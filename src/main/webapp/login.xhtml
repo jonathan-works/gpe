@@ -1,161 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:rich="http://richfaces.org/rich"
-  xmlns:a="http://richfaces.org/a4j"
-  xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:wi="http://www.itx.com.br/jsf"
-  xmlns:p="http://primefaces.org/ui"
-  xmlns:infox="http://www.infox.com.br/jsf"
-  template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-  <ui:define name="baseHead">
-  <ui:param
-      name="useCertLogin"
-      value="#{certificateAuthenticator.certificateLogin}" />
-  </ui:define>
-  <ui:define name="scripts">
-  	<style>
-		.recaptchatable {
-			display: inline-block;
-		}  	
-  	</style>
-    <h:outputScript library="js/components" name="Modal.js" />
-  </ui:define>
-  <ui:define name="baseBody">
-    <s:div id="pageBody" styleClass="loginPageBody">
-      <div class="corpoSuperior" />
-      <div class="corpoInferior">
-        <h:outputText
-          styleClass="versao"
-          value="VERSÃO: #{gitRepository.describe} / #{gitRepository.buildTime}" />
-      </div>
-      <div id="seletorSkinLogin" class="seletorSkinsLogin">
-      	<h:form style="display: inline-block;">
-	        <a:commandButton id="consultaExterna"
-	        	styleClass="input-button-login input_button"
-	        	value="#{infoxMessages['consultaExterna.titlePage']}"
-	        	onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';"
-	        	rendered="#{ativaConsultaExternaPadrao == 'true'}"/>
-       	</h:form>
-        <ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
-          <ui:param
-            name="id"
-            value="login" />
-          <ui:param
-            name="mostrarMenu"
-            value="true" />
-        </ui:include>
-      </div>
-      <h:form id="login">
-        <div
-          id="blocoCentralLogin"
-          class="blocoCentralLogin">
-          <div id="logo" class="logo">
-            <h:graphicImage title="Logo" styleClass="logo-img" url="#{layoutController.getResourceUrl('LOGO_LOGIN')}" />
-          </div>
-          <div class="logo_inferior"></div>
-          <div id="bg_login" class="bg_login login">
-            <s:div rendered="#{not useCertLogin}">
-              <div>
-                <h:outputLabel
-                  for="username"
-                  rendered="#{not useCertLogin}"
-                  class="login-lbl"
-                  value="#{infoxMessages['login.nomeUsuario']}">
-                </h:outputLabel>
-                <h:inputText
-                  id="username"
-                  value="#{credentials.username}"
-                  class="input-text-login"
-                  rendered="#{not useCertLogin}" />
-              </div>
-              <div>
-                <h:outputLabel
-                  for="password"
-                  rendered="#{not useCertLogin}"
-                  class="login-lbl"
-                  value="#{infoxMessages['login.senha']}">
-                </h:outputLabel>
-                <h:inputSecret
-                  id="password"
-                  value="#{credentials.password}"
-                  rendered="#{not useCertLogin}"
-                  class="input-text-login" />
-              </div>
-            </s:div>
-            <s:div
-              styleClass="cert-div"
-              rendered="#{useCertLogin}">
-               <wi:certificadoDigital
-					id="certificacao"
-					tokenField="#{certificateAuthenticator.token}"
-					signableData=""
-					functionPreSign="infox.showLoading();"
-					functionPosSign="submitForm();"
-					signButtonCaption="#{infoxMessages['signature.loginBtn']}">
-				</wi:certificadoDigital>
-               <a:jsFunction
-					name="submitForm"
-					action="#{certificateAuthenticator.authenticate()}"
-					execute="certificacaoToken, @this"
-					render="DialogMessage"
-					limitRender="true" />
-            </s:div>
-          </div>
-          <div id="bg_login_inferior" class="bg_login_inferior login">
-
-			<h:panelGroup rendered="#{loginView.mostrarCaptcha and not useCertLogin and producao}">
-	          	<div style="margin-bottom: 2em; padding-left: 35px; width: 302px">
-		          	<p:captcha id="captcha" label="Captcha" language="pt_BR" validatorMessage="#{infoxMessages['captcha.incorreto']}" requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
-		          	<p:messages for="captcha" severity="error"/>
-	          	</div>
-          	</h:panelGroup>
-          	
-            <h:panelGroup rendered="#{not useCertLogin}">
-              <h:commandButton
-                id="btnEntrar"
-                value="#{infoxMessages['login.entrarBtn']}"
-                styleClass="input-button-login input_button"
-                action="#{loginView.login()}" />
-              <h:button id="btnTrocar" styleClass="input-button-login input_button"
-                outcome="/alteracaoSenha.seam"
-                value="#{infoxMessages['login.trocarSenhaBtn']}" />
-              <h:button id="btnRequisitarCodigoSenha" styleClass="input-button-login input_button"
-                outcome="/codigoRecuperacaoSenha.seam"
-                value="#{infoxMessages['login.esqueciSenhaBtn']}"></h:button>
-                <ui:remove>
-              <h:commandButton
-                styleClass="input-button-login input_button"
-                id="btnTrocarSenha"
-                type="button"
-                value="#{infoxMessages['login.esqueciSenhaBtn']} asdf"
-                action="/codigoRecuperacaoSenha.seam" />
-                </ui:remove>
-            </h:panelGroup>
-          </div>
-        </div>
-      </h:form>
-
-      <rich:popupPanel
-        id="mp_formValidar"
-        height="100"
-        width="250"
-        rendered="#{useCertLogin}"
-        resizeable="false">
-        <f:facet name="header">
-          <h:outputText value="#{infoxMessages['certificate.waitInit']}" />
-        </f:facet>
-        <div>
-          <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/ajax-loader.gif')}" />
-        </div>
-      </rich:popupPanel>
-      <wi:messages />
-    </s:div>
-  </ui:define>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:wi="http://www.itx.com.br/jsf" xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:i="http://java.sun.com/jsf/composite/infox" template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+    <ui:define name="baseHead">
+        <style>
+.recaptchatable {
+    display: inline-block;
+}
+</style>
+    </ui:define>
+    <ui:define name="scripts">
+        <h:outputScript library="js/components" name="Modal.js" />
+        <script>
+        jQuery(document).ready(function() {
+            #{rich:jQuery("username")}.attr("placeholder","#{infoxMessages['login.nomeUsuario']}");
+            #{rich:jQuery("password")}.attr("placeholder","#{infoxMessages['login.senha']}");
+        });
+    </script>
+    </ui:define>
+    <ui:define name="baseBody">
+        <s:div id="pageBody" styleClass="loginPageBody">
+            <div class="corpoSuperior" />
+            <div class="corpoInferior">
+                <h:outputText styleClass="versao" value="VERSÃO: #{gitRepository.describe} / #{gitRepository.buildTime}" />
+            </div>
+            <div id="seletorSkinLogin" class="seletorSkinsLogin">
+                <h:form style="display: inline-block;">
+                    <a:commandButton id="consultaExterna" styleClass="input-button-login input_button"
+                        value="#{infoxMessages['consultaExterna.titlePage']}"
+                        onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';"
+                        rendered="#{ativaConsultaExternaPadrao == 'true'}" />
+                </h:form>
+                <ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
+                    <ui:param name="id" value="login" />
+                    <ui:param name="mostrarMenu" value="true" />
+                </ui:include>
+            </div>
+            <div id="login">
+                <div id="blocoCentralLogin" class="blocoCentralLogin">
+                    <div id="logo" class="logo">
+                        <h:graphicImage title="Logo" styleClass="logo-img"
+                            url="#{layoutController.getResourceUrl('LOGO_LOGIN')}" />
+                    </div>
+                    <div class="login-fieldset">
+                        <div>
+                            <span><h:outputText value="#{infoxMessages['login.comCertificadoLabel']}" /></span>
+                        </div>
+                        <h:form id="loginComCertificado" styleClass="field-block">
+                            <i:certificadoDigital id="certificacao"
+                               tokenField="#{certificateAuthenticator.token}"
+                               signAction="#{certificateAuthenticator.authenticate}"
+                               assinavelProvider="#{certificateAuthenticator.assinavelProvider}"
+                               execute="@this"
+                               render="DialogMessage"
+                               oncomplete="infox.hideLoading();"
+                               value="#{infoxMessages['signature.loginBtn']}">
+                            </i:certificadoDigital>
+                        </h:form>
+                    </div>
+                    <h:form id="loginSemCertificado">
+                        <div class="login-fieldset">
+                            <div>
+                                <span><h:outputText value="#{infoxMessages['login.semCertificadoLabel']}" /></span>
+                            </div>
+                            <div class="field-block">
+                                <div>
+                                    <h:inputText id="username" value="#{credentials.username}" class="input-text-login" />
+                                </div>
+                                <div>
+                                    <h:inputSecret id="password" value="#{credentials.password}" class="input-text-login" />
+                                </div>
+                            </div>
+                            <p:outputPanel rendered="#{loginView.mostrarCaptcha}" styleClass="field-block">
+                                <div class="field">
+                                    <p:captcha id="captcha" label="Captcha" language="pt_BR"
+                                        validatorMessage="#{infoxMessages['captcha.incorreto']}"
+                                        requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+                                    <p:messages for="captcha" severity="error" />
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                        <p:outputPanel>
+                            <h:commandButton id="btnEntrar" value="#{infoxMessages['login.entrarBtn']}"
+                                styleClass="input-button-login input_button" action="#{loginView.login()}" />
+                            <h:button id="btnTrocar" styleClass="input-button-login input_button"
+                                outcome="/alteracaoSenha.seam" value="#{infoxMessages['login.trocarSenhaBtn']}" />
+                            <h:button id="btnRequisitarCodigoSenha" styleClass="input-button-login input_button"
+                                outcome="/codigoRecuperacaoSenha.seam" value="#{infoxMessages['login.esqueciSenhaBtn']}"></h:button>
+                        </p:outputPanel>
+                    </h:form>
+                    <c:forEach var="extensao" items="#{loginView.extensoes}">
+    	               <ui:include src="#{extensao}" />
+                    </c:forEach>
+                </div>
+            </div>
+            <rich:popupPanel id="mp_formValidar" height="100" width="250" resizeable="false">
+                <f:facet name="header">
+                    <h:outputText value="#{infoxMessages['certificate.waitInit']}" />
+                </f:facet>
+                <div>
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/ajax-loader.gif')}" />
+                </div>
+            </rich:popupPanel>
+            <wi:messages />
+        </s:div>
+    </ui:define>
 </ui:composition>

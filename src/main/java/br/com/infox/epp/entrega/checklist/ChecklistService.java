@@ -75,9 +75,9 @@ public class ChecklistService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     private void initChecklistDoc(Checklist checkList, Pasta pasta) {
         Dialect dialect = HibernateUtil.getDialect();
-        String nextVal = dialect.getSequenceNextValString("sq_checklist_doc");
+        String nextVal = dialect.getSelectSequenceNextValString("sq_checklist_doc");
         String sql = "INSERT INTO tb_checklist_doc (id_checklist_doc, id_checklist, id_documento, nr_version) "
-                + nextVal + ", :idChecklist, d.id_documento, 0 "
+                + "SELECT " + nextVal + ", :idChecklist, d.id_documento, 0 "
                 + "FROM tb_documento d "
                 + "WHERE d.id_pasta = :idPastaEntrega";
         getEntityManager().createNativeQuery(sql)

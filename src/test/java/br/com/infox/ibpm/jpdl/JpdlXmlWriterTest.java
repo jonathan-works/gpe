@@ -2,7 +2,6 @@ package br.com.infox.ibpm.jpdl;
 
 import static br.com.infox.epp.processo.status.entity.StatusProcesso.STATUS_PROCESSO_ACTION_NAME;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -11,9 +10,6 @@ import java.io.Writer;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.io.XMLWriter;
 import org.jbpm.activity.exe.ActivityBehavior;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;

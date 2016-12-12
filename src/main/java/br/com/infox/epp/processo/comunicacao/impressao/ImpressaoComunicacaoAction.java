@@ -12,7 +12,7 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;

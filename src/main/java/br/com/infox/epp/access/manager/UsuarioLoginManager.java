@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +32,7 @@ import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -67,17 +71,19 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public UsuarioLogin getUsuarioLoginByEmail(final String email) {
         return getDao().getUsuarioLoginByEmail(email);
     }
-
+    
+    /**
+     * Utilizar {@link UsuarioLoginSearch#getUsuarioByLogin(String)} pra recuperar usuários que podem efetuar login.
+     * Para encontrar um usuário sem impor restrições continuar utilizando este método
+     * @param login Login do usuário a recuperar
+     * @return Usuário referente ao login
+     */
     public UsuarioLogin getUsuarioLoginByLogin(final String login) {
         return getDao().getUsuarioLoginByLogin(login);
     }
 
     public String getLoginUsuarioByTaskInstance(TaskInstance taskInstance) {
         return getDao().getLoginUsuarioByTaskInstance(taskInstance);
-    }
-    
-    public String getNomeUsuarioByIdTarefa(Integer idTarefa, Integer idProcesso) {
-    	return getDao().getNomeUsuarioByIdTarefa(idTarefa, idProcesso);
     }
     
     public String getNomeUsuarioByTaskInstance(TaskInstance taskInstance) {
@@ -127,15 +133,15 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
             if (sendMail){
             	accessMailService.enviarEmailDeMudancaDeSenha("email", persisted, password);
             }
-	    return persisted;
+	    return getDao().update(persisted);
         } catch (IllegalArgumentException e) {
             throw new DAOException(e);
         }
     }
     
     @Override
-    public UsuarioLogin persist(final UsuarioLogin usuario) throws DAOException {
-        return persist(usuario, true);
+    public UsuarioLogin persist(UsuarioLogin usuario) throws DAOException {
+        return persist(usuario, usuario.isLoginComSenhaHabilitado());
     }
     
     public UsuarioLogin getUsuarioSistema() {
@@ -185,4 +191,16 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
 		String password = passwordService.generatePasswordHash("admin", admin.getSalt());
 		return password.equals(admin.getSenha());
 	}
+    
+    public boolean existeTaskInstaceComUsuario(String login) {
+        CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
+        cq.select(cb.count(taskInstance));
+        cq.where(
+            cb.equal(taskInstance.get("assignee"), cb.literal(login))        
+        );
+        Long count = getDao().getEntityManager().createQuery(cq).getSingleResult();
+        return count > 0L;
+    }
 }

@@ -1,13 +1,13 @@
 package br.com.infox.epp.usuario.rest;
 
-import br.com.infox.epp.pessoa.annotation.Data;
-import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
-
-import static br.com.infox.epp.usuario.rest.ConstantesDTO.*;
+import static br.com.infox.epp.usuario.rest.ConstantesDTO.DATE_PATTERN;
 
 import java.text.SimpleDateFormat;
 
 import javax.validation.constraints.NotNull;
+
+import br.com.infox.epp.pessoa.annotation.Data;
+import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
 
 public class PessoaDocumentoDTO {
 
@@ -20,6 +20,9 @@ public class PessoaDocumentoDTO {
 	private String tipo;
 	private String orgaoExpedidor;
 
+	public PessoaDocumentoDTO() {
+	}
+	
 	public PessoaDocumentoDTO(PessoaDocumento pessoaDocumento) {
 		this.documento = pessoaDocumento.getDocumento();
 		this.dataEmissao = new SimpleDateFormat(DATE_PATTERN).format(pessoaDocumento.getDataEmissao());

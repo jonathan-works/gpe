@@ -1,6 +1,7 @@
 package br.com.infox.epp.entrega.entity;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,7 +19,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
-import java.util.Collections;
 
 @Entity
 @Table(name="tb_categoria_entrega")
@@ -108,13 +108,13 @@ public class CategoriaEntrega implements Serializable {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (!(obj instanceof CategoriaEntrega))
             return false;
         CategoriaEntrega other = (CategoriaEntrega) obj;
-        if (codigo == null) {
-            if (other.codigo != null)
+        if (getCodigo() == null) {
+            if (other.getCodigo() != null)
                 return false;
-        } else if (!codigo.equals(other.codigo))
+        } else if (!getCodigo().equals(other.getCodigo()))
             return false;
         return true;
     }

@@ -23,11 +23,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -35,11 +39,14 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaFisica_;
+import br.com.infox.epp.pessoa.entity.Pessoa_;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
+import br.com.infox.epp.processo.partes.manager.HistoricoParticipanteProcessoManager;
 
 @Stateless
 @AutoCreate
@@ -48,6 +55,9 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "participanteProcessoDAO";
+    
+    @Inject
+    private HistoricoParticipanteProcessoManager historicoParticipanteProcessoManager;
     
     public void lockPessimistic(Processo processo){
     	if (!getEntityManager().contains(processo)){
@@ -70,13 +80,32 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
     	return getNamedResultList(PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, params);
     }
     
+    @Deprecated // FIXME esta consulta não funciona no oracle
     public List<Pessoa> getPessoasFisicasParticipantesProcesso(Processo processo){
 		String query = "select distinct p from ParticipanteProcesso pp "
 				+ "inner join  pp.pessoa p "
 				+ "where pp.processo = :processo and p.tipoPessoa = '"+TipoPessoaEnum.F+ "' ";
 		return getEntityManager().createQuery(query,Pessoa.class).setParameter("processo", processo).getResultList();
     }
-    
+
+    public List<PessoaFisica> getPessoasFisicasParticipantesProcessoAtivo(Processo processo) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<PessoaFisica> cq = cb.createQuery(PessoaFisica.class);
+
+        Subquery<Integer> sqIdPessoa = cq.subquery(Integer.class);
+        Root<ParticipanteProcesso> pp = sqIdPessoa.from(ParticipanteProcesso.class);
+        Join<ParticipanteProcesso, Pessoa> pessoa = pp.join(ParticipanteProcesso_.pessoa, JoinType.INNER);
+        sqIdPessoa.distinct(true);
+        sqIdPessoa.select(pessoa.get(Pessoa_.idPessoa));
+        sqIdPessoa.where(cb.equal(pp.get(ParticipanteProcesso_.processo), processo),
+                cb.isTrue(pp.get(ParticipanteProcesso_.ativo)));
+
+        Root<PessoaFisica> pf = cq.from(PessoaFisica.class);
+        cq.select(pf);
+        cq.where(cb.in(pf.get(PessoaFisica_.idPessoa)).value(sqIdPessoa));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+
     public boolean existeParticipanteByPessoaProcessoPaiTipo(Pessoa pessoa, 
     		Processo processo, ParticipanteProcesso pai, TipoParte tipo){
     	Map<String, Object> params = new HashMap<>(4);
@@ -152,5 +181,11 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 		params.put(PARAM_PESSOA, idPessoa);
 		params.put(PARAM_PROCESSO, idProcesso);
 		return getNamedResultList(PARTICIPANTE_BY_PESSOA_FETCH, params);
+	}
+	
+	public void inverterSituacao(ParticipanteProcesso instance, String motivo) {
+		historicoParticipanteProcessoManager.createHistorico(instance, motivo);
+		instance.setAtivo(!instance.getAtivo());
+		update(instance);
 	}
 }

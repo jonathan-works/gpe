@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -20,9 +21,11 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Name(FluxoManager.NAME)
 @AutoCreate
@@ -36,6 +39,8 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
 
     @In
     private RaiaPerfilManager raiaPerfilManager;
+    @Inject
+    private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
     
     private boolean isValidDataFim(Fluxo fluxo, Date now){
         final Date date = fluxo.getDataFimPublicacao();
@@ -57,6 +62,12 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
     }
 
     private void beforePersistOrUpdate(Fluxo o) {
+    	Date dataFimPublicacao = o.getDataFimPublicacao();
+        Date dataInicioPublicacao = o.getDataInicioPublicacao();
+        boolean dataPublicacaoValida = (dataInicioPublicacao != null) && ((dataFimPublicacao == null) || !dataFimPublicacao.before(dataInicioPublicacao));
+        if (!dataPublicacaoValida) {
+        	throw new BusinessRollbackException("#{infoxMessages['fluxo.dataPublicacaoErrada']}");
+        }
         updateDataInicioPublicacao(o);
         updateDataFimPublicacao(o);
     }
@@ -71,6 +82,14 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         }
     }
     
+    public List<Fluxo> getFluxosPrimariosAtivos() {
+    	return getDao().getFluxosPrimariosAtivos();
+    }
+
+    public List<Fluxo> getFluxosPrimarios() {
+        return getDao().getFluxosPrimarios();
+    }
+
     public List<Fluxo> getFluxosAtivosList() {
         return getDao().getFluxosAtivosList();
     }
@@ -89,6 +108,10 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
     
     public boolean existemProcessosAssociadosAFluxo(final Fluxo fluxo) {
         return getDao().getQuantidadeDeProcessoAssociadosAFluxo(fluxo) > 0;
+    }
+
+    public boolean existemProcessoEmAndamento(Fluxo fluxo) {
+        return getDao().getQuantidadeDeProcessosEmAndamento(fluxo) > 0L;
     }
 
     public boolean existeFluxoComDescricao(final String descricao) {
@@ -111,7 +134,9 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
     @Override
     public Fluxo persist(Fluxo o) throws DAOException {
         beforePersistOrUpdate(o);
-        return super.persist(o);
+        o = super.persist(o);
+        definicaoVariavelProcessoManager.createDefaultDefinicaoVariavelProcessoList(o);
+        return o;
     }
 
     @Override
@@ -124,5 +149,16 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         Date now = new Date();
         return fluxo.getPublicado() && isValidDataInicio(fluxo, now) && isValidDataFim(fluxo, now)
                 && isValidUsuarioPerfil(fluxo, usuarioPerfil);
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void gravarReplica(Fluxo fluxoReplicado) {
+    	if (existeFluxoComCodigo(fluxoReplicado.getCodFluxo())) {
+    		throw new BusinessRollbackException("Já existe um fluxo com o código informado");
+    	}
+    	if (existeFluxoComDescricao(fluxoReplicado.getFluxo())) {
+    		throw new BusinessRollbackException("Já existe um fluxo com a descrição informada");
+    	}
+    	persist(fluxoReplicado);
     }
 }

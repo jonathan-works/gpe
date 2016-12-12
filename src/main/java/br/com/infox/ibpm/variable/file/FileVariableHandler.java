@@ -39,6 +39,7 @@ public class FileVariableHandler {
 	public void gravarDocumento(UploadedFile file, String variableFieldName) {
 		TaskInstanceHome taskInstanceHome = TaskInstanceHome.instance();
 		ProcessoEpaHome processoEpaHome = ComponentUtil.getComponent(ProcessoEpaHome.NAME);
+		ClassificacaoDocumento classificacaoDocumento = TaskInstanceHome.instance().getVariaveisDocumento().get(variableFieldName).getClassificacaoDocumento();
 		Integer idDocumentoExistente = (Integer) taskInstanceHome.getValueOfVariableFromTaskInstance(taskInstanceHome.getVariableName(variableFieldName));
         if (idDocumentoExistente != null) {
             try {
@@ -47,7 +48,7 @@ public class FileVariableHandler {
                 throw new BusinessRollbackException(e);
             }
         }
-        Documento documento = createDocumento(file, TaskInstanceHome.instance().getVariaveisDocumento().get(variableFieldName).getClassificacaoDocumento());
+        Documento documento = createDocumento(file, classificacaoDocumento);
         try {
             documentoManager.gravarDocumentoNoProcesso(processoEpaHome.getInstance(), documento);
             taskInstanceHome.getInstance().put(variableFieldName, documento.getId());

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -16,6 +17,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.manager.ModeloPastaManager;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
@@ -56,6 +58,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     private DocumentoManager documentoManager;
     @In
     private NumeracaoDocumentoSequencialManager numeracaoDocumentoSequencialManager;
+    @Inject
+    private PastaSearch pastaSearch;
     
     public Pasta getDefaultFolder(Processo processo) throws DAOException {
         Pasta pasta = getDefault(processo);
@@ -140,6 +144,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     private Pasta createPastaFromModelo(ModeloPasta modeloPasta, Processo processo) {
         Pasta pasta = new Pasta();
         pasta.setNome(modeloPasta.getNome());
+        pasta.setCodigo(modeloPasta.getCodigo());
         pasta.setRemovivel(modeloPasta.getRemovivel());
         pasta.setProcesso(processo);
         pasta.setSistema(modeloPasta.getSistema());
@@ -160,6 +165,14 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         } else {
         	return null;
         }
+    }
+    
+    public Pasta getByCodigoAndProcesso(String codigoPasta, Processo processo) {
+		Pasta pasta = pastaSearch.getPastaByCodigoIdProcesso(codigoPasta, processo.getIdProcesso());
+		if (pasta == null) {
+			pasta = pastaSearch.getPastaByCodigoIdProcesso(codigoPasta, processo.getProcessoRoot().getIdProcesso());
+		}
+		return pasta;
     }
     
     public Pasta persistWithDefault(Pasta o) throws DAOException {

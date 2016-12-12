@@ -5,18 +5,23 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.SystemException;
+import javax.transaction.TransactionManager;
 
 import org.jboss.seam.contexts.Lifecycle;
+import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
 import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.calendario.CalendarioEventosService;
 import br.com.infox.epp.cdi.transaction.Transactional;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
@@ -27,6 +32,7 @@ import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.util.ComponentUtil;
 
 @RequestScoped
 public class QuartzResourceImpl implements QuartzResource {
@@ -43,6 +49,8 @@ public class QuartzResourceImpl implements QuartzResource {
     private CalendarioEventosService calendarioEventosService;
     @Inject
     private BamResourceImpl bamResourceImpl;
+    @Inject
+    private ApplicationServerService applicationServerService;
 
     @Override
     @Transactional
@@ -68,17 +76,30 @@ public class QuartzResourceImpl implements QuartzResource {
     }
     
     @Override
-    @Transactional
     public void retryAutomaticNodes() {
         Lifecycle.beginCall();
-        JbpmContextProducer.createJbpmContextTransactional();
         try {
             List<Token> tokens = JbpmUtil.getTokensOfAutomaticNodesNotEnded();
             for (Token token : tokens) {
-                Node node = (Node) HibernateUtil.removeProxy(token.getNode());
-                ExecutionContext executionContext = new ExecutionContext(token);
-                node.execute(executionContext);
-            } 
+                TransactionManager transactionManager = applicationServerService.getTransactionManager();
+                try {
+                    transactionManager.begin();
+                    JbpmContextProducer.createJbpmContextTransactional();
+                    JbpmContext jbpmContext = ComponentUtil.getComponent("org.jboss.seam.bpm.jbpmContext");
+                    Token tokenForUpdate = jbpmContext.getTokenForUpdate(token.getId());
+                    Node node = (Node) HibernateUtil.removeProxy(tokenForUpdate.getNode());
+                    ExecutionContext executionContext = new ExecutionContext(tokenForUpdate);
+                    node.execute(executionContext);
+                    transactionManager.commit();
+                } catch (Exception e) {
+                    LOG.error("quartzRestImpl.processTaskExpiration()", e);
+                    try {
+                        transactionManager.rollback();
+                    } catch (IllegalStateException | SecurityException | SystemException e1) {
+                        LOG.error("Error rolling back transaction", e1);
+                    }
+                }
+            }
         } finally {
             Lifecycle.endCall();
         }

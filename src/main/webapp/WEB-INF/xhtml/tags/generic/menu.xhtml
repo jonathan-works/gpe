@@ -25,6 +25,9 @@
             <a:jsFunction name="#{id}SkinSwitcher" onbegin="infox.showLoading();" oncomplete="location.reload(true);">
                 <a:param name="idSkin" assignTo="#{wiSkin.skin}" />
             </a:jsFunction>
+            <a:jsFunction name="#{id}Logout" onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+            	action="#{authenticator.unAuthenticate()}">
+            </a:jsFunction>
         </h:form>
     </div>
         
@@ -48,6 +51,9 @@
                 handleSkinSwapClick:function(event, itm){
                     infox.showLoading();
                     #{id}SkinSwitcher(itm);
+                },
+                handleLogoutClick:function(event, itm){
+                    #{id}Logout();
                 }
             };
     		var menuConfig={
@@ -77,7 +83,7 @@
                					]}
                					</c:if>
                				]},	
-                               {"label": "#{infoxMessages['menu.logout']}","url": "#{facesContext.externalContext.context.contextPath}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','power_settings_new')}"}
+                               {"label": "#{infoxMessages['menu.logout']}", onClick:#{id}MenuFunctions.handleLogoutClick, hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','power_settings_new')}"}
                				]
                     }
                 };

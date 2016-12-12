@@ -8,7 +8,6 @@
     
     <composite:interface>
     	
-    	<composite:attribute name="id"/>
     	<composite:attribute name="label" />
     	<composite:attribute name="help" />
     	<composite:attribute name="value" type="java.lang.String"/>
@@ -64,7 +63,7 @@
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
-        			<h:inputTextarea id="#{cc.attrs.id}Input" styleClass="#{styleClass} input #{readonly ? 'readOnly' : ''}"
+        			<h:inputTextarea id="#{cc.attrs.id}Input" styleClass="#{styleClass} input #{readonly ? 'readOnly' : ''} ifx-textarea"
 				      readonly="#{cc.attrs.readonly}" cols="#{cc.attrs.cols}"
 				      rows="#{cc.attrs.rows}" onblur="#{cc.attrs.onblur}"
 				      disabled="#{cc.attrs.disabled}" required="#{cc.attrs.required}"

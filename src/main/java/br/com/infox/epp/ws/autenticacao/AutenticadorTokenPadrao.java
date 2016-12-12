@@ -42,13 +42,22 @@ public class AutenticadorTokenPadrao implements AutenticadorToken, TokenInjector
 		return parametroManager.getValorParametro(nomeParametro);
 	}
 	
+	private void gerarErro(String mensagem) {
+		throw new UnauthorizedException(WSMessages.ME_TOKEN_INVALIDO.codigo(),mensagem);						
+	}
+	
 	@Override
 	public void validarToken(HttpServletRequest request) throws UnauthorizedException {
 		String tokenRequest = getValorToken(request);
 		String tokenParametro = getTokenParametro();
-		if (tokenParametro == null || !tokenParametro.equals(tokenRequest)) {
-			throw new UnauthorizedException(WSMessages.ME_TOKEN_INVALIDO.codigo(),
-					WSMessages.ME_TOKEN_INVALIDO.label());				
+		if (tokenRequest == null) {
+			gerarErro(String.format("Token de autenticação '%s' não definido no cabeçalho HTTP", nomeHeader));
+		}
+		else if(tokenParametro == null) {
+			gerarErro(String.format("Token de autenticação '%s' não definido no cabeçalho HTTP", nomeHeader));
+		}
+		else if(!tokenParametro.equals(tokenRequest)) {
+			gerarErro(WSMessages.ME_TOKEN_INVALIDO.label());
 		}
 	}
 

@@ -5,9 +5,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Produces;
 import javax.inject.Named;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 @Named
 @RequestScoped
@@ -38,13 +43,29 @@ public class DateUtil {
 	 */
 	public static String formatarData(Date data) {
 		try {
-			
 			return formatter.format(data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}		
-	}	
+	}
+	
+    /**
+     * Converte uma instância de Date para uma String em formato por extenso.
+     *
+     * @param data
+     * @return String no formato dd de mesPorExtenso de yyyy
+     */
+    public static String formatarDataPorExtenso(Date data) {
+        try {
+            Locale br = new Locale("pt", "BR");
+            DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, br);
+            return df.format(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     
     /**
      * Adiciona/Subtrai dias de uma data
@@ -168,7 +189,20 @@ public class DateUtil {
         dt.set(Calendar.MILLISECOND, 0);
         return dt.getTime();
     }
+    
+    @Produces
+    @Named("currentDateTime")
+    public DateTime currentDateTime(){
+    	return new DateTime();
+    }
 
+    @Produces
+    @Named("currentDate")
+    public Date currentDate(){
+    	return new Date();
+    }
+    
+    
     /**
      * Calcula a diferença em minutos entre as datas (Date) informadas nos
      * parametros.
@@ -195,6 +229,16 @@ public class DateUtil {
         date1 = DateUtil.getBeginningOfDay(date1);
         date2 = DateUtil.getBeginningOfDay(date2);
         return date1.getTime() <= date2.getTime();
+    }
+
+    public static Date getInicioAno(Date data) {
+        DateTime dateTime = new DateTime(data).withZone(DateTimeZone.UTC);
+        return dateTime.withDate(dateTime.getYear(), 1, 1).withTimeAtStartOfDay().toDate();
+    }
+
+    public static Date getFimAno(Date data) {
+        DateTime dateTime = new DateTime(data).withZone(DateTimeZone.UTC);
+        return dateTime.withDate(dateTime.getYear(), 12, 31).withTime(23, 59, 59, 999).toDate();
     }
 
 }

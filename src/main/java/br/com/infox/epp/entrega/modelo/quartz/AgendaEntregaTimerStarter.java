@@ -26,6 +26,7 @@ import br.com.infox.quartz.QuartzConstant;
 @Scope(ScopeType.STATELESS)
 @AutoCreate
 public class AgendaEntregaTimerStarter {
+    private static final String CRON_EXPRESSION = "0 0 18 1/1 * ? *";
     private static final LogProvider LOG = Logging.getLogProvider(AgendaEntregaTimerStarter.class);
     public static final String NAME = "agendaEntregaTimerStarter";
     private static final Properties QUARTZ_PROPERTIES = ClassLoaderUtil.getProperties(QuartzConstant.QUARTZ_PROPERTIES);
@@ -48,7 +49,7 @@ public class AgendaEntregaTimerStarter {
         try {
             String idAgendaEntregaTimer = getParametro("idTimerAgendaEntrega");
             if (idAgendaEntregaTimer == null) {
-                createTimerInstance("0 0 0 * * ?", "idTimerAgendaEntrega",
+                createTimerInstance(CRON_EXPRESSION, "idTimerAgendaEntrega",
                         "ID do Timer que lança eventos de agenda de entrega");
             }
         } catch (SchedulerException | DAOException e) {

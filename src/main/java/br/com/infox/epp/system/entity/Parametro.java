@@ -118,8 +118,7 @@ public class Parametro implements Serializable {
         this.descricaoVariavel = descricaoVariavel;
     }
 
-    @Column(name = COLUMN_VALOR, nullable = false)
-    @NotNull
+    @Column(name = COLUMN_VALOR)
     public String getValorVariavel() {
         return this.valorVariavel;
     }

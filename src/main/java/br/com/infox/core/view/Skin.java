@@ -64,7 +64,16 @@ public class Skin extends Selector implements Serializable {
 	// #{wiSkin.imageFolder}
 	public String getImageFolder() {
 		// "/resources/styleSkinInfox/default/imagens"
-		return format("/resources/styleSkinInfox/{0}/imagens", getSkin());
+		String skin = getSkin();
+		switch (skin) {
+		case "altoContraste":
+		case "cinza":
+			break;
+		default:
+			skin="default";
+			break;
+		}
+		return format("/resources/styleSkinInfox/{0}/imagens", skin);
 	}
 
 	public void setImageFolder(String folder) {

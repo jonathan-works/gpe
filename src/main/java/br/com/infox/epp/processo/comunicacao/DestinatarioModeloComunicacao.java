@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,8 +20,10 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.partes.entity.TipoParte;
 
 @Entity
 @Table(name = "tb_destinatario_modelo_comunic", uniqueConstraints = {
@@ -56,9 +56,9 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 	@JoinColumn(name = "id_modelo_comunicacao", nullable = false)
 	private ModeloComunicacao modeloComunicacao;
 	
-	@Enumerated(EnumType.STRING)
 	@NotNull
-	@Column(name = "tp_meio_expedicao", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "id_meio_expedicao", nullable = false)
 	private MeioExpedicao meioExpedicao;
 	
 	@Min(0)
@@ -79,6 +79,10 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 	
 	@Column(name = "in_individual", nullable = true)
 	private Boolean individual = Boolean.TRUE;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_tipo_parte", nullable = true)
+	private TipoParte tipoParte;
 	
 	public Long getId() {
 		return id;
@@ -159,8 +163,16 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
     public void setIndividual(Boolean individual) {
         this.individual = individual;
     }
+    
+    public TipoParte getTipoParte() {
+		return tipoParte;
+	}
 
-    @Transient
+	public void setTipoParte(TipoParte tipoParte) {
+		this.tipoParte = tipoParte;
+	}
+
+	@Transient
 	public String getNome() {
 		if (destinatario != null) {
 			return destinatario.getNome();
@@ -168,6 +180,18 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 		    return (destino.getCaminhoCompletoFormatado() + " (" + perfilDestino.getPapel() + ")");
 		} else if (destino != null) {
 		    return destino.getCaminhoCompletoFormatado();
+		}
+		return null;
+	}
+	
+	@Transient
+	public String getNomeDestino() {
+		if (destinatario != null) {
+			return destinatario.getNome();
+		} else if (perfilDestino != null) {
+			return (destino.getPathDescriptor() + " - " + perfilDestino.getPapel());
+		} else if (destino != null) {
+			return destino.getPathDescriptor();
 		}
 		return null;
 	}

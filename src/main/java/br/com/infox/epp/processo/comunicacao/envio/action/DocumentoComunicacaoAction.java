@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -32,11 +30,11 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.MarcadorSearch;
+import br.com.infox.epp.processo.marcador.MarcadorService;
 import br.com.infox.epp.system.Parametros;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named(DocumentoComunicacaoAction.NAME)
-@Stateful
 @ViewScoped
 public class DocumentoComunicacaoAction implements Serializable {
 	
@@ -56,8 +54,12 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private PapelManager papelManager;
 	@Inject
 	private PastaRestricaoManager pastaRestricaoManager;
-	
-	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList = ComponentUtil.getComponent(DocumentoDisponivelComunicacaoList.NAME);
+	@Inject
+	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList;
+	@Inject
+    private MarcadorService marcadorService;
+	@Inject
+	private MarcadorSearch marcadorSearch;
 	
 	private ModeloComunicacao modeloComunicacao;
 	
@@ -79,9 +81,6 @@ public class DocumentoComunicacaoAction implements Serializable {
 		}
 	}
 	
-	@Remove
-	public void destroy() {}
-	
 	public void persistDocumentos() throws DAOException {
 		documentoComunicacaoService.persistDocumentos(modeloComunicacao.getDocumentos());
 	}
@@ -95,7 +94,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private void initEntityLists() {
 		documentoDisponivelComunicacaoList.setProcesso(modeloComunicacao.getProcesso().getProcessoRoot());
 		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
-			documentoDisponivelComunicacaoList.adicionarIdDocumento(documentoModelo.getDocumento().getDocumentoBin().getId());
+			documentoDisponivelComunicacaoList.adicionarIdDocumento(documentoModelo.getDocumento().getId());
 		}
 	}
 
@@ -181,6 +180,19 @@ public class DocumentoComunicacaoAction implements Serializable {
 		}
 		return pastas;
 	}
+	
+    public List<String> autoCompleteMarcadores(String query) {
+    	query = query.toUpperCase();
+        List<String> marcadores = marcadorSearch.listCodigoByProcessoAndNotInListCodigos(modeloComunicacao.getProcesso().getIdProcesso(), query, modeloComunicacao.getCodigosMarcadores());
+        if (!marcadores.contains(query) && (modeloComunicacao.getCodigosMarcadores() == null || !modeloComunicacao.getCodigosMarcadores().contains(query))) {
+            marcadores.add(0, query);
+        }
+        return marcadores;
+    }
+	
+	public boolean isPermittedAddMarcador() {
+        return marcadorService.isPermittedAdicionarMarcador();
+    }
 
 	public boolean canSee(Pasta pasta) {
 	    PastaRestricaoBean restricaoBean = restricoesPasta.get(pasta.getId());
@@ -205,4 +217,5 @@ public class DocumentoComunicacaoAction implements Serializable {
 	public void setModelosDocumento(List<ModeloDocumento> modelosDocumento) {
 		this.modelosDocumento = modelosDocumento;
 	}
+	
 }

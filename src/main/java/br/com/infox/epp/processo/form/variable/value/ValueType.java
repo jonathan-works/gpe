@@ -1,16 +1,16 @@
 package br.com.infox.epp.processo.form.variable.value;
 
+import br.com.infox.epp.processo.form.variable.value.ObjectValueType.JPAValueType;
+import br.com.infox.epp.processo.form.variable.value.ObjectValueType.JSONValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.BooleanValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.DateValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.DoubleValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.IntegerValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.LongValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.NullValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.ParameterValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.StringArrayValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.StringValueType;
-import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.ParameterValueType;
-import br.com.infox.epp.processo.form.variable.value.ObjectValueType.JPAValueType;
-import br.com.infox.epp.processo.form.variable.value.ObjectValueType.JSONValueType;
 
 public interface ValueType {
     

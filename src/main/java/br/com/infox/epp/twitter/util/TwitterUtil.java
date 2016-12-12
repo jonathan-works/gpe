@@ -6,9 +6,15 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.epp.twitter.entity.ContaTwitter;
+import br.com.infox.epp.twitter.entity.TwitterTemplate;
+import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
+import br.com.infox.seam.util.ComponentUtil;
 import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -16,13 +22,6 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
-import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.infox.epp.twitter.entity.ContaTwitter;
-import br.com.infox.epp.twitter.entity.TwitterTemplate;
-import br.com.infox.epp.twitter.manager.ContaTwitterManager;
-import br.com.infox.seam.util.ComponentUtil;
 
 /**
  * @author jonas

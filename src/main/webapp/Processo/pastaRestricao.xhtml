@@ -20,6 +20,8 @@
                 
                 <wi:inputText id="nome" value="#{pastaList.entity.nome}"
                     label="#{infoxMessages['pasta.nome']}" />
+                <wi:inputText id="codigo" value="#{pastaList.entity.codigo}"
+                    label="#{infoxMessages['pasta.codigo']}" />
                 <wi:inputText id="descricao" value="#{pastaList.entity.descricao}"
                     label="#{infoxMessages['pasta.descricao']}" />
                 <div />
@@ -68,6 +70,9 @@
         <wi:columnOutputText columnId="nome"
             columnHeader="#{infoxMessages['pasta.nome']}"
             value="#{row.nome}" />
+        <wi:columnOutputText columnId="codigo"
+            columnHeader="#{infoxMessages['pasta.codigo']}"
+            value="#{row.codigo}" />
         <wi:columnOutputText columnId="descricao"
             columnHeader="#{infoxMessages['pasta.descricao']}"
             value="#{row.descricao}" />
@@ -95,6 +100,16 @@
                     disabled="#{not pastaRestricaoAction.instance.editavel}"
                     label="#{infoxMessages['pasta.nome']}">
                     <f:validator validatorId="nomePastaValidator" />
+                    <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
+                    <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
+                </wi:inputText>
+                
+                <wi:inputText id="editPastaInputCodigo"
+                    value="#{pastaRestricaoAction.instance.codigo}"
+                    required="true" maxlength="250"
+                    disabled="#{not pastaRestricaoAction.instance.editavel}"
+                    label="#{infoxMessages['pasta.codigo']}">
+                    <f:validator validatorId="codigoPastaValidator" />
                     <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
                     <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
                 </wi:inputText>

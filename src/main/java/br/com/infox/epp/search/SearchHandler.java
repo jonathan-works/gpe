@@ -27,6 +27,7 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.Variavel;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 @Name("search")
 @Scope(ScopeType.CONVERSATION)
@@ -66,12 +67,16 @@ public class SearchHandler implements Serializable {
      * é Numero de Processo, Id de Processo ({@link #searchProcesso()}), ou se é
      * texto normal ({@link #searchIndexer()})
      */
-    public void search() {
+    public String search() {
+    	String value = "/Pesquisa/indexedSearch.seam";
         if (searchText == null || "".equals(searchText.trim())) {
-            return;
+            return null;
         }
         processoHandler.clear();
-        processoSearcher.searchProcesso(searchText);
+        if ( processoSearcher.searchProcesso(searchText) ) {
+        	value = "/Processo/Consulta/list.seam";
+        }
+        return value;
     }
 
     public String getTextoDestacado(Variavel v) {
@@ -92,6 +97,13 @@ public class SearchHandler implements Serializable {
             texto = DateFormat.getDateInstance().format((Date)value);
         } else if (VariableType.FILE.toString().equals(type)) {
             texto = documentoManager.find(value).getDescricao();
+        } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(type)) {
+            try {
+                String[] stringArray = (String[]) value;
+                texto = Arrays.toString(stringArray);
+            } catch (ClassCastException cce) {
+                texto = value.toString();
+            }
         } else {
             texto = value.toString();
         }

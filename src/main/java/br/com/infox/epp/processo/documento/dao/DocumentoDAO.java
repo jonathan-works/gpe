@@ -4,8 +4,6 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_SESSAO_ANEXAR;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.ID_JBPM_TASK_PARAM;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_TASKINSTANCE;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_MINUTA_BY_PROCESSO;
@@ -15,7 +13,6 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_IDS
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_TIPO_NUMERACAO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.TOTAL_DOCUMENTOS_PROCESSO;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.USUARIO_PARAM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +26,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
@@ -49,13 +47,21 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
+import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
 import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.entity.PastaRestricao;
+import br.com.infox.epp.processo.documento.entity.PastaRestricao_;
 import br.com.infox.epp.processo.documento.entity.Pasta_;
+import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
+import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento_;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
+import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
@@ -66,7 +72,7 @@ public class DocumentoDAO extends DAO<Documento> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoDAO";
 
-    @In
+    @In(value="sigiloDocumentoService")
     private SigiloDocumentoService sigiloDocumentoService;
 
     public Integer getNextSequencial(Processo processo) {
@@ -85,16 +91,41 @@ public class DocumentoDAO extends DAO<Documento> {
     }
 
     public List<Documento> getAnexosPublicos(long idJbpmTask) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(ID_JBPM_TASK_PARAM, idJbpmTask);
-        UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-        String query = LIST_ANEXOS_PUBLICOS;
-        if (usuarioLogado != null) {
-            parameters.put(USUARIO_PARAM, usuarioLogado);
-            query = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
-        }
-        return getNamedResultList(query, parameters);
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Documento> query = cb.createQuery(Documento.class);
+    	Root<Documento> doc = query.from(Documento.class);
+    	Join<Documento, ClassificacaoDocumento> classificacao = doc.join(Documento_.classificacaoDocumento, JoinType.INNER);
+    	Join<Documento, DocumentoBin> bin = doc.join(Documento_.documentoBin, JoinType.INNER);
+    	
+    	Subquery<Integer> subquerySigilosos = query.subquery(Integer.class);
+    	Root<SigiloDocumento> sigiloDocumento = subquerySigilosos.from(SigiloDocumento.class);
+    	subquerySigilosos.select(cb.literal(1));
+    	subquerySigilosos.where(
+    			cb.equal(sigiloDocumento.get(SigiloDocumento_.ativo), true),
+    			cb.equal(sigiloDocumento.get(SigiloDocumento_.documento), doc)
+    	);
+    	
+    	Subquery<Integer> subqueryRestricoesPasta = query.subquery(Integer.class);
+    	Root<PastaRestricao> pastaRestricao = subqueryRestricoesPasta.from(PastaRestricao.class);
+    	subqueryRestricoesPasta.select(cb.literal(1));
+    	subqueryRestricoesPasta.where(
+    			cb.equal(pastaRestricao.get(PastaRestricao_.pasta), doc.get(Documento_.pasta)),
+    			cb.equal(pastaRestricao.get(PastaRestricao_.tipoPastaRestricao), PastaRestricaoEnum.D),
+    			cb.equal(pastaRestricao.get(PastaRestricao_.read), true)
+    			
+		);
+    	
+    	query.where(
+    			cb.equal(bin.get(DocumentoBin_.minuta), false),
+    			cb.equal(doc.get(Documento_.idJbpmTask), idJbpmTask),
+    			classificacao.get(ClassificacaoDocumento_.visibilidade).in(VisibilidadeEnum.A, VisibilidadeEnum.E),
+    			cb.equal(doc.get(Documento_.excluido), false),
+    			cb.not(cb.exists(subquerySigilosos)),
+    			cb.exists(subqueryRestricoesPasta)    			
+    	);
+    	return getEntityManager().createQuery(query).getResultList();
     }
+    
 
     protected FullTextEntityManager getFullTextEntityManager() {
         return Search.getFullTextEntityManager(super.getEntityManager());

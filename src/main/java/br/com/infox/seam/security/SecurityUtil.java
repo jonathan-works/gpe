@@ -32,6 +32,8 @@ public class SecurityUtil implements Serializable {
     public boolean checkPage(String page) {
         if (!permissions.containsKey(page)) {
             try {
+                if (!Contexts.isSessionContextActive())
+                    return false;
                 permissions.put(page, Identity.instance().hasPermission(page, "access") && !Authenticator.instance().hasToSignTermoAdesao());
             } catch (LoginException e) {
                 throw new RuntimeException(e);
@@ -44,6 +46,12 @@ public class SecurityUtil implements Serializable {
         return hasPermission;
     }
     
+    public boolean isPermitted(String resource) {
+        if (!Contexts.isSessionContextActive())
+            return false;
+        return Identity.instance().hasPermission(resource, "access");
+    }
+    
     public boolean checkPage() {
         HttpServletRequest request = ServletContexts.instance().getRequest();
         String servletPath = request.getServletPath();
@@ -51,6 +59,8 @@ public class SecurityUtil implements Serializable {
     }
     
     public boolean hasRole(String roleName) {
+        if (!Contexts.isSessionContextActive())
+            return false;
     	return Identity.instance().hasRole(roleName);
     }
     
@@ -59,6 +69,8 @@ public class SecurityUtil implements Serializable {
     }
 
     public boolean isLoggedIn() {
+        if (!Contexts.isSessionContextActive())
+            return false;
         return Identity.instance().isLoggedIn();
     }
 }

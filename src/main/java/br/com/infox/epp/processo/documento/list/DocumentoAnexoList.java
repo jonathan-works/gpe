@@ -9,7 +9,8 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.system.EppProperties;
+import br.com.infox.epp.system.Configuration;
+import br.com.infox.epp.system.Database.DatabaseType;
 
 @Name(DocumentoAnexoList.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -21,7 +22,7 @@ public class DocumentoAnexoList extends EntityList<Documento> {
             + "inner join tb_processo p on (p.id_processo = pa.id_processo) "
             + "inner join tb_documento_bin bin on (bin.id_documento_bin = pd.id_documento_bin) "
             + "where "
-            + "pd.id_processo = #{documentoAnexoList.processo} and "
+            + "p.id_processo = #{documentoAnexoList.processo} and "
             + "not exists (select 1 from jbpm_variableinstance v where "
             + "v.longvalue_ = pd.id_documento and "
             + "v.taskinstance_ in (select t.id_ from jbpm_taskinstance t where t.procinst_ = p.id_jbpm)"
@@ -43,11 +44,11 @@ public class DocumentoAnexoList extends EntityList<Documento> {
 
     @Override
     protected String getDefaultEjbql() {
-    	String banco = EppProperties.getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
+    	DatabaseType databaseType = Configuration.getInstance().getDatabase().getDatabaseType();
     	String queryAppend = "";
-    	if ("PostgreSQL".equals(banco)){
+    	if (databaseType.equals(DatabaseType.PostgreSQL)){
     		queryAppend = " and pd.in_excluido = false and bin.in_minuta = false ";
-    	} else if ("SQLServer".equals(banco)) {
+    	} else if (databaseType.equals(DatabaseType.SQLServer) || databaseType.equals(DatabaseType.Oracle)) {
     		queryAppend = " and pd.in_excluido = 0 and bin.in_minuta = 0 ";
     	}
         return DEFAULT_EJBQL + queryAppend;

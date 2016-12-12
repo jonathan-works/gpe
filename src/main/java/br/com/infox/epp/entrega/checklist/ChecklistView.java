@@ -16,16 +16,22 @@ import javax.inject.Named;
 import javax.persistence.OptimisticLockException;
 
 import org.jboss.seam.faces.FacesMessages;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.primefaces.model.LazyDataModel;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.MovimentarController;
+import br.com.infox.epp.processo.marcador.MarcadorSearch;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.Taskpage;
 import br.com.infox.ibpm.variable.TaskpageParameter;
@@ -37,6 +43,7 @@ public class ChecklistView implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static final String PARAMETER_PASTA = "pastaChecklist";
+    private static final String PARAMETER_EXIBIR_NAO_VERIFICADO = "exibirNaoVerificado";
 
     @Inject
     private ChecklistService checklistService;
@@ -48,9 +55,15 @@ public class ChecklistView implements Serializable {
     private TaskInstanceHome taskInstanceHome;
     @Inject
     private PastaManager pastaManager;
+    @Inject
+    private MarcadorSearch marcadorSearch;
+    @Inject
+    private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
 
     @TaskpageParameter(name = PARAMETER_PASTA, description = "Pasta a ser considerada no checklist")
     private Pasta pasta;
+    @TaskpageParameter(name = PARAMETER_EXIBIR_NAO_VERIFICADO, type = "Boolean", description = "Deve exibir opção 'Não verificado'?")
+    private Boolean exibirNaoVerificado;
 
     // Controle geral
     private Processo processo;
@@ -60,10 +73,11 @@ public class ChecklistView implements Serializable {
     private SelectItem[] classificacoesDocumento;
     private SelectItem[] situacoes;
     private SelectItem[] situacoesCompletas;
+    private ChecklistSituacao[] checklistSituacaoOptions;
 
     // Controle do CheckList
     private Checklist checklist;
-    private LazyDataModel<ChecklistDoc> documentoList;
+    private ChecklistDocLazyDataModel documentoList;
     private UsuarioLogin usuarioLogado;
     private String message;
     private ChecklistSituacao situacaoBloco;
@@ -72,6 +86,7 @@ public class ChecklistView implements Serializable {
     private void init() {
         processo = movimentarController.getProcesso();
         pasta = retrievePasta();
+        exibirNaoVerificado = retrieveExibirNaoVerificado();
         if (pasta == null) {
             hasPasta = false;
         } else {
@@ -89,7 +104,11 @@ public class ChecklistView implements Serializable {
      * @return Pasta, caso encontre, null caso contrário.
      */
     private Pasta retrievePasta() {
-        Object nomePasta = taskInstanceHome.getCurrentTaskInstance().getVariable(PARAMETER_PASTA);
+        TaskInstance taskInstance = taskInstanceHome.getCurrentTaskInstance();
+        if (taskInstance == null) { // isso ocorre quando a raia é dinâmica e o usuário que movimentou não tem permissão
+            return null;
+        }
+        Object nomePasta = taskInstance.getVariable(PARAMETER_PASTA);
         if (nomePasta == null) {
             message = "Não foi possível recuperar o parâmetro com o nome da pasta.";
             return null;
@@ -100,6 +119,26 @@ public class ChecklistView implements Serializable {
             }
             return pasta;
         }
+    }
+
+    private Boolean retrieveExibirNaoVerificado() {
+        TaskInstance taskInstance = taskInstanceHome.getCurrentTaskInstance();
+        if (taskInstance == null) { // isso ocorre quando a raia é dinâmica e o usuário que movimentou não tem permissão
+            return true;
+        }
+        Object param = taskInstance.getVariable(PARAMETER_EXIBIR_NAO_VERIFICADO);
+        if (param == null) {
+            return true;
+        } else {
+        	if(param instanceof Boolean)
+        		return (Boolean) param;
+            String paramValue = ((String) param).trim().toLowerCase();
+            return paramValue.isEmpty() || !"false".equals(paramValue);
+        }
+    }
+
+    public List<String> autoCompleteMarcadores(String query) {
+        return marcadorSearch.listByPastaAndCodigo(pasta.getId(), query.toUpperCase(), documentoList.getCodigosMarcadores());
     }
 
     public void onChangeSituacao(ChecklistDoc clDoc) {
@@ -184,7 +223,12 @@ public class ChecklistView implements Serializable {
 
     public SelectItem[] getSituacoes() {
         if (situacoes == null) {
-            ChecklistSituacao[] values = ChecklistSituacao.getValues();
+            ChecklistSituacao[] values;
+            if (exibirNaoVerificado) {
+                values = ChecklistSituacao.getValues();
+            } else {
+                values = new ChecklistSituacao[] {ChecklistSituacao.CON, ChecklistSituacao.NCO};
+            }
             situacoes = new SelectItem[values.length];
             for (int i = 0; i < values.length; i++) {
                 ChecklistSituacao situacao = values[i];
@@ -196,7 +240,12 @@ public class ChecklistView implements Serializable {
 
     public SelectItem[] getSituacoesCompletas() {
         if (situacoesCompletas == null) {
-            ChecklistSituacao[] values = ChecklistSituacao.values();
+            ChecklistSituacao[] values;
+            if (exibirNaoVerificado) {
+                values = ChecklistSituacao.values();
+            } else {
+                values = new ChecklistSituacao[] {ChecklistSituacao.NIF, ChecklistSituacao.CON, ChecklistSituacao.NCO};
+            }
             situacoesCompletas = new SelectItem[values.length];
             for (int i = 0; i < values.length; i++) {
                 ChecklistSituacao situacao = values[i];
@@ -207,7 +256,11 @@ public class ChecklistView implements Serializable {
     }
 
     public ChecklistSituacao[] getChecklistSituacaoOptions() {
-        return ChecklistSituacao.getValues();
+        if (checklistSituacaoOptions == null) {
+            checklistSituacaoOptions = exibirNaoVerificado ? ChecklistSituacao.getValues()
+                    : new ChecklistSituacao[] {ChecklistSituacao.CON, ChecklistSituacao.NCO};
+        }
+        return checklistSituacaoOptions;
     }
 
     public boolean isHasPasta() {
@@ -216,10 +269,6 @@ public class ChecklistView implements Serializable {
 
     public LazyDataModel<ChecklistDoc> getDocumentoList() {
         return documentoList;
-    }
-
-    public void setDocumentoList(LazyDataModel<ChecklistDoc> documentoList) {
-        this.documentoList = documentoList;
     }
 
     public String getMessage() {
@@ -240,5 +289,14 @@ public class ChecklistView implements Serializable {
 
     public void setSituacaoBloco(ChecklistSituacao situacaoBloco) {
         this.situacaoBloco = situacaoBloco;
+    }
+    
+    public String getTextoDocumentoExcluido(Documento documento) {
+    	HistoricoStatusDocumento historico = historicoStatusDocumentoManager.getUltimoHistorico(documento, TipoAlteracaoDocumento.E);  
+    	if(historico == null) {
+    		return ""; 
+    	}
+    	String texto = String.format("Excluído por %s. Motivo: %s", historico.getUsuarioAlteracao(), historico.getMotivo());
+    	return texto;
     }
 }

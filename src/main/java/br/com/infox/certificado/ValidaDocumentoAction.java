@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 
 import javax.faces.event.AbortProcessingException;
 import javax.inject.Inject;
@@ -17,17 +18,17 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.certificado.bean.CertificateSignatureBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
@@ -73,7 +74,7 @@ public class ValidaDocumentoAction implements Serializable {
 	@Inject
 	private AssinaturaDocumentoManager assinaturaDocumentoManager;
 	@Inject
-	private CertificateSignatures certificateSignatures;
+	private AssinadorService assinadorService;
 	@Inject
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
 	@Inject
@@ -128,7 +129,7 @@ public class ValidaDocumentoAction implements Serializable {
 		final List<AssinaturaDocumento> assinaturas = getListAssinaturaDocumento();
 		if (assinaturas != null) {
 			for (final AssinaturaDocumento assinatura : assinaturas) {
-				if (result = assinatura.getUsuario().equals(usuarioLogin)) {
+				if (result = assinatura.getPessoaFisica().equals(usuarioLogin.getPessoaFisica())) {
 					break;
 				}
 			}
@@ -139,18 +140,18 @@ public class ValidaDocumentoAction implements Serializable {
 	public void assinaDocumento(UsuarioPerfil usuarioPerfil) {
 		if (this.documentoBin != null && usuarioPerfil.getAtivo() && !isAssinadoPor(usuarioPerfil)) {
 			try {
-				CertificateSignatureBundleBean bundle = getSignature();
-				for (CertificateSignatureBean certificateSignatureBean : bundle.getSignatureBeanList()) {
-					if (certificateSignatureBean.getDocumentMD5().equals(documentoBin.getMd5Documento())) {
-						assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certificateSignatureBean.getCertChain(),
-								certificateSignatureBean.getSignature());
+				List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(token);
+				for (DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
+					UUID uuidDocumentoBin = dadosAssinatura.getUuidDocumentoBin();
+					if (uuidDocumentoBin != null && uuidDocumentoBin.equals(documentoBin.getUuid())) {
+						assinadorService.assinar(dadosAssinatura, usuarioPerfil);
 						setPodeIniciarFluxoAnaliseDocumentos(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento()));
 						break;
 					}
 				}
 				listAssinaturaDocumento = null;
 				setPodeIniciarFluxoAnaliseDocumentos(validaPodeIniciarFluxoAnalise());
-			} catch (CertificadoException | AssinaturaException | DAOException e) {
+			} catch (AssinaturaException | DAOException e) {
 				LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
 				FacesMessages.instance().add(Severity.ERROR, e.getMessage());
 				throw new AbortProcessingException();
@@ -231,22 +232,6 @@ public class ValidaDocumentoAction implements Serializable {
 		this.token = token;
 	}
 
-	private CertificateSignatureBundleBean getSignature() throws CertificadoException {
-		CertificateSignatureBundleBean bundle = certificateSignatures.get(getToken());
-		if (bundle == null) {
-			throw new CertificadoException(InfoxMessages.getInstance().get("assinatura.error.hashExpired"));
-		} else {
-			switch (bundle.getStatus()) {
-			case ERROR:
-			case UNKNOWN:
-				throw new CertificadoException(InfoxMessages.getInstance().get("assinatura.error.unknown"));
-			default:
-				break;
-			}
-		}
-		return bundle;
-	}
-
 	public Integer getIdDocumento() {
 		return idDocumento;
 	}
@@ -315,7 +300,9 @@ public class ValidaDocumentoAction implements Serializable {
 	}
 
 	private boolean papelInclusaoPossuiRecursoAnexar(Documento documento) {
-		Papel papelInclusao = documento.getPerfilTemplate().getPapel();
+		PerfilTemplate perfilTemplate = documento.getPerfilTemplate();
+		if (perfilTemplate == null) return true;
+        Papel papelInclusao = perfilTemplate.getPapel();
 		if(papelInclusao.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE))
 			return true;
 		

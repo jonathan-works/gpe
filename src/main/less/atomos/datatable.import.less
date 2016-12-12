@@ -149,6 +149,93 @@
 			color: @menu-bg-color;
 		}
 	}
+	.flex-table{
+				display: block;
+				overflow: auto;
+				max-height: 300px;
+				overflow-x: visible;
+				overflow-y: auto;
+				>tbody{
+					.prefixed-value(display, flex);
+					.prefixed-atrib(flex-wrap, wrap);
+					.prefixed-atrib(justify-content, space-between);
+					overflow-x: hidden;
+					padding: 0 4px 0 0;
+				}
+	}
+	.flex-table-row{
+		display:block;
+		.prefixed-atrib(flex-grow, 0);
+		.prefixed-atrib(flex-shrink, 0);
+		.prefixed-atrib(flex-basis, ~"calc(50% - 5px)");
+		
+        padding:2px 2px;
+        &:nth-child(4n+1),&:nth-child(4n){
+        }
+        &:nth-child(4n+2),&:nth-child(4n+3){
+            background-color:rgba(0,0,0,0.15);
+        }
+		
+		&.hidden{
+		    display:none;
+		}
+		>td {
+		    display: block;
+				>.ui-outputpanel {
+					.prefixed-value(display, flex);
+					> * {
+					    .prefixed-atrib(flex-grow, 0);
+					    .prefixed-atrib(flex-shrink, 0);
+					}
+					>.text-content {
+					    .prefixed-atrib(flex-grow, 1);
+					    .prefixed-atrib(flex-shrink, 1);
+					}
+				}
+		}
+	}
+	.flex-table-colors{
+	}
+	.flex-table-row-colors{
+	}
+	.filter-container{
+			display:block;
+			tbody{
+					text-align:left;
+    			font-weight:normal;
+			}
+			tr&-row{
+					display:inline-block;
+			}
+			td&-col, th&-col {
+				display:block;
+				padding: 4px;
+				overflow: visible;
+				border-style: solid;
+				border-width: 1px;
+				border-radius: 10px;
+			}
+	}
+	.filter-container-colors{
+			td&-col, th&-col {
+				border-color:@base-border-color;
+			}
+	}
+}
+table.flex-table{
+	#datatables > .flex-table;
+}
+tr.flex-row{
+	#datatables > .flex-table-row;
+}
+.filter-container {
+	#datatables > .filter-container;
+}
+.filter-label{
+    font-weight:bold;
+}
+.filter-value {
+    padding:0 2px;
 }
 .ifx-dataTable {
 	#datatables > .prime-dataTable;
@@ -180,7 +267,7 @@
 	overflow: auto;
 }
 .dtable-p {
-	&.rf-p {
+	div&,&.rf-p {
 		display: inline-block;
 		width: calc(~"100% - 291px");
 		padding: 0;
@@ -199,6 +286,7 @@
 		}
 		&.p-list-panel {
 			width: 100%;
+			overflow: auto;
 		}
 	}
 	&.grid-lateral-editor-ajuda {

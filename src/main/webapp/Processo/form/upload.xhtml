@@ -21,7 +21,7 @@
 	     label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 	     value="#{formField.properties.classificacaoDocumento}"
 	     items="#{classificacoesDocumento}"
-	     showLabelSelecione="true" required="false"
+	     showLabelSelecione="true" required="#{formField.properties.required}"
 	     rendered="#{not readonly and not formField.value.hasAssinatura() and not formField.value.documentoBin.suficientementeAssinado}"
 	     disabled="#{classificacoesDocumento.size eq 1}">
 	     <a:ajax render="#{varId}UploadDiv #{varId}assinaturaDocumentoDiv" event="change" execute="@this" limitRender="true" />
@@ -93,17 +93,15 @@
 			
 			<a:jsFunction name="assinar" action="#{controller.assinar()}"
 				execute="@this, #{varId}assinaturaDocumentoDiv"
-				render="#{varId}Div, pageBodyDialogMessage"
+				render="#{varId}Div :pageBodyDialogMessage" 
 				oncomplete="infox.hideLoading();"/>
 				
 			<wi:certificadoDigital
 	            id="#{varId}CertificadoDigital"
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-				reRender="pageBodyDialogMessage, #{varId}UploadDiv, #{varId}ClassificacaoDocumento"
 				tokenField="#{controller.tokenToSign}"
-				propertyValue="#{formField.value}"
-				propertyTarget="#{controller.documentoToSign}"
-				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
+				reRender="#{varId}ClassificacaoDocumento #{varId}UploadDiv #{varId}assinaturaDocumentoDiv :pageBodyDialogMessage"
+				documentoBin="#{formField.value.documentoBin}"
 				functionPreSign="infox.showLoading();"
 				functionPosSign="assinar();" >
 	       </wi:certificadoDigital>

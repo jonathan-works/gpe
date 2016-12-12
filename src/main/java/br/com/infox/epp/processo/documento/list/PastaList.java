@@ -45,6 +45,7 @@ public class PastaList extends EntityList<Pasta> {
     protected void addSearchFields() {
         addSearchField("processo", SearchCriteria.IGUAL);
         addSearchField("nome", SearchCriteria.CONTENDO);
+        addSearchField("codigo", SearchCriteria.CONTENDO);
         addSearchField("descricao", SearchCriteria.CONTENDO);
     }
 

@@ -14,6 +14,7 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
@@ -26,6 +27,8 @@ import org.jbpm.graph.node.Join;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
+
+import com.google.common.base.Strings;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -500,4 +503,27 @@ public class NodeFitter extends Fitter implements Serializable {
 		this.managedCatchSignal = managedCatchSignal;
 	}
     
+	public List<Node> getNodesAutocomplete(String query) {
+		List<Node> nodes = new ArrayList<>();
+		if (Strings.isNullOrEmpty(query)) {
+			nodes.addAll(getNodes());
+		} else {
+			query = StringUtils.stripAccents(query).toLowerCase();
+			for (Node node : getNodes()) {
+				if (StringUtils.stripAccents(node.getName()).toLowerCase().contains(query)) {
+					nodes.add(node);
+				}
+			}
+		}
+		return nodes;
+	}
+	
+	public Node getNodeByKey(String key) {
+		for (Node node : getNodes()) {
+			if (node.getKey().equals(key)) {
+				return node;
+			}
+		}
+		return null;
+	}
 }

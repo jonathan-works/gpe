@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.comunicacao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -18,11 +19,23 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.joda.time.DateTime;
+
+import com.google.common.base.Strings;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
+
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -32,8 +45,6 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.comunicacao.query.ModeloComunicacaoQuery;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
-
-import com.google.common.base.Strings;
 
 @Entity
 @Table(name = "tb_modelo_comunicacao")
@@ -100,11 +111,51 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 	@Column(name = "cd_task_key", nullable = true)
     private String taskKey;
 	
+	@Column(name = "cd_marcadores", nullable = true)
+	private String codigosMarcadoresString = "";
+	
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_alteracao")
+    private Date dataAlteracao;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DestinatarioModeloComunicacao> destinatarios = new ArrayList<>(0);
 	
-	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
+	@OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DocumentoModeloComunicacao> documentos = new ArrayList<>(0);
+	
+	@Transient
+	private List<String> codigosMarcadores = new ArrayList<>(1);
+
+    @PrePersist
+    private void prePersist() {
+	updateColumnCodigoMarcadoresString();
+	setDataAlteracao(DateTime.now().toDate());
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+	updateColumnCodigoMarcadoresString();
+	setDataAlteracao(DateTime.now().toDate());
+    }
+
+	@PostLoad
+	private void postLoad() {
+	    loadMarcadoresList();
+	}
+
+    private void loadMarcadoresList() {
+        if (!StringUtil.isEmpty(codigosMarcadoresString)) {
+	        TypeToken<List<String>> typeToken = new TypeToken<List<String>>(){private static final long serialVersionUID = 1L;};
+	        codigosMarcadores = new GsonBuilder().create().fromJson(codigosMarcadoresString, typeToken.getType());
+	    }
+    }
+	
+	private void updateColumnCodigoMarcadoresString() {
+	    if (codigosMarcadores != null && !codigosMarcadores.isEmpty()) {
+	        this.codigosMarcadoresString = new GsonBuilder().create().toJson(codigosMarcadores);
+	    }
+	}
 	
 	public Long getId() {
 		return id;
@@ -217,8 +268,31 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 	public void setEnviarRelatoria(Boolean enviarRelatoria) {
 		this.enviarRelatoria = enviarRelatoria;
 	}
+	
+    public void setCodigosMarcadores(List<String> codigosMarcadores) {
+        this.codigosMarcadores = new ArrayList<>();
+        if(codigosMarcadores == null)
+        	return ;
+        	for (String codigo : codigosMarcadores) {
+    			this.codigosMarcadores.add(codigo.toUpperCase());
+    		}
+        
+        updateColumnCodigoMarcadoresString();
+    }
+    
+    public List<String> getCodigosMarcadores() {
+        return codigosMarcadores;
+    }
 
-	@Transient
+    public Date getDataAlteracao() {
+	return dataAlteracao;
+    }
+
+    public void setDataAlteracao(Date dataAlteracao) {
+	this.dataAlteracao = dataAlteracao;
+    }
+
+    @Transient
 	public boolean isDocumentoBinario() {
 		return Strings.isNullOrEmpty(getTextoComunicacao());
 	}

@@ -41,6 +41,7 @@ public class RelacionamentoManager {
     
 	public void remove(Integer idRelacionamento) {
 		Relacionamento relacionamento = relacionamentoDAO.find(idRelacionamento);
+		getEntityManager().refresh(relacionamento);
 		relacionamentoDAO.remove(relacionamento);
 	}
 

@@ -1,12 +1,15 @@
 package br.com.infox.epp.system.parametro;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import javax.persistence.metamodel.SingularAttribute;
 
+import br.com.infox.core.type.Displayable;
 import br.com.infox.epp.FieldType;
 import br.com.infox.epp.Filter;
 
@@ -26,9 +29,16 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 	private final SingularAttribute<T, ?> keyAttribute;
 	private final SingularAttribute<T, ?> labelAttribute;
 	private final List<Filter<T,?>> filters;
+    private final boolean sistema;
+    private final boolean readonly;
+    private final List<Entry<String,String>> actions;
+    private Enum<? extends Displayable>[] enumValues;
 
 	public ParametroDefinition(String grupo, String nome, FieldType tipo) {
 		this(grupo, nome, tipo, Precedencia.DEFAULT);
+	}
+	public ParametroDefinition(String grupo, String nome, FieldType tipo, boolean sistema, boolean readonly) {
+	    this(grupo, nome, tipo, sistema, readonly, null, null, Precedencia.DEFAULT);
 	}
 
 	public ParametroDefinition(String grupo, String nome, FieldType tipo, int precedencia) {
@@ -41,6 +51,9 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 	}
 
 	public ParametroDefinition(String grupo, String nome, FieldType tipo, SingularAttribute<T, ?> keyAttribute, SingularAttribute<T, ?> labelAttribute, int precedencia) {
+	    this(grupo, nome, tipo, false, false, keyAttribute, labelAttribute, precedencia);
+	}
+	public ParametroDefinition(String grupo, String nome, FieldType tipo, boolean sistema, boolean readonly, SingularAttribute<T, ?> keyAttribute, SingularAttribute<T, ?> labelAttribute, int precedencia) {
 		this.nome = Objects.requireNonNull(nome);
 		this.tipo = Objects.requireNonNull(tipo);
 		this.grupo = Objects.requireNonNull(grupo);
@@ -48,6 +61,9 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 		this.keyAttribute = keyAttribute;
 		this.labelAttribute = labelAttribute;
 		this.filters = new ArrayList<>();
+		this.sistema = sistema;
+		this.readonly = readonly;
+		this.actions = new ArrayList<>();
 	}
 
 	public SingularAttribute<T, ?> getKeyAttribute() {
@@ -73,8 +89,15 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 	public int getPrecedencia() {
 		return precedencia;
 	}
-
-	@Override
+	
+	public boolean isSistema() {
+            return sistema;
+        }
+        public boolean isReadonly() {
+            return readonly;
+        }
+        
+        @Override
 	public int compareTo(ParametroDefinition<T> o) {
 		int result = nome.compareTo(o.nome);
 		if (result == 0) {
@@ -112,7 +135,19 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
+	public ParametroDefinition<T> addAction(String actionName, String actionExpression){
+	    getActions().add(new AbstractMap.SimpleImmutableEntry<String,String>(actionName, actionExpression));
+	    return this;
+	}
+	public ParametroDefinition<T> addActions(List<Entry<String,String>> actionExpressions){
+	    getActions().addAll(actionExpressions);
+	    return this;
+	}
+	
+	public List<Entry<String,String>> getActions() {
+            return actions;
+        }
+    @SuppressWarnings("unchecked")
 	public ParametroDefinition<T> addFilters(Filter<T,?>... filters){
 		for (int i = 0; i < filters.length; i++) {
 			Filter<T, ?> filter = filters[i];
@@ -129,5 +164,12 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 	public List<Filter<T,?>> getFilters() {
 		return Collections.unmodifiableList(filters);
 	}
-
+	
+	public Enum<? extends Displayable>[] getEnumValues() {
+		return enumValues;
+	}
+	
+	public void setEnumValues(Enum<? extends Displayable>[] enumValues) {
+		this.enumValues = enumValues;
+	}
 }

@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.documento.dao;
 
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_EXCLUIDO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_MARCADOR_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_NUMERO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SIGILO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR;
@@ -9,6 +10,7 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_NOME;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_AND_DESCRICAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CODIGO_MARCADOR;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_DESCRICAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_LOCALIZACAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NOME;
@@ -85,6 +87,11 @@ public class PastaDAO extends DAO<Pasta> {
 		if (documentoFilter.getNumeroDocumento() != null) {
 			baseQuery = baseQuery + FILTER_NUMERO_DOCUMENTO;
 			parameters.put(PARAM_NUMERO_DOCUMENTO, documentoFilter.getNumeroDocumento());
+		}
+		if (documentoFilter.getMarcadores() != null) {
+		    for (String codigoMarcador : documentoFilter.getMarcadores()) {
+		        baseQuery = baseQuery + FILTER_MARCADOR_DOCUMENTO.replace("{" + PARAM_CODIGO_MARCADOR + "}", codigoMarcador.toUpperCase());
+		    }
 		}
 		return baseQuery;
 	}

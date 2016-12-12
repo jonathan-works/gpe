@@ -47,13 +47,13 @@ var InfoxBpmnModeler =
 
 	var camundaModdle = __webpack_require__(1);
 	var BpmnModeler = __webpack_require__(2);
-	var InfoxPaletteProvider = __webpack_require__(808);
-	var InfoxReplaceMenuProvider = __webpack_require__(840);
-	var InfoxContextPadProvider = __webpack_require__(841);
-	var InfoxBpmnRules = __webpack_require__(842);
-	var brazilianPortugueseTranslation = __webpack_require__(843);
-	var ParallelGatewayDirectionProvider = __webpack_require__(844);
-	var InfoxLabelEditingProvider = __webpack_require__(845);
+	var InfoxPaletteProvider = __webpack_require__(828);
+	var InfoxReplaceMenuProvider = __webpack_require__(853);
+	var InfoxContextPadProvider = __webpack_require__(854);
+	var InfoxBpmnRules = __webpack_require__(855);
+	var brazilianPortugueseTranslation = __webpack_require__(856);
+	var ParallelGatewayDirectionProvider = __webpack_require__(857);
+	var InfoxLabelEditingProvider = __webpack_require__(858);
 	var BpmnModdle = __webpack_require__(176);
 
 	/**
@@ -268,6 +268,11 @@ var InfoxBpmnModeler =
 						"name": "errorCodeVariable",
 						"isAttr": true,
 						"type": "String"
+					},
+					{
+						"name": "errorMessageVariable",
+						"isAttr": true,
+						"type": "String"
 					}
 				]
 			},
@@ -441,7 +446,7 @@ var InfoxBpmnModeler =
 					{
 						"name": "calledElementVersion",
 						"isAttr": true,
-						"type": "Integer"
+						"type": "String"
 					},
 					{
 						"name": "calledElementTenantId",
@@ -462,10 +467,20 @@ var InfoxBpmnModeler =
 					{
 						"name": "caseVersion",
 						"isAttr": true,
-						"type": "Integer"
+						"type": "String"
 					},
 					{
 						"name": "caseTenantId",
+						"isAttr": true,
+						"type": "String"
+					},
+					{
+						"name": "variableMappingClass",
+						"isAttr": true,
+						"type": "String"
+					},
+					{
+						"name": "variableMappingDelegateExpression",
 						"isAttr": true,
 						"type": "String"
 					}
@@ -774,7 +789,6 @@ var InfoxBpmnModeler =
 					},
 					{
 						"name": "expression",
-						"isAttr": true,
 						"type": "String"
 					},
 					{
@@ -866,8 +880,9 @@ var InfoxBpmnModeler =
 						"type": "Script"
 					},
 					{
-						"name": "field",
-						"type": "Field"
+						"name": "fields",
+						"type": "Field",
+						"isMany": true
 					}
 				]
 			},
@@ -902,8 +917,9 @@ var InfoxBpmnModeler =
 						"type": "Script"
 					},
 					{
-						"name": "field",
-						"type": "Field"
+						"name": "fields",
+						"type": "Field",
+						"isMany": true
 					}
 				]
 			},
@@ -980,6 +996,11 @@ var InfoxBpmnModeler =
 						"name": "fields",
 						"type": "FormField",
 						"isMany": true
+					},
+					{
+						"name": "businessKey",
+						"type": "String",
+						"isAttr": true
 					}
 				]
 			},
@@ -1076,7 +1097,7 @@ var InfoxBpmnModeler =
 
 	var Viewer = __webpack_require__(6);
 
-	var NavigatedViewer = __webpack_require__(486);
+	var NavigatedViewer = __webpack_require__(485);
 
 	var initialDiagram =
 	  '<?xml version="1.0" encoding="UTF-8"?>' +
@@ -1243,31 +1264,26 @@ var InfoxBpmnModeler =
 
 	Modeler.prototype._interactionModules = [
 	  // non-modeling components
-	  __webpack_require__(496),
-	  __webpack_require__(600),
-	  __webpack_require__(607),
-	  __webpack_require__(487),
-	  __webpack_require__(492),
-	  __webpack_require__(615),
-	  __webpack_require__(620)
+	  __webpack_require__(491),
+	  __webpack_require__(495),
+	  __webpack_require__(486)
 	];
 
 	Modeler.prototype._modelingModules = [
 	  // modeling components
-	  __webpack_require__(627),
-	  __webpack_require__(637),
-	  __webpack_require__(650),
-	  __webpack_require__(655),
-	  __webpack_require__(661),
-	  __webpack_require__(665),
-	  __webpack_require__(667),
-	  __webpack_require__(675),
-	  __webpack_require__(690),
-	  __webpack_require__(692),
-	  __webpack_require__(699),
-	  __webpack_require__(790),
-	  __webpack_require__(802),
-	  __webpack_require__(806)
+	  __webpack_require__(500),
+	  __webpack_require__(507),
+	  __webpack_require__(523),
+	  __webpack_require__(532),
+	  __webpack_require__(537),
+	  __webpack_require__(546),
+	  __webpack_require__(799),
+	  __webpack_require__(812),
+	  __webpack_require__(619),
+	  __webpack_require__(592),
+	  __webpack_require__(817),
+	  __webpack_require__(821),
+	  __webpack_require__(823)
 	];
 
 
@@ -1510,7 +1526,7 @@ var InfoxBpmnModeler =
 
 	var inherits = __webpack_require__(3);
 
-	var Importer = __webpack_require__(382);
+	var Importer = __webpack_require__(381);
 
 
 	function checkValidationError(err) {
@@ -1916,10 +1932,10 @@ var InfoxBpmnModeler =
 
 	// modules the viewer is composed of
 	Viewer.prototype._modules = [
-	  __webpack_require__(420),
-	  __webpack_require__(447),
-	  __webpack_require__(453),
-	  __webpack_require__(469)
+	  __webpack_require__(419),
+	  __webpack_require__(446),
+	  __webpack_require__(452),
+	  __webpack_require__(472)
 	];
 
 	// default moddle extensions the viewer is composed of
@@ -1927,8 +1943,8 @@ var InfoxBpmnModeler =
 
 	/* <project-logo> */
 
-	var PoweredBy = __webpack_require__(484),
-	    domEvent = __webpack_require__(485);
+	var PoweredBy = __webpack_require__(483),
+	    domEvent = __webpack_require__(484);
 
 	/**
 	 * Adds the project logo to the diagram container as
@@ -4118,6 +4134,7 @@ var InfoxBpmnModeler =
 	        }
 
 	        if ((provider[2] === 'factory' || provider[2] === 'type') && provider[1].$scope) {
+	          /*jshint -W083 */
 	          forceNewInstances.forEach(function(scope) {
 	            if (provider[1].$scope.indexOf(scope) !== -1) {
 	              fromParentModule[name] = [provider[2], provider[1]];
@@ -15690,7 +15707,11 @@ var InfoxBpmnModeler =
 	}
 
 	/**
-	 * Returns the surrounding bbox for all elements in the array or the element primitive.
+	 * Returns the surrounding bbox for all elements in
+	 * the array or the element primitive.
+	 *
+	 * @param {Array<djs.model.Shape>|djs.model.Shape} elements
+	 * @param {Boolean} stopRecursion
 	 */
 	function getBBox(elements, stopRecursion) {
 
@@ -15744,16 +15765,15 @@ var InfoxBpmnModeler =
 	/**
 	 * Returns all elements that are enclosed from the bounding box.
 	 *
-	 * @param {Array<Object>} elements List of Elements to search through
-	 * @param {Object} bbox the enclosing bbox.
-	 * <ul>
-	 *  <li>If bbox.(width|height) is not specified
-	 * the method returns all elements with element.x/y &gt; bbox.x/y
-	 * </li>
-	 *  <li>If only bbox.x or bbox.y is specified, method return all elements with
-	 *  e.x &gt; bbox.x or e.y &gt; bbox.y.</li>
-	 * </ul>
+	 *   * If bbox.(width|height) is not specified the method returns
+	 *     all elements with element.x/y > bbox.x/y
+	 *   * If only bbox.x or bbox.y is specified, method return all elements with
+	 *     e.x > bbox.x or e.y > bbox.y
 	 *
+	 * @param {Array<djs.model.Shape>} elements List of Elements to search through
+	 * @param {djs.model.Shape} bbox the enclosing bbox.
+	 *
+	 * @return {Array<djs.model.Shape>} enclosed elements
 	 */
 	function getEnclosedElements(elements, bbox) {
 
@@ -16131,6 +16151,7 @@ var InfoxBpmnModeler =
 
 	var Model = __webpack_require__(142);
 
+	var assign = __webpack_require__(77);
 
 	/**
 	 * A factory for diagram-js shapes
@@ -16168,7 +16189,7 @@ var InfoxBpmnModeler =
 	 */
 	ElementFactory.prototype.create = function(type, attrs) {
 
-	  attrs = attrs || {};
+	  attrs = assign({}, attrs || {});
 
 	  if (!attrs.id) {
 	    attrs.id = type + '_' + (this._uid++);
@@ -18566,10 +18587,10 @@ var InfoxBpmnModeler =
 	var BpmnModdle = __webpack_require__(202);
 
 	var packages = {
-	  bpmn: __webpack_require__(378),
-	  bpmndi: __webpack_require__(379),
-	  dc: __webpack_require__(380),
-	  di: __webpack_require__(381)
+	  bpmn: __webpack_require__(377),
+	  bpmndi: __webpack_require__(378),
+	  dc: __webpack_require__(379),
+	  di: __webpack_require__(380)
 	};
 
 	module.exports = function(additionalPackages, options) {
@@ -19489,7 +19510,7 @@ var InfoxBpmnModeler =
 
 	var Moddle = __webpack_require__(204),
 	    XmlReader = __webpack_require__(279),
-	    XmlWriter = __webpack_require__(370);
+	    XmlWriter = __webpack_require__(369);
 
 	/**
 	 * A sub class of {@link Moddle} with support for import and export of BPMN 2.0 xml files.
@@ -23079,7 +23100,7 @@ var InfoxBpmnModeler =
 	    Types = __webpack_require__(269),
 	    coerceType = Types.coerceType,
 	    isSimpleType = Types.isSimple,
-	    common = __webpack_require__(369),
+	    common = __webpack_require__(368),
 	    XSI_TYPE = common.XSI_TYPE,
 	    XSI_URI = common.DEFAULT_NS_MAP.xsi,
 	    serializeAsType = common.serializeAsType,
@@ -23221,6 +23242,8 @@ var InfoxBpmnModeler =
 	      throw error('expected element');
 	    }
 
+	    var elementsById = this.elementsById;
+
 	    var descriptor = getModdleDescriptor(element);
 
 	    var idProperty = descriptor.idProperty,
@@ -23230,7 +23253,12 @@ var InfoxBpmnModeler =
 	      id = element.get(idProperty.name);
 
 	      if (id) {
-	        this.elementsById[id] = element;
+
+	        if (elementsById[id]) {
+	          throw error('duplicate ID <' + id + '>');
+	        }
+
+	        elementsById[id] = element;
 	      }
 	    }
 	  };
@@ -26593,7 +26621,7 @@ var InfoxBpmnModeler =
 	      typeof Buffer.isBuffer === 'function' &&
 	      Buffer.isBuffer(data)) {
 	    if (!this._decoder) {
-	      var SD = __webpack_require__(362).StringDecoder
+	      var SD = __webpack_require__(361).StringDecoder
 	      this._decoder = new SD('utf8')
 	    }
 	    data = this._decoder.write(data);
@@ -27807,9 +27835,6 @@ var InfoxBpmnModeler =
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
 	exports.INSPECT_MAX_BYTES = 50
-	Buffer.poolSize = 8192 // not used by this implementation
-
-	var rootParent = {}
 
 	/**
 	 * If `Buffer.TYPED_ARRAY_SUPPORT`:
@@ -27827,9 +27852,6 @@ var InfoxBpmnModeler =
 	 *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
 	 *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
 	 *
-	 *   - Safari 5-7 lacks support for changing the `Object.prototype.constructor` property
-	 *     on objects.
-	 *
 	 *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
 	 *
 	 *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
@@ -27842,14 +27864,16 @@ var InfoxBpmnModeler =
 	  ? global.TYPED_ARRAY_SUPPORT
 	  : typedArraySupport()
 
+	/*
+	 * Export kMaxLength after typed array support is determined.
+	 */
+	exports.kMaxLength = kMaxLength()
+
 	function typedArraySupport () {
-	  function Bar () {}
 	  try {
 	    var arr = new Uint8Array(1)
-	    arr.foo = function () { return 42 }
-	    arr.constructor = Bar
+	    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
 	    return arr.foo() === 42 && // typed array instances can be augmented
-	        arr.constructor === Bar && // constructor can be set
 	        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
 	        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
 	  } catch (e) {
@@ -27863,184 +27887,252 @@ var InfoxBpmnModeler =
 	    : 0x3fffffff
 	}
 
-	/**
-	 * Class: Buffer
-	 * =============
-	 *
-	 * The Buffer constructor returns instances of `Uint8Array` that are augmented
-	 * with function properties for all the node `Buffer` API functions. We use
-	 * `Uint8Array` so that square bracket notation works as expected -- it returns
-	 * a single octet.
-	 *
-	 * By augmenting the instances, we can avoid modifying the `Uint8Array`
-	 * prototype.
-	 */
-	function Buffer (arg) {
-	  if (!(this instanceof Buffer)) {
-	    // Avoid going through an ArgumentsAdaptorTrampoline in the common case.
-	    if (arguments.length > 1) return new Buffer(arg, arguments[1])
-	    return new Buffer(arg)
+	function createBuffer (that, length) {
+	  if (kMaxLength() < length) {
+	    throw new RangeError('Invalid typed array length')
+	  }
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    // Return an augmented `Uint8Array` instance, for best performance
+	    that = new Uint8Array(length)
+	    that.__proto__ = Buffer.prototype
+	  } else {
+	    // Fallback: Return an object instance of the Buffer class
+	    if (that === null) {
+	      that = new Buffer(length)
+	    }
+	    that.length = length
 	  }
 
-	  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-	    this.length = 0
-	    this.parent = undefined
+	  return that
+	}
+
+	/**
+	 * The Buffer constructor returns instances of `Uint8Array` that have their
+	 * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
+	 * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
+	 * and the `Uint8Array` methods. Square bracket notation works as expected -- it
+	 * returns a single octet.
+	 *
+	 * The `Uint8Array` prototype remains unmodified.
+	 */
+
+	function Buffer (arg, encodingOrOffset, length) {
+	  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
+	    return new Buffer(arg, encodingOrOffset, length)
 	  }
 
 	  // Common case.
 	  if (typeof arg === 'number') {
-	    return fromNumber(this, arg)
+	    if (typeof encodingOrOffset === 'string') {
+	      throw new Error(
+	        'If encoding is specified then the first argument must be a string'
+	      )
+	    }
+	    return allocUnsafe(this, arg)
 	  }
-
-	  // Slightly less common case.
-	  if (typeof arg === 'string') {
-	    return fromString(this, arg, arguments.length > 1 ? arguments[1] : 'utf8')
-	  }
-
-	  // Unusual.
-	  return fromObject(this, arg)
+	  return from(this, arg, encodingOrOffset, length)
 	}
 
-	function fromNumber (that, length) {
-	  that = allocate(that, length < 0 ? 0 : checked(length) | 0)
+	Buffer.poolSize = 8192 // not used by this implementation
+
+	// TODO: Legacy, not needed anymore. Remove in next major version.
+	Buffer._augment = function (arr) {
+	  arr.__proto__ = Buffer.prototype
+	  return arr
+	}
+
+	function from (that, value, encodingOrOffset, length) {
+	  if (typeof value === 'number') {
+	    throw new TypeError('"value" argument must not be a number')
+	  }
+
+	  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+	    return fromArrayBuffer(that, value, encodingOrOffset, length)
+	  }
+
+	  if (typeof value === 'string') {
+	    return fromString(that, value, encodingOrOffset)
+	  }
+
+	  return fromObject(that, value)
+	}
+
+	/**
+	 * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
+	 * if value is a number.
+	 * Buffer.from(str[, encoding])
+	 * Buffer.from(array)
+	 * Buffer.from(buffer)
+	 * Buffer.from(arrayBuffer[, byteOffset[, length]])
+	 **/
+	Buffer.from = function (value, encodingOrOffset, length) {
+	  return from(null, value, encodingOrOffset, length)
+	}
+
+	if (Buffer.TYPED_ARRAY_SUPPORT) {
+	  Buffer.prototype.__proto__ = Uint8Array.prototype
+	  Buffer.__proto__ = Uint8Array
+	  if (typeof Symbol !== 'undefined' && Symbol.species &&
+	      Buffer[Symbol.species] === Buffer) {
+	    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+	    Object.defineProperty(Buffer, Symbol.species, {
+	      value: null,
+	      configurable: true
+	    })
+	  }
+	}
+
+	function assertSize (size) {
+	  if (typeof size !== 'number') {
+	    throw new TypeError('"size" argument must be a number')
+	  } else if (size < 0) {
+	    throw new RangeError('"size" argument must not be negative')
+	  }
+	}
+
+	function alloc (that, size, fill, encoding) {
+	  assertSize(size)
+	  if (size <= 0) {
+	    return createBuffer(that, size)
+	  }
+	  if (fill !== undefined) {
+	    // Only pay attention to encoding if it's a string. This
+	    // prevents accidentally sending in a number that would
+	    // be interpretted as a start offset.
+	    return typeof encoding === 'string'
+	      ? createBuffer(that, size).fill(fill, encoding)
+	      : createBuffer(that, size).fill(fill)
+	  }
+	  return createBuffer(that, size)
+	}
+
+	/**
+	 * Creates a new filled Buffer instance.
+	 * alloc(size[, fill[, encoding]])
+	 **/
+	Buffer.alloc = function (size, fill, encoding) {
+	  return alloc(null, size, fill, encoding)
+	}
+
+	function allocUnsafe (that, size) {
+	  assertSize(size)
+	  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0)
 	  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-	    for (var i = 0; i < length; i++) {
+	    for (var i = 0; i < size; ++i) {
 	      that[i] = 0
 	    }
 	  }
 	  return that
 	}
 
+	/**
+	 * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
+	 * */
+	Buffer.allocUnsafe = function (size) {
+	  return allocUnsafe(null, size)
+	}
+	/**
+	 * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
+	 */
+	Buffer.allocUnsafeSlow = function (size) {
+	  return allocUnsafe(null, size)
+	}
+
 	function fromString (that, string, encoding) {
-	  if (typeof encoding !== 'string' || encoding === '') encoding = 'utf8'
+	  if (typeof encoding !== 'string' || encoding === '') {
+	    encoding = 'utf8'
+	  }
 
-	  // Assumption: byteLength() return value is always < kMaxLength.
+	  if (!Buffer.isEncoding(encoding)) {
+	    throw new TypeError('"encoding" must be a valid string encoding')
+	  }
+
 	  var length = byteLength(string, encoding) | 0
-	  that = allocate(that, length)
+	  that = createBuffer(that, length)
 
-	  that.write(string, encoding)
-	  return that
-	}
+	  var actual = that.write(string, encoding)
 
-	function fromObject (that, object) {
-	  if (Buffer.isBuffer(object)) return fromBuffer(that, object)
-
-	  if (isArray(object)) return fromArray(that, object)
-
-	  if (object == null) {
-	    throw new TypeError('must start with number, buffer, array or string')
+	  if (actual !== length) {
+	    // Writing a hex string, for example, that contains invalid characters will
+	    // cause everything after the first invalid character to be ignored. (e.g.
+	    // 'abxxcd' will be treated as 'ab')
+	    that = that.slice(0, actual)
 	  }
 
-	  if (typeof ArrayBuffer !== 'undefined') {
-	    if (object.buffer instanceof ArrayBuffer) {
-	      return fromTypedArray(that, object)
-	    }
-	    if (object instanceof ArrayBuffer) {
-	      return fromArrayBuffer(that, object)
-	    }
-	  }
-
-	  if (object.length) return fromArrayLike(that, object)
-
-	  return fromJsonObject(that, object)
-	}
-
-	function fromBuffer (that, buffer) {
-	  var length = checked(buffer.length) | 0
-	  that = allocate(that, length)
-	  buffer.copy(that, 0, 0, length)
-	  return that
-	}
-
-	function fromArray (that, array) {
-	  var length = checked(array.length) | 0
-	  that = allocate(that, length)
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
-	  }
-	  return that
-	}
-
-	// Duplicate of fromArray() to keep fromArray() monomorphic.
-	function fromTypedArray (that, array) {
-	  var length = checked(array.length) | 0
-	  that = allocate(that, length)
-	  // Truncating the elements is probably not what people expect from typed
-	  // arrays with BYTES_PER_ELEMENT > 1 but it's compatible with the behavior
-	  // of the old Buffer constructor.
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
-	  }
-	  return that
-	}
-
-	function fromArrayBuffer (that, array) {
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    // Return an augmented `Uint8Array` instance, for best performance
-	    array.byteLength
-	    that = Buffer._augment(new Uint8Array(array))
-	  } else {
-	    // Fallback: Return an object instance of the Buffer class
-	    that = fromTypedArray(that, new Uint8Array(array))
-	  }
 	  return that
 	}
 
 	function fromArrayLike (that, array) {
-	  var length = checked(array.length) | 0
-	  that = allocate(that, length)
+	  var length = array.length < 0 ? 0 : checked(array.length) | 0
+	  that = createBuffer(that, length)
 	  for (var i = 0; i < length; i += 1) {
 	    that[i] = array[i] & 255
 	  }
 	  return that
 	}
 
-	// Deserialize { type: 'Buffer', data: [1,2,3,...] } into a Buffer object.
-	// Returns a zero-length buffer for inputs that don't conform to the spec.
-	function fromJsonObject (that, object) {
-	  var array
-	  var length = 0
+	function fromArrayBuffer (that, array, byteOffset, length) {
+	  array.byteLength // this throws if `array` is not a valid ArrayBuffer
 
-	  if (object.type === 'Buffer' && isArray(object.data)) {
-	    array = object.data
-	    length = checked(array.length) | 0
+	  if (byteOffset < 0 || array.byteLength < byteOffset) {
+	    throw new RangeError('\'offset\' is out of bounds')
 	  }
-	  that = allocate(that, length)
 
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
+	  if (array.byteLength < byteOffset + (length || 0)) {
+	    throw new RangeError('\'length\' is out of bounds')
 	  }
-	  return that
-	}
 
-	if (Buffer.TYPED_ARRAY_SUPPORT) {
-	  Buffer.prototype.__proto__ = Uint8Array.prototype
-	  Buffer.__proto__ = Uint8Array
-	} else {
-	  // pre-set for values that may exist in the future
-	  Buffer.prototype.length = undefined
-	  Buffer.prototype.parent = undefined
-	}
+	  if (byteOffset === undefined && length === undefined) {
+	    array = new Uint8Array(array)
+	  } else if (length === undefined) {
+	    array = new Uint8Array(array, byteOffset)
+	  } else {
+	    array = new Uint8Array(array, byteOffset, length)
+	  }
 
-	function allocate (that, length) {
 	  if (Buffer.TYPED_ARRAY_SUPPORT) {
 	    // Return an augmented `Uint8Array` instance, for best performance
-	    that = Buffer._augment(new Uint8Array(length))
+	    that = array
 	    that.__proto__ = Buffer.prototype
 	  } else {
 	    // Fallback: Return an object instance of the Buffer class
-	    that.length = length
-	    that._isBuffer = true
+	    that = fromArrayLike(that, array)
 	  }
-
-	  var fromPool = length !== 0 && length <= Buffer.poolSize >>> 1
-	  if (fromPool) that.parent = rootParent
-
 	  return that
 	}
 
+	function fromObject (that, obj) {
+	  if (Buffer.isBuffer(obj)) {
+	    var len = checked(obj.length) | 0
+	    that = createBuffer(that, len)
+
+	    if (that.length === 0) {
+	      return that
+	    }
+
+	    obj.copy(that, 0, 0, len)
+	    return that
+	  }
+
+	  if (obj) {
+	    if ((typeof ArrayBuffer !== 'undefined' &&
+	        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
+	      if (typeof obj.length !== 'number' || isnan(obj.length)) {
+	        return createBuffer(that, 0)
+	      }
+	      return fromArrayLike(that, obj)
+	    }
+
+	    if (obj.type === 'Buffer' && isArray(obj.data)) {
+	      return fromArrayLike(that, obj.data)
+	    }
+	  }
+
+	  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
+	}
+
 	function checked (length) {
-	  // Note: cannot use `length < kMaxLength` here because that fails when
+	  // Note: cannot use `length < kMaxLength()` here because that fails when
 	  // length is NaN (which is otherwise coerced to zero.)
 	  if (length >= kMaxLength()) {
 	    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
@@ -28049,12 +28141,11 @@ var InfoxBpmnModeler =
 	  return length | 0
 	}
 
-	function SlowBuffer (subject, encoding) {
-	  if (!(this instanceof SlowBuffer)) return new SlowBuffer(subject, encoding)
-
-	  var buf = new Buffer(subject, encoding)
-	  delete buf.parent
-	  return buf
+	function SlowBuffer (length) {
+	  if (+length != length) { // eslint-disable-line eqeqeq
+	    length = 0
+	  }
+	  return Buffer.alloc(+length)
 	}
 
 	Buffer.isBuffer = function isBuffer (b) {
@@ -28071,17 +28162,12 @@ var InfoxBpmnModeler =
 	  var x = a.length
 	  var y = b.length
 
-	  var i = 0
-	  var len = Math.min(x, y)
-	  while (i < len) {
-	    if (a[i] !== b[i]) break
-
-	    ++i
-	  }
-
-	  if (i !== len) {
-	    x = a[i]
-	    y = b[i]
+	  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+	    if (a[i] !== b[i]) {
+	      x = a[i]
+	      y = b[i]
+	      break
+	    }
 	  }
 
 	  if (x < y) return -1
@@ -28095,9 +28181,9 @@ var InfoxBpmnModeler =
 	    case 'utf8':
 	    case 'utf-8':
 	    case 'ascii':
+	    case 'latin1':
 	    case 'binary':
 	    case 'base64':
-	    case 'raw':
 	    case 'ucs2':
 	    case 'ucs-2':
 	    case 'utf16le':
@@ -28109,32 +28195,46 @@ var InfoxBpmnModeler =
 	}
 
 	Buffer.concat = function concat (list, length) {
-	  if (!isArray(list)) throw new TypeError('list argument must be an Array of Buffers.')
+	  if (!isArray(list)) {
+	    throw new TypeError('"list" argument must be an Array of Buffers')
+	  }
 
 	  if (list.length === 0) {
-	    return new Buffer(0)
+	    return Buffer.alloc(0)
 	  }
 
 	  var i
 	  if (length === undefined) {
 	    length = 0
-	    for (i = 0; i < list.length; i++) {
+	    for (i = 0; i < list.length; ++i) {
 	      length += list[i].length
 	    }
 	  }
 
-	  var buf = new Buffer(length)
+	  var buffer = Buffer.allocUnsafe(length)
 	  var pos = 0
-	  for (i = 0; i < list.length; i++) {
-	    var item = list[i]
-	    item.copy(buf, pos)
-	    pos += item.length
+	  for (i = 0; i < list.length; ++i) {
+	    var buf = list[i]
+	    if (!Buffer.isBuffer(buf)) {
+	      throw new TypeError('"list" argument must be an Array of Buffers')
+	    }
+	    buf.copy(buffer, pos)
+	    pos += buf.length
 	  }
-	  return buf
+	  return buffer
 	}
 
 	function byteLength (string, encoding) {
-	  if (typeof string !== 'string') string = '' + string
+	  if (Buffer.isBuffer(string)) {
+	    return string.length
+	  }
+	  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
+	      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
+	    return string.byteLength
+	  }
+	  if (typeof string !== 'string') {
+	    string = '' + string
+	  }
 
 	  var len = string.length
 	  if (len === 0) return 0
@@ -28144,13 +28244,12 @@ var InfoxBpmnModeler =
 	  for (;;) {
 	    switch (encoding) {
 	      case 'ascii':
+	      case 'latin1':
 	      case 'binary':
-	      // Deprecated
-	      case 'raw':
-	      case 'raws':
 	        return len
 	      case 'utf8':
 	      case 'utf-8':
+	      case undefined:
 	        return utf8ToBytes(string).length
 	      case 'ucs2':
 	      case 'ucs-2':
@@ -28173,13 +28272,39 @@ var InfoxBpmnModeler =
 	function slowToString (encoding, start, end) {
 	  var loweredCase = false
 
-	  start = start | 0
-	  end = end === undefined || end === Infinity ? this.length : end | 0
+	  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
+	  // property of a typed array.
+
+	  // This behaves neither like String nor Uint8Array in that we set start/end
+	  // to their upper/lower bounds if the value passed is out of range.
+	  // undefined is handled specially as per ECMA-262 6th Edition,
+	  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
+	  if (start === undefined || start < 0) {
+	    start = 0
+	  }
+	  // Return early if start > this.length. Done here to prevent potential uint32
+	  // coercion fail below.
+	  if (start > this.length) {
+	    return ''
+	  }
+
+	  if (end === undefined || end > this.length) {
+	    end = this.length
+	  }
+
+	  if (end <= 0) {
+	    return ''
+	  }
+
+	  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
+	  end >>>= 0
+	  start >>>= 0
+
+	  if (end <= start) {
+	    return ''
+	  }
 
 	  if (!encoding) encoding = 'utf8'
-	  if (start < 0) start = 0
-	  if (end > this.length) end = this.length
-	  if (end <= start) return ''
 
 	  while (true) {
 	    switch (encoding) {
@@ -28193,8 +28318,9 @@ var InfoxBpmnModeler =
 	      case 'ascii':
 	        return asciiSlice(this, start, end)
 
+	      case 'latin1':
 	      case 'binary':
-	        return binarySlice(this, start, end)
+	        return latin1Slice(this, start, end)
 
 	      case 'base64':
 	        return base64Slice(this, start, end)
@@ -28211,6 +28337,53 @@ var InfoxBpmnModeler =
 	        loweredCase = true
 	    }
 	  }
+	}
+
+	// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
+	// Buffer instances.
+	Buffer.prototype._isBuffer = true
+
+	function swap (b, n, m) {
+	  var i = b[n]
+	  b[n] = b[m]
+	  b[m] = i
+	}
+
+	Buffer.prototype.swap16 = function swap16 () {
+	  var len = this.length
+	  if (len % 2 !== 0) {
+	    throw new RangeError('Buffer size must be a multiple of 16-bits')
+	  }
+	  for (var i = 0; i < len; i += 2) {
+	    swap(this, i, i + 1)
+	  }
+	  return this
+	}
+
+	Buffer.prototype.swap32 = function swap32 () {
+	  var len = this.length
+	  if (len % 4 !== 0) {
+	    throw new RangeError('Buffer size must be a multiple of 32-bits')
+	  }
+	  for (var i = 0; i < len; i += 4) {
+	    swap(this, i, i + 3)
+	    swap(this, i + 1, i + 2)
+	  }
+	  return this
+	}
+
+	Buffer.prototype.swap64 = function swap64 () {
+	  var len = this.length
+	  if (len % 8 !== 0) {
+	    throw new RangeError('Buffer size must be a multiple of 64-bits')
+	  }
+	  for (var i = 0; i < len; i += 8) {
+	    swap(this, i, i + 7)
+	    swap(this, i + 1, i + 6)
+	    swap(this, i + 2, i + 5)
+	    swap(this, i + 3, i + 4)
+	  }
+	  return this
 	}
 
 	Buffer.prototype.toString = function toString () {
@@ -28236,63 +28409,197 @@ var InfoxBpmnModeler =
 	  return '<Buffer ' + str + '>'
 	}
 
-	Buffer.prototype.compare = function compare (b) {
-	  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-	  if (this === b) return 0
-	  return Buffer.compare(this, b)
+	Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+	  if (!Buffer.isBuffer(target)) {
+	    throw new TypeError('Argument must be a Buffer')
+	  }
+
+	  if (start === undefined) {
+	    start = 0
+	  }
+	  if (end === undefined) {
+	    end = target ? target.length : 0
+	  }
+	  if (thisStart === undefined) {
+	    thisStart = 0
+	  }
+	  if (thisEnd === undefined) {
+	    thisEnd = this.length
+	  }
+
+	  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
+	    throw new RangeError('out of range index')
+	  }
+
+	  if (thisStart >= thisEnd && start >= end) {
+	    return 0
+	  }
+	  if (thisStart >= thisEnd) {
+	    return -1
+	  }
+	  if (start >= end) {
+	    return 1
+	  }
+
+	  start >>>= 0
+	  end >>>= 0
+	  thisStart >>>= 0
+	  thisEnd >>>= 0
+
+	  if (this === target) return 0
+
+	  var x = thisEnd - thisStart
+	  var y = end - start
+	  var len = Math.min(x, y)
+
+	  var thisCopy = this.slice(thisStart, thisEnd)
+	  var targetCopy = target.slice(start, end)
+
+	  for (var i = 0; i < len; ++i) {
+	    if (thisCopy[i] !== targetCopy[i]) {
+	      x = thisCopy[i]
+	      y = targetCopy[i]
+	      break
+	    }
+	  }
+
+	  if (x < y) return -1
+	  if (y < x) return 1
+	  return 0
 	}
 
-	Buffer.prototype.indexOf = function indexOf (val, byteOffset) {
-	  if (byteOffset > 0x7fffffff) byteOffset = 0x7fffffff
-	  else if (byteOffset < -0x80000000) byteOffset = -0x80000000
-	  byteOffset >>= 0
+	// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
+	// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
+	//
+	// Arguments:
+	// - buffer - a Buffer to search
+	// - val - a string, Buffer, or number
+	// - byteOffset - an index into `buffer`; will be clamped to an int32
+	// - encoding - an optional encoding, relevant is val is a string
+	// - dir - true for indexOf, false for lastIndexOf
+	function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
+	  // Empty buffer means no match
+	  if (buffer.length === 0) return -1
 
-	  if (this.length === 0) return -1
-	  if (byteOffset >= this.length) return -1
+	  // Normalize byteOffset
+	  if (typeof byteOffset === 'string') {
+	    encoding = byteOffset
+	    byteOffset = 0
+	  } else if (byteOffset > 0x7fffffff) {
+	    byteOffset = 0x7fffffff
+	  } else if (byteOffset < -0x80000000) {
+	    byteOffset = -0x80000000
+	  }
+	  byteOffset = +byteOffset  // Coerce to Number.
+	  if (isNaN(byteOffset)) {
+	    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
+	    byteOffset = dir ? 0 : (buffer.length - 1)
+	  }
 
-	  // Negative offsets start from the end of the buffer
-	  if (byteOffset < 0) byteOffset = Math.max(this.length + byteOffset, 0)
+	  // Normalize byteOffset: negative offsets start from the end of the buffer
+	  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
+	  if (byteOffset >= buffer.length) {
+	    if (dir) return -1
+	    else byteOffset = buffer.length - 1
+	  } else if (byteOffset < 0) {
+	    if (dir) byteOffset = 0
+	    else return -1
+	  }
 
+	  // Normalize val
 	  if (typeof val === 'string') {
-	    if (val.length === 0) return -1 // special case: looking for empty string always fails
-	    return String.prototype.indexOf.call(this, val, byteOffset)
-	  }
-	  if (Buffer.isBuffer(val)) {
-	    return arrayIndexOf(this, val, byteOffset)
-	  }
-	  if (typeof val === 'number') {
-	    if (Buffer.TYPED_ARRAY_SUPPORT && Uint8Array.prototype.indexOf === 'function') {
-	      return Uint8Array.prototype.indexOf.call(this, val, byteOffset)
-	    }
-	    return arrayIndexOf(this, [ val ], byteOffset)
+	    val = Buffer.from(val, encoding)
 	  }
 
-	  function arrayIndexOf (arr, val, byteOffset) {
-	    var foundIndex = -1
-	    for (var i = 0; byteOffset + i < arr.length; i++) {
-	      if (arr[byteOffset + i] === val[foundIndex === -1 ? 0 : i - foundIndex]) {
-	        if (foundIndex === -1) foundIndex = i
-	        if (i - foundIndex + 1 === val.length) return byteOffset + foundIndex
+	  // Finally, search either indexOf (if dir is true) or lastIndexOf
+	  if (Buffer.isBuffer(val)) {
+	    // Special case: looking for empty string/buffer always fails
+	    if (val.length === 0) {
+	      return -1
+	    }
+	    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
+	  } else if (typeof val === 'number') {
+	    val = val & 0xFF // Search for a byte value [0-255]
+	    if (Buffer.TYPED_ARRAY_SUPPORT &&
+	        typeof Uint8Array.prototype.indexOf === 'function') {
+	      if (dir) {
+	        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
 	      } else {
-	        foundIndex = -1
+	        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
 	      }
 	    }
-	    return -1
+	    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
 	  }
 
 	  throw new TypeError('val must be string, number or Buffer')
 	}
 
-	// `get` is deprecated
-	Buffer.prototype.get = function get (offset) {
-	  console.log('.get() is deprecated. Access using array indexes instead.')
-	  return this.readUInt8(offset)
+	function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
+	  var indexSize = 1
+	  var arrLength = arr.length
+	  var valLength = val.length
+
+	  if (encoding !== undefined) {
+	    encoding = String(encoding).toLowerCase()
+	    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
+	        encoding === 'utf16le' || encoding === 'utf-16le') {
+	      if (arr.length < 2 || val.length < 2) {
+	        return -1
+	      }
+	      indexSize = 2
+	      arrLength /= 2
+	      valLength /= 2
+	      byteOffset /= 2
+	    }
+	  }
+
+	  function read (buf, i) {
+	    if (indexSize === 1) {
+	      return buf[i]
+	    } else {
+	      return buf.readUInt16BE(i * indexSize)
+	    }
+	  }
+
+	  var i
+	  if (dir) {
+	    var foundIndex = -1
+	    for (i = byteOffset; i < arrLength; i++) {
+	      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+	        if (foundIndex === -1) foundIndex = i
+	        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+	      } else {
+	        if (foundIndex !== -1) i -= i - foundIndex
+	        foundIndex = -1
+	      }
+	    }
+	  } else {
+	    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
+	    for (i = byteOffset; i >= 0; i--) {
+	      var found = true
+	      for (var j = 0; j < valLength; j++) {
+	        if (read(arr, i + j) !== read(val, j)) {
+	          found = false
+	          break
+	        }
+	      }
+	      if (found) return i
+	    }
+	  }
+
+	  return -1
 	}
 
-	// `set` is deprecated
-	Buffer.prototype.set = function set (v, offset) {
-	  console.log('.set() is deprecated. Access using array indexes instead.')
-	  return this.writeUInt8(v, offset)
+	Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
+	  return this.indexOf(val, byteOffset, encoding) !== -1
+	}
+
+	Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+	  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
+	}
+
+	Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
+	  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
 	}
 
 	function hexWrite (buf, string, offset, length) {
@@ -28309,14 +28616,14 @@ var InfoxBpmnModeler =
 
 	  // must be an even number of digits
 	  var strLen = string.length
-	  if (strLen % 2 !== 0) throw new Error('Invalid hex string')
+	  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
 
 	  if (length > strLen / 2) {
 	    length = strLen / 2
 	  }
-	  for (var i = 0; i < length; i++) {
+	  for (var i = 0; i < length; ++i) {
 	    var parsed = parseInt(string.substr(i * 2, 2), 16)
-	    if (isNaN(parsed)) throw new Error('Invalid hex string')
+	    if (isNaN(parsed)) return i
 	    buf[offset + i] = parsed
 	  }
 	  return i
@@ -28330,7 +28637,7 @@ var InfoxBpmnModeler =
 	  return blitBuffer(asciiToBytes(string), buf, offset, length)
 	}
 
-	function binaryWrite (buf, string, offset, length) {
+	function latin1Write (buf, string, offset, length) {
 	  return asciiWrite(buf, string, offset, length)
 	}
 
@@ -28365,17 +28672,16 @@ var InfoxBpmnModeler =
 	    }
 	  // legacy write(string, encoding, offset, length) - remove in v0.13
 	  } else {
-	    var swap = encoding
-	    encoding = offset
-	    offset = length | 0
-	    length = swap
+	    throw new Error(
+	      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
+	    )
 	  }
 
 	  var remaining = this.length - offset
 	  if (length === undefined || length > remaining) length = remaining
 
 	  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
-	    throw new RangeError('attempt to write outside buffer bounds')
+	    throw new RangeError('Attempt to write outside buffer bounds')
 	  }
 
 	  if (!encoding) encoding = 'utf8'
@@ -28393,8 +28699,9 @@ var InfoxBpmnModeler =
 	      case 'ascii':
 	        return asciiWrite(this, string, offset, length)
 
+	      case 'latin1':
 	      case 'binary':
-	        return binaryWrite(this, string, offset, length)
+	        return latin1Write(this, string, offset, length)
 
 	      case 'base64':
 	        // Warning: maxLength not taken into account in base64Write
@@ -28529,17 +28836,17 @@ var InfoxBpmnModeler =
 	  var ret = ''
 	  end = Math.min(buf.length, end)
 
-	  for (var i = start; i < end; i++) {
+	  for (var i = start; i < end; ++i) {
 	    ret += String.fromCharCode(buf[i] & 0x7F)
 	  }
 	  return ret
 	}
 
-	function binarySlice (buf, start, end) {
+	function latin1Slice (buf, start, end) {
 	  var ret = ''
 	  end = Math.min(buf.length, end)
 
-	  for (var i = start; i < end; i++) {
+	  for (var i = start; i < end; ++i) {
 	    ret += String.fromCharCode(buf[i])
 	  }
 	  return ret
@@ -28552,7 +28859,7 @@ var InfoxBpmnModeler =
 	  if (!end || end < 0 || end > len) end = len
 
 	  var out = ''
-	  for (var i = start; i < end; i++) {
+	  for (var i = start; i < end; ++i) {
 	    out += toHex(buf[i])
 	  }
 	  return out
@@ -28590,16 +28897,15 @@ var InfoxBpmnModeler =
 
 	  var newBuf
 	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    newBuf = Buffer._augment(this.subarray(start, end))
+	    newBuf = this.subarray(start, end)
+	    newBuf.__proto__ = Buffer.prototype
 	  } else {
 	    var sliceLen = end - start
 	    newBuf = new Buffer(sliceLen, undefined)
-	    for (var i = 0; i < sliceLen; i++) {
+	    for (var i = 0; i < sliceLen; ++i) {
 	      newBuf[i] = this[i + start]
 	    }
 	  }
-
-	  if (newBuf.length) newBuf.parent = this.parent || this
 
 	  return newBuf
 	}
@@ -28769,16 +29075,19 @@ var InfoxBpmnModeler =
 	}
 
 	function checkInt (buf, value, offset, ext, max, min) {
-	  if (!Buffer.isBuffer(buf)) throw new TypeError('buffer must be a Buffer instance')
-	  if (value > max || value < min) throw new RangeError('value is out of bounds')
-	  if (offset + ext > buf.length) throw new RangeError('index out of range')
+	  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+	  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
+	  if (offset + ext > buf.length) throw new RangeError('Index out of range')
 	}
 
 	Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
 	  value = +value
 	  offset = offset | 0
 	  byteLength = byteLength | 0
-	  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
+	  if (!noAssert) {
+	    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+	    checkInt(this, value, offset, byteLength, maxBytes, 0)
+	  }
 
 	  var mul = 1
 	  var i = 0
@@ -28794,7 +29103,10 @@ var InfoxBpmnModeler =
 	  value = +value
 	  offset = offset | 0
 	  byteLength = byteLength | 0
-	  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
+	  if (!noAssert) {
+	    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+	    checkInt(this, value, offset, byteLength, maxBytes, 0)
+	  }
 
 	  var i = byteLength - 1
 	  var mul = 1
@@ -28817,7 +29129,7 @@ var InfoxBpmnModeler =
 
 	function objectWriteUInt16 (buf, value, offset, littleEndian) {
 	  if (value < 0) value = 0xffff + value + 1
-	  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; i++) {
+	  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
 	    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
 	      (littleEndian ? i : 1 - i) * 8
 	  }
@@ -28851,7 +29163,7 @@ var InfoxBpmnModeler =
 
 	function objectWriteUInt32 (buf, value, offset, littleEndian) {
 	  if (value < 0) value = 0xffffffff + value + 1
-	  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; i++) {
+	  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
 	    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
 	  }
 	}
@@ -28897,9 +29209,12 @@ var InfoxBpmnModeler =
 
 	  var i = 0
 	  var mul = 1
-	  var sub = value < 0 ? 1 : 0
+	  var sub = 0
 	  this[offset] = value & 0xFF
 	  while (++i < byteLength && (mul *= 0x100)) {
+	    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
+	      sub = 1
+	    }
 	    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
 	  }
 
@@ -28917,9 +29232,12 @@ var InfoxBpmnModeler =
 
 	  var i = byteLength - 1
 	  var mul = 1
-	  var sub = value < 0 ? 1 : 0
+	  var sub = 0
 	  this[offset + i] = value & 0xFF
 	  while (--i >= 0 && (mul *= 0x100)) {
+	    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
+	      sub = 1
+	    }
 	    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
 	  }
 
@@ -28994,9 +29312,8 @@ var InfoxBpmnModeler =
 	}
 
 	function checkIEEE754 (buf, value, offset, ext, max, min) {
-	  if (value > max || value < min) throw new RangeError('value is out of bounds')
-	  if (offset + ext > buf.length) throw new RangeError('index out of range')
-	  if (offset < 0) throw new RangeError('index out of range')
+	  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+	  if (offset < 0) throw new RangeError('Index out of range')
 	}
 
 	function writeFloat (buf, value, offset, littleEndian, noAssert) {
@@ -29061,142 +29378,90 @@ var InfoxBpmnModeler =
 
 	  if (this === target && start < targetStart && targetStart < end) {
 	    // descending copy from end
-	    for (i = len - 1; i >= 0; i--) {
+	    for (i = len - 1; i >= 0; --i) {
 	      target[i + targetStart] = this[i + start]
 	    }
 	  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
 	    // ascending copy from start
-	    for (i = 0; i < len; i++) {
+	    for (i = 0; i < len; ++i) {
 	      target[i + targetStart] = this[i + start]
 	    }
 	  } else {
-	    target._set(this.subarray(start, start + len), targetStart)
+	    Uint8Array.prototype.set.call(
+	      target,
+	      this.subarray(start, start + len),
+	      targetStart
+	    )
 	  }
 
 	  return len
 	}
 
-	// fill(value, start=0, end=buffer.length)
-	Buffer.prototype.fill = function fill (value, start, end) {
-	  if (!value) value = 0
-	  if (!start) start = 0
-	  if (!end) end = this.length
+	// Usage:
+	//    buffer.fill(number[, offset[, end]])
+	//    buffer.fill(buffer[, offset[, end]])
+	//    buffer.fill(string[, offset[, end]][, encoding])
+	Buffer.prototype.fill = function fill (val, start, end, encoding) {
+	  // Handle string cases:
+	  if (typeof val === 'string') {
+	    if (typeof start === 'string') {
+	      encoding = start
+	      start = 0
+	      end = this.length
+	    } else if (typeof end === 'string') {
+	      encoding = end
+	      end = this.length
+	    }
+	    if (val.length === 1) {
+	      var code = val.charCodeAt(0)
+	      if (code < 256) {
+	        val = code
+	      }
+	    }
+	    if (encoding !== undefined && typeof encoding !== 'string') {
+	      throw new TypeError('encoding must be a string')
+	    }
+	    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
+	      throw new TypeError('Unknown encoding: ' + encoding)
+	    }
+	  } else if (typeof val === 'number') {
+	    val = val & 255
+	  }
 
-	  if (end < start) throw new RangeError('end < start')
+	  // Invalid ranges are not set to a default, so can range check early.
+	  if (start < 0 || this.length < start || this.length < end) {
+	    throw new RangeError('Out of range index')
+	  }
 
-	  // Fill 0 bytes; we're done
-	  if (end === start) return
-	  if (this.length === 0) return
+	  if (end <= start) {
+	    return this
+	  }
 
-	  if (start < 0 || start >= this.length) throw new RangeError('start out of bounds')
-	  if (end < 0 || end > this.length) throw new RangeError('end out of bounds')
+	  start = start >>> 0
+	  end = end === undefined ? this.length : end >>> 0
+
+	  if (!val) val = 0
 
 	  var i
-	  if (typeof value === 'number') {
-	    for (i = start; i < end; i++) {
-	      this[i] = value
+	  if (typeof val === 'number') {
+	    for (i = start; i < end; ++i) {
+	      this[i] = val
 	    }
 	  } else {
-	    var bytes = utf8ToBytes(value.toString())
+	    var bytes = Buffer.isBuffer(val)
+	      ? val
+	      : utf8ToBytes(new Buffer(val, encoding).toString())
 	    var len = bytes.length
-	    for (i = start; i < end; i++) {
-	      this[i] = bytes[i % len]
+	    for (i = 0; i < end - start; ++i) {
+	      this[i + start] = bytes[i % len]
 	    }
 	  }
 
 	  return this
 	}
 
-	/**
-	 * Creates a new `ArrayBuffer` with the *copied* memory of the buffer instance.
-	 * Added in Node 0.12. Only available in browsers that support ArrayBuffer.
-	 */
-	Buffer.prototype.toArrayBuffer = function toArrayBuffer () {
-	  if (typeof Uint8Array !== 'undefined') {
-	    if (Buffer.TYPED_ARRAY_SUPPORT) {
-	      return (new Buffer(this)).buffer
-	    } else {
-	      var buf = new Uint8Array(this.length)
-	      for (var i = 0, len = buf.length; i < len; i += 1) {
-	        buf[i] = this[i]
-	      }
-	      return buf.buffer
-	    }
-	  } else {
-	    throw new TypeError('Buffer.toArrayBuffer not supported in this browser')
-	  }
-	}
-
 	// HELPER FUNCTIONS
 	// ================
-
-	var BP = Buffer.prototype
-
-	/**
-	 * Augment a Uint8Array *instance* (not the Uint8Array class!) with Buffer methods
-	 */
-	Buffer._augment = function _augment (arr) {
-	  arr.constructor = Buffer
-	  arr._isBuffer = true
-
-	  // save reference to original Uint8Array set method before overwriting
-	  arr._set = arr.set
-
-	  // deprecated
-	  arr.get = BP.get
-	  arr.set = BP.set
-
-	  arr.write = BP.write
-	  arr.toString = BP.toString
-	  arr.toLocaleString = BP.toString
-	  arr.toJSON = BP.toJSON
-	  arr.equals = BP.equals
-	  arr.compare = BP.compare
-	  arr.indexOf = BP.indexOf
-	  arr.copy = BP.copy
-	  arr.slice = BP.slice
-	  arr.readUIntLE = BP.readUIntLE
-	  arr.readUIntBE = BP.readUIntBE
-	  arr.readUInt8 = BP.readUInt8
-	  arr.readUInt16LE = BP.readUInt16LE
-	  arr.readUInt16BE = BP.readUInt16BE
-	  arr.readUInt32LE = BP.readUInt32LE
-	  arr.readUInt32BE = BP.readUInt32BE
-	  arr.readIntLE = BP.readIntLE
-	  arr.readIntBE = BP.readIntBE
-	  arr.readInt8 = BP.readInt8
-	  arr.readInt16LE = BP.readInt16LE
-	  arr.readInt16BE = BP.readInt16BE
-	  arr.readInt32LE = BP.readInt32LE
-	  arr.readInt32BE = BP.readInt32BE
-	  arr.readFloatLE = BP.readFloatLE
-	  arr.readFloatBE = BP.readFloatBE
-	  arr.readDoubleLE = BP.readDoubleLE
-	  arr.readDoubleBE = BP.readDoubleBE
-	  arr.writeUInt8 = BP.writeUInt8
-	  arr.writeUIntLE = BP.writeUIntLE
-	  arr.writeUIntBE = BP.writeUIntBE
-	  arr.writeUInt16LE = BP.writeUInt16LE
-	  arr.writeUInt16BE = BP.writeUInt16BE
-	  arr.writeUInt32LE = BP.writeUInt32LE
-	  arr.writeUInt32BE = BP.writeUInt32BE
-	  arr.writeIntLE = BP.writeIntLE
-	  arr.writeIntBE = BP.writeIntBE
-	  arr.writeInt8 = BP.writeInt8
-	  arr.writeInt16LE = BP.writeInt16LE
-	  arr.writeInt16BE = BP.writeInt16BE
-	  arr.writeInt32LE = BP.writeInt32LE
-	  arr.writeInt32BE = BP.writeInt32BE
-	  arr.writeFloatLE = BP.writeFloatLE
-	  arr.writeFloatBE = BP.writeFloatBE
-	  arr.writeDoubleLE = BP.writeDoubleLE
-	  arr.writeDoubleBE = BP.writeDoubleBE
-	  arr.fill = BP.fill
-	  arr.inspect = BP.inspect
-	  arr.toArrayBuffer = BP.toArrayBuffer
-
-	  return arr
-	}
 
 	var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
 
@@ -29229,7 +29494,7 @@ var InfoxBpmnModeler =
 	  var leadSurrogate = null
 	  var bytes = []
 
-	  for (var i = 0; i < length; i++) {
+	  for (var i = 0; i < length; ++i) {
 	    codePoint = string.charCodeAt(i)
 
 	    // is surrogate component
@@ -29304,7 +29569,7 @@ var InfoxBpmnModeler =
 
 	function asciiToBytes (str) {
 	  var byteArray = []
-	  for (var i = 0; i < str.length; i++) {
+	  for (var i = 0; i < str.length; ++i) {
 	    // Node's code seems to be doing this and not & 0x7F..
 	    byteArray.push(str.charCodeAt(i) & 0xFF)
 	  }
@@ -29314,7 +29579,7 @@ var InfoxBpmnModeler =
 	function utf16leToBytes (str, units) {
 	  var c, hi, lo
 	  var byteArray = []
-	  for (var i = 0; i < str.length; i++) {
+	  for (var i = 0; i < str.length; ++i) {
 	    if ((units -= 2) < 0) break
 
 	    c = str.charCodeAt(i)
@@ -29332,143 +29597,132 @@ var InfoxBpmnModeler =
 	}
 
 	function blitBuffer (src, dst, offset, length) {
-	  for (var i = 0; i < length; i++) {
+	  for (var i = 0; i < length; ++i) {
 	    if ((i + offset >= dst.length) || (i >= src.length)) break
 	    dst[i + offset] = src[i]
 	  }
 	  return i
 	}
 
+	function isnan (val) {
+	  return val !== val // eslint-disable-line no-self-compare
+	}
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(347).Buffer, (function() { return this; }())))
 
 /***/ },
 /* 348 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+	'use strict'
 
-	;(function (exports) {
-		'use strict';
+	exports.toByteArray = toByteArray
+	exports.fromByteArray = fromByteArray
 
-	  var Arr = (typeof Uint8Array !== 'undefined')
-	    ? Uint8Array
-	    : Array
+	var lookup = []
+	var revLookup = []
+	var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
 
-		var PLUS   = '+'.charCodeAt(0)
-		var SLASH  = '/'.charCodeAt(0)
-		var NUMBER = '0'.charCodeAt(0)
-		var LOWER  = 'a'.charCodeAt(0)
-		var UPPER  = 'A'.charCodeAt(0)
-		var PLUS_URL_SAFE = '-'.charCodeAt(0)
-		var SLASH_URL_SAFE = '_'.charCodeAt(0)
+	function init () {
+	  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+	  for (var i = 0, len = code.length; i < len; ++i) {
+	    lookup[i] = code[i]
+	    revLookup[code.charCodeAt(i)] = i
+	  }
 
-		function decode (elt) {
-			var code = elt.charCodeAt(0)
-			if (code === PLUS ||
-			    code === PLUS_URL_SAFE)
-				return 62 // '+'
-			if (code === SLASH ||
-			    code === SLASH_URL_SAFE)
-				return 63 // '/'
-			if (code < NUMBER)
-				return -1 //no match
-			if (code < NUMBER + 10)
-				return code - NUMBER + 26 + 26
-			if (code < UPPER + 26)
-				return code - UPPER
-			if (code < LOWER + 26)
-				return code - LOWER + 26
-		}
+	  revLookup['-'.charCodeAt(0)] = 62
+	  revLookup['_'.charCodeAt(0)] = 63
+	}
 
-		function b64ToByteArray (b64) {
-			var i, j, l, tmp, placeHolders, arr
+	init()
 
-			if (b64.length % 4 > 0) {
-				throw new Error('Invalid string. Length must be a multiple of 4')
-			}
+	function toByteArray (b64) {
+	  var i, j, l, tmp, placeHolders, arr
+	  var len = b64.length
 
-			// the number of equal signs (place holders)
-			// if there are two placeholders, than the two characters before it
-			// represent one byte
-			// if there is only one, then the three characters before it represent 2 bytes
-			// this is just a cheap hack to not do indexOf twice
-			var len = b64.length
-			placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
+	  if (len % 4 > 0) {
+	    throw new Error('Invalid string. Length must be a multiple of 4')
+	  }
 
-			// base64 is 4/3 + up to two characters of the original data
-			arr = new Arr(b64.length * 3 / 4 - placeHolders)
+	  // the number of equal signs (place holders)
+	  // if there are two placeholders, than the two characters before it
+	  // represent one byte
+	  // if there is only one, then the three characters before it represent 2 bytes
+	  // this is just a cheap hack to not do indexOf twice
+	  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
 
-			// if there are placeholders, only get up to the last complete 4 chars
-			l = placeHolders > 0 ? b64.length - 4 : b64.length
+	  // base64 is 4/3 + up to two characters of the original data
+	  arr = new Arr(len * 3 / 4 - placeHolders)
 
-			var L = 0
+	  // if there are placeholders, only get up to the last complete 4 chars
+	  l = placeHolders > 0 ? len - 4 : len
 
-			function push (v) {
-				arr[L++] = v
-			}
+	  var L = 0
 
-			for (i = 0, j = 0; i < l; i += 4, j += 3) {
-				tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
-				push((tmp & 0xFF0000) >> 16)
-				push((tmp & 0xFF00) >> 8)
-				push(tmp & 0xFF)
-			}
+	  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+	    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
+	    arr[L++] = (tmp >> 16) & 0xFF
+	    arr[L++] = (tmp >> 8) & 0xFF
+	    arr[L++] = tmp & 0xFF
+	  }
 
-			if (placeHolders === 2) {
-				tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
-				push(tmp & 0xFF)
-			} else if (placeHolders === 1) {
-				tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
-				push((tmp >> 8) & 0xFF)
-				push(tmp & 0xFF)
-			}
+	  if (placeHolders === 2) {
+	    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
+	    arr[L++] = tmp & 0xFF
+	  } else if (placeHolders === 1) {
+	    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
+	    arr[L++] = (tmp >> 8) & 0xFF
+	    arr[L++] = tmp & 0xFF
+	  }
 
-			return arr
-		}
+	  return arr
+	}
 
-		function uint8ToBase64 (uint8) {
-			var i,
-				extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
-				output = "",
-				temp, length
+	function tripletToBase64 (num) {
+	  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
+	}
 
-			function encode (num) {
-				return lookup.charAt(num)
-			}
+	function encodeChunk (uint8, start, end) {
+	  var tmp
+	  var output = []
+	  for (var i = start; i < end; i += 3) {
+	    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+	    output.push(tripletToBase64(tmp))
+	  }
+	  return output.join('')
+	}
 
-			function tripletToBase64 (num) {
-				return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
-			}
+	function fromByteArray (uint8) {
+	  var tmp
+	  var len = uint8.length
+	  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+	  var output = ''
+	  var parts = []
+	  var maxChunkLength = 16383 // must be multiple of 3
 
-			// go through the array every three bytes, we'll deal with trailing stuff later
-			for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-				temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-				output += tripletToBase64(temp)
-			}
+	  // go through the array every three bytes, we'll deal with trailing stuff later
+	  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+	    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+	  }
 
-			// pad the end with zeros, but make sure to not forget the extra bytes
-			switch (extraBytes) {
-				case 1:
-					temp = uint8[uint8.length - 1]
-					output += encode(temp >> 2)
-					output += encode((temp << 4) & 0x3F)
-					output += '=='
-					break
-				case 2:
-					temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
-					output += encode(temp >> 10)
-					output += encode((temp >> 4) & 0x3F)
-					output += encode((temp << 2) & 0x3F)
-					output += '='
-					break
-			}
+	  // pad the end with zeros, but make sure to not forget the extra bytes
+	  if (extraBytes === 1) {
+	    tmp = uint8[len - 1]
+	    output += lookup[tmp >> 2]
+	    output += lookup[(tmp << 4) & 0x3F]
+	    output += '=='
+	  } else if (extraBytes === 2) {
+	    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
+	    output += lookup[tmp >> 10]
+	    output += lookup[(tmp >> 4) & 0x3F]
+	    output += lookup[(tmp << 2) & 0x3F]
+	    output += '='
+	  }
 
-			return output
-		}
+	  parts.push(output)
 
-		exports.toByteArray = b64ToByteArray
-		exports.fromByteArray = uint8ToBase64
-	}( false ? (this.base64js = {}) : exports))
+	  return parts.join('')
+	}
 
 
 /***/ },
@@ -29600,14 +29854,14 @@ var InfoxBpmnModeler =
 	module.exports = Stream;
 
 	var EE = __webpack_require__(352).EventEmitter;
-	var inherits = __webpack_require__(353);
+	var inherits = __webpack_require__(3);
 
 	inherits(Stream, EE);
-	Stream.Readable = __webpack_require__(354);
-	Stream.Writable = __webpack_require__(365);
-	Stream.Duplex = __webpack_require__(366);
-	Stream.Transform = __webpack_require__(367);
-	Stream.PassThrough = __webpack_require__(368);
+	Stream.Readable = __webpack_require__(353);
+	Stream.Writable = __webpack_require__(364);
+	Stream.Duplex = __webpack_require__(365);
+	Stream.Transform = __webpack_require__(366);
+	Stream.PassThrough = __webpack_require__(367);
 
 	// Backwards-compat with node 0.4.x
 	Stream.Stream = Stream;
@@ -29768,8 +30022,12 @@ var InfoxBpmnModeler =
 	      er = arguments[1];
 	      if (er instanceof Error) {
 	        throw er; // Unhandled 'error' event
+	      } else {
+	        // At least give some kind of context to the user
+	        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
+	        err.context = er;
+	        throw err;
 	      }
-	      throw TypeError('Uncaught, unspecified "error" event.');
 	    }
 	  }
 
@@ -30011,56 +30269,26 @@ var InfoxBpmnModeler =
 
 /***/ },
 /* 353 */
-/***/ function(module, exports) {
-
-	if (typeof Object.create === 'function') {
-	  // implementation from standard node.js 'util' module
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    ctor.prototype = Object.create(superCtor.prototype, {
-	      constructor: {
-	        value: ctor,
-	        enumerable: false,
-	        writable: true,
-	        configurable: true
-	      }
-	    });
-	  };
-	} else {
-	  // old school shim for old browsers
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    var TempCtor = function () {}
-	    TempCtor.prototype = superCtor.prototype
-	    ctor.prototype = new TempCtor()
-	    ctor.prototype.constructor = ctor
-	  }
-	}
-
-
-/***/ },
-/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = __webpack_require__(356);
+	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = __webpack_require__(355);
 	exports.Stream = __webpack_require__(351);
 	exports.Readable = exports;
-	exports.Writable = __webpack_require__(361);
-	exports.Duplex = __webpack_require__(360);
-	exports.Transform = __webpack_require__(363);
-	exports.PassThrough = __webpack_require__(364);
+	exports.Writable = __webpack_require__(360);
+	exports.Duplex = __webpack_require__(359);
+	exports.Transform = __webpack_require__(362);
+	exports.PassThrough = __webpack_require__(363);
 	if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 	  module.exports = __webpack_require__(351);
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(355)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(354)))
 
 /***/ },
-/* 355 */
+/* 354 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-
 	var process = module.exports = {};
 
 	// cached from whatever global is present so that test runners that stub it
@@ -30071,22 +30299,84 @@ var InfoxBpmnModeler =
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
 	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
 	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
 	    }
-	  }
 	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -30111,7 +30401,7 @@ var InfoxBpmnModeler =
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -30128,7 +30418,7 @@ var InfoxBpmnModeler =
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    runClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -30140,7 +30430,7 @@ var InfoxBpmnModeler =
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 
@@ -30181,7 +30471,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 356 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -30208,7 +30498,7 @@ var InfoxBpmnModeler =
 	module.exports = Readable;
 
 	/*<replacement>*/
-	var isArray = __webpack_require__(357);
+	var isArray = __webpack_require__(356);
 	/*</replacement>*/
 
 
@@ -30229,15 +30519,15 @@ var InfoxBpmnModeler =
 	var Stream = __webpack_require__(351);
 
 	/*<replacement>*/
-	var util = __webpack_require__(358);
-	util.inherits = __webpack_require__(353);
+	var util = __webpack_require__(357);
+	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
 	var StringDecoder;
 
 
 	/*<replacement>*/
-	var debug = __webpack_require__(359);
+	var debug = __webpack_require__(358);
 	if (debug && debug.debuglog) {
 	  debug = debug.debuglog('stream');
 	} else {
@@ -30249,7 +30539,7 @@ var InfoxBpmnModeler =
 	util.inherits(Readable, Stream);
 
 	function ReadableState(options, stream) {
-	  var Duplex = __webpack_require__(360);
+	  var Duplex = __webpack_require__(359);
 
 	  options = options || {};
 
@@ -30310,14 +30600,14 @@ var InfoxBpmnModeler =
 	  this.encoding = null;
 	  if (options.encoding) {
 	    if (!StringDecoder)
-	      StringDecoder = __webpack_require__(362).StringDecoder;
+	      StringDecoder = __webpack_require__(361).StringDecoder;
 	    this.decoder = new StringDecoder(options.encoding);
 	    this.encoding = options.encoding;
 	  }
 	}
 
 	function Readable(options) {
-	  var Duplex = __webpack_require__(360);
+	  var Duplex = __webpack_require__(359);
 
 	  if (!(this instanceof Readable))
 	    return new Readable(options);
@@ -30420,7 +30710,7 @@ var InfoxBpmnModeler =
 	// backwards compatibility.
 	Readable.prototype.setEncoding = function(enc) {
 	  if (!StringDecoder)
-	    StringDecoder = __webpack_require__(362).StringDecoder;
+	    StringDecoder = __webpack_require__(361).StringDecoder;
 	  this._readableState.decoder = new StringDecoder(enc);
 	  this._readableState.encoding = enc;
 	  return this;
@@ -31136,10 +31426,10 @@ var InfoxBpmnModeler =
 	  return -1;
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(355)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(354)))
 
 /***/ },
-/* 357 */
+/* 356 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
@@ -31148,7 +31438,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 358 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {// Copyright Joyent, Inc. and other Node contributors.
@@ -31262,13 +31552,13 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(347).Buffer))
 
 /***/ },
-/* 359 */
+/* 358 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 360 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -31309,12 +31599,12 @@ var InfoxBpmnModeler =
 
 
 	/*<replacement>*/
-	var util = __webpack_require__(358);
-	util.inherits = __webpack_require__(353);
+	var util = __webpack_require__(357);
+	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
-	var Readable = __webpack_require__(356);
-	var Writable = __webpack_require__(361);
+	var Readable = __webpack_require__(355);
+	var Writable = __webpack_require__(360);
 
 	util.inherits(Duplex, Readable);
 
@@ -31361,10 +31651,10 @@ var InfoxBpmnModeler =
 	  }
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(355)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(354)))
 
 /***/ },
-/* 361 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -31402,8 +31692,8 @@ var InfoxBpmnModeler =
 
 
 	/*<replacement>*/
-	var util = __webpack_require__(358);
-	util.inherits = __webpack_require__(353);
+	var util = __webpack_require__(357);
+	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
 	var Stream = __webpack_require__(351);
@@ -31417,7 +31707,7 @@ var InfoxBpmnModeler =
 	}
 
 	function WritableState(options, stream) {
-	  var Duplex = __webpack_require__(360);
+	  var Duplex = __webpack_require__(359);
 
 	  options = options || {};
 
@@ -31505,7 +31795,7 @@ var InfoxBpmnModeler =
 	}
 
 	function Writable(options) {
-	  var Duplex = __webpack_require__(360);
+	  var Duplex = __webpack_require__(359);
 
 	  // Writable ctor is applied to Duplexes, though they're not
 	  // instanceof Writable, they're instanceof Readable.
@@ -31845,10 +32135,10 @@ var InfoxBpmnModeler =
 	  state.ended = true;
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(355)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(354)))
 
 /***/ },
-/* 362 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -32075,7 +32365,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 363 */
+/* 362 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -32144,11 +32434,11 @@ var InfoxBpmnModeler =
 
 	module.exports = Transform;
 
-	var Duplex = __webpack_require__(360);
+	var Duplex = __webpack_require__(359);
 
 	/*<replacement>*/
-	var util = __webpack_require__(358);
-	util.inherits = __webpack_require__(353);
+	var util = __webpack_require__(357);
+	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
 	util.inherits(Transform, Duplex);
@@ -32290,7 +32580,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 364 */
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -32320,11 +32610,11 @@ var InfoxBpmnModeler =
 
 	module.exports = PassThrough;
 
-	var Transform = __webpack_require__(363);
+	var Transform = __webpack_require__(362);
 
 	/*<replacement>*/
-	var util = __webpack_require__(358);
-	util.inherits = __webpack_require__(353);
+	var util = __webpack_require__(357);
+	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
 	util.inherits(PassThrough, Transform);
@@ -32342,17 +32632,24 @@ var InfoxBpmnModeler =
 
 
 /***/ },
+/* 364 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(360)
+
+
+/***/ },
 /* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(361)
+	module.exports = __webpack_require__(359)
 
 
 /***/ },
 /* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(360)
+	module.exports = __webpack_require__(362)
 
 
 /***/ },
@@ -32364,13 +32661,6 @@ var InfoxBpmnModeler =
 
 /***/ },
 /* 368 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(364)
-
-
-/***/ },
-/* 369 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32423,20 +32713,20 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 370 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var map = __webpack_require__(371),
+	var map = __webpack_require__(370),
 	    forEach = __webpack_require__(329),
-	    isString = __webpack_require__(374),
-	    filter = __webpack_require__(375),
+	    isString = __webpack_require__(373),
+	    filter = __webpack_require__(374),
 	    assign = __webpack_require__(336);
 
 	var Types = __webpack_require__(269),
 	    parseNameNs = __webpack_require__(277).parseName,
-	    common = __webpack_require__(369),
+	    common = __webpack_require__(368),
 	    nameToAlias = common.nameToAlias,
 	    serializeAsType = common.serializeAsType,
 	    serializeAsProperty = common.serializeAsProperty;
@@ -32502,6 +32792,11 @@ var InfoxBpmnModeler =
 
 	    // do not serialize default equals
 	    if (value === p.default) {
+	      return false;
+	    }
+
+	    // do not serialize null properties
+	    if (value === null) {
 	      return false;
 	    }
 
@@ -33106,12 +33401,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 371 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayMap = __webpack_require__(372),
+	var arrayMap = __webpack_require__(371),
 	    baseCallback = __webpack_require__(304),
-	    baseMap = __webpack_require__(373),
+	    baseMap = __webpack_require__(372),
 	    isArray = __webpack_require__(299);
 
 	/**
@@ -33180,7 +33475,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 372 */
+/* 371 */
 /***/ function(module, exports) {
 
 	/**
@@ -33207,7 +33502,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 373 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(282),
@@ -33236,7 +33531,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 374 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObjectLike = __webpack_require__(292);
@@ -33277,12 +33572,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 375 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(376),
+	var arrayFilter = __webpack_require__(375),
 	    baseCallback = __webpack_require__(304),
-	    baseFilter = __webpack_require__(377),
+	    baseFilter = __webpack_require__(376),
 	    isArray = __webpack_require__(299);
 
 	/**
@@ -33344,7 +33639,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 376 */
+/* 375 */
 /***/ function(module, exports) {
 
 	/**
@@ -33375,7 +33670,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 377 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(282);
@@ -33403,7 +33698,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 378 */
+/* 377 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -36357,7 +36652,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 379 */
+/* 378 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -36555,7 +36850,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 380 */
+/* 379 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -36659,7 +36954,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 381 */
+/* 380 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -36902,12 +37197,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 382 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var BpmnTreeWalker = __webpack_require__(383);
+	var BpmnTreeWalker = __webpack_require__(382);
 
 
 	/**
@@ -36977,18 +37272,18 @@ var InfoxBpmnModeler =
 	module.exports.importBpmnDiagram = importBpmnDiagram;
 
 /***/ },
-/* 383 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(384),
-	    find = __webpack_require__(412),
-	    forEach = __webpack_require__(416);
+	var filter = __webpack_require__(383),
+	    find = __webpack_require__(411),
+	    forEach = __webpack_require__(415);
 
 	var Refs = __webpack_require__(143);
 
-	var elementToString = __webpack_require__(419).elementToString;
+	var elementToString = __webpack_require__(418).elementToString;
 
 	var diRefs = new Refs({ name: 'bpmnElement', enumerable: true }, { name: 'di' });
 
@@ -37428,12 +37723,12 @@ var InfoxBpmnModeler =
 	module.exports = BpmnTreeWalker;
 
 /***/ },
-/* 384 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(385),
-	    baseCallback = __webpack_require__(386),
-	    baseFilter = __webpack_require__(408),
+	var arrayFilter = __webpack_require__(384),
+	    baseCallback = __webpack_require__(385),
+	    baseFilter = __webpack_require__(407),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -37495,7 +37790,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 385 */
+/* 384 */
 /***/ function(module, exports) {
 
 	/**
@@ -37526,14 +37821,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 386 */
+/* 385 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(387),
-	    baseMatchesProperty = __webpack_require__(399),
+	var baseMatches = __webpack_require__(386),
+	    baseMatchesProperty = __webpack_require__(398),
 	    bindCallback = __webpack_require__(27),
 	    identity = __webpack_require__(28),
-	    property = __webpack_require__(406);
+	    property = __webpack_require__(405);
 
 	/**
 	 * The base implementation of `_.callback` which supports specifying the
@@ -37567,11 +37862,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 387 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(388),
-	    getMatchData = __webpack_require__(396),
+	var baseIsMatch = __webpack_require__(387),
+	    getMatchData = __webpack_require__(395),
 	    toObject = __webpack_require__(43);
 
 	/**
@@ -37603,10 +37898,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 388 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(389),
+	var baseIsEqual = __webpack_require__(388),
 	    toObject = __webpack_require__(43);
 
 	/**
@@ -37661,10 +37956,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 389 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(390),
+	var baseIsEqualDeep = __webpack_require__(389),
 	    isObject = __webpack_require__(13),
 	    isObjectLike = __webpack_require__(14);
 
@@ -37695,14 +37990,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 390 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(391),
-	    equalByTag = __webpack_require__(393),
-	    equalObjects = __webpack_require__(394),
+	var equalArrays = __webpack_require__(390),
+	    equalByTag = __webpack_require__(392),
+	    equalObjects = __webpack_require__(393),
 	    isArray = __webpack_require__(21),
-	    isTypedArray = __webpack_require__(395);
+	    isTypedArray = __webpack_require__(394);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -37803,10 +38098,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 391 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(392);
+	var arraySome = __webpack_require__(391);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -37860,7 +38155,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 392 */
+/* 391 */
 /***/ function(module, exports) {
 
 	/**
@@ -37889,7 +38184,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 393 */
+/* 392 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -37943,7 +38238,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 394 */
+/* 393 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(9);
@@ -38016,7 +38311,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 395 */
+/* 394 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isLength = __webpack_require__(18),
@@ -38096,11 +38391,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 396 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(397),
-	    pairs = __webpack_require__(398);
+	var isStrictComparable = __webpack_require__(396),
+	    pairs = __webpack_require__(397);
 
 	/**
 	 * Gets the propery names, values, and compare flags of `object`.
@@ -38123,7 +38418,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 397 */
+/* 396 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(13);
@@ -38144,7 +38439,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 398 */
+/* 397 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(9),
@@ -38183,18 +38478,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 399 */
+/* 398 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(400),
-	    baseIsEqual = __webpack_require__(389),
-	    baseSlice = __webpack_require__(401),
+	var baseGet = __webpack_require__(399),
+	    baseIsEqual = __webpack_require__(388),
+	    baseSlice = __webpack_require__(400),
 	    isArray = __webpack_require__(21),
-	    isKey = __webpack_require__(402),
-	    isStrictComparable = __webpack_require__(397),
-	    last = __webpack_require__(403),
+	    isKey = __webpack_require__(401),
+	    isStrictComparable = __webpack_require__(396),
+	    last = __webpack_require__(402),
 	    toObject = __webpack_require__(43),
-	    toPath = __webpack_require__(404);
+	    toPath = __webpack_require__(403);
 
 	/**
 	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -38234,7 +38529,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 400 */
+/* 399 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var toObject = __webpack_require__(43);
@@ -38269,7 +38564,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 401 */
+/* 400 */
 /***/ function(module, exports) {
 
 	/**
@@ -38307,7 +38602,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 402 */
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isArray = __webpack_require__(21),
@@ -38341,7 +38636,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 403 */
+/* 402 */
 /***/ function(module, exports) {
 
 	/**
@@ -38366,10 +38661,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 404 */
+/* 403 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(405),
+	var baseToString = __webpack_require__(404),
 	    isArray = __webpack_require__(21);
 
 	/** Used to match property names within property paths. */
@@ -38400,7 +38695,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 405 */
+/* 404 */
 /***/ function(module, exports) {
 
 	/**
@@ -38419,12 +38714,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 406 */
+/* 405 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseProperty = __webpack_require__(17),
-	    basePropertyDeep = __webpack_require__(407),
-	    isKey = __webpack_require__(402);
+	    basePropertyDeep = __webpack_require__(406),
+	    isKey = __webpack_require__(401);
 
 	/**
 	 * Creates a function that returns the property value at `path` on a
@@ -38456,11 +38751,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 407 */
+/* 406 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(400),
-	    toPath = __webpack_require__(404);
+	var baseGet = __webpack_require__(399),
+	    toPath = __webpack_require__(403);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -38481,10 +38776,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 408 */
+/* 407 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(409);
+	var baseEach = __webpack_require__(408);
 
 	/**
 	 * The base implementation of `_.filter` without support for callback
@@ -38509,11 +38804,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 409 */
+/* 408 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(410),
-	    createBaseEach = __webpack_require__(411);
+	var baseForOwn = __webpack_require__(409),
+	    createBaseEach = __webpack_require__(410);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -38530,7 +38825,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 410 */
+/* 409 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseFor = __webpack_require__(46),
@@ -38553,7 +38848,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 411 */
+/* 410 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var getLength = __webpack_require__(16),
@@ -38590,11 +38885,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 412 */
+/* 411 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(409),
-	    createFind = __webpack_require__(413);
+	var baseEach = __webpack_require__(408),
+	    createFind = __webpack_require__(412);
 
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -38652,12 +38947,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 413 */
+/* 412 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(386),
-	    baseFind = __webpack_require__(414),
-	    baseFindIndex = __webpack_require__(415),
+	var baseCallback = __webpack_require__(385),
+	    baseFind = __webpack_require__(413),
+	    baseFindIndex = __webpack_require__(414),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -38683,7 +38978,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 414 */
+/* 413 */
 /***/ function(module, exports) {
 
 	/**
@@ -38714,7 +39009,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 415 */
+/* 414 */
 /***/ function(module, exports) {
 
 	/**
@@ -38743,12 +39038,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 416 */
+/* 415 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(417),
-	    baseEach = __webpack_require__(409),
-	    createForEach = __webpack_require__(418);
+	var arrayEach = __webpack_require__(416),
+	    baseEach = __webpack_require__(408),
+	    createForEach = __webpack_require__(417);
 
 	/**
 	 * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -38786,7 +39081,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 417 */
+/* 416 */
 /***/ function(module, exports) {
 
 	/**
@@ -38814,7 +39109,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 418 */
+/* 417 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var bindCallback = __webpack_require__(27),
@@ -38840,7 +39135,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 419 */
+/* 418 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38854,29 +39149,29 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 420 */
+/* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(421),
-	    __webpack_require__(446)
+	    __webpack_require__(420),
+	    __webpack_require__(445)
 	  ]
 	};
 
 /***/ },
-/* 421 */
+/* 420 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'bpmnRenderer' ],
-	  bpmnRenderer: [ 'type', __webpack_require__(422) ],
-	  pathMap: [ 'type', __webpack_require__(445) ]
+	  bpmnRenderer: [ 'type', __webpack_require__(421) ],
+	  pathMap: [ 'type', __webpack_require__(444) ]
 	};
 
 
 /***/ },
-/* 422 */
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38884,16 +39179,16 @@ var InfoxBpmnModeler =
 	var inherits = __webpack_require__(3),
 	    isObject = __webpack_require__(13),
 	    assign = __webpack_require__(7),
-	    forEach = __webpack_require__(416),
-	    every = __webpack_require__(423),
-	    includes = __webpack_require__(426),
-	    some = __webpack_require__(429);
+	    forEach = __webpack_require__(415),
+	    every = __webpack_require__(422),
+	    includes = __webpack_require__(425),
+	    some = __webpack_require__(428);
 
 	var BaseRenderer = __webpack_require__(64),
-	    TextUtil = __webpack_require__(431),
-	    DiUtil = __webpack_require__(443);
+	    TextUtil = __webpack_require__(430),
+	    DiUtil = __webpack_require__(442);
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
 	var RenderUtil = __webpack_require__(65);
 
@@ -39186,9 +39481,16 @@ var InfoxBpmnModeler =
 	    return renderLabel(p, semantic.name, { box: element, align: align, padding: 5 });
 	  }
 
-	  function renderExternalLabel(p, element, align) {
+	  function renderExternalLabel(p, element) {
 	    var semantic = getSemantic(element);
-	    return renderLabel(p, semantic.name, { box: element, align: align, style: { fontSize: '11px' } });
+	    var box = {
+	      width: 90,
+	      height: 30,
+	      x: element.width / 2 + element.x,
+	      y: element.height / 2 + element.y
+	    };
+
+	    return renderLabel(p, semantic.name, { box: box, style: { fontSize: '11px' } });
 	  }
 
 	  function renderLaneLabel(p, text, element) {
@@ -39280,7 +39582,7 @@ var InfoxBpmnModeler =
 	        strokeLinecap: 'square'
 	      });
 
-	      for(var i = 0;i < 12;i++) {
+	      for (var i = 0;i < 12;i++) {
 
 	        var linePathData = pathMap.getScaledPath('EVENT_TIMER_LINE', {
 	          xScaleFactor: 0.75,
@@ -39313,7 +39615,7 @@ var InfoxBpmnModeler =
 	        containerHeight: event.height,
 	        position: {
 	          mx: 0.5,
-	          my: 0.555
+	          my: 0.2
 	        }
 	      });
 
@@ -39827,7 +40129,7 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      if (!!(getDi(element).isMarkerVisible)) {
+	      if ((getDi(element).isMarkerVisible)) {
 	        drawPath(p, pathData, {
 	          strokeWidth: 1,
 	          fill: 'black'
@@ -40142,7 +40444,27 @@ var InfoxBpmnModeler =
 	      });
 	    },
 	    'label': function(p, element) {
-	      return renderExternalLabel(p, element, '');
+	      // Update external label size and bounds during rendering when
+	      // we have the actual rendered bounds anyway.
+
+	      var textElement = renderExternalLabel(p, element);
+
+	      var textBBox = textElement.getBBox();
+
+	      // update element.x so that the layouted text is still
+	      // center alligned (newX = oldMidX - newWidth / 2)
+	      element.x = Math.round(element.x + element.width / 2) - Math.round((textBBox.width / 2));
+
+	      // take element width, height from actual bounds
+	      element.width = Math.ceil(textBBox.width);
+	      element.height = Math.ceil(textBBox.height);
+
+	      // compensate bounding box x
+	      textElement.attr({
+	        transform: 'translate(' + (-1 * textBBox.x) + ',0)'
+	      });
+
+	      return textElement;
 	    },
 	    'bpmn:TextAnnotation': function(p, element) {
 	      var style = {
@@ -40535,12 +40857,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 423 */
+/* 422 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEvery = __webpack_require__(424),
-	    baseCallback = __webpack_require__(386),
-	    baseEvery = __webpack_require__(425),
+	var arrayEvery = __webpack_require__(423),
+	    baseCallback = __webpack_require__(385),
+	    baseEvery = __webpack_require__(424),
 	    isArray = __webpack_require__(21),
 	    isIterateeCall = __webpack_require__(29);
 
@@ -40607,7 +40929,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 424 */
+/* 423 */
 /***/ function(module, exports) {
 
 	/**
@@ -40636,10 +40958,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 425 */
+/* 424 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(409);
+	var baseEach = __webpack_require__(408);
 
 	/**
 	 * The base implementation of `_.every` without support for callback
@@ -40664,7 +40986,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 426 */
+/* 425 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseIndexOf = __webpack_require__(34),
@@ -40673,7 +40995,7 @@ var InfoxBpmnModeler =
 	    isIterateeCall = __webpack_require__(29),
 	    isLength = __webpack_require__(18),
 	    isString = __webpack_require__(48),
-	    values = __webpack_require__(427);
+	    values = __webpack_require__(426);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeMax = Math.max;
@@ -40727,10 +41049,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 427 */
+/* 426 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseValues = __webpack_require__(428),
+	var baseValues = __webpack_require__(427),
 	    keys = __webpack_require__(9);
 
 	/**
@@ -40766,7 +41088,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 428 */
+/* 427 */
 /***/ function(module, exports) {
 
 	/**
@@ -40794,12 +41116,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 429 */
+/* 428 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(392),
-	    baseCallback = __webpack_require__(386),
-	    baseSome = __webpack_require__(430),
+	var arraySome = __webpack_require__(391),
+	    baseCallback = __webpack_require__(385),
+	    baseSome = __webpack_require__(429),
 	    isArray = __webpack_require__(21),
 	    isIterateeCall = __webpack_require__(29);
 
@@ -40867,10 +41189,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 430 */
+/* 429 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(409);
+	var baseEach = __webpack_require__(408);
 
 	/**
 	 * The base implementation of `_.some` without support for callback shorthands
@@ -40896,17 +41218,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 431 */
+/* 430 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isObject = __webpack_require__(74),
 	    assign = __webpack_require__(77),
-	    pick = __webpack_require__(432),
+	    pick = __webpack_require__(431),
 	    forEach = __webpack_require__(128),
 	    reduce = __webpack_require__(94),
-	    merge = __webpack_require__(438);
+	    merge = __webpack_require__(437);
 
 	var Snap = __webpack_require__(66);
 
@@ -40983,7 +41305,7 @@ var InfoxBpmnModeler =
 	        remainder = originalLine.slice(fitLine.length).trim();
 
 	    if (/-\s*$/.test(remainder)) {
-	      nextLine = remainder.replace(/-\s*$/, '') + nextLine.replace(/^\s+/, '');
+	      nextLine = remainder + nextLine.replace(/^\s+/, '');
 	    } else {
 	      nextLine = remainder + ' ' + nextLine;
 	    }
@@ -41152,13 +41474,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 432 */
+/* 431 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(433),
+	var baseFlatten = __webpack_require__(432),
 	    bindCallback = __webpack_require__(90),
-	    pickByArray = __webpack_require__(435),
-	    pickByCallback = __webpack_require__(436),
+	    pickByArray = __webpack_require__(434),
+	    pickByCallback = __webpack_require__(435),
 	    restParam = __webpack_require__(93);
 
 	/**
@@ -41200,10 +41522,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 433 */
+/* 432 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayPush = __webpack_require__(434),
+	var arrayPush = __webpack_require__(433),
 	    isArguments = __webpack_require__(84),
 	    isArray = __webpack_require__(70),
 	    isArrayLike = __webpack_require__(80),
@@ -41247,7 +41569,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 434 */
+/* 433 */
 /***/ function(module, exports) {
 
 	/**
@@ -41273,7 +41595,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 435 */
+/* 434 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var toObject = __webpack_require__(100);
@@ -41307,10 +41629,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 436 */
+/* 435 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(437);
+	var baseForIn = __webpack_require__(436);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties `predicate`
@@ -41335,7 +41657,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 437 */
+/* 436 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseFor = __webpack_require__(98),
@@ -41358,10 +41680,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 438 */
+/* 437 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMerge = __webpack_require__(439),
+	var baseMerge = __webpack_require__(438),
 	    createAssigner = __webpack_require__(89);
 
 	/**
@@ -41418,11 +41740,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 439 */
+/* 438 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayEach = __webpack_require__(129),
-	    baseMergeDeep = __webpack_require__(440),
+	    baseMergeDeep = __webpack_require__(439),
 	    isArray = __webpack_require__(70),
 	    isArrayLike = __webpack_require__(80),
 	    isObject = __webpack_require__(74),
@@ -41480,16 +41802,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 440 */
+/* 439 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayCopy = __webpack_require__(155),
 	    isArguments = __webpack_require__(84),
 	    isArray = __webpack_require__(70),
 	    isArrayLike = __webpack_require__(80),
-	    isPlainObject = __webpack_require__(441),
+	    isPlainObject = __webpack_require__(440),
 	    isTypedArray = __webpack_require__(112),
-	    toPlainObject = __webpack_require__(442);
+	    toPlainObject = __webpack_require__(441);
 
 	/**
 	 * A specialized version of `baseMerge` for arrays and objects which performs
@@ -41553,10 +41875,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 441 */
+/* 440 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(437),
+	var baseForIn = __webpack_require__(436),
 	    isArguments = __webpack_require__(84),
 	    isObjectLike = __webpack_require__(75);
 
@@ -41630,7 +41952,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 442 */
+/* 441 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCopy = __webpack_require__(88),
@@ -41667,13 +41989,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 443 */
+/* 442 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(444).is,
-	    getBusinessObject = __webpack_require__(444).getBusinessObject;
+	var is = __webpack_require__(443).is,
+	    getBusinessObject = __webpack_require__(443).getBusinessObject;
 
 	module.exports.isExpanded = function(element) {
 
@@ -41702,7 +42024,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 444 */
+/* 443 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41739,7 +42061,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 445 */
+/* 444 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41799,12 +42121,11 @@ var InfoxBpmnModeler =
 	      widthElements: [10, 20]
 	    },
 	    'EVENT_ESCALATION': {
-	      d: 'm {mx},{my} c -{e.x1},{e.y0} -{e.x3},{e.y1} -{e.x5},{e.y4} {e.x1},-{e.y3} {e.x3},-{e.y5} {e.x5},-{e.y6} ' +
-	        '{e.x0},{e.y3} {e.x2},{e.y5} {e.x4},{e.y6} -{e.x0},-{e.y0} -{e.x2},-{e.y1} -{e.x4},-{e.y4} z',
+	      d: 'M {mx},{my} l {e.x0},{e.y0} l -{e.x0},-{e.y1} l -{e.x0},{e.y1} Z',
 	      height: 36,
 	      width: 36,
-	      heightElements: [2.382, 4.764, 4.926, 6.589333, 7.146, 13.178667, 19.768],
-	      widthElements: [2.463, 2.808, 4.926, 5.616, 7.389, 8.424]
+	      heightElements: [20, 7],
+	      widthElements: [8]
 	    },
 	    'EVENT_CONDITIONAL': {
 	      d: 'M {e.x0},{e.y0} l {e.x1},0 l 0,{e.y2} l -{e.x1},0 Z ' +
@@ -42155,7 +42476,7 @@ var InfoxBpmnModeler =
 	    // compute the start point of the path
 	    var mx, my;
 
-	    if(!!param.abspos) {
+	    if (param.abspos) {
 	      mx = param.abspos.x;
 	      my = param.abspos.y;
 	    } else {
@@ -42164,7 +42485,7 @@ var InfoxBpmnModeler =
 	    }
 
 	    var coordinates = {}; //map for the scaled coordinates
-	    if(param.position) {
+	    if (param.position) {
 
 	      // path
 	      var heightRatio = (param.containerHeight / rawPath.height) * param.yScaleFactor;
@@ -42198,26 +42519,26 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 446 */
+/* 445 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(447)
+	    __webpack_require__(446)
 	  ],
-	  bpmnImporter: [ 'type', __webpack_require__(449) ]
+	  bpmnImporter: [ 'type', __webpack_require__(448) ]
+	};
+
+/***/ },
+/* 446 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  translate: [ 'value', __webpack_require__(447) ]
 	};
 
 /***/ },
 /* 447 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  translate: [ 'value', __webpack_require__(448) ]
-	};
-
-/***/ },
-/* 448 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -42250,22 +42571,22 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 449 */
+/* 448 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(7),
-	    map = __webpack_require__(450);
+	    map = __webpack_require__(449);
 
-	var LabelUtil = __webpack_require__(452);
+	var LabelUtil = __webpack_require__(451);
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
 	var hasExternalLabel = LabelUtil.hasExternalLabel,
 	    getExternalLabelBounds = LabelUtil.getExternalLabelBounds,
-	    isExpanded = __webpack_require__(443).isExpanded,
-	    elementToString = __webpack_require__(419).elementToString;
+	    isExpanded = __webpack_require__(442).isExpanded,
+	    elementToString = __webpack_require__(418).elementToString;
 
 
 	function elementData(semantic, attrs) {
@@ -42284,10 +42605,10 @@ var InfoxBpmnModeler =
 
 	function notYetDrawn(translate, semantic, refSemantic, property) {
 	  return new Error(translate('element {element} referenced by {referenced}#{property} not yet drawn', {
-	                    element: elementToString(refSemantic),
-	                    referenced: elementToString(semantic),
-	                    property: property
-	                  }));
+	    element: elementToString(refSemantic),
+	    referenced: elementToString(semantic),
+	    property: property
+	  }));
 	}
 
 	/**
@@ -42320,7 +42641,8 @@ var InfoxBpmnModeler =
 
 	  var di = semantic.di,
 	      element,
-	      translate = this._translate;
+	      translate = this._translate,
+	      hidden;
 
 	  // ROOT ELEMENT
 	  // handle the special case that we deal with a
@@ -42337,7 +42659,7 @@ var InfoxBpmnModeler =
 	  else if (is(di, 'bpmndi:BPMNShape')) {
 
 	    var collapsed = !isExpanded(semantic);
-	    var hidden = parentElement && (parentElement.hidden || parentElement.collapsed);
+	    hidden = parentElement && (parentElement.hidden || parentElement.collapsed);
 
 	    var bounds = semantic.di.bounds;
 
@@ -42363,7 +42685,10 @@ var InfoxBpmnModeler =
 	    var source = this._getSource(semantic),
 	        target = this._getTarget(semantic);
 
+	    hidden = parentElement && (parentElement.hidden || parentElement.collapsed);
+
 	    element = this._elementFactory.createConnection(elementData(semantic, {
+	      hidden: hidden,
 	      source: source,
 	      target: target,
 	      waypoints: collectWaypoints(semantic.di.waypoint)
@@ -42377,9 +42702,9 @@ var InfoxBpmnModeler =
 	    this._canvas.addConnection(element, parentElement);
 	  } else {
 	    throw new Error(translate('unknown di {di} for element {semantic}', {
-	                      di: elementToString(di),
-	                      semantic: elementToString(semantic)
-	                    }));
+	      di: elementToString(di),
+	      semantic: elementToString(semantic)
+	    }));
 	  }
 	  // (optional) LABEL
 	  if (hasExternalLabel(semantic)) {
@@ -42504,13 +42829,14 @@ var InfoxBpmnModeler =
 	  return this._elementRegistry.get(semantic.id);
 	};
 
+
 /***/ },
-/* 450 */
+/* 449 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayMap = __webpack_require__(32),
-	    baseCallback = __webpack_require__(386),
-	    baseMap = __webpack_require__(451),
+	    baseCallback = __webpack_require__(385),
+	    baseMap = __webpack_require__(450),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -42579,10 +42905,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 451 */
+/* 450 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(409),
+	var baseEach = __webpack_require__(408),
 	    isArrayLike = __webpack_require__(15);
 
 	/**
@@ -42608,14 +42934,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 452 */
+/* 451 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(7);
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
 	var DEFAULT_LABEL_SIZE = module.exports.DEFAULT_LABEL_SIZE = {
 	  width: 90,
@@ -42753,41 +43079,41 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 453 */
+/* 452 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'selectionVisuals', 'selectionBehavior' ],
 	  __depends__: [
-	    __webpack_require__(454),
-	    __webpack_require__(464)
+	    __webpack_require__(453),
+	    __webpack_require__(463)
 	  ],
-	  selection: [ 'type', __webpack_require__(466) ],
-	  selectionVisuals: [ 'type', __webpack_require__(467) ],
-	  selectionBehavior: [ 'type', __webpack_require__(468) ]
+	  selection: [ 'type', __webpack_require__(465) ],
+	  selectionVisuals: [ 'type', __webpack_require__(466) ],
+	  selectionBehavior: [ 'type', __webpack_require__(467) ]
 	};
 
+
+/***/ },
+/* 453 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __init__: [ 'interactionEvents' ],
+	  interactionEvents: [ 'type', __webpack_require__(454) ]
+	};
 
 /***/ },
 /* 454 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-	  __init__: [ 'interactionEvents' ],
-	  interactionEvents: [ 'type', __webpack_require__(455) ]
-	};
-
-/***/ },
-/* 455 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	var forEach = __webpack_require__(128),
-	    domDelegate = __webpack_require__(456);
+	    domDelegate = __webpack_require__(455);
 
 
-	var isPrimaryButton = __webpack_require__(461).isPrimaryButton;
+	var isPrimaryButton = __webpack_require__(460).isPrimaryButton;
 
 	var Snap = __webpack_require__(66);
 
@@ -42795,6 +43121,8 @@ var InfoxBpmnModeler =
 
 	var createLine = renderUtil.createLine,
 	    updateLine = renderUtil.updateLine;
+
+	var LOW_PRIORITY = 500;
 
 	/**
 	 * A plugin that provides interaction events for diagram elements.
@@ -42958,9 +43286,10 @@ var InfoxBpmnModeler =
 	    hit.attr(HIT_STYLE).appendTo(gfx.node);
 	  });
 
-	  // update djs-hit on change
-
-	  eventBus.on('shape.changed', function(event) {
+	  // Update djs-hit on change.
+	  // A low priortity is necessary, because djs-hit of labels has to be updated
+	  // after the label bounds have been updated in the renderer.
+	  eventBus.on('shape.changed', LOW_PRIORITY, function(event) {
 
 	    var element = event.element,
 	        gfx = event.gfx,
@@ -43068,13 +43397,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 456 */
+/* 455 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(457);
+	module.exports = __webpack_require__(456);
 
 /***/ },
-/* 457 */
+/* 456 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43082,15 +43411,15 @@ var InfoxBpmnModeler =
 	 */
 
 	try {
-	  var closest = __webpack_require__(458);
+	  var closest = __webpack_require__(457);
 	} catch(err) {
-	  var closest = __webpack_require__(458);
+	  var closest = __webpack_require__(457);
 	}
 
 	try {
-	  var event = __webpack_require__(460);
+	  var event = __webpack_require__(459);
 	} catch(err) {
-	  var event = __webpack_require__(460);
+	  var event = __webpack_require__(459);
 	}
 
 	/**
@@ -43131,10 +43460,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 458 */
+/* 457 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var matches = __webpack_require__(459)
+	var matches = __webpack_require__(458)
 
 	module.exports = function (element, selector, checkYoSelf, root) {
 	  element = checkYoSelf ? {parentNode: element} : element
@@ -43156,7 +43485,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 459 */
+/* 458 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43212,7 +43541,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 460 */
+/* 459 */
 /***/ function(module, exports) {
 
 	var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
@@ -43252,14 +43581,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 461 */
+/* 460 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getOriginalEvent = __webpack_require__(462).getOriginal;
+	var getOriginalEvent = __webpack_require__(461).getOriginal;
 
-	var isMac = __webpack_require__(463).isMac;
+	var isMac = __webpack_require__(462).isMac;
 
 
 	function isPrimaryButton(event) {
@@ -43295,7 +43624,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 462 */
+/* 461 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -43370,7 +43699,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 463 */
+/* 462 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -43380,24 +43709,25 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 464 */
+/* 463 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'outline' ],
-	  outline: [ 'type', __webpack_require__(465) ]
+	  outline: [ 'type', __webpack_require__(464) ]
 	};
 
 /***/ },
-/* 465 */
+/* 464 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var getBBox = __webpack_require__(137).getBBox;
 
+	var LOW_PRIORITY = 500;
 
 	/**
 	 * @class
@@ -43421,7 +43751,9 @@ var InfoxBpmnModeler =
 	    return gfx.rect(10, 10, 0, 0).attr(OUTLINE_STYLE);
 	  }
 
-	  eventBus.on([ 'shape.added', 'shape.changed' ], function(event) {
+	  // A low priortity is necessary, because outlines of labels have to be updated
+	  // after the label bounds have been updated in the renderer.
+	  eventBus.on([ 'shape.added', 'shape.changed' ], LOW_PRIORITY, function(event) {
 	    var element = event.element,
 	        gfx     = event.gfx;
 
@@ -43495,7 +43827,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 466 */
+/* 465 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43598,7 +43930,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 467 */
+/* 466 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43680,12 +44012,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 468 */
+/* 467 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var hasPrimaryModifier = __webpack_require__(461).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+
+	var find = __webpack_require__(468);
 
 
 	function SelectionBehavior(eventBus, selection, canvas, elementRegistry) {
@@ -43715,11 +44049,14 @@ var InfoxBpmnModeler =
 
 	    // make sure at least the main moved element is being
 	    // selected after a move operation
-	    if (shape && previousSelection.indexOf(shape) === -1) {
+	    var inSelection = find(previousSelection, function(selectedShape) {
+	      return shape.id === selectedShape.id;
+	    });
+
+	    if (!inSelection) {
 	      selection.select(shape);
 	    }
 	  });
-
 
 	  // Shift + click selection
 	  eventBus.on('element.click', function(event) {
@@ -43759,37 +44096,191 @@ var InfoxBpmnModeler =
 
 
 /***/ },
+/* 468 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseEach = __webpack_require__(96),
+	    createFind = __webpack_require__(469);
+
+	/**
+	 * Iterates over elements of `collection`, returning the first element
+	 * `predicate` returns truthy for. The predicate is bound to `thisArg` and
+	 * invoked with three arguments: (value, index|key, collection).
+	 *
+	 * If a property name is provided for `predicate` the created `_.property`
+	 * style callback returns the property value of the given element.
+	 *
+	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
+	 * style callback returns `true` for elements that have a matching property
+	 * value, else `false`.
+	 *
+	 * If an object is provided for `predicate` the created `_.matches` style
+	 * callback returns `true` for elements that have the properties of the given
+	 * object, else `false`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias detect
+	 * @category Collection
+	 * @param {Array|Object|string} collection The collection to search.
+	 * @param {Function|Object|string} [predicate=_.identity] The function invoked
+	 *  per iteration.
+	 * @param {*} [thisArg] The `this` binding of `predicate`.
+	 * @returns {*} Returns the matched element, else `undefined`.
+	 * @example
+	 *
+	 * var users = [
+	 *   { 'user': 'barney',  'age': 36, 'active': true },
+	 *   { 'user': 'fred',    'age': 40, 'active': false },
+	 *   { 'user': 'pebbles', 'age': 1,  'active': true }
+	 * ];
+	 *
+	 * _.result(_.find(users, function(chr) {
+	 *   return chr.age < 40;
+	 * }), 'user');
+	 * // => 'barney'
+	 *
+	 * // using the `_.matches` callback shorthand
+	 * _.result(_.find(users, { 'age': 1, 'active': true }), 'user');
+	 * // => 'pebbles'
+	 *
+	 * // using the `_.matchesProperty` callback shorthand
+	 * _.result(_.find(users, 'active', false), 'user');
+	 * // => 'fred'
+	 *
+	 * // using the `_.property` callback shorthand
+	 * _.result(_.find(users, 'active'), 'user');
+	 * // => 'barney'
+	 */
+	var find = createFind(baseEach);
+
+	module.exports = find;
+
+
+/***/ },
 /* 469 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCallback = __webpack_require__(103),
+	    baseFind = __webpack_require__(470),
+	    baseFindIndex = __webpack_require__(471),
+	    isArray = __webpack_require__(70);
+
+	/**
+	 * Creates a `_.find` or `_.findLast` function.
+	 *
+	 * @private
+	 * @param {Function} eachFunc The function to iterate over a collection.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {Function} Returns the new find function.
+	 */
+	function createFind(eachFunc, fromRight) {
+	  return function(collection, predicate, thisArg) {
+	    predicate = baseCallback(predicate, thisArg, 3);
+	    if (isArray(collection)) {
+	      var index = baseFindIndex(collection, predicate, fromRight);
+	      return index > -1 ? collection[index] : undefined;
+	    }
+	    return baseFind(collection, predicate, eachFunc);
+	  };
+	}
+
+	module.exports = createFind;
+
+
+/***/ },
+/* 470 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
+	 * without support for callback shorthands and `this` binding, which iterates
+	 * over `collection` using the provided `eachFunc`.
+	 *
+	 * @private
+	 * @param {Array|Object|string} collection The collection to search.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @param {Function} eachFunc The function to iterate over `collection`.
+	 * @param {boolean} [retKey] Specify returning the key of the found element
+	 *  instead of the element itself.
+	 * @returns {*} Returns the found element or its key, else `undefined`.
+	 */
+	function baseFind(collection, predicate, eachFunc, retKey) {
+	  var result;
+	  eachFunc(collection, function(value, key, collection) {
+	    if (predicate(value, key, collection)) {
+	      result = retKey ? key : value;
+	      return false;
+	    }
+	  });
+	  return result;
+	}
+
+	module.exports = baseFind;
+
+
+/***/ },
+/* 471 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.findIndex` and `_.findLastIndex` without
+	 * support for callback shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array} array The array to search.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {number} Returns the index of the matched value, else `-1`.
+	 */
+	function baseFindIndex(array, predicate, fromRight) {
+	  var length = array.length,
+	      index = fromRight ? length : -1;
+
+	  while ((fromRight ? index-- : ++index < length)) {
+	    if (predicate(array[index], index, array)) {
+	      return index;
+	    }
+	  }
+	  return -1;
+	}
+
+	module.exports = baseFindIndex;
+
+
+/***/ },
+/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'overlays' ],
-	  overlays: [ 'type', __webpack_require__(470) ]
+	  overlays: [ 'type', __webpack_require__(473) ]
 	};
 
 /***/ },
-/* 470 */
+/* 473 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isArray = __webpack_require__(70),
-	    isString = __webpack_require__(471),
+	    isString = __webpack_require__(474),
 	    isObject = __webpack_require__(74),
 	    assign = __webpack_require__(77),
 	    forEach = __webpack_require__(128),
-	    find = __webpack_require__(472),
-	    filter = __webpack_require__(476);
+	    find = __webpack_require__(468),
+	    filter = __webpack_require__(475);
 
 	var domify = __webpack_require__(50),
-	    domClasses = __webpack_require__(479),
-	    domAttr = __webpack_require__(482),
-	    domRemove = __webpack_require__(54);
+	    domClasses = __webpack_require__(478),
+	    domAttr = __webpack_require__(481),
+	    domRemove = __webpack_require__(54),
+	    domClear = __webpack_require__(175);
 
 	var getBBox = __webpack_require__(137).getBBox;
 
 	// document wide unique overlay ids
-	var ids = new (__webpack_require__(483))('ov');
+	var ids = new (__webpack_require__(482))('ov');
 
 
 	function createRoot(parent) {
@@ -44054,6 +44545,13 @@ var InfoxBpmnModeler =
 	  setVisible(this._overlayRoot, false);
 	};
 
+	Overlays.prototype.clear = function() {
+	  this._overlays = {};
+
+	  this._overlayContainers = [];
+
+	  domClear(this._overlayRoot);
+	};
 
 	Overlays.prototype._updateOverlayContainer = function(container) {
 	  var element = container.element,
@@ -44306,11 +44804,16 @@ var InfoxBpmnModeler =
 	      domClasses(container.html)[e.add ? 'add' : 'remove'](e.marker);
 	    }
 	  });
+
+
+	  // clear overlays with diagram
+
+	  eventBus.on('diagram.clear', this.clear, this);
 	};
 
 
 /***/ },
-/* 471 */
+/* 474 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObjectLike = __webpack_require__(75);
@@ -44351,165 +44854,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 472 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseEach = __webpack_require__(96),
-	    createFind = __webpack_require__(473);
-
-	/**
-	 * Iterates over elements of `collection`, returning the first element
-	 * `predicate` returns truthy for. The predicate is bound to `thisArg` and
-	 * invoked with three arguments: (value, index|key, collection).
-	 *
-	 * If a property name is provided for `predicate` the created `_.property`
-	 * style callback returns the property value of the given element.
-	 *
-	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
-	 * style callback returns `true` for elements that have a matching property
-	 * value, else `false`.
-	 *
-	 * If an object is provided for `predicate` the created `_.matches` style
-	 * callback returns `true` for elements that have the properties of the given
-	 * object, else `false`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias detect
-	 * @category Collection
-	 * @param {Array|Object|string} collection The collection to search.
-	 * @param {Function|Object|string} [predicate=_.identity] The function invoked
-	 *  per iteration.
-	 * @param {*} [thisArg] The `this` binding of `predicate`.
-	 * @returns {*} Returns the matched element, else `undefined`.
-	 * @example
-	 *
-	 * var users = [
-	 *   { 'user': 'barney',  'age': 36, 'active': true },
-	 *   { 'user': 'fred',    'age': 40, 'active': false },
-	 *   { 'user': 'pebbles', 'age': 1,  'active': true }
-	 * ];
-	 *
-	 * _.result(_.find(users, function(chr) {
-	 *   return chr.age < 40;
-	 * }), 'user');
-	 * // => 'barney'
-	 *
-	 * // using the `_.matches` callback shorthand
-	 * _.result(_.find(users, { 'age': 1, 'active': true }), 'user');
-	 * // => 'pebbles'
-	 *
-	 * // using the `_.matchesProperty` callback shorthand
-	 * _.result(_.find(users, 'active', false), 'user');
-	 * // => 'fred'
-	 *
-	 * // using the `_.property` callback shorthand
-	 * _.result(_.find(users, 'active'), 'user');
-	 * // => 'barney'
-	 */
-	var find = createFind(baseEach);
-
-	module.exports = find;
-
-
-/***/ },
-/* 473 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCallback = __webpack_require__(103),
-	    baseFind = __webpack_require__(474),
-	    baseFindIndex = __webpack_require__(475),
-	    isArray = __webpack_require__(70);
-
-	/**
-	 * Creates a `_.find` or `_.findLast` function.
-	 *
-	 * @private
-	 * @param {Function} eachFunc The function to iterate over a collection.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {Function} Returns the new find function.
-	 */
-	function createFind(eachFunc, fromRight) {
-	  return function(collection, predicate, thisArg) {
-	    predicate = baseCallback(predicate, thisArg, 3);
-	    if (isArray(collection)) {
-	      var index = baseFindIndex(collection, predicate, fromRight);
-	      return index > -1 ? collection[index] : undefined;
-	    }
-	    return baseFind(collection, predicate, eachFunc);
-	  };
-	}
-
-	module.exports = createFind;
-
-
-/***/ },
-/* 474 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
-	 * without support for callback shorthands and `this` binding, which iterates
-	 * over `collection` using the provided `eachFunc`.
-	 *
-	 * @private
-	 * @param {Array|Object|string} collection The collection to search.
-	 * @param {Function} predicate The function invoked per iteration.
-	 * @param {Function} eachFunc The function to iterate over `collection`.
-	 * @param {boolean} [retKey] Specify returning the key of the found element
-	 *  instead of the element itself.
-	 * @returns {*} Returns the found element or its key, else `undefined`.
-	 */
-	function baseFind(collection, predicate, eachFunc, retKey) {
-	  var result;
-	  eachFunc(collection, function(value, key, collection) {
-	    if (predicate(value, key, collection)) {
-	      result = retKey ? key : value;
-	      return false;
-	    }
-	  });
-	  return result;
-	}
-
-	module.exports = baseFind;
-
-
-/***/ },
 /* 475 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.findIndex` and `_.findLastIndex` without
-	 * support for callback shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array} array The array to search.
-	 * @param {Function} predicate The function invoked per iteration.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {number} Returns the index of the matched value, else `-1`.
-	 */
-	function baseFindIndex(array, predicate, fromRight) {
-	  var length = array.length,
-	      index = fromRight ? length : -1;
-
-	  while ((fromRight ? index-- : ++index < length)) {
-	    if (predicate(array[index], index, array)) {
-	      return index;
-	    }
-	  }
-	  return -1;
-	}
-
-	module.exports = baseFindIndex;
-
-
-/***/ },
-/* 476 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(477),
+	var arrayFilter = __webpack_require__(476),
 	    baseCallback = __webpack_require__(103),
-	    baseFilter = __webpack_require__(478),
+	    baseFilter = __webpack_require__(477),
 	    isArray = __webpack_require__(70);
 
 	/**
@@ -44571,7 +44921,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 477 */
+/* 476 */
 /***/ function(module, exports) {
 
 	/**
@@ -44602,7 +44952,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 478 */
+/* 477 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(96);
@@ -44630,13 +44980,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 479 */
+/* 478 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(480);
+	module.exports = __webpack_require__(479);
 
 /***/ },
-/* 480 */
+/* 479 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44644,9 +44994,9 @@ var InfoxBpmnModeler =
 	 */
 
 	try {
-	  var index = __webpack_require__(481);
+	  var index = __webpack_require__(480);
 	} catch (err) {
-	  var index = __webpack_require__(481);
+	  var index = __webpack_require__(480);
 	}
 
 	/**
@@ -44833,7 +45183,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 481 */
+/* 480 */
 /***/ function(module, exports) {
 
 	module.exports = function(arr, obj){
@@ -44845,7 +45195,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 482 */
+/* 481 */
 /***/ function(module, exports) {
 
 	/**
@@ -44875,7 +45225,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 483 */
+/* 482 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -44912,7 +45262,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 484 */
+/* 483 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44925,7 +45275,7 @@ var InfoxBpmnModeler =
 
 	var domify = __webpack_require__(50);
 
-	var domDelegate = __webpack_require__(456);
+	var domDelegate = __webpack_require__(455);
 
 	/* jshint -W101 */
 
@@ -45000,13 +45350,13 @@ var InfoxBpmnModeler =
 	module.exports.open = open;
 
 /***/ },
-/* 485 */
+/* 484 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(460);
+	module.exports = __webpack_require__(459);
 
 /***/ },
-/* 486 */
+/* 485 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45030,8 +45380,8 @@ var InfoxBpmnModeler =
 	module.exports = NavigatedViewer;
 
 	NavigatedViewer.prototype._navigationModules = [
-	  __webpack_require__(487),
-	  __webpack_require__(492)
+	  __webpack_require__(486),
+	  __webpack_require__(491)
 	];
 
 	NavigatedViewer.prototype._modules = [].concat(
@@ -45039,32 +45389,32 @@ var InfoxBpmnModeler =
 	  NavigatedViewer.prototype._navigationModules);
 
 /***/ },
-/* 487 */
+/* 486 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'zoomScroll' ],
-	  zoomScroll: [ 'type', __webpack_require__(488) ]
+	  zoomScroll: [ 'type', __webpack_require__(487) ]
 	};
 
 /***/ },
-/* 488 */
+/* 487 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(485),
-	    domClosest = __webpack_require__(489);
+	var domEvent = __webpack_require__(484),
+	    domClosest = __webpack_require__(488);
 
-	var hasPrimaryModifier = __webpack_require__(461).hasPrimaryModifier,
-	    hasSecondaryModifier = __webpack_require__(461).hasSecondaryModifier;
+	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier,
+	    hasSecondaryModifier = __webpack_require__(460).hasSecondaryModifier;
 
-	var isMac = __webpack_require__(463).isMac;
+	var isMac = __webpack_require__(462).isMac;
 
-	var getStepRange = __webpack_require__(490).getStepRange,
-	    cap = __webpack_require__(490).cap;
+	var getStepRange = __webpack_require__(489).getStepRange,
+	    cap = __webpack_require__(489).cap;
 
-	var log10 = __webpack_require__(491).log10;
+	var log10 = __webpack_require__(490).log10;
 
 	var bind = __webpack_require__(147);
 
@@ -45241,19 +45591,19 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 489 */
+/* 488 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(458);
+	module.exports = __webpack_require__(457);
 
 /***/ },
-/* 490 */
+/* 489 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 
-	var log10 = __webpack_require__(491).log10;
+	var log10 = __webpack_require__(490).log10;
 
 	/**
 	 * Get the linear range between two zoom steps based on the
@@ -45275,7 +45625,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 491 */
+/* 490 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45302,26 +45652,26 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 492 */
+/* 491 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'moveCanvas' ],
-	  moveCanvas: [ 'type', __webpack_require__(493) ]
+	  moveCanvas: [ 'type', __webpack_require__(492) ]
 	};
 
 /***/ },
-/* 493 */
+/* 492 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Cursor = __webpack_require__(494),
-	    ClickTrap = __webpack_require__(495),
-	    substract = __webpack_require__(491).substract,
-	    domEvent = __webpack_require__(485),
-	    domClosest = __webpack_require__(489),
-	    EventUtil = __webpack_require__(462);
+	var Cursor = __webpack_require__(493),
+	    ClickTrap = __webpack_require__(494),
+	    substract = __webpack_require__(490).substract,
+	    domEvent = __webpack_require__(484),
+	    domClosest = __webpack_require__(488),
+	    EventUtil = __webpack_require__(461);
 
 
 	function length(point) {
@@ -45380,9 +45730,6 @@ var InfoxBpmnModeler =
 	    context = null;
 
 	    Cursor.unset();
-
-	    // prevent select
-	    EventUtil.stopEvent(event);
 	  }
 
 	  function handleStart(event) {
@@ -45403,9 +45750,6 @@ var InfoxBpmnModeler =
 
 	    domEvent.bind(document, 'mousemove', handleMove);
 	    domEvent.bind(document, 'mouseup', handleEnd);
-
-	    // prevent select
-	    EventUtil.stopEvent(event);
 	  }
 
 	  domEvent.bind(container, 'mousedown', handleStart);
@@ -45418,12 +45762,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 494 */
+/* 493 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domClasses = __webpack_require__(479);
+	var domClasses = __webpack_require__(478);
 
 	var CURSOR_CLS_PATTERN = /^djs-cursor-.*$/;
 
@@ -45450,13 +45794,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 495 */
+/* 494 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(485),
-	    stopEvent = __webpack_require__(462).stopEvent;
+	var domEvent = __webpack_require__(484),
+	    stopEvent = __webpack_require__(461).stopEvent;
 
 	function trap(event) {
 	  stopEvent(event);
@@ -45485,6228 +45829,36 @@ var InfoxBpmnModeler =
 	module.exports.install = install;
 
 /***/ },
+/* 495 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [ __webpack_require__(496) ]
+	};
+
+/***/ },
 /* 496 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [
-	    __webpack_require__(497),
-	    __webpack_require__(509),
-	    __webpack_require__(511)
-	  ],
-	  __init__: [ 'labelEditingProvider' ],
-	  labelEditingProvider: [ 'type', __webpack_require__(597) ]
+	  __depends__: [ __webpack_require__(453) ],
+	  __init__: [ 'touchInteractionEvents' ],
+	  touchInteractionEvents: [ 'type', __webpack_require__(497) ],
+	  touchFix: [ 'type', __webpack_require__(499) ]
 	};
 
 /***/ },
 /* 497 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-	  commandStack: [ 'type', __webpack_require__(498) ]
-	};
-
-
-/***/ },
-/* 498 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var unique = __webpack_require__(499),
-	    isArray = __webpack_require__(70),
-	    assign = __webpack_require__(77);
-
-	var InternalEvent = __webpack_require__(146).Event;
-
-
-	/**
-	 * A service that offers un- and redoable execution of commands.
-	 *
-	 * The command stack is responsible for executing modeling actions
-	 * in a un- and redoable manner. To do this it delegates the actual
-	 * command execution to {@link CommandHandler}s.
-	 *
-	 * Command handlers provide {@link CommandHandler#execute(ctx)} and
-	 * {@link CommandHandler#revert(ctx)} methods to un- and redo a command
-	 * identified by a command context.
-	 *
-	 *
-	 * ## Life-Cycle events
-	 *
-	 * In the process the command stack fires a number of life-cycle events
-	 * that other components to participate in the command execution.
-	 *
-	 *    * preExecute
-	 *    * preExecuted
-	 *    * execute
-	 *    * executed
-	 *    * postExecute
-	 *    * postExecuted
-	 *    * revert
-	 *    * reverted
-	 *
-	 * A special event is used for validating, whether a command can be
-	 * performed prior to its execution.
-	 *
-	 *    * canExecute
-	 *
-	 * Each of the events is fired as `commandStack.{eventName}` and
-	 * `commandStack.{commandName}.{eventName}`, respectively. This gives
-	 * components fine grained control on where to hook into.
-	 *
-	 * The event object fired transports `command`, the name of the
-	 * command and `context`, the command context.
-	 *
-	 *
-	 * ## Creating Command Handlers
-	 *
-	 * Command handlers should provide the {@link CommandHandler#execute(ctx)}
-	 * and {@link CommandHandler#revert(ctx)} methods to implement
-	 * redoing and undoing of a command. They must ensure undo is performed
-	 * properly in order not to break the undo chain.
-	 *
-	 * Command handlers may execute other modeling operations (and thus
-	 * commands) in their `preExecute` and `postExecute` phases. The command
-	 * stack will properly group all commands together into a logical unit
-	 * that may be re- and undone atomically.
-	 *
-	 * Command handlers must not execute other commands from within their
-	 * core implementation (`execute`, `revert`).
-	 *
-	 *
-	 * ## Change Tracking
-	 *
-	 * During the execution of the CommandStack it will keep track of all
-	 * elements that have been touched during the command's execution.
-	 *
-	 * At the end of the CommandStack execution it will notify interested
-	 * components via an 'elements.changed' event with all the dirty
-	 * elements.
-	 *
-	 * The event can be picked up by components that are interested in the fact
-	 * that elements have been changed. One use case for this is updating
-	 * their graphical representation after moving / resizing or deletion.
-	 *
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {Injector} injector
-	 */
-	function CommandStack(eventBus, injector) {
-
-	  /**
-	   * A map of all registered command handlers.
-	   *
-	   * @type {Object}
-	   */
-	  this._handlerMap = {};
-
-	  /**
-	   * A stack containing all re/undoable actions on the diagram
-	   *
-	   * @type {Array<Object>}
-	   */
-	  this._stack = [];
-
-	  /**
-	   * The current index on the stack
-	   *
-	   * @type {Number}
-	   */
-	  this._stackIdx = -1;
-
-	  /**
-	   * Current active commandStack execution
-	   *
-	   * @type {Object}
-	   */
-	  this._currentExecution = {
-	    actions: [],
-	    dirty: []
-	  };
-
-
-	  this._injector = injector;
-	  this._eventBus = eventBus;
-
-	  this._uid = 1;
-
-	  eventBus.on([ 'diagram.destroy', 'diagram.clear' ], this.clear, this);
-	}
-
-	CommandStack.$inject = [ 'eventBus', 'injector' ];
-
-	module.exports = CommandStack;
-
-
-	/**
-	 * Execute a command
-	 *
-	 * @param {String} command the command to execute
-	 * @param {Object} context the environment to execute the command in
-	 */
-	CommandStack.prototype.execute = function(command, context) {
-	  if (!command) {
-	    throw new Error('command required');
-	  }
-
-	  var action = { command: command, context: context };
-
-	  this._pushAction(action);
-	  this._internalExecute(action);
-	  this._popAction(action);
-	};
-
-
-	/**
-	 * Ask whether a given command can be executed.
-	 *
-	 * Implementors may hook into the mechanism on two ways:
-	 *
-	 *   * in event listeners:
-	 *
-	 *     Users may prevent the execution via an event listener.
-	 *     It must prevent the default action for `commandStack.(<command>.)canExecute` events.
-	 *
-	 *   * in command handlers:
-	 *
-	 *     If the method {@link CommandHandler#canExecute} is implemented in a handler
-	 *     it will be called to figure out whether the execution is allowed.
-	 *
-	 * @param  {String} command the command to execute
-	 * @param  {Object} context the environment to execute the command in
-	 *
-	 * @return {Boolean} true if the command can be executed
-	 */
-	CommandStack.prototype.canExecute = function(command, context) {
-
-	  var action = { command: command, context: context };
-
-	  var handler = this._getHandler(command);
-
-	  var result = this._fire(command, 'canExecute', action);
-
-	  // handler#canExecute will only be called if no listener
-	  // decided on a result already
-	  if (result === undefined) {
-	    if (!handler) {
-	      return false;
-	    }
-
-	    if (handler.canExecute) {
-	      result = handler.canExecute(context);
-	    }
-	  }
-
-	  return result;
-	};
-
-
-	/**
-	 * Clear the command stack, erasing all undo / redo history
-	 */
-	CommandStack.prototype.clear = function() {
-	  this._stack.length = 0;
-	  this._stackIdx = -1;
-
-	  this._fire('changed');
-	};
-
-
-	/**
-	 * Undo last command(s)
-	 */
-	CommandStack.prototype.undo = function() {
-	  var action = this._getUndoAction(),
-	      next;
-
-	  if (action) {
-	    this._pushAction(action);
-
-	    while (action) {
-	      this._internalUndo(action);
-	      next = this._getUndoAction();
-
-	      if (!next || next.id !== action.id) {
-	        break;
-	      }
-
-	      action = next;
-	    }
-
-	    this._popAction();
-	  }
-	};
-
-
-	/**
-	 * Redo last command(s)
-	 */
-	CommandStack.prototype.redo = function() {
-	  var action = this._getRedoAction(),
-	      next;
-
-	  if (action) {
-	    this._pushAction(action);
-
-	    while (action) {
-	      this._internalExecute(action, true);
-	      next = this._getRedoAction();
-
-	      if (!next || next.id !== action.id) {
-	        break;
-	      }
-
-	      action = next;
-	    }
-
-	    this._popAction();
-	  }
-	};
-
-
-	/**
-	 * Register a handler instance with the command stack
-	 *
-	 * @param {String} command
-	 * @param {CommandHandler} handler
-	 */
-	CommandStack.prototype.register = function(command, handler) {
-	  this._setHandler(command, handler);
-	};
-
-
-	/**
-	 * Register a handler type with the command stack
-	 * by instantiating it and injecting its dependencies.
-	 *
-	 * @param {String} command
-	 * @param {Function} a constructor for a {@link CommandHandler}
-	 */
-	CommandStack.prototype.registerHandler = function(command, handlerCls) {
-
-	  if (!command || !handlerCls) {
-	    throw new Error('command and handlerCls must be defined');
-	  }
-
-	  var handler = this._injector.instantiate(handlerCls);
-	  this.register(command, handler);
-	};
-
-	CommandStack.prototype.canUndo = function() {
-	  return !!this._getUndoAction();
-	};
-
-	CommandStack.prototype.canRedo = function() {
-	  return !!this._getRedoAction();
-	};
-
-	////// stack access  //////////////////////////////////////
-
-	CommandStack.prototype._getRedoAction = function() {
-	  return this._stack[this._stackIdx + 1];
-	};
-
-
-	CommandStack.prototype._getUndoAction = function() {
-	  return this._stack[this._stackIdx];
-	};
-
-
-	////// internal functionality /////////////////////////////
-
-	CommandStack.prototype._internalUndo = function(action) {
-	  var self = this;
-
-	  var command = action.command,
-	      context = action.context;
-
-	  var handler = this._getHandler(command);
-
-	  // guard against illegal nested command stack invocations
-	  this._atomicDo(function() {
-	    self._fire(command, 'revert', action);
-
-	    if (handler.revert) {
-	      self._markDirty(handler.revert(context));
-	    }
-
-	    self._revertedAction(action);
-
-	    self._fire(command, 'reverted', action);
-	  });
-	};
-
-
-	CommandStack.prototype._fire = function(command, qualifier, event) {
-	  if (arguments.length < 3) {
-	    event = qualifier;
-	    qualifier = null;
-	  }
-
-	  var names = qualifier ? [ command + '.' + qualifier, qualifier ] : [ command ],
-	      i, name, result;
-
-	  event = assign(new InternalEvent(), event);
-
-	  for (i = 0; (name = names[i]); i++) {
-	    result = this._eventBus.fire('commandStack.' + name, event);
-
-	    if (event.cancelBubble) {
-	      break;
-	    }
-	  }
-
-	  return result;
-	};
-
-	CommandStack.prototype._createId = function() {
-	  return this._uid++;
-	};
-
-	CommandStack.prototype._atomicDo = function(fn) {
-
-	  var execution = this._currentExecution;
-
-	  execution.atomic = true;
-
-	  try {
-	    fn();
-	  } finally {
-	    execution.atomic = false;
-	  }
-	};
-
-	CommandStack.prototype._internalExecute = function(action, redo) {
-	  var self = this;
-
-	  var command = action.command,
-	      context = action.context;
-
-	  var handler = this._getHandler(command);
-
-	  if (!handler) {
-	    throw new Error('no command handler registered for <' + command + '>');
-	  }
-
-	  this._pushAction(action);
-
-	  if (!redo) {
-	    this._fire(command, 'preExecute', action);
-
-	    if (handler.preExecute) {
-	      handler.preExecute(context);
-	    }
-
-	    this._fire(command, 'preExecuted', action);
-	  }
-
-	  // guard against illegal nested command stack invocations
-	  this._atomicDo(function() {
-
-	    self._fire(command, 'execute', action);
-
-	    if (handler.execute) {
-	      // actual execute + mark return results as dirty
-	      self._markDirty(handler.execute(context));
-	    }
-
-	    // log to stack
-	    self._executedAction(action, redo);
-
-	    self._fire(command, 'executed', action);
-	  });
-
-	  if (!redo) {
-	    this._fire(command, 'postExecute', action);
-
-	    if (handler.postExecute) {
-	      handler.postExecute(context);
-	    }
-
-	    this._fire(command, 'postExecuted', action);
-	  }
-
-	  this._popAction(action);
-	};
-
-
-	CommandStack.prototype._pushAction = function(action) {
-
-	  var execution = this._currentExecution,
-	      actions = execution.actions;
-
-	  var baseAction = actions[0];
-
-	  if (execution.atomic) {
-	    throw new Error('illegal invocation in <execute> or <revert> phase (action: ' + action.command + ')');
-	  }
-
-	  if (!action.id) {
-	    action.id = (baseAction && baseAction.id) || this._createId();
-	  }
-
-	  actions.push(action);
-	};
-
-
-	CommandStack.prototype._popAction = function() {
-	  var execution = this._currentExecution,
-	      actions = execution.actions,
-	      dirty = execution.dirty;
-
-	  actions.pop();
-
-	  if (!actions.length) {
-	    this._eventBus.fire('elements.changed', { elements: unique(dirty) });
-
-	    dirty.length = 0;
-
-	    this._fire('changed');
-	  }
-	};
-
-
-	CommandStack.prototype._markDirty = function(elements) {
-	  var execution = this._currentExecution;
-
-	  if (!elements) {
-	    return;
-	  }
-
-	  elements = isArray(elements) ? elements : [ elements ];
-
-	  execution.dirty = execution.dirty.concat(elements);
-	};
-
-
-	CommandStack.prototype._executedAction = function(action, redo) {
-	  var stackIdx = ++this._stackIdx;
-
-	  if (!redo) {
-	    this._stack.splice(stackIdx, this._stack.length, action);
-	  }
-	};
-
-
-	CommandStack.prototype._revertedAction = function(action) {
-	  this._stackIdx--;
-	};
-
-
-	CommandStack.prototype._getHandler = function(command) {
-	  return this._handlerMap[command];
-	};
-
-	CommandStack.prototype._setHandler = function(command, handler) {
-	  if (!command || !handler) {
-	    throw new Error('command and handler required');
-	  }
-
-	  if (this._handlerMap[command]) {
-	    throw new Error('overriding handler for command <' + command + '>');
-	  }
-
-	  this._handlerMap[command] = handler;
-	};
-
-
-/***/ },
-/* 499 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(500);
-
-
-/***/ },
-/* 500 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCallback = __webpack_require__(103),
-	    baseUniq = __webpack_require__(501),
-	    isIterateeCall = __webpack_require__(92),
-	    sortedUniq = __webpack_require__(508);
-
-	/**
-	 * Creates a duplicate-free version of an array, using
-	 * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
-	 * for equality comparisons, in which only the first occurence of each element
-	 * is kept. Providing `true` for `isSorted` performs a faster search algorithm
-	 * for sorted arrays. If an iteratee function is provided it's invoked for
-	 * each element in the array to generate the criterion by which uniqueness
-	 * is computed. The `iteratee` is bound to `thisArg` and invoked with three
-	 * arguments: (value, index, array).
-	 *
-	 * If a property name is provided for `iteratee` the created `_.property`
-	 * style callback returns the property value of the given element.
-	 *
-	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
-	 * style callback returns `true` for elements that have a matching property
-	 * value, else `false`.
-	 *
-	 * If an object is provided for `iteratee` the created `_.matches` style
-	 * callback returns `true` for elements that have the properties of the given
-	 * object, else `false`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias unique
-	 * @category Array
-	 * @param {Array} array The array to inspect.
-	 * @param {boolean} [isSorted] Specify the array is sorted.
-	 * @param {Function|Object|string} [iteratee] The function invoked per iteration.
-	 * @param {*} [thisArg] The `this` binding of `iteratee`.
-	 * @returns {Array} Returns the new duplicate-value-free array.
-	 * @example
-	 *
-	 * _.uniq([2, 1, 2]);
-	 * // => [2, 1]
-	 *
-	 * // using `isSorted`
-	 * _.uniq([1, 1, 2], true);
-	 * // => [1, 2]
-	 *
-	 * // using an iteratee function
-	 * _.uniq([1, 2.5, 1.5, 2], function(n) {
-	 *   return this.floor(n);
-	 * }, Math);
-	 * // => [1, 2.5]
-	 *
-	 * // using the `_.property` callback shorthand
-	 * _.uniq([{ 'x': 1 }, { 'x': 2 }, { 'x': 1 }], 'x');
-	 * // => [{ 'x': 1 }, { 'x': 2 }]
-	 */
-	function uniq(array, isSorted, iteratee, thisArg) {
-	  var length = array ? array.length : 0;
-	  if (!length) {
-	    return [];
-	  }
-	  if (isSorted != null && typeof isSorted != 'boolean') {
-	    thisArg = iteratee;
-	    iteratee = isIterateeCall(array, isSorted, thisArg) ? undefined : isSorted;
-	    isSorted = false;
-	  }
-	  iteratee = iteratee == null ? iteratee : baseCallback(iteratee, thisArg, 3);
-	  return (isSorted)
-	    ? sortedUniq(array, iteratee)
-	    : baseUniq(array, iteratee);
-	}
-
-	module.exports = uniq;
-
-
-/***/ },
-/* 501 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseIndexOf = __webpack_require__(502),
-	    cacheIndexOf = __webpack_require__(504),
-	    createCache = __webpack_require__(505);
-
-	/** Used as the size to enable large array optimizations. */
-	var LARGE_ARRAY_SIZE = 200;
-
-	/**
-	 * The base implementation of `_.uniq` without support for callback shorthands
-	 * and `this` binding.
-	 *
-	 * @private
-	 * @param {Array} array The array to inspect.
-	 * @param {Function} [iteratee] The function invoked per iteration.
-	 * @returns {Array} Returns the new duplicate free array.
-	 */
-	function baseUniq(array, iteratee) {
-	  var index = -1,
-	      indexOf = baseIndexOf,
-	      length = array.length,
-	      isCommon = true,
-	      isLarge = isCommon && length >= LARGE_ARRAY_SIZE,
-	      seen = isLarge ? createCache() : null,
-	      result = [];
-
-	  if (seen) {
-	    indexOf = cacheIndexOf;
-	    isCommon = false;
-	  } else {
-	    isLarge = false;
-	    seen = iteratee ? [] : result;
-	  }
-	  outer:
-	  while (++index < length) {
-	    var value = array[index],
-	        computed = iteratee ? iteratee(value, index, array) : value;
-
-	    if (isCommon && value === value) {
-	      var seenIndex = seen.length;
-	      while (seenIndex--) {
-	        if (seen[seenIndex] === computed) {
-	          continue outer;
-	        }
-	      }
-	      if (iteratee) {
-	        seen.push(computed);
-	      }
-	      result.push(value);
-	    }
-	    else if (indexOf(seen, computed, 0) < 0) {
-	      if (iteratee || isLarge) {
-	        seen.push(computed);
-	      }
-	      result.push(value);
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = baseUniq;
-
-
-/***/ },
-/* 502 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var indexOfNaN = __webpack_require__(503);
-
-	/**
-	 * The base implementation of `_.indexOf` without support for binary searches.
-	 *
-	 * @private
-	 * @param {Array} array The array to search.
-	 * @param {*} value The value to search for.
-	 * @param {number} fromIndex The index to search from.
-	 * @returns {number} Returns the index of the matched value, else `-1`.
-	 */
-	function baseIndexOf(array, value, fromIndex) {
-	  if (value !== value) {
-	    return indexOfNaN(array, fromIndex);
-	  }
-	  var index = fromIndex - 1,
-	      length = array.length;
-
-	  while (++index < length) {
-	    if (array[index] === value) {
-	      return index;
-	    }
-	  }
-	  return -1;
-	}
-
-	module.exports = baseIndexOf;
-
-
-/***/ },
-/* 503 */
-/***/ function(module, exports) {
-
-	/**
-	 * Gets the index at which the first occurrence of `NaN` is found in `array`.
-	 *
-	 * @private
-	 * @param {Array} array The array to search.
-	 * @param {number} fromIndex The index to search from.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {number} Returns the index of the matched `NaN`, else `-1`.
-	 */
-	function indexOfNaN(array, fromIndex, fromRight) {
-	  var length = array.length,
-	      index = fromIndex + (fromRight ? 0 : -1);
-
-	  while ((fromRight ? index-- : ++index < length)) {
-	    var other = array[index];
-	    if (other !== other) {
-	      return index;
-	    }
-	  }
-	  return -1;
-	}
-
-	module.exports = indexOfNaN;
-
-
-/***/ },
-/* 504 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(74);
-
-	/**
-	 * Checks if `value` is in `cache` mimicking the return signature of
-	 * `_.indexOf` by returning `0` if the value is found, else `-1`.
-	 *
-	 * @private
-	 * @param {Object} cache The cache to search.
-	 * @param {*} value The value to search for.
-	 * @returns {number} Returns `0` if `value` is found, else `-1`.
-	 */
-	function cacheIndexOf(cache, value) {
-	  var data = cache.data,
-	      result = (typeof value == 'string' || isObject(value)) ? data.set.has(value) : data.hash[value];
-
-	  return result ? 0 : -1;
-	}
-
-	module.exports = cacheIndexOf;
-
-
-/***/ },
-/* 505 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(506),
-	    getNative = __webpack_require__(71);
-
-	/** Native method references. */
-	var Set = getNative(global, 'Set');
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeCreate = getNative(Object, 'create');
-
-	/**
-	 * Creates a `Set` cache object to optimize linear searches of large arrays.
-	 *
-	 * @private
-	 * @param {Array} [values] The values to cache.
-	 * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
-	 */
-	function createCache(values) {
-	  return (nativeCreate && Set) ? new SetCache(values) : null;
-	}
-
-	module.exports = createCache;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 506 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(507),
-	    getNative = __webpack_require__(71);
-
-	/** Native method references. */
-	var Set = getNative(global, 'Set');
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeCreate = getNative(Object, 'create');
-
-	/**
-	 *
-	 * Creates a cache object to store unique values.
-	 *
-	 * @private
-	 * @param {Array} [values] The values to cache.
-	 */
-	function SetCache(values) {
-	  var length = values ? values.length : 0;
-
-	  this.data = { 'hash': nativeCreate(null), 'set': new Set };
-	  while (length--) {
-	    this.push(values[length]);
-	  }
-	}
-
-	// Add functions to the `Set` cache.
-	SetCache.prototype.push = cachePush;
-
-	module.exports = SetCache;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 507 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(74);
-
-	/**
-	 * Adds `value` to the cache.
-	 *
-	 * @private
-	 * @name push
-	 * @memberOf SetCache
-	 * @param {*} value The value to cache.
-	 */
-	function cachePush(value) {
-	  var data = this.data;
-	  if (typeof value == 'string' || isObject(value)) {
-	    data.set.add(value);
-	  } else {
-	    data.hash[value] = true;
-	  }
-	}
-
-	module.exports = cachePush;
-
-
-/***/ },
-/* 508 */
-/***/ function(module, exports) {
-
-	/**
-	 * An implementation of `_.uniq` optimized for sorted arrays without support
-	 * for callback shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array} array The array to inspect.
-	 * @param {Function} [iteratee] The function invoked per iteration.
-	 * @returns {Array} Returns the new duplicate free array.
-	 */
-	function sortedUniq(array, iteratee) {
-	  var seen,
-	      index = -1,
-	      length = array.length,
-	      resIndex = -1,
-	      result = [];
-
-	  while (++index < length) {
-	    var value = array[index],
-	        computed = iteratee ? iteratee(value, index, array) : value;
-
-	    if (!index || seen !== computed) {
-	      seen = computed;
-	      result[++resIndex] = value;
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = sortedUniq;
-
-
-/***/ },
-/* 509 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __init__: [ 'changeSupport'],
-	  changeSupport: [ 'type', __webpack_require__(510) ]
-	};
-
-/***/ },
-/* 510 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var getElementType = __webpack_require__(137).getType;
-
-	/**
-	 * Adds change support to the diagram, including
-	 *
-	 * <ul>
-	 *   <li>redrawing shapes and connections on change</li>
-	 * </ul>
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {Canvas} canvas
-	 * @param {ElementRegistry} elementRegistry
-	 * @param {GraphicsFactory} graphicsFactory
-	 */
-	function ChangeSupport(eventBus, canvas, elementRegistry, graphicsFactory) {
-
-	  // redraw shapes / connections on change
-
-	  eventBus.on('element.changed', function(event) {
-
-	    var element = event.element;
-
-	    if (!event.gfx) {
-	      event.gfx = elementRegistry.getGraphics(element);
-	    }
-
-	    // shape + gfx may have been deleted
-	    if (!event.gfx) {
-	      return;
-	    }
-
-	    eventBus.fire(getElementType(element) + '.changed', event);
-	  });
-
-	  eventBus.on('elements.changed', function(event) {
-
-	    var elements = event.elements;
-
-	    elements.forEach(function(e) {
-	      eventBus.fire('element.changed', { element: e });
-	    });
-
-	    graphicsFactory.updateContainments(elements);
-	  });
-
-	  eventBus.on('shape.changed', function(event) {
-	    graphicsFactory.update('shape', event.element, event.gfx);
-	  });
-
-	  eventBus.on('connection.changed', function(event) {
-	    graphicsFactory.update('connection', event.element, event.gfx);
-	  });
-	}
-
-	ChangeSupport.$inject = [ 'eventBus', 'canvas', 'elementRegistry', 'graphicsFactory' ];
-
-	module.exports = ChangeSupport;
-
-/***/ },
-/* 511 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [ __webpack_require__(454) ],
-	  __init__: [ 'directEditing' ],
-	  directEditing: [ 'type', __webpack_require__(512) ]
-	};
-
-/***/ },
-/* 512 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var bind = __webpack_require__(513),
-	    find = __webpack_require__(550);
-
-	var TextBox = __webpack_require__(590);
-
-
-	/**
-	 * A direct editing component that allows users
-	 * to edit an elements text directly in the diagram
-	 *
-	 * @param {EventBus} eventBus the event bus
-	 */
-	function DirectEditing(eventBus, canvas) {
-
-	  this._eventBus = eventBus;
-
-	  this._providers = [];
-	  this._textbox = new TextBox({
-	    container: canvas.getContainer(),
-	    keyHandler: bind(this._handleKey, this)
-	  });
-	}
-
-	DirectEditing.$inject = [ 'eventBus', 'canvas' ];
-
-
-	/**
-	 * Register a direct editing provider
-
-	 * @param {Object} provider the provider, must expose an #activate(element) method that returns
-	 *                          an activation context ({ bounds: {x, y, width, height }, text }) if
-	 *                          direct editing is available for the given element.
-	 *                          Additionally the provider must expose a #update(element, value) method
-	 *                          to receive direct editing updates.
-	 */
-	DirectEditing.prototype.registerProvider = function(provider) {
-	  this._providers.push(provider);
-	};
-
-
-	/**
-	 * Returns true if direct editing is currently active
-	 *
-	 * @return {Boolean}
-	 */
-	DirectEditing.prototype.isActive = function() {
-	  return !!this._active;
-	};
-
-
-	/**
-	 * Cancel direct editing, if it is currently active
-	 */
-	DirectEditing.prototype.cancel = function() {
-	  if (!this._active) {
-	    return;
-	  }
-
-	  this._fire('cancel');
-	  this.close();
-	};
-
-
-	DirectEditing.prototype._fire = function(event) {
-	  this._eventBus.fire('directEditing.' + event, { active: this._active });
-	};
-
-	DirectEditing.prototype.close = function() {
-	  this._textbox.destroy();
-
-	  this._fire('deactivate');
-
-	  this._active = null;
-	};
-
-
-	DirectEditing.prototype.complete = function() {
-
-	  var active = this._active;
-
-	  if (!active) {
-	    return;
-	  }
-
-	  var text = this.getValue();
-
-	  if (text !== active.context.text) {
-	    active.provider.update(active.element, text, active.context.text);
-	  }
-
-	  this._fire('complete');
-
-	  this.close();
-	};
-
-
-	DirectEditing.prototype.getValue = function() {
-	  return this._textbox.getValue();
-	};
-
-
-	DirectEditing.prototype._handleKey = function(e) {
-
-	  // stop bubble
-	  e.stopPropagation();
-
-	  var key = e.keyCode || e.charCode;
-
-	  // ESC
-	  if (key === 27) {
-	    e.preventDefault();
-	    return this.cancel();
-	  }
-
-	  // Enter
-	  if (key === 13 && !e.shiftKey) {
-	    e.preventDefault();
-	    return this.complete();
-	  }
-	};
-
-
-	/**
-	 * Activate direct editing on the given element
-	 *
-	 * @param {Object} ElementDescriptor the descriptor for a shape or connection
-	 * @return {Boolean} true if the activation was possible
-	 */
-	DirectEditing.prototype.activate = function(element) {
-
-	  if (this.isActive()) {
-	    this.cancel();
-	  }
-
-	  // the direct editing context
-	  var context;
-
-	  var provider = find(this._providers, function(p) {
-	    return !!(context = p.activate(element)) ? p : null;
-	  });
-
-	  // check if activation took place
-	  if (context) {
-	    this._textbox.create(context.bounds, context.style, context.text);
-
-	    this._active = {
-	      element: element,
-	      context: context,
-	      provider: provider
-	    };
-
-	    this._fire('activate');
-	  }
-
-	  return !!context;
-	};
-
-
-	module.exports = DirectEditing;
-
-/***/ },
-/* 513 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var createWrapper = __webpack_require__(514),
-	    replaceHolders = __webpack_require__(544),
-	    restParam = __webpack_require__(549);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1,
-	    PARTIAL_FLAG = 32;
-
-	/**
-	 * Creates a function that invokes `func` with the `this` binding of `thisArg`
-	 * and prepends any additional `_.bind` arguments to those provided to the
-	 * bound function.
-	 *
-	 * The `_.bind.placeholder` value, which defaults to `_` in monolithic builds,
-	 * may be used as a placeholder for partially applied arguments.
-	 *
-	 * **Note:** Unlike native `Function#bind` this method does not set the "length"
-	 * property of bound functions.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Function
-	 * @param {Function} func The function to bind.
-	 * @param {*} thisArg The `this` binding of `func`.
-	 * @param {...*} [partials] The arguments to be partially applied.
-	 * @returns {Function} Returns the new bound function.
-	 * @example
-	 *
-	 * var greet = function(greeting, punctuation) {
-	 *   return greeting + ' ' + this.user + punctuation;
-	 * };
-	 *
-	 * var object = { 'user': 'fred' };
-	 *
-	 * var bound = _.bind(greet, object, 'hi');
-	 * bound('!');
-	 * // => 'hi fred!'
-	 *
-	 * // using placeholders
-	 * var bound = _.bind(greet, object, _, '!');
-	 * bound('hi');
-	 * // => 'hi fred!'
-	 */
-	var bind = restParam(function(func, thisArg, partials) {
-	  var bitmask = BIND_FLAG;
-	  if (partials.length) {
-	    var holders = replaceHolders(partials, bind.placeholder);
-	    bitmask |= PARTIAL_FLAG;
-	  }
-	  return createWrapper(func, bitmask, thisArg, partials, holders);
-	});
-
-	// Assign default placeholders.
-	bind.placeholder = {};
-
-	module.exports = bind;
-
-
-/***/ },
-/* 514 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseSetData = __webpack_require__(515),
-	    createBindWrapper = __webpack_require__(523),
-	    createHybridWrapper = __webpack_require__(526),
-	    createPartialWrapper = __webpack_require__(547),
-	    getData = __webpack_require__(533),
-	    mergeData = __webpack_require__(548),
-	    setData = __webpack_require__(545);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1,
-	    BIND_KEY_FLAG = 2,
-	    PARTIAL_FLAG = 32,
-	    PARTIAL_RIGHT_FLAG = 64;
-
-	/** Used as the `TypeError` message for "Functions" methods. */
-	var FUNC_ERROR_TEXT = 'Expected a function';
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Creates a function that either curries or invokes `func` with optional
-	 * `this` binding and partially applied arguments.
-	 *
-	 * @private
-	 * @param {Function|string} func The function or method name to reference.
-	 * @param {number} bitmask The bitmask of flags.
-	 *  The bitmask may be composed of the following flags:
-	 *     1 - `_.bind`
-	 *     2 - `_.bindKey`
-	 *     4 - `_.curry` or `_.curryRight` of a bound function
-	 *     8 - `_.curry`
-	 *    16 - `_.curryRight`
-	 *    32 - `_.partial`
-	 *    64 - `_.partialRight`
-	 *   128 - `_.rearg`
-	 *   256 - `_.ary`
-	 * @param {*} [thisArg] The `this` binding of `func`.
-	 * @param {Array} [partials] The arguments to be partially applied.
-	 * @param {Array} [holders] The `partials` placeholder indexes.
-	 * @param {Array} [argPos] The argument positions of the new function.
-	 * @param {number} [ary] The arity cap of `func`.
-	 * @param {number} [arity] The arity of `func`.
-	 * @returns {Function} Returns the new wrapped function.
-	 */
-	function createWrapper(func, bitmask, thisArg, partials, holders, argPos, ary, arity) {
-	  var isBindKey = bitmask & BIND_KEY_FLAG;
-	  if (!isBindKey && typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT);
-	  }
-	  var length = partials ? partials.length : 0;
-	  if (!length) {
-	    bitmask &= ~(PARTIAL_FLAG | PARTIAL_RIGHT_FLAG);
-	    partials = holders = undefined;
-	  }
-	  length -= (holders ? holders.length : 0);
-	  if (bitmask & PARTIAL_RIGHT_FLAG) {
-	    var partialsRight = partials,
-	        holdersRight = holders;
-
-	    partials = holders = undefined;
-	  }
-	  var data = isBindKey ? undefined : getData(func),
-	      newData = [func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity];
-
-	  if (data) {
-	    mergeData(newData, data);
-	    bitmask = newData[1];
-	    arity = newData[9];
-	  }
-	  newData[9] = arity == null
-	    ? (isBindKey ? 0 : func.length)
-	    : (nativeMax(arity - length, 0) || 0);
-
-	  if (bitmask == BIND_FLAG) {
-	    var result = createBindWrapper(newData[0], newData[2]);
-	  } else if ((bitmask == PARTIAL_FLAG || bitmask == (BIND_FLAG | PARTIAL_FLAG)) && !newData[4].length) {
-	    result = createPartialWrapper.apply(undefined, newData);
-	  } else {
-	    result = createHybridWrapper.apply(undefined, newData);
-	  }
-	  var setter = data ? baseSetData : setData;
-	  return setter(result, newData);
-	}
-
-	module.exports = createWrapper;
-
-
-/***/ },
-/* 515 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var identity = __webpack_require__(516),
-	    metaMap = __webpack_require__(517);
-
-	/**
-	 * The base implementation of `setData` without support for hot loop detection.
-	 *
-	 * @private
-	 * @param {Function} func The function to associate metadata with.
-	 * @param {*} data The metadata.
-	 * @returns {Function} Returns `func`.
-	 */
-	var baseSetData = !metaMap ? identity : function(func, data) {
-	  metaMap.set(func, data);
-	  return func;
-	};
-
-	module.exports = baseSetData;
-
-
-/***/ },
-/* 516 */
-/***/ function(module, exports) {
-
-	/**
-	 * This method returns the first argument provided to it.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Utility
-	 * @param {*} value Any value.
-	 * @returns {*} Returns `value`.
-	 * @example
-	 *
-	 * var object = { 'user': 'fred' };
-	 *
-	 * _.identity(object) === object;
-	 * // => true
-	 */
-	function identity(value) {
-	  return value;
-	}
-
-	module.exports = identity;
-
-
-/***/ },
-/* 517 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(518);
-
-	/** Native method references. */
-	var WeakMap = getNative(global, 'WeakMap');
-
-	/** Used to store function metadata. */
-	var metaMap = WeakMap && new WeakMap;
-
-	module.exports = metaMap;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 518 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isNative = __webpack_require__(519);
-
-	/**
-	 * Gets the native function at `key` of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @param {string} key The key of the method to get.
-	 * @returns {*} Returns the function if it's native, else `undefined`.
-	 */
-	function getNative(object, key) {
-	  var value = object == null ? undefined : object[key];
-	  return isNative(value) ? value : undefined;
-	}
-
-	module.exports = getNative;
-
-
-/***/ },
-/* 519 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isFunction = __webpack_require__(520),
-	    isObjectLike = __webpack_require__(522);
-
-	/** Used to detect host constructors (Safari > 5). */
-	var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to resolve the decompiled source of functions. */
-	var fnToString = Function.prototype.toString;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/** Used to detect if a method is native. */
-	var reIsNative = RegExp('^' +
-	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
-	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-	);
-
-	/**
-	 * Checks if `value` is a native function.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
-	 * @example
-	 *
-	 * _.isNative(Array.prototype.push);
-	 * // => true
-	 *
-	 * _.isNative(_);
-	 * // => false
-	 */
-	function isNative(value) {
-	  if (value == null) {
-	    return false;
-	  }
-	  if (isFunction(value)) {
-	    return reIsNative.test(fnToString.call(value));
-	  }
-	  return isObjectLike(value) && reIsHostCtor.test(value);
-	}
-
-	module.exports = isNative;
-
-
-/***/ },
-/* 520 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(521);
-
-	/** `Object#toString` result references. */
-	var funcTag = '[object Function]';
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-
-	/**
-	 * Checks if `value` is classified as a `Function` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isFunction(_);
-	 * // => true
-	 *
-	 * _.isFunction(/abc/);
-	 * // => false
-	 */
-	function isFunction(value) {
-	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in older versions of Chrome and Safari which return 'function' for regexes
-	  // and Safari 8 which returns 'object' for typed array constructors.
-	  return isObject(value) && objToString.call(value) == funcTag;
-	}
-
-	module.exports = isFunction;
-
-
-/***/ },
-/* 521 */
-/***/ function(module, exports) {
-
-	/**
-	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
-	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(1);
-	 * // => false
-	 */
-	function isObject(value) {
-	  // Avoid a V8 JIT bug in Chrome 19-20.
-	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	module.exports = isObject;
-
-
-/***/ },
-/* 522 */
-/***/ function(module, exports) {
-
-	/**
-	 * Checks if `value` is object-like.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-	 */
-	function isObjectLike(value) {
-	  return !!value && typeof value == 'object';
-	}
-
-	module.exports = isObjectLike;
-
-
-/***/ },
-/* 523 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(524);
-
-	/**
-	 * Creates a function that wraps `func` and invokes it with the `this`
-	 * binding of `thisArg`.
-	 *
-	 * @private
-	 * @param {Function} func The function to bind.
-	 * @param {*} [thisArg] The `this` binding of `func`.
-	 * @returns {Function} Returns the new bound function.
-	 */
-	function createBindWrapper(func, thisArg) {
-	  var Ctor = createCtorWrapper(func);
-
-	  function wrapper() {
-	    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
-	    return fn.apply(thisArg, arguments);
-	  }
-	  return wrapper;
-	}
-
-	module.exports = createBindWrapper;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 524 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCreate = __webpack_require__(525),
-	    isObject = __webpack_require__(521);
-
-	/**
-	 * Creates a function that produces an instance of `Ctor` regardless of
-	 * whether it was invoked as part of a `new` expression or by `call` or `apply`.
-	 *
-	 * @private
-	 * @param {Function} Ctor The constructor to wrap.
-	 * @returns {Function} Returns the new wrapped function.
-	 */
-	function createCtorWrapper(Ctor) {
-	  return function() {
-	    // Use a `switch` statement to work with class constructors.
-	    // See http://ecma-international.org/ecma-262/6.0/#sec-ecmascript-function-objects-call-thisargument-argumentslist
-	    // for more details.
-	    var args = arguments;
-	    switch (args.length) {
-	      case 0: return new Ctor;
-	      case 1: return new Ctor(args[0]);
-	      case 2: return new Ctor(args[0], args[1]);
-	      case 3: return new Ctor(args[0], args[1], args[2]);
-	      case 4: return new Ctor(args[0], args[1], args[2], args[3]);
-	      case 5: return new Ctor(args[0], args[1], args[2], args[3], args[4]);
-	      case 6: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
-	      case 7: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-	    }
-	    var thisBinding = baseCreate(Ctor.prototype),
-	        result = Ctor.apply(thisBinding, args);
-
-	    // Mimic the constructor's `return` behavior.
-	    // See https://es5.github.io/#x13.2.2 for more details.
-	    return isObject(result) ? result : thisBinding;
-	  };
-	}
-
-	module.exports = createCtorWrapper;
-
-
-/***/ },
-/* 525 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(521);
-
-	/**
-	 * The base implementation of `_.create` without support for assigning
-	 * properties to the created object.
-	 *
-	 * @private
-	 * @param {Object} prototype The object to inherit from.
-	 * @returns {Object} Returns the new object.
-	 */
-	var baseCreate = (function() {
-	  function object() {}
-	  return function(prototype) {
-	    if (isObject(prototype)) {
-	      object.prototype = prototype;
-	      var result = new object;
-	      object.prototype = undefined;
-	    }
-	    return result || {};
-	  };
-	}());
-
-	module.exports = baseCreate;
-
-
-/***/ },
-/* 526 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(527),
-	    composeArgs = __webpack_require__(528),
-	    composeArgsRight = __webpack_require__(529),
-	    createCtorWrapper = __webpack_require__(524),
-	    isLaziable = __webpack_require__(530),
-	    reorder = __webpack_require__(542),
-	    replaceHolders = __webpack_require__(544),
-	    setData = __webpack_require__(545);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1,
-	    BIND_KEY_FLAG = 2,
-	    CURRY_BOUND_FLAG = 4,
-	    CURRY_FLAG = 8,
-	    CURRY_RIGHT_FLAG = 16,
-	    PARTIAL_FLAG = 32,
-	    PARTIAL_RIGHT_FLAG = 64,
-	    ARY_FLAG = 128;
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Creates a function that wraps `func` and invokes it with optional `this`
-	 * binding of, partial application, and currying.
-	 *
-	 * @private
-	 * @param {Function|string} func The function or method name to reference.
-	 * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
-	 * @param {*} [thisArg] The `this` binding of `func`.
-	 * @param {Array} [partials] The arguments to prepend to those provided to the new function.
-	 * @param {Array} [holders] The `partials` placeholder indexes.
-	 * @param {Array} [partialsRight] The arguments to append to those provided to the new function.
-	 * @param {Array} [holdersRight] The `partialsRight` placeholder indexes.
-	 * @param {Array} [argPos] The argument positions of the new function.
-	 * @param {number} [ary] The arity cap of `func`.
-	 * @param {number} [arity] The arity of `func`.
-	 * @returns {Function} Returns the new wrapped function.
-	 */
-	function createHybridWrapper(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity) {
-	  var isAry = bitmask & ARY_FLAG,
-	      isBind = bitmask & BIND_FLAG,
-	      isBindKey = bitmask & BIND_KEY_FLAG,
-	      isCurry = bitmask & CURRY_FLAG,
-	      isCurryBound = bitmask & CURRY_BOUND_FLAG,
-	      isCurryRight = bitmask & CURRY_RIGHT_FLAG,
-	      Ctor = isBindKey ? undefined : createCtorWrapper(func);
-
-	  function wrapper() {
-	    // Avoid `arguments` object use disqualifying optimizations by
-	    // converting it to an array before providing it to other functions.
-	    var length = arguments.length,
-	        index = length,
-	        args = Array(length);
-
-	    while (index--) {
-	      args[index] = arguments[index];
-	    }
-	    if (partials) {
-	      args = composeArgs(args, partials, holders);
-	    }
-	    if (partialsRight) {
-	      args = composeArgsRight(args, partialsRight, holdersRight);
-	    }
-	    if (isCurry || isCurryRight) {
-	      var placeholder = wrapper.placeholder,
-	          argsHolders = replaceHolders(args, placeholder);
-
-	      length -= argsHolders.length;
-	      if (length < arity) {
-	        var newArgPos = argPos ? arrayCopy(argPos) : undefined,
-	            newArity = nativeMax(arity - length, 0),
-	            newsHolders = isCurry ? argsHolders : undefined,
-	            newHoldersRight = isCurry ? undefined : argsHolders,
-	            newPartials = isCurry ? args : undefined,
-	            newPartialsRight = isCurry ? undefined : args;
-
-	        bitmask |= (isCurry ? PARTIAL_FLAG : PARTIAL_RIGHT_FLAG);
-	        bitmask &= ~(isCurry ? PARTIAL_RIGHT_FLAG : PARTIAL_FLAG);
-
-	        if (!isCurryBound) {
-	          bitmask &= ~(BIND_FLAG | BIND_KEY_FLAG);
-	        }
-	        var newData = [func, bitmask, thisArg, newPartials, newsHolders, newPartialsRight, newHoldersRight, newArgPos, ary, newArity],
-	            result = createHybridWrapper.apply(undefined, newData);
-
-	        if (isLaziable(func)) {
-	          setData(result, newData);
-	        }
-	        result.placeholder = placeholder;
-	        return result;
-	      }
-	    }
-	    var thisBinding = isBind ? thisArg : this,
-	        fn = isBindKey ? thisBinding[func] : func;
-
-	    if (argPos) {
-	      args = reorder(args, argPos);
-	    }
-	    if (isAry && ary < args.length) {
-	      args.length = ary;
-	    }
-	    if (this && this !== global && this instanceof wrapper) {
-	      fn = Ctor || createCtorWrapper(func);
-	    }
-	    return fn.apply(thisBinding, args);
-	  }
-	  return wrapper;
-	}
-
-	module.exports = createHybridWrapper;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 527 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copies the values of `source` to `array`.
-	 *
-	 * @private
-	 * @param {Array} source The array to copy values from.
-	 * @param {Array} [array=[]] The array to copy values to.
-	 * @returns {Array} Returns `array`.
-	 */
-	function arrayCopy(source, array) {
-	  var index = -1,
-	      length = source.length;
-
-	  array || (array = Array(length));
-	  while (++index < length) {
-	    array[index] = source[index];
-	  }
-	  return array;
-	}
-
-	module.exports = arrayCopy;
-
-
-/***/ },
-/* 528 */
-/***/ function(module, exports) {
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Creates an array that is the composition of partially applied arguments,
-	 * placeholders, and provided arguments into a single array of arguments.
-	 *
-	 * @private
-	 * @param {Array|Object} args The provided arguments.
-	 * @param {Array} partials The arguments to prepend to those provided.
-	 * @param {Array} holders The `partials` placeholder indexes.
-	 * @returns {Array} Returns the new array of composed arguments.
-	 */
-	function composeArgs(args, partials, holders) {
-	  var holdersLength = holders.length,
-	      argsIndex = -1,
-	      argsLength = nativeMax(args.length - holdersLength, 0),
-	      leftIndex = -1,
-	      leftLength = partials.length,
-	      result = Array(leftLength + argsLength);
-
-	  while (++leftIndex < leftLength) {
-	    result[leftIndex] = partials[leftIndex];
-	  }
-	  while (++argsIndex < holdersLength) {
-	    result[holders[argsIndex]] = args[argsIndex];
-	  }
-	  while (argsLength--) {
-	    result[leftIndex++] = args[argsIndex++];
-	  }
-	  return result;
-	}
-
-	module.exports = composeArgs;
-
-
-/***/ },
-/* 529 */
-/***/ function(module, exports) {
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * This function is like `composeArgs` except that the arguments composition
-	 * is tailored for `_.partialRight`.
-	 *
-	 * @private
-	 * @param {Array|Object} args The provided arguments.
-	 * @param {Array} partials The arguments to append to those provided.
-	 * @param {Array} holders The `partials` placeholder indexes.
-	 * @returns {Array} Returns the new array of composed arguments.
-	 */
-	function composeArgsRight(args, partials, holders) {
-	  var holdersIndex = -1,
-	      holdersLength = holders.length,
-	      argsIndex = -1,
-	      argsLength = nativeMax(args.length - holdersLength, 0),
-	      rightIndex = -1,
-	      rightLength = partials.length,
-	      result = Array(argsLength + rightLength);
-
-	  while (++argsIndex < argsLength) {
-	    result[argsIndex] = args[argsIndex];
-	  }
-	  var offset = argsIndex;
-	  while (++rightIndex < rightLength) {
-	    result[offset + rightIndex] = partials[rightIndex];
-	  }
-	  while (++holdersIndex < holdersLength) {
-	    result[offset + holders[holdersIndex]] = args[argsIndex++];
-	  }
-	  return result;
-	}
-
-	module.exports = composeArgsRight;
-
-
-/***/ },
-/* 530 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var LazyWrapper = __webpack_require__(531),
-	    getData = __webpack_require__(533),
-	    getFuncName = __webpack_require__(535),
-	    lodash = __webpack_require__(537);
-
-	/**
-	 * Checks if `func` has a lazy counterpart.
-	 *
-	 * @private
-	 * @param {Function} func The function to check.
-	 * @returns {boolean} Returns `true` if `func` has a lazy counterpart, else `false`.
-	 */
-	function isLaziable(func) {
-	  var funcName = getFuncName(func),
-	      other = lodash[funcName];
-
-	  if (typeof other != 'function' || !(funcName in LazyWrapper.prototype)) {
-	    return false;
-	  }
-	  if (func === other) {
-	    return true;
-	  }
-	  var data = getData(other);
-	  return !!data && func === data[0];
-	}
-
-	module.exports = isLaziable;
-
-
-/***/ },
-/* 531 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCreate = __webpack_require__(525),
-	    baseLodash = __webpack_require__(532);
-
-	/** Used as references for `-Infinity` and `Infinity`. */
-	var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
-
-	/**
-	 * Creates a lazy wrapper object which wraps `value` to enable lazy evaluation.
-	 *
-	 * @private
-	 * @param {*} value The value to wrap.
-	 */
-	function LazyWrapper(value) {
-	  this.__wrapped__ = value;
-	  this.__actions__ = [];
-	  this.__dir__ = 1;
-	  this.__filtered__ = false;
-	  this.__iteratees__ = [];
-	  this.__takeCount__ = POSITIVE_INFINITY;
-	  this.__views__ = [];
-	}
-
-	LazyWrapper.prototype = baseCreate(baseLodash.prototype);
-	LazyWrapper.prototype.constructor = LazyWrapper;
-
-	module.exports = LazyWrapper;
-
-
-/***/ },
-/* 532 */
-/***/ function(module, exports) {
-
-	/**
-	 * The function whose prototype all chaining wrappers inherit from.
-	 *
-	 * @private
-	 */
-	function baseLodash() {
-	  // No operation performed.
-	}
-
-	module.exports = baseLodash;
-
-
-/***/ },
-/* 533 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var metaMap = __webpack_require__(517),
-	    noop = __webpack_require__(534);
-
-	/**
-	 * Gets metadata for `func`.
-	 *
-	 * @private
-	 * @param {Function} func The function to query.
-	 * @returns {*} Returns the metadata for `func`.
-	 */
-	var getData = !metaMap ? noop : function(func) {
-	  return metaMap.get(func);
-	};
-
-	module.exports = getData;
-
-
-/***/ },
-/* 534 */
-/***/ function(module, exports) {
-
-	/**
-	 * A no-operation function that returns `undefined` regardless of the
-	 * arguments it receives.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Utility
-	 * @example
-	 *
-	 * var object = { 'user': 'fred' };
-	 *
-	 * _.noop(object) === undefined;
-	 * // => true
-	 */
-	function noop() {
-	  // No operation performed.
-	}
-
-	module.exports = noop;
-
-
-/***/ },
-/* 535 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var realNames = __webpack_require__(536);
-
-	/**
-	 * Gets the name of `func`.
-	 *
-	 * @private
-	 * @param {Function} func The function to query.
-	 * @returns {string} Returns the function name.
-	 */
-	function getFuncName(func) {
-	  var result = (func.name + ''),
-	      array = realNames[result],
-	      length = array ? array.length : 0;
-
-	  while (length--) {
-	    var data = array[length],
-	        otherFunc = data.func;
-	    if (otherFunc == null || otherFunc == func) {
-	      return data.name;
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = getFuncName;
-
-
-/***/ },
-/* 536 */
-/***/ function(module, exports) {
-
-	/** Used to lookup unminified function names. */
-	var realNames = {};
-
-	module.exports = realNames;
-
-
-/***/ },
-/* 537 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var LazyWrapper = __webpack_require__(531),
-	    LodashWrapper = __webpack_require__(538),
-	    baseLodash = __webpack_require__(532),
-	    isArray = __webpack_require__(539),
-	    isObjectLike = __webpack_require__(522),
-	    wrapperClone = __webpack_require__(541);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * Creates a `lodash` object which wraps `value` to enable implicit chaining.
-	 * Methods that operate on and return arrays, collections, and functions can
-	 * be chained together. Methods that retrieve a single value or may return a
-	 * primitive value will automatically end the chain returning the unwrapped
-	 * value. Explicit chaining may be enabled using `_.chain`. The execution of
-	 * chained methods is lazy, that is, execution is deferred until `_#value`
-	 * is implicitly or explicitly called.
-	 *
-	 * Lazy evaluation allows several methods to support shortcut fusion. Shortcut
-	 * fusion is an optimization strategy which merge iteratee calls; this can help
-	 * to avoid the creation of intermediate data structures and greatly reduce the
-	 * number of iteratee executions.
-	 *
-	 * Chaining is supported in custom builds as long as the `_#value` method is
-	 * directly or indirectly included in the build.
-	 *
-	 * In addition to lodash methods, wrappers have `Array` and `String` methods.
-	 *
-	 * The wrapper `Array` methods are:
-	 * `concat`, `join`, `pop`, `push`, `reverse`, `shift`, `slice`, `sort`,
-	 * `splice`, and `unshift`
-	 *
-	 * The wrapper `String` methods are:
-	 * `replace` and `split`
-	 *
-	 * The wrapper methods that support shortcut fusion are:
-	 * `compact`, `drop`, `dropRight`, `dropRightWhile`, `dropWhile`, `filter`,
-	 * `first`, `initial`, `last`, `map`, `pluck`, `reject`, `rest`, `reverse`,
-	 * `slice`, `take`, `takeRight`, `takeRightWhile`, `takeWhile`, `toArray`,
-	 * and `where`
-	 *
-	 * The chainable wrapper methods are:
-	 * `after`, `ary`, `assign`, `at`, `before`, `bind`, `bindAll`, `bindKey`,
-	 * `callback`, `chain`, `chunk`, `commit`, `compact`, `concat`, `constant`,
-	 * `countBy`, `create`, `curry`, `debounce`, `defaults`, `defaultsDeep`,
-	 * `defer`, `delay`, `difference`, `drop`, `dropRight`, `dropRightWhile`,
-	 * `dropWhile`, `fill`, `filter`, `flatten`, `flattenDeep`, `flow`, `flowRight`,
-	 * `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`, `forOwnRight`,
-	 * `functions`, `groupBy`, `indexBy`, `initial`, `intersection`, `invert`,
-	 * `invoke`, `keys`, `keysIn`, `map`, `mapKeys`, `mapValues`, `matches`,
-	 * `matchesProperty`, `memoize`, `merge`, `method`, `methodOf`, `mixin`,
-	 * `modArgs`, `negate`, `omit`, `once`, `pairs`, `partial`, `partialRight`,
-	 * `partition`, `pick`, `plant`, `pluck`, `property`, `propertyOf`, `pull`,
-	 * `pullAt`, `push`, `range`, `rearg`, `reject`, `remove`, `rest`, `restParam`,
-	 * `reverse`, `set`, `shuffle`, `slice`, `sort`, `sortBy`, `sortByAll`,
-	 * `sortByOrder`, `splice`, `spread`, `take`, `takeRight`, `takeRightWhile`,
-	 * `takeWhile`, `tap`, `throttle`, `thru`, `times`, `toArray`, `toPlainObject`,
-	 * `transform`, `union`, `uniq`, `unshift`, `unzip`, `unzipWith`, `values`,
-	 * `valuesIn`, `where`, `without`, `wrap`, `xor`, `zip`, `zipObject`, `zipWith`
-	 *
-	 * The wrapper methods that are **not** chainable by default are:
-	 * `add`, `attempt`, `camelCase`, `capitalize`, `ceil`, `clone`, `cloneDeep`,
-	 * `deburr`, `endsWith`, `escape`, `escapeRegExp`, `every`, `find`, `findIndex`,
-	 * `findKey`, `findLast`, `findLastIndex`, `findLastKey`, `findWhere`, `first`,
-	 * `floor`, `get`, `gt`, `gte`, `has`, `identity`, `includes`, `indexOf`,
-	 * `inRange`, `isArguments`, `isArray`, `isBoolean`, `isDate`, `isElement`,
-	 * `isEmpty`, `isEqual`, `isError`, `isFinite` `isFunction`, `isMatch`,
-	 * `isNative`, `isNaN`, `isNull`, `isNumber`, `isObject`, `isPlainObject`,
-	 * `isRegExp`, `isString`, `isUndefined`, `isTypedArray`, `join`, `kebabCase`,
-	 * `last`, `lastIndexOf`, `lt`, `lte`, `max`, `min`, `noConflict`, `noop`,
-	 * `now`, `pad`, `padLeft`, `padRight`, `parseInt`, `pop`, `random`, `reduce`,
-	 * `reduceRight`, `repeat`, `result`, `round`, `runInContext`, `shift`, `size`,
-	 * `snakeCase`, `some`, `sortedIndex`, `sortedLastIndex`, `startCase`,
-	 * `startsWith`, `sum`, `template`, `trim`, `trimLeft`, `trimRight`, `trunc`,
-	 * `unescape`, `uniqueId`, `value`, and `words`
-	 *
-	 * The wrapper method `sample` will return a wrapped value when `n` is provided,
-	 * otherwise an unwrapped value is returned.
-	 *
-	 * @name _
-	 * @constructor
-	 * @category Chain
-	 * @param {*} value The value to wrap in a `lodash` instance.
-	 * @returns {Object} Returns the new `lodash` wrapper instance.
-	 * @example
-	 *
-	 * var wrapped = _([1, 2, 3]);
-	 *
-	 * // returns an unwrapped value
-	 * wrapped.reduce(function(total, n) {
-	 *   return total + n;
-	 * });
-	 * // => 6
-	 *
-	 * // returns a wrapped value
-	 * var squares = wrapped.map(function(n) {
-	 *   return n * n;
-	 * });
-	 *
-	 * _.isArray(squares);
-	 * // => false
-	 *
-	 * _.isArray(squares.value());
-	 * // => true
-	 */
-	function lodash(value) {
-	  if (isObjectLike(value) && !isArray(value) && !(value instanceof LazyWrapper)) {
-	    if (value instanceof LodashWrapper) {
-	      return value;
-	    }
-	    if (hasOwnProperty.call(value, '__chain__') && hasOwnProperty.call(value, '__wrapped__')) {
-	      return wrapperClone(value);
-	    }
-	  }
-	  return new LodashWrapper(value);
-	}
-
-	// Ensure wrappers are instances of `baseLodash`.
-	lodash.prototype = baseLodash.prototype;
-
-	module.exports = lodash;
-
-
-/***/ },
-/* 538 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCreate = __webpack_require__(525),
-	    baseLodash = __webpack_require__(532);
-
-	/**
-	 * The base constructor for creating `lodash` wrapper objects.
-	 *
-	 * @private
-	 * @param {*} value The value to wrap.
-	 * @param {boolean} [chainAll] Enable chaining for all wrapper methods.
-	 * @param {Array} [actions=[]] Actions to peform to resolve the unwrapped value.
-	 */
-	function LodashWrapper(value, chainAll, actions) {
-	  this.__wrapped__ = value;
-	  this.__actions__ = actions || [];
-	  this.__chain__ = !!chainAll;
-	}
-
-	LodashWrapper.prototype = baseCreate(baseLodash.prototype);
-	LodashWrapper.prototype.constructor = LodashWrapper;
-
-	module.exports = LodashWrapper;
-
-
-/***/ },
-/* 539 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getNative = __webpack_require__(518),
-	    isLength = __webpack_require__(540),
-	    isObjectLike = __webpack_require__(522);
-
-	/** `Object#toString` result references. */
-	var arrayTag = '[object Array]';
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeIsArray = getNative(Array, 'isArray');
-
-	/**
-	 * Checks if `value` is classified as an `Array` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isArray([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isArray(function() { return arguments; }());
-	 * // => false
-	 */
-	var isArray = nativeIsArray || function(value) {
-	  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
-	};
-
-	module.exports = isArray;
-
-
-/***/ },
-/* 540 */
-/***/ function(module, exports) {
-
-	/**
-	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
-	 * of an array-like value.
-	 */
-	var MAX_SAFE_INTEGER = 9007199254740991;
-
-	/**
-	 * Checks if `value` is a valid array-like length.
-	 *
-	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
-	 */
-	function isLength(value) {
-	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-	}
-
-	module.exports = isLength;
-
-
-/***/ },
-/* 541 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var LazyWrapper = __webpack_require__(531),
-	    LodashWrapper = __webpack_require__(538),
-	    arrayCopy = __webpack_require__(527);
-
-	/**
-	 * Creates a clone of `wrapper`.
-	 *
-	 * @private
-	 * @param {Object} wrapper The wrapper to clone.
-	 * @returns {Object} Returns the cloned wrapper.
-	 */
-	function wrapperClone(wrapper) {
-	  return wrapper instanceof LazyWrapper
-	    ? wrapper.clone()
-	    : new LodashWrapper(wrapper.__wrapped__, wrapper.__chain__, arrayCopy(wrapper.__actions__));
-	}
-
-	module.exports = wrapperClone;
-
-
-/***/ },
-/* 542 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arrayCopy = __webpack_require__(527),
-	    isIndex = __webpack_require__(543);
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMin = Math.min;
-
-	/**
-	 * Reorder `array` according to the specified indexes where the element at
-	 * the first index is assigned as the first element, the element at
-	 * the second index is assigned as the second element, and so on.
-	 *
-	 * @private
-	 * @param {Array} array The array to reorder.
-	 * @param {Array} indexes The arranged array indexes.
-	 * @returns {Array} Returns `array`.
-	 */
-	function reorder(array, indexes) {
-	  var arrLength = array.length,
-	      length = nativeMin(indexes.length, arrLength),
-	      oldArray = arrayCopy(array);
-
-	  while (length--) {
-	    var index = indexes[length];
-	    array[length] = isIndex(index, arrLength) ? oldArray[index] : undefined;
-	  }
-	  return array;
-	}
-
-	module.exports = reorder;
-
-
-/***/ },
-/* 543 */
-/***/ function(module, exports) {
-
-	/** Used to detect unsigned integer values. */
-	var reIsUint = /^\d+$/;
-
-	/**
-	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
-	 * of an array-like value.
-	 */
-	var MAX_SAFE_INTEGER = 9007199254740991;
-
-	/**
-	 * Checks if `value` is a valid array-like index.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
-	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
-	 */
-	function isIndex(value, length) {
-	  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
-	  length = length == null ? MAX_SAFE_INTEGER : length;
-	  return value > -1 && value % 1 == 0 && value < length;
-	}
-
-	module.exports = isIndex;
-
-
-/***/ },
-/* 544 */
-/***/ function(module, exports) {
-
-	/** Used as the internal argument placeholder. */
-	var PLACEHOLDER = '__lodash_placeholder__';
-
-	/**
-	 * Replaces all `placeholder` elements in `array` with an internal placeholder
-	 * and returns an array of their indexes.
-	 *
-	 * @private
-	 * @param {Array} array The array to modify.
-	 * @param {*} placeholder The placeholder to replace.
-	 * @returns {Array} Returns the new array of placeholder indexes.
-	 */
-	function replaceHolders(array, placeholder) {
-	  var index = -1,
-	      length = array.length,
-	      resIndex = -1,
-	      result = [];
-
-	  while (++index < length) {
-	    if (array[index] === placeholder) {
-	      array[index] = PLACEHOLDER;
-	      result[++resIndex] = index;
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = replaceHolders;
-
-
-/***/ },
-/* 545 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseSetData = __webpack_require__(515),
-	    now = __webpack_require__(546);
-
-	/** Used to detect when a function becomes hot. */
-	var HOT_COUNT = 150,
-	    HOT_SPAN = 16;
-
-	/**
-	 * Sets metadata for `func`.
-	 *
-	 * **Note:** If this function becomes hot, i.e. is invoked a lot in a short
-	 * period of time, it will trip its breaker and transition to an identity function
-	 * to avoid garbage collection pauses in V8. See [V8 issue 2070](https://code.google.com/p/v8/issues/detail?id=2070)
-	 * for more details.
-	 *
-	 * @private
-	 * @param {Function} func The function to associate metadata with.
-	 * @param {*} data The metadata.
-	 * @returns {Function} Returns `func`.
-	 */
-	var setData = (function() {
-	  var count = 0,
-	      lastCalled = 0;
-
-	  return function(key, value) {
-	    var stamp = now(),
-	        remaining = HOT_SPAN - (stamp - lastCalled);
-
-	    lastCalled = stamp;
-	    if (remaining > 0) {
-	      if (++count >= HOT_COUNT) {
-	        return key;
-	      }
-	    } else {
-	      count = 0;
-	    }
-	    return baseSetData(key, value);
-	  };
-	}());
-
-	module.exports = setData;
-
-
-/***/ },
-/* 546 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getNative = __webpack_require__(518);
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeNow = getNative(Date, 'now');
-
-	/**
-	 * Gets the number of milliseconds that have elapsed since the Unix epoch
-	 * (1 January 1970 00:00:00 UTC).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Date
-	 * @example
-	 *
-	 * _.defer(function(stamp) {
-	 *   console.log(_.now() - stamp);
-	 * }, _.now());
-	 * // => logs the number of milliseconds it took for the deferred function to be invoked
-	 */
-	var now = nativeNow || function() {
-	  return new Date().getTime();
-	};
-
-	module.exports = now;
-
-
-/***/ },
-/* 547 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(524);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1;
-
-	/**
-	 * Creates a function that wraps `func` and invokes it with the optional `this`
-	 * binding of `thisArg` and the `partials` prepended to those provided to
-	 * the wrapper.
-	 *
-	 * @private
-	 * @param {Function} func The function to partially apply arguments to.
-	 * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
-	 * @param {*} thisArg The `this` binding of `func`.
-	 * @param {Array} partials The arguments to prepend to those provided to the new function.
-	 * @returns {Function} Returns the new bound function.
-	 */
-	function createPartialWrapper(func, bitmask, thisArg, partials) {
-	  var isBind = bitmask & BIND_FLAG,
-	      Ctor = createCtorWrapper(func);
-
-	  function wrapper() {
-	    // Avoid `arguments` object use disqualifying optimizations by
-	    // converting it to an array before providing it `func`.
-	    var argsIndex = -1,
-	        argsLength = arguments.length,
-	        leftIndex = -1,
-	        leftLength = partials.length,
-	        args = Array(leftLength + argsLength);
-
-	    while (++leftIndex < leftLength) {
-	      args[leftIndex] = partials[leftIndex];
-	    }
-	    while (argsLength--) {
-	      args[leftIndex++] = arguments[++argsIndex];
-	    }
-	    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
-	    return fn.apply(isBind ? thisArg : this, args);
-	  }
-	  return wrapper;
-	}
-
-	module.exports = createPartialWrapper;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 548 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arrayCopy = __webpack_require__(527),
-	    composeArgs = __webpack_require__(528),
-	    composeArgsRight = __webpack_require__(529),
-	    replaceHolders = __webpack_require__(544);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1,
-	    CURRY_BOUND_FLAG = 4,
-	    CURRY_FLAG = 8,
-	    ARY_FLAG = 128,
-	    REARG_FLAG = 256;
-
-	/** Used as the internal argument placeholder. */
-	var PLACEHOLDER = '__lodash_placeholder__';
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMin = Math.min;
-
-	/**
-	 * Merges the function metadata of `source` into `data`.
-	 *
-	 * Merging metadata reduces the number of wrappers required to invoke a function.
-	 * This is possible because methods like `_.bind`, `_.curry`, and `_.partial`
-	 * may be applied regardless of execution order. Methods like `_.ary` and `_.rearg`
-	 * augment function arguments, making the order in which they are executed important,
-	 * preventing the merging of metadata. However, we make an exception for a safe
-	 * common case where curried functions have `_.ary` and or `_.rearg` applied.
-	 *
-	 * @private
-	 * @param {Array} data The destination metadata.
-	 * @param {Array} source The source metadata.
-	 * @returns {Array} Returns `data`.
-	 */
-	function mergeData(data, source) {
-	  var bitmask = data[1],
-	      srcBitmask = source[1],
-	      newBitmask = bitmask | srcBitmask,
-	      isCommon = newBitmask < ARY_FLAG;
-
-	  var isCombo =
-	    (srcBitmask == ARY_FLAG && bitmask == CURRY_FLAG) ||
-	    (srcBitmask == ARY_FLAG && bitmask == REARG_FLAG && data[7].length <= source[8]) ||
-	    (srcBitmask == (ARY_FLAG | REARG_FLAG) && bitmask == CURRY_FLAG);
-
-	  // Exit early if metadata can't be merged.
-	  if (!(isCommon || isCombo)) {
-	    return data;
-	  }
-	  // Use source `thisArg` if available.
-	  if (srcBitmask & BIND_FLAG) {
-	    data[2] = source[2];
-	    // Set when currying a bound function.
-	    newBitmask |= (bitmask & BIND_FLAG) ? 0 : CURRY_BOUND_FLAG;
-	  }
-	  // Compose partial arguments.
-	  var value = source[3];
-	  if (value) {
-	    var partials = data[3];
-	    data[3] = partials ? composeArgs(partials, value, source[4]) : arrayCopy(value);
-	    data[4] = partials ? replaceHolders(data[3], PLACEHOLDER) : arrayCopy(source[4]);
-	  }
-	  // Compose partial right arguments.
-	  value = source[5];
-	  if (value) {
-	    partials = data[5];
-	    data[5] = partials ? composeArgsRight(partials, value, source[6]) : arrayCopy(value);
-	    data[6] = partials ? replaceHolders(data[5], PLACEHOLDER) : arrayCopy(source[6]);
-	  }
-	  // Use source `argPos` if available.
-	  value = source[7];
-	  if (value) {
-	    data[7] = arrayCopy(value);
-	  }
-	  // Use source `ary` if it's smaller.
-	  if (srcBitmask & ARY_FLAG) {
-	    data[8] = data[8] == null ? source[8] : nativeMin(data[8], source[8]);
-	  }
-	  // Use source `arity` if one is not provided.
-	  if (data[9] == null) {
-	    data[9] = source[9];
-	  }
-	  // Use source `func` and merge bitmasks.
-	  data[0] = source[0];
-	  data[1] = newBitmask;
-
-	  return data;
-	}
-
-	module.exports = mergeData;
-
-
-/***/ },
-/* 549 */
-/***/ function(module, exports) {
-
-	/** Used as the `TypeError` message for "Functions" methods. */
-	var FUNC_ERROR_TEXT = 'Expected a function';
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Creates a function that invokes `func` with the `this` binding of the
-	 * created function and arguments from `start` and beyond provided as an array.
-	 *
-	 * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/Web/JavaScript/Reference/Functions/rest_parameters).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Function
-	 * @param {Function} func The function to apply a rest parameter to.
-	 * @param {number} [start=func.length-1] The start position of the rest parameter.
-	 * @returns {Function} Returns the new function.
-	 * @example
-	 *
-	 * var say = _.restParam(function(what, names) {
-	 *   return what + ' ' + _.initial(names).join(', ') +
-	 *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
-	 * });
-	 *
-	 * say('hello', 'fred', 'barney', 'pebbles');
-	 * // => 'hello fred, barney, & pebbles'
-	 */
-	function restParam(func, start) {
-	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT);
-	  }
-	  start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
-	  return function() {
-	    var args = arguments,
-	        index = -1,
-	        length = nativeMax(args.length - start, 0),
-	        rest = Array(length);
-
-	    while (++index < length) {
-	      rest[index] = args[start + index];
-	    }
-	    switch (start) {
-	      case 0: return func.call(this, rest);
-	      case 1: return func.call(this, args[0], rest);
-	      case 2: return func.call(this, args[0], args[1], rest);
-	    }
-	    var otherArgs = Array(start + 1);
-	    index = -1;
-	    while (++index < start) {
-	      otherArgs[index] = args[index];
-	    }
-	    otherArgs[start] = rest;
-	    return func.apply(this, otherArgs);
-	  };
-	}
-
-	module.exports = restParam;
-
-
-/***/ },
-/* 550 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseEach = __webpack_require__(551),
-	    createFind = __webpack_require__(564);
-
-	/**
-	 * Iterates over elements of `collection`, returning the first element
-	 * `predicate` returns truthy for. The predicate is bound to `thisArg` and
-	 * invoked with three arguments: (value, index|key, collection).
-	 *
-	 * If a property name is provided for `predicate` the created `_.property`
-	 * style callback returns the property value of the given element.
-	 *
-	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
-	 * style callback returns `true` for elements that have a matching property
-	 * value, else `false`.
-	 *
-	 * If an object is provided for `predicate` the created `_.matches` style
-	 * callback returns `true` for elements that have the properties of the given
-	 * object, else `false`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias detect
-	 * @category Collection
-	 * @param {Array|Object|string} collection The collection to search.
-	 * @param {Function|Object|string} [predicate=_.identity] The function invoked
-	 *  per iteration.
-	 * @param {*} [thisArg] The `this` binding of `predicate`.
-	 * @returns {*} Returns the matched element, else `undefined`.
-	 * @example
-	 *
-	 * var users = [
-	 *   { 'user': 'barney',  'age': 36, 'active': true },
-	 *   { 'user': 'fred',    'age': 40, 'active': false },
-	 *   { 'user': 'pebbles', 'age': 1,  'active': true }
-	 * ];
-	 *
-	 * _.result(_.find(users, function(chr) {
-	 *   return chr.age < 40;
-	 * }), 'user');
-	 * // => 'barney'
-	 *
-	 * // using the `_.matches` callback shorthand
-	 * _.result(_.find(users, { 'age': 1, 'active': true }), 'user');
-	 * // => 'pebbles'
-	 *
-	 * // using the `_.matchesProperty` callback shorthand
-	 * _.result(_.find(users, 'active', false), 'user');
-	 * // => 'fred'
-	 *
-	 * // using the `_.property` callback shorthand
-	 * _.result(_.find(users, 'active'), 'user');
-	 * // => 'barney'
-	 */
-	var find = createFind(baseEach);
-
-	module.exports = find;
-
-
-/***/ },
-/* 551 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseForOwn = __webpack_require__(552),
-	    createBaseEach = __webpack_require__(563);
-
-	/**
-	 * The base implementation of `_.forEach` without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array|Object|string} collection The collection to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Array|Object|string} Returns `collection`.
-	 */
-	var baseEach = createBaseEach(baseForOwn);
-
-	module.exports = baseEach;
-
-
-/***/ },
-/* 552 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseFor = __webpack_require__(553),
-	    keys = __webpack_require__(556);
-
-	/**
-	 * The base implementation of `_.forOwn` without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Object} object The object to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Object} Returns `object`.
-	 */
-	function baseForOwn(object, iteratee) {
-	  return baseFor(object, iteratee, keys);
-	}
-
-	module.exports = baseForOwn;
-
-
-/***/ },
-/* 553 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var createBaseFor = __webpack_require__(554);
-
-	/**
-	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
-	 * over `object` properties returned by `keysFunc` invoking `iteratee` for
-	 * each property. Iteratee functions may exit iteration early by explicitly
-	 * returning `false`.
-	 *
-	 * @private
-	 * @param {Object} object The object to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @param {Function} keysFunc The function to get the keys of `object`.
-	 * @returns {Object} Returns `object`.
-	 */
-	var baseFor = createBaseFor();
-
-	module.exports = baseFor;
-
-
-/***/ },
-/* 554 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var toObject = __webpack_require__(555);
-
-	/**
-	 * Creates a base function for `_.forIn` or `_.forInRight`.
-	 *
-	 * @private
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {Function} Returns the new base function.
-	 */
-	function createBaseFor(fromRight) {
-	  return function(object, iteratee, keysFunc) {
-	    var iterable = toObject(object),
-	        props = keysFunc(object),
-	        length = props.length,
-	        index = fromRight ? length : -1;
-
-	    while ((fromRight ? index-- : ++index < length)) {
-	      var key = props[index];
-	      if (iteratee(iterable[key], key, iterable) === false) {
-	        break;
-	      }
-	    }
-	    return object;
-	  };
-	}
-
-	module.exports = createBaseFor;
-
-
-/***/ },
-/* 555 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(521);
-
-	/**
-	 * Converts `value` to an object if it's not one.
-	 *
-	 * @private
-	 * @param {*} value The value to process.
-	 * @returns {Object} Returns the object.
-	 */
-	function toObject(value) {
-	  return isObject(value) ? value : Object(value);
-	}
-
-	module.exports = toObject;
-
-
-/***/ },
-/* 556 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getNative = __webpack_require__(518),
-	    isArrayLike = __webpack_require__(557),
-	    isObject = __webpack_require__(521),
-	    shimKeys = __webpack_require__(560);
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeKeys = getNative(Object, 'keys');
-
-	/**
-	 * Creates an array of the own enumerable property names of `object`.
-	 *
-	 * **Note:** Non-object values are coerced to objects. See the
-	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
-	 * for more details.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 * @example
-	 *
-	 * function Foo() {
-	 *   this.a = 1;
-	 *   this.b = 2;
-	 * }
-	 *
-	 * Foo.prototype.c = 3;
-	 *
-	 * _.keys(new Foo);
-	 * // => ['a', 'b'] (iteration order is not guaranteed)
-	 *
-	 * _.keys('hi');
-	 * // => ['0', '1']
-	 */
-	var keys = !nativeKeys ? shimKeys : function(object) {
-	  var Ctor = object == null ? undefined : object.constructor;
-	  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
-	      (typeof object != 'function' && isArrayLike(object))) {
-	    return shimKeys(object);
-	  }
-	  return isObject(object) ? nativeKeys(object) : [];
-	};
-
-	module.exports = keys;
-
-
-/***/ },
-/* 557 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getLength = __webpack_require__(558),
-	    isLength = __webpack_require__(540);
-
-	/**
-	 * Checks if `value` is array-like.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
-	 */
-	function isArrayLike(value) {
-	  return value != null && isLength(getLength(value));
-	}
-
-	module.exports = isArrayLike;
-
-
-/***/ },
-/* 558 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseProperty = __webpack_require__(559);
-
-	/**
-	 * Gets the "length" property value of `object`.
-	 *
-	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
-	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {*} Returns the "length" value.
-	 */
-	var getLength = baseProperty('length');
-
-	module.exports = getLength;
-
-
-/***/ },
-/* 559 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.property` without support for deep paths.
-	 *
-	 * @private
-	 * @param {string} key The key of the property to get.
-	 * @returns {Function} Returns the new function.
-	 */
-	function baseProperty(key) {
-	  return function(object) {
-	    return object == null ? undefined : object[key];
-	  };
-	}
-
-	module.exports = baseProperty;
-
-
-/***/ },
-/* 560 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArguments = __webpack_require__(561),
-	    isArray = __webpack_require__(539),
-	    isIndex = __webpack_require__(543),
-	    isLength = __webpack_require__(540),
-	    keysIn = __webpack_require__(562);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * A fallback implementation of `Object.keys` which creates an array of the
-	 * own enumerable property names of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 */
-	function shimKeys(object) {
-	  var props = keysIn(object),
-	      propsLength = props.length,
-	      length = propsLength && object.length;
-
-	  var allowIndexes = !!length && isLength(length) &&
-	    (isArray(object) || isArguments(object));
-
-	  var index = -1,
-	      result = [];
-
-	  while (++index < propsLength) {
-	    var key = props[index];
-	    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = shimKeys;
-
-
-/***/ },
-/* 561 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArrayLike = __webpack_require__(557),
-	    isObjectLike = __webpack_require__(522);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/** Native method references. */
-	var propertyIsEnumerable = objectProto.propertyIsEnumerable;
-
-	/**
-	 * Checks if `value` is classified as an `arguments` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isArguments(function() { return arguments; }());
-	 * // => true
-	 *
-	 * _.isArguments([1, 2, 3]);
-	 * // => false
-	 */
-	function isArguments(value) {
-	  return isObjectLike(value) && isArrayLike(value) &&
-	    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
-	}
-
-	module.exports = isArguments;
-
-
-/***/ },
-/* 562 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArguments = __webpack_require__(561),
-	    isArray = __webpack_require__(539),
-	    isIndex = __webpack_require__(543),
-	    isLength = __webpack_require__(540),
-	    isObject = __webpack_require__(521);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * Creates an array of the own and inherited enumerable property names of `object`.
-	 *
-	 * **Note:** Non-object values are coerced to objects.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 * @example
-	 *
-	 * function Foo() {
-	 *   this.a = 1;
-	 *   this.b = 2;
-	 * }
-	 *
-	 * Foo.prototype.c = 3;
-	 *
-	 * _.keysIn(new Foo);
-	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
-	 */
-	function keysIn(object) {
-	  if (object == null) {
-	    return [];
-	  }
-	  if (!isObject(object)) {
-	    object = Object(object);
-	  }
-	  var length = object.length;
-	  length = (length && isLength(length) &&
-	    (isArray(object) || isArguments(object)) && length) || 0;
-
-	  var Ctor = object.constructor,
-	      index = -1,
-	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
-	      result = Array(length),
-	      skipIndexes = length > 0;
-
-	  while (++index < length) {
-	    result[index] = (index + '');
-	  }
-	  for (var key in object) {
-	    if (!(skipIndexes && isIndex(key, length)) &&
-	        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = keysIn;
-
-
-/***/ },
-/* 563 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getLength = __webpack_require__(558),
-	    isLength = __webpack_require__(540),
-	    toObject = __webpack_require__(555);
-
-	/**
-	 * Creates a `baseEach` or `baseEachRight` function.
-	 *
-	 * @private
-	 * @param {Function} eachFunc The function to iterate over a collection.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {Function} Returns the new base function.
-	 */
-	function createBaseEach(eachFunc, fromRight) {
-	  return function(collection, iteratee) {
-	    var length = collection ? getLength(collection) : 0;
-	    if (!isLength(length)) {
-	      return eachFunc(collection, iteratee);
-	    }
-	    var index = fromRight ? length : -1,
-	        iterable = toObject(collection);
-
-	    while ((fromRight ? index-- : ++index < length)) {
-	      if (iteratee(iterable[index], index, iterable) === false) {
-	        break;
-	      }
-	    }
-	    return collection;
-	  };
-	}
-
-	module.exports = createBaseEach;
-
-
-/***/ },
-/* 564 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCallback = __webpack_require__(565),
-	    baseFind = __webpack_require__(588),
-	    baseFindIndex = __webpack_require__(589),
-	    isArray = __webpack_require__(539);
-
-	/**
-	 * Creates a `_.find` or `_.findLast` function.
-	 *
-	 * @private
-	 * @param {Function} eachFunc The function to iterate over a collection.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {Function} Returns the new find function.
-	 */
-	function createFind(eachFunc, fromRight) {
-	  return function(collection, predicate, thisArg) {
-	    predicate = baseCallback(predicate, thisArg, 3);
-	    if (isArray(collection)) {
-	      var index = baseFindIndex(collection, predicate, fromRight);
-	      return index > -1 ? collection[index] : undefined;
-	    }
-	    return baseFind(collection, predicate, eachFunc);
-	  };
-	}
-
-	module.exports = createFind;
-
-
-/***/ },
-/* 565 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseMatches = __webpack_require__(566),
-	    baseMatchesProperty = __webpack_require__(578),
-	    bindCallback = __webpack_require__(585),
-	    identity = __webpack_require__(516),
-	    property = __webpack_require__(586);
-
-	/**
-	 * The base implementation of `_.callback` which supports specifying the
-	 * number of arguments to provide to `func`.
-	 *
-	 * @private
-	 * @param {*} [func=_.identity] The value to convert to a callback.
-	 * @param {*} [thisArg] The `this` binding of `func`.
-	 * @param {number} [argCount] The number of arguments to provide to `func`.
-	 * @returns {Function} Returns the callback.
-	 */
-	function baseCallback(func, thisArg, argCount) {
-	  var type = typeof func;
-	  if (type == 'function') {
-	    return thisArg === undefined
-	      ? func
-	      : bindCallback(func, thisArg, argCount);
-	  }
-	  if (func == null) {
-	    return identity;
-	  }
-	  if (type == 'object') {
-	    return baseMatches(func);
-	  }
-	  return thisArg === undefined
-	    ? property(func)
-	    : baseMatchesProperty(func, thisArg);
-	}
-
-	module.exports = baseCallback;
-
-
-/***/ },
-/* 566 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseIsMatch = __webpack_require__(567),
-	    getMatchData = __webpack_require__(575),
-	    toObject = __webpack_require__(555);
-
-	/**
-	 * The base implementation of `_.matches` which does not clone `source`.
-	 *
-	 * @private
-	 * @param {Object} source The object of property values to match.
-	 * @returns {Function} Returns the new function.
-	 */
-	function baseMatches(source) {
-	  var matchData = getMatchData(source);
-	  if (matchData.length == 1 && matchData[0][2]) {
-	    var key = matchData[0][0],
-	        value = matchData[0][1];
-
-	    return function(object) {
-	      if (object == null) {
-	        return false;
-	      }
-	      return object[key] === value && (value !== undefined || (key in toObject(object)));
-	    };
-	  }
-	  return function(object) {
-	    return baseIsMatch(object, matchData);
-	  };
-	}
-
-	module.exports = baseMatches;
-
-
-/***/ },
-/* 567 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseIsEqual = __webpack_require__(568),
-	    toObject = __webpack_require__(555);
-
-	/**
-	 * The base implementation of `_.isMatch` without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Object} object The object to inspect.
-	 * @param {Array} matchData The propery names, values, and compare flags to match.
-	 * @param {Function} [customizer] The function to customize comparing objects.
-	 * @returns {boolean} Returns `true` if `object` is a match, else `false`.
-	 */
-	function baseIsMatch(object, matchData, customizer) {
-	  var index = matchData.length,
-	      length = index,
-	      noCustomizer = !customizer;
-
-	  if (object == null) {
-	    return !length;
-	  }
-	  object = toObject(object);
-	  while (index--) {
-	    var data = matchData[index];
-	    if ((noCustomizer && data[2])
-	          ? data[1] !== object[data[0]]
-	          : !(data[0] in object)
-	        ) {
-	      return false;
-	    }
-	  }
-	  while (++index < length) {
-	    data = matchData[index];
-	    var key = data[0],
-	        objValue = object[key],
-	        srcValue = data[1];
-
-	    if (noCustomizer && data[2]) {
-	      if (objValue === undefined && !(key in object)) {
-	        return false;
-	      }
-	    } else {
-	      var result = customizer ? customizer(objValue, srcValue, key) : undefined;
-	      if (!(result === undefined ? baseIsEqual(srcValue, objValue, customizer, true) : result)) {
-	        return false;
-	      }
-	    }
-	  }
-	  return true;
-	}
-
-	module.exports = baseIsMatch;
-
-
-/***/ },
-/* 568 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseIsEqualDeep = __webpack_require__(569),
-	    isObject = __webpack_require__(521),
-	    isObjectLike = __webpack_require__(522);
-
-	/**
-	 * The base implementation of `_.isEqual` without support for `this` binding
-	 * `customizer` functions.
-	 *
-	 * @private
-	 * @param {*} value The value to compare.
-	 * @param {*} other The other value to compare.
-	 * @param {Function} [customizer] The function to customize comparing values.
-	 * @param {boolean} [isLoose] Specify performing partial comparisons.
-	 * @param {Array} [stackA] Tracks traversed `value` objects.
-	 * @param {Array} [stackB] Tracks traversed `other` objects.
-	 * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-	 */
-	function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
-	  if (value === other) {
-	    return true;
-	  }
-	  if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
-	    return value !== value && other !== other;
-	  }
-	  return baseIsEqualDeep(value, other, baseIsEqual, customizer, isLoose, stackA, stackB);
-	}
-
-	module.exports = baseIsEqual;
-
-
-/***/ },
-/* 569 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var equalArrays = __webpack_require__(570),
-	    equalByTag = __webpack_require__(572),
-	    equalObjects = __webpack_require__(573),
-	    isArray = __webpack_require__(539),
-	    isTypedArray = __webpack_require__(574);
-
-	/** `Object#toString` result references. */
-	var argsTag = '[object Arguments]',
-	    arrayTag = '[object Array]',
-	    objectTag = '[object Object]';
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-
-	/**
-	 * A specialized version of `baseIsEqual` for arrays and objects which performs
-	 * deep comparisons and tracks traversed objects enabling objects with circular
-	 * references to be compared.
-	 *
-	 * @private
-	 * @param {Object} object The object to compare.
-	 * @param {Object} other The other object to compare.
-	 * @param {Function} equalFunc The function to determine equivalents of values.
-	 * @param {Function} [customizer] The function to customize comparing objects.
-	 * @param {boolean} [isLoose] Specify performing partial comparisons.
-	 * @param {Array} [stackA=[]] Tracks traversed `value` objects.
-	 * @param {Array} [stackB=[]] Tracks traversed `other` objects.
-	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-	 */
-	function baseIsEqualDeep(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
-	  var objIsArr = isArray(object),
-	      othIsArr = isArray(other),
-	      objTag = arrayTag,
-	      othTag = arrayTag;
-
-	  if (!objIsArr) {
-	    objTag = objToString.call(object);
-	    if (objTag == argsTag) {
-	      objTag = objectTag;
-	    } else if (objTag != objectTag) {
-	      objIsArr = isTypedArray(object);
-	    }
-	  }
-	  if (!othIsArr) {
-	    othTag = objToString.call(other);
-	    if (othTag == argsTag) {
-	      othTag = objectTag;
-	    } else if (othTag != objectTag) {
-	      othIsArr = isTypedArray(other);
-	    }
-	  }
-	  var objIsObj = objTag == objectTag,
-	      othIsObj = othTag == objectTag,
-	      isSameTag = objTag == othTag;
-
-	  if (isSameTag && !(objIsArr || objIsObj)) {
-	    return equalByTag(object, other, objTag);
-	  }
-	  if (!isLoose) {
-	    var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
-	        othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
-
-	    if (objIsWrapped || othIsWrapped) {
-	      return equalFunc(objIsWrapped ? object.value() : object, othIsWrapped ? other.value() : other, customizer, isLoose, stackA, stackB);
-	    }
-	  }
-	  if (!isSameTag) {
-	    return false;
-	  }
-	  // Assume cyclic values are equal.
-	  // For more information on detecting circular references see https://es5.github.io/#JO.
-	  stackA || (stackA = []);
-	  stackB || (stackB = []);
-
-	  var length = stackA.length;
-	  while (length--) {
-	    if (stackA[length] == object) {
-	      return stackB[length] == other;
-	    }
-	  }
-	  // Add `object` and `other` to the stack of traversed objects.
-	  stackA.push(object);
-	  stackB.push(other);
-
-	  var result = (objIsArr ? equalArrays : equalObjects)(object, other, equalFunc, customizer, isLoose, stackA, stackB);
-
-	  stackA.pop();
-	  stackB.pop();
-
-	  return result;
-	}
-
-	module.exports = baseIsEqualDeep;
-
-
-/***/ },
-/* 570 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arraySome = __webpack_require__(571);
-
-	/**
-	 * A specialized version of `baseIsEqualDeep` for arrays with support for
-	 * partial deep comparisons.
-	 *
-	 * @private
-	 * @param {Array} array The array to compare.
-	 * @param {Array} other The other array to compare.
-	 * @param {Function} equalFunc The function to determine equivalents of values.
-	 * @param {Function} [customizer] The function to customize comparing arrays.
-	 * @param {boolean} [isLoose] Specify performing partial comparisons.
-	 * @param {Array} [stackA] Tracks traversed `value` objects.
-	 * @param {Array} [stackB] Tracks traversed `other` objects.
-	 * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
-	 */
-	function equalArrays(array, other, equalFunc, customizer, isLoose, stackA, stackB) {
-	  var index = -1,
-	      arrLength = array.length,
-	      othLength = other.length;
-
-	  if (arrLength != othLength && !(isLoose && othLength > arrLength)) {
-	    return false;
-	  }
-	  // Ignore non-index properties.
-	  while (++index < arrLength) {
-	    var arrValue = array[index],
-	        othValue = other[index],
-	        result = customizer ? customizer(isLoose ? othValue : arrValue, isLoose ? arrValue : othValue, index) : undefined;
-
-	    if (result !== undefined) {
-	      if (result) {
-	        continue;
-	      }
-	      return false;
-	    }
-	    // Recursively compare arrays (susceptible to call stack limits).
-	    if (isLoose) {
-	      if (!arraySome(other, function(othValue) {
-	            return arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
-	          })) {
-	        return false;
-	      }
-	    } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB))) {
-	      return false;
-	    }
-	  }
-	  return true;
-	}
-
-	module.exports = equalArrays;
-
-
-/***/ },
-/* 571 */
-/***/ function(module, exports) {
-
-	/**
-	 * A specialized version of `_.some` for arrays without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array} array The array to iterate over.
-	 * @param {Function} predicate The function invoked per iteration.
-	 * @returns {boolean} Returns `true` if any element passes the predicate check,
-	 *  else `false`.
-	 */
-	function arraySome(array, predicate) {
-	  var index = -1,
-	      length = array.length;
-
-	  while (++index < length) {
-	    if (predicate(array[index], index, array)) {
-	      return true;
-	    }
-	  }
-	  return false;
-	}
-
-	module.exports = arraySome;
-
-
-/***/ },
-/* 572 */
-/***/ function(module, exports) {
-
-	/** `Object#toString` result references. */
-	var boolTag = '[object Boolean]',
-	    dateTag = '[object Date]',
-	    errorTag = '[object Error]',
-	    numberTag = '[object Number]',
-	    regexpTag = '[object RegExp]',
-	    stringTag = '[object String]';
-
-	/**
-	 * A specialized version of `baseIsEqualDeep` for comparing objects of
-	 * the same `toStringTag`.
-	 *
-	 * **Note:** This function only supports comparing values with tags of
-	 * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
-	 *
-	 * @private
-	 * @param {Object} object The object to compare.
-	 * @param {Object} other The other object to compare.
-	 * @param {string} tag The `toStringTag` of the objects to compare.
-	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-	 */
-	function equalByTag(object, other, tag) {
-	  switch (tag) {
-	    case boolTag:
-	    case dateTag:
-	      // Coerce dates and booleans to numbers, dates to milliseconds and booleans
-	      // to `1` or `0` treating invalid dates coerced to `NaN` as not equal.
-	      return +object == +other;
-
-	    case errorTag:
-	      return object.name == other.name && object.message == other.message;
-
-	    case numberTag:
-	      // Treat `NaN` vs. `NaN` as equal.
-	      return (object != +object)
-	        ? other != +other
-	        : object == +other;
-
-	    case regexpTag:
-	    case stringTag:
-	      // Coerce regexes to strings and treat strings primitives and string
-	      // objects as equal. See https://es5.github.io/#x15.10.6.4 for more details.
-	      return object == (other + '');
-	  }
-	  return false;
-	}
-
-	module.exports = equalByTag;
-
-
-/***/ },
-/* 573 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var keys = __webpack_require__(556);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * A specialized version of `baseIsEqualDeep` for objects with support for
-	 * partial deep comparisons.
-	 *
-	 * @private
-	 * @param {Object} object The object to compare.
-	 * @param {Object} other The other object to compare.
-	 * @param {Function} equalFunc The function to determine equivalents of values.
-	 * @param {Function} [customizer] The function to customize comparing values.
-	 * @param {boolean} [isLoose] Specify performing partial comparisons.
-	 * @param {Array} [stackA] Tracks traversed `value` objects.
-	 * @param {Array} [stackB] Tracks traversed `other` objects.
-	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-	 */
-	function equalObjects(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
-	  var objProps = keys(object),
-	      objLength = objProps.length,
-	      othProps = keys(other),
-	      othLength = othProps.length;
-
-	  if (objLength != othLength && !isLoose) {
-	    return false;
-	  }
-	  var index = objLength;
-	  while (index--) {
-	    var key = objProps[index];
-	    if (!(isLoose ? key in other : hasOwnProperty.call(other, key))) {
-	      return false;
-	    }
-	  }
-	  var skipCtor = isLoose;
-	  while (++index < objLength) {
-	    key = objProps[index];
-	    var objValue = object[key],
-	        othValue = other[key],
-	        result = customizer ? customizer(isLoose ? othValue : objValue, isLoose? objValue : othValue, key) : undefined;
-
-	    // Recursively compare objects (susceptible to call stack limits).
-	    if (!(result === undefined ? equalFunc(objValue, othValue, customizer, isLoose, stackA, stackB) : result)) {
-	      return false;
-	    }
-	    skipCtor || (skipCtor = key == 'constructor');
-	  }
-	  if (!skipCtor) {
-	    var objCtor = object.constructor,
-	        othCtor = other.constructor;
-
-	    // Non `Object` object instances with different constructors are not equal.
-	    if (objCtor != othCtor &&
-	        ('constructor' in object && 'constructor' in other) &&
-	        !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
-	          typeof othCtor == 'function' && othCtor instanceof othCtor)) {
-	      return false;
-	    }
-	  }
-	  return true;
-	}
-
-	module.exports = equalObjects;
-
-
-/***/ },
-/* 574 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isLength = __webpack_require__(540),
-	    isObjectLike = __webpack_require__(522);
-
-	/** `Object#toString` result references. */
-	var argsTag = '[object Arguments]',
-	    arrayTag = '[object Array]',
-	    boolTag = '[object Boolean]',
-	    dateTag = '[object Date]',
-	    errorTag = '[object Error]',
-	    funcTag = '[object Function]',
-	    mapTag = '[object Map]',
-	    numberTag = '[object Number]',
-	    objectTag = '[object Object]',
-	    regexpTag = '[object RegExp]',
-	    setTag = '[object Set]',
-	    stringTag = '[object String]',
-	    weakMapTag = '[object WeakMap]';
-
-	var arrayBufferTag = '[object ArrayBuffer]',
-	    float32Tag = '[object Float32Array]',
-	    float64Tag = '[object Float64Array]',
-	    int8Tag = '[object Int8Array]',
-	    int16Tag = '[object Int16Array]',
-	    int32Tag = '[object Int32Array]',
-	    uint8Tag = '[object Uint8Array]',
-	    uint8ClampedTag = '[object Uint8ClampedArray]',
-	    uint16Tag = '[object Uint16Array]',
-	    uint32Tag = '[object Uint32Array]';
-
-	/** Used to identify `toStringTag` values of typed arrays. */
-	var typedArrayTags = {};
-	typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
-	typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
-	typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
-	typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
-	typedArrayTags[uint32Tag] = true;
-	typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
-	typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
-	typedArrayTags[dateTag] = typedArrayTags[errorTag] =
-	typedArrayTags[funcTag] = typedArrayTags[mapTag] =
-	typedArrayTags[numberTag] = typedArrayTags[objectTag] =
-	typedArrayTags[regexpTag] = typedArrayTags[setTag] =
-	typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-
-	/**
-	 * Checks if `value` is classified as a typed array.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isTypedArray(new Uint8Array);
-	 * // => true
-	 *
-	 * _.isTypedArray([]);
-	 * // => false
-	 */
-	function isTypedArray(value) {
-	  return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[objToString.call(value)];
-	}
-
-	module.exports = isTypedArray;
-
-
-/***/ },
-/* 575 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isStrictComparable = __webpack_require__(576),
-	    pairs = __webpack_require__(577);
-
-	/**
-	 * Gets the propery names, values, and compare flags of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the match data of `object`.
-	 */
-	function getMatchData(object) {
-	  var result = pairs(object),
-	      length = result.length;
-
-	  while (length--) {
-	    result[length][2] = isStrictComparable(result[length][1]);
-	  }
-	  return result;
-	}
-
-	module.exports = getMatchData;
-
-
-/***/ },
-/* 576 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(521);
-
-	/**
-	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` if suitable for strict
-	 *  equality comparisons, else `false`.
-	 */
-	function isStrictComparable(value) {
-	  return value === value && !isObject(value);
-	}
-
-	module.exports = isStrictComparable;
-
-
-/***/ },
-/* 577 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var keys = __webpack_require__(556),
-	    toObject = __webpack_require__(555);
-
-	/**
-	 * Creates a two dimensional array of the key-value pairs for `object`,
-	 * e.g. `[[key1, value1], [key2, value2]]`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the new array of key-value pairs.
-	 * @example
-	 *
-	 * _.pairs({ 'barney': 36, 'fred': 40 });
-	 * // => [['barney', 36], ['fred', 40]] (iteration order is not guaranteed)
-	 */
-	function pairs(object) {
-	  object = toObject(object);
-
-	  var index = -1,
-	      props = keys(object),
-	      length = props.length,
-	      result = Array(length);
-
-	  while (++index < length) {
-	    var key = props[index];
-	    result[index] = [key, object[key]];
-	  }
-	  return result;
-	}
-
-	module.exports = pairs;
-
-
-/***/ },
-/* 578 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseGet = __webpack_require__(579),
-	    baseIsEqual = __webpack_require__(568),
-	    baseSlice = __webpack_require__(580),
-	    isArray = __webpack_require__(539),
-	    isKey = __webpack_require__(581),
-	    isStrictComparable = __webpack_require__(576),
-	    last = __webpack_require__(582),
-	    toObject = __webpack_require__(555),
-	    toPath = __webpack_require__(583);
-
-	/**
-	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
-	 *
-	 * @private
-	 * @param {string} path The path of the property to get.
-	 * @param {*} srcValue The value to compare.
-	 * @returns {Function} Returns the new function.
-	 */
-	function baseMatchesProperty(path, srcValue) {
-	  var isArr = isArray(path),
-	      isCommon = isKey(path) && isStrictComparable(srcValue),
-	      pathKey = (path + '');
-
-	  path = toPath(path);
-	  return function(object) {
-	    if (object == null) {
-	      return false;
-	    }
-	    var key = pathKey;
-	    object = toObject(object);
-	    if ((isArr || !isCommon) && !(key in object)) {
-	      object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
-	      if (object == null) {
-	        return false;
-	      }
-	      key = last(path);
-	      object = toObject(object);
-	    }
-	    return object[key] === srcValue
-	      ? (srcValue !== undefined || (key in object))
-	      : baseIsEqual(srcValue, object[key], undefined, true);
-	  };
-	}
-
-	module.exports = baseMatchesProperty;
-
-
-/***/ },
-/* 579 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var toObject = __webpack_require__(555);
-
-	/**
-	 * The base implementation of `get` without support for string paths
-	 * and default values.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @param {Array} path The path of the property to get.
-	 * @param {string} [pathKey] The key representation of path.
-	 * @returns {*} Returns the resolved value.
-	 */
-	function baseGet(object, path, pathKey) {
-	  if (object == null) {
-	    return;
-	  }
-	  if (pathKey !== undefined && pathKey in toObject(object)) {
-	    path = [pathKey];
-	  }
-	  var index = 0,
-	      length = path.length;
-
-	  while (object != null && index < length) {
-	    object = object[path[index++]];
-	  }
-	  return (index && index == length) ? object : undefined;
-	}
-
-	module.exports = baseGet;
-
-
-/***/ },
-/* 580 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.slice` without an iteratee call guard.
-	 *
-	 * @private
-	 * @param {Array} array The array to slice.
-	 * @param {number} [start=0] The start position.
-	 * @param {number} [end=array.length] The end position.
-	 * @returns {Array} Returns the slice of `array`.
-	 */
-	function baseSlice(array, start, end) {
-	  var index = -1,
-	      length = array.length;
-
-	  start = start == null ? 0 : (+start || 0);
-	  if (start < 0) {
-	    start = -start > length ? 0 : (length + start);
-	  }
-	  end = (end === undefined || end > length) ? length : (+end || 0);
-	  if (end < 0) {
-	    end += length;
-	  }
-	  length = start > end ? 0 : ((end - start) >>> 0);
-	  start >>>= 0;
-
-	  var result = Array(length);
-	  while (++index < length) {
-	    result[index] = array[index + start];
-	  }
-	  return result;
-	}
-
-	module.exports = baseSlice;
-
-
-/***/ },
-/* 581 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArray = __webpack_require__(539),
-	    toObject = __webpack_require__(555);
-
-	/** Used to match property names within property paths. */
-	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
-	    reIsPlainProp = /^\w*$/;
-
-	/**
-	 * Checks if `value` is a property name and not a property path.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @param {Object} [object] The object to query keys on.
-	 * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
-	 */
-	function isKey(value, object) {
-	  var type = typeof value;
-	  if ((type == 'string' && reIsPlainProp.test(value)) || type == 'number') {
-	    return true;
-	  }
-	  if (isArray(value)) {
-	    return false;
-	  }
-	  var result = !reIsDeepProp.test(value);
-	  return result || (object != null && value in toObject(object));
-	}
-
-	module.exports = isKey;
-
-
-/***/ },
-/* 582 */
-/***/ function(module, exports) {
-
-	/**
-	 * Gets the last element of `array`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Array
-	 * @param {Array} array The array to query.
-	 * @returns {*} Returns the last element of `array`.
-	 * @example
-	 *
-	 * _.last([1, 2, 3]);
-	 * // => 3
-	 */
-	function last(array) {
-	  var length = array ? array.length : 0;
-	  return length ? array[length - 1] : undefined;
-	}
-
-	module.exports = last;
-
-
-/***/ },
-/* 583 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseToString = __webpack_require__(584),
-	    isArray = __webpack_require__(539);
-
-	/** Used to match property names within property paths. */
-	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
-
-	/** Used to match backslashes in property paths. */
-	var reEscapeChar = /\\(\\)?/g;
-
-	/**
-	 * Converts `value` to property path array if it's not one.
-	 *
-	 * @private
-	 * @param {*} value The value to process.
-	 * @returns {Array} Returns the property path array.
-	 */
-	function toPath(value) {
-	  if (isArray(value)) {
-	    return value;
-	  }
-	  var result = [];
-	  baseToString(value).replace(rePropName, function(match, number, quote, string) {
-	    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
-	  });
-	  return result;
-	}
-
-	module.exports = toPath;
-
-
-/***/ },
-/* 584 */
-/***/ function(module, exports) {
-
-	/**
-	 * Converts `value` to a string if it's not one. An empty string is returned
-	 * for `null` or `undefined` values.
-	 *
-	 * @private
-	 * @param {*} value The value to process.
-	 * @returns {string} Returns the string.
-	 */
-	function baseToString(value) {
-	  return value == null ? '' : (value + '');
-	}
-
-	module.exports = baseToString;
-
-
-/***/ },
-/* 585 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var identity = __webpack_require__(516);
-
-	/**
-	 * A specialized version of `baseCallback` which only supports `this` binding
-	 * and specifying the number of arguments to provide to `func`.
-	 *
-	 * @private
-	 * @param {Function} func The function to bind.
-	 * @param {*} thisArg The `this` binding of `func`.
-	 * @param {number} [argCount] The number of arguments to provide to `func`.
-	 * @returns {Function} Returns the callback.
-	 */
-	function bindCallback(func, thisArg, argCount) {
-	  if (typeof func != 'function') {
-	    return identity;
-	  }
-	  if (thisArg === undefined) {
-	    return func;
-	  }
-	  switch (argCount) {
-	    case 1: return function(value) {
-	      return func.call(thisArg, value);
-	    };
-	    case 3: return function(value, index, collection) {
-	      return func.call(thisArg, value, index, collection);
-	    };
-	    case 4: return function(accumulator, value, index, collection) {
-	      return func.call(thisArg, accumulator, value, index, collection);
-	    };
-	    case 5: return function(value, other, key, object, source) {
-	      return func.call(thisArg, value, other, key, object, source);
-	    };
-	  }
-	  return function() {
-	    return func.apply(thisArg, arguments);
-	  };
-	}
-
-	module.exports = bindCallback;
-
-
-/***/ },
-/* 586 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseProperty = __webpack_require__(559),
-	    basePropertyDeep = __webpack_require__(587),
-	    isKey = __webpack_require__(581);
-
-	/**
-	 * Creates a function that returns the property value at `path` on a
-	 * given object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Utility
-	 * @param {Array|string} path The path of the property to get.
-	 * @returns {Function} Returns the new function.
-	 * @example
-	 *
-	 * var objects = [
-	 *   { 'a': { 'b': { 'c': 2 } } },
-	 *   { 'a': { 'b': { 'c': 1 } } }
-	 * ];
-	 *
-	 * _.map(objects, _.property('a.b.c'));
-	 * // => [2, 1]
-	 *
-	 * _.pluck(_.sortBy(objects, _.property(['a', 'b', 'c'])), 'a.b.c');
-	 * // => [1, 2]
-	 */
-	function property(path) {
-	  return isKey(path) ? baseProperty(path) : basePropertyDeep(path);
-	}
-
-	module.exports = property;
-
-
-/***/ },
-/* 587 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseGet = __webpack_require__(579),
-	    toPath = __webpack_require__(583);
-
-	/**
-	 * A specialized version of `baseProperty` which supports deep paths.
-	 *
-	 * @private
-	 * @param {Array|string} path The path of the property to get.
-	 * @returns {Function} Returns the new function.
-	 */
-	function basePropertyDeep(path) {
-	  var pathKey = (path + '');
-	  path = toPath(path);
-	  return function(object) {
-	    return baseGet(object, path, pathKey);
-	  };
-	}
-
-	module.exports = basePropertyDeep;
-
-
-/***/ },
-/* 588 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
-	 * without support for callback shorthands and `this` binding, which iterates
-	 * over `collection` using the provided `eachFunc`.
-	 *
-	 * @private
-	 * @param {Array|Object|string} collection The collection to search.
-	 * @param {Function} predicate The function invoked per iteration.
-	 * @param {Function} eachFunc The function to iterate over `collection`.
-	 * @param {boolean} [retKey] Specify returning the key of the found element
-	 *  instead of the element itself.
-	 * @returns {*} Returns the found element or its key, else `undefined`.
-	 */
-	function baseFind(collection, predicate, eachFunc, retKey) {
-	  var result;
-	  eachFunc(collection, function(value, key, collection) {
-	    if (predicate(value, key, collection)) {
-	      result = retKey ? key : value;
-	      return false;
-	    }
-	  });
-	  return result;
-	}
-
-	module.exports = baseFind;
-
-
-/***/ },
-/* 589 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.findIndex` and `_.findLastIndex` without
-	 * support for callback shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array} array The array to search.
-	 * @param {Function} predicate The function invoked per iteration.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {number} Returns the index of the matched value, else `-1`.
-	 */
-	function baseFindIndex(array, predicate, fromRight) {
-	  var length = array.length,
-	      index = fromRight ? length : -1;
-
-	  while ((fromRight ? index-- : ++index < length)) {
-	    if (predicate(array[index], index, array)) {
-	      return index;
-	    }
-	  }
-	  return -1;
-	}
-
-	module.exports = baseFindIndex;
-
-
-/***/ },
-/* 590 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var assign = __webpack_require__(591),
-	    domEvent = __webpack_require__(485),
-	    domRemove = __webpack_require__(54);
-
-	function stopPropagation(event) {
-	  event.stopPropagation();
-	}
-
-	function TextBox(options) {
-
-	  this.container = options.container;
-	  this.textarea = document.createElement('textarea');
-
-	  this.keyHandler = options.keyHandler || function() {};
-	}
-
-	module.exports = TextBox;
-
-
-	TextBox.prototype.create = function(bounds, style, value) {
-
-	  var textarea = this.textarea,
-	      container = this.container;
-
-	  assign(textarea.style, {
-	    width: bounds.width + 'px',
-	    height: bounds.height + 'px',
-	    left: bounds.x + 'px',
-	    top: bounds.y + 'px',
-	    position: 'absolute',
-	    textAlign: 'center',
-	    boxSizing: 'border-box'
-	  }, style || {});
-
-	  textarea.value = value;
-	  textarea.title = 'Press SHIFT+Enter for line feed';
-
-	  domEvent.bind(textarea, 'keydown', this.keyHandler);
-	  domEvent.bind(textarea, 'mousedown', stopPropagation);
-
-	  container.appendChild(textarea);
-
-	  setTimeout(function() {
-	    if (textarea.parent) {
-	      textarea.select();
-	    }
-	    textarea.focus();
-	  }, 100);
-	};
-
-	TextBox.prototype.destroy = function() {
-	  var textarea = this.textarea;
-
-	  textarea.value = '';
-
-	  domEvent.unbind(textarea, 'keydown', this.keyHandler);
-	  domEvent.unbind(textarea, 'mousedown', stopPropagation);
-
-	  domRemove(textarea);
-	};
-
-	TextBox.prototype.getValue = function() {
-	  return this.textarea.value;
-	};
-
-
-/***/ },
-/* 591 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var assignWith = __webpack_require__(592),
-	    baseAssign = __webpack_require__(593),
-	    createAssigner = __webpack_require__(595);
-
-	/**
-	 * Assigns own enumerable properties of source object(s) to the destination
-	 * object. Subsequent sources overwrite property assignments of previous sources.
-	 * If `customizer` is provided it's invoked to produce the assigned values.
-	 * The `customizer` is bound to `thisArg` and invoked with five arguments:
-	 * (objectValue, sourceValue, key, object, source).
-	 *
-	 * **Note:** This method mutates `object` and is based on
-	 * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias extend
-	 * @category Object
-	 * @param {Object} object The destination object.
-	 * @param {...Object} [sources] The source objects.
-	 * @param {Function} [customizer] The function to customize assigned values.
-	 * @param {*} [thisArg] The `this` binding of `customizer`.
-	 * @returns {Object} Returns `object`.
-	 * @example
-	 *
-	 * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
-	 * // => { 'user': 'fred', 'age': 40 }
-	 *
-	 * // using a customizer callback
-	 * var defaults = _.partialRight(_.assign, function(value, other) {
-	 *   return _.isUndefined(value) ? other : value;
-	 * });
-	 *
-	 * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
-	 * // => { 'user': 'barney', 'age': 36 }
-	 */
-	var assign = createAssigner(function(object, source, customizer) {
-	  return customizer
-	    ? assignWith(object, source, customizer)
-	    : baseAssign(object, source);
-	});
-
-	module.exports = assign;
-
-
-/***/ },
-/* 592 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var keys = __webpack_require__(556);
-
-	/**
-	 * A specialized version of `_.assign` for customizing assigned values without
-	 * support for argument juggling, multiple sources, and `this` binding `customizer`
-	 * functions.
-	 *
-	 * @private
-	 * @param {Object} object The destination object.
-	 * @param {Object} source The source object.
-	 * @param {Function} customizer The function to customize assigned values.
-	 * @returns {Object} Returns `object`.
-	 */
-	function assignWith(object, source, customizer) {
-	  var index = -1,
-	      props = keys(source),
-	      length = props.length;
-
-	  while (++index < length) {
-	    var key = props[index],
-	        value = object[key],
-	        result = customizer(value, source[key], key, object, source);
-
-	    if ((result === result ? (result !== value) : (value === value)) ||
-	        (value === undefined && !(key in object))) {
-	      object[key] = result;
-	    }
-	  }
-	  return object;
-	}
-
-	module.exports = assignWith;
-
-
-/***/ },
-/* 593 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCopy = __webpack_require__(594),
-	    keys = __webpack_require__(556);
-
-	/**
-	 * The base implementation of `_.assign` without support for argument juggling,
-	 * multiple sources, and `customizer` functions.
-	 *
-	 * @private
-	 * @param {Object} object The destination object.
-	 * @param {Object} source The source object.
-	 * @returns {Object} Returns `object`.
-	 */
-	function baseAssign(object, source) {
-	  return source == null
-	    ? object
-	    : baseCopy(source, keys(source), object);
-	}
-
-	module.exports = baseAssign;
-
-
-/***/ },
-/* 594 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copies properties of `source` to `object`.
-	 *
-	 * @private
-	 * @param {Object} source The object to copy properties from.
-	 * @param {Array} props The property names to copy.
-	 * @param {Object} [object={}] The object to copy properties to.
-	 * @returns {Object} Returns `object`.
-	 */
-	function baseCopy(source, props, object) {
-	  object || (object = {});
-
-	  var index = -1,
-	      length = props.length;
-
-	  while (++index < length) {
-	    var key = props[index];
-	    object[key] = source[key];
-	  }
-	  return object;
-	}
-
-	module.exports = baseCopy;
-
-
-/***/ },
-/* 595 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var bindCallback = __webpack_require__(585),
-	    isIterateeCall = __webpack_require__(596),
-	    restParam = __webpack_require__(549);
-
-	/**
-	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
-	 *
-	 * @private
-	 * @param {Function} assigner The function to assign values.
-	 * @returns {Function} Returns the new assigner function.
-	 */
-	function createAssigner(assigner) {
-	  return restParam(function(object, sources) {
-	    var index = -1,
-	        length = object == null ? 0 : sources.length,
-	        customizer = length > 2 ? sources[length - 2] : undefined,
-	        guard = length > 2 ? sources[2] : undefined,
-	        thisArg = length > 1 ? sources[length - 1] : undefined;
-
-	    if (typeof customizer == 'function') {
-	      customizer = bindCallback(customizer, thisArg, 5);
-	      length -= 2;
-	    } else {
-	      customizer = typeof thisArg == 'function' ? thisArg : undefined;
-	      length -= (customizer ? 1 : 0);
-	    }
-	    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
-	      customizer = length < 3 ? undefined : customizer;
-	      length = 1;
-	    }
-	    while (++index < length) {
-	      var source = sources[index];
-	      if (source) {
-	        assigner(object, source, customizer);
-	      }
-	    }
-	    return object;
-	  });
-	}
-
-	module.exports = createAssigner;
-
-
-/***/ },
-/* 596 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArrayLike = __webpack_require__(557),
-	    isIndex = __webpack_require__(543),
-	    isObject = __webpack_require__(521);
-
-	/**
-	 * Checks if the provided arguments are from an iteratee call.
-	 *
-	 * @private
-	 * @param {*} value The potential iteratee value argument.
-	 * @param {*} index The potential iteratee index or key argument.
-	 * @param {*} object The potential iteratee object argument.
-	 * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
-	 */
-	function isIterateeCall(value, index, object) {
-	  if (!isObject(object)) {
-	    return false;
-	  }
-	  var type = typeof index;
-	  if (type == 'number'
-	      ? (isArrayLike(object) && isIndex(index, object.length))
-	      : (type == 'string' && index in object)) {
-	    var other = object[index];
-	    return value === value ? (value === other) : (other !== other);
-	  }
-	  return false;
-	}
-
-	module.exports = isIterateeCall;
-
-
-/***/ },
-/* 597 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var UpdateLabelHandler = __webpack_require__(598);
-
-	var LabelUtil = __webpack_require__(599);
-
-	var is = __webpack_require__(444).is,
-	    isExpanded = __webpack_require__(443).isExpanded;
-
-
-	var MIN_BOUNDS = {
-	  width: 150,
-	  height: 50
-	};
-
-
-	function LabelEditingProvider(eventBus, canvas, directEditing, commandStack) {
-
-	  directEditing.registerProvider(this);
-	  commandStack.registerHandler('element.updateLabel', UpdateLabelHandler);
-
-	  // listen to dblclick on non-root elements
-	  eventBus.on('element.dblclick', function(event) {
-	    directEditing.activate(event.element);
-	  });
-
-	  // complete on followup canvas operation
-	  eventBus.on([ 'element.mousedown', 'drag.init', 'canvas.viewbox.changed' ], function(event) {
-	    directEditing.complete();
-	  });
-
-	  // cancel on command stack changes
-	  eventBus.on([ 'commandStack.changed' ], function() {
-	    directEditing.cancel();
-	  });
-
-
-	  // activate direct editing for activities and text annotations
-
-
-	  if ('ontouchstart' in document.documentElement) {
-	    // we deactivate automatic label editing on mobile devices
-	    // as it breaks the user interaction workflow
-
-	    // TODO(nre): we should temporarily focus the edited element here
-	    // and release the focused viewport after the direct edit operation is finished
-	  } else {
-	    eventBus.on('create.end', 500, function(e) {
-
-	      var element = e.shape,
-	          canExecute = e.context.canExecute;
-
-	      if (!canExecute) {
-	        return;
-	      }
-
-	      if (is(element, 'bpmn:Task') || is(element, 'bpmn:TextAnnotation') ||
-	          (is(element, 'bpmn:SubProcess') && !isExpanded(element))) {
-
-	        directEditing.activate(element);
-	      }
-	    });
-	  }
-
-	  this._canvas = canvas;
-	  this._commandStack = commandStack;
-	}
-
-	LabelEditingProvider.$inject = [ 'eventBus', 'canvas', 'directEditing', 'commandStack' ];
-
-	module.exports = LabelEditingProvider;
-
-
-	LabelEditingProvider.prototype.activate = function(element) {
-
-	  var text = LabelUtil.getLabel(element);
-
-	  if (text === undefined) {
-	    return;
-	  }
-
-	  var bbox = this.getEditingBBox(element);
-
-	  // adjust for expanded pools AND lanes
-	  if ((is(element, 'bpmn:Participant') && isExpanded(element)) || is(element, 'bpmn:Lane')) {
-
-	    bbox.width = MIN_BOUNDS.width;
-	    bbox.height = MIN_BOUNDS.height;
-
-	    bbox.x = bbox.x + 10 - bbox.width / 2;
-	    bbox.y = bbox.mid.y - bbox.height / 2;
-	  }
-
-	  // ajust minumum size for task and activities
-	  if ((is(element, 'bpmn:Task') || is(element, 'bpmn:Activity') )) {
-
-	    if (bbox.width < 100) {
-	      bbox.width = 100;
-	      bbox.x = bbox.mid.x - bbox.width / 2;
-	    }
-
-	    if (bbox.height < 80) {
-	      bbox.height = 80;
-	      bbox.y = bbox.mid.y - bbox.height / 2;
-	    }
-	  }
-
-	  // adjust for expanded sub processes and collapsed pools
-	  if ((is(element, 'bpmn:SubProcess') && isExpanded(element)) ||
-	    (is(element, 'bpmn:Participant') && !isExpanded(element))) {
-
-	    bbox.width = element.width;
-	    bbox.height = MIN_BOUNDS.height;
-
-	    bbox.x = bbox.mid.x - element.width / 2;
-	  }
-
-	  return { bounds: bbox, text: text };
-	};
-
-
-	LabelEditingProvider.prototype.getEditingBBox = function(element, maxBounds) {
-
-	  var target = element.label || element;
-
-	  var bbox = this._canvas.getAbsoluteBBox(target);
-
-	  var mid = {
-	    x: bbox.x + bbox.width / 2,
-	    y: bbox.y + bbox.height / 2
-	  };
-
-	  // external label
-	  if (target.labelTarget) {
-	    bbox.width = Math.max(bbox.width, MIN_BOUNDS.width);
-	    bbox.height = Math.max(bbox.height, MIN_BOUNDS.height);
-
-	    bbox.x = mid.x - bbox.width / 2;
-	  }
-
-	  bbox.mid = mid;
-
-	  return bbox;
-	};
-
-
-	LabelEditingProvider.prototype.update = function(element, newLabel) {
-	  this._commandStack.execute('element.updateLabel', {
-	    element: element,
-	    newLabel: newLabel
-	  });
-	};
-
-
-/***/ },
-/* 598 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var LabelUtil = __webpack_require__(599);
-
-
-	/**
-	 * A handler that updates the text of a BPMN element.
-	 */
-	function UpdateLabelHandler() {
-
-	  /**
-	   * Set the label and return the changed elements.
-	   *
-	   * Element parameter can be label itself or connection (i.e. sequence flow).
-	   *
-	   * @param {djs.model.Base} element
-	   * @param {String} text
-	   */
-	  function setText(element, text) {
-
-	    // external label if present
-	    var label = element.label || element;
-
-	    var labelTarget = element.labelTarget || element;
-
-	    LabelUtil.setLabel(label, text, labelTarget !== label);
-
-	    return [ label, labelTarget ];
-	  }
-
-	  function execute(ctx) {
-	    ctx.oldLabel = LabelUtil.getLabel(ctx.element);
-	    return setText(ctx.element, ctx.newLabel);
-	  }
-
-	  function revert(ctx) {
-	    return setText(ctx.element, ctx.oldLabel);
-	  }
-
-	  // API
-
-	  this.execute = execute;
-	  this.revert = revert;
-	}
-
-	module.exports = UpdateLabelHandler;
-
-/***/ },
-/* 599 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var is = __webpack_require__(444).is;
-
-	function getLabelAttr(semantic) {
-	  if (is(semantic, 'bpmn:FlowElement') ||
-	      is(semantic, 'bpmn:Participant') ||
-	      is(semantic, 'bpmn:Lane') ||
-	      is(semantic, 'bpmn:SequenceFlow') ||
-	      is(semantic, 'bpmn:MessageFlow')) {
-
-	    return 'name';
-	  }
-
-	  if (is(semantic, 'bpmn:TextAnnotation')) {
-	    return 'text';
-	  }
-	}
-
-	module.exports.getLabel = function(element) {
-	  var semantic = element.businessObject,
-	      attr = getLabelAttr(semantic);
-
-	  if (attr) {
-	    return semantic[attr] || '';
-	  }
-	};
-
-
-	module.exports.setLabel = function(element, text, isExternal) {
-	  var semantic = element.businessObject,
-	      attr = getLabelAttr(semantic);
-
-	  if (attr) {
-	    semantic[attr] = text;
-	  }
-
-	  // show external label if not empty
-	  if (isExternal) {
-	    element.hidden = !text;
-	  }
-
-	  return element;
-	};
-
-/***/ },
-/* 600 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __init__: [ 'autoResize' ],
-	  autoResize: [ 'type', __webpack_require__(601) ]
-	};
-
-
-/***/ },
-/* 601 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var is = __webpack_require__(444).is,
-	    getBoundingBox = __webpack_require__(137).getBBox;
-
-	var pick = __webpack_require__(602),
-	    assign = __webpack_require__(7),
-	    forEach = __webpack_require__(416),
-	    values = __webpack_require__(427),
-	    flatten = __webpack_require__(603),
-	    groupBy = __webpack_require__(604);
-
-	var CommandInterceptor = __webpack_require__(606);
-
-	var OFFSET = { top: 60, bottom: 60, left: 100, right: 100 };
-	var PADDING = { top: 2, bottom: 2, left: 15, right: 15 };
-
-	/**
-	 * An auto resize component that takes care of expanding parent participants
-	 * and lanes if elements are modeled close to an edge of the parent element.
-	 */
-	function AutoResize(eventBus, canvas, modeling, elementRegistry){
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  this.postExecuted([ 'shape.create' ], function(event) {
-
-	    var context = event.context,
-	        hints = context.hints,
-	        shape = context.shape,
-	        parent = context.parent || context.newParent;
-
-	    if (hints && hints.root === false) {
-	      return;
-	    }
-
-	    expand([ shape ], parent);
-	  });
-
-	  this.postExecuted([ 'elements.move' ], function(event) {
-
-	    var context = event.context,
-	        elements = flatten(values(context.closure.topLevel));
-
-	    var expandings = groupBy(elements, function(element) {
-	      return element.parent.id;
-	    });
-
-	    forEach(expandings, function(elements, parentId) {
-	      expand(elements, parentId);
-	    });
-	  });
-
-	  /**
-	   * Returns an object which indicates near which bounding edge(s)
-	   * of a target a bounding box is located.
-	   *
-	   * @param  {Object} bbox  bounding box object with x, y, width and height properties
-	   * @param  {Shape}  target
-	   * @param  {Number} padding
-	   *
-	   * @return {Object} {top, bottom, left, right}
-	   *
-	   * @example
-	   *
-	   * // If the bounding box is near the bottom left corner of a target the return object is:
-	   * { top: false, bottom: true, left: true, right: false }
-	   *
-	   */
-	  function isInbounds(bbox, target, padding) {
-	    return {
-	      top: bbox.y < target.y + padding.top,
-	      bottom: bbox.y + bbox.height > target.y + target.height - padding.bottom,
-	      left: bbox.x < target.x + padding.left,
-	      right: bbox.x + bbox.width > target.x + target.width - padding.right,
-	    };
-	  }
-
-	  /**
-	   * Expand the target shape if the bounding box of the moved elements is near or on an edge,
-	   * considering the position of the bounding box in relation to the parent's edge plus padding.
-	   * The amount to expand can be defined for each edge in the OFFSET object.
-	   *
-	   * @param  {Array<Shape>} elements
-	   * @param  {Shape|String} target|targetId
-	   */
-	  function expand(elements, target) {
-
-	    if (typeof target === 'string') {
-	      target = elementRegistry.get(target);
-	    }
-
-	    var bbox = getBoundingBox(elements),
-	        canExpand = true;
-
-	    if (!is(target, 'bpmn:Participant') && !is(target, 'bpmn:Lane') && !(is(target, 'bpmn:SubProcess'))) {
-	      return;
-	    }
-
-	    forEach(elements, function(element) {
-
-	      if (is(element, 'bpmn:Lane') || element.labelTarget) {
-	        canExpand = false;
-	        return;
-	      }
-	    });
-
-	    if (!canExpand) {
-	      return;
-	    }
-
-	    var inbounds = isInbounds(bbox, target, PADDING);
-
-	    var newBounds = pick(target, [ 'x', 'y', 'width', 'height' ]);
-
-	    if (inbounds.top) {
-	      var topPosition = bbox.y - OFFSET.top;
-	      assign(newBounds, { y: topPosition, height: newBounds.height + newBounds.y - topPosition });
-	    }
-
-	    if (inbounds.bottom) {
-	      assign(newBounds, { height: bbox.y + bbox.height + OFFSET.bottom - newBounds.y });
-	    }
-
-	    if (inbounds.left) {
-	      var leftPosition = bbox.x - OFFSET.left;
-	      assign(newBounds, { x: leftPosition, width: newBounds.width + newBounds.x - leftPosition });
-	    }
-
-	    if (inbounds.right) {
-	      assign(newBounds, { width: bbox.x + bbox.width + OFFSET.right - newBounds.x });
-	    }
-
-	    if (is(target, 'bpmn:Participant')) {
-	      modeling.resizeLane(target, newBounds);
-	    } else {
-	      modeling.resizeShape(target, newBounds);
-	    }
-
-	    var parent = target.parent;
-
-	    // recursively expand parent elements
-	    if (parent) {
-	      expand([ target ], parent);
-	    }
-	  }
-	}
-
-	AutoResize.$inject = [ 'eventBus', 'canvas', 'modeling', 'elementRegistry' ];
-
-	inherits(AutoResize, CommandInterceptor);
-
-	module.exports = AutoResize;
-
-/***/ },
-/* 602 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseFlatten = __webpack_require__(40),
-	    bindCallback = __webpack_require__(27),
-	    pickByArray = __webpack_require__(42),
-	    pickByCallback = __webpack_require__(44),
-	    restParam = __webpack_require__(30);
-
-	/**
-	 * Creates an object composed of the picked `object` properties. Property
-	 * names may be specified as individual arguments or as arrays of property
-	 * names. If `predicate` is provided it's invoked for each property of `object`
-	 * picking the properties `predicate` returns truthy for. The predicate is
-	 * bound to `thisArg` and invoked with three arguments: (value, key, object).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The source object.
-	 * @param {Function|...(string|string[])} [predicate] The function invoked per
-	 *  iteration or property names to pick, specified as individual property
-	 *  names or arrays of property names.
-	 * @param {*} [thisArg] The `this` binding of `predicate`.
-	 * @returns {Object} Returns the new object.
-	 * @example
-	 *
-	 * var object = { 'user': 'fred', 'age': 40 };
-	 *
-	 * _.pick(object, 'user');
-	 * // => { 'user': 'fred' }
-	 *
-	 * _.pick(object, _.isString);
-	 * // => { 'user': 'fred' }
-	 */
-	var pick = restParam(function(object, props) {
-	  if (object == null) {
-	    return {};
-	  }
-	  return typeof props[0] == 'function'
-	    ? pickByCallback(object, bindCallback(props[0], props[1], 3))
-	    : pickByArray(object, baseFlatten(props));
-	});
-
-	module.exports = pick;
-
-
-/***/ },
-/* 603 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseFlatten = __webpack_require__(40),
-	    isIterateeCall = __webpack_require__(29);
-
-	/**
-	 * Flattens a nested array. If `isDeep` is `true` the array is recursively
-	 * flattened, otherwise it's only flattened a single level.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Array
-	 * @param {Array} array The array to flatten.
-	 * @param {boolean} [isDeep] Specify a deep flatten.
-	 * @param- {Object} [guard] Enables use as a callback for functions like `_.map`.
-	 * @returns {Array} Returns the new flattened array.
-	 * @example
-	 *
-	 * _.flatten([1, [2, 3, [4]]]);
-	 * // => [1, 2, 3, [4]]
-	 *
-	 * // using `isDeep`
-	 * _.flatten([1, [2, 3, [4]]], true);
-	 * // => [1, 2, 3, 4]
-	 */
-	function flatten(array, isDeep, guard) {
-	  var length = array ? array.length : 0;
-	  if (guard && isIterateeCall(array, isDeep, guard)) {
-	    isDeep = false;
-	  }
-	  return length ? baseFlatten(array, isDeep) : [];
-	}
-
-	module.exports = flatten;
-
-
-/***/ },
-/* 604 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var createAggregator = __webpack_require__(605);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * Creates an object composed of keys generated from the results of running
-	 * each element of `collection` through `iteratee`. The corresponding value
-	 * of each key is an array of the elements responsible for generating the key.
-	 * The `iteratee` is bound to `thisArg` and invoked with three arguments:
-	 * (value, index|key, collection).
-	 *
-	 * If a property name is provided for `iteratee` the created `_.property`
-	 * style callback returns the property value of the given element.
-	 *
-	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
-	 * style callback returns `true` for elements that have a matching property
-	 * value, else `false`.
-	 *
-	 * If an object is provided for `iteratee` the created `_.matches` style
-	 * callback returns `true` for elements that have the properties of the given
-	 * object, else `false`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Collection
-	 * @param {Array|Object|string} collection The collection to iterate over.
-	 * @param {Function|Object|string} [iteratee=_.identity] The function invoked
-	 *  per iteration.
-	 * @param {*} [thisArg] The `this` binding of `iteratee`.
-	 * @returns {Object} Returns the composed aggregate object.
-	 * @example
-	 *
-	 * _.groupBy([4.2, 6.1, 6.4], function(n) {
-	 *   return Math.floor(n);
-	 * });
-	 * // => { '4': [4.2], '6': [6.1, 6.4] }
-	 *
-	 * _.groupBy([4.2, 6.1, 6.4], function(n) {
-	 *   return this.floor(n);
-	 * }, Math);
-	 * // => { '4': [4.2], '6': [6.1, 6.4] }
-	 *
-	 * // using the `_.property` callback shorthand
-	 * _.groupBy(['one', 'two', 'three'], 'length');
-	 * // => { '3': ['one', 'two'], '5': ['three'] }
-	 */
-	var groupBy = createAggregator(function(result, value, key) {
-	  if (hasOwnProperty.call(result, key)) {
-	    result[key].push(value);
-	  } else {
-	    result[key] = [value];
-	  }
-	});
-
-	module.exports = groupBy;
-
-
-/***/ },
-/* 605 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCallback = __webpack_require__(386),
-	    baseEach = __webpack_require__(409),
-	    isArray = __webpack_require__(21);
-
-	/**
-	 * Creates a `_.countBy`, `_.groupBy`, `_.indexBy`, or `_.partition` function.
-	 *
-	 * @private
-	 * @param {Function} setter The function to set keys and values of the accumulator object.
-	 * @param {Function} [initializer] The function to initialize the accumulator object.
-	 * @returns {Function} Returns the new aggregator function.
-	 */
-	function createAggregator(setter, initializer) {
-	  return function(collection, iteratee, thisArg) {
-	    var result = initializer ? initializer() : {};
-	    iteratee = baseCallback(iteratee, thisArg, 3);
-
-	    if (isArray(collection)) {
-	      var index = -1,
-	          length = collection.length;
-
-	      while (++index < length) {
-	        var value = collection[index];
-	        setter(result, value, iteratee(value, index, collection), collection);
-	      }
-	    } else {
-	      baseEach(collection, function(value, key, collection) {
-	        setter(result, value, iteratee(value, key, collection), collection);
-	      });
-	    }
-	    return result;
-	  };
-	}
-
-	module.exports = createAggregator;
-
-
-/***/ },
-/* 606 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	var forEach = __webpack_require__(128),
-	    isFunction = __webpack_require__(73),
-	    isArray = __webpack_require__(70),
-	    isNumber = __webpack_require__(127);
-
-
-	var DEFAULT_PRIORITY = 1000;
-
-
-	function isObject(element) {
-	  return typeof element === 'object';
-	}
-
-	/**
-	 * A utility that can be used to plug-in into the command execution for
-	 * extension and/or validation.
-	 *
-	 * @param {EventBus} eventBus
-	 *
-	 * @example
-	 *
-	 * var inherits = require('inherits');
-	 *
-	 * var CommandInterceptor = require('diagram-js/lib/command/CommandInterceptor');
-	 *
-	 * function CommandLogger(eventBus) {
-	 *   CommandInterceptor.call(this, eventBus);
-	 *
-	 *   this.preExecute(function(event) {
-	 *     console.log('command pre-execute', event);
-	 *   });
-	 * }
-	 *
-	 * inherits(CommandLogger, CommandInterceptor);
-	 *
-	 */
-	function CommandInterceptor(eventBus) {
-	  this._eventBus = eventBus;
-	}
-
-	CommandInterceptor.$inject = [ 'eventBus' ];
-
-	module.exports = CommandInterceptor;
-
-	function unwrapEvent(fn, that) {
-	  return function(event) {
-	    return fn.call(that || null, event.context, event.command, event);
-	  };
-	}
-
-	/**
-	 * Register an interceptor for a command execution
-	 *
-	 * @param {String|Array<String>} [events] list of commands to register on
-	 * @param {String} [hook] command hook, i.e. preExecute, executed to listen on
-	 * @param {Number} [priority] the priority on which to hook into the execution
-	 * @param {Function} handlerFn interceptor to be invoked with (event)
-	 * @param {Boolean} unwrap if true, unwrap the event and pass (context, command, event) to the
-	 *                          listener instead
-	 * @param {Object} [that] Pass context (`this`) to the handler function
-	 */
-	CommandInterceptor.prototype.on = function(events, hook, priority, handlerFn, unwrap, that) {
-
-	  if (isFunction(hook) || isNumber(hook)) {
-	    that = unwrap;
-	    unwrap = handlerFn;
-	    handlerFn = priority;
-	    priority = hook;
-	    hook = null;
-	  }
-
-	  if (isFunction(priority)) {
-	    that = unwrap;
-	    unwrap = handlerFn;
-	    handlerFn = priority;
-	    priority = DEFAULT_PRIORITY;
-	  }
-
-	  if (isObject(unwrap)) {
-	    that = unwrap;
-	    unwrap = false;
-	  }
-
-	  if (!isFunction(handlerFn)) {
-	    throw new Error('handlerFn must be a function');
-	  }
-
-	  if (!isArray(events)) {
-	    events = [ events ];
-	  }
-
-	  var eventBus = this._eventBus;
-
-	  forEach(events, function(event) {
-	    // concat commandStack(.event)?(.hook)?
-	    var fullEvent = [ 'commandStack', event, hook ].filter(function(e) { return e; }).join('.');
-
-	    eventBus.on(fullEvent, priority, unwrap ? unwrapEvent(handlerFn, that) : handlerFn, that);
-	  });
-	};
-
-
-	var hooks = [
-	  'canExecute',
-	  'preExecute',
-	  'preExecuted',
-	  'execute',
-	  'executed',
-	  'postExecute',
-	  'postExecuted',
-	  'revert',
-	  'reverted'
-	];
-
-	/*
-	 * Install hook shortcuts
-	 *
-	 * This will generate the CommandInterceptor#(preExecute|...|reverted) methods
-	 * which will in term forward to CommandInterceptor#on.
-	 */
-	forEach(hooks, function(hook) {
-
-	  /**
-	   * {canExecute|preExecute|preExecuted|execute|executed|postExecute|postExecuted|revert|reverted}
-	   *
-	   * A named hook for plugging into the command execution
-	   *
-	   * @param {String|Array<String>} [events] list of commands to register on
-	   * @param {Number} [priority] the priority on which to hook into the execution
-	   * @param {Function} handlerFn interceptor to be invoked with (event)
-	   * @param {Boolean} [unwrap=false] if true, unwrap the event and pass (context, command, event) to the
-	   *                          listener instead
-	   * @param {Object} [that] Pass context (`this`) to the handler function
-	   */
-	  CommandInterceptor.prototype[hook] = function(events, priority, handlerFn, unwrap, that) {
-
-	    if (isFunction(events) || isNumber(events)) {
-	      that = unwrap;
-	      unwrap = handlerFn;
-	      handlerFn = priority;
-	      priority = events;
-	      events = null;
-	    }
-
-	    this.on(events, hook, priority, handlerFn, unwrap, that);
-	  };
-	});
-
-
-/***/ },
-/* 607 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(608)
-	  ],
-	  __init__: [ 'bpmnSearch'],
-	  bpmnSearch: [ 'type', __webpack_require__(610) ]
-	};
-
-
-/***/ },
-/* 608 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(469),
-	    __webpack_require__(453)
-	  ],
-	  searchPad: [ 'type', __webpack_require__(609) ]
-	};
-
-
-/***/ },
-/* 609 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var domClear = __webpack_require__(175),
-	    domDelegate = __webpack_require__(456),
-	    domQuery = __webpack_require__(52),
-	    domClasses = __webpack_require__(479),
-	    domAttr = __webpack_require__(482),
-	    domify = __webpack_require__(50);
-
-	var getBoundingBox = __webpack_require__(137).getBBox;
-
-
-	/**
-	 * Provides searching infrastructure
-	 */
-	function SearchPad(canvas, eventBus, overlays, selection) {
-	  this._open = false;
-	  this._results = [];
-	  this._eventMaps = [];
-
-	  this._canvas = canvas;
-	  this._eventBus = eventBus;
-	  this._overlays = overlays;
-	  this._selection = selection;
-
-	  // setup elements
-	  this._container = domify(SearchPad.BOX_HTML);
-	  this._searchInput = domQuery(SearchPad.INPUT_SELECTOR, this._container);
-	  this._resultsContainer = domQuery(SearchPad.RESULTS_CONTAINER_SELECTOR, this._container);
-
-	  // attach search pad
-	  this._canvas.getContainer().appendChild(this._container);
-
-	  // cleanup on destroy
-	  eventBus.on([ 'canvas.destroy', 'diagram.destroy' ], this.close, this);
-	}
-
-
-	SearchPad.$inject = [
-	  'canvas',
-	  'eventBus',
-	  'overlays',
-	  'selection'
-	];
-
-
-	/**
-	 * Binds and keeps track of all event listereners
-	 */
-	SearchPad.prototype._bindEvents = function() {
-	  var self = this;
-
-	  function listen(el, selector, type, fn) {
-	    self._eventMaps.push({
-	      el: el,
-	      type: type,
-	      listener: domDelegate.bind(el, selector, type, fn)
-	    });
-	  }
-
-	  // close search on clicking anywhere outside
-	  listen(document, 'html', 'click', function(e) {
-	    self.close();
-	  }, true);
-
-	  // stop event from propagating and closing search
-	  // focus on input
-	  listen(this._container, SearchPad.INPUT_SELECTOR, 'click', function(e) {
-	    e.stopPropagation();
-	    e.delegateTarget.focus();
-	  });
-
-	  // preselect result on hover
-	  listen(this._container, SearchPad.RESULT_SELECTOR, 'mouseover', function(e) {
-	    e.stopPropagation();
-	    self._scrollToNode(e.delegateTarget);
-	    self._preselect(e.delegateTarget);
-	  });
-
-	  // selects desired result on mouse click
-	  listen(this._container, SearchPad.RESULT_SELECTOR, 'click', function(e) {
-	    e.stopPropagation();
-	    self._select(e.delegateTarget);
-	  });
-
-	  // prevent cursor in input from going left and right when using up/down to
-	  // navigate results
-	  listen(this._container, SearchPad.INPUT_SELECTOR, 'keydown', function(e) {
-	    // up
-	    if (e.keyCode === 38) {
-	      e.preventDefault();
-	    }
-
-	    // down
-	    if (e.keyCode === 40) {
-	      e.preventDefault();
-	    }
-	  });
-
-	  // handle keyboard input
-	  listen(this._container, SearchPad.INPUT_SELECTOR, 'keyup', function(e) {
-	    // escape
-	    if (e.keyCode === 27) {
-	      return self.close();
-	    }
-
-	    // enter
-	    if (e.keyCode === 13) {
-	      var selected = self._getCurrentResult();
-
-	      return selected ? self._select(selected) : self.close();
-	    }
-
-	    // up
-	    if (e.keyCode === 38) {
-	      return self._scrollToDirection(true);
-	    }
-
-	    // down
-	    if (e.keyCode === 40) {
-	      return self._scrollToDirection();
-	    }
-
-	    // left && right
-	    // do not search while navigating text input
-	    if (e.keyCode === 37 || e.keyCode === 39) {
-	      return;
-	    }
-
-	    // anything else
-	    self._search(e.delegateTarget.value);
-	  });
-	};
-
-
-	/**
-	 * Unbinds all previously established listeners
-	 */
-	SearchPad.prototype._unbindEvents = function() {
-	  this._eventMaps.forEach(function(m) {
-	    domDelegate.unbind(m.el, m.type, m.listener);
-	  });
-	};
-
-
-	/**
-	 * Performs a search for the given pattern.
-	 *
-	 * @param  {String} pattern
-	 */
-	SearchPad.prototype._search = function(pattern) {
-	  var self = this;
-
-	  this._clearResults();
-
-	  // do not search on empty query
-	  if (!pattern || pattern === '') {
-	    return;
-	  }
-
-	  var searchResults = this._searchProvider.find(pattern);
-
-	  if (!searchResults.length) {
-	    return;
-	  }
-
-	  // append new results
-	  searchResults.forEach(function(result) {
-	    var id = result.element.id;
-	    var node = self._createResultNode(result, id);
-	    self._results[id] = {
-	      element: result.element,
-	      node: node
-	    };
-	  });
-
-	  // preselect first result
-	  var node = domQuery(SearchPad.RESULT_SELECTOR, this._resultsContainer);
-	  this._scrollToNode(node);
-	  this._preselect(node);
-	};
-
-
-	/**
-	 * Navigate to the previous/next result. Defaults to next result.
-	 * @param  {Boolean} previous
-	 */
-	SearchPad.prototype._scrollToDirection = function(previous) {
-	  var selected = this._getCurrentResult();
-	  if (!selected) {
-	    return;
-	  }
-
-	  var node = previous ? selected.previousElementSibling : selected.nextElementSibling;
-	  if (node) {
-	    this._scrollToNode(node);
-	    this._preselect(node);
-	  }
-	};
-
-
-	/**
-	 * Scroll to the node if it is not visible.
-	 *
-	 * @param  {Element} node
-	 */
-	SearchPad.prototype._scrollToNode = function(node) {
-	  if (!node || node === this._getCurrentResult()) {
-	    return;
-	  }
-
-	  var nodeOffset = node.offsetTop;
-	  var containerScroll = this._resultsContainer.scrollTop;
-
-	  var bottomScroll = nodeOffset - this._resultsContainer.clientHeight + node.clientHeight;
-
-	  if (nodeOffset < containerScroll) {
-	    this._resultsContainer.scrollTop = nodeOffset;
-	  } else if (containerScroll < bottomScroll) {
-	    this._resultsContainer.scrollTop = bottomScroll;
-	  }
-	};
-
-
-	/**
-	 * Clears all results data.
-	 */
-	SearchPad.prototype._clearResults = function() {
-	  domClear(this._resultsContainer);
-
-	  this._results = [];
-
-	  this._resetOverlay();
-
-	  this._eventBus.fire('searchPad.cleared');
-	};
-
-
-	/**
-	 * Get currently selected result.
-	 *
-	 * @return {Element}
-	 */
-	SearchPad.prototype._getCurrentResult = function() {
-	  return domQuery(SearchPad.RESULT_SELECTED_SELECTOR, this._resultsContainer);
-	};
-
-
-	/**
-	 * Create result DOM element within results container
-	 * that corresponds to a search result.
-	 *
-	 * 'result' : one of the elements returned by SearchProvider
-	 * 'id' : id attribute value to assign to the new DOM node
-	 * return : created DOM element
-	 *
-	 * @param  {SearchResult} result
-	 * @param  {String} id
-	 * @return {Element}
-	 */
-	SearchPad.prototype._createResultNode = function(result, id) {
-	  var node = domify(SearchPad.RESULT_HTML);
-
-	  // create only if available
-	  if (result.primaryTokens.length > 0) {
-	    createInnerTextNode(node, result.primaryTokens, SearchPad.RESULT_PRIMARY_HTML);
-	  }
-
-	  // secondary tokens (represent element ID) are allways available
-	  createInnerTextNode(node, result.secondaryTokens, SearchPad.RESULT_SECONDARY_HTML);
-
-	  domAttr(node, SearchPad.RESULT_ID_ATTRIBUTE, id);
-
-	  this._resultsContainer.appendChild(node);
-
-	  return node;
-	};
-
-
-	/**
-	 * Register search element provider.
-	 *
-	 * SearchProvider.find - provides search function over own elements
-	 *  (pattern) => [{ text: <String>, element: <Element>}, ...]
-	 *
-	 * @param  {SearchProvider} provider
-	 */
-	SearchPad.prototype.registerProvider = function(provider) {
-	  this._searchProvider = provider;
-	};
-
-
-	/**
-	 * Open search pad.
-	 */
-	SearchPad.prototype.open = function() {
-	  if (!this._searchProvider) {
-	    throw new Error('no search provider registered');
-	  }
-
-	  if (this.isOpen()) {
-	    return;
-	  }
-
-	  this._bindEvents();
-
-	  this._open = true;
-
-	  domClasses(this._container).add('open');
-
-	  this._searchInput.focus();
-
-	  this._eventBus.fire('searchPad.opened');
-	};
-
-
-	/**
-	 * Close search pad.
-	 */
-	SearchPad.prototype.close = function() {
-	  if (!this.isOpen()) {
-	    return;
-	  }
-
-	  this._unbindEvents();
-
-	  this._open = false;
-
-	  domClasses(this._container).remove('open');
-
-	  this._clearResults();
-
-	  this._searchInput.value = '';
-	  this._searchInput.blur();
-
-	  this._resetOverlay();
-
-	  this._eventBus.fire('searchPad.closed');
-	};
-
-
-	/**
-	 * Toggles search pad on/off.
-	 */
-	SearchPad.prototype.toggle = function() {
-	  this.isOpen() ? this.close() : this.open();
-	};
-
-
-	/**
-	 * Report state of search pad.
-	 */
-	SearchPad.prototype.isOpen = function() {
-	  return this._open;
-	};
-
-
-	/**
-	 * Preselect result entry.
-	 *
-	 * @param  {Element} element
-	 */
-	SearchPad.prototype._preselect = function(node) {
-	  var selectedNode = this._getCurrentResult();
-
-	  // already selected
-	  if (node === selectedNode) {
-	    return;
-	  }
-
-	  // removing preselection from current node
-	  if (selectedNode) {
-	    domClasses(selectedNode).remove(SearchPad.RESULT_SELECTED_CLASS);
-	  }
-
-	  var id = domAttr(node, SearchPad.RESULT_ID_ATTRIBUTE);
-	  var element = this._results[id].element;
-
-	  domClasses(node).add(SearchPad.RESULT_SELECTED_CLASS);
-
-	  this._resetOverlay(element);
-
-	  this._centerViewbox(element);
-
-	  this._selection.select(element);
-
-	  this._eventBus.fire('searchPad.preselected', element);
-	};
-
-
-	/**
-	 * Select result node.
-	 *
-	 * @param  {Element} element
-	 */
-	SearchPad.prototype._select = function(node) {
-	  var id = domAttr(node, SearchPad.RESULT_ID_ATTRIBUTE);
-	  var element = this._results[id].element;
-
-	  this.close();
-
-	  this._resetOverlay();
-
-	  this._centerViewbox(element);
-
-	  this._selection.select(element);
-
-	  this._eventBus.fire('searchPad.selected', element);
-	};
-
-
-	/**
-	 * Center viewbox on the element middle point.
-	 *
-	 * @param  {Element} element
-	 */
-	SearchPad.prototype._centerViewbox = function(element) {
-	  var viewbox = this._canvas.viewbox();
-
-	  var box = getBoundingBox(element);
-
-	  var newViewbox = {
-	    x: (box.x + box.width/2) - viewbox.outer.width/2,
-	    y: (box.y + box.height/2) - viewbox.outer.height/2,
-	    width: viewbox.outer.width,
-	    height: viewbox.outer.height
-	  };
-
-	  this._canvas.viewbox(newViewbox);
-
-	  this._canvas.zoom(viewbox.scale);
-	};
-
-
-	/**
-	 * Reset overlay removes and, optionally, set
-	 * overlay to a new element.
-	 *
-	 * @param  {Element} element
-	 */
-	SearchPad.prototype._resetOverlay = function(element) {
-	  if (this._overlayId) {
-	    this._overlays.remove(this._overlayId);
-	  }
-
-	  if (element) {
-	    var box = getBoundingBox(element);
-	    var overlay = constructOverlay(box);
-	    this._overlayId = this._overlays.add(element, overlay);
-	  }
-	};
-
-
-	module.exports = SearchPad;
-
-	/**
-	 * Construct overlay object for the given bounding box.
-	 *
-	 * @param  {BoundingBox} box
-	 * @return {Object}
-	 */
-	function constructOverlay(box) {
-
-	  var offset = 6;
-	  var w = box.width + offset * 2;
-	  var h = box.height + offset * 2;
-
-	  var styles = [
-	    'width: '+ w +'px',
-	    'height: '+ h + 'px'
-	  ].join('; ');
-
-	  return {
-	    position: {
-	      bottom: h - offset,
-	      right: w - offset
-	    },
-	    show: true,
-	    html: '<div style="' + styles + '" class="' + SearchPad.OVERLAY_CLASS + '"></div>'
-	  };
-	}
-
-
-	/**
-	 * Creates and appends child node from result tokens and HTML template.
-	 *
-	 * @param  {Element} node
-	 * @param  {Array<Object>} tokens
-	 * @param  {String} template
-	 */
-	function createInnerTextNode(parentNode, tokens, template) {
-	  var text = createHtmlText(tokens);
-	  var childNode = domify(template);
-	  childNode.innerHTML = text;
-	  parentNode.appendChild(childNode);
-	}
-
-	/**
-	 * Create internal HTML markup from result tokens.
-	 * Caters for highlighting pattern matched tokens.
-	 *
-	 * @param  {Array<Object>} tokens
-	 * @return {String}
-	 */
-	function createHtmlText(tokens) {
-	  var htmlText = '';
-
-	  tokens.forEach(function(t) {
-	    if (t.matched) {
-	      htmlText += '<strong class="' + SearchPad.RESULT_HIGHLIGHT_CLASS + '">' + t.matched + '</strong>';
-	    } else {
-	      htmlText += t.normal;
-	    }
-	  });
-
-	  return htmlText !== '' ? htmlText : null;
-	}
-
-
-	/**
-	 * CONSTANTS
-	 */
-	SearchPad.CONTAINER_SELECTOR = '.djs-search-container';
-	SearchPad.INPUT_SELECTOR = '.djs-search-input input';
-	SearchPad.RESULTS_CONTAINER_SELECTOR = '.djs-search-results';
-	SearchPad.RESULT_SELECTOR = '.djs-search-result';
-	SearchPad.RESULT_SELECTED_CLASS = 'djs-search-result-selected';
-	SearchPad.RESULT_SELECTED_SELECTOR = '.' + SearchPad.RESULT_SELECTED_CLASS;
-	SearchPad.RESULT_ID_ATTRIBUTE = 'data-result-id';
-	SearchPad.RESULT_HIGHLIGHT_CLASS = 'djs-search-highlight';
-	SearchPad.OVERLAY_CLASS = 'djs-search-overlay';
-
-	SearchPad.BOX_HTML =
-	  '<div class="djs-search-container djs-draggable djs-scrollable">' +
-	    '<div class="djs-search-input">' +
-	      '<input type="text"/>' +
-	    '</div>' +
-	    '<div class="djs-search-results"></div>' +
-	  '</div>';
-
-	SearchPad.RESULT_HTML =
-	  '<div class="djs-search-result"></div>';
-
-	SearchPad.RESULT_PRIMARY_HTML =
-	  '<div class="djs-search-result-primary"></div>';
-
-	SearchPad.RESULT_SECONDARY_HTML =
-	  '<p class="djs-search-result-secondary"></p>';
-
-
-/***/ },
-/* 610 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var map = __webpack_require__(450),
-	    filter = __webpack_require__(384),
-	    sortBy = __webpack_require__(611);
-
-	var labelUtil = __webpack_require__(599);
-
-
-	/**
-	 * Provides ability to search through BPMN elements
-	 */
-	function BpmnSearchProvider(elementRegistry, searchPad, canvas) {
-
-	  this._elementRegistry = elementRegistry;
-	  this._canvas = canvas;
-
-	  searchPad.registerProvider(this);
-	}
-
-	module.exports = BpmnSearchProvider;
-
-	BpmnSearchProvider.$inject = [
-	  'elementRegistry',
-	  'searchPad',
-	  'canvas'
-	];
-
-
-	/**
-	 * Finds all elements that match given pattern
-	 *
-	 * <Result> :
-	 *  {
-	 *    primaryTokens: <Array<Token>>,
-	 *    secondaryTokens: <Array<Token>>,
-	 *    element: <Element>
-	 *  }
-	 *
-	 * <Token> :
-	 *  {
-	 *    normal|matched: <String>
-	 *  }
-	 *
-	 * @param  {String} pattern
-	 * @return {Array<Result>}
-	 */
-	BpmnSearchProvider.prototype.find = function(pattern) {
-	  var rootElement = this._canvas.getRootElement();
-
-	  var elements = this._elementRegistry.filter(function(element) {
-	    if (element.labelTarget) {
-	      return false;
-	    }
-	    return true;
-	  });
-
-	  // do not include root element
-	  elements = filter(elements, function(element) {
-	    return element !== rootElement;
-	  });
-
-	  elements = map(elements, function(element) {
-	    return {
-	      primaryTokens: matchAndSplit(labelUtil.getLabel(element), pattern),
-	      secondaryTokens: matchAndSplit(element.id, pattern),
-	      element: element
-	    };
-	  });
-
-	  // exclude non-matched elements
-	  elements = filter(elements, function(element) {
-	    return hasMatched(element.primaryTokens) || hasMatched(element.secondaryTokens);
-	  });
-
-	  elements = sortBy(elements, function(element) {
-	    return labelUtil.getLabel(element.element) + element.element.id;
-	  });
-
-	  return elements;
-	};
-
-
-	function hasMatched(tokens) {
-	  var matched = filter(tokens, function(t){
-	    return !!t.matched;
-	  });
-
-	  return matched.length > 0;
-	}
-
-
-	function matchAndSplit(text, pattern) {
-	  var tokens = [],
-	      originalText = text;
-
-	  if (!text) {
-	    return tokens;
-	  }
-
-	  text = text.toLowerCase();
-	  pattern = pattern.toLowerCase();
-
-	  var i = text.indexOf(pattern);
-
-	  if (i > -1) {
-	    if (i !== 0) {
-	      tokens.push({
-	        normal: originalText.substr(0, i)
-	      });
-	    }
-
-	    tokens.push({
-	      matched: originalText.substr(i, pattern.length)
-	    });
-
-	    if (pattern.length + i < text.length) {
-	      tokens.push({
-	        normal: originalText.substr(pattern.length + i, text.length)
-	      });
-	    }
-	  } else {
-	    tokens.push({
-	      normal: originalText
-	    });
-	  }
-
-	  return tokens;
-	}
-
-/***/ },
-/* 611 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCallback = __webpack_require__(386),
-	    baseMap = __webpack_require__(451),
-	    baseSortBy = __webpack_require__(612),
-	    compareAscending = __webpack_require__(613),
-	    isIterateeCall = __webpack_require__(29);
-
-	/**
-	 * Creates an array of elements, sorted in ascending order by the results of
-	 * running each element in a collection through `iteratee`. This method performs
-	 * a stable sort, that is, it preserves the original sort order of equal elements.
-	 * The `iteratee` is bound to `thisArg` and invoked with three arguments:
-	 * (value, index|key, collection).
-	 *
-	 * If a property name is provided for `iteratee` the created `_.property`
-	 * style callback returns the property value of the given element.
-	 *
-	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
-	 * style callback returns `true` for elements that have a matching property
-	 * value, else `false`.
-	 *
-	 * If an object is provided for `iteratee` the created `_.matches` style
-	 * callback returns `true` for elements that have the properties of the given
-	 * object, else `false`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Collection
-	 * @param {Array|Object|string} collection The collection to iterate over.
-	 * @param {Function|Object|string} [iteratee=_.identity] The function invoked
-	 *  per iteration.
-	 * @param {*} [thisArg] The `this` binding of `iteratee`.
-	 * @returns {Array} Returns the new sorted array.
-	 * @example
-	 *
-	 * _.sortBy([1, 2, 3], function(n) {
-	 *   return Math.sin(n);
-	 * });
-	 * // => [3, 1, 2]
-	 *
-	 * _.sortBy([1, 2, 3], function(n) {
-	 *   return this.sin(n);
-	 * }, Math);
-	 * // => [3, 1, 2]
-	 *
-	 * var users = [
-	 *   { 'user': 'fred' },
-	 *   { 'user': 'pebbles' },
-	 *   { 'user': 'barney' }
-	 * ];
-	 *
-	 * // using the `_.property` callback shorthand
-	 * _.pluck(_.sortBy(users, 'user'), 'user');
-	 * // => ['barney', 'fred', 'pebbles']
-	 */
-	function sortBy(collection, iteratee, thisArg) {
-	  if (collection == null) {
-	    return [];
-	  }
-	  if (thisArg && isIterateeCall(collection, iteratee, thisArg)) {
-	    iteratee = undefined;
-	  }
-	  var index = -1;
-	  iteratee = baseCallback(iteratee, thisArg, 3);
-
-	  var result = baseMap(collection, function(value, key, collection) {
-	    return { 'criteria': iteratee(value, key, collection), 'index': ++index, 'value': value };
-	  });
-	  return baseSortBy(result, compareAscending);
-	}
-
-	module.exports = sortBy;
-
-
-/***/ },
-/* 612 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.sortBy` which uses `comparer` to define
-	 * the sort order of `array` and replaces criteria objects with their
-	 * corresponding values.
-	 *
-	 * @private
-	 * @param {Array} array The array to sort.
-	 * @param {Function} comparer The function to define sort order.
-	 * @returns {Array} Returns `array`.
-	 */
-	function baseSortBy(array, comparer) {
-	  var length = array.length;
-
-	  array.sort(comparer);
-	  while (length--) {
-	    array[length] = array[length].value;
-	  }
-	  return array;
-	}
-
-	module.exports = baseSortBy;
-
-
-/***/ },
-/* 613 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCompareAscending = __webpack_require__(614);
-
-	/**
-	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
-	 * sort them in ascending order.
-	 *
-	 * @private
-	 * @param {Object} object The object to compare.
-	 * @param {Object} other The other object to compare.
-	 * @returns {number} Returns the sort order indicator for `object`.
-	 */
-	function compareAscending(object, other) {
-	  return baseCompareAscending(object.criteria, other.criteria) || (object.index - other.index);
-	}
-
-	module.exports = compareAscending;
-
-
-/***/ },
-/* 614 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `compareAscending` which compares values and
-	 * sorts them in ascending order without guaranteeing a stable sort.
-	 *
-	 * @private
-	 * @param {*} value The value to compare.
-	 * @param {*} other The other value to compare.
-	 * @returns {number} Returns the sort order indicator for `value`.
-	 */
-	function baseCompareAscending(value, other) {
-	  if (value !== other) {
-	    var valIsNull = value === null,
-	        valIsUndef = value === undefined,
-	        valIsReflexive = value === value;
-
-	    var othIsNull = other === null,
-	        othIsUndef = other === undefined,
-	        othIsReflexive = other === other;
-
-	    if ((value > other && !othIsNull) || !valIsReflexive ||
-	        (valIsNull && !othIsUndef && othIsReflexive) ||
-	        (valIsUndef && othIsReflexive)) {
-	      return 1;
-	    }
-	    if ((value < other && !valIsNull) || !othIsReflexive ||
-	        (othIsNull && !valIsUndef && valIsReflexive) ||
-	        (othIsUndef && valIsReflexive)) {
-	      return -1;
-	    }
-	  }
-	  return 0;
-	}
-
-	module.exports = baseCompareAscending;
-
-
-/***/ },
-/* 615 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [ __webpack_require__(616) ]
-	};
-
-/***/ },
-/* 616 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [ __webpack_require__(454) ],
-	  __init__: [ 'touchInteractionEvents' ],
-	  touchInteractionEvents: [ 'type', __webpack_require__(617) ],
-	  touchFix: [ 'type', __webpack_require__(619) ]
-	};
-
-/***/ },
-/* 617 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var forEach = __webpack_require__(128),
-	    domEvent = __webpack_require__(485),
-	    domClosest = __webpack_require__(489),
-	    Hammer = __webpack_require__(618),
+	    domEvent = __webpack_require__(484),
+	    domClosest = __webpack_require__(488),
+	    Hammer = __webpack_require__(498),
 	    Snap = __webpack_require__(66),
-	    Event = __webpack_require__(462);
+	    Event = __webpack_require__(461);
 
 	var MIN_ZOOM = 0.2,
 	    MAX_ZOOM = 4;
@@ -52031,7 +46183,7 @@ var InfoxBpmnModeler =
 	module.exports = TouchInteractionEvents;
 
 /***/ },
-/* 618 */
+/* 498 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
@@ -54680,7 +48832,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 619 */
+/* 499 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -54719,20 +48871,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 620 */
+/* 500 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(621),
-	    __webpack_require__(624)
+	    __webpack_require__(501),
+	    __webpack_require__(504)
 	  ],
 	  __init__: [ 'autoScroll' ],
-	  autoScroll: [ 'type', __webpack_require__(626) ]
+	  autoScroll: [ 'type', __webpack_require__(506) ]
 	};
 
 /***/ },
-/* 621 */
+/* 501 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -54740,14 +48892,14 @@ var InfoxBpmnModeler =
 	    'hoverFix'
 	  ],
 	  __depends__: [
-	    __webpack_require__(453)
+	    __webpack_require__(452)
 	  ],
-	  dragging: [ 'type', __webpack_require__(622) ],
-	  hoverFix: [ 'type', __webpack_require__(623) ]
+	  dragging: [ 'type', __webpack_require__(502) ],
+	  hoverFix: [ 'type', __webpack_require__(503) ]
 	};
 
 /***/ },
-/* 622 */
+/* 502 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54758,10 +48910,10 @@ var InfoxBpmnModeler =
 
 	var assign = __webpack_require__(77);
 
-	var domEvent = __webpack_require__(485),
-	    Event = __webpack_require__(462),
-	    ClickTrap = __webpack_require__(495),
-	    Cursor = __webpack_require__(494);
+	var domEvent = __webpack_require__(484),
+	    Event = __webpack_require__(461),
+	    ClickTrap = __webpack_require__(494),
+	    Cursor = __webpack_require__(493);
 
 	var EventBusEvent = __webpack_require__(146).Event;
 
@@ -55261,16 +49413,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 623 */
+/* 503 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domClosest = __webpack_require__(489);
+	var domClosest = __webpack_require__(488);
 
 	var Snap = __webpack_require__(66);
 
-	var Event = __webpack_require__(462);
+	var Event = __webpack_require__(461);
 
 	function getGfx(target) {
 	  var node = domClosest(target, 'svg, .djs-element', true);
@@ -55357,19 +49509,19 @@ var InfoxBpmnModeler =
 	module.exports = HoverFix;
 
 /***/ },
-/* 624 */
+/* 504 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'mouseTracking' ],
-	  mouseTracking: [ 'type', __webpack_require__(625) ]
+	  mouseTracking: [ 'type', __webpack_require__(505) ]
 	};
 
 
 /***/ },
-/* 625 */
+/* 505 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55428,20 +49580,20 @@ var InfoxBpmnModeler =
 
 
 	MouseTracking.prototype._setMousePosition = function(event) {
-	  this._mouseX = event.offsetX;
-	  this._mouseY = event.offsetY;
+	  this._mouseX = event.layerX;
+	  this._mouseY = event.layerY;
 	};
 
 
 /***/ },
-/* 626 */
+/* 506 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(77);
 
-	var EventUtil = __webpack_require__(462);
+	var EventUtil = __webpack_require__(461);
 
 
 	/**
@@ -55582,35 +49734,31 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 627 */
+/* 507 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [
-	    __webpack_require__(454),
-	    __webpack_require__(453),
-	    __webpack_require__(464),
-	    __webpack_require__(628),
-	    __webpack_require__(621)
-	  ],
-	  __init__: [ 'move', 'moveVisuals' ],
-	  move: [ 'type', __webpack_require__(630) ],
-	  moveVisuals: [ 'type', __webpack_require__(631) ]
+	  __depends__: [ __webpack_require__(501), __webpack_require__(508) ],
+	  __init__: [ 'bendpoints', 'bendpointSnapping' ],
+	  bendpoints: [ 'type', __webpack_require__(510) ],
+	  bendpointMove: [ 'type', __webpack_require__(514) ],
+	  connectionSegmentMove: [ 'type', __webpack_require__(515) ],
+	  bendpointSnapping: [ 'type', __webpack_require__(522) ]
 	};
 
 
 /***/ },
-/* 628 */
+/* 508 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'rules' ],
-	  rules: [ 'type', __webpack_require__(629) ]
+	  rules: [ 'type', __webpack_require__(509) ]
 	};
 
 
 /***/ },
-/* 629 */
+/* 509 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -55665,706 +49813,21 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 630 */
+/* 510 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77),
-	    filter = __webpack_require__(476),
-	    groupBy = __webpack_require__(138);
-
-	var LOW_PRIORITY = 500,
-	    MEDIUM_PRIORITY = 1250,
-	    HIGH_PRIORITY = 1500;
-
-	var getOriginalEvent = __webpack_require__(462).getOriginal;
-
-	var round = Math.round;
-
-	function mid(element) {
-	  return {
-	    x: element.x + round(element.width / 2),
-	    y: element.y + round(element.height / 2)
-	  };
-	}
-
-	/**
-	 * A plugin that makes shapes draggable / droppable.
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {Dragging} dragging
-	 * @param {Modeling} modeling
-	 * @param {Selection} selection
-	 * @param {Rules} rules
-	 */
-	function MoveEvents(eventBus, dragging, modeling, selection, rules) {
-
-	  // rules
-
-	  function canMove(shapes, delta, position, target) {
-
-	    return rules.allowed('elements.move', {
-	      shapes: shapes,
-	      delta: delta,
-	      position: position,
-	      target: target
-	    });
-	  }
-
-
-	  // move events
-
-	  // assign a high priority to this handler to setup the environment
-	  // others may hook up later, e.g. at default priority and modify
-	  // the move environment.
-	  //
-	  // This sets up the context with
-	  //
-	  // * shape: the primary shape being moved
-	  // * shapes: a list of shapes to be moved
-	  // * validatedShapes: a list of shapes that are being checked
-	  //                    against the rules before and during move
-	  //
-	  eventBus.on('shape.move.start', HIGH_PRIORITY, function(event) {
-
-	    var context = event.context,
-	        shape = event.shape,
-	        shapes = selection.get().slice();
-
-	    // move only single shape if the dragged element
-	    // is not part of the current selection
-	    if (shapes.indexOf(shape) === -1) {
-	      shapes = [ shape ];
-	    }
-
-	    // ensure we remove nested elements in the collection
-	    // and add attachers for a proper dragger
-	    shapes = removeNested(shapes);
-
-	    // attach shapes to drag context
-	    assign(context, {
-	      shapes: shapes,
-	      validatedShapes: shapes,
-	      shape: shape
-	    });
-	  });
-
-
-	  // assign a high priority to this handler to setup the environment
-	  // others may hook up later, e.g. at default priority and modify
-	  // the move environment
-	  //
-	  eventBus.on('shape.move.start', MEDIUM_PRIORITY, function(event) {
-
-	    var context = event.context,
-	        validatedShapes = context.validatedShapes,
-	        canExecute;
-
-	    canExecute = context.canExecute = canMove(validatedShapes);
-
-	    // check if we can move the elements
-	    if (!canExecute) {
-	      // suppress move operation
-	      event.stopPropagation();
-
-	      return false;
-	    }
-	  });
-
-	  // assign a low priority to this handler
-	  // to let others modify the move event before we update
-	  // the context
-	  //
-	  eventBus.on('shape.move.move', LOW_PRIORITY, function(event) {
-
-	    var context = event.context,
-	        validatedShapes = context.validatedShapes,
-	        hover = event.hover,
-	        delta = { x: event.dx, y: event.dy },
-	        position = { x: event.x, y: event.y },
-	        canExecute;
-
-	    // check if we can move the elements
-	    canExecute = canMove(validatedShapes, delta, position, hover);
-
-	    context.delta = delta;
-	    context.canExecute = canExecute;
-
-	    // simply ignore move over
-	    if (canExecute === null) {
-	      context.target = null;
-
-	      return;
-	    }
-
-	    context.target = hover;
-	  });
-
-	  eventBus.on('shape.move.end', function(event) {
-
-	    var context = event.context;
-
-	    var delta = context.delta,
-	        canExecute = context.canExecute,
-	        isAttach = canExecute === 'attach',
-	        shapes = context.shapes;
-
-	    if (!canExecute) {
-	      return false;
-	    }
-
-	    // ensure we have actual pixel values deltas
-	    // (important when zoom level was > 1 during move)
-	    delta.x = round(delta.x);
-	    delta.y = round(delta.y);
-
-	    modeling.moveElements(shapes, delta, context.target, isAttach, { primaryShape: context.shape });
-	  });
-
-
-	  // move activation
-
-	  eventBus.on('element.mousedown', function(event) {
-
-	    var originalEvent = getOriginalEvent(event);
-
-	    if (!originalEvent) {
-	      throw new Error('must supply DOM mousedown event');
-	    }
-
-	    start(originalEvent, event.element);
-	  });
-
-
-	  function start(event, element, activate) {
-
-	    // do not move connections or the root element
-	    if (element.waypoints || !element.parent) {
-	      return;
-	    }
-
-	    var referencePoint = mid(element);
-
-	    dragging.init(event, referencePoint, 'shape.move', {
-	      cursor: 'grabbing',
-	      autoActivate: activate,
-	      data: {
-	        shape: element,
-	        context: {}
-	      }
-	    });
-	  }
-
-	  // API
-
-	  this.start = start;
-	}
-
-	MoveEvents.$inject = [ 'eventBus', 'dragging', 'modeling', 'selection', 'rules' ];
-
-	module.exports = MoveEvents;
-
-
-	/**
-	 * Return a filtered list of elements that do not contain
-	 * those nested into others.
-	 *
-	 * @param  {Array<djs.model.Base>} elements
-	 *
-	 * @return {Array<djs.model.Base>} filtered
-	 */
-	function removeNested(elements) {
-
-	  var ids = groupBy(elements, 'id');
-
-	  return filter(elements, function(element) {
-	    while ((element = element.parent)) {
-
-	      // parent in selection
-	      if (ids[element.id]) {
-	        return false;
-	      }
-	    }
-
-	    return true;
-	  });
-	}
-
-
-/***/ },
-/* 631 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var flatten = __webpack_require__(632),
-	    forEach = __webpack_require__(128),
-	    filter = __webpack_require__(476),
-	    find = __webpack_require__(472),
-	    size = __webpack_require__(633),
-	    groupBy = __webpack_require__(138),
-	    map = __webpack_require__(634);
-
-	var Elements = __webpack_require__(137);
-
-	var LOW_PRIORITY = 500;
-
-	var MARKER_DRAGGING = 'djs-dragging',
-	    MARKER_OK = 'drop-ok',
-	    MARKER_NOT_OK = 'drop-not-ok',
-	    MARKER_NEW_PARENT = 'new-parent',
-	    MARKER_ATTACH = 'attach-ok';
-
-
-	/**
-	 * A plugin that makes shapes draggable / droppable.
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {ElementRegistry} elementRegistry
-	 * @param {Canvas} canvas
-	 * @param {Styles} styles
-	 */
-	function MoveVisuals(eventBus, elementRegistry, canvas, styles) {
-
-	  function getGfx(e) {
-	    return elementRegistry.getGraphics(e);
-	  }
-
-	  function getVisualDragShapes(shapes) {
-	    var elements = getAllDraggedElements(shapes);
-
-	    var filteredElements = removeEdges(elements);
-
-	    return filteredElements;
-	  }
-
-	  function getAllDraggedElements(shapes) {
-	    var allShapes = Elements.selfAndAllChildren(shapes, true);
-
-	    var allConnections = map(allShapes, function(shape) {
-	      return (shape.incoming || []).concat(shape.outgoing || []);
-	    });
-
-	    return flatten(allShapes.concat(allConnections), true);
-	  }
-
-	  /** set drop marker on an element */
-	  function setMarker(element, marker) {
-
-	    [ MARKER_ATTACH, MARKER_OK, MARKER_NOT_OK, MARKER_NEW_PARENT ].forEach(function(m) {
-
-	      if (m === marker) {
-	        canvas.addMarker(element, m);
-	      } else {
-	        canvas.removeMarker(element, m);
-	      }
-	    });
-	  }
-
-	  /**
-	   * Add a dragger for the given shape in the specific
-	   * move context.
-	   *
-	   * @param {Object} context
-	   * @param {djs.model.Base} element
-	   */
-	  function addDragger(context, element) {
-
-	    var dragGroup = context.dragGroup;
-
-	    if (!dragGroup) {
-	      dragGroup = context.dragGroup =
-	        canvas.getDefaultLayer()
-	          .group()
-	            .attr(styles.cls('djs-drag-group', [ 'no-events' ]));
-	    }
-
-	    var gfx = getGfx(element),
-	        dragger = gfx.clone(),
-	        bbox = gfx.getBBox();
-
-	    dragger.attr(styles.cls('djs-dragger', [], {
-	      x: bbox.x,
-	      y: bbox.y
-	    }));
-
-	    dragGroup.add(dragger);
-
-	    return dragger;
-	  }
-
-	  this.addDragger = addDragger;
-
-	  function makeDraggable(context, element, addMarker) {
-
-	    addDragger(context, element);
-
-	    if (addMarker) {
-	      canvas.addMarker(element, MARKER_DRAGGING);
-	    }
-
-	    if (context.allDraggedElements) {
-	      context.allDraggedElements.push(element);
-	    } else {
-	      context.allDraggedElements = [ element ];
-	    }
-	  }
-
-	  // expose to other components
-	  // that plug into the drag behavior
-	  this.makeDraggable = makeDraggable;
-
-
-	  // assign a low priority to this handler
-	  // to let others modify the move context before
-	  // we draw things
-	  //
-	  eventBus.on('shape.move.start', LOW_PRIORITY, function(event) {
-
-	    var context = event.context,
-	        dragShapes = context.shapes,
-	        allDraggedElements = context.allDraggedElements;
-
-	    var visuallyDraggedShapes = getVisualDragShapes(dragShapes);
-
-	    visuallyDraggedShapes.forEach(function(shape) {
-	      addDragger(context, shape);
-	    });
-
-	    // cache all dragged elements / gfx
-	    // so that we can quickly undo their state changes later
-	    if (!allDraggedElements) {
-	      allDraggedElements = getAllDraggedElements(dragShapes);
-	    } else {
-	      allDraggedElements = flatten(allDraggedElements, getAllDraggedElements(dragShapes));
-	    }
-
-	    // add dragging marker
-	    forEach(allDraggedElements, function(e) {
-	      canvas.addMarker(e, MARKER_DRAGGING);
-	    });
-
-	    context.allDraggedElements = allDraggedElements;
-
-	    // determine, if any of the dragged elements have different parents
-	    context.differentParents = haveDifferentParents(dragShapes);
-	  });
-
-	  // assign a low priority to this handler
-	  // to let others modify the move context before
-	  // we draw things
-	  //
-	  eventBus.on('shape.move.move', LOW_PRIORITY, function(event) {
-
-	    var context = event.context,
-	        dragGroup = context.dragGroup,
-	        target = context.target,
-	        parent = context.shape.parent,
-	        canExecute = context.canExecute;
-
-	    if (target) {
-	      if (canExecute === 'attach') {
-	        setMarker(target, MARKER_ATTACH);
-	      } else if (context.canExecute && target && target.id !== parent.id) {
-	        setMarker(target, MARKER_NEW_PARENT);
-	      } else {
-	        setMarker(target, context.canExecute ? MARKER_OK : MARKER_NOT_OK);
-	      }
-	    }
-
-	    dragGroup.translate(event.dx, event.dy);
-	  });
-
-	  eventBus.on([ 'shape.move.out', 'shape.move.cleanup' ], function(event) {
-	    var context = event.context,
-	        target = context.target;
-
-	    if (target) {
-	      setMarker(target, null);
-	    }
-	  });
-
-	  eventBus.on('shape.move.cleanup', function(event) {
-
-	    var context = event.context,
-	        allDraggedElements = context.allDraggedElements,
-	        dragGroup = context.dragGroup;
-
-
-	    // remove dragging marker
-	    forEach(allDraggedElements, function(e) {
-	      canvas.removeMarker(e, MARKER_DRAGGING);
-	    });
-
-	    if (dragGroup) {
-	      dragGroup.remove();
-	    }
-	  });
-	}
-
-	// returns elements minus all connections
-	// where source or target is not elements
-	function removeEdges(elements) {
-
-	  var filteredElements = filter(elements, function(element) {
-
-	    if (!element.waypoints) { // shapes
-	      return true;
-	    } else {                  // connections
-	      var srcFound = find(elements, element.source);
-	      var targetFound = find(elements, element.target);
-
-	      return srcFound && targetFound;
-	    }
-	  });
-
-	  return filteredElements;
-	}
-
-	function haveDifferentParents(elements) {
-	  return size(groupBy(elements, function(e) { return e.parent && e.parent.id; })) !== 1;
-	}
-
-	MoveVisuals.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles' ];
-
-	module.exports = MoveVisuals;
-
-
-/***/ },
-/* 632 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseFlatten = __webpack_require__(433),
-	    isIterateeCall = __webpack_require__(92);
-
-	/**
-	 * Flattens a nested array. If `isDeep` is `true` the array is recursively
-	 * flattened, otherwise it's only flattened a single level.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Array
-	 * @param {Array} array The array to flatten.
-	 * @param {boolean} [isDeep] Specify a deep flatten.
-	 * @param- {Object} [guard] Enables use as a callback for functions like `_.map`.
-	 * @returns {Array} Returns the new flattened array.
-	 * @example
-	 *
-	 * _.flatten([1, [2, 3, [4]]]);
-	 * // => [1, 2, 3, [4]]
-	 *
-	 * // using `isDeep`
-	 * _.flatten([1, [2, 3, [4]]], true);
-	 * // => [1, 2, 3, 4]
-	 */
-	function flatten(array, isDeep, guard) {
-	  var length = array ? array.length : 0;
-	  if (guard && isIterateeCall(array, isDeep, guard)) {
-	    isDeep = false;
-	  }
-	  return length ? baseFlatten(array, isDeep) : [];
-	}
-
-	module.exports = flatten;
-
-
-/***/ },
-/* 633 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getLength = __webpack_require__(81),
-	    isLength = __webpack_require__(76),
-	    keys = __webpack_require__(79);
-
-	/**
-	 * Gets the size of `collection` by returning its length for array-like
-	 * values or the number of own enumerable properties for objects.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Collection
-	 * @param {Array|Object|string} collection The collection to inspect.
-	 * @returns {number} Returns the size of `collection`.
-	 * @example
-	 *
-	 * _.size([1, 2, 3]);
-	 * // => 3
-	 *
-	 * _.size({ 'a': 1, 'b': 2 });
-	 * // => 2
-	 *
-	 * _.size('pebbles');
-	 * // => 7
-	 */
-	function size(collection) {
-	  var length = collection ? getLength(collection) : 0;
-	  return isLength(length) ? length : keys(collection).length;
-	}
-
-	module.exports = size;
-
-
-/***/ },
-/* 634 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arrayMap = __webpack_require__(635),
-	    baseCallback = __webpack_require__(103),
-	    baseMap = __webpack_require__(636),
-	    isArray = __webpack_require__(70);
-
-	/**
-	 * Creates an array of values by running each element in `collection` through
-	 * `iteratee`. The `iteratee` is bound to `thisArg` and invoked with three
-	 * arguments: (value, index|key, collection).
-	 *
-	 * If a property name is provided for `iteratee` the created `_.property`
-	 * style callback returns the property value of the given element.
-	 *
-	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
-	 * style callback returns `true` for elements that have a matching property
-	 * value, else `false`.
-	 *
-	 * If an object is provided for `iteratee` the created `_.matches` style
-	 * callback returns `true` for elements that have the properties of the given
-	 * object, else `false`.
-	 *
-	 * Many lodash methods are guarded to work as iteratees for methods like
-	 * `_.every`, `_.filter`, `_.map`, `_.mapValues`, `_.reject`, and `_.some`.
-	 *
-	 * The guarded methods are:
-	 * `ary`, `callback`, `chunk`, `clone`, `create`, `curry`, `curryRight`,
-	 * `drop`, `dropRight`, `every`, `fill`, `flatten`, `invert`, `max`, `min`,
-	 * `parseInt`, `slice`, `sortBy`, `take`, `takeRight`, `template`, `trim`,
-	 * `trimLeft`, `trimRight`, `trunc`, `random`, `range`, `sample`, `some`,
-	 * `sum`, `uniq`, and `words`
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias collect
-	 * @category Collection
-	 * @param {Array|Object|string} collection The collection to iterate over.
-	 * @param {Function|Object|string} [iteratee=_.identity] The function invoked
-	 *  per iteration.
-	 * @param {*} [thisArg] The `this` binding of `iteratee`.
-	 * @returns {Array} Returns the new mapped array.
-	 * @example
-	 *
-	 * function timesThree(n) {
-	 *   return n * 3;
-	 * }
-	 *
-	 * _.map([1, 2], timesThree);
-	 * // => [3, 6]
-	 *
-	 * _.map({ 'a': 1, 'b': 2 }, timesThree);
-	 * // => [3, 6] (iteration order is not guaranteed)
-	 *
-	 * var users = [
-	 *   { 'user': 'barney' },
-	 *   { 'user': 'fred' }
-	 * ];
-	 *
-	 * // using the `_.property` callback shorthand
-	 * _.map(users, 'user');
-	 * // => ['barney', 'fred']
-	 */
-	function map(collection, iteratee, thisArg) {
-	  var func = isArray(collection) ? arrayMap : baseMap;
-	  iteratee = baseCallback(iteratee, thisArg, 3);
-	  return func(collection, iteratee);
-	}
-
-	module.exports = map;
-
-
-/***/ },
-/* 635 */
-/***/ function(module, exports) {
-
-	/**
-	 * A specialized version of `_.map` for arrays without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array} array The array to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Array} Returns the new mapped array.
-	 */
-	function arrayMap(array, iteratee) {
-	  var index = -1,
-	      length = array.length,
-	      result = Array(length);
-
-	  while (++index < length) {
-	    result[index] = iteratee(array[index], index, array);
-	  }
-	  return result;
-	}
-
-	module.exports = arrayMap;
-
-
-/***/ },
-/* 636 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseEach = __webpack_require__(96),
-	    isArrayLike = __webpack_require__(80);
-
-	/**
-	 * The base implementation of `_.map` without support for callback shorthands
-	 * and `this` binding.
-	 *
-	 * @private
-	 * @param {Array|Object|string} collection The collection to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Array} Returns the new mapped array.
-	 */
-	function baseMap(collection, iteratee) {
-	  var index = -1,
-	      result = isArrayLike(collection) ? Array(collection.length) : [];
-
-	  baseEach(collection, function(value, key, collection) {
-	    result[++index] = iteratee(value, key, collection);
-	  });
-	  return result;
-	}
-
-	module.exports = baseMap;
-
-
-/***/ },
-/* 637 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [ __webpack_require__(621), __webpack_require__(628) ],
-	  __init__: [ 'bendpoints', 'bendpointSnapping' ],
-	  bendpoints: [ 'type', __webpack_require__(638) ],
-	  bendpointMove: [ 'type', __webpack_require__(642) ],
-	  connectionSegmentMove: [ 'type', __webpack_require__(643) ],
-	  bendpointSnapping: [ 'type', __webpack_require__(649) ]
-	};
-
-
-/***/ },
-/* 638 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var domEvent = __webpack_require__(485),
-	    BendpointUtil = __webpack_require__(639);
-
-	var pointsAligned = __webpack_require__(640).pointsAligned,
-	    getMidPoint = __webpack_require__(640).getMidPoint;
+	var domEvent = __webpack_require__(484),
+	    BendpointUtil = __webpack_require__(511);
+
+	var pointsAligned = __webpack_require__(512).pointsAligned,
+	    getMidPoint = __webpack_require__(512).getMidPoint;
 
 	var BENDPOINT_CLS = BendpointUtil.BENDPOINT_CLS,
 	    SEGMENT_DRAGGER_CLS = BendpointUtil.SEGMENT_DRAGGER_CLS;
 
-	var getApproxIntersection = __webpack_require__(641).getApproxIntersection;
+	var getApproxIntersection = __webpack_require__(513).getApproxIntersection;
 
 
 	/**
@@ -56604,13 +50067,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 639 */
+/* 511 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Events = __webpack_require__(462),
-	    Geometry = __webpack_require__(640);
+	var Events = __webpack_require__(461),
+	    Geometry = __webpack_require__(512);
 
 	var Snap = __webpack_require__(66);
 
@@ -56691,7 +50154,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 640 */
+/* 512 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56800,12 +50263,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 641 */
+/* 513 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pointDistance = __webpack_require__(640).pointDistance;
+	var pointDistance = __webpack_require__(512).pointDistance;
 
 	var Snap = __webpack_require__(66);
 
@@ -56916,13 +50379,13 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 642 */
+/* 514 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Geometry = __webpack_require__(640),
-	    BendpointUtil = __webpack_require__(639);
+	var Geometry = __webpack_require__(512),
+	    BendpointUtil = __webpack_require__(511);
 
 	var MARKER_OK = 'connect-ok',
 	    MARKER_NOT_OK = 'connect-not-ok',
@@ -57141,7 +50604,8 @@ var InfoxBpmnModeler =
 	        waypoints = context.newWaypoints,
 	        bendpointIndex = context.bendpointIndex,
 	        bendpoint = waypoints[bendpointIndex],
-	        allowed = context.allowed;
+	        allowed = context.allowed,
+	        hints;
 
 	    // ensure we have actual pixel values bendpoint
 	    // coordinates (important when zoom level was > 1 during move)
@@ -57155,7 +50619,17 @@ var InfoxBpmnModeler =
 	      modeling.reconnectEnd(context.connection, context.target, bendpoint);
 	    } else
 	    if (allowed !== false && context.type === COMMAND_BENDPOINT_UPDATE) {
-	      modeling.updateWaypoints(context.connection, filterRedundantWaypoints(waypoints));
+
+	      // pass hints on the actual moved bendpoint
+	      // this is useful for connection and label layouting
+	      hints = {
+	        bendpointMove: {
+	          insert: e.context.insert,
+	          bendpointIndex: bendpointIndex
+	        }
+	      };
+
+	      modeling.updateWaypoints(context.connection, filterRedundantWaypoints(waypoints), hints);
 	    } else {
 	      redrawConnection(e);
 
@@ -57174,14 +50648,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 643 */
+/* 515 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Geometry = __webpack_require__(640),
-	    BendpointUtil = __webpack_require__(639),
-	    LayoutUtil = __webpack_require__(644);
+	var Geometry = __webpack_require__(512),
+	    BendpointUtil = __webpack_require__(511),
+	    LayoutUtil = __webpack_require__(516);
 
 	var MARKER_CONNECT_HOVER = 'connect-hover',
 	    MARKER_CONNECT_UPDATING = 'djs-updating';
@@ -57302,6 +50776,34 @@ var InfoxBpmnModeler =
 	    });
 	  };
 
+	  /**
+	   * Crop connection if connection cropping is provided.
+	   *
+	   * @param {Connection} connection
+	   * @param {Array<Point>} newWaypoints
+	   *
+	   * @return {Array<Point>} cropped connection waypoints
+	   */
+	  function cropConnection(connection, newWaypoints) {
+
+	    // crop connection, if docking service is provided only
+	    if (!connectionDocking) {
+	      return newWaypoints;
+	    }
+
+	    var oldWaypoints = connection.waypoints,
+	        croppedWaypoints;
+
+	    // temporary set new waypoints
+	    connection.waypoints = newWaypoints;
+
+	    croppedWaypoints = connectionDocking.getCroppedWaypoints(connection);
+
+	    // restore old waypoints
+	    connection.waypoints = oldWaypoints;
+
+	    return croppedWaypoints;
+	  }
 
 	  // DRAGGING IMPLEMENTATION
 
@@ -57326,10 +50828,35 @@ var InfoxBpmnModeler =
 	    context.draggerGfx.translate(draggerPosition.x, draggerPosition.y);
 	  }
 
-	  function filterRedundantWaypoints(waypoints) {
-	    return waypoints.filter(function(r, idx) {
-	      return !Geometry.pointsOnLine(waypoints[idx - 1], waypoints[idx + 1], r);
+	  /**
+	   * Filter waypoints for redundant ones (i.e. on the same axis).
+	   * Returns the filtered waypoints and the offset related to the segment move.
+	   *
+	   * @param {Array<Point>} waypoints
+	   * @param {Integer} segmentStartIndex of moved segment start
+	   *
+	   * @return {Object} { filteredWaypoints, segmentOffset }
+	   */
+	  function filterRedundantWaypoints(waypoints, segmentStartIndex) {
+
+	    var segmentOffset = 0;
+
+	    var filteredWaypoints = waypoints.filter(function(r, idx) {
+	      if (Geometry.pointsOnLine(waypoints[idx - 1], waypoints[idx + 1], r)) {
+
+	        // remove point and increment offset
+	        segmentOffset = idx <= segmentStartIndex ? segmentOffset - 1 : segmentOffset;
+	        return false;
+	      }
+
+	      // dont remove point
+	      return true;
 	    });
+
+	    return {
+	      waypoints: filteredWaypoints,
+	      segmentOffset: segmentOffset
+	    };
 	  }
 
 	  eventBus.on('connectionSegment.move.start', function(e) {
@@ -57419,18 +50946,13 @@ var InfoxBpmnModeler =
 	    }
 
 	    // update connection waypoints
-	    connection.waypoints = newWaypoints;
-
-	    // crop connection, if docking service is provided
-	    if (connectionDocking) {
-	      connection.waypoints = newWaypoints = connectionDocking.getCroppedWaypoints(connection);
-	    }
-
-	    // save new waypoints in context
-	    context.newWaypoints = newWaypoints;
+	    context.newWaypoints = connection.waypoints = cropConnection(connection, newWaypoints);
 
 	    // update dragger position
 	    updateDragger(context, segmentOffset, e);
+
+	    // save segmentOffset in context
+	    context.newSegmentStartIndex = segmentStartIndex + segmentOffset;
 
 	    // redraw connection
 	    redrawConnection(e);
@@ -57484,19 +51006,38 @@ var InfoxBpmnModeler =
 	  eventBus.on('connectionSegment.move.end', function(e) {
 
 	    var context = e.context,
-	        waypoints = context.newWaypoints;
+	        connection = context.connection,
+	        newWaypoints = context.newWaypoints,
+	        newSegmentStartIndex = context.newSegmentStartIndex;
 
 	    // ensure we have actual pixel values bendpoint
 	    // coordinates (important when zoom level was > 1 during move)
-	    waypoints.forEach(function(wp) {
-	      wp.x = Math.round(wp.x);
-	      wp.y = Math.round(wp.y);
+	    newWaypoints = newWaypoints.map(function(p) {
+	      return {
+	        original: p.original,
+	        x: Math.round(p.x),
+	        y: Math.round(p.y)
+	      };
 	    });
 
-	    modeling.updateWaypoints(context.connection, filterRedundantWaypoints(waypoints));
+	    // apply filter redunant waypoints
+	    var filtered = filterRedundantWaypoints(newWaypoints, newSegmentStartIndex);
+
+	    // get filtered waypoints
+	    var filteredWaypoints = filtered.waypoints,
+	        croppedWaypoints = cropConnection(connection, filteredWaypoints),
+	        segmentOffset = filtered.segmentOffset;
+
+	    var hints = {
+	      segmentMove: {
+	        segmentStartIndex: context.segmentStartIndex,
+	        newSegmentStartIndex: newSegmentStartIndex + segmentOffset
+	      }
+	    };
+
+	    modeling.updateWaypoints(connection, croppedWaypoints, hints);
 	  });
 	}
-
 
 	ConnectionSegmentMove.$inject = [
 	  'injector', 'eventBus', 'canvas',
@@ -57506,15 +51047,16 @@ var InfoxBpmnModeler =
 
 	module.exports = ConnectionSegmentMove;
 
+
 /***/ },
-/* 644 */
+/* 516 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isObject = __webpack_require__(74),
-	    sortBy = __webpack_require__(645),
-	    pointDistance = __webpack_require__(640).pointDistance;
+	    sortBy = __webpack_require__(517),
+	    pointDistance = __webpack_require__(512).pointDistance;
 
 	var Snap = __webpack_require__(66);
 
@@ -57645,6 +51187,15 @@ var InfoxBpmnModeler =
 
 	////// intersection utils //////////////////////////////
 
+	/**
+	 * Get intersection between an element and a line path.
+	 *
+	 * @param {PathDef} elementPath
+	 * @param {PathDef} linePath
+	 * @param {Boolean} cropStart crop from start or end
+	 *
+	 * @return {Point}
+	 */
 	function getElementLineIntersection(elementPath, linePath, cropStart) {
 
 	  var intersections = getIntersections(elementPath, linePath);
@@ -57692,13 +51243,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 645 */
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(103),
-	    baseMap = __webpack_require__(636),
-	    baseSortBy = __webpack_require__(646),
-	    compareAscending = __webpack_require__(647),
+	    baseMap = __webpack_require__(518),
+	    baseSortBy = __webpack_require__(519),
+	    compareAscending = __webpack_require__(520),
 	    isIterateeCall = __webpack_require__(92);
 
 	/**
@@ -57769,7 +51320,36 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 646 */
+/* 518 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseEach = __webpack_require__(96),
+	    isArrayLike = __webpack_require__(80);
+
+	/**
+	 * The base implementation of `_.map` without support for callback shorthands
+	 * and `this` binding.
+	 *
+	 * @private
+	 * @param {Array|Object|string} collection The collection to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Array} Returns the new mapped array.
+	 */
+	function baseMap(collection, iteratee) {
+	  var index = -1,
+	      result = isArrayLike(collection) ? Array(collection.length) : [];
+
+	  baseEach(collection, function(value, key, collection) {
+	    result[++index] = iteratee(value, key, collection);
+	  });
+	  return result;
+	}
+
+	module.exports = baseMap;
+
+
+/***/ },
+/* 519 */
 /***/ function(module, exports) {
 
 	/**
@@ -57796,10 +51376,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 647 */
+/* 520 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCompareAscending = __webpack_require__(648);
+	var baseCompareAscending = __webpack_require__(521);
 
 	/**
 	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
@@ -57818,7 +51398,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 648 */
+/* 521 */
 /***/ function(module, exports) {
 
 	/**
@@ -57858,7 +51438,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 649 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58039,34 +51619,812 @@ var InfoxBpmnModeler =
 	module.exports = BendpointSnapping;
 
 /***/ },
-/* 650 */
+/* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(628),
-	    __webpack_require__(621)
+	    __webpack_require__(453),
+	    __webpack_require__(452),
+	    __webpack_require__(463),
+	    __webpack_require__(508),
+	    __webpack_require__(501),
+	    __webpack_require__(524)
 	  ],
-	  __init__: [ 'resize', 'resizeVisuals', 'resizeHandles' ],
-	  resize: [ 'type', __webpack_require__(651) ],
-	  resizeVisuals: [ 'type', __webpack_require__(653) ],
-	  resizeHandles: [ 'type', __webpack_require__(654) ]
+	  __init__: [ 'move', 'movePreview' ],
+	  move: [ 'type', __webpack_require__(526) ],
+	  movePreview: [ 'type', __webpack_require__(527) ]
 	};
 
 
 /***/ },
-/* 651 */
+/* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pick = __webpack_require__(432),
+	module.exports = {
+	  __init__: [ 'previewSupport' ],
+	  previewSupport: [ 'type', __webpack_require__(525) ]
+	};
+
+
+/***/ },
+/* 525 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var forEach = __webpack_require__(128);
+
+	var Snap = __webpack_require__(66);
+
+	/**
+	 * Adds support for previews of moving/resizing elements.
+	 */
+	function PreviewSupport(elementRegistry, canvas, styles) {
+	  this._elementRegistry = elementRegistry;
+	  this._canvas = canvas;
+	  this._styles = styles;
+	}
+
+	module.exports = PreviewSupport;
+
+	PreviewSupport.$inject = [ 'elementRegistry', 'canvas', 'styles' ];
+
+
+	/**
+	 * Returns graphics of an element.
+	 *
+	 * @param {djs.model.Base} element
+	 *
+	 * @return {Snap<SVGElement>}
+	 */
+	PreviewSupport.prototype.getGfx = function(element) {
+	  return this._elementRegistry.getGraphics(element);
+	};
+
+	/**
+	 * Adds a move preview of a given shape to a given snapsvg group.
+	 *
+	 * @param {djs.model.Base} element
+	 * @param {Snap<SVGElement>} group
+	 *
+	 * @return {Snap<SVGElement>} dragger
+	 */
+	PreviewSupport.prototype.addDragger = function(shape, group) {
+	  var gfx = this.getGfx(shape);
+	  var dragger = gfx.clone();
+	  var bbox = gfx.getBBox();
+
+	  // remove markers from connections
+	  if (isConnection(shape)) {
+	    removeMarkers(dragger);
+	  }
+
+	  dragger.attr(this._styles.cls('djs-dragger', [], {
+	    x: bbox.x,
+	    y: bbox.y
+	  }));
+
+	  group.add(dragger);
+
+	  return dragger;
+	};
+
+	/**
+	 * Adds a resize preview of a given shape to a given snapsvg group.
+	 *
+	 * @param {djs.model.Base} element
+	 * @param {Snap<SVGElement>} group
+	 *
+	 * @return {Snap<SVGElement>} frame
+	 */
+	PreviewSupport.prototype.addFrame = function(shape, group) {
+
+	  var frame = Snap.create('rect', {
+	    class: 'djs-resize-overlay',
+	    width:  shape.width,
+	    height: shape.height,
+	    x: shape.x,
+	    y: shape.y
+	  });
+
+	  group.add(frame);
+
+	  return frame;
+	};
+
+	////////// helpers //////////
+
+	/**
+	 * Removes all svg marker references from an SVG.
+	 *
+	 * @param {Snap<SVGElement>} gfx
+	 */
+	function removeMarkers(gfx) {
+
+	  if (gfx.node) {
+
+	    // snapsvg paper element
+	    forEach(gfx.node.childNodes, function(childNode) {
+	      if (childNode.node) {
+
+	        // recursion
+	        removeMarkers(childNode.node);
+
+	      } else if (childNode.childNodes) {
+
+	        forEach(childNode.childNodes, function(childNodeChild) {
+
+	          // recursion
+	          removeMarkers(childNodeChild);
+	        });
+
+	      }
+	    });
+
+	  } else {
+
+	    // plain svg element
+	    gfx.style.markerStart = '';
+	    gfx.style.markerEnd = '';
+	  }
+
+	}
+
+	/**
+	 * Checks if an element is a connection.
+	 */
+	function isConnection(element) {
+	  return element.waypoints;
+	}
+
+
+/***/ },
+/* 526 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var assign = __webpack_require__(77),
+	    filter = __webpack_require__(475),
+	    groupBy = __webpack_require__(138);
+
+	var LOW_PRIORITY = 500,
+	    MEDIUM_PRIORITY = 1250,
+	    HIGH_PRIORITY = 1500;
+
+	var getOriginalEvent = __webpack_require__(461).getOriginal;
+
+	var round = Math.round;
+
+	function mid(element) {
+	  return {
+	    x: element.x + round(element.width / 2),
+	    y: element.y + round(element.height / 2)
+	  };
+	}
+
+	/**
+	 * A plugin that makes shapes draggable / droppable.
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {Dragging} dragging
+	 * @param {Modeling} modeling
+	 * @param {Selection} selection
+	 * @param {Rules} rules
+	 */
+	function MoveEvents(eventBus, dragging, modeling, selection, rules) {
+
+	  // rules
+
+	  function canMove(shapes, delta, position, target) {
+
+	    return rules.allowed('elements.move', {
+	      shapes: shapes,
+	      delta: delta,
+	      position: position,
+	      target: target
+	    });
+	  }
+
+
+	  // move events
+
+	  // assign a high priority to this handler to setup the environment
+	  // others may hook up later, e.g. at default priority and modify
+	  // the move environment.
+	  //
+	  // This sets up the context with
+	  //
+	  // * shape: the primary shape being moved
+	  // * shapes: a list of shapes to be moved
+	  // * validatedShapes: a list of shapes that are being checked
+	  //                    against the rules before and during move
+	  //
+	  eventBus.on('shape.move.start', HIGH_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        shape = event.shape,
+	        shapes = selection.get().slice();
+
+	    // move only single shape if the dragged element
+	    // is not part of the current selection
+	    if (shapes.indexOf(shape) === -1) {
+	      shapes = [ shape ];
+	    }
+
+	    // ensure we remove nested elements in the collection
+	    // and add attachers for a proper dragger
+	    shapes = removeNested(shapes);
+
+	    // attach shapes to drag context
+	    assign(context, {
+	      shapes: shapes,
+	      validatedShapes: shapes,
+	      shape: shape
+	    });
+	  });
+
+
+	  // assign a high priority to this handler to setup the environment
+	  // others may hook up later, e.g. at default priority and modify
+	  // the move environment
+	  //
+	  eventBus.on('shape.move.start', MEDIUM_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        validatedShapes = context.validatedShapes,
+	        canExecute;
+
+	    canExecute = context.canExecute = canMove(validatedShapes);
+
+	    // check if we can move the elements
+	    if (!canExecute) {
+	      // suppress move operation
+	      event.stopPropagation();
+
+	      return false;
+	    }
+	  });
+
+	  // assign a low priority to this handler
+	  // to let others modify the move event before we update
+	  // the context
+	  //
+	  eventBus.on('shape.move.move', LOW_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        validatedShapes = context.validatedShapes,
+	        hover = event.hover,
+	        delta = { x: event.dx, y: event.dy },
+	        position = { x: event.x, y: event.y },
+	        canExecute;
+
+	    // check if we can move the elements
+	    canExecute = canMove(validatedShapes, delta, position, hover);
+
+	    context.delta = delta;
+	    context.canExecute = canExecute;
+
+	    // simply ignore move over
+	    if (canExecute === null) {
+	      context.target = null;
+
+	      return;
+	    }
+
+	    context.target = hover;
+	  });
+
+	  eventBus.on('shape.move.end', function(event) {
+
+	    var context = event.context;
+
+	    var delta = context.delta,
+	        canExecute = context.canExecute,
+	        isAttach = canExecute === 'attach',
+	        shapes = context.shapes;
+
+	    if (!canExecute) {
+	      return false;
+	    }
+
+	    // ensure we have actual pixel values deltas
+	    // (important when zoom level was > 1 during move)
+	    delta.x = round(delta.x);
+	    delta.y = round(delta.y);
+
+	    modeling.moveElements(shapes, delta, context.target, isAttach, { primaryShape: context.shape });
+	  });
+
+
+	  // move activation
+
+	  eventBus.on('element.mousedown', function(event) {
+
+	    var originalEvent = getOriginalEvent(event);
+
+	    if (!originalEvent) {
+	      throw new Error('must supply DOM mousedown event');
+	    }
+
+	    start(originalEvent, event.element);
+	  });
+
+
+	  function start(event, element, activate) {
+
+	    // do not move connections or the root element
+	    if (element.waypoints || !element.parent) {
+	      return;
+	    }
+
+	    var referencePoint = mid(element);
+
+	    dragging.init(event, referencePoint, 'shape.move', {
+	      cursor: 'grabbing',
+	      autoActivate: activate,
+	      data: {
+	        shape: element,
+	        context: {}
+	      }
+	    });
+	  }
+
+	  // API
+
+	  this.start = start;
+	}
+
+	MoveEvents.$inject = [ 'eventBus', 'dragging', 'modeling', 'selection', 'rules' ];
+
+	module.exports = MoveEvents;
+
+
+	/**
+	 * Return a filtered list of elements that do not contain
+	 * those nested into others.
+	 *
+	 * @param  {Array<djs.model.Base>} elements
+	 *
+	 * @return {Array<djs.model.Base>} filtered
+	 */
+	function removeNested(elements) {
+
+	  var ids = groupBy(elements, 'id');
+
+	  return filter(elements, function(element) {
+	    while ((element = element.parent)) {
+
+	      // parent in selection
+	      if (ids[element.id]) {
+	        return false;
+	      }
+	    }
+
+	    return true;
+	  });
+	}
+
+
+/***/ },
+/* 527 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var flatten = __webpack_require__(528),
+	    forEach = __webpack_require__(128),
+	    filter = __webpack_require__(475),
+	    find = __webpack_require__(468),
+	    size = __webpack_require__(529),
+	    groupBy = __webpack_require__(138),
+	    map = __webpack_require__(530);
+
+	var Elements = __webpack_require__(137);
+
+	var LOW_PRIORITY = 500;
+
+	var MARKER_DRAGGING = 'djs-dragging',
+	    MARKER_OK = 'drop-ok',
+	    MARKER_NOT_OK = 'drop-not-ok',
+	    MARKER_NEW_PARENT = 'new-parent',
+	    MARKER_ATTACH = 'attach-ok';
+
+	/**
+	 * Provides previews for moving shapes when moving.
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {ElementRegistry} elementRegistry
+	 * @param {Canvas} canvas
+	 * @param {Styles} styles
+	 */
+	function MovePreview(eventBus, elementRegistry, canvas, styles, previewSupport) {
+
+	  function getVisualDragShapes(shapes) {
+	    var elements = getAllDraggedElements(shapes);
+
+	    var filteredElements = removeEdges(elements);
+
+	    return filteredElements;
+	  }
+
+	  function getAllDraggedElements(shapes) {
+	    var allShapes = Elements.selfAndAllChildren(shapes, true);
+
+	    var allConnections = map(allShapes, function(shape) {
+	      return (shape.incoming || []).concat(shape.outgoing || []);
+	    });
+
+	    return flatten(allShapes.concat(allConnections), true);
+	  }
+
+	  /**
+	   * Sets drop marker on an element.
+	   */
+	  function setMarker(element, marker) {
+
+	    [ MARKER_ATTACH, MARKER_OK, MARKER_NOT_OK, MARKER_NEW_PARENT ].forEach(function(m) {
+
+	      if (m === marker) {
+	        canvas.addMarker(element, m);
+	      } else {
+	        canvas.removeMarker(element, m);
+	      }
+	    });
+	  }
+
+	  function makeDraggable(context, element, addMarker) {
+
+	    previewSupport.addDragger(element, context.dragGroup);
+
+	    if (addMarker) {
+	      canvas.addMarker(element, MARKER_DRAGGING);
+	    }
+
+	    if (context.allDraggedElements) {
+	      context.allDraggedElements.push(element);
+	    } else {
+	      context.allDraggedElements = [ element ];
+	    }
+	  }
+
+	  // expose to other components
+	  // that plug into the drag behavior
+	  this.makeDraggable = makeDraggable;
+
+	  // add previews
+	  eventBus.on('shape.move.start', LOW_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        dragShapes = context.shapes,
+	        allDraggedElements = context.allDraggedElements;
+
+	    var visuallyDraggedShapes = getVisualDragShapes(dragShapes);
+
+	    if (!context.dragGroup) {
+	      context.dragGroup = canvas.getDefaultLayer().group()
+	        .attr(styles.cls('djs-drag-group', [ 'no-events' ]));
+	    }
+
+	    // add previews
+	    visuallyDraggedShapes.forEach(function(shape) {
+	      previewSupport.addDragger(shape, context.dragGroup);
+	    });
+
+	    // cache all dragged elements / gfx
+	    // so that we can quickly undo their state changes later
+	    if (!allDraggedElements) {
+	      allDraggedElements = getAllDraggedElements(dragShapes);
+	    } else {
+	      allDraggedElements = flatten(allDraggedElements, getAllDraggedElements(dragShapes));
+	    }
+
+	    // add dragging marker
+	    forEach(allDraggedElements, function(e) {
+	      canvas.addMarker(e, MARKER_DRAGGING);
+	    });
+
+	    context.allDraggedElements = allDraggedElements;
+
+	    // determine, if any of the dragged elements have different parents
+	    context.differentParents = haveDifferentParents(dragShapes);
+	  });
+
+	  // update previews
+	  eventBus.on('shape.move.move', LOW_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        dragGroup = context.dragGroup,
+	        target = context.target,
+	        parent = context.shape.parent,
+	        canExecute = context.canExecute;
+
+	    if (target) {
+	      if (canExecute === 'attach') {
+	        setMarker(target, MARKER_ATTACH);
+	      } else if (context.canExecute && target && target.id !== parent.id) {
+	        setMarker(target, MARKER_NEW_PARENT);
+	      } else {
+	        setMarker(target, context.canExecute ? MARKER_OK : MARKER_NOT_OK);
+	      }
+	    }
+
+	    dragGroup.translate(event.dx, event.dy);
+	  });
+
+	  eventBus.on([ 'shape.move.out', 'shape.move.cleanup' ], function(event) {
+	    var context = event.context,
+	        target = context.target;
+
+	    if (target) {
+	      setMarker(target, null);
+	    }
+	  });
+
+	  // remove previews
+	  eventBus.on('shape.move.cleanup', function(event) {
+
+	    var context = event.context,
+	        allDraggedElements = context.allDraggedElements,
+	        dragGroup = context.dragGroup;
+
+
+	    // remove dragging marker
+	    forEach(allDraggedElements, function(e) {
+	      canvas.removeMarker(e, MARKER_DRAGGING);
+	    });
+
+	    if (dragGroup) {
+	      dragGroup.remove();
+	    }
+	  });
+	}
+
+	MovePreview.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles', 'previewSupport' ];
+
+	module.exports = MovePreview;
+
+	////////// helpers //////////
+
+	// returns elements minus all connections
+	// where source or target is not elements
+	function removeEdges(elements) {
+
+	  var filteredElements = filter(elements, function(element) {
+
+	    if (!isConnection(element)) {
+	      return true;
+	    } else {
+	      var srcFound = find(elements, element.source);
+	      var targetFound = find(elements, element.target);
+
+	      return srcFound && targetFound;
+	    }
+	  });
+
+	  return filteredElements;
+	}
+
+	function haveDifferentParents(elements) {
+	  return size(groupBy(elements, function(e) { return e.parent && e.parent.id; })) !== 1;
+	}
+
+	/**
+	 * Checks if an element is a connection.
+	 */
+	function isConnection(element) {
+	  return element.waypoints;
+	}
+
+
+/***/ },
+/* 528 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseFlatten = __webpack_require__(432),
+	    isIterateeCall = __webpack_require__(92);
+
+	/**
+	 * Flattens a nested array. If `isDeep` is `true` the array is recursively
+	 * flattened, otherwise it's only flattened a single level.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Array
+	 * @param {Array} array The array to flatten.
+	 * @param {boolean} [isDeep] Specify a deep flatten.
+	 * @param- {Object} [guard] Enables use as a callback for functions like `_.map`.
+	 * @returns {Array} Returns the new flattened array.
+	 * @example
+	 *
+	 * _.flatten([1, [2, 3, [4]]]);
+	 * // => [1, 2, 3, [4]]
+	 *
+	 * // using `isDeep`
+	 * _.flatten([1, [2, 3, [4]]], true);
+	 * // => [1, 2, 3, 4]
+	 */
+	function flatten(array, isDeep, guard) {
+	  var length = array ? array.length : 0;
+	  if (guard && isIterateeCall(array, isDeep, guard)) {
+	    isDeep = false;
+	  }
+	  return length ? baseFlatten(array, isDeep) : [];
+	}
+
+	module.exports = flatten;
+
+
+/***/ },
+/* 529 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getLength = __webpack_require__(81),
+	    isLength = __webpack_require__(76),
+	    keys = __webpack_require__(79);
+
+	/**
+	 * Gets the size of `collection` by returning its length for array-like
+	 * values or the number of own enumerable properties for objects.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Collection
+	 * @param {Array|Object|string} collection The collection to inspect.
+	 * @returns {number} Returns the size of `collection`.
+	 * @example
+	 *
+	 * _.size([1, 2, 3]);
+	 * // => 3
+	 *
+	 * _.size({ 'a': 1, 'b': 2 });
+	 * // => 2
+	 *
+	 * _.size('pebbles');
+	 * // => 7
+	 */
+	function size(collection) {
+	  var length = collection ? getLength(collection) : 0;
+	  return isLength(length) ? length : keys(collection).length;
+	}
+
+	module.exports = size;
+
+
+/***/ },
+/* 530 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arrayMap = __webpack_require__(531),
+	    baseCallback = __webpack_require__(103),
+	    baseMap = __webpack_require__(518),
+	    isArray = __webpack_require__(70);
+
+	/**
+	 * Creates an array of values by running each element in `collection` through
+	 * `iteratee`. The `iteratee` is bound to `thisArg` and invoked with three
+	 * arguments: (value, index|key, collection).
+	 *
+	 * If a property name is provided for `iteratee` the created `_.property`
+	 * style callback returns the property value of the given element.
+	 *
+	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
+	 * style callback returns `true` for elements that have a matching property
+	 * value, else `false`.
+	 *
+	 * If an object is provided for `iteratee` the created `_.matches` style
+	 * callback returns `true` for elements that have the properties of the given
+	 * object, else `false`.
+	 *
+	 * Many lodash methods are guarded to work as iteratees for methods like
+	 * `_.every`, `_.filter`, `_.map`, `_.mapValues`, `_.reject`, and `_.some`.
+	 *
+	 * The guarded methods are:
+	 * `ary`, `callback`, `chunk`, `clone`, `create`, `curry`, `curryRight`,
+	 * `drop`, `dropRight`, `every`, `fill`, `flatten`, `invert`, `max`, `min`,
+	 * `parseInt`, `slice`, `sortBy`, `take`, `takeRight`, `template`, `trim`,
+	 * `trimLeft`, `trimRight`, `trunc`, `random`, `range`, `sample`, `some`,
+	 * `sum`, `uniq`, and `words`
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias collect
+	 * @category Collection
+	 * @param {Array|Object|string} collection The collection to iterate over.
+	 * @param {Function|Object|string} [iteratee=_.identity] The function invoked
+	 *  per iteration.
+	 * @param {*} [thisArg] The `this` binding of `iteratee`.
+	 * @returns {Array} Returns the new mapped array.
+	 * @example
+	 *
+	 * function timesThree(n) {
+	 *   return n * 3;
+	 * }
+	 *
+	 * _.map([1, 2], timesThree);
+	 * // => [3, 6]
+	 *
+	 * _.map({ 'a': 1, 'b': 2 }, timesThree);
+	 * // => [3, 6] (iteration order is not guaranteed)
+	 *
+	 * var users = [
+	 *   { 'user': 'barney' },
+	 *   { 'user': 'fred' }
+	 * ];
+	 *
+	 * // using the `_.property` callback shorthand
+	 * _.map(users, 'user');
+	 * // => ['barney', 'fred']
+	 */
+	function map(collection, iteratee, thisArg) {
+	  var func = isArray(collection) ? arrayMap : baseMap;
+	  iteratee = baseCallback(iteratee, thisArg, 3);
+	  return func(collection, iteratee);
+	}
+
+	module.exports = map;
+
+
+/***/ },
+/* 531 */
+/***/ function(module, exports) {
+
+	/**
+	 * A specialized version of `_.map` for arrays without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array} array The array to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Array} Returns the new mapped array.
+	 */
+	function arrayMap(array, iteratee) {
+	  var index = -1,
+	      length = array.length,
+	      result = Array(length);
+
+	  while (++index < length) {
+	    result[index] = iteratee(array[index], index, array);
+	  }
+	  return result;
+	}
+
+	module.exports = arrayMap;
+
+
+/***/ },
+/* 532 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(508),
+	    __webpack_require__(501),
+	    __webpack_require__(524)
+	  ],
+	  __init__: [ 'resize', 'resizePreview', 'resizeHandles' ],
+	  resize: [ 'type', __webpack_require__(533) ],
+	  resizePreview: [ 'type', __webpack_require__(535) ],
+	  resizeHandles: [ 'type', __webpack_require__(536) ]
+	};
+
+
+/***/ },
+/* 533 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var pick = __webpack_require__(431),
 	    assign = __webpack_require__(77);
 
-	var ResizeUtil = __webpack_require__(652);
+	var ResizeUtil = __webpack_require__(534);
 
-	var asTRBL = __webpack_require__(644).asTRBL,
-	    roundBounds = __webpack_require__(644).roundBounds;
+	var asTRBL = __webpack_require__(516).asTRBL,
+	    roundBounds = __webpack_require__(516).roundBounds;
 
 	var DEFAULT_MIN_WIDTH = 10;
 
@@ -58250,12 +52608,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 652 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(476);
+	var filter = __webpack_require__(475);
 
 	var max = Math.max,
 	    min = Math.min;
@@ -58265,8 +52623,8 @@ var InfoxBpmnModeler =
 	var getBBox = __webpack_require__(137).getBBox;
 
 
-	var asTRBL = __webpack_require__(644).asTRBL,
-	    asBounds = __webpack_require__(644).asBounds;
+	var asTRBL = __webpack_require__(516).asTRBL,
+	    asBounds = __webpack_require__(516).asBounds;
 
 	function isNumber(a) {
 	  return typeof a === 'number';
@@ -58518,115 +52876,71 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 653 */
-/***/ function(module, exports, __webpack_require__) {
+/* 535 */
+/***/ function(module, exports) {
 
 	'use strict';
-
-	var Snap = __webpack_require__(66);
 
 	var MARKER_RESIZING = 'djs-resizing',
 	    MARKER_RESIZE_NOT_OK = 'resize-not-ok';
 
 	var LOW_PRIORITY = 500;
 
-
 	/**
-	 * This component is responsible for creating a visual during resize.
+	 * Provides previews for resizing shapes when resizing.
 	 *
 	 * @param {EventBus} eventBus
+	 * @param {ElementRegistry} elementRegistry
 	 * @param {Canvas} canvas
+	 * @param {Styles} styles
 	 */
-	function ResizeVisuals(eventBus, canvas) {
+	function ResizePreview(eventBus, elementRegistry, canvas, styles, previewSupport) {
 
-	  this._canvas = canvas;
-
-	  var self = this;
-
-	  eventBus.on('resize.start', LOW_PRIORITY, function(event) {
-	    var context = event.context,
-	        shape = context.shape;
-
-	    // add resizable indicator
-	    canvas.addMarker(shape, MARKER_RESIZING);
-
-	    self.create(context);
-	  });
-
-
+	  // add and update previews
 	  eventBus.on('resize.move', LOW_PRIORITY, function(event) {
-	    var context = event.context;
+	    var context = event.context,
+	        shape = context.shape,
+	        bounds = context.newBounds,
+	        frame = context.frame;
 
-	    // update resize frame visuals
-	    self.update(context);
+	    if (!frame) {
+	      frame = context.frame = previewSupport.addFrame(shape, canvas.getDefaultLayer());
+
+	      canvas.addMarker(shape, MARKER_RESIZING);
+	    }
+
+	    if (bounds.width > 5) {
+	      frame.attr({ x: bounds.x, width: bounds.width });
+	    }
+
+	    if (bounds.height > 5) {
+	      frame.attr({ y: bounds.y, height: bounds.height });
+	    }
+
+	    frame[context.canExecute ? 'removeClass' : 'addClass'](MARKER_RESIZE_NOT_OK);
 	  });
 
-
+	  // remove previews
 	  eventBus.on('resize.cleanup', function(event) {
 	    var context = event.context,
-	        shape = context.shape;
+	        shape = context.shape,
+	        frame = context.frame;
 
-	    // remove resizable indicator
+	    if (frame) {
+	      context.frame.remove();
+	    }
+
 	    canvas.removeMarker(shape, MARKER_RESIZING);
-
-	    // remove frame + destroy context
-	    self.remove(context);
 	  });
 	}
 
-	/**
-	 * A helper that realizes the resize visuals
-	 */
-	ResizeVisuals.prototype.create = function(context) {
-	  var container = this._canvas.getDefaultLayer(),
-	      shape = context.shape,
-	      frame;
+	ResizePreview.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles', 'previewSupport'];
 
-	  frame = context.frame = Snap.create('rect', {
-	    class: 'djs-resize-overlay',
-	    width:  shape.width + 10,
-	    height: shape.height + 10,
-	    x: shape.x -5,
-	    y: shape.y -5
-	  });
-
-	  frame.appendTo(container);
-	};
-
-	ResizeVisuals.prototype.update = function(context) {
-	  var frame = context.frame,
-	      bounds = context.newBounds;
-
-	  if (bounds.width > 5) {
-	    frame.attr({
-	      x: bounds.x,
-	      width: bounds.width
-	    });
-	  }
-
-	  if (bounds.height > 5) {
-	    frame.attr({
-	      y: bounds.y,
-	      height: bounds.height
-	    });
-	  }
-
-	  frame[context.canExecute ? 'removeClass' : 'addClass'](MARKER_RESIZE_NOT_OK);
-	};
-
-	ResizeVisuals.prototype.remove = function(context) {
-	  if (context.frame) {
-	    context.frame.remove();
-	  }
-	};
-
-	ResizeVisuals.$inject = [ 'eventBus', 'canvas' ];
-
-	module.exports = ResizeVisuals;
+	module.exports = ResizePreview;
 
 
 /***/ },
-/* 654 */
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58641,11 +52955,11 @@ var InfoxBpmnModeler =
 
 	var CLS_RESIZER   = 'djs-resizer';
 
-	var domEvent = __webpack_require__(485);
+	var domEvent = __webpack_require__(484);
 
-	var isPrimaryButton = __webpack_require__(461).isPrimaryButton;
+	var isPrimaryButton = __webpack_require__(460).isPrimaryButton;
 
-	var asTRBL = __webpack_require__(644).asTRBL;
+	var asTRBL = __webpack_require__(516).asTRBL;
 
 
 	/**
@@ -58655,7 +52969,6 @@ var InfoxBpmnModeler =
 	 * @param {Canvas} canvas
 	 * @param {Selection} selection
 	 * @param {Resize} resize
-	 * @param {ResizeVisuals} resizeVisuals
 	 */
 	function ResizeHandles(eventBus, canvas, selection, resize) {
 
@@ -58786,939 +53099,255 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 655 */
+/* 537 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
 	module.exports = {
-	  __init__: ['spaceToolVisuals'],
-	  __depends__: [
-	    __webpack_require__(621),
-	    __webpack_require__(628),
-	    __webpack_require__(656)
-	  ],
-	  spaceTool: ['type', __webpack_require__(658)],
-	  spaceToolVisuals: ['type', __webpack_require__(660) ]
+	  __init__: [ 'bpmnAutoResize', 'bpmnAutoResizeProvider' ],
+	  bpmnAutoResize: [ 'type', __webpack_require__(538) ],
+	  bpmnAutoResizeProvider: [ 'type', __webpack_require__(543) ]
 	};
 
 
 /***/ },
-/* 656 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	var AutoResize = __webpack_require__(539);
 
-	module.exports = {
-	  __depends__: [ __webpack_require__(621) ],
-	  __init__: [ 'toolManager' ],
-	  toolManager: [ 'type', __webpack_require__(657) ]
-	};
+	var inherits = __webpack_require__(3);
 
-
-/***/ },
-/* 657 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var forEach = __webpack_require__(128);
-
-	var LOW_PRIORITY = 250;
+	var is = __webpack_require__(443).is;
 
 	/**
-	 * The tool manager acts as middle-man between the available tool's and the Palette,
-	 * it takes care of making sure that the correct active state is set.
-	 *
-	 * @param  {Object}    eventBus
-	 * @param  {Object}    dragging
+	 * Sub class of the AutoResize module which implements a BPMN
+	 * specific resize function.
 	 */
-	function ToolManager(eventBus, dragging) {
-	  this._eventBus = eventBus;
-	  this._dragging = dragging;
-
-	  this._tools = [];
-	  this._active = null;
+	function BpmnAutoResize(eventBus, elementRegistry, modeling, rules) {
+	  AutoResize.call(this, eventBus, elementRegistry, modeling, rules);
 	}
 
-	ToolManager.$inject = [ 'eventBus', 'dragging' ];
+	BpmnAutoResize.$inject = [ 'eventBus', 'elementRegistry', 'modeling', 'rules' ];
 
-	module.exports = ToolManager;
+	inherits(BpmnAutoResize, AutoResize);
 
-	ToolManager.prototype.registerTool = function(name, events) {
-	  var tools = this._tools;
+	module.exports = BpmnAutoResize;
 
-	  if (!events) {
-	    throw new Error('A tool has to be registered with it\'s "events"');
-	  }
 
-	  tools.push(name);
+	/**
+	 * Resize shapes and lanes
+	 *
+	 * @param  {djs.model.Shape} target
+	 * @param  {Object} newBounds
+	 */
+	BpmnAutoResize.prototype.resize = function(target, newBounds) {
 
-	  this.bindEvents(name, events);
-	};
-
-	ToolManager.prototype.isActive = function(tool) {
-	  return tool && this._active === tool;
-	};
-
-	ToolManager.prototype.length = function(tool) {
-	  return this._tools.length;
-	};
-
-	ToolManager.prototype.setActive = function(tool) {
-	  var eventBus = this._eventBus;
-
-	  if (this._active !== tool) {
-	    this._active = tool;
-
-	    eventBus.fire('tool-manager.update', { tool: tool });
+	  if (is(target, 'bpmn:Participant')) {
+	    this._modeling.resizeLane(target, newBounds);
+	  } else {
+	    this._modeling.resizeShape(target, newBounds);
 	  }
 	};
-
-	ToolManager.prototype.bindEvents = function(name, events) {
-	  var eventBus = this._eventBus,
-	      dragging = this._dragging;
-
-	  var eventsToRegister = [];
-
-	  eventBus.on(events.tool + '.init', function(event) {
-	    var context = event.context;
-
-	    // Active tools that want to reactivate themselves must do this explicitly
-	    if (!context.reactivate && this.isActive(name)) {
-	      this.setActive(null);
-
-	      dragging.cancel();
-	      return;
-	    }
-
-	    this.setActive(name);
-
-	  }, this);
-
-	  // Todo[ricardo]: add test cases
-	  forEach(events, function(event) {
-	    eventsToRegister.push(event + '.ended');
-	    eventsToRegister.push(event + '.canceled');
-	  });
-
-	  eventBus.on(eventsToRegister, LOW_PRIORITY, function(event) {
-	    var originalEvent = event.originalEvent;
-
-	    // We defer the de-activation of the tool to the .activate phase,
-	    // so we're able to check if we want to toggle off the current active tool or switch to a new one
-	    if (!this._active ||
-	        (originalEvent && originalEvent.target.parentElement.getAttribute('data-group') === 'tools')) {
-	      return;
-	    }
-
-	    this.setActive(null);
-	  }, this);
-	};
-
 
 /***/ },
-/* 658 */
+/* 539 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var SpaceUtil = __webpack_require__(659);
+	var inherits = __webpack_require__(3);
 
-	var Cursor = __webpack_require__(494);
+	var getBoundingBox = __webpack_require__(137).getBBox;
 
-	var hasPrimaryModifier = __webpack_require__(461).hasPrimaryModifier;
-
-	var abs = Math.abs,
-	    round = Math.round;
-
-	var HIGH_PRIORITY = 1500,
-	    SPACE_TOOL_CURSOR = 'crosshair';
-
-	var AXIS_TO_DIMENSION = { x: 'width', y: 'height' },
-	    AXIS_INVERTED = { x: 'y', y: 'x' };
-
-	var getAllChildren = __webpack_require__(137).selfAndAllChildren;
+	var asTRBL = __webpack_require__(516).asTRBL,
+	    asBounds = __webpack_require__(516).asBounds;
 
 	var assign = __webpack_require__(77),
-	    forEach = __webpack_require__(128);
+	    forEach = __webpack_require__(128),
+	    values = __webpack_require__(540),
+	    flatten = __webpack_require__(528),
+	    groupBy = __webpack_require__(138);
+
+	var CommandInterceptor = __webpack_require__(542);
 
 
 	/**
-	 * A tool that allows users to create and remove space in a diagram.
-	 *
-	 * The tool needs to be activated manually via {@link SpaceTool#activate(MouseEvent)}.
-	 */
-	function SpaceTool(eventBus, dragging, canvas, modeling, rules, toolManager) {
-
-	  this._canvas = canvas;
-	  this._dragging = dragging;
-	  this._modeling = modeling;
-	  this._rules = rules;
-	  this._toolManager = toolManager;
-
-	  var self = this;
-
-	  toolManager.registerTool('space', {
-	    tool: 'spaceTool.selection',
-	    dragging: 'spaceTool'
-	  });
-
-	  eventBus.on('spaceTool.selection.end', function(event) {
-	    var target = event.originalEvent.target;
-
-	    // only reactive on diagram click
-	    // on some occasions, event.hover is not set and we have to check if the target is an svg
-	    if (!event.hover && !(target instanceof SVGElement)) {
-	      return;
-	    }
-
-	    eventBus.once('spaceTool.selection.ended', function() {
-	      self.activateMakeSpace(event.originalEvent);
-	    });
-	  });
-
-
-	  eventBus.on('spaceTool.move', HIGH_PRIORITY , function(event) {
-
-	    var context = event.context;
-
-	    if (!context.initialized) {
-	      context.initialized = self.initializeMakeSpace(event, context);
-	    }
-	  });
-
-
-	  eventBus.on('spaceTool.end', function(event) {
-
-	    var context = event.context,
-	        axis = context.axis,
-	        direction = context.direction,
-	        movingShapes = context.movingShapes,
-	        resizingShapes = context.resizingShapes;
-
-	    // skip if create space has not been initialized yet
-	    if (!context.initialized) {
-	      return;
-	    }
-
-	    var delta = { x: round(event.dx), y: round(event.dy) };
-	    delta[ AXIS_INVERTED[ axis ] ] = 0;
-
-	    var insideBounds = true;
-
-	    // check if the space tool cursor is inside of bounds of
-	    // any of the shapes that would be resized.
-	    forEach(resizingShapes, function(shape) {
-
-	      if ((direction === 'w' && event.x > shape.x + shape.width) ||
-	          (direction === 'e' && event.x < shape.x) ||
-	          (direction === 'n' && event.y > shape.y + shape.height) ||
-	          (direction === 's' && event.y < shape.y)) {
-
-	        insideBounds = false;
-	        return;
-	      }
-	    });
-
-	    if (insideBounds) {
-	      // make space only if the cursor is inside bounds
-	      self.makeSpace(movingShapes, resizingShapes, delta, direction);
-	    }
-	  });
-	}
-
-	SpaceTool.$inject = [ 'eventBus', 'dragging', 'canvas', 'modeling', 'rules', 'toolManager' ];
-
-	module.exports = SpaceTool;
-
-
-	/**
-	 * Activate space tool selection
-	 *
-	 * @param  {MouseEvent} event
-	 * @param  {Boolean} autoActivate
-	 */
-	SpaceTool.prototype.activateSelection = function(event, autoActivate) {
-	  this._dragging.init(event, 'spaceTool.selection', {
-	    trapClick: false,
-	    cursor: SPACE_TOOL_CURSOR,
-	    autoActivate: autoActivate,
-	    data: {
-	      context: {}
-	    }
-	  });
-	};
-
-	/**
-	 * Activate make space
-	 *
-	 * @param  {MouseEvent} event
-	 */
-	SpaceTool.prototype.activateMakeSpace = function(event) {
-	  this._dragging.init(event, 'spaceTool', {
-	    autoActivate: true,
-	    cursor: SPACE_TOOL_CURSOR,
-	    data: {
-	      context: {}
-	    }
-	  });
-	};
-
-	/**
-	 * Actually make space on the diagram
-	 *
-	 * @param  {Array<djs.model.Shape>} movingShapes
-	 * @param  {Array<djs.model.Shape>} resizingShapes
-	 * @param  {Point} delta
-	 * @param  {String} direction
-	 */
-	SpaceTool.prototype.makeSpace = function(movingShapes, resizingShapes, delta, direction) {
-	  return this._modeling.createSpace(movingShapes, resizingShapes, delta, direction);
-	};
-
-	/**
-	 * Initialize make space and return true if that was successful.
-	 *
-	 * @param {Event} event
-	 * @param {Object} context
-	 *
-	 * @return {Boolean} true, if successful
-	 */
-	SpaceTool.prototype.initializeMakeSpace = function(event, context) {
-
-	  var axis = abs(event.dx) > abs(event.dy) ? 'x' : 'y',
-	      offset = event['d' + axis],
-	      // start point of create space operation
-	      spacePos = event[axis] - offset;
-
-	  if (abs(offset) < 5) {
-	    return false;
-	  }
-
-	  // invert the offset in order to remove space when moving left
-	  if (offset < 0) {
-	    offset *= -1;
-	  }
-
-	  // inverts the offset to choose the shapes
-	  // on the opposite side of the resizer if
-	  // a key modifier is pressed
-	  if (hasPrimaryModifier(event)) {
-	    offset *= -1;
-	  }
-
-	  var rootShape = this._canvas.getRootElement();
-
-	  var allShapes = getAllChildren(rootShape, true);
-
-	  var adjustments = this.calculateAdjustments(allShapes, axis, offset, spacePos);
-
-	  // store data in context
-	  assign(context, adjustments, {
-	    axis: axis,
-	    direction: SpaceUtil.getDirection(axis, offset)
-	  });
-
-	  Cursor.set('resize-' + (axis === 'x' ? 'ew' : 'ns'));
-
-	  return true;
-	};
-
-	/**
-	 * Calculate adjustments needed when making space
-	 *
-	 * @param  {Array<djs.model.Shape>} elements
-	 * @param  {String} axis
-	 * @param  {Number} offset
-	 * @param  {Number} spacePos
-	 *
-	 * @return {Object}
-	 */
-	SpaceTool.prototype.calculateAdjustments = function(elements, axis, offset, spacePos) {
-
-	  var movingShapes = [],
-	      resizingShapes = [];
-
-	  var rules = this._rules;
-
-	  // collect all elements that need to be moved _AND_
-	  // resized given on the initial create space position
-	  elements.forEach(function(shape) {
-
-	    var shapeStart = shape[axis],
-	        shapeEnd = shapeStart + shape[AXIS_TO_DIMENSION[axis]];
-
-	    // checking if it's root
-	    if (!shape.parent) {
-	      return;
-	    }
-
-	    // checking if it's a shape
-	    if (shape.waypoints) {
-	      return;
-	    }
-
-	    // shape after spacePos
-	    if (offset > 0 && shapeStart > spacePos) {
-	      return movingShapes.push(shape);
-	    }
-
-	    // shape before spacePos
-	    if (offset < 0 && shapeEnd < spacePos) {
-	      return movingShapes.push(shape);
-	    }
-
-	    // shape on top of spacePos, resize only if allowed
-	    if (shapeStart < spacePos &&
-	        shapeEnd > spacePos &&
-	        rules.allowed('shape.resize', { shape: shape })) {
-
-	      return resizingShapes.push(shape);
-	    }
-	  });
-
-	  return {
-	    movingShapes: movingShapes,
-	    resizingShapes: resizingShapes
-	  };
-	};
-
-	SpaceTool.prototype.toggle = function() {
-	  if (this.isActive()) {
-	    this._dragging.cancel();
-	  } else {
-	    this.activateSelection();
-	  }
-	};
-
-	SpaceTool.prototype.isActive = function() {
-	  var context = this._dragging.context();
-
-	  return context && /^spaceTool/.test(context.prefix);
-	};
-
-
-/***/ },
-/* 659 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	/**
-	 * Get Resize direction given axis + offset
-	 *
-	 * @param {String} axis (x|y)
-	 * @param {Number} offset
-	 *
-	 * @return {String} (e|w|n|s)
-	 */
-	function getDirection(axis, offset) {
-
-	  if (axis === 'x') {
-	    if (offset > 0) {
-	      return 'e';
-	    }
-
-	    if (offset < 0) {
-	      return 'w';
-	    }
-	  }
-
-	  if (axis === 'y') {
-	    if (offset > 0) {
-	      return 's';
-	    }
-
-	    if (offset < 0) {
-	      return 'n';
-	    }
-	  }
-
-	  return null;
-	}
-
-	module.exports.getDirection = getDirection;
-
-	/**
-	 * Resize the given bounds by the specified delta from a given anchor point.
-	 *
-	 * @param {Bounds} bounds the bounding box that should be resized
-	 * @param {String} direction in which the element is resized (n, s, e, w)
-	 * @param {Point} delta of the resize operation
-	 *
-	 * @return {Bounds} resized bounding box
-	 */
-	module.exports.resizeBounds = function(bounds, direction, delta) {
-
-	  var dx = delta.x,
-	      dy = delta.y;
-
-	  switch (direction) {
-
-	  case 'n':
-	    return {
-	      x: bounds.x,
-	      y: bounds.y + dy,
-	      width: bounds.width,
-	      height: bounds.height - dy
-	    };
-
-	  case 's':
-	    return {
-	      x: bounds.x,
-	      y: bounds.y,
-	      width: bounds.width,
-	      height: bounds.height + dy
-	    };
-
-	  case 'w':
-	    return {
-	      x: bounds.x + dx,
-	      y: bounds.y,
-	      width: bounds.width - dx,
-	      height: bounds.height
-	    };
-
-	  case 'e':
-	    return {
-	      x: bounds.x,
-	      y: bounds.y,
-	      width: bounds.width + dx,
-	      height: bounds.height
-	    };
-
-	  default:
-	    throw new Error('unrecognized direction: ' + direction);
-	  }
-	};
-
-/***/ },
-/* 660 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var forEach = __webpack_require__(128);
-
-	var MARKER_DRAGGING = 'djs-dragging';
-
-	var LOW_PRIORITY = 250;
-
-	/**
-	 * A plugin that makes shapes draggable / droppable.
+	 * An auto resize component that takes care of expanding a parent element
+	 * if child elements are created or moved close the parents edge.
 	 *
 	 * @param {EventBus} eventBus
 	 * @param {ElementRegistry} elementRegistry
-	 * @param {Canvas} canvas
-	 * @param {Styles} styles
+	 * @param {Modeling} modeling
+	 * @param {Rules} rules
 	 */
+	function AutoResize(eventBus, elementRegistry, modeling, rules) {
 
-	function SpaceToolVisuals(eventBus, elementRegistry, canvas, styles) {
+	  CommandInterceptor.call(this, eventBus);
 
-	  function getGfx(e) {
-	    return elementRegistry.getGraphics(e);
-	  }
-
-	  function addDragger(shape, dragGroup) {
-	    var gfx = getGfx(shape);
-	    var dragger = gfx.clone();
-	    var bbox = gfx.getBBox();
-
-	    dragger.attr(styles.cls('djs-dragger', [], {
-	      x: bbox.x,
-	      y: bbox.y
-	    }));
-
-	    dragGroup.add(dragger);
-	  }
-
-	  eventBus.on('spaceTool.selection.start', function(event) {
-	    var space = canvas.getLayer('space'),
-	        context = event.context;
-
-	    var orientation = {
-	      x: 'M 0,-10000 L 0,10000',
-	      y: 'M -10000,0 L 10000,0'
-	    };
-
-	    var crosshairGroup = space.group().attr(styles.cls('djs-crosshair-group', [ 'no-events' ]));
-
-	    crosshairGroup.path(orientation.x).addClass('djs-crosshair');
-	    crosshairGroup.path(orientation.y).addClass('djs-crosshair');
-
-	    context.crosshairGroup = crosshairGroup;
-	  });
-
-	  eventBus.on('spaceTool.selection.move', function(event) {
-	    var crosshairGroup = event.context.crosshairGroup;
-
-	    crosshairGroup.translate(event.x, event.y);
-	  });
-
-	  eventBus.on('spaceTool.selection.cleanup', function(event) {
-	    var context = event.context,
-	        crosshairGroup = context.crosshairGroup;
-
-	    if (crosshairGroup) {
-	      crosshairGroup.remove();
-	    }
-	  });
-
-
-	  // assign a low priority to this handler
-	  // to let others modify the move context before
-	  // we draw things
-	  eventBus.on('spaceTool.move', LOW_PRIORITY, function(event) {
-	    /*
-	      TODO (Ricardo): extend connections while adding space
-	    */
-
-	    var context = event.context,
-	        line = context.line,
-	        axis = context.axis,
-	        dragShapes = context.movingShapes;
-
-	    if (!context.initialized) {
-	      return;
-	    }
-
-	    if (!context.dragGroup) {
-	      var spaceLayer = canvas.getLayer('space');
-	      line = spaceLayer.path('M0,0 L0,0').addClass('djs-crosshair');
-
-	      context.line  = line;
-	      var dragGroup = canvas.getDefaultLayer().group().attr(styles.cls('djs-drag-group', [ 'no-events' ]));
-
-
-	      forEach(dragShapes, function(shape) {
-	        addDragger(shape, dragGroup);
-	        canvas.addMarker(shape, MARKER_DRAGGING);
-	      });
-
-	      context.dragGroup = dragGroup;
-	    }
-
-	    var orientation = {
-	      x: 'M' + event.x + ', -10000 L' + event.x + ', 10000',
-	      y: 'M -10000, ' + event.y + ' L 10000, ' + event.y
-	    };
-
-	    line.attr({
-	      path: orientation[ axis ],
-	      display: ''
-	    });
-
-	    var opposite = { x: 'y', y: 'x' };
-	    var delta = { x: event.dx, y: event.dy };
-	    delta[ opposite[ context.axis ] ] = 0;
-
-	    context.dragGroup.translate(delta.x, delta.y);
-	  });
-
-	  eventBus.on('spaceTool.cleanup', function(event) {
-
-	    var context = event.context,
-	        shapes = context.movingShapes,
-	        line = context.line,
-	        dragGroup = context.dragGroup;
-
-	    // remove dragging marker
-	    forEach(shapes, function(e) {
-	      canvas.removeMarker(e, MARKER_DRAGGING);
-	    });
-
-	    if (dragGroup) {
-	      line.remove();
-	      dragGroup.remove();
-	    }
-	  });
-	}
-
-	SpaceToolVisuals.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles' ];
-
-	module.exports = SpaceToolVisuals;
-
-
-/***/ },
-/* 661 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	module.exports = {
-	  __depends__: [ __webpack_require__(656) ],
-	  __init__: [ 'lassoTool' ],
-	  lassoTool: [ 'type', __webpack_require__(662) ]
-	};
-
-
-/***/ },
-/* 662 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var values = __webpack_require__(663);
-
-	var getEnclosedElements = __webpack_require__(137).getEnclosedElements;
-
-	var hasSecondaryModifier = __webpack_require__(461).hasSecondaryModifier;
-
-	var Snap = __webpack_require__(66);
-
-	var LASSO_TOOL_CURSOR = 'crosshair';
-
-
-	function LassoTool(eventBus, canvas, dragging, elementRegistry, selection, toolManager) {
-
-	  this._selection = selection;
-	  this._dragging = dragging;
+	  this._elementRegistry = elementRegistry;
+	  this._modeling = modeling;
+	  this._rules = rules;
 
 	  var self = this;
 
-	  // lasso visuals implementation
+	  this.postExecuted([ 'shape.create' ], function(event) {
 
-	  /**
-	  * A helper that realizes the selection box visual
-	  */
-	  var visuals = {
+	    var context = event.context,
+	        hints = context.hints,
+	        shape = context.shape,
+	        parent = context.parent || context.newParent;
 
-	    create: function(context) {
-	      var container = canvas.getDefaultLayer(),
-	          frame;
-
-	      frame = context.frame = Snap.create('rect', {
-	        class: 'djs-lasso-overlay',
-	        width:  1,
-	        height: 1,
-	        x: 0,
-	        y: 0
-	      });
-
-	      frame.appendTo(container);
-	    },
-
-	    update: function(context) {
-	      var frame = context.frame,
-	          bbox  = context.bbox;
-
-	      frame.attr({
-	        x: bbox.x,
-	        y: bbox.y,
-	        width: bbox.width,
-	        height: bbox.height
-	      });
-	    },
-
-	    remove: function(context) {
-
-	      if (context.frame) {
-	        context.frame.remove();
-	      }
-	    }
-	  };
-
-	  toolManager.registerTool('lasso', {
-	    tool: 'lasso.selection',
-	    dragging: 'lasso'
-	  });
-
-	  eventBus.on('lasso.selection.end', function(event) {
-	    var target = event.originalEvent.target;
-
-	    // only reactive on diagram click
-	    // on some occasions, event.hover is not set and we have to check if the target is an svg
-	    if (!event.hover && !(target instanceof SVGElement)) {
+	    if (hints && hints.root === false) {
 	      return;
 	    }
 
-	    eventBus.once('lasso.selection.ended', function() {
-	      self.activateLasso(event.originalEvent, true);
-	    });
+	    self._expand([ shape ], parent);
 	  });
 
-	  // lasso interaction implementation
+	  this.postExecuted([ 'elements.move' ], function(event) {
 
-	  eventBus.on('lasso.end', function(event) {
+	    var context = event.context,
+	        elements = flatten(values(context.closure.topLevel)),
+	        hints = context.hints;
 
-	    var bbox = toBBox(event);
-
-	    var elements = elementRegistry.filter(function(element) {
-	      return element;
-	    });
-
-	    self.select(elements, bbox);
-	  });
-
-	  eventBus.on('lasso.start', function(event) {
-
-	    var context = event.context;
-
-	    context.bbox = toBBox(event);
-	    visuals.create(context);
-	  });
-
-	  eventBus.on('lasso.move', function(event) {
-
-	    var context = event.context;
-
-	    context.bbox = toBBox(event);
-	    visuals.update(context);
-	  });
-
-	  eventBus.on('lasso.end', function(event) {
-
-	    var context = event.context;
-
-	    visuals.remove(context);
-	  });
-
-	  eventBus.on('lasso.cleanup', function(event) {
-
-	    var context = event.context;
-
-	    visuals.remove(context);
-	  });
-
-
-	  // event integration
-
-	  eventBus.on('element.mousedown', 1500, function(event) {
-
-	    if (hasSecondaryModifier(event)) {
-	      self.activateLasso(event.originalEvent);
-
-	      event.stopPropagation();
+	    if (hints && hints.autoResize === false) {
+	      return;
 	    }
+
+	    var expandings = groupBy(elements, function(element) {
+	      return element.parent.id;
+	    });
+
+	    forEach(expandings, function(elements, parentId) {
+	      self._expand(elements, parentId);
+	    });
 	  });
 	}
 
-	LassoTool.$inject = [
-	  'eventBus',
-	  'canvas',
-	  'dragging',
-	  'elementRegistry',
-	  'selection',
-	  'toolManager'
-	];
+	AutoResize.$inject = [ 'eventBus', 'elementRegistry', 'modeling', 'rules' ];
 
-	module.exports = LassoTool;
+	inherits(AutoResize, CommandInterceptor);
+
+	module.exports = AutoResize;
 
 
-	LassoTool.prototype.activateLasso = function(event, autoActivate) {
+	/**
+	 * Calculate the new bounds of the target shape, given
+	 * a number of elements have been moved or added into the parent.
+	 *
+	 * This method considers the current size, the added elements as well as
+	 * the provided padding for the new bounds.
+	 *
+	 * @param {Array<djs.model.Shape>} elements
+	 * @param {djs.model.Shape} target
+	 */
+	AutoResize.prototype._getOptimalBounds = function(elements, target) {
 
-	  this._dragging.init(event, 'lasso', {
-	    autoActivate: autoActivate,
-	    cursor: LASSO_TOOL_CURSOR,
-	    data: {
-	      context: {}
-	    }
+	  var offset = this.getOffset(target),
+	      padding = this.getPadding(target);
+
+	  var elementsTrbl = asTRBL(getBoundingBox(elements)),
+	      targetTrbl = asTRBL(target);
+
+	  var newTrbl = {};
+
+	  if (elementsTrbl.top - targetTrbl.top < padding.top) {
+	    newTrbl.top = elementsTrbl.top - offset.top;
+	  }
+
+	  if (elementsTrbl.left - targetTrbl.left < padding.left) {
+	    newTrbl.left = elementsTrbl.left - offset.left;
+	  }
+
+	  if (targetTrbl.right - elementsTrbl.right < padding.right) {
+	    newTrbl.right = elementsTrbl.right + offset.right;
+	  }
+
+	  if (targetTrbl.bottom - elementsTrbl.bottom < padding.bottom) {
+	    newTrbl.bottom = elementsTrbl.bottom + offset.bottom;
+	  }
+
+	  return asBounds(assign({}, targetTrbl, newTrbl));
+	};
+
+
+	/**
+	 * Expand the target shape respecting rules, offset and padding
+	 *
+	 * @param {Array<djs.model.Shape>} elements
+	 * @param {djs.model.Shape|String} target|targetId
+	 */
+	AutoResize.prototype._expand = function(elements, target) {
+
+	  if (typeof target === 'string') {
+	    target = this._elementRegistry.get(target);
+	  }
+
+	  var allowed = this._rules.allowed('element.autoResize', {
+	    elements: elements,
+	    target: target
 	  });
-	};
 
-	LassoTool.prototype.activateSelection = function(event) {
+	  if (!allowed) {
+	    return;
+	  }
 
-	  this._dragging.init(event, 'lasso.selection', {
-	    trapClick: false,
-	    cursor: LASSO_TOOL_CURSOR,
-	    data: {
-	      context: {}
-	    }
-	  });
-	};
+	  // calculate the new bounds
+	  var newBounds = this._getOptimalBounds(elements, target);
 
-	LassoTool.prototype.select = function(elements, bbox) {
-	  var selectedElements = getEnclosedElements(elements, bbox);
+	  // resize the parent shape
+	  this.resize(target, newBounds);
 
-	  this._selection.select(values(selectedElements));
-	};
+	  var parent = target.parent;
 
-	LassoTool.prototype.toggle = function() {
-	  if (this.isActive()) {
-	    this._dragging.cancel();
-	  } else {
-	    this.activateSelection();
+	  // recursively expand parent elements
+	  if (parent) {
+	    this._expand([ target ], parent);
 	  }
 	};
 
-	LassoTool.prototype.isActive = function() {
-	  var context = this._dragging.context();
 
-	  return context && /^lasso/.test(context.prefix);
+	/**
+	 * Get the amount to expand the given shape in each direction.
+	 *
+	 * @param {djs.model.Shape} shape
+	 *
+	 * @return {Object} {top, bottom, left, right}
+	 */
+	AutoResize.prototype.getOffset = function(shape) {
+	  return { top: 60, bottom: 60, left: 100, right: 100 };
 	};
 
 
+	/**
+	 * Get the activation threshold for each side for which
+	 * resize triggers.
+	 *
+	 * @param {djs.model.Shape} shape
+	 *
+	 * @return {Object} {top, bottom, left, right}
+	 */
+	AutoResize.prototype.getPadding = function(shape) {
+	  return { top: 2, bottom: 2, left: 15, right: 15 };
+	};
 
-	function toBBox(event) {
 
-	  var start = {
-
-	    x: event.x - event.dx,
-	    y: event.y - event.dy
-	  };
-
-	  var end = {
-	    x: event.x,
-	    y: event.y
-	  };
-
-	  var bbox;
-
-	  if ((start.x <= end.x && start.y < end.y) ||
-	      (start.x < end.x && start.y <= end.y)) {
-
-	    bbox = {
-	      x: start.x,
-	      y: start.y,
-	      width:  end.x - start.x,
-	      height: end.y - start.y
-	    };
-	  } else if ((start.x >= end.x && start.y < end.y) ||
-	             (start.x > end.x && start.y <= end.y)) {
-
-	    bbox = {
-	      x: end.x,
-	      y: start.y,
-	      width:  start.x - end.x,
-	      height: end.y - start.y
-	    };
-	  } else if ((start.x <= end.x && start.y > end.y) ||
-	             (start.x < end.x && start.y >= end.y)) {
-
-	    bbox = {
-	      x: start.x,
-	      y: end.y,
-	      width:  end.x - start.x,
-	      height: start.y - end.y
-	    };
-	  } else if ((start.x >= end.x && start.y > end.y) ||
-	             (start.x > end.x && start.y >= end.y)) {
-
-	    bbox = {
-	      x: end.x,
-	      y: end.y,
-	      width:  start.x - end.x,
-	      height: start.y - end.y
-	    };
-	  } else {
-
-	    bbox = {
-	      x: end.x,
-	      y: end.y,
-	      width:  0,
-	      height: 0
-	    };
-	  }
-	  return bbox;
-	}
+	/**
+	 * Perform the actual resize operation.
+	 *
+	 * @param {djs.model.Shape} target
+	 * @param {Object} newBounds
+	 */
+	AutoResize.prototype.resize = function(target, newBounds) {
+	  this._modeling.resizeShape(target, newBounds);
+	};
 
 
 /***/ },
-/* 663 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseValues = __webpack_require__(664),
+	var baseValues = __webpack_require__(541),
 	    keys = __webpack_require__(79);
 
 	/**
@@ -59754,7 +53383,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 664 */
+/* 541 */
 /***/ function(module, exports) {
 
 	/**
@@ -59782,656 +53411,607 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 665 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = {
-	  __depends__: [ __webpack_require__(656) ],
-	  __init__: [ 'handTool' ],
-	  handTool: [ 'type', __webpack_require__(666) ]
-	};
+	var forEach = __webpack_require__(128),
+	    isFunction = __webpack_require__(73),
+	    isArray = __webpack_require__(70),
+	    isNumber = __webpack_require__(127);
 
 
-/***/ },
-/* 666 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var hasPrimaryModifier = __webpack_require__(461).hasPrimaryModifier;
+	var DEFAULT_PRIORITY = 1000;
 
 
-	var HIGH_PRIORITY = 1500;
-	var HAND_CURSOR = 'grab';
-
-	function HandTool(eventBus, canvas, dragging, toolManager) {
-	  this._dragging = dragging;
-
-
-	  toolManager.registerTool('hand', {
-	    tool: 'hand',
-	    dragging: 'hand.move'
-	  });
-
-	  eventBus.on('element.mousedown', HIGH_PRIORITY, function(event) {
-	    if (hasPrimaryModifier(event)) {
-	      this.activateMove(event.originalEvent);
-
-	      return false;
-	    }
-	  }, this);
-
-
-	  eventBus.on('hand.end', function(event) {
-	    var target = event.originalEvent.target;
-
-	    // only reactive on diagram click
-	    // on some occasions, event.hover is not set and we have to check if the target is an svg
-	    if (!event.hover && !(target instanceof SVGElement)) {
-	      return false;
-	    }
-
-	    eventBus.once('hand.ended', function() {
-	      this.activateMove(event.originalEvent, { reactivate: true });
-	    }, this);
-
-	  }, this);
-
-
-	  eventBus.on('hand.move.move', function(event) {
-	    var scale = canvas.viewbox().scale;
-
-	    canvas.scroll({
-	      dx: event.dx * scale,
-	      dy: event.dy * scale
-	    });
-	  });
-
-	  eventBus.on('hand.move.end', function(event) {
-	    var context = event.context,
-	        reactivate = context.reactivate;
-
-	    // Don't reactivate if the user is using the keyboard keybinding
-	    if (!hasPrimaryModifier(event) && reactivate) {
-
-	      eventBus.once('hand.move.ended', function(event) {
-	        this.activateHand(event.originalEvent, true, true);
-	      }, this);
-
-	    }
-
-	    return false;
-	  }, this);
-
+	function isObject(element) {
+	  return typeof element === 'object';
 	}
 
-	HandTool.$inject = [
-	  'eventBus',
-	  'canvas',
-	  'dragging',
-	  'toolManager'
-	];
+	/**
+	 * A utility that can be used to plug-in into the command execution for
+	 * extension and/or validation.
+	 *
+	 * @param {EventBus} eventBus
+	 *
+	 * @example
+	 *
+	 * var inherits = require('inherits');
+	 *
+	 * var CommandInterceptor = require('diagram-js/lib/command/CommandInterceptor');
+	 *
+	 * function CommandLogger(eventBus) {
+	 *   CommandInterceptor.call(this, eventBus);
+	 *
+	 *   this.preExecute(function(event) {
+	 *     console.log('command pre-execute', event);
+	 *   });
+	 * }
+	 *
+	 * inherits(CommandLogger, CommandInterceptor);
+	 *
+	 */
+	function CommandInterceptor(eventBus) {
+	  this._eventBus = eventBus;
+	}
 
-	module.exports = HandTool;
+	CommandInterceptor.$inject = [ 'eventBus' ];
 
+	module.exports = CommandInterceptor;
 
-	HandTool.prototype.activateMove = function(event, autoActivate, context) {
-	  if (typeof autoActivate === 'object') {
-	    context = autoActivate;
-	    autoActivate = false;
-	  }
-
-	  this._dragging.init(event, 'hand.move', {
-	    autoActivate: autoActivate,
-	    cursor: HAND_CURSOR,
-	    data: {
-	      context: context || {}
-	    }
-	  });
-	};
-
-	HandTool.prototype.activateHand = function(event, autoActivate, reactivate) {
-	  this._dragging.init(event, 'hand', {
-	    trapClick: false,
-	    autoActivate: autoActivate,
-	    cursor: HAND_CURSOR,
-	    data: {
-	      context: {
-	        reactivate: reactivate
-	      }
-	    }
-	  });
-	};
-
-	HandTool.prototype.toggle = function() {
-	  if (this.isActive()) {
-	    this._dragging.cancel();
-	  } else {
-	    this.activateHand();
-	  }
-	};
-
-	HandTool.prototype.isActive = function() {
-	  var context = this._dragging.context();
-
-	  return context && /^hand/.test(context.prefix);
-	};
-
-
-/***/ },
-/* 667 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(668)
-	  ],
-	  __init__: [ 'bpmnGlobalConnect' ],
-	  bpmnGlobalConnect: [ 'type', __webpack_require__(672) ]
-	};
-
-
-/***/ },
-/* 668 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(669),
-	    __webpack_require__(628),
-	    __webpack_require__(621),
-	    __webpack_require__(656)
-	  ],
-	  globalConnect: [ 'type', __webpack_require__(671) ]
-	};
-
-
-/***/ },
-/* 669 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(453),
-	    __webpack_require__(628),
-	    __webpack_require__(621)
-	  ],
-	  connect: [ 'type', __webpack_require__(670) ]
-	};
-
-
-/***/ },
-/* 670 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var LayoutUtil = __webpack_require__(644);
-
-	var MARKER_OK = 'connect-ok',
-	    MARKER_NOT_OK = 'connect-not-ok';
-
-
-	function Connect(eventBus, dragging, modeling, rules, canvas, graphicsFactory) {
-
-	  // TODO(nre): separate UI and events
-
-	  // rules
-
-	  function canConnect(source, target) {
-	    return rules.allowed('connection.create', {
-	      source: source,
-	      target: target
-	    });
-	  }
-
-
-	  // layouting
-
-	  function crop(start, end, source, target) {
-
-	    var sourcePath = graphicsFactory.getShapePath(source),
-	        targetPath = target && graphicsFactory.getShapePath(target),
-	        connectionPath = graphicsFactory.getConnectionPath({ waypoints: [ start, end ] });
-
-	    start = LayoutUtil.getElementLineIntersection(sourcePath, connectionPath, true) || start;
-	    end = (target && LayoutUtil.getElementLineIntersection(targetPath, connectionPath, false)) || end;
-
-	    return [ start, end ];
-	  }
-
-
-	  // event handlers
-
-	  eventBus.on('connect.move', function(event) {
-
-	    var context = event.context,
-	        source = context.source,
-	        target = context.target,
-	        visual = context.visual,
-	        start, end, waypoints;
-
-	    // update connection visuals during drag
-
-	    start = LayoutUtil.getMid(source);
-
-	    end = {
-	      x: event.x,
-	      y: event.y
-	    };
-
-	    waypoints = crop(start, end, source, target);
-
-	    visual.attr('points', [ waypoints[0].x, waypoints[0].y, waypoints[1].x, waypoints[1].y ]);
-	  });
-
-	  eventBus.on('connect.hover', function(event) {
-	    var context = event.context,
-	        source = context.source,
-	        hover = event.hover,
-	        canExecute;
-
-	    canExecute = context.canExecute = canConnect(source, hover);
-
-	    // simply ignore hover
-	    if (canExecute === null) {
-	      return;
-	    }
-
-	    context.target = hover;
-
-	    canvas.addMarker(hover, canExecute ? MARKER_OK : MARKER_NOT_OK);
-	  });
-
-	  eventBus.on([ 'connect.out', 'connect.cleanup' ], function(event) {
-	    var context = event.context;
-
-	    if (context.target) {
-	      canvas.removeMarker(context.target, context.canExecute ? MARKER_OK : MARKER_NOT_OK);
-	    }
-
-	    context.target = null;
-	  });
-
-	  eventBus.on('connect.cleanup', function(event) {
-	    var context = event.context;
-
-	    if (context.visual) {
-	      context.visual.remove();
-	    }
-	  });
-
-	  eventBus.on('connect.start', function(event) {
-	    var context = event.context,
-	        visual;
-
-	    visual = canvas.getDefaultLayer().polyline().attr({
-	      'stroke': '#333',
-	      'strokeDasharray': [ 1 ],
-	      'strokeWidth': 2,
-	      'pointer-events': 'none'
-	    });
-
-	    context.visual = visual;
-	  });
-
-	  eventBus.on('connect.end', function(event) {
-
-	    var context = event.context,
-	        source = context.source,
-	        target = context.target,
-	        canExecute = context.canExecute || canConnect(source, target);
-
-	    if (!canExecute) {
-	      return false;
-	    }
-
-	    modeling.connect(source, target, typeof canExecute === 'object' && canExecute);
-	  });
-
-
-	  // API
-
-	  this.start = function(event, source, autoActivate) {
-
-	    dragging.init(event, 'connect', {
-	      autoActivate: autoActivate,
-	      data: {
-	        shape: source,
-	        context: {
-	          source: source
-	        }
-	      }
-	    });
+	function unwrapEvent(fn, that) {
+	  return function(event) {
+	    return fn.call(that || null, event.context, event.command, event);
 	  };
 	}
 
-	Connect.$inject = [ 'eventBus', 'dragging', 'modeling', 'rules', 'canvas', 'graphicsFactory' ];
+	/**
+	 * Register an interceptor for a command execution
+	 *
+	 * @param {String|Array<String>} [events] list of commands to register on
+	 * @param {String} [hook] command hook, i.e. preExecute, executed to listen on
+	 * @param {Number} [priority] the priority on which to hook into the execution
+	 * @param {Function} handlerFn interceptor to be invoked with (event)
+	 * @param {Boolean} unwrap if true, unwrap the event and pass (context, command, event) to the
+	 *                          listener instead
+	 * @param {Object} [that] Pass context (`this`) to the handler function
+	 */
+	CommandInterceptor.prototype.on = function(events, hook, priority, handlerFn, unwrap, that) {
 
-	module.exports = Connect;
+	  if (isFunction(hook) || isNumber(hook)) {
+	    that = unwrap;
+	    unwrap = handlerFn;
+	    handlerFn = priority;
+	    priority = hook;
+	    hook = null;
+	  }
+
+	  if (isFunction(priority)) {
+	    that = unwrap;
+	    unwrap = handlerFn;
+	    handlerFn = priority;
+	    priority = DEFAULT_PRIORITY;
+	  }
+
+	  if (isObject(unwrap)) {
+	    that = unwrap;
+	    unwrap = false;
+	  }
+
+	  if (!isFunction(handlerFn)) {
+	    throw new Error('handlerFn must be a function');
+	  }
+
+	  if (!isArray(events)) {
+	    events = [ events ];
+	  }
+
+	  var eventBus = this._eventBus;
+
+	  forEach(events, function(event) {
+	    // concat commandStack(.event)?(.hook)?
+	    var fullEvent = [ 'commandStack', event, hook ].filter(function(e) { return e; }).join('.');
+
+	    eventBus.on(fullEvent, priority, unwrap ? unwrapEvent(handlerFn, that) : handlerFn, that);
+	  });
+	};
+
+
+	var hooks = [
+	  'canExecute',
+	  'preExecute',
+	  'preExecuted',
+	  'execute',
+	  'executed',
+	  'postExecute',
+	  'postExecuted',
+	  'revert',
+	  'reverted'
+	];
+
+	/*
+	 * Install hook shortcuts
+	 *
+	 * This will generate the CommandInterceptor#(preExecute|...|reverted) methods
+	 * which will in term forward to CommandInterceptor#on.
+	 */
+	forEach(hooks, function(hook) {
+
+	  /**
+	   * {canExecute|preExecute|preExecuted|execute|executed|postExecute|postExecuted|revert|reverted}
+	   *
+	   * A named hook for plugging into the command execution
+	   *
+	   * @param {String|Array<String>} [events] list of commands to register on
+	   * @param {Number} [priority] the priority on which to hook into the execution
+	   * @param {Function} handlerFn interceptor to be invoked with (event)
+	   * @param {Boolean} [unwrap=false] if true, unwrap the event and pass (context, command, event) to the
+	   *                          listener instead
+	   * @param {Object} [that] Pass context (`this`) to the handler function
+	   */
+	  CommandInterceptor.prototype[hook] = function(events, priority, handlerFn, unwrap, that) {
+
+	    if (isFunction(events) || isNumber(events)) {
+	      that = unwrap;
+	      unwrap = handlerFn;
+	      handlerFn = priority;
+	      priority = events;
+	      events = null;
+	    }
+
+	    this.on(events, hook, priority, handlerFn, unwrap, that);
+	  };
+	});
 
 
 /***/ },
-/* 671 */
-/***/ function(module, exports) {
+/* 543 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var MARKER_OK = 'connect-ok',
-	    MARKER_NOT_OK = 'connect-not-ok';
+	var is = __webpack_require__(443).is;
+
+	var inherits = __webpack_require__(3);
+
+	var forEach = __webpack_require__(415);
+
+	var AutoResizeProvider = __webpack_require__(544);
+
+	/**
+	 * This module is a provider for automatically resizing parent BPMN elements
+	 */
+	function BpmnAutoResizeProvider(eventBus, modeling) {
+	  AutoResizeProvider.call(this, eventBus);
+
+	  this._modeling = modeling;
+	}
+
+	inherits(BpmnAutoResizeProvider, AutoResizeProvider);
+
+	BpmnAutoResizeProvider.$inject = [ 'eventBus', 'modeling' ];
+
+	module.exports = BpmnAutoResizeProvider;
 
 
-	function GlobalConnect(eventBus, dragging, connect, canvas, toolManager) {
+	/**
+	 * Check if the given target can be expanded
+	 *
+	 * @param  {djs.model.Shape} target
+	 *
+	 * @return {boolean}
+	 */
+	BpmnAutoResizeProvider.prototype.canResize = function(elements, target) {
+
+	  if (!is(target, 'bpmn:Participant') && !is(target, 'bpmn:Lane') && !(is(target, 'bpmn:SubProcess'))) {
+	    return false;
+	  }
+
+	  var canResize = true;
+
+	  forEach(elements, function(element) {
+
+	    if (is(element, 'bpmn:Lane') || element.labelTarget) {
+	      canResize = false;
+	      return;
+	    }
+	  });
+
+	  return canResize;
+	};
+
+
+/***/ },
+/* 544 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var RuleProvider = __webpack_require__(545);
+
+	var inherits = __webpack_require__(3);
+
+	/**
+	 * This is a base rule provider for the element.autoResize rule.
+	 */
+	function AutoResizeProvider(eventBus) {
+
+	  RuleProvider.call(this, eventBus);
+
 	  var self = this;
 
-	  this._dragging = dragging;
-
-	  toolManager.registerTool('global-connect', {
-	    tool: 'global-connect',
-	    dragging: 'global-connect.drag'
+	  this.addRule('element.autoResize', function(context) {
+	    return self.canResize(context.elements, context.target);
 	  });
+	}
 
-	  eventBus.on('global-connect.hover', function(event) {
-	    var context = event.context,
-	        startTarget = event.hover;
+	AutoResizeProvider.$inject = [ 'eventBus' ];
 
-	    var canStartConnect = context.canStartConnect = self.canStartConnect(startTarget);
+	inherits(AutoResizeProvider, RuleProvider);
 
-	    // simply ignore hover
-	    if (canStartConnect === null) {
-	      return;
-	    }
+	module.exports = AutoResizeProvider;
 
-	    context.startTarget = startTarget;
+	/**
+	 * Needs to be implemented by sub classes to allow actual auto resize
+	 *
+	 * @param  {Array<djs.model.Shape>} elements
+	 * @param  {djs.model.Shape} target
+	 *
+	 * @return {Boolean}
+	 */
+	AutoResizeProvider.prototype.canResize = function(elements, target) {
+	  return false;
+	};
 
-	    canvas.addMarker(startTarget, canStartConnect ? MARKER_OK : MARKER_NOT_OK);
+/***/ },
+/* 545 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	/**
+	 * A basic provider that may be extended to implement modeling rules.
+	 *
+	 * Extensions should implement the init method to actually add their custom
+	 * modeling checks. Checks may be added via the #addRule(action, fn) method.
+	 *
+	 * @param {EventBus} eventBus
+	 */
+	function RuleProvider(eventBus) {
+	  CommandInterceptor.call(this, eventBus);
+
+	  this.init();
+	}
+
+	RuleProvider.$inject = [ 'eventBus' ];
+
+	inherits(RuleProvider, CommandInterceptor);
+
+	module.exports = RuleProvider;
+
+
+	/**
+	 * Adds a modeling rule for the given action, implemented through
+	 * a callback function.
+	 *
+	 * The function will receive the modeling specific action context
+	 * to perform its check. It must return `false` to disallow the
+	 * action from happening or `true` to allow the action.
+	 *
+	 * A rule provider may pass over the evaluation to lower priority
+	 * rules by returning return nothing (or <code>undefined</code>).
+	 *
+	 * @example
+	 *
+	 * ResizableRules.prototype.init = function() {
+	 *
+	 *   \/**
+	 *    * Return `true`, `false` or nothing to denote
+	 *    * _allowed_, _not allowed_ and _continue evaluating_.
+	 *    *\/
+	 *   this.addRule('shape.resize', function(context) {
+	 *
+	 *     var shape = context.shape;
+	 *
+	 *     if (!context.newBounds) {
+	 *       // check general resizability
+	 *       if (!shape.resizable) {
+	 *         return false;
+	 *       }
+	 *
+	 *       // not returning anything (read: undefined)
+	 *       // will continue the evaluation of other rules
+	 *       // (with lower priority)
+	 *       return;
+	 *     } else {
+	 *       // element must have minimum size of 10*10 points
+	 *       return context.newBounds.width > 10 && context.newBounds.height > 10;
+	 *     }
+	 *   });
+	 * };
+	 *
+	 * @param {String|Array<String>} actions the identifier for the modeling action to check
+	 * @param {Number} [priority] the priority at which this rule is being applied
+	 * @param {Function} fn the callback function that performs the actual check
+	 */
+	RuleProvider.prototype.addRule = function(actions, priority, fn) {
+
+	  var self = this;
+
+	  if (typeof actions === 'string') {
+	    actions = [ actions ];
+	  }
+
+	  actions.forEach(function(action) {
+
+	    self.canExecute(action, priority, function(context, action, event) {
+	      return fn(context);
+	    }, true);
 	  });
+	};
+
+	/**
+	 * Implement this method to add new rules during provider initialization.
+	 */
+	RuleProvider.prototype.init = function() {};
+
+/***/ },
+/* 546 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(547),
+	    __webpack_require__(549),
+	    __webpack_require__(559),
+	    __webpack_require__(563),
+	    __webpack_require__(565),
+	    __webpack_require__(569),
+	    __webpack_require__(577),
+	    __webpack_require__(579),
+	    __webpack_require__(569),
+	    __webpack_require__(583),
+	    __webpack_require__(592)
+	  ],
+	  editorActions: [ 'type', __webpack_require__(798) ]
+	};
 
 
-	  eventBus.on([ 'global-connect.out', 'global-connect.cleanup' ], function(event) {
-	    var startTarget = event.context.startTarget,
-	        canStartConnect = event.context.canStartConnect;
+/***/ },
+/* 547 */
+/***/ function(module, exports, __webpack_require__) {
 
-	    if (startTarget) {
-	      canvas.removeMarker(startTarget, canStartConnect ? MARKER_OK : MARKER_NOT_OK);
-	    }
-	  });
+	'use strict';
+
+	module.exports = {
+	  __init__: [ 'alignElements' ],
+	  alignElements: [ 'type', __webpack_require__(548) ]
+	};
 
 
-	  eventBus.on([ 'global-connect.ended' ], function(event) {
-	    var context = event.context,
-	        startTarget = context.startTarget;
+/***/ },
+/* 548 */
+/***/ function(module, exports, __webpack_require__) {
 
-	    var canStartConnect = self.canStartConnect(startTarget);
+	'use strict';
 
-	    if (!canStartConnect) {
-	      return;
-	    }
+	var filter = __webpack_require__(475),
+	    forEach = __webpack_require__(128),
+	    sortBy = __webpack_require__(517);
 
-	    eventBus.once('element.out', function() {
-	      eventBus.once([ 'connect.ended', 'connect.canceled' ], function() {
-	        eventBus.fire('global-connect.drag.ended');
-	      });
+	function last(arr) {
+	  return arr && arr[arr.length - 1];
+	}
 
-	      connect.start(null, startTarget);
+	function sortTopOrMiddle(element) {
+	  return element.y;
+	}
+
+	function sortLeftOrCenter(element) {
+	  return element.x;
+	}
+
+	/**
+	 * Sorting functions for different types of alignment
+	 *
+	 * @type {Object}
+	 *
+	 * @return {Function}
+	 */
+	var ALIGNMENT_SORTING = {
+	  left: sortLeftOrCenter,
+	  center: sortLeftOrCenter,
+	  right: function(element) {
+	    return element.x + element.width;
+	  },
+	  top: sortTopOrMiddle,
+	  middle: sortTopOrMiddle,
+	  bottom: function(element) {
+	    return element.y + element.height;
+	  }
+	};
+
+
+	function AlignElements(modeling) {
+	  this._modeling = modeling;
+	}
+
+	module.exports = AlignElements;
+
+	AlignElements.$inject = [ 'modeling' ];
+
+
+	/**
+	 * Get the relevant "axis" and "dimension" related to the current type of alignment
+	 *
+	 * @param  {String} type left|right|center|top|bottom|middle
+	 *
+	 * @return {Object} { axis, dimension }
+	 */
+	AlignElements.prototype._getOrientationDetails = function(type) {
+	  var vertical = [ 'top', 'bottom', 'middle' ],
+	      axis = 'x',
+	      dimension = 'width';
+
+	  if (vertical.indexOf(type) !== -1) {
+	    axis = 'y';
+	    dimension = 'height';
+	  }
+
+	  return {
+	    axis: axis,
+	    dimension: dimension
+	  };
+	};
+
+	AlignElements.prototype._isType = function(type, types) {
+	  return types.indexOf(type) !== -1;
+	};
+
+	/**
+	 * Get a point on the relevant axis where elements should align to
+	 *
+	 * @param  {String} type left|right|center|top|bottom|middle
+	 * @param  {Array} sortedElements
+	 *
+	 * @return {Object}
+	 */
+	AlignElements.prototype._alignmentPosition = function(type, sortedElements) {
+	  var orientation = this._getOrientationDetails(type),
+	      axis = orientation.axis,
+	      dimension = orientation.dimension,
+	      alignment = {},
+	      centers = {},
+	      hasSharedCenters = false,
+	      centeredElements,
+	      firstElement,
+	      lastElement;
+
+	  function getMiddleOrTop(first, last) {
+	    return Math.round((first[axis] + last[axis] + last[dimension]) / 2);
+	  }
+
+	  if (this._isType(type, [ 'left', 'top' ])) {
+	    alignment[type] = sortedElements[0][axis];
+
+	  } else if (this._isType(type, [ 'right', 'bottom' ])) {
+	    lastElement = last(sortedElements);
+
+	    alignment[type] = lastElement[axis] + lastElement[dimension];
+
+	  } else if (this._isType(type, [ 'center', 'middle' ])) {
+
+	    // check if there is a center shared by more than one shape
+	    // if not, just take the middle of the range
+	    forEach(sortedElements, function(element) {
+	      var center = element[axis] + Math.round(element[dimension] / 2);
+
+	      if (centers[center]) {
+	        centers[center].elements.push(element);
+	      } else {
+	        centers[center] = {
+	          elements: [ element ],
+	          center: center
+	        };
+	      }
 	    });
 
-	    return false;
-	  });
-	}
+	    centeredElements = sortBy(centers, function(center) {
+	      if (center.elements.length > 1) {
+	        hasSharedCenters = true;
+	      }
 
-	GlobalConnect.$inject = [ 'eventBus', 'dragging', 'connect', 'canvas', 'toolManager' ];
+	      return center.elements.length;
+	    });
 
-	module.exports = GlobalConnect;
+	    if (hasSharedCenters) {
+	      alignment[type] = last(centeredElements).center;
 
-
-	/**
-	 * Initiates tool activity.
-	 */
-	GlobalConnect.prototype.start = function(event) {
-	  this._dragging.init(event, 'global-connect', {
-	    trapClick: false,
-	    data: {
-	      context: {}
+	      return alignment;
 	    }
+
+	    firstElement = sortedElements[0];
+
+	    sortedElements = sortBy(sortedElements, function(element) {
+	      return element[axis] + element[dimension];
+	    });
+
+	    lastElement = last(sortedElements);
+
+	    alignment[type] = getMiddleOrTop(firstElement, lastElement);
+	  }
+
+	  return alignment;
+	};
+
+	/**
+	 * Executes the alignment of a selection of elements
+	 *
+	 * @param  {Array} elements [description]
+	 * @param  {String} type left|right|center|top|bottom|middle
+	 */
+	AlignElements.prototype.trigger = function(elements, type) {
+	  var modeling = this._modeling;
+
+	  var filteredElements = filter(elements, function(element) {
+	    return !(element.waypoints || element.host || element.labelTarget);
 	  });
-	};
 
+	  var sortFn = ALIGNMENT_SORTING[type];
 
-	GlobalConnect.prototype.toggle = function() {
-	  if (this.isActive()) {
-	    this._dragging.cancel();
-	  } else {
-	    this.start();
-	  }
-	};
+	  var sortedElements = sortBy(filteredElements, sortFn);
 
-	GlobalConnect.prototype.isActive = function() {
-	  var context = this._dragging.context();
+	  var alignment = this._alignmentPosition(type, sortedElements);
 
-	  return context && /^global-connect/.test(context.prefix);
-	};
-
-
-	GlobalConnect.prototype.registerProvider = function(provider) {
-	  this._provider = provider;
-	};
-
-
-	/**
-	 * Check if source shape can initiate connection.
-	 *
-	 * @param  {Shape} startTarget
-	 * @return {Boolean}
-	 */
-	GlobalConnect.prototype.canStartConnect = function(startTarget) {
-	  return this._provider.canStartConnect(startTarget);
+	  modeling.alignElements(sortedElements, alignment);
 	};
 
 
 /***/ },
-/* 672 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var isAny = __webpack_require__(673).isAny;
-
-	/**
-	 * Extention of GlobalConnect tool that implements BPMN specific rules about
-	 * connection start elements.
-	 */
-	function BpmnGlobalConnect(globalConnect) {
-	  globalConnect.registerProvider(this);
-	}
-
-	BpmnGlobalConnect.$inject = [ 'globalConnect' ];
-
-	module.exports = BpmnGlobalConnect;
-
-
-	/**
-	 * Checks if given element can be used for starting connection.
-	 *
-	 * @param  {Element} source
-	 * @return {Boolean}
-	 */
-	BpmnGlobalConnect.prototype.canStartConnect = function(source) {
-
-	  if (nonExistantOrLabel(source)) {
-	    return null;
-	  }
-
-	  var businessObject = source.businessObject;
-
-	  return isAny(businessObject, [
-	    'bpmn:FlowNode',
-	    'bpmn:InteractionNode',
-	    'bpmn:DataObjectReference',
-	    'bpmn:DataStoreReference'
-	  ]);
-	};
-
-
-	function nonExistantOrLabel(element) {
-	  return !element || isLabel(element);
-	}
-
-	function isLabel(element) {
-	  return element.labelTarget;
-	}
-
-
-
-
-/***/ },
-/* 673 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var any = __webpack_require__(674);
-
-	var is = __webpack_require__(444).is;
-
-
-	function getParents(element) {
-
-	  var parents = [];
-
-	  while (element) {
-	    element = element.parent;
-
-	    if (element) {
-	      parents.push(element);
-	    }
-	  }
-
-	  return parents;
-	}
-
-	module.exports.getParents = getParents;
-
-
-	/**
-	 * Return true if element has any of the given types.
-	 *
-	 * @param {djs.model.Base} element
-	 * @param {Array<String>} types
-	 *
-	 * @return {Boolean}
-	 */
-	function isAny(element, types) {
-	  return any(types, function(t) {
-	    return is(element, t);
-	  });
-	}
-
-	module.exports.isAny = isAny;
-
-
-	/**
-	 * Return the parent of the element with any of the given types.
-	 *
-	 * @param {djs.model.Base} element
-	 * @param {String|Array<String>} anyType
-	 *
-	 * @return {djs.model.Base}
-	 */
-	function getParent(element, anyType) {
-
-	  if (typeof anyType === 'string') {
-	    anyType = [ anyType ];
-	  }
-
-	  while ((element = element.parent)) {
-	    if (isAny(element, anyType)) {
-	      return element;
-	    }
-	  }
-
-	  return null;
-	}
-
-	module.exports.getParent = getParent;
-
-
-/***/ },
-/* 674 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(429);
-
-
-/***/ },
-/* 675 */
+/* 549 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(676),
-	    __webpack_require__(667)
-	  ],
-	  __init__: [ 'bpmnKeyBindings' ],
-	  bpmnKeyBindings: [ 'type', __webpack_require__(689) ]
-	};
-
-/***/ },
-/* 676 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(677)
-	  ],
-	  __init__: [ 'keyboard' ],
-	  keyboard: [ 'type', __webpack_require__(687) ]
-	};
-
-
-/***/ },
-/* 677 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(453),
-	    __webpack_require__(678),
-	    __webpack_require__(487)
+	    __webpack_require__(452),
+	    __webpack_require__(550),
+	    __webpack_require__(486)
 	  ],
 	  __init__: [ 'editorActions' ],
-	  editorActions: [ 'type', __webpack_require__(686) ]
+	  editorActions: [ 'type', __webpack_require__(558) ]
 	};
 
 
 /***/ },
-/* 678 */
+/* 550 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(679),
-	    __webpack_require__(628),
-	    __webpack_require__(624)
+	    __webpack_require__(551),
+	    __webpack_require__(508),
+	    __webpack_require__(504)
 	  ],
 	  __init__: [ 'copyPaste' ],
-	  copyPaste: [ 'type', __webpack_require__(681) ]
+	  copyPaste: [ 'type', __webpack_require__(553) ]
 	};
 
 
 /***/ },
-/* 679 */
+/* 551 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  clipboard: [ 'type', __webpack_require__(680) ]
+	  clipboard: [ 'type', __webpack_require__(552) ]
 	};
 
 
 /***/ },
-/* 680 */
+/* 552 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -60465,24 +54045,24 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 681 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isArray = __webpack_require__(70),
 	    forEach = __webpack_require__(128),
-	    map = __webpack_require__(634),
-	    find = __webpack_require__(472),
-	    findIndex = __webpack_require__(682),
-	    sortBy = __webpack_require__(645),
+	    map = __webpack_require__(530),
+	    find = __webpack_require__(468),
+	    findIndex = __webpack_require__(554),
+	    sortBy = __webpack_require__(517),
 	    reduce = __webpack_require__(94);
 
 	var getBBox = __webpack_require__(137).getBBox;
 
-	var PositionUtil = __webpack_require__(684);
+	var PositionUtil = __webpack_require__(556);
 
-	var CopyPasteUtil = __webpack_require__(685),
+	var CopyPasteUtil = __webpack_require__(557),
 	    ElementsUtil = __webpack_require__(137);
 
 
@@ -60932,10 +54512,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 682 */
+/* 554 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createFindIndex = __webpack_require__(683);
+	var createFindIndex = __webpack_require__(555);
 
 	/**
 	 * This method is like `_.find` except that it returns the index of the first
@@ -60991,11 +54571,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 683 */
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(103),
-	    baseFindIndex = __webpack_require__(475);
+	    baseFindIndex = __webpack_require__(471);
 
 	/**
 	 * Creates a `_.findIndex` or `_.findLastIndex` function.
@@ -61018,7 +54598,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 684 */
+/* 556 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61044,7 +54624,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 685 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -61094,7 +54674,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 686 */
+/* 558 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -61104,6 +54684,7 @@ var InfoxBpmnModeler =
 
 	var NOT_REGISTERED_ERROR = 'is not a registered action',
 	    IS_REGISTERED_ERROR = 'is already registered';
+
 
 	/**
 	 * An interface that provides access to modeling actions by decoupling
@@ -61311,481 +54892,1687 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 687 */
+/* 559 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(485),
-	    domMatches = __webpack_require__(688);
+	module.exports = {
+	  __depends__: [ __webpack_require__(560) ],
+	  __init__: [ 'handTool' ],
+	  handTool: [ 'type', __webpack_require__(562) ]
+	};
+
+
+/***/ },
+/* 560 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  __depends__: [ __webpack_require__(501) ],
+	  __init__: [ 'toolManager' ],
+	  toolManager: [ 'type', __webpack_require__(561) ]
+	};
+
+
+/***/ },
+/* 561 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var forEach = __webpack_require__(128);
+
+	var LOW_PRIORITY = 250;
 
 	/**
-	 * A keyboard abstraction that may be activated and
-	 * deactivated by users at will, consuming key events
-	 * and triggering diagram actions.
+	 * The tool manager acts as middle-man between the available tool's and the Palette,
+	 * it takes care of making sure that the correct active state is set.
 	 *
-	 * The implementation fires the following key events that allow
-	 * other components to hook into key handling:
-	 *
-	 *  - keyboard.bind
-	 *  - keyboard.unbind
-	 *  - keyboard.init
-	 *  - keyboard.destroy
-	 *
-	 * All events contain the fields (node, listeners).
-	 *
-	 * A default binding for the keyboard may be specified via the
-	 * `keyboard.bindTo` configuration option.
-	 *
-	 * @param {Config} config
-	 * @param {EventBus} eventBus
-	 * @param {EditorActions} editorActions
+	 * @param  {Object}    eventBus
+	 * @param  {Object}    dragging
 	 */
-	function Keyboard(config, eventBus, editorActions) {
-	  var self = this;
-
-	  this._config = config || {};
+	function ToolManager(eventBus, dragging) {
 	  this._eventBus = eventBus;
-	  this._editorActions = editorActions;
+	  this._dragging = dragging;
 
-	  this._listeners = [];
+	  this._tools = [];
+	  this._active = null;
+	}
 
-	  // our key handler is a singleton that passes
-	  // (keycode, modifiers) to each listener.
-	  //
-	  // listeners must indicate that they handled a key event
-	  // by returning true. This stops the event propagation.
-	  //
-	  this._keyHandler = function(event) {
+	ToolManager.$inject = [ 'eventBus', 'dragging' ];
 
-	    var i, l,
-	        target = event.target,
-	        listeners = self._listeners,
-	        code = event.keyCode || event.charCode || -1;
+	module.exports = ToolManager;
 
-	    if (domMatches(target, 'input, textarea')) {
+	ToolManager.prototype.registerTool = function(name, events) {
+	  var tools = this._tools;
+
+	  if (!events) {
+	    throw new Error('A tool has to be registered with it\'s "events"');
+	  }
+
+	  tools.push(name);
+
+	  this.bindEvents(name, events);
+	};
+
+	ToolManager.prototype.isActive = function(tool) {
+	  return tool && this._active === tool;
+	};
+
+	ToolManager.prototype.length = function(tool) {
+	  return this._tools.length;
+	};
+
+	ToolManager.prototype.setActive = function(tool) {
+	  var eventBus = this._eventBus;
+
+	  if (this._active !== tool) {
+	    this._active = tool;
+
+	    eventBus.fire('tool-manager.update', { tool: tool });
+	  }
+	};
+
+	ToolManager.prototype.bindEvents = function(name, events) {
+	  var eventBus = this._eventBus,
+	      dragging = this._dragging;
+
+	  var eventsToRegister = [];
+
+	  eventBus.on(events.tool + '.init', function(event) {
+	    var context = event.context;
+
+	    // Active tools that want to reactivate themselves must do this explicitly
+	    if (!context.reactivate && this.isActive(name)) {
+	      this.setActive(null);
+
+	      dragging.cancel();
 	      return;
 	    }
 
-	    for (i = 0; (l = listeners[i]); i++) {
-	      if (l(code, event)) {
-	        event.preventDefault();
-	        event.stopPropagation();
+	    this.setActive(name);
+
+	  }, this);
+
+	  // Todo[ricardo]: add test cases
+	  forEach(events, function(event) {
+	    eventsToRegister.push(event + '.ended');
+	    eventsToRegister.push(event + '.canceled');
+	  });
+
+	  eventBus.on(eventsToRegister, LOW_PRIORITY, function(event) {
+	    var originalEvent = event.originalEvent;
+
+	    // We defer the de-activation of the tool to the .activate phase,
+	    // so we're able to check if we want to toggle off the current active tool or switch to a new one
+	    if (!this._active ||
+	        (originalEvent && originalEvent.target.parentElement.getAttribute('data-group') === 'tools')) {
+	      return;
+	    }
+
+	    this.setActive(null);
+	  }, this);
+	};
+
+
+/***/ },
+/* 562 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+
+
+	var HIGH_PRIORITY = 1500;
+	var HAND_CURSOR = 'grab';
+
+	function HandTool(eventBus, canvas, dragging, toolManager) {
+	  this._dragging = dragging;
+
+
+	  toolManager.registerTool('hand', {
+	    tool: 'hand',
+	    dragging: 'hand.move'
+	  });
+
+	  eventBus.on('element.mousedown', HIGH_PRIORITY, function(event) {
+	    if (hasPrimaryModifier(event)) {
+	      this.activateMove(event.originalEvent);
+
+	      return false;
+	    }
+	  }, this);
+
+
+	  eventBus.on('hand.end', function(event) {
+	    var target = event.originalEvent.target;
+
+	    // only reactive on diagram click
+	    // on some occasions, event.hover is not set and we have to check if the target is an svg
+	    if (!event.hover && !(target instanceof SVGElement)) {
+	      return false;
+	    }
+
+	    eventBus.once('hand.ended', function() {
+	      this.activateMove(event.originalEvent, { reactivate: true });
+	    }, this);
+
+	  }, this);
+
+
+	  eventBus.on('hand.move.move', function(event) {
+	    var scale = canvas.viewbox().scale;
+
+	    canvas.scroll({
+	      dx: event.dx * scale,
+	      dy: event.dy * scale
+	    });
+	  });
+
+	  eventBus.on('hand.move.end', function(event) {
+	    var context = event.context,
+	        reactivate = context.reactivate;
+
+	    // Don't reactivate if the user is using the keyboard keybinding
+	    if (!hasPrimaryModifier(event) && reactivate) {
+
+	      eventBus.once('hand.move.ended', function(event) {
+	        this.activateHand(event.originalEvent, true, true);
+	      }, this);
+
+	    }
+
+	    return false;
+	  }, this);
+
+	}
+
+	HandTool.$inject = [
+	  'eventBus',
+	  'canvas',
+	  'dragging',
+	  'toolManager'
+	];
+
+	module.exports = HandTool;
+
+
+	HandTool.prototype.activateMove = function(event, autoActivate, context) {
+	  if (typeof autoActivate === 'object') {
+	    context = autoActivate;
+	    autoActivate = false;
+	  }
+
+	  this._dragging.init(event, 'hand.move', {
+	    autoActivate: autoActivate,
+	    cursor: HAND_CURSOR,
+	    data: {
+	      context: context || {}
+	    }
+	  });
+	};
+
+	HandTool.prototype.activateHand = function(event, autoActivate, reactivate) {
+	  this._dragging.init(event, 'hand', {
+	    trapClick: false,
+	    autoActivate: autoActivate,
+	    cursor: HAND_CURSOR,
+	    data: {
+	      context: {
+	        reactivate: reactivate
+	      }
+	    }
+	  });
+	};
+
+	HandTool.prototype.toggle = function() {
+	  if (this.isActive()) {
+	    this._dragging.cancel();
+	  } else {
+	    this.activateHand();
+	  }
+	};
+
+	HandTool.prototype.isActive = function() {
+	  var context = this._dragging.context();
+
+	  return context && /^hand/.test(context.prefix);
+	};
+
+
+/***/ },
+/* 563 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  __depends__: [ __webpack_require__(560) ],
+	  __init__: [ 'lassoTool' ],
+	  lassoTool: [ 'type', __webpack_require__(564) ]
+	};
+
+
+/***/ },
+/* 564 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var values = __webpack_require__(540);
+
+	var getEnclosedElements = __webpack_require__(137).getEnclosedElements;
+
+	var hasSecondaryModifier = __webpack_require__(460).hasSecondaryModifier;
+
+	var Snap = __webpack_require__(66);
+
+	var LASSO_TOOL_CURSOR = 'crosshair';
+
+
+	function LassoTool(eventBus, canvas, dragging, elementRegistry, selection, toolManager) {
+
+	  this._selection = selection;
+	  this._dragging = dragging;
+
+	  var self = this;
+
+	  // lasso visuals implementation
+
+	  /**
+	  * A helper that realizes the selection box visual
+	  */
+	  var visuals = {
+
+	    create: function(context) {
+	      var container = canvas.getDefaultLayer(),
+	          frame;
+
+	      frame = context.frame = Snap.create('rect', {
+	        class: 'djs-lasso-overlay',
+	        width:  1,
+	        height: 1,
+	        x: 0,
+	        y: 0
+	      });
+
+	      frame.appendTo(container);
+	    },
+
+	    update: function(context) {
+	      var frame = context.frame,
+	          bbox  = context.bbox;
+
+	      frame.attr({
+	        x: bbox.x,
+	        y: bbox.y,
+	        width: bbox.width,
+	        height: bbox.height
+	      });
+	    },
+
+	    remove: function(context) {
+
+	      if (context.frame) {
+	        context.frame.remove();
 	      }
 	    }
 	  };
 
-	  // properly clean dom registrations
-	  eventBus.on('diagram.destroy', function() {
-	    self._fire('destroy');
-
-	    self.unbind();
-	    self._listeners = null;
+	  toolManager.registerTool('lasso', {
+	    tool: 'lasso.selection',
+	    dragging: 'lasso'
 	  });
 
-	  eventBus.on('diagram.init', function() {
-	    self._fire('init');
+	  eventBus.on('lasso.selection.end', function(event) {
+	    var target = event.originalEvent.target;
 
-	    if (config && config.bindTo) {
-	      self.bind(config.bindTo);
+	    // only reactive on diagram click
+	    // on some occasions, event.hover is not set and we have to check if the target is an svg
+	    if (!event.hover && !(target instanceof SVGElement)) {
+	      return;
+	    }
+
+	    eventBus.once('lasso.selection.ended', function() {
+	      self.activateLasso(event.originalEvent, true);
+	    });
+	  });
+
+	  // lasso interaction implementation
+
+	  eventBus.on('lasso.end', function(event) {
+
+	    var bbox = toBBox(event);
+
+	    var elements = elementRegistry.filter(function(element) {
+	      return element;
+	    });
+
+	    self.select(elements, bbox);
+	  });
+
+	  eventBus.on('lasso.start', function(event) {
+
+	    var context = event.context;
+
+	    context.bbox = toBBox(event);
+	    visuals.create(context);
+	  });
+
+	  eventBus.on('lasso.move', function(event) {
+
+	    var context = event.context;
+
+	    context.bbox = toBBox(event);
+	    visuals.update(context);
+	  });
+
+	  eventBus.on('lasso.end', function(event) {
+
+	    var context = event.context;
+
+	    visuals.remove(context);
+	  });
+
+	  eventBus.on('lasso.cleanup', function(event) {
+
+	    var context = event.context;
+
+	    visuals.remove(context);
+	  });
+
+
+	  // event integration
+
+	  eventBus.on('element.mousedown', 1500, function(event) {
+
+	    if (hasSecondaryModifier(event)) {
+	      self.activateLasso(event.originalEvent);
+
+	      event.stopPropagation();
 	    }
 	  });
-
-	  this._init();
 	}
 
-	Keyboard.$inject = [
-	  'config.keyboard',
+	LassoTool.$inject = [
 	  'eventBus',
-	  'editorActions'
+	  'canvas',
+	  'dragging',
+	  'elementRegistry',
+	  'selection',
+	  'toolManager'
 	];
 
-	module.exports = Keyboard;
+	module.exports = LassoTool;
 
 
-	Keyboard.prototype.bind = function(node) {
-	  // make sure that the keyboard is only bound once to the DOM
-	  this.unbind();
+	LassoTool.prototype.activateLasso = function(event, autoActivate) {
 
-	  this._node = node;
-
-	  // bind key events
-	  domEvent.bind(node, 'keydown', this._keyHandler, true);
-
-	  this._fire('bind');
+	  this._dragging.init(event, 'lasso', {
+	    autoActivate: autoActivate,
+	    cursor: LASSO_TOOL_CURSOR,
+	    data: {
+	      context: {}
+	    }
+	  });
 	};
 
-	Keyboard.prototype.getBinding = function() {
-	  return this._node;
+	LassoTool.prototype.activateSelection = function(event) {
+
+	  this._dragging.init(event, 'lasso.selection', {
+	    trapClick: false,
+	    cursor: LASSO_TOOL_CURSOR,
+	    data: {
+	      context: {}
+	    }
+	  });
 	};
 
-	Keyboard.prototype.unbind = function() {
-	  var node = this._node;
+	LassoTool.prototype.select = function(elements, bbox) {
+	  var selectedElements = getEnclosedElements(elements, bbox);
 
-	  if (node) {
-	    this._fire('unbind');
-
-	    // unbind key events
-	    domEvent.unbind(node, 'keydown', this._keyHandler, true);
-	  }
-
-	  this._node = null;
+	  this._selection.select(values(selectedElements));
 	};
 
-	Keyboard.prototype._fire = function(event) {
-	  this._eventBus.fire('keyboard.' + event, { node: this._node, listeners: this._listeners });
+	LassoTool.prototype.toggle = function() {
+	  if (this.isActive()) {
+	    this._dragging.cancel();
+	  } else {
+	    this.activateSelection();
+	  }
 	};
 
-	Keyboard.prototype._init = function() {
+	LassoTool.prototype.isActive = function() {
+	  var context = this._dragging.context();
 
-	  var listeners = this._listeners;
-
-	  var editorActions = this._editorActions,
-	      config = this._config;
-
-	  // init default listeners
-
-	  // undo
-	  // (CTRL|CMD) + Z
-	  function undo(key, modifiers) {
-
-	    if (isCmd(modifiers) && !isShift(modifiers) && key === 90) {
-	      editorActions.trigger('undo');
-
-	      return true;
-	    }
-	  }
-
-	  // redo
-	  // CTRL + Y
-	  // CMD + SHIFT + Z
-	  function redo(key, modifiers) {
-
-	    if (isCmd(modifiers) && (key === 89 || (key === 90 && isShift(modifiers)))) {
-	      editorActions.trigger('redo');
-
-	      return true;
-	    }
-	  }
-
-	  // copy
-	  // CTRL/CMD + C
-	  function copy(key, modifiers) {
-
-	    if (isCmd(modifiers) && (key === 67)) {
-	      editorActions.trigger('copy');
-
-	      return true;
-	    }
-	  }
-
-	  // paste
-	  // CTRL/CMD + V
-	  function paste(key, modifiers) {
-
-	    if (isCmd(modifiers) && (key === 86)) {
-	      editorActions.trigger('paste');
-
-	      return true;
-	    }
-	  }
-
-	  /**
-	   * zoom in one step
-	   * CTRL + +
-	   *
-	   * 107 = numpad plus
-	   * 187 = regular plus
-	   * 171 = regular plus in Firefox (german keyboard layout)
-	   *  61 = regular plus in Firefox (US keyboard layout)
-	   */
-	  function zoomIn(key, modifiers) {
-
-	    if ((key === 107 || key === 187 || key === 171 || key === 61) && isCmd(modifiers)) {
-	      editorActions.trigger('stepZoom', { value: 1 });
-
-	      return true;
-	    }
-	  }
-
-	  /**
-	   * zoom out one step
-	   * CTRL + -
-	   *
-	   * 109 = numpad minus
-	   * 189 = regular minus
-	   * 173 = regular minus in Firefox (US and german keyboard layout)
-	   */
-	  function zoomOut(key, modifiers) {
-
-	    if ((key === 109 || key === 189 || key === 173)  && isCmd(modifiers)) {
-	      editorActions.trigger('stepZoom', { value: -1 });
-
-	      return true;
-	    }
-	  }
-
-	  /**
-	   * zoom to the default level
-	   * CTRL + 0
-	   *
-	   * 96 = numpad zero
-	   * 48 = regular zero
-	   */
-	  function zoomDefault(key, modifiers) {
-
-	    if ((key === 96 || key === 48) && isCmd(modifiers)) {
-	      editorActions.trigger('zoom', { value: 1 });
-
-	      return true;
-	    }
-	  }
-
-	  // delete selected element
-	  // DEL
-	  function removeSelection(key, modifiers) {
-
-	    if (key === 46) {
-	      editorActions.trigger('removeSelection');
-
-	      return true;
-	    }
-	  }
-
-	  // move canvas left
-	  // left arrow
-	  //
-	  // 37 = Left
-	  // 38 = Up
-	  // 39 = Right
-	  // 40 = Down
-	  function moveCanvas(key, modifiers) {
-
-	    if ([37, 38, 39, 40].indexOf(key) >= 0) {
-
-	      var opts = {
-	        invertY: config.invertY,
-	        speed: (config.speed || 50)
-	      };
-
-	      switch (key) {
-	      case 37:    // Left
-	        opts.direction = 'left';
-	        break;
-	      case 38:    // Up
-	        opts.direction = 'up';
-	        break;
-	      case 39:    // Right
-	        opts.direction = 'right';
-	        break;
-	      case 40:    // Down
-	        opts.direction = 'down';
-	        break;
-	      }
-
-	      editorActions.trigger('moveCanvas', opts);
-
-	      return true;
-	    }
-	  }
-
-	  listeners.push(undo);
-	  listeners.push(redo);
-	  listeners.push(copy);
-	  listeners.push(paste);
-	  listeners.push(removeSelection);
-	  listeners.push(zoomIn);
-	  listeners.push(zoomOut);
-	  listeners.push(zoomDefault);
-	  listeners.push(moveCanvas);
+	  return context && /^lasso/.test(context.prefix);
 	};
+
+
+
+	function toBBox(event) {
+
+	  var start = {
+
+	    x: event.x - event.dx,
+	    y: event.y - event.dy
+	  };
+
+	  var end = {
+	    x: event.x,
+	    y: event.y
+	  };
+
+	  var bbox;
+
+	  if ((start.x <= end.x && start.y < end.y) ||
+	      (start.x < end.x && start.y <= end.y)) {
+
+	    bbox = {
+	      x: start.x,
+	      y: start.y,
+	      width:  end.x - start.x,
+	      height: end.y - start.y
+	    };
+	  } else if ((start.x >= end.x && start.y < end.y) ||
+	             (start.x > end.x && start.y <= end.y)) {
+
+	    bbox = {
+	      x: end.x,
+	      y: start.y,
+	      width:  start.x - end.x,
+	      height: end.y - start.y
+	    };
+	  } else if ((start.x <= end.x && start.y > end.y) ||
+	             (start.x < end.x && start.y >= end.y)) {
+
+	    bbox = {
+	      x: start.x,
+	      y: end.y,
+	      width:  end.x - start.x,
+	      height: start.y - end.y
+	    };
+	  } else if ((start.x >= end.x && start.y > end.y) ||
+	             (start.x > end.x && start.y >= end.y)) {
+
+	    bbox = {
+	      x: end.x,
+	      y: end.y,
+	      width:  start.x - end.x,
+	      height: start.y - end.y
+	    };
+	  } else {
+
+	    bbox = {
+	      x: end.x,
+	      y: end.y,
+	      width:  0,
+	      height: 0
+	    };
+	  }
+	  return bbox;
+	}
+
+
+/***/ },
+/* 565 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  __init__: ['spaceToolPreview'],
+	  __depends__: [
+	    __webpack_require__(501),
+	    __webpack_require__(508),
+	    __webpack_require__(560),
+	    __webpack_require__(524)
+	  ],
+	  spaceTool: ['type', __webpack_require__(566)],
+	  spaceToolPreview: ['type', __webpack_require__(568) ]
+	};
+
+
+/***/ },
+/* 566 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var SpaceUtil = __webpack_require__(567);
+
+	var Cursor = __webpack_require__(493);
+
+	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+
+	var abs = Math.abs,
+	    round = Math.round;
+
+	var HIGH_PRIORITY = 1500,
+	    SPACE_TOOL_CURSOR = 'crosshair';
+
+	var AXIS_TO_DIMENSION = { x: 'width', y: 'height' },
+	    AXIS_INVERTED = { x: 'y', y: 'x' };
+
+	var getAllChildren = __webpack_require__(137).selfAndAllChildren;
+
+	var assign = __webpack_require__(77),
+	    forEach = __webpack_require__(128);
 
 
 	/**
-	 * Add a listener function that is notified with (key, modifiers) whenever
-	 * the keyboard is bound and the user presses a key.
+	 * A tool that allows users to create and remove space in a diagram.
 	 *
-	 * @param {Function} listenerFn
+	 * The tool needs to be activated manually via {@link SpaceTool#activate(MouseEvent)}.
 	 */
-	Keyboard.prototype.addListener = function(listenerFn) {
-	  this._listeners.push(listenerFn);
+	function SpaceTool(eventBus, dragging, canvas, modeling, rules, toolManager) {
+
+	  this._canvas = canvas;
+	  this._dragging = dragging;
+	  this._modeling = modeling;
+	  this._rules = rules;
+	  this._toolManager = toolManager;
+
+	  var self = this;
+
+	  toolManager.registerTool('space', {
+	    tool: 'spaceTool.selection',
+	    dragging: 'spaceTool'
+	  });
+
+	  eventBus.on('spaceTool.selection.end', function(event) {
+	    var target = event.originalEvent.target;
+
+	    // only reactive on diagram click
+	    // on some occasions, event.hover is not set and we have to check if the target is an svg
+	    if (!event.hover && !(target instanceof SVGElement)) {
+	      return;
+	    }
+
+	    eventBus.once('spaceTool.selection.ended', function() {
+	      self.activateMakeSpace(event.originalEvent);
+	    });
+	  });
+
+
+	  eventBus.on('spaceTool.move', HIGH_PRIORITY , function(event) {
+
+	    var context = event.context;
+
+	    if (!context.initialized) {
+	      context.initialized = self.initializeMakeSpace(event, context);
+	    }
+	  });
+
+
+	  eventBus.on('spaceTool.end', function(event) {
+
+	    var context = event.context,
+	        axis = context.axis,
+	        direction = context.direction,
+	        movingShapes = context.movingShapes,
+	        resizingShapes = context.resizingShapes;
+
+	    // skip if create space has not been initialized yet
+	    if (!context.initialized) {
+	      return;
+	    }
+
+	    var delta = { x: round(event.dx), y: round(event.dy) };
+	    delta[ AXIS_INVERTED[ axis ] ] = 0;
+
+	    var insideBounds = true;
+
+	    // check if the space tool cursor is inside of bounds of
+	    // any of the shapes that would be resized.
+	    forEach(resizingShapes, function(shape) {
+
+	      if ((direction === 'w' && event.x > shape.x + shape.width) ||
+	          (direction === 'e' && event.x < shape.x) ||
+	          (direction === 'n' && event.y > shape.y + shape.height) ||
+	          (direction === 's' && event.y < shape.y)) {
+
+	        insideBounds = false;
+	        return;
+	      }
+	    });
+
+	    if (insideBounds) {
+	      // make space only if the cursor is inside bounds
+	      self.makeSpace(movingShapes, resizingShapes, delta, direction);
+	    }
+
+	    eventBus.once('spaceTool.ended', function(event) {
+	      // reactivate space tool after usage
+	      self.activateSelection(event.originalEvent, true, true);
+	    });
+
+	  });
+	}
+
+	SpaceTool.$inject = [ 'eventBus', 'dragging', 'canvas', 'modeling', 'rules', 'toolManager' ];
+
+	module.exports = SpaceTool;
+
+
+	/**
+	 * Activate space tool selection
+	 *
+	 * @param  {MouseEvent} event
+	 * @param  {Boolean} autoActivate
+	 */
+	SpaceTool.prototype.activateSelection = function(event, autoActivate, reactivate) {
+	  this._dragging.init(event, 'spaceTool.selection', {
+	    trapClick: false,
+	    cursor: SPACE_TOOL_CURSOR,
+	    autoActivate: autoActivate,
+	    data: {
+	      context: {
+	        reactivate: reactivate
+	      }
+	    }
+	  });
 	};
 
-	Keyboard.prototype.hasModifier = hasModifier;
-	Keyboard.prototype.isCmd = isCmd;
-	Keyboard.prototype.isShift = isShift;
+	/**
+	 * Activate make space
+	 *
+	 * @param  {MouseEvent} event
+	 */
+	SpaceTool.prototype.activateMakeSpace = function(event) {
+	  this._dragging.init(event, 'spaceTool', {
+	    autoActivate: true,
+	    cursor: SPACE_TOOL_CURSOR,
+	    data: {
+	      context: {}
+	    }
+	  });
+	};
 
+	/**
+	 * Actually make space on the diagram
+	 *
+	 * @param  {Array<djs.model.Shape>} movingShapes
+	 * @param  {Array<djs.model.Shape>} resizingShapes
+	 * @param  {Point} delta
+	 * @param  {String} direction
+	 */
+	SpaceTool.prototype.makeSpace = function(movingShapes, resizingShapes, delta, direction) {
+	  return this._modeling.createSpace(movingShapes, resizingShapes, delta, direction);
+	};
 
-	function hasModifier(modifiers) {
-	  return (modifiers.ctrlKey || modifiers.metaKey || modifiers.shiftKey || modifiers.altKey);
-	}
+	/**
+	 * Initialize make space and return true if that was successful.
+	 *
+	 * @param {Event} event
+	 * @param {Object} context
+	 *
+	 * @return {Boolean} true, if successful
+	 */
+	SpaceTool.prototype.initializeMakeSpace = function(event, context) {
 
-	function isCmd(modifiers) {
-	  return modifiers.ctrlKey || modifiers.metaKey;
-	}
+	  var axis = abs(event.dx) > abs(event.dy) ? 'x' : 'y',
+	      offset = event['d' + axis],
+	      // start point of create space operation
+	      spacePos = event[axis] - offset;
 
-	function isShift(modifiers) {
-	  return modifiers.shiftKey;
-	}
+	  if (abs(offset) < 5) {
+	    return false;
+	  }
+
+	  // invert the offset in order to remove space when moving left
+	  if (offset < 0) {
+	    offset *= -1;
+	  }
+
+	  // inverts the offset to choose the shapes
+	  // on the opposite side of the resizer if
+	  // a key modifier is pressed
+	  if (hasPrimaryModifier(event)) {
+	    offset *= -1;
+	  }
+
+	  var rootShape = this._canvas.getRootElement();
+
+	  var allShapes = getAllChildren(rootShape, true);
+
+	  var adjustments = this.calculateAdjustments(allShapes, axis, offset, spacePos);
+
+	  // store data in context
+	  assign(context, adjustments, {
+	    axis: axis,
+	    direction: SpaceUtil.getDirection(axis, offset)
+	  });
+
+	  Cursor.set('resize-' + (axis === 'x' ? 'ew' : 'ns'));
+
+	  return true;
+	};
+
+	/**
+	 * Calculate adjustments needed when making space
+	 *
+	 * @param  {Array<djs.model.Shape>} elements
+	 * @param  {String} axis
+	 * @param  {Number} offset
+	 * @param  {Number} spacePos
+	 *
+	 * @return {Object}
+	 */
+	SpaceTool.prototype.calculateAdjustments = function(elements, axis, offset, spacePos) {
+
+	  var movingShapes = [],
+	      resizingShapes = [];
+
+	  var rules = this._rules;
+
+	  // collect all elements that need to be moved _AND_
+	  // resized given on the initial create space position
+	  elements.forEach(function(shape) {
+
+	    var shapeStart = shape[axis],
+	        shapeEnd = shapeStart + shape[AXIS_TO_DIMENSION[axis]];
+
+	    // checking if it's root
+	    if (!shape.parent) {
+	      return;
+	    }
+
+	    // checking if it's a shape
+	    if (shape.waypoints) {
+	      return;
+	    }
+
+	    // shape after spacePos
+	    if (offset > 0 && shapeStart > spacePos) {
+	      return movingShapes.push(shape);
+	    }
+
+	    // shape before spacePos
+	    if (offset < 0 && shapeEnd < spacePos) {
+	      return movingShapes.push(shape);
+	    }
+
+	    // shape on top of spacePos, resize only if allowed
+	    if (shapeStart < spacePos &&
+	        shapeEnd > spacePos &&
+	        rules.allowed('shape.resize', { shape: shape })) {
+
+	      return resizingShapes.push(shape);
+	    }
+	  });
+
+	  return {
+	    movingShapes: movingShapes,
+	    resizingShapes: resizingShapes
+	  };
+	};
+
+	SpaceTool.prototype.toggle = function() {
+	  if (this.isActive()) {
+	    this._dragging.cancel();
+	  } else {
+	    this.activateSelection();
+	  }
+	};
+
+	SpaceTool.prototype.isActive = function() {
+	  var context = this._dragging.context();
+
+	  return context && /^spaceTool/.test(context.prefix);
+	};
 
 
 /***/ },
-/* 688 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(459);
-
-/***/ },
-/* 689 */
+/* 567 */
 /***/ function(module, exports) {
 
 	'use strict';
 
-	function BpmnKeyBindings(keyboard, spaceTool, lassoTool, handTool, globalConnect, directEditing,
-	  searchPad, selection, canvas, elementRegistry, editorActions) {
+	/**
+	 * Get Resize direction given axis + offset
+	 *
+	 * @param {String} axis (x|y)
+	 * @param {Number} offset
+	 *
+	 * @return {String} (e|w|n|s)
+	 */
+	function getDirection(axis, offset) {
 
-	  var actions = {
-	    selectElements: function() {
-	      // select all elements except for the invisible
-	      // root element
-	      var rootElement = canvas.getRootElement();
-
-	      var elements = elementRegistry.filter(function(element) {
-	        return element != rootElement;
-	      });
-
-	      selection.select(elements);
-	    },
-	    spaceTool: function() {
-	      spaceTool.toggle();
-	    },
-	    lassoTool: function() {
-	      lassoTool.toggle();
-	    },
-	    handTool: function() {
-	      handTool.toggle();
-	    },
-	    globalConnectTool: function() {
-	      globalConnect.toggle();
-	    },
-	    directEditing: function() {
-	      var currentSelection = selection.get();
-
-	      if (currentSelection.length) {
-	        directEditing.activate(currentSelection[0]);
-	      }
-	    },
-	    find: function() {
-	      searchPad.toggle();
-	    }
-	  };
-
-	  editorActions.register(actions);
-
-	  keyboard.addListener(function(key, modifiers) {
-
-	    // ctrl + a -> select all elements
-	    if (key === 65 && keyboard.isCmd(modifiers)) {
-	      editorActions.trigger('selectElements');
-
-	      return true;
+	  if (axis === 'x') {
+	    if (offset > 0) {
+	      return 'e';
 	    }
 
-	    // ctrl + f -> search labels
-	    if (key === 70 && keyboard.isCmd(modifiers)) {
-	      editorActions.trigger('find');
+	    if (offset < 0) {
+	      return 'w';
+	    }
+	  }
 
-	      return true;
+	  if (axis === 'y') {
+	    if (offset > 0) {
+	      return 's';
 	    }
 
-	    if (keyboard.hasModifier(modifiers)) {
-	      return;
+	    if (offset < 0) {
+	      return 'n';
 	    }
+	  }
 
-	    // s -> activate space tool
-	    if (key === 83) {
-	      editorActions.trigger('spaceTool');
-
-	      return true;
-	    }
-
-	    // l -> activate lasso tool
-	    if (key === 76) {
-	      editorActions.trigger('lassoTool');
-
-	      return true;
-	    }
-
-	    // h -> activate hand tool
-	    if (key === 72) {
-	      editorActions.trigger('handTool');
-
-	      return true;
-	    }
-
-	    // c -> activate global connect tool
-	    if (key === 67) {
-	      editorActions.trigger('globalConnectTool');
-
-	      return true;
-	    }
-
-	    // e -> activate direct editing
-	    if (key === 69) {
-	      editorActions.trigger('directEditing');
-
-	      return true;
-	    }
-	  });
+	  return null;
 	}
 
-	BpmnKeyBindings.$inject = [
-	  'keyboard',
-	  'spaceTool',
-	  'lassoTool',
-	  'handTool',
-	  'globalConnect',
-	  'directEditing',
-	  'searchPad',
-	  'selection',
-	  'canvas',
-	  'elementRegistry',
-	  'editorActions'
-	];
+	module.exports.getDirection = getDirection;
 
-	module.exports = BpmnKeyBindings;
+	/**
+	 * Resize the given bounds by the specified delta from a given anchor point.
+	 *
+	 * @param {Bounds} bounds the bounding box that should be resized
+	 * @param {String} direction in which the element is resized (n, s, e, w)
+	 * @param {Point} delta of the resize operation
+	 *
+	 * @return {Bounds} resized bounding box
+	 */
+	module.exports.resizeBounds = function(bounds, direction, delta) {
 
+	  var dx = delta.x,
+	      dy = delta.y;
 
-/***/ },
-/* 690 */
-/***/ function(module, exports, __webpack_require__) {
+	  switch (direction) {
 
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(678)
-	  ],
-	  __init__: [ 'bpmnCopyPaste' ],
-	  bpmnCopyPaste: [ 'type', __webpack_require__(691) ]
+	  case 'n':
+	    return {
+	      x: bounds.x,
+	      y: bounds.y + dy,
+	      width: bounds.width,
+	      height: bounds.height - dy
+	    };
+
+	  case 's':
+	    return {
+	      x: bounds.x,
+	      y: bounds.y,
+	      width: bounds.width,
+	      height: bounds.height + dy
+	    };
+
+	  case 'w':
+	    return {
+	      x: bounds.x + dx,
+	      y: bounds.y,
+	      width: bounds.width - dx,
+	      height: bounds.height
+	    };
+
+	  case 'e':
+	    return {
+	      x: bounds.x,
+	      y: bounds.y,
+	      width: bounds.width + dx,
+	      height: bounds.height
+	    };
+
+	  default:
+	    throw new Error('unrecognized direction: ' + direction);
+	  }
 	};
 
-
 /***/ },
-/* 691 */
+/* 568 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ModelUtil = __webpack_require__(444),
+	var forEach = __webpack_require__(128);
+
+	var MARKER_DRAGGING = 'djs-dragging',
+	    MARKER_RESIZING = 'djs-resizing';
+
+	var LOW_PRIORITY = 250;
+
+
+	/**
+	 * Provides previews for selecting/moving/resizing shapes when creating/removing space.
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {ElementRegistry} elementRegistry
+	 * @param {Canvas} canvas
+	 * @param {Styles} styles
+	 */
+
+	function SpaceToolPreview(eventBus, elementRegistry, canvas, styles, previewSupport) {
+
+	  function addPreviewGfx(collection, dragGroup) {
+	    forEach(collection, function(element) {
+	      previewSupport.addDragger(element, dragGroup);
+
+	      canvas.addMarker(element, MARKER_DRAGGING);
+	    });
+	  }
+
+	  // add crosshair
+	  eventBus.on('spaceTool.selection.start', function(event) {
+	    var space = canvas.getLayer('space'),
+	        context = event.context;
+
+	    var orientation = {
+	      x: 'M 0,-10000 L 0,10000',
+	      y: 'M -10000,0 L 10000,0'
+	    };
+
+	    var crosshairGroup = space.group().attr(styles.cls('djs-crosshair-group', [ 'no-events' ]));
+
+	    crosshairGroup.path(orientation.x).addClass('djs-crosshair');
+	    crosshairGroup.path(orientation.y).addClass('djs-crosshair');
+
+	    context.crosshairGroup = crosshairGroup;
+	  });
+
+	  // update crosshair
+	  eventBus.on('spaceTool.selection.move', function(event) {
+	    var crosshairGroup = event.context.crosshairGroup;
+
+	    crosshairGroup.translate(event.x, event.y);
+	  });
+
+	  // remove crosshair
+	  eventBus.on('spaceTool.selection.cleanup', function(event) {
+	    var context = event.context,
+	        crosshairGroup = context.crosshairGroup;
+
+	    if (crosshairGroup) {
+	      crosshairGroup.remove();
+	    }
+	  });
+
+	  // add and update move/resize previews
+	  eventBus.on('spaceTool.move', LOW_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        line = context.line,
+	        axis = context.axis,
+	        movingShapes = context.movingShapes,
+	        resizingShapes = context.resizingShapes;
+
+	    if (!context.initialized) {
+	      return;
+	    }
+
+	    if (!context.dragGroup) {
+	      var spaceLayer = canvas.getLayer('space');
+	      line = spaceLayer.path('M0,0 L0,0').addClass('djs-crosshair');
+
+	      context.line  = line;
+	      var dragGroup = canvas.getDefaultLayer().group().attr(styles.cls('djs-drag-group', [ 'no-events' ]));
+
+	      // shapes
+	      addPreviewGfx(movingShapes, dragGroup);
+
+	      // connections
+	      var movingConnections = context.movingConnections = elementRegistry.filter(function(element, gfx) {
+	        var sourceIsMoving = false;
+
+	        forEach(movingShapes, function(shape) {
+	          forEach(shape.outgoing, function(connection) {
+	            if (element === connection) {
+	              sourceIsMoving = true;
+	            }
+	          });
+	        });
+
+	        var targetIsMoving = false;
+
+	        forEach(movingShapes, function(shape) {
+	          forEach(shape.incoming, function(connection) {
+	            if (element === connection) {
+	              targetIsMoving = true;
+	            }
+	          });
+	        });
+
+	        var sourceIsResizing = false;
+
+	        forEach(resizingShapes, function(shape) {
+	          forEach(shape.outgoing, function(connection) {
+	            if (element === connection) {
+	              sourceIsResizing = true;
+	            }
+	          });
+	        });
+
+	        var targetIsResizing = false;
+
+	        forEach(resizingShapes, function(shape) {
+	          forEach(shape.incoming, function(connection) {
+	            if (element === connection) {
+	              targetIsResizing = true;
+	            }
+	          });
+	        });
+
+	        return isConnection(element)
+	          && (sourceIsMoving || sourceIsResizing)
+	          && (targetIsMoving || targetIsResizing);
+	      });
+
+
+	      addPreviewGfx(movingConnections, dragGroup);
+
+	      context.dragGroup = dragGroup;
+	    }
+
+	    if (!context.frameGroup) {
+	      var frameGroup = canvas.getDefaultLayer().group().attr(styles.cls('djs-frame-group', [ 'no-events' ])),
+	          frames = [];
+
+	      forEach(resizingShapes, function(shape) {
+	        var frame = previewSupport.addFrame(shape, frameGroup);
+
+	        frames.push({
+	          element: frame,
+	          initialWidth: frame.getBBox().width,
+	          initialHeight: frame.getBBox().height
+	        });
+
+	        canvas.addMarker(shape, MARKER_RESIZING);
+	      });
+
+	      context.frameGroup = frameGroup;
+	      context.frames = frames;
+	    }
+
+	    var orientation = {
+	      x: 'M' + event.x + ', -10000 L' + event.x + ', 10000',
+	      y: 'M -10000, ' + event.y + ' L 10000, ' + event.y
+	    };
+
+	    line.attr({
+	      path: orientation[ axis ],
+	      display: ''
+	    });
+
+	    var opposite = { x: 'y', y: 'x' };
+	    var delta = { x: event.dx, y: event.dy };
+	    delta[ opposite[ context.axis ] ] = 0;
+
+	    // update move previews
+	    context.dragGroup.translate(delta.x, delta.y);
+
+	    // update resize previews
+	    forEach(context.frames, function(frame) {
+	      if (frame.initialWidth + delta.x > 5) {
+	        frame.element.attr({ width: frame.initialWidth + delta.x });
+	      }
+
+	      if (frame.initialHeight + delta.y > 5) {
+	        frame.element.attr({ height: frame.initialHeight + delta.y });
+	      }
+	    });
+
+	  });
+
+	  // remove move/resize previews
+	  eventBus.on('spaceTool.cleanup', function(event) {
+
+	    var context = event.context,
+	        movingShapes = context.movingShapes,
+	        movingConnections = context.movingConnections,
+	        resizingShapes = context.resizingShapes,
+	        line = context.line,
+	        dragGroup = context.dragGroup,
+	        frameGroup = context.frameGroup;
+
+	    // moving shapes
+	    forEach(movingShapes, function(shape) {
+	      canvas.removeMarker(shape, MARKER_DRAGGING);
+	    });
+
+	    // moving connections
+	    forEach(movingConnections, function(connection) {
+	      canvas.removeMarker(connection, MARKER_DRAGGING);
+	    });
+
+	    if (dragGroup) {
+	      line.remove();
+	      dragGroup.remove();
+	    }
+
+	    forEach(resizingShapes, function(shape) {
+	      canvas.removeMarker(shape, MARKER_RESIZING);
+	    });
+
+	    if (frameGroup) {
+	      frameGroup.remove();
+	    }
+	  });
+	}
+
+	SpaceToolPreview.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles', 'previewSupport' ];
+
+	module.exports = SpaceToolPreview;
+
+	////////// helpers //////////
+
+	/**
+	 * Checks if an element is a connection.
+	 */
+	function isConnection(element) {
+	  return element.waypoints;
+	}
+
+
+/***/ },
+/* 569 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(570)
+	  ],
+	  __init__: [ 'bpmnGlobalConnect' ],
+	  bpmnGlobalConnect: [ 'type', __webpack_require__(574) ]
+	};
+
+
+/***/ },
+/* 570 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(571),
+	    __webpack_require__(508),
+	    __webpack_require__(501),
+	    __webpack_require__(560)
+	  ],
+	  globalConnect: [ 'type', __webpack_require__(573) ]
+	};
+
+
+/***/ },
+/* 571 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(452),
+	    __webpack_require__(508),
+	    __webpack_require__(501)
+	  ],
+	  connect: [ 'type', __webpack_require__(572) ]
+	};
+
+
+/***/ },
+/* 572 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var LayoutUtil = __webpack_require__(516);
+
+	var MARKER_OK = 'connect-ok',
+	    MARKER_NOT_OK = 'connect-not-ok';
+
+
+	function Connect(eventBus, dragging, modeling, rules, canvas, graphicsFactory) {
+
+	  // TODO(nre): separate UI and events
+
+	  // rules
+
+	  function canConnect(source, target) {
+	    return rules.allowed('connection.create', {
+	      source: source,
+	      target: target
+	    });
+	  }
+
+
+	  // layouting
+
+	  function crop(start, end, source, target) {
+
+	    var sourcePath = graphicsFactory.getShapePath(source),
+	        targetPath = target && graphicsFactory.getShapePath(target),
+	        connectionPath = graphicsFactory.getConnectionPath({ waypoints: [ start, end ] });
+
+	    start = LayoutUtil.getElementLineIntersection(sourcePath, connectionPath, true) || start;
+	    end = (target && LayoutUtil.getElementLineIntersection(targetPath, connectionPath, false)) || end;
+
+	    return [ start, end ];
+	  }
+
+
+	  // event handlers
+
+	  eventBus.on('connect.move', function(event) {
+
+	    var context = event.context,
+	        source = context.source,
+	        target = context.target,
+	        visual = context.visual,
+	        sourcePosition = context.sourcePosition,
+	        endPosition,
+	        waypoints;
+
+	    // update connection visuals during drag
+
+	    endPosition = {
+	      x: event.x,
+	      y: event.y
+	    };
+
+	    waypoints = crop(sourcePosition, endPosition, source, target);
+
+	    visual.attr('points', [ waypoints[0].x, waypoints[0].y, waypoints[1].x, waypoints[1].y ]);
+	  });
+
+	  eventBus.on('connect.hover', function(event) {
+	    var context = event.context,
+	        source = context.source,
+	        hover = event.hover,
+	        canExecute;
+
+	    canExecute = context.canExecute = canConnect(source, hover);
+
+	    // simply ignore hover
+	    if (canExecute === null) {
+	      return;
+	    }
+
+	    context.target = hover;
+
+	    canvas.addMarker(hover, canExecute ? MARKER_OK : MARKER_NOT_OK);
+	  });
+
+	  eventBus.on([ 'connect.out', 'connect.cleanup' ], function(event) {
+	    var context = event.context;
+
+	    if (context.target) {
+	      canvas.removeMarker(context.target, context.canExecute ? MARKER_OK : MARKER_NOT_OK);
+	    }
+
+	    context.target = null;
+	  });
+
+	  eventBus.on('connect.cleanup', function(event) {
+	    var context = event.context;
+
+	    if (context.visual) {
+	      context.visual.remove();
+	    }
+	  });
+
+	  eventBus.on('connect.start', function(event) {
+	    var context = event.context,
+	        visual;
+
+	    visual = canvas.getDefaultLayer().polyline().attr({
+	      'stroke': '#333',
+	      'strokeDasharray': [ 1 ],
+	      'strokeWidth': 2,
+	      'pointer-events': 'none'
+	    });
+
+	    context.visual = visual;
+	  });
+
+	  eventBus.on('connect.end', function(event) {
+
+	    var context = event.context,
+	        source = context.source,
+	        sourcePosition = context.sourcePosition,
+	        target = context.target,
+	        targetPosition = {
+	          x: event.x,
+	          y: event.y
+	        },
+	        canExecute = context.canExecute || canConnect(source, target);
+
+	    if (!canExecute) {
+	      return false;
+	    }
+
+	    var attrs = null,
+	        hints = {
+	          connectionStart: sourcePosition,
+	          connectionEnd: targetPosition
+	        };
+
+	    if (typeof canExecute === 'object') {
+	      attrs = canExecute;
+	    }
+
+	    modeling.connect(source, target, attrs, hints);
+	  });
+
+
+	  // API
+
+	  /**
+	   * Start connect operation.
+	   *
+	   * @param {DOMEvent} event
+	   * @param {djs.model.Base} source
+	   * @param {Point} [sourcePosition]
+	   * @param {Boolean} [autoActivate=false]
+	   */
+	  this.start = function(event, source, sourcePosition, autoActivate) {
+
+	    if (typeof sourcePosition !== 'object') {
+	      autoActivate = sourcePosition;
+	      sourcePosition = LayoutUtil.getMid(source);
+	    }
+
+	    dragging.init(event, 'connect', {
+	      autoActivate: autoActivate,
+	      data: {
+	        shape: source,
+	        context: {
+	          source: source,
+	          sourcePosition: sourcePosition
+	        }
+	      }
+	    });
+	  };
+	}
+
+	Connect.$inject = [ 'eventBus', 'dragging', 'modeling', 'rules', 'canvas', 'graphicsFactory' ];
+
+	module.exports = Connect;
+
+
+/***/ },
+/* 573 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var MARKER_OK = 'connect-ok',
+	    MARKER_NOT_OK = 'connect-not-ok';
+
+
+	function GlobalConnect(eventBus, dragging, connect, canvas, toolManager) {
+	  var self = this;
+
+	  this._dragging = dragging;
+
+	  toolManager.registerTool('global-connect', {
+	    tool: 'global-connect',
+	    dragging: 'global-connect.drag'
+	  });
+
+	  eventBus.on('global-connect.hover', function(event) {
+	    var context = event.context,
+	        startTarget = event.hover;
+
+	    var canStartConnect = context.canStartConnect = self.canStartConnect(startTarget);
+
+	    // simply ignore hover
+	    if (canStartConnect === null) {
+	      return;
+	    }
+
+	    context.startTarget = startTarget;
+
+	    canvas.addMarker(startTarget, canStartConnect ? MARKER_OK : MARKER_NOT_OK);
+	  });
+
+
+	  eventBus.on([ 'global-connect.out', 'global-connect.cleanup' ], function(event) {
+	    var startTarget = event.context.startTarget,
+	        canStartConnect = event.context.canStartConnect;
+
+	    if (startTarget) {
+	      canvas.removeMarker(startTarget, canStartConnect ? MARKER_OK : MARKER_NOT_OK);
+	    }
+	  });
+
+
+	  eventBus.on([ 'global-connect.ended' ], function(event) {
+	    var context = event.context,
+	        startTarget = context.startTarget,
+	        startPosition = {
+	          x: event.x,
+	          y: event.y
+	        };
+
+	    var canStartConnect = self.canStartConnect(startTarget);
+
+	    if (!canStartConnect) {
+	      return;
+	    }
+
+	    eventBus.once('element.out', function() {
+	      eventBus.once([ 'connect.ended', 'connect.canceled' ], function() {
+	        eventBus.fire('global-connect.drag.ended');
+	      });
+
+	      connect.start(null, startTarget, startPosition);
+	    });
+
+	    return false;
+	  });
+	}
+
+	GlobalConnect.$inject = [ 'eventBus', 'dragging', 'connect', 'canvas', 'toolManager' ];
+
+	module.exports = GlobalConnect;
+
+
+	/**
+	 * Initiates tool activity.
+	 */
+	GlobalConnect.prototype.start = function(event) {
+	  this._dragging.init(event, 'global-connect', {
+	    trapClick: false,
+	    data: {
+	      context: {}
+	    }
+	  });
+	};
+
+
+	GlobalConnect.prototype.toggle = function() {
+	  if (this.isActive()) {
+	    this._dragging.cancel();
+	  } else {
+	    this.start();
+	  }
+	};
+
+	GlobalConnect.prototype.isActive = function() {
+	  var context = this._dragging.context();
+
+	  return context && /^global-connect/.test(context.prefix);
+	};
+
+
+	GlobalConnect.prototype.registerProvider = function(provider) {
+	  this._provider = provider;
+	};
+
+
+	/**
+	 * Check if source shape can initiate connection.
+	 *
+	 * @param  {Shape} startTarget
+	 * @return {Boolean}
+	 */
+	GlobalConnect.prototype.canStartConnect = function(startTarget) {
+	  return this._provider.canStartConnect(startTarget);
+	};
+
+
+/***/ },
+/* 574 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var isAny = __webpack_require__(575).isAny;
+
+	/**
+	 * Extention of GlobalConnect tool that implements BPMN specific rules about
+	 * connection start elements.
+	 */
+	function BpmnGlobalConnect(globalConnect) {
+	  globalConnect.registerProvider(this);
+	}
+
+	BpmnGlobalConnect.$inject = [ 'globalConnect' ];
+
+	module.exports = BpmnGlobalConnect;
+
+
+	/**
+	 * Checks if given element can be used for starting connection.
+	 *
+	 * @param  {Element} source
+	 * @return {Boolean}
+	 */
+	BpmnGlobalConnect.prototype.canStartConnect = function(source) {
+
+	  if (nonExistantOrLabel(source)) {
+	    return null;
+	  }
+
+	  var businessObject = source.businessObject;
+
+	  return isAny(businessObject, [
+	    'bpmn:FlowNode',
+	    'bpmn:InteractionNode',
+	    'bpmn:DataObjectReference',
+	    'bpmn:DataStoreReference'
+	  ]);
+	};
+
+
+	function nonExistantOrLabel(element) {
+	  return !element || isLabel(element);
+	}
+
+	function isLabel(element) {
+	  return element.labelTarget;
+	}
+
+
+
+
+/***/ },
+/* 575 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var any = __webpack_require__(576);
+
+	var is = __webpack_require__(443).is;
+
+
+	function getParents(element) {
+
+	  var parents = [];
+
+	  while (element) {
+	    element = element.parent;
+
+	    if (element) {
+	      parents.push(element);
+	    }
+	  }
+
+	  return parents;
+	}
+
+	module.exports.getParents = getParents;
+
+
+	/**
+	 * Return true if element has any of the given types.
+	 *
+	 * @param {djs.model.Base} element
+	 * @param {Array<String>} types
+	 *
+	 * @return {Boolean}
+	 */
+	function isAny(element, types) {
+	  return any(types, function(t) {
+	    return is(element, t);
+	  });
+	}
+
+	module.exports.isAny = isAny;
+
+
+	/**
+	 * Return the parent of the element with any of the given types.
+	 *
+	 * @param {djs.model.Base} element
+	 * @param {String|Array<String>} anyType
+	 *
+	 * @return {djs.model.Base}
+	 */
+	function getParent(element, anyType) {
+
+	  if (typeof anyType === 'string') {
+	    anyType = [ anyType ];
+	  }
+
+	  while ((element = element.parent)) {
+	    if (isAny(element, anyType)) {
+	      return element;
+	    }
+	  }
+
+	  return null;
+	}
+
+	module.exports.getParent = getParent;
+
+
+/***/ },
+/* 576 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(428);
+
+
+/***/ },
+/* 577 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(550)
+	  ],
+	  __init__: [ 'bpmnCopyPaste' ],
+	  bpmnCopyPaste: [ 'type', __webpack_require__(578) ]
+	};
+
+
+/***/ },
+/* 578 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var ModelUtil = __webpack_require__(443),
 	    getBusinessObject = ModelUtil.getBusinessObject,
 	    is = ModelUtil.is;
 
-	var map = __webpack_require__(450),
-	    forEach = __webpack_require__(416);
+	var map = __webpack_require__(449),
+	    forEach = __webpack_require__(415);
 
 
 	function setProperties(descriptor, data, properties) {
 	  forEach(properties, function(property) {
-	    if (data[property]) {
+	    if (data[property] !== undefined) {
 	      descriptor[property] = data[property];
 	    }
 	  });
@@ -61818,7 +56605,9 @@ var InfoxBpmnModeler =
 	      'processRef',
 	      'isInterrupting',
 	      'isForCompensation',
-	      'associationDirection'
+	      'associationDirection',
+	      'triggeredByEvent',
+	      'cancelActivity'
 	    ]);
 
 	    if (businessObject.default) {
@@ -61863,7 +56652,6 @@ var InfoxBpmnModeler =
 	        parent = descriptor.parent,
 	        rootElement = canvas.getRootElement(),
 	        businessObject,
-	        eventDefinitions,
 	        newEventDefinition,
 	        conditionExpression,
 	        loopCharacteristics,
@@ -61915,6 +56703,10 @@ var InfoxBpmnModeler =
 	    setProperties(businessObject, descriptor, [
 	      'name',
 	      'text',
+	      'isExpanded',
+	      'isInterrupting',
+	      'cancelActivity',
+	      'triggeredByEvent'
 	    ]);
 
 	    if (descriptor.loopCharacteristics) {
@@ -61938,8 +56730,6 @@ var InfoxBpmnModeler =
 	    }
 
 	    if (descriptor.eventDefinitions) {
-	      eventDefinitions = businessObject.eventDefinitions;
-
 	      businessObject.eventDefinitions = map(descriptor.eventDefinitions, function(type) {
 	        newEventDefinition = moddle.create(type);
 
@@ -61949,7 +56739,16 @@ var InfoxBpmnModeler =
 	      });
 	    }
 
-	    removeProperties(descriptor, [ 'name', 'text', 'eventDefinitions', 'conditionExpression', 'loopCharacteristics' ]);
+	    removeProperties(descriptor, [
+	      'name',
+	      'text',
+	      'eventDefinitions',
+	      'conditionExpression',
+	      'loopCharacteristics',
+	      'isInterrupting',
+	      'cancelActivity',
+	      'triggeredByEvent'
+	    ]);
 	  });
 	}
 
@@ -61968,1206 +56767,2005 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 692 */
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __init__: [ 'snapping' ],
-	  snapping: [ 'type', __webpack_require__(693) ]
+	  __depends__: [
+	    __webpack_require__(580)
+	  ],
+	  __init__: [ 'bpmnDistributeElements' ],
+	  bpmnDistributeElements: [ 'type', __webpack_require__(582) ]
+	};
+
+
+/***/ },
+/* 580 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  __init__: [ 'distributeElements' ],
+	  distributeElements: [ 'type', __webpack_require__(581) ]
+	};
+
+
+/***/ },
+/* 581 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var sortBy = __webpack_require__(517),
+	    forEach = __webpack_require__(128),
+	    filter = __webpack_require__(475);
+
+	var AXIS_DIMENSIONS = {
+	  horizontal: [ 'x', 'width' ],
+	  vertical: [ 'y', 'height' ]
+	};
+
+	var THRESHOLD = 5;
+
+	/**
+	 * Groups and filters elements and then trigger even distribution.
+	 */
+	function DistributeElements(modeling) {
+	  this._modeling = modeling;
+
+	  this._filters = [];
+
+	  // register filter for filtering big elements
+	  this.registerFilter(function(elements, axis, dimension) {
+	    var elementsSize = 0,
+	        numOfShapes = 0,
+	        avgDimension;
+
+	    forEach(elements, function(element) {
+	      if (element.waypoints || element.labelTarget) {
+	        return;
+	      }
+
+	      elementsSize += element[dimension];
+
+	      numOfShapes += 1;
+	    });
+
+	    avgDimension = Math.round(elementsSize / numOfShapes);
+
+	    return filter(elements, function(element) {
+	      return element[dimension] < (avgDimension + 50);
+	    });
+	  });
+
+	}
+
+	module.exports = DistributeElements;
+
+	DistributeElements.$inject = [ 'modeling' ];
+
+
+	/**
+	 * Registers filter functions that allow external parties to filter
+	 * out certain elements.
+	 *
+	 * @param  {Function} filterFn
+	 */
+	DistributeElements.prototype.registerFilter = function(filterFn) {
+	  if (typeof filterFn !== 'function') {
+	    throw new Error('the filter has to be a function');
+	  }
+
+	  this._filters.push(filterFn);
+	};
+
+	/**
+	 * Distributes the elements with a given orientation
+	 *
+	 * @param  {Array} elements    [description]
+	 * @param  {String} orientation [description]
+	 */
+	DistributeElements.prototype.trigger = function(elements, orientation) {
+	  var modeling = this._modeling;
+
+	  var groups,
+	      distributableElements;
+
+	  if (elements.length < 3) {
+	    return;
+	  }
+
+	  this._setOrientation(orientation);
+
+	  distributableElements = this._filterElements(elements);
+
+	  groups = this._createGroups(distributableElements);
+
+	  // nothing to distribute
+	  if (groups.length <= 2) {
+	    return;
+	  }
+
+	  modeling.distributeElements(groups, this._axis, this._dimension);
+
+	  return groups;
+	};
+
+	/**
+	 * Filters the elements with provided filters by external parties
+	 *
+	 * @param  {Array[Elements]} elements
+	 *
+	 * @return {Array[Elements]}
+	 */
+	DistributeElements.prototype._filterElements = function(elements) {
+	  var filters = this._filters,
+	      axis = this._axis,
+	      dimension = this._dimension,
+	      distributableElements = [].concat(elements);
+
+	  if (!filters.length) {
+	    return elements;
+	  }
+
+	  forEach(filters, function(filterFn) {
+	    distributableElements = filterFn(distributableElements, axis, dimension);
+	  });
+
+	  return distributableElements;
+	};
+
+
+	/**
+	 * Create range (min, max) groups. Also tries to group elements
+	 * together that share the same range.
+	 *
+	 * @example
+	 * 	var distributableElements = [
+	 * 		{
+	 * 			range: {
+	 * 				min: 100,
+	 * 				max: 200
+	 * 			},
+	 * 			elements: [ { id: 'shape1', .. }]
+	 * 		}
+	 * 	]
+	 *
+	 * @param  {Array} elements
+	 *
+	 * @return {Array[Objects]}
+	 */
+	DistributeElements.prototype._createGroups = function(elements) {
+	  var rangeGroups = [],
+	      axis = this._axis,
+	      dimension = this._dimension;
+
+	  if (!axis) {
+	    throw new Error('must have a defined "axis" and "dimension"');
+	  }
+
+	  // sort by 'left->right' or 'top->bottom'
+	  var sortedElements = sortBy(elements, axis);
+
+	  forEach(sortedElements, function(element, idx) {
+	    var elementRange = this._findRange(element, axis, dimension),
+	        range;
+
+	    var previous = rangeGroups[rangeGroups.length - 1];
+
+	    if (previous && this._hasIntersection(previous.range, elementRange)) {
+	      rangeGroups[rangeGroups.length - 1].elements.push(element);
+	    } else {
+	      range = { range: elementRange, elements: [ element ] };
+
+	      rangeGroups.push(range);
+	    }
+	  }, this);
+
+	  return rangeGroups;
+	};
+
+
+	/**
+	 * Maps a direction to the according axis and dimension
+	 *
+	 * @param  {String} direction 'horizontal' or 'vertical'
+	 */
+	DistributeElements.prototype._setOrientation = function(direction) {
+	  var orientation = AXIS_DIMENSIONS[direction];
+
+	  this._axis = orientation[0];
+	  this._dimension = orientation[1];
+	};
+
+
+	/**
+	 * Checks if the two ranges intercept each other
+	 *
+	 * @param  {Object} rangeA {min, max}
+	 * @param  {Object} rangeB {min, max}
+	 *
+	 * @return {Boolean}
+	 */
+	DistributeElements.prototype._hasIntersection = function(rangeA, rangeB) {
+	  return Math.max(rangeA.min, rangeA.max) >= Math.min(rangeB.min, rangeB.max) &&
+	         Math.min(rangeA.min, rangeA.max) <= Math.max(rangeB.min, rangeB.max);
+	};
+
+
+	/**
+	 * Returns the min and max values for an element
+	 *
+	 * @param  {[type]} element   [description]
+	 * @param  {[type]} axis      [description]
+	 * @param  {[type]} dimension [description]
+	 *
+	 * @return {[type]}           [description]
+	 */
+	DistributeElements.prototype._findRange = function(element) {
+	  var axis = element[this._axis],
+	      dimension = element[this._dimension];
+
+	  return {
+	    min: axis + THRESHOLD,
+	    max: axis + dimension - THRESHOLD
+	  };
+	};
+
+
+/***/ },
+/* 582 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var filter = __webpack_require__(383);
+
+	var isAny = __webpack_require__(575).isAny;
+
+	/**
+	 * Registers element exclude filters for elements that currently do 
+	 * not support distribution.
+	 */
+	function BpmnDistributeElements(distributeElements) {
+
+	  distributeElements.registerFilter(function(elements) {
+	    return filter(elements, function(element) {
+	      var cannotDistribute = isAny(element, [
+	        'bpmn:Association',
+	        'bpmn:BoundaryEvent',
+	        'bpmn:DataInputAssociation',
+	        'bpmn:DataOutputAssociation',
+	        'bpmn:Lane',
+	        'bpmn:MessageFlow',
+	        'bpmn:Participant',
+	        'bpmn:SequenceFlow',
+	        'bpmn:TextAnnotation'
+	      ]);
+
+	      return !(element.labelTarget || cannotDistribute);
+	    });
+	  });
+	}
+
+	BpmnDistributeElements.$inject = [ 'distributeElements' ];
+
+	module.exports = BpmnDistributeElements;
+
+
+/***/ },
+/* 583 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(584)
+	  ],
+	  __init__: [ 'bpmnSearch'],
+	  bpmnSearch: [ 'type', __webpack_require__(586) ]
+	};
+
+
+/***/ },
+/* 584 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(472),
+	    __webpack_require__(452)
+	  ],
+	  searchPad: [ 'type', __webpack_require__(585) ]
+	};
+
+
+/***/ },
+/* 585 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var domClear = __webpack_require__(175),
+	    domDelegate = __webpack_require__(455),
+	    domQuery = __webpack_require__(52),
+	    domClasses = __webpack_require__(478),
+	    domAttr = __webpack_require__(481),
+	    domify = __webpack_require__(50);
+
+	var getBoundingBox = __webpack_require__(137).getBBox;
+
+
+	/**
+	 * Provides searching infrastructure
+	 */
+	function SearchPad(canvas, eventBus, overlays, selection) {
+	  this._open = false;
+	  this._results = [];
+	  this._eventMaps = [];
+
+	  this._canvas = canvas;
+	  this._eventBus = eventBus;
+	  this._overlays = overlays;
+	  this._selection = selection;
+
+	  // setup elements
+	  this._container = domify(SearchPad.BOX_HTML);
+	  this._searchInput = domQuery(SearchPad.INPUT_SELECTOR, this._container);
+	  this._resultsContainer = domQuery(SearchPad.RESULTS_CONTAINER_SELECTOR, this._container);
+
+	  // attach search pad
+	  this._canvas.getContainer().appendChild(this._container);
+
+	  // cleanup on destroy
+	  eventBus.on([ 'canvas.destroy', 'diagram.destroy' ], this.close, this);
+	}
+
+
+	SearchPad.$inject = [
+	  'canvas',
+	  'eventBus',
+	  'overlays',
+	  'selection'
+	];
+
+
+	/**
+	 * Binds and keeps track of all event listereners
+	 */
+	SearchPad.prototype._bindEvents = function() {
+	  var self = this;
+
+	  function listen(el, selector, type, fn) {
+	    self._eventMaps.push({
+	      el: el,
+	      type: type,
+	      listener: domDelegate.bind(el, selector, type, fn)
+	    });
+	  }
+
+	  // close search on clicking anywhere outside
+	  listen(document, 'html', 'click', function(e) {
+	    self.close();
+	  }, true);
+
+	  // stop event from propagating and closing search
+	  // focus on input
+	  listen(this._container, SearchPad.INPUT_SELECTOR, 'click', function(e) {
+	    e.stopPropagation();
+	    e.delegateTarget.focus();
+	  });
+
+	  // preselect result on hover
+	  listen(this._container, SearchPad.RESULT_SELECTOR, 'mouseover', function(e) {
+	    e.stopPropagation();
+	    self._scrollToNode(e.delegateTarget);
+	    self._preselect(e.delegateTarget);
+	  });
+
+	  // selects desired result on mouse click
+	  listen(this._container, SearchPad.RESULT_SELECTOR, 'click', function(e) {
+	    e.stopPropagation();
+	    self._select(e.delegateTarget);
+	  });
+
+	  // prevent cursor in input from going left and right when using up/down to
+	  // navigate results
+	  listen(this._container, SearchPad.INPUT_SELECTOR, 'keydown', function(e) {
+	    // up
+	    if (e.keyCode === 38) {
+	      e.preventDefault();
+	    }
+
+	    // down
+	    if (e.keyCode === 40) {
+	      e.preventDefault();
+	    }
+	  });
+
+	  // handle keyboard input
+	  listen(this._container, SearchPad.INPUT_SELECTOR, 'keyup', function(e) {
+	    // escape
+	    if (e.keyCode === 27) {
+	      return self.close();
+	    }
+
+	    // enter
+	    if (e.keyCode === 13) {
+	      var selected = self._getCurrentResult();
+
+	      return selected ? self._select(selected) : self.close();
+	    }
+
+	    // up
+	    if (e.keyCode === 38) {
+	      return self._scrollToDirection(true);
+	    }
+
+	    // down
+	    if (e.keyCode === 40) {
+	      return self._scrollToDirection();
+	    }
+
+	    // left && right
+	    // do not search while navigating text input
+	    if (e.keyCode === 37 || e.keyCode === 39) {
+	      return;
+	    }
+
+	    // anything else
+	    self._search(e.delegateTarget.value);
+	  });
+	};
+
+
+	/**
+	 * Unbinds all previously established listeners
+	 */
+	SearchPad.prototype._unbindEvents = function() {
+	  this._eventMaps.forEach(function(m) {
+	    domDelegate.unbind(m.el, m.type, m.listener);
+	  });
+	};
+
+
+	/**
+	 * Performs a search for the given pattern.
+	 *
+	 * @param  {String} pattern
+	 */
+	SearchPad.prototype._search = function(pattern) {
+	  var self = this;
+
+	  this._clearResults();
+
+	  // do not search on empty query
+	  if (!pattern || pattern === '') {
+	    return;
+	  }
+
+	  var searchResults = this._searchProvider.find(pattern);
+
+	  if (!searchResults.length) {
+	    return;
+	  }
+
+	  // append new results
+	  searchResults.forEach(function(result) {
+	    var id = result.element.id;
+	    var node = self._createResultNode(result, id);
+	    self._results[id] = {
+	      element: result.element,
+	      node: node
+	    };
+	  });
+
+	  // preselect first result
+	  var node = domQuery(SearchPad.RESULT_SELECTOR, this._resultsContainer);
+	  this._scrollToNode(node);
+	  this._preselect(node);
+	};
+
+
+	/**
+	 * Navigate to the previous/next result. Defaults to next result.
+	 * @param  {Boolean} previous
+	 */
+	SearchPad.prototype._scrollToDirection = function(previous) {
+	  var selected = this._getCurrentResult();
+	  if (!selected) {
+	    return;
+	  }
+
+	  var node = previous ? selected.previousElementSibling : selected.nextElementSibling;
+	  if (node) {
+	    this._scrollToNode(node);
+	    this._preselect(node);
+	  }
+	};
+
+
+	/**
+	 * Scroll to the node if it is not visible.
+	 *
+	 * @param  {Element} node
+	 */
+	SearchPad.prototype._scrollToNode = function(node) {
+	  if (!node || node === this._getCurrentResult()) {
+	    return;
+	  }
+
+	  var nodeOffset = node.offsetTop;
+	  var containerScroll = this._resultsContainer.scrollTop;
+
+	  var bottomScroll = nodeOffset - this._resultsContainer.clientHeight + node.clientHeight;
+
+	  if (nodeOffset < containerScroll) {
+	    this._resultsContainer.scrollTop = nodeOffset;
+	  } else if (containerScroll < bottomScroll) {
+	    this._resultsContainer.scrollTop = bottomScroll;
+	  }
+	};
+
+
+	/**
+	 * Clears all results data.
+	 */
+	SearchPad.prototype._clearResults = function() {
+	  domClear(this._resultsContainer);
+
+	  this._results = [];
+
+	  this._resetOverlay();
+
+	  this._eventBus.fire('searchPad.cleared');
+	};
+
+
+	/**
+	 * Get currently selected result.
+	 *
+	 * @return {Element}
+	 */
+	SearchPad.prototype._getCurrentResult = function() {
+	  return domQuery(SearchPad.RESULT_SELECTED_SELECTOR, this._resultsContainer);
+	};
+
+
+	/**
+	 * Create result DOM element within results container
+	 * that corresponds to a search result.
+	 *
+	 * 'result' : one of the elements returned by SearchProvider
+	 * 'id' : id attribute value to assign to the new DOM node
+	 * return : created DOM element
+	 *
+	 * @param  {SearchResult} result
+	 * @param  {String} id
+	 * @return {Element}
+	 */
+	SearchPad.prototype._createResultNode = function(result, id) {
+	  var node = domify(SearchPad.RESULT_HTML);
+
+	  // create only if available
+	  if (result.primaryTokens.length > 0) {
+	    createInnerTextNode(node, result.primaryTokens, SearchPad.RESULT_PRIMARY_HTML);
+	  }
+
+	  // secondary tokens (represent element ID) are allways available
+	  createInnerTextNode(node, result.secondaryTokens, SearchPad.RESULT_SECONDARY_HTML);
+
+	  domAttr(node, SearchPad.RESULT_ID_ATTRIBUTE, id);
+
+	  this._resultsContainer.appendChild(node);
+
+	  return node;
+	};
+
+
+	/**
+	 * Register search element provider.
+	 *
+	 * SearchProvider.find - provides search function over own elements
+	 *  (pattern) => [{ text: <String>, element: <Element>}, ...]
+	 *
+	 * @param  {SearchProvider} provider
+	 */
+	SearchPad.prototype.registerProvider = function(provider) {
+	  this._searchProvider = provider;
+	};
+
+
+	/**
+	 * Open search pad.
+	 */
+	SearchPad.prototype.open = function() {
+	  if (!this._searchProvider) {
+	    throw new Error('no search provider registered');
+	  }
+
+	  if (this.isOpen()) {
+	    return;
+	  }
+
+	  this._bindEvents();
+
+	  this._open = true;
+
+	  domClasses(this._container).add('open');
+
+	  this._searchInput.focus();
+
+	  this._eventBus.fire('searchPad.opened');
+	};
+
+
+	/**
+	 * Close search pad.
+	 */
+	SearchPad.prototype.close = function() {
+	  if (!this.isOpen()) {
+	    return;
+	  }
+
+	  this._unbindEvents();
+
+	  this._open = false;
+
+	  domClasses(this._container).remove('open');
+
+	  this._clearResults();
+
+	  this._searchInput.value = '';
+	  this._searchInput.blur();
+
+	  this._resetOverlay();
+
+	  this._eventBus.fire('searchPad.closed');
+	};
+
+
+	/**
+	 * Toggles search pad on/off.
+	 */
+	SearchPad.prototype.toggle = function() {
+	  this.isOpen() ? this.close() : this.open();
+	};
+
+
+	/**
+	 * Report state of search pad.
+	 */
+	SearchPad.prototype.isOpen = function() {
+	  return this._open;
+	};
+
+
+	/**
+	 * Preselect result entry.
+	 *
+	 * @param  {Element} element
+	 */
+	SearchPad.prototype._preselect = function(node) {
+	  var selectedNode = this._getCurrentResult();
+
+	  // already selected
+	  if (node === selectedNode) {
+	    return;
+	  }
+
+	  // removing preselection from current node
+	  if (selectedNode) {
+	    domClasses(selectedNode).remove(SearchPad.RESULT_SELECTED_CLASS);
+	  }
+
+	  var id = domAttr(node, SearchPad.RESULT_ID_ATTRIBUTE);
+	  var element = this._results[id].element;
+
+	  domClasses(node).add(SearchPad.RESULT_SELECTED_CLASS);
+
+	  this._resetOverlay(element);
+
+	  this._centerViewbox(element);
+
+	  this._selection.select(element);
+
+	  this._eventBus.fire('searchPad.preselected', element);
+	};
+
+
+	/**
+	 * Select result node.
+	 *
+	 * @param  {Element} element
+	 */
+	SearchPad.prototype._select = function(node) {
+	  var id = domAttr(node, SearchPad.RESULT_ID_ATTRIBUTE);
+	  var element = this._results[id].element;
+
+	  this.close();
+
+	  this._resetOverlay();
+
+	  this._centerViewbox(element);
+
+	  this._selection.select(element);
+
+	  this._eventBus.fire('searchPad.selected', element);
+	};
+
+
+	/**
+	 * Center viewbox on the element middle point.
+	 *
+	 * @param  {Element} element
+	 */
+	SearchPad.prototype._centerViewbox = function(element) {
+	  var viewbox = this._canvas.viewbox();
+
+	  var box = getBoundingBox(element);
+
+	  var newViewbox = {
+	    x: (box.x + box.width/2) - viewbox.outer.width/2,
+	    y: (box.y + box.height/2) - viewbox.outer.height/2,
+	    width: viewbox.outer.width,
+	    height: viewbox.outer.height
+	  };
+
+	  this._canvas.viewbox(newViewbox);
+
+	  this._canvas.zoom(viewbox.scale);
+	};
+
+
+	/**
+	 * Reset overlay removes and, optionally, set
+	 * overlay to a new element.
+	 *
+	 * @param  {Element} element
+	 */
+	SearchPad.prototype._resetOverlay = function(element) {
+	  if (this._overlayId) {
+	    this._overlays.remove(this._overlayId);
+	  }
+
+	  if (element) {
+	    var box = getBoundingBox(element);
+	    var overlay = constructOverlay(box);
+	    this._overlayId = this._overlays.add(element, overlay);
+	  }
+	};
+
+
+	module.exports = SearchPad;
+
+	/**
+	 * Construct overlay object for the given bounding box.
+	 *
+	 * @param  {BoundingBox} box
+	 * @return {Object}
+	 */
+	function constructOverlay(box) {
+
+	  var offset = 6;
+	  var w = box.width + offset * 2;
+	  var h = box.height + offset * 2;
+
+	  var styles = [
+	    'width: '+ w +'px',
+	    'height: '+ h + 'px'
+	  ].join('; ');
+
+	  return {
+	    position: {
+	      bottom: h - offset,
+	      right: w - offset
+	    },
+	    show: true,
+	    html: '<div style="' + styles + '" class="' + SearchPad.OVERLAY_CLASS + '"></div>'
+	  };
+	}
+
+
+	/**
+	 * Creates and appends child node from result tokens and HTML template.
+	 *
+	 * @param  {Element} node
+	 * @param  {Array<Object>} tokens
+	 * @param  {String} template
+	 */
+	function createInnerTextNode(parentNode, tokens, template) {
+	  var text = createHtmlText(tokens);
+	  var childNode = domify(template);
+	  childNode.innerHTML = text;
+	  parentNode.appendChild(childNode);
+	}
+
+	/**
+	 * Create internal HTML markup from result tokens.
+	 * Caters for highlighting pattern matched tokens.
+	 *
+	 * @param  {Array<Object>} tokens
+	 * @return {String}
+	 */
+	function createHtmlText(tokens) {
+	  var htmlText = '';
+
+	  tokens.forEach(function(t) {
+	    if (t.matched) {
+	      htmlText += '<strong class="' + SearchPad.RESULT_HIGHLIGHT_CLASS + '">' + t.matched + '</strong>';
+	    } else {
+	      htmlText += t.normal;
+	    }
+	  });
+
+	  return htmlText !== '' ? htmlText : null;
+	}
+
+
+	/**
+	 * CONSTANTS
+	 */
+	SearchPad.CONTAINER_SELECTOR = '.djs-search-container';
+	SearchPad.INPUT_SELECTOR = '.djs-search-input input';
+	SearchPad.RESULTS_CONTAINER_SELECTOR = '.djs-search-results';
+	SearchPad.RESULT_SELECTOR = '.djs-search-result';
+	SearchPad.RESULT_SELECTED_CLASS = 'djs-search-result-selected';
+	SearchPad.RESULT_SELECTED_SELECTOR = '.' + SearchPad.RESULT_SELECTED_CLASS;
+	SearchPad.RESULT_ID_ATTRIBUTE = 'data-result-id';
+	SearchPad.RESULT_HIGHLIGHT_CLASS = 'djs-search-highlight';
+	SearchPad.OVERLAY_CLASS = 'djs-search-overlay';
+
+	SearchPad.BOX_HTML =
+	  '<div class="djs-search-container djs-draggable djs-scrollable">' +
+	    '<div class="djs-search-input">' +
+	      '<input type="text"/>' +
+	    '</div>' +
+	    '<div class="djs-search-results"></div>' +
+	  '</div>';
+
+	SearchPad.RESULT_HTML =
+	  '<div class="djs-search-result"></div>';
+
+	SearchPad.RESULT_PRIMARY_HTML =
+	  '<div class="djs-search-result-primary"></div>';
+
+	SearchPad.RESULT_SECONDARY_HTML =
+	  '<p class="djs-search-result-secondary"></p>';
+
+
+/***/ },
+/* 586 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var map = __webpack_require__(449),
+	    filter = __webpack_require__(383),
+	    sortBy = __webpack_require__(587);
+
+	var labelUtil = __webpack_require__(591);
+
+
+	/**
+	 * Provides ability to search through BPMN elements
+	 */
+	function BpmnSearchProvider(elementRegistry, searchPad, canvas) {
+
+	  this._elementRegistry = elementRegistry;
+	  this._canvas = canvas;
+
+	  searchPad.registerProvider(this);
+	}
+
+	module.exports = BpmnSearchProvider;
+
+	BpmnSearchProvider.$inject = [
+	  'elementRegistry',
+	  'searchPad',
+	  'canvas'
+	];
+
+
+	/**
+	 * Finds all elements that match given pattern
+	 *
+	 * <Result> :
+	 *  {
+	 *    primaryTokens: <Array<Token>>,
+	 *    secondaryTokens: <Array<Token>>,
+	 *    element: <Element>
+	 *  }
+	 *
+	 * <Token> :
+	 *  {
+	 *    normal|matched: <String>
+	 *  }
+	 *
+	 * @param  {String} pattern
+	 * @return {Array<Result>}
+	 */
+	BpmnSearchProvider.prototype.find = function(pattern) {
+	  var rootElement = this._canvas.getRootElement();
+
+	  var elements = this._elementRegistry.filter(function(element) {
+	    if (element.labelTarget) {
+	      return false;
+	    }
+	    return true;
+	  });
+
+	  // do not include root element
+	  elements = filter(elements, function(element) {
+	    return element !== rootElement;
+	  });
+
+	  elements = map(elements, function(element) {
+	    return {
+	      primaryTokens: matchAndSplit(labelUtil.getLabel(element), pattern),
+	      secondaryTokens: matchAndSplit(element.id, pattern),
+	      element: element
+	    };
+	  });
+
+	  // exclude non-matched elements
+	  elements = filter(elements, function(element) {
+	    return hasMatched(element.primaryTokens) || hasMatched(element.secondaryTokens);
+	  });
+
+	  elements = sortBy(elements, function(element) {
+	    return labelUtil.getLabel(element.element) + element.element.id;
+	  });
+
+	  return elements;
+	};
+
+
+	function hasMatched(tokens) {
+	  var matched = filter(tokens, function(t) {
+	    return !!t.matched;
+	  });
+
+	  return matched.length > 0;
+	}
+
+
+	function matchAndSplit(text, pattern) {
+	  var tokens = [],
+	      originalText = text;
+
+	  if (!text) {
+	    return tokens;
+	  }
+
+	  text = text.toLowerCase();
+	  pattern = pattern.toLowerCase();
+
+	  var i = text.indexOf(pattern);
+
+	  if (i > -1) {
+	    if (i !== 0) {
+	      tokens.push({
+	        normal: originalText.substr(0, i)
+	      });
+	    }
+
+	    tokens.push({
+	      matched: originalText.substr(i, pattern.length)
+	    });
+
+	    if (pattern.length + i < text.length) {
+	      tokens.push({
+	        normal: originalText.substr(pattern.length + i, text.length)
+	      });
+	    }
+	  } else {
+	    tokens.push({
+	      normal: originalText
+	    });
+	  }
+
+	  return tokens;
+	}
+
+/***/ },
+/* 587 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCallback = __webpack_require__(385),
+	    baseMap = __webpack_require__(450),
+	    baseSortBy = __webpack_require__(588),
+	    compareAscending = __webpack_require__(589),
+	    isIterateeCall = __webpack_require__(29);
+
+	/**
+	 * Creates an array of elements, sorted in ascending order by the results of
+	 * running each element in a collection through `iteratee`. This method performs
+	 * a stable sort, that is, it preserves the original sort order of equal elements.
+	 * The `iteratee` is bound to `thisArg` and invoked with three arguments:
+	 * (value, index|key, collection).
+	 *
+	 * If a property name is provided for `iteratee` the created `_.property`
+	 * style callback returns the property value of the given element.
+	 *
+	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
+	 * style callback returns `true` for elements that have a matching property
+	 * value, else `false`.
+	 *
+	 * If an object is provided for `iteratee` the created `_.matches` style
+	 * callback returns `true` for elements that have the properties of the given
+	 * object, else `false`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Collection
+	 * @param {Array|Object|string} collection The collection to iterate over.
+	 * @param {Function|Object|string} [iteratee=_.identity] The function invoked
+	 *  per iteration.
+	 * @param {*} [thisArg] The `this` binding of `iteratee`.
+	 * @returns {Array} Returns the new sorted array.
+	 * @example
+	 *
+	 * _.sortBy([1, 2, 3], function(n) {
+	 *   return Math.sin(n);
+	 * });
+	 * // => [3, 1, 2]
+	 *
+	 * _.sortBy([1, 2, 3], function(n) {
+	 *   return this.sin(n);
+	 * }, Math);
+	 * // => [3, 1, 2]
+	 *
+	 * var users = [
+	 *   { 'user': 'fred' },
+	 *   { 'user': 'pebbles' },
+	 *   { 'user': 'barney' }
+	 * ];
+	 *
+	 * // using the `_.property` callback shorthand
+	 * _.pluck(_.sortBy(users, 'user'), 'user');
+	 * // => ['barney', 'fred', 'pebbles']
+	 */
+	function sortBy(collection, iteratee, thisArg) {
+	  if (collection == null) {
+	    return [];
+	  }
+	  if (thisArg && isIterateeCall(collection, iteratee, thisArg)) {
+	    iteratee = undefined;
+	  }
+	  var index = -1;
+	  iteratee = baseCallback(iteratee, thisArg, 3);
+
+	  var result = baseMap(collection, function(value, key, collection) {
+	    return { 'criteria': iteratee(value, key, collection), 'index': ++index, 'value': value };
+	  });
+	  return baseSortBy(result, compareAscending);
+	}
+
+	module.exports = sortBy;
+
+
+/***/ },
+/* 588 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.sortBy` which uses `comparer` to define
+	 * the sort order of `array` and replaces criteria objects with their
+	 * corresponding values.
+	 *
+	 * @private
+	 * @param {Array} array The array to sort.
+	 * @param {Function} comparer The function to define sort order.
+	 * @returns {Array} Returns `array`.
+	 */
+	function baseSortBy(array, comparer) {
+	  var length = array.length;
+
+	  array.sort(comparer);
+	  while (length--) {
+	    array[length] = array[length].value;
+	  }
+	  return array;
+	}
+
+	module.exports = baseSortBy;
+
+
+/***/ },
+/* 589 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCompareAscending = __webpack_require__(590);
+
+	/**
+	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
+	 * sort them in ascending order.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @returns {number} Returns the sort order indicator for `object`.
+	 */
+	function compareAscending(object, other) {
+	  return baseCompareAscending(object.criteria, other.criteria) || (object.index - other.index);
+	}
+
+	module.exports = compareAscending;
+
+
+/***/ },
+/* 590 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `compareAscending` which compares values and
+	 * sorts them in ascending order without guaranteeing a stable sort.
+	 *
+	 * @private
+	 * @param {*} value The value to compare.
+	 * @param {*} other The other value to compare.
+	 * @returns {number} Returns the sort order indicator for `value`.
+	 */
+	function baseCompareAscending(value, other) {
+	  if (value !== other) {
+	    var valIsNull = value === null,
+	        valIsUndef = value === undefined,
+	        valIsReflexive = value === value;
+
+	    var othIsNull = other === null,
+	        othIsUndef = other === undefined,
+	        othIsReflexive = other === other;
+
+	    if ((value > other && !othIsNull) || !valIsReflexive ||
+	        (valIsNull && !othIsUndef && othIsReflexive) ||
+	        (valIsUndef && othIsReflexive)) {
+	      return 1;
+	    }
+	    if ((value < other && !valIsNull) || !othIsReflexive ||
+	        (othIsNull && !valIsUndef && valIsReflexive) ||
+	        (othIsUndef && valIsReflexive)) {
+	      return -1;
+	    }
+	  }
+	  return 0;
+	}
+
+	module.exports = baseCompareAscending;
+
+
+/***/ },
+/* 591 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var is = __webpack_require__(443).is;
+
+	function getLabelAttr(semantic) {
+	  if (is(semantic, 'bpmn:FlowElement') ||
+	      is(semantic, 'bpmn:Participant') ||
+	      is(semantic, 'bpmn:Lane') ||
+	      is(semantic, 'bpmn:SequenceFlow') ||
+	      is(semantic, 'bpmn:MessageFlow')) {
+
+	    return 'name';
+	  }
+
+	  if (is(semantic, 'bpmn:TextAnnotation')) {
+	    return 'text';
+	  }
+	}
+
+	module.exports.getLabel = function(element) {
+	  var semantic = element.businessObject,
+	      attr = getLabelAttr(semantic);
+
+	  if (attr) {
+	    return semantic[attr] || '';
+	  }
+	};
+
+
+	module.exports.setLabel = function(element, text, isExternal) {
+	  var semantic = element.businessObject,
+	      attr = getLabelAttr(semantic);
+
+	  if (attr) {
+	    semantic[attr] = text;
+	  }
+
+	  // show external label if not empty
+	  if (isExternal) {
+	    element.hidden = !text;
+	  }
+
+	  return element;
 	};
 
 /***/ },
-/* 693 */
+/* 592 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __init__: [ 'modeling', 'bpmnUpdater' ],
+	  __depends__: [
+	    __webpack_require__(593),
+	    __webpack_require__(619),
+	    __webpack_require__(722),
+	    __webpack_require__(725),
+	    __webpack_require__(730),
+	    __webpack_require__(620),
+	    __webpack_require__(736),
+	    __webpack_require__(738),
+	    __webpack_require__(740),
+	    __webpack_require__(452),
+	    __webpack_require__(632),
+	    __webpack_require__(565)
+	  ],
+	  bpmnFactory: [ 'type', __webpack_require__(745) ],
+	  bpmnUpdater: [ 'type', __webpack_require__(746) ],
+	  elementFactory: [ 'type', __webpack_require__(747) ],
+	  modeling: [ 'type', __webpack_require__(748) ],
+	  layouter: [ 'type', __webpack_require__(792) ],
+	  connectionDocking: [ 'type', __webpack_require__(797) ]
+	};
+
+
+/***/ },
+/* 593 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __init__: [
+	    'appendBehavior',
+	    'copyPasteBehavior',
+	    'createBoundaryEventBehavior',
+	    'createDataObjectBehavior',
+	    'createOnFlowBehavior',
+	    'createParticipantBehavior',
+	    'dataInputAssociationBehavior',
+	    'deleteLaneBehavior',
+	    'importDockingFix',
+	    'labelBehavior',
+	    'modelingFeedback',
+	    'removeParticipantBehavior',
+	    'replaceConnectionBehavior',
+	    'replaceElementBehaviour',
+	    'resizeLaneBehavior',
+	    'unsetDefaultFlowBehavior',
+	    'updateFlowNodeRefsBehavior',
+	    'removeElementBehavior',
+	    'unclaimIdBehavior',
+	    'toggleElementCollapseBehaviour'
+	  ],
+	  appendBehavior: [ 'type', __webpack_require__(594) ],
+	  copyPasteBehavior: [ 'type', __webpack_require__(595) ],
+	  createBoundaryEventBehavior: [ 'type', __webpack_require__(596) ],
+	  createDataObjectBehavior: [ 'type', __webpack_require__(597) ],
+	  createOnFlowBehavior: [ 'type', __webpack_require__(598) ],
+	  createParticipantBehavior: [ 'type', __webpack_require__(599) ],
+	  dataInputAssociationBehavior: [ 'type', __webpack_require__(600) ],
+	  deleteLaneBehavior: [ 'type', __webpack_require__(601) ],
+	  importDockingFix: [ 'type', __webpack_require__(603) ],
+	  labelBehavior: [ 'type', __webpack_require__(605) ],
+	  modelingFeedback: [ 'type', __webpack_require__(609) ],
+	  removeParticipantBehavior: [ 'type', __webpack_require__(610) ],
+	  replaceConnectionBehavior: [ 'type', __webpack_require__(611) ],
+	  replaceElementBehaviour: [ 'type', __webpack_require__(612) ],
+	  resizeLaneBehavior: [ 'type', __webpack_require__(613) ],
+	  unsetDefaultFlowBehavior: [ 'type', __webpack_require__(614) ],
+	  updateFlowNodeRefsBehavior: [ 'type', __webpack_require__(615) ],
+	  removeElementBehavior: [ 'type', __webpack_require__(616) ],
+	  unclaimIdBehavior: [ 'type', __webpack_require__(617) ],
+	  toggleElementCollapseBehaviour : [ 'type', __webpack_require__(618) ]
+	};
+
+
+/***/ },
+/* 594 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var forEach = __webpack_require__(416);
+	var is = __webpack_require__(443).is;
 
-	var getBoundingBox = __webpack_require__(137).getBBox;
-
-	var is = __webpack_require__(444).is,
-	    isAny = __webpack_require__(673).isAny,
-	    isExpanded = __webpack_require__(443).isExpanded;
-
-	var Snapping = __webpack_require__(694),
-	    SnapUtil = __webpack_require__(695);
-
-	var asTRBL = __webpack_require__(644).asTRBL;
-
-	var round = Math.round;
-
-	var mid = SnapUtil.mid,
-	    topLeft = SnapUtil.topLeft,
-	    bottomRight = SnapUtil.bottomRight,
-	    isSnapped = SnapUtil.isSnapped,
-	    setSnapped = SnapUtil.setSnapped;
-
-	var getBoundaryAttachment = __webpack_require__(697).getBoundaryAttachment,
-	    getParticipantSizeConstraints = __webpack_require__(697).getParticipantSizeConstraints,
-	    getLanesRoot = __webpack_require__(698).getLanesRoot;
+	var CommandInterceptor = __webpack_require__(542);
 
 
-	/**
-	 * BPMN specific snapping functionality
-	 *
-	 *  * snap on process elements if a pool is created inside a
-	 *    process diagram
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {Canvas} canvas
-	 */
-	function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
+	function AppendBehavior(eventBus, elementFactory, bpmnRules) {
 
-	  // instantiate super
-	  Snapping.call(this, eventBus, canvas);
+	  CommandInterceptor.call(this, eventBus);
 
+	  // assign correct shape position unless already set
 
-	  /**
-	   * Drop participant on process <> process elements snapping
-	   */
-	  eventBus.on('create.start', function(event) {
+	  this.preExecute('shape.append', function(context) {
 
-	    var context = event.context,
-	        shape = context.shape,
-	        rootElement = canvas.getRootElement();
-
-	    // snap participant around existing elements (if any)
-	    if (is(shape, 'bpmn:Participant') && is(rootElement, 'bpmn:Process')) {
-	      initParticipantSnapping(context, shape, rootElement.children);
-	    }
-	  });
-
-	  eventBus.on([ 'create.move', 'create.end' ], 1500, function(event) {
-
-	    var context = event.context,
-	        shape = context.shape,
-	        participantSnapBox = context.participantSnapBox;
-
-	    if (!isSnapped(event) && participantSnapBox) {
-	      snapParticipant(participantSnapBox, shape, event);
-	    }
-	  });
-
-	  eventBus.on('shape.move.start', function(event) {
-
-	    var context = event.context,
-	        shape = context.shape,
-	        rootElement = canvas.getRootElement();
-
-	    // snap participant around existing elements (if any)
-	    if (is(shape, 'bpmn:Participant') && is(rootElement, 'bpmn:Process')) {
-	      initParticipantSnapping(context, shape, rootElement.children);
-	    }
-	  });
-
-
-	  function canAttach(shape, target, position) {
-	    return bpmnRules.canAttach([ shape ], target, null, position) === 'attach';
-	  }
-
-	  /**
-	   * Snap boundary events to elements border
-	   */
-	  eventBus.on([
-	    'create.move',
-	    'create.end',
-	    'shape.move.move',
-	    'shape.move.end'
-	  ], 1500, function(event) {
-
-	    var context = event.context,
-	        target = context.target,
+	    var source = context.source,
 	        shape = context.shape;
 
-	    if (target && !isSnapped(event) && canAttach(shape, target, event)) {
-	      snapBoundaryEvent(event, shape, target);
-	    }
-	  });
-
-	  /**
-	   * Adjust parent for flowElements to the target participant
-	   * when droping onto lanes.
-	   */
-	  eventBus.on([
-	    'shape.move.hover',
-	    'shape.move.move',
-	    'shape.move.end',
-	    'create.hover',
-	    'create.move',
-	    'create.end'
-	  ], 1500, function(event) {
-	    var context = event.context,
-	        shape = context.shape,
-	        hover = event.hover;
-
-	    if (is(hover, 'bpmn:Lane') && !isAny(shape, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
-	      event.hover = getLanesRoot(hover);
-	      event.hoverGfx = elementRegistry.getGraphics(event.hover);
-	    }
-	  });
-
-
-	  var abs = Math.abs;
-
-	  var filter = __webpack_require__(384),
-	      assign = __webpack_require__(7);
-
-
-	  eventBus.on([
-	    'create.move',
-	    'shape.move.move'
-	  ], function(event) {
-
-	    var context = event.context,
-	        shape = context.shape,
-	        target = context.target;
-
-	    var threshold = 30;
-
-	    if (is(shape, 'bpmn:Lane')) {
-	      if (isAny(target, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
-
-	        var childLanes = filter(target.children, function(c) {
-	          return is(c, 'bpmn:Lane');
-	        });
-
-	        var y = event.y,
-	            targetTrbl;
-
-	        var insert = childLanes.reduce(function(insert, l) {
-
-	          var laneTrbl = asTRBL(l);
-
-	          if (abs(laneTrbl.top - y) < threshold) {
-	            insert = assign(insert || {}, { before: { element: l, y: laneTrbl.top } });
-	          } else
-	          if (abs(laneTrbl.bottom - y) < threshold) {
-	            insert = assign(insert || {}, { after: { element: l, y: laneTrbl.bottom } });
-	          } else
-	          if (laneTrbl.top < y && laneTrbl.bottom > y) {
-	            if (abs(laneTrbl.top - y) > abs(laneTrbl.bottom - y)) {
-	              insert = assign(insert || {}, { after: { element: l, y: laneTrbl.bottom } });
-	            } else {
-	              insert = assign(insert || {}, { before: { element: l, y: laneTrbl.top } });
-	            }
-
-	          }
-
-	          return insert;
-	        }, false);
-
-
-	        if (!insert) {
-	          targetTrbl = asTRBL(target);
-
-	          if (abs(targetTrbl.top - y) < threshold) {
-	            insert = { before: { element: target, y: targetTrbl.top } };
-	          } else
-	          if (abs(targetTrbl.bottom - y) < threshold) {
-	            insert = { after: { element: target, y: targetTrbl.bottom } };
-	          } else {
-	            insert = { into: { element: target, y: (targetTrbl.top + targetTrbl.bottom) / 2 } };
-	          }
-
-	        }
-
-	        if (insert.before && insert.after) {
-	          console.log('insert between', insert.before.element.id, 'and', insert.after.element.id);
-	          setSnapped(event, 'x', insert.before.element.x + insert.before.element.width / 2);
-	          setSnapped(event, 'y', insert.before.y);
-	        } else
-	        if (insert.after) {
-	          console.log('insert after', insert.after.element.id);
-	          setSnapped(event, 'x', insert.after.element.x + insert.after.element.width / 2);
-	          setSnapped(event, 'y', insert.after.y);
-	        } else
-	        if (insert.before) {
-	          console.log('insert before', insert.before.element.id);
-	          setSnapped(event, 'x', insert.before.element.x + insert.before.element.width / 2);
-	          setSnapped(event, 'y', insert.before.y);
-	        } else
-	        if (insert.into) {
-	          console.log('insert into', insert.into.element.id);
-	          setSnapped(event, 'x', insert.into.element.x + insert.into.element.width / 2);
-	          setSnapped(event, 'y', insert.into.y);
-	        }
-	      }
-	    }
-
-	  });
-
-	  eventBus.on('resize.start', 1500, function(event) {
-	    var context = event.context,
-	        shape = context.shape;
-
-	    if (is(shape, 'bpmn:SubProcess') && isExpanded(shape)) {
-	      context.minDimensions = { width: 140, height: 120 };
-	    }
-
-	    if (is(shape, 'bpmn:Participant')) {
-	      context.minDimensions = { width: 300, height: 150 };
-	    }
-
-	    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
-	      context.resizeConstraints = getParticipantSizeConstraints(shape, context.direction, context.balanced);
-	    }
-
-	    if (is(shape, 'bpmn:TextAnnotation')) {
-	      context.minDimensions = { width: 50, height: 30 };
-	    }
-	  });
-
-	}
-
-	inherits(BpmnSnapping, Snapping);
-
-	BpmnSnapping.$inject = [ 'eventBus', 'canvas', 'bpmnRules', 'elementRegistry' ];
-
-	module.exports = BpmnSnapping;
-
-
-	BpmnSnapping.prototype.initSnap = function(event) {
-
-	  var context = event.context,
-	      shape = event.shape,
-	      shapeMid,
-	      shapeBounds,
-	      shapeTopLeft,
-	      shapeBottomRight,
-	      snapContext;
-
-
-	  snapContext = Snapping.prototype.initSnap.call(this, event);
-
-	  if (is(shape, 'bpmn:Participant')) {
-	    // assign higher priority for outer snaps on participants
-	    snapContext.setSnapLocations([ 'top-left', 'bottom-right', 'mid' ]);
-	  }
-
-
-	  if (shape) {
-
-	    shapeMid = mid(shape, event);
-
-	    shapeBounds = {
-	      width: shape.width,
-	      height: shape.height,
-	      x: isNaN(shape.x) ? round(shapeMid.x - shape.width / 2) : shape.x,
-	      y: isNaN(shape.y) ? round(shapeMid.y - shape.height / 2) : shape.y,
-	    };
-
-	    shapeTopLeft = topLeft(shapeBounds);
-	    shapeBottomRight = bottomRight(shapeBounds);
-
-	    snapContext.setSnapOrigin('top-left', {
-	      x: shapeTopLeft.x - event.x,
-	      y: shapeTopLeft.y - event.y
-	    });
-
-	    snapContext.setSnapOrigin('bottom-right', {
-	      x: shapeBottomRight.x - event.x,
-	      y: shapeBottomRight.y - event.y
-	    });
-
-	    forEach(shape.outgoing, function(c) {
-	      var docking = c.waypoints[0];
-
-	      docking = docking.original || docking;
-
-	      snapContext.setSnapOrigin(c.id + '-docking', {
-	        x: docking.x - event.x,
-	        y: docking.y - event.y
-	      });
-	    });
-
-	    forEach(shape.incoming, function(c) {
-	      var docking = c.waypoints[c.waypoints.length - 1];
-
-	      docking = docking.original || docking;
-
-	      snapContext.setSnapOrigin(c.id + '-docking', {
-	        x: docking.x - event.x,
-	        y: docking.y - event.y
-	      });
-	    });
-
-	  }
-
-	  var source = context.source;
-
-	  if (source) {
-	    snapContext.addDefaultSnap('mid', mid(source));
-	  }
-	};
-
-
-	BpmnSnapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
-
-	  // use target parent as snap target
-	  if (is(shape, 'bpmn:BoundaryEvent') && shape.type !== 'label') {
-	    target = target.parent;
-	  }
-
-	  // add sequence flow parents as snap targets
-	  if (is(target, 'bpmn:SequenceFlow')) {
-	    this.addTargetSnaps(snapPoints, shape, target.parent);
-	  }
-
-	  var siblings = this.getSiblings(shape, target) || [];
-
-	  forEach(siblings, function(s) {
-
-	    // do not snap to lanes
-	    if (is(s, 'bpmn:Lane')) {
-	      return;
-	    }
-
-	    snapPoints.add('mid', mid(s));
-
-	    if (is(s, 'bpmn:Participant')) {
-	      snapPoints.add('top-left', topLeft(s));
-	      snapPoints.add('bottom-right', bottomRight(s));
-	    }
-	  });
-
-
-	  forEach(shape.incoming, function(c) {
-
-	    if (siblings.indexOf(c.source) === -1) {
-	      snapPoints.add('mid', mid(c.source));
-	    }
-
-	    var docking = c.waypoints[0];
-	    snapPoints.add(c.id + '-docking', docking.original || docking);
-	  });
-
-
-	  forEach(shape.outgoing, function(c) {
-
-	    if (siblings.indexOf(c.target) === -1) {
-	      snapPoints.add('mid', mid(c.target));
-	    }
-
-	    var docking = c.waypoints[c.waypoints.length - 1];
-	    snapPoints.add(c.id + '-docking', docking.original || docking);
-	  });
-	};
-
-
-	/////// participant snapping //////////////////
-
-	function initParticipantSnapping(context, shape, elements) {
-
-	  if (!elements.length) {
-	    return;
-	  }
-
-	  var snapBox = getBoundingBox(elements.filter(function(e) {
-	    return !e.labelTarget && !e.waypoints;
-	  }));
-
-	  snapBox.x -= 50;
-	  snapBox.y -= 20;
-	  snapBox.width += 70;
-	  snapBox.height += 40;
-
-	  // adjust shape height to include bounding box
-	  shape.width = Math.max(shape.width, snapBox.width);
-	  shape.height = Math.max(shape.height, snapBox.height);
-
-	  context.participantSnapBox = snapBox;
-	}
-
-	function snapParticipant(snapBox, shape, event, offset) {
-	  offset = offset || 0;
-
-	  var shapeHalfWidth = shape.width / 2 - offset,
-	      shapeHalfHeight = shape.height / 2;
-
-	  var currentTopLeft = {
-	    x: event.x - shapeHalfWidth - offset,
-	    y: event.y - shapeHalfHeight
-	  };
-
-	  var currentBottomRight = {
-	    x: event.x + shapeHalfWidth + offset,
-	    y: event.y + shapeHalfHeight
-	  };
-
-	  var snapTopLeft = snapBox,
-	      snapBottomRight = bottomRight(snapBox);
-
-	  if (currentTopLeft.x >= snapTopLeft.x) {
-	    setSnapped(event, 'x', snapTopLeft.x + offset + shapeHalfWidth);
-	  } else
-	  if (currentBottomRight.x <= snapBottomRight.x) {
-	    setSnapped(event, 'x', snapBottomRight.x - offset - shapeHalfWidth);
-	  }
-
-	  if (currentTopLeft.y >= snapTopLeft.y) {
-	    setSnapped(event, 'y', snapTopLeft.y + shapeHalfHeight);
-	  } else
-	  if (currentBottomRight.y <= snapBottomRight.y) {
-	    setSnapped(event, 'y', snapBottomRight.y - shapeHalfHeight);
-	  }
-	}
-
-
-	/////// boundary event snapping /////////////////////////
-
-
-	function snapBoundaryEvent(event, shape, target) {
-	  var targetTRBL = asTRBL(target);
-
-	  var direction = getBoundaryAttachment(event, target);
-
-	  if (/top/.test(direction)) {
-	    setSnapped(event, 'y', targetTRBL.top);
-	  } else
-	  if (/bottom/.test(direction)) {
-	    setSnapped(event, 'y', targetTRBL.bottom);
-	  }
-
-	  if (/left/.test(direction)) {
-	    setSnapped(event, 'x', targetTRBL.left);
-	  } else
-	  if (/right/.test(direction)) {
-	    setSnapped(event, 'x', targetTRBL.right);
-	  }
-	}
-
-
-/***/ },
-/* 694 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var filter = __webpack_require__(476),
-	    forEach = __webpack_require__(128),
-	    debounce = __webpack_require__(134);
-
-
-	var mid = __webpack_require__(695).mid;
-
-	var SnapContext = __webpack_require__(696);
-
-	var SnapUtil = __webpack_require__(695);
-
-
-	var isSnapped = SnapUtil.isSnapped,
-	    setSnapped = SnapUtil.setSnapped;
-
-
-	/**
-	 * A general purpose snapping component for diagram elements.
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {Canvas} canvas
-	 */
-	function Snapping(eventBus, canvas) {
-
-	  this._canvas = canvas;
-
-	  var self = this;
-
-	  eventBus.on([ 'shape.move.start', 'create.start' ], function(event) {
-	    self.initSnap(event);
-	  });
-
-	  eventBus.on([ 'shape.move.move', 'shape.move.end', 'create.move', 'create.end' ], function(event) {
-
-	    if (event.originalEvent && event.originalEvent.ctrlKey) {
-	      return;
-	    }
-
-	    if (isSnapped(event)) {
-	      return;
-	    }
-
-	    self.snap(event);
-	  });
-
-	  eventBus.on([ 'shape.move.cleanup', 'create.cleanup' ], function(event) {
-	    self.hide();
-	  });
-
-	  // delay hide by 1000 seconds since last match
-	  this._asyncHide = debounce(this.hide, 1000);
-	}
-
-	Snapping.$inject = [ 'eventBus', 'canvas' ];
-
-	module.exports = Snapping;
-
-
-	Snapping.prototype.initSnap = function(event) {
-
-	  var context = event.context,
-	      shape = context.shape,
-	      snapContext = context.snapContext;
-
-	  if (!snapContext) {
-	    snapContext = context.snapContext = new SnapContext();
-	  }
-
-	  var snapMid = mid(shape, event);
-
-	  snapContext.setSnapOrigin('mid', {
-	    x: snapMid.x - event.x,
-	    y: snapMid.y - event.y
-	  });
-
-	  return snapContext;
-	};
-
-
-	Snapping.prototype.snap = function(event) {
-
-	  var context = event.context,
-	      snapContext = context.snapContext,
-	      shape = context.shape,
-	      target = context.target,
-	      snapLocations = snapContext.getSnapLocations();
-
-	  if (!target) {
-	    return;
-	  }
-
-	  var snapPoints = snapContext.pointsForTarget(target);
-
-	  if (!snapPoints.initialized) {
-	    this.addTargetSnaps(snapPoints, shape, target);
-
-	    snapPoints.initialized = true;
-	  }
-
-
-	  var snapping = {
-	    x: isSnapped(event, 'x'),
-	    y: isSnapped(event, 'y')
-	  };
-
-
-	  forEach(snapLocations, function(location) {
-
-	    var snapOrigin = snapContext.getSnapOrigin(location);
-
-	    var snapCurrent = {
-	      x: event.x + snapOrigin.x,
-	      y: event.y + snapOrigin.y
-	    };
-
-	    // snap on both axis, if not snapped already
-	    forEach([ 'x', 'y' ], function(axis) {
-	      var locationSnapping;
-
-	      if (!snapping[axis]) {
-	        locationSnapping = snapPoints.snap(snapCurrent, location, axis, 7);
-
-	        if (locationSnapping !== undefined) {
-	          snapping[axis] = {
-	            value: locationSnapping,
-	            originValue: locationSnapping - snapOrigin[axis]
-	          };
-	        }
-	      }
-	    });
-
-	    // no more need to snap, drop out of interation
-	    if (snapping.x && snapping.y) {
-	      return false;
-	    }
-	  });
-
-
-	  // show snap visuals
-
-	  this.showSnapLine('vertical', snapping.x && snapping.x.value);
-	  this.showSnapLine('horizontal', snapping.y && snapping.y.value);
-
-
-	  // adjust event { x, y, dx, dy } and mark as snapping
-	  forEach([ 'x', 'y' ], function(axis) {
-
-	    var axisSnapping = snapping[axis];
-
-	    if (typeof axisSnapping === 'object') {
-	      setSnapped(event, axis, axisSnapping.originValue);
-	    }
-	  });
-	};
-
-
-	Snapping.prototype._createLine = function(orientation) {
-
-	  var root = this._canvas.getLayer('snap');
-
-	  var line = root.path('M0,0 L0,0').addClass('djs-snap-line');
-
-	  return {
-	    update: function(position) {
-
-	      if (typeof position !== 'number') {
-	        line.attr({ display: 'none' });
+	    if (!context.position) {
+
+	      if (is(shape, 'bpmn:TextAnnotation')) {
+	        context.position = {
+	          x: source.x + source.width / 2 + 75,
+	          y: source.y - (50) - shape.height / 2
+	        };
 	      } else {
-	        if (orientation === 'horizontal') {
-	          line.attr({
-	            path: 'M-100000,' + position + ' L+100000,' + position,
-	            display: ''
-	          });
+	        context.position = {
+	          x: source.x + source.width + 80 + shape.width / 2,
+	          y: source.y + source.height / 2
+	        };
+	      }
+	    }
+	  }, true);
+	}
+
+
+	AppendBehavior.$inject = [ 'eventBus', 'elementFactory', 'bpmnRules' ];
+
+	inherits(AppendBehavior, CommandInterceptor);
+
+	module.exports = AppendBehavior;
+
+/***/ },
+/* 595 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var forEach = __webpack_require__(415);
+
+	var is = __webpack_require__(443).is;
+
+	var CommandInterceptor = __webpack_require__(542);
+
+
+	function CopyPasteBehavior(eventBus, modeling, canvas) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  this.preExecute('elements.paste', 1500, function(context) {
+	    var topParent = context.topParent;
+
+	    // always grab the latest root
+	    if (!topParent.parent) {
+	      context.topParent = canvas.getRootElement();
+	    }
+
+	    if (is(topParent, 'bpmn:Lane')) {
+	      do {
+	        // unwrap Lane -> LaneSet -> (Lane | FlowElementsContainer)
+	        topParent = context.topParent = topParent.parent;
+
+	      } while (is(topParent, 'bpmn:Lane') || !is(topParent, 'bpmn:Participant'));
+	    }
+	  }, true);
+
+	  this.postExecute('elements.paste', function(context) {
+
+	    var tree = context.tree,
+	        createdElements = tree.createdElements;
+
+	    forEach(createdElements, function(data) {
+	      var element = data.element,
+	          businessObject = element.businessObject,
+	          descriptor = data.descriptor,
+	          defaultFlow;
+
+	      if ((is(businessObject, 'bpmn:ExclusiveGateway') || is(businessObject, 'bpmn:InclusiveGateway') ||
+	           is(businessObject, 'bpmn:Activity')) && descriptor.default) {
+
+	        defaultFlow = createdElements[descriptor.default];
+
+	        // if the default flow wasn't created, means that it wasn't copied
+	        if (defaultFlow) {
+	          defaultFlow = defaultFlow.element;
 	        } else {
-	          line.attr({
-	            path: 'M ' + position + ',-100000 L ' + position + ', +100000',
-	            display: ''
-	          });
+	          defaultFlow = undefined;
+	        }
+
+	        delete element.default;
+
+	        modeling.updateProperties(element, { default: defaultFlow });
+	      }
+	    });
+	  }, true);
+	}
+
+
+	CopyPasteBehavior.$inject = [ 'eventBus', 'modeling', 'canvas' ];
+
+	inherits(CopyPasteBehavior, CommandInterceptor);
+
+	module.exports = CopyPasteBehavior;
+
+
+/***/ },
+/* 596 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is;
+
+
+	/**
+	 * BPMN specific create boundary event behavior
+	 */
+	function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFactory) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  /**
+	   * replace intermediate event with boundary event when
+	   * attaching it to a shape
+	   */
+
+	  this.preExecute('shape.create', function(context) {
+	    var shape = context.shape,
+	        host = context.host,
+	        businessObject,
+	        boundaryEvent;
+
+	    var attrs = {
+	      cancelActivity: true
+	    };
+
+	    if (host && is(shape, 'bpmn:IntermediateThrowEvent')) {
+	      attrs.attachedToRef = host.businessObject;
+
+	      businessObject = bpmnFactory.create('bpmn:BoundaryEvent', attrs);
+
+	      boundaryEvent = {
+	        type: 'bpmn:BoundaryEvent',
+	        businessObject: businessObject
+	      };
+
+	      context.shape = elementFactory.createShape(boundaryEvent);
+	    }
+	  }, true);
+	}
+
+	CreateBoundaryEventBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory' ];
+
+	inherits(CreateBoundaryEventBehavior, CommandInterceptor);
+
+	module.exports = CreateBoundaryEventBehavior;
+
+
+/***/ },
+/* 597 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is;
+
+	/**
+	 * BPMN specific create data object behavior
+	 */
+	function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  this.preExecute('shape.create', function(event) {
+
+	    var context = event.context,
+	        shape = context.shape;
+
+	    if (is(shape, 'bpmn:DataObjectReference') && shape.type !== 'label') {
+
+	      // create a DataObject every time a DataObjectReference is created
+	      var dataObject = bpmnFactory.create('bpmn:DataObject');
+
+	      // set the reference to the DataObject
+	      shape.businessObject.dataObjectRef = dataObject;
+	    }
+	  });
+
+	}
+
+	CreateDataObjectBehavior.$inject = [ 'eventBus', 'bpmnFactory', 'moddle' ];
+
+	inherits(CreateDataObjectBehavior, CommandInterceptor);
+
+	module.exports = CreateDataObjectBehavior;
+
+
+/***/ },
+/* 598 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var assign = __webpack_require__(7);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var getApproxIntersection = __webpack_require__(513).getApproxIntersection;
+
+
+	function copy(obj) {
+	  return assign({}, obj);
+	}
+
+	function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  /**
+	   * Reconnect start / end of a connection after
+	   * dropping an element on a flow.
+	   */
+
+	  this.preExecute('shape.create', function(context) {
+
+	    var parent = context.parent,
+	        shape = context.shape;
+
+	    if (bpmnRules.canInsert(shape, parent)) {
+	      context.targetFlow = parent;
+	      context.parent = parent.parent;
+	    }
+	  }, true);
+
+
+	  this.postExecute('shape.create', function(context) {
+
+	    var shape = context.shape,
+	        targetFlow = context.targetFlow,
+	        position = context.position,
+	        source,
+	        target,
+	        reconnected,
+	        intersection,
+	        waypoints,
+	        waypointsBefore,
+	        waypointsAfter,
+	        dockingPoint;
+
+	    if (targetFlow) {
+
+	      waypoints = targetFlow.waypoints;
+
+
+	      intersection = getApproxIntersection(waypoints, position);
+
+	      if (intersection) {
+	        waypointsBefore = waypoints.slice(0, intersection.index);
+	        waypointsAfter = waypoints.slice(intersection.index + (intersection.bendpoint ? 1 : 0));
+
+	        dockingPoint = intersection.bendpoint ? waypoints[intersection.index] : position;
+
+	        waypointsBefore.push(copy(dockingPoint));
+	        waypointsAfter.unshift(copy(dockingPoint));
+	      }
+
+	      source = targetFlow.source;
+	      target = targetFlow.target;
+
+	      if (bpmnRules.canConnect(source, shape, targetFlow)) {
+	        // reconnect source -> inserted shape
+	        modeling.reconnectEnd(targetFlow, shape, waypointsBefore || copy(position));
+
+	        reconnected = true;
+	      }
+
+	      if (bpmnRules.canConnect(shape, target, targetFlow)) {
+
+	        if (!reconnected) {
+	          // reconnect inserted shape -> end
+	          modeling.reconnectStart(targetFlow, shape, waypointsAfter || copy(position));
+	        } else {
+	          modeling.connect(shape, target, { type: targetFlow.type, waypoints: waypointsAfter });
 	        }
 	      }
 	    }
-	  };
-	};
+	  }, true);
+	}
 
+	inherits(CreateOnFlowBehavior, CommandInterceptor);
 
-	Snapping.prototype._createSnapLines = function() {
+	CreateOnFlowBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
 
-	  this._snapLines = {
-	    horizontal: this._createLine('horizontal'),
-	    vertical: this._createLine('vertical')
-	  };
-	};
+	module.exports = CreateOnFlowBehavior;
 
-	Snapping.prototype.showSnapLine = function(orientation, position) {
-
-	  var line = this.getSnapLine(orientation);
-
-	  if (line) {
-	    line.update(position);
-	  }
-
-	  this._asyncHide();
-	};
-
-	Snapping.prototype.getSnapLine = function(orientation) {
-	  if (!this._snapLines) {
-	    this._createSnapLines();
-	  }
-
-	  return this._snapLines[orientation];
-	};
-
-	Snapping.prototype.hide = function() {
-	  forEach(this._snapLines, function(l) {
-	    l.update();
-	  });
-	};
-
-	Snapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
-
-	  var siblings = this.getSiblings(shape, target);
-
-	  forEach(siblings, function(s) {
-	    snapPoints.add('mid', mid(s));
-	  });
-
-	};
-
-	Snapping.prototype.getSiblings = function(element, target) {
-
-	  // snap to all non connection siblings
-	  return target && filter(target.children, function(e) {
-	    return !e.hidden && !e.labelTarget && !e.waypoints && e.host !== element && e !== element;
-	  });
-	};
 
 /***/ },
-/* 695 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var abs = Math.abs,
-	    round = Math.round;
-
-
-	/**
-	 * Snap value to a collection of reference values.
-	 *
-	 * @param  {Number} value
-	 * @param  {Array<Number>} values
-	 * @param  {Number} [tolerance=10]
-	 *
-	 * @return {Number} the value we snapped to or null, if none snapped
-	 */
-	function snapTo(value, values, tolerance) {
-	  tolerance = tolerance === undefined ? 10 : tolerance;
-
-	  var idx, snapValue;
-
-	  for (idx = 0; idx < values.length; idx++) {
-	    snapValue = values[idx];
-
-	    if (abs(snapValue - value) <= tolerance) {
-	      return snapValue;
-	    }
-	  }
-	}
-
-	module.exports.snapTo = snapTo;
-
-
-	function topLeft(bounds) {
-	  return {
-	    x: bounds.x,
-	    y: bounds.y
-	  };
-	}
-
-	module.exports.topLeft = topLeft;
-
-
-	function mid(bounds, defaultValue) {
-
-	  if (!bounds || isNaN(bounds.x) || isNaN(bounds.y)) {
-	    return defaultValue;
-	  }
-
-	  return {
-	    x: round(bounds.x + bounds.width / 2),
-	    y: round(bounds.y + bounds.height / 2)
-	  };
-	}
-
-	module.exports.mid = mid;
-
-
-	function bottomRight(bounds) {
-	  return {
-	    x: bounds.x + bounds.width,
-	    y: bounds.y + bounds.height
-	  };
-	}
-
-	module.exports.bottomRight = bottomRight;
-
-
-	/**
-	 * Retrieve the snap state of the given event.
-	 *
-	 * @param  {Event} event
-	 * @param  {String} axis
-	 *
-	 * @return {Boolean} the snapped state
-	 *
-	 */
-	module.exports.isSnapped = function(event, axis) {
-	  var snapped = event.snapped;
-
-	  if (!snapped) {
-	    return false;
-	  }
-
-	  if (typeof axis === 'string') {
-	    return snapped[axis];
-	  }
-
-	  return snapped.x && snapped.y;
-	};
-
-	/**
-	 * Set the given event as snapped.
-	 *
-	 * @param {Event} event
-	 * @param {String} axis
-	 * @param {Number|Boolean} value
-	 *
-	 * @return {Number} old value
-	 */
-	module.exports.setSnapped = function(event, axis, value) {
-
-	  if (typeof axis !== 'string') {
-	    throw new Error('axis must be in [x, y]');
-	  }
-
-	  if (typeof value !== 'number' && value !== false) {
-	    throw new Error('value must be Number or false');
-	  }
-
-	  var delta,
-	      previousValue = event[axis];
-
-	  var snapped = event.snapped = (event.snapped || {});
-
-
-	  if (value === false) {
-	    snapped[axis] = false;
-	  } else {
-	    snapped[axis] = true;
-
-	    delta = value - previousValue;
-
-	    event[axis] += delta;
-	    event['d' + axis] += delta;
-	  }
-
-	  return previousValue;
-	};
-
-/***/ },
-/* 696 */
+/* 599 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var inherits = __webpack_require__(3);
 
-	var snapTo = __webpack_require__(695).snapTo;
+	var CommandInterceptor = __webpack_require__(542);
 
+	var is = __webpack_require__(443).is;
 
 	/**
-	 * A snap context, containing the (possibly incomplete)
-	 * mappings of drop targets (to identify the snapping)
-	 * to computed snap points.
+	 * BPMN specific create participant behavior
 	 */
-	function SnapContext() {
+	function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFactory, canvas) {
+
+	  CommandInterceptor.call(this, eventBus);
 
 	  /**
-	   * Map<String, SnapPoints> mapping drop targets to
-	   * a list of possible snappings.
-	   *
-	   * @type {Object}
+	   * morph process into collaboration before adding
+	   * participant onto collaboration
 	   */
-	  this._targets = {};
 
-	  /**
-	   * Map<String, Point> initial positioning of element
-	   * regarding various snap directions.
-	   *
-	   * @type {Object}
-	   */
-	  this._snapOrigins = {};
+	  this.preExecute('shape.create', function(context) {
 
-	  /**
-	   * List of snap locations
-	   *
-	   * @type {Array<String>}
-	   */
-	  this._snapLocations = [];
+	    var parent = context.parent,
+	        shape = context.shape,
+	        position = context.position;
 
-	  /**
-	   * Map<String, Array<Point>> of default snapping locations
-	   *
-	   * @type {Object}
-	   */
-	  this._defaultSnaps = {};
+	    var rootElement = canvas.getRootElement();
+
+	    if (is(parent, 'bpmn:Process') && is(shape, 'bpmn:Participant') && !is(rootElement, 'bpmn:Collaboration')) {
+
+	      // this is going to detach the process root
+	      // and set the returned collaboration element
+	      // as the new root element
+	      var collaborationElement = modeling.makeCollaboration();
+
+	      // monkey patch the create context
+	      // so that the participant is being dropped
+	      // onto the new collaboration root instead
+	      context.position = position;
+	      context.parent = collaborationElement;
+
+	      context.processRoot = parent;
+	    }
+	  }, true);
+
+
+	  this.execute('shape.create', function(context) {
+
+	    var processRoot = context.processRoot,
+	        shape = context.shape;
+
+	    if (processRoot) {
+	      context.oldProcessRef = shape.businessObject.processRef;
+
+	      // assign the participant processRef
+	      shape.businessObject.processRef = processRoot.businessObject;
+	    }
+	  }, true);
+
+
+	  this.revert('shape.create', function(context) {
+	    var processRoot = context.processRoot,
+	        shape = context.shape;
+
+	    if (processRoot) {
+	      // assign the participant processRef
+	      shape.businessObject.processRef = context.oldProcessRef;
+	    }
+	  }, true);
+
+
+	  this.postExecute('shape.create', function(context) {
+
+	    var processRoot = context.processRoot,
+	        shape = context.shape;
+
+	    if (processRoot) {
+	      // process root is already detached at this point
+	      var processChildren = processRoot.children.slice();
+	      modeling.moveElements(processChildren, { x: 0, y: 0 }, shape);
+	    }
+
+	  }, true);
+
 	}
 
+	CreateParticipantBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory', 'canvas' ];
 
-	SnapContext.prototype.getSnapOrigin = function(snapLocation) {
-	  return this._snapOrigins[snapLocation];
-	};
+	inherits(CreateParticipantBehavior, CommandInterceptor);
 
-
-	SnapContext.prototype.setSnapOrigin = function(snapLocation, initialValue) {
-	  this._snapOrigins[snapLocation] = initialValue;
-
-	  if (this._snapLocations.indexOf(snapLocation) === -1) {
-	    this._snapLocations.push(snapLocation);
-	  }
-	};
+	module.exports = CreateParticipantBehavior;
 
 
-	SnapContext.prototype.addDefaultSnap = function(type, point) {
+/***/ },
+/* 600 */
+/***/ function(module, exports, __webpack_require__) {
 
-	  var snapValues = this._defaultSnaps[type];
+	'use strict';
 
-	  if (!snapValues) {
-	    snapValues = this._defaultSnaps[type] = [];
-	  }
+	var inherits = __webpack_require__(3);
 
-	  snapValues.push(point);
-	};
+	var CommandInterceptor = __webpack_require__(542);
 
-	/**
-	 * Return a number of initialized snaps, i.e. snap locations such as
-	 * top-left, mid, bottom-right and so forth.
-	 *
-	 * @return {Array<String>} snapLocations
-	 */
-	SnapContext.prototype.getSnapLocations = function() {
-	  return this._snapLocations;
-	};
+	var Collections = __webpack_require__(136);
 
-	/**
-	 * Set the snap locations for this context.
-	 *
-	 * The order of locations determines precedence.
-	 *
-	 * @param {Array<String>} snapLocations
-	 */
-	SnapContext.prototype.setSnapLocations = function(snapLocations) {
-	  this._snapLocations = snapLocations;
-	};
+	var find = __webpack_require__(411);
 
-	/**
-	 * Get snap points for a given target
-	 *
-	 * @param {Element|String} target
-	 */
-	SnapContext.prototype.pointsForTarget = function(target) {
+	var is = __webpack_require__(443).is;
 
-	  var targetId = target.id || target;
-
-	  var snapPoints = this._targets[targetId];
-
-	  if (!snapPoints) {
-	    snapPoints = this._targets[targetId] = new SnapPoints();
-	    snapPoints.initDefaults(this._defaultSnaps);
-	  }
-
-	  return snapPoints;
-	};
-
-	module.exports = SnapContext;
+	var TARGET_REF_PLACEHOLDER_NAME = '__targetRef_placeholder';
 
 
 	/**
-	 * Creates the snap points and initializes them with the
-	 * given default values.
+	 * This behavior makes sure we always set a fake
+	 * DataInputAssociation#targetRef as demanded by the BPMN 2.0
+	 * XSD schema.
 	 *
-	 * @param {Object<String, Array<Point>>} [defaultPoints]
-	 */
-	function SnapPoints(defaultSnaps) {
-
-	  /**
-	   * Map<String, Map<(x|y), Array<Number>>> mapping snap locations,
-	   * i.e. top-left, bottom-right, center to actual snap values.
-	   *
-	   * @type {Object}
-	   */
-	  this._snapValues = {};
-	}
-
-	SnapPoints.prototype.add = function(snapLocation, point) {
-
-	  var snapValues = this._snapValues[snapLocation];
-
-	  if (!snapValues) {
-	    snapValues = this._snapValues[snapLocation] = { x: [], y: [] };
-	  }
-
-	  if (snapValues.x.indexOf(point.x) === -1) {
-	    snapValues.x.push(point.x);
-	  }
-
-	  if (snapValues.y.indexOf(point.y) === -1) {
-	    snapValues.y.push(point.y);
-	  }
-	};
-
-
-	SnapPoints.prototype.snap = function(point, snapLocation, axis, tolerance) {
-	  var snappingValues = this._snapValues[snapLocation];
-	  
-	  return snappingValues && snapTo(point[axis], snappingValues[axis], tolerance);
-	};
-
-	/**
-	 * Initialize a number of default snapping points.
+	 * The reference is set to a bpmn:Property{ name: '__targetRef_placeholder' }
+	 * which is created on the fly and cleaned up afterwards if not needed
+	 * anymore.
 	 *
-	 * @param  {Object} defaultSnaps
+	 * @param {EventBus} eventBus
+	 * @param {BpmnFactory} bpmnFactory
 	 */
-	SnapPoints.prototype.initDefaults = function(defaultSnaps) {
+	function DataInputAssociationBehavior(eventBus, bpmnFactory) {
 
-	  var self = this;
+	  CommandInterceptor.call(this, eventBus);
 
-	  forEach(defaultSnaps || {}, function(snapPoints, snapLocation) {
-	    forEach(snapPoints, function(point) {
-	      self.add(snapLocation, point);
+
+	  this.executed([
+	    'connection.create',
+	    'connection.delete',
+	    'connection.move',
+	    'connection.reconnectEnd'
+	  ], ifDataInputAssociation(fixTargetRef));
+
+	  this.reverted([
+	    'connection.create',
+	    'connection.delete',
+	    'connection.move',
+	    'connection.reconnectEnd'
+	  ], ifDataInputAssociation(fixTargetRef));
+
+
+	  function usesTargetRef(element, targetRef, removedConnection) {
+
+	    var inputAssociations = element.get('dataInputAssociations');
+
+	    return find(inputAssociations, function(association) {
+	      return association !== removedConnection &&
+	             association.targetRef === targetRef;
 	    });
-	  });
-	};
+	  }
 
-/***/ },
-/* 697 */
-/***/ function(module, exports, __webpack_require__) {
+	  function getTargetRef(element, create) {
 
-	'use strict';
+	    var properties = element.get('properties');
 
-	var getOrientation = __webpack_require__(644).getOrientation;
+	    var targetRefProp = find(properties, function(p) {
+	      return p.name === TARGET_REF_PLACEHOLDER_NAME;
+	    });
 
+	    if (!targetRefProp && create) {
+	      targetRefProp = bpmnFactory.create('bpmn:Property', {
+	        name: TARGET_REF_PLACEHOLDER_NAME
+	      });
 
-	function getBoundaryAttachment(position, targetBounds) {
+	      Collections.add(properties, targetRefProp);
+	    }
 
-	  var orientation = getOrientation(position, targetBounds, -15);
+	    return targetRefProp;
+	  }
 
-	  if (orientation !== 'intersect') {
-	    return orientation;
-	  } else {
-	    return null;
+	  function cleanupTargetRef(element, connection) {
+
+	    var targetRefProp = getTargetRef(element);
+
+	    if (!targetRefProp) {
+	      return;
+	    }
+
+	    if (!usesTargetRef(element, targetRefProp, connection)) {
+	      Collections.remove(element.get('properties'), targetRefProp);
+	    }
+	  }
+
+	  /**
+	   * Make sure targetRef is set to a valid property or
+	   * `null` if the connection is detached.
+	   *
+	   * @param {Event} event
+	   */
+	  function fixTargetRef(event) {
+
+	    var context = event.context,
+	        connection = context.connection,
+	        connectionBo = connection.businessObject,
+	        target = connection.target,
+	        targetBo = target && target.businessObject,
+	        newTarget = context.newTarget,
+	        newTargetBo = newTarget && newTarget.businessObject,
+	        oldTarget = context.oldTarget || context.target,
+	        oldTargetBo = oldTarget && oldTarget.businessObject;
+
+	    var dataAssociation = connection.businessObject,
+	        targetRefProp;
+
+	    if (oldTargetBo && oldTargetBo !== targetBo) {
+	      cleanupTargetRef(oldTargetBo, connectionBo);
+	    }
+
+	    if (newTargetBo && newTargetBo !== targetBo) {
+	      cleanupTargetRef(newTargetBo, connectionBo);
+	    }
+
+	    if (targetBo) {
+	      targetRefProp = getTargetRef(targetBo, true);
+	      dataAssociation.targetRef = targetRefProp;
+	    } else {
+	      dataAssociation.targetRef = null;
+	    }
 	  }
 	}
 
-	module.exports.getBoundaryAttachment = getBoundaryAttachment;
+	DataInputAssociationBehavior.$inject = [ 'eventBus', 'bpmnFactory' ];
+
+	inherits(DataInputAssociationBehavior, CommandInterceptor);
+
+	module.exports = DataInputAssociationBehavior;
 
 
+	/**
+	 * Only call the given function when the event
+	 * touches a bpmn:DataInputAssociation.
+	 *
+	 * @param {Function} fn
+	 * @return {Function}
+	 */
+	function ifDataInputAssociation(fn) {
 
-	// participant snapping box implementation /////////////////
+	  return function(event) {
+	    var context = event.context,
+	        connection = context.connection;
 
-	var is = __webpack_require__(444).is;
-
-	var asTRBL = __webpack_require__(644).asTRBL;
-
-	var collectLanes = __webpack_require__(698).collectLanes,
-	    getLanesRoot = __webpack_require__(698).getLanesRoot;
-
-	var abs = Math.abs,
-	    min = Math.min,
-	    max = Math.max;
-
-
-	function addToTrbl(trbl, attr, value, choice) {
-
-	  var current = trbl[attr];
-
-	  // make sure to set the value if it does not exist
-	  // or apply the correct value by comparing against
-	  // choice(value, currentValue)
-	  trbl[attr] = current === undefined ? value : choice(value, current);
-	}
-
-	function addMin(trbl, attr, value) {
-	  return addToTrbl(trbl, attr, value, min);
-	}
-
-	function addMax(trbl, attr, value) {
-	  return addToTrbl(trbl, attr, value, max);
-	}
-
-
-	var LANE_MIN_HEIGHT = 60,
-	    LANE_MIN_WIDTH = 300,
-	    LANE_RIGHT_PADDING = 20,
-	    LANE_LEFT_PADDING = 50,
-	    LANE_TOP_PADDING = 20,
-	    LANE_BOTTOM_PADDING = 20;
-
-
-	function getParticipantSizeConstraints(laneShape, resizeDirection, balanced) {
-
-	  var lanesRoot = getLanesRoot(laneShape);
-
-	  var isFirst = true,
-	      isLast = true;
-
-	  ///// max top/bottom size for lanes
-
-	  var allLanes = collectLanes(lanesRoot, [ lanesRoot ]);
-
-	  var laneTrbl = asTRBL(laneShape);
-
-	  var maxTrbl = {},
-	      minTrbl = {};
-
-	  if (/e/.test(resizeDirection)) {
-	    minTrbl.right = laneTrbl.left + LANE_MIN_WIDTH;
-	  } else
-	  if (/w/.test(resizeDirection)) {
-	    minTrbl.left = laneTrbl.right - LANE_MIN_WIDTH;
-	  }
-
-	  allLanes.forEach(function(other) {
-
-	    var otherTrbl = asTRBL(other);
-
-	    if (/n/.test(resizeDirection)) {
-
-	      if (otherTrbl.top < (laneTrbl.top - 10)) {
-	        isFirst = false;
-	      }
-
-	      // max top size (based on next element)
-	      if (balanced && abs(laneTrbl.top - otherTrbl.bottom) < 10) {
-	        addMax(maxTrbl, 'top', otherTrbl.top + LANE_MIN_HEIGHT);
-	      }
-
-	      // min top size (based on self or nested element)
-	      if (abs(laneTrbl.top - otherTrbl.top) < 5) {
-	        addMin(minTrbl, 'top', otherTrbl.bottom - LANE_MIN_HEIGHT);
-	      }
+	    if (is(connection, 'bpmn:DataInputAssociation')) {
+	      return fn(event);
 	    }
-
-	    if (/s/.test(resizeDirection)) {
-
-	      if (otherTrbl.bottom > (laneTrbl.bottom + 10)) {
-	        isLast = false;
-	      }
-
-	      // max bottom size (based on previous element)
-	      if (balanced && abs(laneTrbl.bottom - otherTrbl.top) < 10) {
-	        addMin(maxTrbl, 'bottom', otherTrbl.bottom - LANE_MIN_HEIGHT);
-	      }
-
-	      // min bottom size (based on self or nested element)
-	      if (abs(laneTrbl.bottom - otherTrbl.bottom) < 5) {
-	        addMax(minTrbl, 'bottom', otherTrbl.top + LANE_MIN_HEIGHT);
-	      }
-	    }
-	  });
-
-
-	  ///// max top/bottom/left/right size based on flow nodes
-
-	  var flowElements = lanesRoot.children.filter(function(s) {
-	    return !s.hidden && !s.waypoints && (is(s, 'bpmn:FlowElement') || is(s, 'bpmn:Artifact'));
-	  });
-
-	  flowElements.forEach(function(flowElement) {
-
-	    var flowElementTrbl = asTRBL(flowElement);
-
-	    if (isFirst && /n/.test(resizeDirection)) {
-	      addMin(minTrbl, 'top', flowElementTrbl.top - LANE_TOP_PADDING);
-	    }
-
-	    if (/e/.test(resizeDirection)) {
-	      addMax(minTrbl, 'right', flowElementTrbl.right + LANE_RIGHT_PADDING);
-	    }
-
-	    if (isLast && /s/.test(resizeDirection)) {
-	      addMax(minTrbl, 'bottom', flowElementTrbl.bottom + LANE_BOTTOM_PADDING);
-	    }
-
-	    if (/w/.test(resizeDirection)) {
-	      addMin(minTrbl, 'left', flowElementTrbl.left - LANE_LEFT_PADDING);
-	    }
-	  });
-
-
-	  return {
-	    min: minTrbl,
-	    max: maxTrbl
 	  };
 	}
 
-
-	module.exports.getParticipantSizeConstraints = getParticipantSizeConstraints;
-
 /***/ },
-/* 698 */
+/* 601 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(444).is;
+	var inherits = __webpack_require__(3);
 
-	var getParent = __webpack_require__(673).getParent;
+	var CommandInterceptor = __webpack_require__(542);
 
-	var asTRBL = __webpack_require__(644).asTRBL,
-	    substractTRBL = __webpack_require__(652).substractTRBL,
-	    resizeTRBL = __webpack_require__(652).resizeTRBL;
+	var is = __webpack_require__(443).is;
+
+	var getChildLanes = __webpack_require__(602).getChildLanes;
+
+	var eachElement = __webpack_require__(137).eachElement;
+
+
+	var LOW_PRIORITY = 500;
+
+
+	/**
+	 * BPMN specific delete lane behavior
+	 */
+	function DeleteLaneBehavior(eventBus, modeling, spaceTool) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+
+	  function compensateLaneDelete(shape, oldParent) {
+
+	    var siblings = getChildLanes(oldParent);
+
+	    var topAffected = [];
+	    var bottomAffected = [];
+
+	    eachElement(siblings, function(element) {
+
+	      if (element.y > shape.y) {
+	        bottomAffected.push(element);
+	      } else {
+	        topAffected.push(element);
+	      }
+
+	      return element.children;
+	    });
+
+	    if (!siblings.length) {
+	      return;
+	    }
+
+	    var offset;
+
+	    if (bottomAffected.length && topAffected.length) {
+	      offset = shape.height / 2;
+	    } else {
+	      offset = shape.height;
+	    }
+
+	    var topAdjustments,
+	        bottomAdjustments;
+
+	    if (topAffected.length) {
+	      topAdjustments = spaceTool.calculateAdjustments(
+	        topAffected, 'y', offset, shape.y - 10);
+
+	      spaceTool.makeSpace(
+	        topAdjustments.movingShapes,
+	        topAdjustments.resizingShapes,
+	        { x: 0, y: offset }, 's');
+	    }
+
+	    if (bottomAffected.length) {
+	      bottomAdjustments = spaceTool.calculateAdjustments(
+	        bottomAffected, 'y', -offset, shape.y + shape.height + 10);
+
+	      spaceTool.makeSpace(
+	        bottomAdjustments.movingShapes,
+	        bottomAdjustments.resizingShapes,
+	        { x: 0, y: -offset }, 'n');
+	    }
+	  }
+
+
+	  /**
+	   * Adjust sizes of other lanes after lane deletion
+	   */
+	  this.postExecuted('shape.delete', LOW_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        hints = context.hints,
+	        shape = context.shape,
+	        oldParent = context.oldParent;
+
+	    // only compensate lane deletes
+	    if (!is(shape, 'bpmn:Lane')) {
+	      return;
+	    }
+
+	    // compensate root deletes only
+	    if (hints && hints.nested) {
+	      return;
+	    }
+
+	    compensateLaneDelete(shape, oldParent);
+	  });
+	}
+
+	DeleteLaneBehavior.$inject = [ 'eventBus', 'modeling', 'spaceTool' ];
+
+	inherits(DeleteLaneBehavior, CommandInterceptor);
+
+	module.exports = DeleteLaneBehavior;
+
+/***/ },
+/* 602 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var is = __webpack_require__(443).is;
+
+	var getParent = __webpack_require__(575).getParent;
+
+	var asTRBL = __webpack_require__(516).asTRBL,
+	    substractTRBL = __webpack_require__(534).substractTRBL,
+	    resizeTRBL = __webpack_require__(534).resizeTRBL;
 
 	var abs = Math.abs;
 
@@ -63319,773 +58917,135 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 699 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __init__: [ 'modeling', 'bpmnUpdater' ],
-	  __depends__: [
-	    __webpack_require__(700),
-	    __webpack_require__(496),
-	    __webpack_require__(719),
-	    __webpack_require__(722),
-	    __webpack_require__(727),
-	    __webpack_require__(497),
-	    __webpack_require__(731),
-	    __webpack_require__(733),
-	    __webpack_require__(735),
-	    __webpack_require__(453),
-	    __webpack_require__(509),
-	    __webpack_require__(655)
-	  ],
-	  bpmnFactory: [ 'type', __webpack_require__(740) ],
-	  bpmnUpdater: [ 'type', __webpack_require__(741) ],
-	  elementFactory: [ 'type', __webpack_require__(742) ],
-	  modeling: [ 'type', __webpack_require__(743) ],
-	  layouter: [ 'type', __webpack_require__(784) ],
-	  connectionDocking: [ 'type', __webpack_require__(789) ]
-	};
-
-
-/***/ },
-/* 700 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __init__: [
-	    'appendBehavior',
-	    'copyPasteBehavior',
-	    'createBoundaryEventBehavior',
-	    'createDataObjectBehavior',
-	    'createOnFlowBehavior',
-	    'createParticipantBehavior',
-	    'dataInputAssociationBehavior',
-	    'deleteLaneBehavior',
-	    'labelBehavior',
-	    'modelingFeedback',
-	    'removeParticipantBehavior',
-	    'replaceConnectionBehavior',
-	    'replaceElementBehaviour',
-	    'resizeLaneBehavior',
-	    'unsetDefaultFlowBehavior',
-	    'updateFlowNodeRefsBehavior',
-	    'removeElementBehavior',
-	    'unclaimIdBehavior'
-	  ],
-	  appendBehavior: [ 'type', __webpack_require__(701) ],
-	  copyPasteBehavior: [ 'type', __webpack_require__(702) ],
-	  createBoundaryEventBehavior: [ 'type', __webpack_require__(703) ],
-	  createDataObjectBehavior: [ 'type', __webpack_require__(704) ],
-	  createOnFlowBehavior: [ 'type', __webpack_require__(705) ],
-	  createParticipantBehavior: [ 'type', __webpack_require__(706) ],
-	  dataInputAssociationBehavior: [ 'type', __webpack_require__(707) ],
-	  deleteLaneBehavior: [ 'type', __webpack_require__(708) ],
-	  labelBehavior: [ 'type', __webpack_require__(709) ],
-	  modelingFeedback: [ 'type', __webpack_require__(710) ],
-	  removeParticipantBehavior: [ 'type', __webpack_require__(711) ],
-	  replaceConnectionBehavior: [ 'type', __webpack_require__(712) ],
-	  replaceElementBehaviour: [ 'type', __webpack_require__(713) ],
-	  resizeLaneBehavior: [ 'type', __webpack_require__(714) ],
-	  unsetDefaultFlowBehavior: [ 'type', __webpack_require__(715) ],
-	  updateFlowNodeRefsBehavior: [ 'type', __webpack_require__(716) ],
-	  removeElementBehavior: [ 'type', __webpack_require__(717) ],
-	  unclaimIdBehavior: [ 'type', __webpack_require__(718) ]
-	};
-
-
-/***/ },
-/* 701 */
+/* 603 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var inherits = __webpack_require__(3);
+	var getMid = __webpack_require__(516).getMid;
 
-	var is = __webpack_require__(444).is;
-
-	var CommandInterceptor = __webpack_require__(606);
-
-
-	function AppendBehavior(eventBus, elementFactory, bpmnRules) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  // assign correct shape position unless already set
-
-	  this.preExecute('shape.append', function(context) {
-
-	    var source = context.source,
-	        shape = context.shape;
-
-	    if (!context.position) {
-
-	      if (is(shape, 'bpmn:TextAnnotation')) {
-	        context.position = {
-	          x: source.x + source.width / 2 + 75,
-	          y: source.y - (50) - shape.height / 2
-	        };
-	      } else {
-	        context.position = {
-	          x: source.x + source.width + 80 + shape.width / 2,
-	          y: source.y + source.height / 2
-	        };
-	      }
-	    }
-	  }, true);
-	}
-
-
-	AppendBehavior.$inject = [ 'eventBus', 'elementFactory', 'bpmnRules' ];
-
-	inherits(AppendBehavior, CommandInterceptor);
-
-	module.exports = AppendBehavior;
-
-/***/ },
-/* 702 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var forEach = __webpack_require__(416);
-
-	var is = __webpack_require__(444).is;
-
-	var CommandInterceptor = __webpack_require__(606);
-
-
-	function CopyPasteBehavior(eventBus, modeling, canvas) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  this.preExecute('elements.paste', 1500, function(context) {
-	    var topParent = context.topParent;
-
-	    // always grab the latest root
-	    if (!topParent.parent) {
-	      context.topParent = canvas.getRootElement();
-	    }
-
-	    if (is(topParent, 'bpmn:Lane')) {
-	      do {
-	        // unwrap Lane -> LaneSet -> (Lane | FlowElementsContainer)
-	        topParent = context.topParent = topParent.parent;
-
-	      } while (is(topParent, 'bpmn:Lane') || !is(topParent, 'bpmn:Participant'));
-	    }
-	  }, true);
-
-	  this.postExecute('elements.paste', function(context) {
-
-	    var tree = context.tree,
-	        createdElements = tree.createdElements;
-
-	    forEach(createdElements, function(data) {
-	      var element = data.element,
-	          businessObject = element.businessObject,
-	          descriptor = data.descriptor,
-	          defaultFlow;
-
-	      if ((is(businessObject, 'bpmn:ExclusiveGateway') || is(businessObject, 'bpmn:InclusiveGateway') ||
-	           is(businessObject, 'bpmn:Activity')) && descriptor.default) {
-
-	        defaultFlow = createdElements[descriptor.default];
-
-	        // if the default flow wasn't created, means that it wasn't copied
-	        if (defaultFlow) {
-	          defaultFlow = defaultFlow.element;
-	        } else {
-	          defaultFlow = undefined;
-	        }
-
-	        delete element.default;
-
-	        modeling.updateProperties(element, { default: defaultFlow });
-	      }
-	    });
-	  }, true);
-	}
-
-
-	CopyPasteBehavior.$inject = [ 'eventBus', 'modeling', 'canvas' ];
-
-	inherits(CopyPasteBehavior, CommandInterceptor);
-
-	module.exports = CopyPasteBehavior;
-
-
-/***/ },
-/* 703 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(606);
-
-	var is = __webpack_require__(444).is;
+	var lineIntersect = __webpack_require__(604);
 
 
 	/**
-	 * BPMN specific create boundary event behavior
-	 */
-	function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFactory) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  /**
-	   * replace intermediate event with boundary event when
-	   * attaching it to a shape
-	   */
-
-	  this.preExecute('shape.create', function(context) {
-	    var shape = context.shape,
-	        host = context.host,
-	        businessObject,
-	        boundaryEvent;
-
-	    var attrs = {
-	      cancelActivity: true
-	    };
-
-	    if (host && is(shape, 'bpmn:IntermediateThrowEvent')) {
-	      attrs.attachedToRef = host.businessObject;
-
-	      businessObject = bpmnFactory.create('bpmn:BoundaryEvent', attrs);
-
-	      boundaryEvent = {
-	        type: 'bpmn:BoundaryEvent',
-	        businessObject: businessObject
-	      };
-
-	      context.shape = elementFactory.createShape(boundaryEvent);
-	    }
-	  }, true);
-	}
-
-	CreateBoundaryEventBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory' ];
-
-	inherits(CreateBoundaryEventBehavior, CommandInterceptor);
-
-	module.exports = CreateBoundaryEventBehavior;
-
-
-/***/ },
-/* 704 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(606);
-
-	var is = __webpack_require__(444).is;
-
-	/**
-	 * BPMN specific create data object behavior
-	 */
-	function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  this.preExecute('shape.create', function(event) {
-
-	    var context = event.context,
-	        shape = context.shape;
-
-	    if (is(shape, 'bpmn:DataObjectReference') && shape.type !== 'label') {
-
-	      // create a DataObject every time a DataObjectReference is created
-	      var dataObject = bpmnFactory.create('bpmn:DataObject');
-
-	      // set the reference to the DataObject
-	      shape.businessObject.dataObjectRef = dataObject;
-	    }
-	  });
-
-	}
-
-	CreateDataObjectBehavior.$inject = [ 'eventBus', 'bpmnFactory', 'moddle' ];
-
-	inherits(CreateDataObjectBehavior, CommandInterceptor);
-
-	module.exports = CreateDataObjectBehavior;
-
-
-/***/ },
-/* 705 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var assign = __webpack_require__(7);
-
-	var CommandInterceptor = __webpack_require__(606);
-
-	var getApproxIntersection = __webpack_require__(641).getApproxIntersection;
-
-
-	function copy(obj) {
-	  return assign({}, obj);
-	}
-
-	function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  /**
-	   * Reconnect start / end of a connection after
-	   * dropping an element on a flow.
-	   */
-
-	  this.preExecute('shape.create', function(context) {
-
-	    var parent = context.parent,
-	        shape = context.shape;
-
-	    if (bpmnRules.canInsert(shape, parent)) {
-	      context.targetFlow = parent;
-	      context.parent = parent.parent;
-	    }
-	  }, true);
-
-
-	  this.postExecute('shape.create', function(context) {
-
-	    var shape = context.shape,
-	        targetFlow = context.targetFlow,
-	        position = context.position,
-	        source,
-	        target,
-	        reconnected,
-	        intersection,
-	        waypoints,
-	        waypointsBefore,
-	        waypointsAfter,
-	        dockingPoint;
-
-	    if (targetFlow) {
-
-	      waypoints = targetFlow.waypoints;
-
-
-	      intersection = getApproxIntersection(waypoints, position);
-
-	      if (intersection) {
-	        waypointsBefore = waypoints.slice(0, intersection.index);
-	        waypointsAfter = waypoints.slice(intersection.index + (intersection.bendpoint ? 1 : 0));
-
-	        dockingPoint = intersection.bendpoint ? waypoints[intersection.index] : position;
-
-	        waypointsBefore.push(copy(dockingPoint));
-	        waypointsAfter.unshift(copy(dockingPoint));
-	      }
-
-	      source = targetFlow.source;
-	      target = targetFlow.target;
-
-	      if (bpmnRules.canConnect(source, shape, targetFlow)) {
-	        // reconnect source -> inserted shape
-	        modeling.reconnectEnd(targetFlow, shape, waypointsBefore || copy(position));
-
-	        reconnected = true;
-	      }
-
-	      if (bpmnRules.canConnect(shape, target, targetFlow)) {
-
-	        if (!reconnected) {
-	          // reconnect inserted shape -> end
-	          modeling.reconnectStart(targetFlow, shape, waypointsAfter || copy(position));
-	        } else {
-	          modeling.connect(shape, target, { type: targetFlow.type, waypoints: waypointsAfter });
-	        }
-	      }
-	    }
-	  }, true);
-	}
-
-	inherits(CreateOnFlowBehavior, CommandInterceptor);
-
-	CreateOnFlowBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
-
-	module.exports = CreateOnFlowBehavior;
-
-
-/***/ },
-/* 706 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(606);
-
-	var is = __webpack_require__(444).is;
-
-	/**
-	 * BPMN specific create participant behavior
-	 */
-	function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFactory, canvas) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  /**
-	   * morph process into collaboration before adding
-	   * participant onto collaboration
-	   */
-
-	  this.preExecute('shape.create', function(context) {
-
-	    var parent = context.parent,
-	        shape = context.shape,
-	        position = context.position;
-
-	    var rootElement = canvas.getRootElement();
-
-	    if (is(parent, 'bpmn:Process') && is(shape, 'bpmn:Participant') && !is(rootElement, 'bpmn:Collaboration')) {
-
-	      // this is going to detach the process root
-	      // and set the returned collaboration element
-	      // as the new root element
-	      var collaborationElement = modeling.makeCollaboration();
-
-	      // monkey patch the create context
-	      // so that the participant is being dropped
-	      // onto the new collaboration root instead
-	      context.position = position;
-	      context.parent = collaborationElement;
-
-	      context.processRoot = parent;
-	    }
-	  }, true);
-
-
-	  this.execute('shape.create', function(context) {
-
-	    var processRoot = context.processRoot,
-	        shape = context.shape;
-
-	    if (processRoot) {
-	      context.oldProcessRef = shape.businessObject.processRef;
-
-	      // assign the participant processRef
-	      shape.businessObject.processRef = processRoot.businessObject;
-	    }
-	  }, true);
-
-
-	  this.revert('shape.create', function(context) {
-	    var processRoot = context.processRoot,
-	        shape = context.shape;
-
-	    if (processRoot) {
-	      // assign the participant processRef
-	      shape.businessObject.processRef = context.oldProcessRef;
-	    }
-	  }, true);
-
-
-	  this.postExecute('shape.create', function(context) {
-
-	    var processRoot = context.processRoot,
-	        shape = context.shape;
-
-	    if (processRoot) {
-	      // process root is already detached at this point
-	      var processChildren = processRoot.children.slice();
-	      modeling.moveElements(processChildren, { x: 0, y: 0 }, shape);
-	    }
-
-	  }, true);
-
-	}
-
-	CreateParticipantBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory', 'canvas' ];
-
-	inherits(CreateParticipantBehavior, CommandInterceptor);
-
-	module.exports = CreateParticipantBehavior;
-
-
-/***/ },
-/* 707 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(606);
-
-	var Collections = __webpack_require__(136);
-
-	var find = __webpack_require__(412);
-
-	var is = __webpack_require__(444).is;
-
-	var TARGET_REF_PLACEHOLDER_NAME = '__targetRef_placeholder';
-
-
-	/**
-	 * This behavior makes sure we always set a fake
-	 * DataInputAssociation#targetRef as demanded by the BPMN 2.0
-	 * XSD schema.
-	 *
-	 * The reference is set to a bpmn:Property{ name: '__targetRef_placeholder' }
-	 * which is created on the fly and cleaned up afterwards if not needed
-	 * anymore.
+	 * Fix broken dockings after DI imports.
 	 *
 	 * @param {EventBus} eventBus
-	 * @param {BpmnFactory} bpmnFactory
 	 */
-	function DataInputAssociationBehavior(eventBus, bpmnFactory) {
+	function ImportDockingFix(eventBus) {
 
-	  CommandInterceptor.call(this, eventBus);
+	  function adjustDocking(startPoint, nextPoint, elementMid) {
 
+	    var elementTop = {
+	      x: elementMid.x,
+	      y: elementMid.y - 50
+	    };
 
-	  this.executed([
-	    'connection.create',
-	    'connection.delete',
-	    'connection.move',
-	    'connection.reconnectEnd'
-	  ], ifDataInputAssociation(fixTargetRef));
+	    var elementLeft = {
+	      x: elementMid.x - 50,
+	      y: elementMid.y
+	    };
 
-	  this.reverted([
-	    'connection.create',
-	    'connection.delete',
-	    'connection.move',
-	    'connection.reconnectEnd'
-	  ], ifDataInputAssociation(fixTargetRef));
+	    var verticalIntersect = lineIntersect(startPoint, nextPoint, elementMid, elementTop),
+	        horizontalIntersect = lineIntersect(startPoint, nextPoint, elementMid, elementLeft);
 
+	    // original is horizontal or vertical center cross intersection
+	    var centerIntersect;
 
-	  function usesTargetRef(element, targetRef, removedConnection) {
-
-	    var inputAssociations = element.get('dataInputAssociations');
-
-	    return find(inputAssociations, function(association) {
-	      return association !== removedConnection &&
-	             association.targetRef === targetRef;
-	    });
-	  }
-
-	  function getTargetRef(element, create) {
-
-	    var properties = element.get('properties');
-
-	    var targetRefProp = find(properties, function(p) {
-	      return p.name === TARGET_REF_PLACEHOLDER_NAME;
-	    });
-
-	    if (!targetRefProp && create) {
-	      targetRefProp = bpmnFactory.create('bpmn:Property', {
-	        name: TARGET_REF_PLACEHOLDER_NAME
-	      });
-
-	      Collections.add(properties, targetRefProp);
-	    }
-
-	    return targetRefProp;
-	  }
-
-	  function cleanupTargetRef(element, connection) {
-
-	    var targetRefProp = getTargetRef(element);
-
-	    if (!targetRefProp) {
-	      return;
-	    }
-
-	    if (!usesTargetRef(element, targetRefProp, connection)) {
-	      Collections.remove(element.get('properties'), targetRefProp);
-	    }
-	  }
-
-	  /**
-	   * Make sure targetRef is set to a valid property or
-	   * `null` if the connection is detached.
-	   *
-	   * @param {Event} event
-	   */
-	  function fixTargetRef(event) {
-
-	    var context = event.context,
-	        connection = context.connection,
-	        connectionBo = connection.businessObject,
-	        target = connection.target,
-	        targetBo = target && target.businessObject,
-	        newTarget = context.newTarget,
-	        newTargetBo = newTarget && newTarget.businessObject,
-	        oldTarget = context.oldTarget || context.target,
-	        oldTargetBo = oldTarget && oldTarget.businessObject;
-
-	    var dataAssociation = connection.businessObject,
-	        targetRefProp;
-
-	    if (oldTargetBo && oldTargetBo !== targetBo) {
-	      cleanupTargetRef(oldTargetBo, connectionBo);
-	    }
-
-	    if (newTargetBo && newTargetBo !== targetBo) {
-	      cleanupTargetRef(newTargetBo, connectionBo);
-	    }
-
-	    if (targetBo) {
-	      targetRefProp = getTargetRef(targetBo, true);
-	      dataAssociation.targetRef = targetRefProp;
-	    } else {
-	      dataAssociation.targetRef = null;
-	    }
-	  }
-	}
-
-	DataInputAssociationBehavior.$inject = [ 'eventBus', 'bpmnFactory' ];
-
-	inherits(DataInputAssociationBehavior, CommandInterceptor);
-
-	module.exports = DataInputAssociationBehavior;
-
-
-	/**
-	 * Only call the given function when the event
-	 * touches a bpmn:DataInputAssociation.
-	 *
-	 * @param {Function} fn
-	 * @return {Function}
-	 */
-	function ifDataInputAssociation(fn) {
-
-	  return function(event) {
-	    var context = event.context,
-	        connection = context.connection;
-
-	    if (is(connection, 'bpmn:DataInputAssociation')) {
-	      return fn(event);
-	    }
-	  };
-	}
-
-/***/ },
-/* 708 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(606);
-
-	var is = __webpack_require__(444).is;
-
-	var getChildLanes = __webpack_require__(698).getChildLanes;
-
-	var eachElement = __webpack_require__(137).eachElement;
-
-
-	var LOW_PRIORITY = 500;
-
-
-	/**
-	 * BPMN specific delete lane behavior
-	 */
-	function DeleteLaneBehavior(eventBus, modeling, spaceTool) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-
-	  function compensateLaneDelete(shape, oldParent) {
-
-	    var siblings = getChildLanes(oldParent);
-
-	    var topAffected = [];
-	    var bottomAffected = [];
-
-	    eachElement(siblings, function(element) {
-
-	      if (element.y > shape.y) {
-	        bottomAffected.push(element);
+	    if (verticalIntersect && horizontalIntersect) {
+	      if (getDistance(verticalIntersect, elementMid) > getDistance(horizontalIntersect, elementMid)) {
+	        centerIntersect = horizontalIntersect;
 	      } else {
-	        topAffected.push(element);
+	        centerIntersect = verticalIntersect;
 	      }
-
-	      return element.children;
-	    });
-
-	    if (!siblings.length) {
-	      return;
-	    }
-
-	    var offset;
-
-	    if (bottomAffected.length && topAffected.length) {
-	      offset = shape.height / 2;
 	    } else {
-	      offset = shape.height;
+	      centerIntersect = verticalIntersect || horizontalIntersect;
 	    }
 
-	    var topAdjustments,
-	        bottomAdjustments;
-
-	    if (topAffected.length) {
-	      topAdjustments = spaceTool.calculateAdjustments(
-	        topAffected, 'y', offset, shape.y - 10);
-
-	      spaceTool.makeSpace(
-	        topAdjustments.movingShapes,
-	        topAdjustments.resizingShapes,
-	        { x: 0, y: offset }, 's');
-	    }
-
-	    if (bottomAffected.length) {
-	      bottomAdjustments = spaceTool.calculateAdjustments(
-	        bottomAffected, 'y', -offset, shape.y + shape.height + 10);
-
-	      spaceTool.makeSpace(
-	        bottomAdjustments.movingShapes,
-	        bottomAdjustments.resizingShapes,
-	        { x: 0, y: -offset }, 'n');
-	    }
+	    startPoint.original = centerIntersect;
 	  }
 
+	  function fixDockings(connection) {
+	    var waypoints = connection.waypoints;
 
-	  /**
-	   * Adjust sizes of other lanes after lane deletion
-	   */
-	  this.postExecuted('shape.delete', LOW_PRIORITY, function(event) {
+	    adjustDocking(
+	      waypoints[0],
+	      waypoints[1],
+	      getMid(connection.source)
+	    );
 
-	    var context = event.context,
-	        hints = context.hints,
-	        shape = context.shape,
-	        oldParent = context.oldParent;
+	    adjustDocking(
+	      waypoints[waypoints.length - 1],
+	      waypoints[waypoints.length - 2],
+	      getMid(connection.target)
+	    );
+	  }
 
-	    // only compensate lane deletes
-	    if (!is(shape, 'bpmn:Lane')) {
-	      return;
+	  eventBus.on('bpmnElement.added', function(e) {
+
+	    var element = e.element;
+
+	    if (element.waypoints) {
+	      fixDockings(element);
 	    }
-
-	    // compensate root deletes only
-	    if (hints && hints.nested) {
-	      return;
-	    }
-
-	    compensateLaneDelete(shape, oldParent);
 	  });
 	}
 
-	DeleteLaneBehavior.$inject = [ 'eventBus', 'modeling', 'spaceTool' ];
+	ImportDockingFix.$inject = [ 'eventBus' ];
 
-	inherits(DeleteLaneBehavior, CommandInterceptor);
+	module.exports = ImportDockingFix;
 
-	module.exports = DeleteLaneBehavior;
+
+	/////// helpers //////////////////////////////////
+
+	function getDistance(p1, p2) {
+	  return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+	}
 
 /***/ },
-/* 709 */
+/* 604 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * Returns the intersection between two line segments a and b.
+	 *
+	 * @param {Point} l1s
+	 * @param {Point} l1e
+	 * @param {Point} l2s
+	 * @param {Point} l2e
+	 *
+	 * @return {Point}
+	 */
+	module.exports = function lineIntersect(l1s, l1e, l2s, l2e) {
+	  // if the lines intersect, the result contains the x and y of the
+	  // intersection (treating the lines as infinite) and booleans for
+	  // whether line segment 1 or line segment 2 contain the point
+	  var denominator, a, b, c, numerator;
+
+	  denominator = ((l2e.y - l2s.y) * (l1e.x - l1s.x)) - ((l2e.x - l2s.x) * (l1e.y - l1s.y));
+
+	  if (denominator == 0) {
+	    return null;
+	  }
+
+	  a = l1s.y - l2s.y;
+	  b = l1s.x - l2s.x;
+	  numerator = ((l2e.x - l2s.x) * a) - ((l2e.y - l2s.y) * b);
+
+	  c = numerator / denominator;
+
+	  // if we cast these lines infinitely in
+	  // both directions, they intersect here
+	  return {
+	    x: Math.round(l1s.x + (c * (l1e.x - l1s.x))),
+	    y: Math.round(l1s.y + (c * (l1e.y - l1s.y)))
+	  };
+	};
+
+/***/ },
+/* 605 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -64093,15 +59053,17 @@ var InfoxBpmnModeler =
 	var assign = __webpack_require__(7),
 	    inherits = __webpack_require__(3);
 
-	var LabelUtil = __webpack_require__(452),
-	    ModelUtil = __webpack_require__(444),
+	var LabelUtil = __webpack_require__(451),
+	    LabelLayoutUtil = __webpack_require__(606),
+	    ModelUtil = __webpack_require__(443),
 	    is = ModelUtil.is,
 	    getBusinessObject = ModelUtil.getBusinessObject;
 
 	var hasExternalLabel = LabelUtil.hasExternalLabel,
-	    getExternalLabelMid = LabelUtil.getExternalLabelMid;
+	    getExternalLabelMid = LabelUtil.getExternalLabelMid,
+	    getLabelAdjustment = LabelLayoutUtil.getLabelAdjustment;
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
 
 	/**
@@ -64117,7 +59079,8 @@ var InfoxBpmnModeler =
 
 	  CommandInterceptor.call(this, eventBus);
 
-	  // create external labels on shape creation
+
+	  ///// create external labels on shape creation
 
 	  this.postExecute([ 'shape.create', 'connection.create' ], function(e) {
 	    var context = e.context;
@@ -64138,45 +59101,12 @@ var InfoxBpmnModeler =
 	    }
 	  });
 
-	  // update label position on waypoints change if still hidden
-	  this.postExecute([ 'connection.updateWaypoints' ], function(e) {
-	    var context = e.context,
-	        connection = context.connection,
-	        label = connection.label;
 
-	    if (!label) {
-	      return;
-	    }
+	  ///// update di information on label creation
 
-	    if (label.hidden) {
-	      var position = getExternalLabelMid(connection);
+	  this.executed([ 'label.create' ], function(event) {
 
-	      var delta = {
-	        x: position.x - label.x - label.width / 2,
-	        y: position.y - label.y - label.height / 2
-	      };
-
-	      modeling.moveShape(label, delta);
-	    }
-	  });
-
-	  this.postExecute([ 'shape.replace' ], function(e) {
-	    var context = e.context,
-	        newShape = context.newShape,
-	        oldShape = context.oldShape;
-
-	    var businessObject = getBusinessObject(newShape);
-
-	    if (businessObject && hasExternalLabel(businessObject)) {
-	      newShape.label.x = oldShape.label.x;
-	      newShape.label.y = oldShape.label.y;
-	    }
-	  });
-
-	  // update di information on label creation
-	  this.executed([ 'label.create' ], function(e) {
-
-	    var element = e.context.shape,
+	    var element = event.context.shape,
 	        businessObject,
 	        di;
 
@@ -64207,6 +59137,85 @@ var InfoxBpmnModeler =
 	      height: element.height
 	    });
 	  });
+
+
+	  ///// update label position on connection change
+
+	  function getHiddenLabelAdjustment(event) {
+
+	    var context = event.context,
+	        connection = context.connection,
+	        label = connection.label;
+
+	    var labelPosition = getExternalLabelMid(connection);
+
+	    return {
+	      x: labelPosition.x - label.x - label.width / 2,
+	      y: labelPosition.y - label.y - label.height / 2
+	    };
+	  }
+
+	  function getVisibleLabelAdjustment(event) {
+
+	    var command = event.command,
+	        context = event.context,
+	        connection = context.connection,
+	        label = connection.label,
+	        hints = assign({}, context.hints),
+	        newWaypoints = context.newWaypoints || connection.waypoints,
+	        oldWaypoints = context.oldWaypoints;
+
+
+	    if (typeof hints.startChanged === 'undefined') {
+	      hints.startChanged = (command === 'connection.reconnectStart');
+	    }
+
+	    if (typeof hints.endChanged === 'undefined') {
+	      hints.endChanged = (command === 'connection.reconnectEnd');
+	    }
+
+	    return getLabelAdjustment(label, newWaypoints, oldWaypoints, hints);
+	  }
+
+	  this.postExecute([
+	    'connection.layout',
+	    'connection.reconnectEnd',
+	    'connection.reconnectStart',
+	    'connection.updateWaypoints'
+	  ], function(event) {
+
+	    var label = event.context.connection.label,
+	        labelAdjustment;
+
+	    if (!label) {
+	      return;
+	    }
+
+	    if (label.hidden) {
+	      labelAdjustment = getHiddenLabelAdjustment(event);
+	    } else {
+	      labelAdjustment = getVisibleLabelAdjustment(event);
+	    }
+
+	    modeling.moveShape(label, labelAdjustment);
+	  });
+
+
+	  ////// keep label position on shape replace
+
+	  this.postExecute([ 'shape.replace' ], function(event) {
+	    var context = event.context,
+	        newShape = context.newShape,
+	        oldShape = context.oldShape;
+
+	    var businessObject = getBusinessObject(newShape);
+
+	    if (businessObject && hasExternalLabel(businessObject)) {
+	      newShape.label.x = oldShape.label.x;
+	      newShape.label.y = oldShape.label.y;
+	    }
+	  });
+
 	}
 
 	inherits(LabelSupport, CommandInterceptor);
@@ -64217,12 +59226,603 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 710 */
+/* 606 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(444).is;
+	var GeometricUtil = __webpack_require__(607);
+
+	var getDistancePointPoint = __webpack_require__(607).getDistancePointPoint;
+
+	var getAttachment = __webpack_require__(608).getAttachment;
+
+
+	function findNewLabelLineStartIndex(oldWaypoints, newWaypoints, attachment, hints) {
+
+	  var index = attachment.segmentIndex;
+
+	  var offset = newWaypoints.length - oldWaypoints.length;
+
+	  // segmentMove happend
+	  if (hints.segmentMove) {
+
+	    var oldSegmentStartIndex = hints.segmentMove.segmentStartIndex,
+	        newSegmentStartIndex = hints.segmentMove.newSegmentStartIndex;
+
+	    // if label was on moved segment return new segment index
+	    if (index === oldSegmentStartIndex) {
+	      return newSegmentStartIndex;
+	    }
+
+	    // label is after new segment index
+	    if (index >= newSegmentStartIndex) {
+	      return (index+offset < newSegmentStartIndex) ? newSegmentStartIndex : index+offset;
+	    }
+
+	    // if label is before new segment index
+	    return index;
+	  }
+
+	  // bendpointMove happend
+	  if (hints.bendpointMove) {
+
+	    var insert = hints.bendpointMove.insert,
+	        bendpointIndex = hints.bendpointMove.bendpointIndex,
+	        newIndex;
+
+	    // waypoints length didnt change
+	    if (offset === 0) {
+	      return index;
+	    }
+
+	    // label behind new/removed bendpoint
+	    if (index >= bendpointIndex) {
+	      newIndex = insert ? index + 1 : index - 1;
+	    }
+
+	    // label before new/removed bendpoint
+	    if (index < bendpointIndex) {
+
+	      newIndex = index;
+
+	      // decide label should take right or left segment
+	      if (insert && attachment.type !== 'bendpoint' && bendpointIndex-1 === index) {
+
+	        var rel = relativePositionMidWaypoint(newWaypoints, bendpointIndex);
+
+	        if (rel < attachment.relativeLocation) {
+	          newIndex++;
+	        }
+	      }
+	    }
+
+	    return newIndex;
+	  }
+
+	  // start/end changed
+	  if (offset === 0) {
+	    return index;
+	  }
+
+	  if (hints.connectionStart) {
+	    return (index === 0) ? 0 : null;
+	  }
+
+	  if (hints.connectionEnd) {
+	    return (index === oldWaypoints.length - 2) ? newWaypoints.length - 2 : null;
+	  }
+
+	  // if nothing fits, return null
+	  return null;
+	}
+
+	module.exports.findNewLabelLineStartIndex = findNewLabelLineStartIndex;
+
+
+	/**
+	 * Calculate the required adjustment (move delta) for the given label
+	 * after the connection waypoints got updated.
+	 *
+	 * @param {djs.model.Label} label
+	 * @param {Array<Point>} newWaypoints
+	 * @param {Array<Point>} oldWaypoints
+	 * @param {Object} hints
+	 *
+	 * @return {Point} delta
+	 */
+	function getLabelAdjustment(label, newWaypoints, oldWaypoints, hints) {
+
+	  var x = 0,
+	      y = 0;
+
+	  var labelPosition = getLabelMid(label);
+
+	  // get closest attachment
+	  var attachment = getAttachment(labelPosition, oldWaypoints),
+	      oldLabelLineIndex = attachment.segmentIndex,
+	      newLabelLineIndex = findNewLabelLineStartIndex(oldWaypoints, newWaypoints, attachment, hints);
+
+	  if ( newLabelLineIndex === null ) {
+	    return { x: x, y: y };
+	  }
+
+	  // should never happen
+	  // TODO(@janstuemmel): throw an error here when connectionSegmentMove is refactored
+	  if (newLabelLineIndex < 0 ||
+	      newLabelLineIndex > newWaypoints.length - 2) {
+	    return { x: x, y: y };
+	  }
+
+	  var oldLabelLine = getLine(oldWaypoints, oldLabelLineIndex),
+	      newLabelLine = getLine(newWaypoints, newLabelLineIndex),
+	      oldFoot = attachment.position;
+
+	  var relativeFootPosition = getRelativeFootPosition(oldLabelLine, oldFoot),
+	      angleDelta = getAngleDelta(oldLabelLine, newLabelLine);
+
+	  // special rule if label on bendpoint
+	  if (attachment.type === 'bendpoint') {
+
+	    var offset = newWaypoints.length - oldWaypoints.length,
+	        oldBendpointIndex = attachment.bendpointIndex,
+	        oldBendpoint = oldWaypoints[oldBendpointIndex];
+
+	    // bendpoint position hasnt changed, return same position
+	    if (newWaypoints.indexOf(oldBendpoint) !== -1) {
+	      return { x: x, y: y };
+	    }
+
+	    // new bendpoint and old bendpoint have same index, then just return the offset
+	    if (offset === 0) {
+	      var newBendpoint = newWaypoints[oldBendpointIndex];
+
+	      return {
+	        x: newBendpoint.x - attachment.position.x,
+	        y: newBendpoint.y - attachment.position.y
+	      };
+	    }
+
+	    // if bendpoints get removed
+	    if (offset < 0 && oldBendpointIndex !== 0 && oldBendpointIndex < oldWaypoints.length - 1) {
+	      relativeFootPosition = relativePositionMidWaypoint(oldWaypoints, oldBendpointIndex);
+	    }
+	  }
+
+	  var newFoot = {
+	    x: (newLabelLine[1].x - newLabelLine[0].x) * relativeFootPosition + newLabelLine[0].x,
+	    y: (newLabelLine[1].y - newLabelLine[0].y) * relativeFootPosition + newLabelLine[0].y
+	  };
+
+	  // the rotated vector to label
+	  var newLabelVector = GeometricUtil.rotateVector({
+	    x: labelPosition.x - oldFoot.x,
+	    y: labelPosition.y - oldFoot.y
+	  }, angleDelta);
+
+	  // the new relative position
+	  x = newFoot.x + newLabelVector.x - labelPosition.x;
+	  y = newFoot.y + newLabelVector.y - labelPosition.y;
+
+	  return { x: x, y: y };
+	}
+
+	module.exports.getLabelAdjustment = getLabelAdjustment;
+
+
+	//// HELPERS ///////
+
+	function relativePositionMidWaypoint(waypoints, idx) {
+
+	  var distanceSegment1 = getDistancePointPoint(waypoints[idx-1], waypoints[idx]),
+	      distanceSegment2 = getDistancePointPoint(waypoints[idx], waypoints[idx+1]);
+
+	  var relativePosition = distanceSegment1 / ( distanceSegment1 + distanceSegment2 );
+
+	  return relativePosition;
+
+	}
+
+	function getLabelMid(label) {
+	  return {
+	    x: label.x + label.width / 2,
+	    y: label.y + label.height / 2
+	  };
+	}
+
+	function getAngleDelta(l1, l2) {
+	  var a1 = GeometricUtil.getAngle(l1),
+	      a2 = GeometricUtil.getAngle(l2);
+	  return a2 - a1;
+	}
+
+	function getLine(waypoints, idx) {
+	  return [ waypoints[idx], waypoints[idx+1] ];
+	}
+
+	function getRelativeFootPosition(line, foot) {
+	  var length = getDistancePointPoint(line[0], line[1]),
+	      lengthToFoot = getDistancePointPoint(line[0], foot);
+
+	  return lengthToFoot / length;
+	}
+
+
+/***/ },
+/* 607 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * Returns the length of a vector
+	 *
+	 * @param {Vector}
+	 * @return {Float}
+	 */
+	function vectorLength(v) {
+	  return Math.sqrt( Math.pow(v.x, 2) + Math.pow(v.y, 2) );
+	}
+
+	module.exports.vectorLength = vectorLength;
+
+	/**
+	 * Calculates the angle between a line a the yAxis
+	 *
+	 * @param {Array}
+	 * @return {Float}
+	 */
+	function getAngle(line) {
+	  // return value is between 0, 180 and -180, -0
+	  // @janstuemmel: maybe replace return a/b with b/a
+	  return Math.atan( (line[1].y - line[0].y) / (line[1].x - line[0].x) );
+	}
+
+	module.exports.getAngle = getAngle;
+
+	/**
+	 * Rotates a vector by a given angle
+	 *
+	 * @param {Vector}
+	 * @param {Float} Angle in radians
+	 * @return {Vector}
+	 */
+	function rotateVector(vector, angle) {
+	  return (!angle) ? vector : {
+	    x: Math.cos(angle) * vector.x - Math.sin(angle) * vector.y,
+	    y: Math.sin(angle) * vector.x + Math.cos(angle) * vector.y
+	  };
+	}
+
+	module.exports.rotateVector = rotateVector;
+
+	/**
+	 * Solves a 2D equation system
+	 * a + r*b = c, where a,b,c are 2D vectors
+	 *
+	 * @param {Vector}
+	 * @param {Vector}
+	 * @param {Vector}
+	 * @return {Float}
+	 */
+	function solveLambaSystem(a, b, c) {
+
+	  // the 2d system
+	  var system = [
+	    { n: a[0] - c[0], lambda: b[0] },
+	    { n: a[1] - c[1], lambda: b[1] }
+	  ];
+
+	  // solve
+	  var n = system[0].n * b[0] + system[1].n * b[1],
+	      l = system[0].lambda * b[0] + system[1].lambda * b[1];
+
+	  return -n/l;
+	}
+
+	/**
+	 * Position of perpendicular foot
+	 *
+	 * @param {Point}
+	 * @param [ {Point}, {Point} ] line defined throug two points
+	 * @return {Point} the perpendicular foot position
+	 */
+	function perpendicularFoot(point, line) {
+
+	  var a = line[0], b = line[1];
+
+	  // relative position of b from a
+	  var bd = { x: b.x - a.x, y: b.y - a.y };
+
+	  // solve equation system to the parametrized vectors param real value
+	  var r = solveLambaSystem( [ a.x, a.y ], [ bd.x, bd.y ], [ point.x, point.y ] );
+
+	  return { x: a.x + r*bd.x, y: a.y + r*bd.y };
+
+	}
+
+	module.exports.perpendicularFoot = perpendicularFoot;
+
+	/**
+	 * Calculates the distance between a point and a line
+	 *
+	 * @param {Point}
+	 * @param [ {Point}, {Point} ] line defined throug two points
+	 * @return {Float} distance
+	 */
+	function getDistancePointLine(point, line) {
+
+	  var pfPoint = perpendicularFoot(point, line);
+
+	  // distance vector
+	  var connectionVector = {
+	    x: pfPoint.x - point.x,
+	    y: pfPoint.y - point.y
+	  };
+
+	  return vectorLength(connectionVector);
+	}
+
+	module.exports.getDistancePointLine = getDistancePointLine;
+
+	/**
+	 * Calculates the distance between two points
+	 *
+	 * @param {Point}
+	 * @param {Point}
+	 * @return {Float} distance
+	 */
+	function getDistancePointPoint(point1, point2) {
+
+	  return vectorLength({
+	    x: point1.x - point2.x,
+	    y: point1.y - point2.y
+	  });
+	}
+
+	module.exports.getDistancePointPoint = getDistancePointPoint;
+
+
+/***/ },
+/* 608 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var sqrt = Math.sqrt,
+	    min = Math.min,
+	    max = Math.max;
+
+	/**
+	 * Calculate the square (power to two) of a number.
+	 *
+	 * @param {Number} n
+	 *
+	 * @return {Number}
+	 */
+	function sq(n) {
+	  return Math.pow(n, 2);
+	}
+
+	/**
+	 * Get distance between two points.
+	 *
+	 * @param {Point} p1
+	 * @param {Point} p2
+	 *
+	 * @return {Number}
+	 */
+	function getDistance(p1, p2) {
+	  return sqrt(sq(p1.x - p2.x) + sq(p1.y - p2.y));
+	}
+
+	/**
+	 * Return the attachment of the given point on the specified line.
+	 *
+	 * The attachment is either a bendpoint (attached to the given point)
+	 * or segment (attached to a location on a line segment) attachment:
+	 *
+	 * ```javascript
+	 * var pointAttachment = {
+	 *   type: 'bendpoint',
+	 *   bendpointIndex: 3,
+	 *   position: { x: 10, y: 10 } // the attach point on the line
+	 * };
+	 *
+	 * var segmentAttachment = {
+	 *   type: 'segment',
+	 *   segmentIndex: 2,
+	 *   relativeLocation: 0.31, // attach point location between 0 (at start) and 1 (at end)
+	 *   position: { x: 10, y: 10 } // the attach point on the line
+	 * };
+	 * ```
+	 *
+	 * @param {Point} point
+	 * @param {Array<Point>} line
+	 *
+	 * @return {Object} attachment
+	 */
+	function getAttachment(point, line) {
+
+	  var idx = 0,
+	      segmentStart,
+	      segmentEnd,
+	      segmentStartDistance,
+	      segmentEndDistance,
+	      attachmentPosition,
+	      minDistance,
+	      intersections,
+	      attachment,
+	      attachmentDistance,
+	      closestAttachmentDistance,
+	      closestAttachment;
+
+	  for (idx = 0; idx < line.length - 1; idx++) {
+
+	    segmentStart = line[idx];
+	    segmentEnd = line[idx + 1];
+
+	    if (pointsEqual(segmentStart, segmentEnd)) {
+	      continue;
+	    }
+
+	    segmentStartDistance = getDistance(point, segmentStart);
+	    segmentEndDistance = getDistance(point, segmentEnd);
+
+	    minDistance = min(segmentStartDistance, segmentEndDistance);
+
+	    intersections = getCircleSegmentIntersections(segmentStart, segmentEnd, point, minDistance);
+
+	    if (intersections.length < 1) {
+	      throw new Error('expected between [1, 2] circle -> line intersections');
+	    }
+
+	    // one intersection -> bendpoint attachment
+	    if (intersections.length === 1) {
+	      attachment = {
+	        type: 'bendpoint',
+	        position: intersections[0],
+	        segmentIndex: idx,
+	        bendpointIndex: pointsEqual(segmentStart, intersections[0]) ? idx : idx + 1
+	      };
+	    }
+
+	    // two intersections -> segment attachment
+	    if (intersections.length === 2) {
+
+	      attachmentPosition = mid(intersections[0], intersections[1]);
+
+	      attachment = {
+	        type: 'segment',
+	        position: attachmentPosition,
+	        segmentIndex: idx,
+	        relativeLocation: getDistance(segmentStart, attachmentPosition) / getDistance(segmentStart, segmentEnd)
+	      };
+	    }
+
+	    attachmentDistance = getDistance(attachment.position, point);
+
+	    if (!closestAttachment || closestAttachmentDistance > attachmentDistance) {
+	      closestAttachment = attachment;
+	      closestAttachmentDistance = attachmentDistance;
+	    }
+	  }
+
+	  return closestAttachment;
+	}
+
+	module.exports.getAttachment = getAttachment;
+
+	/**
+	 * Gets the intersection between a circle and a line segment.
+	 *
+	 * @param {Point} s1 segment start
+	 * @param {Point} s2 segment end
+	 * @param {Point} cc circle center
+	 * @param {Number} cr circle radius
+	 *
+	 * @return {Array<Point>} intersections
+	 */
+	function getCircleSegmentIntersections(s1, s2, cc, cr) {
+
+	  // silently round values
+	  s1 = roundPoint(s1);
+	  s2 = roundPoint(s2);
+	  cc = roundPoint(cc);
+	  cr = min(getDistance(s1, cc), getDistance(s2, cc));
+
+	  var baX = s2.x - s1.x;
+	  var baY = s2.y - s1.y;
+	  var caX = cc.x - s1.x;
+	  var caY = cc.y - s1.y;
+
+	  var a = baX * baX + baY * baY;
+	  var bBy2 = baX * caX + baY * caY;
+	  var c = caX * caX + caY * caY - cr * cr;
+
+	  var pBy2 = bBy2 / a;
+	  var q = c / a;
+
+	  var disc = pBy2 * pBy2 - q;
+	  if (disc < 0) {
+	    return [];
+	  }
+
+	  // if disc == 0 ... dealt with later
+	  var tmpSqrt = sqrt(disc);
+	  var abScalingFactor1 = -pBy2 + tmpSqrt;
+	  var abScalingFactor2 = -pBy2 - tmpSqrt;
+
+	  var i1 = {
+	    x: round(s1.x - baX * abScalingFactor1),
+	    y: round(s1.y - baY * abScalingFactor1)
+	  };
+
+	  if (disc === 0) { // abScalingFactor1 == abScalingFactor2
+	    return [ i1 ];
+	  }
+
+	  var i2 = {
+	    x: round(s1.x - baX * abScalingFactor2),
+	    y: round(s1.y - baY * abScalingFactor2)
+	  };
+
+	  return [ i1, i2 ].filter(function(p) {
+	    return isPointInSegment(p, s1, s2);
+	  });
+	}
+
+
+	function isPointInSegment(p, segmentStart, segmentEnd) {
+	  return (
+	    fenced(p.x, segmentStart.x, segmentEnd.x) &&
+	    fenced(p.y, segmentStart.y, segmentEnd.y)
+	  );
+	}
+
+	function fenced(n, rangeStart, rangeEnd) {
+	  return min(rangeStart, rangeEnd) <= n && n <= max(rangeStart, rangeEnd);
+	}
+
+	/**
+	 * Calculate mid of two points.
+	 *
+	 * @param {Point} p1
+	 * @param {Point} p2
+	 *
+	 * @return {Point}
+	 */
+	function mid(p1, p2) {
+
+	  return {
+	    x: (p1.x + p2.x) / 2,
+	    y: (p1.y + p2.y) / 2
+	  };
+	}
+
+	function round(n) {
+	  return Math.round(n * 1000) / 1000;
+	}
+
+	function roundPoint(p) {
+	  return {
+	    x: round(p.x),
+	    y: round(p.y)
+	  };
+	}
+
+	function pointsEqual(p1, p2) {
+	  return p1.x === p2.x && p1.y === p2.y;
+	}
+
+
+/***/ },
+/* 609 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var is = __webpack_require__(443).is;
 
 	var COLLAB_ERR_MSG = 'flow elements must be children of pools/participants',
 	    PROCESS_ERR_MSG = 'participants cannot be pasted onto a non-empty process diagram';
@@ -64273,16 +59873,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 711 */
+/* 610 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
 
 	/**
@@ -64329,18 +59929,18 @@ var InfoxBpmnModeler =
 	module.exports = RemoveParticipantBehavior;
 
 /***/ },
-/* 712 */
+/* 611 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(416),
-	    find = __webpack_require__(412),
+	var forEach = __webpack_require__(415),
+	    find = __webpack_require__(411),
 	    inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
 	function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
 
@@ -64425,7 +60025,7 @@ var InfoxBpmnModeler =
 	  this.postExecuted([
 	    'connection.reconnectStart',
 	    'connection.reconnectEnd'
-	  ], function(event){
+	  ], function(event) {
 
 	    var connection = event.context.connection;
 
@@ -64463,19 +60063,19 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 713 */
+/* 612 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
-	var forEach = __webpack_require__(416);
+	var forEach = __webpack_require__(415);
 
-	var isEventSubProcess = __webpack_require__(443).isEventSubProcess;
-	var is = __webpack_require__(444).is;
+	var isEventSubProcess = __webpack_require__(442).isEventSubProcess;
+	var is = __webpack_require__(443).is;
 
 	/**
 	 * Defines the behaviour of what happens to the elements inside a container
@@ -64525,9 +60125,6 @@ var InfoxBpmnModeler =
 	        attachers = oldShape.attachers,
 	        canReplace;
 
-	    modeling.unclaimId(oldShape.businessObject.id, oldShape.businessObject);
-	    modeling.claimId(newShape.businessObject.id, newShape.businessObject);
-
 	    if (attachers && attachers.length) {
 	      canReplace = bpmnRules.canReplace(attachers, newShape);
 
@@ -64535,6 +60132,15 @@ var InfoxBpmnModeler =
 	    }
 
 	  }, this);
+
+	  this.postExecuted( [ 'shape.replace' ], 1500, function(e) {
+	    var context = e.context,
+	        oldShape = context.oldShape,
+	        newShape = context.newShape;
+
+	    modeling.unclaimId(oldShape.businessObject.id, oldShape.businessObject);
+	    modeling.updateProperties(newShape, { id: oldShape.id });
+	  });
 	}
 
 	inherits(ReplaceElementBehaviour, CommandInterceptor);
@@ -64579,16 +60185,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 714 */
+/* 613 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
-	var roundBounds = __webpack_require__(644).roundBounds;
+	var roundBounds = __webpack_require__(516).roundBounds;
 
-	var hasPrimaryModifier = __webpack_require__(461).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
 
 	var SLIGHTLY_HIGHER_PRIORITY = 1001;
 
@@ -64644,17 +60250,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 715 */
+/* 614 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
-	var is = __webpack_require__(444).is,
-	    getBusinessObject = __webpack_require__(444).getBusinessObject;
+	var is = __webpack_require__(443).is,
+	    getBusinessObject = __webpack_require__(443).getBusinessObject;
 
 	/**
 	 * A behavior that unsets the Default property of
@@ -64704,7 +60310,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 716 */
+/* 615 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -64712,9 +60318,9 @@ var InfoxBpmnModeler =
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
 	var LOW_PRIORITY = 500,
 	    HIGH_PRIORITY = 5000;
@@ -64866,14 +60472,17 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 717 */
+/* 616 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
+
+	var lineIntersect = __webpack_require__(604);
+
 
 	function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
 
@@ -64884,7 +60493,6 @@ var InfoxBpmnModeler =
 	   * if there is one incoming and one outgoing
 	   * sequence flow
 	   */
-
 	  this.preExecute('shape.delete', function(e) {
 
 	    var shape = e.context.shape;
@@ -64894,14 +60502,17 @@ var InfoxBpmnModeler =
 	      var inConnection = shape.incoming[0],
 	          outConnection = shape.outgoing[0];
 
-	      var docking = outConnection.waypoints[outConnection.waypoints.length - 1];
 
 	      if (bpmnRules.canConnect(inConnection.source, outConnection.target, inConnection)) {
-	        modeling.reconnectEnd(inConnection, outConnection.target, docking);
-	      }
 
+	        // compute new, combined waypoints
+	        var newWaypoints = getNewWaypoints(inConnection.waypoints, outConnection.waypoints);
+
+	        modeling.reconnectEnd(inConnection, outConnection.target, newWaypoints);
+	      }
 	    }
 	  });
+
 	}
 
 	inherits(RemoveElementBehavior, CommandInterceptor);
@@ -64911,17 +60522,45 @@ var InfoxBpmnModeler =
 	module.exports = RemoveElementBehavior;
 
 
+	///////// helpers //////////////////////////////
+
+	function getDocking(point) {
+	  return point.original || point;
+	}
+
+
+	function getNewWaypoints(inWaypoints, outWaypoints) {
+
+	  var intersection = lineIntersect(
+	    getDocking(inWaypoints[inWaypoints.length - 2]),
+	    getDocking(inWaypoints[inWaypoints.length - 1]),
+	    getDocking(outWaypoints[1]),
+	    getDocking(outWaypoints[0]));
+
+	  if (intersection) {
+	    return [].concat(
+	      inWaypoints.slice(0, inWaypoints.length - 1),
+	      [ intersection ],
+	      outWaypoints.slice(1));
+	  } else {
+	    return [
+	      getDocking(inWaypoints[0]),
+	      getDocking(outWaypoints[outWaypoints.length - 1])
+	    ];
+	  }
+	}
+
 /***/ },
-/* 718 */
+/* 617 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(416);
+	var forEach = __webpack_require__(415);
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
 	function UnclaimIdBehavior(eventBus, modeling) {
 
@@ -64945,16 +60584,4768 @@ var InfoxBpmnModeler =
 	module.exports = UnclaimIdBehavior;
 
 /***/ },
-/* 719 */
+/* 618 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542),
+	    getBusinessObject = __webpack_require__(443).getBusinessObject,
+	    is = __webpack_require__(443).is,
+	    computeChildrenBBox = __webpack_require__(534).computeChildrenBBox;
+
+
+	var LOW_PRIORITY = 500;
+
+
+	function ToggleElementCollapseBehaviour(eventBus, elementFactory, modeling, resize) {
+	  CommandInterceptor.call(this, eventBus);
+
+
+	  function hideEmptyLables(children) {
+	    if (children.length) {
+	      children.forEach(function(child) {
+	        if (child.type === 'label' && !child.businessObject.name) {
+	          child.hidden = true;
+	        }
+	      });
+	    }
+	  }
+
+	  function expandedBounds(shape, defaultSize) {
+	    var children = shape.children,
+	        newBounds = defaultSize,
+	        visibleElements,
+	        visibleBBox;
+
+	    visibleElements = filterVisible(children).concat([ shape ]);
+
+	    visibleBBox = computeChildrenBBox(visibleElements);
+
+	    if (visibleBBox) {
+	      // center to visibleBBox with max(defaultSize, childrenBounds)
+	      newBounds.width = Math.max(visibleBBox.width, newBounds.width);
+	      newBounds.height = Math.max(visibleBBox.height, newBounds.height);
+
+	      newBounds.x = visibleBBox.x + (visibleBBox.width - newBounds.width) / 2;
+	      newBounds.y = visibleBBox.y + (visibleBBox.height - newBounds.height) / 2;
+	    } else {
+	      // center to collapsed shape with defaultSize
+	      newBounds.x = shape.x + (shape.width - newBounds.width) / 2;
+	      newBounds.y = shape.y + (shape.height - newBounds.height) / 2;
+	    }
+
+	    return newBounds;
+	  }
+
+	  function collapsedBounds(shape, defaultSize) {
+
+	    return {
+	      x: shape.x + (shape.width - defaultSize.width) / 2,
+	      y: shape.y + (shape.height - defaultSize.height) / 2,
+	      width: defaultSize.width,
+	      height: defaultSize.height
+	    };
+	  }
+
+	  this.executed([ 'shape.toggleCollapse' ], LOW_PRIORITY, function(e) {
+
+	    var context = e.context,
+	        shape = context.shape;
+
+	    if (!is(shape, 'bpmn:SubProcess')) {
+	      return;
+	    }
+
+	    if (!shape.collapsed) {
+	      // all children got made visible through djs, hide empty labels
+	      hideEmptyLables(shape.children);
+
+	      // remove collapsed marker
+	      getBusinessObject(shape).di.isExpanded = true;
+	    } else {
+	      // place collapsed marker
+	      getBusinessObject(shape).di.isExpanded = false;
+	    }
+	  });
+
+	  this.reverted([ 'shape.toggleCollapse' ], LOW_PRIORITY, function(e) {
+
+	    var context = e.context;
+	    var shape = context.shape;
+
+
+	    // revert removing/placing collapsed marker
+	    if (!shape.collapsed) {
+	      getBusinessObject(shape).di.isExpanded = true;
+
+	    } else {
+	      getBusinessObject(shape).di.isExpanded = false;
+	    }
+	  });
+
+	  this.postExecuted([ 'shape.toggleCollapse' ], LOW_PRIORITY, function(e) {
+	    var shape = e.context.shape,
+	        defaultSize = elementFactory._getDefaultSize(shape),
+	        newBounds;
+
+	    if (shape.collapsed) {
+
+	      // resize to default size of collapsed shapes
+	      newBounds = collapsedBounds(shape, defaultSize);
+	    } else {
+
+	      // resize to bounds of max(visible children, defaultSize)
+	      newBounds = expandedBounds(shape, defaultSize);
+	    }
+
+	    modeling.resizeShape(shape, newBounds);
+	  });
+
+	}
+
+
+	inherits(ToggleElementCollapseBehaviour, CommandInterceptor);
+
+	ToggleElementCollapseBehaviour.$inject = [
+	  'eventBus',
+	  'elementFactory',
+	  'modeling'
+	];
+
+	module.exports = ToggleElementCollapseBehaviour;
+
+
+
+	/////// helpers ///////////////////////////
+
+	function filterVisible(elements) {
+	  return elements.filter(function(e) {
+	    return !e.hidden;
+	  });
+	}
+
+/***/ },
+/* 619 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(628)
+	    __webpack_require__(620),
+	    __webpack_require__(632),
+	    __webpack_require__(634)
 	  ],
-	  __init__: [ 'bpmnRules' ],
-	  bpmnRules: [ 'type', __webpack_require__(720) ]
+	  __init__: [ 'labelEditingProvider' ],
+	  labelEditingProvider: [ 'type', __webpack_require__(720) ]
 	};
+
+/***/ },
+/* 620 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  commandStack: [ 'type', __webpack_require__(621) ]
+	};
+
+
+/***/ },
+/* 621 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var unique = __webpack_require__(622),
+	    isArray = __webpack_require__(70),
+	    assign = __webpack_require__(77);
+
+	var InternalEvent = __webpack_require__(146).Event;
+
+
+	/**
+	 * A service that offers un- and redoable execution of commands.
+	 *
+	 * The command stack is responsible for executing modeling actions
+	 * in a un- and redoable manner. To do this it delegates the actual
+	 * command execution to {@link CommandHandler}s.
+	 *
+	 * Command handlers provide {@link CommandHandler#execute(ctx)} and
+	 * {@link CommandHandler#revert(ctx)} methods to un- and redo a command
+	 * identified by a command context.
+	 *
+	 *
+	 * ## Life-Cycle events
+	 *
+	 * In the process the command stack fires a number of life-cycle events
+	 * that other components to participate in the command execution.
+	 *
+	 *    * preExecute
+	 *    * preExecuted
+	 *    * execute
+	 *    * executed
+	 *    * postExecute
+	 *    * postExecuted
+	 *    * revert
+	 *    * reverted
+	 *
+	 * A special event is used for validating, whether a command can be
+	 * performed prior to its execution.
+	 *
+	 *    * canExecute
+	 *
+	 * Each of the events is fired as `commandStack.{eventName}` and
+	 * `commandStack.{commandName}.{eventName}`, respectively. This gives
+	 * components fine grained control on where to hook into.
+	 *
+	 * The event object fired transports `command`, the name of the
+	 * command and `context`, the command context.
+	 *
+	 *
+	 * ## Creating Command Handlers
+	 *
+	 * Command handlers should provide the {@link CommandHandler#execute(ctx)}
+	 * and {@link CommandHandler#revert(ctx)} methods to implement
+	 * redoing and undoing of a command.
+	 *
+	 * A command handler _must_ ensure undo is performed properly in order
+	 * not to break the undo chain. It must also return the shapes that
+	 * got changed during the `execute` and `revert` operations.
+	 *
+	 * Command handlers may execute other modeling operations (and thus
+	 * commands) in their `preExecute` and `postExecute` phases. The command
+	 * stack will properly group all commands together into a logical unit
+	 * that may be re- and undone atomically.
+	 *
+	 * Command handlers must not execute other commands from within their
+	 * core implementation (`execute`, `revert`).
+	 *
+	 *
+	 * ## Change Tracking
+	 *
+	 * During the execution of the CommandStack it will keep track of all
+	 * elements that have been touched during the command's execution.
+	 *
+	 * At the end of the CommandStack execution it will notify interested
+	 * components via an 'elements.changed' event with all the dirty
+	 * elements.
+	 *
+	 * The event can be picked up by components that are interested in the fact
+	 * that elements have been changed. One use case for this is updating
+	 * their graphical representation after moving / resizing or deletion.
+	 *
+	 * @see CommandHandler
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {Injector} injector
+	 */
+	function CommandStack(eventBus, injector) {
+
+	  /**
+	   * A map of all registered command handlers.
+	   *
+	   * @type {Object}
+	   */
+	  this._handlerMap = {};
+
+	  /**
+	   * A stack containing all re/undoable actions on the diagram
+	   *
+	   * @type {Array<Object>}
+	   */
+	  this._stack = [];
+
+	  /**
+	   * The current index on the stack
+	   *
+	   * @type {Number}
+	   */
+	  this._stackIdx = -1;
+
+	  /**
+	   * Current active commandStack execution
+	   *
+	   * @type {Object}
+	   */
+	  this._currentExecution = {
+	    actions: [],
+	    dirty: []
+	  };
+
+
+	  this._injector = injector;
+	  this._eventBus = eventBus;
+
+	  this._uid = 1;
+
+	  eventBus.on([ 'diagram.destroy', 'diagram.clear' ], this.clear, this);
+	}
+
+	CommandStack.$inject = [ 'eventBus', 'injector' ];
+
+	module.exports = CommandStack;
+
+
+	/**
+	 * Execute a command
+	 *
+	 * @param {String} command the command to execute
+	 * @param {Object} context the environment to execute the command in
+	 */
+	CommandStack.prototype.execute = function(command, context) {
+	  if (!command) {
+	    throw new Error('command required');
+	  }
+
+	  var action = { command: command, context: context };
+
+	  this._pushAction(action);
+	  this._internalExecute(action);
+	  this._popAction(action);
+	};
+
+
+	/**
+	 * Ask whether a given command can be executed.
+	 *
+	 * Implementors may hook into the mechanism on two ways:
+	 *
+	 *   * in event listeners:
+	 *
+	 *     Users may prevent the execution via an event listener.
+	 *     It must prevent the default action for `commandStack.(<command>.)canExecute` events.
+	 *
+	 *   * in command handlers:
+	 *
+	 *     If the method {@link CommandHandler#canExecute} is implemented in a handler
+	 *     it will be called to figure out whether the execution is allowed.
+	 *
+	 * @param  {String} command the command to execute
+	 * @param  {Object} context the environment to execute the command in
+	 *
+	 * @return {Boolean} true if the command can be executed
+	 */
+	CommandStack.prototype.canExecute = function(command, context) {
+
+	  var action = { command: command, context: context };
+
+	  var handler = this._getHandler(command);
+
+	  var result = this._fire(command, 'canExecute', action);
+
+	  // handler#canExecute will only be called if no listener
+	  // decided on a result already
+	  if (result === undefined) {
+	    if (!handler) {
+	      return false;
+	    }
+
+	    if (handler.canExecute) {
+	      result = handler.canExecute(context);
+	    }
+	  }
+
+	  return result;
+	};
+
+
+	/**
+	 * Clear the command stack, erasing all undo / redo history
+	 */
+	CommandStack.prototype.clear = function() {
+	  this._stack.length = 0;
+	  this._stackIdx = -1;
+
+	  this._fire('changed');
+	};
+
+
+	/**
+	 * Undo last command(s)
+	 */
+	CommandStack.prototype.undo = function() {
+	  var action = this._getUndoAction(),
+	      next;
+
+	  if (action) {
+	    this._pushAction(action);
+
+	    while (action) {
+	      this._internalUndo(action);
+	      next = this._getUndoAction();
+
+	      if (!next || next.id !== action.id) {
+	        break;
+	      }
+
+	      action = next;
+	    }
+
+	    this._popAction();
+	  }
+	};
+
+
+	/**
+	 * Redo last command(s)
+	 */
+	CommandStack.prototype.redo = function() {
+	  var action = this._getRedoAction(),
+	      next;
+
+	  if (action) {
+	    this._pushAction(action);
+
+	    while (action) {
+	      this._internalExecute(action, true);
+	      next = this._getRedoAction();
+
+	      if (!next || next.id !== action.id) {
+	        break;
+	      }
+
+	      action = next;
+	    }
+
+	    this._popAction();
+	  }
+	};
+
+
+	/**
+	 * Register a handler instance with the command stack
+	 *
+	 * @param {String} command
+	 * @param {CommandHandler} handler
+	 */
+	CommandStack.prototype.register = function(command, handler) {
+	  this._setHandler(command, handler);
+	};
+
+
+	/**
+	 * Register a handler type with the command stack
+	 * by instantiating it and injecting its dependencies.
+	 *
+	 * @param {String} command
+	 * @param {Function} a constructor for a {@link CommandHandler}
+	 */
+	CommandStack.prototype.registerHandler = function(command, handlerCls) {
+
+	  if (!command || !handlerCls) {
+	    throw new Error('command and handlerCls must be defined');
+	  }
+
+	  var handler = this._injector.instantiate(handlerCls);
+	  this.register(command, handler);
+	};
+
+	CommandStack.prototype.canUndo = function() {
+	  return !!this._getUndoAction();
+	};
+
+	CommandStack.prototype.canRedo = function() {
+	  return !!this._getRedoAction();
+	};
+
+	////// stack access  //////////////////////////////////////
+
+	CommandStack.prototype._getRedoAction = function() {
+	  return this._stack[this._stackIdx + 1];
+	};
+
+
+	CommandStack.prototype._getUndoAction = function() {
+	  return this._stack[this._stackIdx];
+	};
+
+
+	////// internal functionality /////////////////////////////
+
+	CommandStack.prototype._internalUndo = function(action) {
+	  var self = this;
+
+	  var command = action.command,
+	      context = action.context;
+
+	  var handler = this._getHandler(command);
+
+	  // guard against illegal nested command stack invocations
+	  this._atomicDo(function() {
+	    self._fire(command, 'revert', action);
+
+	    if (handler.revert) {
+	      self._markDirty(handler.revert(context));
+	    }
+
+	    self._revertedAction(action);
+
+	    self._fire(command, 'reverted', action);
+	  });
+	};
+
+
+	CommandStack.prototype._fire = function(command, qualifier, event) {
+	  if (arguments.length < 3) {
+	    event = qualifier;
+	    qualifier = null;
+	  }
+
+	  var names = qualifier ? [ command + '.' + qualifier, qualifier ] : [ command ],
+	      i, name, result;
+
+	  event = assign(new InternalEvent(), event);
+
+	  for (i = 0; (name = names[i]); i++) {
+	    result = this._eventBus.fire('commandStack.' + name, event);
+
+	    if (event.cancelBubble) {
+	      break;
+	    }
+	  }
+
+	  return result;
+	};
+
+	CommandStack.prototype._createId = function() {
+	  return this._uid++;
+	};
+
+	CommandStack.prototype._atomicDo = function(fn) {
+
+	  var execution = this._currentExecution;
+
+	  execution.atomic = true;
+
+	  try {
+	    fn();
+	  } finally {
+	    execution.atomic = false;
+	  }
+	};
+
+	CommandStack.prototype._internalExecute = function(action, redo) {
+	  var self = this;
+
+	  var command = action.command,
+	      context = action.context;
+
+	  var handler = this._getHandler(command);
+
+	  if (!handler) {
+	    throw new Error('no command handler registered for <' + command + '>');
+	  }
+
+	  this._pushAction(action);
+
+	  if (!redo) {
+	    this._fire(command, 'preExecute', action);
+
+	    if (handler.preExecute) {
+	      handler.preExecute(context);
+	    }
+
+	    this._fire(command, 'preExecuted', action);
+	  }
+
+	  // guard against illegal nested command stack invocations
+	  this._atomicDo(function() {
+
+	    self._fire(command, 'execute', action);
+
+	    if (handler.execute) {
+	      // actual execute + mark return results as dirty
+	      self._markDirty(handler.execute(context));
+	    }
+
+	    // log to stack
+	    self._executedAction(action, redo);
+
+	    self._fire(command, 'executed', action);
+	  });
+
+	  if (!redo) {
+	    this._fire(command, 'postExecute', action);
+
+	    if (handler.postExecute) {
+	      handler.postExecute(context);
+	    }
+
+	    this._fire(command, 'postExecuted', action);
+	  }
+
+	  this._popAction(action);
+	};
+
+
+	CommandStack.prototype._pushAction = function(action) {
+
+	  var execution = this._currentExecution,
+	      actions = execution.actions;
+
+	  var baseAction = actions[0];
+
+	  if (execution.atomic) {
+	    throw new Error('illegal invocation in <execute> or <revert> phase (action: ' + action.command + ')');
+	  }
+
+	  if (!action.id) {
+	    action.id = (baseAction && baseAction.id) || this._createId();
+	  }
+
+	  actions.push(action);
+	};
+
+
+	CommandStack.prototype._popAction = function() {
+	  var execution = this._currentExecution,
+	      actions = execution.actions,
+	      dirty = execution.dirty;
+
+	  actions.pop();
+
+	  if (!actions.length) {
+	    this._eventBus.fire('elements.changed', { elements: unique(dirty) });
+
+	    dirty.length = 0;
+
+	    this._fire('changed');
+	  }
+	};
+
+
+	CommandStack.prototype._markDirty = function(elements) {
+	  var execution = this._currentExecution;
+
+	  if (!elements) {
+	    return;
+	  }
+
+	  elements = isArray(elements) ? elements : [ elements ];
+
+	  execution.dirty = execution.dirty.concat(elements);
+	};
+
+
+	CommandStack.prototype._executedAction = function(action, redo) {
+	  var stackIdx = ++this._stackIdx;
+
+	  if (!redo) {
+	    this._stack.splice(stackIdx, this._stack.length, action);
+	  }
+	};
+
+
+	CommandStack.prototype._revertedAction = function(action) {
+	  this._stackIdx--;
+	};
+
+
+	CommandStack.prototype._getHandler = function(command) {
+	  return this._handlerMap[command];
+	};
+
+	CommandStack.prototype._setHandler = function(command, handler) {
+	  if (!command || !handler) {
+	    throw new Error('command and handler required');
+	  }
+
+	  if (this._handlerMap[command]) {
+	    throw new Error('overriding handler for command <' + command + '>');
+	  }
+
+	  this._handlerMap[command] = handler;
+	};
+
+
+/***/ },
+/* 622 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(623);
+
+
+/***/ },
+/* 623 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCallback = __webpack_require__(103),
+	    baseUniq = __webpack_require__(624),
+	    isIterateeCall = __webpack_require__(92),
+	    sortedUniq = __webpack_require__(631);
+
+	/**
+	 * Creates a duplicate-free version of an array, using
+	 * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
+	 * for equality comparisons, in which only the first occurence of each element
+	 * is kept. Providing `true` for `isSorted` performs a faster search algorithm
+	 * for sorted arrays. If an iteratee function is provided it's invoked for
+	 * each element in the array to generate the criterion by which uniqueness
+	 * is computed. The `iteratee` is bound to `thisArg` and invoked with three
+	 * arguments: (value, index, array).
+	 *
+	 * If a property name is provided for `iteratee` the created `_.property`
+	 * style callback returns the property value of the given element.
+	 *
+	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
+	 * style callback returns `true` for elements that have a matching property
+	 * value, else `false`.
+	 *
+	 * If an object is provided for `iteratee` the created `_.matches` style
+	 * callback returns `true` for elements that have the properties of the given
+	 * object, else `false`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias unique
+	 * @category Array
+	 * @param {Array} array The array to inspect.
+	 * @param {boolean} [isSorted] Specify the array is sorted.
+	 * @param {Function|Object|string} [iteratee] The function invoked per iteration.
+	 * @param {*} [thisArg] The `this` binding of `iteratee`.
+	 * @returns {Array} Returns the new duplicate-value-free array.
+	 * @example
+	 *
+	 * _.uniq([2, 1, 2]);
+	 * // => [2, 1]
+	 *
+	 * // using `isSorted`
+	 * _.uniq([1, 1, 2], true);
+	 * // => [1, 2]
+	 *
+	 * // using an iteratee function
+	 * _.uniq([1, 2.5, 1.5, 2], function(n) {
+	 *   return this.floor(n);
+	 * }, Math);
+	 * // => [1, 2.5]
+	 *
+	 * // using the `_.property` callback shorthand
+	 * _.uniq([{ 'x': 1 }, { 'x': 2 }, { 'x': 1 }], 'x');
+	 * // => [{ 'x': 1 }, { 'x': 2 }]
+	 */
+	function uniq(array, isSorted, iteratee, thisArg) {
+	  var length = array ? array.length : 0;
+	  if (!length) {
+	    return [];
+	  }
+	  if (isSorted != null && typeof isSorted != 'boolean') {
+	    thisArg = iteratee;
+	    iteratee = isIterateeCall(array, isSorted, thisArg) ? undefined : isSorted;
+	    isSorted = false;
+	  }
+	  iteratee = iteratee == null ? iteratee : baseCallback(iteratee, thisArg, 3);
+	  return (isSorted)
+	    ? sortedUniq(array, iteratee)
+	    : baseUniq(array, iteratee);
+	}
+
+	module.exports = uniq;
+
+
+/***/ },
+/* 624 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIndexOf = __webpack_require__(625),
+	    cacheIndexOf = __webpack_require__(627),
+	    createCache = __webpack_require__(628);
+
+	/** Used as the size to enable large array optimizations. */
+	var LARGE_ARRAY_SIZE = 200;
+
+	/**
+	 * The base implementation of `_.uniq` without support for callback shorthands
+	 * and `this` binding.
+	 *
+	 * @private
+	 * @param {Array} array The array to inspect.
+	 * @param {Function} [iteratee] The function invoked per iteration.
+	 * @returns {Array} Returns the new duplicate free array.
+	 */
+	function baseUniq(array, iteratee) {
+	  var index = -1,
+	      indexOf = baseIndexOf,
+	      length = array.length,
+	      isCommon = true,
+	      isLarge = isCommon && length >= LARGE_ARRAY_SIZE,
+	      seen = isLarge ? createCache() : null,
+	      result = [];
+
+	  if (seen) {
+	    indexOf = cacheIndexOf;
+	    isCommon = false;
+	  } else {
+	    isLarge = false;
+	    seen = iteratee ? [] : result;
+	  }
+	  outer:
+	  while (++index < length) {
+	    var value = array[index],
+	        computed = iteratee ? iteratee(value, index, array) : value;
+
+	    if (isCommon && value === value) {
+	      var seenIndex = seen.length;
+	      while (seenIndex--) {
+	        if (seen[seenIndex] === computed) {
+	          continue outer;
+	        }
+	      }
+	      if (iteratee) {
+	        seen.push(computed);
+	      }
+	      result.push(value);
+	    }
+	    else if (indexOf(seen, computed, 0) < 0) {
+	      if (iteratee || isLarge) {
+	        seen.push(computed);
+	      }
+	      result.push(value);
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = baseUniq;
+
+
+/***/ },
+/* 625 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var indexOfNaN = __webpack_require__(626);
+
+	/**
+	 * The base implementation of `_.indexOf` without support for binary searches.
+	 *
+	 * @private
+	 * @param {Array} array The array to search.
+	 * @param {*} value The value to search for.
+	 * @param {number} fromIndex The index to search from.
+	 * @returns {number} Returns the index of the matched value, else `-1`.
+	 */
+	function baseIndexOf(array, value, fromIndex) {
+	  if (value !== value) {
+	    return indexOfNaN(array, fromIndex);
+	  }
+	  var index = fromIndex - 1,
+	      length = array.length;
+
+	  while (++index < length) {
+	    if (array[index] === value) {
+	      return index;
+	    }
+	  }
+	  return -1;
+	}
+
+	module.exports = baseIndexOf;
+
+
+/***/ },
+/* 626 */
+/***/ function(module, exports) {
+
+	/**
+	 * Gets the index at which the first occurrence of `NaN` is found in `array`.
+	 *
+	 * @private
+	 * @param {Array} array The array to search.
+	 * @param {number} fromIndex The index to search from.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {number} Returns the index of the matched `NaN`, else `-1`.
+	 */
+	function indexOfNaN(array, fromIndex, fromRight) {
+	  var length = array.length,
+	      index = fromIndex + (fromRight ? 0 : -1);
+
+	  while ((fromRight ? index-- : ++index < length)) {
+	    var other = array[index];
+	    if (other !== other) {
+	      return index;
+	    }
+	  }
+	  return -1;
+	}
+
+	module.exports = indexOfNaN;
+
+
+/***/ },
+/* 627 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(74);
+
+	/**
+	 * Checks if `value` is in `cache` mimicking the return signature of
+	 * `_.indexOf` by returning `0` if the value is found, else `-1`.
+	 *
+	 * @private
+	 * @param {Object} cache The cache to search.
+	 * @param {*} value The value to search for.
+	 * @returns {number} Returns `0` if `value` is found, else `-1`.
+	 */
+	function cacheIndexOf(cache, value) {
+	  var data = cache.data,
+	      result = (typeof value == 'string' || isObject(value)) ? data.set.has(value) : data.hash[value];
+
+	  return result ? 0 : -1;
+	}
+
+	module.exports = cacheIndexOf;
+
+
+/***/ },
+/* 628 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(629),
+	    getNative = __webpack_require__(71);
+
+	/** Native method references. */
+	var Set = getNative(global, 'Set');
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeCreate = getNative(Object, 'create');
+
+	/**
+	 * Creates a `Set` cache object to optimize linear searches of large arrays.
+	 *
+	 * @private
+	 * @param {Array} [values] The values to cache.
+	 * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
+	 */
+	function createCache(values) {
+	  return (nativeCreate && Set) ? new SetCache(values) : null;
+	}
+
+	module.exports = createCache;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 629 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(630),
+	    getNative = __webpack_require__(71);
+
+	/** Native method references. */
+	var Set = getNative(global, 'Set');
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeCreate = getNative(Object, 'create');
+
+	/**
+	 *
+	 * Creates a cache object to store unique values.
+	 *
+	 * @private
+	 * @param {Array} [values] The values to cache.
+	 */
+	function SetCache(values) {
+	  var length = values ? values.length : 0;
+
+	  this.data = { 'hash': nativeCreate(null), 'set': new Set };
+	  while (length--) {
+	    this.push(values[length]);
+	  }
+	}
+
+	// Add functions to the `Set` cache.
+	SetCache.prototype.push = cachePush;
+
+	module.exports = SetCache;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 630 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(74);
+
+	/**
+	 * Adds `value` to the cache.
+	 *
+	 * @private
+	 * @name push
+	 * @memberOf SetCache
+	 * @param {*} value The value to cache.
+	 */
+	function cachePush(value) {
+	  var data = this.data;
+	  if (typeof value == 'string' || isObject(value)) {
+	    data.set.add(value);
+	  } else {
+	    data.hash[value] = true;
+	  }
+	}
+
+	module.exports = cachePush;
+
+
+/***/ },
+/* 631 */
+/***/ function(module, exports) {
+
+	/**
+	 * An implementation of `_.uniq` optimized for sorted arrays without support
+	 * for callback shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array} array The array to inspect.
+	 * @param {Function} [iteratee] The function invoked per iteration.
+	 * @returns {Array} Returns the new duplicate free array.
+	 */
+	function sortedUniq(array, iteratee) {
+	  var seen,
+	      index = -1,
+	      length = array.length,
+	      resIndex = -1,
+	      result = [];
+
+	  while (++index < length) {
+	    var value = array[index],
+	        computed = iteratee ? iteratee(value, index, array) : value;
+
+	    if (!index || seen !== computed) {
+	      seen = computed;
+	      result[++resIndex] = value;
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = sortedUniq;
+
+
+/***/ },
+/* 632 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __init__: [ 'changeSupport'],
+	  changeSupport: [ 'type', __webpack_require__(633) ]
+	};
+
+/***/ },
+/* 633 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var getElementType = __webpack_require__(137).getType;
+
+	/**
+	 * Adds change support to the diagram, including
+	 *
+	 * <ul>
+	 *   <li>redrawing shapes and connections on change</li>
+	 * </ul>
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {Canvas} canvas
+	 * @param {ElementRegistry} elementRegistry
+	 * @param {GraphicsFactory} graphicsFactory
+	 */
+	function ChangeSupport(eventBus, canvas, elementRegistry, graphicsFactory) {
+
+	  // redraw shapes / connections on change
+
+	  eventBus.on('element.changed', function(event) {
+
+	    var element = event.element;
+
+	    // element might have been deleted and replaced by new element with same ID
+	    // thus check for parent of element except for root element
+	    if (element.parent || element === canvas.getRootElement()) {
+	      event.gfx = elementRegistry.getGraphics(element);
+	    }
+
+	    // shape + gfx may have been deleted
+	    if (!event.gfx) {
+	      return;
+	    }
+
+	    eventBus.fire(getElementType(element) + '.changed', event);
+	  });
+
+	  eventBus.on('elements.changed', function(event) {
+
+	    var elements = event.elements;
+
+	    elements.forEach(function(e) {
+	      eventBus.fire('element.changed', { element: e });
+	    });
+
+	    graphicsFactory.updateContainments(elements);
+	  });
+
+	  eventBus.on('shape.changed', function(event) {
+	    graphicsFactory.update('shape', event.element, event.gfx);
+	  });
+
+	  eventBus.on('connection.changed', function(event) {
+	    graphicsFactory.update('connection', event.element, event.gfx);
+	  });
+	}
+
+	ChangeSupport.$inject = [ 'eventBus', 'canvas', 'elementRegistry', 'graphicsFactory' ];
+
+	module.exports = ChangeSupport;
+
+
+/***/ },
+/* 634 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [ __webpack_require__(453) ],
+	  __init__: [ 'directEditing' ],
+	  directEditing: [ 'type', __webpack_require__(635) ]
+	};
+
+/***/ },
+/* 635 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var bind = __webpack_require__(636),
+	    find = __webpack_require__(673);
+
+	var TextBox = __webpack_require__(713);
+
+
+	/**
+	 * A direct editing component that allows users
+	 * to edit an elements text directly in the diagram
+	 *
+	 * @param {EventBus} eventBus the event bus
+	 */
+	function DirectEditing(eventBus, canvas) {
+
+	  this._eventBus = eventBus;
+
+	  this._providers = [];
+	  this._textbox = new TextBox({
+	    container: canvas.getContainer(),
+	    keyHandler: bind(this._handleKey, this)
+	  });
+	}
+
+	DirectEditing.$inject = [ 'eventBus', 'canvas' ];
+
+
+	/**
+	 * Register a direct editing provider
+
+	 * @param {Object} provider the provider, must expose an #activate(element) method that returns
+	 *                          an activation context ({ bounds: {x, y, width, height }, text }) if
+	 *                          direct editing is available for the given element.
+	 *                          Additionally the provider must expose a #update(element, value) method
+	 *                          to receive direct editing updates.
+	 */
+	DirectEditing.prototype.registerProvider = function(provider) {
+	  this._providers.push(provider);
+	};
+
+
+	/**
+	 * Returns true if direct editing is currently active
+	 *
+	 * @return {Boolean}
+	 */
+	DirectEditing.prototype.isActive = function() {
+	  return !!this._active;
+	};
+
+
+	/**
+	 * Cancel direct editing, if it is currently active
+	 */
+	DirectEditing.prototype.cancel = function() {
+	  if (!this._active) {
+	    return;
+	  }
+
+	  this._fire('cancel');
+	  this.close();
+	};
+
+
+	DirectEditing.prototype._fire = function(event) {
+	  this._eventBus.fire('directEditing.' + event, { active: this._active });
+	};
+
+	DirectEditing.prototype.close = function() {
+	  this._textbox.destroy();
+
+	  this._fire('deactivate');
+
+	  this._active = null;
+	};
+
+
+	DirectEditing.prototype.complete = function() {
+
+	  var active = this._active;
+
+	  if (!active) {
+	    return;
+	  }
+
+	  var text = this.getValue();
+
+	  if (text !== active.context.text) {
+	    active.provider.update(active.element, text, active.context.text);
+	  }
+
+	  this._fire('complete');
+
+	  this.close();
+	};
+
+
+	DirectEditing.prototype.getValue = function() {
+	  return this._textbox.getValue();
+	};
+
+
+	DirectEditing.prototype._handleKey = function(e) {
+
+	  // stop bubble
+	  e.stopPropagation();
+
+	  var key = e.keyCode || e.charCode;
+
+	  // ESC
+	  if (key === 27) {
+	    e.preventDefault();
+	    return this.cancel();
+	  }
+
+	  // Enter
+	  if (key === 13 && !e.shiftKey) {
+	    e.preventDefault();
+	    return this.complete();
+	  }
+	};
+
+
+	/**
+	 * Activate direct editing on the given element
+	 *
+	 * @param {Object} ElementDescriptor the descriptor for a shape or connection
+	 * @return {Boolean} true if the activation was possible
+	 */
+	DirectEditing.prototype.activate = function(element) {
+
+	  if (this.isActive()) {
+	    this.cancel();
+	  }
+
+	  // the direct editing context
+	  var context;
+
+	  var provider = find(this._providers, function(p) {
+	    return (context = p.activate(element)) ? p : null;
+	  });
+
+	  // check if activation took place
+	  if (context) {
+	    this._textbox.create(context.bounds, context.style, context.text);
+
+	    this._active = {
+	      element: element,
+	      context: context,
+	      provider: provider
+	    };
+
+	    this._fire('activate');
+	  }
+
+	  return !!context;
+	};
+
+
+	module.exports = DirectEditing;
+
+/***/ },
+/* 636 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var createWrapper = __webpack_require__(637),
+	    replaceHolders = __webpack_require__(667),
+	    restParam = __webpack_require__(672);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1,
+	    PARTIAL_FLAG = 32;
+
+	/**
+	 * Creates a function that invokes `func` with the `this` binding of `thisArg`
+	 * and prepends any additional `_.bind` arguments to those provided to the
+	 * bound function.
+	 *
+	 * The `_.bind.placeholder` value, which defaults to `_` in monolithic builds,
+	 * may be used as a placeholder for partially applied arguments.
+	 *
+	 * **Note:** Unlike native `Function#bind` this method does not set the "length"
+	 * property of bound functions.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Function
+	 * @param {Function} func The function to bind.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {...*} [partials] The arguments to be partially applied.
+	 * @returns {Function} Returns the new bound function.
+	 * @example
+	 *
+	 * var greet = function(greeting, punctuation) {
+	 *   return greeting + ' ' + this.user + punctuation;
+	 * };
+	 *
+	 * var object = { 'user': 'fred' };
+	 *
+	 * var bound = _.bind(greet, object, 'hi');
+	 * bound('!');
+	 * // => 'hi fred!'
+	 *
+	 * // using placeholders
+	 * var bound = _.bind(greet, object, _, '!');
+	 * bound('hi');
+	 * // => 'hi fred!'
+	 */
+	var bind = restParam(function(func, thisArg, partials) {
+	  var bitmask = BIND_FLAG;
+	  if (partials.length) {
+	    var holders = replaceHolders(partials, bind.placeholder);
+	    bitmask |= PARTIAL_FLAG;
+	  }
+	  return createWrapper(func, bitmask, thisArg, partials, holders);
+	});
+
+	// Assign default placeholders.
+	bind.placeholder = {};
+
+	module.exports = bind;
+
+
+/***/ },
+/* 637 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseSetData = __webpack_require__(638),
+	    createBindWrapper = __webpack_require__(646),
+	    createHybridWrapper = __webpack_require__(649),
+	    createPartialWrapper = __webpack_require__(670),
+	    getData = __webpack_require__(656),
+	    mergeData = __webpack_require__(671),
+	    setData = __webpack_require__(668);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1,
+	    BIND_KEY_FLAG = 2,
+	    PARTIAL_FLAG = 32,
+	    PARTIAL_RIGHT_FLAG = 64;
+
+	/** Used as the `TypeError` message for "Functions" methods. */
+	var FUNC_ERROR_TEXT = 'Expected a function';
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * Creates a function that either curries or invokes `func` with optional
+	 * `this` binding and partially applied arguments.
+	 *
+	 * @private
+	 * @param {Function|string} func The function or method name to reference.
+	 * @param {number} bitmask The bitmask of flags.
+	 *  The bitmask may be composed of the following flags:
+	 *     1 - `_.bind`
+	 *     2 - `_.bindKey`
+	 *     4 - `_.curry` or `_.curryRight` of a bound function
+	 *     8 - `_.curry`
+	 *    16 - `_.curryRight`
+	 *    32 - `_.partial`
+	 *    64 - `_.partialRight`
+	 *   128 - `_.rearg`
+	 *   256 - `_.ary`
+	 * @param {*} [thisArg] The `this` binding of `func`.
+	 * @param {Array} [partials] The arguments to be partially applied.
+	 * @param {Array} [holders] The `partials` placeholder indexes.
+	 * @param {Array} [argPos] The argument positions of the new function.
+	 * @param {number} [ary] The arity cap of `func`.
+	 * @param {number} [arity] The arity of `func`.
+	 * @returns {Function} Returns the new wrapped function.
+	 */
+	function createWrapper(func, bitmask, thisArg, partials, holders, argPos, ary, arity) {
+	  var isBindKey = bitmask & BIND_KEY_FLAG;
+	  if (!isBindKey && typeof func != 'function') {
+	    throw new TypeError(FUNC_ERROR_TEXT);
+	  }
+	  var length = partials ? partials.length : 0;
+	  if (!length) {
+	    bitmask &= ~(PARTIAL_FLAG | PARTIAL_RIGHT_FLAG);
+	    partials = holders = undefined;
+	  }
+	  length -= (holders ? holders.length : 0);
+	  if (bitmask & PARTIAL_RIGHT_FLAG) {
+	    var partialsRight = partials,
+	        holdersRight = holders;
+
+	    partials = holders = undefined;
+	  }
+	  var data = isBindKey ? undefined : getData(func),
+	      newData = [func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity];
+
+	  if (data) {
+	    mergeData(newData, data);
+	    bitmask = newData[1];
+	    arity = newData[9];
+	  }
+	  newData[9] = arity == null
+	    ? (isBindKey ? 0 : func.length)
+	    : (nativeMax(arity - length, 0) || 0);
+
+	  if (bitmask == BIND_FLAG) {
+	    var result = createBindWrapper(newData[0], newData[2]);
+	  } else if ((bitmask == PARTIAL_FLAG || bitmask == (BIND_FLAG | PARTIAL_FLAG)) && !newData[4].length) {
+	    result = createPartialWrapper.apply(undefined, newData);
+	  } else {
+	    result = createHybridWrapper.apply(undefined, newData);
+	  }
+	  var setter = data ? baseSetData : setData;
+	  return setter(result, newData);
+	}
+
+	module.exports = createWrapper;
+
+
+/***/ },
+/* 638 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var identity = __webpack_require__(639),
+	    metaMap = __webpack_require__(640);
+
+	/**
+	 * The base implementation of `setData` without support for hot loop detection.
+	 *
+	 * @private
+	 * @param {Function} func The function to associate metadata with.
+	 * @param {*} data The metadata.
+	 * @returns {Function} Returns `func`.
+	 */
+	var baseSetData = !metaMap ? identity : function(func, data) {
+	  metaMap.set(func, data);
+	  return func;
+	};
+
+	module.exports = baseSetData;
+
+
+/***/ },
+/* 639 */
+/***/ function(module, exports) {
+
+	/**
+	 * This method returns the first argument provided to it.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {*} value Any value.
+	 * @returns {*} Returns `value`.
+	 * @example
+	 *
+	 * var object = { 'user': 'fred' };
+	 *
+	 * _.identity(object) === object;
+	 * // => true
+	 */
+	function identity(value) {
+	  return value;
+	}
+
+	module.exports = identity;
+
+
+/***/ },
+/* 640 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(641);
+
+	/** Native method references. */
+	var WeakMap = getNative(global, 'WeakMap');
+
+	/** Used to store function metadata. */
+	var metaMap = WeakMap && new WeakMap;
+
+	module.exports = metaMap;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 641 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isNative = __webpack_require__(642);
+
+	/**
+	 * Gets the native function at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {string} key The key of the method to get.
+	 * @returns {*} Returns the function if it's native, else `undefined`.
+	 */
+	function getNative(object, key) {
+	  var value = object == null ? undefined : object[key];
+	  return isNative(value) ? value : undefined;
+	}
+
+	module.exports = getNative;
+
+
+/***/ },
+/* 642 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isFunction = __webpack_require__(643),
+	    isObjectLike = __webpack_require__(645);
+
+	/** Used to detect host constructors (Safari > 5). */
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to resolve the decompiled source of functions. */
+	var fnToString = Function.prototype.toString;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/** Used to detect if a method is native. */
+	var reIsNative = RegExp('^' +
+	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+	 * @example
+	 *
+	 * _.isNative(Array.prototype.push);
+	 * // => true
+	 *
+	 * _.isNative(_);
+	 * // => false
+	 */
+	function isNative(value) {
+	  if (value == null) {
+	    return false;
+	  }
+	  if (isFunction(value)) {
+	    return reIsNative.test(fnToString.call(value));
+	  }
+	  return isObjectLike(value) && reIsHostCtor.test(value);
+	}
+
+	module.exports = isNative;
+
+
+/***/ },
+/* 643 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(644);
+
+	/** `Object#toString` result references. */
+	var funcTag = '[object Function]';
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in older versions of Chrome and Safari which return 'function' for regexes
+	  // and Safari 8 which returns 'object' for typed array constructors.
+	  return isObject(value) && objToString.call(value) == funcTag;
+	}
+
+	module.exports = isFunction;
+
+
+/***/ },
+/* 644 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	module.exports = isObject;
+
+
+/***/ },
+/* 645 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is object-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	module.exports = isObjectLike;
+
+
+/***/ },
+/* 646 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(647);
+
+	/**
+	 * Creates a function that wraps `func` and invokes it with the `this`
+	 * binding of `thisArg`.
+	 *
+	 * @private
+	 * @param {Function} func The function to bind.
+	 * @param {*} [thisArg] The `this` binding of `func`.
+	 * @returns {Function} Returns the new bound function.
+	 */
+	function createBindWrapper(func, thisArg) {
+	  var Ctor = createCtorWrapper(func);
+
+	  function wrapper() {
+	    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
+	    return fn.apply(thisArg, arguments);
+	  }
+	  return wrapper;
+	}
+
+	module.exports = createBindWrapper;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 647 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCreate = __webpack_require__(648),
+	    isObject = __webpack_require__(644);
+
+	/**
+	 * Creates a function that produces an instance of `Ctor` regardless of
+	 * whether it was invoked as part of a `new` expression or by `call` or `apply`.
+	 *
+	 * @private
+	 * @param {Function} Ctor The constructor to wrap.
+	 * @returns {Function} Returns the new wrapped function.
+	 */
+	function createCtorWrapper(Ctor) {
+	  return function() {
+	    // Use a `switch` statement to work with class constructors.
+	    // See http://ecma-international.org/ecma-262/6.0/#sec-ecmascript-function-objects-call-thisargument-argumentslist
+	    // for more details.
+	    var args = arguments;
+	    switch (args.length) {
+	      case 0: return new Ctor;
+	      case 1: return new Ctor(args[0]);
+	      case 2: return new Ctor(args[0], args[1]);
+	      case 3: return new Ctor(args[0], args[1], args[2]);
+	      case 4: return new Ctor(args[0], args[1], args[2], args[3]);
+	      case 5: return new Ctor(args[0], args[1], args[2], args[3], args[4]);
+	      case 6: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
+	      case 7: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+	    }
+	    var thisBinding = baseCreate(Ctor.prototype),
+	        result = Ctor.apply(thisBinding, args);
+
+	    // Mimic the constructor's `return` behavior.
+	    // See https://es5.github.io/#x13.2.2 for more details.
+	    return isObject(result) ? result : thisBinding;
+	  };
+	}
+
+	module.exports = createCtorWrapper;
+
+
+/***/ },
+/* 648 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(644);
+
+	/**
+	 * The base implementation of `_.create` without support for assigning
+	 * properties to the created object.
+	 *
+	 * @private
+	 * @param {Object} prototype The object to inherit from.
+	 * @returns {Object} Returns the new object.
+	 */
+	var baseCreate = (function() {
+	  function object() {}
+	  return function(prototype) {
+	    if (isObject(prototype)) {
+	      object.prototype = prototype;
+	      var result = new object;
+	      object.prototype = undefined;
+	    }
+	    return result || {};
+	  };
+	}());
+
+	module.exports = baseCreate;
+
+
+/***/ },
+/* 649 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(650),
+	    composeArgs = __webpack_require__(651),
+	    composeArgsRight = __webpack_require__(652),
+	    createCtorWrapper = __webpack_require__(647),
+	    isLaziable = __webpack_require__(653),
+	    reorder = __webpack_require__(665),
+	    replaceHolders = __webpack_require__(667),
+	    setData = __webpack_require__(668);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1,
+	    BIND_KEY_FLAG = 2,
+	    CURRY_BOUND_FLAG = 4,
+	    CURRY_FLAG = 8,
+	    CURRY_RIGHT_FLAG = 16,
+	    PARTIAL_FLAG = 32,
+	    PARTIAL_RIGHT_FLAG = 64,
+	    ARY_FLAG = 128;
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * Creates a function that wraps `func` and invokes it with optional `this`
+	 * binding of, partial application, and currying.
+	 *
+	 * @private
+	 * @param {Function|string} func The function or method name to reference.
+	 * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
+	 * @param {*} [thisArg] The `this` binding of `func`.
+	 * @param {Array} [partials] The arguments to prepend to those provided to the new function.
+	 * @param {Array} [holders] The `partials` placeholder indexes.
+	 * @param {Array} [partialsRight] The arguments to append to those provided to the new function.
+	 * @param {Array} [holdersRight] The `partialsRight` placeholder indexes.
+	 * @param {Array} [argPos] The argument positions of the new function.
+	 * @param {number} [ary] The arity cap of `func`.
+	 * @param {number} [arity] The arity of `func`.
+	 * @returns {Function} Returns the new wrapped function.
+	 */
+	function createHybridWrapper(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity) {
+	  var isAry = bitmask & ARY_FLAG,
+	      isBind = bitmask & BIND_FLAG,
+	      isBindKey = bitmask & BIND_KEY_FLAG,
+	      isCurry = bitmask & CURRY_FLAG,
+	      isCurryBound = bitmask & CURRY_BOUND_FLAG,
+	      isCurryRight = bitmask & CURRY_RIGHT_FLAG,
+	      Ctor = isBindKey ? undefined : createCtorWrapper(func);
+
+	  function wrapper() {
+	    // Avoid `arguments` object use disqualifying optimizations by
+	    // converting it to an array before providing it to other functions.
+	    var length = arguments.length,
+	        index = length,
+	        args = Array(length);
+
+	    while (index--) {
+	      args[index] = arguments[index];
+	    }
+	    if (partials) {
+	      args = composeArgs(args, partials, holders);
+	    }
+	    if (partialsRight) {
+	      args = composeArgsRight(args, partialsRight, holdersRight);
+	    }
+	    if (isCurry || isCurryRight) {
+	      var placeholder = wrapper.placeholder,
+	          argsHolders = replaceHolders(args, placeholder);
+
+	      length -= argsHolders.length;
+	      if (length < arity) {
+	        var newArgPos = argPos ? arrayCopy(argPos) : undefined,
+	            newArity = nativeMax(arity - length, 0),
+	            newsHolders = isCurry ? argsHolders : undefined,
+	            newHoldersRight = isCurry ? undefined : argsHolders,
+	            newPartials = isCurry ? args : undefined,
+	            newPartialsRight = isCurry ? undefined : args;
+
+	        bitmask |= (isCurry ? PARTIAL_FLAG : PARTIAL_RIGHT_FLAG);
+	        bitmask &= ~(isCurry ? PARTIAL_RIGHT_FLAG : PARTIAL_FLAG);
+
+	        if (!isCurryBound) {
+	          bitmask &= ~(BIND_FLAG | BIND_KEY_FLAG);
+	        }
+	        var newData = [func, bitmask, thisArg, newPartials, newsHolders, newPartialsRight, newHoldersRight, newArgPos, ary, newArity],
+	            result = createHybridWrapper.apply(undefined, newData);
+
+	        if (isLaziable(func)) {
+	          setData(result, newData);
+	        }
+	        result.placeholder = placeholder;
+	        return result;
+	      }
+	    }
+	    var thisBinding = isBind ? thisArg : this,
+	        fn = isBindKey ? thisBinding[func] : func;
+
+	    if (argPos) {
+	      args = reorder(args, argPos);
+	    }
+	    if (isAry && ary < args.length) {
+	      args.length = ary;
+	    }
+	    if (this && this !== global && this instanceof wrapper) {
+	      fn = Ctor || createCtorWrapper(func);
+	    }
+	    return fn.apply(thisBinding, args);
+	  }
+	  return wrapper;
+	}
+
+	module.exports = createHybridWrapper;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 650 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copies the values of `source` to `array`.
+	 *
+	 * @private
+	 * @param {Array} source The array to copy values from.
+	 * @param {Array} [array=[]] The array to copy values to.
+	 * @returns {Array} Returns `array`.
+	 */
+	function arrayCopy(source, array) {
+	  var index = -1,
+	      length = source.length;
+
+	  array || (array = Array(length));
+	  while (++index < length) {
+	    array[index] = source[index];
+	  }
+	  return array;
+	}
+
+	module.exports = arrayCopy;
+
+
+/***/ },
+/* 651 */
+/***/ function(module, exports) {
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * Creates an array that is the composition of partially applied arguments,
+	 * placeholders, and provided arguments into a single array of arguments.
+	 *
+	 * @private
+	 * @param {Array|Object} args The provided arguments.
+	 * @param {Array} partials The arguments to prepend to those provided.
+	 * @param {Array} holders The `partials` placeholder indexes.
+	 * @returns {Array} Returns the new array of composed arguments.
+	 */
+	function composeArgs(args, partials, holders) {
+	  var holdersLength = holders.length,
+	      argsIndex = -1,
+	      argsLength = nativeMax(args.length - holdersLength, 0),
+	      leftIndex = -1,
+	      leftLength = partials.length,
+	      result = Array(leftLength + argsLength);
+
+	  while (++leftIndex < leftLength) {
+	    result[leftIndex] = partials[leftIndex];
+	  }
+	  while (++argsIndex < holdersLength) {
+	    result[holders[argsIndex]] = args[argsIndex];
+	  }
+	  while (argsLength--) {
+	    result[leftIndex++] = args[argsIndex++];
+	  }
+	  return result;
+	}
+
+	module.exports = composeArgs;
+
+
+/***/ },
+/* 652 */
+/***/ function(module, exports) {
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * This function is like `composeArgs` except that the arguments composition
+	 * is tailored for `_.partialRight`.
+	 *
+	 * @private
+	 * @param {Array|Object} args The provided arguments.
+	 * @param {Array} partials The arguments to append to those provided.
+	 * @param {Array} holders The `partials` placeholder indexes.
+	 * @returns {Array} Returns the new array of composed arguments.
+	 */
+	function composeArgsRight(args, partials, holders) {
+	  var holdersIndex = -1,
+	      holdersLength = holders.length,
+	      argsIndex = -1,
+	      argsLength = nativeMax(args.length - holdersLength, 0),
+	      rightIndex = -1,
+	      rightLength = partials.length,
+	      result = Array(argsLength + rightLength);
+
+	  while (++argsIndex < argsLength) {
+	    result[argsIndex] = args[argsIndex];
+	  }
+	  var offset = argsIndex;
+	  while (++rightIndex < rightLength) {
+	    result[offset + rightIndex] = partials[rightIndex];
+	  }
+	  while (++holdersIndex < holdersLength) {
+	    result[offset + holders[holdersIndex]] = args[argsIndex++];
+	  }
+	  return result;
+	}
+
+	module.exports = composeArgsRight;
+
+
+/***/ },
+/* 653 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var LazyWrapper = __webpack_require__(654),
+	    getData = __webpack_require__(656),
+	    getFuncName = __webpack_require__(658),
+	    lodash = __webpack_require__(660);
+
+	/**
+	 * Checks if `func` has a lazy counterpart.
+	 *
+	 * @private
+	 * @param {Function} func The function to check.
+	 * @returns {boolean} Returns `true` if `func` has a lazy counterpart, else `false`.
+	 */
+	function isLaziable(func) {
+	  var funcName = getFuncName(func),
+	      other = lodash[funcName];
+
+	  if (typeof other != 'function' || !(funcName in LazyWrapper.prototype)) {
+	    return false;
+	  }
+	  if (func === other) {
+	    return true;
+	  }
+	  var data = getData(other);
+	  return !!data && func === data[0];
+	}
+
+	module.exports = isLaziable;
+
+
+/***/ },
+/* 654 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCreate = __webpack_require__(648),
+	    baseLodash = __webpack_require__(655);
+
+	/** Used as references for `-Infinity` and `Infinity`. */
+	var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
+
+	/**
+	 * Creates a lazy wrapper object which wraps `value` to enable lazy evaluation.
+	 *
+	 * @private
+	 * @param {*} value The value to wrap.
+	 */
+	function LazyWrapper(value) {
+	  this.__wrapped__ = value;
+	  this.__actions__ = [];
+	  this.__dir__ = 1;
+	  this.__filtered__ = false;
+	  this.__iteratees__ = [];
+	  this.__takeCount__ = POSITIVE_INFINITY;
+	  this.__views__ = [];
+	}
+
+	LazyWrapper.prototype = baseCreate(baseLodash.prototype);
+	LazyWrapper.prototype.constructor = LazyWrapper;
+
+	module.exports = LazyWrapper;
+
+
+/***/ },
+/* 655 */
+/***/ function(module, exports) {
+
+	/**
+	 * The function whose prototype all chaining wrappers inherit from.
+	 *
+	 * @private
+	 */
+	function baseLodash() {
+	  // No operation performed.
+	}
+
+	module.exports = baseLodash;
+
+
+/***/ },
+/* 656 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var metaMap = __webpack_require__(640),
+	    noop = __webpack_require__(657);
+
+	/**
+	 * Gets metadata for `func`.
+	 *
+	 * @private
+	 * @param {Function} func The function to query.
+	 * @returns {*} Returns the metadata for `func`.
+	 */
+	var getData = !metaMap ? noop : function(func) {
+	  return metaMap.get(func);
+	};
+
+	module.exports = getData;
+
+
+/***/ },
+/* 657 */
+/***/ function(module, exports) {
+
+	/**
+	 * A no-operation function that returns `undefined` regardless of the
+	 * arguments it receives.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @example
+	 *
+	 * var object = { 'user': 'fred' };
+	 *
+	 * _.noop(object) === undefined;
+	 * // => true
+	 */
+	function noop() {
+	  // No operation performed.
+	}
+
+	module.exports = noop;
+
+
+/***/ },
+/* 658 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var realNames = __webpack_require__(659);
+
+	/**
+	 * Gets the name of `func`.
+	 *
+	 * @private
+	 * @param {Function} func The function to query.
+	 * @returns {string} Returns the function name.
+	 */
+	function getFuncName(func) {
+	  var result = (func.name + ''),
+	      array = realNames[result],
+	      length = array ? array.length : 0;
+
+	  while (length--) {
+	    var data = array[length],
+	        otherFunc = data.func;
+	    if (otherFunc == null || otherFunc == func) {
+	      return data.name;
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = getFuncName;
+
+
+/***/ },
+/* 659 */
+/***/ function(module, exports) {
+
+	/** Used to lookup unminified function names. */
+	var realNames = {};
+
+	module.exports = realNames;
+
+
+/***/ },
+/* 660 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var LazyWrapper = __webpack_require__(654),
+	    LodashWrapper = __webpack_require__(661),
+	    baseLodash = __webpack_require__(655),
+	    isArray = __webpack_require__(662),
+	    isObjectLike = __webpack_require__(645),
+	    wrapperClone = __webpack_require__(664);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Creates a `lodash` object which wraps `value` to enable implicit chaining.
+	 * Methods that operate on and return arrays, collections, and functions can
+	 * be chained together. Methods that retrieve a single value or may return a
+	 * primitive value will automatically end the chain returning the unwrapped
+	 * value. Explicit chaining may be enabled using `_.chain`. The execution of
+	 * chained methods is lazy, that is, execution is deferred until `_#value`
+	 * is implicitly or explicitly called.
+	 *
+	 * Lazy evaluation allows several methods to support shortcut fusion. Shortcut
+	 * fusion is an optimization strategy which merge iteratee calls; this can help
+	 * to avoid the creation of intermediate data structures and greatly reduce the
+	 * number of iteratee executions.
+	 *
+	 * Chaining is supported in custom builds as long as the `_#value` method is
+	 * directly or indirectly included in the build.
+	 *
+	 * In addition to lodash methods, wrappers have `Array` and `String` methods.
+	 *
+	 * The wrapper `Array` methods are:
+	 * `concat`, `join`, `pop`, `push`, `reverse`, `shift`, `slice`, `sort`,
+	 * `splice`, and `unshift`
+	 *
+	 * The wrapper `String` methods are:
+	 * `replace` and `split`
+	 *
+	 * The wrapper methods that support shortcut fusion are:
+	 * `compact`, `drop`, `dropRight`, `dropRightWhile`, `dropWhile`, `filter`,
+	 * `first`, `initial`, `last`, `map`, `pluck`, `reject`, `rest`, `reverse`,
+	 * `slice`, `take`, `takeRight`, `takeRightWhile`, `takeWhile`, `toArray`,
+	 * and `where`
+	 *
+	 * The chainable wrapper methods are:
+	 * `after`, `ary`, `assign`, `at`, `before`, `bind`, `bindAll`, `bindKey`,
+	 * `callback`, `chain`, `chunk`, `commit`, `compact`, `concat`, `constant`,
+	 * `countBy`, `create`, `curry`, `debounce`, `defaults`, `defaultsDeep`,
+	 * `defer`, `delay`, `difference`, `drop`, `dropRight`, `dropRightWhile`,
+	 * `dropWhile`, `fill`, `filter`, `flatten`, `flattenDeep`, `flow`, `flowRight`,
+	 * `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`, `forOwnRight`,
+	 * `functions`, `groupBy`, `indexBy`, `initial`, `intersection`, `invert`,
+	 * `invoke`, `keys`, `keysIn`, `map`, `mapKeys`, `mapValues`, `matches`,
+	 * `matchesProperty`, `memoize`, `merge`, `method`, `methodOf`, `mixin`,
+	 * `modArgs`, `negate`, `omit`, `once`, `pairs`, `partial`, `partialRight`,
+	 * `partition`, `pick`, `plant`, `pluck`, `property`, `propertyOf`, `pull`,
+	 * `pullAt`, `push`, `range`, `rearg`, `reject`, `remove`, `rest`, `restParam`,
+	 * `reverse`, `set`, `shuffle`, `slice`, `sort`, `sortBy`, `sortByAll`,
+	 * `sortByOrder`, `splice`, `spread`, `take`, `takeRight`, `takeRightWhile`,
+	 * `takeWhile`, `tap`, `throttle`, `thru`, `times`, `toArray`, `toPlainObject`,
+	 * `transform`, `union`, `uniq`, `unshift`, `unzip`, `unzipWith`, `values`,
+	 * `valuesIn`, `where`, `without`, `wrap`, `xor`, `zip`, `zipObject`, `zipWith`
+	 *
+	 * The wrapper methods that are **not** chainable by default are:
+	 * `add`, `attempt`, `camelCase`, `capitalize`, `ceil`, `clone`, `cloneDeep`,
+	 * `deburr`, `endsWith`, `escape`, `escapeRegExp`, `every`, `find`, `findIndex`,
+	 * `findKey`, `findLast`, `findLastIndex`, `findLastKey`, `findWhere`, `first`,
+	 * `floor`, `get`, `gt`, `gte`, `has`, `identity`, `includes`, `indexOf`,
+	 * `inRange`, `isArguments`, `isArray`, `isBoolean`, `isDate`, `isElement`,
+	 * `isEmpty`, `isEqual`, `isError`, `isFinite` `isFunction`, `isMatch`,
+	 * `isNative`, `isNaN`, `isNull`, `isNumber`, `isObject`, `isPlainObject`,
+	 * `isRegExp`, `isString`, `isUndefined`, `isTypedArray`, `join`, `kebabCase`,
+	 * `last`, `lastIndexOf`, `lt`, `lte`, `max`, `min`, `noConflict`, `noop`,
+	 * `now`, `pad`, `padLeft`, `padRight`, `parseInt`, `pop`, `random`, `reduce`,
+	 * `reduceRight`, `repeat`, `result`, `round`, `runInContext`, `shift`, `size`,
+	 * `snakeCase`, `some`, `sortedIndex`, `sortedLastIndex`, `startCase`,
+	 * `startsWith`, `sum`, `template`, `trim`, `trimLeft`, `trimRight`, `trunc`,
+	 * `unescape`, `uniqueId`, `value`, and `words`
+	 *
+	 * The wrapper method `sample` will return a wrapped value when `n` is provided,
+	 * otherwise an unwrapped value is returned.
+	 *
+	 * @name _
+	 * @constructor
+	 * @category Chain
+	 * @param {*} value The value to wrap in a `lodash` instance.
+	 * @returns {Object} Returns the new `lodash` wrapper instance.
+	 * @example
+	 *
+	 * var wrapped = _([1, 2, 3]);
+	 *
+	 * // returns an unwrapped value
+	 * wrapped.reduce(function(total, n) {
+	 *   return total + n;
+	 * });
+	 * // => 6
+	 *
+	 * // returns a wrapped value
+	 * var squares = wrapped.map(function(n) {
+	 *   return n * n;
+	 * });
+	 *
+	 * _.isArray(squares);
+	 * // => false
+	 *
+	 * _.isArray(squares.value());
+	 * // => true
+	 */
+	function lodash(value) {
+	  if (isObjectLike(value) && !isArray(value) && !(value instanceof LazyWrapper)) {
+	    if (value instanceof LodashWrapper) {
+	      return value;
+	    }
+	    if (hasOwnProperty.call(value, '__chain__') && hasOwnProperty.call(value, '__wrapped__')) {
+	      return wrapperClone(value);
+	    }
+	  }
+	  return new LodashWrapper(value);
+	}
+
+	// Ensure wrappers are instances of `baseLodash`.
+	lodash.prototype = baseLodash.prototype;
+
+	module.exports = lodash;
+
+
+/***/ },
+/* 661 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCreate = __webpack_require__(648),
+	    baseLodash = __webpack_require__(655);
+
+	/**
+	 * The base constructor for creating `lodash` wrapper objects.
+	 *
+	 * @private
+	 * @param {*} value The value to wrap.
+	 * @param {boolean} [chainAll] Enable chaining for all wrapper methods.
+	 * @param {Array} [actions=[]] Actions to peform to resolve the unwrapped value.
+	 */
+	function LodashWrapper(value, chainAll, actions) {
+	  this.__wrapped__ = value;
+	  this.__actions__ = actions || [];
+	  this.__chain__ = !!chainAll;
+	}
+
+	LodashWrapper.prototype = baseCreate(baseLodash.prototype);
+	LodashWrapper.prototype.constructor = LodashWrapper;
+
+	module.exports = LodashWrapper;
+
+
+/***/ },
+/* 662 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getNative = __webpack_require__(641),
+	    isLength = __webpack_require__(663),
+	    isObjectLike = __webpack_require__(645);
+
+	/** `Object#toString` result references. */
+	var arrayTag = '[object Array]';
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeIsArray = getNative(Array, 'isArray');
+
+	/**
+	 * Checks if `value` is classified as an `Array` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isArray([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArray(function() { return arguments; }());
+	 * // => false
+	 */
+	var isArray = nativeIsArray || function(value) {
+	  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
+	};
+
+	module.exports = isArray;
+
+
+/***/ },
+/* 663 */
+/***/ function(module, exports) {
+
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+
+	module.exports = isLength;
+
+
+/***/ },
+/* 664 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var LazyWrapper = __webpack_require__(654),
+	    LodashWrapper = __webpack_require__(661),
+	    arrayCopy = __webpack_require__(650);
+
+	/**
+	 * Creates a clone of `wrapper`.
+	 *
+	 * @private
+	 * @param {Object} wrapper The wrapper to clone.
+	 * @returns {Object} Returns the cloned wrapper.
+	 */
+	function wrapperClone(wrapper) {
+	  return wrapper instanceof LazyWrapper
+	    ? wrapper.clone()
+	    : new LodashWrapper(wrapper.__wrapped__, wrapper.__chain__, arrayCopy(wrapper.__actions__));
+	}
+
+	module.exports = wrapperClone;
+
+
+/***/ },
+/* 665 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arrayCopy = __webpack_require__(650),
+	    isIndex = __webpack_require__(666);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMin = Math.min;
+
+	/**
+	 * Reorder `array` according to the specified indexes where the element at
+	 * the first index is assigned as the first element, the element at
+	 * the second index is assigned as the second element, and so on.
+	 *
+	 * @private
+	 * @param {Array} array The array to reorder.
+	 * @param {Array} indexes The arranged array indexes.
+	 * @returns {Array} Returns `array`.
+	 */
+	function reorder(array, indexes) {
+	  var arrLength = array.length,
+	      length = nativeMin(indexes.length, arrLength),
+	      oldArray = arrayCopy(array);
+
+	  while (length--) {
+	    var index = indexes[length];
+	    array[length] = isIndex(index, arrLength) ? oldArray[index] : undefined;
+	  }
+	  return array;
+	}
+
+	module.exports = reorder;
+
+
+/***/ },
+/* 666 */
+/***/ function(module, exports) {
+
+	/** Used to detect unsigned integer values. */
+	var reIsUint = /^\d+$/;
+
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+
+	/**
+	 * Checks if `value` is a valid array-like index.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+	 */
+	function isIndex(value, length) {
+	  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
+	  length = length == null ? MAX_SAFE_INTEGER : length;
+	  return value > -1 && value % 1 == 0 && value < length;
+	}
+
+	module.exports = isIndex;
+
+
+/***/ },
+/* 667 */
+/***/ function(module, exports) {
+
+	/** Used as the internal argument placeholder. */
+	var PLACEHOLDER = '__lodash_placeholder__';
+
+	/**
+	 * Replaces all `placeholder` elements in `array` with an internal placeholder
+	 * and returns an array of their indexes.
+	 *
+	 * @private
+	 * @param {Array} array The array to modify.
+	 * @param {*} placeholder The placeholder to replace.
+	 * @returns {Array} Returns the new array of placeholder indexes.
+	 */
+	function replaceHolders(array, placeholder) {
+	  var index = -1,
+	      length = array.length,
+	      resIndex = -1,
+	      result = [];
+
+	  while (++index < length) {
+	    if (array[index] === placeholder) {
+	      array[index] = PLACEHOLDER;
+	      result[++resIndex] = index;
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = replaceHolders;
+
+
+/***/ },
+/* 668 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseSetData = __webpack_require__(638),
+	    now = __webpack_require__(669);
+
+	/** Used to detect when a function becomes hot. */
+	var HOT_COUNT = 150,
+	    HOT_SPAN = 16;
+
+	/**
+	 * Sets metadata for `func`.
+	 *
+	 * **Note:** If this function becomes hot, i.e. is invoked a lot in a short
+	 * period of time, it will trip its breaker and transition to an identity function
+	 * to avoid garbage collection pauses in V8. See [V8 issue 2070](https://code.google.com/p/v8/issues/detail?id=2070)
+	 * for more details.
+	 *
+	 * @private
+	 * @param {Function} func The function to associate metadata with.
+	 * @param {*} data The metadata.
+	 * @returns {Function} Returns `func`.
+	 */
+	var setData = (function() {
+	  var count = 0,
+	      lastCalled = 0;
+
+	  return function(key, value) {
+	    var stamp = now(),
+	        remaining = HOT_SPAN - (stamp - lastCalled);
+
+	    lastCalled = stamp;
+	    if (remaining > 0) {
+	      if (++count >= HOT_COUNT) {
+	        return key;
+	      }
+	    } else {
+	      count = 0;
+	    }
+	    return baseSetData(key, value);
+	  };
+	}());
+
+	module.exports = setData;
+
+
+/***/ },
+/* 669 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getNative = __webpack_require__(641);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeNow = getNative(Date, 'now');
+
+	/**
+	 * Gets the number of milliseconds that have elapsed since the Unix epoch
+	 * (1 January 1970 00:00:00 UTC).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Date
+	 * @example
+	 *
+	 * _.defer(function(stamp) {
+	 *   console.log(_.now() - stamp);
+	 * }, _.now());
+	 * // => logs the number of milliseconds it took for the deferred function to be invoked
+	 */
+	var now = nativeNow || function() {
+	  return new Date().getTime();
+	};
+
+	module.exports = now;
+
+
+/***/ },
+/* 670 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(647);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1;
+
+	/**
+	 * Creates a function that wraps `func` and invokes it with the optional `this`
+	 * binding of `thisArg` and the `partials` prepended to those provided to
+	 * the wrapper.
+	 *
+	 * @private
+	 * @param {Function} func The function to partially apply arguments to.
+	 * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {Array} partials The arguments to prepend to those provided to the new function.
+	 * @returns {Function} Returns the new bound function.
+	 */
+	function createPartialWrapper(func, bitmask, thisArg, partials) {
+	  var isBind = bitmask & BIND_FLAG,
+	      Ctor = createCtorWrapper(func);
+
+	  function wrapper() {
+	    // Avoid `arguments` object use disqualifying optimizations by
+	    // converting it to an array before providing it `func`.
+	    var argsIndex = -1,
+	        argsLength = arguments.length,
+	        leftIndex = -1,
+	        leftLength = partials.length,
+	        args = Array(leftLength + argsLength);
+
+	    while (++leftIndex < leftLength) {
+	      args[leftIndex] = partials[leftIndex];
+	    }
+	    while (argsLength--) {
+	      args[leftIndex++] = arguments[++argsIndex];
+	    }
+	    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
+	    return fn.apply(isBind ? thisArg : this, args);
+	  }
+	  return wrapper;
+	}
+
+	module.exports = createPartialWrapper;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 671 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arrayCopy = __webpack_require__(650),
+	    composeArgs = __webpack_require__(651),
+	    composeArgsRight = __webpack_require__(652),
+	    replaceHolders = __webpack_require__(667);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1,
+	    CURRY_BOUND_FLAG = 4,
+	    CURRY_FLAG = 8,
+	    ARY_FLAG = 128,
+	    REARG_FLAG = 256;
+
+	/** Used as the internal argument placeholder. */
+	var PLACEHOLDER = '__lodash_placeholder__';
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMin = Math.min;
+
+	/**
+	 * Merges the function metadata of `source` into `data`.
+	 *
+	 * Merging metadata reduces the number of wrappers required to invoke a function.
+	 * This is possible because methods like `_.bind`, `_.curry`, and `_.partial`
+	 * may be applied regardless of execution order. Methods like `_.ary` and `_.rearg`
+	 * augment function arguments, making the order in which they are executed important,
+	 * preventing the merging of metadata. However, we make an exception for a safe
+	 * common case where curried functions have `_.ary` and or `_.rearg` applied.
+	 *
+	 * @private
+	 * @param {Array} data The destination metadata.
+	 * @param {Array} source The source metadata.
+	 * @returns {Array} Returns `data`.
+	 */
+	function mergeData(data, source) {
+	  var bitmask = data[1],
+	      srcBitmask = source[1],
+	      newBitmask = bitmask | srcBitmask,
+	      isCommon = newBitmask < ARY_FLAG;
+
+	  var isCombo =
+	    (srcBitmask == ARY_FLAG && bitmask == CURRY_FLAG) ||
+	    (srcBitmask == ARY_FLAG && bitmask == REARG_FLAG && data[7].length <= source[8]) ||
+	    (srcBitmask == (ARY_FLAG | REARG_FLAG) && bitmask == CURRY_FLAG);
+
+	  // Exit early if metadata can't be merged.
+	  if (!(isCommon || isCombo)) {
+	    return data;
+	  }
+	  // Use source `thisArg` if available.
+	  if (srcBitmask & BIND_FLAG) {
+	    data[2] = source[2];
+	    // Set when currying a bound function.
+	    newBitmask |= (bitmask & BIND_FLAG) ? 0 : CURRY_BOUND_FLAG;
+	  }
+	  // Compose partial arguments.
+	  var value = source[3];
+	  if (value) {
+	    var partials = data[3];
+	    data[3] = partials ? composeArgs(partials, value, source[4]) : arrayCopy(value);
+	    data[4] = partials ? replaceHolders(data[3], PLACEHOLDER) : arrayCopy(source[4]);
+	  }
+	  // Compose partial right arguments.
+	  value = source[5];
+	  if (value) {
+	    partials = data[5];
+	    data[5] = partials ? composeArgsRight(partials, value, source[6]) : arrayCopy(value);
+	    data[6] = partials ? replaceHolders(data[5], PLACEHOLDER) : arrayCopy(source[6]);
+	  }
+	  // Use source `argPos` if available.
+	  value = source[7];
+	  if (value) {
+	    data[7] = arrayCopy(value);
+	  }
+	  // Use source `ary` if it's smaller.
+	  if (srcBitmask & ARY_FLAG) {
+	    data[8] = data[8] == null ? source[8] : nativeMin(data[8], source[8]);
+	  }
+	  // Use source `arity` if one is not provided.
+	  if (data[9] == null) {
+	    data[9] = source[9];
+	  }
+	  // Use source `func` and merge bitmasks.
+	  data[0] = source[0];
+	  data[1] = newBitmask;
+
+	  return data;
+	}
+
+	module.exports = mergeData;
+
+
+/***/ },
+/* 672 */
+/***/ function(module, exports) {
+
+	/** Used as the `TypeError` message for "Functions" methods. */
+	var FUNC_ERROR_TEXT = 'Expected a function';
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * Creates a function that invokes `func` with the `this` binding of the
+	 * created function and arguments from `start` and beyond provided as an array.
+	 *
+	 * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/Web/JavaScript/Reference/Functions/rest_parameters).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Function
+	 * @param {Function} func The function to apply a rest parameter to.
+	 * @param {number} [start=func.length-1] The start position of the rest parameter.
+	 * @returns {Function} Returns the new function.
+	 * @example
+	 *
+	 * var say = _.restParam(function(what, names) {
+	 *   return what + ' ' + _.initial(names).join(', ') +
+	 *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
+	 * });
+	 *
+	 * say('hello', 'fred', 'barney', 'pebbles');
+	 * // => 'hello fred, barney, & pebbles'
+	 */
+	function restParam(func, start) {
+	  if (typeof func != 'function') {
+	    throw new TypeError(FUNC_ERROR_TEXT);
+	  }
+	  start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
+	  return function() {
+	    var args = arguments,
+	        index = -1,
+	        length = nativeMax(args.length - start, 0),
+	        rest = Array(length);
+
+	    while (++index < length) {
+	      rest[index] = args[start + index];
+	    }
+	    switch (start) {
+	      case 0: return func.call(this, rest);
+	      case 1: return func.call(this, args[0], rest);
+	      case 2: return func.call(this, args[0], args[1], rest);
+	    }
+	    var otherArgs = Array(start + 1);
+	    index = -1;
+	    while (++index < start) {
+	      otherArgs[index] = args[index];
+	    }
+	    otherArgs[start] = rest;
+	    return func.apply(this, otherArgs);
+	  };
+	}
+
+	module.exports = restParam;
+
+
+/***/ },
+/* 673 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseEach = __webpack_require__(674),
+	    createFind = __webpack_require__(687);
+
+	/**
+	 * Iterates over elements of `collection`, returning the first element
+	 * `predicate` returns truthy for. The predicate is bound to `thisArg` and
+	 * invoked with three arguments: (value, index|key, collection).
+	 *
+	 * If a property name is provided for `predicate` the created `_.property`
+	 * style callback returns the property value of the given element.
+	 *
+	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
+	 * style callback returns `true` for elements that have a matching property
+	 * value, else `false`.
+	 *
+	 * If an object is provided for `predicate` the created `_.matches` style
+	 * callback returns `true` for elements that have the properties of the given
+	 * object, else `false`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias detect
+	 * @category Collection
+	 * @param {Array|Object|string} collection The collection to search.
+	 * @param {Function|Object|string} [predicate=_.identity] The function invoked
+	 *  per iteration.
+	 * @param {*} [thisArg] The `this` binding of `predicate`.
+	 * @returns {*} Returns the matched element, else `undefined`.
+	 * @example
+	 *
+	 * var users = [
+	 *   { 'user': 'barney',  'age': 36, 'active': true },
+	 *   { 'user': 'fred',    'age': 40, 'active': false },
+	 *   { 'user': 'pebbles', 'age': 1,  'active': true }
+	 * ];
+	 *
+	 * _.result(_.find(users, function(chr) {
+	 *   return chr.age < 40;
+	 * }), 'user');
+	 * // => 'barney'
+	 *
+	 * // using the `_.matches` callback shorthand
+	 * _.result(_.find(users, { 'age': 1, 'active': true }), 'user');
+	 * // => 'pebbles'
+	 *
+	 * // using the `_.matchesProperty` callback shorthand
+	 * _.result(_.find(users, 'active', false), 'user');
+	 * // => 'fred'
+	 *
+	 * // using the `_.property` callback shorthand
+	 * _.result(_.find(users, 'active'), 'user');
+	 * // => 'barney'
+	 */
+	var find = createFind(baseEach);
+
+	module.exports = find;
+
+
+/***/ },
+/* 674 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseForOwn = __webpack_require__(675),
+	    createBaseEach = __webpack_require__(686);
+
+	/**
+	 * The base implementation of `_.forEach` without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array|Object|string} collection The collection to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Array|Object|string} Returns `collection`.
+	 */
+	var baseEach = createBaseEach(baseForOwn);
+
+	module.exports = baseEach;
+
+
+/***/ },
+/* 675 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseFor = __webpack_require__(676),
+	    keys = __webpack_require__(679);
+
+	/**
+	 * The base implementation of `_.forOwn` without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Object} object The object to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseForOwn(object, iteratee) {
+	  return baseFor(object, iteratee, keys);
+	}
+
+	module.exports = baseForOwn;
+
+
+/***/ },
+/* 676 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var createBaseFor = __webpack_require__(677);
+
+	/**
+	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
+	 * over `object` properties returned by `keysFunc` invoking `iteratee` for
+	 * each property. Iteratee functions may exit iteration early by explicitly
+	 * returning `false`.
+	 *
+	 * @private
+	 * @param {Object} object The object to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @param {Function} keysFunc The function to get the keys of `object`.
+	 * @returns {Object} Returns `object`.
+	 */
+	var baseFor = createBaseFor();
+
+	module.exports = baseFor;
+
+
+/***/ },
+/* 677 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var toObject = __webpack_require__(678);
+
+	/**
+	 * Creates a base function for `_.forIn` or `_.forInRight`.
+	 *
+	 * @private
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {Function} Returns the new base function.
+	 */
+	function createBaseFor(fromRight) {
+	  return function(object, iteratee, keysFunc) {
+	    var iterable = toObject(object),
+	        props = keysFunc(object),
+	        length = props.length,
+	        index = fromRight ? length : -1;
+
+	    while ((fromRight ? index-- : ++index < length)) {
+	      var key = props[index];
+	      if (iteratee(iterable[key], key, iterable) === false) {
+	        break;
+	      }
+	    }
+	    return object;
+	  };
+	}
+
+	module.exports = createBaseFor;
+
+
+/***/ },
+/* 678 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(644);
+
+	/**
+	 * Converts `value` to an object if it's not one.
+	 *
+	 * @private
+	 * @param {*} value The value to process.
+	 * @returns {Object} Returns the object.
+	 */
+	function toObject(value) {
+	  return isObject(value) ? value : Object(value);
+	}
+
+	module.exports = toObject;
+
+
+/***/ },
+/* 679 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getNative = __webpack_require__(641),
+	    isArrayLike = __webpack_require__(680),
+	    isObject = __webpack_require__(644),
+	    shimKeys = __webpack_require__(683);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeKeys = getNative(Object, 'keys');
+
+	/**
+	 * Creates an array of the own enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects. See the
+	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+	 * for more details.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keys(new Foo);
+	 * // => ['a', 'b'] (iteration order is not guaranteed)
+	 *
+	 * _.keys('hi');
+	 * // => ['0', '1']
+	 */
+	var keys = !nativeKeys ? shimKeys : function(object) {
+	  var Ctor = object == null ? undefined : object.constructor;
+	  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
+	      (typeof object != 'function' && isArrayLike(object))) {
+	    return shimKeys(object);
+	  }
+	  return isObject(object) ? nativeKeys(object) : [];
+	};
+
+	module.exports = keys;
+
+
+/***/ },
+/* 680 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getLength = __webpack_require__(681),
+	    isLength = __webpack_require__(663);
+
+	/**
+	 * Checks if `value` is array-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 */
+	function isArrayLike(value) {
+	  return value != null && isLength(getLength(value));
+	}
+
+	module.exports = isArrayLike;
+
+
+/***/ },
+/* 681 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseProperty = __webpack_require__(682);
+
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+
+	module.exports = getLength;
+
+
+/***/ },
+/* 682 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+
+	module.exports = baseProperty;
+
+
+/***/ },
+/* 683 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArguments = __webpack_require__(684),
+	    isArray = __webpack_require__(662),
+	    isIndex = __webpack_require__(666),
+	    isLength = __webpack_require__(663),
+	    keysIn = __webpack_require__(685);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * A fallback implementation of `Object.keys` which creates an array of the
+	 * own enumerable property names of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 */
+	function shimKeys(object) {
+	  var props = keysIn(object),
+	      propsLength = props.length,
+	      length = propsLength && object.length;
+
+	  var allowIndexes = !!length && isLength(length) &&
+	    (isArray(object) || isArguments(object));
+
+	  var index = -1,
+	      result = [];
+
+	  while (++index < propsLength) {
+	    var key = props[index];
+	    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = shimKeys;
+
+
+/***/ },
+/* 684 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArrayLike = __webpack_require__(680),
+	    isObjectLike = __webpack_require__(645);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/** Native method references. */
+	var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+
+	/**
+	 * Checks if `value` is classified as an `arguments` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isArguments(function() { return arguments; }());
+	 * // => true
+	 *
+	 * _.isArguments([1, 2, 3]);
+	 * // => false
+	 */
+	function isArguments(value) {
+	  return isObjectLike(value) && isArrayLike(value) &&
+	    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
+	}
+
+	module.exports = isArguments;
+
+
+/***/ },
+/* 685 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArguments = __webpack_require__(684),
+	    isArray = __webpack_require__(662),
+	    isIndex = __webpack_require__(666),
+	    isLength = __webpack_require__(663),
+	    isObject = __webpack_require__(644);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Creates an array of the own and inherited enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keysIn(new Foo);
+	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+	 */
+	function keysIn(object) {
+	  if (object == null) {
+	    return [];
+	  }
+	  if (!isObject(object)) {
+	    object = Object(object);
+	  }
+	  var length = object.length;
+	  length = (length && isLength(length) &&
+	    (isArray(object) || isArguments(object)) && length) || 0;
+
+	  var Ctor = object.constructor,
+	      index = -1,
+	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+	      result = Array(length),
+	      skipIndexes = length > 0;
+
+	  while (++index < length) {
+	    result[index] = (index + '');
+	  }
+	  for (var key in object) {
+	    if (!(skipIndexes && isIndex(key, length)) &&
+	        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = keysIn;
+
+
+/***/ },
+/* 686 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getLength = __webpack_require__(681),
+	    isLength = __webpack_require__(663),
+	    toObject = __webpack_require__(678);
+
+	/**
+	 * Creates a `baseEach` or `baseEachRight` function.
+	 *
+	 * @private
+	 * @param {Function} eachFunc The function to iterate over a collection.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {Function} Returns the new base function.
+	 */
+	function createBaseEach(eachFunc, fromRight) {
+	  return function(collection, iteratee) {
+	    var length = collection ? getLength(collection) : 0;
+	    if (!isLength(length)) {
+	      return eachFunc(collection, iteratee);
+	    }
+	    var index = fromRight ? length : -1,
+	        iterable = toObject(collection);
+
+	    while ((fromRight ? index-- : ++index < length)) {
+	      if (iteratee(iterable[index], index, iterable) === false) {
+	        break;
+	      }
+	    }
+	    return collection;
+	  };
+	}
+
+	module.exports = createBaseEach;
+
+
+/***/ },
+/* 687 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCallback = __webpack_require__(688),
+	    baseFind = __webpack_require__(711),
+	    baseFindIndex = __webpack_require__(712),
+	    isArray = __webpack_require__(662);
+
+	/**
+	 * Creates a `_.find` or `_.findLast` function.
+	 *
+	 * @private
+	 * @param {Function} eachFunc The function to iterate over a collection.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {Function} Returns the new find function.
+	 */
+	function createFind(eachFunc, fromRight) {
+	  return function(collection, predicate, thisArg) {
+	    predicate = baseCallback(predicate, thisArg, 3);
+	    if (isArray(collection)) {
+	      var index = baseFindIndex(collection, predicate, fromRight);
+	      return index > -1 ? collection[index] : undefined;
+	    }
+	    return baseFind(collection, predicate, eachFunc);
+	  };
+	}
+
+	module.exports = createFind;
+
+
+/***/ },
+/* 688 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseMatches = __webpack_require__(689),
+	    baseMatchesProperty = __webpack_require__(701),
+	    bindCallback = __webpack_require__(708),
+	    identity = __webpack_require__(639),
+	    property = __webpack_require__(709);
+
+	/**
+	 * The base implementation of `_.callback` which supports specifying the
+	 * number of arguments to provide to `func`.
+	 *
+	 * @private
+	 * @param {*} [func=_.identity] The value to convert to a callback.
+	 * @param {*} [thisArg] The `this` binding of `func`.
+	 * @param {number} [argCount] The number of arguments to provide to `func`.
+	 * @returns {Function} Returns the callback.
+	 */
+	function baseCallback(func, thisArg, argCount) {
+	  var type = typeof func;
+	  if (type == 'function') {
+	    return thisArg === undefined
+	      ? func
+	      : bindCallback(func, thisArg, argCount);
+	  }
+	  if (func == null) {
+	    return identity;
+	  }
+	  if (type == 'object') {
+	    return baseMatches(func);
+	  }
+	  return thisArg === undefined
+	    ? property(func)
+	    : baseMatchesProperty(func, thisArg);
+	}
+
+	module.exports = baseCallback;
+
+
+/***/ },
+/* 689 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsMatch = __webpack_require__(690),
+	    getMatchData = __webpack_require__(698),
+	    toObject = __webpack_require__(678);
+
+	/**
+	 * The base implementation of `_.matches` which does not clone `source`.
+	 *
+	 * @private
+	 * @param {Object} source The object of property values to match.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseMatches(source) {
+	  var matchData = getMatchData(source);
+	  if (matchData.length == 1 && matchData[0][2]) {
+	    var key = matchData[0][0],
+	        value = matchData[0][1];
+
+	    return function(object) {
+	      if (object == null) {
+	        return false;
+	      }
+	      return object[key] === value && (value !== undefined || (key in toObject(object)));
+	    };
+	  }
+	  return function(object) {
+	    return baseIsMatch(object, matchData);
+	  };
+	}
+
+	module.exports = baseMatches;
+
+
+/***/ },
+/* 690 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsEqual = __webpack_require__(691),
+	    toObject = __webpack_require__(678);
+
+	/**
+	 * The base implementation of `_.isMatch` without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Object} object The object to inspect.
+	 * @param {Array} matchData The propery names, values, and compare flags to match.
+	 * @param {Function} [customizer] The function to customize comparing objects.
+	 * @returns {boolean} Returns `true` if `object` is a match, else `false`.
+	 */
+	function baseIsMatch(object, matchData, customizer) {
+	  var index = matchData.length,
+	      length = index,
+	      noCustomizer = !customizer;
+
+	  if (object == null) {
+	    return !length;
+	  }
+	  object = toObject(object);
+	  while (index--) {
+	    var data = matchData[index];
+	    if ((noCustomizer && data[2])
+	          ? data[1] !== object[data[0]]
+	          : !(data[0] in object)
+	        ) {
+	      return false;
+	    }
+	  }
+	  while (++index < length) {
+	    data = matchData[index];
+	    var key = data[0],
+	        objValue = object[key],
+	        srcValue = data[1];
+
+	    if (noCustomizer && data[2]) {
+	      if (objValue === undefined && !(key in object)) {
+	        return false;
+	      }
+	    } else {
+	      var result = customizer ? customizer(objValue, srcValue, key) : undefined;
+	      if (!(result === undefined ? baseIsEqual(srcValue, objValue, customizer, true) : result)) {
+	        return false;
+	      }
+	    }
+	  }
+	  return true;
+	}
+
+	module.exports = baseIsMatch;
+
+
+/***/ },
+/* 691 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsEqualDeep = __webpack_require__(692),
+	    isObject = __webpack_require__(644),
+	    isObjectLike = __webpack_require__(645);
+
+	/**
+	 * The base implementation of `_.isEqual` without support for `this` binding
+	 * `customizer` functions.
+	 *
+	 * @private
+	 * @param {*} value The value to compare.
+	 * @param {*} other The other value to compare.
+	 * @param {Function} [customizer] The function to customize comparing values.
+	 * @param {boolean} [isLoose] Specify performing partial comparisons.
+	 * @param {Array} [stackA] Tracks traversed `value` objects.
+	 * @param {Array} [stackB] Tracks traversed `other` objects.
+	 * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+	 */
+	function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
+	  if (value === other) {
+	    return true;
+	  }
+	  if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
+	    return value !== value && other !== other;
+	  }
+	  return baseIsEqualDeep(value, other, baseIsEqual, customizer, isLoose, stackA, stackB);
+	}
+
+	module.exports = baseIsEqual;
+
+
+/***/ },
+/* 692 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var equalArrays = __webpack_require__(693),
+	    equalByTag = __webpack_require__(695),
+	    equalObjects = __webpack_require__(696),
+	    isArray = __webpack_require__(662),
+	    isTypedArray = __webpack_require__(697);
+
+	/** `Object#toString` result references. */
+	var argsTag = '[object Arguments]',
+	    arrayTag = '[object Array]',
+	    objectTag = '[object Object]';
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/**
+	 * A specialized version of `baseIsEqual` for arrays and objects which performs
+	 * deep comparisons and tracks traversed objects enabling objects with circular
+	 * references to be compared.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Function} [customizer] The function to customize comparing objects.
+	 * @param {boolean} [isLoose] Specify performing partial comparisons.
+	 * @param {Array} [stackA=[]] Tracks traversed `value` objects.
+	 * @param {Array} [stackB=[]] Tracks traversed `other` objects.
+	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+	 */
+	function baseIsEqualDeep(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
+	  var objIsArr = isArray(object),
+	      othIsArr = isArray(other),
+	      objTag = arrayTag,
+	      othTag = arrayTag;
+
+	  if (!objIsArr) {
+	    objTag = objToString.call(object);
+	    if (objTag == argsTag) {
+	      objTag = objectTag;
+	    } else if (objTag != objectTag) {
+	      objIsArr = isTypedArray(object);
+	    }
+	  }
+	  if (!othIsArr) {
+	    othTag = objToString.call(other);
+	    if (othTag == argsTag) {
+	      othTag = objectTag;
+	    } else if (othTag != objectTag) {
+	      othIsArr = isTypedArray(other);
+	    }
+	  }
+	  var objIsObj = objTag == objectTag,
+	      othIsObj = othTag == objectTag,
+	      isSameTag = objTag == othTag;
+
+	  if (isSameTag && !(objIsArr || objIsObj)) {
+	    return equalByTag(object, other, objTag);
+	  }
+	  if (!isLoose) {
+	    var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+	        othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
+
+	    if (objIsWrapped || othIsWrapped) {
+	      return equalFunc(objIsWrapped ? object.value() : object, othIsWrapped ? other.value() : other, customizer, isLoose, stackA, stackB);
+	    }
+	  }
+	  if (!isSameTag) {
+	    return false;
+	  }
+	  // Assume cyclic values are equal.
+	  // For more information on detecting circular references see https://es5.github.io/#JO.
+	  stackA || (stackA = []);
+	  stackB || (stackB = []);
+
+	  var length = stackA.length;
+	  while (length--) {
+	    if (stackA[length] == object) {
+	      return stackB[length] == other;
+	    }
+	  }
+	  // Add `object` and `other` to the stack of traversed objects.
+	  stackA.push(object);
+	  stackB.push(other);
+
+	  var result = (objIsArr ? equalArrays : equalObjects)(object, other, equalFunc, customizer, isLoose, stackA, stackB);
+
+	  stackA.pop();
+	  stackB.pop();
+
+	  return result;
+	}
+
+	module.exports = baseIsEqualDeep;
+
+
+/***/ },
+/* 693 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arraySome = __webpack_require__(694);
+
+	/**
+	 * A specialized version of `baseIsEqualDeep` for arrays with support for
+	 * partial deep comparisons.
+	 *
+	 * @private
+	 * @param {Array} array The array to compare.
+	 * @param {Array} other The other array to compare.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Function} [customizer] The function to customize comparing arrays.
+	 * @param {boolean} [isLoose] Specify performing partial comparisons.
+	 * @param {Array} [stackA] Tracks traversed `value` objects.
+	 * @param {Array} [stackB] Tracks traversed `other` objects.
+	 * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
+	 */
+	function equalArrays(array, other, equalFunc, customizer, isLoose, stackA, stackB) {
+	  var index = -1,
+	      arrLength = array.length,
+	      othLength = other.length;
+
+	  if (arrLength != othLength && !(isLoose && othLength > arrLength)) {
+	    return false;
+	  }
+	  // Ignore non-index properties.
+	  while (++index < arrLength) {
+	    var arrValue = array[index],
+	        othValue = other[index],
+	        result = customizer ? customizer(isLoose ? othValue : arrValue, isLoose ? arrValue : othValue, index) : undefined;
+
+	    if (result !== undefined) {
+	      if (result) {
+	        continue;
+	      }
+	      return false;
+	    }
+	    // Recursively compare arrays (susceptible to call stack limits).
+	    if (isLoose) {
+	      if (!arraySome(other, function(othValue) {
+	            return arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
+	          })) {
+	        return false;
+	      }
+	    } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB))) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	module.exports = equalArrays;
+
+
+/***/ },
+/* 694 */
+/***/ function(module, exports) {
+
+	/**
+	 * A specialized version of `_.some` for arrays without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array} array The array to iterate over.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @returns {boolean} Returns `true` if any element passes the predicate check,
+	 *  else `false`.
+	 */
+	function arraySome(array, predicate) {
+	  var index = -1,
+	      length = array.length;
+
+	  while (++index < length) {
+	    if (predicate(array[index], index, array)) {
+	      return true;
+	    }
+	  }
+	  return false;
+	}
+
+	module.exports = arraySome;
+
+
+/***/ },
+/* 695 */
+/***/ function(module, exports) {
+
+	/** `Object#toString` result references. */
+	var boolTag = '[object Boolean]',
+	    dateTag = '[object Date]',
+	    errorTag = '[object Error]',
+	    numberTag = '[object Number]',
+	    regexpTag = '[object RegExp]',
+	    stringTag = '[object String]';
+
+	/**
+	 * A specialized version of `baseIsEqualDeep` for comparing objects of
+	 * the same `toStringTag`.
+	 *
+	 * **Note:** This function only supports comparing values with tags of
+	 * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @param {string} tag The `toStringTag` of the objects to compare.
+	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+	 */
+	function equalByTag(object, other, tag) {
+	  switch (tag) {
+	    case boolTag:
+	    case dateTag:
+	      // Coerce dates and booleans to numbers, dates to milliseconds and booleans
+	      // to `1` or `0` treating invalid dates coerced to `NaN` as not equal.
+	      return +object == +other;
+
+	    case errorTag:
+	      return object.name == other.name && object.message == other.message;
+
+	    case numberTag:
+	      // Treat `NaN` vs. `NaN` as equal.
+	      return (object != +object)
+	        ? other != +other
+	        : object == +other;
+
+	    case regexpTag:
+	    case stringTag:
+	      // Coerce regexes to strings and treat strings primitives and string
+	      // objects as equal. See https://es5.github.io/#x15.10.6.4 for more details.
+	      return object == (other + '');
+	  }
+	  return false;
+	}
+
+	module.exports = equalByTag;
+
+
+/***/ },
+/* 696 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var keys = __webpack_require__(679);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * A specialized version of `baseIsEqualDeep` for objects with support for
+	 * partial deep comparisons.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Function} [customizer] The function to customize comparing values.
+	 * @param {boolean} [isLoose] Specify performing partial comparisons.
+	 * @param {Array} [stackA] Tracks traversed `value` objects.
+	 * @param {Array} [stackB] Tracks traversed `other` objects.
+	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+	 */
+	function equalObjects(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
+	  var objProps = keys(object),
+	      objLength = objProps.length,
+	      othProps = keys(other),
+	      othLength = othProps.length;
+
+	  if (objLength != othLength && !isLoose) {
+	    return false;
+	  }
+	  var index = objLength;
+	  while (index--) {
+	    var key = objProps[index];
+	    if (!(isLoose ? key in other : hasOwnProperty.call(other, key))) {
+	      return false;
+	    }
+	  }
+	  var skipCtor = isLoose;
+	  while (++index < objLength) {
+	    key = objProps[index];
+	    var objValue = object[key],
+	        othValue = other[key],
+	        result = customizer ? customizer(isLoose ? othValue : objValue, isLoose? objValue : othValue, key) : undefined;
+
+	    // Recursively compare objects (susceptible to call stack limits).
+	    if (!(result === undefined ? equalFunc(objValue, othValue, customizer, isLoose, stackA, stackB) : result)) {
+	      return false;
+	    }
+	    skipCtor || (skipCtor = key == 'constructor');
+	  }
+	  if (!skipCtor) {
+	    var objCtor = object.constructor,
+	        othCtor = other.constructor;
+
+	    // Non `Object` object instances with different constructors are not equal.
+	    if (objCtor != othCtor &&
+	        ('constructor' in object && 'constructor' in other) &&
+	        !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
+	          typeof othCtor == 'function' && othCtor instanceof othCtor)) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	module.exports = equalObjects;
+
+
+/***/ },
+/* 697 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isLength = __webpack_require__(663),
+	    isObjectLike = __webpack_require__(645);
+
+	/** `Object#toString` result references. */
+	var argsTag = '[object Arguments]',
+	    arrayTag = '[object Array]',
+	    boolTag = '[object Boolean]',
+	    dateTag = '[object Date]',
+	    errorTag = '[object Error]',
+	    funcTag = '[object Function]',
+	    mapTag = '[object Map]',
+	    numberTag = '[object Number]',
+	    objectTag = '[object Object]',
+	    regexpTag = '[object RegExp]',
+	    setTag = '[object Set]',
+	    stringTag = '[object String]',
+	    weakMapTag = '[object WeakMap]';
+
+	var arrayBufferTag = '[object ArrayBuffer]',
+	    float32Tag = '[object Float32Array]',
+	    float64Tag = '[object Float64Array]',
+	    int8Tag = '[object Int8Array]',
+	    int16Tag = '[object Int16Array]',
+	    int32Tag = '[object Int32Array]',
+	    uint8Tag = '[object Uint8Array]',
+	    uint8ClampedTag = '[object Uint8ClampedArray]',
+	    uint16Tag = '[object Uint16Array]',
+	    uint32Tag = '[object Uint32Array]';
+
+	/** Used to identify `toStringTag` values of typed arrays. */
+	var typedArrayTags = {};
+	typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
+	typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
+	typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
+	typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
+	typedArrayTags[uint32Tag] = true;
+	typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
+	typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
+	typedArrayTags[dateTag] = typedArrayTags[errorTag] =
+	typedArrayTags[funcTag] = typedArrayTags[mapTag] =
+	typedArrayTags[numberTag] = typedArrayTags[objectTag] =
+	typedArrayTags[regexpTag] = typedArrayTags[setTag] =
+	typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/**
+	 * Checks if `value` is classified as a typed array.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isTypedArray(new Uint8Array);
+	 * // => true
+	 *
+	 * _.isTypedArray([]);
+	 * // => false
+	 */
+	function isTypedArray(value) {
+	  return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[objToString.call(value)];
+	}
+
+	module.exports = isTypedArray;
+
+
+/***/ },
+/* 698 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isStrictComparable = __webpack_require__(699),
+	    pairs = __webpack_require__(700);
+
+	/**
+	 * Gets the propery names, values, and compare flags of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the match data of `object`.
+	 */
+	function getMatchData(object) {
+	  var result = pairs(object),
+	      length = result.length;
+
+	  while (length--) {
+	    result[length][2] = isStrictComparable(result[length][1]);
+	  }
+	  return result;
+	}
+
+	module.exports = getMatchData;
+
+
+/***/ },
+/* 699 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(644);
+
+	/**
+	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` if suitable for strict
+	 *  equality comparisons, else `false`.
+	 */
+	function isStrictComparable(value) {
+	  return value === value && !isObject(value);
+	}
+
+	module.exports = isStrictComparable;
+
+
+/***/ },
+/* 700 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var keys = __webpack_require__(679),
+	    toObject = __webpack_require__(678);
+
+	/**
+	 * Creates a two dimensional array of the key-value pairs for `object`,
+	 * e.g. `[[key1, value1], [key2, value2]]`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the new array of key-value pairs.
+	 * @example
+	 *
+	 * _.pairs({ 'barney': 36, 'fred': 40 });
+	 * // => [['barney', 36], ['fred', 40]] (iteration order is not guaranteed)
+	 */
+	function pairs(object) {
+	  object = toObject(object);
+
+	  var index = -1,
+	      props = keys(object),
+	      length = props.length,
+	      result = Array(length);
+
+	  while (++index < length) {
+	    var key = props[index];
+	    result[index] = [key, object[key]];
+	  }
+	  return result;
+	}
+
+	module.exports = pairs;
+
+
+/***/ },
+/* 701 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGet = __webpack_require__(702),
+	    baseIsEqual = __webpack_require__(691),
+	    baseSlice = __webpack_require__(703),
+	    isArray = __webpack_require__(662),
+	    isKey = __webpack_require__(704),
+	    isStrictComparable = __webpack_require__(699),
+	    last = __webpack_require__(705),
+	    toObject = __webpack_require__(678),
+	    toPath = __webpack_require__(706);
+
+	/**
+	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
+	 *
+	 * @private
+	 * @param {string} path The path of the property to get.
+	 * @param {*} srcValue The value to compare.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseMatchesProperty(path, srcValue) {
+	  var isArr = isArray(path),
+	      isCommon = isKey(path) && isStrictComparable(srcValue),
+	      pathKey = (path + '');
+
+	  path = toPath(path);
+	  return function(object) {
+	    if (object == null) {
+	      return false;
+	    }
+	    var key = pathKey;
+	    object = toObject(object);
+	    if ((isArr || !isCommon) && !(key in object)) {
+	      object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
+	      if (object == null) {
+	        return false;
+	      }
+	      key = last(path);
+	      object = toObject(object);
+	    }
+	    return object[key] === srcValue
+	      ? (srcValue !== undefined || (key in object))
+	      : baseIsEqual(srcValue, object[key], undefined, true);
+	  };
+	}
+
+	module.exports = baseMatchesProperty;
+
+
+/***/ },
+/* 702 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var toObject = __webpack_require__(678);
+
+	/**
+	 * The base implementation of `get` without support for string paths
+	 * and default values.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {Array} path The path of the property to get.
+	 * @param {string} [pathKey] The key representation of path.
+	 * @returns {*} Returns the resolved value.
+	 */
+	function baseGet(object, path, pathKey) {
+	  if (object == null) {
+	    return;
+	  }
+	  if (pathKey !== undefined && pathKey in toObject(object)) {
+	    path = [pathKey];
+	  }
+	  var index = 0,
+	      length = path.length;
+
+	  while (object != null && index < length) {
+	    object = object[path[index++]];
+	  }
+	  return (index && index == length) ? object : undefined;
+	}
+
+	module.exports = baseGet;
+
+
+/***/ },
+/* 703 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.slice` without an iteratee call guard.
+	 *
+	 * @private
+	 * @param {Array} array The array to slice.
+	 * @param {number} [start=0] The start position.
+	 * @param {number} [end=array.length] The end position.
+	 * @returns {Array} Returns the slice of `array`.
+	 */
+	function baseSlice(array, start, end) {
+	  var index = -1,
+	      length = array.length;
+
+	  start = start == null ? 0 : (+start || 0);
+	  if (start < 0) {
+	    start = -start > length ? 0 : (length + start);
+	  }
+	  end = (end === undefined || end > length) ? length : (+end || 0);
+	  if (end < 0) {
+	    end += length;
+	  }
+	  length = start > end ? 0 : ((end - start) >>> 0);
+	  start >>>= 0;
+
+	  var result = Array(length);
+	  while (++index < length) {
+	    result[index] = array[index + start];
+	  }
+	  return result;
+	}
+
+	module.exports = baseSlice;
+
+
+/***/ },
+/* 704 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArray = __webpack_require__(662),
+	    toObject = __webpack_require__(678);
+
+	/** Used to match property names within property paths. */
+	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
+	    reIsPlainProp = /^\w*$/;
+
+	/**
+	 * Checks if `value` is a property name and not a property path.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {Object} [object] The object to query keys on.
+	 * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
+	 */
+	function isKey(value, object) {
+	  var type = typeof value;
+	  if ((type == 'string' && reIsPlainProp.test(value)) || type == 'number') {
+	    return true;
+	  }
+	  if (isArray(value)) {
+	    return false;
+	  }
+	  var result = !reIsDeepProp.test(value);
+	  return result || (object != null && value in toObject(object));
+	}
+
+	module.exports = isKey;
+
+
+/***/ },
+/* 705 */
+/***/ function(module, exports) {
+
+	/**
+	 * Gets the last element of `array`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Array
+	 * @param {Array} array The array to query.
+	 * @returns {*} Returns the last element of `array`.
+	 * @example
+	 *
+	 * _.last([1, 2, 3]);
+	 * // => 3
+	 */
+	function last(array) {
+	  var length = array ? array.length : 0;
+	  return length ? array[length - 1] : undefined;
+	}
+
+	module.exports = last;
+
+
+/***/ },
+/* 706 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseToString = __webpack_require__(707),
+	    isArray = __webpack_require__(662);
+
+	/** Used to match property names within property paths. */
+	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
+
+	/** Used to match backslashes in property paths. */
+	var reEscapeChar = /\\(\\)?/g;
+
+	/**
+	 * Converts `value` to property path array if it's not one.
+	 *
+	 * @private
+	 * @param {*} value The value to process.
+	 * @returns {Array} Returns the property path array.
+	 */
+	function toPath(value) {
+	  if (isArray(value)) {
+	    return value;
+	  }
+	  var result = [];
+	  baseToString(value).replace(rePropName, function(match, number, quote, string) {
+	    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
+	  });
+	  return result;
+	}
+
+	module.exports = toPath;
+
+
+/***/ },
+/* 707 */
+/***/ function(module, exports) {
+
+	/**
+	 * Converts `value` to a string if it's not one. An empty string is returned
+	 * for `null` or `undefined` values.
+	 *
+	 * @private
+	 * @param {*} value The value to process.
+	 * @returns {string} Returns the string.
+	 */
+	function baseToString(value) {
+	  return value == null ? '' : (value + '');
+	}
+
+	module.exports = baseToString;
+
+
+/***/ },
+/* 708 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var identity = __webpack_require__(639);
+
+	/**
+	 * A specialized version of `baseCallback` which only supports `this` binding
+	 * and specifying the number of arguments to provide to `func`.
+	 *
+	 * @private
+	 * @param {Function} func The function to bind.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {number} [argCount] The number of arguments to provide to `func`.
+	 * @returns {Function} Returns the callback.
+	 */
+	function bindCallback(func, thisArg, argCount) {
+	  if (typeof func != 'function') {
+	    return identity;
+	  }
+	  if (thisArg === undefined) {
+	    return func;
+	  }
+	  switch (argCount) {
+	    case 1: return function(value) {
+	      return func.call(thisArg, value);
+	    };
+	    case 3: return function(value, index, collection) {
+	      return func.call(thisArg, value, index, collection);
+	    };
+	    case 4: return function(accumulator, value, index, collection) {
+	      return func.call(thisArg, accumulator, value, index, collection);
+	    };
+	    case 5: return function(value, other, key, object, source) {
+	      return func.call(thisArg, value, other, key, object, source);
+	    };
+	  }
+	  return function() {
+	    return func.apply(thisArg, arguments);
+	  };
+	}
+
+	module.exports = bindCallback;
+
+
+/***/ },
+/* 709 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseProperty = __webpack_require__(682),
+	    basePropertyDeep = __webpack_require__(710),
+	    isKey = __webpack_require__(704);
+
+	/**
+	 * Creates a function that returns the property value at `path` on a
+	 * given object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {Array|string} path The path of the property to get.
+	 * @returns {Function} Returns the new function.
+	 * @example
+	 *
+	 * var objects = [
+	 *   { 'a': { 'b': { 'c': 2 } } },
+	 *   { 'a': { 'b': { 'c': 1 } } }
+	 * ];
+	 *
+	 * _.map(objects, _.property('a.b.c'));
+	 * // => [2, 1]
+	 *
+	 * _.pluck(_.sortBy(objects, _.property(['a', 'b', 'c'])), 'a.b.c');
+	 * // => [1, 2]
+	 */
+	function property(path) {
+	  return isKey(path) ? baseProperty(path) : basePropertyDeep(path);
+	}
+
+	module.exports = property;
+
+
+/***/ },
+/* 710 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGet = __webpack_require__(702),
+	    toPath = __webpack_require__(706);
+
+	/**
+	 * A specialized version of `baseProperty` which supports deep paths.
+	 *
+	 * @private
+	 * @param {Array|string} path The path of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function basePropertyDeep(path) {
+	  var pathKey = (path + '');
+	  path = toPath(path);
+	  return function(object) {
+	    return baseGet(object, path, pathKey);
+	  };
+	}
+
+	module.exports = basePropertyDeep;
+
+
+/***/ },
+/* 711 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
+	 * without support for callback shorthands and `this` binding, which iterates
+	 * over `collection` using the provided `eachFunc`.
+	 *
+	 * @private
+	 * @param {Array|Object|string} collection The collection to search.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @param {Function} eachFunc The function to iterate over `collection`.
+	 * @param {boolean} [retKey] Specify returning the key of the found element
+	 *  instead of the element itself.
+	 * @returns {*} Returns the found element or its key, else `undefined`.
+	 */
+	function baseFind(collection, predicate, eachFunc, retKey) {
+	  var result;
+	  eachFunc(collection, function(value, key, collection) {
+	    if (predicate(value, key, collection)) {
+	      result = retKey ? key : value;
+	      return false;
+	    }
+	  });
+	  return result;
+	}
+
+	module.exports = baseFind;
+
+
+/***/ },
+/* 712 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.findIndex` and `_.findLastIndex` without
+	 * support for callback shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array} array The array to search.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {number} Returns the index of the matched value, else `-1`.
+	 */
+	function baseFindIndex(array, predicate, fromRight) {
+	  var length = array.length,
+	      index = fromRight ? length : -1;
+
+	  while ((fromRight ? index-- : ++index < length)) {
+	    if (predicate(array[index], index, array)) {
+	      return index;
+	    }
+	  }
+	  return -1;
+	}
+
+	module.exports = baseFindIndex;
+
+
+/***/ },
+/* 713 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var assign = __webpack_require__(714),
+	    domEvent = __webpack_require__(484),
+	    domRemove = __webpack_require__(54);
+
+	function stopPropagation(event) {
+	  event.stopPropagation();
+	}
+
+
+	/**
+	 * Initializes a container div 'contentContainer' which contains an editable content div 'content'.
+	 *
+	 * @param {object} options
+	 * @param {DOMElement} options.container The DOM element to append the contentContainer to
+	 * @param {String} options.keyHandler
+	 */
+	function TextBox(options) {
+
+	  this.container = options.container;
+
+	  this.content = document.createElement('div');
+
+	  this.content.contentEditable = 'true';
+
+	  this.keyHandler = options.keyHandler || function() {};
+	}
+
+	module.exports = TextBox;
+
+
+	/**
+	 * Create a text box with the given position, size, style and text content
+	 *
+	 * @param {Object} bounds
+	 * @param {Number} bounds.x absolute x position
+	 * @param {Number} bounds.y absolute y position
+	 * @param {Number} [bounds.width] fixed width value
+	 * @param {Number} [bounds.height] fixed height value
+	 * @param {Number} [bounds.maxWidth] maximum width value
+	 * @param {Number} [bounds.maxHeight] maximum height value
+	 * @param {Number} [bounds.minWidth] minimum width value
+	 * @param {Number} [bounds.minHeight] minimum height value
+	 * @param {Object} [style]
+	 * @param {String} value text content
+	 *
+	 * @return {DOMElement} The created content DOM element
+	 */
+	TextBox.prototype.create = function(bounds, style, value) {
+
+	  var content = this.content,
+	      container = this.container;
+
+	  assign(content.style, {
+	    width: bounds.width + 'px',
+	    height: bounds.height + 'px',
+	    maxWidth: bounds.maxWidth + 'px',
+	    maxHeight: bounds.maxHeight + 'px',
+	    minWidth: bounds.minWidth + 'px',
+	    minHeight: bounds.minHeight + 'px',
+	    left: bounds.x + 'px',
+	    top: bounds.y + 'px',
+	    backgroundColor: '#ffffff',
+	    position: 'absolute',
+	    overflowY: 'auto',
+	    border: '1px solid #ccc',
+	    padding: '2px',
+	    wordWrap: 'normal',
+	    textAlign: 'center',
+	    outline: 'none'
+	  }, style || {});
+
+	  content.innerText = value;
+
+	  domEvent.bind(content, 'keydown', this.keyHandler);
+	  domEvent.bind(content, 'mousedown', stopPropagation);
+
+	  container.appendChild(content);
+
+	  var self = this;
+
+	  setTimeout(function() {
+	    if (content.parent) {
+	      content.select();
+	    }
+	    self.setCursor();
+	  }, 100);
+
+	  return content;
+	};
+
+
+	/**
+	 * Clear content and style of the textbox, unbind listeners and
+	 * reset CSS style.
+	 */
+	TextBox.prototype.destroy = function() {
+	  var content = this.content;
+
+	  // clear content
+	  content.innerText = '';
+
+	  // clear optional bounds values
+	  assign(content.style, {
+	    width: '',
+	    height: '',
+	    maxWidth: '',
+	    maxHeight: '',
+	    minWidth: '',
+	    minHeight: ''
+	  });
+
+	  domEvent.unbind(content, 'keydown', this.keyHandler);
+	  domEvent.unbind(content, 'mousedown', stopPropagation);
+
+	  domRemove(content);
+	};
+
+
+	TextBox.prototype.getValue = function() {
+	  return this.content.innerText;
+	};
+
+
+	/**
+	 * Set the cursor to the end of the text
+	 */
+	TextBox.prototype.setCursor = function() {
+
+	  // scroll to the bottom
+	  this.content.scrollTop = this.content.scrollHeight;
+
+	  var range = document.createRange();
+
+	  range.selectNodeContents(this.content);
+	  range.collapse(false);
+
+	  var selection = window.getSelection();
+
+	  selection.removeAllRanges();
+	  selection.addRange(range);
+	};
+
+
+/***/ },
+/* 714 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var assignWith = __webpack_require__(715),
+	    baseAssign = __webpack_require__(716),
+	    createAssigner = __webpack_require__(718);
+
+	/**
+	 * Assigns own enumerable properties of source object(s) to the destination
+	 * object. Subsequent sources overwrite property assignments of previous sources.
+	 * If `customizer` is provided it's invoked to produce the assigned values.
+	 * The `customizer` is bound to `thisArg` and invoked with five arguments:
+	 * (objectValue, sourceValue, key, object, source).
+	 *
+	 * **Note:** This method mutates `object` and is based on
+	 * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias extend
+	 * @category Object
+	 * @param {Object} object The destination object.
+	 * @param {...Object} [sources] The source objects.
+	 * @param {Function} [customizer] The function to customize assigned values.
+	 * @param {*} [thisArg] The `this` binding of `customizer`.
+	 * @returns {Object} Returns `object`.
+	 * @example
+	 *
+	 * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
+	 * // => { 'user': 'fred', 'age': 40 }
+	 *
+	 * // using a customizer callback
+	 * var defaults = _.partialRight(_.assign, function(value, other) {
+	 *   return _.isUndefined(value) ? other : value;
+	 * });
+	 *
+	 * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
+	 * // => { 'user': 'barney', 'age': 36 }
+	 */
+	var assign = createAssigner(function(object, source, customizer) {
+	  return customizer
+	    ? assignWith(object, source, customizer)
+	    : baseAssign(object, source);
+	});
+
+	module.exports = assign;
+
+
+/***/ },
+/* 715 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var keys = __webpack_require__(679);
+
+	/**
+	 * A specialized version of `_.assign` for customizing assigned values without
+	 * support for argument juggling, multiple sources, and `this` binding `customizer`
+	 * functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @param {Function} customizer The function to customize assigned values.
+	 * @returns {Object} Returns `object`.
+	 */
+	function assignWith(object, source, customizer) {
+	  var index = -1,
+	      props = keys(source),
+	      length = props.length;
+
+	  while (++index < length) {
+	    var key = props[index],
+	        value = object[key],
+	        result = customizer(value, source[key], key, object, source);
+
+	    if ((result === result ? (result !== value) : (value === value)) ||
+	        (value === undefined && !(key in object))) {
+	      object[key] = result;
+	    }
+	  }
+	  return object;
+	}
+
+	module.exports = assignWith;
+
+
+/***/ },
+/* 716 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCopy = __webpack_require__(717),
+	    keys = __webpack_require__(679);
+
+	/**
+	 * The base implementation of `_.assign` without support for argument juggling,
+	 * multiple sources, and `customizer` functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseAssign(object, source) {
+	  return source == null
+	    ? object
+	    : baseCopy(source, keys(source), object);
+	}
+
+	module.exports = baseAssign;
+
+
+/***/ },
+/* 717 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copies properties of `source` to `object`.
+	 *
+	 * @private
+	 * @param {Object} source The object to copy properties from.
+	 * @param {Array} props The property names to copy.
+	 * @param {Object} [object={}] The object to copy properties to.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseCopy(source, props, object) {
+	  object || (object = {});
+
+	  var index = -1,
+	      length = props.length;
+
+	  while (++index < length) {
+	    var key = props[index];
+	    object[key] = source[key];
+	  }
+	  return object;
+	}
+
+	module.exports = baseCopy;
+
+
+/***/ },
+/* 718 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var bindCallback = __webpack_require__(708),
+	    isIterateeCall = __webpack_require__(719),
+	    restParam = __webpack_require__(672);
+
+	/**
+	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
+	 *
+	 * @private
+	 * @param {Function} assigner The function to assign values.
+	 * @returns {Function} Returns the new assigner function.
+	 */
+	function createAssigner(assigner) {
+	  return restParam(function(object, sources) {
+	    var index = -1,
+	        length = object == null ? 0 : sources.length,
+	        customizer = length > 2 ? sources[length - 2] : undefined,
+	        guard = length > 2 ? sources[2] : undefined,
+	        thisArg = length > 1 ? sources[length - 1] : undefined;
+
+	    if (typeof customizer == 'function') {
+	      customizer = bindCallback(customizer, thisArg, 5);
+	      length -= 2;
+	    } else {
+	      customizer = typeof thisArg == 'function' ? thisArg : undefined;
+	      length -= (customizer ? 1 : 0);
+	    }
+	    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+	      customizer = length < 3 ? undefined : customizer;
+	      length = 1;
+	    }
+	    while (++index < length) {
+	      var source = sources[index];
+	      if (source) {
+	        assigner(object, source, customizer);
+	      }
+	    }
+	    return object;
+	  });
+	}
+
+	module.exports = createAssigner;
+
+
+/***/ },
+/* 719 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArrayLike = __webpack_require__(680),
+	    isIndex = __webpack_require__(666),
+	    isObject = __webpack_require__(644);
+
+	/**
+	 * Checks if the provided arguments are from an iteratee call.
+	 *
+	 * @private
+	 * @param {*} value The potential iteratee value argument.
+	 * @param {*} index The potential iteratee index or key argument.
+	 * @param {*} object The potential iteratee object argument.
+	 * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+	 */
+	function isIterateeCall(value, index, object) {
+	  if (!isObject(object)) {
+	    return false;
+	  }
+	  var type = typeof index;
+	  if (type == 'number'
+	      ? (isArrayLike(object) && isIndex(index, object.length))
+	      : (type == 'string' && index in object)) {
+	    var other = object[index];
+	    return value === value ? (value === other) : (other !== other);
+	  }
+	  return false;
+	}
+
+	module.exports = isIterateeCall;
 
 
 /***/ },
@@ -64963,25 +65354,288 @@ var InfoxBpmnModeler =
 
 	'use strict';
 
-	var find = __webpack_require__(412),
-	    any = __webpack_require__(674),
-	    every = __webpack_require__(423),
-	    filter = __webpack_require__(384),
-	    forEach = __webpack_require__(416),
+	var UpdateLabelHandler = __webpack_require__(721);
+
+	var LabelUtil = __webpack_require__(591);
+
+	var is = __webpack_require__(443).is,
+	    isExpanded = __webpack_require__(442).isExpanded;
+
+	var LINE_HEIGHT = 14,
+	    PADDING = 6;
+
+	function LabelEditingProvider(eventBus, canvas, directEditing, commandStack) {
+
+	  this._canvas = canvas;
+	  this._commandStack = commandStack;
+
+	  directEditing.registerProvider(this);
+
+	  commandStack.registerHandler('element.updateLabel', UpdateLabelHandler);
+
+	  // listen to dblclick on non-root elements
+	  eventBus.on('element.dblclick', function(event) {
+	    directEditing.activate(event.element);
+	  });
+
+	  // complete on followup canvas operation
+	  eventBus.on([ 'element.mousedown', 'drag.init', 'canvas.viewbox.changed' ], function(event) {
+	    directEditing.complete();
+	  });
+
+	  // cancel on command stack changes
+	  eventBus.on([ 'commandStack.changed' ], function() {
+	    directEditing.cancel();
+	  });
+
+
+	  if ('ontouchstart' in document.documentElement) {
+	    // we deactivate automatic label editing on mobile devices
+	    // as it breaks the user interaction workflow
+
+	    // TODO(nre): we should temporarily focus the edited element here
+	    // and release the focused viewport after the direct edit operation is finished
+	  } else {
+	    eventBus.on('create.end', 500, function(e) {
+
+	      var element = e.shape,
+	          canExecute = e.context.canExecute;
+
+	      if (!canExecute) {
+	        return;
+	      }
+
+	      if (is(element, 'bpmn:Task') || is(element, 'bpmn:TextAnnotation') ||
+	          (is(element, 'bpmn:SubProcess') && !isExpanded(element))) {
+
+	        directEditing.activate(element);
+	      }
+	    });
+	  }
+	}
+
+	LabelEditingProvider.$inject = [ 'eventBus', 'canvas', 'directEditing', 'commandStack' ];
+
+	module.exports = LabelEditingProvider;
+
+
+	/**
+	 * Activate direct editing for activities and text annotations.
+	 *
+	 * @param  {djs.model.Base} element
+	 *
+	 * @return {Object} an object with properties bounds (position and size) and text
+	 */
+	LabelEditingProvider.prototype.activate = function(element) {
+
+	  var text = LabelUtil.getLabel(element);
+
+	  if (text === undefined) {
+	    return;
+	  }
+
+	  var properties = this.getEditingBBox(element);
+
+	  properties.text = text;
+
+	  return properties;
+	};
+
+
+	/**
+	 * Get the editing bounding box based on the element's size and position
+	 *
+	 * @param  {djs.model.Base} element
+	 *
+	 * @return {Object} an object containing information about position and size (fixed or minimum and/or maximum)
+	 */
+	LabelEditingProvider.prototype.getEditingBBox = function(element) {
+	  var canvas = this._canvas;
+
+	  var target = element.label || element;
+
+	  var bbox = canvas.getAbsoluteBBox(target);
+
+	  var mid = {
+	    x: bbox.x + bbox.width / 2,
+	    y: bbox.y + bbox.height / 2
+	  };
+
+	  // default position
+	  var bounds = { x: bbox.x, y: bbox.y };
+
+	  var style = {},
+	      zoom;
+
+	  // adjust for expanded pools AND lanes
+	  if ((is(element, 'bpmn:Participant') && isExpanded(element)) || is(element, 'bpmn:Lane')) {
+
+	    bounds.width = 150;
+	    bounds.minHeight = LINE_HEIGHT + PADDING;
+	    bounds.maxHeight = LINE_HEIGHT * 2 + PADDING;
+	    bounds.x = bbox.x - bounds.width / 2;
+	    bounds.y = mid.y - bounds.minHeight / 2;
+	  }
+
+
+	  // internal labels for tasks and collapsed call activities, sub processes and participants
+	  if (
+	    is(element, 'bpmn:Task') ||
+	    (is(element, 'bpmn:CallActivity') && !isExpanded(element)) ||
+	    (is(element, 'bpmn:SubProcess') && !isExpanded(element)) ||
+	    (is(element, 'bpmn:Participant') && !isExpanded(element))
+	  ) {
+
+	    zoom = canvas.zoom();
+
+	    // fixed size for internal labels:
+	    // on high zoom levels: text box size === bbox size
+	    // on low zoom levels: text box size === bbox size at 100% zoom
+	    // This ensures minimum bounds at low zoom levels
+	    if (zoom > 1) {
+	      bounds.width = bbox.width;
+	      bounds.height = bbox.height;
+	    } else {
+	      bounds.width = bbox.width / zoom;
+	      bounds.height = bbox.height / zoom;
+	    }
+
+	    // centering overlapping text box size at low zoom levels
+	    if (zoom < 1) {
+	      bounds.x = bbox.x - (bounds.width / 2 - bbox.width / 2);
+	      bounds.y = bbox.y - (bounds.height / 2 - bbox.height / 2);
+	    }
+
+	  }
+
+
+	  // internal labels for expanded sub processes
+	  if (is(element, 'bpmn:SubProcess') && isExpanded(element)) {
+
+	    bounds.width = element.width;
+	    bounds.maxHeight = 3 * LINE_HEIGHT + PADDING; // maximum 3 lines
+	    bounds.x = mid.x - element.width / 2;
+	  }
+
+
+	  // external labels for events, data elements, gateways and connections
+	  if (target.labelTarget) {
+
+	    bounds.width = 150;
+	    bounds.minHeight = LINE_HEIGHT + PADDING; // 1 line
+	    bounds.x = mid.x - bounds.width / 2;
+	  }
+
+
+	  // text annotations
+	  if (is(element, 'bpmn:TextAnnotation')) {
+	    bounds.minWidth = 100;
+	    bounds.height = element.height;
+
+	    style.textAlign = 'left';
+	  }
+
+	  return { bounds: bounds, style: style };
+	};
+
+
+	LabelEditingProvider.prototype.update = function(element, newLabel) {
+	  this._commandStack.execute('element.updateLabel', {
+	    element: element,
+	    newLabel: newLabel
+	  });
+	};
+
+
+/***/ },
+/* 721 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var LabelUtil = __webpack_require__(591);
+
+
+	/**
+	 * A handler that updates the text of a BPMN element.
+	 */
+	function UpdateLabelHandler() {
+
+	  /**
+	   * Set the label and return the changed elements.
+	   *
+	   * Element parameter can be label itself or connection (i.e. sequence flow).
+	   *
+	   * @param {djs.model.Base} element
+	   * @param {String} text
+	   */
+	  function setText(element, text) {
+
+	    // external label if present
+	    var label = element.label || element;
+
+	    var labelTarget = element.labelTarget || element;
+
+	    LabelUtil.setLabel(label, text, labelTarget !== label);
+
+	    return [ label, labelTarget ];
+	  }
+
+	  function execute(ctx) {
+	    ctx.oldLabel = LabelUtil.getLabel(ctx.element);
+	    return setText(ctx.element, ctx.newLabel);
+	  }
+
+	  function revert(ctx) {
+	    return setText(ctx.element, ctx.oldLabel);
+	  }
+
+	  // API
+
+	  this.execute = execute;
+	  this.revert = revert;
+	}
+
+	module.exports = UpdateLabelHandler;
+
+/***/ },
+/* 722 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(508)
+	  ],
+	  __init__: [ 'bpmnRules' ],
+	  bpmnRules: [ 'type', __webpack_require__(723) ]
+	};
+
+
+/***/ },
+/* 723 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var find = __webpack_require__(411),
+	    any = __webpack_require__(576),
+	    every = __webpack_require__(422),
+	    filter = __webpack_require__(383),
+	    forEach = __webpack_require__(415),
 	    inherits = __webpack_require__(3);
 
-	var getParents = __webpack_require__(673).getParents,
-	    is = __webpack_require__(444).is,
-	    isAny = __webpack_require__(673).isAny,
-	    getBusinessObject = __webpack_require__(444).getBusinessObject,
-	    isExpanded = __webpack_require__(443).isExpanded,
-	    isEventSubProcess = __webpack_require__(443).isEventSubProcess,
-	    isInterrupting = __webpack_require__(443).isInterrupting;
+	var getParents = __webpack_require__(575).getParents,
+	    is = __webpack_require__(443).is,
+	    isAny = __webpack_require__(575).isAny,
+	    getBusinessObject = __webpack_require__(443).getBusinessObject,
+	    isExpanded = __webpack_require__(442).isExpanded,
+	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
+	    isInterrupting = __webpack_require__(442).isInterrupting;
 
 
-	var RuleProvider = __webpack_require__(721);
+	var RuleProvider = __webpack_require__(545);
 
-	var isBoundaryAttachment = __webpack_require__(697).getBoundaryAttachment;
+	var isBoundaryAttachment = __webpack_require__(724).getBoundaryAttachment;
 
 	/**
 	 * BPMN specific modeling rule
@@ -65375,11 +66029,11 @@ var InfoxBpmnModeler =
 
 	  if (is(element, 'bpmn:Artifact')) {
 	    return isAny(target, [
-	              'bpmn:Collaboration',
-	              'bpmn:Lane',
-	              'bpmn:Participant',
-	              'bpmn:Process',
-	              'bpmn:SubProcess' ]);
+	      'bpmn:Collaboration',
+	      'bpmn:Lane',
+	      'bpmn:Participant',
+	      'bpmn:Process',
+	      'bpmn:SubProcess' ]);
 	  }
 
 	  if (is(element, 'bpmn:MessageFlow')) {
@@ -65417,11 +66071,11 @@ var InfoxBpmnModeler =
 	  }
 
 	  return isAny(target, [
-	              'bpmn:Collaboration',
-	              'bpmn:Lane',
-	              'bpmn:Participant',
-	              'bpmn:Process',
-	              'bpmn:SubProcess' ]);
+	    'bpmn:Collaboration',
+	    'bpmn:Lane',
+	    'bpmn:Participant',
+	    'bpmn:Process',
+	    'bpmn:SubProcess' ]);
 	}
 
 	function isBoundaryEvent(element) {
@@ -65707,129 +66361,197 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 721 */
+/* 724 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
 	'use strict';
 
-	var inherits = __webpack_require__(3);
+	var getOrientation = __webpack_require__(516).getOrientation;
 
-	var CommandInterceptor = __webpack_require__(606);
 
-	/**
-	 * A basic provider that may be extended to implement modeling rules.
-	 *
-	 * Extensions should implement the init method to actually add their custom
-	 * modeling checks. Checks may be added via the #addRule(action, fn) method.
-	 *
-	 * @param {EventBus} eventBus
-	 */
-	function RuleProvider(eventBus) {
-	  CommandInterceptor.call(this, eventBus);
+	function getBoundaryAttachment(position, targetBounds) {
 
-	  this.init();
+	  var orientation = getOrientation(position, targetBounds, -15);
+
+	  if (orientation !== 'intersect') {
+	    return orientation;
+	  } else {
+	    return null;
+	  }
 	}
 
-	RuleProvider.$inject = [ 'eventBus' ];
-
-	inherits(RuleProvider, CommandInterceptor);
-
-	module.exports = RuleProvider;
+	module.exports.getBoundaryAttachment = getBoundaryAttachment;
 
 
-	/**
-	 * Adds a modeling rule for the given action, implemented through
-	 * a callback function.
-	 *
-	 * The function will receive the modeling specific action context
-	 * to perform its check. It must return `false` to disallow the
-	 * action from happening or `true` to allow the action.
-	 *
-	 * A rule provider may pass over the evaluation to lower priority
-	 * rules by returning return nothing (or <code>undefined</code>).
-	 *
-	 * @example
-	 *
-	 * ResizableRules.prototype.init = function() {
-	 *
-	 *   \/**
-	 *    * Return `true`, `false` or nothing to denote
-	 *    * _allowed_, _not allowed_ and _continue evaluating_.
-	 *    *\/
-	 *   this.addRule('shape.resize', function(context) {
-	 *
-	 *     var shape = context.shape;
-	 *
-	 *     if (!context.newBounds) {
-	 *       // check general resizability
-	 *       if (!shape.resizable) {
-	 *         return false;
-	 *       }
-	 *
-	 *       // not returning anything (read: undefined)
-	 *       // will continue the evaluation of other rules
-	 *       // (with lower priority)
-	 *       return;
-	 *     } else {
-	 *       // element must have minimum size of 10*10 points
-	 *       return context.newBounds.width > 10 && context.newBounds.height > 10;
-	 *     }
-	 *   });
-	 * };
-	 *
-	 * @param {String|Array<String>} actions the identifier for the modeling action to check
-	 * @param {Number} [priority] the priority at which this rule is being applied
-	 * @param {Function} fn the callback function that performs the actual check
-	 */
-	RuleProvider.prototype.addRule = function(actions, priority, fn) {
 
-	  var self = this;
+	// participant snapping box implementation /////////////////
 
-	  if (typeof actions === 'string') {
-	    actions = [ actions ];
+	var is = __webpack_require__(443).is;
+
+	var asTRBL = __webpack_require__(516).asTRBL;
+
+	var collectLanes = __webpack_require__(602).collectLanes,
+	    getLanesRoot = __webpack_require__(602).getLanesRoot;
+
+	var abs = Math.abs,
+	    min = Math.min,
+	    max = Math.max;
+
+
+	function addToTrbl(trbl, attr, value, choice) {
+
+	  var current = trbl[attr];
+
+	  // make sure to set the value if it does not exist
+	  // or apply the correct value by comparing against
+	  // choice(value, currentValue)
+	  trbl[attr] = current === undefined ? value : choice(value, current);
+	}
+
+	function addMin(trbl, attr, value) {
+	  return addToTrbl(trbl, attr, value, min);
+	}
+
+	function addMax(trbl, attr, value) {
+	  return addToTrbl(trbl, attr, value, max);
+	}
+
+
+	var LANE_MIN_HEIGHT = 60,
+	    LANE_MIN_WIDTH = 300,
+	    LANE_RIGHT_PADDING = 20,
+	    LANE_LEFT_PADDING = 50,
+	    LANE_TOP_PADDING = 20,
+	    LANE_BOTTOM_PADDING = 20;
+
+
+	function getParticipantSizeConstraints(laneShape, resizeDirection, balanced) {
+
+	  var lanesRoot = getLanesRoot(laneShape);
+
+	  var isFirst = true,
+	      isLast = true;
+
+	  ///// max top/bottom size for lanes
+
+	  var allLanes = collectLanes(lanesRoot, [ lanesRoot ]);
+
+	  var laneTrbl = asTRBL(laneShape);
+
+	  var maxTrbl = {},
+	      minTrbl = {};
+
+	  if (/e/.test(resizeDirection)) {
+	    minTrbl.right = laneTrbl.left + LANE_MIN_WIDTH;
+	  } else
+	  if (/w/.test(resizeDirection)) {
+	    minTrbl.left = laneTrbl.right - LANE_MIN_WIDTH;
 	  }
 
-	  actions.forEach(function(action) {
+	  allLanes.forEach(function(other) {
 
-	    self.canExecute(action, priority, function(context, action, event) {
-	      return fn(context);
-	    }, true);
+	    var otherTrbl = asTRBL(other);
+
+	    if (/n/.test(resizeDirection)) {
+
+	      if (otherTrbl.top < (laneTrbl.top - 10)) {
+	        isFirst = false;
+	      }
+
+	      // max top size (based on next element)
+	      if (balanced && abs(laneTrbl.top - otherTrbl.bottom) < 10) {
+	        addMax(maxTrbl, 'top', otherTrbl.top + LANE_MIN_HEIGHT);
+	      }
+
+	      // min top size (based on self or nested element)
+	      if (abs(laneTrbl.top - otherTrbl.top) < 5) {
+	        addMin(minTrbl, 'top', otherTrbl.bottom - LANE_MIN_HEIGHT);
+	      }
+	    }
+
+	    if (/s/.test(resizeDirection)) {
+
+	      if (otherTrbl.bottom > (laneTrbl.bottom + 10)) {
+	        isLast = false;
+	      }
+
+	      // max bottom size (based on previous element)
+	      if (balanced && abs(laneTrbl.bottom - otherTrbl.top) < 10) {
+	        addMin(maxTrbl, 'bottom', otherTrbl.bottom - LANE_MIN_HEIGHT);
+	      }
+
+	      // min bottom size (based on self or nested element)
+	      if (abs(laneTrbl.bottom - otherTrbl.bottom) < 5) {
+	        addMax(minTrbl, 'bottom', otherTrbl.top + LANE_MIN_HEIGHT);
+	      }
+	    }
 	  });
-	};
 
-	/**
-	 * Implement this method to add new rules during provider initialization.
-	 */
-	RuleProvider.prototype.init = function() {};
+
+	  ///// max top/bottom/left/right size based on flow nodes
+
+	  var flowElements = lanesRoot.children.filter(function(s) {
+	    return !s.hidden && !s.waypoints && (is(s, 'bpmn:FlowElement') || is(s, 'bpmn:Artifact'));
+	  });
+
+	  flowElements.forEach(function(flowElement) {
+
+	    var flowElementTrbl = asTRBL(flowElement);
+
+	    if (isFirst && /n/.test(resizeDirection)) {
+	      addMin(minTrbl, 'top', flowElementTrbl.top - LANE_TOP_PADDING);
+	    }
+
+	    if (/e/.test(resizeDirection)) {
+	      addMax(minTrbl, 'right', flowElementTrbl.right + LANE_RIGHT_PADDING);
+	    }
+
+	    if (isLast && /s/.test(resizeDirection)) {
+	      addMax(minTrbl, 'bottom', flowElementTrbl.bottom + LANE_BOTTOM_PADDING);
+	    }
+
+	    if (/w/.test(resizeDirection)) {
+	      addMin(minTrbl, 'left', flowElementTrbl.left - LANE_LEFT_PADDING);
+	    }
+	  });
+
+
+	  return {
+	    min: minTrbl,
+	    max: maxTrbl
+	  };
+	}
+
+
+	module.exports.getParticipantSizeConstraints = getParticipantSizeConstraints;
 
 /***/ },
-/* 722 */
+/* 725 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'bpmnOrderingProvider' ],
 	  __depends__: [
-	    __webpack_require__(447)
+	    __webpack_require__(446)
 	  ],
-	  bpmnOrderingProvider: [ 'type', __webpack_require__(723) ]
+	  bpmnOrderingProvider: [ 'type', __webpack_require__(726) ]
 	};
 
 /***/ },
-/* 723 */
+/* 726 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var OrderingProvider = __webpack_require__(724);
+	var OrderingProvider = __webpack_require__(727);
 
-	var isAny = __webpack_require__(673).isAny;
+	var isAny = __webpack_require__(575).isAny;
 
-	var findIndex = __webpack_require__(725);
+	var findIndex = __webpack_require__(728);
 
-	var find = __webpack_require__(412);
+	var find = __webpack_require__(411);
 
 
 	/**
@@ -65843,7 +66565,6 @@ var InfoxBpmnModeler =
 	  OrderingProvider.call(this, eventBus);
 
 	  var orders = [
-	    { type: 'label', order: { level: 10 } },
 	    { type: 'bpmn:SubProcess', order: { level: 6 } },
 	    {
 	      type: 'bpmn:SequenceFlow',
@@ -65875,6 +66596,10 @@ var InfoxBpmnModeler =
 	  ];
 
 	  function computeOrder(element) {
+	    if (element.labelTarget) {
+	      return { level: 10 };
+	    }
+
 	    var entry = find(orders, function(o) {
 	      return isAny(element, [ o.type ]);
 	    });
@@ -65908,9 +66633,9 @@ var InfoxBpmnModeler =
 
 	    if (!actualParent) {
 	      throw new Error(translate('no parent for {element} in {parent}', {
-	                        element: element.id,
-	                        parent: newParent.id
-	                      }));
+	        element: element.id,
+	        parent: newParent.id
+	      }));
 	    }
 
 	    return actualParent;
@@ -65966,14 +66691,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 724 */
+/* 727 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
 
 	/**
@@ -66070,10 +66795,10 @@ var InfoxBpmnModeler =
 	module.exports = OrderingProvider;
 
 /***/ },
-/* 725 */
+/* 728 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createFindIndex = __webpack_require__(726);
+	var createFindIndex = __webpack_require__(729);
 
 	/**
 	 * This method is like `_.find` except that it returns the index of the first
@@ -66129,11 +66854,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 726 */
+/* 729 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(386),
-	    baseFindIndex = __webpack_require__(415);
+	var baseCallback = __webpack_require__(385),
+	    baseFindIndex = __webpack_require__(414);
 
 	/**
 	 * Creates a `_.findIndex` or `_.findLastIndex` function.
@@ -66156,31 +66881,31 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 727 */
+/* 730 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(728),
-	    __webpack_require__(453)
+	    __webpack_require__(731),
+	    __webpack_require__(452)
 	  ],
-	  bpmnReplace: [ 'type', __webpack_require__(730) ]
+	  bpmnReplace: [ 'type', __webpack_require__(733) ]
 	};
 
 /***/ },
-/* 728 */
+/* 731 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'replace' ],
-	  replace: [ 'type', __webpack_require__(729) ]
+	  replace: [ 'type', __webpack_require__(732) ]
 	};
 
 
 /***/ },
-/* 729 */
+/* 732 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -66233,17 +66958,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 730 */
+/* 733 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pick = __webpack_require__(602),
-	    assign = __webpack_require__(7);
+	var pick = __webpack_require__(734),
+	    assign = __webpack_require__(7),
+	    has = __webpack_require__(735);
 
-	var is = __webpack_require__(444).is,
-	    isExpanded = __webpack_require__(443).isExpanded,
-	    isEventSubProcess = __webpack_require__(443).isEventSubProcess;
+	var is = __webpack_require__(443).is,
+	    isExpanded = __webpack_require__(442).isExpanded,
+	    isEventSubProcess = __webpack_require__(442).isEventSubProcess;
 
 	var CUSTOM_PROPERTIES = [
 	  'cancelActivity',
@@ -66252,6 +66978,30 @@ var InfoxBpmnModeler =
 	  'triggeredByEvent',
 	  'isInterrupting'
 	];
+
+	function toggeling(element, target) {
+
+	  var oldCollapsed = has(element, 'collapsed') ?
+	                     element.collapsed : !isExpanded(element);
+
+	  var targetCollapsed;
+
+	  if (has(target, 'collapsed') || has(target, 'isExpanded')) {
+	    // property is explicitly set so use it
+	    targetCollapsed = has(target, 'collapsed') ?
+	                      target.collapsed : !target.isExpanded;
+	  } else {
+	    // keep old state
+	    targetCollapsed = oldCollapsed;
+	  }
+
+	  if (oldCollapsed !== targetCollapsed) {
+	    element.collapsed = oldCollapsed;
+	    return true;
+	  }
+
+	  return false;
+	}
 
 
 	/**
@@ -66274,8 +67024,23 @@ var InfoxBpmnModeler =
 	    hints = hints || {};
 
 	    var type = target.type,
-	        oldBusinessObject = element.businessObject,
-	        newBusinessObject = bpmnFactory.create(type);
+	        oldBusinessObject = element.businessObject;
+
+
+
+	    if (is(oldBusinessObject, 'bpmn:SubProcess')) {
+	      if (type === 'bpmn:SubProcess') {
+	        if (toggeling(element, target)) {
+	          // expanding or collapsing process
+	          modeling.toggleCollapse(element);
+
+	          return element;
+	        }
+	      }
+	    }
+
+
+	    var newBusinessObject = bpmnFactory.create(type);
 
 	    var newElement = {
 	      type: type,
@@ -66290,21 +67055,16 @@ var InfoxBpmnModeler =
 	    // initialize special properties defined in target definition
 	    assign(newBusinessObject, pick(target, CUSTOM_PROPERTIES));
 
-	    if (is(oldBusinessObject, 'bpmn:SubProcess')) {
-
-	      newElement.isExpanded = isExpanded(oldBusinessObject);
-	    }
-
-	    // preserve adhoc state while switching collapsed/expanded subprocess
-	    if (is(oldBusinessObject, 'bpmn:AdHocSubProcess') && target.isExpanded) {
-	      newElement.businessObject = bpmnFactory.create('bpmn:AdHocSubProcess');
-	    }
 
 	    if (is(oldBusinessObject, 'bpmn:Activity')) {
 
-	      // switch collapsed/expanded subprocesses
-	      if (target.isExpanded === true) {
-	        newElement.isExpanded = true;
+	      if (is(oldBusinessObject, 'bpmn:SubProcess')) {
+	        // no toggeling, so keep old state
+	        newElement.isExpanded = isExpanded(oldBusinessObject);
+	      }
+	      // else if property is explicitly set, use it
+	      else if (has(target, 'isExpanded')) {
+	        newElement.isExpanded = target.isExpanded;
 	      }
 
 	      // TODO: need also to respect min/max Size
@@ -66321,16 +67081,16 @@ var InfoxBpmnModeler =
 	    if (is(oldBusinessObject, 'bpmn:Participant')) {
 
 	        // create expanded pool
-	        if (target.isExpanded === true) {
-	          newBusinessObject.processRef = bpmnFactory.create('bpmn:Process');
-	        } else {
+	      if (target.isExpanded === true) {
+	        newBusinessObject.processRef = bpmnFactory.create('bpmn:Process');
+	      } else {
 	          // remove children when transforming to collapsed pool
-	          hints.moveChildren = false;
-	        }
+	        hints.moveChildren = false;
+	      }
 
 	        // apply same size
-	        newElement.width = element.width;
-	        newElement.height = element.height;
+	      newElement.width = element.width;
+	      newElement.height = element.height;
 	    }
 
 	    newBusinessObject.name = oldBusinessObject.name;
@@ -66371,33 +67131,144 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 731 */
+/* 734 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseFlatten = __webpack_require__(40),
+	    bindCallback = __webpack_require__(27),
+	    pickByArray = __webpack_require__(42),
+	    pickByCallback = __webpack_require__(44),
+	    restParam = __webpack_require__(30);
+
+	/**
+	 * Creates an object composed of the picked `object` properties. Property
+	 * names may be specified as individual arguments or as arrays of property
+	 * names. If `predicate` is provided it's invoked for each property of `object`
+	 * picking the properties `predicate` returns truthy for. The predicate is
+	 * bound to `thisArg` and invoked with three arguments: (value, key, object).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The source object.
+	 * @param {Function|...(string|string[])} [predicate] The function invoked per
+	 *  iteration or property names to pick, specified as individual property
+	 *  names or arrays of property names.
+	 * @param {*} [thisArg] The `this` binding of `predicate`.
+	 * @returns {Object} Returns the new object.
+	 * @example
+	 *
+	 * var object = { 'user': 'fred', 'age': 40 };
+	 *
+	 * _.pick(object, 'user');
+	 * // => { 'user': 'fred' }
+	 *
+	 * _.pick(object, _.isString);
+	 * // => { 'user': 'fred' }
+	 */
+	var pick = restParam(function(object, props) {
+	  if (object == null) {
+	    return {};
+	  }
+	  return typeof props[0] == 'function'
+	    ? pickByCallback(object, bindCallback(props[0], props[1], 3))
+	    : pickByArray(object, baseFlatten(props));
+	});
+
+	module.exports = pick;
+
+
+/***/ },
+/* 735 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGet = __webpack_require__(399),
+	    baseSlice = __webpack_require__(400),
+	    isArguments = __webpack_require__(20),
+	    isArray = __webpack_require__(21),
+	    isIndex = __webpack_require__(22),
+	    isKey = __webpack_require__(401),
+	    isLength = __webpack_require__(18),
+	    last = __webpack_require__(402),
+	    toPath = __webpack_require__(403);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Checks if `path` is a direct property.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @param {Array|string} path The path to check.
+	 * @returns {boolean} Returns `true` if `path` is a direct property, else `false`.
+	 * @example
+	 *
+	 * var object = { 'a': { 'b': { 'c': 3 } } };
+	 *
+	 * _.has(object, 'a');
+	 * // => true
+	 *
+	 * _.has(object, 'a.b.c');
+	 * // => true
+	 *
+	 * _.has(object, ['a', 'b', 'c']);
+	 * // => true
+	 */
+	function has(object, path) {
+	  if (object == null) {
+	    return false;
+	  }
+	  var result = hasOwnProperty.call(object, path);
+	  if (!result && !isKey(path)) {
+	    path = toPath(path);
+	    object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
+	    if (object == null) {
+	      return false;
+	    }
+	    path = last(path);
+	    result = hasOwnProperty.call(object, path);
+	  }
+	  return result || (isLength(object.length) && isIndex(path, object.length) &&
+	    (isArray(object) || isArguments(object)));
+	}
+
+	module.exports = has;
+
+
+/***/ },
+/* 736 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'tooltips' ],
-	  tooltips: [ 'type', __webpack_require__(732) ]
+	  tooltips: [ 'type', __webpack_require__(737) ]
 	};
 
 /***/ },
-/* 732 */
+/* 737 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isString = __webpack_require__(471),
+	var isString = __webpack_require__(474),
 	    assign = __webpack_require__(77),
 	    forEach = __webpack_require__(128);
 
 	var domify = __webpack_require__(50),
-	    domAttr = __webpack_require__(482),
-	    domClasses = __webpack_require__(479),
+	    domAttr = __webpack_require__(481),
+	    domClasses = __webpack_require__(478),
 	    domRemove = __webpack_require__(54),
-	    domDelegate = __webpack_require__(456);
+	    domDelegate = __webpack_require__(455);
 
 
 	// document wide unique tooltip ids
-	var ids = new (__webpack_require__(483))('tt');
+	var ids = new (__webpack_require__(482))('tt');
 
 
 	function createRoot(parent) {
@@ -66749,39 +67620,39 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 733 */
+/* 738 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(627)
+	    __webpack_require__(523)
 	  ],
 	  __init__: [ 'labelSupport'],
-	  labelSupport: [ 'type', __webpack_require__(734) ]
+	  labelSupport: [ 'type', __webpack_require__(739) ]
 	};
 
 
 /***/ },
-/* 734 */
+/* 739 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128),
-	    filter = __webpack_require__(476),
+	    filter = __webpack_require__(475),
 	    inherits = __webpack_require__(3);
 
 	var LOW_PRIORITY = 250,
 	    HIGH_PRIORITY = 1400;
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
 
 	/**
 	 * A handler that makes sure labels are properly moved with
 	 * their label targets.
 	 */
-	function LabelSupport(eventBus, modeling, moveVisuals) {
+	function LabelSupport(eventBus, modeling, movePreview) {
 
 	  CommandInterceptor.call(this, eventBus);
 
@@ -66819,7 +67690,7 @@ var InfoxBpmnModeler =
 	    });
 
 	    forEach(labels, function(label) {
-	      moveVisuals.makeDraggable(context, label, true);
+	      movePreview.makeDraggable(context, label, true);
 	    });
 
 	  });
@@ -66845,7 +67716,7 @@ var InfoxBpmnModeler =
 
 	inherits(LabelSupport, CommandInterceptor);
 
-	LabelSupport.$inject = [ 'eventBus', 'modeling', 'moveVisuals' ];
+	LabelSupport.$inject = [ 'eventBus', 'modeling', 'movePreview' ];
 
 	module.exports = LabelSupport;
 
@@ -66871,45 +67742,45 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 735 */
+/* 740 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(627),
-	    __webpack_require__(733)
+	    __webpack_require__(523),
+	    __webpack_require__(738)
 	  ],
 	  __init__: [ 'attachSupport'],
-	  attachSupport: [ 'type', __webpack_require__(736) ]
+	  attachSupport: [ 'type', __webpack_require__(741) ]
 	};
 
 
 /***/ },
-/* 736 */
+/* 741 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128),
-	    flatten = __webpack_require__(632),
-	    union = __webpack_require__(737),
-	    filter = __webpack_require__(476),
+	    flatten = __webpack_require__(528),
+	    union = __webpack_require__(742),
+	    filter = __webpack_require__(475),
 	    groupBy = __webpack_require__(138),
-	    map = __webpack_require__(634);
+	    map = __webpack_require__(530);
 
-	var saveClear = __webpack_require__(738).saveClear,
+	var saveClear = __webpack_require__(743).saveClear,
 	    Collections = __webpack_require__(136);
 
-	var getNewAttachShapeDelta = __webpack_require__(739).getNewAttachShapeDelta;
+	var getNewAttachShapeDelta = __webpack_require__(744).getNewAttachShapeDelta;
 
 	var inherits = __webpack_require__(3);
 
 	var HIGH_PRIORITY = 1500;
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
 
-	function AttachSupport(eventBus, modeling, moveVisuals, rules) {
+	function AttachSupport(eventBus, modeling, movePreview, rules) {
 
 	  CommandInterceptor.call(this, eventBus);
 
@@ -67118,7 +67989,7 @@ var InfoxBpmnModeler =
 
 	inherits(AttachSupport, CommandInterceptor);
 
-	AttachSupport.$inject = [ 'eventBus', 'modeling', 'moveVisuals', 'rules' ];
+	AttachSupport.$inject = [ 'eventBus', 'modeling', 'movePreview', 'rules' ];
 
 	module.exports = AttachSupport;
 
@@ -67178,11 +68049,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 737 */
+/* 742 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(433),
-	    baseUniq = __webpack_require__(501),
+	var baseFlatten = __webpack_require__(432),
+	    baseUniq = __webpack_require__(624),
 	    restParam = __webpack_require__(93);
 
 	/**
@@ -67208,7 +68079,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 738 */
+/* 743 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -67251,15 +68122,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 739 */
+/* 744 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var roundPoint = __webpack_require__(644).roundPoint;
+	var roundPoint = __webpack_require__(516).roundPoint;
 
-	var center = __webpack_require__(684).center,
-	    delta = __webpack_require__(684).delta;
+	var center = __webpack_require__(556).center,
+	    delta = __webpack_require__(556).delta;
 
 
 	/**
@@ -67327,14 +68198,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 740 */
+/* 745 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var map = __webpack_require__(450),
+	var map = __webpack_require__(449),
 	    assign = __webpack_require__(7),
-	    pick = __webpack_require__(602);
+	    pick = __webpack_require__(734);
 
 
 	function BpmnFactory(moddle) {
@@ -67430,23 +68301,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 741 */
+/* 746 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(416),
+	    forEach = __webpack_require__(415),
 	    inherits = __webpack_require__(3);
 
 	var Collections = __webpack_require__(136),
 	    Model = __webpack_require__(142);
 
-	var getBusinessObject = __webpack_require__(444).getBusinessObject,
-	    is = __webpack_require__(444).is;
+	var getBusinessObject = __webpack_require__(443).getBusinessObject,
+	    is = __webpack_require__(443).is;
 
-	var CommandInterceptor = __webpack_require__(606);
-
+	var CommandInterceptor = __webpack_require__(542);
 
 	/**
 	 * A handler responsible for updating the underlying BPMN 2.0 XML + DI
@@ -67538,7 +68408,9 @@ var InfoxBpmnModeler =
 	        children = oldRoot.children;
 
 	    forEach(children, function(child) {
-	      self.updateParent(child);
+	      if (is(child, 'bpmn:BaseElement')) {
+	        self.updateParent(child);
+	      }
 	    });
 	  }
 
@@ -67557,9 +68429,33 @@ var InfoxBpmnModeler =
 	    self.updateBounds(shape);
 	  }
 
-	  this.executed([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(updateBounds));
-	  this.reverted([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(updateBounds));
+	  this.executed([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(function(event) {
 
+	    // exclude labels because they're handled separately during shape.changed
+	    if (event.context.shape.type === 'label') {
+	      return;
+	    }
+
+	    updateBounds(event);
+	  }));
+
+	  this.reverted([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(function(event) {
+
+	    // exclude labels because they're handled separately during shape.changed
+	    if (event.context.shape.type === 'label') {
+	      return;
+	    }
+
+	    updateBounds(event);
+	  }));
+
+	  // Handle labels separately. This is necessary, because the label bounds have to be updated
+	  // every time its shape changes, not only on move, create and resize.
+	  eventBus.on('shape.changed', function(event) {
+	    if (event.element.type === 'label') {
+	      updateBounds({ context: { shape: event.element } });
+	    }
+	  });
 
 	  // attach / detach connection
 	  function updateConnection(e) {
@@ -67632,21 +68528,25 @@ var InfoxBpmnModeler =
 	    if ((businessObject.sourceRef && businessObject.sourceRef.default) &&
 	        !(is(newTarget, 'bpmn:Activity') ||
 	          is(newTarget, 'bpmn:EndEvent') ||
+	          is(newTarget, 'bpmn:Gateway') ||
 	          is(newTarget, 'bpmn:IntermediateThrowEvent')) ) {
 	      context.default = businessObject.sourceRef.default;
 	      businessObject.sourceRef.default = undefined;
 	    }
 
 	    // on reconnectStart -> conditional flow
-	    if ((businessObject.conditionExpression) && !is(newSource, 'bpmn:Activity')) {
+	    if (oldSource && (businessObject.conditionExpression) &&
+	      !(is(newSource, 'bpmn:Activity') ||
+	        is(newSource, 'bpmn:Gateway')) ) {
 	      context.conditionExpression = businessObject.conditionExpression;
 	      businessObject.conditionExpression = undefined;
 	    }
 
 	    // on reconnectEnd -> conditional flow
-	    if ((businessObject.conditionExpression) &&
+	    if (oldTarget && (businessObject.conditionExpression) &&
 	        !(is(newTarget, 'bpmn:Activity') ||
 	          is(newTarget, 'bpmn:EndEvent') ||
+	          is(newTarget, 'bpmn:Gateway') ||
 	          is(newTarget, 'bpmn:IntermediateThrowEvent')) ) {
 	      context.conditionExpression = businessObject.conditionExpression;
 	      businessObject.conditionExpression = undefined;
@@ -67872,7 +68772,7 @@ var InfoxBpmnModeler =
 	        do {
 	          // unwrap Lane -> LaneSet -> (Lane | FlowElementsContainer)
 	          newParent = newParent.$parent.$parent;
-	        } while(is(newParent, 'bpmn:Lane'));
+	        } while (is(newParent, 'bpmn:Lane'));
 
 	      }
 	    }
@@ -67974,7 +68874,7 @@ var InfoxBpmnModeler =
 	        diChildren = [];
 	        newParent.set(containment, diChildren);
 	      }
-	      
+
 	      diChildren.push(businessObject);
 	    }
 	  }
@@ -68078,7 +68978,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 742 */
+/* 747 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68086,12 +68986,12 @@ var InfoxBpmnModeler =
 	var assign = __webpack_require__(7),
 	    inherits = __webpack_require__(3);
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
-	var isExpanded = __webpack_require__(443).isExpanded;
+	var isExpanded = __webpack_require__(442).isExpanded;
 
 	var BaseElementFactory = __webpack_require__(141),
-	    LabelUtil = __webpack_require__(452);
+	    LabelUtil = __webpack_require__(451);
 
 	/**
 	 * A bpmn-aware factory for diagram-js shapes
@@ -68269,22 +69169,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 743 */
+/* 748 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var BaseModeling = __webpack_require__(744);
+	var BaseModeling = __webpack_require__(749);
 
-	var UpdatePropertiesHandler = __webpack_require__(775),
-	    UpdateCanvasRootHandler = __webpack_require__(778),
-	    AddLaneHandler = __webpack_require__(779),
-	    SplitLaneHandler = __webpack_require__(780),
-	    ResizeLaneHandler = __webpack_require__(781),
-	    UpdateFlowNodeRefsHandler = __webpack_require__(782),
-	    IdClaimHandler = __webpack_require__(783);
+	var UpdatePropertiesHandler = __webpack_require__(783),
+	    UpdateCanvasRootHandler = __webpack_require__(786),
+	    AddLaneHandler = __webpack_require__(787),
+	    SplitLaneHandler = __webpack_require__(788),
+	    ResizeLaneHandler = __webpack_require__(789),
+	    UpdateFlowNodeRefsHandler = __webpack_require__(790),
+	    IdClaimHandler = __webpack_require__(791);
 
 
 	/**
@@ -68331,7 +69231,7 @@ var InfoxBpmnModeler =
 	};
 
 
-	Modeling.prototype.connect = function(source, target, attrs) {
+	Modeling.prototype.connect = function(source, target, attrs, hints) {
 
 	  var bpmnRules = this._bpmnRules;
 
@@ -68339,7 +69239,7 @@ var InfoxBpmnModeler =
 	    attrs = bpmnRules.canConnect(source, target) || { type: 'bpmn:Association' };
 	  }
 
-	  return this.createConnection(source, target, attrs, source.parent);
+	  return this.createConnection(source, target, attrs, source.parent, hints);
 	};
 
 
@@ -68441,7 +69341,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 744 */
+/* 749 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68478,34 +69378,37 @@ var InfoxBpmnModeler =
 
 	Modeling.prototype.getHandlers = function() {
 	  return {
-	    'shape.append': __webpack_require__(745),
-	    'shape.create': __webpack_require__(750),
-	    'shape.delete': __webpack_require__(751),
-	    'shape.move': __webpack_require__(752),
-	    'shape.resize': __webpack_require__(754),
-	    'shape.replace': __webpack_require__(755),
+	    'shape.append': __webpack_require__(750),
+	    'shape.create': __webpack_require__(755),
+	    'shape.delete': __webpack_require__(756),
+	    'shape.move': __webpack_require__(757),
+	    'shape.resize': __webpack_require__(760),
+	    'shape.replace': __webpack_require__(761),
+	    'shape.toggleCollapse': __webpack_require__(762),
 
-	    'spaceTool': __webpack_require__(756),
+	    'spaceTool': __webpack_require__(763),
 
-	    'label.create': __webpack_require__(757),
+	    'label.create': __webpack_require__(764),
 
-	    'connection.create': __webpack_require__(758),
-	    'connection.delete': __webpack_require__(759),
-	    'connection.move': __webpack_require__(760),
-	    'connection.layout': __webpack_require__(761),
+	    'connection.create': __webpack_require__(765),
+	    'connection.delete': __webpack_require__(766),
+	    'connection.move': __webpack_require__(767),
+	    'connection.layout': __webpack_require__(768),
 
-	    'connection.updateWaypoints': __webpack_require__(762),
+	    'connection.updateWaypoints': __webpack_require__(769),
 
-	    'connection.reconnectStart': __webpack_require__(763),
-	    'connection.reconnectEnd': __webpack_require__(763),
+	    'connection.reconnectStart': __webpack_require__(770),
+	    'connection.reconnectEnd': __webpack_require__(770),
 
-	    'elements.move': __webpack_require__(764),
-	    'elements.delete': __webpack_require__(765),
+	    'elements.move': __webpack_require__(771),
+	    'elements.delete': __webpack_require__(772),
 
-	    'element.updateAttachment': __webpack_require__(766),
-	    'element.updateAnchors': __webpack_require__(767),
+	    'elements.distribute': __webpack_require__(773),
+	    'elements.align': __webpack_require__(774),
 
-	    'elements.paste': __webpack_require__(768)
+	    'element.updateAttachment': __webpack_require__(775),
+
+	    'elements.paste': __webpack_require__(776)
 	  };
 	};
 
@@ -68596,20 +69499,6 @@ var InfoxBpmnModeler =
 	  this._commandStack.execute('elements.move', context);
 	};
 
-	/**
-	 * Update the anchors on the element with the given delta movement
-	 * @param  {djs.model.Element} element
-	 * @param  {Point} delta
-	 */
-	Modeling.prototype.updateAnchors = function(element, oldBounds) {
-	  var context = {
-	    element: element,
-	    oldBounds: oldBounds
-	  };
-
-	  this._commandStack.execute('element.updateAnchors', context);
-	};
-
 	Modeling.prototype.moveConnection = function(connection, delta, newParent, newParentIndex, hints) {
 
 	  if (typeof newParentIndex === 'object') {
@@ -68638,10 +69527,22 @@ var InfoxBpmnModeler =
 	  this._commandStack.execute('connection.layout', context);
 	};
 
-
-	Modeling.prototype.createConnection = function(source, target, targetIndex, connection, parent) {
+	/**
+	 * Create connection.
+	 *
+	 * @param {djs.model.Base} source
+	 * @param {djs.model.Base} target
+	 * @param {Number} [targetIndex]
+	 * @param {Object|djs.model.Connection} connection
+	 * @param {djs.model.Base} parent
+	 * @param {Object} hints
+	 *
+	 * @return {djs.model.Connection} the created connection.
+	 */
+	Modeling.prototype.createConnection = function(source, target, targetIndex, connection, parent, hints) {
 
 	  if (typeof targetIndex === 'object') {
+	    hints = parent;
 	    parent = connection;
 	    connection = targetIndex;
 	    targetIndex = undefined;
@@ -68654,7 +69555,8 @@ var InfoxBpmnModeler =
 	    target: target,
 	    parent: parent,
 	    parentIndex: targetIndex,
-	    connection: connection
+	    connection: connection,
+	    hints: hints
 	  };
 
 	  this._commandStack.execute('connection.create', context);
@@ -68741,6 +69643,17 @@ var InfoxBpmnModeler =
 	};
 
 
+	Modeling.prototype.distributeElements = function(groups, axis, dimension) {
+	  var context = {
+	    groups: groups,
+	    axis: axis,
+	    dimension: dimension
+	  };
+
+	  this._commandStack.execute('elements.distribute', context);
+	};
+
+
 	Modeling.prototype.removeShape = function(shape, hints) {
 	  var context = {
 	    shape: shape,
@@ -68782,6 +69695,15 @@ var InfoxBpmnModeler =
 	  this._commandStack.execute('elements.paste', context);
 	};
 
+	Modeling.prototype.alignElements = function(elements, alignment) {
+	  var context = {
+	    elements: elements,
+	    alignment: alignment
+	  };
+
+	  this._commandStack.execute('elements.align', context);
+	};
+
 	Modeling.prototype.resizeShape = function(shape, newBounds) {
 	  var context = {
 	    shape: shape,
@@ -68802,10 +69724,11 @@ var InfoxBpmnModeler =
 	  this._commandStack.execute('spaceTool', context);
 	};
 
-	Modeling.prototype.updateWaypoints = function(connection, newWaypoints) {
+	Modeling.prototype.updateWaypoints = function(connection, newWaypoints, hints) {
 	  var context = {
 	    connection: connection,
-	    newWaypoints: newWaypoints
+	    newWaypoints: newWaypoints,
+	    hints: hints || {}
 	  };
 
 	  this._commandStack.execute('connection.updateWaypoints', context);
@@ -68831,8 +69754,8 @@ var InfoxBpmnModeler =
 	  this._commandStack.execute('connection.reconnectEnd', context);
 	};
 
-	Modeling.prototype.connect = function(source, target, attrs) {
-	  return this.createConnection(source, target, attrs || {}, source.parent);
+	Modeling.prototype.connect = function(source, target, attrs, hints) {
+	  return this.createConnection(source, target, attrs || {}, source.parent, hints);
 	};
 
 	Modeling.prototype._create = function(type, attrs) {
@@ -68843,14 +69766,23 @@ var InfoxBpmnModeler =
 	  }
 	};
 
+	Modeling.prototype.toggleCollapse = function(shape, hints) {
+	  var context = {
+	    shape: shape,
+	    hints: hints || {}
+	  };
+
+	  this._commandStack.execute('shape.toggleCollapse', context);
+	};
+
 
 /***/ },
-/* 745 */
+/* 750 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var any = __webpack_require__(746);
+	var any = __webpack_require__(751);
 
 	var inherits = __webpack_require__(3);
 
@@ -68867,7 +69799,7 @@ var InfoxBpmnModeler =
 	  this._modeling = modeling;
 	}
 
-	inherits(AppendShapeHandler, __webpack_require__(749));
+	inherits(AppendShapeHandler, __webpack_require__(754));
 
 
 	AppendShapeHandler.$inject = [ 'modeling' ];
@@ -68916,19 +69848,19 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 746 */
+/* 751 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(747);
+	module.exports = __webpack_require__(752);
 
 
 /***/ },
-/* 747 */
+/* 752 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arraySome = __webpack_require__(109),
 	    baseCallback = __webpack_require__(103),
-	    baseSome = __webpack_require__(748),
+	    baseSome = __webpack_require__(753),
 	    isArray = __webpack_require__(70),
 	    isIterateeCall = __webpack_require__(92);
 
@@ -68996,7 +69928,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 748 */
+/* 753 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(96);
@@ -69025,7 +69957,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 749 */
+/* 754 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -69038,7 +69970,7 @@ var InfoxBpmnModeler =
 	NoopHandler.prototype.revert = function() {};
 
 /***/ },
-/* 750 */
+/* 755 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69115,14 +70047,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 751 */
+/* 756 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var Collections = __webpack_require__(136);
 
-	var saveClear = __webpack_require__(738).saveClear;
+	var saveClear = __webpack_require__(743).saveClear;
 
 
 	/**
@@ -69225,17 +70157,21 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 752 */
+/* 757 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(77),
 	    forEach = __webpack_require__(128),
-	    pick = __webpack_require__(432);
+	    pick = __webpack_require__(431);
 
-	var MoveHelper = __webpack_require__(753),
+	var MoveHelper = __webpack_require__(758),
 	    Collections = __webpack_require__(136);
+
+	var getMovedSourceAnchor = __webpack_require__(759).getMovedSourceAnchor,
+	    getMovedTargetAnchor = __webpack_require__(759).getMovedTargetAnchor;
+
 
 	/**
 	 * A handler that implements reversible moving of shapes.
@@ -69281,25 +70217,27 @@ var InfoxBpmnModeler =
 	MoveShapeHandler.prototype.postExecute = function(context) {
 
 	  var shape = context.shape,
-	      oldBounds = context.oldBounds;
+	      delta = context.delta,
+	      hints = context.hints;
 
 	  var modeling = this._modeling;
 
-	  if (context.hints.updateAnchors !== false) {
-	    modeling.updateAnchors(shape, oldBounds);
-	  }
+	  if (hints.layout !== false) {
 
-	  if (context.hints.layout !== false) {
 	    forEach(shape.incoming, function(c) {
-	      modeling.layoutConnection(c, { endChanged: true });
+	      modeling.layoutConnection(c, {
+	        connectionEnd: getMovedTargetAnchor(c, shape, delta)
+	      });
 	    });
 
 	    forEach(shape.outgoing, function(c) {
-	      modeling.layoutConnection(c, { startChanged: true });
+	      modeling.layoutConnection(c, {
+	        connectionStart: getMovedSourceAnchor(c, shape, delta)
+	      });
 	    });
 	  }
 
-	  if (context.hints.recurse !== false) {
+	  if (hints.recurse !== false) {
 	    this.moveChildren(context);
 	  }
 	};
@@ -69338,7 +70276,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 753 */
+/* 758 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69347,6 +70285,8 @@ var InfoxBpmnModeler =
 
 	var Elements = __webpack_require__(137);
 
+	var getMovedSourceAnchor = __webpack_require__(759).getMovedSourceAnchor,
+	    getMovedTargetAnchor = __webpack_require__(759).getMovedTargetAnchor;
 
 	/**
 	 * A helper that is able to carry out serialized move operations on multiple elements.
@@ -69393,9 +70333,8 @@ var InfoxBpmnModeler =
 	  var allShapes = closure.allShapes,
 	      allConnections = closure.allConnections,
 	      enclosedConnections = closure.enclosedConnections,
-	      topLevel = closure.topLevel;
-
-	  var keepParent = false;
+	      topLevel = closure.topLevel,
+	      keepParent = false;
 
 	  if (primaryShape && primaryShape.parent === newParent) {
 	    keepParent = true;
@@ -69414,15 +70353,15 @@ var InfoxBpmnModeler =
 	  // move all child connections / layout external connections
 	  forEach(allConnections, function(c) {
 
-	    var startMoved = !!allShapes[c.source.id],
-	        endMoved = !!allShapes[c.target.id];
+	    var sourceMoved = !!allShapes[c.source.id],
+	        targetMoved = !!allShapes[c.target.id];
 
-	    if (enclosedConnections[c.id] && startMoved && endMoved) {
-	      modeling.moveConnection(c, delta, topLevel[c.id] && newParent, { updateAnchors: false });
+	    if (enclosedConnections[c.id] && sourceMoved && targetMoved) {
+	      modeling.moveConnection(c, delta, topLevel[c.id] && !keepParent && newParent);
 	    } else {
 	      modeling.layoutConnection(c, {
-	        startChanged: startMoved,
-	        endChanged: endMoved
+	        connectionStart: sourceMoved && getMovedSourceAnchor(c, c.source, delta),
+	        connectionEnd: targetMoved && getMovedTargetAnchor(c, c.target, delta)
 	      });
 	    }
 	  });
@@ -69440,7 +70379,82 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 754 */
+/* 759 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var getNewAttachPoint = __webpack_require__(744).getNewAttachPoint;
+
+	function getResizedSourceAnchor(connection, shape, oldBounds) {
+
+	  var waypoints = safeGetWaypoints(connection),
+	      oldAnchor = waypoints[0];
+
+	  return getNewAttachPoint(oldAnchor.original || oldAnchor, oldBounds, shape);
+	}
+
+	module.exports.getResizedSourceAnchor = getResizedSourceAnchor;
+
+
+	function getResizedTargetAnchor(connection, shape, oldBounds) {
+
+	  var waypoints = safeGetWaypoints(connection),
+	      oldAnchor = waypoints[waypoints.length - 1];
+
+	  return getNewAttachPoint(oldAnchor.original || oldAnchor, oldBounds, shape);
+	}
+
+	module.exports.getResizedTargetAnchor = getResizedTargetAnchor;
+
+
+	function getMovedSourceAnchor(connection, source, moveDelta) {
+	  return getResizedSourceAnchor(connection, source, substractPosition(source, moveDelta));
+	}
+
+	module.exports.getMovedSourceAnchor = getMovedSourceAnchor;
+
+
+	function getMovedTargetAnchor(connection, target, moveDelta) {
+	  return getResizedTargetAnchor(connection, target, substractPosition(target, moveDelta));
+	}
+
+	module.exports.getMovedTargetAnchor = getMovedTargetAnchor;
+
+
+	//////// helpers ////////////////////////////////////
+
+	function substractPosition(bounds, delta) {
+	  return {
+	    x: bounds.x - delta.x,
+	    y: bounds.y - delta.y,
+	    width: bounds.width,
+	    height: bounds.height
+	  };
+	}
+
+
+	/**
+	 * Return waypoints of given connection; throw if non exists (should not happen!!).
+	 *
+	 * @param {Connection} connection
+	 *
+	 * @return {Array<Point>}
+	 */
+	function safeGetWaypoints(connection) {
+
+	  var waypoints = connection.waypoints;
+
+	  if (!waypoints.length) {
+	    throw new Error('connection#' + connection.id + ': no waypoints');
+	  }
+
+	  return waypoints;
+	}
+
+
+/***/ },
+/* 760 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69448,10 +70462,13 @@ var InfoxBpmnModeler =
 	var assign = __webpack_require__(77),
 	    forEach = __webpack_require__(128);
 
+	var getResizedSourceAnchor = __webpack_require__(759).getResizedSourceAnchor,
+	    getResizedTargetAnchor = __webpack_require__(759).getResizedTargetAnchor;
 
 	/**
 	 * A handler that implements reversible resizing of shapes.
 	 *
+	 * @param {Modeling} modeling
 	 */
 	function ResizeShapeHandler(modeling) {
 	  this._modeling = modeling;
@@ -69475,7 +70492,7 @@ var InfoxBpmnModeler =
 	 */
 	ResizeShapeHandler.prototype.execute = function(context) {
 
-	  var shape   = context.shape,
+	  var shape = context.shape,
 	      newBounds = context.newBounds;
 
 	  if (newBounds.x === undefined || newBounds.y === undefined ||
@@ -69513,21 +70530,23 @@ var InfoxBpmnModeler =
 
 	  var modeling = this._modeling;
 
-	  modeling.updateAnchors(shape, oldBounds);
-
 	  forEach(shape.incoming, function(c) {
-	    modeling.layoutConnection(c, { endChanged: true });
+	    modeling.layoutConnection(c, {
+	      connectionEnd: getResizedTargetAnchor(c, shape, oldBounds)
+	    });
 	  });
 
 	  forEach(shape.outgoing, function(c) {
-	    modeling.layoutConnection(c, { startChanged: true });
+	    modeling.layoutConnection(c, {
+	      connectionStart: getResizedSourceAnchor(c, shape, oldBounds)
+	    });
 	  });
 
 	};
 
 	ResizeShapeHandler.prototype.revert = function(context) {
 
-	  var shape   = context.shape,
+	  var shape = context.shape,
 	      oldBounds = context.oldBounds;
 
 	  // restore previous bbox
@@ -69543,7 +70562,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 755 */
+/* 761 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69705,14 +70724,104 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 756 */
+/* 762 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * A handler that toggles the collapsed state of an element
+	 * and the visibility of all its children.
+	 *
+	 * @param {Modeling} modeling
+	 */
+	function ToggleShapeCollapseHandler(modeling) {
+	  this._modeling = modeling;
+	}
+
+	ToggleShapeCollapseHandler.$inject = [ 'modeling' ];
+
+	module.exports = ToggleShapeCollapseHandler;
+
+
+	ToggleShapeCollapseHandler.prototype.execute = function(context) {
+
+	  var shape = context.shape,
+	      children = shape.children;
+
+	  // remember previous visibility of children
+	  context.oldChildrenVisibility = getElementsVisibility(children);
+
+	  // toggle state
+	  shape.collapsed = !shape.collapsed;
+
+	  // hide/show children
+	  setHidden(children, shape.collapsed);
+
+	  return [shape].concat(children);
+	};
+
+
+	ToggleShapeCollapseHandler.prototype.revert = function(context) {
+
+	  var shape = context.shape,
+	      oldChildrenVisibility = context.oldChildrenVisibility;
+
+	  var children = shape.children;
+
+	  // set old visability of children
+	  restoreVisibility(children, oldChildrenVisibility);
+
+	  // retoggle state
+	  shape.collapsed = !shape.collapsed;
+
+	  return [shape].concat(children);
+	};
+
+
+	/////// helpers ///////////////////////////////
+
+	/**
+	 * Return a map { elementId -> hiddenState}.
+	 *
+	 * @param {Array<djs.model.Shape>} elements
+	 *
+	 * @return {Object}
+	 */
+	function getElementsVisibility(elements) {
+
+	  var result = {};
+
+	  elements.forEach(function(e) {
+	    result[e.id] = e.hidden;
+	  });
+
+	  return result;
+	}
+
+
+	function setHidden(elements, newHidden) {
+	  elements.forEach(function(element) {
+	    element.hidden = newHidden;
+	  });
+	}
+
+	function restoreVisibility(elements, lastState) {
+	  elements.forEach(function(e) {
+	    e.hidden = lastState[e.id];
+	  });
+	}
+
+
+/***/ },
+/* 763 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128);
 
-	var SpaceUtil = __webpack_require__(659);
+	var SpaceUtil = __webpack_require__(567);
 
 	/**
 	 * A handler that implements reversible creating and removing of space.
@@ -69752,7 +70861,7 @@ var InfoxBpmnModeler =
 	      movingShapes = context.movingShapes,
 	      delta = context.delta;
 
-	  modeling.moveElements(movingShapes, delta);
+	  modeling.moveElements(movingShapes, delta, undefined, false, { autoResize: false });
 	};
 
 	SpaceToolHandler.prototype.execute = function(context) {};
@@ -69760,14 +70869,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 757 */
+/* 764 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CreateShapeHandler = __webpack_require__(750);
+	var CreateShapeHandler = __webpack_require__(755);
 
 
 	/**
@@ -69837,7 +70946,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 758 */
+/* 765 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -69866,9 +70975,11 @@ var InfoxBpmnModeler =
 	 */
 	CreateConnectionHandler.prototype.execute = function(context) {
 
-	  var source = context.source,
+	  var connection = context.connection,
+	      source = context.source,
 	      target = context.target,
-	      parent = context.parent;
+	      parent = context.parent,
+	      hints = context.hints;
 
 	  if (!source || !target) {
 	    throw new Error('source and target required');
@@ -69878,13 +70989,11 @@ var InfoxBpmnModeler =
 	    throw new Error('parent required');
 	  }
 
-	  var connection = context.connection;
-
 	  connection.source = source;
 	  connection.target = target;
 
 	  if (!connection.waypoints) {
-	    connection.waypoints = this._layouter.layoutConnection(connection);
+	    connection.waypoints = this._layouter.layoutConnection(connection, hints);
 	  }
 
 	  // add connection
@@ -69903,7 +71012,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 759 */
+/* 766 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69980,7 +71089,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 760 */
+/* 767 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70020,15 +71129,12 @@ var InfoxBpmnModeler =
 	  // update parent
 	  connection.parent = newParent;
 
-
-	  var updateAnchors = (context.hints.updateAnchors !== false);
-
 	  // update waypoint positions
 	  forEach(connection.waypoints, function(p) {
 	    p.x += delta.x;
 	    p.y += delta.y;
 
-	    if (updateAnchors && p.original) {
+	    if (p.original) {
 	      p.original.x += delta.x;
 	      p.original.y += delta.y;
 	    }
@@ -70054,15 +71160,12 @@ var InfoxBpmnModeler =
 	  // restore parent
 	  connection.parent = oldParent;
 
-
-	  var updateAnchors = (context.hints.updateAnchors !== false);
-
 	  // revert to old waypoint positions
 	  forEach(connection.waypoints, function(p) {
 	    p.x -= delta.x;
 	    p.y -= delta.y;
 
-	    if (updateAnchors && p.original) {
+	    if (p.original) {
 	      p.original.x -= delta.x;
 	      p.original.y -= delta.y;
 	    }
@@ -70072,7 +71175,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 761 */
+/* 768 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70111,27 +71214,6 @@ var InfoxBpmnModeler =
 
 	  connection.waypoints = this._layouter.layoutConnection(connection, context.hints);
 
-	  if (!oldWaypoints.length) {
-	    return connection;
-	  }
-
-	  // Only pass in the the `original` values if they don't exist
-	  if (oldWaypoints[0].original && !connection.waypoints[0].original) {
-
-	    connection.waypoints[0].original = {
-	      x: oldWaypoints[0].original.x,
-	      y: oldWaypoints[0].original.y
-	    };
-	  }
-
-	  if (last(oldWaypoints).original && !last(connection.waypoints).original) {
-
-	    last(connection.waypoints).original = {
-	      x: last(oldWaypoints).original.x,
-	      y: last(oldWaypoints).original.y
-	    };
-	  }
-
 	  return connection;
 	};
 
@@ -70155,9 +71237,9 @@ var InfoxBpmnModeler =
 	  return connection;
 	};
 
-	function last(coll) {
-	  return coll[coll.length - 1];
-	}
+
+	////////////// helpers /////////////////////////////////////
+
 
 	// connections should have a higher z-order as there source and targets
 	function sendToFront(connection) {
@@ -70192,7 +71274,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 762 */
+/* 769 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -70224,7 +71306,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 763 */
+/* 770 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70303,12 +71385,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 764 */
+/* 771 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var MoveHelper = __webpack_require__(753);
+	var MoveHelper = __webpack_require__(758);
 
 
 	/**
@@ -70345,7 +71427,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 765 */
+/* 772 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70359,7 +71441,7 @@ var InfoxBpmnModeler =
 	  this._elementRegistry = elementRegistry;
 	}
 
-	inherits(DeleteElementsHandler, __webpack_require__(749));
+	inherits(DeleteElementsHandler, __webpack_require__(754));
 
 	DeleteElementsHandler.$inject = [ 'modeling', 'elementRegistry' ];
 
@@ -70389,7 +71471,231 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 766 */
+/* 773 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var forEach = __webpack_require__(128),
+	    sortBy = __webpack_require__(517);
+
+	/**
+	 * A handler that distributes elements evenly.
+	 */
+	function DistributeElements(modeling) {
+	  this._modeling = modeling;
+	}
+
+	DistributeElements.$inject = [ 'modeling' ];
+
+	module.exports = DistributeElements;
+
+	var OFF_AXIS = {
+	  x: 'y',
+	  y: 'x'
+	};
+
+	DistributeElements.prototype.preExecute = function(context) {
+	  var modeling = this._modeling;
+
+	  var groups = context.groups,
+	      axis = context.axis,
+	      dimension = context.dimension;
+
+	  function updateRange(group, element) {
+	    group.range.min = Math.min(element[axis], group.range.min);
+	    group.range.max = Math.max(element[axis] + element[dimension], group.range.max);
+	  }
+
+	  function center(element) {
+	    return element[axis] + element[dimension] / 2;
+	  }
+
+	  function lastIdx(arr) {
+	    return arr.length - 1;
+	  }
+
+	  function rangeDiff(range) {
+	    return range.max - range.min;
+	  }
+
+	  function centerElement(refCenter, element) {
+	    var delta = { y: 0 };
+
+	    delta[axis] = refCenter - center(element);
+
+	    if (delta[axis]) {
+
+	      delta[OFF_AXIS[axis]] = 0;
+
+	      modeling.moveElements([ element ], delta, element.parent);
+	    }
+	  }
+
+	  var firstGroup = groups[0],
+	      lastGroupIdx = lastIdx(groups),
+	      lastGroup = groups[ lastGroupIdx ];
+
+	  var margin,
+	      spaceInBetween,
+	      groupsSize = 0; // the size of each range
+
+	  forEach(groups, function(group, idx) {
+	    var sortedElements,
+	        refElem,
+	        refCenter;
+
+	    if (group.elements.length < 2) {
+	      if (idx && idx !== groups.length - 1) {
+	        updateRange(group, group.elements[0]);
+
+	        groupsSize += rangeDiff(group.range);
+	      }
+	      return;
+	    }
+
+	    sortedElements = sortBy(group.elements, axis);
+
+	    refElem = sortedElements[0];
+
+	    if (idx === lastGroupIdx) {
+	      refElem = sortedElements[lastIdx(sortedElements)];
+	    }
+
+	    refCenter = center(refElem);
+
+	    // wanna update the ranges after the shapes have been centered
+	    group.range = null;
+
+	    forEach(sortedElements, function(element) {
+
+	      centerElement(refCenter, element);
+
+	      if (group.range === null) {
+	        group.range = {
+	          min: element[axis],
+	          max: element[axis] + element[dimension]
+	        };
+
+	        return;
+	      }
+
+	      // update group's range after centering the range elements
+	      updateRange(group, element);
+	    });
+
+	    if (idx && idx !== groups.length - 1) {
+	      groupsSize += rangeDiff(group.range);
+	    }
+	  });
+
+	  spaceInBetween = Math.abs(lastGroup.range.min - firstGroup.range.max);
+
+	  margin = Math.round((spaceInBetween - groupsSize) / (groups.length - 1));
+
+	  if (margin < groups.length - 1) {
+	    return;
+	  }
+
+	  forEach(groups, function(group, groupIdx) {
+	    var delta = {},
+	        prevGroup;
+
+	    if (group === firstGroup || group === lastGroup) {
+	      return;
+	    }
+
+	    prevGroup = groups[groupIdx - 1];
+
+	    group.range.max = 0;
+
+	    forEach(group.elements, function(element, idx) {
+	      delta[OFF_AXIS[axis]] = 0;
+	      delta[axis] = (prevGroup.range.max - element[axis]) + margin;
+
+	      if (group.range.min !== element[axis]) {
+	        delta[axis] += element[axis] - group.range.min;
+	      }
+
+	      if (delta[axis]) {
+	        modeling.moveElements([ element ], delta, element.parent);
+	      }
+
+	      group.range.max = Math.max(element[axis] + element[dimension], idx ? group.range.max : 0);
+	    });
+	  });
+	};
+
+	DistributeElements.prototype.postExecute = function(context) {
+
+	};
+
+
+/***/ },
+/* 774 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var forEach = __webpack_require__(128);
+
+	/**
+	 * A handler that align elements in a certain way.
+	 *
+	 */
+	function AlignElements(modeling, canvas) {
+	  this._modeling = modeling;
+	  this._canvas = canvas;
+	}
+
+	AlignElements.$inject = [ 'modeling', 'canvas' ];
+
+	module.exports = AlignElements;
+
+
+	AlignElements.prototype.preExecute = function(context) {
+	  var modeling = this._modeling;
+
+	  var elements = context.elements,
+	      alignment = context.alignment;
+
+
+	  forEach(elements, function(element) {
+	    var delta = {
+	      x: 0,
+	      y: 0
+	    };
+
+	    if (alignment.left) {
+	      delta.x = alignment.left - element.x;
+
+	    } else if (alignment.right) {
+	      delta.x = (alignment.right - element.width) - element.x;
+
+	    } else if (alignment.center) {
+	      delta.x = (alignment.center - Math.round(element.width / 2)) - element.x;
+
+	    } else if (alignment.top) {
+	      delta.y = alignment.top - element.y;
+
+	    } else if (alignment.bottom) {
+	      delta.y = (alignment.bottom - element.height) - element.y;
+
+	    } else if (alignment.middle) {
+	      delta.y = (alignment.middle - Math.round(element.height / 2)) - element.y;
+	    }
+
+	    modeling.moveElements([ element ], delta, element.parent);
+	  });
+	};
+
+	AlignElements.prototype.postExecute = function(context) {
+
+	};
+
+
+/***/ },
+/* 775 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70467,94 +71773,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 767 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var forEach = __webpack_require__(128);
-
-	var getNewAttachPoint = __webpack_require__(739).getNewAttachPoint;
-
-	/**
-	 * Update the anchors of
-	 */
-	function UpdateAnchorsHandler() { }
-
-	module.exports = UpdateAnchorsHandler;
-
-	/**
-	 * Update anchors on the element according to the delta movement.
-	 *
-	 * @param {context} context
-	 * @param {djs.model.Element} context.element
-	 * @param {dc.Bounds} context.oldBounds
-	 *
-	 * @return Array<djs.model.Connection>
-	 */
-	UpdateAnchorsHandler.prototype.execute = function(context) {
-
-	  var element = context.element,
-	      oldBounds = context.oldBounds;
-
-	  // storing all changed connections for revert
-	  var changedConnections = context.changedConnections = [];
-
-	  // Array containing all the previous original points
-	  var oldAnchors = context.oldAnchors = [];
-
-
-	  /**
-	   * Update anchors for all connections,
-	   * taking anchorPosition = (start|end) into account
-	   */
-	  function updateAnchors(connections, anchorPosition) {
-	    forEach(connections, function(c) {
-
-	      var waypoints = c.waypoints,
-	          pointIndex = anchorPosition === 'end' ? waypoints.length - 1 : 0,
-	          point = waypoints[pointIndex];
-
-	      oldAnchors.push({ point: point, oldOriginal: point.original });
-
-	      // calculate the new original point
-	      // based on the old orgininal
-	      // fall back to actual point if no old original is set
-	      point.original = getNewAttachPoint(point.original || point, oldBounds, element);
-
-	      changedConnections.push(c);
-	    });
-	  }
-
-	  updateAnchors(element.incoming, 'end');
-	  updateAnchors(element.outgoing, 'start');
-
-	  return changedConnections;
-	};
-
-	UpdateAnchorsHandler.prototype.revert = function(context) {
-	  var oldAnchors = context.oldAnchors,
-	      changedConnections = context.changedConnections;
-
-	  forEach(oldAnchors, function(anchor) {
-	    // replace point.original with the old version
-	    // we stored during execute
-	    anchor.point.original = anchor.oldOriginal;
-	  });
-
-	  return changedConnections;
-	};
-
-/***/ },
-/* 768 */
+/* 776 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128),
-	    map = __webpack_require__(634),
-	    sortBy = __webpack_require__(645),
-	    clone = __webpack_require__(769);
+	    map = __webpack_require__(530),
+	    sortBy = __webpack_require__(517),
+	    clone = __webpack_require__(777);
 
 	var inherits = __webpack_require__(3);
 
@@ -70587,7 +71814,7 @@ var InfoxBpmnModeler =
 	  this._rules = rules;
 	}
 
-	inherits(PasteHandler, __webpack_require__(749));
+	inherits(PasteHandler, __webpack_require__(754));
 
 
 	PasteHandler.$inject = [
@@ -70835,10 +72062,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 769 */
+/* 777 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseClone = __webpack_require__(770),
+	var baseClone = __webpack_require__(778),
 	    bindCallback = __webpack_require__(90),
 	    isIterateeCall = __webpack_require__(92);
 
@@ -70911,16 +72138,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 770 */
+/* 778 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayCopy = __webpack_require__(155),
 	    arrayEach = __webpack_require__(129),
 	    baseAssign = __webpack_require__(87),
 	    baseForOwn = __webpack_require__(97),
-	    initCloneArray = __webpack_require__(771),
-	    initCloneByTag = __webpack_require__(772),
-	    initCloneObject = __webpack_require__(774),
+	    initCloneArray = __webpack_require__(779),
+	    initCloneByTag = __webpack_require__(780),
+	    initCloneObject = __webpack_require__(782),
 	    isArray = __webpack_require__(70),
 	    isObject = __webpack_require__(74);
 
@@ -71045,7 +72272,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 771 */
+/* 779 */
 /***/ function(module, exports) {
 
 	/** Used for native method references. */
@@ -71077,10 +72304,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 772 */
+/* 780 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bufferClone = __webpack_require__(773);
+	var bufferClone = __webpack_require__(781);
 
 	/** `Object#toString` result references. */
 	var boolTag = '[object Boolean]',
@@ -71146,7 +72373,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 773 */
+/* 781 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/** Native method references. */
@@ -71173,7 +72400,7 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 774 */
+/* 782 */
 /***/ function(module, exports) {
 
 	/**
@@ -71195,17 +72422,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 775 */
+/* 783 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var reduce = __webpack_require__(776),
+	var reduce = __webpack_require__(784),
 	    keys = __webpack_require__(9),
-	    forEach = __webpack_require__(416),
+	    forEach = __webpack_require__(415),
 	    assign = __webpack_require__(7);
 
-	var getBusinessObject = __webpack_require__(444).getBusinessObject;
+	var getBusinessObject = __webpack_require__(443).getBusinessObject;
 
 	var DEFAULT_FLOW = 'default',
 	    NAME = 'name',
@@ -71242,7 +72469,7 @@ var InfoxBpmnModeler =
 	 * @param {Object} context.properties a list of properties to set on the element's
 	 *                                    businessObject (the BPMN model element)
 	 *
-	 * @return {Array<djs.mode.Base>} the updated element
+	 * @return {Array<djs.model.Base>} the updated element
 	 */
 	UpdatePropertiesHandler.prototype.execute = function(context) {
 
@@ -71304,7 +72531,7 @@ var InfoxBpmnModeler =
 	 *
 	 * @param  {Object} context
 	 *
-	 * @return {djs.mode.Base} the updated element
+	 * @return {djs.model.Base} the updated element
 	 */
 	UpdatePropertiesHandler.prototype.revert = function(context) {
 
@@ -71375,17 +72602,17 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 776 */
+/* 784 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(417),
-	    baseCallback = __webpack_require__(386),
-	    baseCreate = __webpack_require__(777),
-	    baseForOwn = __webpack_require__(410),
+	var arrayEach = __webpack_require__(416),
+	    baseCallback = __webpack_require__(385),
+	    baseCreate = __webpack_require__(785),
+	    baseForOwn = __webpack_require__(409),
 	    isArray = __webpack_require__(21),
 	    isFunction = __webpack_require__(12),
 	    isObject = __webpack_require__(13),
-	    isTypedArray = __webpack_require__(395);
+	    isTypedArray = __webpack_require__(394);
 
 	/**
 	 * An alternative to `_.reduce`; this method transforms `object` to a new
@@ -71442,7 +72669,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 777 */
+/* 785 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(13);
@@ -71471,7 +72698,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 778 */
+/* 786 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -71555,18 +72782,18 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 779 */
+/* 787 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(384);
+	var filter = __webpack_require__(383);
 
 	var Elements = __webpack_require__(137);
 
-	var getLanesRoot = __webpack_require__(698).getLanesRoot,
-	    getChildLanes = __webpack_require__(698).getChildLanes,
-	    LANE_INDENTATION = __webpack_require__(698).LANE_INDENTATION;
+	var getLanesRoot = __webpack_require__(602).getLanesRoot,
+	    getChildLanes = __webpack_require__(602).getChildLanes,
+	    LANE_INDENTATION = __webpack_require__(602).LANE_INDENTATION;
 
 	/**
 	 * A handler that allows us to add a new lane
@@ -71644,14 +72871,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 780 */
+/* 788 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getChildLanes = __webpack_require__(698).getChildLanes;
+	var getChildLanes = __webpack_require__(602).getChildLanes;
 
-	var LANE_INDENTATION = __webpack_require__(698).LANE_INDENTATION;
+	var LANE_INDENTATION = __webpack_require__(602).LANE_INDENTATION;
 
 	/**
 	 * A handler that splits a lane into a number of sub-lanes,
@@ -71732,20 +72959,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 781 */
+/* 789 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
-	var getLanesRoot = __webpack_require__(698).getLanesRoot,
-	    computeLanesResize = __webpack_require__(698).computeLanesResize;
+	var getLanesRoot = __webpack_require__(602).getLanesRoot,
+	    computeLanesResize = __webpack_require__(602).computeLanesResize;
 
 	var eachElement = __webpack_require__(137).eachElement;
 
-	var asTRBL = __webpack_require__(644).asTRBL,
-	    substractTRBL = __webpack_require__(652).substractTRBL;
+	var asTRBL = __webpack_require__(516).asTRBL,
+	    substractTRBL = __webpack_require__(534).substractTRBL;
 
 
 	/**
@@ -71863,20 +73090,20 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 782 */
+/* 790 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var collectLanes = __webpack_require__(698).collectLanes;
+	var collectLanes = __webpack_require__(602).collectLanes;
 
-	var getLanesRoot = __webpack_require__(698).getLanesRoot;
+	var getLanesRoot = __webpack_require__(602).getLanesRoot;
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
 	var Collections = __webpack_require__(136);
 
-	var asTRBL = __webpack_require__(644).asTRBL;
+	var asTRBL = __webpack_require__(516).asTRBL;
 
 	var FLOW_NODE_REFS_ATTR = 'flowNodeRef',
 	    LANES_ATTR = 'lanes';
@@ -72054,7 +73281,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 783 */
+/* 791 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -72075,7 +73302,7 @@ var InfoxBpmnModeler =
 	      element = context.element,
 	      claiming = context.claiming;
 
-	  if (claiming){
+	  if (claiming) {
 	    ids.claim(id, element);
 	  } else {
 	    ids.unclaim(id);
@@ -72091,7 +73318,7 @@ var InfoxBpmnModeler =
 	      element = context.element,
 	      claiming = context.claiming;
 
-	  if (claiming){
+	  if (claiming) {
 	    ids.unclaim(id);
 	  } else {
 	    ids.claim(id, element);
@@ -72101,7 +73328,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 784 */
+/* 792 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -72110,15 +73337,17 @@ var InfoxBpmnModeler =
 
 	var assign = __webpack_require__(7);
 
-	var BaseLayouter = __webpack_require__(785),
-	    ManhattanLayout = __webpack_require__(786);
+	var BaseLayouter = __webpack_require__(793),
+	    ManhattanLayout = __webpack_require__(794);
 
-	var LayoutUtil = __webpack_require__(644);
+	var LayoutUtil = __webpack_require__(516);
+
+	var isExpanded = __webpack_require__(442).isExpanded;
 
 	var getMid = LayoutUtil.getMid,
 	    getOrientation = LayoutUtil.getOrientation;
 
-	var is = __webpack_require__(444).is;
+	var is = __webpack_require__(443).is;
 
 
 	function BpmnLayouter() {}
@@ -72128,35 +73357,69 @@ var InfoxBpmnModeler =
 	module.exports = BpmnLayouter;
 
 
-	BpmnLayouter.prototype.layoutConnection = function(connection, layoutHints) {
+	BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
+
+	  hints = hints || {};
+
 	  var source = connection.source,
 	      target = connection.target,
 	      waypoints = connection.waypoints,
-	      start,
-	      end;
+	      start = hints.connectionStart,
+	      end = hints.connectionEnd;
 
 	  var manhattanOptions,
 	      updatedWaypoints;
 
-	  start = getConnectionDocking(waypoints, 0, source);
-	  end = getConnectionDocking(waypoints, waypoints && waypoints.length - 1, target);
+	  if (!start) {
+	    start = getConnectionDocking(waypoints && waypoints[0], source);
+	  }
 
-	  // TODO (nre): support vertical modeling
+	  if (!end) {
+	    end = getConnectionDocking(waypoints && waypoints[waypoints.length - 1], target);
+	  }
+
+	  // TODO(nikku): support vertical modeling
 	  // and invert preferredLayouts accordingly
 
 	  if (is(connection, 'bpmn:Association') ||
 	      is(connection, 'bpmn:DataAssociation')) {
 
 	    if (waypoints && !isCompensationAssociation(connection)) {
-	      return waypoints;
+	      return [].concat([ start ], waypoints.slice(1, -1), [ end ]);
 	    }
 	  }
 
 	  // manhattan layout sequence / message flows
 	  if (is(connection, 'bpmn:MessageFlow')) {
 	    manhattanOptions = {
-	      preferredLayouts: [ 'straight', 'v:v' ]
+	      preferredLayouts: [ 'v:v' ]
 	    };
+
+	    if (is(target, 'bpmn:Participant')) {
+	      manhattanOptions = {
+	        preferredLayouts: [ 'straight', 'v:v' ]
+	      };
+	    }
+
+	    if (isExpandedSubProcess(target)) {
+	      manhattanOptions = {
+	        preferredLayouts: [ 'straight', 'v:v' ]
+	      };
+	    }
+
+	    if (isExpandedSubProcess(source) && is(target, 'bpmn:FlowNode')) {
+	      manhattanOptions = {
+	        preferredLayouts: [ 'straight', 'v:v' ],
+	        preserveDocking: isExpandedSubProcess(target) ? 'source' : 'target'
+	      };
+	    }
+
+	    if (is(source, 'bpmn:Participant') && is(target, 'bpmn:FlowNode')) {
+	      manhattanOptions = {
+	        preferredLayouts: [ 'straight', 'v:v' ],
+	        preserveDocking: 'target'
+	      };
+	    }
 
 	    if (is(target, 'bpmn:Event')) {
 	      manhattanOptions = {
@@ -72219,7 +73482,7 @@ var InfoxBpmnModeler =
 
 	  if (manhattanOptions) {
 
-	    manhattanOptions = assign(manhattanOptions, layoutHints);
+	    manhattanOptions = assign(manhattanOptions, hints);
 
 	    updatedWaypoints =
 	      ManhattanLayout.repairConnection(
@@ -72242,9 +73505,7 @@ var InfoxBpmnModeler =
 	}
 
 
-	function getConnectionDocking(waypoints, idx, shape) {
-	  var point = waypoints && waypoints[idx];
-
+	function getConnectionDocking(point, shape) {
 	  return point ? (point.original || point) : getMid(shape);
 	}
 
@@ -72258,13 +73519,18 @@ var InfoxBpmnModeler =
 	         target.businessObject.isForCompensation;
 	}
 
+
+	function isExpandedSubProcess(element) {
+	  return is(element, 'bpmn:SubProcess') && isExpanded(element);
+	}
+
 /***/ },
-/* 785 */
+/* 793 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getMid = __webpack_require__(644).getMid;
+	var getMid = __webpack_require__(516).getMid;
 
 
 	/**
@@ -72280,34 +73546,40 @@ var InfoxBpmnModeler =
 	/**
 	 * Return the new layouted waypoints for the given connection.
 	 *
+	 * The connection passed is still unchanged; you may figure out about
+	 * the new connection start / end via the layout hints provided.
+	 *
 	 * @param {djs.model.Connection} connection
-	 * @param {Object} hints
-	 * @param {Boolean} [hints.movedStart=false]
-	 * @param {Boolean} [hints.movedEnd=false]
+	 * @param {Object} [hints]
+	 * @param {Point} [hints.connectionStart]
+	 * @param {Point} [hints.connectionEnd]
 	 *
 	 * @return {Array<Point>} the layouted connection waypoints
 	 */
 	BaseLayouter.prototype.layoutConnection = function(connection, hints) {
+
+	  hints = hints || {};
+
 	  return [
-	    getMid(connection.source),
-	    getMid(connection.target)
+	    hints.connectionStart || getMid(connection.source),
+	    hints.connectionEnd || getMid(connection.target)
 	  ];
 	};
 
 
 /***/ },
-/* 786 */
+/* 794 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isArray = __webpack_require__(70),
-	    find = __webpack_require__(472),
-	    without = __webpack_require__(787),
+	    find = __webpack_require__(468),
+	    without = __webpack_require__(795),
 	    assign = __webpack_require__(77);
 
-	var LayoutUtil = __webpack_require__(644),
-	    Geometry = __webpack_require__(640);
+	var LayoutUtil = __webpack_require__(516),
+	    Geometry = __webpack_require__(512);
 
 	var getOrientation = LayoutUtil.getOrientation,
 	    getMid = LayoutUtil.getMid,
@@ -72421,7 +73693,10 @@ var InfoxBpmnModeler =
 	 * @param {Point} [end] target docking
 	 *
 	 * @param {Object} [hints]
+	 * @param {String} [hints.preserveDocking=source] preserve docking on selected side
 	 * @param {Array<String>} [hints.preferredLayouts]
+	 * @param {Point|Boolean} [hints.connectionStart] whether the start changed
+	 * @param {Point|Boolean} [hints.connectionEnd] whether the end changed
 	 *
 	 * @return {Array<Point>} connection points
 	 */
@@ -72494,8 +73769,8 @@ var InfoxBpmnModeler =
 	 * @param {Array<Point>} waypoints
 	 * @param {Object} [hints]
 	 * @param {Array<String>} [hints.preferredLayouts] list of preferred layouts
-	 * @param {Boolean} [hints.startChanged]
-	 * @param {Boolean} [hints.endChanged]
+	 * @param {Boolean} [hints.connectionStart]
+	 * @param {Boolean} [hints.connectionEnd]
 	 *
 	 * @return {Array<Point>} repaired waypoints
 	 */
@@ -72510,6 +73785,7 @@ var InfoxBpmnModeler =
 	  }
 
 	  hints = assign({ preferredLayouts: [] }, hints);
+	  waypoints = waypoints || [];
 
 	  var preferredLayouts = hints.preferredLayouts,
 	      layoutStraight = preferredLayouts.indexOf('straight') !== -1,
@@ -72525,11 +73801,11 @@ var InfoxBpmnModeler =
 
 	  if (!repairedWaypoints) {
 	    // check if we layout from start or end
-	    if (hints.endChanged) {
+	    if (hints.connectionEnd) {
 	      repairedWaypoints = this._repairConnectionSide(target, source, end, waypoints.slice().reverse());
 	      repairedWaypoints = repairedWaypoints && repairedWaypoints.reverse();
 	    } else
-	    if (hints.startChanged) {
+	    if (hints.connectionStart) {
 	      repairedWaypoints = this._repairConnectionSide(source, target, start, waypoints);
 	    } else
 	    // or whether nothing seems to have changed
@@ -72592,26 +73868,53 @@ var InfoxBpmnModeler =
 	    primaryAxis = 'y';
 	  }
 
-	  if (!isInRange(primaryAxis, start, target)) {
-	    return null;
+	  if (hints.preserveDocking === 'target') {
+
+	    if (!isInRange(primaryAxis, end, source)) {
+	      return null;
+	    }
+
+	    axis[primaryAxis] = end[primaryAxis];
+
+	    return [
+	      {
+	        x: axis.x !== undefined ? axis.x : start.x,
+	        y: axis.y !== undefined ? axis.y : start.y,
+	        original: {
+	          x: axis.x !== undefined ? axis.x : start.x,
+	          y: axis.y !== undefined ? axis.y : start.y
+	        }
+	      },
+	      {
+	        x: end.x,
+	        y: end.y
+	      }
+	    ];
+
+	  } else {
+
+	    if (!isInRange(primaryAxis, start, target)) {
+	      return null;
+	    }
+
+	    axis[primaryAxis] = start[primaryAxis];
+
+	    return [
+	      {
+	        x: start.x,
+	        y: start.y
+	      },
+	      {
+	        x: axis.x !== undefined ? axis.x : end.x,
+	        y: axis.y !== undefined ? axis.y : end.y,
+	        original: {
+	          x: axis.x !== undefined ? axis.x : end.x,
+	          y: axis.y !== undefined ? axis.y : end.y
+	        }
+	      }
+	    ];
 	  }
 
-	  axis[primaryAxis] = start[primaryAxis];
-
-	  return [
-	    {
-	      x: start.x,
-	      y: start.y
-	    },
-	    {
-	      x: axis.x !== undefined ? axis.x : end.x,
-	      y: axis.y !== undefined ? axis.y : end.y,
-	      original: {
-	        x: axis.x !== undefined ? axis.x : end.x,
-	        y: axis.y !== undefined ? axis.y : end.y
-	      }
-	    }
-	  ];
 	};
 
 	/**
@@ -72752,10 +74055,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 787 */
+/* 795 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseDifference = __webpack_require__(788),
+	var baseDifference = __webpack_require__(796),
 	    isArrayLike = __webpack_require__(80),
 	    restParam = __webpack_require__(93);
 
@@ -72785,12 +74088,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 788 */
+/* 796 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(502),
-	    cacheIndexOf = __webpack_require__(504),
-	    createCache = __webpack_require__(505);
+	var baseIndexOf = __webpack_require__(625),
+	    cacheIndexOf = __webpack_require__(627),
+	    createCache = __webpack_require__(628);
 
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -72846,14 +74149,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 789 */
+/* 797 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(77);
 
-	var LayoutUtil = __webpack_require__(644);
+	var LayoutUtil = __webpack_require__(516);
 
 
 	function dockingToPoint(docking) {
@@ -72947,36 +74250,165 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 790 */
+/* 798 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var EditorActions = __webpack_require__(558);
+
+	var filter = __webpack_require__(383);
+
+	var is = __webpack_require__(443).is;
+
+	var getBBox = __webpack_require__(137).getBBox;
+
+	function BpmnEditorActions(
+	    injector,
+	    canvas, elementRegistry, selection,
+	    spaceTool,
+	    lassoTool,
+	    handTool,
+	    globalConnect,
+	    distributeElements,
+	    alignElements,
+	    directEditing,
+	    searchPad,
+	    modeling) {
+
+	  injector.invoke(EditorActions, this);
+
+	  this.register({
+	    selectElements: function() {
+	      // select all elements except for the invisible
+	      // root element
+	      var rootElement = canvas.getRootElement();
+
+	      var elements = elementRegistry.filter(function(element) {
+	        return element !== rootElement;
+	      });
+
+	      selection.select(elements);
+
+	      return elements;
+	    },
+	    spaceTool: function() {
+	      spaceTool.toggle();
+	    },
+	    lassoTool: function() {
+	      lassoTool.toggle();
+	    },
+	    handTool: function() {
+	      handTool.toggle();
+	    },
+	    globalConnectTool: function() {
+	      globalConnect.toggle();
+	    },
+	    distributeElements: function(opts) {
+	      var currentSelection = selection.get(),
+	          type = opts.type;
+
+	      if (currentSelection.length) {
+	        distributeElements.trigger(currentSelection, type);
+	      }
+	    },
+	    alignElements: function(opts) {
+	      var currentSelection = selection.get(),
+	          aligneableElements = [],
+	          type = opts.type;
+
+	      if (currentSelection.length) {
+	        aligneableElements = filter(currentSelection, function(element) {
+	          return !is(element, 'bpmn:Lane');
+	        });
+
+	        alignElements.trigger(aligneableElements, type);
+	      }
+	    },
+	    directEditing: function() {
+	      var currentSelection = selection.get();
+
+	      if (currentSelection.length) {
+	        directEditing.activate(currentSelection[0]);
+	      }
+	    },
+	    find: function() {
+	      searchPad.toggle();
+	    },
+	    moveToOrigin: function() {
+	      var rootElement = canvas.getRootElement(),
+	          boundingBox,
+	          elements;
+
+	      if (is(rootElement, 'bpmn:Collaboration')) {
+	        elements = elementRegistry.filter(function(element) {
+	          return is(element.parent, 'bpmn:Collaboration');
+	        });
+	      } else {
+	        elements = elementRegistry.filter(function(element) {
+	          return element !== rootElement;
+	        });
+	      }
+
+	      boundingBox = getBBox(elements);
+
+	      modeling.moveElements(elements, { x: -boundingBox.x, y: -boundingBox.y }, rootElement);
+	    }
+	  });
+	}
+
+	inherits(BpmnEditorActions, EditorActions);
+
+	BpmnEditorActions.$inject = [
+	  'injector',
+	  'canvas', 'elementRegistry', 'selection',
+	  'spaceTool',
+	  'lassoTool',
+	  'handTool',
+	  'globalConnect',
+	  'distributeElements',
+	  'alignElements',
+	  'directEditing',
+	  'searchPad',
+	  'modeling'
+	];
+
+	module.exports = BpmnEditorActions;
+
+
+/***/ },
+/* 799 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(511),
-	    __webpack_require__(791),
-	    __webpack_require__(453),
-	    __webpack_require__(669),
-	    __webpack_require__(793),
-	    __webpack_require__(795)
+	    __webpack_require__(634),
+	    __webpack_require__(800),
+	    __webpack_require__(452),
+	    __webpack_require__(571),
+	    __webpack_require__(802),
+	    __webpack_require__(804)
 	  ],
 	  __init__: [ 'contextPadProvider' ],
-	  contextPadProvider: [ 'type', __webpack_require__(801) ]
+	  contextPadProvider: [ 'type', __webpack_require__(811) ]
 	};
 
 /***/ },
-/* 791 */
+/* 800 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(454),
-	    __webpack_require__(469)
+	    __webpack_require__(453),
+	    __webpack_require__(472)
 	  ],
-	  contextPad: [ 'type', __webpack_require__(792) ]
+	  contextPad: [ 'type', __webpack_require__(801) ]
 	};
 
 /***/ },
-/* 792 */
+/* 801 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -72984,11 +74416,11 @@ var InfoxBpmnModeler =
 	var isFunction = __webpack_require__(73),
 	    forEach = __webpack_require__(128),
 
-	    domDelegate = __webpack_require__(456),
-	    domEvent = __webpack_require__(485),
-	    domAttr = __webpack_require__(482),
+	    domDelegate = __webpack_require__(455),
+	    domEvent = __webpack_require__(484),
+	    domAttr = __webpack_require__(481),
 	    domQuery = __webpack_require__(52),
-	    domClasses = __webpack_require__(479),
+	    domClasses = __webpack_require__(478),
 	    domify = __webpack_require__(50);
 
 
@@ -73267,24 +74699,26 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 793 */
+/* 802 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(621),
-	    __webpack_require__(453),
-	    __webpack_require__(628)
+	    __webpack_require__(501),
+	    __webpack_require__(452),
+	    __webpack_require__(508)
 	  ],
-	  create: [ 'type', __webpack_require__(794) ]
+	  create: [ 'type', __webpack_require__(803) ]
 	};
 
 
 /***/ },
-/* 794 */
+/* 803 */
 /***/ function(module, exports) {
 
 	'use strict';
+
+	var LOW_PRIORITY = 750;
 
 	var MARKER_OK = 'drop-ok',
 	    MARKER_NOT_OK = 'drop-not-ok',
@@ -73354,18 +74788,7 @@ var InfoxBpmnModeler =
 	  eventBus.on('create.move', function(event) {
 
 	    var context = event.context,
-	        shape = context.shape,
-	        visual = context.visual;
-
-	    // lazy init drag visual once we received the first real
-	    // drag move event (this allows us to get the proper canvas local coordinates)
-	    if (!visual) {
-	      visual = context.visual = createVisual(shape);
-	    }
-
-	    visual.translate(event.x, event.y);
-
-	    var hover = event.hover,
+	        hover = event.hover,
 	        canExecute;
 
 	    var position = {
@@ -73386,6 +74809,22 @@ var InfoxBpmnModeler =
 	      }
 	    }
 	  });
+
+	  eventBus.on('create.move', LOW_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        shape = context.shape,
+	        visual = context.visual;
+
+	    // lazy init drag visual once we received the first real
+	    // drag move event (this allows us to get the proper canvas local coordinates)
+	    if (!visual) {
+	      visual = context.visual = createVisual(shape);
+	    }
+
+	    visual.translate(event.x, event.y);
+	  });
+
 
 	  eventBus.on([ 'create.end', 'create.out', 'create.cleanup' ], function(event) {
 	    var context = event.context,
@@ -73460,44 +74899,44 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 795 */
+/* 804 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(796),
-	    __webpack_require__(727)
+	    __webpack_require__(805),
+	    __webpack_require__(730)
 	  ],
 	  __init__: [ 'replaceMenuProvider' ],
-	  replaceMenuProvider: [ 'type', __webpack_require__(798) ]
+	  replaceMenuProvider: [ 'type', __webpack_require__(807) ]
 	};
 
 /***/ },
-/* 796 */
+/* 805 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'popupMenu' ],
-	  popupMenu: [ 'type', __webpack_require__(797) ]
+	  popupMenu: [ 'type', __webpack_require__(806) ]
 	};
 
 
 /***/ },
-/* 797 */
+/* 806 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128),
 	    assign = __webpack_require__(77),
-	    find = __webpack_require__(472);
+	    find = __webpack_require__(468);
 
-	var domDelegate = __webpack_require__(456),
+	var domDelegate = __webpack_require__(455),
 	    domify = __webpack_require__(50),
-	    domClasses = __webpack_require__(479),
-	    domAttr = __webpack_require__(482),
+	    domClasses = __webpack_require__(478),
+	    domAttr = __webpack_require__(481),
 	    domRemove = __webpack_require__(54);
 
 	var DATA_REF = 'data-id';
@@ -73774,35 +75213,38 @@ var InfoxBpmnModeler =
 	  var canvas = this._canvas,
 	      clientRect = canvas._container.getBoundingClientRect();
 
-	  var conX = container.offsetLeft,
-	      conY = container.offsetTop,
-	      conWidth = container.scrollWidth,
-	      conHeight = container.scrollHeight,
+	  var containerX = container.offsetLeft,
+	      containerY = container.offsetTop,
+	      containerWidth = container.scrollWidth,
+	      containerHeight = container.scrollHeight,
 	      overAxis = {},
 	      left, top;
 
-	  var curPos = {
+	  var cursorPosition = {
 	    x: cursor.x - clientRect.left,
 	    y: cursor.y - clientRect.top
 	  };
 
-	  if (conX + conWidth > clientRect.width) {
+	  if (containerX + containerWidth > clientRect.width) {
 	    overAxis.x = true;
 	  }
 
-	  if (conY + conHeight > clientRect.height) {
+	  if (containerY + containerHeight > clientRect.height) {
 	    overAxis.y = true;
 	  }
 
 	  if (overAxis.x && overAxis.y) {
-	    left = curPos.x - conWidth + 'px';
-	    top = curPos.y - conHeight + 'px';
+	    left = cursorPosition.x - containerWidth + 'px';
+	    top = cursorPosition.y - containerHeight + 'px';
 	  } else if (overAxis.x) {
-	    left = curPos.x - conWidth + 'px';
-	    top = curPos.y + 'px';
+	    left = cursorPosition.x - containerWidth + 'px';
+	    top = cursorPosition.y + 'px';
+	  } else if (overAxis.y && cursorPosition.y < containerHeight) {
+	    left = cursorPosition.x + 'px';
+	    top = 10 + 'px';
 	  } else if (overAxis.y) {
-	    left = curPos.x + 'px';
-	    top = curPos.y - conHeight + 'px';
+	    left = cursorPosition.x + 'px';
+	    top = cursorPosition.y - containerHeight + 'px';
 	  }
 
 	  assign(container.style, { left: left, top: top }, { visibility: 'visible', 'z-index': 1000 });
@@ -73922,21 +75364,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 798 */
+/* 807 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(444).is,
-	    isEventSubProcess = __webpack_require__(443).isEventSubProcess,
-	    getBusinessObject = __webpack_require__(444).getBusinessObject,
-	    isExpanded = __webpack_require__(443).isExpanded,
-	    isDifferentType = __webpack_require__(799).isDifferentType;
+	var is = __webpack_require__(443).is,
+	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
+	    getBusinessObject = __webpack_require__(443).getBusinessObject,
+	    isExpanded = __webpack_require__(442).isExpanded,
+	    isDifferentType = __webpack_require__(808).isDifferentType;
 
-	var forEach = __webpack_require__(416),
-	    filter = __webpack_require__(384);
+	var forEach = __webpack_require__(415),
+	    filter = __webpack_require__(383),
+	    reject = __webpack_require__(809);
 
-	var replaceOptions = __webpack_require__ (800);
+	var replaceOptions = __webpack_require__ (810);
 
 
 	/**
@@ -74031,9 +75474,10 @@ var InfoxBpmnModeler =
 	      var target = entry.target;
 
 	      // hide cancel end events outside transactions
-	      if (target.eventDefinition == 'bpmn:CancelEventDefinition' && !is(businessObject.$parent, 'bpmn:Transaction')) {
+	      if (target.eventDefinitionType == 'bpmn:CancelEventDefinition' && !is(businessObject.$parent, 'bpmn:Transaction')) {
 	        return false;
 	      }
+
 	      return differentType(entry);
 	    });
 
@@ -74128,11 +75572,10 @@ var InfoxBpmnModeler =
 	  if (is(businessObject, 'bpmn:FlowNode')) {
 	    entries = filter(replaceOptions.TASK, differentType);
 
-	    if (businessObject.isForCompensation) {
-
-	      // can only replace to compensation activities
-	      entries = filter(entries, function(entry) {
-	        return !/CallActivity/.test(entry.target.type);
+	    // collapsed SubProcess can not be replaced with itself
+	    if (is(businessObject, 'bpmn:SubProcess') && !isExpanded(businessObject)) {
+	      entries = reject(entries, function(entry) {
+	        return entry.label === 'Sub Process (collapsed)';
 	      });
 	    }
 
@@ -74200,7 +75643,7 @@ var InfoxBpmnModeler =
 
 	 * @return {Array<Object>} a list of menu items
 	 */
-	ReplaceMenuProvider.prototype._createSequenceFlowEntries = function (element, replaceOptions) {
+	ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, replaceOptions) {
 
 	  var businessObject = getBusinessObject(element);
 
@@ -74214,44 +75657,46 @@ var InfoxBpmnModeler =
 	  forEach(replaceOptions, function(entry) {
 
 	    switch (entry.actionName) {
-	      case 'replace-with-default-flow':
-	        if (businessObject.sourceRef.default !== businessObject &&
+	    case 'replace-with-default-flow':
+	      if (businessObject.sourceRef.default !== businessObject &&
 	            (is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
 	             is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
+	             is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
 	             is(businessObject.sourceRef, 'bpmn:Activity'))) {
 
-	          menuEntries.push(self._createMenuEntry(entry, element, function() {
-	            modeling.updateProperties(element.source, { default: businessObject });
-	          }));
-	        }
-	        break;
-	      case 'replace-with-conditional-flow':
-	        if (!businessObject.conditionExpression && is(businessObject.sourceRef, 'bpmn:Activity')) {
+	        menuEntries.push(self._createMenuEntry(entry, element, function() {
+	          modeling.updateProperties(element.source, { default: businessObject });
+	        }));
+	      }
+	      break;
+	    case 'replace-with-conditional-flow':
+	      if (!businessObject.conditionExpression && is(businessObject.sourceRef, 'bpmn:Activity')) {
 
-	          menuEntries.push(self._createMenuEntry(entry, element, function() {
-	            var conditionExpression = moddle.create('bpmn:FormalExpression', { body: '' });
+	        menuEntries.push(self._createMenuEntry(entry, element, function() {
+	          var conditionExpression = moddle.create('bpmn:FormalExpression', { body: '' });
 
-	            modeling.updateProperties(element, { conditionExpression: conditionExpression });
-	          }));
-	        }
-	        break;
-	      default:
+	          modeling.updateProperties(element, { conditionExpression: conditionExpression });
+	        }));
+	      }
+	      break;
+	    default:
 	        // default flows
-	        if (is(businessObject.sourceRef, 'bpmn:Activity') && businessObject.conditionExpression) {
-	          return menuEntries.push(self._createMenuEntry(entry, element, function() {
-	            modeling.updateProperties(element, { conditionExpression: undefined });
-	          }));
-	        }
+	      if (is(businessObject.sourceRef, 'bpmn:Activity') && businessObject.conditionExpression) {
+	        return menuEntries.push(self._createMenuEntry(entry, element, function() {
+	          modeling.updateProperties(element, { conditionExpression: undefined });
+	        }));
+	      }
 	        // conditional flows
-	        if ((is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
+	      if ((is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
 	           is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
+	           is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
 	           is(businessObject.sourceRef, 'bpmn:Activity')) &&
 	           businessObject.sourceRef.default === businessObject) {
 
-	          return menuEntries.push(self._createMenuEntry(entry, element, function() {
-	            modeling.updateProperties(element.source, { default: undefined });
-	          }));
-	        }
+	        return menuEntries.push(self._createMenuEntry(entry, element, function() {
+	          modeling.updateProperties(element.source, { default: undefined });
+	        }));
+	      }
 	    }
 	  });
 
@@ -74404,13 +75849,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 799 */
+/* 808 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getBusinessObject = __webpack_require__(444).getBusinessObject;
-	var isExpanded = __webpack_require__(443).isExpanded;
+	var getBusinessObject = __webpack_require__(443).getBusinessObject;
+	var isExpanded = __webpack_require__(442).isExpanded;
 
 	/**
 	 * Returns true, if an element is from a different type
@@ -74431,15 +75876,18 @@ var InfoxBpmnModeler =
 
 	    var isTypeEqual = businessObject.$type === target.type;
 
-	    var isEventDefinitionEqual =
-	        (eventDefinition && eventDefinition.$type) === target.eventDefinitionType;
+	    var isEventDefinitionEqual = (
+	      (eventDefinition && eventDefinition.$type) === target.eventDefinitionType
+	    );
 
-	    var isTriggeredByEventEqual =
-	        target.triggeredByEvent === undefined ||
-	        businessObject.triggeredByEvent === target.triggeredByEvent;
+	    var isTriggeredByEventEqual = (
+	      businessObject.triggeredByEvent === target.triggeredByEvent
+	    );
 
-	    var isExpandedEqual =
-	        target.isExpanded === undefined || target.isExpanded === isExpanded(businessObject);
+	    var isExpandedEqual = (
+	        target.isExpanded === undefined ||
+	        target.isExpanded === isExpanded(businessObject)
+	    );
 
 	    return !isTypeEqual || !isEventDefinitionEqual || !isTriggeredByEventEqual || !isExpandedEqual;
 	  };
@@ -74448,7 +75896,63 @@ var InfoxBpmnModeler =
 	module.exports.isDifferentType = isDifferentType;
 
 /***/ },
-/* 800 */
+/* 809 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arrayFilter = __webpack_require__(384),
+	    baseCallback = __webpack_require__(385),
+	    baseFilter = __webpack_require__(407),
+	    isArray = __webpack_require__(21);
+
+	/**
+	 * The opposite of `_.filter`; this method returns the elements of `collection`
+	 * that `predicate` does **not** return truthy for.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Collection
+	 * @param {Array|Object|string} collection The collection to iterate over.
+	 * @param {Function|Object|string} [predicate=_.identity] The function invoked
+	 *  per iteration.
+	 * @param {*} [thisArg] The `this` binding of `predicate`.
+	 * @returns {Array} Returns the new filtered array.
+	 * @example
+	 *
+	 * _.reject([1, 2, 3, 4], function(n) {
+	 *   return n % 2 == 0;
+	 * });
+	 * // => [1, 3]
+	 *
+	 * var users = [
+	 *   { 'user': 'barney', 'age': 36, 'active': false },
+	 *   { 'user': 'fred',   'age': 40, 'active': true }
+	 * ];
+	 *
+	 * // using the `_.matches` callback shorthand
+	 * _.pluck(_.reject(users, { 'age': 40, 'active': true }), 'user');
+	 * // => ['barney']
+	 *
+	 * // using the `_.matchesProperty` callback shorthand
+	 * _.pluck(_.reject(users, 'active', false), 'user');
+	 * // => ['fred']
+	 *
+	 * // using the `_.property` callback shorthand
+	 * _.pluck(_.reject(users, 'active'), 'user');
+	 * // => ['barney']
+	 */
+	function reject(collection, predicate, thisArg) {
+	  var func = isArray(collection) ? arrayFilter : baseFilter;
+	  predicate = baseCallback(predicate, thisArg, 3);
+	  return func(collection, function(value, index, collection) {
+	    return !predicate(value, index, collection);
+	  });
+	}
+
+	module.exports = reject;
+
+
+/***/ },
+/* 810 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -74810,6 +76314,15 @@ var InfoxBpmnModeler =
 	      triggeredByEvent: true,
 	      isExpanded: true
 	    }
+	  },
+	  {
+	    label: 'Sub Process (collapsed)',
+	    actionName: 'replace-with-collapsed-subprocess',
+	    className: 'bpmn-icon-subprocess-collapsed',
+	    target: {
+	      type: 'bpmn:SubProcess',
+	      isExpanded: false
+	    }
 	  }
 	];
 
@@ -74853,7 +76366,7 @@ var InfoxBpmnModeler =
 	      type: 'bpmn:Transaction',
 	      isExpanded: true
 	    }
-	  },
+	  }
 	];
 
 	module.exports.TASK = [
@@ -75071,7 +76584,7 @@ var InfoxBpmnModeler =
 	      eventDefinitionType: 'bpmn:SignalEventDefinition',
 	      cancelActivity: false
 	    }
-	  },
+	  }
 	];
 
 	module.exports.EVENT_SUB_PROCESS_START_EVENT = [
@@ -75187,7 +76700,7 @@ var InfoxBpmnModeler =
 	      eventDefinitionType: 'bpmn:EscalationEventDefinition',
 	      isInterrupting: false
 	    }
-	  },
+	  }
 	];
 
 	module.exports.SEQUENCE_FLOW = [
@@ -75232,26 +76745,26 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 801 */
+/* 811 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 
 	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(416),
+	    forEach = __webpack_require__(415),
 	    isArray = __webpack_require__(21),
-	    is = __webpack_require__(444).is,
-	    isExpanded = __webpack_require__(443).isExpanded,
-	    isAny = __webpack_require__(673).isAny,
-	    getChildLanes = __webpack_require__(698).getChildLanes,
-	    isEventSubProcess = __webpack_require__(443).isEventSubProcess;
-
+	    is = __webpack_require__(443).is,
+	    isExpanded = __webpack_require__(442).isExpanded,
+	    isAny = __webpack_require__(575).isAny,
+	    getChildLanes = __webpack_require__(602).getChildLanes,
+	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
+	    hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
 
 	/**
 	 * A provider for BPMN 2.0 elements context pad
 	 */
-	function ContextPadProvider(contextPad, modeling, elementFactory,
+	function ContextPadProvider(eventBus, contextPad, modeling, elementFactory,
 	                            connect, create, popupMenu,
 	                            canvas, rules, translate) {
 
@@ -75268,9 +76781,20 @@ var InfoxBpmnModeler =
 	  this._canvas  = canvas;
 	  this._rules = rules;
 	  this._translate = translate;
+
+
+	  eventBus.on('create.end', 250, function(event) {
+	    var shape = event.shape,
+	        entries = contextPad.getEntries(shape);
+
+	    if (hasPrimaryModifier(event) && entries.replace) {
+	      entries.replace.action.click(event, shape);
+	    }
+	  });
 	}
 
 	ContextPadProvider.$inject = [
+	  'eventBus',
 	  'contextPad',
 	  'modeling',
 	  'elementFactory',
@@ -75453,16 +76977,16 @@ var InfoxBpmnModeler =
 	        'append.receive-task': appendAction('bpmn:ReceiveTask', 'bpmn-icon-receive-task'),
 	        'append.message-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
 	                                                  'bpmn-icon-intermediate-event-catch-message',
-	                                                  { eventDefinitionType: 'bpmn:MessageEventDefinition'}),
+	                                                  { eventDefinitionType: 'bpmn:MessageEventDefinition' }),
 	        'append.timer-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
 	                                                  'bpmn-icon-intermediate-event-catch-timer',
-	                                                  { eventDefinitionType: 'bpmn:TimerEventDefinition'}),
+	                                                  { eventDefinitionType: 'bpmn:TimerEventDefinition' }),
 	        'append.condtion-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
 	                                                  'bpmn-icon-intermediate-event-catch-condition',
-	                                                  { eventDefinitionType: 'bpmn:ConditionalEventDefinition'}),
+	                                                  { eventDefinitionType: 'bpmn:ConditionalEventDefinition' }),
 	        'append.signal-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
 	                                                  'bpmn-icon-intermediate-event-catch-signal',
-	                                                  { eventDefinitionType: 'bpmn:SignalEventDefinition'})
+	                                                  { eventDefinitionType: 'bpmn:SignalEventDefinition' })
 	      });
 	    } else
 
@@ -75516,7 +77040,12 @@ var InfoxBpmnModeler =
 	    });
 	  }
 
-	  if (isAny(businessObject, [ 'bpmn:FlowNode', 'bpmn:InteractionNode' ]) ) {
+	  if (isAny(businessObject, [
+	    'bpmn:FlowNode',
+	    'bpmn:InteractionNode',
+	    'bpmn:DataObjectReference',
+	    'bpmn:DataStoreReference'
+	  ]) ) {
 
 	    assign(actions, {
 	      'append.text-annotation': appendAction('bpmn:TextAnnotation', 'bpmn-icon-text-annotation'),
@@ -75550,7 +77079,7 @@ var InfoxBpmnModeler =
 	  }
 
 	  // delete element entry, only show if allowed by rules
-	  var deleteAllowed = rules.allowed('elements.delete', { elements: [ element ]});
+	  var deleteAllowed = rules.allowed('elements.delete', { elements: [ element ] });
 
 	  if (isArray(deleteAllowed)) {
 	    // was the element returned as a deletion candidate?
@@ -75591,39 +77120,465 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 802 */
+/* 812 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(803),
-	    __webpack_require__(793),
-	    __webpack_require__(655),
-	    __webpack_require__(661),
-	    __webpack_require__(665),
-	    __webpack_require__(447),
-	    __webpack_require__(667)
+	    __webpack_require__(813)
 	  ],
-	  __init__: [ 'paletteProvider' ],
-	  paletteProvider: [ 'type', __webpack_require__(805) ]
+	  __init__: [ 'bpmnKeyBindings' ],
+	  bpmnKeyBindings: [ 'type', __webpack_require__(816) ]
 	};
 
 
 /***/ },
-/* 803 */
+/* 813 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __init__: [ 'keyboard' ],
+	  keyboard: [ 'type', __webpack_require__(814) ]
+	};
+
+
+/***/ },
+/* 814 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var domEvent = __webpack_require__(484),
+	    domMatches = __webpack_require__(815);
+
+	/**
+	 * A keyboard abstraction that may be activated and
+	 * deactivated by users at will, consuming key events
+	 * and triggering diagram actions.
+	 *
+	 * The implementation fires the following key events that allow
+	 * other components to hook into key handling:
+	 *
+	 *  - keyboard.bind
+	 *  - keyboard.unbind
+	 *  - keyboard.init
+	 *  - keyboard.destroy
+	 *
+	 * All events contain the fields (node, listeners).
+	 *
+	 * A default binding for the keyboard may be specified via the
+	 * `keyboard.bindTo` configuration option.
+	 *
+	 * @param {Config} config
+	 * @param {EventBus} eventBus
+	 * @param {EditorActions} editorActions
+	 */
+	function Keyboard(config, eventBus, editorActions) {
+	  var self = this;
+
+	  this._config = config || {};
+	  this._eventBus = eventBus;
+	  this._editorActions = editorActions;
+
+	  this._listeners = [];
+
+	  // our key handler is a singleton that passes
+	  // (keycode, modifiers) to each listener.
+	  //
+	  // listeners must indicate that they handled a key event
+	  // by returning true. This stops the event propagation.
+	  //
+	  this._keyHandler = function(event) {
+
+	    var i, l,
+	        target = event.target,
+	        listeners = self._listeners,
+	        code = event.keyCode || event.charCode || -1;
+
+	    if (target && (domMatches(target, 'input, textarea') || target.contentEditable === 'true')) {
+	      return;
+	    }
+
+	    for (i = 0; (l = listeners[i]); i++) {
+	      if (l(code, event)) {
+	        event.preventDefault();
+	        event.stopPropagation();
+	      }
+	    }
+	  };
+
+	  // properly clean dom registrations
+	  eventBus.on('diagram.destroy', function() {
+	    self._fire('destroy');
+
+	    self.unbind();
+	    self._listeners = null;
+	  });
+
+	  eventBus.on('diagram.init', function() {
+	    self._fire('init');
+
+	    if (config && config.bindTo) {
+	      self.bind(config.bindTo);
+	    }
+	  });
+
+	  this._init();
+	}
+
+	Keyboard.$inject = [
+	  'config.keyboard',
+	  'eventBus',
+	  'editorActions'
+	];
+
+	module.exports = Keyboard;
+
+
+	Keyboard.prototype.bind = function(node) {
+	  // make sure that the keyboard is only bound once to the DOM
+	  this.unbind();
+
+	  this._node = node;
+
+	  // bind key events
+	  domEvent.bind(node, 'keydown', this._keyHandler, true);
+
+	  this._fire('bind');
+	};
+
+	Keyboard.prototype.getBinding = function() {
+	  return this._node;
+	};
+
+	Keyboard.prototype.unbind = function() {
+	  var node = this._node;
+
+	  if (node) {
+	    this._fire('unbind');
+
+	    // unbind key events
+	    domEvent.unbind(node, 'keydown', this._keyHandler, true);
+	  }
+
+	  this._node = null;
+	};
+
+	Keyboard.prototype._fire = function(event) {
+	  this._eventBus.fire('keyboard.' + event, { node: this._node, listeners: this._listeners });
+	};
+
+	Keyboard.prototype._init = function() {
+
+	  var listeners = this._listeners;
+
+	  var editorActions = this._editorActions,
+	      config = this._config;
+
+	  // init default listeners
+
+	  // undo
+	  // (CTRL|CMD) + Z
+	  function undo(key, modifiers) {
+
+	    if (isCmd(modifiers) && !isShift(modifiers) && key === 90) {
+	      editorActions.trigger('undo');
+
+	      return true;
+	    }
+	  }
+
+	  // redo
+	  // CTRL + Y
+	  // CMD + SHIFT + Z
+	  function redo(key, modifiers) {
+
+	    if (isCmd(modifiers) && (key === 89 || (key === 90 && isShift(modifiers)))) {
+	      editorActions.trigger('redo');
+
+	      return true;
+	    }
+	  }
+
+	  // copy
+	  // CTRL/CMD + C
+	  function copy(key, modifiers) {
+
+	    if (isCmd(modifiers) && (key === 67)) {
+	      editorActions.trigger('copy');
+
+	      return true;
+	    }
+	  }
+
+	  // paste
+	  // CTRL/CMD + V
+	  function paste(key, modifiers) {
+
+	    if (isCmd(modifiers) && (key === 86)) {
+	      editorActions.trigger('paste');
+
+	      return true;
+	    }
+	  }
+
+	  /**
+	   * zoom in one step
+	   * CTRL + +
+	   *
+	   * 107 = numpad plus
+	   * 187 = regular plus
+	   * 171 = regular plus in Firefox (german keyboard layout)
+	   *  61 = regular plus in Firefox (US keyboard layout)
+	   */
+	  function zoomIn(key, modifiers) {
+
+	    if ((key === 107 || key === 187 || key === 171 || key === 61) && isCmd(modifiers)) {
+	      editorActions.trigger('stepZoom', { value: 1 });
+
+	      return true;
+	    }
+	  }
+
+	  /**
+	   * zoom out one step
+	   * CTRL + -
+	   *
+	   * 109 = numpad minus
+	   * 189 = regular minus
+	   * 173 = regular minus in Firefox (US and german keyboard layout)
+	   */
+	  function zoomOut(key, modifiers) {
+
+	    if ((key === 109 || key === 189 || key === 173)  && isCmd(modifiers)) {
+	      editorActions.trigger('stepZoom', { value: -1 });
+
+	      return true;
+	    }
+	  }
+
+	  /**
+	   * zoom to the default level
+	   * CTRL + 0
+	   *
+	   * 96 = numpad zero
+	   * 48 = regular zero
+	   */
+	  function zoomDefault(key, modifiers) {
+
+	    if ((key === 96 || key === 48) && isCmd(modifiers)) {
+	      editorActions.trigger('zoom', { value: 1 });
+
+	      return true;
+	    }
+	  }
+
+	  // delete selected element
+	  // DEL
+	  function removeSelection(key, modifiers) {
+
+	    if (key === 46) {
+	      editorActions.trigger('removeSelection');
+
+	      return true;
+	    }
+	  }
+
+	  // move canvas left
+	  // left arrow
+	  //
+	  // 37 = Left
+	  // 38 = Up
+	  // 39 = Right
+	  // 40 = Down
+	  function moveCanvas(key, modifiers) {
+
+	    if ([37, 38, 39, 40].indexOf(key) >= 0) {
+
+	      var opts = {
+	        invertY: config.invertY,
+	        speed: (config.speed || 50)
+	      };
+
+	      switch (key) {
+	      case 37:    // Left
+	        opts.direction = 'left';
+	        break;
+	      case 38:    // Up
+	        opts.direction = 'up';
+	        break;
+	      case 39:    // Right
+	        opts.direction = 'right';
+	        break;
+	      case 40:    // Down
+	        opts.direction = 'down';
+	        break;
+	      }
+
+	      editorActions.trigger('moveCanvas', opts);
+
+	      return true;
+	    }
+	  }
+
+	  listeners.push(undo);
+	  listeners.push(redo);
+	  listeners.push(copy);
+	  listeners.push(paste);
+	  listeners.push(removeSelection);
+	  listeners.push(zoomIn);
+	  listeners.push(zoomOut);
+	  listeners.push(zoomDefault);
+	  listeners.push(moveCanvas);
+	};
+
+
+	/**
+	 * Add a listener function that is notified with (key, modifiers) whenever
+	 * the keyboard is bound and the user presses a key.
+	 *
+	 * @param {Function} listenerFn
+	 */
+	Keyboard.prototype.addListener = function(listenerFn) {
+	  this._listeners.push(listenerFn);
+	};
+
+	Keyboard.prototype.hasModifier = hasModifier;
+	Keyboard.prototype.isCmd = isCmd;
+	Keyboard.prototype.isShift = isShift;
+
+
+	function hasModifier(modifiers) {
+	  return (modifiers.ctrlKey || modifiers.metaKey || modifiers.shiftKey || modifiers.altKey);
+	}
+
+	function isCmd(modifiers) {
+	  return modifiers.ctrlKey || modifiers.metaKey;
+	}
+
+	function isShift(modifiers) {
+	  return modifiers.shiftKey;
+	}
+
+
+/***/ },
+/* 815 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(458);
+
+/***/ },
+/* 816 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * BPMN 2.0 specific key bindings.
+	 *
+	 * @param {Keyboard} keyboard
+	 * @param {EditorActions} editorActions
+	 */
+	function BpmnKeyBindings(keyboard, editorActions) {
+
+	  keyboard.addListener(function(key, modifiers) {
+
+	    // ctrl + a -> select all elements
+	    if (key === 65 && keyboard.isCmd(modifiers)) {
+	      editorActions.trigger('selectElements');
+
+	      return true;
+	    }
+
+	    // ctrl + f -> search labels
+	    if (key === 70 && keyboard.isCmd(modifiers)) {
+	      editorActions.trigger('find');
+
+	      return true;
+	    }
+
+	    if (keyboard.hasModifier(modifiers)) {
+	      return;
+	    }
+
+	    // s -> activate space tool
+	    if (key === 83) {
+	      editorActions.trigger('spaceTool');
+
+	      return true;
+	    }
+
+	    // l -> activate lasso tool
+	    if (key === 76) {
+	      editorActions.trigger('lassoTool');
+
+	      return true;
+	    }
+
+	    // h -> activate hand tool
+	    if (key === 72) {
+	      editorActions.trigger('handTool');
+
+	      return true;
+	    }
+
+	    // c -> activate global connect tool
+	    if (key === 67) {
+	      editorActions.trigger('globalConnectTool');
+
+	      return true;
+	    }
+
+	    // e -> activate direct editing
+	    if (key === 69) {
+	      editorActions.trigger('directEditing');
+
+	      return true;
+	    }
+	  });
+	}
+
+	BpmnKeyBindings.$inject = [
+	  'keyboard',
+	  'editorActions'
+	];
+
+	module.exports = BpmnKeyBindings;
+
+/***/ },
+/* 817 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(818),
+	    __webpack_require__(802),
+	    __webpack_require__(565),
+	    __webpack_require__(563),
+	    __webpack_require__(559),
+	    __webpack_require__(446),
+	    __webpack_require__(569)
+	  ],
+	  __init__: [ 'paletteProvider' ],
+	  paletteProvider: [ 'type', __webpack_require__(820) ]
+	};
+
+
+/***/ },
+/* 818 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(656) ],
+	  __depends__: [ __webpack_require__(560) ],
 	  __init__: [ 'palette' ],
-	  palette: [ 'type', __webpack_require__(804) ]
+	  palette: [ 'type', __webpack_require__(819) ]
 	};
 
 
 /***/ },
-/* 804 */
+/* 819 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -75633,12 +77588,12 @@ var InfoxBpmnModeler =
 
 	var domify = __webpack_require__(50),
 	    domQuery = __webpack_require__(52),
-	    domAttr = __webpack_require__(482),
+	    domAttr = __webpack_require__(481),
 	    domClear = __webpack_require__(175),
-	    domClasses = __webpack_require__(479),
-	    domMatches = __webpack_require__(688),
-	    domDelegate = __webpack_require__(456),
-	    domEvent = __webpack_require__(485);
+	    domClasses = __webpack_require__(478),
+	    domMatches = __webpack_require__(815),
+	    domDelegate = __webpack_require__(455),
+	    domEvent = __webpack_require__(484);
 
 
 	var toggleSelector = '.djs-palette-toggle',
@@ -75940,7 +77895,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 805 */
+/* 820 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -76104,32 +78059,32 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 806 */
+/* 821 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(627) ],
-	  __init__: ['bpmnReplacePreview'],
-	  bpmnReplacePreview: [ 'type', __webpack_require__(807) ]
+	  __depends__: [ __webpack_require__(524) ],
+	  __init__: [ 'bpmnReplacePreview' ],
+	  bpmnReplacePreview: [ 'type', __webpack_require__(822) ]
 	};
 
 
 /***/ },
-/* 807 */
+/* 822 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var CommandInterceptor = __webpack_require__(606);
+	var CommandInterceptor = __webpack_require__(542);
 
 	var inherits = __webpack_require__(3);
 
 	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(416);
+	    forEach = __webpack_require__(415);
 
 	var LOW_PRIORITY = 250;
 
-	function BpmnReplacePreview(eventBus, elementRegistry, elementFactory, canvas, moveVisuals) {
+	function BpmnReplacePreview(eventBus, elementRegistry, elementFactory, canvas, previewSupport) {
 
 	  CommandInterceptor.call(this, eventBus);
 
@@ -76172,7 +78127,7 @@ var InfoxBpmnModeler =
 	      }
 
 	      // clone the gfx of the temporary shape and add it to the drag group
-	      var dragger = moveVisuals.addDragger(context, tempShape);
+	      var dragger = previewSupport.addDragger(tempShape, context.dragGroup);
 
 	      context.visualReplacements[id] = dragger;
 
@@ -76222,7 +78177,7 @@ var InfoxBpmnModeler =
 	  });
 	}
 
-	BpmnReplacePreview.$inject = [ 'eventBus', 'elementRegistry', 'elementFactory', 'canvas', 'moveVisuals' ];
+	BpmnReplacePreview.$inject = [ 'eventBus', 'elementRegistry', 'elementFactory', 'canvas', 'previewSupport' ];
 
 	inherits(BpmnReplacePreview, CommandInterceptor);
 
@@ -76230,12 +78185,1076 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 808 */
+/* 823 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __init__: [ 'snapping' ],
+	  snapping: [ 'type', __webpack_require__(824) ]
+	};
+
+/***/ },
+/* 824 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var abs = Math.abs;
+
+	var forEach = __webpack_require__(415),
+	    filter = __webpack_require__(383),
+	    assign = __webpack_require__(7);
+
+	var getBoundingBox = __webpack_require__(137).getBBox;
+
+	var is = __webpack_require__(443).is,
+	    isAny = __webpack_require__(575).isAny,
+	    isExpanded = __webpack_require__(442).isExpanded;
+
+	var Snapping = __webpack_require__(825),
+	    SnapUtil = __webpack_require__(826);
+
+	var asTRBL = __webpack_require__(516).asTRBL;
+
+	var round = Math.round;
+
+	var mid = SnapUtil.mid,
+	    topLeft = SnapUtil.topLeft,
+	    bottomRight = SnapUtil.bottomRight,
+	    isSnapped = SnapUtil.isSnapped,
+	    setSnapped = SnapUtil.setSnapped;
+
+	var getBoundaryAttachment = __webpack_require__(724).getBoundaryAttachment,
+	    getParticipantSizeConstraints = __webpack_require__(724).getParticipantSizeConstraints,
+	    getLanesRoot = __webpack_require__(602).getLanesRoot;
+
+	var HIGH_PRIORITY = 1500;
+
+
+	/**
+	 * BPMN specific snapping functionality
+	 *
+	 *  * snap on process elements if a pool is created inside a
+	 *    process diagram
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {Canvas} canvas
+	 */
+	function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
+
+	  // instantiate super
+	  Snapping.call(this, eventBus, canvas);
+
+
+	  /**
+	   * Drop participant on process <> process elements snapping
+	   */
+	  eventBus.on('create.start', function(event) {
+
+	    var context = event.context,
+	        shape = context.shape,
+	        rootElement = canvas.getRootElement();
+
+	    // snap participant around existing elements (if any)
+	    if (is(shape, 'bpmn:Participant') && is(rootElement, 'bpmn:Process')) {
+	      initParticipantSnapping(context, shape, rootElement.children);
+	    }
+	  });
+
+	  eventBus.on([ 'create.move', 'create.end' ], HIGH_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        shape = context.shape,
+	        participantSnapBox = context.participantSnapBox;
+
+	    if (!isSnapped(event) && participantSnapBox) {
+	      snapParticipant(participantSnapBox, shape, event);
+	    }
+	  });
+
+	  eventBus.on('shape.move.start', function(event) {
+
+	    var context = event.context,
+	        shape = context.shape,
+	        rootElement = canvas.getRootElement();
+
+	    // snap participant around existing elements (if any)
+	    if (is(shape, 'bpmn:Participant') && is(rootElement, 'bpmn:Process')) {
+	      initParticipantSnapping(context, shape, rootElement.children);
+	    }
+	  });
+
+
+	  function canAttach(shape, target, position) {
+	    return bpmnRules.canAttach([ shape ], target, null, position) === 'attach';
+	  }
+
+	  function canConnect(source, target) {
+	    return bpmnRules.canConnect(source, target);
+	  }
+
+	  /**
+	   * Snap boundary events to elements border
+	   */
+	  eventBus.on([
+	    'create.move',
+	    'create.end',
+	    'shape.move.move',
+	    'shape.move.end'
+	  ], HIGH_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        target = context.target,
+	        shape = context.shape;
+
+	    if (target && !isSnapped(event) && canAttach(shape, target, event)) {
+	      snapBoundaryEvent(event, shape, target);
+	    }
+	  });
+
+	  /**
+	   * Adjust parent for flowElements to the target participant
+	   * when droping onto lanes.
+	   */
+	  eventBus.on([
+	    'shape.move.hover',
+	    'shape.move.move',
+	    'shape.move.end',
+	    'create.hover',
+	    'create.move',
+	    'create.end'
+	  ], HIGH_PRIORITY, function(event) {
+	    var context = event.context,
+	        shape = context.shape,
+	        hover = event.hover;
+
+	    if (is(hover, 'bpmn:Lane') && !isAny(shape, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
+	      event.hover = getLanesRoot(hover);
+	      event.hoverGfx = elementRegistry.getGraphics(event.hover);
+	    }
+	  });
+
+	  /**
+	   * Snap sequence flows.
+	   */
+	  eventBus.on([
+	    'connect.move',
+	    'connect.hover',
+	    'connect.end'
+	  ], HIGH_PRIORITY, function(event) {
+	    var context = event.context,
+	        source = context.source,
+	        target = context.target;
+
+	    var connection = canConnect(source, target) || {};
+
+	    if (!context.initialSourcePosition) {
+	      context.initialSourcePosition = context.sourcePosition;
+	    }
+
+	    if (target && connection.type === 'bpmn:SequenceFlow') {
+
+	      // snap source
+	      context.sourcePosition = mid(source);
+
+	      // snap target
+	      assign(event, mid(target));
+	    } else {
+
+	      // otherwise reset source snap
+	      context.sourcePosition = context.initialSourcePosition;
+	    }
+
+	  });
+
+
+	  eventBus.on([
+	    'create.move',
+	    'shape.move.move'
+	  ], function(event) {
+
+	    var context = event.context,
+	        shape = context.shape,
+	        target = context.target;
+
+	    var threshold = 30;
+
+	    if (is(shape, 'bpmn:Lane')) {
+	      if (isAny(target, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
+
+	        var childLanes = filter(target.children, function(c) {
+	          return is(c, 'bpmn:Lane');
+	        });
+
+	        var y = event.y,
+	            targetTrbl;
+
+	        var insert = childLanes.reduce(function(insert, l) {
+
+	          var laneTrbl = asTRBL(l);
+
+	          if (abs(laneTrbl.top - y) < threshold) {
+	            insert = assign(insert || {}, { before: { element: l, y: laneTrbl.top } });
+	          } else
+	          if (abs(laneTrbl.bottom - y) < threshold) {
+	            insert = assign(insert || {}, { after: { element: l, y: laneTrbl.bottom } });
+	          } else
+	          if (laneTrbl.top < y && laneTrbl.bottom > y) {
+	            if (abs(laneTrbl.top - y) > abs(laneTrbl.bottom - y)) {
+	              insert = assign(insert || {}, { after: { element: l, y: laneTrbl.bottom } });
+	            } else {
+	              insert = assign(insert || {}, { before: { element: l, y: laneTrbl.top } });
+	            }
+
+	          }
+
+	          return insert;
+	        }, false);
+
+
+	        if (!insert) {
+	          targetTrbl = asTRBL(target);
+
+	          if (abs(targetTrbl.top - y) < threshold) {
+	            insert = { before: { element: target, y: targetTrbl.top } };
+	          } else
+	          if (abs(targetTrbl.bottom - y) < threshold) {
+	            insert = { after: { element: target, y: targetTrbl.bottom } };
+	          } else {
+	            insert = { into: { element: target, y: (targetTrbl.top + targetTrbl.bottom) / 2 } };
+	          }
+
+	        }
+
+	        if (insert.before && insert.after) {
+	          console.log('insert between', insert.before.element.id, 'and', insert.after.element.id);
+	          setSnapped(event, 'x', insert.before.element.x + insert.before.element.width / 2);
+	          setSnapped(event, 'y', insert.before.y);
+	        } else
+	        if (insert.after) {
+	          console.log('insert after', insert.after.element.id);
+	          setSnapped(event, 'x', insert.after.element.x + insert.after.element.width / 2);
+	          setSnapped(event, 'y', insert.after.y);
+	        } else
+	        if (insert.before) {
+	          console.log('insert before', insert.before.element.id);
+	          setSnapped(event, 'x', insert.before.element.x + insert.before.element.width / 2);
+	          setSnapped(event, 'y', insert.before.y);
+	        } else
+	        if (insert.into) {
+	          console.log('insert into', insert.into.element.id);
+	          setSnapped(event, 'x', insert.into.element.x + insert.into.element.width / 2);
+	          setSnapped(event, 'y', insert.into.y);
+	        }
+	      }
+	    }
+
+	  });
+
+	  eventBus.on('resize.start', HIGH_PRIORITY, function(event) {
+	    var context = event.context,
+	        shape = context.shape;
+
+	    if (is(shape, 'bpmn:SubProcess') && isExpanded(shape)) {
+	      context.minDimensions = { width: 140, height: 120 };
+	    }
+
+	    if (is(shape, 'bpmn:Participant')) {
+	      context.minDimensions = { width: 300, height: 150 };
+	    }
+
+	    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
+	      context.resizeConstraints = getParticipantSizeConstraints(shape, context.direction, context.balanced);
+	    }
+
+	    if (is(shape, 'bpmn:TextAnnotation')) {
+	      context.minDimensions = { width: 50, height: 30 };
+	    }
+	  });
+
+	}
+
+	inherits(BpmnSnapping, Snapping);
+
+	BpmnSnapping.$inject = [ 'eventBus', 'canvas', 'bpmnRules', 'elementRegistry' ];
+
+	module.exports = BpmnSnapping;
+
+
+	BpmnSnapping.prototype.initSnap = function(event) {
+
+	  var context = event.context,
+	      shape = event.shape,
+	      shapeMid,
+	      shapeBounds,
+	      shapeTopLeft,
+	      shapeBottomRight,
+	      snapContext;
+
+
+	  snapContext = Snapping.prototype.initSnap.call(this, event);
+
+	  if (is(shape, 'bpmn:Participant')) {
+	    // assign higher priority for outer snaps on participants
+	    snapContext.setSnapLocations([ 'top-left', 'bottom-right', 'mid' ]);
+	  }
+
+
+	  if (shape) {
+
+	    shapeMid = mid(shape, event);
+
+	    shapeBounds = {
+	      width: shape.width,
+	      height: shape.height,
+	      x: isNaN(shape.x) ? round(shapeMid.x - shape.width / 2) : shape.x,
+	      y: isNaN(shape.y) ? round(shapeMid.y - shape.height / 2) : shape.y
+	    };
+
+	    shapeTopLeft = topLeft(shapeBounds);
+	    shapeBottomRight = bottomRight(shapeBounds);
+
+	    snapContext.setSnapOrigin('top-left', {
+	      x: shapeTopLeft.x - event.x,
+	      y: shapeTopLeft.y - event.y
+	    });
+
+	    snapContext.setSnapOrigin('bottom-right', {
+	      x: shapeBottomRight.x - event.x,
+	      y: shapeBottomRight.y - event.y
+	    });
+
+	    forEach(shape.outgoing, function(c) {
+	      var docking = c.waypoints[0];
+
+	      docking = docking.original || docking;
+
+	      snapContext.setSnapOrigin(c.id + '-docking', {
+	        x: docking.x - event.x,
+	        y: docking.y - event.y
+	      });
+	    });
+
+	    forEach(shape.incoming, function(c) {
+	      var docking = c.waypoints[c.waypoints.length - 1];
+
+	      docking = docking.original || docking;
+
+	      snapContext.setSnapOrigin(c.id + '-docking', {
+	        x: docking.x - event.x,
+	        y: docking.y - event.y
+	      });
+	    });
+
+	  }
+
+	  var source = context.source;
+
+	  if (source) {
+	    snapContext.addDefaultSnap('mid', mid(source));
+	  }
+	};
+
+
+	BpmnSnapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
+
+	  // use target parent as snap target
+	  if (is(shape, 'bpmn:BoundaryEvent') && shape.type !== 'label') {
+	    target = target.parent;
+	  }
+
+	  // add sequence flow parents as snap targets
+	  if (is(target, 'bpmn:SequenceFlow')) {
+	    this.addTargetSnaps(snapPoints, shape, target.parent);
+	  }
+
+	  var siblings = this.getSiblings(shape, target) || [];
+
+	  forEach(siblings, function(s) {
+
+	    // do not snap to lanes
+	    if (is(s, 'bpmn:Lane')) {
+	      return;
+	    }
+
+	    snapPoints.add('mid', mid(s));
+
+	    if (is(s, 'bpmn:Participant')) {
+	      snapPoints.add('top-left', topLeft(s));
+	      snapPoints.add('bottom-right', bottomRight(s));
+	    }
+	  });
+
+
+	  forEach(shape.incoming, function(c) {
+
+	    if (siblings.indexOf(c.source) === -1) {
+	      snapPoints.add('mid', mid(c.source));
+	    }
+
+	    var docking = c.waypoints[0];
+	    snapPoints.add(c.id + '-docking', docking.original || docking);
+	  });
+
+
+	  forEach(shape.outgoing, function(c) {
+
+	    if (siblings.indexOf(c.target) === -1) {
+	      snapPoints.add('mid', mid(c.target));
+	    }
+
+	    var docking = c.waypoints[c.waypoints.length - 1];
+	    snapPoints.add(c.id + '-docking', docking.original || docking);
+	  });
+	};
+
+
+	/////// participant snapping //////////////////
+
+	function initParticipantSnapping(context, shape, elements) {
+
+	  if (!elements.length) {
+	    return;
+	  }
+
+	  var snapBox = getBoundingBox(elements.filter(function(e) {
+	    return !e.labelTarget && !e.waypoints;
+	  }));
+
+	  snapBox.x -= 50;
+	  snapBox.y -= 20;
+	  snapBox.width += 70;
+	  snapBox.height += 40;
+
+	  // adjust shape height to include bounding box
+	  shape.width = Math.max(shape.width, snapBox.width);
+	  shape.height = Math.max(shape.height, snapBox.height);
+
+	  context.participantSnapBox = snapBox;
+	}
+
+	function snapParticipant(snapBox, shape, event, offset) {
+	  offset = offset || 0;
+
+	  var shapeHalfWidth = shape.width / 2 - offset,
+	      shapeHalfHeight = shape.height / 2;
+
+	  var currentTopLeft = {
+	    x: event.x - shapeHalfWidth - offset,
+	    y: event.y - shapeHalfHeight
+	  };
+
+	  var currentBottomRight = {
+	    x: event.x + shapeHalfWidth + offset,
+	    y: event.y + shapeHalfHeight
+	  };
+
+	  var snapTopLeft = snapBox,
+	      snapBottomRight = bottomRight(snapBox);
+
+	  if (currentTopLeft.x >= snapTopLeft.x) {
+	    setSnapped(event, 'x', snapTopLeft.x + offset + shapeHalfWidth);
+	  } else
+	  if (currentBottomRight.x <= snapBottomRight.x) {
+	    setSnapped(event, 'x', snapBottomRight.x - offset - shapeHalfWidth);
+	  }
+
+	  if (currentTopLeft.y >= snapTopLeft.y) {
+	    setSnapped(event, 'y', snapTopLeft.y + shapeHalfHeight);
+	  } else
+	  if (currentBottomRight.y <= snapBottomRight.y) {
+	    setSnapped(event, 'y', snapBottomRight.y - shapeHalfHeight);
+	  }
+	}
+
+
+	/////// boundary event snapping /////////////////////////
+
+
+	function snapBoundaryEvent(event, shape, target) {
+	  var targetTRBL = asTRBL(target);
+
+	  var direction = getBoundaryAttachment(event, target);
+
+	  if (/top/.test(direction)) {
+	    setSnapped(event, 'y', targetTRBL.top);
+	  } else
+	  if (/bottom/.test(direction)) {
+	    setSnapped(event, 'y', targetTRBL.bottom);
+	  }
+
+	  if (/left/.test(direction)) {
+	    setSnapped(event, 'x', targetTRBL.left);
+	  } else
+	  if (/right/.test(direction)) {
+	    setSnapped(event, 'x', targetTRBL.right);
+	  }
+	}
+
+
+/***/ },
+/* 825 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var filter = __webpack_require__(475),
+	    forEach = __webpack_require__(128),
+	    debounce = __webpack_require__(134);
+
+
+	var mid = __webpack_require__(826).mid;
+
+	var SnapContext = __webpack_require__(827);
+
+	var SnapUtil = __webpack_require__(826);
+
+	var HIGHER_PRIORITY = 1250;
+
+	var isSnapped = SnapUtil.isSnapped,
+	    setSnapped = SnapUtil.setSnapped;
+
+
+	/**
+	 * A general purpose snapping component for diagram elements.
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {Canvas} canvas
+	 */
+	function Snapping(eventBus, canvas) {
+
+	  this._canvas = canvas;
+
+	  var self = this;
+
+	  eventBus.on([ 'shape.move.start', 'create.start' ], function(event) {
+	    self.initSnap(event);
+	  });
+
+	  eventBus.on([ 'shape.move.move', 'shape.move.end', 'create.move', 'create.end' ], HIGHER_PRIORITY, function(event) {
+
+	    if (event.originalEvent && event.originalEvent.ctrlKey) {
+	      return;
+	    }
+
+	    if (isSnapped(event)) {
+	      return;
+	    }
+
+	    self.snap(event);
+	  });
+
+	  eventBus.on([ 'shape.move.cleanup', 'create.cleanup' ], function(event) {
+	    self.hide();
+	  });
+
+	  // delay hide by 1000 seconds since last match
+	  this._asyncHide = debounce(this.hide, 1000);
+	}
+
+	Snapping.$inject = [ 'eventBus', 'canvas' ];
+
+	module.exports = Snapping;
+
+
+	Snapping.prototype.initSnap = function(event) {
+
+	  var context = event.context,
+	      shape = context.shape,
+	      snapContext = context.snapContext;
+
+	  if (!snapContext) {
+	    snapContext = context.snapContext = new SnapContext();
+	  }
+
+	  var snapMid = mid(shape, event);
+
+	  snapContext.setSnapOrigin('mid', {
+	    x: snapMid.x - event.x,
+	    y: snapMid.y - event.y
+	  });
+
+	  return snapContext;
+	};
+
+
+	Snapping.prototype.snap = function(event) {
+
+	  var context = event.context,
+	      snapContext = context.snapContext,
+	      shape = context.shape,
+	      target = context.target,
+	      snapLocations = snapContext.getSnapLocations();
+
+	  if (!target) {
+	    return;
+	  }
+
+	  var snapPoints = snapContext.pointsForTarget(target);
+
+	  if (!snapPoints.initialized) {
+	    this.addTargetSnaps(snapPoints, shape, target);
+
+	    snapPoints.initialized = true;
+	  }
+
+
+	  var snapping = {
+	    x: isSnapped(event, 'x'),
+	    y: isSnapped(event, 'y')
+	  };
+
+
+	  forEach(snapLocations, function(location) {
+
+	    var snapOrigin = snapContext.getSnapOrigin(location);
+
+	    var snapCurrent = {
+	      x: event.x + snapOrigin.x,
+	      y: event.y + snapOrigin.y
+	    };
+
+	    // snap on both axis, if not snapped already
+	    forEach([ 'x', 'y' ], function(axis) {
+	      var locationSnapping;
+
+	      if (!snapping[axis]) {
+	        locationSnapping = snapPoints.snap(snapCurrent, location, axis, 7);
+
+	        if (locationSnapping !== undefined) {
+	          snapping[axis] = {
+	            value: locationSnapping,
+	            originValue: locationSnapping - snapOrigin[axis]
+	          };
+	        }
+	      }
+	    });
+
+	    // no more need to snap, drop out of interation
+	    if (snapping.x && snapping.y) {
+	      return false;
+	    }
+	  });
+
+
+	  // show snap visuals
+
+	  this.showSnapLine('vertical', snapping.x && snapping.x.value);
+	  this.showSnapLine('horizontal', snapping.y && snapping.y.value);
+
+
+	  // adjust event { x, y, dx, dy } and mark as snapping
+	  forEach([ 'x', 'y' ], function(axis) {
+
+	    var axisSnapping = snapping[axis];
+
+	    if (typeof axisSnapping === 'object') {
+	      // set as snapped and adjust the x and/or y position of the event
+	      setSnapped(event, axis, axisSnapping.originValue);
+	    }
+	  });
+	};
+
+
+	Snapping.prototype._createLine = function(orientation) {
+
+	  var root = this._canvas.getLayer('snap');
+
+	  var line = root.path('M0,0 L0,0').addClass('djs-snap-line');
+
+	  return {
+	    update: function(position) {
+
+	      if (typeof position !== 'number') {
+	        line.attr({ display: 'none' });
+	      } else {
+	        if (orientation === 'horizontal') {
+	          line.attr({
+	            path: 'M-100000,' + position + ' L+100000,' + position,
+	            display: ''
+	          });
+	        } else {
+	          line.attr({
+	            path: 'M ' + position + ',-100000 L ' + position + ', +100000',
+	            display: ''
+	          });
+	        }
+	      }
+	    }
+	  };
+	};
+
+
+	Snapping.prototype._createSnapLines = function() {
+
+	  this._snapLines = {
+	    horizontal: this._createLine('horizontal'),
+	    vertical: this._createLine('vertical')
+	  };
+	};
+
+	Snapping.prototype.showSnapLine = function(orientation, position) {
+
+	  var line = this.getSnapLine(orientation);
+
+	  if (line) {
+	    line.update(position);
+	  }
+
+	  this._asyncHide();
+	};
+
+	Snapping.prototype.getSnapLine = function(orientation) {
+	  if (!this._snapLines) {
+	    this._createSnapLines();
+	  }
+
+	  return this._snapLines[orientation];
+	};
+
+	Snapping.prototype.hide = function() {
+	  forEach(this._snapLines, function(l) {
+	    l.update();
+	  });
+	};
+
+	Snapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
+
+	  var siblings = this.getSiblings(shape, target);
+
+	  forEach(siblings, function(s) {
+	    snapPoints.add('mid', mid(s));
+	  });
+
+	};
+
+	Snapping.prototype.getSiblings = function(element, target) {
+
+	  // snap to all non connection siblings
+	  return target && filter(target.children, function(e) {
+	    return !e.hidden && !e.labelTarget && !e.waypoints && e.host !== element && e !== element;
+	  });
+	};
+
+/***/ },
+/* 826 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var abs = Math.abs,
+	    round = Math.round;
+
+
+	/**
+	 * Snap value to a collection of reference values.
+	 *
+	 * @param  {Number} value
+	 * @param  {Array<Number>} values
+	 * @param  {Number} [tolerance=10]
+	 *
+	 * @return {Number} the value we snapped to or null, if none snapped
+	 */
+	function snapTo(value, values, tolerance) {
+	  tolerance = tolerance === undefined ? 10 : tolerance;
+
+	  var idx, snapValue;
+
+	  for (idx = 0; idx < values.length; idx++) {
+	    snapValue = values[idx];
+
+	    if (abs(snapValue - value) <= tolerance) {
+	      return snapValue;
+	    }
+	  }
+	}
+
+	module.exports.snapTo = snapTo;
+
+
+	function topLeft(bounds) {
+	  return {
+	    x: bounds.x,
+	    y: bounds.y
+	  };
+	}
+
+	module.exports.topLeft = topLeft;
+
+
+	function mid(bounds, defaultValue) {
+
+	  if (!bounds || isNaN(bounds.x) || isNaN(bounds.y)) {
+	    return defaultValue;
+	  }
+
+	  return {
+	    x: round(bounds.x + bounds.width / 2),
+	    y: round(bounds.y + bounds.height / 2)
+	  };
+	}
+
+	module.exports.mid = mid;
+
+
+	function bottomRight(bounds) {
+	  return {
+	    x: bounds.x + bounds.width,
+	    y: bounds.y + bounds.height
+	  };
+	}
+
+	module.exports.bottomRight = bottomRight;
+
+
+	/**
+	 * Retrieve the snap state of the given event.
+	 *
+	 * @param  {Event} event
+	 * @param  {String} axis
+	 *
+	 * @return {Boolean} the snapped state
+	 *
+	 */
+	module.exports.isSnapped = function(event, axis) {
+	  var snapped = event.snapped;
+
+	  if (!snapped) {
+	    return false;
+	  }
+
+	  if (typeof axis === 'string') {
+	    return snapped[axis];
+	  }
+
+	  return snapped.x && snapped.y;
+	};
+
+	/**
+	 * Set the given event as snapped.
+	 *
+	 * This method may change the x and/or y position of the shape
+	 * from the given event!
+	 *
+	 * @param {Event} event
+	 * @param {String} axis
+	 * @param {Number|Boolean} value
+	 *
+	 * @return {Number} old value
+	 */
+	module.exports.setSnapped = function(event, axis, value) {
+	  if (typeof axis !== 'string') {
+	    throw new Error('axis must be in [x, y]');
+	  }
+
+	  if (typeof value !== 'number' && value !== false) {
+	    throw new Error('value must be Number or false');
+	  }
+
+	  var delta,
+	      previousValue = event[axis];
+
+	  var snapped = event.snapped = (event.snapped || {});
+
+
+	  if (value === false) {
+	    snapped[axis] = false;
+	  } else {
+	    snapped[axis] = true;
+
+	    delta = value - previousValue;
+
+	    event[axis] += delta;
+	    event['d' + axis] += delta;
+	  }
+
+	  return previousValue;
+	};
+
+/***/ },
+/* 827 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var forEach = __webpack_require__(128);
+
+	var snapTo = __webpack_require__(826).snapTo;
+
+
+	/**
+	 * A snap context, containing the (possibly incomplete)
+	 * mappings of drop targets (to identify the snapping)
+	 * to computed snap points.
+	 */
+	function SnapContext() {
+
+	  /**
+	   * Map<String, SnapPoints> mapping drop targets to
+	   * a list of possible snappings.
+	   *
+	   * @type {Object}
+	   */
+	  this._targets = {};
+
+	  /**
+	   * Map<String, Point> initial positioning of element
+	   * regarding various snap directions.
+	   *
+	   * @type {Object}
+	   */
+	  this._snapOrigins = {};
+
+	  /**
+	   * List of snap locations
+	   *
+	   * @type {Array<String>}
+	   */
+	  this._snapLocations = [];
+
+	  /**
+	   * Map<String, Array<Point>> of default snapping locations
+	   *
+	   * @type {Object}
+	   */
+	  this._defaultSnaps = {};
+	}
+
+
+	SnapContext.prototype.getSnapOrigin = function(snapLocation) {
+	  return this._snapOrigins[snapLocation];
+	};
+
+
+	SnapContext.prototype.setSnapOrigin = function(snapLocation, initialValue) {
+	  this._snapOrigins[snapLocation] = initialValue;
+
+	  if (this._snapLocations.indexOf(snapLocation) === -1) {
+	    this._snapLocations.push(snapLocation);
+	  }
+	};
+
+
+	SnapContext.prototype.addDefaultSnap = function(type, point) {
+
+	  var snapValues = this._defaultSnaps[type];
+
+	  if (!snapValues) {
+	    snapValues = this._defaultSnaps[type] = [];
+	  }
+
+	  snapValues.push(point);
+	};
+
+	/**
+	 * Return a number of initialized snaps, i.e. snap locations such as
+	 * top-left, mid, bottom-right and so forth.
+	 *
+	 * @return {Array<String>} snapLocations
+	 */
+	SnapContext.prototype.getSnapLocations = function() {
+	  return this._snapLocations;
+	};
+
+	/**
+	 * Set the snap locations for this context.
+	 *
+	 * The order of locations determines precedence.
+	 *
+	 * @param {Array<String>} snapLocations
+	 */
+	SnapContext.prototype.setSnapLocations = function(snapLocations) {
+	  this._snapLocations = snapLocations;
+	};
+
+	/**
+	 * Get snap points for a given target
+	 *
+	 * @param {Element|String} target
+	 */
+	SnapContext.prototype.pointsForTarget = function(target) {
+
+	  var targetId = target.id || target;
+
+	  var snapPoints = this._targets[targetId];
+
+	  if (!snapPoints) {
+	    snapPoints = this._targets[targetId] = new SnapPoints();
+	    snapPoints.initDefaults(this._defaultSnaps);
+	  }
+
+	  return snapPoints;
+	};
+
+	module.exports = SnapContext;
+
+
+	/**
+	 * Creates the snap points and initializes them with the
+	 * given default values.
+	 *
+	 * @param {Object<String, Array<Point>>} [defaultPoints]
+	 */
+	function SnapPoints(defaultSnaps) {
+
+	  /**
+	   * Map<String, Map<(x|y), Array<Number>>> mapping snap locations,
+	   * i.e. top-left, bottom-right, center to actual snap values.
+	   *
+	   * @type {Object}
+	   */
+	  this._snapValues = {};
+	}
+
+	SnapPoints.prototype.add = function(snapLocation, point) {
+
+	  var snapValues = this._snapValues[snapLocation];
+
+	  if (!snapValues) {
+	    snapValues = this._snapValues[snapLocation] = { x: [], y: [] };
+	  }
+
+	  if (snapValues.x.indexOf(point.x) === -1) {
+	    snapValues.x.push(point.x);
+	  }
+
+	  if (snapValues.y.indexOf(point.y) === -1) {
+	    snapValues.y.push(point.y);
+	  }
+	};
+
+
+	SnapPoints.prototype.snap = function(point, snapLocation, axis, tolerance) {
+	  var snappingValues = this._snapValues[snapLocation];
+	  
+	  return snappingValues && snapTo(point[axis], snappingValues[axis], tolerance);
+	};
+
+	/**
+	 * Initialize a number of default snapping points.
+	 *
+	 * @param  {Object} defaultSnaps
+	 */
+	SnapPoints.prototype.initDefaults = function(defaultSnaps) {
+
+	  var self = this;
+
+	  forEach(defaultSnaps || {}, function(snapPoints, snapLocation) {
+	    forEach(snapPoints, function(point) {
+	      self.add(snapLocation, point);
+	    });
+	  });
+	};
+
+/***/ },
+/* 828 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var PaletteProvider = __webpack_require__(805);
-	var assign = __webpack_require__(809);
+	var PaletteProvider = __webpack_require__(820);
+	var assign = __webpack_require__(829);
 
 	function InfoxPaletteProvider(palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate) {
 	    PaletteProvider.call(this, palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate);
@@ -76290,15 +79309,15 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 809 */
+/* 829 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(810),
-	    copyObject = __webpack_require__(812),
-	    createAssigner = __webpack_require__(813),
-	    isArrayLike = __webpack_require__(815),
-	    isPrototype = __webpack_require__(829),
-	    keys = __webpack_require__(830);
+	var assignValue = __webpack_require__(830),
+	    copyObject = __webpack_require__(832),
+	    createAssigner = __webpack_require__(833),
+	    isArrayLike = __webpack_require__(837),
+	    isPrototype = __webpack_require__(842),
+	    keys = __webpack_require__(843);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -76331,18 +79350,18 @@ var InfoxBpmnModeler =
 	 * @example
 	 *
 	 * function Foo() {
-	 *   this.c = 3;
+	 *   this.a = 1;
 	 * }
 	 *
 	 * function Bar() {
-	 *   this.e = 5;
+	 *   this.c = 3;
 	 * }
 	 *
-	 * Foo.prototype.d = 4;
-	 * Bar.prototype.f = 6;
+	 * Foo.prototype.b = 2;
+	 * Bar.prototype.d = 4;
 	 *
-	 * _.assign({ 'a': 1 }, new Foo, new Bar);
-	 * // => { 'a': 1, 'c': 3, 'e': 5 }
+	 * _.assign({ 'a': 0 }, new Foo, new Bar);
+	 * // => { 'a': 1, 'c': 3 }
 	 */
 	var assign = createAssigner(function(object, source) {
 	  if (nonEnumShadows || isPrototype(source) || isArrayLike(source)) {
@@ -76360,10 +79379,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 810 */
+/* 830 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(811);
+	var eq = __webpack_require__(831);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -76373,7 +79392,7 @@ var InfoxBpmnModeler =
 
 	/**
 	 * Assigns `value` to `key` of `object` if the existing value is not equivalent
-	 * using [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
+	 * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
 	 * for equality comparisons.
 	 *
 	 * @private
@@ -76393,12 +79412,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 811 */
+/* 831 */
 /***/ function(module, exports) {
 
 	/**
 	 * Performs a
-	 * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
+	 * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
 	 * comparison between two values to determine if they are equivalent.
 	 *
 	 * @static
@@ -76410,8 +79429,8 @@ var InfoxBpmnModeler =
 	 * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
 	 * @example
 	 *
-	 * var object = { 'user': 'fred' };
-	 * var other = { 'user': 'fred' };
+	 * var object = { 'a': 1 };
+	 * var other = { 'a': 1 };
 	 *
 	 * _.eq(object, object);
 	 * // => true
@@ -76436,10 +79455,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 812 */
+/* 832 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(810);
+	var assignValue = __webpack_require__(830);
 
 	/**
 	 * Copies properties of `source` to `object`.
@@ -76462,9 +79481,9 @@ var InfoxBpmnModeler =
 
 	    var newValue = customizer
 	      ? customizer(object[key], source[key], key, object, source)
-	      : source[key];
+	      : undefined;
 
-	    assignValue(object, key, newValue);
+	    assignValue(object, key, newValue === undefined ? source[key] : newValue);
 	  }
 	  return object;
 	}
@@ -76473,11 +79492,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 813 */
+/* 833 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isIterateeCall = __webpack_require__(814),
-	    rest = __webpack_require__(822);
+	var baseRest = __webpack_require__(834),
+	    isIterateeCall = __webpack_require__(836);
 
 	/**
 	 * Creates a function like `_.assign`.
@@ -76487,7 +79506,7 @@ var InfoxBpmnModeler =
 	 * @returns {Function} Returns the new assigner function.
 	 */
 	function createAssigner(assigner) {
-	  return rest(function(object, sources) {
+	  return baseRest(function(object, sources) {
 	    var index = -1,
 	        length = sources.length,
 	        customizer = length > 1 ? sources[length - 1] : undefined,
@@ -76516,13 +79535,81 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 814 */
+/* 834 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(811),
-	    isArrayLike = __webpack_require__(815),
-	    isIndex = __webpack_require__(821),
-	    isObject = __webpack_require__(819);
+	var apply = __webpack_require__(835);
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * The base implementation of `_.rest` which doesn't validate or coerce arguments.
+	 *
+	 * @private
+	 * @param {Function} func The function to apply a rest parameter to.
+	 * @param {number} [start=func.length-1] The start position of the rest parameter.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseRest(func, start) {
+	  start = nativeMax(start === undefined ? (func.length - 1) : start, 0);
+	  return function() {
+	    var args = arguments,
+	        index = -1,
+	        length = nativeMax(args.length - start, 0),
+	        array = Array(length);
+
+	    while (++index < length) {
+	      array[index] = args[start + index];
+	    }
+	    index = -1;
+	    var otherArgs = Array(start + 1);
+	    while (++index < start) {
+	      otherArgs[index] = args[index];
+	    }
+	    otherArgs[start] = array;
+	    return apply(func, this, otherArgs);
+	  };
+	}
+
+	module.exports = baseRest;
+
+
+/***/ },
+/* 835 */
+/***/ function(module, exports) {
+
+	/**
+	 * A faster alternative to `Function#apply`, this function invokes `func`
+	 * with the `this` binding of `thisArg` and the arguments of `args`.
+	 *
+	 * @private
+	 * @param {Function} func The function to invoke.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {Array} args The arguments to invoke `func` with.
+	 * @returns {*} Returns the result of `func`.
+	 */
+	function apply(func, thisArg, args) {
+	  switch (args.length) {
+	    case 0: return func.call(thisArg);
+	    case 1: return func.call(thisArg, args[0]);
+	    case 2: return func.call(thisArg, args[0], args[1]);
+	    case 3: return func.call(thisArg, args[0], args[1], args[2]);
+	  }
+	  return func.apply(thisArg, args);
+	}
+
+	module.exports = apply;
+
+
+/***/ },
+/* 836 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var eq = __webpack_require__(831),
+	    isArrayLike = __webpack_require__(837),
+	    isIndex = __webpack_require__(841),
+	    isObject = __webpack_require__(839);
 
 	/**
 	 * Checks if the given arguments are from an iteratee call.
@@ -76552,12 +79639,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 815 */
+/* 837 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(816),
-	    isFunction = __webpack_require__(818),
-	    isLength = __webpack_require__(820);
+	var isFunction = __webpack_require__(838),
+	    isLength = __webpack_require__(840);
 
 	/**
 	 * Checks if `value` is array-like. A value is considered array-like if it's
@@ -76585,59 +79671,17 @@ var InfoxBpmnModeler =
 	 * // => false
 	 */
 	function isArrayLike(value) {
-	  return value != null && isLength(getLength(value)) && !isFunction(value);
+	  return value != null && isLength(value.length) && !isFunction(value);
 	}
 
 	module.exports = isArrayLike;
 
 
 /***/ },
-/* 816 */
+/* 838 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(817);
-
-	/**
-	 * Gets the "length" property value of `object`.
-	 *
-	 * **Note:** This function is used to avoid a
-	 * [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792) that affects
-	 * Safari on at least iOS 8.1-8.3 ARM64.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {*} Returns the "length" value.
-	 */
-	var getLength = baseProperty('length');
-
-	module.exports = getLength;
-
-
-/***/ },
-/* 817 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.property` without support for deep paths.
-	 *
-	 * @private
-	 * @param {string} key The key of the property to get.
-	 * @returns {Function} Returns the new accessor function.
-	 */
-	function baseProperty(key) {
-	  return function(object) {
-	    return object == null ? undefined : object[key];
-	  };
-	}
-
-	module.exports = baseProperty;
-
-
-/***/ },
-/* 818 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(819);
+	var isObject = __webpack_require__(839);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]',
@@ -76648,7 +79692,7 @@ var InfoxBpmnModeler =
 
 	/**
 	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
 	var objectToString = objectProto.toString;
@@ -76661,8 +79705,7 @@ var InfoxBpmnModeler =
 	 * @since 0.1.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is a function, else `false`.
 	 * @example
 	 *
 	 * _.isFunction(_);
@@ -76673,8 +79716,7 @@ var InfoxBpmnModeler =
 	 */
 	function isFunction(value) {
 	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in Safari 8 which returns 'object' for typed array and weak map constructors,
-	  // and PhantomJS 1.9 which returns 'function' for `NodeList` instances.
+	  // in Safari 8-9 which returns 'object' for typed array and other constructors.
 	  var tag = isObject(value) ? objectToString.call(value) : '';
 	  return tag == funcTag || tag == genTag;
 	}
@@ -76683,12 +79725,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 819 */
+/* 839 */
 /***/ function(module, exports) {
 
 	/**
 	 * Checks if `value` is the
-	 * [language type](http://www.ecma-international.org/ecma-262/6.0/#sec-ecmascript-language-types)
+	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
 	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
 	 *
 	 * @static
@@ -76720,7 +79762,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 820 */
+/* 840 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -76729,16 +79771,15 @@ var InfoxBpmnModeler =
 	/**
 	 * Checks if `value` is a valid array-like length.
 	 *
-	 * **Note:** This function is loosely based on
-	 * [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 * **Note:** This method is loosely based on
+	 * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
 	 *
 	 * @static
 	 * @memberOf _
 	 * @since 4.0.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a valid length,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
 	 * @example
 	 *
 	 * _.isLength(3);
@@ -76762,7 +79803,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 821 */
+/* 841 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -76790,348 +79831,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 822 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var apply = __webpack_require__(823),
-	    toInteger = __webpack_require__(824);
-
-	/** Used as the `TypeError` message for "Functions" methods. */
-	var FUNC_ERROR_TEXT = 'Expected a function';
-
-	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Creates a function that invokes `func` with the `this` binding of the
-	 * created function and arguments from `start` and beyond provided as
-	 * an array.
-	 *
-	 * **Note:** This method is based on the
-	 * [rest parameter](https://mdn.io/rest_parameters).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Function
-	 * @param {Function} func The function to apply a rest parameter to.
-	 * @param {number} [start=func.length-1] The start position of the rest parameter.
-	 * @returns {Function} Returns the new function.
-	 * @example
-	 *
-	 * var say = _.rest(function(what, names) {
-	 *   return what + ' ' + _.initial(names).join(', ') +
-	 *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
-	 * });
-	 *
-	 * say('hello', 'fred', 'barney', 'pebbles');
-	 * // => 'hello fred, barney, & pebbles'
-	 */
-	function rest(func, start) {
-	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT);
-	  }
-	  start = nativeMax(start === undefined ? (func.length - 1) : toInteger(start), 0);
-	  return function() {
-	    var args = arguments,
-	        index = -1,
-	        length = nativeMax(args.length - start, 0),
-	        array = Array(length);
-
-	    while (++index < length) {
-	      array[index] = args[start + index];
-	    }
-	    switch (start) {
-	      case 0: return func.call(this, array);
-	      case 1: return func.call(this, args[0], array);
-	      case 2: return func.call(this, args[0], args[1], array);
-	    }
-	    var otherArgs = Array(start + 1);
-	    index = -1;
-	    while (++index < start) {
-	      otherArgs[index] = args[index];
-	    }
-	    otherArgs[start] = array;
-	    return apply(func, this, otherArgs);
-	  };
-	}
-
-	module.exports = rest;
-
-
-/***/ },
-/* 823 */
-/***/ function(module, exports) {
-
-	/**
-	 * A faster alternative to `Function#apply`, this function invokes `func`
-	 * with the `this` binding of `thisArg` and the arguments of `args`.
-	 *
-	 * @private
-	 * @param {Function} func The function to invoke.
-	 * @param {*} thisArg The `this` binding of `func`.
-	 * @param {Array} args The arguments to invoke `func` with.
-	 * @returns {*} Returns the result of `func`.
-	 */
-	function apply(func, thisArg, args) {
-	  var length = args.length;
-	  switch (length) {
-	    case 0: return func.call(thisArg);
-	    case 1: return func.call(thisArg, args[0]);
-	    case 2: return func.call(thisArg, args[0], args[1]);
-	    case 3: return func.call(thisArg, args[0], args[1], args[2]);
-	  }
-	  return func.apply(thisArg, args);
-	}
-
-	module.exports = apply;
-
-
-/***/ },
-/* 824 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var toFinite = __webpack_require__(825);
-
-	/**
-	 * Converts `value` to an integer.
-	 *
-	 * **Note:** This method is loosely based on
-	 * [`ToInteger`](http://www.ecma-international.org/ecma-262/6.0/#sec-tointeger).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to convert.
-	 * @returns {number} Returns the converted integer.
-	 * @example
-	 *
-	 * _.toInteger(3.2);
-	 * // => 3
-	 *
-	 * _.toInteger(Number.MIN_VALUE);
-	 * // => 0
-	 *
-	 * _.toInteger(Infinity);
-	 * // => 1.7976931348623157e+308
-	 *
-	 * _.toInteger('3.2');
-	 * // => 3
-	 */
-	function toInteger(value) {
-	  var result = toFinite(value),
-	      remainder = result % 1;
-
-	  return result === result ? (remainder ? result - remainder : result) : 0;
-	}
-
-	module.exports = toInteger;
-
-
-/***/ },
-/* 825 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var toNumber = __webpack_require__(826);
-
-	/** Used as references for various `Number` constants. */
-	var INFINITY = 1 / 0,
-	    MAX_INTEGER = 1.7976931348623157e+308;
-
-	/**
-	 * Converts `value` to a finite number.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.12.0
-	 * @category Lang
-	 * @param {*} value The value to convert.
-	 * @returns {number} Returns the converted number.
-	 * @example
-	 *
-	 * _.toFinite(3.2);
-	 * // => 3.2
-	 *
-	 * _.toFinite(Number.MIN_VALUE);
-	 * // => 5e-324
-	 *
-	 * _.toFinite(Infinity);
-	 * // => 1.7976931348623157e+308
-	 *
-	 * _.toFinite('3.2');
-	 * // => 3.2
-	 */
-	function toFinite(value) {
-	  if (!value) {
-	    return value === 0 ? value : 0;
-	  }
-	  value = toNumber(value);
-	  if (value === INFINITY || value === -INFINITY) {
-	    var sign = (value < 0 ? -1 : 1);
-	    return sign * MAX_INTEGER;
-	  }
-	  return value === value ? value : 0;
-	}
-
-	module.exports = toFinite;
-
-
-/***/ },
-/* 826 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isFunction = __webpack_require__(818),
-	    isObject = __webpack_require__(819),
-	    isSymbol = __webpack_require__(827);
-
-	/** Used as references for various `Number` constants. */
-	var NAN = 0 / 0;
-
-	/** Used to match leading and trailing whitespace. */
-	var reTrim = /^\s+|\s+$/g;
-
-	/** Used to detect bad signed hexadecimal string values. */
-	var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-	/** Used to detect binary string values. */
-	var reIsBinary = /^0b[01]+$/i;
-
-	/** Used to detect octal string values. */
-	var reIsOctal = /^0o[0-7]+$/i;
-
-	/** Built-in method references without a dependency on `root`. */
-	var freeParseInt = parseInt;
-
-	/**
-	 * Converts `value` to a number.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to process.
-	 * @returns {number} Returns the number.
-	 * @example
-	 *
-	 * _.toNumber(3.2);
-	 * // => 3.2
-	 *
-	 * _.toNumber(Number.MIN_VALUE);
-	 * // => 5e-324
-	 *
-	 * _.toNumber(Infinity);
-	 * // => Infinity
-	 *
-	 * _.toNumber('3.2');
-	 * // => 3.2
-	 */
-	function toNumber(value) {
-	  if (typeof value == 'number') {
-	    return value;
-	  }
-	  if (isSymbol(value)) {
-	    return NAN;
-	  }
-	  if (isObject(value)) {
-	    var other = isFunction(value.valueOf) ? value.valueOf() : value;
-	    value = isObject(other) ? (other + '') : other;
-	  }
-	  if (typeof value != 'string') {
-	    return value === 0 ? value : +value;
-	  }
-	  value = value.replace(reTrim, '');
-	  var isBinary = reIsBinary.test(value);
-	  return (isBinary || reIsOctal.test(value))
-	    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-	    : (reIsBadHex.test(value) ? NAN : +value);
-	}
-
-	module.exports = toNumber;
-
-
-/***/ },
-/* 827 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObjectLike = __webpack_require__(828);
-
-	/** `Object#toString` result references. */
-	var symbolTag = '[object Symbol]';
-
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
-
-	/**
-	 * Checks if `value` is classified as a `Symbol` primitive or object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
-	 * @example
-	 *
-	 * _.isSymbol(Symbol.iterator);
-	 * // => true
-	 *
-	 * _.isSymbol('abc');
-	 * // => false
-	 */
-	function isSymbol(value) {
-	  return typeof value == 'symbol' ||
-	    (isObjectLike(value) && objectToString.call(value) == symbolTag);
-	}
-
-	module.exports = isSymbol;
-
-
-/***/ },
-/* 828 */
-/***/ function(module, exports) {
-
-	/**
-	 * Checks if `value` is object-like. A value is object-like if it's not `null`
-	 * and has a `typeof` result of "object".
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-	 * @example
-	 *
-	 * _.isObjectLike({});
-	 * // => true
-	 *
-	 * _.isObjectLike([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObjectLike(_.noop);
-	 * // => false
-	 *
-	 * _.isObjectLike(null);
-	 * // => false
-	 */
-	function isObjectLike(value) {
-	  return !!value && typeof value == 'object';
-	}
-
-	module.exports = isObjectLike;
-
-
-/***/ },
-/* 829 */
+/* 842 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -77155,21 +79855,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 830 */
+/* 843 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseHas = __webpack_require__(831),
-	    baseKeys = __webpack_require__(833),
-	    indexKeys = __webpack_require__(834),
-	    isArrayLike = __webpack_require__(815),
-	    isIndex = __webpack_require__(821),
-	    isPrototype = __webpack_require__(829);
+	var arrayLikeKeys = __webpack_require__(844),
+	    baseKeys = __webpack_require__(850),
+	    isArrayLike = __webpack_require__(837);
 
 	/**
 	 * Creates an array of the own enumerable property names of `object`.
 	 *
 	 * **Note:** Non-object values are coerced to objects. See the
-	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+	 * [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
 	 * for more details.
 	 *
 	 * @static
@@ -77194,33 +79891,20 @@ var InfoxBpmnModeler =
 	 * // => ['0', '1']
 	 */
 	function keys(object) {
-	  var isProto = isPrototype(object);
-	  if (!(isProto || isArrayLike(object))) {
-	    return baseKeys(object);
-	  }
-	  var indexes = indexKeys(object),
-	      skipIndexes = !!indexes,
-	      result = indexes || [],
-	      length = result.length;
-
-	  for (var key in object) {
-	    if (baseHas(object, key) &&
-	        !(skipIndexes && (key == 'length' || isIndex(key, length))) &&
-	        !(isProto && key == 'constructor')) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
+	  return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
 	}
 
 	module.exports = keys;
 
 
 /***/ },
-/* 831 */
+/* 844 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getPrototype = __webpack_require__(832);
+	var baseTimes = __webpack_require__(845),
+	    isArguments = __webpack_require__(846),
+	    isArray = __webpack_require__(849),
+	    isIndex = __webpack_require__(841);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -77229,100 +79913,37 @@ var InfoxBpmnModeler =
 	var hasOwnProperty = objectProto.hasOwnProperty;
 
 	/**
-	 * The base implementation of `_.has` without support for deep paths.
-	 *
-	 * @private
-	 * @param {Object} [object] The object to query.
-	 * @param {Array|string} key The key to check.
-	 * @returns {boolean} Returns `true` if `key` exists, else `false`.
-	 */
-	function baseHas(object, key) {
-	  // Avoid a bug in IE 10-11 where objects with a [[Prototype]] of `null`,
-	  // that are composed entirely of index properties, return `false` for
-	  // `hasOwnProperty` checks of them.
-	  return object != null &&
-	    (hasOwnProperty.call(object, key) ||
-	      (typeof object == 'object' && key in object && getPrototype(object) === null));
-	}
-
-	module.exports = baseHas;
-
-
-/***/ },
-/* 832 */
-/***/ function(module, exports) {
-
-	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeGetPrototype = Object.getPrototypeOf;
-
-	/**
-	 * Gets the `[[Prototype]]` of `value`.
+	 * Creates an array of the enumerable property names of the array-like `value`.
 	 *
 	 * @private
 	 * @param {*} value The value to query.
-	 * @returns {null|Object} Returns the `[[Prototype]]`.
-	 */
-	function getPrototype(value) {
-	  return nativeGetPrototype(Object(value));
-	}
-
-	module.exports = getPrototype;
-
-
-/***/ },
-/* 833 */
-/***/ function(module, exports) {
-
-	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeKeys = Object.keys;
-
-	/**
-	 * The base implementation of `_.keys` which doesn't skip the constructor
-	 * property of prototypes or treat sparse arrays as dense.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
+	 * @param {boolean} inherited Specify returning inherited property names.
 	 * @returns {Array} Returns the array of property names.
 	 */
-	function baseKeys(object) {
-	  return nativeKeys(Object(object));
-	}
+	function arrayLikeKeys(value, inherited) {
+	  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
+	  // Safari 9 makes `arguments.length` enumerable in strict mode.
+	  var result = (isArray(value) || isArguments(value))
+	    ? baseTimes(value.length, String)
+	    : [];
 
-	module.exports = baseKeys;
+	  var length = result.length,
+	      skipIndexes = !!length;
 
-
-/***/ },
-/* 834 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseTimes = __webpack_require__(835),
-	    isArguments = __webpack_require__(836),
-	    isArray = __webpack_require__(838),
-	    isLength = __webpack_require__(820),
-	    isString = __webpack_require__(839);
-
-	/**
-	 * Creates an array of index keys for `object` values of arrays,
-	 * `arguments` objects, and strings, otherwise `null` is returned.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {Array|null} Returns index keys, else `null`.
-	 */
-	function indexKeys(object) {
-	  var length = object ? object.length : undefined;
-	  if (isLength(length) &&
-	      (isArray(object) || isString(object) || isArguments(object))) {
-	    return baseTimes(length, String);
+	  for (var key in value) {
+	    if ((inherited || hasOwnProperty.call(value, key)) &&
+	        !(skipIndexes && (key == 'length' || isIndex(key, length)))) {
+	      result.push(key);
+	    }
 	  }
-	  return null;
+	  return result;
 	}
 
-	module.exports = indexKeys;
+	module.exports = arrayLikeKeys;
 
 
 /***/ },
-/* 835 */
+/* 845 */
 /***/ function(module, exports) {
 
 	/**
@@ -77348,10 +79969,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 836 */
+/* 846 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLikeObject = __webpack_require__(837);
+	var isArrayLikeObject = __webpack_require__(847);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]';
@@ -77364,7 +79985,7 @@ var InfoxBpmnModeler =
 
 	/**
 	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
 	var objectToString = objectProto.toString;
@@ -77380,7 +80001,7 @@ var InfoxBpmnModeler =
 	 * @since 0.1.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
+	 * @returns {boolean} Returns `true` if `value` is an `arguments` object,
 	 *  else `false`.
 	 * @example
 	 *
@@ -77391,7 +80012,7 @@ var InfoxBpmnModeler =
 	 * // => false
 	 */
 	function isArguments(value) {
-	  // Safari 8.1 incorrectly makes `arguments.callee` enumerable in strict mode.
+	  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
 	  return isArrayLikeObject(value) && hasOwnProperty.call(value, 'callee') &&
 	    (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
 	}
@@ -77400,11 +80021,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 837 */
+/* 847 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(815),
-	    isObjectLike = __webpack_require__(828);
+	var isArrayLike = __webpack_require__(837),
+	    isObjectLike = __webpack_require__(848);
 
 	/**
 	 * This method is like `_.isArrayLike` except that it also checks if `value`
@@ -77439,7 +80060,42 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 838 */
+/* 848 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is object-like. A value is object-like if it's not `null`
+	 * and has a `typeof` result of "object".
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 * @example
+	 *
+	 * _.isObjectLike({});
+	 * // => true
+	 *
+	 * _.isObjectLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObjectLike(_.noop);
+	 * // => false
+	 *
+	 * _.isObjectLike(null);
+	 * // => false
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	module.exports = isObjectLike;
+
+
+/***/ },
+/* 849 */
 /***/ function(module, exports) {
 
 	/**
@@ -77448,11 +80104,9 @@ var InfoxBpmnModeler =
 	 * @static
 	 * @memberOf _
 	 * @since 0.1.0
-	 * @type {Function}
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is an array, else `false`.
 	 * @example
 	 *
 	 * _.isArray([1, 2, 3]);
@@ -77473,59 +80127,82 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 839 */
+/* 850 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(838),
-	    isObjectLike = __webpack_require__(828);
-
-	/** `Object#toString` result references. */
-	var stringTag = '[object String]';
+	var isPrototype = __webpack_require__(842),
+	    nativeKeys = __webpack_require__(851);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
 
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
 
 	/**
-	 * Checks if `value` is classified as a `String` primitive or object.
+	 * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
 	 *
-	 * @static
-	 * @since 0.1.0
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
-	 * @example
-	 *
-	 * _.isString('abc');
-	 * // => true
-	 *
-	 * _.isString(1);
-	 * // => false
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
 	 */
-	function isString(value) {
-	  return typeof value == 'string' ||
-	    (!isArray(value) && isObjectLike(value) && objectToString.call(value) == stringTag);
+	function baseKeys(object) {
+	  if (!isPrototype(object)) {
+	    return nativeKeys(object);
+	  }
+	  var result = [];
+	  for (var key in Object(object)) {
+	    if (hasOwnProperty.call(object, key) && key != 'constructor') {
+	      result.push(key);
+	    }
+	  }
+	  return result;
 	}
 
-	module.exports = isString;
+	module.exports = baseKeys;
 
 
 /***/ },
-/* 840 */
+/* 851 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var overArg = __webpack_require__(852);
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeKeys = overArg(Object.keys, Object);
+
+	module.exports = nativeKeys;
+
+
+/***/ },
+/* 852 */
+/***/ function(module, exports) {
+
+	/**
+	 * Creates a unary function that invokes `func` with its argument transformed.
+	 *
+	 * @private
+	 * @param {Function} func The function to wrap.
+	 * @param {Function} transform The argument transform.
+	 * @returns {Function} Returns the new function.
+	 */
+	function overArg(func, transform) {
+	  return function(arg) {
+	    return func(transform(arg));
+	  };
+	}
+
+	module.exports = overArg;
+
+
+/***/ },
+/* 853 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var ReplaceMenuProvider = __webpack_require__(798);
-	var is = __webpack_require__(444).is;
-	var isAny = __webpack_require__(673).isAny;
+	var ReplaceMenuProvider = __webpack_require__(807);
+	var is = __webpack_require__(443).is;
+	var isAny = __webpack_require__(575).isAny;
 
 	function InfoxReplaceMenuProvider(popupMenu, modeling, moddle, bpmnReplace, rules, translate) {
 	    ReplaceMenuProvider.call(this, popupMenu, modeling, moddle, bpmnReplace, rules, translate);
@@ -77561,23 +80238,23 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 841 */
+/* 854 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var ContextPadProvider = __webpack_require__(801);
-	var assign = __webpack_require__(809);
-	var is = __webpack_require__(444).is;
-	var isAny = __webpack_require__(673).isAny;
+	var ContextPadProvider = __webpack_require__(811);
+	var assign = __webpack_require__(829);
+	var is = __webpack_require__(443).is;
+	var isAny = __webpack_require__(575).isAny;
 
-	function InfoxContextPadProvider(contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate, parallelGatewayDirectionProvider, infoxModeler) {
-	    ContextPadProvider.call(this, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate);
+	function InfoxContextPadProvider(eventBus, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate, parallelGatewayDirectionProvider, infoxModeler) {
+	    ContextPadProvider.call(this, eventBus, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate);
 
 	    this._parallelGatewayDirectionProvider = parallelGatewayDirectionProvider;
 	    this._infoxModeler = infoxModeler;
 	}
 
-	InfoxContextPadProvider.$inject = ['contextPad', 'modeling', 'elementFactory', 'connect', 'create', 'popupMenu', 'canvas', 'rules', 'translate', 'parallelGatewayDirectionProvider', 'infoxModeler'];
+	InfoxContextPadProvider.$inject = ['eventBus', 'contextPad', 'modeling', 'elementFactory', 'connect', 'create', 'popupMenu', 'canvas', 'rules', 'translate', 'parallelGatewayDirectionProvider', 'infoxModeler'];
 
 	inherits(InfoxContextPadProvider, ContextPadProvider);
 	module.exports = InfoxContextPadProvider;
@@ -77602,7 +80279,6 @@ var InfoxBpmnModeler =
 	    function appendAction(type, className, options) {
 	        function appendListener(event, element) {
 	            var shape = elementFactory.createShape(assign({ type: type }, options));
-	            console.log(element);
 	            create.start(event, shape, element);
 	        }
 	        var shortType = type.replace(/^bpmn\:/, '');
@@ -77711,12 +80387,12 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 842 */
+/* 855 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var BpmnRules = __webpack_require__(720);
-	var is = __webpack_require__(444).is;
+	var BpmnRules = __webpack_require__(723);
+	var is = __webpack_require__(443).is;
 
 	function InfoxBpmnRules(eventBus) {
 	    BpmnRules.call(this, eventBus);
@@ -77754,7 +80430,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 843 */
+/* 856 */
 /***/ function(module, exports) {
 
 	function brazilianPortugueseTranslate(template, replacements) {
@@ -77828,7 +80504,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 844 */
+/* 857 */
 /***/ function(module, exports) {
 
 	function ParallelGatewayDirectionProvider(popupMenu, translate, modeling) {
@@ -77868,13 +80544,13 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 845 */
+/* 858 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var LabelEditingProvider = __webpack_require__(597);
-	var is = __webpack_require__(444).is;
+	var LabelEditingProvider = __webpack_require__(720);
+	var is = __webpack_require__(443).is;
 	var inherits = __webpack_require__(3);
 
 	function InfoxLabelEditingProvider(eventBus, canvas, directEditing, commandStack) {

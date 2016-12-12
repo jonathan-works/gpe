@@ -22,7 +22,7 @@ import br.com.infox.ibpm.variable.VariableEditorModeloHandler.FileConfig;
 @Named
 @ViewScoped
 public class VariavelClassificacaoDocumentoAction implements Serializable, Pageable {
-	
+
     private static final long serialVersionUID = 1L;
     private static final int MAX_RESULTS = 10;
     
@@ -37,7 +37,6 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     private String nomeClassificacaoDocumento;
     private VariableAccess currentVariable;
     
-    
     private TipoDocumentoEnum getTipoDocumento() {
         if (isEditor()) {
             return TipoDocumentoEnum.P;
@@ -46,104 +45,104 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
         }
     }
     
-	private void updateConfiguracoesClassificacoes() {
-		if (isEditor()) {
-    		updateListaClassificacoesEditor();
-    	} else {
-    		updateListaClassificacoesUpload();
-    	}
-	}
+    private void updateConfiguracoesClassificacoes() {
+        if (isEditor()) {
+            updateListaClassificacoesEditor();
+        } else {
+            updateListaClassificacoesUpload();
+        }
+    }
     
     private void updateListaClassificacoesUpload() {
-    	if (!getClassificacoesDaVariavel().isEmpty()) {
-    		FileConfig configuration = new FileConfig();
-    		configuration.setCodigosClassificacaoDocumento(new ArrayList<String>());
-    		for (ClassificacaoDocumento classificacao : getClassificacoesDaVariavel()) {
-				configuration.getCodigosClassificacaoDocumento().add(classificacao.getCodigoDocumento());
-			}
-    		getCurrentVariable().setConfiguration(VariableEditorModeloHandler.toJson(configuration));
-    	} else {
-    		getCurrentVariable().setConfiguration(null);
-    	}
-	}
+        if (!getClassificacoesDaVariavel().isEmpty()) {
+            FileConfig configuration = new FileConfig();
+            configuration.setCodigosClassificacaoDocumento(new ArrayList<String>());
+            for (ClassificacaoDocumento classificacao : getClassificacoesDaVariavel()) {
+                configuration.getCodigosClassificacaoDocumento().add(classificacao.getCodigoDocumento());
+            }
+            getCurrentVariable().setConfiguration(VariableEditorModeloHandler.toJson(configuration));
+        } else {
+            getCurrentVariable().setConfiguration(null);
+        }
+    }
     
     private void updateListaClassificacoesEditor() {
-		FileConfig configuration = null;
-		if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
-			configuration = VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration());
-		} 
-		if (!getClassificacoesDaVariavel().isEmpty()) {
-			if (configuration ==  null) {
-				configuration = new FileConfig();
-			}
-			configuration.setCodigosClassificacaoDocumento(new ArrayList<String>());
-			for (ClassificacaoDocumento classificacao : getClassificacoesDaVariavel()) {
-				configuration.getCodigosClassificacaoDocumento().add(classificacao.getCodigoDocumento());
-			}
-			getCurrentVariable().setConfiguration(VariableEditorModeloHandler.toJson(configuration));
-		} else {
-			if (configuration != null) {
-				if (configuration.getCodigosModeloDocumento() != null && !configuration.getCodigosModeloDocumento().isEmpty()) {
-					configuration.setCodigosClassificacaoDocumento(null);
-					getCurrentVariable().setConfiguration(VariableEditorModeloHandler.toJson(configuration));
-				} else {
-					getCurrentVariable().setConfiguration(null);
-				}
-			}
-		}
+        FileConfig configuration = null;
+        if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
+            configuration = VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration());
+        } 
+        if (!getClassificacoesDaVariavel().isEmpty()) {
+            if (configuration ==  null) {
+                configuration = new FileConfig();
+            }
+            configuration.setCodigosClassificacaoDocumento(new ArrayList<String>());
+            for (ClassificacaoDocumento classificacao : getClassificacoesDaVariavel()) {
+                configuration.getCodigosClassificacaoDocumento().add(classificacao.getCodigoDocumento());
+            }
+            getCurrentVariable().setConfiguration(VariableEditorModeloHandler.toJson(configuration));
+        } else {
+            if (configuration != null) {
+                if (configuration.getCodigosModeloDocumento() != null && !configuration.getCodigosModeloDocumento().isEmpty()) {
+                    configuration.setCodigosClassificacaoDocumento(null);
+                    getCurrentVariable().setConfiguration(VariableEditorModeloHandler.toJson(configuration));
+                } else {
+                    getCurrentVariable().setConfiguration(null);
+                }
+            }
+        }
     }
     
     private List<String> getCodigosClassificacoesVariavel() {
-    	if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
-			return VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration()).getCodigosClassificacaoDocumento();
-		}
-    	return null;
+        if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
+            return VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration()).getCodigosClassificacaoDocumento();
+        }
+        return null;
     }
     
     private boolean isEditor() {
-    	return VariableType.EDITOR.name().equals(getCurrentVariable().getType());
+        return VariableType.EDITOR.name().equals(getCurrentVariable().getType());
     }
     
     public void adicionarClassificacao(ClassificacaoDocumento classificacaoDocumento) {
-    	getClassificacoesDaVariavel().add(classificacaoDocumento);
-    	updateConfiguracoesClassificacoes();
-    	this.classificacoesDisponiveis = null;
+        getClassificacoesDaVariavel().add(classificacaoDocumento);
+        updateConfiguracoesClassificacoes();
+        classificacoesDisponiveis = null;
     }
 
-	public void removerClassificacao(ClassificacaoDocumento classificacaoDocumento) {
-    	getClassificacoesDaVariavel().remove(classificacaoDocumento);
-    	updateConfiguracoesClassificacoes();
-    	this.classificacoesDisponiveis = null;
+    public void removerClassificacao(ClassificacaoDocumento classificacaoDocumento) {
+        getClassificacoesDaVariavel().remove(classificacaoDocumento);
+        updateConfiguracoesClassificacoes();
+        classificacoesDisponiveis = null;
     }
     
     public List<ClassificacaoDocumento> getClassificacoesDisponiveis() {
         if (classificacoesDisponiveis == null) {
-        	List<String> codigosAdicionadas = getCodigosClassificacoesVariavel();
+            List<String> codigosAdicionadas = getCodigosClassificacoesVariavel();
             this.total = classificacaoDocumentoSearch.countClassificacoesDocumentoDisponiveisVariavelFluxo(codigosAdicionadas, getTipoDocumento(), 
-            		getNomeClassificacaoDocumento()); 
+                    getNomeClassificacaoDocumento()); 
             this.pageCount = Long.valueOf(total / MAX_RESULTS + (total % MAX_RESULTS != 0 ? 1 : 0)).intValue();
             int start = (this.page - 1) * MAX_RESULTS;
             classificacoesDisponiveis = classificacaoDocumentoSearch.listClassificacoesDocumentoDisponiveisVariavelFluxo(codigosAdicionadas, 
-            		getTipoDocumento(), getNomeClassificacaoDocumento(), start, MAX_RESULTS);
+                    getTipoDocumento(), getNomeClassificacaoDocumento(), start, MAX_RESULTS);
         }
         return classificacoesDisponiveis;
     }
     
     public List<ClassificacaoDocumento> getClassificacoesDaVariavel() {
         if (classificacoesDaVariavel == null) {
-        	if (getCodigosClassificacoesVariavel() != null) {
-        		this.classificacoesDaVariavel = classificacaoDocumentoSearch.findByListCodigos(getCodigosClassificacoesVariavel());
-        	} else {
-        		this.classificacoesDaVariavel = new ArrayList<ClassificacaoDocumento>();
-        	}
+            if (getCodigosClassificacoesVariavel() != null) {
+                classificacoesDaVariavel = classificacaoDocumentoSearch.findByListCodigos(getCodigosClassificacoesVariavel());
+            } else {
+                classificacoesDaVariavel = new ArrayList<ClassificacaoDocumento>();
+            }
         }
-        return this.classificacoesDaVariavel;
+        return classificacoesDaVariavel;
     }
     
     public void clearSearch() {
         resetSearch();
-        this.nomeClassificacaoDocumento = null;
-        this.classificacoesDaVariavel = null;
+        nomeClassificacaoDocumento = null;
+        classificacoesDaVariavel = null;
     }
     
     public void resetSearch() {
@@ -190,14 +189,14 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
         this.nomeClassificacaoDocumento = nomeClassificacaoDocumento;
     }
 
-	public VariableAccess getCurrentVariable() {
-		return currentVariable;
-	}
+    public VariableAccess getCurrentVariable() {
+        return currentVariable;
+    }
 
-	public void setCurrentVariable(VariableAccess currentVariable) {
-		this.currentVariable = currentVariable;
-		this.classificacoesDaVariavel = null;
-		this.classificacoesDisponiveis = null;
-	}
+    public void setCurrentVariable(VariableAccess currentVariable) {
+        this.currentVariable = currentVariable;
+        this.classificacoesDaVariavel = null;
+        this.classificacoesDisponiveis = null;
+    }
 
 }

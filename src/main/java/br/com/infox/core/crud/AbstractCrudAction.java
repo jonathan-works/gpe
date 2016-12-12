@@ -7,15 +7,16 @@ import java.lang.reflect.InvocationTargetException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.action.AbstractAction;
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -145,7 +146,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
             try {
                 setInstance(getManager().merge(activeEntity));
             } catch (final DAOException e) {
-                getMessagesHandler().add(Severity.ERROR, infoxMessages.get("entity.error.merge"), e);
+                BeanManager.INSTANCE.getReference(ActionMessagesService.class).handleGenericException(e);
             }
         }
     }
@@ -286,7 +287,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
         final GenericDatabaseErrorCode errorCode = daoException.getDatabaseErrorCode();
         if (errorCode != null) {
             getMessagesHandler().clear();
-            getMessagesHandler().add(daoException.getLocalizedMessage());
+            getMessagesHandler().add(infoxMessages.get(daoException.getLocalizedMessage()));
         }
     }
 

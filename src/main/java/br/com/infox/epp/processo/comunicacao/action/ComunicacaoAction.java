@@ -21,6 +21,9 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
@@ -34,8 +37,11 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.path.PathResolver;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @Stateful
@@ -45,6 +51,7 @@ public class ComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoAction.class);
+	private static final String OPEN_CRIAR_COMUNICACAO = "infox.openPopUp('comunicacao%d', '%s/Processo/criarComunicacao.seam?idModeloComunicacao=%d','1024'); ";
 	
 	@Inject
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
@@ -62,6 +69,8 @@ public class ComunicacaoAction implements Serializable {
 	private EntityManager entityManager;
 	@Inject
 	private EnvioComunicacaoController envioComunicacaoController;
+	@Inject
+	private JsfUtil jsfUtil;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private Processo processo;
@@ -73,6 +82,7 @@ public class ComunicacaoAction implements Serializable {
 	private boolean documentos;
 	private boolean documentoResposta;
 	private List<Documento> documentosListResposta;
+	private Boolean destinatarioComCienciaEmComunicacao;
 	
 	protected static final Comparator<DestinatarioBean> comparatorDestinatarios = new Comparator<DestinatarioBean>() {
 		@Override
@@ -95,8 +105,13 @@ public class ComunicacaoAction implements Serializable {
 	
 	public void reabrirComunicacao(ModeloComunicacao modeloComunicacao) {
 		try {
-			comunicacaoService.reabrirComunicacao(modeloComunicacao);
-			envioComunicacaoController.init(); //para recarregar a página de tarefa
+			ModeloComunicacao modeloNovo = comunicacaoService.reabrirComunicacao(modeloComunicacao);
+			
+			PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
+			jsfUtil.execute(String.format(OPEN_CRIAR_COMUNICACAO, modeloNovo.getId(), pathResolver.getContextPath(), modeloNovo.getId()));
+			envioComunicacaoController.init();
+			modeloComunicacaoRascunhoList.refresh();
+
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
 			LOG.error("Erro ao rebarir comunicação", e);
@@ -138,9 +153,6 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void clearCacheModelos() {
-		for (ModeloComunicacao modeloComunicacao : modeloComunicacaoRascunhoList.getResultList()) {
-			modeloComunicacaoManager.detach(modeloComunicacao);
-		}
 		modeloComunicacaoRascunhoList.refresh();
 		this.comunicacoes = null;
 		this.destinatario = null;
@@ -214,6 +226,18 @@ public class ComunicacaoAction implements Serializable {
 		return dadosCiencia.get(bean.getIdDestinatario());
 	}
 	
+    public boolean isDestinatario(DestinatarioBean bean) {
+        DestinatarioModeloComunicacao destinatario = getDestinatarioModeloComunicacao(bean);
+        UsuarioLogin usuario = Authenticator.getUsuarioLogado();
+        UsuarioPerfil perfil = Authenticator.getUsuarioPerfilAtual();
+        if ((destinatario.getDestinatario() != null && usuario.getPessoaFisica() != null && usuario.getPessoaFisica().equals(destinatario.getDestinatario()))
+                || (destinatario.getDestino() != null && destinatario.getDestino().equals(perfil.getLocalizacao())
+                        && (destinatario.getPerfilDestino() == null || (destinatario.getPerfilDestino().equals(perfil.getPerfilTemplate()))))) {
+            return true;
+        }
+        return false;
+    }
+	
 	public void clear() {
 		clearCacheModelos();
 		documentos = false;
@@ -262,5 +286,18 @@ public class ComunicacaoAction implements Serializable {
 	public Map<Long, Boolean> getDadosCiencia() {
 		return dadosCiencia;
 	}
+
+    public boolean isDestinatarioComCienciaEmComunicacao() {
+        if (destinatarioComCienciaEmComunicacao == null) {
+            List<DestinatarioBean> destinatarios = getDestinatarios();
+            destinatarioComCienciaEmComunicacao = false;
+            for (DestinatarioBean destinatario : destinatarios) {
+                if (isCienciaConfirmada(destinatario) && isDestinatario(destinatario)) {
+                    destinatarioComCienciaEmComunicacao = true;
+                }
+            }
+        }
+        return destinatarioComCienciaEmComunicacao;
+    }
 
 }

@@ -17,7 +17,7 @@
 		<h:inputTextarea id="#{id}" styleClass="#{readonly ? 'readOnly' : ''}"
 			readonly="#{readonly}" cols="#{empty cols ? 80 : cols}"
 			rows="#{empty rows ? props.rows : rows}" disabled="#{disabled}"
-			required="#{required}" value="#{value}" onkeyup="counterTextarea(this, 4000)">
+			value="#{value}" onkeyup="counterTextarea(this, 4000)">
 			<ui:insert />
 		</h:inputTextarea>
 		<div>(#{not empty value ? value.length() : 0} / 4000)</div>

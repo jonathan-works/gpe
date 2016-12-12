@@ -59,19 +59,21 @@ public class HistoricoProcessDefinitionService {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public HistoricoProcessDefinition registrarHistorico(Fluxo fluxo) {
-		HistoricoProcessDefinition novoHistorico = new HistoricoProcessDefinition();
-		novoHistorico.setFluxo(fluxo);
-		novoHistorico.setBpmn(fluxo.getBpmn());
-		novoHistorico.setProcessDefinition(fluxo.getXml());
-		novoHistorico.setSvg(fluxo.getSvg());
-		novoHistorico.setRevisao(getMaiorRevisao(fluxo) + 1);
-		
-		if (getTotalHistoricos(fluxo) >= 20) {
-			historicoProcessDefinitionDao.remove(getPrimeiroHistorico(fluxo));
+	public void registrarHistorico(Fluxo fluxo) {
+		if (fluxo.getXml() != null) {
+			HistoricoProcessDefinition novoHistorico = new HistoricoProcessDefinition();
+			novoHistorico.setFluxo(fluxo);
+			novoHistorico.setBpmn(fluxo.getBpmn());
+			novoHistorico.setProcessDefinition(fluxo.getXml());
+			novoHistorico.setSvg(fluxo.getSvg());
+			novoHistorico.setRevisao(getMaiorRevisao(fluxo) + 1);
+			
+			if (getTotalHistoricos(fluxo) >= 20) {
+				historicoProcessDefinitionDao.remove(getPrimeiroHistorico(fluxo));
+			}
+			
+			historicoProcessDefinitionDao.persist(novoHistorico);
 		}
-		
-		return historicoProcessDefinitionDao.persist(novoHistorico);
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)

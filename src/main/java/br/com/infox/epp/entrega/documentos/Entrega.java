@@ -66,6 +66,10 @@ public class Entrega implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_certidao_entrega")
 	private DocumentoBin certidaoEntrega;
+	
+	@ManyToOne
+	@JoinColumn(name="id_responsavel_principal")
+	private EntregaResponsavel responsavelPrincipal;
 
 	public DocumentoBin getCertidaoEntrega() {
 		return certidaoEntrega;
@@ -129,5 +133,13 @@ public class Entrega implements Serializable {
 	
 	public void setUsuarioEntrega(UsuarioLogin usuarioEntrega) {
 		this.usuarioEntrega = usuarioEntrega;
+	}
+
+	public EntregaResponsavel getResponsavelPrincipal() {
+		return responsavelPrincipal;
+	}
+
+	public void setResponsavelPrincipal(EntregaResponsavel responsavelPrincipal) {
+		this.responsavelPrincipal = responsavelPrincipal;
 	}
 }

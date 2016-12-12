@@ -1,8 +1,5 @@
 package br.com.infox.epp.tarefa.entity;
 
-import static br.com.infox.epp.tarefa.query.TarefaJbpmQuery.INSERT_TAREFA_VERSIONS;
-import static br.com.infox.epp.tarefa.query.TarefaJbpmQuery.INSERT_TAREFA_VERSIONS_QUERY;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,8 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -21,7 +16,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = TarefaJbpm.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = {
     "id_tarefa", "id_jbpm_task" }) })
-@NamedNativeQueries({ @NamedNativeQuery(name = INSERT_TAREFA_VERSIONS, query = INSERT_TAREFA_VERSIONS_QUERY) })
 public class TarefaJbpm implements java.io.Serializable {
 
     public static final String TABLE_NAME = "tb_tarefa_jbpm";

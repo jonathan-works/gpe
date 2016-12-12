@@ -2,13 +2,16 @@ package br.com.infox.ibpm.task.view;
 
 import static java.text.MessageFormat.format;
 
+import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.ScopeType;
@@ -20,6 +23,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.process.definition.variable.constants.VariableConstants;
@@ -128,8 +132,18 @@ public class TaskInstanceForm implements Serializable {
                         setPageProperties(name, ff, "seam", "url");
                         break;
                     case FRAME:
-                        setPageProperties(name, ff, "xhtml", "urlFrame");
-                        break;
+                        String url = format("/{0}.{1}", name.replaceAll("_", "/"), "xhtml");
+                        String framePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(url);
+                        File file = new File(framePath);
+                        if (!file.exists()) {
+                            String containerPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
+                            Path findFirst = FileUtil.findFirst(containerPath + "/WEB-INF", "**" + url);
+                            if (findFirst != null) {
+                                url = findFirst.toString().replace(containerPath.toString(), "");
+                            }
+                        }
+                        ff.getProperties().put("urlFrame", url);
+                        break; 
                     case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {
                         DominioVariavelTarefaSearch dominioVariavelTarefaSearch = BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);;

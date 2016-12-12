@@ -18,8 +18,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -28,6 +26,8 @@ import br.com.infox.epp.processo.documento.sigilo.action.SigiloDocumentoControll
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.util.collection.Factory;
 import br.com.infox.util.collection.LazyMap;

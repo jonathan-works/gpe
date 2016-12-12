@@ -1,80 +1,98 @@
 package br.com.infox.core.messages;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
+import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
+import java.util.ResourceBundle.Control;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 
 @Stateless
-public class InfoxMessagesLoader implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
-	private static final String EXTENDED_MESSAGES = "/extended_messages_%s.properties";
-	private static final String ENTITY_MESSAGES = "/entity_messages_%s.properties";
-	private static final String MESSAGES = "/messages_%s.properties";
-	private static final String STANDARD_MESSAGES = "/standard_messages_%s.properties";
-	private static final String PROCESS_DEFINITION_MESSAGES = "/process_definition_messages_%s.properties";
-	private static final String VALIDATION_MESSAGES = "/ValidationMessages_%s.properties";
-	
+public class InfoxMessagesLoader {
+    
+    private static final String[] RESOURCE_MESSAGES = {"entity_messages", "messages", "standard_messages", "process_definition_messages", "ValidationMessages"}; 
+    
 	@EJB
 	private InfoxMessages infoxMessages;
 
-	public void loadMessagesProperties() {
+	public void loadMessagesProperties() throws IOException {
+	    List<String> resourceMessages = new ArrayList<>(Arrays.asList(RESOURCE_MESSAGES));
+	    appendCustomizesMessages(resourceMessages);
 		Iterator<Locale> supportedLocales = getSupportedLocales();
 		while (supportedLocales.hasNext()) {
 			Locale locale = supportedLocales.next();
-
-			String localeext = locale.toString();
-
-			InputStream entityMessagesEppStream = getClass().getResourceAsStream(String.format(ENTITY_MESSAGES, localeext));
-			InputStream messagesEppStream = getClass().getResourceAsStream(String.format(MESSAGES, localeext));
-			InputStream processDefinitionStream = getClass()
-					.getResourceAsStream(String.format(PROCESS_DEFINITION_MESSAGES, localeext));
-			InputStream standardMessagesEppStream = getClass().getResourceAsStream(String.format(STANDARD_MESSAGES, localeext));
-			InputStream validationMessagesStream = getClass().getResourceAsStream(String.format(VALIDATION_MESSAGES, localeext));
-			InputStream extendedMessagesStream = getClass().getResourceAsStream(String.format(EXTENDED_MESSAGES, localeext));
-
-			Map<String, String> mensagens = new HashMap<>();
-
-			try {
-				copyProperties(mensagens, entityMessagesEppStream, messagesEppStream, processDefinitionStream,
-						standardMessagesEppStream, validationMessagesStream, extendedMessagesStream);
-			} catch (IOException e) {
-				throw new RuntimeException("Não foi possível carregar as mensagens do sistema", e);
+			List<ResourceBundle> resourceBundles = new ArrayList<>();
+			for (String resourceMessage : resourceMessages) {
+		        ResourceBundle resourceBundle = getResourceBundle(resourceMessage, locale);
+                if (resourceBundle != null) {
+                    resourceBundles.add(resourceBundle);
+                }
 			}
+			
+			loadExtendedMessages(resourceBundles, locale);
+
+			Map<String, String> mensagens = generateMessages(resourceBundles);
+			
 			infoxMessages.putInLocales(locale, mensagens);
 		}
-
 	}
 	
-	public void setInfoxMessages(InfoxMessages infoxMessages) {
+    private void loadExtendedMessages(List<ResourceBundle> resourceBundles, Locale locale) throws IOException {
+        Control control = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
+        int position = RESOURCE_MESSAGES.length;
+        String resourceName = control.toBundleName("extended_messages", locale) + ".properties";
+        Enumeration<URL> extendedMessagesResources = getClass().getClassLoader().getResources(resourceName);
+        while (extendedMessagesResources.hasMoreElements()) {
+            URL extendedMessagesResource = extendedMessagesResources.nextElement();
+            ResourceBundle resourceBundle = new PropertyResourceBundle(extendedMessagesResource.openStream());
+            resourceBundles.add(position, resourceBundle);
+            position++;
+        }
+    }
+
+    protected void appendCustomizesMessages(List<String> resourceMessages) {
+        // for customized messages
+    }
+
+    public void setInfoxMessages(InfoxMessages infoxMessages) {
 		this.infoxMessages = infoxMessages;
 	}
+    
+    private ResourceBundle getResourceBundle(String resourceName, Locale locale) {
+        ResourceBundle resourceBundle = null;
+        try {
+            resourceBundle = ResourceBundle.getBundle(resourceName, locale);
+        } catch (MissingResourceException e) {
+            // do nothing
+        }
+        return resourceBundle;
+    }
 
-	private void copyProperties(Map<String, String> destination, InputStream... streamMessage) throws IOException {
-		for (InputStream stream : streamMessage) {
-			if (stream == null) continue;
-			Properties source = new Properties();
-			source.load(stream);
-			Enumeration<Object> srcKeys = source.keys();
-			while (srcKeys.hasMoreElements()) {
-				String key = srcKeys.nextElement().toString();
-				String value = source.getProperty(key);
-				destination.put(key, value);
-			}
-		}
-	}
-
+	private Map<String, String> generateMessages(List<ResourceBundle> resourceBundles) throws IOException {
+	    Map<String, String> messages = new HashMap<>();
+        for (ResourceBundle bundle : resourceBundles) {
+            Enumeration<String> keys = bundle.getKeys();
+            while (keys.hasMoreElements()) {
+                String key = keys.nextElement();
+                String value = bundle.getString(key);
+                messages.put(key, value);
+            }
+        }
+        return messages;
+    }
+	
 	private Iterator<Locale> getSupportedLocales() {
 		return FacesContext.getCurrentInstance().getApplication().getSupportedLocales();
 	}

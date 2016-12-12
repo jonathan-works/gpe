@@ -4,10 +4,6 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTO
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO_QUERY;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_SESSAO_ANEXAR;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_SESSAO_ANEXAR_QUERY;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_QUERY;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_TASKINSTANCE;
@@ -52,7 +48,6 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
-import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -63,15 +58,15 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
+import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import edu.emory.mathcs.backport.java.util.Collections;
 
 @Entity
 @Table(name = Documento.TABLE_NAME)
 @NamedQueries({
-    @NamedQuery(name = LIST_ANEXOS_PUBLICOS, query = LIST_ANEXOS_PUBLICOS_QUERY),
     @NamedQuery(name = NEXT_SEQUENCIAL, query = NEXT_SEQUENCIAL_QUERY),
-    @NamedQuery(name = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO, query = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY),
     @NamedQuery(name = LIST_DOCUMENTO_BY_PROCESSO, query = LIST_DOCUMENTO_BY_PROCESSO_QUERY),
     @NamedQuery(name = LIST_DOCUMENTO_MINUTA_BY_PROCESSO, query = LIST_DOCUMENTO_MINUTA_BY_PROCESSO_QUERY),
     @NamedQuery(name = LIST_DOCUMENTO_BY_TASKINSTANCE, query = lIST_DOCUMENTO_BY_TASKINSTANCE_QUERY),
@@ -83,6 +78,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 public class Documento implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
+    public static final int TAMANHO_MAX_DESCRICAO_DOCUMENTO = 260;
     public static final String TABLE_NAME = "tb_documento";
 
     @Id
@@ -102,8 +98,8 @@ public class Documento implements Serializable, Cloneable {
     private DocumentoBin documentoBin;
     
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
-    @Column(name = "ds_documento", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
+    @Size(max = TAMANHO_MAX_DESCRICAO_DOCUMENTO)
+    @Column(name = "ds_documento", nullable = false, length = TAMANHO_MAX_DESCRICAO_DOCUMENTO)
     private String descricao;
     
     @Column(name = "nr_documento", nullable = true)
@@ -157,6 +153,10 @@ public class Documento implements Serializable, Cloneable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento", cascade = CascadeType.REMOVE)
     @OrderBy(value="dataAlteracao DESC")
     private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento")
+    @OrderBy(value="dataPublicacao DESC")
+    private List<PublicacaoDocumento> publicacoes = new ArrayList<>();
     
     @PrePersist
     private void prePersist(){
@@ -338,9 +338,9 @@ public class Documento implements Serializable, Cloneable {
 	public void setLocalizacao(Localizacao localizacao) {
 		this.localizacao = localizacao;
 	}
-	
-	public boolean isDocumentoAssinavel(Papel papel){
-		if (getDocumentoBin() == null) {
+
+    public boolean isDocumentoAssinavel(Papel papel){
+		if (getDocumentoBin() == null || getClassificacaoDocumento() == null) {
 			return false;
 		}
 		if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {
@@ -374,7 +374,7 @@ public class Documento implements Serializable, Cloneable {
     
     public boolean isDocumentoAssinado(Papel papel){
     	for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
-    		if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)){
+    		if (assinaturaDocumento.getPapel().equals(papel)){
     			return true;
     		}
     	}
@@ -383,7 +383,7 @@ public class Documento implements Serializable, Cloneable {
     
     public boolean isDocumentoAssinado(UsuarioLogin usuarioLogin){
     	for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
-    		if (assinaturaDocumento.getUsuarioPerfil().getUsuarioLogin().equals(usuarioLogin)){
+    		if (assinaturaDocumento.getPessoaFisica().equals(usuarioLogin.getPessoaFisica())){
     			return true;
     		}
     	}
@@ -479,5 +479,10 @@ public class Documento implements Serializable, Cloneable {
 		}
 		cDocumento.setHistoricoStatusDocumentoList(cList);
 		return cDocumento;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PublicacaoDocumento> getPublicacoes() {
+		return Collections.unmodifiableList(publicacoes);
 	}
 }

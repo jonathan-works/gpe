@@ -3,6 +3,7 @@
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns="http://www.w3.org/1999/xhtml"
      xmlns:a="http://richfaces.org/a4j"
+     xmlns:p="http://primefaces.org/ui"
      xmlns:h="http://java.sun.com/jsf/html">
 
 	<ui:param
@@ -14,11 +15,24 @@
 	<script>
 		const CKEDITOR_BASEPATH = '#{request.contextPath}/org.richfaces.resources/javax.faces.resource/org.richfaces.ckeditor/';
 	</script>
-	<h:form>
-		<a:poll
-            interval="#{intervalPush}"
-            limitRender="true"
-            execute="@this" />
-	</h:form>
+	
+	<script>
+		function executePoll() {
+		  var xhttp;
+		  if (window.XMLHttpRequest) {
+		    xhttp = new XMLHttpRequest();
+		    } else {
+		    xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+		  xhttp.open('HEAD', '#{pathResolver.contextPath}/sessionPoll?conversationId=#{org.jboss.seam.core.conversation.id}');
+		  xhttp.onload = function() {
+	          setTimeout(executePoll, #{intervalPush});
+		  }
+		  xhttp.send();
+		}
+		$(document).ready(function() {
+			setTimeout(executePoll, #{intervalPush});
+     	});
+	</script>
 	
 </ui:composition>

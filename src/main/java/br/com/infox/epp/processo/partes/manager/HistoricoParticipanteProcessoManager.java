@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.partes.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -13,6 +15,7 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 
 @AutoCreate
 @Name(HistoricoParticipanteProcessoManager.NAME)
+@Stateless
 public class HistoricoParticipanteProcessoManager extends Manager<HistoricoParticipanteProcessoDAO, HistoricoParticipanteProcesso> {
 
     private static final long serialVersionUID = 1L;

@@ -48,18 +48,33 @@ public class EditorFormType extends FileFormType {
         super.performUpdate(formField, formData);
         Documento documento = formField.getTypedValue(Documento.class);
         ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
-        if (documento.getId() == null) {
-            documento.setDescricao(formField.getLabel());
-            documento.setClassificacaoDocumento(classificacaoDocumento);
-            getDocumentoBinManager().createProcessoDocumentoBin(documento);
-            getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
-        } else {
-            if (!documento.getClassificacaoDocumento().equals(classificacaoDocumento)) {
-                documento = getDocumentoManager().update(documento);
+        if (classificacaoDocumento == null) {
+            if (documento.getId() != null) {
+                formData.setVariable(formField.getId(), new TypedValue(null, ValueType.FILE));
+                formField.addProperty("modeloDocumento", null);
+                getDocumentoManager().remove(documento);
+                getDocumentoBinManager().remove(documento.getDocumentoBin());
+                documento = createNewDocumento();
+                formField.setValue(documento);
+            } else {
+                formField.addProperty("modeloDocumento", null);
+                documento.getDocumentoBin().setModeloDocumento("");
             }
-            DocumentoBin documentoBin = getDocumentoBinManager().update(documento.getDocumentoBin());
-            documento.setDocumentoBin(documentoBin);
-            formField.setValue(documento);
+        } else {
+            if (documento.getId() != null) {
+                if (!classificacaoDocumento.equals(documento.getClassificacaoDocumento())) {
+                    documento = getDocumentoManager().update(documento);
+                }
+                DocumentoBin documentoBin = getDocumentoBinManager().update(documento.getDocumentoBin());
+                documento.setDocumentoBin(documentoBin);
+                formField.setValue(documento);
+            } else {
+                documento.setDescricao(formField.getLabel());
+                documento.setClassificacaoDocumento(classificacaoDocumento);
+                if (documento.getDocumentoBin().getModeloDocumento() == null) documento.getDocumentoBin().setModeloDocumento("");
+                getDocumentoBinManager().createProcessoDocumentoBin(documento);
+                getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
+            }
         }
     }
     

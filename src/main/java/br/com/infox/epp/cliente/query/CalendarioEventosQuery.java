@@ -1,6 +1,14 @@
 package br.com.infox.epp.cliente.query;
 
-import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.*;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA_FIM;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA_INICIO;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DESCRICAO_EVENTO;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.LOCALIZACAO;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.PARAM_END_DATE;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.PARAM_START_DATE;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.SERIE;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.TIPO_EVENTO;
 
 public interface CalendarioEventosQuery {
     public interface Param {
@@ -37,7 +45,7 @@ public interface CalendarioEventosQuery {
     String GET_PERIODICOS_NAO_ATUALIZADOS_QUERY = "select cd from CalendarioEventos cd"
             + " where cd.dataFim < :" + DATA
             + " and cd.serie is not null"
-            + " and not exists(select 1 from CalendarioEventos future where future.serie=cd.serie and future.dataFim > :" + DATA + ")";
+            + " and not exists(select 1 from CalendarioEventos future where future.serie=cd.serie and future.dataFim > cd.dataFim)";
     String GET_BY_SERIE="CalendarioEventos.getBySerie";
     String GET_BY_SERIE_QUERY = "select cd from CalendarioEventos cd where cd.serie = :" + SERIE;
     String GET_ULTIMO_EVENTO_SERIE="CalendarioEventos.getUltimoEventoSerie";

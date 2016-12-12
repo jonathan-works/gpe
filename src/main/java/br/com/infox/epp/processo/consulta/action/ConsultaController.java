@@ -1,9 +1,14 @@
 package br.com.infox.epp.processo.consulta.action;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Remove;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -14,6 +19,10 @@ import org.jboss.seam.faces.Redirect;
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -22,14 +31,17 @@ import br.com.infox.epp.processo.documento.list.PastaList;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoAction;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.list.FiltrosBeanList;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
+import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
+import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 
 @AutoCreate
 @Name(ConsultaController.NAME)
+@ContextDependency
 public class ConsultaController extends AbstractController {
 
     private static final long serialVersionUID = 1L;
@@ -55,12 +67,19 @@ public class ConsultaController extends AbstractController {
     private PastaList pastaList;
     @In
     private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
+    @Inject
+    private VariavelProcessoService variavelProcessoService;
+    @Inject
+    private PapelManager papelManager;
+    
+    private FiltrosBeanList filtros;
     
     private Processo processo;
     private boolean showAllDocuments = false;
-    private List<MetadadoProcesso> detalhesMetadados;
     private boolean showBackButton = true;
     private List<Localizacao> localizacoesProcesso;
+    private List<VariavelProcesso> variaveisDetalhe;
+    private String url;
 
 	public boolean isShowBackButton() {
 		return showBackButton;
@@ -139,13 +158,6 @@ public class ConsultaController extends AbstractController {
         }
     }
     
-    public List<MetadadoProcesso> getDetalhesMetadados() {
-    	if (detalhesMetadados == null) {
-    		detalhesMetadados = metadadoProcessoManager.getListMetadadoVisivelByProcesso(getProcesso());
-    	}
-    	return detalhesMetadados;
-    }
-    
     public List<Localizacao> getLocalizacoes() {
         if (localizacoesProcesso == null) {
             localizacoesProcesso = usuarioTaskInstanceManager.getLocalizacoes(getProcesso());
@@ -186,4 +198,52 @@ public class ConsultaController extends AbstractController {
 	@Remove
 	public void remove(){}
     
+	public List<VariavelProcesso> getVariaveisDetalhe() {
+		if (variaveisDetalhe == null) {
+			variaveisDetalhe = variavelProcessoService.getVariaveis(processo, 
+				DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
+		}
+		return variaveisDetalhe;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	public void redirectToView() {
+		try {
+			URL url = new URL(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("url"));
+			String path = url.getPath();
+			String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+			String redirectUrl = path.substring(path.indexOf(contextPath) + contextPath.length()).replace(".seam", ".xhtml");
+			if (redirectUrl.equals("/Processo/Consulta/listView.xhtml")) {
+				Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+				flash.put("idFluxo", processo.getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
+				flash.put("recurso", DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
+				
+				flash.put("filtros", getFiltros());
+				
+				Redirect.instance().setConversationPropagationEnabled(false);
+				Redirect.instance().getParameters().clear();
+			} else {
+				Redirect.instance().setConversationPropagationEnabled(true);
+			}
+	        Redirect.instance().setViewId(redirectUrl);
+	        Redirect.instance().execute();
+		} catch (MalformedURLException e) {
+			FacesMessages.instance().add("URL de retorno mal-formada: " + FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("url"));
+		}
+	}
+
+	public FiltrosBeanList getFiltros() {
+		return filtros;
+	}
+
+	public void setFiltros(FiltrosBeanList filtros) {
+		this.filtros = filtros;
+	}
 }

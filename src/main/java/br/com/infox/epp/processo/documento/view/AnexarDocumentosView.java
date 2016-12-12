@@ -3,17 +3,19 @@ package br.com.infox.epp.processo.documento.view;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ejb.EJBException;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ValidationException;
 
-import org.apache.commons.io.IOUtils;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.graph.exe.ExecutionContext;
@@ -21,18 +23,18 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
-import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
-import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
+import br.com.infox.epp.assinador.DocumentoBinAssinavelService;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.certificado.DefaultSignableDocumentImpl;
@@ -58,10 +60,14 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoTemporarioManager;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.Marcador;
+import br.com.infox.epp.processo.marcador.MarcadorSearch;
+import br.com.infox.epp.processo.marcador.MarcadorService;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
@@ -91,6 +97,10 @@ public class AnexarDocumentosView implements Serializable {
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 	@Inject
 	private InfoxMessages infoxMessages;
+	@Inject
+	private MarcadorSearch marcadorSearch;
+	@Inject
+	private MarcadorService marcadorService;
 
 	// Propriedades da classe
 	private Processo processo;
@@ -100,7 +110,9 @@ public class AnexarDocumentosView implements Serializable {
 
 	// Controle do uploader
 	private ClassificacaoDocumento classificacaoDocumentoUploader;
+	private String descricaoUploader;
 	private Pasta pastaUploader;
+	private List<Marcador> marcadoresUpload;
 	private List<DadosUpload> dadosUploader = new ArrayList<>();
 	private boolean showUploader;
 
@@ -109,6 +121,7 @@ public class AnexarDocumentosView implements Serializable {
 	private List<ModeloDocumento> modeloDocumentoList;
 	private ModeloDocumento modeloDocumento;
 	private boolean showModeloDocumentoCombo;
+	private List<Marcador> marcadoresEditor;
 	private ExpressionResolver expressionResolver;
 
 	// Controle da assinatura
@@ -117,7 +130,8 @@ public class AnexarDocumentosView implements Serializable {
 	private List<DocumentoTemporario> documentosMinutas;
 	private DocumentoTemporario docTempMostrarAssinaturas;
 	private String tokenAssinatura;
-	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
+	@Inject
+	private AssinadorService assinadorService;
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil
 			.getComponent(AssinaturaDocumentoService.NAME);
 
@@ -137,29 +151,59 @@ public class AnexarDocumentosView implements Serializable {
 		if (pastaDefault != null) {
 			newEditor.setPasta(pastaDefault);
 		}
+		marcadoresEditor = null;
 		setDocumentoEditor(newEditor);
 		setModeloDocumentoList(null);
 		setModeloDocumento(null);
 		setShowModeloDocumentoCombo(false);
 	}
+	
+	public List<Marcador> autoCompleteMarcadoresUpload(String query) {
+	    return autoCompleteMarcadores(query, marcadoresUpload);
+    }
+	
+	public List<Marcador> autoCompleteMarcadoresEditor(String query) {
+        return autoCompleteMarcadores(query, marcadoresEditor);
+    }
 
+    private List<Marcador> autoCompleteMarcadores(String query, List<Marcador> marcadoresSelectionados) {
+        Marcador marcadorTemp = new Marcador(query.toUpperCase());
+        List<String> codigosMarcadores = ArrayUtil.convertToList(marcadoresSelectionados, MarcadorService.CONVERT_MARCADOR_CODIGO);
+        List<Marcador> marcadores = marcadorSearch.listMarcadorByProcessoAndCodigo(getProcesso().getIdProcesso(), query, codigosMarcadores);
+        if (!marcadores.contains(marcadorTemp) 
+                && (marcadoresSelectionados == null || !marcadoresSelectionados.contains(marcadorTemp))) {
+            marcadores.add(0, marcadorTemp);
+        }
+        return marcadores;
+    }
+	
+	public boolean isPermittedAddMarcador() {
+	    return marcadorService.isPermittedAdicionarMarcador();
+	}
+	
 	public void fileUploadListener(FileUploadEvent fileUploadEvent) throws IOException {
 		UploadedFile uploadedFile = fileUploadEvent.getUploadedFile();
 		try {
-			byte[] dadosArquivo = IOUtils.toByteArray(uploadedFile.getInputStream());
-			DadosUpload dadosUpload = new DadosUpload(uploadedFile, dadosArquivo);
-			documentoUploaderService.validaDocumento(dadosUpload.getUploadedFile(), classificacaoDocumentoUploader,	dadosUpload.getDadosArquivo());
+			DadosUpload dadosUpload = new DadosUpload(uploadedFile);
+			documentoUploaderService.validaDocumento(dadosUpload.getUploadedFile(), classificacaoDocumentoUploader);
 			dadosUploader.add(dadosUpload);
 		} catch (Exception e) {
+			if (e instanceof EJBException) {
+				e = (Exception) e.getCause();
+			}
 			FacesMessages.instance().add(e.getMessage());
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-            response.sendError(415);
+			response.addHeader("Error-Message", "Falha: " + e.getMessage());
+            response.sendError(500);
 		}
 	}
 	
 	public void removeDocumentoUpload() {
         String fileName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fileName");
         if ("ALL_FILES".equals(fileName)) {
+            for (DadosUpload dadosUpload : dadosUploader) {
+            	dadosUpload.delete();
+            }
             dadosUploader.clear();
         } else if (fileName != null) {
             DadosUpload dadosUploadToRemove = null;
@@ -171,6 +215,7 @@ public class AnexarDocumentosView implements Serializable {
             }
             if (dadosUploadToRemove != null) {
                 dadosUploader.remove(dadosUploadToRemove);
+                dadosUploadToRemove.delete();
             }
         }
     }
@@ -182,8 +227,10 @@ public class AnexarDocumentosView implements Serializable {
 	private void resetUploader() {
 		clearUploadFile();
 		classificacaoDocumentoUploader = null;
-		pastaUploader = null;
+		descricaoUploader = null;
+		pastaUploader = pastaDefault;
 		showUploader = false;
+		marcadoresUpload = null;
 	}
 
 	public void clearUploadFile() {
@@ -220,23 +267,30 @@ public class AnexarDocumentosView implements Serializable {
 
 	private DocumentoTemporario gravarArquivoUpload(DadosUpload dadosUpload) throws Exception {
 		DocumentoTemporario retorno = new DocumentoTemporario();
-		retorno.setDescricao(dadosUpload.getUploadedFile().getName());
+		retorno.setDescricao(getDescricaoUploader());
 		retorno.setDocumentoBin(documentoUploaderService.createProcessoDocumentoBin(dadosUpload.getUploadedFile()));
 		retorno.setAnexo(Boolean.TRUE);
 		retorno.setClassificacaoDocumento(classificacaoDocumentoUploader);
 		retorno.setPasta(pastaUploader == null ? pastaDefault : pastaUploader);
 		retorno.setProcesso(processo);
-		documentoTemporarioManager.gravarDocumentoTemporario(retorno, dadosUpload.getDadosArquivo());
+		retorno.getDocumentoBin().setMarcadores(marcadoresUpload != null ? new HashSet<>(marcadoresUpload) : new HashSet<Marcador>());
+		documentoTemporarioManager.gravarDocumentoTemporario(retorno, dadosUpload.getUploadedFile().getInputStream()); 
 		return retorno;
 	}
 
-	public void persistUpload() {
+	public void persistUpload(String toRender) {
+	    if (pastaDefault == null) {
+	        FacesMessages.instance().add(infoxMessages.get("documento.erro.processSemPasta"));
+	        return;
+	    }
 		try {
 			for (DadosUpload dadosUpload : dadosUploader) {
 				DocumentoTemporario documentoGerado = gravarArquivoUpload(dadosUpload);
 				getDocumentoTemporarioList().add(new DocumentoTemporarioWrapper(documentoGerado));
+				dadosUpload.getUploadedFile().delete();
 			}
 			resetUploader();
+		    JsfUtil.instance().render(toRender);
 		} catch (DAOException e) {
 			FacesMessages.instance().add("Não foi possível enviar o arquivo. Tente novamente");
 			LOG.error("Erro ao gravar documento temporário", e);
@@ -248,10 +302,10 @@ public class AnexarDocumentosView implements Serializable {
 
 	private List<DocumentoTemporarioWrapper> loadDocumentoTemporarioList() {
 		List<DocumentoTemporarioWrapper> dtList = new ArrayList<>();
-		Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		if (getProcesso() != null) {
 			List<DocumentoTemporario> listByProcesso = documentoTemporarioManager.listByProcesso(getProcesso(),
-					localizacao, getOrder());
+					usuarioPerfil, getOrder());
 			for (DocumentoTemporario documentoTemporario : listByProcesso) {
 				dtList.add(new DocumentoTemporarioWrapper(documentoTemporario));
 			}
@@ -264,16 +318,21 @@ public class AnexarDocumentosView implements Serializable {
 			if (getDocumentoEditor().getId() == null) {
 				getDocumentoEditor().setProcesso(getProcesso());
 				if (getDocumentoEditor().getPasta() == null) {
+				    if (pastaDefault == null) {
+				        FacesMessages.instance().add(infoxMessages.get("documento.erro.processSemPasta"));
+				        return;
+				    }
 					getDocumentoEditor().setPasta(pastaDefault);
 				}
+				getDocumentoEditor().getDocumentoBin().setMarcadores(marcadoresEditor != null ? new HashSet<>(marcadoresEditor) : new HashSet<Marcador>());
 				documentoTemporarioManager.gravarDocumentoTemporario(getDocumentoEditor());
 				getDocumentoTemporarioList().add(new DocumentoTemporarioWrapper(getDocumentoEditor()));
-				newEditorInstance();
 			} else {
 				DocumentoTemporarioWrapper wrapper = (DocumentoTemporarioWrapper) getDocumentoEditor();
 				documentoTemporarioManager.update(wrapper.getDocumentoTemporario());
-				newEditorInstance();
 			}
+			newEditorInstance();
+			marcadoresEditor = null;
 		} catch (DAOException e) {
 			FacesMessages.instance().add("Não foi possível atualizar o arquivo. Tente novamente");
 			LOG.error("Erro ao atualizar documento temporário", e);
@@ -282,8 +341,7 @@ public class AnexarDocumentosView implements Serializable {
 
 	public void onClickExcluirButton() {
 		List<DocumentoTemporario> documentosMarcados = new ArrayList<>();
-		for (Iterator<DocumentoTemporarioWrapper> iterator = getDocumentoTemporarioList().iterator(); iterator
-				.hasNext();) {
+		for (Iterator<DocumentoTemporarioWrapper> iterator = getDocumentoTemporarioList().iterator(); iterator.hasNext();) {
 			DocumentoTemporarioWrapper wrapper = iterator.next();
 			if (wrapper.getCheck()) {
 				documentosMarcados.add(wrapper.getDocumentoTemporario());
@@ -297,6 +355,11 @@ public class AnexarDocumentosView implements Serializable {
 			documentoTemporarioManager.removeAll(documentosMarcados);
 			newEditorInstance();
 		} catch (DAOException e) {
+		    for (DocumentoTemporario documentoTemporario : documentosMarcados) {
+		        DocumentoTemporarioWrapper documentoTemporarioWrapper = new DocumentoTemporarioWrapper(documentoTemporario);
+		        documentoTemporarioWrapper.setCheck(true);
+		        getDocumentoTemporarioList().add(documentoTemporarioWrapper);
+		    }
 			FacesMessages.instance().add("Não foi possível remover os documentos marcados. Tente novamente");
 			LOG.error("Erro ao excluir documentos temporários", e);
 		}
@@ -356,7 +419,7 @@ public class AnexarDocumentosView implements Serializable {
 				documentoTemporarioParaEnviar.add(wrapper.getDocumentoTemporario());
 			}
 			documentoTemporarioManager.transformarEmDocumento(documentoTemporarioParaEnviar);
-			documentoTemporarioManager.removeAll(documentoTemporarioParaEnviar);
+			documentoTemporarioManager.removeAllSomenteTemporario(documentoTemporarioParaEnviar);
 			getDocumentoTemporarioList().removeAll(getDocumentosParaEnviar());
 			FacesMessages.instance().add("Documento(s) enviado(s) com sucesso!");
 		} catch (DAOException e) {
@@ -385,34 +448,33 @@ public class AnexarDocumentosView implements Serializable {
 		} else {
 			this.processo = processo.getProcessoRoot();
 			this.processoReal = processo;
-			if (pastaDefault == null) {
-				List<MetadadoProcesso> metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(getProcessoReal(),
+			List<MetadadoProcesso> metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(getProcessoReal(),
+					EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType());
+			if (!metaPastas.isEmpty()) {
+				pastaDefault = metaPastas.get(0).getValue();
+			} else {
+				metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(getProcesso(),
 						EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType());
 				if (!metaPastas.isEmpty()) {
 					pastaDefault = metaPastas.get(0).getValue();
-				} else {
-					metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(getProcesso(),
-							EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType());
-					if (!metaPastas.isEmpty()) {
-						pastaDefault = metaPastas.get(0).getValue();
-					}
 				}
 			}
+			pastaUploader = pastaDefault;
+			newEditorInstance();
 			createExpressionResolver();
 		}
 	}
 
 	public void signDocuments() {
 		try {
-			CertificateSignatureBundleBean bundle = getSignatureBundle();
+			List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(tokenAssinatura);
 
 			UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-			for (CertificateSignatureBean bean : bundle.getSignatureBeanList()) {
-				DocumentoBin docBin = getDocumentoTemporarioByUuid(bean.getDocumentUuid());
+			for (DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
+				DocumentoBin docBin =  getDocumentoTemporarioByUuid(dadosAssinatura.getUuidDocumentoBin());
 				if (docBin != null) {
 					if (!isAssinadoPor(docBin, usuarioPerfil)) {
-						assinaturaDocumentoService.assinarDocumento(docBin, usuarioPerfil, bean.getCertChain(),
-								bean.getSignature());
+						assinadorService.assinar(dadosAssinatura, usuarioPerfil);
 					}
 				} else {
 					throw new ApplicationException("Documento não localizado!");
@@ -421,7 +483,7 @@ public class AnexarDocumentosView implements Serializable {
 			setDocumentoTemporarioList(loadDocumentoTemporarioList());
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("anexarDocumentos.sucessoAssinatura"));
 			setDocumentosAssinaveis(new ArrayList<DocumentoTemporario>());
-		}catch(AssinaturaException | CertificadoException e){
+		}catch(AssinaturaException | ValidationException e){
 			LOG.error("Erro signDocuments ", e);
 			FacesMessages.instance().add(Severity.ERROR,e.getMessage());
 		}catch (Exception e) {
@@ -435,7 +497,7 @@ public class AnexarDocumentosView implements Serializable {
 		List<AssinaturaDocumento> assinaturas = docBin.getAssinaturas();
 		if (assinaturas != null) {
 			for (AssinaturaDocumento assinatura : assinaturas) {
-				if (usuarioPerfil.equals(assinatura.getUsuarioPerfil())) {
+				if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getPapel())) {
 					return true;
 				}
 			}
@@ -443,24 +505,13 @@ public class AnexarDocumentosView implements Serializable {
 		return false;
 	}
 
-	private DocumentoBin getDocumentoTemporarioByUuid(String uuid) {
+	private DocumentoBin getDocumentoTemporarioByUuid(UUID uuid) {
 		for (DocumentoTemporario documentoTemporario : documentosAssinaveis) {
 			UUID wrapperUuid = documentoTemporario.getDocumentoBin().getUuid();
-			if (uuid.equals(wrapperUuid.toString()))
+			if (uuid.equals(wrapperUuid))
 				return documentoBinManager.getByUUID(wrapperUuid);
 		}
 		return null;
-	}
-
-	private CertificateSignatureBundleBean getSignatureBundle() throws CertificadoException {
-		CertificateSignatureBundleBean bundle = certificateSignatures.get(tokenAssinatura);
-		if (bundle == null) {
-			throw new CertificadoException(infoxMessages.get("assinatura.error.hashExpired"));
-		} else if (CertificateSignatureBundleStatus.ERROR.equals(bundle.getStatus())
-				|| CertificateSignatureBundleStatus.UNKNOWN.equals(bundle.getStatus())) {
-			throw new CertificadoException("Erro de Certificado " + bundle);
-		}
-		return bundle;
 	}
 
 	public void selectSignableDocuments() {
@@ -480,6 +531,18 @@ public class AnexarDocumentosView implements Serializable {
 				}
 			}
 		}
+	}
+	
+	public AssinavelProvider getAssinavelProvider() {
+		return new AssinavelDocumentoBinProvider(getDocumentoBinList());
+	}
+	
+	public List<DocumentoBin> getDocumentoBinList() {
+		List<DocumentoBin> retorno = new ArrayList<>();
+		for (DocumentoTemporario documentoTemporario : documentosAssinaveis) {
+			retorno.add(documentoTemporario.getDocumentoBin());
+		}
+		return retorno;
 	}
 
 	public String getSignDocuments() {
@@ -587,8 +650,16 @@ public class AnexarDocumentosView implements Serializable {
 	public void setShowModeloDocumentoCombo(boolean showModeloDocumentoCombo) {
 		this.showModeloDocumentoCombo = showModeloDocumentoCombo;
 	}
+	
+	public List<Marcador> getMarcadoresEditor() {
+        return marcadoresEditor;
+    }
 
-	public List<String> getFaltaAssinar() {
+    public void setMarcadoresEditor(List<Marcador> marcadoresEditor) {
+        this.marcadoresEditor = marcadoresEditor;
+    }
+
+    public List<String> getFaltaAssinar() {
 		return faltaAssinar;
 	}
 
@@ -671,13 +742,31 @@ public class AnexarDocumentosView implements Serializable {
 	public void setClassificacaoDocumentoUploader(ClassificacaoDocumento classificacaoDocumentoUploader) {
 		this.classificacaoDocumentoUploader = classificacaoDocumentoUploader;
 	}
+	
+    public String getDescricaoUploader() {
+		return descricaoUploader;
+	}
 
-	private void createExpressionResolver() {
+	public void setDescricaoUploader(String descricaoUploader) {
+		this.descricaoUploader = descricaoUploader;
+	}
+
+	public List<Marcador> getMarcadoresUpload() {
+        return marcadoresUpload;
+    }
+
+    public void setMarcadoresUpload(List<Marcador> marcadoresUpload) {
+        this.marcadoresUpload = marcadoresUpload;
+    }
+
+    private void createExpressionResolver() {
 		if (processoReal != null) {
 			VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 			EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 			ProcessInstance processInstance = entityManager.find(ProcessInstance.class, processoReal.getIdJbpm());
-			variableTypeResolver.setProcessInstance(processInstance);
+			if (variableTypeResolver.getProcessInstance() == null) {
+			    variableTypeResolver.setProcessInstance(processInstance);
+			}
 			ExecutionContext executionContext = new ExecutionContext(processInstance.getRootToken());
 			expressionResolver = ExpressionResolverChainBuilder
 					.defaultExpressionResolverChain(processoReal.getIdProcesso(), executionContext);

@@ -144,6 +144,10 @@ public class EventHandler implements Serializable {
                     		StatusProcesso.STATUS_PROCESSO_ACTION_NAME.equals(action.getName())) {
                         it.remove();
                     }
+                    if (action instanceof CancelTimerAction) {
+                    	it.remove();
+                        break;
+                    }
                 }
             }
             setCurrentAction(null);

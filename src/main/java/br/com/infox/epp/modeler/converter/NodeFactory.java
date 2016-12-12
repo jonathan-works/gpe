@@ -28,8 +28,8 @@ import br.com.infox.ibpm.task.handler.InfoxTaskControllerHandler;
 import br.com.infox.ibpm.util.BpmUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
-public class NodeFactory {
-	public static Node createNode(FlowNode flowNode, ProcessDefinition processDefinition) {
+class NodeFactory {
+	static Node createNode(FlowNode flowNode, ProcessDefinition processDefinition) {
 		Node node = null;
 		if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_START_EVENT)) {
 			node = new StartState(getLabel(flowNode));
@@ -53,8 +53,6 @@ public class NodeFactory {
 			node = new Decision(getLabel(flowNode));
 		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_SUB_PROCESS)) {
 			node = new ProcessState(getLabel(flowNode));
-		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_INTERMEDIATE_THROW_EVENT)) {
-			node = new Node(getLabel(flowNode));
 		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_PARALLEL_GATEWAY)) {
 			GatewayDirection direction = ((ParallelGateway) flowNode).getGatewayDirection();
 			if (direction == GatewayDirection.Diverging) {
@@ -90,7 +88,7 @@ public class NodeFactory {
 		return node;
 	}
 	
-	public static String getLabel(FlowElement element) {
+	static String getLabel(FlowElement element) {
 		return element.getName() != null ? element.getName() : element.getId();
 	}
 }

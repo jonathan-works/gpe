@@ -9,13 +9,17 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.access.entity.Estrutura_;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.PerfilTemplate_;
@@ -45,6 +49,18 @@ public class PerfilTemplateDAO extends DAO<PerfilTemplate> {
 		return getSingleResult(getEntityManager().createQuery(cq));
     }
     
+    public List<PerfilTemplate> listByEstrutura(Integer idEstrutura) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<PerfilTemplate> cq = cb.createQuery(PerfilTemplate.class);
+        Root<PerfilTemplate> perfilTemplate = cq.from(PerfilTemplate.class);
+        Join<PerfilTemplate, Localizacao> localizacao = perfilTemplate.join(PerfilTemplate_.localizacao, JoinType.INNER);
+        cq.select(perfilTemplate);
+        cq.where(
+            cb.equal(localizacao.get(Localizacao_.estruturaPai).get(Estrutura_.id), cb.literal(idEstrutura))
+        );
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
     public PerfilTemplate getPerfilTemplateByDescricao(String descricao) {
     	Map<String, Object> param = new HashMap<>(1);
         param.put(PerfilTemplateQuery.PARAM_DESCRICAO, descricao);
@@ -55,8 +71,7 @@ public class PerfilTemplateDAO extends DAO<PerfilTemplate> {
         return getNamedResultList(LIST_PERFIS_DENTRO_DE_ESTRUTURA);
     }
 
-    public PerfilTemplate getByLocalizacaoPapel(Localizacao localizacao,
-            Papel papel) {
+    public PerfilTemplate getByLocalizacaoPapel(Localizacao localizacao, Papel papel) {
         final Map<String, Object> param = new HashMap<>();
         param.put(PerfilTemplateQuery.PARAM_LOCALIZACAO, localizacao);
         param.put(PerfilTemplateQuery.PARAM_PAPEL, papel);

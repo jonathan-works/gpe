@@ -45,9 +45,11 @@ public class CaptchaService {
 	}
 
 	private Cookie getCookieRequest() {
-		for (Cookie cookie : request.getCookies()) {
-			if (NOME_COOKIE.equals(cookie.getName())) {
-				return cookie;
+		if(request != null && request.getCookies() != null){
+			for (Cookie cookie : request.getCookies()) {
+				if (NOME_COOKIE.equals(cookie.getName())) {
+					return cookie;
+				}
 			}
 		}
 		return null;
@@ -136,6 +138,7 @@ public class CaptchaService {
 	    if(!cookieCaptcha.getUsuarios().contains(username)) {
 	        cookieCaptcha.getUsuarios().add(username);
 	        getEntityManager().persist(cookieCaptcha);
+	        getEntityManager().flush();
 	    }
 		
 	    resetTentativasLoginInvalido(cookieCaptcha.getId());

@@ -9,12 +9,16 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
+import javax.faces.component.html.HtmlInputHidden;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 
 import org.primefaces.context.RequestContext;
 import org.richfaces.component.UIDataTable;
+
+import com.sun.faces.context.flash.ELFlash;
 
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.seam.exception.ApplicationException;
@@ -39,8 +43,12 @@ public class JsfUtil {
     
 	public static void clear(UIComponent uiComponent){
 		if(uiComponent instanceof EditableValueHolder){
-			((EditableValueHolder)uiComponent).resetValue();
-			((EditableValueHolder)uiComponent).setValue(null);
+		    if (uiComponent instanceof HtmlInputHidden) {
+		        ((EditableValueHolder)uiComponent).resetValue();
+		    } else {
+                ((EditableValueHolder) uiComponent).resetValue();
+                ((EditableValueHolder)uiComponent).setValue(null);
+		    }
 		}
 		for (UIComponent child : uiComponent.getChildren()){
 			if(!(child instanceof UIData) || !(child instanceof UIDataTable)){
@@ -79,9 +87,15 @@ public class JsfUtil {
     }
     
     public void addFlashParam(String name, Object value) {
-        context.getExternalContext().getFlash().put(name, value);
+        Flash flash = context.getExternalContext().getFlash();
+        flash.put(name, value);
     }
     
+    public void applyLastPhaseFlashAction() {
+        ELFlash flash = (ELFlash) context.getExternalContext().getFlash();
+        flash.doLastPhaseActions(context, true);
+    }
+
     public <T> T getFlashParam(String name, Class<T> clazz) {
         return clazz.cast(context.getExternalContext().getFlash().get(name));
     }

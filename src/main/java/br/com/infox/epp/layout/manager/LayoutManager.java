@@ -233,6 +233,14 @@ public class LayoutManager {
 	}
 
 	private String getUrlJavaByPath(String codigoSkin, String resourcePath) {
+	    switch (codigoSkin) {
+	    case "cinza":
+            case "altoContraste":
+                break;
+            default:
+                codigoSkin="default";
+                break;
+            }
 		return MessageFormat.format("/resources/styleSkinInfox/{0}{1}", codigoSkin, resourcePath);
 	}
 
@@ -242,8 +250,10 @@ public class LayoutManager {
 		if (resourceBin != null) {
 			return new MetadadosResource(resourceBin);
 		}
-
-		URL url = LayoutManager.class.getResource(getUrlJava(codigoSkin, codigoResource));
+		String urlJava = getUrlJava(codigoSkin, codigoResource);
+		URL url = LayoutManager.class.getResource(urlJava);
+		if(url == null)
+			throw new RuntimeException("Não foi possível recuperar o recurso: " + urlJava);
 		return new MetadadosResource(url);
 	}
 

@@ -8,7 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:a="http://richfaces.org/a4j">
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:i="http://java.sun.com/jsf/composite/infox">
 
 	<!-- Div com os formulários para upload e editor -->
 	<div id="anexarDocumentosDiv"
@@ -19,11 +21,15 @@
 			header="#{infoxMessages['fileUpload.header']}"
 			style="margin-bottom: 1em" switchType="client">
 			<h:form id="uploadForm">
+			
+				<wi:inputText id="uploadDescricao" required="true"
+					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
+					value="#{anexarDocumentosView.descricaoUploader}" />
 				<wi:selectOneMenuEntity id="uploadClassificacao" required="true"
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 					value="#{anexarDocumentosView.classificacaoDocumentoUploader}"
 					items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('D')}">
-					<a:ajax id="uploadClassificacaoAjax" event="change"
+					<a:ajax event="change"
 						onbeforesubmit="infox.showLoading();"
 						oncomplete="infox.hideLoading();" render="uploadArquivoDiv"
 						limitRender="true" execute="@this"
@@ -35,7 +41,25 @@
 					value="#{anexarDocumentosView.pastaUploader}"
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}">
 				</wi:selectOneMenuEntity>
-
+				
+				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
+					<div class="property-field-edit">
+						<div class="property-field-edit-name">
+							<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorUpload"/>
+						</div>
+						<div class="property-field-edit-value">
+							<p:autoComplete id="marcadorUpload" multiple="true" 
+								value="#{anexarDocumentosView.marcadoresUpload}" 
+					        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresUpload}"
+					        	converter="br.com.infox.converter.marcador" itemLabel="#{item.codigo}" itemValue="#{item}" var="item"
+					        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+					        	<p:ajax event="itemSelect" update="@this" process="@this" />
+					        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+					        </p:autoComplete>
+				        </div>
+					</div>
+				</c:if>
+				
 				<s:div id="uploadArquivoDiv">
 					<s:div id="uploadArquivoTooltipDiv"
 						rendered="#{anexarDocumentosView.showUploader}">
@@ -79,15 +103,19 @@
 							maxFilesQuantity="20" immediateUpload="true" noDuplicate="true"
 							render="uploadArquivoAnexarButton pageBodyDialogMessage"
 							acceptedTypes="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypes}"
+							serverErrorLabel="Erro no envio"
+							onerror="processErrorMessage(this);"
 							onuploadcomplete="infox.hideLoading(); addClearEventUploadModelo();"
 							rendered="#{not empty anexarDocumentosView.classificacaoDocumentoUploader.extensaoArquivosList}">
 						</rich:fileUpload>
 						
 						<script type="text/javascript">
-                            var upload = #{rich:component('uploadArquivo')};
-                            upload.serverErrorProcLabel = 'Falha no Envio';
+							function processErrorMessage(uploader) {
+								var message = event.currentTarget.getResponseHeader('Error-Message');
+								uploader.serverErrorProcLabel = message;
+							}
                         </script>
-
+						
                         <a:jsFunction id="onClickClearItemList" name="onClickClearItemList" render="uploadArquivoAnexarButton"
                             actionListener="#{anexarDocumentosView.removeDocumentoUpload}" immediate="true" onbegin="infox.showLoading();"
                             oncomplete="infox.hideLoading();">
@@ -96,11 +124,11 @@
 
 						<s:div id="uploadArquivoAnexarButton">
 							<a:commandButton id="uploadSubmitButton" styleClass="buttons"
-								action="#{anexarDocumentosView.persistUpload()}"
+								action="#{anexarDocumentosView.persistUpload(rich:clientId('uploadPanel'))}"
 								value="#{infoxMessages['crud.update']}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
 								rendered="#{anexarDocumentosView.showUploaderButton}"
-								render="uploadPanel documentoDataTable pageBodyDialogMessage"/>
+								render="uploadDescricaoDecoration uploadClassificacaoDecoration documentoDataTable pageBodyDialogMessage"/>
 						</s:div>
 					</s:div>
 				</s:div>
@@ -150,7 +178,7 @@
 					value="#{anexarDocumentosView.documentoEditor.classificacaoDocumento}"
 					items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('P')}"
 					disabled="#{not minuta}" readonly="#{not minuta}">
-					<a:ajax id="editorClassificacaoAjax" event="change"
+					<a:ajax event="change"
 						listener="#{anexarDocumentosView.onChangeEditorClassificacaoDocumento()}"
 						onbeforesubmit="infox.showLoading();"
 						oncomplete="infox.hideLoading();"
@@ -164,6 +192,24 @@
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}"
 					rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
 					disabled="#{not minuta}" />
+				
+				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
+					<div class="property-field-edit">
+						<div class="property-field-edit-name">
+							<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorEditor"/>
+						</div>
+						<div class="property-field-edit-value">
+							<p:autoComplete id="marcadorEditor" multiple="true" 
+								value="#{anexarDocumentosView.marcadoresEditor}" 
+					        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresEditor}"
+					        	converter="br.com.infox.converter.marcador" itemLabel="#{item.codigo}" itemValue="#{item}" var="item"
+					        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+					        	<p:ajax event="itemSelect" update="@this" process="@this" />
+					        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+					        </p:autoComplete>
+				        </div>
+					</div>
+				</c:if>
 
 				<s:div id="selectModeloDocumentoDiv">
 					<wi:selectOneMenuEntity id="editorModeloDocumento" required="false"
@@ -172,7 +218,7 @@
 						items="#{anexarDocumentosView.modeloDocumentoList}"
 						disabled="#{not minuta}" readonly="#{not minuta}"
 						rendered="#{anexarDocumentosView.showModeloDocumentoCombo}">
-						<a:ajax id="editorModeloDocumentoAjax" event="change"
+						<a:ajax event="change"
 							execute="@this" render="editorDiv"
 							listener="#{anexarDocumentosView.onSelectModeloDocumento}" />
 					</wi:selectOneMenuEntity>
@@ -262,27 +308,30 @@
 							</a:commandLink>
 
 							<a:commandLink id="viewEditorLink" execute="@form"
+								action="#{jsfUtil.applyLastPhaseFlashAction}"
 								rendered="#{isModelo and not row.documentoBin.minuta}"
 								status=":status" styleClass="opacityHover"
 								onclick="infox.showLoading();" render="@this"
-								oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/Processo/downloadDocumento.seam');">
-								<infox:flashcopy />
+								oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documentoBin.id}', '#{pathResolver.contextPath}/Processo/downloadDocumento.seam',screen.availWidth,screen.availHeight);">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-								<f:setPropertyActionListener value="#{row}"
-									target="#{flash.documentoTemporario}" />
+								<f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
 							</a:commandLink>
 
-							<a:commandLink id="downloadLink" execute="@form"
-								rendered="#{not isModelo}" render="@this" limitRender="true"
-								status=":status" styleClass="opacityHover"
-								onclick="infox.showLoading();"
-								oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true');">
-								<infox:flashcopy />
-								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-								<f:setPropertyActionListener value="#{row}"
-									target="#{flash.documentoTemporario}" />
-							</a:commandLink>
-
+						   <a:commandLink id="downloadLinkPDF"
+                               execute="@form" action="#{jsfUtil.applyLastPhaseFlashAction}"
+                               rendered="#{not isModelo and fileDownloader.isPdf(row.documentoBin)}" render="@this pageBodyDialogMessage" limitRender="true"
+                               status=":status" styleClass="opacityHover"
+                               onclick="infox.showLoading();"
+                               oncomplete="infox.hideLoading(); infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/downloadDocumento.seam','1024');">
+                               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+                               <f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
+                            </a:commandLink>
+                            
+                             <p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documentoBin)}"
+                               rendered="#{not isModelo and not fileDownloader.isPdf(row.documentoBin)}" 
+                               styleClass="opacityHover" ajax="false">
+                               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+                            </p:commandLink>
 
 							<a:commandLink
 								oncomplete="#{rich:component('assinaturasDocumento')}.show();"
@@ -303,10 +352,18 @@
 						<wi:columnOutputText columnId="classificacaoDocumento.descricao"
 							columnHeader="#{infoxMessages['anexarDocumentos.classificacao']}"
 							value="#{row.classificacaoDocumento}" />
-
-						<wi:columnOutputText columnId="descricao"
-							columnHeader="#{infoxMessages['anexarDocumentos.descricao']}"
-							value="#{row.descricao}" />
+							
+						<wi:column columnId="descricao"
+							columnHeader="#{infoxMessages['anexarDocumentos.descricao']}">
+							<div align="center">
+								<h:outputText value="#{row.descricao}" style="display: block;" />
+								<ui:repeat var="marcador"
+									value="#{row.documentoBin.marcadoresList}">
+									<h:outputText value="#{marcador.codigo} "
+										styleClass="marcadorLabel" />
+								</ui:repeat>
+							</div>
+						</wi:column>
 
 						<wi:columnOutputText columnId="dataInclusao"
 							columnHeader="#{infoxMessages['anexarDocumentos.data']}"
@@ -434,20 +491,15 @@
 
 			<div align="center">
 				<h:form>
-					<a:jsFunction name="assinarForm"
-						actionListener="#{anexarDocumentosView.signDocuments}"
-						action="#{elFunctions.invokeMethod(actionPosSign)}"
-						execute="@this assinarButtonToken"
-						render="pageBodyDialogMessage documentoDiv assinarDocumentosPopUpPanelOutput"
-						onbegin="infox.showLoading('Assinando Documento(s)');"
-						oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();" />
-
-					<wi:certificadoDigital id="assinarButton"
-						rendered="#{not empty anexarDocumentosView.documentosAssinaveis}"
-						tokenField="#{anexarDocumentosView.tokenAssinatura}"
-						documentData="#{anexarDocumentosView.signDocuments}"
-						functionPreSign="infox.showLoading('Aguardando Usuário');"
-						functionPosSign="assinarForm();" />
+                    <i:certificadoDigital
+                        id="assinarButton"
+                        tokenField="#{anexarDocumentosView.tokenAssinatura}"
+                        assinavelProvider="#{anexarDocumentosView.assinavelProvider}"
+                        execute="@this"
+                        render="pageBodyDialogMessage documentoDiv assinarDocumentosPopUpPanelOutput"
+                        oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();"
+                        signAction="#{anexarDocumentosView.signDocuments}"
+                        limitRender="true" />
 
 					<a:commandButton id="cancelarAssinaturaButton" styleClass="buttons"
 						value="#{infoxMessages['button.cancelar']}"

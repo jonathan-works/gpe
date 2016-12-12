@@ -4,16 +4,19 @@ import java.sql.SQLException;
 
 import org.jboss.seam.annotations.ApplicationException;
 
+import br.com.infox.epp.system.Configuration;
+import br.com.infox.epp.system.Database;
+
 @ApplicationException(end = false, rollback = false)
 @javax.ejb.ApplicationException(rollback = true)
 public class DAOException extends RuntimeException {
-
     private static final long serialVersionUID = 1L;
-    public static final String MSG_UNIQUE_VIOLATION = "#{infoxMessages['constraintViolation.uniqueViolation']}";
-    public static final String MSG_FOREIGN_KEY_VIOLATION = "#{infoxMessages['constraintViolation.foreignKeyViolation']}";
-    public static final String MSG_NOT_NULL_VIOLATION = "#{infoxMessages['constraintViolation.notNullViolation']}";
-    public static final String MSG_CHECK_VIOLATION = "#{infoxMessages['constraintViolation.checkViolation']}";
-    public static final String MSG_DEADLOCK = "#{infoxMessages['databaseError.deadlock']}";
+    
+    public static final String MSG_UNIQUE_VIOLATION = "constraintViolation.uniqueViolation";
+    public static final String MSG_FOREIGN_KEY_VIOLATION = "constraintViolation.foreignKeyViolation";
+    public static final String MSG_NOT_NULL_VIOLATION = "constraintViolation.notNullViolation";
+    public static final String MSG_CHECK_VIOLATION = "constraintViolation.checkViolation";
+    public static final String MSG_DEADLOCK = "databaseError.deadlock";
 
     private GenericDatabaseErrorCode databaseErrorCode;
     private String localizedMessage;
@@ -84,13 +87,9 @@ public class DAOException extends RuntimeException {
             current = current.getCause();
         }
         if (current != null) {
-            this.sqlException = (SQLException) current;
-            String exceptionClassName = this.sqlException.getClass().getCanonicalName();
-            if (exceptionClassName.equals("com.microsoft.sqlserver.jdbc.SQLServerException")) {
-                return new SqlServer2012ErrorCodeAdaptor().resolve(sqlException);
-            } else if (exceptionClassName.equals("org.postgresql.util.PSQLException")) {
-                return new PostgreSQLErrorCodeAdaptor().resolve(sqlException);
-            }
+        	this.sqlException = (SQLException) current;
+        	Database database = Configuration.getInstance().getDatabase();
+        	return database.getErrorCodeAdapter().resolve(sqlException.getErrorCode(), sqlException.getSQLState());
         }
         return null;
     }

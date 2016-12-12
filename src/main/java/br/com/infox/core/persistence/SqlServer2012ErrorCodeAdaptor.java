@@ -1,16 +1,15 @@
 package br.com.infox.core.persistence;
 
-import java.sql.SQLException;
-
 import br.com.infox.hibernate.sqlserver.error.SQLServer2012ErrorCode;
 
-public class SqlServer2012ErrorCodeAdaptor {
+public class SqlServer2012ErrorCodeAdaptor implements DatabaseErrorCodeAdapter {
+    
+    public static final DatabaseErrorCodeAdapter INSTANCE = new SqlServer2012ErrorCodeAdaptor();
 
-    public GenericDatabaseErrorCode resolve(SQLException sqlException) {
-        int code = sqlException.getErrorCode();
-        for (SQLServer2012ErrorCode errorCode : SQLServer2012ErrorCode.values()) {
-            if (errorCode.getCode() == code) {
-                switch (errorCode) {
+    public GenericDatabaseErrorCode resolve(Integer errorCode, String sqlState) {
+        for (SQLServer2012ErrorCode sqlServerCode : SQLServer2012ErrorCode.values()) {
+            if (sqlServerCode.getCode() == errorCode) {
+                switch (sqlServerCode) {
                 case UNIQUE_VIOLATION_INDEX:
                     return GenericDatabaseErrorCode.UNIQUE_VIOLATION;
                 case UNIQUE_VIOLATION_CONSTRAINT:

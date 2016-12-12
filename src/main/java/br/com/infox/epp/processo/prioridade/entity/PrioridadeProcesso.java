@@ -78,6 +78,31 @@ public class PrioridadeProcesso implements Serializable, Comparable<PrioridadePr
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((getIdPrioridade() == null) ? 0 : getIdPrioridade().hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (obj instanceof PrioridadeProcesso)
+            return false;
+        PrioridadeProcesso other = (PrioridadeProcesso) obj;
+        if (getIdPrioridade() == null) {
+            if (other.getIdPrioridade() != null)
+                return false;
+        } else if (!getIdPrioridade().equals(other.getIdPrioridade()))
+            return false;
+        return true;
+    }
+
+    @Override
     public int compareTo(PrioridadeProcesso o) {
         if ((this.peso != null) && (o != null) && (o.peso != null)) {
             return this.peso.compareTo(o.peso);

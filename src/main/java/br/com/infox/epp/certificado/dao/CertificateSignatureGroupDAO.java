@@ -3,7 +3,7 @@
  */
 package br.com.infox.epp.certificado.dao;
 
-import static br.com.infox.epp.certificado.query.CertificateSignatureGroupQuery.*;
+import static br.com.infox.epp.certificado.query.CertificateSignatureGroupQuery.GET_BY_TOKEN;
 import static br.com.infox.epp.certificado.query.CertificateSignatureGroupQuery.PARAM_TOKEN;
 
 import java.util.HashMap;

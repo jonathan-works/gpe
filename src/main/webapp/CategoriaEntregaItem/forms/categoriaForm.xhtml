@@ -15,7 +15,8 @@
             <fieldset>
                 <legend>Categoria</legend>
                 <i:inputText id="codigoCategoria" required="true" label="Código"  value="#{categoriaEntregaView.categoriaEntregaController.codigo}" 
-                onchange="this.value=this.value.toUpperCase();" onkeyup="this.value=this.value.toUpperCase();"/>
+	                onchange="this.value=this.value.toUpperCase();" onkeyup="this.value=this.value.toUpperCase();" 
+	                disabled="#{categoriaEntregaView.categoriaEntregaController.isManaged()}"/>
                 <i:inputText id="descricaoCategoria" required="true" label="Descrição" value="#{categoriaEntregaView.categoriaEntregaController.descricao}" />
             </fieldset>
 

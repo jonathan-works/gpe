@@ -96,7 +96,8 @@ public class BpmnJpdlService {
     }
     
     public ProcessDefinition createInitialProcessDefinition(String processName) {
-    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(null);
+    	ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
+    	processDefinition.setKey(BpmUtil.generateKey());
     	processDefinition.setName(processName);
     	updateDefinitionsFromBpmn(createInitialBpmn(processName), processDefinition);
     	Swimlane laneSolicitante = processDefinition.getTaskMgmtDefinition().getSwimlanes().values().iterator().next();
@@ -145,7 +146,19 @@ public class BpmnJpdlService {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Fluxo importarBpmn(Fluxo fluxo, String bpmn) {
 		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmn.getBytes(StandardCharsets.UTF_8)));
-    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(null);
+		BpmnAdapter[] adapters = getAdapters();
+		for (BpmnAdapter adapter : adapters) {
+			bpmnModel = adapter.checkAndConvert(bpmnModel);
+		}
+
+		if (bpmnModel.getModelElementsByType(Process.class).size() != 1) {
+			throw new BusinessRollbackException("O BPMN deve conter apenas 1 processo");
+		}
+		if (bpmnModel.getModelElementsByType(Participant.class).size() != 1) {
+			throw new BusinessRollbackException("O BPMN deve conter apenas 1 participante");
+		}
+		
+    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(fluxo.getXml());
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
 
     	Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
@@ -172,15 +185,6 @@ public class BpmnJpdlService {
 	}
 	
 	private void updateDefinitionsFromBpmn(BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
-		BizagiBpmnAdapter bizagiBpmnAdapter = new BizagiBpmnAdapter();
-		bizagiBpmnAdapter.checkAndConvert(bpmnModel);
-		if (bpmnModel.getModelElementsByType(Process.class).size() != 1) {
-			throw new BusinessRollbackException("O BPMN deve conter apenas 1 processo");
-		}
-		if (bpmnModel.getModelElementsByType(Participant.class).size() != 1) {
-			throw new BusinessRollbackException("O BPMN deve conter apenas 1 participante");
-		}
-		
 		BpmnJpdlTranslation translation = new BpmnJpdlTranslation(bpmnModel, processDefinition);
 		for (Node node : translation.getNodesToRemove()) {
 			processDefinition.removeNode(node);
@@ -239,6 +243,10 @@ public class BpmnJpdlService {
 	private void updateNodes(BpmnJpdlTranslation translation, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
 		for (FlowNode flowNode : bpmnModel.getModelElementsByType(FlowNode.class)) {
 			Node node = processDefinition.getNode(flowNode.getId());
+			Node newCandidateNode = NodeFactory.createNode(flowNode, processDefinition);
+			if (!newCandidateNode.getClass().equals(node.getClass())) {
+				copyAndRemoveNode(processDefinition, node, newCandidateNode);
+			}
 			String label = NodeFactory.getLabel(flowNode);
 			if (label.equals(flowNode.getId()) && !label.equals(node.getName())) {
 				// workaround para o comportamento do método hasNode do ProcessDefinition
@@ -341,10 +349,7 @@ public class BpmnJpdlService {
 
 	private ProcessDefinition loadOrCreateProcessDefinition(String xml) {
 		if (xml == null) {
-			ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
-			processDefinition.setKey(BpmUtil.generateKey());
-			processDefinition.setName(processDefinition.getKey());
-			return processDefinition;
+			return createInitialProcessDefinition(BpmUtil.generateKey());
 		} else {
 			return new InfoxJpdlXmlReader(new StringReader(xml)).readProcessDefinition();
 		}
@@ -364,4 +369,11 @@ public class BpmnJpdlService {
         }
     }
 
+	private BpmnAdapter[] getAdapters() {
+		return new BpmnAdapter[] {
+			new BizagiBpmnAdapter(),
+			new BpmnNodesAdapter(),
+			new BpmnDiagramAdapter()
+		};
+	}
 }

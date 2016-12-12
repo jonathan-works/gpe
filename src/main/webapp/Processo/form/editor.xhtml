@@ -20,16 +20,17 @@
 	<wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
 		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 		items="#{classificacoesDocumento}"
-		required="#{not readonly}"
+		required="#{wi:get(required, false)}"
 		showLabelSelecione="true"
 		value="#{formField.properties.classificacaoDocumento}"
 		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
 		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
-		<a:ajax event="change" render="#{varId}AssinaturaDocumento #{varId}EditorDiv" execute="@this" limitRender="true" />
+		<f:validator validatorId="classificacaoEditorValidator" for="@this"/>
+		<f:attribute name="editorId" value="#{rich:clientId(varId)}"/>
 	</wi:selectOneMenuEntity>
 	
     <wi:selectOneMenuEntity id="#{varId}ModeloDocumento"
-		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
 		items="#{formField.properties.modelosDocumento}"
 		noSelectionLabel="[Selecione o modelo]"
 		required="false"
@@ -55,6 +56,7 @@
 	    </s:div>
 	    
 	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
+	    	required="#{wi:get(required, false)}"
 	        readonly="#{readonly or formField.value.hasAssinatura()}" 
 	        label="#{formField.label}"/>
 	        
@@ -67,17 +69,16 @@
 			<a:jsFunction name="assinar"
 				action="#{controller.assinar()}"
 				execute="@this, #{varId}AssinaturaDocumento"
-				render="#{varId}Div, :pageBodyDialogMessage" 
+				render="#{varId}Div :pageBodyDialogMessage" 
 				oncomplete="infox.hideLoading();"/>
 				
 			<wi:certificadoDigital
-	            id="appletAssinatura"
+	            id="#{varId}CertificadoDigital"
+	            execute="#{varId}EditorDiv"
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-				reRender="#{varId}AssinaturaDocumento, :pageBodyDialogMessage"
 				tokenField="#{controller.tokenToSign}"
-				propertyValue="#{formField.value}"
-				propertyTarget="#{controller.documentoToSign}"
-				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
+				reRender="#{varId}ClassificacaoDocumento #{varId}ModeloDocumento #{varId}EditorDiv #{varId}AssinaturaDocumento :pageBodyDialogMessage"
+				documentoBin="#{formField.value.documentoBin}"
 				functionPreSign="infox.showLoading();"
 				functionPosSign="assinar();" >
 	       </wi:certificadoDigital>

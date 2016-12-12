@@ -4,7 +4,7 @@ import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
-import org.bouncycastle.asn1.DERObjectIdentifier;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 
 import br.com.infox.certificado.exception.CertificadoException;
 
@@ -25,7 +25,7 @@ public class CertJUSInstitucional extends CertJUS implements CertificadoDadosPes
     }
     
     @Override
-    protected void parseCertificateData(DERObjectIdentifier oid, String info) throws CertificadoException {
+    protected void parseCertificateData(ASN1ObjectIdentifier oid, String info) throws CertificadoException {
         this.dadosPessoaFisica = CertificateUtil.parseDadosPessoaFisica(oid, info, this.dadosPessoaFisica);
     }
     

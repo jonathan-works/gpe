@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:i="http://java.sun.com/jsf/composite/infox">
+
+	<!-- Painel dos Destinatários -->
+	<s:div id="destinatariosPanel">
+		<h:form>
+			<rich:panel id="destinatariosSelecionadosComunicacaoPanel"
+				header="#{infoxMessages['comunicacao.destinatarios']}"
+				bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
+				<rich:dataTable id="destinatariosSelecionados"
+					value="#{envioComunicacaoController.modeloComunicacao.destinatarios}"
+					styleClass="dtable rf-dt-crud" var="row">
+					<ui:param name="showToolbarNaoFinalizada"
+						value="#{not envioComunicacaoController.modeloComunicacao.finalizada}" />
+					<ui:param name="showToolbarFinalizada"
+						value="#{envioComunicacaoController.modeloComunicacao.finalizada and
+															 not envioComunicacaoController.modeloComunicacao.documentoBinario}" />
+					<rich:column styleClass="dt-toolbar-col"
+						rendered="#{showToolbarNaoFinalizada or showToolbarFinalizada}">
+						<f:facet name="header">
+							<a:commandLink id="abrirPopupAddComunicacao"
+								execute="@this" render="adicionaDestinatariosModalDiv" limitRender="true"
+								onclick="infox.showLoading();"
+								oncomplete="infox.hideLoading(); #{rich:component('addDestinatariosComunicacaoPopup')}.show();"
+								rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['button.add']}" />
+							</a:commandLink>
+						</f:facet>
+						<a:commandLink execute="@this" render="destinatariosPanel"
+							action="#{destinatarioComunicacaoAction.removerDestinatario(row)}"
+							rendered="#{showToolbarNaoFinalizada}">
+							<h:graphicImage
+								url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+								title="#{infoxMessages['button.delete']}" />
+						</a:commandLink>
+						<s:div rendered="#{showToolbarFinalizada}">
+							<a:commandLink
+								action="#{envioComunicacaoController.setDestinatario(row)}"
+								render="comunicacaoDestinatarioForm" execute="@this"
+								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel and not row.expedido}">
+								<h:graphicImage
+									url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}"
+									title="#{infoxMessages['button.selecionar']}" />
+							</a:commandLink>
+							<a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction()}"
+								oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
+								rendered="#{row.expedido}" render="@this" execute="@this">
+								<h:graphicImage
+									url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}"
+									title="#{infoxMessages['comunicacao.visualizarAComunicacao']}" />
+								<f:setPropertyActionListener value="#{row.id}"
+									target="#{flash.idDestinatario}" />
+							</a:commandLink>
+							<a:commandLink execute="@this" rendered="#{not row.expedido}"
+								render="comunicacaoDiv :pageBodyDialogMessage"
+								action="#{envioComunicacaoController.excluirDestinatarioComunicacao(row)}"
+								onclick="if (confirm('#{envioComunicacaoController.modeloComunicacao.destinatarios.size gt 1 ? infoxMessages['crud.confirmRemove'] : infoxMessages['comunicacao.msg.aviso.exclusaoUltimoDestinatario']}')) {infox.showLoading(); return true;} else return false;"
+								oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();">
+								<h:graphicImage
+									url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+									title="#{infoxMessages['comunicacao.excluir']}" />
+							</a:commandLink>
+						</s:div>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['participanteProcesso.nome']}</f:facet>
+						<h:outputText value="#{row.nome} #{row.destinatario eq destinatarioComunicacaoAction.relator ? '(Relator)' : ''}" />
+					</rich:column>
+					<rich:column style="width:12em;">
+						<f:facet name="header">#{infoxMessages['comunicacao.meioExpedicao']}<span
+								class="required">*</span>
+						</f:facet>
+						<h:selectOneMenu value="#{row.meioExpedicao}"
+							rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+							<f:selectItem noSelectionOption="true"
+								itemLabel="#{infoxMessages['crud.select.select']}" />
+							<f:selectItems var="v"
+								value="#{destinatarioComunicacaoAction.getMeiosExpedicao(row)}"
+								itemLabel="#{v.descricao}" itemValue="#{v}" />
+							<a:ajax event="change" />
+							<s:convertEntity />
+						</h:selectOneMenu>
+						<h:outputText value="#{row.meioExpedicao.descricao}"
+							rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}" />
+					</rich:column>
+					<rich:column style="width:15em;">
+						<f:facet name="header">
+							#{infoxMessages['comunicacao.prazo']}
+							<s:fragment
+								rendered="#{envioComunicacaoController.prazoComunicacaoRequired}">
+								<span class="required">*</span>
+							</s:fragment>
+						</f:facet>
+						<h:inputText value="#{row.prazo}"
+							rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
+							onkeyup="onlyPositiveNumber(this)" converterId="integerConverter"
+							id="prazo">
+							<a:ajax event="change" />
+						</h:inputText>
+						<h:outputText value="#{row.prazo}"
+							rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}" />
+					</rich:column>
+					<rich:column styleClass="dt-toolbar-col"
+						rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+						<a:commandButton
+							value="#{infoxMessages['comunicacao.replicarPrazo']}"
+							render="destinatariosPanel"
+							action="#{destinatarioComunicacaoAction.replicarPrazo(row)}"
+							rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
+							execute="@this, prazo" />
+					</rich:column>
+				</rich:dataTable>
+			</rich:panel>
+		</h:form>
+	</s:div>
+	
+
+	<script type="text/javascript">
+        function closeDestinatarioPopup() {
+        	#{rich:component('addDestinatariosComunicacaoPopup')}.hide();
+        }
+        function onBeforeHidePopup() {
+        	#{rich:jQuery('relator')}.attr('checked', false);
+        	#{rich:jQuery('localizacao')}.val('');
+        	#{rich:jQuery('perfisPermitidosDestino')}.val('');
+        }
+    </script>
+
+	<rich:popupPanel id="addDestinatariosComunicacaoPopup" modal="true"
+		autosized="true" minWidth="800" minHeight="420"
+		header="Adicionar Destinatário" onbeforehide="onBeforeHidePopup();" onbeforeshow="#{rich:component('destinoLocalizacaoPerfilPanel')}.switchToItem('false');">
+		<f:facet name="controls">
+			<h:graphicImage id="closeBtnAddDestinatarioPopup"
+				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+				onclick="closeDestinatarioPopup();" style="cursor: pointer;" />
+		</f:facet>
+		
+		<s:div id="adicionaDestinatariosModalDiv">
+		
+		<!-- Participantes Disponíveis -->
+		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.participantesProcesso']}" switchType="client"
+			rendered="#{participanteProcessoComunicacaoList.resultCount gt 0}">
+			<h:outputText value="#{infoxMessages['comunicacao.mensagemEnvioParaParte']}"/>
+
+			<wi:dataTable id="participantesDisponiveis" style="margin-top: 1em;"
+				values="#{participanteProcessoComunicacaoList.list(15)}"
+				bean="#{participanteProcessoComunicacaoList}" showSearchForm="false"
+				rowId="#{row.id}">
+				<ui:define name="headerToolBar" />
+				<ui:define name="toolBar">
+					<h:form>
+						<a:commandLink render="destinatariosPanel"
+							action="#{destinatarioComunicacaoAction.adicionarDestinatario(row)}"
+							oncomplete="closeDestinatarioPopup();" >
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['button.add']}" />
+						</a:commandLink>
+					</h:form>
+				</ui:define>
+				<rich:column>
+					<f:facet name="header">#{infoxMessages['participanteProcesso.nome']}</f:facet>
+					<h:outputText value="#{row.nome}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">#{infoxMessages['participanteProcesso.tipoParticipante']}</f:facet>
+					<h:outputText value="#{row.tipoParte.descricao}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">#{infoxMessages['participanteProcesso.superior']}</f:facet>
+					<h:outputText value="#{row.participantePai}"></h:outputText>
+				</rich:column>
+			</wi:dataTable>
+		</rich:collapsiblePanel>
+
+		<!-- Localizações disponíveis para serem selecionadas como Destinatários -->
+		<h:form>
+			<rich:collapsiblePanel id="destinoLocalizacaoPerfilPanel" header="#{infoxMessages['comunicacao.adicionarLocalizacoes']}" style="margin-top:1em;"	
+				switchType="client" expanded="false">
+				<div style="margin-botton: 1em">
+					<wi:outputText id="mensagemEnvioLocalizacao" value="#{infoxMessages['comunicacao.mensagemEnvioParaLocalizacao']}" />
+				</div>
+				<i:autoComplete id="localizacao"
+					label="#{infoxMessages['comunicacao.localizacoes']}"
+					value="#{destinatarioComunicacaoAction.localizacao}"
+					required="true"
+					completeMethod="#{destinatarioComunicacaoAction.getLocalizacoesDisponiveis}"
+					converter="org.jboss.seam.ui.EntityConverter"
+					style="position: relative;" var="localizacao"
+					itemLabel="#{localizacao.localizacao}" itemValue="#{localizacao}"
+					forceSelection="true" ajax="true" event="itemSelect"
+					render="@(.perfis-destino) @(.button-add-destino)"
+					onstart="infox.showLoading();" oncomplete="infox.hideLoading();">
+					<f:facet name="itemtip">
+						<h:outputText value="#{localizacao.caminhoCompletoFormatado}" />
+					</f:facet>
+				</i:autoComplete>
+
+				<wi:selectOneMenuEntity id="perfisPermitidosDestino"
+					styleClass="perfis-destino"
+					value="#{destinatarioComunicacaoAction.perfilDestino}"
+					label="#{infoxMessages['usuarioPerfil.perfil']}"
+					items="#{destinatarioComunicacaoAction.perfisPermitidosDestino}"
+					disabled="#{empty destinatarioComunicacaoAction.localizacao}">
+					<a:ajax event="change" execute="@this" limitRender="true"
+						render="buttonAdicionarDestinoComunicacao"
+						onbegin="infox.showLoading();" oncomplete="infox.hideLoading();" />
+				</wi:selectOneMenuEntity>
+
+				<s:div id="buttonAdicionarDestinoComunicacao" styleClass="button-add-destino" style="display: inline;">
+					<wi:commandButton id="adicionarLocalizacao"
+						reRender="destinatariosPanel, pageBodyDialogMessage"
+						value="#{infoxMessages['button.add']}"
+						action="#{destinatarioComunicacaoAction.adicionarDestino()}"
+						rendered="#{destinatarioComunicacaoAction.existeUsuarioDestino()}"
+						oncomplete="closeDestinatarioPopup();" />
+					<wi:commandButton id="adicionarLocalizacaoWithConfirm"
+						reRender="destinatariosPanel, pageBodyDialogMessage"
+						value="#{infoxMessages['button.add']}"
+						action="#{destinatarioComunicacaoAction.adicionarDestino()}"
+						onclick="if(confirm('Não existem usuários no destino selecionado. Deseja continuar?')) {infox.showLoading();} else {return false};"
+						oncomplete="closeDestinatarioPopup(); "
+						rendered="#{not destinatarioComunicacaoAction.existeUsuarioDestino()}" />
+				</s:div>
+
+			</rich:collapsiblePanel>
+		</h:form>
+		
+		<!-- Controle do Relator -->
+		<h:form	rendered="#{destinatarioComunicacaoAction.processoPossuiRelator and not destinatarioComunicacaoAction.modeloComunicacao.enviarRelatoria}"
+			style="margin-top:1em;">
+			<rich:collapsiblePanel id="destinatarioRelatoria" header="#{infoxMessages['comunicacao.adicionarRelatoria']}" switchType="client" expanded="false">
+				<h:outputText value="#{infoxMessages['comunicacao.mensagemEnvioParaRelatoria']} #{destinatarioComunicacaoAction.relator.nome}."/>
+				<div style="display: inline;">
+					<wi:commandButton id="adicionarRelatorDestinatario"
+						reRender="destinatariosPanel, pageBodyDialogMessage"
+						action="#{destinatarioComunicacaoAction.adicionarRelatoria()}"
+						value="#{infoxMessages['button.add']} Relatoria"
+						oncomplete="closeDestinatarioPopup();" />
+				</div>
+			</rich:collapsiblePanel>
+		</h:form>
+		</s:div>
+	</rich:popupPanel>
+	
+</ui:composition>

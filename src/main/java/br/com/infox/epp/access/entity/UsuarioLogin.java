@@ -13,8 +13,6 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.LOGIN;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TAREFA;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TAREFA_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TASK_INSTANCE_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PROVISORIO;
@@ -106,7 +104,6 @@ import br.com.infox.epp.system.entity.EntityLog;
         @NamedQuery(name = USUARIO_FETCH_PF_BY_NUMERO_CPF, query = USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY) })
 @NamedNativeQueries({
     @NamedNativeQuery(name = USUARIO_BY_ID_TASK_INSTANCE, query = USUARIO_BY_ID_TASK_INSTANCE_QUERY),
-    @NamedNativeQuery(name = NOME_USUARIO_BY_ID_TAREFA, query = NOME_USUARIO_BY_ID_TAREFA_QUERY),
     @NamedNativeQuery(name = NOME_USUARIO_BY_ID_TASK_INSTANCE, query = NOME_USUARIO_BY_ID_TASK_INSTANCE_QUERY) })
 public class UsuarioLogin implements Serializable {
 
@@ -433,9 +430,22 @@ public class UsuarioLogin implements Serializable {
         return getNomeUsuario();
     }
 
+	@Transient
+    public boolean isLoginComSenhaHabilitado(){
+	    return UsuarioEnum.H.equals(tipoUsuario) || UsuarioEnum.P.equals(tipoUsuario);
+	}
+	@Transient
+	public boolean isLoginComCertificadoHabilitado(){
+	    return UsuarioEnum.H.equals(tipoUsuario) || UsuarioEnum.C.equals(tipoUsuario);
+	}
+	@Transient
+	public boolean isUsuarioSistema(){
+	    return UsuarioEnum.S.equals(tipoUsuario);
+	}
+	
     @Transient
     public boolean isHumano() {
-        return UsuarioEnum.H.equals(tipoUsuario);
+        return !isUsuarioSistema();
     }
 
     @Transient

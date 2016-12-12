@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -21,23 +19,25 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
+import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.ParticipanteProcessoComunicacaoList;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named(DestinatarioComunicacaoAction.NAME)
 @ViewScoped
-@Stateful
 public class DestinatarioComunicacaoAction implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -52,7 +52,14 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	private UsuarioPerfilManager usuarioPerfilManager;
 	@Inject
 	private DestinatarioComunicacaoService destinatarioComunicacaoService;
+	@Inject
+	private LocalizacaoSearch localizacaoSearch;
+	@Inject
+	private UsuarioLoginSearch usuarioLoginSearch;
 	
+	private Localizacao localizacaoRaizComunicacao;
+	private Integer prazoDefaultTarefa;
+	private PerfilTemplate perfilAssinatura;
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
 	private Map<Localizacao, List<PerfilTemplate>> perfisSelecionados = new HashMap<>();
 	private List<DestinatarioModeloComunicacao> destinatariosExcluidos = new ArrayList<>();
@@ -61,15 +68,17 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	private boolean processoPossuiRelator;
 	private Localizacao localizacao;
 	private PerfilTemplate perfilDestino;
+	private boolean existeUsuarioNoDestino = true;
 	
-	public void init() {
+	public void init(Localizacao localizacaoRaizComunicacao, Integer prazoDefaultTarefa, PerfilTemplate perfilAssinatura) {
 		initEntityLists();
+		this.localizacaoRaizComunicacao = localizacaoRaizComunicacao;
+		this.prazoDefaultTarefa = prazoDefaultTarefa;
+		this.perfilAssinatura = perfilAssinatura;
 	}
 	
-	@Remove
-	public void destroy() {}
-	
 	//TODO ver como colocar esse método no service
+	@Transactional
 	public void persistDestinatarios() throws DAOException {
 		destinatarioComunicacaoService.removeDestinatariosModeloComunicacaoList(destinatariosExcluidos);
 		destinatarioComunicacaoService.gravaDestinatariosModeloComunicacaoList(modeloComunicacao.getDestinatarios());
@@ -89,6 +98,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 			// A query sempre retorna PessoaFisica
 			destinatario.setDestinatario(pessoaFisicaManager.merge((PessoaFisica) HibernateUtil.removeProxy(participante.getPessoa())));
 			destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
+			destinatario.setTipoParte(participante.getTipoParte());
 			participanteProcessoComunicacaoList.adicionarIdPessoa(destinatario.getDestinatario().getIdPessoa());
 			modeloComunicacao.getDestinatarios().add(destinatario);
 		} catch (DAOException e) {
@@ -97,7 +107,11 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		}
 	}
 	
-	public void adicionarDestino(Localizacao localizacao, PerfilTemplate perfilDestino) {
+	public boolean existeUsuarioDestino() {
+		return existeUsuarioNoDestino;
+	}
+	
+	public void adicionarDestino() {
 		DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
         destinatario.setModeloComunicacao(modeloComunicacao);
         destinatario.setDestino(localizacao);
@@ -119,10 +133,12 @@ public class DestinatarioComunicacaoAction implements Serializable{
             modeloComunicacao.getDestinatarios().add(destinatario);
             addPerfilSelecionado(destinatario);
 	    }
+		this.localizacao = null;
+		this.perfilDestino = null;
 	}
 
-	protected Integer getPrazoDefaultByTipoComunicacao( TipoComunicacao tipoComunicacao){
-		return null;
+	protected Integer getPrazoDefaultByTipoComunicacao(TipoComunicacao tipoComunicacao) { 
+		return prazoDefaultTarefa;
 	}
 	
 	public void removerDestinatario(DestinatarioModeloComunicacao destinatario) {
@@ -152,29 +168,19 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		}
 	}
 	
-	public void gerenciarRelator() {
-		PessoaFisica relator = getRelator();
-		if (modeloComunicacao.getEnviarRelatoria()) {
-			if (!isPessoaFisicaNaListaDestinatarios(relator)) {
-				DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
-				destinatario.setDestinatario(relator);
-				destinatario.setModeloComunicacao(modeloComunicacao);
-				destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
-				modeloComunicacao.getDestinatarios().add(destinatario);
-				participanteProcessoComunicacaoList.adicionarIdPessoa(relator.getIdPessoa());
-			}
-		} else {
-			DestinatarioModeloComunicacao destinatarioRelator = null;
-			for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
-				if (destinatarioModeloComunicacao.getDestinatario() != null && destinatarioModeloComunicacao.getDestinatario().equals(relator)) {
-					destinatarioRelator = destinatarioModeloComunicacao;
-					break;
-				}
-			}
-			removerDestinatario(destinatarioRelator);
-		}
-	}
-	
+    public void adicionarRelatoria() {
+        modeloComunicacao.setEnviarRelatoria(true);
+        PessoaFisica relator = getRelator();
+        if (!isPessoaFisicaNaListaDestinatarios(relator)) {
+            DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
+            destinatario.setDestinatario(relator);
+            destinatario.setModeloComunicacao(modeloComunicacao);
+            destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
+            modeloComunicacao.getDestinatarios().add(destinatario);
+            participanteProcessoComunicacaoList.adicionarIdPessoa(relator.getIdPessoa());
+        }
+    }
+
 	private boolean isPessoaFisicaNaListaDestinatarios(PessoaFisica relator) {
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getDestinatario() != null && destinatario.getDestinatario().equals(relator)) {
@@ -188,15 +194,28 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		return destinatarioComunicacaoService.getMeiosExpedicao(destinatario);
 	}
 	
-	public boolean isProcessoPossuiRelator() {
+	public boolean isProcessoPossuiRelator() { 
 		return processoPossuiRelator;
 	}
 	
+	public List<Localizacao> getLocalizacoesDisponiveis(String query) {
+		if (localizacaoRaizComunicacao != null) {
+			return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(localizacaoRaizComunicacao, query, EnvioComunicacaoController.MAX_RESULTS);
+		}
+		return Collections.emptyList();
+	}
+	
 	public List<PerfilTemplate> getPerfisPermitidos() {
-		if (modeloComunicacao.getLocalizacaoResponsavelAssinatura() == null) {
+	    if (modeloComunicacao.getLocalizacaoResponsavelAssinatura() == null) {
 			return Collections.emptyList();
 		}
-		return usuarioPerfilManager.getPerfisPermitidos(modeloComunicacao.getLocalizacaoResponsavelAssinatura());
+		List<PerfilTemplate> perfisPermitidos = usuarioPerfilManager.getPerfisPermitidos(modeloComunicacao.getLocalizacaoResponsavelAssinatura());
+		if (modeloComunicacao.getPerfilResponsavelAssinatura() != null && !perfisPermitidos.contains(modeloComunicacao.getPerfilResponsavelAssinatura())) {
+		    modeloComunicacao.setPerfilResponsavelAssinatura(null);
+		} else {
+		    modeloComunicacao.setPerfilResponsavelAssinatura(perfilAssinatura);
+		}
+		return perfisPermitidos;
 	}
 	
 	public List<PerfilTemplate> getPerfisPermitidosDestino() {
@@ -212,6 +231,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	
 	public void setLocalizacao(Localizacao localizacao) {
 		this.localizacao = localizacao;
+		setPerfilDestino(null);
 	}
 	
 	public PerfilTemplate getPerfilDestino() {
@@ -220,6 +240,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	
 	public void setPerfilDestino(PerfilTemplate perfilDestino) {
 	    this.perfilDestino = perfilDestino;
+		existeUsuarioNoDestino = usuarioLoginSearch.existsUsuarioWithLocalizacaoPerfil(localizacao, perfilDestino);
 	}
 	
 	private void initEntityLists() {
@@ -243,7 +264,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		}
 	}
 
-	private PessoaFisica getRelator() {
+	public PessoaFisica getRelator() {
 		MetadadoProcesso metadadoProcesso = modeloComunicacao.getProcesso().getProcessoRoot().getMetadado(EppMetadadoProvider.RELATOR);
 		return (PessoaFisica) (metadadoProcesso != null ? metadadoProcesso.getValue() : null);
 	}

@@ -17,18 +17,15 @@
 			<ui:define name="toolBar">
 				<h:column>
 					<h:form>
-						<infox:flashcopy />
 						<a:commandLink id="visualizaProcessoLink"
 							title="#{infoxMessages['button.selecionar']}" render="@form"
+							action="#{jsfUtil.applyLastPhaseFlashAction}"
 							oncomplete="infox.openPopUp('Detalhes do Processo', '#{pathResolver.contextPath}/Processo/Consulta/list.seam',screen.availWidth,screen.availHeight);">
-							<f:setPropertyActionListener value="#{row.processo.idProcesso}"
-								target="#{flash.idProcesso}" />
-							<f:setPropertyActionListener value="#{row.processo.idJbpm}"
-								target="#{flash.idJbpm}" />
-							<f:setPropertyActionListener value="#{false}"
-								target="#{flash.showBackButton}" />
-							<h:graphicImage
-								url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+							<f:setPropertyActionListener value="#{row.processo.idProcesso}"	target="#{flash.idProcesso}" />
+							<f:setPropertyActionListener value="#{row.processo.idJbpm}"	target="#{flash.idJbpm}" />
+							<f:setPropertyActionListener value="#{false}" target="#{flash.showBackButton}" />
+							<f:setPropertyActionListener value="#{true}" target="#{flash.hideMenu}"/>
+							<h:graphicImage	url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
 						</a:commandLink>
 						<a:commandLink
 							action="#{relacionamentoProcessoInternoList.remove(row)}"
@@ -36,9 +33,7 @@
 							render="relacionamentoProcessoInternoListDiv pageBodyDialogMessage"
 							execute="@this"
 							rendered="#{not relacionamentoProcessoInternoList.readOnly}">
-							<h:graphicImage
-								url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
-								title="#{infoxMessages['crud.remove']}" />
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['crud.remove']}" />
 						</a:commandLink>
 					</h:form>
 				</h:column>

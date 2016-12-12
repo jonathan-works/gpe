@@ -68,25 +68,24 @@
         </s:div>
         <s:div id="timerDiv">
             <h:form>
-                <s:div rendered="#{not empty node.currentTimer}">
+                <s:div rendered="#{not empty nodeFitter.nodeHandler.currentTimer}">
                 
-                    <ui:param name="timer" value="#{node.currentTimer}"/>
+                    <ui:param name="timer" value="#{nodeFitter.nodeHandler.currentTimer}"/>
                     
-                    <i:inputText  id="name" value="#{node.timerName}" label="#{infoxMessages['process.timer.name']}" 
+                    <i:inputText  id="name" value="#{nodeFitter.nodeHandler.timerName}" label="#{infoxMessages['process.timer.name']}" 
                     	ajax="true" render=":processDefinition:timersTable" />
                     
                     <i:selectOneMenu id="transition" value="#{timer.transitionName}" label="#{infoxMessages['process.timer.transition']}" 
-                        items="#{node.getTransitions()}" showLabelSelecione="true" ajax="true" />
+                        items="#{nodeFitter.nodeHandler.transitionItens}" ajax="true" hideNoSelectionLabel="true"/>
                     
-                    <i:selectOneRadio id="dueDateTypeRadio" value="#{node.dueDateType}" items="#{node.dueDateTypeValues}" 
+                    <i:selectOneRadio id="dueDateTypeRadio" value="#{nodeFitter.nodeHandler.dueDateType}" items="#{nodeFitter.nodeHandler.dueDateTypeValues}" 
                     	ajax="true" render="@(.dueDateTimer)" listener="#{nodeFitter.nodeHandler.onChangeDueDateType}" 
-                    	itemLabel="#{item.label}" label="Tipo Expiração"/>
+                    	itemLabel="#{item.label}" label="#{infoxMessages['process.timer.dueDateType']}"/>
                     
                     <p:outputPanel styleClass="dueDateTimer">
 	                    <p:outputPanel rendered="#{nodeFitter.nodeHandler.dueDateType.period}">
-	                    
 		                    <i:inputText id="duedatePeriod" value="#{nodeFitter.nodeHandler.dueDateValue}" 
-		                    	label="#{infoxMessages['process.timer.prazo']}" ajax="true" listener="#{node.onChangeDueDate}" />
+		                    	label="#{infoxMessages['process.timer.prazo']}" ajax="true" listener="#{nodeFitter.nodeHandler.onChangeDueDate}" />
 		                    
 		                    <i:selectOneMenu id="unit" value="#{nodeFitter.nodeHandler.dueDateUnit}"  
 		                    	label="#{infoxMessages['process.timer.prazo.unidade']}"
@@ -100,7 +99,7 @@
 	                    
 	                    <p:outputPanel rendered="#{node.dueDateType.date}">
 		                    <wi:inputDate id="dueDateDate" value="#{nodeFitter.nodeHandler.dueDateDate}" widthDiv="255px" 
-		                    	label="#{infoxMessages['process.timer.data']}"
+		                    	label="#{infoxMessages['process.timer.data']}" required="true"
 		                    	pattern="dd/MM/yyyy HH:mm" defaultTime="00:00:00">
 		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{nodeFitter.nodeHandler.onChangeDueDate}"/>
 		                    </wi:inputDate>
@@ -110,7 +109,7 @@
 		                    <i:inputTextarea id="dueDateExpression" value="#{node.dueDateExpression}"
 		                    	label="#{infoxMessages['process.timer.expressao']}" ajax="true" showCounter="false"
 		                    	listener="#{nodeFitter.nodeHandler.onChangeDueDate}" rows="1" cols="60"
-		                    	help="#{infoxMessages['process.timer.expressao.help']}"/>
+		                    	help="#{infoxMessages['process.timer.expressao.help']}" required="true"/>
 	                    </p:outputPanel>
                      </p:outputPanel>
                 </s:div>

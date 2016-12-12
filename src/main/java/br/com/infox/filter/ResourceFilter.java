@@ -18,11 +18,12 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.annotations.web.Filter;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.util.Resources;
 import org.jboss.seam.util.Strings;
 import org.jboss.seam.web.AbstractFilter;
+
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name("resourceFilter")
 @BypassInterceptors

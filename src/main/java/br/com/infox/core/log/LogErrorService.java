@@ -209,7 +209,7 @@ public class LogErrorService extends PersistenceController {
     }
     
     private Throwable getHandledException(Throwable throwable) {
-        if ((throwable instanceof EJBException) || (throwable instanceof FacesException) || (throwable instanceof ServletException)) {
+        if (((throwable instanceof EJBException) || (throwable instanceof FacesException) || (throwable instanceof ServletException)) && throwable.getCause() != null) {
             return getHandledException(throwable.getCause());
         } else {
             return throwable;

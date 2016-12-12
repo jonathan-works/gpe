@@ -10,8 +10,6 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.type.DateType;
 import org.hibernate.type.Type;
 
-import br.com.infox.hibernate.util.HibernateUtil;
-
 public class ToDateJpql implements SQLFunction{
 
 	@Override
@@ -31,15 +29,14 @@ public class ToDateJpql implements SQLFunction{
 
 	@Override
 	@SuppressWarnings("rawtypes")
-	public String render(Type firstArgumentType, List arguments,
-			SessionFactoryImplementor factory) throws QueryException {
+	public String render(Type firstArgumentType, List arguments, SessionFactoryImplementor factory) throws QueryException {
 		if (arguments.isEmpty()) {
             throw new QueryException("É necessário a data");
         }
-		if (HibernateUtil.getDialect() instanceof SQLServerDialect) {
+		if (factory.getDialect() instanceof SQLServerDialect) {
 		    return "convert(Date, " + arguments.get(0) + ", 103)";
 		} else {
-		    return "to_date(" + arguments.get(0) + ", 'dd/MM/yyyy') ";
+		    return "to_date(" + arguments.get(0) + ", 'DD/MM/YYYY HH24:MI:SS') ";
 		}
 	}
 

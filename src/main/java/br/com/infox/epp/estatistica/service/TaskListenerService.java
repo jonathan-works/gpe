@@ -81,7 +81,7 @@ public class TaskListenerService implements Serializable {
     	
         Processo processo = processoManager.getProcessoByIdJbpm(context.getProcessInstance().getRoot().getId());
         if (processo == null) {
-            throw new ApplicationException("Erro ao criar o processo - Defição de fluxo imcompleta. Contate o administrador do sistema.");
+            throw new ApplicationException("Erro ao criar o processo - Defição de fluxo incompleta. Contate o administrador do sistema.");
         }
         processo.setDataFim(new Date());
         processoManager.update(processo);

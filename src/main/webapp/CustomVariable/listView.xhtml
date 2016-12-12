@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+	<ui:define name="title">#{infoxMessages['customVariables.pageTitle']}</ui:define>
+	<ui:param name="home" value="#{customVariableView}" />
+    
+	<ui:define name="searchGrid">
+		<wi:dataTable id="customVariablesDataList" tableTitle="#{infoxMessages['customVariables.pageTitle']}"
+			values="#{customVariableDataList.list(10)}" bean="#{customVariableDataList}">
+			
+			<ui:define name="searchForm">
+				<wi:searchForm formId="customVariablesSearchForm" formTitle="#{infoxMessages['searchForm.title']}">
+					
+					<i:inputText id="codigoCustomVariableSearch"
+						label="#{infoxMessages['customVariables.codigo']}"
+						value="#{customVariableDataList.codigo}"
+						length="250" />
+					
+					<i:selectOneMenu id="tipoCustomVariableSearch"
+						label="#{infoxMessages['customVariables.tipo']}"
+						value="#{customVariableDataList.tipo}"
+						items="#{customVariableDataList.tiposDisponiveis}"
+						itemLabel="#{item.label}" />
+					
+				</wi:searchForm>
+			</ui:define>
+			<ui:define name="headerToolBar"/>
+			<ui:define name="toolBar">
+				<h:form id="toolBarForm">
+					<a:commandLink action="#{customVariableView.select(row)}" render="defaultTabPanel" execute="@this">
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+						title="#{infoxMessages['button.selecionar']}" 
+						style="margin-right: 0.3em;" styleClass="opacityHover"/>
+					</a:commandLink>
+				
+					<a:commandLink action="#{customVariableView.remove(row)}"
+						onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+						onclick="return confirm('#{infoxMessages['crud.confirmRemove']}');"
+						render="defaultTabPanel pageBodyDialogMessage " execute="@this">
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+							title="#{infoxMessages['button.delete']}" styleClass="opacityHover"/>
+					</a:commandLink>
+				</h:form>
+			</ui:define>
+			
+			<wi:columnOutputText columnId="codigoCustomVariable"
+				columnHeader="#{infoxMessages['customVariables.codigo']}"
+				value="#{row.codigo}" />
+			
+			<wi:columnOutputText columnId="tipoCustomVariableSearch"
+				columnHeader="#{infoxMessages['customVariables.tipo']}"
+				value="#{row.tipo.label}" />
+				
+			<wi:columnOutputText columnId="valorCustomVariableSearch"
+				columnHeader="#{infoxMessages['customVariables.valor']}"
+				value="#{row.valor}" hideOrder="true"/>
+				
+		</wi:dataTable>
+	</ui:define>
+
+	<ui:define name="form">
+		<h:form id="customVariableForm">
+            <fieldset>
+                <legend>#{infoxMessages['customVariables.formTitle']}</legend>
+				
+				<i:inputText id="codigo"
+					label="#{infoxMessages['customVariables.codigo']}"
+					value="#{customVariableView.codigoVariavel}"
+					length="250" required="true"/>
+				<i:selectOneMenu id="tipo"
+					label="#{infoxMessages['customVariables.tipo']}"
+					value="#{customVariableView.tipoVariavel}"
+					items="#{customVariableView.tiposDisponiveis}"
+					itemLabel="#{item.label}" required="true"
+					ajax="true" render="@form:inputValor"/>
+				
+				<h:panelGroup id="inputValor">
+					<i:inputText id="valorString"
+						label="#{infoxMessages['customVariables.valor']}"
+						rendered="#{customVariableView.isTipoString()}"
+						value="#{customVariableView.stringValorVariavel}"
+						length="250" required="true"/>
+					<i:inputDate id="valorDate" 
+						label="#{infoxMessages['customVariables.valor']}"
+						rendered="#{customVariableView.isTipoDate()}"
+						value="#{customVariableView.dateValorVariavel}"
+						required="true"/>
+					<i:selectOneRadio id="valorBoolean" 
+						label="#{infoxMessages['customVariables.valor']}"
+						rendered="#{customVariableView.isTipoBoolean()}"
+						items="#{selectItemFunctions.createFromString('true:customVariables.true,false:customVariables.false')}"
+						value="#{customVariableView.booleanValorVariavel}"
+						required="true"/>
+				</h:panelGroup>
+					
+			</fieldset>
+            <infox:div styleClass="required-alert">
+                <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
+                <span class="required">*</span>
+                <span>#{infoxMessages['form.required']}</span>
+            </infox:div>
+			<div id="formButtons">
+				<a:commandButton action="#{customVariableView.persist}"
+					render="defaultTabPanel :pageBodyDialogMessage " execute="@form"
+					styleClass="buttons" value="#{infoxMessages['crud.persist']}"
+					rendered="#{not customVariableView.isManaged()}" />
+				<a:commandButton action="#{customVariableView.update}"
+					render="@form :pageBodyDialogMessage " execute="@form"
+					styleClass="buttons" value="#{infoxMessages['crud.update']}"
+					rendered="#{customVariableView.isManaged()}" />
+				<a:commandButton action="#{customVariableView.newInstance}"
+					render="defaultTabPanel :pageBodyDialogMessage" execute="@this"
+					styleClass="buttons" value="#{infoxMessages['crud.new']}" />
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

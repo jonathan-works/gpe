@@ -2,7 +2,10 @@ package br.com.infox.epp.processo.documento.dao;
 
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.DELETE_BY_PASTA;
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA;
-import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.*;
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA_ALVO_TIPO_RESTRICAO;
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.PARAM_ALVO;
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.PARAM_PASTA;
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.PARAM_TIPO_RESTRICAO;
 
 import java.util.HashMap;
 import java.util.List;

@@ -11,6 +11,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.ClassificacaoDocumentoSearch;
@@ -20,6 +21,8 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 
 @Stateless
 @AutoCreate
@@ -33,6 +36,8 @@ public class ClassificacaoDocumentoFacade {
     private ClassificacaoDocumentoManager classificacaoDocumentoManager;
     @Inject
     private ClassificacaoDocumentoSearch classificacaoDocumentoSearch;
+    @Inject
+    private FluxoManager fluxoManager;
 
     public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
         return TipoDocumentoEnum.values();
@@ -48,6 +53,16 @@ public class ClassificacaoDocumentoFacade {
     
     public TipoAssinaturaEnum[] getTipoAssinaturaEnumValues() {
         return TipoAssinaturaEnum.values();
+    }
+
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, TaskInstance taskInstance) {
+        String nomeFluxo = taskInstance.getTask().getProcessDefinition().getName();
+        Fluxo fluxo = fluxoManager.getFluxoByDescricao(nomeFluxo);
+        if (fluxo != null) {
+            return getUseableClassificacaoDocumento(isModelo, nomeVariavel, fluxo.getIdFluxo());
+        } else {
+            return getUseableClassificacaoDocumento(false);
+        }
     }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo) {

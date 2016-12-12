@@ -18,11 +18,11 @@ import javax.faces.context.FacesContext;
 import org.hibernate.AnnotationException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.util.Reflections;
 
 import br.com.infox.hibernate.util.HibernateUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public final class ComponentUtil {
 

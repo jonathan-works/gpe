@@ -26,5 +26,5 @@ public @interface TokenAuthentication {
 	public Class<? extends AutenticadorToken> autenticador() default AutenticadorTokenPadrao.class;
 	
 	@Nonbinding
-	public TipoExcecao tipoExcecao() default TipoExcecao.STRING;
+	public TipoExcecao tipoExcecao() default TipoExcecao.JSON;
 }

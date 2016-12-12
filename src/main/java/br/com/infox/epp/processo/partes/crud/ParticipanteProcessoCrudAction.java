@@ -1,22 +1,26 @@
 package br.com.infox.epp.processo.partes.crud;
 
-import org.jboss.seam.annotations.In;
+import javax.inject.Inject;
+
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoDAO;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
-import br.com.infox.epp.processo.partes.manager.HistoricoParticipanteProcessoManager;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 
 @Name(ParticipanteProcessoCrudAction.NAME)
+@ContextDependency
 public class ParticipanteProcessoCrudAction extends AbstractCrudAction<ParticipanteProcesso, ParticipanteProcessoManager> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "participanteProcessoCrudAction";
-
-    @In
-    private HistoricoParticipanteProcessoManager historicoParticipanteProcessoManager;
+    
+    @Inject
+    private ParticipanteProcessoDAO participanteProcessoDAO;
 
     private String motivoModificacao;
     private Boolean showHistory;
@@ -29,14 +33,9 @@ public class ParticipanteProcessoCrudAction extends AbstractCrudAction<Participa
         this.motivoModificacao = motivoModificacao;
     }
 
+    @ExceptionHandled(MethodType.UPDATE)
     public void inverterSituacao() {
-        try {
-        	historicoParticipanteProcessoManager.createHistorico(getInstance(), getMotivoModificacao());
-            getInstance().setAtivo(!getInstance().getAtivo());
-        } catch (DAOException daoException) {
-            onDAOExcecption(daoException);
-        }
-        super.save();
+    	participanteProcessoDAO.inverterSituacao(getInstance(), getMotivoModificacao());
         getManager().refresh(getInstance());
         newInstance();
         setMotivoModificacao(null);

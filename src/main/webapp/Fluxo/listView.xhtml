@@ -89,7 +89,15 @@
                         <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{layoutController.getResourceUrlByPath('/imagens/deploy.png')}" />
                     </a:commandLink>
                 <wi:toolBarEdit id="fluxoListedit" />
-                <wi:toolBarInactive />
+                <a:commandLink id="inativar"
+                        action="#{fluxoCrudAction.inactive(row)}"
+                        onclick="return confirm(\'#{infoxMessages['crud.confirmInactivate']}\');"
+                        onbegin="infox.showLoading();"
+                        rendered="#{row.ativo}"
+                        render="fluxoListPanel pageBodyDialogMessage"
+                        oncomplete="infox.hideLoading();">
+                        <wi:toolBarGraphicImage title="#{infoxMessages['button.inactive']}" url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
+                    </a:commandLink>
                 </h:form>
             </ui:define>
         </wi:dataTable>
@@ -129,18 +137,28 @@
             formTitle="#{infoxMessages['form.title']}">
             <wi:inputText
                 id="codFluxo"
+                rendered="#{not fluxoCrudAction.hasProcessoRunning}"
                 value="#{fluxoCrudAction.instance.codFluxo}"
                 required="true"
                 label="#{infoxMessages['fluxo.codFluxo']}"
                 maxlength="30" >
                 <f:validator validatorId="jsfComponentIdValidator" />
             </wi:inputText>
+            <wi:outputText id="codFluxoReadonly"
+                rendered="#{fluxoCrudAction.hasProcessoRunning}"
+                label="#{infoxMessages['fluxo.codFluxo']}"
+                value="#{fluxoCrudAction.instance.codFluxo}" />
             <wi:inputText
                 id="descricaoFluxo"
+                rendered="#{not fluxoCrudAction.hasProcessoRunning}"
                 required="true"
                 label="#{infoxMessages['fluxo.descricao']}"
                 value="#{fluxoCrudAction.instance.fluxo}" 
                 maxlength="100" />
+            <wi:outputText id="descricaoFluxoReadonly"
+                rendered="#{fluxoCrudAction.hasProcessoRunning}"
+                label="#{infoxMessages['fluxo.descricao']}"
+                value="#{fluxoCrudAction.instance.fluxo}" />
             <wi:inputNumber
                 id="prazoDias"
                 label="#{infoxMessages['fluxo.qtPrazo']}"
@@ -163,35 +181,36 @@
                 label="#{infoxMessages['field.situacao']}"
                 value="#{fluxoCrudAction.instance.ativo}" />
             <ui:define name="buttons">
-                <wi:commandButtonSave
-                    rendered="#{not fluxoCrudAction.replica}" />
-                <wi:commandButtonNew />
-                <wi:commandButton
-                    id="updateButton"
-                    action="fluxoCrudAction.criarReplica()"
-                    reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
-                    rendered="#{fluxoCrudAction.managed or fluxoCrudAction.replica}"
-                    value="#{infoxMessages['fluxo.duplicar']}" />
-                <a:commandButton
-                    id="exportButton"
-                    styleClass="buttons" type="button"
+                <a:commandButton value="#{infoxMessages['crud.persist']}" action="#{fluxoCrudAction.persist}" execute="@form"
+					limitRender="true" render="pageBodyDialogMessage @form" rendered="#{not fluxoCrudAction.managed}"
+					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
+					
+				<a:commandButton value="#{infoxMessages['crud.update']}" action="#{fluxoCrudAction.update}" execute="@form"
+					limitRender="true" render="pageBodyDialogMessage @form" rendered="#{fluxoCrudAction.managed}"
+					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
+					
+                <a:commandButton value="#{infoxMessages['crud.new']}" action="#{fluxoCrudAction.newInstance}" execute="@this"
+					limitRender="true" render="pageBodyDialogMessage @form"
+					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
+					
+                <wi:commandButton id="botaoGerarReplica" action="fluxoCrudAction.gerarReplica()" reRender="modalReplicaForm"
+                    rendered="#{fluxoCrudAction.managed}" value="#{infoxMessages['fluxo.exportar']}" oncomplete="#{rich:component('modalReplica')}.show()"/>
+     
+                <a:commandButton id="exportButton" styleClass="buttons" type="button"
                     oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Fluxo/definicao/exportarFluxo.seam','1024');"
-                    execute="@this" render="@this" rendered="#{fluxoCrudAction.managed}"
-                    value="#{infoxMessages['fluxo.exportar']}">
-						<f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
-						<infox:flashcopy/>
-				</a:commandButton>
+                    execute="@this" render="@this" rendered="#{fluxoCrudAction.managed}" value="#{infoxMessages['fluxo.exportar']}">
+                        <f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
+                        <infox:flashcopy/>
+                </a:commandButton>
                 <wi:commandButton
                     id="definicao"
+                    action="#{jsfUtil.applyLastPhaseFlashAction()}"
                     value="#{infoxMessages['fluxo.definicao']}" reRender="@this"
-                    rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam',1300,850);">
-                    <f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
-                  	<infox:flashcopy />
+                    rendered="#{fluxoCrudAction.managed}"
+                    onclick="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{fluxoController.conversationId}',1300,850); return false;">
                 </wi:commandButton>
                 <wi:commandButton id="importarFluxo" value="#{infoxMessages['fluxo.importar']}" onclick="#{rich:component('modalImportFluxo')}.show(); return false;"
-                	rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"/>
-                               	
+                	rendered="#{fluxoCrudAction.managed}"/>
             </ui:define>
         </wi:dataForm>
         <rich:popupPanel id="modalImportFluxo" width="450" height="450" maxHeight="600" modal="true" header="#{infoxMessages['fluxo.importar']}"
@@ -253,6 +272,43 @@
 				</p:outputPanel>
 			</h:form>
 		</rich:popupPanel>
+		
+		<rich:popupPanel id="modalReplica" width="450" height="200" maxHeight="200" modal="true" header="#{infoxMessages['fluxo.exportar']}">
+		    <f:facet name="controls">
+		        <h:graphicImage styleClass="mp-close"
+		            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+		            onclick="#{rich:component('modalReplica')}.hide();" />
+		    </f:facet>
+		    <h:form id="modalReplicaForm">
+		    	<wi:inputText
+	                id="codFluxo"
+	                value="#{fluxoCrudAction.replica.codFluxo}"
+	                required="true"
+	                label="#{infoxMessages['fluxo.codFluxo']}"
+	                maxlength="30">
+                	<f:validator validatorId="jsfComponentIdValidator" />
+	            </wi:inputText>
+	            <wi:inputText
+	                id="descricaoFluxo"
+	                required="true"
+	                label="#{infoxMessages['fluxo.descricao']}"
+	                value="#{fluxoCrudAction.replica.fluxo}" 
+	                maxlength="100" />
+	            <div />
+				<a:commandButton value="#{infoxMessages['fluxo.exportar']}" action="#{fluxoCrudAction.gravarReplica}" execute="@form"
+					limitRender="true" render="pageBodyDialogMessage @form fluxoForm" 
+					oncomplete="infox.hideLoading(); closeModalBpmn();"
+					onclick="infox.showLoading();"
+					styleClass="buttons"/>
+				<script>
+					function closeModalBpmn() {
+						if (#{empty fluxoCrudAction.replica}) {
+							#{rich:component('modalReplica')}.hide();
+						}
+					}
+				</script>
+			</h:form>
+		</rich:popupPanel>
     </ui:define>
     <ui:define name="tabs">
         <ui:param
@@ -260,8 +316,8 @@
             value="#{fluxoPapelAction}" />
         <infox:tab
             id="fluxoPapelTab"
-            rendered="#{home.isManaged() and not fluxoCrudAction.replica}"
-            action="#{action.init(fluxoCrudAction.instance)}"
+            rendered="#{home.isManaged()}"
+            action="#{action.init()}"
             title="#{infoxMessages['fluxoPapel.titleTab']}"
             name="fluxoPapelTab">
             <wi:dataForm
@@ -312,7 +368,7 @@
         <infox:tab
             id="natCatFluxoLoc"
             name="natCatFluxoLoc"
-            rendered="#{home.managed and not fluxoCrudAction.replica}"
+            rendered="#{home.managed}"
             title="#{infoxMessages['localizacao.titleView']}">
             <s:div id="natCatFluxoLocDiv">
                 <div>
@@ -386,19 +442,33 @@
 	        name="modeloPastasTab"
 	        id="modeloPastasTab"
 	        title="#{infoxMessages['modeloPasta.tabTitle']}"
-	        rendered="#{home.isManaged() and not fluxoCrudAction.replica}"
-            action="#{modeloPastaRestricaoAction.init(fluxoCrudAction.instance)}">
+	        rendered="#{home.isManaged()}"
+            action="#{modeloPastaRestricaoAction.init()}">
 	        <ui:include src="definicao/modeloPastaRestricao.xhtml" />	        
+      	</infox:tab>
+      	<infox:tab
+	        name="definicaoVariaveisTab"
+	        id="definicaoVariaveisTab"
+	        title="#{infoxMessages['processBuilder.definicaoVariavelProcesso']}"
+	        rendered="#{fluxoCrudAction.managed}"
+            action="#{definicaoVariavelProcessoAction.init()}">
+	        <ui:include src="definicaoVariavelProcesso.xhtml" />	        
       	</infox:tab>
 
         <infox:tab 
             name="monitorTab"
             id="monitorTab"
             title="#{infoxMessages['monitorProcesso.title']}"
-            rendered="#{home.isManaged() and not fluxoCrudAction.replica and not empty home.instance.svgExecucao}"
-            action="#{monitorProcessoView.selectFluxo(home.instance)}">
+            rendered="#{home.isManaged() and not empty home.instance.svgExecucao}"
+            action="#{monitorProcessoView.selectFluxo()}">
             <ui:include src="definicao/monitorProcesso.xhtml" />
         </infox:tab>
+    </ui:define>
+    
+    <ui:define name="extraContent">
+    	<h:form>
+    		<a:poll execute="@this" enabled="true" interval="120000" />
+    	</h:form>
     </ui:define>
 
 </ui:composition>

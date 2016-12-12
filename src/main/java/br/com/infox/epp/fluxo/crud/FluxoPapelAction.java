@@ -3,34 +3,37 @@ package br.com.infox.epp.fluxo.crud;
 import java.util.Iterator;
 import java.util.List;
 
-
+import javax.inject.Inject;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.international.StatusMessages;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
-import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(FluxoPapelAction.NAME)
+@ContextDependency
 public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel, FluxoPapelManager> {
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(FluxoPapelAction.class);
 
     public static final String NAME = "fluxoPapelAction";
+
+    @Inject
+    private FluxoController fluxoController;
     
     @In(value= PapelTreeHandler.NAME)
     private PapelTreeHandler papelTreeHandler;
     private List<FluxoPapel> fluxoPapelList;
-    private Fluxo fluxo;
-
+    
     @Override
     protected void beforeSave() {
-        getInstance().setFluxo(fluxo);
+        getInstance().setFluxo(fluxoController.getFluxo());
     }
 
     @Override
@@ -70,13 +73,14 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel, FluxoPapelM
         listByNatureza();
     }
 
-    public void init(final Fluxo fluxo) {
-        this.fluxo = fluxo;
+    @Override
+    public void init() {
+    	super.init();
         listByNatureza();
     }
 
     private void listByNatureza() {
-        setFluxoPapelList(getManager().listByFluxo(fluxo));
+        setFluxoPapelList(getManager().listByFluxo(fluxoController.getFluxo()));
     }
 
     public void setPapelTreeHandler(final PapelTreeHandler papelTreeHandler) {

@@ -18,7 +18,6 @@ import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.ibpm.variable.file.FileVariableHandler;
-import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.seam.path.PathResolver;
 
@@ -54,28 +53,18 @@ public class UploadFormType extends FileFormType {
         try {
             getDocumentoUploadService().validaDocumento(file, classificacao, file.getData());
             getFileVariableHandler().gravarDocumento(file, uploadFile.getId(), formField, formData.getProcesso());
-            formData.setVariable(formField.getId(), new TypedValue(formField.getValue(), formField.getType().getValueType()));
+            TypedValue typedValue = new TypedValue(formField.getValue(), formField.getType().getValueType());
+            formData.setVariable(formField.getId(), typedValue);
         } catch (BusinessRollbackException e) {
              LOG.log(Level.SEVERE, "Erro ao remover o documento existente", e);
              if (e.getCause() instanceof DAOException) {
                  getActionMessagesService().handleDAOException((DAOException) e.getCause());
              } else {
-                 getActionMessagesService().handleException("Erro ao substituir o documento", e);
+                 getActionMessagesService().handleException("Erro ao substituir o documento." + e.getMessage(), e);
              }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "", e);
             getActionMessagesService().handleGenericException(e, "Registro alterado por outro usuário, tente novamente");
-        }
-    }
-    
-    @Override
-    public void validate(FormField formField, FormData formData) throws BusinessException {
-        String required = formField.getProperty("required", String.class);
-        if ("true".equals(required) && formField.getValue() == null) {
-            throw new BusinessException("O arquivo do campo " + formField.getLabel() + " é obrigatório");
-        }
-        if (formField.getValue() != null) {
-            super.validate(formField, formData);
         }
     }
     

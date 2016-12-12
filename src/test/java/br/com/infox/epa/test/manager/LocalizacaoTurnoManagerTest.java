@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.manager.LocalizacaoTurnoManager;
+import junit.framework.Assert;
 
 public class LocalizacaoTurnoManagerTest {
 	

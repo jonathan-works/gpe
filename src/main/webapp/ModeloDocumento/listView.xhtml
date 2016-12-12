@@ -26,7 +26,7 @@
                 <wi:searchForm formId="modeloDocumentoSearchForm"
                     formTitle="#{infoxMessages['searchForm.title']}">
 
-                    <wi:inputText id="tituloModeloDocumento" maxlength="80"
+                    <wi:inputText id="tituloModeloDocumento" maxlength="250"
                         label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
                         value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />
                    	<wi:inputText id="codigoModeloDocumento" maxlength="30"
@@ -77,7 +77,7 @@
                 label="#{infoxMessages['modeloDocumento.codigoModelo']}"
                 value="#{modeloDocumentoCrudAction.instance.codigo}"
                 required="true" />
-            <wi:inputText id="tituloModeloDocumento" maxlength="80"
+             <wi:inputText id="tituloModeloDocumento" maxlength="250"
                 label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
                 value="#{modeloDocumentoCrudAction.instance.tituloModeloDocumento}"
                 required="true" />
@@ -90,8 +90,7 @@
 	                value="#{modeloDocumentoCrudAction.instance.modeloDocumento}"
 	                showVariables="true" required="true" />
 	            <a:region>
-	                <wi:imageUpload imageBean="#{imageFileUploader}"
-	                    editorId="modeloDocumento" />
+	                <wi:imageUpload imageBean="#{imageFileUploader}" editorId="modeloDocumento" />
 	            </a:region>
             </div>
 
@@ -127,7 +126,7 @@
                         formTitle="#{infoxMessages['searchForm.title']}">
 
                         <wi:inputText
-                            id="historicoTituloModeloDocumento" maxlength="80"
+                            id="historicoTituloModeloDocumento" maxlength="250"
                             label="#{infoxMessages['historicoModeloDocumento.tituloModeloDocumento']}"
                             value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
                         <wi:selectOneMenuEntity id="usuarioAlteracao"

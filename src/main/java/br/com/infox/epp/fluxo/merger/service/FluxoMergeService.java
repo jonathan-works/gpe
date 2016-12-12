@@ -193,7 +193,8 @@ public class FluxoMergeService {
            }
        }
 	}
-    
+    //FIXME aqui tinha um m´etodo verificar depois do merge
+    //private List<String> getVariaveisDocumento(ProcessDefinition instance) {
     private void updatePostDeploy(ProcessDefinition processDefinition) {
         processoManager.atualizarProcessos(processDefinition.getId(), processDefinition.getName());
         tarefaManager.encontrarNovasTarefas();
@@ -206,7 +207,13 @@ public class FluxoMergeService {
             if (node.getNodeType().equals(NodeType.Task)) {
             	validateVariables(" da tarefa " + node.getName(), ((TaskNode) node).getTask(node.getName()).getTaskController());
             } else if (node.getNodeType().equals(NodeType.StartState)) {
-                validateVariables(" do nó de início ", processDefinition.getTaskMgmtDefinition().getStartTask().getTaskController());
+            	Task startTask = ((StartState)node).getProcessDefinition().getTaskMgmtDefinition().getStartTask();
+				if (startTask != null) {
+	            	taskController = startTask.getTaskController();
+                       //FIXME verificar e internacionalizar o metodos de validaçao
+	            	validateVariables(" do nó de início ", taskController);
+
+				}
             }
         }
     }
@@ -228,7 +235,8 @@ public class FluxoMergeService {
 		            throw new BusinessRollbackException("A variável " + tokens[1] + nodeName + " é do tipo lista de dados (múltipla) mas não possui lista de valores definida");
 		        } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
 		            throw new BusinessRollbackException("A variável " + tokens[1] + nodeName + " é do tipo lista personalizável e não possui valor definido");
-		        } 
+		            //throw new BusinessRollbackException(MessageFormat.format(InfoxMessages.getInstance().get("processDefinition.variable.list.error"), tokens[1], node.getName()));
+		        }
 		    }
 		}
 	}

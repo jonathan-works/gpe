@@ -27,6 +27,11 @@ public class ModeloPasta {
     private Integer id;
 
     @NotNull
+    @Column(name = "cd_modelo_pasta", nullable = false)
+    @Size(min = 1, max = 250)
+    private String codigo;
+    
+    @NotNull
     @Column(name = "nm_modelo_pasta", nullable = false)
     @Size(max = 250)
     private String nome;
@@ -67,7 +72,15 @@ public class ModeloPasta {
         this.id = id;
     }
 
-    public String getNome() {
+    public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getNome() {
         return nome;
     }
 

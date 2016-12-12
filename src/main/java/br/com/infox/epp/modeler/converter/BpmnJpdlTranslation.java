@@ -14,7 +14,9 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.taskmgmt.def.Swimlane;
 
-public class BpmnJpdlTranslation {
+import com.google.common.base.Strings;
+
+class BpmnJpdlTranslation {
 	
 	private BpmnModelInstance bpmnModel;
 	private ProcessDefinition processDefinition;
@@ -81,6 +83,9 @@ public class BpmnJpdlTranslation {
 		
 		for (SequenceFlow sequenceFlow : bpmnModel.getModelElementsByType(SequenceFlow.class)) {
 			sequenceFlows.put(sequenceFlow.getId(), sequenceFlow);
+			if (Strings.isNullOrEmpty(sequenceFlow.getName()) && !Strings.isNullOrEmpty(sequenceFlow.getTarget().getName())) {
+				sequenceFlow.setName(sequenceFlow.getTarget().getName());
+			}
 		}
 		if (processDefinition.getNodes() != null) {
 			for (Node node : processDefinition.getNodes()) {

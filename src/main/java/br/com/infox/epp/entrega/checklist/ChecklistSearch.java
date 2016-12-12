@@ -109,6 +109,7 @@ public class ChecklistSearch {
         Join<Documento, ClassificacaoDocumento> classDoc = doc.join(Documento_.classificacaoDocumento, JoinType.INNER);
 
         cq.select(classDoc);
+        cq.distinct(true);
         cq.where(cb.equal(clDoc.get(ChecklistDoc_.checklist), checklist));
         cq.orderBy(cb.asc(classDoc.get(ClassificacaoDocumento_.descricao)));
 

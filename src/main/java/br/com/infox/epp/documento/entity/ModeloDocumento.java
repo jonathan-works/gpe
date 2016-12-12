@@ -52,7 +52,7 @@ public class ModeloDocumento implements java.io.Serializable {
     private int idModeloDocumento;
     
     @NotNull
-    @Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA)
+    @Size(min = 1, max = 30)
     @Column(name = "cd_modelo_documento", nullable = false, unique = true)
     private String codigo;
     
@@ -61,8 +61,8 @@ public class ModeloDocumento implements java.io.Serializable {
     @NotNull
     private TipoModeloDocumento tipoModeloDocumento;
     
-    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 80)
-    @Size(max = 80)
+    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 250)
+    @Size(max = 250)
     @NotNull
     private String tituloModeloDocumento;
     
@@ -76,7 +76,7 @@ public class ModeloDocumento implements java.io.Serializable {
 
     public ModeloDocumento() {
     }
-
+    
     public int getIdModeloDocumento() {
         return this.idModeloDocumento;
     }
@@ -86,14 +86,14 @@ public class ModeloDocumento implements java.io.Serializable {
     }
 
     public String getCodigo() {
-		return codigo;
-	}
+        return codigo;
+    }
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
 
-	public TipoModeloDocumento getTipoModeloDocumento() {
+    public TipoModeloDocumento getTipoModeloDocumento() {
         return this.tipoModeloDocumento;
     }
 

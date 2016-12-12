@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -29,5 +30,17 @@ public class ModeloPastaSearch extends PersistenceController {
         }
         return getEntityManager().createQuery(cq).getResultList();
     }
+    
+	public ModeloPasta modeloPastaByCodigo(String codigoModeloPasta) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ModeloPasta> cq = cb.createQuery(ModeloPasta.class);
+		Root<ModeloPasta> modelo = cq.from(ModeloPasta.class);
+		cq.where(cb.equal(modelo.get(ModeloPasta_.codigo), codigoModeloPasta));
+		try {
+			return getEntityManager().createQuery(cq).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 
 }

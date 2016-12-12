@@ -56,10 +56,10 @@
          rendered="#{ ( empty rendered ? 'true' : rendered ) and (wi:get(showGridCount, true) )}"/>
       </div>
       <s:div rendered="#{bean.previousExists or bean.nextExists}" style="#{(empty rendered ? true : rendered) and (wi:get(showGridCount, true) ) ? 'margin-top:-1em;':''}">
-        <ui:fragment rendered="#{!empty inForm ? false : inForm}">
+        <ui:fragment rendered="#{empty inForm ? false : inForm}">
           <ui:include src="inputNumberSlider.xhtml" />
         </ui:fragment>
-        <h:form style="text-align: initial" rendered="#{empty inForm ? true : !inForm}">
+        <h:form style="text-align: initial" rendered="#{empty inForm ? true : not inForm}">
           <ui:include src="inputNumberSlider.xhtml" />
         </h:form>
       </s:div>

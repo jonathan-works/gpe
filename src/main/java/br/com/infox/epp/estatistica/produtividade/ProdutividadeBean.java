@@ -2,6 +2,8 @@ package br.com.infox.epp.estatistica.produtividade;
 
 import java.io.Serializable;
 
+import br.com.infox.epp.tarefa.type.PrazoEnum;
+
 public class ProdutividadeBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -15,22 +17,25 @@ public class ProdutividadeBean implements Serializable {
     private String minimoTempoGasto;
     private String maximoTempoGasto;
 
-    public ProdutividadeBean(String tempoPrevisto, String localizacao,
+    public ProdutividadeBean(Integer prazo, String localizacao,
             String papel, String usuario, String tarefa,
-            String mediaTempoGasto, String minimoTempoGasto,
-            String maximoTempoGasto, Long quantidadeTarefas) {
-        this.tempoPrevisto = tempoPrevisto;
+            Double mediaTempoGasto, Integer minimoTempoGasto,
+            Integer maximoTempoGasto, Long quantidadeTarefas, PrazoEnum tipoPrazo) {
+       
         this.localizacao = localizacao;
         this.papel = papel;
         this.usuario = usuario;
         this.tarefa = tarefa;
-        this.mediaTempoGasto = mediaTempoGasto;
-        this.minimoTempoGasto = minimoTempoGasto;
-        this.maximoTempoGasto = maximoTempoGasto;
         this.quantidadeTarefas = quantidadeTarefas;
-    }
-
-    public ProdutividadeBean() {
+        
+        this.maximoTempoGasto = PrazoEnum.formatTempo(maximoTempoGasto, tipoPrazo);
+        this.mediaTempoGasto = PrazoEnum.formatTempo(mediaTempoGasto.intValue(), tipoPrazo);
+        this.minimoTempoGasto = PrazoEnum.formatTempo(minimoTempoGasto, tipoPrazo);
+        
+        if (prazo != null) {
+            prazo *= 60;
+        }
+        this.tempoPrevisto = PrazoEnum.formatTempo(prazo, tipoPrazo);
     }
 
     public Long getQuantidadeTarefas() {

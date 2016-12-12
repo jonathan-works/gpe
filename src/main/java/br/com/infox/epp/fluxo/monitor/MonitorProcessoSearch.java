@@ -39,7 +39,7 @@ public class MonitorProcessoSearch {
         Join<TaskInstance, Task> t = ti.join("task", JoinType.INNER);
         Join<Task, Node> n = t.join("taskNode", JoinType.INNER);
 
-        cq.groupBy(n.get("id"));
+        cq.groupBy(n.get("key"));
         cq.select(cb.construct(MonitorTarefaDTO.class, n.<String>get("key"), cb.countDistinct(ti.get("processInstance").get("id"))));
 
         Predicate where = cq.getRestriction();
@@ -91,7 +91,7 @@ public class MonitorProcessoSearch {
         String qlString = "select new br.com.infox.epp.fluxo.monitor.MonitorTarefaDTO(node.key, count(token.id)) "
                 + "from org.jbpm.graph.exe.Token token "
                     + "inner join token.node node " + where
-                + "group by node.id";
+                + "group by node.key";
 
         TypedQuery<MonitorTarefaDTO> typedQuery = getEntityManager().createQuery(qlString, MonitorTarefaDTO.class);
         typedQuery.setParameter("idProcessDefinition", processDefinition);

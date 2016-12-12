@@ -8,10 +8,6 @@ import javax.inject.Named;
 
 import org.jboss.seam.faces.FacesMessages;
 
-import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
@@ -20,6 +16,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
@@ -31,6 +28,7 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.transaction.TransactionService;
@@ -57,7 +55,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	@Inject
 	private TipoComunicacaoManager tipoComunicacaoManager;
 	@Inject
-	private CertificateSignatures certificateSignatures;
+	private AssinadorService assinadorService;
 	
 	private String tab = TAB_SEARCH;
 	private ModeloComunicacao modeloComunicacao;
@@ -104,8 +102,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		this.destinatario = destinatario;
 	}
 	
-	public String getMd5Comunicacao() {
-		return getDocumentoComunicacao().getDocumentoBin().getMd5Documento();
+	public DocumentoBin getDocumentoBinComunicacao() {
+		return getDocumentoComunicacao().getDocumentoBin();
 	}
 	
 	public String getToken() {
@@ -144,16 +142,12 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 				return;
 			}
-			Documento documentoComunicacao = getDocumentoComunicacao();
 			if (!isComunicacaoSuficientementeAssinada()) {
-				CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
-				if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-				    throw new DAOException(InfoxMessages.getInstance().get("comunicacao.assinar.erro"));
+				try {
+					assinadorService.assinarToken(token, Authenticator.getUsuarioPerfilAtual());
 				}
-				CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
-				if (assinaturaDocumentoService.podeRenderizarApplet(Authenticator.getPapelAtual(), documentoComunicacao.getClassificacaoDocumento(), 
-						documentoComunicacao.getDocumentoBin(), Authenticator.getUsuarioLogado())) {
-					assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
+				catch(AssinaturaException e) {
+				    throw new DAOException(InfoxMessages.getInstance().get("comunicacao.assinar.erro"));
 				}
 			}
 			if (isComunicacaoSuficientementeAssinada()) {
@@ -162,7 +156,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 			} else {
 				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.assinatura"));
 			}
-		} catch (DAOException | CertificadoException | AssinaturaException e) {
+		} catch (DAOException e) {
 			TransactionService.rollbackTransaction();
 			handleException(e);
 		}

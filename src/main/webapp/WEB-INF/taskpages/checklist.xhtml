@@ -14,18 +14,45 @@
         <h:outputText value="#{checklistView.message}" rendered="#{not empty checklistView.message}" />
     </infox:div>
 
-    <infox:div rendered="#{checklistView.hasPasta}">
-        <h:form id="blocoSituacaoForm">
+    <p:panel rendered="#{checklistView.hasPasta}" style="margin-top: 1rem; margin-bottom: 1rem;">
+        <h:form id="blocoSituacaoForm" style="display: inline-block; vertical-align: top;">
             <wi:selectOneMenuEnum id="blocoSituacaoMenu" label="#{infoxMessages['checklist.blocoSituacao.label']}"
                 value="#{checklistView.situacaoBloco}"
                 items="#{checklistView.checklistSituacaoOptions}"/>
-
             <a:commandButton id="blocoSituacaoButton" styleClass="buttons"
                 value="#{infoxMessages['checklist.blocoSituacao.button']}" onclick="infox.showLoading();"
                 actionListener="#{checklistView.setBlockSituacao()}"
                 oncomplete="infox.hideLoading();" execute="@form"
                 render="checklistMessage pageBodyDialogMessage @form checklistTable" />
         </h:form>
+
+        <h:form id="formFiltros" style="display: inline-block; margin-left: 1em;">
+            <div class="property-field-edit" style="display: inline-block;">
+                <div class="property-field-edit-name">
+                    <h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorFilter"/>
+                </div>
+                <div class="property-field-edit-value">
+                    <p:autoComplete id="marcadorFilter" multiple="true" inputStyle="display: inline-block;"
+                        value="#{checklistView.documentoList.codigosMarcadores}"
+                        completeMethod="#{checklistView.autoCompleteMarcadores}"
+                        itemLabel="#{item}" itemValue="#{item}" var="item" dropdown="true"
+                        minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+                        <p:ajax event="itemSelect" update="@this :movimentarTabPanel:checklistTableform" process="@this" />
+                        <p:ajax event="itemUnselect" update="@this :movimentarTabPanel:checklistTableform" process="@this" />
+                    </p:autoComplete>
+                    <style type="text/css">
+                        .ui-autocomplete-multiple-container.ui-widget.ui-inputfield.ui-state-default.ui-corner-all {
+                            display: inline-block;
+                            vertical-align: middle;
+                        }
+                        .ui-button-icon-primary.ui-icon.ui-icon-triangle-1-s {
+                            vertical-align: middle;
+                        }
+                    </style>
+                </div>
+            </div>
+        </h:form>
+
         <h:form id="checklistTableform">
             <p:dataTable id="checklistTable" widgetVar="checklistTable"
                 var="row" rowKey="#{row.id}" rowIndexVar="rowNumber" value="#{checklistView.documentoList}"
@@ -34,27 +61,33 @@
                 currentPageReportTemplate="Página {currentPage} de {totalPages} em {totalRecords} registros" >
                 
                 <p:column styleClass="dt-toolbar-col" exportable="false">
-                    <a:commandLink id="downloadDocumento" rendered="#{row.documento.documentoBin.extensao ne null}" 
+                    <a:commandLink id="downloadDocumentoPDF" rendered="#{row.documento.documentoBin.extensao ne null and fileDownloader.isPdf(row.documento.documentoBin)}" 
+                    	action="#{jsfUtil.applyLastPhaseFlashAction}"
                         style="margin-right: 0.5em;" title="#{row.documento.descricao}"
                         onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
-                        oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/PdfReadOnly/downloadDocumento.seam');">
-                        <infox:flashcopy />
-                        <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
+                        oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documento.documentoBin.id}', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documento.documentoBin.id}&amp;binario=true',screen.availWidth,screen.availHeight);">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
                         <f:setPropertyActionListener value="#{row.documento.documentoBin}" target="#{flash.documentoBin}" />
                     </a:commandLink>
+
+                     <p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documento.documentoBin)}" ajax="false"
+                               rendered="#{row.documento.documentoBin.extensao ne null and not fileDownloader.isPdf(row.documento.documentoBin)}" >
+                               <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
+                     </p:commandLink>
+           
                     
                     <a:commandLink id="viewEditor" rendered="#{row.documento.documentoBin.extensao eq null}"
                         style="margin-right: 0.5em;" title="#{row.documento.descricao}"
+                        action="#{jsfUtil.applyLastPhaseFlashAction}"
                         onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
                         oncomplete="infox.hideLoading(); infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
-                        <infox:flashcopy />
-                        <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover" />
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{row.documento.documentoBin}" styleClass="opacityHover" />
                         <f:setPropertyActionListener value="#{row.documento.id}" target="#{flash.idDocumento}" />
                         <f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
                     </a:commandLink>
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checklist.classificacaoDocumento']}" filterBy="#{row.documento.classificacaoDocumento}">
+                <p:column styleClass="#{row.documento.excluido ? 'inativo' : ''}" headerText="#{infoxMessages['checklist.classificacaoDocumento']}" filterBy="#{row.documento.classificacaoDocumento}">
                     <f:facet name="filter">
                         <h:selectOneMenu id="filterClassificacao" onchange="PF('checklistTable').filter()" style="max-width: 100%;">
                             <f:selectItem itemLabel="[Todos]" noSelectionOption="true" />
@@ -64,11 +97,18 @@
                     <h:outputText value="#{row.documento.classificacaoDocumento}" />
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checklist.documento']}" filterBy="#{row.documento.descricao}">
+                <p:column styleClass="#{row.documento.excluido ? 'inativo' : ''}" headerText="#{infoxMessages['checklist.documento']}" filterBy="#{row.documento.descricao}">
                     <f:facet name="filter">
                         <h:inputText id="filterNomeDocumento" onchange="PF('checklistTable').filter()" style="max-width: 100%;" />
                     </f:facet>
-                    <h:outputText value="#{row.documento.descricao}" />
+                    <div align="center">
+                        <h:outputText value="#{row.documento.descricao}" style="display: block;" />
+                        <ui:repeat var="marcador" value="#{row.documento.documentoBin.marcadoresList}">
+                            <h:outputText value="#{marcador.codigo} "
+                                style=" #{row.documento.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+                                styleClass="marcadorLabel" />
+                        </ui:repeat>
+                    </div>
                 </p:column>
                 
                 <p:column headerText="#{infoxMessages['checklist.situacao']}" filterBy="#{row.situacao}" style="width: 345px">
@@ -78,7 +118,7 @@
                             <f:selectItems value="#{checklistView.situacoesCompletas}" />
                         </h:selectOneMenu>
                     </f:facet>
-                    <h:panelGroup id="selectSituacao">
+                    <h:panelGroup id="selectSituacao" rendered="#{not row.documento.excluido}">
                         <h:selectOneRadio id="selectSituacaoRadio" value="#{row.situacao}" styleClass="checklistRadio"
                             layout="lineDirection" style="border: none">
                             <f:selectItems value="#{checklistView.situacoes}" />
@@ -87,9 +127,10 @@
                                 listener="#{checklistView.onChangeSituacao(row)}" />
                         </h:selectOneRadio>
                     </h:panelGroup>
+                    <h:outputText rendered="#{row.documento.excluido}" value="#{checklistView.getTextoDocumentoExcluido(row.documento)}" />
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checklist.comentarios']}">
+                <p:column styleClass="#{row.documento.excluido ? 'inativo' : ''}" headerText="#{infoxMessages['checklist.comentarios']}">
                     <h:panelGroup id="textArea" styleClass="textAreaPanel#{row.id}">
                         <h:inputTextarea rows="3" cols="30" rendered="#{row.situacao eq 'NCO' or row.situacao eq 'NVE'}"
                             value="#{row.comentario}">
@@ -102,7 +143,7 @@
                 </p:column>
             </p:dataTable>
         </h:form>
-    </infox:div>
+    </p:panel>
     
     <h:form id="taskButtonsForm">
         <ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml">

@@ -9,24 +9,25 @@
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:p="http://primefaces.org/ui"
   xmlns:infox="http://www.infox.com.br/jsf"
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
  
   <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{empty processBuilder.instance ? '' : processBuilder.instance.name}</ui:define>
   <ui:define name="head">
-	<c:if test="#{not empty flash.idFluxo}">
-		<c:set property="idFluxo" target="#{processBuilder}" value="#{flash.idFluxo}"></c:set>
-		<c:set property="idFluxo" target="#{historicoProcessDefinitionList}" value="#{flash.idFluxo}"></c:set>
-		<f:metadata>
-			<f:event listener="#{processBuilder.load()}" type="preRenderView" />
-		</f:metadata>
-	</c:if>
+  	<c:set property="idFluxo" target="#{historicoProcessDefinitionList}" value="#{fluxoController.fluxo.idFluxo}" />
+	<f:metadata>
+		<f:event listener="#{processBuilder.load()}" type="preRenderView" />
+	</f:metadata>
     <h:outputScript
       name="jbpmGraph.js"
       library="js" />
     <h:outputScript
       name="underscore.js"
       library="js" />
+    <h:outputStylesheet name="diagram-js.css" library="modelador/css" />
+	<link type="text/css" href="#{pathResolver.contextPath}/resources/modelador/vendor/bpmn-font/css/bpmn.css" rel="stylesheet"></link>
+	<h:outputScript name="bundle.js" library="modelador" />
   </ui:define>
   <ui:define name="body">
     <!-- rich:tree para carregar javascript da tree para o nó de email. Não retirar, ver ticket #70361  -->
@@ -34,6 +35,7 @@
     <ui:param
       name="def"
       value="#{processBuilder.instance}" />
+      
    	 <h:form id="modeladorForm">
 		<a:jsFunction name="doUpdate" execute="@this" render=":processDefinition @form :pageBodyDialogMessage" action="#{bpmnView.update}"
 			oncomplete="infox.hideLoading()" actionListener="#{processBuilder.prepareUpdate}">
@@ -42,12 +44,30 @@
 		<a:jsFunction name="configureElement" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configureElement}">
 			<a:param name="elementKey" assignTo="#{bpmnView.elementKey}" />
 		</a:jsFunction>
+     	
+     	<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmn}" />
+		
 		<script>
 			function updateBpmn() {
 				doUpdate(JSON.stringify(modeler.getBpmnInformation()));
 			}
+			
+			function initModelador(container) {
+				var bpmn;
+				if (!window.modeler) {
+					bpmn = document.getElementById("#{rich:clientId('bpmn')}").value;
+				} else {
+					bpmn = window.modeler.getBpmnInformation().bpmn;
+				}
+		        window.modeler = new InfoxBpmnModeler({
+		        	'container': document.getElementById(container),
+		        	'bpmn': bpmn,
+		        	'configureElement': configureElement
+		        });
+			}
 		</script>
 	</h:form>
+	
     <infox:tabPanel
       switchType="ajax"
       activeTab="#{processBuilder.tab}"
@@ -85,16 +105,16 @@
             </wi:inputTextarea>
           </h:form>
         </rich:panel>
-        <rich:panel
-          header="#{infoxMessages['processBuilder.definicaoVariavelProcesso']}">
-          <ui:include src="definicaoVariavelProcesso.xhtml" />
-        </rich:panel>
         <ui:include src="historico.xhtml" />
         <rich:panel
           styleClass="SwimlanePanel"
           header="#{infoxMessages['processBuilder.swimlanes']}">
           <ui:include src="swimlanes.xhtml" />
         </rich:panel>
+        <p:outputPanel layout="block" id="modeladorAbaPropriedades" style="visibility: hidden; width: 0px; height: 0px;" />
+        <script>
+	        initModelador("#{rich:clientId('modeladorAbaPropriedades')}");
+        </script>
       </infox:tab>
       <infox:tab
         name="nodesTab"
@@ -102,6 +122,10 @@
         title="#{infoxMessages['processBuilder.nodes']}"
         render="processDefinitionButtonsForm">
         <ui:include src="nodes.xhtml" />
+        <p:outputPanel layout="block" id="modeladorAbaNos" style="visibility: hidden; width: 0px; height: 0px;" />
+        <script>
+        	initModelador("#{rich:clientId('modeladorAbaNos')}");
+        </script>
       </infox:tab>
       <infox:tab
         name="modeladorTab"
@@ -119,19 +143,9 @@
               infox.editor[key].instance.fire("blur");
             }
           }
-          if (window.modeler) {
-          	updateBpmn();
-          } else {
-            updateFluxo();
-          }
+          updateBpmn();
         }
       </h:outputScript>
-      <a:jsFunction
-        name="updateFluxo"
-        actionListener="#{processBuilder.prepareUpdate}"
-        action="#{processBuilder.update}"
-        render="pageBodyDialogMessage"
-        oncomplete="infox.hideLoading()"/>
       <a:commandButton
         id="gravar"
         value="#{infoxMessages['processBuilder.saveBtn']}"
@@ -153,7 +167,7 @@
         width="920">
         <c:if
           test="#{!empty actionTemplate.fileName}">
-          <ui:include src="actions/#{actionTemplate.fileName}" />
+          <ui:include src="/Fluxo/definicao/actions/setModeloDocumento.xhtml" />
         </c:if>
       </wi:modalPanel>
     </s:div>

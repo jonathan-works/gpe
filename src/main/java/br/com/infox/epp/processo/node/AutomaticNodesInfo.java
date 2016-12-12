@@ -17,6 +17,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
 import br.com.infox.cdi.producer.JbpmContextProducer;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.node.NodeType;
@@ -45,10 +46,15 @@ public class AutomaticNodesInfo implements Serializable {
             nodes = new ArrayList<>();
             List<Token> tokens = JbpmUtil.getTokensOfAutomaticNodesNotEnded();
             for (Token token : tokens) {
+                if (token.getProcessInstance() == null)
+                    continue;
+                String numeroProcesso =processoManager.getNumeroProcessoByIdJbpm(token.getProcessInstance().getRoot().getId());
+                if (StringUtil.isEmpty(numeroProcesso))
+                    continue;
                 NodeBean node = new NodeBean();
                 Node jbpmNode = (Node) HibernateUtil.removeProxy(token.getNode());
                 node.setNodeName(jbpmNode.getName());
-                node.setNumeroProcesso(processoManager.getNumeroProcessoByIdJbpm(token.getProcessInstance().getRoot().getId()));
+                node.setNumeroProcesso(numeroProcesso);
                 node.setTokenId(token.getId());
                 node.setNodeType(NodeType.getNodeType(jbpmNode).getLabel());
                 nodes.add(node);

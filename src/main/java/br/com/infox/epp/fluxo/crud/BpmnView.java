@@ -1,11 +1,14 @@
 package br.com.infox.epp.fluxo.crud;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.camunda.bpm.model.bpmn.Bpmn;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.jpdl.JpdlException;
@@ -31,12 +34,14 @@ public class BpmnView implements Serializable {
 	
 	@Inject
 	private BpmnJpdlService bpmnJpdlService;
+	@Inject
+	private FluxoController fluxoController;
 	
 	private String bpmnInformation;
 	private String elementKey;
 
 	public Fluxo getFluxo() {
-		return ProcessBuilder.instance().getFluxo();
+		return fluxoController.getFluxo();
 	}
 	
 	@ExceptionHandled
@@ -46,15 +51,19 @@ public class BpmnView implements Serializable {
 		
 		String newProcessDefinitionXml = JpdlXmlWriter.toString(ProcessBuilder.instance().getInstance());
 		String newBpmnXml = bpmnInfo.get("bpmn").getAsString();
+		newBpmnXml = Bpmn.convertToString(Bpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8))));
 		
 		if (!newProcessDefinitionXml.equals(fluxo.getXml()) || !newBpmnXml.equals(fluxo.getBpmn())) {
 			try {
-				fluxo = bpmnJpdlService.atualizarDefinicao(fluxo, newProcessDefinitionXml, newBpmnXml, bpmnInfo.get("svg").getAsString());
+				fluxoController.setFluxo(bpmnJpdlService.atualizarDefinicao(fluxo, newProcessDefinitionXml, newBpmnXml, bpmnInfo.get("svg").getAsString()));
+				fluxo = getFluxo();
 			} catch (JpdlException e) {
 				logJpdlException(e);
 				return;
 			}
+			String currentNodeKey = ProcessBuilder.instance().getNodeFitter().getCurrentNode() != null ? ProcessBuilder.instance().getNodeFitter().getCurrentNode().getKey() : null;
 			ProcessBuilder.instance().load(fluxo);
+			ProcessBuilder.instance().getNodeFitter().setCurrentNodeByKey(currentNodeKey);
 			bpmnInformation = null;
 			FacesMessages.instance().add("Fluxo salvo com sucesso!");
 		}

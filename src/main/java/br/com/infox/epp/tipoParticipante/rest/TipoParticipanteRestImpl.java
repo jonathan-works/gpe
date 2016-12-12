@@ -1,7 +1,10 @@
 package br.com.infox.epp.tipoParticipante.rest;
 
+import java.net.URI;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 public class TipoParticipanteRestImpl implements TipoParticipanteRest{
 
@@ -11,9 +14,10 @@ public class TipoParticipanteRestImpl implements TipoParticipanteRest{
 	private TipoParticipanteRestService tipoParticipanteRestService;
 	
 	@Override
-	public Response adicionarTipoParticipante(TipoParticipanteDTO tipoParticipanteDTO) {
+	public Response adicionarTipoParticipante(UriInfo uriInfo, TipoParticipanteDTO tipoParticipanteDTO) {
 		tipoParticipanteRestService.adicionarTipoParticipante(tipoParticipanteDTO);
-		return Response.ok().build();
+		URI location = uriInfo.getAbsolutePathBuilder().path(tipoParticipanteDTO.getCodigo()).build();
+        return Response.created(location).build();
 	}
 
 	@Override

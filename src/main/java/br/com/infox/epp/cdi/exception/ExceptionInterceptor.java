@@ -9,6 +9,8 @@ import javax.interceptor.InvocationContext;
 
 import org.jboss.seam.faces.FacesMessages;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.log.LogErrorService;
 import br.com.infox.core.util.StringUtil;
@@ -62,7 +64,7 @@ public class ExceptionInterceptor implements Serializable {
 		        LOG.error("", e);
 		        ActionMessagesService actionMessagesService = BeanManager.INSTANCE.getReference(ActionMessagesService.class);
 		        if (actionMessagesService != null) {
-		            if (annotation.lockExceptionMessage() != null) {
+		            if (!Strings.isNullOrEmpty(annotation.lockExceptionMessage())) {
 		            	actionMessagesService.handleGenericException(e, annotation.lockExceptionMessage());
 		            } else {
 		            	actionMessagesService.handleGenericException(e);

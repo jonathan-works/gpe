@@ -5,7 +5,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -15,9 +17,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
@@ -35,11 +41,12 @@ import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
-import br.com.infox.epp.processo.documento.service.DocumentoBinService;
+import br.com.infox.epp.processo.documento.service.DocumentoBinWrapper;
+import br.com.infox.epp.processo.documento.service.DocumentoBinWrapperFactory;
+import br.com.infox.epp.processo.marcador.Marcador;
 import br.com.infox.hibernate.UUIDGenericType;
 
 @Entity
@@ -69,9 +76,8 @@ public class DocumentoBin implements Serializable {
     @Column(name = "ds_modelo_documento")
     private String modeloDocumento;
     
-    @NotNull
     @Size(max = LengthConstants.DESCRICAO_MD5)
-    @Column(name = "ds_md5_documento", nullable = false, length = LengthConstants.DESCRICAO_MD5)
+    @Column(name = "ds_md5_documento", length = LengthConstants.DESCRICAO_MD5)
     private String md5Documento;
     
     @Size(max = LengthConstants.DESCRICAO_NOME_ARQUIVO)
@@ -102,27 +108,37 @@ public class DocumentoBin implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataSuficientementeAssinado;
     
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable(name = "tb_marcador_documento_bin", 
+            joinColumns=@JoinColumn(name="id_documento_bin", referencedColumnName="id_documento_bin"),
+            inverseJoinColumns=@JoinColumn(name="id_marcador", referencedColumnName="id_marcador"))
+    @OrderBy(value = "cd_marcador")
+    private Set<Marcador> marcadores = new HashSet<>(1);
+    
     @OneToMany(fetch= FetchType.LAZY, mappedBy="documentoBin", cascade = {CascadeType.REMOVE})
     private List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList = new ArrayList<>();
     
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
+    private List<DocumentoTemporario> documentoTemporarioList = new ArrayList<>();
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<AssinaturaDocumento> assinaturas = new ArrayList<>();
     
-    @Transient
+	@Column(name = "tp_documento_externo")
+	private String tipoDocumentoExterno;
+	
+	@Size(max = 1000)
+	@Column(name="id_documento_externo")
+	private String idDocumentoExterno;
+	
+	@Transient
     private byte[] processoDocumento;
     
     @Transient
-	private DocumentoBinService documentoBinService;
-
-	@Column(name="tp_documento_externo")
-	private String tipoDocumentoExterno;
-	
-	@Size(max=1000)
-	@Column(name="id_documento_externo")
-	private String idDocumentoExterno;
+    private DocumentoBinWrapper documentoBinWrapper;
 
 	public String getTipoDocumentoExterno() {
 		return tipoDocumentoExterno;
@@ -186,7 +202,7 @@ public class DocumentoBin implements Serializable {
 		if(getId() == null) {
 			return md5Documento;
 		}				
-		return getDocumentoBinService().getHash(getId());
+		return getDocumentoBinWrapper().getHash();
 	}
 
 	public void setMd5Documento(String md5Documento) {
@@ -209,7 +225,9 @@ public class DocumentoBin implements Serializable {
 		if(getId() == null) {
 			return size;
 		}				
-		return getDocumentoBinService().getSize(getId());
+		if(size == null)
+			return null;
+		return getDocumentoBinWrapper().getSize();
 	}
 
 	public void setSize(Integer size) {
@@ -232,11 +250,19 @@ public class DocumentoBin implements Serializable {
 		this.documentoList = documentoList;
 	}
 	
-	public DocumentoBinService getDocumentoBinService() {
-		if(documentoBinService == null) {
-			documentoBinService = BeanManager.INSTANCE.getReference(DocumentoBinService.class);
+    public List<DocumentoTemporario> getDocumentoTemporarioList() {
+        return documentoTemporarioList;
+    }
+
+    public void setDocumentoTemporarioList(List<DocumentoTemporario> documentoTemporarioList) {
+        this.documentoTemporarioList = documentoTemporarioList;
+    }
+
+    public DocumentoBinWrapper getDocumentoBinWrapper() {
+		if( documentoBinWrapper == null ) {
+		    documentoBinWrapper = DocumentoBinWrapperFactory.getInstance().createWrapperInstance(this);
 		}
-		return documentoBinService; 		
+		return documentoBinWrapper; 		
 	}
 
 	public List<AssinaturaDocumento> getAssinaturasAtributo() {
@@ -247,7 +273,7 @@ public class DocumentoBin implements Serializable {
 		if(getId() == null) {
 			return getAssinaturasAtributo();
 		}		
-		return getDocumentoBinService().carregarAssinaturas(getId());
+		return getDocumentoBinWrapper().carregarAssinaturas();
 	}
 
 	public void setAssinaturas(List<AssinaturaDocumento> assinaturas) {
@@ -297,8 +323,24 @@ public class DocumentoBin implements Serializable {
 	public void setDataSuficientementeAssinado(Date dataSuficientementeAssinado) {
 		this.dataSuficientementeAssinado = dataSuficientementeAssinado;
 	}
+	
+	public List<Marcador> getMarcadoresList(){
+		if(this.marcadores == null || this.marcadores.isEmpty())
+    		return new ArrayList<Marcador>();
+    	List<Marcador> marcadoresList = new ArrayList<Marcador>();
+    	marcadoresList.addAll(marcadores);
+    	return marcadoresList;
+	}
+	
+	public Set<Marcador> getMarcadores() {
+        return marcadores;
+    }
 
-	public List<RegistroAssinaturaSuficiente> getRegistrosAssinaturaSuficiente() {
+    public void setMarcadores(Set<Marcador> marcadores) {
+        this.marcadores = marcadores;
+    }
+
+    public List<RegistroAssinaturaSuficiente> getRegistrosAssinaturaSuficiente() {
 		return registrosAssinaturaSuficiente;
 	}
 
@@ -311,8 +353,8 @@ public class DocumentoBin implements Serializable {
 	public boolean isAssinadoPor(UsuarioPerfil usuarioPerfil) {
         if (getAssinaturas() == null || getAssinaturas().isEmpty()) return false;
         for (AssinaturaDocumento assinatura : getAssinaturas()) {
-            if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getUsuarioPerfil().getPerfilTemplate().getPapel())
-            		&& usuarioPerfil.getUsuarioLogin().equals(assinatura.getUsuario())) {
+            if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getPapel())
+            		&& assinatura.getPessoaFisica().equals(usuarioPerfil.getUsuarioLogin().getPessoaFisica())) {
                 return true;
             }
         }
@@ -326,7 +368,7 @@ public class DocumentoBin implements Serializable {
 
     @Transient
     public boolean isBinario() {
-        return !Strings.isEmpty(getExtensao());
+        return !Strings.isEmpty(getExtensao()) && (size != null &&  size.intValue() > 0 ) ;
     }
 
     @Transient
@@ -337,14 +379,15 @@ public class DocumentoBin implements Serializable {
             float sizeF = size / BYTES_IN_A_KILOBYTE;
             return formatter.format(sizeF) + " Kb";
         }
-        return "0 Kb";
+        return "-";
     }
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
 
@@ -354,13 +397,18 @@ public class DocumentoBin implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof DocumentoBin))
+		if (getClass() != obj.getClass())
 			return false;
 		DocumentoBin other = (DocumentoBin) obj;
-		if (getId() == null) {
-			if (other.getId() != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!getId().equals(other.getId()))
+		} else if (!id.equals(other.id))
+			return false;
+		if (uuid == null) {
+			if (other.uuid != null)
+				return false;
+		} else if (!uuid.equals(other.uuid))
 			return false;
 		return true;
 	}

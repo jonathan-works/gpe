@@ -18,12 +18,15 @@
     <ui:define name="searchGrid">
         <wi:dataTable values="#{naturezaList.list(15)}"
             bean="#{naturezaList}"
-            tableTitle="#{epp_messages['natureza.tableTitle']}"
+            tableTitle="#{infoxMessages['natureza.tableTitle']}"
             id="naturezaList" rowId="#{row.idNatureza}"
             actionInactive="naturezaCrudAction.inactive">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarNaturezaForm"
                     formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigo"
+                        value="#{naturezaList.entity.codigo}"
+                        label="#{infoxMessages['natureza.codigo']}" />
                     <wi:inputText id="natureza"
                         value="#{naturezaList.entity.natureza}"
                         label="#{infoxMessages['natureza.natureza']}" />
@@ -40,6 +43,9 @@
                 <wi:toolBarInactive
                     actionInactive="naturezaCrudAction.inactive(row)" />
             </ui:define>
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['natureza.codigo']}"
+                value="#{row.codigo}" />
             <wi:columnOutputText columnId="natureza"
                 columnHeader="#{infoxMessages['natureza.natureza']}"
                 value="#{row.natureza}" />
@@ -55,6 +61,11 @@
     <ui:define name="form">
         <wi:dataForm formId="naturezaForm"
             formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="codigo"
+                value="#{naturezaCrudAction.instance.codigo}"
+                required="true" label="#{infoxMessages['natureza.codigo']}"
+                disabled="#{naturezaCrudAction.instance.locked}" 
+                maxlength="30" />
             <wi:inputText id="natureza"
                 value="#{naturezaCrudAction.instance.natureza}"
                 required="true" label="#{infoxMessages['natureza.natureza']}"

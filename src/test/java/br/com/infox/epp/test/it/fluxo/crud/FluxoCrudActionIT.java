@@ -15,7 +15,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
-import org.junit.Test;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.action.AbstractAction;
@@ -86,7 +85,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         // final ActionContainer<Fluxo> initEntityAction =
         // FluxoCrudActionIT.initEntityAction;
         final PersistSuccessTest<Fluxo> persistSuccessTest = new PersistSuccessTest<Fluxo>(
-                FluxoCrudAction.NAME, FluxoCrudActionIT.initEntityAction);
+                "", FluxoCrudActionIT.initEntityAction);
         for (final Date dataFim : datasFim) {
             for (final Boolean publicado : FluxoCrudActionIT.allBooleans) {
                 for (final Boolean ativo : FluxoCrudActionIT.booleans) {
@@ -106,7 +105,8 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
 
     @Override
     protected String getComponentName() {
-        return FluxoCrudAction.NAME;
+//        return FluxoCrudAction.NAME;
+    	return "";
     }
 
     private static int id = 0;

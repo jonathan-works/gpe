@@ -182,7 +182,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             if (errorCode != null) {
                 ret = errorCode.toString();
                 FacesMessages.instance().clear();
-                FacesMessages.instance().add(daoException.getLocalizedMessage());
+                FacesMessages.instance().add(InfoxMessages.getInstance().get(daoException.getLocalizedMessage()));
             }
         } catch (RuntimeException e) {
             FacesMessages fm = FacesMessages.instance();
@@ -240,7 +240,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             if (errorCode != null) {
                 ret = errorCode.toString();
                 FacesMessages.instance().clear();
-                FacesMessages.instance().add(daoException.getLocalizedMessage());
+                FacesMessages.instance().add(InfoxMessages.getInstance().get(daoException.getLocalizedMessage()));
             }
         } catch (javax.validation.ConstraintViolationException e) {
             LOG.error(msg, e);
@@ -316,7 +316,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             if (errorCode != null) {
                 ret = errorCode.toString();
                 FacesMessages.instance().clear();
-                FacesMessages.instance().add(daoException.getLocalizedMessage());
+                FacesMessages.instance().add(InfoxMessages.getInstance().get(daoException.getLocalizedMessage()));
             }
         } catch (javax.validation.ConstraintViolationException e) {
             LOG.error(msg, e);

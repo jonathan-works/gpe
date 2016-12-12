@@ -1,6 +1,7 @@
 package br.com.infox.epp.login;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -13,6 +14,7 @@ import org.jboss.seam.security.Credentials;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
 
 @Named
 @SessionScoped
@@ -26,6 +28,8 @@ public class LoginView implements Serializable {
     private Authenticator authenticator;
     @Inject
     private InfoxMessages infoxMessages;
+    @Inject
+    private ExtensaoLogin extensaoLogin;
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,6 +39,7 @@ public class LoginView implements Serializable {
 		return captchaService.isMostrarCaptcha() || forcarMostrarCaptcha;
 	}
 	
+	@ExceptionHandled
 	public void login() {
 	    
 		Credentials credentials = (Credentials) Component.getInstance(Credentials.class);
@@ -46,7 +51,6 @@ public class LoginView implements Serializable {
         	FacesMessages.instance().add(Severity.ERROR, infoxMessages.get("captcha.obrigatorio"));
         	return;
         }
-        
         if(loginService.autenticar(username, password)) {
 			captchaService.loggedIn(username);
 			forcarMostrarCaptcha = false;        	
@@ -59,5 +63,7 @@ public class LoginView implements Serializable {
         authenticator.login();
 	}
 	
-	
+	public List<String> getExtensoes(){
+	    return extensaoLogin.getExtensoes();
+	}
 }

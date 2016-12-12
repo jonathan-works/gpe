@@ -14,34 +14,32 @@
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-      <h:inputHidden id="#{id}Token" value="#{tokenField}" />
-      <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
-      		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
+      <a:jsFunction name="apagarGrupo" action="#{assinadorController.apagarGrupo()}" execute="@none" render="@none" />
+      <ui:param name="objetoAssinatura" value="#{empty documentoBin ? (empty textoAssinavelList ? (empty documentoBinList ? assinadorController.criarGrupoAssinatura(assinavelProvider) : assinadorController.criarGrupoAssinaturaWithDocumentoBin(documentoBinList)) : assinadorController.criarGrupoAssinatura(textoAssinavelList)) : assinadorController.criarGrupoAssinaturaWithDocumentoBin(documentoBin)}" />
+      <a:commandButton type="button" styleClass="buttons #{styleClass}" disabled="#{disabled}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
+      		action="#{elFunctions.invokeMethod(preSignAction)}" execute="@this #{execute}" rendered="#{empty rendered ? true : rendered}"
       		oncomplete="infox.hideLoading(); if (#{!facesContext.validationFailed}) {infox.CertDig.#{id}.init();}"
-            render="#{empty reRender ? '@this' : reRender}"
+            render="#{reRender} #{empty id ? 'divApplet' : id}"
       		value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" >
-      			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />
+      			<f:setPropertyActionListener value="#{objetoAssinatura}" target="#{tokenField}" />
+      			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />      				
       </a:commandButton>
-
-      <ui:param name="parameter" value="#{empty documentBundleToken ? (empty documentData ? 'md5='.concat(signableData) : 'multiSign='.concat(documentData)) : 'bundleToken='.concat(documentBundleToken)}" />
-
-      <h:outputScript name="cookies.min.js" library="js" />  
+      
       <h:outputScript>
           namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
   	              #{functionPreSign};
-  	        	  location.href='#{certificadoDigitalPathResolver.JNLPUrl}?#{parameter}';
+  	        	  location.href='#{assinadorController.JNLPUrl}?token=#{tokenField}';
   	        	  var intervalId = setInterval(function() {  
-  	        	      var token = Cookies.get('br.com.infox.epp.sign.token');
-  	        	      #{rich:element(id.concat('Token'))}.value = token;  
-  	        	      $.get('#{certificadoDigitalPathResolver.certificadoWSBasePath}/' + token, function(status) {
-   	        		      if (status === 'SUCCESS' || status === 'ERROR') {  
+  	        	      var token = '#{tokenField}';  
+  	        	      $.get('#{pathResolver.getRestBaseUrl()}' + '/tokenAssinatura/' + token + '/status', function(status) {
+   	        		      if (status !== 'AGUARDANDO_ASSINATURA') {  
 	  	        		      clearInterval(intervalId);
 	  	        		      #{functionPosSign};
+	  	        		      apagarGrupo();
   	        	  	      }
   			  	      });  
   		          }, 2000);  
-                     setTimeout(function() { clearInterval(intervalId);}, 8000 * 60);
   		   }  
   	   });  
 	  </h:outputScript>

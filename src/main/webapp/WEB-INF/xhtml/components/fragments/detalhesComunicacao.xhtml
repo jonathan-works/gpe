@@ -11,7 +11,8 @@
 
 	<ui:param name="id" value="#{empty id ? 'idDetalhesComunicacao' : id}"></ui:param>
 	<ui:param name="prazoResposta" value="#{empty prazoResposta ? '-' : prazoResposta}"></ui:param>
-	
+    <ui:param name="isAnexo" value="#{empty isAnexo ? false : isAnexo}" />
+
 	<wi:outputText id="#{id}meioExpedicao"
 		label="#{infoxMessages['comunicacao.meioExpedicao']}"
 		value="#{meioExpedicao}"
@@ -70,12 +71,20 @@
 			onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(documentoComunicacao)}');"
 			rendered="#{empty showDownloadDocumentoPrincipal ? false : showDownloadDocumentoPrincipal}" />
 		<a:commandButton id="#{id}visualizarComunicacao" 
+			   action="#{jsfUtil.applyLastPhaseFlashAction}"
                value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
                styleClass="buttons" render="@this" execute="@this"
                oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
-               rendered="#{empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}" >
+               rendered="#{not isAnexo and empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}" >
         	<f:setPropertyActionListener value="#{idDestinatario}" target="#{flash.idDestinatario}" />
-        	<infox:flashcopy/>
+        </a:commandButton>
+		<a:commandButton id="#{id}visualizarComunicacaoAnexo"
+            value="#{infoxMessages['comunicacao.visualizarComunicacao']}"
+            styleClass="buttons" render="@this" execute="@this" action="#{jsfUtil.applyLastPhaseFlashAction()}"
+            oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');"
+            rendered="#{isAnexo and empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}" >
+            <f:setPropertyActionListener value="#{idDocumentoComunicacao}" target="#{flash.idDocumento}" />
+            <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
         </a:commandButton>
 	</h:form>
 

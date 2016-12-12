@@ -43,6 +43,14 @@
                icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
                iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
                label="#{infoxMessages['perfil.papel']}" />
+          <wi:selectOneMenuEnum
+                id="tipoUsuario"
+                label="#{infoxMessages['usuario.tipoLogin']}"
+                items="#{usuarioLoginCrudAction.tiposDeUsuario}"
+                value="#{usuarioLoginList.entity.tipoUsuario}"
+                showLabelTodos="true"
+                >
+      </wi:selectOneMenuEnum>
           <wi:selectBooleanMenu
             id="bloqueio"
             label="#{infoxMessages['usuarioLogin.bloqueio']}"
@@ -66,6 +74,11 @@
         columnHeader="#{infoxMessages['usuarioLogin.perfis']}"
         value="#{row.perfisFormatados}"
         hideOrder="true" />
+      <wi:columnOutputText
+        columnId="tipoLogin"
+        columnHeader="#{infoxMessages['usuario.tipoLogin']}"
+        value="#{row.tipoUsuario.label}"
+        hideOrder="true" />
       <wi:columnBoolean
         columnId="bloqueio"
         columnHeader="#{infoxMessages['usuarioLogin.bloqueio']}"
@@ -80,52 +93,47 @@
         value="#{row.ativo}" />
     </wi:dataTable>
   </ui:define>
-  <ui:define name="form">
-    <wi:dataForm
-      formId="usuarioForm"
-      formTitle="#{infoxMessages['form.title']}"
-      home="#{usuarioLoginCrudAction}">
-      <wi:inputText
-        id="nomeUsuario"
-        label="#{infoxMessages['usuario.nome']}"
-        value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
-        required="true"
-        maxlength="150" />
-      <wi:inputText
-        id="email"
-        label="#{infoxMessages['usuarioLogin.email']}"
-        value="#{usuarioLoginCrudAction.instance.email}"
-        required="true"
-        maxlength="100" >
-        <f:validator validatorId="emailValidator" />
-      </wi:inputText>
-      <wi:inputText
-        id="login"
-        label="#{infoxMessages['usuarioLogin.login']}"
-        value="#{usuarioLoginCrudAction.instance.login}"
-        required="true"
-        maxlength="15" />
-      <wi:selectOneMenuEnum
-        id="tipoUsuario"
-        label="#{infoxMessages['usuario.tipoUsuario']}"
-        items="#{usuarioLoginCrudAction.tiposDeUsuario}"
-        value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
-        showLabelSelecione="true"
-        required="true">
-      </wi:selectOneMenuEnum>
-      <wi:selectSituacaoRadio
-        id="ativo"
-        label="#{infoxMessages['field.situacao']}"
-        value="#{usuarioLoginCrudAction.instance.ativo}" />
-      <ui:include
-        src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
-        <ui:param
-          name="id"
-          value="usuarioProvisorio" />
-      </ui:include>
-    </wi:dataForm>
-  </ui:define>
-  <ui:define name="tabs">
+	<ui:define name="form">
+		<wi:dataForm formId="usuarioForm"
+			formTitle="#{infoxMessages['form.title']}"
+			home="#{usuarioLoginCrudAction}"
+			newInstanceAction="usuarioLoginController.newInstance()">
+			
+			<wi:inputText id="nomeUsuario"
+				label="#{infoxMessages['usuario.nome']}"
+				value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
+				required="true" maxlength="150" />
+				
+			<wi:inputText id="email"
+				label="#{infoxMessages['usuarioLogin.email']}"
+				value="#{usuarioLoginCrudAction.instance.email}" required="true"
+				maxlength="100">
+				<f:validator validatorId="emailValidator" />
+			</wi:inputText>
+			
+			<wi:inputText id="login"
+				label="#{infoxMessages['usuarioLogin.login']}"
+				value="#{usuarioLoginCrudAction.instance.login}" required="true"
+				maxlength="15" 
+				readonly="#{not usuarioLoginCrudAction.podeEditarLogin}"/>
+			
+			<wi:selectOneMenuEnum id="tipoUsuario"
+				label="#{infoxMessages['usuario.tipoLogin']}"
+				items="#{usuarioLoginCrudAction.tiposDeUsuario}"
+				value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
+				showLabelSelecione="true" required="true"/>
+			
+			<wi:selectSituacaoRadio id="ativo"
+				label="#{infoxMessages['field.situacao']}"
+				value="#{usuarioLoginCrudAction.instance.ativo}" />
+				
+			<ui:include
+				src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
+				<ui:param name="id" value="usuarioProvisorio" />
+			</ui:include>
+		</wi:dataForm>
+	</ui:define>
+	<ui:define name="tabs">
     <infox:tab
       id="usuarioPessoaFisica"
       rendered="#{usuarioLoginCrudAction.isManaged() and usuarioLoginCrudAction.instance.humano}"
@@ -501,5 +509,10 @@
 	    </rich:dataTable>
 	    
     </infox:tab>
+    
+    <c:forEach var="tab" items="#{extensaoCrudUsuario.tabs}">
+    	<ui:include src="#{tab}" />
+    </c:forEach>
+    
   </ui:define>
 </ui:composition>

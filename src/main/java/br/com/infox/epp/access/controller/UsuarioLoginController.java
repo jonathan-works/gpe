@@ -84,7 +84,7 @@ public class UsuarioLoginController extends AbstractController {
 	}
 	
 	public void onClickAssinaturaTab() {
-		assinaturaDocumentoList.getEntity().setUsuario(getInstance());
+		assinaturaDocumentoList.getEntity().setPessoaFisica(getInstance().getPessoaFisica());
 	}
 	
 	public void onClickVinculoUnidadeDecisoraTab() {

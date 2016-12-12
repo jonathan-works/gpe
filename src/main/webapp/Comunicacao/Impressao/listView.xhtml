@@ -47,7 +47,7 @@
 								   formTitle="#{infoxMessages['searchForm.title']}"
                                    searchAction="#{impressaoComunicacaoList.showDataTable()}"
                                    clearAction="#{impressaoComunicacaoList.hideDataTable()}" >
-						<wi:selectOneMenuEnum id="meioExpedicao"
+						<wi:selectOneMenuEntity id="meioExpedicao"
 							label="#{infoxMessages['comunicacao.impressao.meioExpedicao']}"
 							value="#{impressaoComunicacaoList.meioExpedicao}" 
 							items="#{impressaoComunicacaoList.meiosExpedicao}" 
@@ -108,7 +108,7 @@
 	        		type="submit"
 	        		value="#{infoxMessages['comunicacao.impressao.imprimirComunicacao']}"
 	        		onclick="#{rich:component('imprimirComunicacaoPopUp')}.hide();"
-	        		oncomplete="window.open('#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?scid=#{conversation.id}', '_blank');"
+	        		oncomplete="infox.openPopUp('imprimir', '#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?scid=#{conversation.id}',screen.availWidth,screen.availHeight);"
 	        		render=":panelImpressaoComunicacoes">
 	        	</a:commandButton>
 	        		

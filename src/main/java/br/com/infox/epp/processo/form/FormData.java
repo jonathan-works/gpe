@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.form;
 import java.util.List;
 import java.util.Map;
 
+import org.jbpm.graph.def.Node;
+
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
@@ -29,5 +31,7 @@ public interface FormData {
     ExpressionResolverChain getExpressionResolver();
     
     void validate() throws BusinessException;
+    
+    Node getNode();
     
 }

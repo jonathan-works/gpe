@@ -1,13 +1,9 @@
 <jbpm-configuration>
 
-
   <jbpm-context>
     <service name="persistence">
        <factory>
           <bean class="org.jbpm.persistence.jta.JtaDbPersistenceServiceFactory">
-             <field name="sessionExpression">
-             	<string>#{hibernateSession}</string>
-             </field>
           </bean>
        </factory>
     </service>

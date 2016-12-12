@@ -25,6 +25,7 @@ import org.dom4j.Namespace;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.jbpm.JbpmException;
+import org.jbpm.configuration.ConfigurationManager;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.action.ActionTypes;
 import org.jbpm.graph.action.Script;
@@ -233,9 +234,6 @@ public class JpdlXmlWriter {
         Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
         while (iter.hasNext()) {
             org.jbpm.graph.def.Node node = iter.next();
-            if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.Node)){
-                node.setAsync(true);
-            }
             if (!(node instanceof StartState)) {
                 Element nodeElement = addElement(parentElement, ProcessFactory.getTypeName(node));
                 if (node instanceof TaskNode) {
@@ -425,7 +423,7 @@ public class JpdlXmlWriter {
     		transition.setKey("key_" + UUID.randomUUID().toString());
     	}
     	transitionElement.addAttribute("key", transition.getKey());
-    	transitionElement.addAttribute("hidden", String.valueOf(transition.isHidden()));
+    	transitionElement.addAttribute("configuration", ConfigurationManager.serialize(transition.getConfiguration()));
         if (transition.getTo() != null) {
         	if (transition.getTo().getKey() == null){
         		transition.getTo().setKey("key_" + UUID.randomUUID().toString());
@@ -590,7 +588,8 @@ public class JpdlXmlWriter {
             initCreateTimerAction(parentElement, action);
             return true;
         } else if (action instanceof CancelTimerAction) {
-            initCancelTimerAction(parentElement, action);
+            initCancelTimerAction(parentElement, action);//TODO: Verificar necessidade disso 
+        	return true;
         }
         
         return false;

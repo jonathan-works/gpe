@@ -4,7 +4,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,33 +11,29 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.commons.codec.binary.Base64;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.util.Strings;
 
-import br.com.infox.certificado.Certificado;
-import br.com.infox.certificado.CertificadoDadosPessoaFisica;
-import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.CertificateManager;
+import br.com.infox.epp.assinador.ValidadorAssinatura;
+import br.com.infox.epp.assinador.ValidadorUsuarioCertificado;
+import br.com.infox.epp.assinador.assinavel.TipoSignedData;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
-import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.dao.AssinaturaDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -48,7 +43,6 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Stateless
 @AutoCreate
@@ -64,16 +58,18 @@ public class AssinaturaDocumentoService {
     @Inject
     private DocumentoBinarioManager documentoBinarioManager;
     @Inject
-    private DocumentoBinManager documentoBinManager;
+    protected DocumentoBinManager documentoBinManager;
     @Inject
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
-    @In
+    @Inject
     private AssinaturaDocumentoListenerService assinaturaDocumentoListenerService;
     @Inject
-    private PessoaFisicaManager pessoaFisicaManager;
+    protected AssinaturaDocumentoDAO assinaturaDocumentoDAO;
     @Inject
-    private AssinaturaDocumentoDAO assinaturaDocumentoDAO;
-
+    private ValidadorAssinatura validadorAssinatura;
+    @Inject
+    private ValidadorUsuarioCertificado validadorUsuarioCertificado;
+    
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
         return documentoBin != null
@@ -84,7 +80,7 @@ public class AssinaturaDocumentoService {
         boolean result = false;
         try {
             verificaCertificadoUsuarioLogado(assinatura.getCertChain(),
-                    assinatura.getUsuario());
+                    assinatura.getPessoaFisica());
             result = true;
         } catch (CertificadoException | AssinaturaException e) {
             LOG.error(e.getMessage(), e);
@@ -187,11 +183,23 @@ public class AssinaturaDocumentoService {
         for (AssinaturaDocumento assinaturaDocumento : documento.getDocumentoBin().getAssinaturas()) {
             Papel papel = usuarioLocalizacao.getPerfilTemplate().getPapel();
             UsuarioLogin usuario = usuarioLocalizacao.getUsuarioLogin();
-            if (result = (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel) && assinaturaDocumento.getUsuario().equals(usuario))) {
+            if (result = (assinaturaDocumento.getPapel().equals(papel) && assinaturaDocumento.getPessoaFisica().equals(usuario.getPessoaFisica()))) {
                 break;
             }
         }
         return result;
+    }
+    
+    public boolean isDocumentoAssinado(Integer idDocumentoBin, PessoaFisica pessoaFisica) {
+        DocumentoBin bin = documentoBinManager.find(idDocumentoBin);
+        if (bin != null && bin.getAssinaturas() != null) {
+            for (AssinaturaDocumento assinatura : bin.getAssinaturas()) {
+                if (assinatura.getPessoaFisica() != null && assinatura.getPessoaFisica().equals(pessoaFisica)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isDocumentoAssinado(Documento documento, UsuarioLogin usuarioLogin) {
@@ -204,7 +212,7 @@ public class AssinaturaDocumentoService {
     	}
     	boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
-            if (assinaturaDocumento.getUsuario().equals(usuarioLogin)) {
+            if (assinaturaDocumento.getPessoaFisica().equals(usuarioLogin.getPessoaFisica())) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }
@@ -216,7 +224,7 @@ public class AssinaturaDocumentoService {
         boolean result = false;
         List<AssinaturaDocumento> assinaturas = assinaturaDocumentoDAO.listAssinaturaByDocumentoBin(documentoBin);
         for (AssinaturaDocumento assinaturaDocumento : assinaturas) {
-            if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)) {
+            if (assinaturaDocumento.getPapel().equals(papel)) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }
@@ -224,52 +232,26 @@ public class AssinaturaDocumentoService {
         return result;
     }
 
-    public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded,
-            UsuarioLogin usuarioLogado) throws CertificadoException, AssinaturaException {
-        if (Strings.isEmpty(certChainBase64Encoded)) {
-            throw new AssinaturaException(Motivo.SEM_CERTIFICADO);
-        }
-        if (usuarioLogado.getPessoaFisica() == null) {
-            throw new AssinaturaException(Motivo.USUARIO_SEM_PESSOA_FISICA);
-        }
-        if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
-            final Certificado certificado = CertificadoFactory.createCertificado(certChainBase64Encoded); 
-            if (!(certificado instanceof CertificadoDadosPessoaFisica)) {
-                throw new CertificadoException("Este certificado não é de pessoa física");
-            }
-            final String cpfCertificado = ((CertificadoDadosPessoaFisica) certificado).getCPF();
-            if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf()
-                    .replace(".", "").replace("-", ""))) {
-                usuarioLogado.getPessoaFisica().setCertChain(certChainBase64Encoded);
-            } else {
-                throw new AssinaturaException(Motivo.CADASTRO_USUARIO_NAO_ASSINADO);
-            }
-        }
-        PessoaFisica pessoaFisicaCertificado = getPessoaFisicaFromCertChain(certChainBase64Encoded);
-        if (!usuarioLogado.getPessoaFisica().equals(pessoaFisicaCertificado)) {
-            throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
-        }
-        if (!pessoaFisicaCertificado.checkCertChain(certChainBase64Encoded)) {
-            throw new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
-        }
+    public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, PessoaFisica pessoaFisica) throws CertificadoException, AssinaturaException {
+    	validadorUsuarioCertificado.verificaCertificadoUsuarioLogado(certChainBase64Encoded, pessoaFisica);
     }
     
-    private PessoaFisica getPessoaFisicaFromCertChain(String certChain) throws CertificadoException {
-        Certificado c = CertificadoFactory.createCertificado(certChain);
-        String cpf = new StringBuilder(((CertificadoDadosPessoaFisica) c).getCPF()).insert(9, '-').insert(6, '.').insert(3, '.').toString();
-        if (cpf != null) {
-            return pessoaFisicaManager.getByCpf(cpf);
-        }
-        return null;
+    
+    public void validarCertificado(String certChain, PessoaFisica pessoaFisica) throws CertificadoException, AssinaturaException {
+		verificaCertificadoUsuarioLogado(certChain, pessoaFisica);
+		checkValidadeCertificado(certChain);    	
+    }
+    
+    public void validarCertificado(String certChain) throws CertificadoException {
+		checkValidadeCertificado(certChain);    	
     }
 
 	public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
-			String signature) throws CertificadoException, AssinaturaException, DAOException {
+			String signature, TipoAssinatura tipoAssinatura, byte[] signedData, TipoSignedData tipoSignedData) throws CertificadoException, AssinaturaException, DAOException {
 		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
-		verificaCertificadoUsuarioLogado(certChain, usuario);
-		checkValidadeCertificado(certChain);
+		validadorAssinatura.validarAssinatura(signedData, tipoSignedData, Base64.decodeBase64(signature), usuario.getPessoaFisica());
 
-		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature);
+		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature, tipoAssinatura);
 		List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
 		documentoBin.getAssinaturas().add(assinaturaDocumento);
 		assinaturaDocumentoDAO.persist(assinaturaDocumento);
@@ -278,7 +260,7 @@ public class AssinaturaDocumentoService {
 			documentoBin.setMinuta(Boolean.FALSE);
 		}
 		if (isDocumentoTotalmenteAssinado(documentoBin)){
-			setDocumentoSuficientementeAssinado(documentoBin, usuarioPerfilAtual);
+			documentoBinManager.setDocumentoSuficientementeAssinado(documentoBin);
 		}
 		documentoBinManager.update(documentoBin);
 		try {
@@ -291,40 +273,6 @@ public class AssinaturaDocumentoService {
 			throw new DAOException(e);
 		}
 	}
-
-	public void setDocumentoSuficientementeAssinado(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual) throws DAOException {
-		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
-		documentoBin.setDataSuficientementeAssinado(new Date());
-		List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = documentoBin.getRegistrosAssinaturaSuficiente();
-		List<Documento> documentoList = documentoManager.getDocumentosFromDocumentoBin(documentoBin);
-		GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
-        if (!(documentoList == null || documentoList.isEmpty()) && usuarioPerfilAtual != null) {
-            Documento documento = documentoList.get(0);
-            for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
-                RegistroAssinaturaSuficiente registroAssinaturaSuficiente = new RegistroAssinaturaSuficiente();
-                registroAssinaturaSuficiente.setDocumentoBin(documentoBin);
-                registroAssinaturaSuficiente.setPapel(usuarioPerfilAtual.getPerfilTemplate().getPapel().getNome());
-                registroAssinaturaSuficiente.setTipoAssinatura(classificacaoDocumentoPapel.getTipoAssinatura());
-                registrosAssinaturaSuficiente.add(registroAssinaturaSuficiente);
-                genericManager.persist(registroAssinaturaSuficiente);
-            }
-        }
-        documentoBinManager.update(documentoBin);
-	}
-    
-    public void assinarDocumento(final Documento documento,
-            final UsuarioPerfil perfilAtual, final String certChain,
-            final String signature) throws CertificadoException,
-            AssinaturaException, DAOException {
-        assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature);
-    }
-    
-    public void assinarGravarDocumento(Documento documento,
-            final UsuarioPerfil perfilAtual, final String certChain,
-            final String signature) throws DAOException, CertificadoException, AssinaturaException {
-    	documento = documentoManager.gravarDocumentoNoProcesso(documento);
-    	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature);
-    }
 
     public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {
         Documento documento = documentoManager.find(idDocumento);
@@ -374,8 +322,8 @@ public class AssinaturaDocumentoService {
     public boolean isDocumentoAssinado(DocumentoBin documentoBin, Papel papel, UsuarioLogin usuario) {
         boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
-            if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel) && 
-            		assinaturaDocumento.getUsuarioPerfil().getUsuarioLogin().equals(usuario)) {
+            if (assinaturaDocumento.getPapel().equals(papel) && 
+            		assinaturaDocumento.getPessoaFisica().equals(usuario.getPessoaFisica())) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }
@@ -413,7 +361,7 @@ public class AssinaturaDocumentoService {
     	return true;
     }
     
-    private void checkValidadeCertificado(String certChain) throws CertificadoException {
+    protected void checkValidadeCertificado(String certChain) throws CertificadoException {
         try {
             CertificateManager.instance().verificaCertificado(certChain);
         } catch (CertificateExpiredException e) {

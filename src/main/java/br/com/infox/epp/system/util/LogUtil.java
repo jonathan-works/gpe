@@ -17,8 +17,6 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.util.Reflections;
 
 import br.com.infox.core.util.EntityUtil;
@@ -28,6 +26,8 @@ import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
 import br.com.infox.epp.system.exception.LogException;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public final class LogUtil {
 

@@ -24,7 +24,7 @@
             status="none"
             rendered="#{!empty form.fields and processoEpaHome.managed and !isUsuarioExterno}"
             onmouseup="showLoading()"
-            oncomplete="#{oncomplete}; hideLoading(); reloadPanel();"
+            oncomplete="#{oncomplete}; hideLoading();"
             render="#{reRenderSave},:pageBodyDialogMessage"
             value="#{infoxMessages['crud.update']}"
             styleClass="buttons"
@@ -97,7 +97,8 @@
                     value="#{prioridadeProcessoList.listAtivos()}"
                     var="p"
                     label="#{p.descricaoPrioridade}"
-                    showLabelSelecione="true" />
+                    noSelectionLabel="Sem prioridade"
+                    hideNoSelectionLabel="false" />
                 <s:convertEntity />
             </h:selectOneMenu>
         </ui:fragment>

@@ -5,9 +5,9 @@ import static java.text.MessageFormat.format;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Renderer;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
 import br.com.infox.seam.exception.BusinessException;
 
 public class SendmailCommand {

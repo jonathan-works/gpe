@@ -55,6 +55,11 @@ public class Pasta implements Serializable, Cloneable {
     private Integer id;
     
     @NotNull
+    @Column(name = "cd_pasta", nullable = false)
+    @Size(max=250)
+    private String codigo;
+    
+    @NotNull
     @Column(name = "nm_pasta", nullable = false)
     @Size(max=250)
     private String nome;
@@ -83,7 +88,10 @@ public class Pasta implements Serializable, Cloneable {
     private Integer ordem;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
-    private List<Documento> documentosList = new ArrayList<>(0); 
+    private List<Documento> documentosList = new ArrayList<>(0);
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
+    private List<PastaRestricao> pastaRestricaoList = new ArrayList<>(0);
     
     @PostPersist
     private void postPersist() {
@@ -108,7 +116,15 @@ public class Pasta implements Serializable, Cloneable {
         this.processo = processo;
     }
 
-    public String getNome() {
+    public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getNome() {
         return nome;
     }
 
@@ -131,6 +147,14 @@ public class Pasta implements Serializable, Cloneable {
     public void setDocumentosList(List<Documento> documentosList) {
         this.documentosList = documentosList;
     }
+    
+    public List<PastaRestricao> getPastaRestricaoList() {
+        return pastaRestricaoList;
+    }
+
+    public void setPastaRestricaoList(List<PastaRestricao> pastaRestricaoList) {
+        this.pastaRestricaoList = pastaRestricaoList;
+    }
 
     public Boolean getSistema() {
         return sistema;
@@ -148,6 +172,7 @@ public class Pasta implements Serializable, Cloneable {
     	Pasta cPasta = (Pasta) super.clone();
     	cPasta.setId(null);
     	cPasta.setProcesso(null);
+    	cPasta.setPastaRestricaoList(null);
     	List<Documento> cDocumentos = new ArrayList<>();
     	for (Documento documento : getDocumentosList()) {
     		Documento cDoc = documento.makeCopy();
@@ -191,7 +216,7 @@ public class Pasta implements Serializable, Cloneable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         return result;
     }
 

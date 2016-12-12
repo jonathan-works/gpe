@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
 
 import br.com.infox.epp.fluxo.crud.CategoriaCrudAction;
 import br.com.infox.epp.fluxo.crud.FluxoCrudAction;

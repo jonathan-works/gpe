@@ -18,7 +18,7 @@
     <ui:define name="body">
     	
     	<fieldset id="processoCriadosField">
-    		<legend class="name">#{infoxMessages['processo.processos']}</legend>
+    		<legend class="name">#{infoxMessages['processo.processosNaoIniciados']}</legend>
     		
 	    	<p:dataTable id="processosCriados" var="row" value="#{iniciarProcessoView.processosCriados}" 
 	        	rowKey="#{row.id}" headerText="Processos Criados" responsive="true" 
@@ -75,7 +75,7 @@
 	        
 	        <h:form id="iniciarProcessoForm">
 		        <p:dataTable id="natCatProcessoList" var="row" value="#{iniciarProcessoView.naturezaCategoriaFluxoItemList}" 
-		        	selection="#{iniciarProcessoView.naturezaCategoriaFluxoItem}" rowKey="#{row.id}" 
+		        	selection="#{iniciarProcessoView.naturezaCategoriaFluxoItem}" rowKey="#{row.id}" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
 		        	responsive="true" rows="10" paginator="#{iniciarProcessoView.naturezaCategoriaFluxoItemList.size() gt 10}">
 		        	
 		        	<p:column selectionMode="single" style="width:16px; text-align:center"/>

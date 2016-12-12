@@ -44,7 +44,32 @@
         width: initial;
     }
   }
+  .panel{
+    div&-titlebar.ui-widget-header{
+        position:relative;
+    }
 
+    div&-titlebar.ui-widget-header a&-titlebar-icon {
+        position:absolute;
+        top:0;
+        left:0;
+        padding:0;
+        margin:0;
+        width:100%;
+        height:100%;
+        background-color:transparent;
+        float: none;
+        border-color: transparent;
+        background-image: none;
+        span.ui-icon {
+            display:none;
+        }
+    }
+
+  }
+  .panel-colors{
+
+  }
   .inputfield{
     .prefixed-atrib(box-shadow, initial);
     .ui-widget-content &, .ui-widget-header & {
@@ -72,9 +97,13 @@ p {
       max-width:100%;
     }
 }
+.ui-panel {
+    #normalize-prime-components > .panel;
+}
 body {
     #normalize-html > .standard;
     #normalize-prime-components > .picklist;
+
     .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{
       #normalize-rich-components > .fonts;
     }

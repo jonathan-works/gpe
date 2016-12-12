@@ -10,13 +10,13 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.async.QuartzDispatcher;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.util.ClassLoaderUtil;
 import org.quartz.SchedulerException;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.manager.BloqueioUsuarioTimerManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.quartz.QuartzConstant;
 
 @Name(BloqueioUsuarioStarter.NAME)

@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -23,7 +24,6 @@ public class ActionTemplateHandler implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(ActionTemplateHandler.class);
 
-    public static final String SET_CURRENT_TEMPLATE_EVENT = "setCurrentTemplateEvent";
     private List<ActionTemplate> templateList;
     private List<ActionTemplate> publicTemplateList;
     private ActionTemplate emptyExpressionTemplate;
@@ -59,21 +59,20 @@ public class ActionTemplateHandler implements Serializable {
     }
 
     public void setCurrentActionTemplate(String expression) {
-        Events.instance().raiseEvent(SET_CURRENT_TEMPLATE_EVENT);
         for (ActionTemplate act : getTemplateList()) {
             String exp = "#{" + act.getExpression();
             if (expression.startsWith(exp)) {
-                Contexts.getConversationContext().set(ACTION_TEMPLATE, act);
+                Contexts.getPageContext().set(ACTION_TEMPLATE, act);
                 act.extractParameters(expression);
                 return;
             }
         }
-        Contexts.getConversationContext().set(ACTION_TEMPLATE, getEmptyExpressionTemplate());
+        Contexts.getPageContext().set(ACTION_TEMPLATE, getEmptyExpressionTemplate());
         return;
     }
 
     public void setCurrentTemplate(ActionTemplate template) {
-        Contexts.getConversationContext().set(ACTION_TEMPLATE, template);
+        Contexts.getPageContext().set(ACTION_TEMPLATE, template);
         template.extractParameters(null);
     }
 

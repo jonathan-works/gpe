@@ -10,6 +10,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
@@ -29,6 +32,8 @@ public class VariavelProcessoAction implements Serializable {
 
     @In
     private VariavelProcessoService variavelProcessoService;
+    @In
+    private PapelManager papelManager;
 
     public Boolean possuiVariaveis() {
         if (this.possuiVariaveis == null) {
@@ -39,7 +44,8 @@ public class VariavelProcessoAction implements Serializable {
 
     public List<VariavelProcesso> getVariaveis() {
         if (this.variaveis == null) {
-            this.variaveis = variavelProcessoService.getVariaveis(processo);
+            this.variaveis = variavelProcessoService.getVariaveis(processo, 
+            		DefinicaoVariavelProcessoRecursos.MOVIMENTAR.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
         }
         return this.variaveis;
     }

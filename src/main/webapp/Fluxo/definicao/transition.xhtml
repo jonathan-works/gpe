@@ -76,7 +76,9 @@
                     </div>
                 </f:facet>
                 <h:form>
-	                <h:inputTextarea value="#{transicaoHandler.transition.condition}" maxlength="1000" style="width: 100%" styleClass="textAreaexpressoesAjudaGatewayPopupPanel#{transicaoHandler.name}">
+	                <h:inputTextarea value="#{transicaoHandler.transition.condition}" maxlength="1000" style="width: 100%"
+	                 styleClass="textAreaexpressoesAjudaGatewayPopupPanel#{transicaoHandler.name}"
+	                 converter="stringConverter">
 	                    <a:ajax event="change" execute="@this" render="transition#{type}Table" limitRender="true" />
 	                </h:inputTextarea>
                 </h:form>
@@ -87,7 +89,22 @@
                     <center>
                         <h:selectBooleanCheckbox
                             id="occultTransitionButton"
-                            value="#{transicaoHandler.transition.hidden}">
+                            value="#{transicaoHandler.transition.configuration.hidden}">
+                            <a:ajax
+                                event="change"
+                                execute="@this"
+                                render="transition#{type}Table"
+                                limitRender="true" />
+                        </h:selectBooleanCheckbox>
+                    </center>
+                </h:form>
+            </rich:column>
+            <rich:column rendered="#{type eq 'to' and nodeFitter.currentNode.nodeType eq 'Task'}">
+                <f:facet name="header">#{infoxMessages['process.transition.validateForm']}</f:facet>
+                <h:form>
+                    <center>
+                        <h:selectBooleanCheckbox
+                            value="#{transicaoHandler.transition.configuration.validateForm}">
                             <a:ajax
                                 event="change"
                                 execute="@this"

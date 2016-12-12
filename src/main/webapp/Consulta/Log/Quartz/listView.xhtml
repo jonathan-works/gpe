@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+	<ui:define name="title">#{infoxMessages['quartzLog.pageTitle']}</ui:define>
+	<ui:define name="body">
+	
+		<wi:panel id="logErroPanel" styleClass="content-block">
+
+			<wi:dataTable values="#{consultaLogQuartzList.list(15)}" bean="#{consultaLogQuartzList}" tableTitle="#{infoxMessages['quartzLog.tableTitle']}"
+				id="consultaLogQuartzListTable" showToolbarColumn="false">
+				
+				<ui:define name="searchForm">
+					<wi:searchForm formId="pesquisarLogQuartzForm" formTitle="#{infoxMessages['searchForm.title']}" 
+						searchAction="#{bean.refresh()}">
+						
+						<wi:inputText id="jobName" value="#{bean.jobName}" label="#{infoxMessages['quartzLog.jobName']}" />
+						<wi:inputText id="expressao" value="#{bean.expressao}" label="#{infoxMessages['quartzLog.expressao']}" />
+						<wi:inputText id="instancia" value="#{bean.instancia}" label="#{infoxMessages['quartzLog.instancia']}" />
+						<wi:inputDataPeriodo id="periodo" label="#{infoxMessages['quartzLog.periodoInicio']}" valueDateFrom="#{bean.dataInicioIntervalo}"
+							valueDateTo="#{bean.dataFimIntervalo}" validatePastDateFrom="true" validatePastDateTo="true" 
+							pattern="dd/MM/yyyy HH:mm" maskDate="99/99/9999 99:99"/>
+							
+					</wi:searchForm>
+				</ui:define>
+				<ui:define name="headerToolBar" />
+				<ui:define name="toolBar" />
+
+				<wi:columnOutputText columnId="jobName" columnHeader="#{infoxMessages['quartzLog.jobName']}" value="#{row.jobName}" />
+				<wi:columnOutputText columnId="expressao" columnHeader="#{infoxMessages['quartzLog.expressao']}" value="#{row.expressao}" />
+				<wi:columnOutputText columnId="instancia" columnHeader="#{infoxMessages['quartzLog.instancia']}" value="#{row.instancia}" />
+				<wi:columnDateTime columnId="dataInicioProcessamento" columnHeader="#{infoxMessages['quartzLog.dataInicioProcessamento']}" 
+					value="#{row.dataInicioProcessamento}" pattern="dd/MM/yyyy kk:mm" />
+				<wi:columnDateTime columnId="dataFimProcessamento" columnHeader="#{infoxMessages['quartzLog.dataFimProcessamento']}" 
+					value="#{row.dataFimProcessamento}" pattern="dd/MM/yyyy kk:mm" />
+				
+			</wi:dataTable>
+			
+		</wi:panel>
+		
+	</ui:define>
+</ui:composition>

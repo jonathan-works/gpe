@@ -7,6 +7,10 @@ public class RestException implements ErroServico {
     private String code;
     private String message;
     
+    protected RestException() {
+    	
+    }
+    
     public RestException(String code, String message) {
         this.code = code;
         this.message = message;
@@ -26,5 +30,10 @@ public class RestException implements ErroServico {
     
     public void setMessage(String message) {
         this.message = message;
+    }
+    
+    @Override
+    public String toString() {
+    	return String.format("%s: %s", code, message);
     }
 }
