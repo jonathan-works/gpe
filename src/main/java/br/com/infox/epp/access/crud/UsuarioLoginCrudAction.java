@@ -33,6 +33,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
     
     private List<Map<String, String>> unidadeDecisoraMonocraticaList;
     private List<Map<String, String>> unidadeDecisoraColegiadaList;
+    private boolean podeEditarLogin;
     
     public void limparListasDeUnidadesDecisoras() {
     	unidadeDecisoraMonocraticaList = null;
@@ -55,6 +56,22 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
     		unidadeDecisoraColegiadaList = unidadeDecisoraColegiadaManager.getUnidadeDecisoraListByIdUsuario((Integer) getInstanceId()); 
     	}
     	return unidadeDecisoraColegiadaList;
+    }
+    
+    @Override
+    public void setInstance(UsuarioLogin instance) {
+        super.setInstance(instance);
+        this.podeEditarLogin = podeEditarLogin();
+    }
+    
+    private boolean podeEditarLogin() {
+        return getInstance() == null 
+                || getInstance().getLogin() == null 
+                || !getManager().existeTaskInstaceComUsuario(getInstance().getLogin());
+    }
+    
+    public boolean isPodeEditarLogin() {
+        return podeEditarLogin;
     }
 
     @Override
