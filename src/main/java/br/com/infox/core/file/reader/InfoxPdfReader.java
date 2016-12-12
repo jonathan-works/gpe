@@ -47,7 +47,8 @@ public class InfoxPdfReader {
             int qtdPaginas = pdfReader.getNumberOfPages();
             for (int i = 1; i <= qtdPaginas; i++) {
                 try {
-                    sb.append(extractor.getTextFromPage(i));
+                    String textFromPage = extractor.getTextFromPage(i);
+                    sb.append(textFromPage == null ? null : textFromPage.replace("\u0000", ""));
                 } catch (ExceptionConverter e) {
                     LOG.error("Erro ao extrair texto da página " + i, e);
                 }
