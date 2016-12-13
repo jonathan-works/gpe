@@ -22,6 +22,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
+import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -209,7 +210,7 @@ public class FluxoMergeService {
             } else if (node.getNodeType().equals(NodeType.StartState)) {
             	Task startTask = ((StartState)node).getProcessDefinition().getTaskMgmtDefinition().getStartTask();
 				if (startTask != null) {
-	            	taskController = startTask.getTaskController();
+	            	TaskController taskController = startTask.getTaskController();
                        //FIXME verificar e internacionalizar o metodos de validaçao
 	            	validateVariables(" do nó de início ", taskController);
 

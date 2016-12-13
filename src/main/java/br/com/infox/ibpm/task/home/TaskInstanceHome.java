@@ -689,8 +689,7 @@ public class TaskInstanceHome implements Serializable {
                 VariableAccess var = (VariableAccess) object;
                 if (var.isRequired() && var.getMappedName().split(":")[0].equals("EDITOR")
                         && getInstance().get(getFieldName(var.getVariableName())) == null) {
-                    String label = JbpmUtil.instance().getMessages()
-                            .get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + var.getVariableName());
+                    String label = var.getLabel();
                     FacesMessages.instance().add("O editor do campo " + label + " é obrigatório");
                     return false;
                 }

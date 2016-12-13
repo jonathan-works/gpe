@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
 
 @XmlRootElement
 public class FluxoConfiguration implements Serializable{
@@ -32,9 +32,6 @@ public class FluxoConfiguration implements Serializable{
 			variavel.setName(definicaoVariavelProcesso.getNome());
 	        variavel.setLabel(definicaoVariavelProcesso.getLabel());
 	        variavel.setDefaultValue(definicaoVariavelProcesso.getValorPadrao());
-	        variavel.setVisible(definicaoVariavelProcesso.getVisivel());
-	        variavel.setPanelVisible(definicaoVariavelProcesso.getVisivelPainel());
-	        variavel.setOrder(definicaoVariavelProcesso.getOrdem());
 			this.getVariavelProcesso().add(variavel);
 		}
 	}
@@ -47,9 +44,6 @@ public class FluxoConfiguration implements Serializable{
 				definicaoVariavel.setNome(var.getName());
 				definicaoVariavel.setLabel(var.getLabel());
 				definicaoVariavel.setValorPadrao(var.getDefaultValue());
-				definicaoVariavel.setVisivel(var.getVisible());
-				definicaoVariavel.setVisivelPainel(var.getPanelVisible());
-				definicaoVariavel.setOrdem(var.getOrder());
 				listDefinicaoVariavelProcesso.add(definicaoVariavel);
 			}
 		}

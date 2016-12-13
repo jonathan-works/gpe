@@ -9,18 +9,18 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.xml.bind.JAXBException;
 
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 
 @Stateless
 public class FluxoExporterService {
 	
 	@Inject
-	private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+	private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
 	
 	public byte[] exportarFluxo(Fluxo fluxo) throws IOException, JAXBException {
 		VariaveisProcessoXmlWriter variablesWriter = new VariaveisProcessoXmlWriter();
-		String xmlVariables = variablesWriter.getVariablesAsXml(definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo));
+		String xmlVariables = variablesWriter.getVariablesAsXml(definicaoVariavelProcessoSearch.listVariaveisByFluxo(fluxo));
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zos = new ZipOutputStream(baos);

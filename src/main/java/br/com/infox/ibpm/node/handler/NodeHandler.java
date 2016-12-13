@@ -646,7 +646,7 @@ public class NodeHandler implements Serializable {
 		return this.codigoPasta;
 	}
     
-    public void setCodigoPasta(String codigoPasta) { //TODO Ajustar quando integrar a branch do exportador
+    public void setCodigoPasta(String codigoPasta) {
     	Action action = null;
     	if (codigoPasta != null){
 	        if (this.node.hasEvent(Event.EVENTTYPE_NODE_LEAVE)) {
@@ -655,8 +655,8 @@ public class NodeHandler implements Serializable {
 	            if (actionDelegation != null && GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
 	            	actionDelegation.setConfigType("constructor");
 	            	GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
-	            	configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
-	            	configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+	            	configuration.setCodigoClassificacaoDocumento(classificacaoDocumento.getCodigoDocumento());
+	            	configuration.setCodigoModeloDocumento(modeloDocumento.getCodigo());
 	            	configuration.setCodigoPasta(codigoPasta);
 	            	actionDelegation.setConfiguration(new Gson().toJson(configuration));
 	            }

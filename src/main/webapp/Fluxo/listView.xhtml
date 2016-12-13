@@ -194,7 +194,7 @@
 					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
 					
                 <wi:commandButton id="botaoGerarReplica" action="fluxoCrudAction.gerarReplica()" reRender="modalReplicaForm"
-                    rendered="#{fluxoCrudAction.managed}" value="#{infoxMessages['fluxo.exportar']}" oncomplete="#{rich:component('modalReplica')}.show()"/>
+                    rendered="#{fluxoCrudAction.managed}" value="#{infoxMessages['fluxo.duplicar']}" oncomplete="#{rich:component('modalReplica')}.show()"/>
      
                 <a:commandButton id="exportButton" styleClass="buttons" type="button"
                     oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Fluxo/definicao/exportarFluxo.seam','1024');"

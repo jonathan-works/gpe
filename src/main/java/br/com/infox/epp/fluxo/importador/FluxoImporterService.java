@@ -27,8 +27,8 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.access.dao.PerfilTemplateDAO;
 import br.com.infox.epp.documento.ClassificacaoDocumentoSearch;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
-import br.com.infox.epp.fluxo.dao.DefinicaoVariavelProcessoDAO;
-import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.exportador.FluxoConfiguration;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
@@ -65,7 +65,7 @@ public class FluxoImporterService {
 	@Inject
 	private DominioVariavelTarefaSearch dominioVariavelTarefaSearch;
 	@Inject
-	private DefinicaoVariavelProcessoDAO definicaoVariavelProcessoDAO;
+	private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
 	@Inject
 	private SignalSearch signalSearch;
 	
@@ -81,7 +81,7 @@ public class FluxoImporterService {
 	}
 
 	private void removeVariaveisProcesso(Fluxo fluxo) {
-		List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoDAO.listVariaveisByFluxo(fluxo);
+		List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoSearch.listVariaveisByFluxo(fluxo);
 		for (DefinicaoVariavelProcesso definicaoVariavelProcesso : variaveis) {
 			getEntityManager().remove(definicaoVariavelProcesso);
 		}
