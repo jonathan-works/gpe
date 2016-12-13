@@ -1,6 +1,7 @@
 package br.com.infox.epp.fluxo.merger.service;
 
 import java.io.StringReader;
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +32,7 @@ import org.xml.sax.InputSource;
 import com.google.common.base.Strings;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.cdi.transaction.Transactional.TxType;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -53,6 +55,9 @@ import br.com.infox.seam.exception.BusinessRollbackException;
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)
 public class FluxoMergeService {
+
+    private static final int START_NODE = 0;
+    private static final int TAREFA = 1;
 
     @Inject
     private EntityManager entityManager;
@@ -194,54 +199,56 @@ public class FluxoMergeService {
            }
        }
 	}
-    //FIXME aqui tinha um m´etodo verificar depois do merge
-    //private List<String> getVariaveisDocumento(ProcessDefinition instance) {
+
     private void updatePostDeploy(ProcessDefinition processDefinition) {
         processoManager.atualizarProcessos(processDefinition.getId(), processDefinition.getName());
         tarefaManager.encontrarNovasTarefas();
         tarefaJbpmManager.inserirVersoesTarefas();
     }
-    
+
     private void validateVariables(ProcessDefinition processDefinition) {
         List<Node> nodes = processDefinition.getNodes();
         for (Node node : nodes) {
             if (node.getNodeType().equals(NodeType.Task)) {
-            	validateVariables(" da tarefa " + node.getName(), ((TaskNode) node).getTask(node.getName()).getTaskController());
+                validateVariables(TAREFA, node.getName(), ((TaskNode) node).getTask(node.getName()).getTaskController());
             } else if (node.getNodeType().equals(NodeType.StartState)) {
-            	Task startTask = ((StartState)node).getProcessDefinition().getTaskMgmtDefinition().getStartTask();
-				if (startTask != null) {
-	            	TaskController taskController = startTask.getTaskController();
-                       //FIXME verificar e internacionalizar o metodos de validaçao
-	            	validateVariables(" do nó de início ", taskController);
-
-				}
+                Task startTask = ((StartState) node).getProcessDefinition().getTaskMgmtDefinition().getStartTask();
+                if (startTask != null) {
+                    TaskController taskController = startTask.getTaskController();
+                    validateVariables(START_NODE, null, taskController);
+                }
             }
         }
     }
 
-	private void validateVariables(String nodeName, TaskController taskController) {
-		if (taskController != null) {
-		    List<VariableAccess> variables = taskController.getVariableAccesses();
-		    for (VariableAccess variable : variables) {
-		        String[] tokens = variable.getMappedName().split(":");
-		        if (tokens.length == 1) {
-		            throw new BusinessRollbackException("Existe uma variável sem nome" + nodeName); 
-		        } else if (VariableType.NULL.name().equals(tokens[0])) {
-		            throw new BusinessRollbackException("A variável " + tokens[1] + nodeName + " não possui tipo");
-		        } else if (VariableType.DATE.name().equals(tokens[0]) && variable.getConfiguration() == null) {
-		            throw new BusinessRollbackException("A variável " + tokens[1] + nodeName + " é do tipo data mas não possui tipo de validação");
-		        } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && variable.getConfiguration() == null) {
-		            throw new BusinessRollbackException("A variável " + tokens[1] + nodeName + " é do tipo lista de dados mas não possui lista de valores definida");
-		        } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(tokens[0]) && variable.getConfiguration() == null) {
-		            throw new BusinessRollbackException("A variável " + tokens[1] + nodeName + " é do tipo lista de dados (múltipla) mas não possui lista de valores definida");
-		        } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
-		            throw new BusinessRollbackException("A variável " + tokens[1] + nodeName + " é do tipo lista personalizável e não possui valor definido");
-		            //throw new BusinessRollbackException(MessageFormat.format(InfoxMessages.getInstance().get("processDefinition.variable.list.error"), tokens[1], node.getName()));
-		        }
-		    }
-		}
-	}
-    
+    private void validateVariables(int nodeType, String nodeName, TaskController taskController) {
+        if (taskController != null) {
+            List<VariableAccess> variables = taskController.getVariableAccesses();
+            for (VariableAccess variable : variables) {
+                String[] tokens = variable.getMappedName().split(":");
+                if (tokens.length == 1) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.varSemNome"), nodeName));
+                } else if (VariableType.NULL.name().equals(tokens[0])) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.varSemTipo"), tokens[1], nodeType, nodeName));
+                } else if (VariableType.DATE.name().equals(tokens[0]) && variable.getConfiguration() == null) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.dataSemValidacao"), tokens[1], nodeType, nodeName));
+                } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && variable.getConfiguration() == null) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.listaSemValor"), tokens[1], nodeType, nodeName));
+                } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(tokens[0]) && variable.getConfiguration() == null) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.lMutilpaSemValor"), tokens[1], nodeType, nodeName));
+                } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.listaPersonSemValor"), tokens[1], nodeType, nodeName));
+                }
+            }
+        }
+    }
+
     private void validateSubProcessNode(ProcessDefinition processDefinition) {
         List<Node> nodes = processDefinition.getNodes();
         for (Node node : nodes) {
