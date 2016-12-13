@@ -3,7 +3,6 @@ package br.com.infox.epp.fluxo.importador;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,10 +10,6 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -23,14 +18,12 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.dao.PerfilTemplateDAO;
 import br.com.infox.epp.documento.ClassificacaoDocumentoSearch;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
-import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.exportador.FluxoConfiguration;
+import br.com.infox.epp.fluxo.exportador.FluxoExporterService;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.ibpm.node.handler.NodeHandler;
@@ -51,7 +44,7 @@ import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.seam.exception.ValidationException;
 
 @Stateless
-public class FluxoImporterService {
+public class FluxoImporterService extends PersistenceController {
 	private static final LogProvider LOG = Logging.getLogProvider(FluxoImporterService.class);
 	
 	@Inject
@@ -65,27 +58,15 @@ public class FluxoImporterService {
 	@Inject
 	private DominioVariavelTarefaSearch dominioVariavelTarefaSearch;
 	@Inject
-	private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
-	@Inject
 	private SignalSearch signalSearch;
 	
 	public Fluxo importarFluxo(HashMap<String, String> xmls, Fluxo fluxo) {
-		String xpdl = xmls.get(FluxoConfiguration.FLUXO_XML);
+		String xpdl = xmls.get(FluxoExporterService.FLUXO_XML);
 		Document doc = readDocument(xpdl);
 		validarExistenciaCodigos(doc);
 		atualizaNameProcessDefinition(doc, fluxo);
 		fluxo = gravarXpdlFluxo(fluxo, doc);
-		removeVariaveisProcesso(fluxo);
-		adicionarVariaveisProcesso(xmls.get(FluxoConfiguration.PROCESS_VARIABLES_XML), fluxo);
 		return fluxo;
-	}
-
-	private void removeVariaveisProcesso(Fluxo fluxo) {
-		List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoSearch.listVariaveisByFluxo(fluxo);
-		for (DefinicaoVariavelProcesso definicaoVariavelProcesso : variaveis) {
-			getEntityManager().remove(definicaoVariavelProcesso);
-		}
-		getEntityManager().flush();
 	}
 
 	private Fluxo gravarXpdlFluxo(Fluxo fluxo, Document doc) {
@@ -341,31 +322,6 @@ public class FluxoImporterService {
 			LOG.info("Erro ao importar fluxo", e);
 			throw new BusinessException("Erro na leitura do xml.");
 		}
-	}
-	
-	private void adicionarVariaveisProcesso(String xmlVariaveisProcesso, Fluxo fluxo) {
-		try {
-			FluxoConfiguration configuration = readFluxoConfiguration(xmlVariaveisProcesso);
-			List<DefinicaoVariavelProcesso> list = configuration.createDefinicaoVariavelProcessoList();
-			for (DefinicaoVariavelProcesso definicaoVariavelProcesso : list) {
-				definicaoVariavelProcesso.setFluxo(fluxo);
-				getEntityManager().persist(definicaoVariavelProcesso);
-			}
-			getEntityManager().flush();
-		} catch (JAXBException e) {
-			LOG.error("Erro ao adicionar as variaveis do processo.", e);
-			new BusinessRollbackException("Erro ao recuperar as variaveis do xml");
-		}
-	}
-
-	private FluxoConfiguration readFluxoConfiguration(String string) throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(FluxoConfiguration.class);
-		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		return (FluxoConfiguration) unmarshaller.unmarshal(new StringReader(string));
-	}
-	
-	private EntityManager getEntityManager() {
-		return EntityManagerProducer.getEntityManager();
 	}
 
 }

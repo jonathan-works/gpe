@@ -19,7 +19,7 @@ import org.richfaces.event.FileUploadEvent;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.exportador.FluxoConfiguration;
+import br.com.infox.epp.fluxo.exportador.FluxoExporterService;
 import br.com.infox.epp.fluxo.importador.FluxoImporterService;
 import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.log.LogProvider;
@@ -74,11 +74,8 @@ public class FluxoUploader implements Serializable{
 	}
 
 	private void validaEppFluxoFile() {
-		if (!eppFluxoFile.containsKey(FluxoConfiguration.FLUXO_XML)) {
+		if (!eppFluxoFile.containsKey(FluxoExporterService.FLUXO_XML)) {
 			throw new BusinessException("Não foi encontrado o arquivo com a definição de fluxo.");
-		}
-		if (!eppFluxoFile.containsKey(FluxoConfiguration.PROCESS_VARIABLES_XML)) {
-			throw new BusinessException("Não foi encontrado o arquivo com as definições de variavéis de processo.");
 		}
 	}
 	
