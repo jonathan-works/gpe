@@ -47,14 +47,14 @@ var InfoxBpmnModeler =
 
 	var camundaModdle = __webpack_require__(1);
 	var BpmnModeler = __webpack_require__(2);
-	var InfoxPaletteProvider = __webpack_require__(828);
-	var InfoxReplaceMenuProvider = __webpack_require__(853);
-	var InfoxContextPadProvider = __webpack_require__(854);
-	var InfoxBpmnRules = __webpack_require__(855);
-	var brazilianPortugueseTranslation = __webpack_require__(856);
-	var ParallelGatewayDirectionProvider = __webpack_require__(857);
-	var InfoxLabelEditingProvider = __webpack_require__(858);
-	var BpmnModdle = __webpack_require__(176);
+	var InfoxPaletteProvider = __webpack_require__(847);
+	var InfoxReplaceMenuProvider = __webpack_require__(899);
+	var InfoxContextPadProvider = __webpack_require__(900);
+	var InfoxBpmnRules = __webpack_require__(901);
+	var brazilianPortugueseTranslation = __webpack_require__(902);
+	var ParallelGatewayDirectionProvider = __webpack_require__(903);
+	var InfoxLabelEditingProvider = __webpack_require__(904);
+	var BpmnModdle = __webpack_require__(188);
 
 	/**
 	 * Inicializa o modelador. O parâmetro settings deve ser um dicionário ou JSON com as seguintes chaves:
@@ -1080,6 +1080,25 @@ var InfoxBpmnModeler =
 						"isAttr": true
 					}
 				]
+			},
+			{
+				"name": "ConditionalEventDefinition",
+				"isAbstract": true,
+				"extends": [
+					"bpmn:ConditionalEventDefinition"
+				],
+				"properties": [
+					{
+						"name": "variableName",
+						"isAttr": true,
+						"type": "String"
+					},
+					{
+						"name": "variableEvent",
+						"isAttr": true,
+						"type": "String"
+					}
+				]
 			}
 		],
 		"emumerations": []
@@ -1097,7 +1116,7 @@ var InfoxBpmnModeler =
 
 	var Viewer = __webpack_require__(6);
 
-	var NavigatedViewer = __webpack_require__(485);
+	var NavigatedViewer = __webpack_require__(502);
 
 	var initialDiagram =
 	  '<?xml version="1.0" encoding="UTF-8"?>' +
@@ -1264,26 +1283,26 @@ var InfoxBpmnModeler =
 
 	Modeler.prototype._interactionModules = [
 	  // non-modeling components
-	  __webpack_require__(491),
-	  __webpack_require__(495),
-	  __webpack_require__(486)
+	  __webpack_require__(508),
+	  __webpack_require__(512),
+	  __webpack_require__(503)
 	];
 
 	Modeler.prototype._modelingModules = [
 	  // modeling components
-	  __webpack_require__(500),
-	  __webpack_require__(507),
-	  __webpack_require__(523),
-	  __webpack_require__(532),
-	  __webpack_require__(537),
-	  __webpack_require__(546),
-	  __webpack_require__(799),
-	  __webpack_require__(812),
-	  __webpack_require__(619),
-	  __webpack_require__(592),
-	  __webpack_require__(817),
-	  __webpack_require__(821),
-	  __webpack_require__(823)
+	  __webpack_require__(517),
+	  __webpack_require__(524),
+	  __webpack_require__(541),
+	  __webpack_require__(551),
+	  __webpack_require__(556),
+	  __webpack_require__(565),
+	  __webpack_require__(818),
+	  __webpack_require__(831),
+	  __webpack_require__(638),
+	  __webpack_require__(611),
+	  __webpack_require__(836),
+	  __webpack_require__(840),
+	  __webpack_require__(842)
 	];
 
 
@@ -1520,13 +1539,15 @@ var InfoxBpmnModeler =
 	    domQuery = __webpack_require__(52),
 	    domRemove = __webpack_require__(54);
 
-	var Diagram = __webpack_require__(55),
-	    BpmnModdle = __webpack_require__(176);
+	var innerSVG = __webpack_require__(55);
+
+	var Diagram = __webpack_require__(63),
+	    BpmnModdle = __webpack_require__(188);
 
 
 	var inherits = __webpack_require__(3);
 
-	var Importer = __webpack_require__(381);
+	var Importer = __webpack_require__(398);
 
 
 	function checkValidationError(err) {
@@ -1735,10 +1756,10 @@ var InfoxBpmnModeler =
 	  var canvas = this.get('canvas');
 
 	  var contentNode = canvas.getDefaultLayer(),
-	      defsNode = canvas._svg.select('defs');
+	      defsNode = domQuery('defs', canvas._svg);
 
-	  var contents = contentNode.innerSVG(),
-	      defs = (defsNode && defsNode.outerSVG()) || '';
+	  var contents = innerSVG(contentNode),
+	      defs = (defsNode && defsNode.outerHTML) || '';
 
 	  var bbox = contentNode.getBBox();
 
@@ -1932,10 +1953,10 @@ var InfoxBpmnModeler =
 
 	// modules the viewer is composed of
 	Viewer.prototype._modules = [
-	  __webpack_require__(419),
-	  __webpack_require__(446),
-	  __webpack_require__(452),
-	  __webpack_require__(472)
+	  __webpack_require__(436),
+	  __webpack_require__(463),
+	  __webpack_require__(469),
+	  __webpack_require__(489)
 	];
 
 	// default moddle extensions the viewer is composed of
@@ -1943,8 +1964,8 @@ var InfoxBpmnModeler =
 
 	/* <project-logo> */
 
-	var PoweredBy = __webpack_require__(483),
-	    domEvent = __webpack_require__(484);
+	var PoweredBy = __webpack_require__(500),
+	    domEvent = __webpack_require__(501);
 
 	/**
 	 * Adds the project logo to the diagram container as
@@ -1978,6 +1999,7 @@ var InfoxBpmnModeler =
 	}
 
 	/* </project-logo> */
+
 
 /***/ },
 /* 7 */
@@ -3689,15 +3711,299 @@ var InfoxBpmnModeler =
 /* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(56);
+	/**
+	 * innerHTML like functionality for SVG elements.
+	 * based on innerSVG (https://code.google.com/p/innersvg)
+	 */
+
+	module.exports = innerSVG;
+
+
+	var clear = __webpack_require__(56);
+	var appendTo = __webpack_require__(58);
+	var parse = __webpack_require__(60);
+	var serialize = __webpack_require__(62);
+
+
+	function set(element, svg) {
+
+	  var node,
+	      documentElement = parse(svg).documentElement;
+
+	  // clear element contents
+	  clear(element);
+
+	  if (!svg) {
+	    return;
+	  }
+
+	  // import + append each node
+	  node = documentElement.firstChild;
+
+	  while (node) {
+	    appendTo(node, element);
+	    node = node.nextSibling;
+	  }
+	}
+
+	function get(element) {
+	  var child = element.firstChild,
+	      output = [];
+
+	  while (child) {
+	    serialize(child, output);
+	    child = child.nextSibling;
+	  }
+
+	  return output.join('');
+	}
+
+	function innerSVG(element, svg) {
+
+	  if (svg !== undefined) {
+
+	    try {
+	      set(element, svg);
+	    } catch (e) {
+	      throw new Error('error parsing SVG: ' + e.message);
+	    }
+
+	    return element;
+	  } else {
+	    return get(element);
+	  }
+	}
 
 /***/ },
 /* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * Clear utility
+	 */
+
+	module.exports = clear;
+
+
+	var remove = __webpack_require__(57);
+
+	/**
+	 * Removes all children from the given element
+	 *
+	 * @param  {DOMElement} element
+	 * @return {DOMElement} the element (for chaining)
+	 */
+	function clear(element) {
+	  var child;
+
+	  while ((child = element.firstChild)) {
+	    remove(child);
+	  }
+
+	  return element;
+	}
+
+/***/ },
+/* 57 */
+/***/ function(module, exports) {
+
+	module.exports = remove;
+
+	function remove(element) {
+	  element.parentNode.removeChild(element);
+	  return element;
+	}
+
+/***/ },
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * appendTo utility
+	 */
+	module.exports = appendTo;
+
+	var ensureImported = __webpack_require__(59);
+
+	/**
+	 * Append a node to a target element and return the appended node.
+	 *
+	 * @param  {SVGElement} element
+	 * @param  {SVGElement} node
+	 *
+	 * @return {SVGElement} the appended node
+	 */
+	function appendTo(element, target) {
+	  target.appendChild(ensureImported(element, target));
+	  return element;
+	}
+
+/***/ },
+/* 59 */
+/***/ function(module, exports) {
+
+	module.exports = ensureImported;
+
+	function ensureImported(element, target) {
+
+	  if (element.ownerDocument !== target.ownerDocument) {
+	    try {
+	      // may fail on webkit
+	      return target.ownerDocument.importNode(element, true);
+	    } catch (e) {
+	      // ignore
+	    }
+	  }
+
+	  return element;
+	}
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * DOM parsing utility
+	 */
+
+	module.exports = parse;
+
+
+	var ns = __webpack_require__(61);
+
+	var SVG_START = '<svg xmlns="' + ns.svg + '"';
+
+	function parse(svg) {
+
+	  // ensure we import a valid svg document
+	  if (svg.substring(0, 4) === '<svg') {
+	    if (svg.indexOf(ns.svg) === -1) {
+	      svg = SVG_START + svg.substring(4);
+	    }
+	  } else {
+	    // namespace svg
+	    svg = SVG_START + '>' + svg + '</svg>';
+	  }
+
+	  return parseDocument(svg);
+	}
+
+	function parseDocument(svg) {
+
+	  var parser;
+
+	  // parse
+	  parser = new DOMParser();
+	  parser.async = false;
+
+	  return parser.parseFromString(svg, 'text/xml');
+	}
+
+/***/ },
+/* 61 */
+/***/ function(module, exports) {
+
+	var ns = {
+	  svg: 'http://www.w3.org/2000/svg'
+	};
+
+	module.exports = ns;
+
+/***/ },
+/* 62 */
+/***/ function(module, exports) {
+
+	/**
+	 * Serialization util
+	 */
+
+	module.exports = serialize;
+
+
+	var TEXT_ENTITIES = /([&<>]{1})/g;
+	var ATTR_ENTITIES = /([\n\r"]{1})/g;
+
+	var ENTITY_REPLACEMENT = {
+	  '&': '&amp;',
+	  '<': '&lt;',
+	  '>': '&gt;',
+	  '"': '\''
+	};
+
+	function escape(str, pattern) {
+
+	  function replaceFn(match, entity) {
+	    return ENTITY_REPLACEMENT[entity] || entity;
+	  }
+
+	  return str.replace(pattern, replaceFn);
+	}
+
+	function serialize(node, output) {
+
+	  var i, len, attrMap, attrNode, childNodes;
+
+	  switch (node.nodeType) {
+	  // TEXT
+	  case 3:
+	    // replace special XML characters
+	    output.push(escape(node.textContent, TEXT_ENTITIES));
+	    break;
+
+	  // ELEMENT
+	  case 1:
+	    output.push('<', node.tagName);
+
+	    if (node.hasAttributes()) {
+	      attrMap = node.attributes;
+	      for (i = 0, len = attrMap.length; i < len; ++i) {
+	        attrNode = attrMap.item(i);
+	        output.push(' ', attrNode.name, '="', escape(attrNode.value, ATTR_ENTITIES), '"');
+	      }
+	    }
+
+	    if (node.hasChildNodes()) {
+	      output.push('>');
+	      childNodes = node.childNodes;
+	      for (i = 0, len = childNodes.length; i < len; ++i) {
+	        serialize(childNodes.item(i), output);
+	      }
+	      output.push('</', node.tagName, '>');
+	    } else {
+	      output.push('/>');
+	    }
+	    break;
+
+	  // COMMENT
+	  case 8:
+	    output.push('<!--', escape(node.nodeValue, TEXT_ENTITIES), '-->');
+	    break;
+
+	  // CDATA
+	  case 4:
+	    output.push('<![CDATA[', node.nodeValue, ']]>');
+	    break;
+
+	  default:
+	    throw new Error('unable to handle node ' + node.nodeType);
+	  }
+
+	  return output;
+	}
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(64);
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
-	var di = __webpack_require__(57);
+	var di = __webpack_require__(65);
 
 
 	/**
@@ -3774,7 +4080,7 @@ var InfoxBpmnModeler =
 	    'config': ['value', options]
 	  };
 
-	  var coreModule = __webpack_require__(61);
+	  var coreModule = __webpack_require__(69);
 
 	  var modules = [ configModule, coreModule ].concat(options.modules || []);
 
@@ -3896,19 +4202,20 @@ var InfoxBpmnModeler =
 	  this.get('eventBus').fire('diagram.clear');
 	};
 
+
 /***/ },
-/* 57 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  annotate: __webpack_require__(58).annotate,
-	  Module: __webpack_require__(59),
-	  Injector: __webpack_require__(60)
+	  annotate: __webpack_require__(66).annotate,
+	  Module: __webpack_require__(67),
+	  Injector: __webpack_require__(68)
 	};
 
 
 /***/ },
-/* 58 */
+/* 66 */
 /***/ function(module, exports) {
 
 	
@@ -3962,7 +4269,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 59 */
+/* 67 */
 /***/ function(module, exports) {
 
 	var Module = function() {
@@ -3992,13 +4299,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 60 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Module = __webpack_require__(59);
-	var autoAnnotate = __webpack_require__(58).parse;
-	var annotate = __webpack_require__(58).annotate;
-	var isArray = __webpack_require__(58).isArray;
+	var Module = __webpack_require__(67);
+	var autoAnnotate = __webpack_require__(66).parse;
+	var annotate = __webpack_require__(66).annotate;
+	var isArray = __webpack_require__(66).isArray;
 
 
 	var Injector = function(modules, parent) {
@@ -4226,44 +4533,48 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 61 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(62) ],
+	  __depends__: [ __webpack_require__(70) ],
 	  __init__: [ 'canvas' ],
-	  canvas: [ 'type', __webpack_require__(126) ],
-	  elementRegistry: [ 'type', __webpack_require__(140) ],
-	  elementFactory: [ 'type', __webpack_require__(141) ],
-	  eventBus: [ 'type', __webpack_require__(146) ],
-	  graphicsFactory: [ 'type', __webpack_require__(173) ]
+	  canvas: [ 'type', __webpack_require__(134) ],
+	  elementRegistry: [ 'type', __webpack_require__(151) ],
+	  elementFactory: [ 'type', __webpack_require__(152) ],
+	  eventBus: [ 'type', __webpack_require__(157) ],
+	  graphicsFactory: [ 'type', __webpack_require__(184) ]
 	};
 
 /***/ },
-/* 62 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'defaultRenderer' ],
-	  defaultRenderer: [ 'type', __webpack_require__(63) ],
-	  styles: [ 'type', __webpack_require__(69) ]
+	  defaultRenderer: [ 'type', __webpack_require__(71) ],
+	  styles: [ 'type', __webpack_require__(77) ]
 	};
 
 
 /***/ },
-/* 63 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var BaseRenderer = __webpack_require__(64);
+	var BaseRenderer = __webpack_require__(72);
 
-	var renderUtil = __webpack_require__(65);
+	var renderUtil = __webpack_require__(73);
 
 	var componentsToPath = renderUtil.componentsToPath,
 	    createLine = renderUtil.createLine;
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgCreate = __webpack_require__(75);
 
 	// apply default renderer with lowest possible priority
 	// so that it only kicks in if noone else could render
@@ -4291,11 +4602,27 @@ var InfoxBpmnModeler =
 	};
 
 	DefaultRenderer.prototype.drawShape = function drawShape(visuals, element) {
-	  return visuals.rect(0, 0, element.width || 0, element.height || 0).attr(this.SHAPE_STYLE);
+
+	  var rect = svgCreate('rect');
+	  svgAttr(rect, {
+	    x: 0,
+	    y: 0,
+	    width: element.width || 0,
+	    height: element.height || 0
+	  });
+	  svgAttr(rect, this.SHAPE_STYLE);
+
+	  svgAppend(visuals, rect);
+
+	  return rect;
 	};
 
 	DefaultRenderer.prototype.drawConnection = function drawConnection(visuals, connection) {
-	  return createLine(connection.waypoints, this.CONNECTION_STYLE).appendTo(visuals);
+
+	  var line = createLine(connection.waypoints, this.CONNECTION_STYLE);
+	  svgAppend(visuals, line);
+
+	  return line;
 	};
 
 	DefaultRenderer.prototype.getShapePath = function getShapePath(shape) {
@@ -4340,7 +4667,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 64 */
+/* 72 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4435,12 +4762,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 65 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Snap = __webpack_require__(66);
+	var svgAttr = __webpack_require__(74),
+	    svgCreate = __webpack_require__(75);
 
 
 	module.exports.componentsToPath = function(elements) {
@@ -4460,7302 +4788,236 @@ var InfoxBpmnModeler =
 	module.exports.toSVGPoints = toSVGPoints;
 
 	module.exports.createLine = function(points, attrs) {
-	  return Snap.create('polyline', { points: toSVGPoints(points) }).attr(attrs || {});
+
+	  var line = svgCreate('polyline');
+	  svgAttr(line, { points: toSVGPoints(points) });
+
+	  if (attrs) {
+	    svgAttr(line, attrs);
+	  }
+
+	  return line;
 	};
 
 	module.exports.updateLine = function(gfx, points) {
-	  return gfx.attr({ points: toSVGPoints(points) });
+	  svgAttr(gfx, { points: toSVGPoints(points) });
+
+	  return gfx;
 	};
 
 
 /***/ },
-/* 66 */
+/* 74 */
+/***/ function(module, exports) {
+
+	/**
+	 * attribute accessor utility
+	 */
+
+	module.exports = attr;
+
+
+	var LENGTH_ATTR = 2;
+
+	var CSS_PROPERTIES = {
+	  'alignment-baseline': 1,
+	  'baseline-shift': 1,
+	  'clip': 1,
+	  'clip-path': 1,
+	  'clip-rule': 1,
+	  'color': 1,
+	  'color-interpolation': 1,
+	  'color-interpolation-filters': 1,
+	  'color-profile': 1,
+	  'color-rendering': 1,
+	  'cursor': 1,
+	  'direction': 1,
+	  'display': 1,
+	  'dominant-baseline': 1,
+	  'enable-background': 1,
+	  'fill': 1,
+	  'fill-opacity': 1,
+	  'fill-rule': 1,
+	  'filter': 1,
+	  'flood-color': 1,
+	  'flood-opacity': 1,
+	  'font': 1,
+	  'font-family': 1,
+	  'font-size': LENGTH_ATTR,
+	  'font-size-adjust': 1,
+	  'font-stretch': 1,
+	  'font-style': 1,
+	  'font-variant': 1,
+	  'font-weight': 1,
+	  'glyph-orientation-horizontal': 1,
+	  'glyph-orientation-vertical': 1,
+	  'image-rendering': 1,
+	  'kerning': 1,
+	  'letter-spacing': 1,
+	  'lighting-color': 1,
+	  'marker': 1,
+	  'marker-end': 1,
+	  'marker-mid': 1,
+	  'marker-start': 1,
+	  'mask': 1,
+	  'opacity': 1,
+	  'overflow': 1,
+	  'pointer-events': 1,
+	  'shape-rendering': 1,
+	  'stop-color': 1,
+	  'stop-opacity': 1,
+	  'stroke': 1,
+	  'stroke-dasharray': 1,
+	  'stroke-dashoffset': 1,
+	  'stroke-linecap': 1,
+	  'stroke-linejoin': 1,
+	  'stroke-miterlimit': 1,
+	  'stroke-opacity': 1,
+	  'stroke-width': LENGTH_ATTR,
+	  'text-anchor': 1,
+	  'text-decoration': 1,
+	  'text-rendering': 1,
+	  'unicode-bidi': 1,
+	  'visibility': 1,
+	  'word-spacing': 1,
+	  'writing-mode': 1
+	};
+
+
+	function getAttribute(node, name) {
+	  if (CSS_PROPERTIES[name]) {
+	    return node.style[name];
+	  } else {
+	    return node.getAttributeNS(null, name);
+	  }
+	}
+
+	function setAttribute(node, name, value) {
+	  var hyphenated = name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
+	  var type = CSS_PROPERTIES[hyphenated];
+
+	  if (type) {
+	    // append pixel unit, unless present
+	    if (type === LENGTH_ATTR && typeof value === 'number') {
+	      value = String(value) + 'px';
+	    }
+
+	    node.style[hyphenated] = value;
+	  } else {
+	    node.setAttributeNS(null, name, value);
+	  }
+	}
+
+	function setAttributes(node, attrs) {
+
+	  var names = Object.keys(attrs), i, name;
+
+	  for (i = 0, name; (name = names[i]); i++) {
+	    setAttribute(node, name, attrs[name]);
+	  }
+	}
+
+	/**
+	 * Gets or sets raw attributes on a node.
+	 *
+	 * @param  {SVGElement} node
+	 * @param  {Object} [attrs]
+	 * @param  {String} [name]
+	 * @param  {String} [value]
+	 *
+	 * @return {String}
+	 */
+	function attr(node, name, value) {
+	  if (typeof name === 'string') {
+	    if (value !== undefined) {
+	      setAttribute(node, name, value);
+	    } else {
+	      return getAttribute(node, name);
+	    }
+	  } else {
+	    setAttributes(node, name);
+	  }
+
+	  return node;
+	}
+
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Create utility for SVG elements
+	 */
+
+	module.exports = create;
+
+
+	var attr = __webpack_require__(74);
+	var parse = __webpack_require__(60);
+	var ns = __webpack_require__(61);
+
+
+	/**
+	 * Create a specific type from name or SVG markup.
+	 *
+	 * @param {String} name the name or markup of the element
+	 * @param {Object} [attrs] attributes to set on the element
+	 *
+	 * @returns {SVGElement}
+	 */
+	function create(name, attrs) {
+	  var element;
+
+	  if (name.charAt(0) === '<') {
+	    element = parse(name).firstChild;
+	    element = document.importNode(element, true);
+	  } else {
+	    element = document.createElementNS(ns.svg, name);
+	  }
+
+	  if (attrs) {
+	    attr(element, attrs);
+	  }
+
+	  return element;
+	}
+
+/***/ },
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * append utility
+	 */
+
+	module.exports = append;
+
+	var appendTo = __webpack_require__(58);
+
+	/**
+	 * Append a node to an element
+	 *
+	 * @param  {SVGElement} element
+	 * @param  {SVGElement} node
+	 *
+	 * @return {SVGElement} the element
+	 */
+	function append(element, node) {
+	  appendTo(node, element);
+	  return element;
+	}
+
+/***/ },
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var snapsvg = module.exports = __webpack_require__(67);
-
-	snapsvg.plugin(function(Snap, Element) {
-
-	  /*\
-	   * Element.children
-	   [ method ]
-	   **
-	   * Returns array of all the children of the element.
-	   = (array) array of Elements
-	  \*/
-	  Element.prototype.children = function () {
-	      var out = [],
-	          ch = this.node.childNodes;
-	      for (var i = 0, ii = ch.length; i < ii; i++) {
-	          out[i] = new Snap(ch[i]);
-	      }
-	      return out;
-	  };
-	});
-
-
-	/**
-	 * @class ClassPlugin
-	 *
-	 * Extends snapsvg with methods to add and remove classes
-	 */
-	snapsvg.plugin(function (Snap, Element, Paper, global) {
-
-	  function split(str) {
-	    return str.split(/\s+/);
-	  }
-
-	  function join(array) {
-	    return array.join(' ');
-	  }
-
-	  function getClasses(e) {
-	    return split(e.attr('class') || '');
-	  }
-
-	  function setClasses(e, classes) {
-	    e.attr('class', join(classes));
-	  }
-
-	  /**
-	   * @method snapsvg.Element#addClass
-	   *
-	   * @example
-	   *
-	   * e.attr('class', 'selector');
-	   *
-	   * e.addClass('foo bar'); // adds classes foo and bar
-	   * e.attr('class'); // -> 'selector foo bar'
-	   *
-	   * e.addClass('fooBar');
-	   * e.attr('class'); // -> 'selector foo bar fooBar'
-	   *
-	   * @param {String} cls classes to be added to the element
-	   *
-	   * @return {snapsvg.Element} the element (this)
-	   */
-	  Element.prototype.addClass = function(cls) {
-	    var current = getClasses(this),
-	        add = split(cls),
-	        i, e;
-
-	    for (i = 0, e; !!(e = add[i]); i++) {
-	      if (current.indexOf(e) === -1) {
-	        current.push(e);
-	      }
-	    }
-
-	    setClasses(this, current);
-
-	    return this;
-	  };
-
-	  /**
-	   * @method snapsvg.Element#hasClass
-	   *
-	   * @param  {String}  cls the class to query for
-	   * @return {Boolean} returns true if the element has the given class
-	   */
-	  Element.prototype.hasClass = function(cls) {
-	    if (!cls) {
-	      throw new Error('[snapsvg] syntax: hasClass(clsStr)');
-	    }
-
-	    return getClasses(this).indexOf(cls) !== -1;
-	  };
-
-	  /**
-	   * @method snapsvg.Element#removeClass
-	   *
-	   * @example
-	   *
-	   * e.attr('class', 'foo bar');
-	   *
-	   * e.removeClass('foo');
-	   * e.attr('class'); // -> 'bar'
-	   *
-	   * e.removeClass('foo bar'); // removes classes foo and bar
-	   * e.attr('class'); // -> ''
-	   *
-	   * @param {String} cls classes to be removed from element
-	   *
-	   * @return {snapsvg.Element} the element (this)
-	   */
-	  Element.prototype.removeClass = function(cls) {
-	    var current = getClasses(this),
-	        remove = split(cls),
-	        i, e, idx;
-
-	    for (i = 0, e; !!(e = remove[i]); i++) {
-	      idx = current.indexOf(e);
-
-	      if (idx !== -1) {
-	        // remove element from array
-	        current.splice(idx, 1);
-	      }
-	    }
-
-	    setClasses(this, current);
-
-	    return this;
-	  };
-
-	});
-
-	/**
-	 * @class TranslatePlugin
-	 *
-	 * Extends snapsvg with methods to translate elements
-	 */
-	snapsvg.plugin(function (Snap, Element, Paper, global) {
-
-	  /*
-	   * @method snapsvg.Element#translate
-	   *
-	   * @example
-	   *
-	   * e.translate(10, 20);
-	   *
-	   * // sets transform matrix to translate(10, 20)
-	   *
-	   * @param {Number} x translation
-	   * @param {Number} y translation
-	   *
-	   * @return {snapsvg.Element} the element (this)
-	   */
-	  Element.prototype.translate = function(x, y) {
-	    var matrix = new Snap.Matrix();
-	    matrix.translate(x, y);
-	    return this.transform(matrix);
-	  };
-	});
-
-
-	/**
-	 * @class CreatePlugin
-	 *
-	 * Create an svg element without attaching it to the dom
-	 */
-	snapsvg.plugin(function(Snap) {
-
-	  Snap.create = function(name, attrs) {
-	    return Snap._.wrap(Snap._.$(name, attrs));
-	  };
-	});
-
-
-	/**
-	 * @class CreatSnapAtPlugin
-	 *
-	 * Extends snap.svg with a method to create a SVG element
-	 * at a specific position in the DOM.
-	 */
-	snapsvg.plugin(function(Snap, Element, Paper, global) {
-
-	  /*
-	   * @method snapsvg.createSnapAt
-	   *
-	   * @example
-	   *
-	   * snapsvg.createSnapAt(parentNode, 200, 200);
-	   *
-	   * @param {Number} width of svg
-	   * @param {Number} height of svg
-	   * @param {Object} parentNode svg Element will be child of this
-	   *
-	   * @return {snapsvg.Element} the newly created wrapped SVG element instance
-	   */
-	  Snap.createSnapAt = function(width, height, parentNode) {
-
-	    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-	    svg.setAttribute('width', width);
-	    svg.setAttribute('height', height);
-	    if (!parentNode) {
-	      parentNode = document.body;
-	    }
-	    parentNode.appendChild(svg);
-
-	    return new Snap(svg);
-	  };
-	});
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Snap.svg 0.3.0
-	// 
-	// Copyright (c) 2013 – 2014 Adobe Systems Incorporated. All rights reserved.
-	// 
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	// 
-	// http://www.apache.org/licenses/LICENSE-2.0
-	// 
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	// 
-	// build: 2014-09-08
-
-	(function (glob, factory) {
-	    // AMD support
-	    if (true) {
-	        // Define as an anonymous module
-	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(68)], __WEBPACK_AMD_DEFINE_RESULT__ = function( eve ) {
-	            return factory(glob, eve);
-	        }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	    } else if (typeof exports !== 'undefined') {
-	        // Next for Node.js or CommonJS
-	        var eve = require('eve');
-	        module.exports = factory(glob, eve);
-	    } else {
-	        // Browser globals (glob is window)
-	        // Snap adds itself to window
-	        factory(glob, glob.eve);
-	    }
-	}(window || this, function (window, eve) {
-
-	// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	// 
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	// 
-	// http://www.apache.org/licenses/LICENSE-2.0
-	// 
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	var mina = (function (eve) {
-	    var animations = {},
-	    requestAnimFrame = window.requestAnimationFrame       ||
-	                       window.webkitRequestAnimationFrame ||
-	                       window.mozRequestAnimationFrame    ||
-	                       window.oRequestAnimationFrame      ||
-	                       window.msRequestAnimationFrame     ||
-	                       function (callback) {
-	                           setTimeout(callback, 16);
-	                       },
-	    isArray = Array.isArray || function (a) {
-	        return a instanceof Array ||
-	            Object.prototype.toString.call(a) == "[object Array]";
-	    },
-	    idgen = 0,
-	    idprefix = "M" + (+new Date).toString(36),
-	    ID = function () {
-	        return idprefix + (idgen++).toString(36);
-	    },
-	    diff = function (a, b, A, B) {
-	        if (isArray(a)) {
-	            res = [];
-	            for (var i = 0, ii = a.length; i < ii; i++) {
-	                res[i] = diff(a[i], b, A[i], B);
-	            }
-	            return res;
-	        }
-	        var dif = (A - a) / (B - b);
-	        return function (bb) {
-	            return a + dif * (bb - b);
-	        };
-	    },
-	    timer = Date.now || function () {
-	        return +new Date;
-	    },
-	    sta = function (val) {
-	        var a = this;
-	        if (val == null) {
-	            return a.s;
-	        }
-	        var ds = a.s - val;
-	        a.b += a.dur * ds;
-	        a.B += a.dur * ds;
-	        a.s = val;
-	    },
-	    speed = function (val) {
-	        var a = this;
-	        if (val == null) {
-	            return a.spd;
-	        }
-	        a.spd = val;
-	    },
-	    duration = function (val) {
-	        var a = this;
-	        if (val == null) {
-	            return a.dur;
-	        }
-	        a.s = a.s * val / a.dur;
-	        a.dur = val;
-	    },
-	    stopit = function () {
-	        var a = this;
-	        delete animations[a.id];
-	        a.update();
-	        eve("mina.stop." + a.id, a);
-	    },
-	    pause = function () {
-	        var a = this;
-	        if (a.pdif) {
-	            return;
-	        }
-	        delete animations[a.id];
-	        a.update();
-	        a.pdif = a.get() - a.b;
-	    },
-	    resume = function () {
-	        var a = this;
-	        if (!a.pdif) {
-	            return;
-	        }
-	        a.b = a.get() - a.pdif;
-	        delete a.pdif;
-	        animations[a.id] = a;
-	    },
-	    update = function () {
-	        var a = this,
-	            res;
-	        if (isArray(a.start)) {
-	            res = [];
-	            for (var j = 0, jj = a.start.length; j < jj; j++) {
-	                res[j] = +a.start[j] +
-	                    (a.end[j] - a.start[j]) * a.easing(a.s);
-	            }
-	        } else {
-	            res = +a.start + (a.end - a.start) * a.easing(a.s);
-	        }
-	        a.set(res);
-	    },
-	    frame = function () {
-	        var len = 0;
-	        for (var i in animations) if (animations.hasOwnProperty(i)) {
-	            var a = animations[i],
-	                b = a.get(),
-	                res;
-	            len++;
-	            a.s = (b - a.b) / (a.dur / a.spd);
-	            if (a.s >= 1) {
-	                delete animations[i];
-	                a.s = 1;
-	                len--;
-	                (function (a) {
-	                    setTimeout(function () {
-	                        eve("mina.finish." + a.id, a);
-	                    });
-	                }(a));
-	            }
-	            a.update();
-	        }
-	        len && requestAnimFrame(frame);
-	    },
-	    /*\
-	     * mina
-	     [ method ]
-	     **
-	     * Generic animation of numbers
-	     **
-	     - a (number) start _slave_ number
-	     - A (number) end _slave_ number
-	     - b (number) start _master_ number (start time in general case)
-	     - B (number) end _master_ number (end time in gereal case)
-	     - get (function) getter of _master_ number (see @mina.time)
-	     - set (function) setter of _slave_ number
-	     - easing (function) #optional easing function, default is @mina.linear
-	     = (object) animation descriptor
-	     o {
-	     o         id (string) animation id,
-	     o         start (number) start _slave_ number,
-	     o         end (number) end _slave_ number,
-	     o         b (number) start _master_ number,
-	     o         s (number) animation status (0..1),
-	     o         dur (number) animation duration,
-	     o         spd (number) animation speed,
-	     o         get (function) getter of _master_ number (see @mina.time),
-	     o         set (function) setter of _slave_ number,
-	     o         easing (function) easing function, default is @mina.linear,
-	     o         status (function) status getter/setter,
-	     o         speed (function) speed getter/setter,
-	     o         duration (function) duration getter/setter,
-	     o         stop (function) animation stopper
-	     o         pause (function) pauses the animation
-	     o         resume (function) resumes the animation
-	     o         update (function) calles setter with the right value of the animation
-	     o }
-	    \*/
-	    mina = function (a, A, b, B, get, set, easing) {
-	        var anim = {
-	            id: ID(),
-	            start: a,
-	            end: A,
-	            b: b,
-	            s: 0,
-	            dur: B - b,
-	            spd: 1,
-	            get: get,
-	            set: set,
-	            easing: easing || mina.linear,
-	            status: sta,
-	            speed: speed,
-	            duration: duration,
-	            stop: stopit,
-	            pause: pause,
-	            resume: resume,
-	            update: update
-	        };
-	        animations[anim.id] = anim;
-	        var len = 0, i;
-	        for (i in animations) if (animations.hasOwnProperty(i)) {
-	            len++;
-	            if (len == 2) {
-	                break;
-	            }
-	        }
-	        len == 1 && requestAnimFrame(frame);
-	        return anim;
-	    };
-	    /*\
-	     * mina.time
-	     [ method ]
-	     **
-	     * Returns the current time. Equivalent to:
-	     | function () {
-	     |     return (new Date).getTime();
-	     | }
-	    \*/
-	    mina.time = timer;
-	    /*\
-	     * mina.getById
-	     [ method ]
-	     **
-	     * Returns an animation by its id
-	     - id (string) animation's id
-	     = (object) See @mina
-	    \*/
-	    mina.getById = function (id) {
-	        return animations[id] || null;
-	    };
-
-	    /*\
-	     * mina.linear
-	     [ method ]
-	     **
-	     * Default linear easing
-	     - n (number) input 0..1
-	     = (number) output 0..1
-	    \*/
-	    mina.linear = function (n) {
-	        return n;
-	    };
-	    /*\
-	     * mina.easeout
-	     [ method ]
-	     **
-	     * Easeout easing
-	     - n (number) input 0..1
-	     = (number) output 0..1
-	    \*/
-	    mina.easeout = function (n) {
-	        return Math.pow(n, 1.7);
-	    };
-	    /*\
-	     * mina.easein
-	     [ method ]
-	     **
-	     * Easein easing
-	     - n (number) input 0..1
-	     = (number) output 0..1
-	    \*/
-	    mina.easein = function (n) {
-	        return Math.pow(n, .48);
-	    };
-	    /*\
-	     * mina.easeinout
-	     [ method ]
-	     **
-	     * Easeinout easing
-	     - n (number) input 0..1
-	     = (number) output 0..1
-	    \*/
-	    mina.easeinout = function (n) {
-	        if (n == 1) {
-	            return 1;
-	        }
-	        if (n == 0) {
-	            return 0;
-	        }
-	        var q = .48 - n / 1.04,
-	            Q = Math.sqrt(.1734 + q * q),
-	            x = Q - q,
-	            X = Math.pow(Math.abs(x), 1 / 3) * (x < 0 ? -1 : 1),
-	            y = -Q - q,
-	            Y = Math.pow(Math.abs(y), 1 / 3) * (y < 0 ? -1 : 1),
-	            t = X + Y + .5;
-	        return (1 - t) * 3 * t * t + t * t * t;
-	    };
-	    /*\
-	     * mina.backin
-	     [ method ]
-	     **
-	     * Backin easing
-	     - n (number) input 0..1
-	     = (number) output 0..1
-	    \*/
-	    mina.backin = function (n) {
-	        if (n == 1) {
-	            return 1;
-	        }
-	        var s = 1.70158;
-	        return n * n * ((s + 1) * n - s);
-	    };
-	    /*\
-	     * mina.backout
-	     [ method ]
-	     **
-	     * Backout easing
-	     - n (number) input 0..1
-	     = (number) output 0..1
-	    \*/
-	    mina.backout = function (n) {
-	        if (n == 0) {
-	            return 0;
-	        }
-	        n = n - 1;
-	        var s = 1.70158;
-	        return n * n * ((s + 1) * n + s) + 1;
-	    };
-	    /*\
-	     * mina.elastic
-	     [ method ]
-	     **
-	     * Elastic easing
-	     - n (number) input 0..1
-	     = (number) output 0..1
-	    \*/
-	    mina.elastic = function (n) {
-	        if (n == !!n) {
-	            return n;
-	        }
-	        return Math.pow(2, -10 * n) * Math.sin((n - .075) *
-	            (2 * Math.PI) / .3) + 1;
-	    };
-	    /*\
-	     * mina.bounce
-	     [ method ]
-	     **
-	     * Bounce easing
-	     - n (number) input 0..1
-	     = (number) output 0..1
-	    \*/
-	    mina.bounce = function (n) {
-	        var s = 7.5625,
-	            p = 2.75,
-	            l;
-	        if (n < (1 / p)) {
-	            l = s * n * n;
-	        } else {
-	            if (n < (2 / p)) {
-	                n -= (1.5 / p);
-	                l = s * n * n + .75;
-	            } else {
-	                if (n < (2.5 / p)) {
-	                    n -= (2.25 / p);
-	                    l = s * n * n + .9375;
-	                } else {
-	                    n -= (2.625 / p);
-	                    l = s * n * n + .984375;
-	                }
-	            }
-	        }
-	        return l;
-	    };
-	    window.mina = mina;
-	    return mina;
-	})(typeof eve == "undefined" ? function () {} : eve);
-	// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	//
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	//
-	// http://www.apache.org/licenses/LICENSE-2.0
-	//
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-
-	var Snap = (function(root) {
-	Snap.version = "0.3.0";
-	/*\
-	 * Snap
-	 [ method ]
-	 **
-	 * Creates a drawing surface or wraps existing SVG element.
-	 **
-	 - width (number|string) width of surface
-	 - height (number|string) height of surface
-	 * or
-	 - DOM (SVGElement) element to be wrapped into Snap structure
-	 * or
-	 - array (array) array of elements (will return set of elements)
-	 * or
-	 - query (string) CSS query selector
-	 = (object) @Element
-	\*/
-	function Snap(w, h) {
-	    if (w) {
-	        if (w.tagName) {
-	            return wrap(w);
-	        }
-	        if (is(w, "array") && Snap.set) {
-	            return Snap.set.apply(Snap, w);
-	        }
-	        if (w instanceof Element) {
-	            return w;
-	        }
-	        if (h == null) {
-	            w = glob.doc.querySelector(w);
-	            return wrap(w);
-	        }
-	    }
-	    w = w == null ? "100%" : w;
-	    h = h == null ? "100%" : h;
-	    return new Paper(w, h);
-	}
-	Snap.toString = function () {
-	    return "Snap v" + this.version;
-	};
-	Snap._ = {};
-	var glob = {
-	    win: root.window,
-	    doc: root.window.document
-	};
-	Snap._.glob = glob;
-	var has = "hasOwnProperty",
-	    Str = String,
-	    toFloat = parseFloat,
-	    toInt = parseInt,
-	    math = Math,
-	    mmax = math.max,
-	    mmin = math.min,
-	    abs = math.abs,
-	    pow = math.pow,
-	    PI = math.PI,
-	    round = math.round,
-	    E = "",
-	    S = " ",
-	    objectToString = Object.prototype.toString,
-	    ISURL = /^url\(['"]?([^\)]+?)['"]?\)$/i,
-	    colourRegExp = /^\s*((#[a-f\d]{6})|(#[a-f\d]{3})|rgba?\(\s*([\d\.]+%?\s*,\s*[\d\.]+%?\s*,\s*[\d\.]+%?(?:\s*,\s*[\d\.]+%?)?)\s*\)|hsba?\(\s*([\d\.]+(?:deg|\xb0|%)?\s*,\s*[\d\.]+%?\s*,\s*[\d\.]+(?:%?\s*,\s*[\d\.]+)?%?)\s*\)|hsla?\(\s*([\d\.]+(?:deg|\xb0|%)?\s*,\s*[\d\.]+%?\s*,\s*[\d\.]+(?:%?\s*,\s*[\d\.]+)?%?)\s*\))\s*$/i,
-	    bezierrg = /^(?:cubic-)?bezier\(([^,]+),([^,]+),([^,]+),([^\)]+)\)/,
-	    reURLValue = /^url\(#?([^)]+)\)$/,
-	    separator = Snap._.separator = /[,\s]+/,
-	    whitespace = /[\s]/g,
-	    commaSpaces = /[\s]*,[\s]*/,
-	    hsrg = {hs: 1, rg: 1},
-	    pathCommand = /([a-z])[\s,]*((-?\d*\.?\d*(?:e[\-+]?\d+)?[\s]*,?[\s]*)+)/ig,
-	    tCommand = /([rstm])[\s,]*((-?\d*\.?\d*(?:e[\-+]?\d+)?[\s]*,?[\s]*)+)/ig,
-	    pathValues = /(-?\d*\.?\d*(?:e[\-+]?\\d+)?)[\s]*,?[\s]*/ig,
-	    idgen = 0,
-	    idprefix = "S" + (+new Date).toString(36),
-	    ID = function (el) {
-	        return (el && el.type ? el.type : E) + idprefix + (idgen++).toString(36);
-	    },
-	    xlink = "http://www.w3.org/1999/xlink",
-	    xmlns = "http://www.w3.org/2000/svg",
-	    hub = {},
-	    URL = Snap.url = function (url) {
-	        return "url('#" + url + "')";
-	    };
-
-	function $(el, attr) {
-	    if (attr) {
-	        if (el == "#text") {
-	            el = glob.doc.createTextNode(attr.text || "");
-	        }
-	        if (typeof el == "string") {
-	            el = $(el);
-	        }
-	        if (typeof attr == "string") {
-	            if (attr.substring(0, 6) == "xlink:") {
-	                return el.getAttributeNS(xlink, attr.substring(6));
-	            }
-	            if (attr.substring(0, 4) == "xml:") {
-	                return el.getAttributeNS(xmlns, attr.substring(4));
-	            }
-	            return el.getAttribute(attr);
-	        }
-	        for (var key in attr) if (attr[has](key)) {
-	            var val = Str(attr[key]);
-	            if (val) {
-	                if (key.substring(0, 6) == "xlink:") {
-	                    el.setAttributeNS(xlink, key.substring(6), val);
-	                } else if (key.substring(0, 4) == "xml:") {
-	                    el.setAttributeNS(xmlns, key.substring(4), val);
-	                } else {
-	                    el.setAttribute(key, val);
-	                }
-	            } else {
-	                el.removeAttribute(key);
-	            }
-	        }
-	    } else {
-	        el = glob.doc.createElementNS(xmlns, el);
-	    }
-	    return el;
-	}
-	Snap._.$ = $;
-	Snap._.id = ID;
-	function getAttrs(el) {
-	    var attrs = el.attributes,
-	        name,
-	        out = {};
-	    for (var i = 0; i < attrs.length; i++) {
-	        if (attrs[i].namespaceURI == xlink) {
-	            name = "xlink:";
-	        } else {
-	            name = "";
-	        }
-	        name += attrs[i].name;
-	        out[name] = attrs[i].textContent;
-	    }
-	    return out;
-	}
-	function is(o, type) {
-	    type = Str.prototype.toLowerCase.call(type);
-	    if (type == "finite") {
-	        return isFinite(o);
-	    }
-	    if (type == "array" &&
-	        (o instanceof Array || Array.isArray && Array.isArray(o))) {
-	        return true;
-	    }
-	    return  (type == "null" && o === null) ||
-	            (type == typeof o && o !== null) ||
-	            (type == "object" && o === Object(o)) ||
-	            objectToString.call(o).slice(8, -1).toLowerCase() == type;
-	}
-	/*\
-	 * Snap.format
-	 [ method ]
-	 **
-	 * Replaces construction of type `{<name>}` to the corresponding argument
-	 **
-	 - token (string) string to format
-	 - json (object) object which properties are used as a replacement
-	 = (string) formatted string
-	 > Usage
-	 | // this draws a rectangular shape equivalent to "M10,20h40v50h-40z"
-	 | paper.path(Snap.format("M{x},{y}h{dim.width}v{dim.height}h{dim['negative width']}z", {
-	 |     x: 10,
-	 |     y: 20,
-	 |     dim: {
-	 |         width: 40,
-	 |         height: 50,
-	 |         "negative width": -40
-	 |     }
-	 | }));
-	\*/
-	Snap.format = (function () {
-	    var tokenRegex = /\{([^\}]+)\}/g,
-	        objNotationRegex = /(?:(?:^|\.)(.+?)(?=\[|\.|$|\()|\[('|")(.+?)\2\])(\(\))?/g, // matches .xxxxx or ["xxxxx"] to run over object properties
-	        replacer = function (all, key, obj) {
-	            var res = obj;
-	            key.replace(objNotationRegex, function (all, name, quote, quotedName, isFunc) {
-	                name = name || quotedName;
-	                if (res) {
-	                    if (name in res) {
-	                        res = res[name];
-	                    }
-	                    typeof res == "function" && isFunc && (res = res());
-	                }
-	            });
-	            res = (res == null || res == obj ? all : res) + "";
-	            return res;
-	        };
-	    return function (str, obj) {
-	        return Str(str).replace(tokenRegex, function (all, key) {
-	            return replacer(all, key, obj);
-	        });
-	    };
-	})();
-	function clone(obj) {
-	    if (typeof obj == "function" || Object(obj) !== obj) {
-	        return obj;
-	    }
-	    var res = new obj.constructor;
-	    for (var key in obj) if (obj[has](key)) {
-	        res[key] = clone(obj[key]);
-	    }
-	    return res;
-	}
-	Snap._.clone = clone;
-	function repush(array, item) {
-	    for (var i = 0, ii = array.length; i < ii; i++) if (array[i] === item) {
-	        return array.push(array.splice(i, 1)[0]);
-	    }
-	}
-	function cacher(f, scope, postprocessor) {
-	    function newf() {
-	        var arg = Array.prototype.slice.call(arguments, 0),
-	            args = arg.join("\u2400"),
-	            cache = newf.cache = newf.cache || {},
-	            count = newf.count = newf.count || [];
-	        if (cache[has](args)) {
-	            repush(count, args);
-	            return postprocessor ? postprocessor(cache[args]) : cache[args];
-	        }
-	        count.length >= 1e3 && delete cache[count.shift()];
-	        count.push(args);
-	        cache[args] = f.apply(scope, arg);
-	        return postprocessor ? postprocessor(cache[args]) : cache[args];
-	    }
-	    return newf;
-	}
-	Snap._.cacher = cacher;
-	function angle(x1, y1, x2, y2, x3, y3) {
-	    if (x3 == null) {
-	        var x = x1 - x2,
-	            y = y1 - y2;
-	        if (!x && !y) {
-	            return 0;
-	        }
-	        return (180 + math.atan2(-y, -x) * 180 / PI + 360) % 360;
-	    } else {
-	        return angle(x1, y1, x3, y3) - angle(x2, y2, x3, y3);
-	    }
-	}
-	function rad(deg) {
-	    return deg % 360 * PI / 180;
-	}
-	function deg(rad) {
-	    return rad * 180 / PI % 360;
-	}
-	function x_y() {
-	    return this.x + S + this.y;
-	}
-	function x_y_w_h() {
-	    return this.x + S + this.y + S + this.width + " \xd7 " + this.height;
-	}
-
-	/*\
-	 * Snap.rad
-	 [ method ]
-	 **
-	 * Transform angle to radians
-	 - deg (number) angle in degrees
-	 = (number) angle in radians
-	\*/
-	Snap.rad = rad;
-	/*\
-	 * Snap.deg
-	 [ method ]
-	 **
-	 * Transform angle to degrees
-	 - rad (number) angle in radians
-	 = (number) angle in degrees
-	\*/
-	Snap.deg = deg;
-	/*\
-	 * Snap.angle
-	 [ method ]
-	 **
-	 * Returns an angle between two or three points
-	 > Parameters
-	 - x1 (number) x coord of first point
-	 - y1 (number) y coord of first point
-	 - x2 (number) x coord of second point
-	 - y2 (number) y coord of second point
-	 - x3 (number) #optional x coord of third point
-	 - y3 (number) #optional y coord of third point
-	 = (number) angle in degrees
-	\*/
-	Snap.angle = angle;
-	/*\
-	 * Snap.is
-	 [ method ]
-	 **
-	 * Handy replacement for the `typeof` operator
-	 - o (…) any object or primitive
-	 - type (string) name of the type, e.g., `string`, `function`, `number`, etc.
-	 = (boolean) `true` if given value is of given type
-	\*/
-	Snap.is = is;
-	/*\
-	 * Snap.snapTo
-	 [ method ]
-	 **
-	 * Snaps given value to given grid
-	 - values (array|number) given array of values or step of the grid
-	 - value (number) value to adjust
-	 - tolerance (number) #optional maximum distance to the target value that would trigger the snap. Default is `10`.
-	 = (number) adjusted value
-	\*/
-	Snap.snapTo = function (values, value, tolerance) {
-	    tolerance = is(tolerance, "finite") ? tolerance : 10;
-	    if (is(values, "array")) {
-	        var i = values.length;
-	        while (i--) if (abs(values[i] - value) <= tolerance) {
-	            return values[i];
-	        }
-	    } else {
-	        values = +values;
-	        var rem = value % values;
-	        if (rem < tolerance) {
-	            return value - rem;
-	        }
-	        if (rem > values - tolerance) {
-	            return value - rem + values;
-	        }
-	    }
-	    return value;
-	};
-	// Colour
-	/*\
-	 * Snap.getRGB
-	 [ method ]
-	 **
-	 * Parses color string as RGB object
-	 - color (string) color string in one of the following formats:
-	 # <ul>
-	 #     <li>Color name (<code>red</code>, <code>green</code>, <code>cornflowerblue</code>, etc)</li>
-	 #     <li>#••• — shortened HTML color: (<code>#000</code>, <code>#fc0</code>, etc.)</li>
-	 #     <li>#•••••• — full length HTML color: (<code>#000000</code>, <code>#bd2300</code>)</li>
-	 #     <li>rgb(•••, •••, •••) — red, green and blue channels values: (<code>rgb(200,&nbsp;100,&nbsp;0)</code>)</li>
-	 #     <li>rgba(•••, •••, •••, •••) — also with opacity</li>
-	 #     <li>rgb(•••%, •••%, •••%) — same as above, but in %: (<code>rgb(100%,&nbsp;175%,&nbsp;0%)</code>)</li>
-	 #     <li>rgba(•••%, •••%, •••%, •••%) — also with opacity</li>
-	 #     <li>hsb(•••, •••, •••) — hue, saturation and brightness values: (<code>hsb(0.5,&nbsp;0.25,&nbsp;1)</code>)</li>
-	 #     <li>hsba(•••, •••, •••, •••) — also with opacity</li>
-	 #     <li>hsb(•••%, •••%, •••%) — same as above, but in %</li>
-	 #     <li>hsba(•••%, •••%, •••%, •••%) — also with opacity</li>
-	 #     <li>hsl(•••, •••, •••) — hue, saturation and luminosity values: (<code>hsb(0.5,&nbsp;0.25,&nbsp;0.5)</code>)</li>
-	 #     <li>hsla(•••, •••, •••, •••) — also with opacity</li>
-	 #     <li>hsl(•••%, •••%, •••%) — same as above, but in %</li>
-	 #     <li>hsla(•••%, •••%, •••%, •••%) — also with opacity</li>
-	 # </ul>
-	 * Note that `%` can be used any time: `rgb(20%, 255, 50%)`.
-	 = (object) RGB object in the following format:
-	 o {
-	 o     r (number) red,
-	 o     g (number) green,
-	 o     b (number) blue,
-	 o     hex (string) color in HTML/CSS format: #••••••,
-	 o     error (boolean) true if string can't be parsed
-	 o }
-	\*/
-	Snap.getRGB = cacher(function (colour) {
-	    if (!colour || !!((colour = Str(colour)).indexOf("-") + 1)) {
-	        return {r: -1, g: -1, b: -1, hex: "none", error: 1, toString: rgbtoString};
-	    }
-	    if (colour == "none") {
-	        return {r: -1, g: -1, b: -1, hex: "none", toString: rgbtoString};
-	    }
-	    !(hsrg[has](colour.toLowerCase().substring(0, 2)) || colour.charAt() == "#") && (colour = toHex(colour));
-	    if (!colour) {
-	        return {r: -1, g: -1, b: -1, hex: "none", error: 1, toString: rgbtoString};
-	    }
-	    var res,
-	        red,
-	        green,
-	        blue,
-	        opacity,
-	        t,
-	        values,
-	        rgb = colour.match(colourRegExp);
-	    if (rgb) {
-	        if (rgb[2]) {
-	            blue = toInt(rgb[2].substring(5), 16);
-	            green = toInt(rgb[2].substring(3, 5), 16);
-	            red = toInt(rgb[2].substring(1, 3), 16);
-	        }
-	        if (rgb[3]) {
-	            blue = toInt((t = rgb[3].charAt(3)) + t, 16);
-	            green = toInt((t = rgb[3].charAt(2)) + t, 16);
-	            red = toInt((t = rgb[3].charAt(1)) + t, 16);
-	        }
-	        if (rgb[4]) {
-	            values = rgb[4].split(commaSpaces);
-	            red = toFloat(values[0]);
-	            values[0].slice(-1) == "%" && (red *= 2.55);
-	            green = toFloat(values[1]);
-	            values[1].slice(-1) == "%" && (green *= 2.55);
-	            blue = toFloat(values[2]);
-	            values[2].slice(-1) == "%" && (blue *= 2.55);
-	            rgb[1].toLowerCase().slice(0, 4) == "rgba" && (opacity = toFloat(values[3]));
-	            values[3] && values[3].slice(-1) == "%" && (opacity /= 100);
-	        }
-	        if (rgb[5]) {
-	            values = rgb[5].split(commaSpaces);
-	            red = toFloat(values[0]);
-	            values[0].slice(-1) == "%" && (red /= 100);
-	            green = toFloat(values[1]);
-	            values[1].slice(-1) == "%" && (green /= 100);
-	            blue = toFloat(values[2]);
-	            values[2].slice(-1) == "%" && (blue /= 100);
-	            (values[0].slice(-3) == "deg" || values[0].slice(-1) == "\xb0") && (red /= 360);
-	            rgb[1].toLowerCase().slice(0, 4) == "hsba" && (opacity = toFloat(values[3]));
-	            values[3] && values[3].slice(-1) == "%" && (opacity /= 100);
-	            return Snap.hsb2rgb(red, green, blue, opacity);
-	        }
-	        if (rgb[6]) {
-	            values = rgb[6].split(commaSpaces);
-	            red = toFloat(values[0]);
-	            values[0].slice(-1) == "%" && (red /= 100);
-	            green = toFloat(values[1]);
-	            values[1].slice(-1) == "%" && (green /= 100);
-	            blue = toFloat(values[2]);
-	            values[2].slice(-1) == "%" && (blue /= 100);
-	            (values[0].slice(-3) == "deg" || values[0].slice(-1) == "\xb0") && (red /= 360);
-	            rgb[1].toLowerCase().slice(0, 4) == "hsla" && (opacity = toFloat(values[3]));
-	            values[3] && values[3].slice(-1) == "%" && (opacity /= 100);
-	            return Snap.hsl2rgb(red, green, blue, opacity);
-	        }
-	        red = mmin(math.round(red), 255);
-	        green = mmin(math.round(green), 255);
-	        blue = mmin(math.round(blue), 255);
-	        opacity = mmin(mmax(opacity, 0), 1);
-	        rgb = {r: red, g: green, b: blue, toString: rgbtoString};
-	        rgb.hex = "#" + (16777216 | blue | (green << 8) | (red << 16)).toString(16).slice(1);
-	        rgb.opacity = is(opacity, "finite") ? opacity : 1;
-	        return rgb;
-	    }
-	    return {r: -1, g: -1, b: -1, hex: "none", error: 1, toString: rgbtoString};
-	}, Snap);
-	// SIERRA It seems odd that the following 3 conversion methods are not expressed as .this2that(), like the others.
-	/*\
-	 * Snap.hsb
-	 [ method ]
-	 **
-	 * Converts HSB values to a hex representation of the color
-	 - h (number) hue
-	 - s (number) saturation
-	 - b (number) value or brightness
-	 = (string) hex representation of the color
-	\*/
-	Snap.hsb = cacher(function (h, s, b) {
-	    return Snap.hsb2rgb(h, s, b).hex;
-	});
-	/*\
-	 * Snap.hsl
-	 [ method ]
-	 **
-	 * Converts HSL values to a hex representation of the color
-	 - h (number) hue
-	 - s (number) saturation
-	 - l (number) luminosity
-	 = (string) hex representation of the color
-	\*/
-	Snap.hsl = cacher(function (h, s, l) {
-	    return Snap.hsl2rgb(h, s, l).hex;
-	});
-	/*\
-	 * Snap.rgb
-	 [ method ]
-	 **
-	 * Converts RGB values to a hex representation of the color
-	 - r (number) red
-	 - g (number) green
-	 - b (number) blue
-	 = (string) hex representation of the color
-	\*/
-	Snap.rgb = cacher(function (r, g, b, o) {
-	    if (is(o, "finite")) {
-	        var round = math.round;
-	        return "rgba(" + [round(r), round(g), round(b), +o.toFixed(2)] + ")";
-	    }
-	    return "#" + (16777216 | b | (g << 8) | (r << 16)).toString(16).slice(1);
-	});
-	var toHex = function (color) {
-	    var i = glob.doc.getElementsByTagName("head")[0] || glob.doc.getElementsByTagName("svg")[0],
-	        red = "rgb(255, 0, 0)";
-	    toHex = cacher(function (color) {
-	        if (color.toLowerCase() == "red") {
-	            return red;
-	        }
-	        i.style.color = red;
-	        i.style.color = color;
-	        var out = glob.doc.defaultView.getComputedStyle(i, E).getPropertyValue("color");
-	        return out == red ? null : out;
-	    });
-	    return toHex(color);
-	},
-	hsbtoString = function () {
-	    return "hsb(" + [this.h, this.s, this.b] + ")";
-	},
-	hsltoString = function () {
-	    return "hsl(" + [this.h, this.s, this.l] + ")";
-	},
-	rgbtoString = function () {
-	    return this.opacity == 1 || this.opacity == null ?
-	            this.hex :
-	            "rgba(" + [this.r, this.g, this.b, this.opacity] + ")";
-	},
-	prepareRGB = function (r, g, b) {
-	    if (g == null && is(r, "object") && "r" in r && "g" in r && "b" in r) {
-	        b = r.b;
-	        g = r.g;
-	        r = r.r;
-	    }
-	    if (g == null && is(r, string)) {
-	        var clr = Snap.getRGB(r);
-	        r = clr.r;
-	        g = clr.g;
-	        b = clr.b;
-	    }
-	    if (r > 1 || g > 1 || b > 1) {
-	        r /= 255;
-	        g /= 255;
-	        b /= 255;
-	    }
-
-	    return [r, g, b];
-	},
-	packageRGB = function (r, g, b, o) {
-	    r = math.round(r * 255);
-	    g = math.round(g * 255);
-	    b = math.round(b * 255);
-	    var rgb = {
-	        r: r,
-	        g: g,
-	        b: b,
-	        opacity: is(o, "finite") ? o : 1,
-	        hex: Snap.rgb(r, g, b),
-	        toString: rgbtoString
-	    };
-	    is(o, "finite") && (rgb.opacity = o);
-	    return rgb;
-	};
-	// SIERRA Clarify if Snap does not support consolidated HSLA/RGBA colors. E.g., can you specify a semi-transparent value for Snap.filter.shadow()?
-	/*\
-	 * Snap.color
-	 [ method ]
-	 **
-	 * Parses the color string and returns an object featuring the color's component values
-	 - clr (string) color string in one of the supported formats (see @Snap.getRGB)
-	 = (object) Combined RGB/HSB object in the following format:
-	 o {
-	 o     r (number) red,
-	 o     g (number) green,
-	 o     b (number) blue,
-	 o     hex (string) color in HTML/CSS format: #••••••,
-	 o     error (boolean) `true` if string can't be parsed,
-	 o     h (number) hue,
-	 o     s (number) saturation,
-	 o     v (number) value (brightness),
-	 o     l (number) lightness
-	 o }
-	\*/
-	Snap.color = function (clr) {
-	    var rgb;
-	    if (is(clr, "object") && "h" in clr && "s" in clr && "b" in clr) {
-	        rgb = Snap.hsb2rgb(clr);
-	        clr.r = rgb.r;
-	        clr.g = rgb.g;
-	        clr.b = rgb.b;
-	        clr.opacity = 1;
-	        clr.hex = rgb.hex;
-	    } else if (is(clr, "object") && "h" in clr && "s" in clr && "l" in clr) {
-	        rgb = Snap.hsl2rgb(clr);
-	        clr.r = rgb.r;
-	        clr.g = rgb.g;
-	        clr.b = rgb.b;
-	        clr.opacity = 1;
-	        clr.hex = rgb.hex;
-	    } else {
-	        if (is(clr, "string")) {
-	            clr = Snap.getRGB(clr);
-	        }
-	        if (is(clr, "object") && "r" in clr && "g" in clr && "b" in clr && !("error" in clr)) {
-	            rgb = Snap.rgb2hsl(clr);
-	            clr.h = rgb.h;
-	            clr.s = rgb.s;
-	            clr.l = rgb.l;
-	            rgb = Snap.rgb2hsb(clr);
-	            clr.v = rgb.b;
-	        } else {
-	            clr = {hex: "none"};
-	            clr.r = clr.g = clr.b = clr.h = clr.s = clr.v = clr.l = -1;
-	            clr.error = 1;
-	        }
-	    }
-	    clr.toString = rgbtoString;
-	    return clr;
-	};
-	/*\
-	 * Snap.hsb2rgb
-	 [ method ]
-	 **
-	 * Converts HSB values to an RGB object
-	 - h (number) hue
-	 - s (number) saturation
-	 - v (number) value or brightness
-	 = (object) RGB object in the following format:
-	 o {
-	 o     r (number) red,
-	 o     g (number) green,
-	 o     b (number) blue,
-	 o     hex (string) color in HTML/CSS format: #••••••
-	 o }
-	\*/
-	Snap.hsb2rgb = function (h, s, v, o) {
-	    if (is(h, "object") && "h" in h && "s" in h && "b" in h) {
-	        v = h.b;
-	        s = h.s;
-	        h = h.h;
-	        o = h.o;
-	    }
-	    h *= 360;
-	    var R, G, B, X, C;
-	    h = (h % 360) / 60;
-	    C = v * s;
-	    X = C * (1 - abs(h % 2 - 1));
-	    R = G = B = v - C;
-
-	    h = ~~h;
-	    R += [C, X, 0, 0, X, C][h];
-	    G += [X, C, C, X, 0, 0][h];
-	    B += [0, 0, X, C, C, X][h];
-	    return packageRGB(R, G, B, o);
-	};
-	/*\
-	 * Snap.hsl2rgb
-	 [ method ]
-	 **
-	 * Converts HSL values to an RGB object
-	 - h (number) hue
-	 - s (number) saturation
-	 - l (number) luminosity
-	 = (object) RGB object in the following format:
-	 o {
-	 o     r (number) red,
-	 o     g (number) green,
-	 o     b (number) blue,
-	 o     hex (string) color in HTML/CSS format: #••••••
-	 o }
-	\*/
-	Snap.hsl2rgb = function (h, s, l, o) {
-	    if (is(h, "object") && "h" in h && "s" in h && "l" in h) {
-	        l = h.l;
-	        s = h.s;
-	        h = h.h;
-	    }
-	    if (h > 1 || s > 1 || l > 1) {
-	        h /= 360;
-	        s /= 100;
-	        l /= 100;
-	    }
-	    h *= 360;
-	    var R, G, B, X, C;
-	    h = (h % 360) / 60;
-	    C = 2 * s * (l < .5 ? l : 1 - l);
-	    X = C * (1 - abs(h % 2 - 1));
-	    R = G = B = l - C / 2;
-
-	    h = ~~h;
-	    R += [C, X, 0, 0, X, C][h];
-	    G += [X, C, C, X, 0, 0][h];
-	    B += [0, 0, X, C, C, X][h];
-	    return packageRGB(R, G, B, o);
-	};
-	/*\
-	 * Snap.rgb2hsb
-	 [ method ]
-	 **
-	 * Converts RGB values to an HSB object
-	 - r (number) red
-	 - g (number) green
-	 - b (number) blue
-	 = (object) HSB object in the following format:
-	 o {
-	 o     h (number) hue,
-	 o     s (number) saturation,
-	 o     b (number) brightness
-	 o }
-	\*/
-	Snap.rgb2hsb = function (r, g, b) {
-	    b = prepareRGB(r, g, b);
-	    r = b[0];
-	    g = b[1];
-	    b = b[2];
-
-	    var H, S, V, C;
-	    V = mmax(r, g, b);
-	    C = V - mmin(r, g, b);
-	    H = (C == 0 ? null :
-	         V == r ? (g - b) / C :
-	         V == g ? (b - r) / C + 2 :
-	                  (r - g) / C + 4
-	        );
-	    H = ((H + 360) % 6) * 60 / 360;
-	    S = C == 0 ? 0 : C / V;
-	    return {h: H, s: S, b: V, toString: hsbtoString};
-	};
-	/*\
-	 * Snap.rgb2hsl
-	 [ method ]
-	 **
-	 * Converts RGB values to an HSL object
-	 - r (number) red
-	 - g (number) green
-	 - b (number) blue
-	 = (object) HSL object in the following format:
-	 o {
-	 o     h (number) hue,
-	 o     s (number) saturation,
-	 o     l (number) luminosity
-	 o }
-	\*/
-	Snap.rgb2hsl = function (r, g, b) {
-	    b = prepareRGB(r, g, b);
-	    r = b[0];
-	    g = b[1];
-	    b = b[2];
-
-	    var H, S, L, M, m, C;
-	    M = mmax(r, g, b);
-	    m = mmin(r, g, b);
-	    C = M - m;
-	    H = (C == 0 ? null :
-	         M == r ? (g - b) / C :
-	         M == g ? (b - r) / C + 2 :
-	                  (r - g) / C + 4);
-	    H = ((H + 360) % 6) * 60 / 360;
-	    L = (M + m) / 2;
-	    S = (C == 0 ? 0 :
-	         L < .5 ? C / (2 * L) :
-	                  C / (2 - 2 * L));
-	    return {h: H, s: S, l: L, toString: hsltoString};
-	};
-
-	// Transformations
-	// SIERRA Snap.parsePathString(): By _array of arrays,_ I assume you mean a format like this for two separate segments? [ ["M10,10","L90,90"], ["M90,10","L10,90"] ] Otherwise how is each command structured?
-	/*\
-	 * Snap.parsePathString
-	 [ method ]
-	 **
-	 * Utility method
-	 **
-	 * Parses given path string into an array of arrays of path segments
-	 - pathString (string|array) path string or array of segments (in the last case it is returned straight away)
-	 = (array) array of segments
-	\*/
-	Snap.parsePathString = function (pathString) {
-	    if (!pathString) {
-	        return null;
-	    }
-	    var pth = Snap.path(pathString);
-	    if (pth.arr) {
-	        return Snap.path.clone(pth.arr);
-	    }
-
-	    var paramCounts = {a: 7, c: 6, o: 2, h: 1, l: 2, m: 2, r: 4, q: 4, s: 4, t: 2, v: 1, u: 3, z: 0},
-	        data = [];
-	    if (is(pathString, "array") && is(pathString[0], "array")) { // rough assumption
-	        data = Snap.path.clone(pathString);
-	    }
-	    if (!data.length) {
-	        Str(pathString).replace(pathCommand, function (a, b, c) {
-	            var params = [],
-	                name = b.toLowerCase();
-	            c.replace(pathValues, function (a, b) {
-	                b && params.push(+b);
-	            });
-	            if (name == "m" && params.length > 2) {
-	                data.push([b].concat(params.splice(0, 2)));
-	                name = "l";
-	                b = b == "m" ? "l" : "L";
-	            }
-	            if (name == "o" && params.length == 1) {
-	                data.push([b, params[0]]);
-	            }
-	            if (name == "r") {
-	                data.push([b].concat(params));
-	            } else while (params.length >= paramCounts[name]) {
-	                data.push([b].concat(params.splice(0, paramCounts[name])));
-	                if (!paramCounts[name]) {
-	                    break;
-	                }
-	            }
-	        });
-	    }
-	    data.toString = Snap.path.toString;
-	    pth.arr = Snap.path.clone(data);
-	    return data;
-	};
-	/*\
-	 * Snap.parseTransformString
-	 [ method ]
-	 **
-	 * Utility method
-	 **
-	 * Parses given transform string into an array of transformations
-	 - TString (string|array) transform string or array of transformations (in the last case it is returned straight away)
-	 = (array) array of transformations
-	\*/
-	var parseTransformString = Snap.parseTransformString = function (TString) {
-	    if (!TString) {
-	        return null;
-	    }
-	    var paramCounts = {r: 3, s: 4, t: 2, m: 6},
-	        data = [];
-	    if (is(TString, "array") && is(TString[0], "array")) { // rough assumption
-	        data = Snap.path.clone(TString);
-	    }
-	    if (!data.length) {
-	        Str(TString).replace(tCommand, function (a, b, c) {
-	            var params = [],
-	                name = b.toLowerCase();
-	            c.replace(pathValues, function (a, b) {
-	                b && params.push(+b);
-	            });
-	            data.push([b].concat(params));
-	        });
-	    }
-	    data.toString = Snap.path.toString;
-	    return data;
-	};
-	function svgTransform2string(tstr) {
-	    var res = [];
-	    tstr = tstr.replace(/(?:^|\s)(\w+)\(([^)]+)\)/g, function (all, name, params) {
-	        params = params.split(/\s*,\s*|\s+/);
-	        if (name == "rotate" && params.length == 1) {
-	            params.push(0, 0);
-	        }
-	        if (name == "scale") {
-	            if (params.length > 2) {
-	                params = params.slice(0, 2);
-	            } else if (params.length == 2) {
-	                params.push(0, 0);
-	            }
-	            if (params.length == 1) {
-	                params.push(params[0], 0, 0);
-	            }
-	        }
-	        if (name == "skewX") {
-	            res.push(["m", 1, 0, math.tan(rad(params[0])), 1, 0, 0]);
-	        } else if (name == "skewY") {
-	            res.push(["m", 1, math.tan(rad(params[0])), 0, 1, 0, 0]);
-	        } else {
-	            res.push([name.charAt(0)].concat(params));
-	        }
-	        return all;
-	    });
-	    return res;
-	}
-	Snap._.svgTransform2string = svgTransform2string;
-	Snap._.rgTransform = /^[a-z][\s]*-?\.?\d/i;
-	function transform2matrix(tstr, bbox) {
-	    var tdata = parseTransformString(tstr),
-	        m = new Snap.Matrix;
-	    if (tdata) {
-	        for (var i = 0, ii = tdata.length; i < ii; i++) {
-	            var t = tdata[i],
-	                tlen = t.length,
-	                command = Str(t[0]).toLowerCase(),
-	                absolute = t[0] != command,
-	                inver = absolute ? m.invert() : 0,
-	                x1,
-	                y1,
-	                x2,
-	                y2,
-	                bb;
-	            if (command == "t" && tlen == 2){
-	                m.translate(t[1], 0);
-	            } else if (command == "t" && tlen == 3) {
-	                if (absolute) {
-	                    x1 = inver.x(0, 0);
-	                    y1 = inver.y(0, 0);
-	                    x2 = inver.x(t[1], t[2]);
-	                    y2 = inver.y(t[1], t[2]);
-	                    m.translate(x2 - x1, y2 - y1);
-	                } else {
-	                    m.translate(t[1], t[2]);
-	                }
-	            } else if (command == "r") {
-	                if (tlen == 2) {
-	                    bb = bb || bbox;
-	                    m.rotate(t[1], bb.x + bb.width / 2, bb.y + bb.height / 2);
-	                } else if (tlen == 4) {
-	                    if (absolute) {
-	                        x2 = inver.x(t[2], t[3]);
-	                        y2 = inver.y(t[2], t[3]);
-	                        m.rotate(t[1], x2, y2);
-	                    } else {
-	                        m.rotate(t[1], t[2], t[3]);
-	                    }
-	                }
-	            } else if (command == "s") {
-	                if (tlen == 2 || tlen == 3) {
-	                    bb = bb || bbox;
-	                    m.scale(t[1], t[tlen - 1], bb.x + bb.width / 2, bb.y + bb.height / 2);
-	                } else if (tlen == 4) {
-	                    if (absolute) {
-	                        x2 = inver.x(t[2], t[3]);
-	                        y2 = inver.y(t[2], t[3]);
-	                        m.scale(t[1], t[1], x2, y2);
-	                    } else {
-	                        m.scale(t[1], t[1], t[2], t[3]);
-	                    }
-	                } else if (tlen == 5) {
-	                    if (absolute) {
-	                        x2 = inver.x(t[3], t[4]);
-	                        y2 = inver.y(t[3], t[4]);
-	                        m.scale(t[1], t[2], x2, y2);
-	                    } else {
-	                        m.scale(t[1], t[2], t[3], t[4]);
-	                    }
-	                }
-	            } else if (command == "m" && tlen == 7) {
-	                m.add(t[1], t[2], t[3], t[4], t[5], t[6]);
-	            }
-	        }
-	    }
-	    return m;
-	}
-	Snap._.transform2matrix = transform2matrix;
-	Snap._unit2px = unit2px;
-	var contains = glob.doc.contains || glob.doc.compareDocumentPosition ?
-	    function (a, b) {
-	        var adown = a.nodeType == 9 ? a.documentElement : a,
-	            bup = b && b.parentNode;
-	            return a == bup || !!(bup && bup.nodeType == 1 && (
-	                adown.contains ?
-	                    adown.contains(bup) :
-	                    a.compareDocumentPosition && a.compareDocumentPosition(bup) & 16
-	            ));
-	    } :
-	    function (a, b) {
-	        if (b) {
-	            while (b) {
-	                b = b.parentNode;
-	                if (b == a) {
-	                    return true;
-	                }
-	            }
-	        }
-	        return false;
-	    };
-	function getSomeDefs(el) {
-	    var p = (el.node.ownerSVGElement && wrap(el.node.ownerSVGElement)) ||
-	            (el.node.parentNode && wrap(el.node.parentNode)) ||
-	            Snap.select("svg") ||
-	            Snap(0, 0),
-	        pdefs = p.select("defs"),
-	        defs  = pdefs == null ? false : pdefs.node;
-	    if (!defs) {
-	        defs = make("defs", p.node).node;
-	    }
-	    return defs;
-	}
-	function getSomeSVG(el) {
-	    return el.node.ownerSVGElement && wrap(el.node.ownerSVGElement) || Snap.select("svg");
-	}
-	Snap._.getSomeDefs = getSomeDefs;
-	Snap._.getSomeSVG = getSomeSVG;
-	function unit2px(el, name, value) {
-	    var svg = getSomeSVG(el).node,
-	        out = {},
-	        mgr = svg.querySelector(".svg---mgr");
-	    if (!mgr) {
-	        mgr = $("rect");
-	        $(mgr, {x: -9e9, y: -9e9, width: 10, height: 10, "class": "svg---mgr", fill: "none"});
-	        svg.appendChild(mgr);
-	    }
-	    function getW(val) {
-	        if (val == null) {
-	            return E;
-	        }
-	        if (val == +val) {
-	            return val;
-	        }
-	        $(mgr, {width: val});
-	        try {
-	            return mgr.getBBox().width;
-	        } catch (e) {
-	            return 0;
-	        }
-	    }
-	    function getH(val) {
-	        if (val == null) {
-	            return E;
-	        }
-	        if (val == +val) {
-	            return val;
-	        }
-	        $(mgr, {height: val});
-	        try {
-	            return mgr.getBBox().height;
-	        } catch (e) {
-	            return 0;
-	        }
-	    }
-	    function set(nam, f) {
-	        if (name == null) {
-	            out[nam] = f(el.attr(nam) || 0);
-	        } else if (nam == name) {
-	            out = f(value == null ? el.attr(nam) || 0 : value);
-	        }
-	    }
-	    switch (el.type) {
-	        case "rect":
-	            set("rx", getW);
-	            set("ry", getH);
-	        case "image":
-	            set("width", getW);
-	            set("height", getH);
-	        case "text":
-	            set("x", getW);
-	            set("y", getH);
-	        break;
-	        case "circle":
-	            set("cx", getW);
-	            set("cy", getH);
-	            set("r", getW);
-	        break;
-	        case "ellipse":
-	            set("cx", getW);
-	            set("cy", getH);
-	            set("rx", getW);
-	            set("ry", getH);
-	        break;
-	        case "line":
-	            set("x1", getW);
-	            set("x2", getW);
-	            set("y1", getH);
-	            set("y2", getH);
-	        break;
-	        case "marker":
-	            set("refX", getW);
-	            set("markerWidth", getW);
-	            set("refY", getH);
-	            set("markerHeight", getH);
-	        break;
-	        case "radialGradient":
-	            set("fx", getW);
-	            set("fy", getH);
-	        break;
-	        case "tspan":
-	            set("dx", getW);
-	            set("dy", getH);
-	        break;
-	        default:
-	            set(name, getW);
-	    }
-	    svg.removeChild(mgr);
-	    return out;
-	}
-	/*\
-	 * Snap.select
-	 [ method ]
-	 **
-	 * Wraps a DOM element specified by CSS selector as @Element
-	 - query (string) CSS selector of the element
-	 = (Element) the current element
-	\*/
-	Snap.select = function (query) {
-	    query = Str(query).replace(/([^\\]):/g, "$1\\:");
-	    return wrap(glob.doc.querySelector(query));
-	};
-	/*\
-	 * Snap.selectAll
-	 [ method ]
-	 **
-	 * Wraps DOM elements specified by CSS selector as set or array of @Element
-	 - query (string) CSS selector of the element
-	 = (Element) the current element
-	\*/
-	Snap.selectAll = function (query) {
-	    var nodelist = glob.doc.querySelectorAll(query),
-	        set = (Snap.set || Array)();
-	    for (var i = 0; i < nodelist.length; i++) {
-	        set.push(wrap(nodelist[i]));
-	    }
-	    return set;
-	};
-
-	function add2group(list) {
-	    if (!is(list, "array")) {
-	        list = Array.prototype.slice.call(arguments, 0);
-	    }
-	    var i = 0,
-	        j = 0,
-	        node = this.node;
-	    while (this[i]) delete this[i++];
-	    for (i = 0; i < list.length; i++) {
-	        if (list[i].type == "set") {
-	            list[i].forEach(function (el) {
-	                node.appendChild(el.node);
-	            });
-	        } else {
-	            node.appendChild(list[i].node);
-	        }
-	    }
-	    var children = node.childNodes;
-	    for (i = 0; i < children.length; i++) {
-	        this[j++] = wrap(children[i]);
-	    }
-	    return this;
-	}
-	// Hub garbage collector every 10s
-	setInterval(function () {
-	    for (var key in hub) if (hub[has](key)) {
-	        var el = hub[key],
-	            node = el.node;
-	        if (el.type != "svg" && !node.ownerSVGElement || el.type == "svg" && (!node.parentNode || "ownerSVGElement" in node.parentNode && !node.ownerSVGElement)) {
-	            delete hub[key];
-	        }
-	    }
-	}, 1e4);
-	function Element(el) {
-	    if (el.snap in hub) {
-	        return hub[el.snap];
-	    }
-	    var svg;
-	    try {
-	        svg = el.ownerSVGElement;
-	    } catch(e) {}
-	    /*\
-	     * Element.node
-	     [ property (object) ]
-	     **
-	     * Gives you a reference to the DOM object, so you can assign event handlers or just mess around.
-	     > Usage
-	     | // draw a circle at coordinate 10,10 with radius of 10
-	     | var c = paper.circle(10, 10, 10);
-	     | c.node.onclick = function () {
-	     |     c.attr("fill", "red");
-	     | };
-	    \*/
-	    this.node = el;
-	    if (svg) {
-	        this.paper = new Paper(svg);
-	    }
-	    /*\
-	     * Element.type
-	     [ property (string) ]
-	     **
-	     * SVG tag name of the given element.
-	    \*/
-	    this.type = el.tagName;
-	    var id = this.id = ID(this);
-	    this.anims = {};
-	    this._ = {
-	        transform: []
-	    };
-	    el.snap = id;
-	    hub[id] = this;
-	    if (this.type == "g") {
-	        this.add = add2group;
-	    }
-	    if (this.type in {g: 1, mask: 1, pattern: 1, symbol: 1}) {
-	        for (var method in Paper.prototype) if (Paper.prototype[has](method)) {
-	            this[method] = Paper.prototype[method];
-	        }
-	    }
-	}
-	   /*\
-	     * Element.attr
-	     [ method ]
-	     **
-	     * Gets or sets given attributes of the element.
-	     **
-	     - params (object) contains key-value pairs of attributes you want to set
-	     * or
-	     - param (string) name of the attribute
-	     = (Element) the current element
-	     * or
-	     = (string) value of attribute
-	     > Usage
-	     | el.attr({
-	     |     fill: "#fc0",
-	     |     stroke: "#000",
-	     |     strokeWidth: 2, // CamelCase...
-	     |     "fill-opacity": 0.5, // or dash-separated names
-	     |     width: "*=2" // prefixed values
-	     | });
-	     | console.log(el.attr("fill")); // #fc0
-	     * Prefixed values in format `"+=10"` supported. All four operations
-	     * (`+`, `-`, `*` and `/`) could be used. Optionally you can use units for `+`
-	     * and `-`: `"+=2em"`.
-	    \*/
-	    Element.prototype.attr = function (params, value) {
-	        var el = this,
-	            node = el.node;
-	        if (!params) {
-	            return el;
-	        }
-	        if (is(params, "string")) {
-	            if (arguments.length > 1) {
-	                var json = {};
-	                json[params] = value;
-	                params = json;
-	            } else {
-	                return eve("snap.util.getattr." + params, el).firstDefined();
-	            }
-	        }
-	        for (var att in params) {
-	            if (params[has](att)) {
-	                eve("snap.util.attr." + att, el, params[att]);
-	            }
-	        }
-	        return el;
-	    };
-	/*\
-	 * Snap.parse
-	 [ method ]
-	 **
-	 * Parses SVG fragment and converts it into a @Fragment
-	 **
-	 - svg (string) SVG string
-	 = (Fragment) the @Fragment
-	\*/
-	Snap.parse = function (svg) {
-	    var f = glob.doc.createDocumentFragment(),
-	        full = true,
-	        div = glob.doc.createElement("div");
-	    svg = Str(svg);
-	    if (!svg.match(/^\s*<\s*svg(?:\s|>)/)) {
-	        svg = "<svg>" + svg + "</svg>";
-	        full = false;
-	    }
-	    div.innerHTML = svg;
-	    svg = div.getElementsByTagName("svg")[0];
-	    if (svg) {
-	        if (full) {
-	            f = svg;
-	        } else {
-	            while (svg.firstChild) {
-	                f.appendChild(svg.firstChild);
-	            }
-	            div.innerHTML = E;
-	        }
-	    }
-	    return new Fragment(f);
-	};
-	function Fragment(frag) {
-	    this.node = frag;
-	}
-	// SIERRA Snap.fragment() could especially use a code example
-	/*\
-	 * Snap.fragment
-	 [ method ]
-	 **
-	 * Creates a DOM fragment from a given list of elements or strings
-	 **
-	 - varargs (…) SVG string
-	 = (Fragment) the @Fragment
-	\*/
-	Snap.fragment = function () {
-	    var args = Array.prototype.slice.call(arguments, 0),
-	        f = glob.doc.createDocumentFragment();
-	    for (var i = 0, ii = args.length; i < ii; i++) {
-	        var item = args[i];
-	        if (item.node && item.node.nodeType) {
-	            f.appendChild(item.node);
-	        }
-	        if (item.nodeType) {
-	            f.appendChild(item);
-	        }
-	        if (typeof item == "string") {
-	            f.appendChild(Snap.parse(item).node);
-	        }
-	    }
-	    return new Fragment(f);
-	};
-
-	function make(name, parent) {
-	    var res = $(name);
-	    parent.appendChild(res);
-	    var el = wrap(res);
-	    return el;
-	}
-	function Paper(w, h) {
-	    var res,
-	        desc,
-	        defs,
-	        proto = Paper.prototype;
-	    if (w && w.tagName == "svg") {
-	        if (w.snap in hub) {
-	            return hub[w.snap];
-	        }
-	        var doc = w.ownerDocument;
-	        res = new Element(w);
-	        desc = w.getElementsByTagName("desc")[0];
-	        defs = w.getElementsByTagName("defs")[0];
-	        if (!desc) {
-	            desc = $("desc");
-	            desc.appendChild(doc.createTextNode("Created with Snap"));
-	            res.node.appendChild(desc);
-	        }
-	        if (!defs) {
-	            defs = $("defs");
-	            res.node.appendChild(defs);
-	        }
-	        res.defs = defs;
-	        for (var key in proto) if (proto[has](key)) {
-	            res[key] = proto[key];
-	        }
-	        res.paper = res.root = res;
-	    } else {
-	        res = make("svg", glob.doc.body);
-	        $(res.node, {
-	            height: h,
-	            version: 1.1,
-	            width: w,
-	            xmlns: xmlns
-	        });
-	    }
-	    return res;
-	}
-	function wrap(dom) {
-	    if (!dom) {
-	        return dom;
-	    }
-	    if (dom instanceof Element || dom instanceof Fragment) {
-	        return dom;
-	    }
-	    if (dom.tagName && dom.tagName.toLowerCase() == "svg") {
-	        return new Paper(dom);
-	    }
-	    if (dom.tagName && dom.tagName.toLowerCase() == "object" && dom.type == "image/svg+xml") {
-	        return new Paper(dom.contentDocument.getElementsByTagName("svg")[0]);
-	    }
-	    return new Element(dom);
-	}
-
-	Snap._.make = make;
-	Snap._.wrap = wrap;
-	/*\
-	 * Paper.el
-	 [ method ]
-	 **
-	 * Creates an element on paper with a given name and no attributes
-	 **
-	 - name (string) tag name
-	 - attr (object) attributes
-	 = (Element) the current element
-	 > Usage
-	 | var c = paper.circle(10, 10, 10); // is the same as...
-	 | var c = paper.el("circle").attr({
-	 |     cx: 10,
-	 |     cy: 10,
-	 |     r: 10
-	 | });
-	 | // and the same as
-	 | var c = paper.el("circle", {
-	 |     cx: 10,
-	 |     cy: 10,
-	 |     r: 10
-	 | });
-	\*/
-	Paper.prototype.el = function (name, attr) {
-	    var el = make(name, this.node);
-	    attr && el.attr(attr);
-	    return el;
-	};
-	// default
-	eve.on("snap.util.getattr", function () {
-	    var att = eve.nt();
-	    att = att.substring(att.lastIndexOf(".") + 1);
-	    var css = att.replace(/[A-Z]/g, function (letter) {
-	        return "-" + letter.toLowerCase();
-	    });
-	    if (cssAttr[has](css)) {
-	        return this.node.ownerDocument.defaultView.getComputedStyle(this.node, null).getPropertyValue(css);
-	    } else {
-	        return $(this.node, att);
-	    }
-	});
-	var cssAttr = {
-	    "alignment-baseline": 0,
-	    "baseline-shift": 0,
-	    "clip": 0,
-	    "clip-path": 0,
-	    "clip-rule": 0,
-	    "color": 0,
-	    "color-interpolation": 0,
-	    "color-interpolation-filters": 0,
-	    "color-profile": 0,
-	    "color-rendering": 0,
-	    "cursor": 0,
-	    "direction": 0,
-	    "display": 0,
-	    "dominant-baseline": 0,
-	    "enable-background": 0,
-	    "fill": 0,
-	    "fill-opacity": 0,
-	    "fill-rule": 0,
-	    "filter": 0,
-	    "flood-color": 0,
-	    "flood-opacity": 0,
-	    "font": 0,
-	    "font-family": 0,
-	    "font-size": 0,
-	    "font-size-adjust": 0,
-	    "font-stretch": 0,
-	    "font-style": 0,
-	    "font-variant": 0,
-	    "font-weight": 0,
-	    "glyph-orientation-horizontal": 0,
-	    "glyph-orientation-vertical": 0,
-	    "image-rendering": 0,
-	    "kerning": 0,
-	    "letter-spacing": 0,
-	    "lighting-color": 0,
-	    "marker": 0,
-	    "marker-end": 0,
-	    "marker-mid": 0,
-	    "marker-start": 0,
-	    "mask": 0,
-	    "opacity": 0,
-	    "overflow": 0,
-	    "pointer-events": 0,
-	    "shape-rendering": 0,
-	    "stop-color": 0,
-	    "stop-opacity": 0,
-	    "stroke": 0,
-	    "stroke-dasharray": 0,
-	    "stroke-dashoffset": 0,
-	    "stroke-linecap": 0,
-	    "stroke-linejoin": 0,
-	    "stroke-miterlimit": 0,
-	    "stroke-opacity": 0,
-	    "stroke-width": 0,
-	    "text-anchor": 0,
-	    "text-decoration": 0,
-	    "text-rendering": 0,
-	    "unicode-bidi": 0,
-	    "visibility": 0,
-	    "word-spacing": 0,
-	    "writing-mode": 0
-	};
-
-	eve.on("snap.util.attr", function (value) {
-	    var att = eve.nt(),
-	        attr = {};
-	    att = att.substring(att.lastIndexOf(".") + 1);
-	    attr[att] = value;
-	    var style = att.replace(/-(\w)/gi, function (all, letter) {
-	            return letter.toUpperCase();
-	        }),
-	        css = att.replace(/[A-Z]/g, function (letter) {
-	            return "-" + letter.toLowerCase();
-	        });
-	    if (cssAttr[has](css)) {
-	        this.node.style[style] = value == null ? E : value;
-	    } else {
-	        $(this.node, attr);
-	    }
-	});
-	(function (proto) {}(Paper.prototype));
-
-	// simple ajax
-	/*\
-	 * Snap.ajax
-	 [ method ]
-	 **
-	 * Simple implementation of Ajax
-	 **
-	 - url (string) URL
-	 - postData (object|string) data for post request
-	 - callback (function) callback
-	 - scope (object) #optional scope of callback
-	 * or
-	 - url (string) URL
-	 - callback (function) callback
-	 - scope (object) #optional scope of callback
-	 = (XMLHttpRequest) the XMLHttpRequest object, just in case
-	\*/
-	Snap.ajax = function (url, postData, callback, scope){
-	    var req = new XMLHttpRequest,
-	        id = ID();
-	    if (req) {
-	        if (is(postData, "function")) {
-	            scope = callback;
-	            callback = postData;
-	            postData = null;
-	        } else if (is(postData, "object")) {
-	            var pd = [];
-	            for (var key in postData) if (postData.hasOwnProperty(key)) {
-	                pd.push(encodeURIComponent(key) + "=" + encodeURIComponent(postData[key]));
-	            }
-	            postData = pd.join("&");
-	        }
-	        req.open((postData ? "POST" : "GET"), url, true);
-	        if (postData) {
-	            req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-	            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	        }
-	        if (callback) {
-	            eve.once("snap.ajax." + id + ".0", callback);
-	            eve.once("snap.ajax." + id + ".200", callback);
-	            eve.once("snap.ajax." + id + ".304", callback);
-	        }
-	        req.onreadystatechange = function() {
-	            if (req.readyState != 4) return;
-	            eve("snap.ajax." + id + "." + req.status, scope, req);
-	        };
-	        if (req.readyState == 4) {
-	            return req;
-	        }
-	        req.send(postData);
-	        return req;
-	    }
-	};
-	/*\
-	 * Snap.load
-	 [ method ]
-	 **
-	 * Loads external SVG file as a @Fragment (see @Snap.ajax for more advanced AJAX)
-	 **
-	 - url (string) URL
-	 - callback (function) callback
-	 - scope (object) #optional scope of callback
-	\*/
-	Snap.load = function (url, callback, scope) {
-	    Snap.ajax(url, function (req) {
-	        var f = Snap.parse(req.responseText);
-	        scope ? callback.call(scope, f) : callback(f);
-	    });
-	};
-	var getOffset = function (elem) {
-	    var box = elem.getBoundingClientRect(),
-	        doc = elem.ownerDocument,
-	        body = doc.body,
-	        docElem = doc.documentElement,
-	        clientTop = docElem.clientTop || body.clientTop || 0, clientLeft = docElem.clientLeft || body.clientLeft || 0,
-	        top  = box.top  + (g.win.pageYOffset || docElem.scrollTop || body.scrollTop ) - clientTop,
-	        left = box.left + (g.win.pageXOffset || docElem.scrollLeft || body.scrollLeft) - clientLeft;
-	    return {
-	        y: top,
-	        x: left
-	    };
-	};
-	/*\
-	 * Snap.getElementByPoint
-	 [ method ]
-	 **
-	 * Returns you topmost element under given point.
-	 **
-	 = (object) Snap element object
-	 - x (number) x coordinate from the top left corner of the window
-	 - y (number) y coordinate from the top left corner of the window
-	 > Usage
-	 | Snap.getElementByPoint(mouseX, mouseY).attr({stroke: "#f00"});
-	\*/
-	Snap.getElementByPoint = function (x, y) {
-	    var paper = this,
-	        svg = paper.canvas,
-	        target = glob.doc.elementFromPoint(x, y);
-	    if (glob.win.opera && target.tagName == "svg") {
-	        var so = getOffset(target),
-	            sr = target.createSVGRect();
-	        sr.x = x - so.x;
-	        sr.y = y - so.y;
-	        sr.width = sr.height = 1;
-	        var hits = target.getIntersectionList(sr, null);
-	        if (hits.length) {
-	            target = hits[hits.length - 1];
-	        }
-	    }
-	    if (!target) {
-	        return null;
-	    }
-	    return wrap(target);
-	};
-	/*\
-	 * Snap.plugin
-	 [ method ]
-	 **
-	 * Let you write plugins. You pass in a function with four arguments, like this:
-	 | Snap.plugin(function (Snap, Element, Paper, global, Fragment) {
-	 |     Snap.newmethod = function () {};
-	 |     Element.prototype.newmethod = function () {};
-	 |     Paper.prototype.newmethod = function () {};
-	 | });
-	 * Inside the function you have access to all main objects (and their
-	 * prototypes). This allow you to extend anything you want.
-	 **
-	 - f (function) your plugin body
-	\*/
-	Snap.plugin = function (f) {
-	    f(Snap, Element, Paper, glob, Fragment);
-	};
-	glob.win.Snap = Snap;
-	return Snap;
-	}(window || this));
-	// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	//
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	//
-	// http://www.apache.org/licenses/LICENSE-2.0
-	//
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	Snap.plugin(function (Snap, Element, Paper, glob, Fragment) {
-	    var elproto = Element.prototype,
-	        is = Snap.is,
-	        Str = String,
-	        unit2px = Snap._unit2px,
-	        $ = Snap._.$,
-	        make = Snap._.make,
-	        getSomeDefs = Snap._.getSomeDefs,
-	        has = "hasOwnProperty",
-	        wrap = Snap._.wrap;
-	    /*\
-	     * Element.getBBox
-	     [ method ]
-	     **
-	     * Returns the bounding box descriptor for the given element
-	     **
-	     = (object) bounding box descriptor:
-	     o {
-	     o     cx: (number) x of the center,
-	     o     cy: (number) x of the center,
-	     o     h: (number) height,
-	     o     height: (number) height,
-	     o     path: (string) path command for the box,
-	     o     r0: (number) radius of a circle that fully encloses the box,
-	     o     r1: (number) radius of the smallest circle that can be enclosed,
-	     o     r2: (number) radius of the largest circle that can be enclosed,
-	     o     vb: (string) box as a viewbox command,
-	     o     w: (number) width,
-	     o     width: (number) width,
-	     o     x2: (number) x of the right side,
-	     o     x: (number) x of the left side,
-	     o     y2: (number) y of the bottom edge,
-	     o     y: (number) y of the top edge
-	     o }
-	    \*/
-	    elproto.getBBox = function (isWithoutTransform) {
-	        if (!Snap.Matrix || !Snap.path) {
-	            return this.node.getBBox();
-	        }
-	        var el = this,
-	            m = new Snap.Matrix;
-	        if (el.removed) {
-	            return Snap._.box();
-	        }
-	        while (el.type == "use") {
-	            if (!isWithoutTransform) {
-	                m = m.add(el.transform().localMatrix.translate(el.attr("x") || 0, el.attr("y") || 0));
-	            }
-	            if (el.original) {
-	                el = el.original;
-	            } else {
-	                var href = el.attr("xlink:href");
-	                el = el.original = el.node.ownerDocument.getElementById(href.substring(href.indexOf("#") + 1));
-	            }
-	        }
-	        var _ = el._,
-	            pathfinder = Snap.path.get[el.type] || Snap.path.get.deflt;
-	        try {
-	            if (isWithoutTransform) {
-	                _.bboxwt = pathfinder ? Snap.path.getBBox(el.realPath = pathfinder(el)) : Snap._.box(el.node.getBBox());
-	                return Snap._.box(_.bboxwt);
-	            } else {
-	                el.realPath = pathfinder(el);
-	                el.matrix = el.transform().localMatrix;
-	                _.bbox = Snap.path.getBBox(Snap.path.map(el.realPath, m.add(el.matrix)));
-	                return Snap._.box(_.bbox);
-	            }
-	        } catch (e) {
-	            // Firefox doesn’t give you bbox of hidden element
-	            return Snap._.box();
-	        }
-	    };
-	    var propString = function () {
-	        return this.string;
-	    };
-	    function extractTransform(el, tstr) {
-	        if (tstr == null) {
-	            var doReturn = true;
-	            if (el.type == "linearGradient" || el.type == "radialGradient") {
-	                tstr = el.node.getAttribute("gradientTransform");
-	            } else if (el.type == "pattern") {
-	                tstr = el.node.getAttribute("patternTransform");
-	            } else {
-	                tstr = el.node.getAttribute("transform");
-	            }
-	            if (!tstr) {
-	                return new Snap.Matrix;
-	            }
-	            tstr = Snap._.svgTransform2string(tstr);
-	        } else {
-	            if (!Snap._.rgTransform.test(tstr)) {
-	                tstr = Snap._.svgTransform2string(tstr);
-	            } else {
-	                tstr = Str(tstr).replace(/\.{3}|\u2026/g, el._.transform || E);
-	            }
-	            if (is(tstr, "array")) {
-	                tstr = Snap.path ? Snap.path.toString.call(tstr) : Str(tstr);
-	            }
-	            el._.transform = tstr;
-	        }
-	        var m = Snap._.transform2matrix(tstr, el.getBBox(1));
-	        if (doReturn) {
-	            return m;
-	        } else {
-	            el.matrix = m;
-	        }
-	    }
-	    /*\
-	     * Element.transform
-	     [ method ]
-	     **
-	     * Gets or sets transformation of the element
-	     **
-	     - tstr (string) transform string in Snap or SVG format
-	     = (Element) the current element
-	     * or
-	     = (object) transformation descriptor:
-	     o {
-	     o     string (string) transform string,
-	     o     globalMatrix (Matrix) matrix of all transformations applied to element or its parents,
-	     o     localMatrix (Matrix) matrix of transformations applied only to the element,
-	     o     diffMatrix (Matrix) matrix of difference between global and local transformations,
-	     o     global (string) global transformation as string,
-	     o     local (string) local transformation as string,
-	     o     toString (function) returns `string` property
-	     o }
-	    \*/
-	    elproto.transform = function (tstr) {
-	        var _ = this._;
-	        if (tstr == null) {
-	            var papa = this,
-	                global = new Snap.Matrix(this.node.getCTM()),
-	                local = extractTransform(this),
-	                ms = [local],
-	                m = new Snap.Matrix,
-	                i,
-	                localString = local.toTransformString(),
-	                string = Str(local) == Str(this.matrix) ?
-	                            Str(_.transform) : localString;
-	            while (papa.type != "svg" && (papa = papa.parent())) {
-	                ms.push(extractTransform(papa));
-	            }
-	            i = ms.length;
-	            while (i--) {
-	                m.add(ms[i]);
-	            }
-	            return {
-	                string: string,
-	                globalMatrix: global,
-	                totalMatrix: m,
-	                localMatrix: local,
-	                diffMatrix: global.clone().add(local.invert()),
-	                global: global.toTransformString(),
-	                total: m.toTransformString(),
-	                local: localString,
-	                toString: propString
-	            };
-	        }
-	        if (tstr instanceof Snap.Matrix) {
-	            this.matrix = tstr;
-	            this._.transform = tstr.toTransformString();
-	        } else {
-	            extractTransform(this, tstr);
-	        }
-
-	        if (this.node) {
-	            if (this.type == "linearGradient" || this.type == "radialGradient") {
-	                $(this.node, {gradientTransform: this.matrix});
-	            } else if (this.type == "pattern") {
-	                $(this.node, {patternTransform: this.matrix});
-	            } else {
-	                $(this.node, {transform: this.matrix});
-	            }
-	        }
-
-	        return this;
-	    };
-	    /*\
-	     * Element.parent
-	     [ method ]
-	     **
-	     * Returns the element's parent
-	     **
-	     = (Element) the parent element
-	    \*/
-	    elproto.parent = function () {
-	        return wrap(this.node.parentNode);
-	    };
-	    /*\
-	     * Element.append
-	     [ method ]
-	     **
-	     * Appends the given element to current one
-	     **
-	     - el (Element|Set) element to append
-	     = (Element) the parent element
-	    \*/
-	    /*\
-	     * Element.add
-	     [ method ]
-	     **
-	     * See @Element.append
-	    \*/
-	    elproto.append = elproto.add = function (el) {
-	        if (el) {
-	            if (el.type == "set") {
-	                var it = this;
-	                el.forEach(function (el) {
-	                    it.add(el);
-	                });
-	                return this;
-	            }
-	            el = wrap(el);
-	            this.node.appendChild(el.node);
-	            el.paper = this.paper;
-	        }
-	        return this;
-	    };
-	    /*\
-	     * Element.appendTo
-	     [ method ]
-	     **
-	     * Appends the current element to the given one
-	     **
-	     - el (Element) parent element to append to
-	     = (Element) the child element
-	    \*/
-	    elproto.appendTo = function (el) {
-	        if (el) {
-	            el = wrap(el);
-	            el.append(this);
-	        }
-	        return this;
-	    };
-	    /*\
-	     * Element.prepend
-	     [ method ]
-	     **
-	     * Prepends the given element to the current one
-	     **
-	     - el (Element) element to prepend
-	     = (Element) the parent element
-	    \*/
-	    elproto.prepend = function (el) {
-	        if (el) {
-	            if (el.type == "set") {
-	                var it = this,
-	                    first;
-	                el.forEach(function (el) {
-	                    if (first) {
-	                        first.after(el);
-	                    } else {
-	                        it.prepend(el);
-	                    }
-	                    first = el;
-	                });
-	                return this;
-	            }
-	            el = wrap(el);
-	            var parent = el.parent();
-	            this.node.insertBefore(el.node, this.node.firstChild);
-	            this.add && this.add();
-	            el.paper = this.paper;
-	            this.parent() && this.parent().add();
-	            parent && parent.add();
-	        }
-	        return this;
-	    };
-	    /*\
-	     * Element.prependTo
-	     [ method ]
-	     **
-	     * Prepends the current element to the given one
-	     **
-	     - el (Element) parent element to prepend to
-	     = (Element) the child element
-	    \*/
-	    elproto.prependTo = function (el) {
-	        el = wrap(el);
-	        el.prepend(this);
-	        return this;
-	    };
-	    /*\
-	     * Element.before
-	     [ method ]
-	     **
-	     * Inserts given element before the current one
-	     **
-	     - el (Element) element to insert
-	     = (Element) the parent element
-	    \*/
-	    elproto.before = function (el) {
-	        if (el.type == "set") {
-	            var it = this;
-	            el.forEach(function (el) {
-	                var parent = el.parent();
-	                it.node.parentNode.insertBefore(el.node, it.node);
-	                parent && parent.add();
-	            });
-	            this.parent().add();
-	            return this;
-	        }
-	        el = wrap(el);
-	        var parent = el.parent();
-	        this.node.parentNode.insertBefore(el.node, this.node);
-	        this.parent() && this.parent().add();
-	        parent && parent.add();
-	        el.paper = this.paper;
-	        return this;
-	    };
-	    /*\
-	     * Element.after
-	     [ method ]
-	     **
-	     * Inserts given element after the current one
-	     **
-	     - el (Element) element to insert
-	     = (Element) the parent element
-	    \*/
-	    elproto.after = function (el) {
-	        el = wrap(el);
-	        var parent = el.parent();
-	        if (this.node.nextSibling) {
-	            this.node.parentNode.insertBefore(el.node, this.node.nextSibling);
-	        } else {
-	            this.node.parentNode.appendChild(el.node);
-	        }
-	        this.parent() && this.parent().add();
-	        parent && parent.add();
-	        el.paper = this.paper;
-	        return this;
-	    };
-	    /*\
-	     * Element.insertBefore
-	     [ method ]
-	     **
-	     * Inserts the element after the given one
-	     **
-	     - el (Element) element next to whom insert to
-	     = (Element) the parent element
-	    \*/
-	    elproto.insertBefore = function (el) {
-	        el = wrap(el);
-	        var parent = this.parent();
-	        el.node.parentNode.insertBefore(this.node, el.node);
-	        this.paper = el.paper;
-	        parent && parent.add();
-	        el.parent() && el.parent().add();
-	        return this;
-	    };
-	    /*\
-	     * Element.insertAfter
-	     [ method ]
-	     **
-	     * Inserts the element after the given one
-	     **
-	     - el (Element) element next to whom insert to
-	     = (Element) the parent element
-	    \*/
-	    elproto.insertAfter = function (el) {
-	        el = wrap(el);
-	        var parent = this.parent();
-	        el.node.parentNode.insertBefore(this.node, el.node.nextSibling);
-	        this.paper = el.paper;
-	        parent && parent.add();
-	        el.parent() && el.parent().add();
-	        return this;
-	    };
-	    /*\
-	     * Element.remove
-	     [ method ]
-	     **
-	     * Removes element from the DOM
-	     = (Element) the detached element
-	    \*/
-	    elproto.remove = function () {
-	        var parent = this.parent();
-	        this.node.parentNode && this.node.parentNode.removeChild(this.node);
-	        delete this.paper;
-	        this.removed = true;
-	        parent && parent.add();
-	        return this;
-	    };
-	    /*\
-	     * Element.select
-	     [ method ]
-	     **
-	     * Gathers the nested @Element matching the given set of CSS selectors
-	     **
-	     - query (string) CSS selector
-	     = (Element) result of query selection
-	    \*/
-	    elproto.select = function (query) {
-	        query = Str(query).replace(/([^\\]):/g, "$1\\:");
-	        return wrap(this.node.querySelector(query));
-	    };
-	    /*\
-	     * Element.selectAll
-	     [ method ]
-	     **
-	     * Gathers nested @Element objects matching the given set of CSS selectors
-	     **
-	     - query (string) CSS selector
-	     = (Set|array) result of query selection
-	    \*/
-	    elproto.selectAll = function (query) {
-	        var nodelist = this.node.querySelectorAll(query),
-	            set = (Snap.set || Array)();
-	        for (var i = 0; i < nodelist.length; i++) {
-	            set.push(wrap(nodelist[i]));
-	        }
-	        return set;
-	    };
-	    /*\
-	     * Element.asPX
-	     [ method ]
-	     **
-	     * Returns given attribute of the element as a `px` value (not %, em, etc.)
-	     **
-	     - attr (string) attribute name
-	     - value (string) #optional attribute value
-	     = (Element) result of query selection
-	    \*/
-	    elproto.asPX = function (attr, value) {
-	        if (value == null) {
-	            value = this.attr(attr);
-	        }
-	        return +unit2px(this, attr, value);
-	    };
-	    // SIERRA Element.use(): I suggest adding a note about how to access the original element the returned <use> instantiates. It's a part of SVG with which ordinary web developers may be least familiar.
-	    /*\
-	     * Element.use
-	     [ method ]
-	     **
-	     * Creates a `<use>` element linked to the current element
-	     **
-	     = (Element) the `<use>` element
-	    \*/
-	    elproto.use = function () {
-	        var use,
-	            id = this.node.id;
-	        if (!id) {
-	            id = this.id;
-	            $(this.node, {
-	                id: id
-	            });
-	        }
-	        if (this.type == "linearGradient" || this.type == "radialGradient" ||
-	            this.type == "pattern") {
-	            use = make(this.type, this.node.parentNode);
-	        } else {
-	            use = make("use", this.node.parentNode);
-	        }
-	        $(use.node, {
-	            "xlink:href": "#" + id
-	        });
-	        use.original = this;
-	        return use;
-	    };
-	    function fixids(el) {
-	        var els = el.selectAll("*"),
-	            it,
-	            url = /^\s*url\(("|'|)(.*)\1\)\s*$/,
-	            ids = [],
-	            uses = {};
-	        function urltest(it, name) {
-	            var val = $(it.node, name);
-	            val = val && val.match(url);
-	            val = val && val[2];
-	            if (val && val.charAt() == "#") {
-	                val = val.substring(1);
-	            } else {
-	                return;
-	            }
-	            if (val) {
-	                uses[val] = (uses[val] || []).concat(function (id) {
-	                    var attr = {};
-	                    attr[name] = URL(id);
-	                    $(it.node, attr);
-	                });
-	            }
-	        }
-	        function linktest(it) {
-	            var val = $(it.node, "xlink:href");
-	            if (val && val.charAt() == "#") {
-	                val = val.substring(1);
-	            } else {
-	                return;
-	            }
-	            if (val) {
-	                uses[val] = (uses[val] || []).concat(function (id) {
-	                    it.attr("xlink:href", "#" + id);
-	                });
-	            }
-	        }
-	        for (var i = 0, ii = els.length; i < ii; i++) {
-	            it = els[i];
-	            urltest(it, "fill");
-	            urltest(it, "stroke");
-	            urltest(it, "filter");
-	            urltest(it, "mask");
-	            urltest(it, "clip-path");
-	            linktest(it);
-	            var oldid = $(it.node, "id");
-	            if (oldid) {
-	                $(it.node, {id: it.id});
-	                ids.push({
-	                    old: oldid,
-	                    id: it.id
-	                });
-	            }
-	        }
-	        for (i = 0, ii = ids.length; i < ii; i++) {
-	            var fs = uses[ids[i].old];
-	            if (fs) {
-	                for (var j = 0, jj = fs.length; j < jj; j++) {
-	                    fs[j](ids[i].id);
-	                }
-	            }
-	        }
-	    }
-	    /*\
-	     * Element.clone
-	     [ method ]
-	     **
-	     * Creates a clone of the element and inserts it after the element
-	     **
-	     = (Element) the clone
-	    \*/
-	    elproto.clone = function () {
-	        var clone = wrap(this.node.cloneNode(true));
-	        if ($(clone.node, "id")) {
-	            $(clone.node, {id: clone.id});
-	        }
-	        fixids(clone);
-	        clone.insertAfter(this);
-	        return clone;
-	    };
-	    /*\
-	     * Element.toDefs
-	     [ method ]
-	     **
-	     * Moves element to the shared `<defs>` area
-	     **
-	     = (Element) the element
-	    \*/
-	    elproto.toDefs = function () {
-	        var defs = getSomeDefs(this);
-	        defs.appendChild(this.node);
-	        return this;
-	    };
-	    /*\
-	     * Element.toPattern
-	     [ method ]
-	     **
-	     * Creates a `<pattern>` element from the current element
-	     **
-	     * To create a pattern you have to specify the pattern rect:
-	     - x (string|number)
-	     - y (string|number)
-	     - width (string|number)
-	     - height (string|number)
-	     = (Element) the `<pattern>` element
-	     * You can use pattern later on as an argument for `fill` attribute:
-	     | var p = paper.path("M10-5-10,15M15,0,0,15M0-5-20,15").attr({
-	     |         fill: "none",
-	     |         stroke: "#bada55",
-	     |         strokeWidth: 5
-	     |     }).pattern(0, 0, 10, 10),
-	     |     c = paper.circle(200, 200, 100);
-	     | c.attr({
-	     |     fill: p
-	     | });
-	    \*/
-	    elproto.pattern = elproto.toPattern = function (x, y, width, height) {
-	        var p = make("pattern", getSomeDefs(this));
-	        if (x == null) {
-	            x = this.getBBox();
-	        }
-	        if (is(x, "object") && "x" in x) {
-	            y = x.y;
-	            width = x.width;
-	            height = x.height;
-	            x = x.x;
-	        }
-	        $(p.node, {
-	            x: x,
-	            y: y,
-	            width: width,
-	            height: height,
-	            patternUnits: "userSpaceOnUse",
-	            id: p.id,
-	            viewBox: [x, y, width, height].join(" ")
-	        });
-	        p.node.appendChild(this.node);
-	        return p;
-	    };
-	// SIERRA Element.marker(): clarify what a reference point is. E.g., helps you offset the object from its edge such as when centering it over a path.
-	// SIERRA Element.marker(): I suggest the method should accept default reference point values.  Perhaps centered with (refX = width/2) and (refY = height/2)? Also, couldn't it assume the element's current _width_ and _height_? And please specify what _x_ and _y_ mean: offsets? If so, from where?  Couldn't they also be assigned default values?
-	    /*\
-	     * Element.marker
-	     [ method ]
-	     **
-	     * Creates a `<marker>` element from the current element
-	     **
-	     * To create a marker you have to specify the bounding rect and reference point:
-	     - x (number)
-	     - y (number)
-	     - width (number)
-	     - height (number)
-	     - refX (number)
-	     - refY (number)
-	     = (Element) the `<marker>` element
-	     * You can specify the marker later as an argument for `marker-start`, `marker-end`, `marker-mid`, and `marker` attributes. The `marker` attribute places the marker at every point along the path, and `marker-mid` places them at every point except the start and end.
-	    \*/
-	    // TODO add usage for markers
-	    elproto.marker = function (x, y, width, height, refX, refY) {
-	        var p = make("marker", getSomeDefs(this));
-	        if (x == null) {
-	            x = this.getBBox();
-	        }
-	        if (is(x, "object") && "x" in x) {
-	            y = x.y;
-	            width = x.width;
-	            height = x.height;
-	            refX = x.refX || x.cx;
-	            refY = x.refY || x.cy;
-	            x = x.x;
-	        }
-	        $(p.node, {
-	            viewBox: [x, y, width, height].join(" "),
-	            markerWidth: width,
-	            markerHeight: height,
-	            orient: "auto",
-	            refX: refX || 0,
-	            refY: refY || 0,
-	            id: p.id
-	        });
-	        p.node.appendChild(this.node);
-	        return p;
-	    };
-	    // animation
-	    function slice(from, to, f) {
-	        return function (arr) {
-	            var res = arr.slice(from, to);
-	            if (res.length == 1) {
-	                res = res[0];
-	            }
-	            return f ? f(res) : res;
-	        };
-	    }
-	    var Animation = function (attr, ms, easing, callback) {
-	        if (typeof easing == "function" && !easing.length) {
-	            callback = easing;
-	            easing = mina.linear;
-	        }
-	        this.attr = attr;
-	        this.dur = ms;
-	        easing && (this.easing = easing);
-	        callback && (this.callback = callback);
-	    };
-	    Snap._.Animation = Animation;
-	    /*\
-	     * Snap.animation
-	     [ method ]
-	     **
-	     * Creates an animation object
-	     **
-	     - attr (object) attributes of final destination
-	     - duration (number) duration of the animation, in milliseconds
-	     - easing (function) #optional one of easing functions of @mina or custom one
-	     - callback (function) #optional callback function that fires when animation ends
-	     = (object) animation object
-	    \*/
-	    Snap.animation = function (attr, ms, easing, callback) {
-	        return new Animation(attr, ms, easing, callback);
-	    };
-	    /*\
-	     * Element.inAnim
-	     [ method ]
-	     **
-	     * Returns a set of animations that may be able to manipulate the current element
-	     **
-	     = (object) in format:
-	     o {
-	     o     anim (object) animation object,
-	     o     mina (object) @mina object,
-	     o     curStatus (number) 0..1 — status of the animation: 0 — just started, 1 — just finished,
-	     o     status (function) gets or sets the status of the animation,
-	     o     stop (function) stops the animation
-	     o }
-	    \*/
-	    elproto.inAnim = function () {
-	        var el = this,
-	            res = [];
-	        for (var id in el.anims) if (el.anims[has](id)) {
-	            (function (a) {
-	                res.push({
-	                    anim: new Animation(a._attrs, a.dur, a.easing, a._callback),
-	                    mina: a,
-	                    curStatus: a.status(),
-	                    status: function (val) {
-	                        return a.status(val);
-	                    },
-	                    stop: function () {
-	                        a.stop();
-	                    }
-	                });
-	            }(el.anims[id]));
-	        }
-	        return res;
-	    };
-	    /*\
-	     * Snap.animate
-	     [ method ]
-	     **
-	     * Runs generic animation of one number into another with a caring function
-	     **
-	     - from (number|array) number or array of numbers
-	     - to (number|array) number or array of numbers
-	     - setter (function) caring function that accepts one number argument
-	     - duration (number) duration, in milliseconds
-	     - easing (function) #optional easing function from @mina or custom
-	     - callback (function) #optional callback function to execute when animation ends
-	     = (object) animation object in @mina format
-	     o {
-	     o     id (string) animation id, consider it read-only,
-	     o     duration (function) gets or sets the duration of the animation,
-	     o     easing (function) easing,
-	     o     speed (function) gets or sets the speed of the animation,
-	     o     status (function) gets or sets the status of the animation,
-	     o     stop (function) stops the animation
-	     o }
-	     | var rect = Snap().rect(0, 0, 10, 10);
-	     | Snap.animate(0, 10, function (val) {
-	     |     rect.attr({
-	     |         x: val
-	     |     });
-	     | }, 1000);
-	     | // in given context is equivalent to
-	     | rect.animate({x: 10}, 1000);
-	    \*/
-	    Snap.animate = function (from, to, setter, ms, easing, callback) {
-	        if (typeof easing == "function" && !easing.length) {
-	            callback = easing;
-	            easing = mina.linear;
-	        }
-	        var now = mina.time(),
-	            anim = mina(from, to, now, now + ms, mina.time, setter, easing);
-	        callback && eve.once("mina.finish." + anim.id, callback);
-	        return anim;
-	    };
-	    /*\
-	     * Element.stop
-	     [ method ]
-	     **
-	     * Stops all the animations for the current element
-	     **
-	     = (Element) the current element
-	    \*/
-	    elproto.stop = function () {
-	        var anims = this.inAnim();
-	        for (var i = 0, ii = anims.length; i < ii; i++) {
-	            anims[i].stop();
-	        }
-	        return this;
-	    };
-	    /*\
-	     * Element.animate
-	     [ method ]
-	     **
-	     * Animates the given attributes of the element
-	     **
-	     - attrs (object) key-value pairs of destination attributes
-	     - duration (number) duration of the animation in milliseconds
-	     - easing (function) #optional easing function from @mina or custom
-	     - callback (function) #optional callback function that executes when the animation ends
-	     = (Element) the current element
-	    \*/
-	    elproto.animate = function (attrs, ms, easing, callback) {
-	        if (typeof easing == "function" && !easing.length) {
-	            callback = easing;
-	            easing = mina.linear;
-	        }
-	        if (attrs instanceof Animation) {
-	            callback = attrs.callback;
-	            easing = attrs.easing;
-	            ms = easing.dur;
-	            attrs = attrs.attr;
-	        }
-	        var fkeys = [], tkeys = [], keys = {}, from, to, f, eq,
-	            el = this;
-	        for (var key in attrs) if (attrs[has](key)) {
-	            if (el.equal) {
-	                eq = el.equal(key, Str(attrs[key]));
-	                from = eq.from;
-	                to = eq.to;
-	                f = eq.f;
-	            } else {
-	                from = +el.attr(key);
-	                to = +attrs[key];
-	            }
-	            var len = is(from, "array") ? from.length : 1;
-	            keys[key] = slice(fkeys.length, fkeys.length + len, f);
-	            fkeys = fkeys.concat(from);
-	            tkeys = tkeys.concat(to);
-	        }
-	        var now = mina.time(),
-	            anim = mina(fkeys, tkeys, now, now + ms, mina.time, function (val) {
-	                var attr = {};
-	                for (var key in keys) if (keys[has](key)) {
-	                    attr[key] = keys[key](val);
-	                }
-	                el.attr(attr);
-	            }, easing);
-	        el.anims[anim.id] = anim;
-	        anim._attrs = attrs;
-	        anim._callback = callback;
-	        eve("snap.animcreated." + el.id, anim);
-	        eve.once("mina.finish." + anim.id, function () {
-	            delete el.anims[anim.id];
-	            callback && callback.call(el);
-	        });
-	        eve.once("mina.stop." + anim.id, function () {
-	            delete el.anims[anim.id];
-	        });
-	        return el;
-	    };
-	    var eldata = {};
-	    /*\
-	     * Element.data
-	     [ method ]
-	     **
-	     * Adds or retrieves given value associated with given key. (Don’t confuse
-	     * with `data-` attributes)
-	     *
-	     * See also @Element.removeData
-	     - key (string) key to store data
-	     - value (any) #optional value to store
-	     = (object) @Element
-	     * or, if value is not specified:
-	     = (any) value
-	     > Usage
-	     | for (var i = 0, i < 5, i++) {
-	     |     paper.circle(10 + 15 * i, 10, 10)
-	     |          .attr({fill: "#000"})
-	     |          .data("i", i)
-	     |          .click(function () {
-	     |             alert(this.data("i"));
-	     |          });
-	     | }
-	    \*/
-	    elproto.data = function (key, value) {
-	        var data = eldata[this.id] = eldata[this.id] || {};
-	        if (arguments.length == 0){
-	            eve("snap.data.get." + this.id, this, data, null);
-	            return data;
-	        }
-	        if (arguments.length == 1) {
-	            if (Snap.is(key, "object")) {
-	                for (var i in key) if (key[has](i)) {
-	                    this.data(i, key[i]);
-	                }
-	                return this;
-	            }
-	            eve("snap.data.get." + this.id, this, data[key], key);
-	            return data[key];
-	        }
-	        data[key] = value;
-	        eve("snap.data.set." + this.id, this, value, key);
-	        return this;
-	    };
-	    /*\
-	     * Element.removeData
-	     [ method ]
-	     **
-	     * Removes value associated with an element by given key.
-	     * If key is not provided, removes all the data of the element.
-	     - key (string) #optional key
-	     = (object) @Element
-	    \*/
-	    elproto.removeData = function (key) {
-	        if (key == null) {
-	            eldata[this.id] = {};
-	        } else {
-	            eldata[this.id] && delete eldata[this.id][key];
-	        }
-	        return this;
-	    };
-	    /*\
-	     * Element.outerSVG
-	     [ method ]
-	     **
-	     * Returns SVG code for the element, equivalent to HTML's `outerHTML`.
-	     *
-	     * See also @Element.innerSVG
-	     = (string) SVG code for the element
-	    \*/
-	    /*\
-	     * Element.toString
-	     [ method ]
-	     **
-	     * See @Element.outerSVG
-	    \*/
-	    elproto.outerSVG = elproto.toString = toString(1);
-	    /*\
-	     * Element.innerSVG
-	     [ method ]
-	     **
-	     * Returns SVG code for the element's contents, equivalent to HTML's `innerHTML`
-	     = (string) SVG code for the element
-	    \*/
-	    elproto.innerSVG = toString();
-	    function toString(type) {
-	        return function () {
-	            var res = type ? "<" + this.type : "",
-	                attr = this.node.attributes,
-	                chld = this.node.childNodes;
-	            if (type) {
-	                for (var i = 0, ii = attr.length; i < ii; i++) {
-	                    res += " " + attr[i].name + '="' +
-	                            attr[i].value.replace(/"/g, '\\"') + '"';
-	                }
-	            }
-	            if (chld.length) {
-	                type && (res += ">");
-	                for (i = 0, ii = chld.length; i < ii; i++) {
-	                    if (chld[i].nodeType == 3) {
-	                        res += chld[i].nodeValue;
-	                    } else if (chld[i].nodeType == 1) {
-	                        res += wrap(chld[i]).toString();
-	                    }
-	                }
-	                type && (res += "</" + this.type + ">");
-	            } else {
-	                type && (res += "/>");
-	            }
-	            return res;
-	        };
-	    }
-	    elproto.toDataURL = function () {
-	        if (window && window.btoa) {
-	            var bb = this.getBBox(),
-	                svg = Snap.format('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{width}" height="{height}" viewBox="{x} {y} {width} {height}">{contents}</svg>', {
-	                x: +bb.x.toFixed(3),
-	                y: +bb.y.toFixed(3),
-	                width: +bb.width.toFixed(3),
-	                height: +bb.height.toFixed(3),
-	                contents: this.outerSVG()
-	            });
-	            return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svg)));
-	        }
-	    };
-	    /*\
-	     * Fragment.select
-	     [ method ]
-	     **
-	     * See @Element.select
-	    \*/
-	    Fragment.prototype.select = elproto.select;
-	    /*\
-	     * Fragment.selectAll
-	     [ method ]
-	     **
-	     * See @Element.selectAll
-	    \*/
-	    Fragment.prototype.selectAll = elproto.selectAll;
-	});
-
-	// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	// 
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	// 
-	// http://www.apache.org/licenses/LICENSE-2.0
-	// 
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	Snap.plugin(function (Snap, Element, Paper, glob, Fragment) {
-	    var objectToString = Object.prototype.toString,
-	        Str = String,
-	        math = Math,
-	        E = "";
-	    function Matrix(a, b, c, d, e, f) {
-	        if (b == null && objectToString.call(a) == "[object SVGMatrix]") {
-	            this.a = a.a;
-	            this.b = a.b;
-	            this.c = a.c;
-	            this.d = a.d;
-	            this.e = a.e;
-	            this.f = a.f;
-	            return;
-	        }
-	        if (a != null) {
-	            this.a = +a;
-	            this.b = +b;
-	            this.c = +c;
-	            this.d = +d;
-	            this.e = +e;
-	            this.f = +f;
-	        } else {
-	            this.a = 1;
-	            this.b = 0;
-	            this.c = 0;
-	            this.d = 1;
-	            this.e = 0;
-	            this.f = 0;
-	        }
-	    }
-	    (function (matrixproto) {
-	        /*\
-	         * Matrix.add
-	         [ method ]
-	         **
-	         * Adds the given matrix to existing one
-	         - a (number)
-	         - b (number)
-	         - c (number)
-	         - d (number)
-	         - e (number)
-	         - f (number)
-	         * or
-	         - matrix (object) @Matrix
-	        \*/
-	        matrixproto.add = function (a, b, c, d, e, f) {
-	            var out = [[], [], []],
-	                m = [[this.a, this.c, this.e], [this.b, this.d, this.f], [0, 0, 1]],
-	                matrix = [[a, c, e], [b, d, f], [0, 0, 1]],
-	                x, y, z, res;
-
-	            if (a && a instanceof Matrix) {
-	                matrix = [[a.a, a.c, a.e], [a.b, a.d, a.f], [0, 0, 1]];
-	            }
-
-	            for (x = 0; x < 3; x++) {
-	                for (y = 0; y < 3; y++) {
-	                    res = 0;
-	                    for (z = 0; z < 3; z++) {
-	                        res += m[x][z] * matrix[z][y];
-	                    }
-	                    out[x][y] = res;
-	                }
-	            }
-	            this.a = out[0][0];
-	            this.b = out[1][0];
-	            this.c = out[0][1];
-	            this.d = out[1][1];
-	            this.e = out[0][2];
-	            this.f = out[1][2];
-	            return this;
-	        };
-	        /*\
-	         * Matrix.invert
-	         [ method ]
-	         **
-	         * Returns an inverted version of the matrix
-	         = (object) @Matrix
-	        \*/
-	        matrixproto.invert = function () {
-	            var me = this,
-	                x = me.a * me.d - me.b * me.c;
-	            return new Matrix(me.d / x, -me.b / x, -me.c / x, me.a / x, (me.c * me.f - me.d * me.e) / x, (me.b * me.e - me.a * me.f) / x);
-	        };
-	        /*\
-	         * Matrix.clone
-	         [ method ]
-	         **
-	         * Returns a copy of the matrix
-	         = (object) @Matrix
-	        \*/
-	        matrixproto.clone = function () {
-	            return new Matrix(this.a, this.b, this.c, this.d, this.e, this.f);
-	        };
-	        /*\
-	         * Matrix.translate
-	         [ method ]
-	         **
-	         * Translate the matrix
-	         - x (number) horizontal offset distance
-	         - y (number) vertical offset distance
-	        \*/
-	        matrixproto.translate = function (x, y) {
-	            return this.add(1, 0, 0, 1, x, y);
-	        };
-	        /*\
-	         * Matrix.scale
-	         [ method ]
-	         **
-	         * Scales the matrix
-	         - x (number) amount to be scaled, with `1` resulting in no change
-	         - y (number) #optional amount to scale along the vertical axis. (Otherwise `x` applies to both axes.)
-	         - cx (number) #optional horizontal origin point from which to scale
-	         - cy (number) #optional vertical origin point from which to scale
-	         * Default cx, cy is the middle point of the element.
-	        \*/
-	        matrixproto.scale = function (x, y, cx, cy) {
-	            y == null && (y = x);
-	            (cx || cy) && this.add(1, 0, 0, 1, cx, cy);
-	            this.add(x, 0, 0, y, 0, 0);
-	            (cx || cy) && this.add(1, 0, 0, 1, -cx, -cy);
-	            return this;
-	        };
-	        /*\
-	         * Matrix.rotate
-	         [ method ]
-	         **
-	         * Rotates the matrix
-	         - a (number) angle of rotation, in degrees
-	         - x (number) horizontal origin point from which to rotate
-	         - y (number) vertical origin point from which to rotate
-	        \*/
-	        matrixproto.rotate = function (a, x, y) {
-	            a = Snap.rad(a);
-	            x = x || 0;
-	            y = y || 0;
-	            var cos = +math.cos(a).toFixed(9),
-	                sin = +math.sin(a).toFixed(9);
-	            this.add(cos, sin, -sin, cos, x, y);
-	            return this.add(1, 0, 0, 1, -x, -y);
-	        };
-	        /*\
-	         * Matrix.x
-	         [ method ]
-	         **
-	         * Returns x coordinate for given point after transformation described by the matrix. See also @Matrix.y
-	         - x (number)
-	         - y (number)
-	         = (number) x
-	        \*/
-	        matrixproto.x = function (x, y) {
-	            return x * this.a + y * this.c + this.e;
-	        };
-	        /*\
-	         * Matrix.y
-	         [ method ]
-	         **
-	         * Returns y coordinate for given point after transformation described by the matrix. See also @Matrix.x
-	         - x (number)
-	         - y (number)
-	         = (number) y
-	        \*/
-	        matrixproto.y = function (x, y) {
-	            return x * this.b + y * this.d + this.f;
-	        };
-	        matrixproto.get = function (i) {
-	            return +this[Str.fromCharCode(97 + i)].toFixed(4);
-	        };
-	        matrixproto.toString = function () {
-	            return "matrix(" + [this.get(0), this.get(1), this.get(2), this.get(3), this.get(4), this.get(5)].join() + ")";
-	        };
-	        matrixproto.offset = function () {
-	            return [this.e.toFixed(4), this.f.toFixed(4)];
-	        };
-	        function norm(a) {
-	            return a[0] * a[0] + a[1] * a[1];
-	        }
-	        function normalize(a) {
-	            var mag = math.sqrt(norm(a));
-	            a[0] && (a[0] /= mag);
-	            a[1] && (a[1] /= mag);
-	        }
-	        /*\
-	         * Matrix.determinant
-	         [ method ]
-	         **
-	         * Finds determinant of the given matrix.
-	         = (number) determinant
-	        \*/
-	        matrixproto.determinant = function () {
-	            return this.a * this.d - this.b * this.c;
-	        };
-	        /*\
-	         * Matrix.split
-	         [ method ]
-	         **
-	         * Splits matrix into primitive transformations
-	         = (object) in format:
-	         o dx (number) translation by x
-	         o dy (number) translation by y
-	         o scalex (number) scale by x
-	         o scaley (number) scale by y
-	         o shear (number) shear
-	         o rotate (number) rotation in deg
-	         o isSimple (boolean) could it be represented via simple transformations
-	        \*/
-	        matrixproto.split = function () {
-	            var out = {};
-	            // translation
-	            out.dx = this.e;
-	            out.dy = this.f;
-
-	            // scale and shear
-	            var row = [[this.a, this.c], [this.b, this.d]];
-	            out.scalex = math.sqrt(norm(row[0]));
-	            normalize(row[0]);
-
-	            out.shear = row[0][0] * row[1][0] + row[0][1] * row[1][1];
-	            row[1] = [row[1][0] - row[0][0] * out.shear, row[1][1] - row[0][1] * out.shear];
-
-	            out.scaley = math.sqrt(norm(row[1]));
-	            normalize(row[1]);
-	            out.shear /= out.scaley;
-
-	            if (this.determinant() < 0) {
-	                out.scalex = -out.scalex;
-	            }
-
-	            // rotation
-	            var sin = -row[0][1],
-	                cos = row[1][1];
-	            if (cos < 0) {
-	                out.rotate = Snap.deg(math.acos(cos));
-	                if (sin < 0) {
-	                    out.rotate = 360 - out.rotate;
-	                }
-	            } else {
-	                out.rotate = Snap.deg(math.asin(sin));
-	            }
-
-	            out.isSimple = !+out.shear.toFixed(9) && (out.scalex.toFixed(9) == out.scaley.toFixed(9) || !out.rotate);
-	            out.isSuperSimple = !+out.shear.toFixed(9) && out.scalex.toFixed(9) == out.scaley.toFixed(9) && !out.rotate;
-	            out.noRotation = !+out.shear.toFixed(9) && !out.rotate;
-	            return out;
-	        };
-	        /*\
-	         * Matrix.toTransformString
-	         [ method ]
-	         **
-	         * Returns transform string that represents given matrix
-	         = (string) transform string
-	        \*/
-	        matrixproto.toTransformString = function (shorter) {
-	            var s = shorter || this.split();
-	            if (!+s.shear.toFixed(9)) {
-	                s.scalex = +s.scalex.toFixed(4);
-	                s.scaley = +s.scaley.toFixed(4);
-	                s.rotate = +s.rotate.toFixed(4);
-	                return  (s.dx || s.dy ? "t" + [+s.dx.toFixed(4), +s.dy.toFixed(4)] : E) + 
-	                        (s.scalex != 1 || s.scaley != 1 ? "s" + [s.scalex, s.scaley, 0, 0] : E) +
-	                        (s.rotate ? "r" + [+s.rotate.toFixed(4), 0, 0] : E);
-	            } else {
-	                return "m" + [this.get(0), this.get(1), this.get(2), this.get(3), this.get(4), this.get(5)];
-	            }
-	        };
-	    })(Matrix.prototype);
-	    /*\
-	     * Snap.Matrix
-	     [ method ]
-	     **
-	     * Matrix constructor, extend on your own risk.
-	     * To create matrices use @Snap.matrix.
-	    \*/
-	    Snap.Matrix = Matrix;
-	    /*\
-	     * Snap.matrix
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Returns a matrix based on the given parameters
-	     - a (number)
-	     - b (number)
-	     - c (number)
-	     - d (number)
-	     - e (number)
-	     - f (number)
-	     * or
-	     - svgMatrix (SVGMatrix)
-	     = (object) @Matrix
-	    \*/
-	    Snap.matrix = function (a, b, c, d, e, f) {
-	        return new Matrix(a, b, c, d, e, f);
-	    };
-	});
-	// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	// 
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	// 
-	// http://www.apache.org/licenses/LICENSE-2.0
-	// 
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	Snap.plugin(function (Snap, Element, Paper, glob, Fragment) {
-	    var has = "hasOwnProperty",
-	        make = Snap._.make,
-	        wrap = Snap._.wrap,
-	        is = Snap.is,
-	        getSomeDefs = Snap._.getSomeDefs,
-	        reURLValue = /^url\(#?([^)]+)\)$/,
-	        $ = Snap._.$,
-	        URL = Snap.url,
-	        Str = String,
-	        separator = Snap._.separator,
-	        E = "";
-	    // Attributes event handlers
-	    eve.on("snap.util.attr.mask", function (value) {
-	        if (value instanceof Element || value instanceof Fragment) {
-	            eve.stop();
-	            if (value instanceof Fragment && value.node.childNodes.length == 1) {
-	                value = value.node.firstChild;
-	                getSomeDefs(this).appendChild(value);
-	                value = wrap(value);
-	            }
-	            if (value.type == "mask") {
-	                var mask = value;
-	            } else {
-	                mask = make("mask", getSomeDefs(this));
-	                mask.node.appendChild(value.node);
-	            }
-	            !mask.node.id && $(mask.node, {
-	                id: mask.id
-	            });
-	            $(this.node, {
-	                mask: URL(mask.id)
-	            });
-	        }
-	    });
-	    (function (clipIt) {
-	        eve.on("snap.util.attr.clip", clipIt);
-	        eve.on("snap.util.attr.clip-path", clipIt);
-	        eve.on("snap.util.attr.clipPath", clipIt);
-	    }(function (value) {
-	        if (value instanceof Element || value instanceof Fragment) {
-	            eve.stop();
-	            if (value.type == "clipPath") {
-	                var clip = value;
-	            } else {
-	                clip = make("clipPath", getSomeDefs(this));
-	                clip.node.appendChild(value.node);
-	                !clip.node.id && $(clip.node, {
-	                    id: clip.id
-	                });
-	            }
-	            $(this.node, {
-	                "clip-path": URL(clip.node.id || clip.id)
-	            });
-	        }
-	    }));
-	    function fillStroke(name) {
-	        return function (value) {
-	            eve.stop();
-	            if (value instanceof Fragment && value.node.childNodes.length == 1 &&
-	                (value.node.firstChild.tagName == "radialGradient" ||
-	                value.node.firstChild.tagName == "linearGradient" ||
-	                value.node.firstChild.tagName == "pattern")) {
-	                value = value.node.firstChild;
-	                getSomeDefs(this).appendChild(value);
-	                value = wrap(value);
-	            }
-	            if (value instanceof Element) {
-	                if (value.type == "radialGradient" || value.type == "linearGradient"
-	                   || value.type == "pattern") {
-	                    if (!value.node.id) {
-	                        $(value.node, {
-	                            id: value.id
-	                        });
-	                    }
-	                    var fill = URL(value.node.id);
-	                } else {
-	                    fill = value.attr(name);
-	                }
-	            } else {
-	                fill = Snap.color(value);
-	                if (fill.error) {
-	                    var grad = Snap(getSomeDefs(this).ownerSVGElement).gradient(value);
-	                    if (grad) {
-	                        if (!grad.node.id) {
-	                            $(grad.node, {
-	                                id: grad.id
-	                            });
-	                        }
-	                        fill = URL(grad.node.id);
-	                    } else {
-	                        fill = value;
-	                    }
-	                } else {
-	                    fill = Str(fill);
-	                }
-	            }
-	            var attrs = {};
-	            attrs[name] = fill;
-	            $(this.node, attrs);
-	            this.node.style[name] = E;
-	        };
-	    }
-	    eve.on("snap.util.attr.fill", fillStroke("fill"));
-	    eve.on("snap.util.attr.stroke", fillStroke("stroke"));
-	    var gradrg = /^([lr])(?:\(([^)]*)\))?(.*)$/i;
-	    eve.on("snap.util.grad.parse", function parseGrad(string) {
-	        string = Str(string);
-	        var tokens = string.match(gradrg);
-	        if (!tokens) {
-	            return null;
-	        }
-	        var type = tokens[1],
-	            params = tokens[2],
-	            stops = tokens[3];
-	        params = params.split(/\s*,\s*/).map(function (el) {
-	            return +el == el ? +el : el;
-	        });
-	        if (params.length == 1 && params[0] == 0) {
-	            params = [];
-	        }
-	        stops = stops.split("-");
-	        stops = stops.map(function (el) {
-	            el = el.split(":");
-	            var out = {
-	                color: el[0]
-	            };
-	            if (el[1]) {
-	                out.offset = parseFloat(el[1]);
-	            }
-	            return out;
-	        });
-	        return {
-	            type: type,
-	            params: params,
-	            stops: stops
-	        };
-	    });
-
-	    eve.on("snap.util.attr.d", function (value) {
-	        eve.stop();
-	        if (is(value, "array") && is(value[0], "array")) {
-	            value = Snap.path.toString.call(value);
-	        }
-	        value = Str(value);
-	        if (value.match(/[ruo]/i)) {
-	            value = Snap.path.toAbsolute(value);
-	        }
-	        $(this.node, {d: value});
-	    })(-1);
-	    eve.on("snap.util.attr.#text", function (value) {
-	        eve.stop();
-	        value = Str(value);
-	        var txt = glob.doc.createTextNode(value);
-	        while (this.node.firstChild) {
-	            this.node.removeChild(this.node.firstChild);
-	        }
-	        this.node.appendChild(txt);
-	    })(-1);
-	    eve.on("snap.util.attr.path", function (value) {
-	        eve.stop();
-	        this.attr({d: value});
-	    })(-1);
-	    eve.on("snap.util.attr.class", function (value) {
-	        eve.stop();
-	        this.node.className.baseVal = value;
-	    })(-1);
-	    eve.on("snap.util.attr.viewBox", function (value) {
-	        var vb;
-	        if (is(value, "object") && "x" in value) {
-	            vb = [value.x, value.y, value.width, value.height].join(" ");
-	        } else if (is(value, "array")) {
-	            vb = value.join(" ");
-	        } else {
-	            vb = value;
-	        }
-	        $(this.node, {
-	            viewBox: vb
-	        });
-	        eve.stop();
-	    })(-1);
-	    eve.on("snap.util.attr.transform", function (value) {
-	        this.transform(value);
-	        eve.stop();
-	    })(-1);
-	    eve.on("snap.util.attr.r", function (value) {
-	        if (this.type == "rect") {
-	            eve.stop();
-	            $(this.node, {
-	                rx: value,
-	                ry: value
-	            });
-	        }
-	    })(-1);
-	    eve.on("snap.util.attr.textpath", function (value) {
-	        eve.stop();
-	        if (this.type == "text") {
-	            var id, tp, node;
-	            if (!value && this.textPath) {
-	                tp = this.textPath;
-	                while (tp.node.firstChild) {
-	                    this.node.appendChild(tp.node.firstChild);
-	                }
-	                tp.remove();
-	                delete this.textPath;
-	                return;
-	            }
-	            if (is(value, "string")) {
-	                var defs = getSomeDefs(this),
-	                    path = wrap(defs.parentNode).path(value);
-	                defs.appendChild(path.node);
-	                id = path.id;
-	                path.attr({id: id});
-	            } else {
-	                value = wrap(value);
-	                if (value instanceof Element) {
-	                    id = value.attr("id");
-	                    if (!id) {
-	                        id = value.id;
-	                        value.attr({id: id});
-	                    }
-	                }
-	            }
-	            if (id) {
-	                tp = this.textPath;
-	                node = this.node;
-	                if (tp) {
-	                    tp.attr({"xlink:href": "#" + id});
-	                } else {
-	                    tp = $("textPath", {
-	                        "xlink:href": "#" + id
-	                    });
-	                    while (node.firstChild) {
-	                        tp.appendChild(node.firstChild);
-	                    }
-	                    node.appendChild(tp);
-	                    this.textPath = wrap(tp);
-	                }
-	            }
-	        }
-	    })(-1);
-	    eve.on("snap.util.attr.text", function (value) {
-	        if (this.type == "text") {
-	            var i = 0,
-	                node = this.node,
-	                tuner = function (chunk) {
-	                    var out = $("tspan");
-	                    if (is(chunk, "array")) {
-	                        for (var i = 0; i < chunk.length; i++) {
-	                            out.appendChild(tuner(chunk[i]));
-	                        }
-	                    } else {
-	                        out.appendChild(glob.doc.createTextNode(chunk));
-	                    }
-	                    out.normalize && out.normalize();
-	                    return out;
-	                };
-	            while (node.firstChild) {
-	                node.removeChild(node.firstChild);
-	            }
-	            var tuned = tuner(value);
-	            while (tuned.firstChild) {
-	                node.appendChild(tuned.firstChild);
-	            }
-	        }
-	        eve.stop();
-	    })(-1);
-	    function setFontSize(value) {
-	        eve.stop();
-	        if (value == +value) {
-	            value += "px";
-	        }
-	        this.node.style.fontSize = value;
-	    }
-	    eve.on("snap.util.attr.fontSize", setFontSize)(-1);
-	    eve.on("snap.util.attr.font-size", setFontSize)(-1);
-
-
-	    eve.on("snap.util.getattr.transform", function () {
-	        eve.stop();
-	        return this.transform();
-	    })(-1);
-	    eve.on("snap.util.getattr.textpath", function () {
-	        eve.stop();
-	        return this.textPath;
-	    })(-1);
-	    // Markers
-	    (function () {
-	        function getter(end) {
-	            return function () {
-	                eve.stop();
-	                var style = glob.doc.defaultView.getComputedStyle(this.node, null).getPropertyValue("marker-" + end);
-	                if (style == "none") {
-	                    return style;
-	                } else {
-	                    return Snap(glob.doc.getElementById(style.match(reURLValue)[1]));
-	                }
-	            };
-	        }
-	        function setter(end) {
-	            return function (value) {
-	                eve.stop();
-	                var name = "marker" + end.charAt(0).toUpperCase() + end.substring(1);
-	                if (value == "" || !value) {
-	                    this.node.style[name] = "none";
-	                    return;
-	                }
-	                if (value.type == "marker") {
-	                    var id = value.node.id;
-	                    if (!id) {
-	                        $(value.node, {id: value.id});
-	                    }
-	                    this.node.style[name] = URL(id);
-	                    return;
-	                }
-	            };
-	        }
-	        eve.on("snap.util.getattr.marker-end", getter("end"))(-1);
-	        eve.on("snap.util.getattr.markerEnd", getter("end"))(-1);
-	        eve.on("snap.util.getattr.marker-start", getter("start"))(-1);
-	        eve.on("snap.util.getattr.markerStart", getter("start"))(-1);
-	        eve.on("snap.util.getattr.marker-mid", getter("mid"))(-1);
-	        eve.on("snap.util.getattr.markerMid", getter("mid"))(-1);
-	        eve.on("snap.util.attr.marker-end", setter("end"))(-1);
-	        eve.on("snap.util.attr.markerEnd", setter("end"))(-1);
-	        eve.on("snap.util.attr.marker-start", setter("start"))(-1);
-	        eve.on("snap.util.attr.markerStart", setter("start"))(-1);
-	        eve.on("snap.util.attr.marker-mid", setter("mid"))(-1);
-	        eve.on("snap.util.attr.markerMid", setter("mid"))(-1);
-	    }());
-	    eve.on("snap.util.getattr.r", function () {
-	        if (this.type == "rect" && $(this.node, "rx") == $(this.node, "ry")) {
-	            eve.stop();
-	            return $(this.node, "rx");
-	        }
-	    })(-1);
-	    function textExtract(node) {
-	        var out = [];
-	        var children = node.childNodes;
-	        for (var i = 0, ii = children.length; i < ii; i++) {
-	            var chi = children[i];
-	            if (chi.nodeType == 3) {
-	                out.push(chi.nodeValue);
-	            }
-	            if (chi.tagName == "tspan") {
-	                if (chi.childNodes.length == 1 && chi.firstChild.nodeType == 3) {
-	                    out.push(chi.firstChild.nodeValue);
-	                } else {
-	                    out.push(textExtract(chi));
-	                }
-	            }
-	        }
-	        return out;
-	    }
-	    eve.on("snap.util.getattr.text", function () {
-	        if (this.type == "text" || this.type == "tspan") {
-	            eve.stop();
-	            var out = textExtract(this.node);
-	            return out.length == 1 ? out[0] : out;
-	        }
-	    })(-1);
-	    eve.on("snap.util.getattr.#text", function () {
-	        return this.node.textContent;
-	    })(-1);
-	    eve.on("snap.util.getattr.viewBox", function () {
-	        eve.stop();
-	        var vb = $(this.node, "viewBox");
-	        if (vb) {
-	            vb = vb.split(separator);
-	            return Snap._.box(+vb[0], +vb[1], +vb[2], +vb[3]);
-	        } else {
-	            return;
-	        }
-	    })(-1);
-	    eve.on("snap.util.getattr.points", function () {
-	        var p = $(this.node, "points");
-	        eve.stop();
-	        if (p) {
-	            return p.split(separator);
-	        } else {
-	            return;
-	        }
-	    })(-1);
-	    eve.on("snap.util.getattr.path", function () {
-	        var p = $(this.node, "d");
-	        eve.stop();
-	        return p;
-	    })(-1);
-	    eve.on("snap.util.getattr.class", function () {
-	        return this.node.className.baseVal;
-	    })(-1);
-	    function getFontSize() {
-	        eve.stop();
-	        return this.node.style.fontSize;
-	    }
-	    eve.on("snap.util.getattr.fontSize", getFontSize)(-1);
-	    eve.on("snap.util.getattr.font-size", getFontSize)(-1);
-	});
-
-	// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	// 
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	// 
-	// http://www.apache.org/licenses/LICENSE-2.0
-	// 
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	Snap.plugin(function (Snap, Element, Paper, glob, Fragment) {
-	    var proto = Paper.prototype,
-	        is = Snap.is;
-	    /*\
-	     * Paper.rect
-	     [ method ]
-	     *
-	     * Draws a rectangle
-	     **
-	     - x (number) x coordinate of the top left corner
-	     - y (number) y coordinate of the top left corner
-	     - width (number) width
-	     - height (number) height
-	     - rx (number) #optional horizontal radius for rounded corners, default is 0
-	     - ry (number) #optional vertical radius for rounded corners, default is rx or 0
-	     = (object) the `rect` element
-	     **
-	     > Usage
-	     | // regular rectangle
-	     | var c = paper.rect(10, 10, 50, 50);
-	     | // rectangle with rounded corners
-	     | var c = paper.rect(40, 40, 50, 50, 10);
-	    \*/
-	    proto.rect = function (x, y, w, h, rx, ry) {
-	        var attr;
-	        if (ry == null) {
-	            ry = rx;
-	        }
-	        if (is(x, "object") && x == "[object Object]") {
-	            attr = x;
-	        } else if (x != null) {
-	            attr = {
-	                x: x,
-	                y: y,
-	                width: w,
-	                height: h
-	            };
-	            if (rx != null) {
-	                attr.rx = rx;
-	                attr.ry = ry;
-	            }
-	        }
-	        return this.el("rect", attr);
-	    };
-	    /*\
-	     * Paper.circle
-	     [ method ]
-	     **
-	     * Draws a circle
-	     **
-	     - x (number) x coordinate of the centre
-	     - y (number) y coordinate of the centre
-	     - r (number) radius
-	     = (object) the `circle` element
-	     **
-	     > Usage
-	     | var c = paper.circle(50, 50, 40);
-	    \*/
-	    proto.circle = function (cx, cy, r) {
-	        var attr;
-	        if (is(cx, "object") && cx == "[object Object]") {
-	            attr = cx;
-	        } else if (cx != null) {
-	            attr = {
-	                cx: cx,
-	                cy: cy,
-	                r: r
-	            };
-	        }
-	        return this.el("circle", attr);
-	    };
-
-	    var preload = (function () {
-	        function onerror() {
-	            this.parentNode.removeChild(this);
-	        }
-	        return function (src, f) {
-	            var img = glob.doc.createElement("img"),
-	                body = glob.doc.body;
-	            img.style.cssText = "position:absolute;left:-9999em;top:-9999em";
-	            img.onload = function () {
-	                f.call(img);
-	                img.onload = img.onerror = null;
-	                body.removeChild(img);
-	            };
-	            img.onerror = onerror;
-	            body.appendChild(img);
-	            img.src = src;
-	        };
-	    }());
-
-	    /*\
-	     * Paper.image
-	     [ method ]
-	     **
-	     * Places an image on the surface
-	     **
-	     - src (string) URI of the source image
-	     - x (number) x offset position
-	     - y (number) y offset position
-	     - width (number) width of the image
-	     - height (number) height of the image
-	     = (object) the `image` element
-	     * or
-	     = (object) Snap element object with type `image`
-	     **
-	     > Usage
-	     | var c = paper.image("apple.png", 10, 10, 80, 80);
-	    \*/
-	    proto.image = function (src, x, y, width, height) {
-	        var el = this.el("image");
-	        if (is(src, "object") && "src" in src) {
-	            el.attr(src);
-	        } else if (src != null) {
-	            var set = {
-	                "xlink:href": src,
-	                preserveAspectRatio: "none"
-	            };
-	            if (x != null && y != null) {
-	                set.x = x;
-	                set.y = y;
-	            }
-	            if (width != null && height != null) {
-	                set.width = width;
-	                set.height = height;
-	            } else {
-	                preload(src, function () {
-	                    Snap._.$(el.node, {
-	                        width: this.offsetWidth,
-	                        height: this.offsetHeight
-	                    });
-	                });
-	            }
-	            Snap._.$(el.node, set);
-	        }
-	        return el;
-	    };
-	    /*\
-	     * Paper.ellipse
-	     [ method ]
-	     **
-	     * Draws an ellipse
-	     **
-	     - x (number) x coordinate of the centre
-	     - y (number) y coordinate of the centre
-	     - rx (number) horizontal radius
-	     - ry (number) vertical radius
-	     = (object) the `ellipse` element
-	     **
-	     > Usage
-	     | var c = paper.ellipse(50, 50, 40, 20);
-	    \*/
-	    proto.ellipse = function (cx, cy, rx, ry) {
-	        var attr;
-	        if (is(cx, "object") && cx == "[object Object]") {
-	            attr = cx;
-	        } else if (cx != null) {
-	            attr ={
-	                cx: cx,
-	                cy: cy,
-	                rx: rx,
-	                ry: ry
-	            };
-	        }
-	        return this.el("ellipse", attr);
-	    };
-	    // SIERRA Paper.path(): Unclear from the link what a Catmull-Rom curveto is, and why it would make life any easier.
-	    /*\
-	     * Paper.path
-	     [ method ]
-	     **
-	     * Creates a `<path>` element using the given string as the path's definition
-	     - pathString (string) #optional path string in SVG format
-	     * Path string consists of one-letter commands, followed by comma seprarated arguments in numerical form. Example:
-	     | "M10,20L30,40"
-	     * This example features two commands: `M`, with arguments `(10, 20)` and `L` with arguments `(30, 40)`. Uppercase letter commands express coordinates in absolute terms, while lowercase commands express them in relative terms from the most recently declared coordinates.
-	     *
-	     # <p>Here is short list of commands available, for more details see <a href="http://www.w3.org/TR/SVG/paths.html#PathData" title="Details of a path's data attribute's format are described in the SVG specification.">SVG path string format</a> or <a href="https://developer.mozilla.org/en/SVG/Tutorial/Paths">article about path strings at MDN</a>.</p>
-	     # <table><thead><tr><th>Command</th><th>Name</th><th>Parameters</th></tr></thead><tbody>
-	     # <tr><td>M</td><td>moveto</td><td>(x y)+</td></tr>
-	     # <tr><td>Z</td><td>closepath</td><td>(none)</td></tr>
-	     # <tr><td>L</td><td>lineto</td><td>(x y)+</td></tr>
-	     # <tr><td>H</td><td>horizontal lineto</td><td>x+</td></tr>
-	     # <tr><td>V</td><td>vertical lineto</td><td>y+</td></tr>
-	     # <tr><td>C</td><td>curveto</td><td>(x1 y1 x2 y2 x y)+</td></tr>
-	     # <tr><td>S</td><td>smooth curveto</td><td>(x2 y2 x y)+</td></tr>
-	     # <tr><td>Q</td><td>quadratic Bézier curveto</td><td>(x1 y1 x y)+</td></tr>
-	     # <tr><td>T</td><td>smooth quadratic Bézier curveto</td><td>(x y)+</td></tr>
-	     # <tr><td>A</td><td>elliptical arc</td><td>(rx ry x-axis-rotation large-arc-flag sweep-flag x y)+</td></tr>
-	     # <tr><td>R</td><td><a href="http://en.wikipedia.org/wiki/Catmull–Rom_spline#Catmull.E2.80.93Rom_spline">Catmull-Rom curveto</a>*</td><td>x1 y1 (x y)+</td></tr></tbody></table>
-	     * * _Catmull-Rom curveto_ is a not standard SVG command and added to make life easier.
-	     * Note: there is a special case when a path consists of only three commands: `M10,10R…z`. In this case the path connects back to its starting point.
-	     > Usage
-	     | var c = paper.path("M10 10L90 90");
-	     | // draw a diagonal line:
-	     | // move to 10,10, line to 90,90
-	    \*/
-	    proto.path = function (d) {
-	        var attr;
-	        if (is(d, "object") && !is(d, "array")) {
-	            attr = d;
-	        } else if (d) {
-	            attr = {d: d};
-	        }
-	        return this.el("path", attr);
-	    };
-	    /*\
-	     * Paper.g
-	     [ method ]
-	     **
-	     * Creates a group element
-	     **
-	     - varargs (…) #optional elements to nest within the group
-	     = (object) the `g` element
-	     **
-	     > Usage
-	     | var c1 = paper.circle(),
-	     |     c2 = paper.rect(),
-	     |     g = paper.g(c2, c1); // note that the order of elements is different
-	     * or
-	     | var c1 = paper.circle(),
-	     |     c2 = paper.rect(),
-	     |     g = paper.g();
-	     | g.add(c2, c1);
-	    \*/
-	    /*\
-	     * Paper.group
-	     [ method ]
-	     **
-	     * See @Paper.g
-	    \*/
-	    proto.group = proto.g = function (first) {
-	        var attr,
-	            el = this.el("g");
-	        if (arguments.length == 1 && first && !first.type) {
-	            el.attr(first);
-	        } else if (arguments.length) {
-	            el.add(Array.prototype.slice.call(arguments, 0));
-	        }
-	        return el;
-	    };
-	    /*\
-	     * Paper.svg
-	     [ method ]
-	     **
-	     * Creates a nested SVG element.
-	     - x (number) @optional X of the element
-	     - y (number) @optional Y of the element
-	     - width (number) @optional width of the element
-	     - height (number) @optional height of the element
-	     - vbx (number) @optional viewbox X
-	     - vby (number) @optional viewbox Y
-	     - vbw (number) @optional viewbox width
-	     - vbh (number) @optional viewbox height
-	     **
-	     = (object) the `svg` element
-	     **
-	    \*/
-	    proto.svg = function (x, y, width, height, vbx, vby, vbw, vbh) {
-	        var attrs = {};
-	        if (is(x, "object") && y == null) {
-	            attrs = x;
-	        } else {
-	            if (x != null) {
-	                attrs.x = x;
-	            }
-	            if (y != null) {
-	                attrs.y = y;
-	            }
-	            if (width != null) {
-	                attrs.width = width;
-	            }
-	            if (height != null) {
-	                attrs.height = height;
-	            }
-	            if (vbx != null && vby != null && vbw != null && vbh != null) {
-	                attrs.viewBox = [vbx, vby, vbw, vbh];
-	            }
-	        }
-	        return this.el("svg", attrs);
-	    };
-	    /*\
-	     * Paper.mask
-	     [ method ]
-	     **
-	     * Equivalent in behaviour to @Paper.g, except it’s a mask.
-	     **
-	     = (object) the `mask` element
-	     **
-	    \*/
-	    proto.mask = function (first) {
-	        var attr,
-	            el = this.el("mask");
-	        if (arguments.length == 1 && first && !first.type) {
-	            el.attr(first);
-	        } else if (arguments.length) {
-	            el.add(Array.prototype.slice.call(arguments, 0));
-	        }
-	        return el;
-	    };
-	    /*\
-	     * Paper.ptrn
-	     [ method ]
-	     **
-	     * Equivalent in behaviour to @Paper.g, except it’s a pattern.
-	     - x (number) @optional X of the element
-	     - y (number) @optional Y of the element
-	     - width (number) @optional width of the element
-	     - height (number) @optional height of the element
-	     - vbx (number) @optional viewbox X
-	     - vby (number) @optional viewbox Y
-	     - vbw (number) @optional viewbox width
-	     - vbh (number) @optional viewbox height
-	     **
-	     = (object) the `pattern` element
-	     **
-	    \*/
-	    proto.ptrn = function (x, y, width, height, vx, vy, vw, vh) {
-	        if (is(x, "object")) {
-	            var attr = x;
-	        } else {
-	            attr = {patternUnits: "userSpaceOnUse"};
-	            if (x) {
-	                attr.x = x;
-	            }
-	            if (y) {
-	                attr.y = y;
-	            }
-	            if (width != null) {
-	                attr.width = width;
-	            }
-	            if (height != null) {
-	                attr.height = height;
-	            }
-	            if (vx != null && vy != null && vw != null && vh != null) {
-	                attr.viewBox = [vx, vy, vw, vh];
-	            }
-	        }
-	        return this.el("pattern", attr);
-	    };
-	    /*\
-	     * Paper.use
-	     [ method ]
-	     **
-	     * Creates a <use> element.
-	     - id (string) @optional id of element to link
-	     * or
-	     - id (Element) @optional element to link
-	     **
-	     = (object) the `use` element
-	     **
-	    \*/
-	    proto.use = function (id) {
-	        if (id != null) {
-	            if (id instanceof Element) {
-	                if (!id.attr("id")) {
-	                    id.attr({id: Snap._.id(id)});
-	                }
-	                id = id.attr("id");
-	            }
-	            if (String(id).charAt() == "#") {
-	                id = id.substring(1);
-	            }
-	            return this.el("use", {"xlink:href": "#" + id});
-	        } else {
-	            return Element.prototype.use.call(this);
-	        }
-	    };
-	    /*\
-	     * Paper.symbol
-	     [ method ]
-	     **
-	     * Creates a <symbol> element.
-	     - vbx (number) @optional viewbox X
-	     - vby (number) @optional viewbox Y
-	     - vbw (number) @optional viewbox width
-	     - vbh (number) @optional viewbox height
-	     = (object) the `symbol` element
-	     **
-	    \*/
-	    proto.symbol = function (vx, vy, vw, vh) {
-	        var attr = {};
-	        if (vx != null && vy != null && vw != null && vh != null) {
-	            attr.viewBox = [vx, vy, vw, vh];
-	        }
-
-	        return this.el("symbol", attr);
-	    };
-	    /*\
-	     * Paper.text
-	     [ method ]
-	     **
-	     * Draws a text string
-	     **
-	     - x (number) x coordinate position
-	     - y (number) y coordinate position
-	     - text (string|array) The text string to draw or array of strings to nest within separate `<tspan>` elements
-	     = (object) the `text` element
-	     **
-	     > Usage
-	     | var t1 = paper.text(50, 50, "Snap");
-	     | var t2 = paper.text(50, 50, ["S","n","a","p"]);
-	     | // Text path usage
-	     | t1.attr({textpath: "M10,10L100,100"});
-	     | // or
-	     | var pth = paper.path("M10,10L100,100");
-	     | t1.attr({textpath: pth});
-	    \*/
-	    proto.text = function (x, y, text) {
-	        var attr = {};
-	        if (is(x, "object")) {
-	            attr = x;
-	        } else if (x != null) {
-	            attr = {
-	                x: x,
-	                y: y,
-	                text: text || ""
-	            };
-	        }
-	        return this.el("text", attr);
-	    };
-	    /*\
-	     * Paper.line
-	     [ method ]
-	     **
-	     * Draws a line
-	     **
-	     - x1 (number) x coordinate position of the start
-	     - y1 (number) y coordinate position of the start
-	     - x2 (number) x coordinate position of the end
-	     - y2 (number) y coordinate position of the end
-	     = (object) the `line` element
-	     **
-	     > Usage
-	     | var t1 = paper.line(50, 50, 100, 100);
-	    \*/
-	    proto.line = function (x1, y1, x2, y2) {
-	        var attr = {};
-	        if (is(x1, "object")) {
-	            attr = x1;
-	        } else if (x1 != null) {
-	            attr = {
-	                x1: x1,
-	                x2: x2,
-	                y1: y1,
-	                y2: y2
-	            };
-	        }
-	        return this.el("line", attr);
-	    };
-	    /*\
-	     * Paper.polyline
-	     [ method ]
-	     **
-	     * Draws a polyline
-	     **
-	     - points (array) array of points
-	     * or
-	     - varargs (…) points
-	     = (object) the `polyline` element
-	     **
-	     > Usage
-	     | var p1 = paper.polyline([10, 10, 100, 100]);
-	     | var p2 = paper.polyline(10, 10, 100, 100);
-	    \*/
-	    proto.polyline = function (points) {
-	        if (arguments.length > 1) {
-	            points = Array.prototype.slice.call(arguments, 0);
-	        }
-	        var attr = {};
-	        if (is(points, "object") && !is(points, "array")) {
-	            attr = points;
-	        } else if (points != null) {
-	            attr = {points: points};
-	        }
-	        return this.el("polyline", attr);
-	    };
-	    /*\
-	     * Paper.polygon
-	     [ method ]
-	     **
-	     * Draws a polygon. See @Paper.polyline
-	    \*/
-	    proto.polygon = function (points) {
-	        if (arguments.length > 1) {
-	            points = Array.prototype.slice.call(arguments, 0);
-	        }
-	        var attr = {};
-	        if (is(points, "object") && !is(points, "array")) {
-	            attr = points;
-	        } else if (points != null) {
-	            attr = {points: points};
-	        }
-	        return this.el("polygon", attr);
-	    };
-	    // gradients
-	    (function () {
-	        var $ = Snap._.$;
-	        // gradients' helpers
-	        function Gstops() {
-	            return this.selectAll("stop");
-	        }
-	        function GaddStop(color, offset) {
-	            var stop = $("stop"),
-	                attr = {
-	                    offset: +offset + "%"
-	                };
-	            color = Snap.color(color);
-	            attr["stop-color"] = color.hex;
-	            if (color.opacity < 1) {
-	                attr["stop-opacity"] = color.opacity;
-	            }
-	            $(stop, attr);
-	            this.node.appendChild(stop);
-	            return this;
-	        }
-	        function GgetBBox() {
-	            if (this.type == "linearGradient") {
-	                var x1 = $(this.node, "x1") || 0,
-	                    x2 = $(this.node, "x2") || 1,
-	                    y1 = $(this.node, "y1") || 0,
-	                    y2 = $(this.node, "y2") || 0;
-	                return Snap._.box(x1, y1, math.abs(x2 - x1), math.abs(y2 - y1));
-	            } else {
-	                var cx = this.node.cx || .5,
-	                    cy = this.node.cy || .5,
-	                    r = this.node.r || 0;
-	                return Snap._.box(cx - r, cy - r, r * 2, r * 2);
-	            }
-	        }
-	        function gradient(defs, str) {
-	            var grad = eve("snap.util.grad.parse", null, str).firstDefined(),
-	                el;
-	            if (!grad) {
-	                return null;
-	            }
-	            grad.params.unshift(defs);
-	            if (grad.type.toLowerCase() == "l") {
-	                el = gradientLinear.apply(0, grad.params);
-	            } else {
-	                el = gradientRadial.apply(0, grad.params);
-	            }
-	            if (grad.type != grad.type.toLowerCase()) {
-	                $(el.node, {
-	                    gradientUnits: "userSpaceOnUse"
-	                });
-	            }
-	            var stops = grad.stops,
-	                len = stops.length,
-	                start = 0,
-	                j = 0;
-	            function seed(i, end) {
-	                var step = (end - start) / (i - j);
-	                for (var k = j; k < i; k++) {
-	                    stops[k].offset = +(+start + step * (k - j)).toFixed(2);
-	                }
-	                j = i;
-	                start = end;
-	            }
-	            len--;
-	            for (var i = 0; i < len; i++) if ("offset" in stops[i]) {
-	                seed(i, stops[i].offset);
-	            }
-	            stops[len].offset = stops[len].offset || 100;
-	            seed(len, stops[len].offset);
-	            for (i = 0; i <= len; i++) {
-	                var stop = stops[i];
-	                el.addStop(stop.color, stop.offset);
-	            }
-	            return el;
-	        }
-	        function gradientLinear(defs, x1, y1, x2, y2) {
-	            var el = Snap._.make("linearGradient", defs);
-	            el.stops = Gstops;
-	            el.addStop = GaddStop;
-	            el.getBBox = GgetBBox;
-	            if (x1 != null) {
-	                $(el.node, {
-	                    x1: x1,
-	                    y1: y1,
-	                    x2: x2,
-	                    y2: y2
-	                });
-	            }
-	            return el;
-	        }
-	        function gradientRadial(defs, cx, cy, r, fx, fy) {
-	            var el = Snap._.make("radialGradient", defs);
-	            el.stops = Gstops;
-	            el.addStop = GaddStop;
-	            el.getBBox = GgetBBox;
-	            if (cx != null) {
-	                $(el.node, {
-	                    cx: cx,
-	                    cy: cy,
-	                    r: r
-	                });
-	            }
-	            if (fx != null && fy != null) {
-	                $(el.node, {
-	                    fx: fx,
-	                    fy: fy
-	                });
-	            }
-	            return el;
-	        }
-	        /*\
-	         * Paper.gradient
-	         [ method ]
-	         **
-	         * Creates a gradient element
-	         **
-	         - gradient (string) gradient descriptor
-	         > Gradient Descriptor
-	         * The gradient descriptor is an expression formatted as
-	         * follows: `<type>(<coords>)<colors>`.  The `<type>` can be
-	         * either linear or radial.  The uppercase `L` or `R` letters
-	         * indicate absolute coordinates offset from the SVG surface.
-	         * Lowercase `l` or `r` letters indicate coordinates
-	         * calculated relative to the element to which the gradient is
-	         * applied.  Coordinates specify a linear gradient vector as
-	         * `x1`, `y1`, `x2`, `y2`, or a radial gradient as `cx`, `cy`,
-	         * `r` and optional `fx`, `fy` specifying a focal point away
-	         * from the center of the circle. Specify `<colors>` as a list
-	         * of dash-separated CSS color values.  Each color may be
-	         * followed by a custom offset value, separated with a colon
-	         * character.
-	         > Examples
-	         * Linear gradient, relative from top-left corner to bottom-right
-	         * corner, from black through red to white:
-	         | var g = paper.gradient("l(0, 0, 1, 1)#000-#f00-#fff");
-	         * Linear gradient, absolute from (0, 0) to (100, 100), from black
-	         * through red at 25% to white:
-	         | var g = paper.gradient("L(0, 0, 100, 100)#000-#f00:25-#fff");
-	         * Radial gradient, relative from the center of the element with radius
-	         * half the width, from black to white:
-	         | var g = paper.gradient("r(0.5, 0.5, 0.5)#000-#fff");
-	         * To apply the gradient:
-	         | paper.circle(50, 50, 40).attr({
-	         |     fill: g
-	         | });
-	         = (object) the `gradient` element
-	        \*/
-	        proto.gradient = function (str) {
-	            return gradient(this.defs, str);
-	        };
-	        proto.gradientLinear = function (x1, y1, x2, y2) {
-	            return gradientLinear(this.defs, x1, y1, x2, y2);
-	        };
-	        proto.gradientRadial = function (cx, cy, r, fx, fy) {
-	            return gradientRadial(this.defs, cx, cy, r, fx, fy);
-	        };
-	        /*\
-	         * Paper.toString
-	         [ method ]
-	         **
-	         * Returns SVG code for the @Paper
-	         = (string) SVG code for the @Paper
-	        \*/
-	        proto.toString = function () {
-	            var doc = this.node.ownerDocument,
-	                f = doc.createDocumentFragment(),
-	                d = doc.createElement("div"),
-	                svg = this.node.cloneNode(true),
-	                res;
-	            f.appendChild(d);
-	            d.appendChild(svg);
-	            Snap._.$(svg, {xmlns: "http://www.w3.org/2000/svg"});
-	            res = d.innerHTML;
-	            f.removeChild(f.firstChild);
-	            return res;
-	        };
-	        /*\
-	         * Paper.toDataURL
-	         [ method ]
-	         **
-	         * Returns SVG code for the @Paper as Data URI string.
-	         = (string) Data URI string
-	        \*/
-	        proto.toDataURL = function () {
-	            if (window && window.btoa) {
-	                return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(this)));
-	            }
-	        };
-	        /*\
-	         * Paper.clear
-	         [ method ]
-	         **
-	         * Removes all child nodes of the paper, except <defs>.
-	        \*/
-	        proto.clear = function () {
-	            var node = this.node.firstChild,
-	                next;
-	            while (node) {
-	                next = node.nextSibling;
-	                if (node.tagName != "defs") {
-	                    node.parentNode.removeChild(node);
-	                } else {
-	                    proto.clear.call({node: node});
-	                }
-	                node = next;
-	            }
-	        };
-	    }());
-	});
-
-	// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	// 
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	// 
-	// http://www.apache.org/licenses/LICENSE-2.0
-	// 
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	Snap.plugin(function (Snap, Element, Paper, glob) {
-	    var elproto = Element.prototype,
-	        is = Snap.is,
-	        clone = Snap._.clone,
-	        has = "hasOwnProperty",
-	        p2s = /,?([a-z]),?/gi,
-	        toFloat = parseFloat,
-	        math = Math,
-	        PI = math.PI,
-	        mmin = math.min,
-	        mmax = math.max,
-	        pow = math.pow,
-	        abs = math.abs;
-	    function paths(ps) {
-	        var p = paths.ps = paths.ps || {};
-	        if (p[ps]) {
-	            p[ps].sleep = 100;
-	        } else {
-	            p[ps] = {
-	                sleep: 100
-	            };
-	        }
-	        setTimeout(function () {
-	            for (var key in p) if (p[has](key) && key != ps) {
-	                p[key].sleep--;
-	                !p[key].sleep && delete p[key];
-	            }
-	        });
-	        return p[ps];
-	    }
-	    function box(x, y, width, height) {
-	        if (x == null) {
-	            x = y = width = height = 0;
-	        }
-	        if (y == null) {
-	            y = x.y;
-	            width = x.width;
-	            height = x.height;
-	            x = x.x;
-	        }
-	        return {
-	            x: x,
-	            y: y,
-	            width: width,
-	            w: width,
-	            height: height,
-	            h: height,
-	            x2: x + width,
-	            y2: y + height,
-	            cx: x + width / 2,
-	            cy: y + height / 2,
-	            r1: math.min(width, height) / 2,
-	            r2: math.max(width, height) / 2,
-	            r0: math.sqrt(width * width + height * height) / 2,
-	            path: rectPath(x, y, width, height),
-	            vb: [x, y, width, height].join(" ")
-	        };
-	    }
-	    function toString() {
-	        return this.join(",").replace(p2s, "$1");
-	    }
-	    function pathClone(pathArray) {
-	        var res = clone(pathArray);
-	        res.toString = toString;
-	        return res;
-	    }
-	    function getPointAtSegmentLength(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, length) {
-	        if (length == null) {
-	            return bezlen(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y);
-	        } else {
-	            return findDotsAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y,
-	                getTotLen(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, length));
-	        }
-	    }
-	    function getLengthFactory(istotal, subpath) {
-	        function O(val) {
-	            return +(+val).toFixed(3);
-	        }
-	        return Snap._.cacher(function (path, length, onlystart) {
-	            if (path instanceof Element) {
-	                path = path.attr("d");
-	            }
-	            path = path2curve(path);
-	            var x, y, p, l, sp = "", subpaths = {}, point,
-	                len = 0;
-	            for (var i = 0, ii = path.length; i < ii; i++) {
-	                p = path[i];
-	                if (p[0] == "M") {
-	                    x = +p[1];
-	                    y = +p[2];
-	                } else {
-	                    l = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6]);
-	                    if (len + l > length) {
-	                        if (subpath && !subpaths.start) {
-	                            point = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6], length - len);
-	                            sp += [
-	                                "C" + O(point.start.x),
-	                                O(point.start.y),
-	                                O(point.m.x),
-	                                O(point.m.y),
-	                                O(point.x),
-	                                O(point.y)
-	                            ];
-	                            if (onlystart) {return sp;}
-	                            subpaths.start = sp;
-	                            sp = [
-	                                "M" + O(point.x),
-	                                O(point.y) + "C" + O(point.n.x),
-	                                O(point.n.y),
-	                                O(point.end.x),
-	                                O(point.end.y),
-	                                O(p[5]),
-	                                O(p[6])
-	                            ].join();
-	                            len += l;
-	                            x = +p[5];
-	                            y = +p[6];
-	                            continue;
-	                        }
-	                        if (!istotal && !subpath) {
-	                            point = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6], length - len);
-	                            return point;
-	                        }
-	                    }
-	                    len += l;
-	                    x = +p[5];
-	                    y = +p[6];
-	                }
-	                sp += p.shift() + p;
-	            }
-	            subpaths.end = sp;
-	            point = istotal ? len : subpath ? subpaths : findDotsAtSegment(x, y, p[0], p[1], p[2], p[3], p[4], p[5], 1);
-	            return point;
-	        }, null, Snap._.clone);
-	    }
-	    var getTotalLength = getLengthFactory(1),
-	        getPointAtLength = getLengthFactory(),
-	        getSubpathsAtLength = getLengthFactory(0, 1);
-	    function findDotsAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t) {
-	        var t1 = 1 - t,
-	            t13 = pow(t1, 3),
-	            t12 = pow(t1, 2),
-	            t2 = t * t,
-	            t3 = t2 * t,
-	            x = t13 * p1x + t12 * 3 * t * c1x + t1 * 3 * t * t * c2x + t3 * p2x,
-	            y = t13 * p1y + t12 * 3 * t * c1y + t1 * 3 * t * t * c2y + t3 * p2y,
-	            mx = p1x + 2 * t * (c1x - p1x) + t2 * (c2x - 2 * c1x + p1x),
-	            my = p1y + 2 * t * (c1y - p1y) + t2 * (c2y - 2 * c1y + p1y),
-	            nx = c1x + 2 * t * (c2x - c1x) + t2 * (p2x - 2 * c2x + c1x),
-	            ny = c1y + 2 * t * (c2y - c1y) + t2 * (p2y - 2 * c2y + c1y),
-	            ax = t1 * p1x + t * c1x,
-	            ay = t1 * p1y + t * c1y,
-	            cx = t1 * c2x + t * p2x,
-	            cy = t1 * c2y + t * p2y,
-	            alpha = (90 - math.atan2(mx - nx, my - ny) * 180 / PI);
-	        // (mx > nx || my < ny) && (alpha += 180);
-	        return {
-	            x: x,
-	            y: y,
-	            m: {x: mx, y: my},
-	            n: {x: nx, y: ny},
-	            start: {x: ax, y: ay},
-	            end: {x: cx, y: cy},
-	            alpha: alpha
-	        };
-	    }
-	    function bezierBBox(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y) {
-	        if (!Snap.is(p1x, "array")) {
-	            p1x = [p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y];
-	        }
-	        var bbox = curveDim.apply(null, p1x);
-	        return box(
-	            bbox.min.x,
-	            bbox.min.y,
-	            bbox.max.x - bbox.min.x,
-	            bbox.max.y - bbox.min.y
-	        );
-	    }
-	    function isPointInsideBBox(bbox, x, y) {
-	        return  x >= bbox.x &&
-	                x <= bbox.x + bbox.width &&
-	                y >= bbox.y &&
-	                y <= bbox.y + bbox.height;
-	    }
-	    function isBBoxIntersect(bbox1, bbox2) {
-	        bbox1 = box(bbox1);
-	        bbox2 = box(bbox2);
-	        return isPointInsideBBox(bbox2, bbox1.x, bbox1.y)
-	            || isPointInsideBBox(bbox2, bbox1.x2, bbox1.y)
-	            || isPointInsideBBox(bbox2, bbox1.x, bbox1.y2)
-	            || isPointInsideBBox(bbox2, bbox1.x2, bbox1.y2)
-	            || isPointInsideBBox(bbox1, bbox2.x, bbox2.y)
-	            || isPointInsideBBox(bbox1, bbox2.x2, bbox2.y)
-	            || isPointInsideBBox(bbox1, bbox2.x, bbox2.y2)
-	            || isPointInsideBBox(bbox1, bbox2.x2, bbox2.y2)
-	            || (bbox1.x < bbox2.x2 && bbox1.x > bbox2.x
-	                || bbox2.x < bbox1.x2 && bbox2.x > bbox1.x)
-	            && (bbox1.y < bbox2.y2 && bbox1.y > bbox2.y
-	                || bbox2.y < bbox1.y2 && bbox2.y > bbox1.y);
-	    }
-	    function base3(t, p1, p2, p3, p4) {
-	        var t1 = -3 * p1 + 9 * p2 - 9 * p3 + 3 * p4,
-	            t2 = t * t1 + 6 * p1 - 12 * p2 + 6 * p3;
-	        return t * t2 - 3 * p1 + 3 * p2;
-	    }
-	    function bezlen(x1, y1, x2, y2, x3, y3, x4, y4, z) {
-	        if (z == null) {
-	            z = 1;
-	        }
-	        z = z > 1 ? 1 : z < 0 ? 0 : z;
-	        var z2 = z / 2,
-	            n = 12,
-	            Tvalues = [-.1252,.1252,-.3678,.3678,-.5873,.5873,-.7699,.7699,-.9041,.9041,-.9816,.9816],
-	            Cvalues = [0.2491,0.2491,0.2335,0.2335,0.2032,0.2032,0.1601,0.1601,0.1069,0.1069,0.0472,0.0472],
-	            sum = 0;
-	        for (var i = 0; i < n; i++) {
-	            var ct = z2 * Tvalues[i] + z2,
-	                xbase = base3(ct, x1, x2, x3, x4),
-	                ybase = base3(ct, y1, y2, y3, y4),
-	                comb = xbase * xbase + ybase * ybase;
-	            sum += Cvalues[i] * math.sqrt(comb);
-	        }
-	        return z2 * sum;
-	    }
-	    function getTotLen(x1, y1, x2, y2, x3, y3, x4, y4, ll) {
-	        if (ll < 0 || bezlen(x1, y1, x2, y2, x3, y3, x4, y4) < ll) {
-	            return;
-	        }
-	        var t = 1,
-	            step = t / 2,
-	            t2 = t - step,
-	            l,
-	            e = .01;
-	        l = bezlen(x1, y1, x2, y2, x3, y3, x4, y4, t2);
-	        while (abs(l - ll) > e) {
-	            step /= 2;
-	            t2 += (l < ll ? 1 : -1) * step;
-	            l = bezlen(x1, y1, x2, y2, x3, y3, x4, y4, t2);
-	        }
-	        return t2;
-	    }
-	    function intersect(x1, y1, x2, y2, x3, y3, x4, y4) {
-	        if (
-	            mmax(x1, x2) < mmin(x3, x4) ||
-	            mmin(x1, x2) > mmax(x3, x4) ||
-	            mmax(y1, y2) < mmin(y3, y4) ||
-	            mmin(y1, y2) > mmax(y3, y4)
-	        ) {
-	            return;
-	        }
-	        var nx = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4),
-	            ny = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4),
-	            denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-
-	        if (!denominator) {
-	            return;
-	        }
-	        var px = nx / denominator,
-	            py = ny / denominator,
-	            px2 = +px.toFixed(2),
-	            py2 = +py.toFixed(2);
-	        if (
-	            px2 < +mmin(x1, x2).toFixed(2) ||
-	            px2 > +mmax(x1, x2).toFixed(2) ||
-	            px2 < +mmin(x3, x4).toFixed(2) ||
-	            px2 > +mmax(x3, x4).toFixed(2) ||
-	            py2 < +mmin(y1, y2).toFixed(2) ||
-	            py2 > +mmax(y1, y2).toFixed(2) ||
-	            py2 < +mmin(y3, y4).toFixed(2) ||
-	            py2 > +mmax(y3, y4).toFixed(2)
-	        ) {
-	            return;
-	        }
-	        return {x: px, y: py};
-	    }
-	    function inter(bez1, bez2) {
-	        return interHelper(bez1, bez2);
-	    }
-	    function interCount(bez1, bez2) {
-	        return interHelper(bez1, bez2, 1);
-	    }
-	    function interHelper(bez1, bez2, justCount) {
-	        var bbox1 = bezierBBox(bez1),
-	            bbox2 = bezierBBox(bez2);
-	        if (!isBBoxIntersect(bbox1, bbox2)) {
-	            return justCount ? 0 : [];
-	        }
-	        var l1 = bezlen.apply(0, bez1),
-	            l2 = bezlen.apply(0, bez2),
-	            n1 = ~~(l1 / 8),
-	            n2 = ~~(l2 / 8),
-	            dots1 = [],
-	            dots2 = [],
-	            xy = {},
-	            res = justCount ? 0 : [];
-	        for (var i = 0; i < n1 + 1; i++) {
-	            var p = findDotsAtSegment.apply(0, bez1.concat(i / n1));
-	            dots1.push({x: p.x, y: p.y, t: i / n1});
-	        }
-	        for (i = 0; i < n2 + 1; i++) {
-	            p = findDotsAtSegment.apply(0, bez2.concat(i / n2));
-	            dots2.push({x: p.x, y: p.y, t: i / n2});
-	        }
-	        for (i = 0; i < n1; i++) {
-	            for (var j = 0; j < n2; j++) {
-	                var di = dots1[i],
-	                    di1 = dots1[i + 1],
-	                    dj = dots2[j],
-	                    dj1 = dots2[j + 1],
-	                    ci = abs(di1.x - di.x) < .001 ? "y" : "x",
-	                    cj = abs(dj1.x - dj.x) < .001 ? "y" : "x",
-	                    is = intersect(di.x, di.y, di1.x, di1.y, dj.x, dj.y, dj1.x, dj1.y);
-	                if (is) {
-	                    if (xy[is.x.toFixed(4)] == is.y.toFixed(4)) {
-	                        continue;
-	                    }
-	                    xy[is.x.toFixed(4)] = is.y.toFixed(4);
-	                    var t1 = di.t + abs((is[ci] - di[ci]) / (di1[ci] - di[ci])) * (di1.t - di.t),
-	                        t2 = dj.t + abs((is[cj] - dj[cj]) / (dj1[cj] - dj[cj])) * (dj1.t - dj.t);
-	                    if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
-	                        if (justCount) {
-	                            res++;
-	                        } else {
-	                            res.push({
-	                                x: is.x,
-	                                y: is.y,
-	                                t1: t1,
-	                                t2: t2
-	                            });
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	        return res;
-	    }
-	    function pathIntersection(path1, path2) {
-	        return interPathHelper(path1, path2);
-	    }
-	    function pathIntersectionNumber(path1, path2) {
-	        return interPathHelper(path1, path2, 1);
-	    }
-	    function interPathHelper(path1, path2, justCount) {
-	        path1 = path2curve(path1);
-	        path2 = path2curve(path2);
-	        var x1, y1, x2, y2, x1m, y1m, x2m, y2m, bez1, bez2,
-	            res = justCount ? 0 : [];
-	        for (var i = 0, ii = path1.length; i < ii; i++) {
-	            var pi = path1[i];
-	            if (pi[0] == "M") {
-	                x1 = x1m = pi[1];
-	                y1 = y1m = pi[2];
-	            } else {
-	                if (pi[0] == "C") {
-	                    bez1 = [x1, y1].concat(pi.slice(1));
-	                    x1 = bez1[6];
-	                    y1 = bez1[7];
-	                } else {
-	                    bez1 = [x1, y1, x1, y1, x1m, y1m, x1m, y1m];
-	                    x1 = x1m;
-	                    y1 = y1m;
-	                }
-	                for (var j = 0, jj = path2.length; j < jj; j++) {
-	                    var pj = path2[j];
-	                    if (pj[0] == "M") {
-	                        x2 = x2m = pj[1];
-	                        y2 = y2m = pj[2];
-	                    } else {
-	                        if (pj[0] == "C") {
-	                            bez2 = [x2, y2].concat(pj.slice(1));
-	                            x2 = bez2[6];
-	                            y2 = bez2[7];
-	                        } else {
-	                            bez2 = [x2, y2, x2, y2, x2m, y2m, x2m, y2m];
-	                            x2 = x2m;
-	                            y2 = y2m;
-	                        }
-	                        var intr = interHelper(bez1, bez2, justCount);
-	                        if (justCount) {
-	                            res += intr;
-	                        } else {
-	                            for (var k = 0, kk = intr.length; k < kk; k++) {
-	                                intr[k].segment1 = i;
-	                                intr[k].segment2 = j;
-	                                intr[k].bez1 = bez1;
-	                                intr[k].bez2 = bez2;
-	                            }
-	                            res = res.concat(intr);
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	        return res;
-	    }
-	    function isPointInsidePath(path, x, y) {
-	        var bbox = pathBBox(path);
-	        return isPointInsideBBox(bbox, x, y) &&
-	               interPathHelper(path, [["M", x, y], ["H", bbox.x2 + 10]], 1) % 2 == 1;
-	    }
-	    function pathBBox(path) {
-	        var pth = paths(path);
-	        if (pth.bbox) {
-	            return clone(pth.bbox);
-	        }
-	        if (!path) {
-	            return box();
-	        }
-	        path = path2curve(path);
-	        var x = 0, 
-	            y = 0,
-	            X = [],
-	            Y = [],
-	            p;
-	        for (var i = 0, ii = path.length; i < ii; i++) {
-	            p = path[i];
-	            if (p[0] == "M") {
-	                x = p[1];
-	                y = p[2];
-	                X.push(x);
-	                Y.push(y);
-	            } else {
-	                var dim = curveDim(x, y, p[1], p[2], p[3], p[4], p[5], p[6]);
-	                X = X.concat(dim.min.x, dim.max.x);
-	                Y = Y.concat(dim.min.y, dim.max.y);
-	                x = p[5];
-	                y = p[6];
-	            }
-	        }
-	        var xmin = mmin.apply(0, X),
-	            ymin = mmin.apply(0, Y),
-	            xmax = mmax.apply(0, X),
-	            ymax = mmax.apply(0, Y),
-	            bb = box(xmin, ymin, xmax - xmin, ymax - ymin);
-	        pth.bbox = clone(bb);
-	        return bb;
-	    }
-	    function rectPath(x, y, w, h, r) {
-	        if (r) {
-	            return [
-	                ["M", +x + (+r), y],
-	                ["l", w - r * 2, 0],
-	                ["a", r, r, 0, 0, 1, r, r],
-	                ["l", 0, h - r * 2],
-	                ["a", r, r, 0, 0, 1, -r, r],
-	                ["l", r * 2 - w, 0],
-	                ["a", r, r, 0, 0, 1, -r, -r],
-	                ["l", 0, r * 2 - h],
-	                ["a", r, r, 0, 0, 1, r, -r],
-	                ["z"]
-	            ];
-	        }
-	        var res = [["M", x, y], ["l", w, 0], ["l", 0, h], ["l", -w, 0], ["z"]];
-	        res.toString = toString;
-	        return res;
-	    }
-	    function ellipsePath(x, y, rx, ry, a) {
-	        if (a == null && ry == null) {
-	            ry = rx;
-	        }
-	        x = +x;
-	        y = +y;
-	        rx = +rx;
-	        ry = +ry;
-	        if (a != null) {
-	            var rad = Math.PI / 180,
-	                x1 = x + rx * Math.cos(-ry * rad),
-	                x2 = x + rx * Math.cos(-a * rad),
-	                y1 = y + rx * Math.sin(-ry * rad),
-	                y2 = y + rx * Math.sin(-a * rad),
-	                res = [["M", x1, y1], ["A", rx, rx, 0, +(a - ry > 180), 0, x2, y2]];
-	        } else {
-	            res = [
-	                ["M", x, y],
-	                ["m", 0, -ry],
-	                ["a", rx, ry, 0, 1, 1, 0, 2 * ry],
-	                ["a", rx, ry, 0, 1, 1, 0, -2 * ry],
-	                ["z"]
-	            ];
-	        }
-	        res.toString = toString;
-	        return res;
-	    }
-	    var unit2px = Snap._unit2px,
-	        getPath = {
-	        path: function (el) {
-	            return el.attr("path");
-	        },
-	        circle: function (el) {
-	            var attr = unit2px(el);
-	            return ellipsePath(attr.cx, attr.cy, attr.r);
-	        },
-	        ellipse: function (el) {
-	            var attr = unit2px(el);
-	            return ellipsePath(attr.cx || 0, attr.cy || 0, attr.rx, attr.ry);
-	        },
-	        rect: function (el) {
-	            var attr = unit2px(el);
-	            return rectPath(attr.x || 0, attr.y || 0, attr.width, attr.height, attr.rx, attr.ry);
-	        },
-	        image: function (el) {
-	            var attr = unit2px(el);
-	            return rectPath(attr.x || 0, attr.y || 0, attr.width, attr.height);
-	        },
-	        line: function (el) {
-	            return "M" + [el.attr("x1") || 0, el.attr("y1") || 0, el.attr("x2"), el.attr("y2")];
-	        },
-	        polyline: function (el) {
-	            return "M" + el.attr("points");
-	        },
-	        polygon: function (el) {
-	            return "M" + el.attr("points") + "z";
-	        },
-	        deflt: function (el) {
-	            var bbox = el.node.getBBox();
-	            return rectPath(bbox.x, bbox.y, bbox.width, bbox.height);
-	        }
-	    };
-	    function pathToRelative(pathArray) {
-	        var pth = paths(pathArray),
-	            lowerCase = String.prototype.toLowerCase;
-	        if (pth.rel) {
-	            return pathClone(pth.rel);
-	        }
-	        if (!Snap.is(pathArray, "array") || !Snap.is(pathArray && pathArray[0], "array")) {
-	            pathArray = Snap.parsePathString(pathArray);
-	        }
-	        var res = [],
-	            x = 0,
-	            y = 0,
-	            mx = 0,
-	            my = 0,
-	            start = 0;
-	        if (pathArray[0][0] == "M") {
-	            x = pathArray[0][1];
-	            y = pathArray[0][2];
-	            mx = x;
-	            my = y;
-	            start++;
-	            res.push(["M", x, y]);
-	        }
-	        for (var i = start, ii = pathArray.length; i < ii; i++) {
-	            var r = res[i] = [],
-	                pa = pathArray[i];
-	            if (pa[0] != lowerCase.call(pa[0])) {
-	                r[0] = lowerCase.call(pa[0]);
-	                switch (r[0]) {
-	                    case "a":
-	                        r[1] = pa[1];
-	                        r[2] = pa[2];
-	                        r[3] = pa[3];
-	                        r[4] = pa[4];
-	                        r[5] = pa[5];
-	                        r[6] = +(pa[6] - x).toFixed(3);
-	                        r[7] = +(pa[7] - y).toFixed(3);
-	                        break;
-	                    case "v":
-	                        r[1] = +(pa[1] - y).toFixed(3);
-	                        break;
-	                    case "m":
-	                        mx = pa[1];
-	                        my = pa[2];
-	                    default:
-	                        for (var j = 1, jj = pa.length; j < jj; j++) {
-	                            r[j] = +(pa[j] - ((j % 2) ? x : y)).toFixed(3);
-	                        }
-	                }
-	            } else {
-	                r = res[i] = [];
-	                if (pa[0] == "m") {
-	                    mx = pa[1] + x;
-	                    my = pa[2] + y;
-	                }
-	                for (var k = 0, kk = pa.length; k < kk; k++) {
-	                    res[i][k] = pa[k];
-	                }
-	            }
-	            var len = res[i].length;
-	            switch (res[i][0]) {
-	                case "z":
-	                    x = mx;
-	                    y = my;
-	                    break;
-	                case "h":
-	                    x += +res[i][len - 1];
-	                    break;
-	                case "v":
-	                    y += +res[i][len - 1];
-	                    break;
-	                default:
-	                    x += +res[i][len - 2];
-	                    y += +res[i][len - 1];
-	            }
-	        }
-	        res.toString = toString;
-	        pth.rel = pathClone(res);
-	        return res;
-	    }
-	    function pathToAbsolute(pathArray) {
-	        var pth = paths(pathArray);
-	        if (pth.abs) {
-	            return pathClone(pth.abs);
-	        }
-	        if (!is(pathArray, "array") || !is(pathArray && pathArray[0], "array")) { // rough assumption
-	            pathArray = Snap.parsePathString(pathArray);
-	        }
-	        if (!pathArray || !pathArray.length) {
-	            return [["M", 0, 0]];
-	        }
-	        var res = [],
-	            x = 0,
-	            y = 0,
-	            mx = 0,
-	            my = 0,
-	            start = 0,
-	            pa0;
-	        if (pathArray[0][0] == "M") {
-	            x = +pathArray[0][1];
-	            y = +pathArray[0][2];
-	            mx = x;
-	            my = y;
-	            start++;
-	            res[0] = ["M", x, y];
-	        }
-	        var crz = pathArray.length == 3 &&
-	            pathArray[0][0] == "M" &&
-	            pathArray[1][0].toUpperCase() == "R" &&
-	            pathArray[2][0].toUpperCase() == "Z";
-	        for (var r, pa, i = start, ii = pathArray.length; i < ii; i++) {
-	            res.push(r = []);
-	            pa = pathArray[i];
-	            pa0 = pa[0];
-	            if (pa0 != pa0.toUpperCase()) {
-	                r[0] = pa0.toUpperCase();
-	                switch (r[0]) {
-	                    case "A":
-	                        r[1] = pa[1];
-	                        r[2] = pa[2];
-	                        r[3] = pa[3];
-	                        r[4] = pa[4];
-	                        r[5] = pa[5];
-	                        r[6] = +pa[6] + x;
-	                        r[7] = +pa[7] + y;
-	                        break;
-	                    case "V":
-	                        r[1] = +pa[1] + y;
-	                        break;
-	                    case "H":
-	                        r[1] = +pa[1] + x;
-	                        break;
-	                    case "R":
-	                        var dots = [x, y].concat(pa.slice(1));
-	                        for (var j = 2, jj = dots.length; j < jj; j++) {
-	                            dots[j] = +dots[j] + x;
-	                            dots[++j] = +dots[j] + y;
-	                        }
-	                        res.pop();
-	                        res = res.concat(catmullRom2bezier(dots, crz));
-	                        break;
-	                    case "O":
-	                        res.pop();
-	                        dots = ellipsePath(x, y, pa[1], pa[2]);
-	                        dots.push(dots[0]);
-	                        res = res.concat(dots);
-	                        break;
-	                    case "U":
-	                        res.pop();
-	                        res = res.concat(ellipsePath(x, y, pa[1], pa[2], pa[3]));
-	                        r = ["U"].concat(res[res.length - 1].slice(-2));
-	                        break;
-	                    case "M":
-	                        mx = +pa[1] + x;
-	                        my = +pa[2] + y;
-	                    default:
-	                        for (j = 1, jj = pa.length; j < jj; j++) {
-	                            r[j] = +pa[j] + ((j % 2) ? x : y);
-	                        }
-	                }
-	            } else if (pa0 == "R") {
-	                dots = [x, y].concat(pa.slice(1));
-	                res.pop();
-	                res = res.concat(catmullRom2bezier(dots, crz));
-	                r = ["R"].concat(pa.slice(-2));
-	            } else if (pa0 == "O") {
-	                res.pop();
-	                dots = ellipsePath(x, y, pa[1], pa[2]);
-	                dots.push(dots[0]);
-	                res = res.concat(dots);
-	            } else if (pa0 == "U") {
-	                res.pop();
-	                res = res.concat(ellipsePath(x, y, pa[1], pa[2], pa[3]));
-	                r = ["U"].concat(res[res.length - 1].slice(-2));
-	            } else {
-	                for (var k = 0, kk = pa.length; k < kk; k++) {
-	                    r[k] = pa[k];
-	                }
-	            }
-	            pa0 = pa0.toUpperCase();
-	            if (pa0 != "O") {
-	                switch (r[0]) {
-	                    case "Z":
-	                        x = +mx;
-	                        y = +my;
-	                        break;
-	                    case "H":
-	                        x = r[1];
-	                        break;
-	                    case "V":
-	                        y = r[1];
-	                        break;
-	                    case "M":
-	                        mx = r[r.length - 2];
-	                        my = r[r.length - 1];
-	                    default:
-	                        x = r[r.length - 2];
-	                        y = r[r.length - 1];
-	                }
-	            }
-	        }
-	        res.toString = toString;
-	        pth.abs = pathClone(res);
-	        return res;
-	    }
-	    function l2c(x1, y1, x2, y2) {
-	        return [x1, y1, x2, y2, x2, y2];
-	    }
-	    function q2c(x1, y1, ax, ay, x2, y2) {
-	        var _13 = 1 / 3,
-	            _23 = 2 / 3;
-	        return [
-	                _13 * x1 + _23 * ax,
-	                _13 * y1 + _23 * ay,
-	                _13 * x2 + _23 * ax,
-	                _13 * y2 + _23 * ay,
-	                x2,
-	                y2
-	            ];
-	    }
-	    function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
-	        // for more information of where this math came from visit:
-	        // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
-	        var _120 = PI * 120 / 180,
-	            rad = PI / 180 * (+angle || 0),
-	            res = [],
-	            xy,
-	            rotate = Snap._.cacher(function (x, y, rad) {
-	                var X = x * math.cos(rad) - y * math.sin(rad),
-	                    Y = x * math.sin(rad) + y * math.cos(rad);
-	                return {x: X, y: Y};
-	            });
-	        if (!recursive) {
-	            xy = rotate(x1, y1, -rad);
-	            x1 = xy.x;
-	            y1 = xy.y;
-	            xy = rotate(x2, y2, -rad);
-	            x2 = xy.x;
-	            y2 = xy.y;
-	            var cos = math.cos(PI / 180 * angle),
-	                sin = math.sin(PI / 180 * angle),
-	                x = (x1 - x2) / 2,
-	                y = (y1 - y2) / 2;
-	            var h = (x * x) / (rx * rx) + (y * y) / (ry * ry);
-	            if (h > 1) {
-	                h = math.sqrt(h);
-	                rx = h * rx;
-	                ry = h * ry;
-	            }
-	            var rx2 = rx * rx,
-	                ry2 = ry * ry,
-	                k = (large_arc_flag == sweep_flag ? -1 : 1) *
-	                    math.sqrt(abs((rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x))),
-	                cx = k * rx * y / ry + (x1 + x2) / 2,
-	                cy = k * -ry * x / rx + (y1 + y2) / 2,
-	                f1 = math.asin(((y1 - cy) / ry).toFixed(9)),
-	                f2 = math.asin(((y2 - cy) / ry).toFixed(9));
-
-	            f1 = x1 < cx ? PI - f1 : f1;
-	            f2 = x2 < cx ? PI - f2 : f2;
-	            f1 < 0 && (f1 = PI * 2 + f1);
-	            f2 < 0 && (f2 = PI * 2 + f2);
-	            if (sweep_flag && f1 > f2) {
-	                f1 = f1 - PI * 2;
-	            }
-	            if (!sweep_flag && f2 > f1) {
-	                f2 = f2 - PI * 2;
-	            }
-	        } else {
-	            f1 = recursive[0];
-	            f2 = recursive[1];
-	            cx = recursive[2];
-	            cy = recursive[3];
-	        }
-	        var df = f2 - f1;
-	        if (abs(df) > _120) {
-	            var f2old = f2,
-	                x2old = x2,
-	                y2old = y2;
-	            f2 = f1 + _120 * (sweep_flag && f2 > f1 ? 1 : -1);
-	            x2 = cx + rx * math.cos(f2);
-	            y2 = cy + ry * math.sin(f2);
-	            res = a2c(x2, y2, rx, ry, angle, 0, sweep_flag, x2old, y2old, [f2, f2old, cx, cy]);
-	        }
-	        df = f2 - f1;
-	        var c1 = math.cos(f1),
-	            s1 = math.sin(f1),
-	            c2 = math.cos(f2),
-	            s2 = math.sin(f2),
-	            t = math.tan(df / 4),
-	            hx = 4 / 3 * rx * t,
-	            hy = 4 / 3 * ry * t,
-	            m1 = [x1, y1],
-	            m2 = [x1 + hx * s1, y1 - hy * c1],
-	            m3 = [x2 + hx * s2, y2 - hy * c2],
-	            m4 = [x2, y2];
-	        m2[0] = 2 * m1[0] - m2[0];
-	        m2[1] = 2 * m1[1] - m2[1];
-	        if (recursive) {
-	            return [m2, m3, m4].concat(res);
-	        } else {
-	            res = [m2, m3, m4].concat(res).join().split(",");
-	            var newres = [];
-	            for (var i = 0, ii = res.length; i < ii; i++) {
-	                newres[i] = i % 2 ? rotate(res[i - 1], res[i], rad).y : rotate(res[i], res[i + 1], rad).x;
-	            }
-	            return newres;
-	        }
-	    }
-	    function findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t) {
-	        var t1 = 1 - t;
-	        return {
-	            x: pow(t1, 3) * p1x + pow(t1, 2) * 3 * t * c1x + t1 * 3 * t * t * c2x + pow(t, 3) * p2x,
-	            y: pow(t1, 3) * p1y + pow(t1, 2) * 3 * t * c1y + t1 * 3 * t * t * c2y + pow(t, 3) * p2y
-	        };
-	    }
-	    
-	    // Returns bounding box of cubic bezier curve.
-	    // Source: http://blog.hackers-cafe.net/2009/06/how-to-calculate-bezier-curves-bounding.html
-	    // Original version: NISHIO Hirokazu
-	    // Modifications: https://github.com/timo22345
-	    function curveDim(x0, y0, x1, y1, x2, y2, x3, y3) {
-	        var tvalues = [],
-	            bounds = [[], []],
-	            a, b, c, t, t1, t2, b2ac, sqrtb2ac;
-	        for (var i = 0; i < 2; ++i) {
-	            if (i == 0) {
-	                b = 6 * x0 - 12 * x1 + 6 * x2;
-	                a = -3 * x0 + 9 * x1 - 9 * x2 + 3 * x3;
-	                c = 3 * x1 - 3 * x0;
-	            } else {
-	                b = 6 * y0 - 12 * y1 + 6 * y2;
-	                a = -3 * y0 + 9 * y1 - 9 * y2 + 3 * y3;
-	                c = 3 * y1 - 3 * y0;
-	            }
-	            if (abs(a) < 1e-12) {
-	                if (abs(b) < 1e-12) {
-	                    continue;
-	                }
-	                t = -c / b;
-	                if (0 < t && t < 1) {
-	                    tvalues.push(t);
-	                }
-	                continue;
-	            }
-	            b2ac = b * b - 4 * c * a;
-	            sqrtb2ac = math.sqrt(b2ac);
-	            if (b2ac < 0) {
-	                continue;
-	            }
-	            t1 = (-b + sqrtb2ac) / (2 * a);
-	            if (0 < t1 && t1 < 1) {
-	                tvalues.push(t1);
-	            }
-	            t2 = (-b - sqrtb2ac) / (2 * a);
-	            if (0 < t2 && t2 < 1) {
-	                tvalues.push(t2);
-	            }
-	        }
-
-	        var x, y, j = tvalues.length,
-	            jlen = j,
-	            mt;
-	        while (j--) {
-	            t = tvalues[j];
-	            mt = 1 - t;
-	            bounds[0][j] = (mt * mt * mt * x0) + (3 * mt * mt * t * x1) + (3 * mt * t * t * x2) + (t * t * t * x3);
-	            bounds[1][j] = (mt * mt * mt * y0) + (3 * mt * mt * t * y1) + (3 * mt * t * t * y2) + (t * t * t * y3);
-	        }
-
-	        bounds[0][jlen] = x0;
-	        bounds[1][jlen] = y0;
-	        bounds[0][jlen + 1] = x3;
-	        bounds[1][jlen + 1] = y3;
-	        bounds[0].length = bounds[1].length = jlen + 2;
-
-
-	        return {
-	          min: {x: mmin.apply(0, bounds[0]), y: mmin.apply(0, bounds[1])},
-	          max: {x: mmax.apply(0, bounds[0]), y: mmax.apply(0, bounds[1])}
-	        };
-	    }
-
-	    function path2curve(path, path2) {
-	        var pth = !path2 && paths(path);
-	        if (!path2 && pth.curve) {
-	            return pathClone(pth.curve);
-	        }
-	        var p = pathToAbsolute(path),
-	            p2 = path2 && pathToAbsolute(path2),
-	            attrs = {x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null},
-	            attrs2 = {x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null},
-	            processPath = function (path, d, pcom) {
-	                var nx, ny;
-	                if (!path) {
-	                    return ["C", d.x, d.y, d.x, d.y, d.x, d.y];
-	                }
-	                !(path[0] in {T: 1, Q: 1}) && (d.qx = d.qy = null);
-	                switch (path[0]) {
-	                    case "M":
-	                        d.X = path[1];
-	                        d.Y = path[2];
-	                        break;
-	                    case "A":
-	                        path = ["C"].concat(a2c.apply(0, [d.x, d.y].concat(path.slice(1))));
-	                        break;
-	                    case "S":
-	                        if (pcom == "C" || pcom == "S") { // In "S" case we have to take into account, if the previous command is C/S.
-	                            nx = d.x * 2 - d.bx;          // And reflect the previous
-	                            ny = d.y * 2 - d.by;          // command's control point relative to the current point.
-	                        }
-	                        else {                            // or some else or nothing
-	                            nx = d.x;
-	                            ny = d.y;
-	                        }
-	                        path = ["C", nx, ny].concat(path.slice(1));
-	                        break;
-	                    case "T":
-	                        if (pcom == "Q" || pcom == "T") { // In "T" case we have to take into account, if the previous command is Q/T.
-	                            d.qx = d.x * 2 - d.qx;        // And make a reflection similar
-	                            d.qy = d.y * 2 - d.qy;        // to case "S".
-	                        }
-	                        else {                            // or something else or nothing
-	                            d.qx = d.x;
-	                            d.qy = d.y;
-	                        }
-	                        path = ["C"].concat(q2c(d.x, d.y, d.qx, d.qy, path[1], path[2]));
-	                        break;
-	                    case "Q":
-	                        d.qx = path[1];
-	                        d.qy = path[2];
-	                        path = ["C"].concat(q2c(d.x, d.y, path[1], path[2], path[3], path[4]));
-	                        break;
-	                    case "L":
-	                        path = ["C"].concat(l2c(d.x, d.y, path[1], path[2]));
-	                        break;
-	                    case "H":
-	                        path = ["C"].concat(l2c(d.x, d.y, path[1], d.y));
-	                        break;
-	                    case "V":
-	                        path = ["C"].concat(l2c(d.x, d.y, d.x, path[1]));
-	                        break;
-	                    case "Z":
-	                        path = ["C"].concat(l2c(d.x, d.y, d.X, d.Y));
-	                        break;
-	                }
-	                return path;
-	            },
-	            fixArc = function (pp, i) {
-	                if (pp[i].length > 7) {
-	                    pp[i].shift();
-	                    var pi = pp[i];
-	                    while (pi.length) {
-	                        pcoms1[i] = "A"; // if created multiple C:s, their original seg is saved
-	                        p2 && (pcoms2[i] = "A"); // the same as above
-	                        pp.splice(i++, 0, ["C"].concat(pi.splice(0, 6)));
-	                    }
-	                    pp.splice(i, 1);
-	                    ii = mmax(p.length, p2 && p2.length || 0);
-	                }
-	            },
-	            fixM = function (path1, path2, a1, a2, i) {
-	                if (path1 && path2 && path1[i][0] == "M" && path2[i][0] != "M") {
-	                    path2.splice(i, 0, ["M", a2.x, a2.y]);
-	                    a1.bx = 0;
-	                    a1.by = 0;
-	                    a1.x = path1[i][1];
-	                    a1.y = path1[i][2];
-	                    ii = mmax(p.length, p2 && p2.length || 0);
-	                }
-	            },
-	            pcoms1 = [], // path commands of original path p
-	            pcoms2 = [], // path commands of original path p2
-	            pfirst = "", // temporary holder for original path command
-	            pcom = ""; // holder for previous path command of original path
-	        for (var i = 0, ii = mmax(p.length, p2 && p2.length || 0); i < ii; i++) {
-	            p[i] && (pfirst = p[i][0]); // save current path command
-
-	            if (pfirst != "C") // C is not saved yet, because it may be result of conversion
-	            {
-	                pcoms1[i] = pfirst; // Save current path command
-	                i && ( pcom = pcoms1[i - 1]); // Get previous path command pcom
-	            }
-	            p[i] = processPath(p[i], attrs, pcom); // Previous path command is inputted to processPath
-
-	            if (pcoms1[i] != "A" && pfirst == "C") pcoms1[i] = "C"; // A is the only command
-	            // which may produce multiple C:s
-	            // so we have to make sure that C is also C in original path
-
-	            fixArc(p, i); // fixArc adds also the right amount of A:s to pcoms1
-
-	            if (p2) { // the same procedures is done to p2
-	                p2[i] && (pfirst = p2[i][0]);
-	                if (pfirst != "C") {
-	                    pcoms2[i] = pfirst;
-	                    i && (pcom = pcoms2[i - 1]);
-	                }
-	                p2[i] = processPath(p2[i], attrs2, pcom);
-
-	                if (pcoms2[i] != "A" && pfirst == "C") {
-	                    pcoms2[i] = "C";
-	                }
-
-	                fixArc(p2, i);
-	            }
-	            fixM(p, p2, attrs, attrs2, i);
-	            fixM(p2, p, attrs2, attrs, i);
-	            var seg = p[i],
-	                seg2 = p2 && p2[i],
-	                seglen = seg.length,
-	                seg2len = p2 && seg2.length;
-	            attrs.x = seg[seglen - 2];
-	            attrs.y = seg[seglen - 1];
-	            attrs.bx = toFloat(seg[seglen - 4]) || attrs.x;
-	            attrs.by = toFloat(seg[seglen - 3]) || attrs.y;
-	            attrs2.bx = p2 && (toFloat(seg2[seg2len - 4]) || attrs2.x);
-	            attrs2.by = p2 && (toFloat(seg2[seg2len - 3]) || attrs2.y);
-	            attrs2.x = p2 && seg2[seg2len - 2];
-	            attrs2.y = p2 && seg2[seg2len - 1];
-	        }
-	        if (!p2) {
-	            pth.curve = pathClone(p);
-	        }
-	        return p2 ? [p, p2] : p;
-	    }
-	    function mapPath(path, matrix) {
-	        if (!matrix) {
-	            return path;
-	        }
-	        var x, y, i, j, ii, jj, pathi;
-	        path = path2curve(path);
-	        for (i = 0, ii = path.length; i < ii; i++) {
-	            pathi = path[i];
-	            for (j = 1, jj = pathi.length; j < jj; j += 2) {
-	                x = matrix.x(pathi[j], pathi[j + 1]);
-	                y = matrix.y(pathi[j], pathi[j + 1]);
-	                pathi[j] = x;
-	                pathi[j + 1] = y;
-	            }
-	        }
-	        return path;
-	    }
-
-	    // http://schepers.cc/getting-to-the-point
-	    function catmullRom2bezier(crp, z) {
-	        var d = [];
-	        for (var i = 0, iLen = crp.length; iLen - 2 * !z > i; i += 2) {
-	            var p = [
-	                        {x: +crp[i - 2], y: +crp[i - 1]},
-	                        {x: +crp[i],     y: +crp[i + 1]},
-	                        {x: +crp[i + 2], y: +crp[i + 3]},
-	                        {x: +crp[i + 4], y: +crp[i + 5]}
-	                    ];
-	            if (z) {
-	                if (!i) {
-	                    p[0] = {x: +crp[iLen - 2], y: +crp[iLen - 1]};
-	                } else if (iLen - 4 == i) {
-	                    p[3] = {x: +crp[0], y: +crp[1]};
-	                } else if (iLen - 2 == i) {
-	                    p[2] = {x: +crp[0], y: +crp[1]};
-	                    p[3] = {x: +crp[2], y: +crp[3]};
-	                }
-	            } else {
-	                if (iLen - 4 == i) {
-	                    p[3] = p[2];
-	                } else if (!i) {
-	                    p[0] = {x: +crp[i], y: +crp[i + 1]};
-	                }
-	            }
-	            d.push(["C",
-	                  (-p[0].x + 6 * p[1].x + p[2].x) / 6,
-	                  (-p[0].y + 6 * p[1].y + p[2].y) / 6,
-	                  (p[1].x + 6 * p[2].x - p[3].x) / 6,
-	                  (p[1].y + 6*p[2].y - p[3].y) / 6,
-	                  p[2].x,
-	                  p[2].y
-	            ]);
-	        }
-
-	        return d;
-	    }
-
-	    // export
-	    Snap.path = paths;
-
-	    /*\
-	     * Snap.path.getTotalLength
-	     [ method ]
-	     **
-	     * Returns the length of the given path in pixels
-	     **
-	     - path (string) SVG path string
-	     **
-	     = (number) length
-	    \*/
-	    Snap.path.getTotalLength = getTotalLength;
-	    /*\
-	     * Snap.path.getPointAtLength
-	     [ method ]
-	     **
-	     * Returns the coordinates of the point located at the given length along the given path
-	     **
-	     - path (string) SVG path string
-	     - length (number) length, in pixels, from the start of the path, excluding non-rendering jumps
-	     **
-	     = (object) representation of the point:
-	     o {
-	     o     x: (number) x coordinate,
-	     o     y: (number) y coordinate,
-	     o     alpha: (number) angle of derivative
-	     o }
-	    \*/
-	    Snap.path.getPointAtLength = getPointAtLength;
-	    /*\
-	     * Snap.path.getSubpath
-	     [ method ]
-	     **
-	     * Returns the subpath of a given path between given start and end lengths
-	     **
-	     - path (string) SVG path string
-	     - from (number) length, in pixels, from the start of the path to the start of the segment
-	     - to (number) length, in pixels, from the start of the path to the end of the segment
-	     **
-	     = (string) path string definition for the segment
-	    \*/
-	    Snap.path.getSubpath = function (path, from, to) {
-	        if (this.getTotalLength(path) - to < 1e-6) {
-	            return getSubpathsAtLength(path, from).end;
-	        }
-	        var a = getSubpathsAtLength(path, to, 1);
-	        return from ? getSubpathsAtLength(a, from).end : a;
-	    };
-	    /*\
-	     * Element.getTotalLength
-	     [ method ]
-	     **
-	     * Returns the length of the path in pixels (only works for `path` elements)
-	     = (number) length
-	    \*/
-	    elproto.getTotalLength = function () {
-	        if (this.node.getTotalLength) {
-	            return this.node.getTotalLength();
-	        }
-	    };
-	    // SIERRA Element.getPointAtLength()/Element.getTotalLength(): If a <path> is broken into different segments, is the jump distance to the new coordinates set by the _M_ or _m_ commands calculated as part of the path's total length?
-	    /*\
-	     * Element.getPointAtLength
-	     [ method ]
-	     **
-	     * Returns coordinates of the point located at the given length on the given path (only works for `path` elements)
-	     **
-	     - length (number) length, in pixels, from the start of the path, excluding non-rendering jumps
-	     **
-	     = (object) representation of the point:
-	     o {
-	     o     x: (number) x coordinate,
-	     o     y: (number) y coordinate,
-	     o     alpha: (number) angle of derivative
-	     o }
-	    \*/
-	    elproto.getPointAtLength = function (length) {
-	        return getPointAtLength(this.attr("d"), length);
-	    };
-	    // SIERRA Element.getSubpath(): Similar to the problem for Element.getPointAtLength(). Unclear how this would work for a segmented path. Overall, the concept of _subpath_ and what I'm calling a _segment_ (series of non-_M_ or _Z_ commands) is unclear.
-	    /*\
-	     * Element.getSubpath
-	     [ method ]
-	     **
-	     * Returns subpath of a given element from given start and end lengths (only works for `path` elements)
-	     **
-	     - from (number) length, in pixels, from the start of the path to the start of the segment
-	     - to (number) length, in pixels, from the start of the path to the end of the segment
-	     **
-	     = (string) path string definition for the segment
-	    \*/
-	    elproto.getSubpath = function (from, to) {
-	        return Snap.path.getSubpath(this.attr("d"), from, to);
-	    };
-	    Snap._.box = box;
-	    /*\
-	     * Snap.path.findDotsAtSegment
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Finds dot coordinates on the given cubic beziér curve at the given t
-	     - p1x (number) x of the first point of the curve
-	     - p1y (number) y of the first point of the curve
-	     - c1x (number) x of the first anchor of the curve
-	     - c1y (number) y of the first anchor of the curve
-	     - c2x (number) x of the second anchor of the curve
-	     - c2y (number) y of the second anchor of the curve
-	     - p2x (number) x of the second point of the curve
-	     - p2y (number) y of the second point of the curve
-	     - t (number) position on the curve (0..1)
-	     = (object) point information in format:
-	     o {
-	     o     x: (number) x coordinate of the point,
-	     o     y: (number) y coordinate of the point,
-	     o     m: {
-	     o         x: (number) x coordinate of the left anchor,
-	     o         y: (number) y coordinate of the left anchor
-	     o     },
-	     o     n: {
-	     o         x: (number) x coordinate of the right anchor,
-	     o         y: (number) y coordinate of the right anchor
-	     o     },
-	     o     start: {
-	     o         x: (number) x coordinate of the start of the curve,
-	     o         y: (number) y coordinate of the start of the curve
-	     o     },
-	     o     end: {
-	     o         x: (number) x coordinate of the end of the curve,
-	     o         y: (number) y coordinate of the end of the curve
-	     o     },
-	     o     alpha: (number) angle of the curve derivative at the point
-	     o }
-	    \*/
-	    Snap.path.findDotsAtSegment = findDotsAtSegment;
-	    /*\
-	     * Snap.path.bezierBBox
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Returns the bounding box of a given cubic beziér curve
-	     - p1x (number) x of the first point of the curve
-	     - p1y (number) y of the first point of the curve
-	     - c1x (number) x of the first anchor of the curve
-	     - c1y (number) y of the first anchor of the curve
-	     - c2x (number) x of the second anchor of the curve
-	     - c2y (number) y of the second anchor of the curve
-	     - p2x (number) x of the second point of the curve
-	     - p2y (number) y of the second point of the curve
-	     * or
-	     - bez (array) array of six points for beziér curve
-	     = (object) bounding box
-	     o {
-	     o     x: (number) x coordinate of the left top point of the box,
-	     o     y: (number) y coordinate of the left top point of the box,
-	     o     x2: (number) x coordinate of the right bottom point of the box,
-	     o     y2: (number) y coordinate of the right bottom point of the box,
-	     o     width: (number) width of the box,
-	     o     height: (number) height of the box
-	     o }
-	    \*/
-	    Snap.path.bezierBBox = bezierBBox;
-	    /*\
-	     * Snap.path.isPointInsideBBox
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Returns `true` if given point is inside bounding box
-	     - bbox (string) bounding box
-	     - x (string) x coordinate of the point
-	     - y (string) y coordinate of the point
-	     = (boolean) `true` if point is inside
-	    \*/
-	    Snap.path.isPointInsideBBox = isPointInsideBBox;
-	    /*\
-	     * Snap.path.isBBoxIntersect
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Returns `true` if two bounding boxes intersect
-	     - bbox1 (string) first bounding box
-	     - bbox2 (string) second bounding box
-	     = (boolean) `true` if bounding boxes intersect
-	    \*/
-	    Snap.path.isBBoxIntersect = isBBoxIntersect;
-	    /*\
-	     * Snap.path.intersection
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Finds intersections of two paths
-	     - path1 (string) path string
-	     - path2 (string) path string
-	     = (array) dots of intersection
-	     o [
-	     o     {
-	     o         x: (number) x coordinate of the point,
-	     o         y: (number) y coordinate of the point,
-	     o         t1: (number) t value for segment of path1,
-	     o         t2: (number) t value for segment of path2,
-	     o         segment1: (number) order number for segment of path1,
-	     o         segment2: (number) order number for segment of path2,
-	     o         bez1: (array) eight coordinates representing beziér curve for the segment of path1,
-	     o         bez2: (array) eight coordinates representing beziér curve for the segment of path2
-	     o     }
-	     o ]
-	    \*/
-	    Snap.path.intersection = pathIntersection;
-	    Snap.path.intersectionNumber = pathIntersectionNumber;
-	    /*\
-	     * Snap.path.isPointInside
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Returns `true` if given point is inside a given closed path.
-	     *
-	     * Note: fill mode doesn’t affect the result of this method.
-	     - path (string) path string
-	     - x (number) x of the point
-	     - y (number) y of the point
-	     = (boolean) `true` if point is inside the path
-	    \*/
-	    Snap.path.isPointInside = isPointInsidePath;
-	    /*\
-	     * Snap.path.getBBox
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Returns the bounding box of a given path
-	     - path (string) path string
-	     = (object) bounding box
-	     o {
-	     o     x: (number) x coordinate of the left top point of the box,
-	     o     y: (number) y coordinate of the left top point of the box,
-	     o     x2: (number) x coordinate of the right bottom point of the box,
-	     o     y2: (number) y coordinate of the right bottom point of the box,
-	     o     width: (number) width of the box,
-	     o     height: (number) height of the box
-	     o }
-	    \*/
-	    Snap.path.getBBox = pathBBox;
-	    Snap.path.get = getPath;
-	    /*\
-	     * Snap.path.toRelative
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Converts path coordinates into relative values
-	     - path (string) path string
-	     = (array) path string
-	    \*/
-	    Snap.path.toRelative = pathToRelative;
-	    /*\
-	     * Snap.path.toAbsolute
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Converts path coordinates into absolute values
-	     - path (string) path string
-	     = (array) path string
-	    \*/
-	    Snap.path.toAbsolute = pathToAbsolute;
-	    /*\
-	     * Snap.path.toCubic
-	     [ method ]
-	     **
-	     * Utility method
-	     **
-	     * Converts path to a new path where all segments are cubic beziér curves
-	     - pathString (string|array) path string or array of segments
-	     = (array) array of segments
-	    \*/
-	    Snap.path.toCubic = path2curve;
-	    /*\
-	     * Snap.path.map
-	     [ method ]
-	     **
-	     * Transform the path string with the given matrix
-	     - path (string) path string
-	     - matrix (object) see @Matrix
-	     = (string) transformed path string
-	    \*/
-	    Snap.path.map = mapPath;
-	    Snap.path.toString = toString;
-	    Snap.path.clone = pathClone;
-	});
-	// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	// 
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	// 
-	// http://www.apache.org/licenses/LICENSE-2.0
-	// 
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	Snap.plugin(function (Snap, Element, Paper, glob) {
-	    var elproto = Element.prototype,
-	    has = "hasOwnProperty",
-	    supportsTouch = "createTouch" in glob.doc,
-	    events = [
-	        "click", "dblclick", "mousedown", "mousemove", "mouseout",
-	        "mouseover", "mouseup", "touchstart", "touchmove", "touchend",
-	        "touchcancel"
-	    ],
-	    touchMap = {
-	        mousedown: "touchstart",
-	        mousemove: "touchmove",
-	        mouseup: "touchend"
-	    },
-	    getScroll = function (xy, el) {
-	        var name = xy == "y" ? "scrollTop" : "scrollLeft",
-	            doc = el && el.node ? el.node.ownerDocument : glob.doc;
-	        return doc[name in doc.documentElement ? "documentElement" : "body"][name];
-	    },
-	    preventDefault = function () {
-	        this.returnValue = false;
-	    },
-	    preventTouch = function () {
-	        return this.originalEvent.preventDefault();
-	    },
-	    stopPropagation = function () {
-	        this.cancelBubble = true;
-	    },
-	    stopTouch = function () {
-	        return this.originalEvent.stopPropagation();
-	    },
-	    addEvent = (function () {
-	        if (glob.doc.addEventListener) {
-	            return function (obj, type, fn, element) {
-	                var realName = supportsTouch && touchMap[type] ? touchMap[type] : type,
-	                    f = function (e) {
-	                        var scrollY = getScroll("y", element),
-	                            scrollX = getScroll("x", element);
-	                        if (supportsTouch && touchMap[has](type)) {
-	                            for (var i = 0, ii = e.targetTouches && e.targetTouches.length; i < ii; i++) {
-	                                if (e.targetTouches[i].target == obj || obj.contains(e.targetTouches[i].target)) {
-	                                    var olde = e;
-	                                    e = e.targetTouches[i];
-	                                    e.originalEvent = olde;
-	                                    e.preventDefault = preventTouch;
-	                                    e.stopPropagation = stopTouch;
-	                                    break;
-	                                }
-	                            }
-	                        }
-	                        var x = e.clientX + scrollX,
-	                            y = e.clientY + scrollY;
-	                        return fn.call(element, e, x, y);
-	                    };
-
-	                if (type !== realName) {
-	                    obj.addEventListener(type, f, false);
-	                }
-
-	                obj.addEventListener(realName, f, false);
-
-	                return function () {
-	                    if (type !== realName) {
-	                        obj.removeEventListener(type, f, false);
-	                    }
-
-	                    obj.removeEventListener(realName, f, false);
-	                    return true;
-	                };
-	            };
-	        } else if (glob.doc.attachEvent) {
-	            return function (obj, type, fn, element) {
-	                var f = function (e) {
-	                    e = e || element.node.ownerDocument.window.event;
-	                    var scrollY = getScroll("y", element),
-	                        scrollX = getScroll("x", element),
-	                        x = e.clientX + scrollX,
-	                        y = e.clientY + scrollY;
-	                    e.preventDefault = e.preventDefault || preventDefault;
-	                    e.stopPropagation = e.stopPropagation || stopPropagation;
-	                    return fn.call(element, e, x, y);
-	                };
-	                obj.attachEvent("on" + type, f);
-	                var detacher = function () {
-	                    obj.detachEvent("on" + type, f);
-	                    return true;
-	                };
-	                return detacher;
-	            };
-	        }
-	    })(),
-	    drag = [],
-	    dragMove = function (e) {
-	        var x = e.clientX,
-	            y = e.clientY,
-	            scrollY = getScroll("y"),
-	            scrollX = getScroll("x"),
-	            dragi,
-	            j = drag.length;
-	        while (j--) {
-	            dragi = drag[j];
-	            if (supportsTouch) {
-	                var i = e.touches && e.touches.length,
-	                    touch;
-	                while (i--) {
-	                    touch = e.touches[i];
-	                    if (touch.identifier == dragi.el._drag.id || dragi.el.node.contains(touch.target)) {
-	                        x = touch.clientX;
-	                        y = touch.clientY;
-	                        (e.originalEvent ? e.originalEvent : e).preventDefault();
-	                        break;
-	                    }
-	                }
-	            } else {
-	                e.preventDefault();
-	            }
-	            var node = dragi.el.node,
-	                o,
-	                next = node.nextSibling,
-	                parent = node.parentNode,
-	                display = node.style.display;
-	            // glob.win.opera && parent.removeChild(node);
-	            // node.style.display = "none";
-	            // o = dragi.el.paper.getElementByPoint(x, y);
-	            // node.style.display = display;
-	            // glob.win.opera && (next ? parent.insertBefore(node, next) : parent.appendChild(node));
-	            // o && eve("snap.drag.over." + dragi.el.id, dragi.el, o);
-	            x += scrollX;
-	            y += scrollY;
-	            eve("snap.drag.move." + dragi.el.id, dragi.move_scope || dragi.el, x - dragi.el._drag.x, y - dragi.el._drag.y, x, y, e);
-	        }
-	    },
-	    dragUp = function (e) {
-	        Snap.unmousemove(dragMove).unmouseup(dragUp);
-	        var i = drag.length,
-	            dragi;
-	        while (i--) {
-	            dragi = drag[i];
-	            dragi.el._drag = {};
-	            eve("snap.drag.end." + dragi.el.id, dragi.end_scope || dragi.start_scope || dragi.move_scope || dragi.el, e);
-	        }
-	        drag = [];
-	    };
-	    /*\
-	     * Element.click
-	     [ method ]
-	     **
-	     * Adds a click event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.unclick
-	     [ method ]
-	     **
-	     * Removes a click event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.dblclick
-	     [ method ]
-	     **
-	     * Adds a double click event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.undblclick
-	     [ method ]
-	     **
-	     * Removes a double click event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.mousedown
-	     [ method ]
-	     **
-	     * Adds a mousedown event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.unmousedown
-	     [ method ]
-	     **
-	     * Removes a mousedown event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.mousemove
-	     [ method ]
-	     **
-	     * Adds a mousemove event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.unmousemove
-	     [ method ]
-	     **
-	     * Removes a mousemove event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.mouseout
-	     [ method ]
-	     **
-	     * Adds a mouseout event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.unmouseout
-	     [ method ]
-	     **
-	     * Removes a mouseout event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.mouseover
-	     [ method ]
-	     **
-	     * Adds a mouseover event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.unmouseover
-	     [ method ]
-	     **
-	     * Removes a mouseover event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.mouseup
-	     [ method ]
-	     **
-	     * Adds a mouseup event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.unmouseup
-	     [ method ]
-	     **
-	     * Removes a mouseup event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.touchstart
-	     [ method ]
-	     **
-	     * Adds a touchstart event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.untouchstart
-	     [ method ]
-	     **
-	     * Removes a touchstart event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.touchmove
-	     [ method ]
-	     **
-	     * Adds a touchmove event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.untouchmove
-	     [ method ]
-	     **
-	     * Removes a touchmove event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.touchend
-	     [ method ]
-	     **
-	     * Adds a touchend event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.untouchend
-	     [ method ]
-	     **
-	     * Removes a touchend event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    
-	    /*\
-	     * Element.touchcancel
-	     [ method ]
-	     **
-	     * Adds a touchcancel event handler to the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    /*\
-	     * Element.untouchcancel
-	     [ method ]
-	     **
-	     * Removes a touchcancel event handler from the element
-	     - handler (function) handler for the event
-	     = (object) @Element
-	    \*/
-	    for (var i = events.length; i--;) {
-	        (function (eventName) {
-	            Snap[eventName] = elproto[eventName] = function (fn, scope) {
-	                if (Snap.is(fn, "function")) {
-	                    this.events = this.events || [];
-	                    this.events.push({
-	                        name: eventName,
-	                        f: fn,
-	                        unbind: addEvent(this.node || document, eventName, fn, scope || this)
-	                    });
-	                }
-	                return this;
-	            };
-	            Snap["un" + eventName] =
-	            elproto["un" + eventName] = function (fn) {
-	                var events = this.events || [],
-	                    l = events.length;
-	                while (l--) if (events[l].name == eventName &&
-	                               (events[l].f == fn || !fn)) {
-	                    events[l].unbind();
-	                    events.splice(l, 1);
-	                    !events.length && delete this.events;
-	                    return this;
-	                }
-	                return this;
-	            };
-	        })(events[i]);
-	    }
-	    /*\
-	     * Element.hover
-	     [ method ]
-	     **
-	     * Adds hover event handlers to the element
-	     - f_in (function) handler for hover in
-	     - f_out (function) handler for hover out
-	     - icontext (object) #optional context for hover in handler
-	     - ocontext (object) #optional context for hover out handler
-	     = (object) @Element
-	    \*/
-	    elproto.hover = function (f_in, f_out, scope_in, scope_out) {
-	        return this.mouseover(f_in, scope_in).mouseout(f_out, scope_out || scope_in);
-	    };
-	    /*\
-	     * Element.unhover
-	     [ method ]
-	     **
-	     * Removes hover event handlers from the element
-	     - f_in (function) handler for hover in
-	     - f_out (function) handler for hover out
-	     = (object) @Element
-	    \*/
-	    elproto.unhover = function (f_in, f_out) {
-	        return this.unmouseover(f_in).unmouseout(f_out);
-	    };
-	    var draggable = [];
-	    // SIERRA unclear what _context_ refers to for starting, ending, moving the drag gesture.
-	    // SIERRA Element.drag(): _x position of the mouse_: Where are the x/y values offset from?
-	    // SIERRA Element.drag(): much of this member's doc appears to be duplicated for some reason.
-	    // SIERRA Unclear about this sentence: _Additionally following drag events will be triggered: drag.start.<id> on start, drag.end.<id> on end and drag.move.<id> on every move._ Is there a global _drag_ object to which you can assign handlers keyed by an element's ID?
-	    /*\
-	     * Element.drag
-	     [ method ]
-	     **
-	     * Adds event handlers for an element's drag gesture
-	     **
-	     - onmove (function) handler for moving
-	     - onstart (function) handler for drag start
-	     - onend (function) handler for drag end
-	     - mcontext (object) #optional context for moving handler
-	     - scontext (object) #optional context for drag start handler
-	     - econtext (object) #optional context for drag end handler
-	     * Additionaly following `drag` events are triggered: `drag.start.<id>` on start, 
-	     * `drag.end.<id>` on end and `drag.move.<id>` on every move. When element is dragged over another element 
-	     * `drag.over.<id>` fires as well.
-	     *
-	     * Start event and start handler are called in specified context or in context of the element with following parameters:
-	     o x (number) x position of the mouse
-	     o y (number) y position of the mouse
-	     o event (object) DOM event object
-	     * Move event and move handler are called in specified context or in context of the element with following parameters:
-	     o dx (number) shift by x from the start point
-	     o dy (number) shift by y from the start point
-	     o x (number) x position of the mouse
-	     o y (number) y position of the mouse
-	     o event (object) DOM event object
-	     * End event and end handler are called in specified context or in context of the element with following parameters:
-	     o event (object) DOM event object
-	     = (object) @Element
-	    \*/
-	    elproto.drag = function (onmove, onstart, onend, move_scope, start_scope, end_scope) {
-	        if (!arguments.length) {
-	            var origTransform;
-	            return this.drag(function (dx, dy) {
-	                this.attr({
-	                    transform: origTransform + (origTransform ? "T" : "t") + [dx, dy]
-	                });
-	            }, function () {
-	                origTransform = this.transform().local;
-	            });
-	        }
-	        function start(e, x, y) {
-	            (e.originalEvent || e).preventDefault();
-	            this._drag.x = x;
-	            this._drag.y = y;
-	            this._drag.id = e.identifier;
-	            !drag.length && Snap.mousemove(dragMove).mouseup(dragUp);
-	            drag.push({el: this, move_scope: move_scope, start_scope: start_scope, end_scope: end_scope});
-	            onstart && eve.on("snap.drag.start." + this.id, onstart);
-	            onmove && eve.on("snap.drag.move." + this.id, onmove);
-	            onend && eve.on("snap.drag.end." + this.id, onend);
-	            eve("snap.drag.start." + this.id, start_scope || move_scope || this, x, y, e);
-	        }
-	        this._drag = {};
-	        draggable.push({el: this, start: start});
-	        this.mousedown(start);
-	        return this;
-	    };
-	    /*
-	     * Element.onDragOver
-	     [ method ]
-	     **
-	     * Shortcut to assign event handler for `drag.over.<id>` event, where `id` is the element's `id` (see @Element.id)
-	     - f (function) handler for event, first argument would be the element you are dragging over
-	    \*/
-	    // elproto.onDragOver = function (f) {
-	    //     f ? eve.on("snap.drag.over." + this.id, f) : eve.unbind("snap.drag.over." + this.id);
-	    // };
-	    /*\
-	     * Element.undrag
-	     [ method ]
-	     **
-	     * Removes all drag event handlers from the given element
-	    \*/
-	    elproto.undrag = function () {
-	        var i = draggable.length;
-	        while (i--) if (draggable[i].el == this) {
-	            this.unmousedown(draggable[i].start);
-	            draggable.splice(i, 1);
-	            eve.unbind("snap.drag.*." + this.id);
-	        }
-	        !draggable.length && Snap.unmousemove(dragMove).unmouseup(dragUp);
-	        return this;
-	    };
-	});
-	// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	// 
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	// 
-	// http://www.apache.org/licenses/LICENSE-2.0
-	// 
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	Snap.plugin(function (Snap, Element, Paper, glob) {
-	    var elproto = Element.prototype,
-	        pproto = Paper.prototype,
-	        rgurl = /^\s*url\((.+)\)/,
-	        Str = String,
-	        $ = Snap._.$;
-	    Snap.filter = {};
-	    /*\
-	     * Paper.filter
-	     [ method ]
-	     **
-	     * Creates a `<filter>` element
-	     **
-	     - filstr (string) SVG fragment of filter provided as a string
-	     = (object) @Element
-	     * Note: It is recommended to use filters embedded into the page inside an empty SVG element.
-	     > Usage
-	     | var f = paper.filter('<feGaussianBlur stdDeviation="2"/>'),
-	     |     c = paper.circle(10, 10, 10).attr({
-	     |         filter: f
-	     |     });
-	    \*/
-	    pproto.filter = function (filstr) {
-	        var paper = this;
-	        if (paper.type != "svg") {
-	            paper = paper.paper;
-	        }
-	        var f = Snap.parse(Str(filstr)),
-	            id = Snap._.id(),
-	            width = paper.node.offsetWidth,
-	            height = paper.node.offsetHeight,
-	            filter = $("filter");
-	        $(filter, {
-	            id: id,
-	            filterUnits: "userSpaceOnUse"
-	        });
-	        filter.appendChild(f.node);
-	        paper.defs.appendChild(filter);
-	        return new Element(filter);
-	    };
-	    
-	    eve.on("snap.util.getattr.filter", function () {
-	        eve.stop();
-	        var p = $(this.node, "filter");
-	        if (p) {
-	            var match = Str(p).match(rgurl);
-	            return match && Snap.select(match[1]);
-	        }
-	    });
-	    eve.on("snap.util.attr.filter", function (value) {
-	        if (value instanceof Element && value.type == "filter") {
-	            eve.stop();
-	            var id = value.node.id;
-	            if (!id) {
-	                $(value.node, {id: value.id});
-	                id = value.id;
-	            }
-	            $(this.node, {
-	                filter: Snap.url(id)
-	            });
-	        }
-	        if (!value || value == "none") {
-	            eve.stop();
-	            this.node.removeAttribute("filter");
-	        }
-	    });
-	    /*\
-	     * Snap.filter.blur
-	     [ method ]
-	     **
-	     * Returns an SVG markup string for the blur filter
-	     **
-	     - x (number) amount of horizontal blur, in pixels
-	     - y (number) #optional amount of vertical blur, in pixels
-	     = (string) filter representation
-	     > Usage
-	     | var f = paper.filter(Snap.filter.blur(5, 10)),
-	     |     c = paper.circle(10, 10, 10).attr({
-	     |         filter: f
-	     |     });
-	    \*/
-	    Snap.filter.blur = function (x, y) {
-	        if (x == null) {
-	            x = 2;
-	        }
-	        var def = y == null ? x : [x, y];
-	        return Snap.format('\<feGaussianBlur stdDeviation="{def}"/>', {
-	            def: def
-	        });
-	    };
-	    Snap.filter.blur.toString = function () {
-	        return this();
-	    };
-	    /*\
-	     * Snap.filter.shadow
-	     [ method ]
-	     **
-	     * Returns an SVG markup string for the shadow filter
-	     **
-	     - dx (number) #optional horizontal shift of the shadow, in pixels
-	     - dy (number) #optional vertical shift of the shadow, in pixels
-	     - blur (number) #optional amount of blur
-	     - color (string) #optional color of the shadow
-	     - opacity (number) #optional `0..1` opacity of the shadow
-	     * or
-	     - dx (number) #optional horizontal shift of the shadow, in pixels
-	     - dy (number) #optional vertical shift of the shadow, in pixels
-	     - color (string) #optional color of the shadow
-	     - opacity (number) #optional `0..1` opacity of the shadow
-	     * which makes blur default to `4`. Or
-	     - dx (number) #optional horizontal shift of the shadow, in pixels
-	     - dy (number) #optional vertical shift of the shadow, in pixels
-	     - opacity (number) #optional `0..1` opacity of the shadow
-	     = (string) filter representation
-	     > Usage
-	     | var f = paper.filter(Snap.filter.shadow(0, 2, 3)),
-	     |     c = paper.circle(10, 10, 10).attr({
-	     |         filter: f
-	     |     });
-	    \*/
-	    Snap.filter.shadow = function (dx, dy, blur, color, opacity) {
-	        if (typeof blur == "string") {
-	            color = blur;
-	            opacity = color;
-	            blur = 4;
-	        }
-	        if (typeof color != "string") {
-	            opacity = color;
-	            color = "#000";
-	        }
-	        color = color || "#000";
-	        if (blur == null) {
-	            blur = 4;
-	        }
-	        if (opacity == null) {
-	            opacity = 1;
-	        }
-	        if (dx == null) {
-	            dx = 0;
-	            dy = 2;
-	        }
-	        if (dy == null) {
-	            dy = dx;
-	        }
-	        color = Snap.color(color);
-	        return Snap.format('<feGaussianBlur in="SourceAlpha" stdDeviation="{blur}"/><feOffset dx="{dx}" dy="{dy}" result="offsetblur"/><feFlood flood-color="{color}"/><feComposite in2="offsetblur" operator="in"/><feComponentTransfer><feFuncA type="linear" slope="{opacity}"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>', {
-	            color: color,
-	            dx: dx,
-	            dy: dy,
-	            blur: blur,
-	            opacity: opacity
-	        });
-	    };
-	    Snap.filter.shadow.toString = function () {
-	        return this();
-	    };
-	    /*\
-	     * Snap.filter.grayscale
-	     [ method ]
-	     **
-	     * Returns an SVG markup string for the grayscale filter
-	     **
-	     - amount (number) amount of filter (`0..1`)
-	     = (string) filter representation
-	    \*/
-	    Snap.filter.grayscale = function (amount) {
-	        if (amount == null) {
-	            amount = 1;
-	        }
-	        return Snap.format('<feColorMatrix type="matrix" values="{a} {b} {c} 0 0 {d} {e} {f} 0 0 {g} {b} {h} 0 0 0 0 0 1 0"/>', {
-	            a: 0.2126 + 0.7874 * (1 - amount),
-	            b: 0.7152 - 0.7152 * (1 - amount),
-	            c: 0.0722 - 0.0722 * (1 - amount),
-	            d: 0.2126 - 0.2126 * (1 - amount),
-	            e: 0.7152 + 0.2848 * (1 - amount),
-	            f: 0.0722 - 0.0722 * (1 - amount),
-	            g: 0.2126 - 0.2126 * (1 - amount),
-	            h: 0.0722 + 0.9278 * (1 - amount)
-	        });
-	    };
-	    Snap.filter.grayscale.toString = function () {
-	        return this();
-	    };
-	    /*\
-	     * Snap.filter.sepia
-	     [ method ]
-	     **
-	     * Returns an SVG markup string for the sepia filter
-	     **
-	     - amount (number) amount of filter (`0..1`)
-	     = (string) filter representation
-	    \*/
-	    Snap.filter.sepia = function (amount) {
-	        if (amount == null) {
-	            amount = 1;
-	        }
-	        return Snap.format('<feColorMatrix type="matrix" values="{a} {b} {c} 0 0 {d} {e} {f} 0 0 {g} {h} {i} 0 0 0 0 0 1 0"/>', {
-	            a: 0.393 + 0.607 * (1 - amount),
-	            b: 0.769 - 0.769 * (1 - amount),
-	            c: 0.189 - 0.189 * (1 - amount),
-	            d: 0.349 - 0.349 * (1 - amount),
-	            e: 0.686 + 0.314 * (1 - amount),
-	            f: 0.168 - 0.168 * (1 - amount),
-	            g: 0.272 - 0.272 * (1 - amount),
-	            h: 0.534 - 0.534 * (1 - amount),
-	            i: 0.131 + 0.869 * (1 - amount)
-	        });
-	    };
-	    Snap.filter.sepia.toString = function () {
-	        return this();
-	    };
-	    /*\
-	     * Snap.filter.saturate
-	     [ method ]
-	     **
-	     * Returns an SVG markup string for the saturate filter
-	     **
-	     - amount (number) amount of filter (`0..1`)
-	     = (string) filter representation
-	    \*/
-	    Snap.filter.saturate = function (amount) {
-	        if (amount == null) {
-	            amount = 1;
-	        }
-	        return Snap.format('<feColorMatrix type="saturate" values="{amount}"/>', {
-	            amount: 1 - amount
-	        });
-	    };
-	    Snap.filter.saturate.toString = function () {
-	        return this();
-	    };
-	    /*\
-	     * Snap.filter.hueRotate
-	     [ method ]
-	     **
-	     * Returns an SVG markup string for the hue-rotate filter
-	     **
-	     - angle (number) angle of rotation
-	     = (string) filter representation
-	    \*/
-	    Snap.filter.hueRotate = function (angle) {
-	        angle = angle || 0;
-	        return Snap.format('<feColorMatrix type="hueRotate" values="{angle}"/>', {
-	            angle: angle
-	        });
-	    };
-	    Snap.filter.hueRotate.toString = function () {
-	        return this();
-	    };
-	    /*\
-	     * Snap.filter.invert
-	     [ method ]
-	     **
-	     * Returns an SVG markup string for the invert filter
-	     **
-	     - amount (number) amount of filter (`0..1`)
-	     = (string) filter representation
-	    \*/
-	    Snap.filter.invert = function (amount) {
-	        if (amount == null) {
-	            amount = 1;
-	        }
-	        return Snap.format('<feComponentTransfer><feFuncR type="table" tableValues="{amount} {amount2}"/><feFuncG type="table" tableValues="{amount} {amount2}"/><feFuncB type="table" tableValues="{amount} {amount2}"/></feComponentTransfer>', {
-	            amount: amount,
-	            amount2: 1 - amount
-	        });
-	    };
-	    Snap.filter.invert.toString = function () {
-	        return this();
-	    };
-	    /*\
-	     * Snap.filter.brightness
-	     [ method ]
-	     **
-	     * Returns an SVG markup string for the brightness filter
-	     **
-	     - amount (number) amount of filter (`0..1`)
-	     = (string) filter representation
-	    \*/
-	    Snap.filter.brightness = function (amount) {
-	        if (amount == null) {
-	            amount = 1;
-	        }
-	        return Snap.format('<feComponentTransfer><feFuncR type="linear" slope="{amount}"/><feFuncG type="linear" slope="{amount}"/><feFuncB type="linear" slope="{amount}"/></feComponentTransfer>', {
-	            amount: amount
-	        });
-	    };
-	    Snap.filter.brightness.toString = function () {
-	        return this();
-	    };
-	    /*\
-	     * Snap.filter.contrast
-	     [ method ]
-	     **
-	     * Returns an SVG markup string for the contrast filter
-	     **
-	     - amount (number) amount of filter (`0..1`)
-	     = (string) filter representation
-	    \*/
-	    Snap.filter.contrast = function (amount) {
-	        if (amount == null) {
-	            amount = 1;
-	        }
-	        return Snap.format('<feComponentTransfer><feFuncR type="linear" slope="{amount}" intercept="{amount2}"/><feFuncG type="linear" slope="{amount}" intercept="{amount2}"/><feFuncB type="linear" slope="{amount}" intercept="{amount2}"/></feComponentTransfer>', {
-	            amount: amount,
-	            amount2: .5 - amount / 2
-	        });
-	    };
-	    Snap.filter.contrast.toString = function () {
-	        return this();
-	    };
-	});
-
-	return Snap;
-	}));
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-	// 
-	// Licensed under the Apache License, Version 2.0 (the "License");
-	// you may not use this file except in compliance with the License.
-	// You may obtain a copy of the License at
-	// 
-	// http://www.apache.org/licenses/LICENSE-2.0
-	// 
-	// Unless required by applicable law or agreed to in writing, software
-	// distributed under the License is distributed on an "AS IS" BASIS,
-	// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	// See the License for the specific language governing permissions and
-	// limitations under the License.
-	// ┌────────────────────────────────────────────────────────────┐ \\
-	// │ Eve 0.4.2 - JavaScript Events Library                      │ \\
-	// ├────────────────────────────────────────────────────────────┤ \\
-	// │ Author Dmitry Baranovskiy (http://dmitry.baranovskiy.com/) │ \\
-	// └────────────────────────────────────────────────────────────┘ \\
-
-	(function (glob) {
-	    var version = "0.4.2",
-	        has = "hasOwnProperty",
-	        separator = /[\.\/]/,
-	        comaseparator = /\s*,\s*/,
-	        wildcard = "*",
-	        fun = function () {},
-	        numsort = function (a, b) {
-	            return a - b;
-	        },
-	        current_event,
-	        stop,
-	        events = {n: {}},
-	        firstDefined = function () {
-	            for (var i = 0, ii = this.length; i < ii; i++) {
-	                if (typeof this[i] != "undefined") {
-	                    return this[i];
-	                }
-	            }
-	        },
-	        lastDefined = function () {
-	            var i = this.length;
-	            while (--i) {
-	                if (typeof this[i] != "undefined") {
-	                    return this[i];
-	                }
-	            }
-	        },
-	    /*\
-	     * eve
-	     [ method ]
-
-	     * Fires event with given `name`, given scope and other parameters.
-
-	     > Arguments
-
-	     - name (string) name of the *event*, dot (`.`) or slash (`/`) separated
-	     - scope (object) context for the event handlers
-	     - varargs (...) the rest of arguments will be sent to event handlers
-
-	     = (object) array of returned values from the listeners. Array has two methods `.firstDefined()` and `.lastDefined()` to get first or last not `undefined` value.
-	    \*/
-	        eve = function (name, scope) {
-	            name = String(name);
-	            var e = events,
-	                oldstop = stop,
-	                args = Array.prototype.slice.call(arguments, 2),
-	                listeners = eve.listeners(name),
-	                z = 0,
-	                f = false,
-	                l,
-	                indexed = [],
-	                queue = {},
-	                out = [],
-	                ce = current_event,
-	                errors = [];
-	            out.firstDefined = firstDefined;
-	            out.lastDefined = lastDefined;
-	            current_event = name;
-	            stop = 0;
-	            for (var i = 0, ii = listeners.length; i < ii; i++) if ("zIndex" in listeners[i]) {
-	                indexed.push(listeners[i].zIndex);
-	                if (listeners[i].zIndex < 0) {
-	                    queue[listeners[i].zIndex] = listeners[i];
-	                }
-	            }
-	            indexed.sort(numsort);
-	            while (indexed[z] < 0) {
-	                l = queue[indexed[z++]];
-	                out.push(l.apply(scope, args));
-	                if (stop) {
-	                    stop = oldstop;
-	                    return out;
-	                }
-	            }
-	            for (i = 0; i < ii; i++) {
-	                l = listeners[i];
-	                if ("zIndex" in l) {
-	                    if (l.zIndex == indexed[z]) {
-	                        out.push(l.apply(scope, args));
-	                        if (stop) {
-	                            break;
-	                        }
-	                        do {
-	                            z++;
-	                            l = queue[indexed[z]];
-	                            l && out.push(l.apply(scope, args));
-	                            if (stop) {
-	                                break;
-	                            }
-	                        } while (l)
-	                    } else {
-	                        queue[l.zIndex] = l;
-	                    }
-	                } else {
-	                    out.push(l.apply(scope, args));
-	                    if (stop) {
-	                        break;
-	                    }
-	                }
-	            }
-	            stop = oldstop;
-	            current_event = ce;
-	            return out;
-	        };
-	        // Undocumented. Debug only.
-	        eve._events = events;
-	    /*\
-	     * eve.listeners
-	     [ method ]
-
-	     * Internal method which gives you array of all event handlers that will be triggered by the given `name`.
-
-	     > Arguments
-
-	     - name (string) name of the event, dot (`.`) or slash (`/`) separated
-
-	     = (array) array of event handlers
-	    \*/
-	    eve.listeners = function (name) {
-	        var names = name.split(separator),
-	            e = events,
-	            item,
-	            items,
-	            k,
-	            i,
-	            ii,
-	            j,
-	            jj,
-	            nes,
-	            es = [e],
-	            out = [];
-	        for (i = 0, ii = names.length; i < ii; i++) {
-	            nes = [];
-	            for (j = 0, jj = es.length; j < jj; j++) {
-	                e = es[j].n;
-	                items = [e[names[i]], e[wildcard]];
-	                k = 2;
-	                while (k--) {
-	                    item = items[k];
-	                    if (item) {
-	                        nes.push(item);
-	                        out = out.concat(item.f || []);
-	                    }
-	                }
-	            }
-	            es = nes;
-	        }
-	        return out;
-	    };
-	    
-	    /*\
-	     * eve.on
-	     [ method ]
-	     **
-	     * Binds given event handler with a given name. You can use wildcards “`*`” for the names:
-	     | eve.on("*.under.*", f);
-	     | eve("mouse.under.floor"); // triggers f
-	     * Use @eve to trigger the listener.
-	     **
-	     > Arguments
-	     **
-	     - name (string) name of the event, dot (`.`) or slash (`/`) separated, with optional wildcards
-	     - f (function) event handler function
-	     **
-	     = (function) returned function accepts a single numeric parameter that represents z-index of the handler. It is an optional feature and only used when you need to ensure that some subset of handlers will be invoked in a given order, despite of the order of assignment. 
-	     > Example:
-	     | eve.on("mouse", eatIt)(2);
-	     | eve.on("mouse", scream);
-	     | eve.on("mouse", catchIt)(1);
-	     * This will ensure that `catchIt` function will be called before `eatIt`.
-	     *
-	     * If you want to put your handler before non-indexed handlers, specify a negative value.
-	     * Note: I assume most of the time you don’t need to worry about z-index, but it’s nice to have this feature “just in case”.
-	    \*/
-	    eve.on = function (name, f) {
-	        name = String(name);
-	        if (typeof f != "function") {
-	            return function () {};
-	        }
-	        var names = name.split(comaseparator);
-	        for (var i = 0, ii = names.length; i < ii; i++) {
-	            (function (name) {
-	                var names = name.split(separator),
-	                    e = events,
-	                    exist;
-	                for (var i = 0, ii = names.length; i < ii; i++) {
-	                    e = e.n;
-	                    e = e.hasOwnProperty(names[i]) && e[names[i]] || (e[names[i]] = {n: {}});
-	                }
-	                e.f = e.f || [];
-	                for (i = 0, ii = e.f.length; i < ii; i++) if (e.f[i] == f) {
-	                    exist = true;
-	                    break;
-	                }
-	                !exist && e.f.push(f);
-	            }(names[i]));
-	        }
-	        return function (zIndex) {
-	            if (+zIndex == +zIndex) {
-	                f.zIndex = +zIndex;
-	            }
-	        };
-	    };
-	    /*\
-	     * eve.f
-	     [ method ]
-	     **
-	     * Returns function that will fire given event with optional arguments.
-	     * Arguments that will be passed to the result function will be also
-	     * concated to the list of final arguments.
-	     | el.onclick = eve.f("click", 1, 2);
-	     | eve.on("click", function (a, b, c) {
-	     |     console.log(a, b, c); // 1, 2, [event object]
-	     | });
-	     > Arguments
-	     - event (string) event name
-	     - varargs (…) and any other arguments
-	     = (function) possible event handler function
-	    \*/
-	    eve.f = function (event) {
-	        var attrs = [].slice.call(arguments, 1);
-	        return function () {
-	            eve.apply(null, [event, null].concat(attrs).concat([].slice.call(arguments, 0)));
-	        };
-	    };
-	    /*\
-	     * eve.stop
-	     [ method ]
-	     **
-	     * Is used inside an event handler to stop the event, preventing any subsequent listeners from firing.
-	    \*/
-	    eve.stop = function () {
-	        stop = 1;
-	    };
-	    /*\
-	     * eve.nt
-	     [ method ]
-	     **
-	     * Could be used inside event handler to figure out actual name of the event.
-	     **
-	     > Arguments
-	     **
-	     - subname (string) #optional subname of the event
-	     **
-	     = (string) name of the event, if `subname` is not specified
-	     * or
-	     = (boolean) `true`, if current event’s name contains `subname`
-	    \*/
-	    eve.nt = function (subname) {
-	        if (subname) {
-	            return new RegExp("(?:\\.|\\/|^)" + subname + "(?:\\.|\\/|$)").test(current_event);
-	        }
-	        return current_event;
-	    };
-	    /*\
-	     * eve.nts
-	     [ method ]
-	     **
-	     * Could be used inside event handler to figure out actual name of the event.
-	     **
-	     **
-	     = (array) names of the event
-	    \*/
-	    eve.nts = function () {
-	        return current_event.split(separator);
-	    };
-	    /*\
-	     * eve.off
-	     [ method ]
-	     **
-	     * Removes given function from the list of event listeners assigned to given name.
-	     * If no arguments specified all the events will be cleared.
-	     **
-	     > Arguments
-	     **
-	     - name (string) name of the event, dot (`.`) or slash (`/`) separated, with optional wildcards
-	     - f (function) event handler function
-	    \*/
-	    /*\
-	     * eve.unbind
-	     [ method ]
-	     **
-	     * See @eve.off
-	    \*/
-	    eve.off = eve.unbind = function (name, f) {
-	        if (!name) {
-	            eve._events = events = {n: {}};
-	            return;
-	        }
-	        var names = name.split(comaseparator);
-	        if (names.length > 1) {
-	            for (var i = 0, ii = names.length; i < ii; i++) {
-	                eve.off(names[i], f);
-	            }
-	            return;
-	        }
-	        names = name.split(separator);
-	        var e,
-	            key,
-	            splice,
-	            i, ii, j, jj,
-	            cur = [events];
-	        for (i = 0, ii = names.length; i < ii; i++) {
-	            for (j = 0; j < cur.length; j += splice.length - 2) {
-	                splice = [j, 1];
-	                e = cur[j].n;
-	                if (names[i] != wildcard) {
-	                    if (e[names[i]]) {
-	                        splice.push(e[names[i]]);
-	                    }
-	                } else {
-	                    for (key in e) if (e[has](key)) {
-	                        splice.push(e[key]);
-	                    }
-	                }
-	                cur.splice.apply(cur, splice);
-	            }
-	        }
-	        for (i = 0, ii = cur.length; i < ii; i++) {
-	            e = cur[i];
-	            while (e.n) {
-	                if (f) {
-	                    if (e.f) {
-	                        for (j = 0, jj = e.f.length; j < jj; j++) if (e.f[j] == f) {
-	                            e.f.splice(j, 1);
-	                            break;
-	                        }
-	                        !e.f.length && delete e.f;
-	                    }
-	                    for (key in e.n) if (e.n[has](key) && e.n[key].f) {
-	                        var funcs = e.n[key].f;
-	                        for (j = 0, jj = funcs.length; j < jj; j++) if (funcs[j] == f) {
-	                            funcs.splice(j, 1);
-	                            break;
-	                        }
-	                        !funcs.length && delete e.n[key].f;
-	                    }
-	                } else {
-	                    delete e.f;
-	                    for (key in e.n) if (e.n[has](key) && e.n[key].f) {
-	                        delete e.n[key].f;
-	                    }
-	                }
-	                e = e.n;
-	            }
-	        }
-	    };
-	    /*\
-	     * eve.once
-	     [ method ]
-	     **
-	     * Binds given event handler with a given name to only run once then unbind itself.
-	     | eve.once("login", f);
-	     | eve("login"); // triggers f
-	     | eve("login"); // no listeners
-	     * Use @eve to trigger the listener.
-	     **
-	     > Arguments
-	     **
-	     - name (string) name of the event, dot (`.`) or slash (`/`) separated, with optional wildcards
-	     - f (function) event handler function
-	     **
-	     = (function) same return function as @eve.on
-	    \*/
-	    eve.once = function (name, f) {
-	        var f2 = function () {
-	            eve.unbind(name, f2);
-	            return f.apply(this, arguments);
-	        };
-	        return eve.on(name, f2);
-	    };
-	    /*\
-	     * eve.version
-	     [ property (string) ]
-	     **
-	     * Current version of the library.
-	    \*/
-	    eve.version = version;
-	    eve.toString = function () {
-	        return "You are running Eve " + version;
-	    };
-	    (typeof module != "undefined" && module.exports) ? (module.exports = eve) : ( true ? (!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() { return eve; }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))) : (glob.eve = eve));
-	})(this);
-
-
-/***/ },
-/* 69 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var isArray = __webpack_require__(70),
-	    assign = __webpack_require__(77),
-	    reduce = __webpack_require__(94);
+	var isArray = __webpack_require__(78),
+	    assign = __webpack_require__(85),
+	    reduce = __webpack_require__(102);
 
 
 	/**
@@ -11829,12 +5091,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 70 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(71),
-	    isLength = __webpack_require__(76),
-	    isObjectLike = __webpack_require__(75);
+	var getNative = __webpack_require__(79),
+	    isLength = __webpack_require__(84),
+	    isObjectLike = __webpack_require__(83);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -11875,10 +5137,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 71 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(72);
+	var isNative = __webpack_require__(80);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -11897,11 +5159,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 72 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(73),
-	    isObjectLike = __webpack_require__(75);
+	var isFunction = __webpack_require__(81),
+	    isObjectLike = __webpack_require__(83);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -11951,10 +5213,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 73 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(74);
+	var isObject = __webpack_require__(82);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -11995,7 +5257,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 74 */
+/* 82 */
 /***/ function(module, exports) {
 
 	/**
@@ -12029,7 +5291,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 75 */
+/* 83 */
 /***/ function(module, exports) {
 
 	/**
@@ -12047,7 +5309,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 76 */
+/* 84 */
 /***/ function(module, exports) {
 
 	/**
@@ -12073,12 +5335,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 77 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignWith = __webpack_require__(78),
-	    baseAssign = __webpack_require__(87),
-	    createAssigner = __webpack_require__(89);
+	var assignWith = __webpack_require__(86),
+	    baseAssign = __webpack_require__(95),
+	    createAssigner = __webpack_require__(97);
 
 	/**
 	 * Assigns own enumerable properties of source object(s) to the destination
@@ -12122,10 +5384,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 78 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(79);
+	var keys = __webpack_require__(87);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -12160,13 +5422,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 79 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(71),
-	    isArrayLike = __webpack_require__(80),
-	    isObject = __webpack_require__(74),
-	    shimKeys = __webpack_require__(83);
+	var getNative = __webpack_require__(79),
+	    isArrayLike = __webpack_require__(88),
+	    isObject = __webpack_require__(82),
+	    shimKeys = __webpack_require__(91);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -12211,11 +5473,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 80 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(81),
-	    isLength = __webpack_require__(76);
+	var getLength = __webpack_require__(89),
+	    isLength = __webpack_require__(84);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -12232,10 +5494,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 81 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(82);
+	var baseProperty = __webpack_require__(90);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -12253,7 +5515,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 82 */
+/* 90 */
 /***/ function(module, exports) {
 
 	/**
@@ -12273,14 +5535,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 83 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(84),
-	    isArray = __webpack_require__(70),
-	    isIndex = __webpack_require__(85),
-	    isLength = __webpack_require__(76),
-	    keysIn = __webpack_require__(86);
+	var isArguments = __webpack_require__(92),
+	    isArray = __webpack_require__(78),
+	    isIndex = __webpack_require__(93),
+	    isLength = __webpack_require__(84),
+	    keysIn = __webpack_require__(94);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -12320,11 +5582,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 84 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(80),
-	    isObjectLike = __webpack_require__(75);
+	var isArrayLike = __webpack_require__(88),
+	    isObjectLike = __webpack_require__(83);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -12360,7 +5622,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 85 */
+/* 93 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -12390,14 +5652,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 86 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(84),
-	    isArray = __webpack_require__(70),
-	    isIndex = __webpack_require__(85),
-	    isLength = __webpack_require__(76),
-	    isObject = __webpack_require__(74);
+	var isArguments = __webpack_require__(92),
+	    isArray = __webpack_require__(78),
+	    isIndex = __webpack_require__(93),
+	    isLength = __webpack_require__(84),
+	    isObject = __webpack_require__(82);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -12460,11 +5722,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 87 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(88),
-	    keys = __webpack_require__(79);
+	var baseCopy = __webpack_require__(96),
+	    keys = __webpack_require__(87);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -12485,7 +5747,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 88 */
+/* 96 */
 /***/ function(module, exports) {
 
 	/**
@@ -12514,12 +5776,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 89 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(90),
-	    isIterateeCall = __webpack_require__(92),
-	    restParam = __webpack_require__(93);
+	var bindCallback = __webpack_require__(98),
+	    isIterateeCall = __webpack_require__(100),
+	    restParam = __webpack_require__(101);
 
 	/**
 	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -12561,10 +5823,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 90 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(91);
+	var identity = __webpack_require__(99);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -12606,7 +5868,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 91 */
+/* 99 */
 /***/ function(module, exports) {
 
 	/**
@@ -12632,12 +5894,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 92 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(80),
-	    isIndex = __webpack_require__(85),
-	    isObject = __webpack_require__(74);
+	var isArrayLike = __webpack_require__(88),
+	    isIndex = __webpack_require__(93),
+	    isObject = __webpack_require__(82);
 
 	/**
 	 * Checks if the provided arguments are from an iteratee call.
@@ -12666,7 +5928,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 93 */
+/* 101 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -12730,12 +5992,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 94 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayReduce = __webpack_require__(95),
-	    baseEach = __webpack_require__(96),
-	    createReduce = __webpack_require__(102);
+	var arrayReduce = __webpack_require__(103),
+	    baseEach = __webpack_require__(104),
+	    createReduce = __webpack_require__(110);
 
 	/**
 	 * Reduces `collection` to a value which is the accumulated result of running
@@ -12780,7 +6042,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 95 */
+/* 103 */
 /***/ function(module, exports) {
 
 	/**
@@ -12812,11 +6074,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 96 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(97),
-	    createBaseEach = __webpack_require__(101);
+	var baseForOwn = __webpack_require__(105),
+	    createBaseEach = __webpack_require__(109);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -12833,11 +6095,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 97 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(98),
-	    keys = __webpack_require__(79);
+	var baseFor = __webpack_require__(106),
+	    keys = __webpack_require__(87);
 
 	/**
 	 * The base implementation of `_.forOwn` without support for callback
@@ -12856,10 +6118,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 98 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(99);
+	var createBaseFor = __webpack_require__(107);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -12879,10 +6141,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 99 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(100);
+	var toObject = __webpack_require__(108);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -12912,10 +6174,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 100 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(74);
+	var isObject = __webpack_require__(82);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -12932,12 +6194,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 101 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(81),
-	    isLength = __webpack_require__(76),
-	    toObject = __webpack_require__(100);
+	var getLength = __webpack_require__(89),
+	    isLength = __webpack_require__(84),
+	    toObject = __webpack_require__(108);
 
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -12969,12 +6231,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 102 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(103),
-	    baseReduce = __webpack_require__(125),
-	    isArray = __webpack_require__(70);
+	var baseCallback = __webpack_require__(111),
+	    baseReduce = __webpack_require__(133),
+	    isArray = __webpack_require__(78);
 
 	/**
 	 * Creates a function for `_.reduce` or `_.reduceRight`.
@@ -12997,14 +6259,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 103 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(104),
-	    baseMatchesProperty = __webpack_require__(116),
-	    bindCallback = __webpack_require__(90),
-	    identity = __webpack_require__(91),
-	    property = __webpack_require__(123);
+	var baseMatches = __webpack_require__(112),
+	    baseMatchesProperty = __webpack_require__(124),
+	    bindCallback = __webpack_require__(98),
+	    identity = __webpack_require__(99),
+	    property = __webpack_require__(131);
 
 	/**
 	 * The base implementation of `_.callback` which supports specifying the
@@ -13038,12 +6300,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 104 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(105),
-	    getMatchData = __webpack_require__(113),
-	    toObject = __webpack_require__(100);
+	var baseIsMatch = __webpack_require__(113),
+	    getMatchData = __webpack_require__(121),
+	    toObject = __webpack_require__(108);
 
 	/**
 	 * The base implementation of `_.matches` which does not clone `source`.
@@ -13074,11 +6336,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 105 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(106),
-	    toObject = __webpack_require__(100);
+	var baseIsEqual = __webpack_require__(114),
+	    toObject = __webpack_require__(108);
 
 	/**
 	 * The base implementation of `_.isMatch` without support for callback
@@ -13132,12 +6394,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 106 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(107),
-	    isObject = __webpack_require__(74),
-	    isObjectLike = __webpack_require__(75);
+	var baseIsEqualDeep = __webpack_require__(115),
+	    isObject = __webpack_require__(82),
+	    isObjectLike = __webpack_require__(83);
 
 	/**
 	 * The base implementation of `_.isEqual` without support for `this` binding
@@ -13166,14 +6428,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 107 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(108),
-	    equalByTag = __webpack_require__(110),
-	    equalObjects = __webpack_require__(111),
-	    isArray = __webpack_require__(70),
-	    isTypedArray = __webpack_require__(112);
+	var equalArrays = __webpack_require__(116),
+	    equalByTag = __webpack_require__(118),
+	    equalObjects = __webpack_require__(119),
+	    isArray = __webpack_require__(78),
+	    isTypedArray = __webpack_require__(120);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -13274,10 +6536,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 108 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(109);
+	var arraySome = __webpack_require__(117);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -13331,7 +6593,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 109 */
+/* 117 */
 /***/ function(module, exports) {
 
 	/**
@@ -13360,7 +6622,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 110 */
+/* 118 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -13414,10 +6676,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 111 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(79);
+	var keys = __webpack_require__(87);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -13487,11 +6749,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 112 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(76),
-	    isObjectLike = __webpack_require__(75);
+	var isLength = __webpack_require__(84),
+	    isObjectLike = __webpack_require__(83);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -13567,11 +6829,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 113 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(114),
-	    pairs = __webpack_require__(115);
+	var isStrictComparable = __webpack_require__(122),
+	    pairs = __webpack_require__(123);
 
 	/**
 	 * Gets the propery names, values, and compare flags of `object`.
@@ -13594,10 +6856,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 114 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(74);
+	var isObject = __webpack_require__(82);
 
 	/**
 	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -13615,11 +6877,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 115 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(79),
-	    toObject = __webpack_require__(100);
+	var keys = __webpack_require__(87),
+	    toObject = __webpack_require__(108);
 
 	/**
 	 * Creates a two dimensional array of the key-value pairs for `object`,
@@ -13654,18 +6916,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 116 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(117),
-	    baseIsEqual = __webpack_require__(106),
-	    baseSlice = __webpack_require__(118),
-	    isArray = __webpack_require__(70),
-	    isKey = __webpack_require__(119),
-	    isStrictComparable = __webpack_require__(114),
-	    last = __webpack_require__(120),
-	    toObject = __webpack_require__(100),
-	    toPath = __webpack_require__(121);
+	var baseGet = __webpack_require__(125),
+	    baseIsEqual = __webpack_require__(114),
+	    baseSlice = __webpack_require__(126),
+	    isArray = __webpack_require__(78),
+	    isKey = __webpack_require__(127),
+	    isStrictComparable = __webpack_require__(122),
+	    last = __webpack_require__(128),
+	    toObject = __webpack_require__(108),
+	    toPath = __webpack_require__(129);
 
 	/**
 	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -13705,10 +6967,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 117 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(100);
+	var toObject = __webpack_require__(108);
 
 	/**
 	 * The base implementation of `get` without support for string paths
@@ -13740,7 +7002,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 118 */
+/* 126 */
 /***/ function(module, exports) {
 
 	/**
@@ -13778,11 +7040,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 119 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(70),
-	    toObject = __webpack_require__(100);
+	var isArray = __webpack_require__(78),
+	    toObject = __webpack_require__(108);
 
 	/** Used to match property names within property paths. */
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
@@ -13812,7 +7074,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 120 */
+/* 128 */
 /***/ function(module, exports) {
 
 	/**
@@ -13837,11 +7099,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 121 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(122),
-	    isArray = __webpack_require__(70);
+	var baseToString = __webpack_require__(130),
+	    isArray = __webpack_require__(78);
 
 	/** Used to match property names within property paths. */
 	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
@@ -13871,7 +7133,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 122 */
+/* 130 */
 /***/ function(module, exports) {
 
 	/**
@@ -13890,12 +7152,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 123 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(82),
-	    basePropertyDeep = __webpack_require__(124),
-	    isKey = __webpack_require__(119);
+	var baseProperty = __webpack_require__(90),
+	    basePropertyDeep = __webpack_require__(132),
+	    isKey = __webpack_require__(127);
 
 	/**
 	 * Creates a function that returns the property value at `path` on a
@@ -13927,11 +7189,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 124 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(117),
-	    toPath = __webpack_require__(121);
+	var baseGet = __webpack_require__(125),
+	    toPath = __webpack_require__(129);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -13952,7 +7214,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 125 */
+/* 133 */
 /***/ function(module, exports) {
 
 	/**
@@ -13982,21 +7244,28 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 126 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isNumber = __webpack_require__(127),
-	    assign = __webpack_require__(77),
-	    forEach = __webpack_require__(128),
-	    every = __webpack_require__(131),
-	    debounce = __webpack_require__(134);
+	var isNumber = __webpack_require__(135),
+	    assign = __webpack_require__(85),
+	    forEach = __webpack_require__(136),
+	    every = __webpack_require__(139),
+	    debounce = __webpack_require__(142);
 
-	var Collections = __webpack_require__(136),
-	    Elements = __webpack_require__(137);
+	var Collections = __webpack_require__(144),
+	    Elements = __webpack_require__(145);
 
-	var Snap = __webpack_require__(66);
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClasses = __webpack_require__(148),
+	    svgCreate = __webpack_require__(75),
+	    svgTransform = __webpack_require__(149);
+
+	var createMatrix = __webpack_require__(150).createMatrix;
+
 
 	function round(number, resolution) {
 	  return Math.round(number * resolution) / resolution;
@@ -14038,7 +7307,12 @@ var InfoxBpmnModeler =
 	}
 
 	function createGroup(parent, cls) {
-	  return parent.group().attr({ 'class' : cls });
+	  var group = svgCreate('g');
+	  svgClasses(group).add(cls);
+
+	  svgAppend(parent, group);
+
+	  return group;
 	}
 
 	var BASE_LAYER = 'base';
@@ -14093,9 +7367,14 @@ var InfoxBpmnModeler =
 	  // </div>
 
 	  // html container
-	  var container = this._container = createContainer(config),
-	      svg = this._svg = Snap.createSnapAt('100%', '100%', container),
-	      viewport = this._viewport = createGroup(svg, 'viewport');
+	  var container = this._container = createContainer(config);
+
+	  var svg = this._svg = svgCreate('svg');
+	  svgAttr(svg, { width: '100%', height: '100%' });
+
+	  svgAppend(container, svg);
+
+	  var viewport = this._viewport = createGroup(svg, 'viewport');
 
 	  this._layers = {};
 
@@ -14236,7 +7515,11 @@ var InfoxBpmnModeler =
 	  forEach([ container.gfx, container.secondaryGfx ], function(gfx) {
 	    if (gfx) {
 	      // invoke either addClass or removeClass based on mode
-	      gfx[add ? 'addClass' : 'removeClass'](marker);
+	      if (add) {
+	        svgClasses(gfx).add(marker);
+	      } else {
+	        svgClasses(gfx).remove(marker);
+	      }
 	    }
 	  });
 
@@ -14301,7 +7584,7 @@ var InfoxBpmnModeler =
 
 	  var gfx = this.getGraphics(element);
 
-	  return gfx && gfx.hasClass(marker);
+	  return svgClasses(gfx).has(marker);
 	};
 
 	/**
@@ -14674,9 +7957,10 @@ var InfoxBpmnModeler =
 	    // compute the inner box based on the
 	    // diagrams default layer. This allows us to exclude
 	    // external components, such as overlays
-	    innerBox = this.getDefaultLayer().getBBox(true);
+	    innerBox = this.getDefaultLayer().getBBox();
 
-	    matrix = viewport.transform().localMatrix;
+	    var transform = svgTransform(viewport);
+	    matrix = transform ? transform.matrix : createMatrix();
 	    scale = round(matrix.a, 1000);
 
 	    x = round(-matrix.e || 0, 1000);
@@ -14703,8 +7987,11 @@ var InfoxBpmnModeler =
 	    this._changeViewbox(function() {
 	      scale = Math.min(outerBox.width / box.width, outerBox.height / box.height);
 
-	      matrix = new Snap.Matrix().scale(scale).translate(-box.x, -box.y);
-	      viewport.transform(matrix);
+	      var matrix = this._svg.createSVGMatrix()
+	        .scale(scale)
+	        .translate(-box.x, -box.y);
+
+	      svgTransform(viewport, matrix);
 	    });
 	  }
 
@@ -14722,14 +8009,14 @@ var InfoxBpmnModeler =
 	 */
 	Canvas.prototype.scroll = function(delta) {
 
-	  var node = this._viewport.node;
+	  var node = this._viewport;
 	  var matrix = node.getCTM();
 
 	  if (delta) {
 	    this._changeViewbox(function() {
 	      delta = assign({ dx: 0, dy: 0 }, delta || {});
 
-	      matrix = this._svg.node.createSVGMatrix().translate(delta.dx, delta.dy).multiply(matrix);
+	      matrix = this._svg.createSVGMatrix().translate(delta.dx, delta.dy).multiply(matrix);
 
 	      setCTM(node, matrix);
 	    });
@@ -14833,8 +8120,8 @@ var InfoxBpmnModeler =
 
 	Canvas.prototype._setZoom = function(scale, center) {
 
-	  var svg = this._svg.node,
-	      viewport = this._viewport.node;
+	  var svg = this._svg,
+	      viewport = this._viewport;
 
 	  var matrix = svg.createSVGMatrix();
 	  var point = svg.createSVGPoint();
@@ -14846,7 +8133,6 @@ var InfoxBpmnModeler =
 	      newMatrix;
 
 	  currentMatrix = viewport.getCTM();
-
 
 	  var currentScale = currentMatrix.a;
 
@@ -14867,7 +8153,7 @@ var InfoxBpmnModeler =
 	    newMatrix = matrix.scale(scale);
 	  }
 
-	  setCTM(this._viewport.node, newMatrix);
+	  setCTM(this._viewport, newMatrix);
 
 	  return newMatrix;
 	};
@@ -14948,10 +8234,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 127 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(75);
+	var isObjectLike = __webpack_require__(83);
 
 	/** `Object#toString` result references. */
 	var numberTag = '[object Number]';
@@ -14995,12 +8281,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 128 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(129),
-	    baseEach = __webpack_require__(96),
-	    createForEach = __webpack_require__(130);
+	var arrayEach = __webpack_require__(137),
+	    baseEach = __webpack_require__(104),
+	    createForEach = __webpack_require__(138);
 
 	/**
 	 * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -15038,7 +8324,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 129 */
+/* 137 */
 /***/ function(module, exports) {
 
 	/**
@@ -15066,11 +8352,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 130 */
+/* 138 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(90),
-	    isArray = __webpack_require__(70);
+	var bindCallback = __webpack_require__(98),
+	    isArray = __webpack_require__(78);
 
 	/**
 	 * Creates a function for `_.forEach` or `_.forEachRight`.
@@ -15092,14 +8378,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 131 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEvery = __webpack_require__(132),
-	    baseCallback = __webpack_require__(103),
-	    baseEvery = __webpack_require__(133),
-	    isArray = __webpack_require__(70),
-	    isIterateeCall = __webpack_require__(92);
+	var arrayEvery = __webpack_require__(140),
+	    baseCallback = __webpack_require__(111),
+	    baseEvery = __webpack_require__(141),
+	    isArray = __webpack_require__(78),
+	    isIterateeCall = __webpack_require__(100);
 
 	/**
 	 * Checks if `predicate` returns truthy for **all** elements of `collection`.
@@ -15164,7 +8450,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 132 */
+/* 140 */
 /***/ function(module, exports) {
 
 	/**
@@ -15193,10 +8479,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 133 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(96);
+	var baseEach = __webpack_require__(104);
 
 	/**
 	 * The base implementation of `_.every` without support for callback
@@ -15221,11 +8507,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 134 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(74),
-	    now = __webpack_require__(135);
+	var isObject = __webpack_require__(82),
+	    now = __webpack_require__(143);
 
 	/** Used as the `TypeError` message for "Functions" methods. */
 	var FUNC_ERROR_TEXT = 'Expected a function';
@@ -15408,10 +8694,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 135 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(71);
+	var getNative = __webpack_require__(79);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeNow = getNative(Date, 'now');
@@ -15438,7 +8724,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 136 */
+/* 144 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -15533,15 +8819,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 137 */
+/* 145 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isArray = __webpack_require__(70),
-	    isNumber = __webpack_require__(127),
-	    groupBy = __webpack_require__(138),
-	    forEach = __webpack_require__(128);
+	var isArray = __webpack_require__(78),
+	    isNumber = __webpack_require__(135),
+	    groupBy = __webpack_require__(146),
+	    forEach = __webpack_require__(136);
 
 	/**
 	 * Adds an element to a collection and returns true if the
@@ -15835,10 +9121,10 @@ var InfoxBpmnModeler =
 	module.exports.getType = getElementType;
 
 /***/ },
-/* 138 */
+/* 146 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createAggregator = __webpack_require__(139);
+	var createAggregator = __webpack_require__(147);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -15900,12 +9186,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 139 */
+/* 147 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(103),
-	    baseEach = __webpack_require__(96),
-	    isArray = __webpack_require__(70);
+	var baseCallback = __webpack_require__(111),
+	    baseEach = __webpack_require__(104),
+	    isArray = __webpack_require__(78);
 
 	/**
 	 * Creates a `_.countBy`, `_.groupBy`, `_.indexBy`, or `_.partition` function.
@@ -15941,12 +9227,342 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 140 */
+/* 148 */
 /***/ function(module, exports) {
+
+	/**
+	 * Clear utility
+	 */
+	module.exports = classes;
+
+	var index = function(arr, obj) {
+	  if (arr.indexOf) {
+	    return arr.indexOf(obj);
+	  }
+
+
+	  for (var i = 0; i < arr.length; ++i) {
+	    if (arr[i] === obj) {
+	      return i;
+	    }
+	  }
+
+	  return -1;
+	};
+
+	var re = /\s+/;
+
+	var toString = Object.prototype.toString;
+
+	function defined(o) {
+	  return typeof o !== 'undefined';
+	}
+
+	/**
+	 * Wrap `el` in a `ClassList`.
+	 *
+	 * @param {Element} el
+	 * @return {ClassList}
+	 * @api public
+	 */
+
+	function classes(el) {
+	  return new ClassList(el);
+	}
+
+	function ClassList(el) {
+	  if (!el || !el.nodeType) {
+	    throw new Error('A DOM element reference is required');
+	  }
+	  this.el = el;
+	  this.list = el.classList;
+	}
+
+	/**
+	 * Add class `name` if not already present.
+	 *
+	 * @param {String} name
+	 * @return {ClassList}
+	 * @api public
+	 */
+
+	ClassList.prototype.add = function(name) {
+
+	  // classList
+	  if (this.list) {
+	    this.list.add(name);
+	    return this;
+	  }
+
+	  // fallback
+	  var arr = this.array();
+	  var i = index(arr, name);
+	  if (!~i) {
+	    arr.push(name);
+	  }
+
+	  if (defined(this.el.className.baseVal)) {
+	    this.el.className.baseVal = arr.join(' ');
+	  } else {
+	    this.el.className = arr.join(' ');
+	  }
+
+	  return this;
+	};
+
+	/**
+	 * Remove class `name` when present, or
+	 * pass a regular expression to remove
+	 * any which match.
+	 *
+	 * @param {String|RegExp} name
+	 * @return {ClassList}
+	 * @api public
+	 */
+
+	ClassList.prototype.remove = function(name) {
+	  if ('[object RegExp]' === toString.call(name)) {
+	    return this.removeMatching(name);
+	  }
+
+	  // classList
+	  if (this.list) {
+	    this.list.remove(name);
+	    return this;
+	  }
+
+	  // fallback
+	  var arr = this.array();
+	  var i = index(arr, name);
+	  if (~i) {
+	    arr.splice(i, 1);
+	  }
+	  this.el.className.baseVal = arr.join(' ');
+	  return this;
+	};
+
+	/**
+	 * Remove all classes matching `re`.
+	 *
+	 * @param {RegExp} re
+	 * @return {ClassList}
+	 * @api private
+	 */
+
+	ClassList.prototype.removeMatching = function(re) {
+	  var arr = this.array();
+	  for (var i = 0; i < arr.length; i++) {
+	    if (re.test(arr[i])) {
+	      this.remove(arr[i]);
+	    }
+	  }
+	  return this;
+	};
+
+	/**
+	 * Toggle class `name`, can force state via `force`.
+	 *
+	 * For browsers that support classList, but do not support `force` yet,
+	 * the mistake will be detected and corrected.
+	 *
+	 * @param {String} name
+	 * @param {Boolean} force
+	 * @return {ClassList}
+	 * @api public
+	 */
+
+	ClassList.prototype.toggle = function(name, force) {
+	  // classList
+	  if (this.list) {
+	    if (defined(force)) {
+	      if (force !== this.list.toggle(name, force)) {
+	        this.list.toggle(name); // toggle again to correct
+	      }
+	    } else {
+	      this.list.toggle(name);
+	    }
+	    return this;
+	  }
+
+	  // fallback
+	  if (defined(force)) {
+	    if (!force) {
+	      this.remove(name);
+	    } else {
+	      this.add(name);
+	    }
+	  } else {
+	    if (this.has(name)) {
+	      this.remove(name);
+	    } else {
+	      this.add(name);
+	    }
+	  }
+
+	  return this;
+	};
+
+	/**
+	 * Return an array of classes.
+	 *
+	 * @return {Array}
+	 * @api public
+	 */
+
+	ClassList.prototype.array = function() {
+	  var className = this.el.getAttribute('class') || '';
+	  var str = className.replace(/^\s+|\s+$/g, '');
+	  var arr = str.split(re);
+	  if ('' === arr[0]) {
+	    arr.shift();
+	  }
+	  return arr;
+	};
+
+	/**
+	 * Check if class `name` is present.
+	 *
+	 * @param {String} name
+	 * @return {ClassList}
+	 * @api public
+	 */
+
+	ClassList.prototype.has =
+	ClassList.prototype.contains = function(name) {
+	  return (
+	    this.list ?
+	      this.list.contains(name) :
+	      !! ~index(this.array(), name)
+	  );
+	};
+
+
+/***/ },
+/* 149 */
+/***/ function(module, exports) {
+
+	/**
+	 * transform accessor utility
+	 */
+
+	module.exports = transform;
+
+	function wrapMatrix(transformList, transform) {
+	  if (transform instanceof SVGMatrix) {
+	    return transformList.createSVGTransformFromMatrix(transform);
+	  } else {
+	    return transform;
+	  }
+	}
+
+	function setTransforms(transformList, transforms) {
+	  var i, t;
+
+	  transformList.clear();
+
+	  for (i = 0; (t = transforms[i]); i++) {
+	    transformList.appendItem(wrapMatrix(transformList, t));
+	  }
+
+	  transformList.consolidate();
+	}
+
+	function transform(node, transforms) {
+	  var transformList = node.transform.baseVal;
+
+	  if (arguments.length === 1) {
+	    return transformList.consolidate();
+	  } else {
+	    if (transforms.length) {
+	      setTransforms(transformList, transforms);
+	    } else {
+	      transformList.initialize(wrapMatrix(transformList, transforms));
+	    }
+	  }
+	}
+
+/***/ },
+/* 150 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Geometry helpers
+	 */
+
+	module.exports = { createPoint: createPoint, createMatrix: createMatrix, createTransform: createTransform };
+
+
+	var create = __webpack_require__(75);
+
+	// fake node used to instantiate svg geometry elements
+	var node = create('svg');
+
+	function extend(object, props) {
+	  var i, k, keys = Object.keys(props);
+
+	  for (i = 0; (k = keys[i]); i++) {
+	    object[k] = props[k];
+	  }
+
+	  return object;
+	}
+
+
+	function createPoint(x, y) {
+	  var point = node.createSVGPoint();
+
+	  switch (arguments.length) {
+	  case 0:
+	    return point;
+	  case 2:
+	    x = {
+	      x: x,
+	      y: y
+	    };
+	    break;
+	  }
+
+	  return extend(point, x);
+	}
+
+	function createMatrix(a, b, c, d, e, f) {
+	  var matrix = node.createSVGMatrix();
+
+	  switch (arguments.length) {
+	  case 0:
+	    return matrix;
+	  case 6:
+	    a = {
+	      a: a,
+	      b: b,
+	      c: c,
+	      d: d,
+	      e: e,
+	      f: f
+	    };
+	    break;
+	  }
+
+	  return extend(matrix, a);
+	}
+
+	function createTransform(matrix) {
+	  if (matrix) {
+	    return node.createSVGTransformFromMatrix(matrix);
+	  } else {
+	    return node.createSVGTransform();
+	  }
+	}
+
+/***/ },
+/* 151 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ELEMENT_ID = 'data-element-id';
+
+	var svgAttr = __webpack_require__(74);
 
 
 	/**
@@ -15964,8 +9580,8 @@ var InfoxBpmnModeler =
 	 * Register a pair of (element, gfx, (secondaryGfx)).
 	 *
 	 * @param {djs.model.Base} element
-	 * @param {Snap<SVGElement>} gfx
-	 * @param {Snap<SVGElement>} [secondaryGfx] optional other element to register, too
+	 * @param {SVGElement} gfx
+	 * @param {SVGElement} [secondaryGfx] optional other element to register, too
 	 */
 	ElementRegistry.prototype.add = function(element, gfx, secondaryGfx) {
 
@@ -15974,10 +9590,10 @@ var InfoxBpmnModeler =
 	  this._validateId(id);
 
 	  // associate dom node with element
-	  gfx.attr(ELEMENT_ID, id);
+	  svgAttr(gfx, ELEMENT_ID, id);
 
 	  if (secondaryGfx) {
-	    secondaryGfx.attr(ELEMENT_ID, id);
+	    svgAttr(secondaryGfx, ELEMENT_ID, id);
 	  }
 
 	  this._elements[id] = { element: element, gfx: gfx, secondaryGfx: secondaryGfx };
@@ -15996,10 +9612,10 @@ var InfoxBpmnModeler =
 	  if (container) {
 
 	    // unset element id on gfx
-	    container.gfx.attr(ELEMENT_ID, '');
+	    svgAttr(container.gfx, ELEMENT_ID, '');
 
 	    if (container.secondaryGfx) {
-	      container.secondaryGfx.attr(ELEMENT_ID, '');
+	      svgAttr(container.secondaryGfx, ELEMENT_ID, '');
 	    }
 
 	    delete elements[id];
@@ -16049,7 +9665,7 @@ var InfoxBpmnModeler =
 	  if (typeof filter === 'string') {
 	    id = filter;
 	  } else {
-	    id = filter && filter.attr(ELEMENT_ID);
+	    id = filter && svgAttr(filter, ELEMENT_ID);
 	  }
 
 	  var container = this._elements[id];
@@ -16143,15 +9759,16 @@ var InfoxBpmnModeler =
 	  }
 	};
 
+
 /***/ },
-/* 141 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Model = __webpack_require__(142);
+	var Model = __webpack_require__(153);
 
-	var assign = __webpack_require__(77);
+	var assign = __webpack_require__(85);
 
 	/**
 	 * A factory for diagram-js shapes
@@ -16199,15 +9816,15 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 142 */
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77),
+	var assign = __webpack_require__(85),
 	    inherits = __webpack_require__(3);
 
-	var Refs = __webpack_require__(143);
+	var Refs = __webpack_require__(154);
 
 	var parentRefs = new Refs({ name: 'children', enumerable: true, collection: true }, { name: 'parent' }),
 	    labelRefs = new Refs({ name: 'label', enumerable: true }, { name: 'labelTarget' }),
@@ -16419,20 +10036,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 143 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(144);
+	module.exports = __webpack_require__(155);
 
-	module.exports.Collection = __webpack_require__(145);
+	module.exports.Collection = __webpack_require__(156);
 
 /***/ },
-/* 144 */
+/* 155 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Collection = __webpack_require__(145);
+	var Collection = __webpack_require__(156);
 
 	function hasOwnProperty(e, property) {
 	  return Object.prototype.hasOwnProperty.call(e, property.name || property);
@@ -16623,7 +10240,7 @@ var InfoxBpmnModeler =
 	 */
 
 /***/ },
-/* 145 */
+/* 156 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -16724,16 +10341,16 @@ var InfoxBpmnModeler =
 	module.exports.isExtended = isExtended;
 
 /***/ },
-/* 146 */
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isFunction = __webpack_require__(73),
-	    isArray = __webpack_require__(70),
-	    isNumber = __webpack_require__(127),
-	    bind = __webpack_require__(147),
-	    assign = __webpack_require__(77);
+	var isFunction = __webpack_require__(81),
+	    isArray = __webpack_require__(78),
+	    isNumber = __webpack_require__(135),
+	    bind = __webpack_require__(158),
+	    assign = __webpack_require__(85);
 
 	var FN_REF = '__fn';
 
@@ -17186,12 +10803,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 147 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createWrapper = __webpack_require__(148),
-	    replaceHolders = __webpack_require__(169),
-	    restParam = __webpack_require__(93);
+	var createWrapper = __webpack_require__(159),
+	    replaceHolders = __webpack_require__(180),
+	    restParam = __webpack_require__(101);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -17248,16 +10865,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 148 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseSetData = __webpack_require__(149),
-	    createBindWrapper = __webpack_require__(151),
-	    createHybridWrapper = __webpack_require__(154),
-	    createPartialWrapper = __webpack_require__(171),
-	    getData = __webpack_require__(161),
-	    mergeData = __webpack_require__(172),
-	    setData = __webpack_require__(170);
+	var baseSetData = __webpack_require__(160),
+	    createBindWrapper = __webpack_require__(162),
+	    createHybridWrapper = __webpack_require__(165),
+	    createPartialWrapper = __webpack_require__(182),
+	    getData = __webpack_require__(172),
+	    mergeData = __webpack_require__(183),
+	    setData = __webpack_require__(181);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -17340,11 +10957,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 149 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(91),
-	    metaMap = __webpack_require__(150);
+	var identity = __webpack_require__(99),
+	    metaMap = __webpack_require__(161);
 
 	/**
 	 * The base implementation of `setData` without support for hot loop detection.
@@ -17363,10 +10980,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 150 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(71);
+	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(79);
 
 	/** Native method references. */
 	var WeakMap = getNative(global, 'WeakMap');
@@ -17379,10 +10996,10 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 151 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(152);
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(163);
 
 	/**
 	 * Creates a function that wraps `func` and invokes it with the `this`
@@ -17408,11 +11025,11 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 152 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCreate = __webpack_require__(153),
-	    isObject = __webpack_require__(74);
+	var baseCreate = __webpack_require__(164),
+	    isObject = __webpack_require__(82);
 
 	/**
 	 * Creates a function that produces an instance of `Ctor` regardless of
@@ -17451,10 +11068,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 153 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(74);
+	var isObject = __webpack_require__(82);
 
 	/**
 	 * The base implementation of `_.create` without support for assigning
@@ -17480,17 +11097,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 154 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(155),
-	    composeArgs = __webpack_require__(156),
-	    composeArgsRight = __webpack_require__(157),
-	    createCtorWrapper = __webpack_require__(152),
-	    isLaziable = __webpack_require__(158),
-	    reorder = __webpack_require__(168),
-	    replaceHolders = __webpack_require__(169),
-	    setData = __webpack_require__(170);
+	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(166),
+	    composeArgs = __webpack_require__(167),
+	    composeArgsRight = __webpack_require__(168),
+	    createCtorWrapper = __webpack_require__(163),
+	    isLaziable = __webpack_require__(169),
+	    reorder = __webpack_require__(179),
+	    replaceHolders = __webpack_require__(180),
+	    setData = __webpack_require__(181);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -17598,7 +11215,7 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 155 */
+/* 166 */
 /***/ function(module, exports) {
 
 	/**
@@ -17624,7 +11241,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 156 */
+/* 167 */
 /***/ function(module, exports) {
 
 	/* Native method references for those with the same name as other `lodash` methods. */
@@ -17664,7 +11281,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 157 */
+/* 168 */
 /***/ function(module, exports) {
 
 	/* Native method references for those with the same name as other `lodash` methods. */
@@ -17706,13 +11323,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 158 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var LazyWrapper = __webpack_require__(159),
-	    getData = __webpack_require__(161),
-	    getFuncName = __webpack_require__(163),
-	    lodash = __webpack_require__(165);
+	var LazyWrapper = __webpack_require__(170),
+	    getData = __webpack_require__(172),
+	    getFuncName = __webpack_require__(174),
+	    lodash = __webpack_require__(176);
 
 	/**
 	 * Checks if `func` has a lazy counterpart.
@@ -17739,11 +11356,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 159 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCreate = __webpack_require__(153),
-	    baseLodash = __webpack_require__(160);
+	var baseCreate = __webpack_require__(164),
+	    baseLodash = __webpack_require__(171);
 
 	/** Used as references for `-Infinity` and `Infinity`. */
 	var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
@@ -17771,7 +11388,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 160 */
+/* 171 */
 /***/ function(module, exports) {
 
 	/**
@@ -17787,11 +11404,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 161 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var metaMap = __webpack_require__(150),
-	    noop = __webpack_require__(162);
+	var metaMap = __webpack_require__(161),
+	    noop = __webpack_require__(173);
 
 	/**
 	 * Gets metadata for `func`.
@@ -17808,7 +11425,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 162 */
+/* 173 */
 /***/ function(module, exports) {
 
 	/**
@@ -17833,10 +11450,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 163 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var realNames = __webpack_require__(164);
+	var realNames = __webpack_require__(175);
 
 	/**
 	 * Gets the name of `func`.
@@ -17864,7 +11481,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 164 */
+/* 175 */
 /***/ function(module, exports) {
 
 	/** Used to lookup unminified function names. */
@@ -17874,15 +11491,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 165 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var LazyWrapper = __webpack_require__(159),
-	    LodashWrapper = __webpack_require__(166),
-	    baseLodash = __webpack_require__(160),
-	    isArray = __webpack_require__(70),
-	    isObjectLike = __webpack_require__(75),
-	    wrapperClone = __webpack_require__(167);
+	var LazyWrapper = __webpack_require__(170),
+	    LodashWrapper = __webpack_require__(177),
+	    baseLodash = __webpack_require__(171),
+	    isArray = __webpack_require__(78),
+	    isObjectLike = __webpack_require__(83),
+	    wrapperClone = __webpack_require__(178);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -18005,11 +11622,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 166 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCreate = __webpack_require__(153),
-	    baseLodash = __webpack_require__(160);
+	var baseCreate = __webpack_require__(164),
+	    baseLodash = __webpack_require__(171);
 
 	/**
 	 * The base constructor for creating `lodash` wrapper objects.
@@ -18032,12 +11649,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 167 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var LazyWrapper = __webpack_require__(159),
-	    LodashWrapper = __webpack_require__(166),
-	    arrayCopy = __webpack_require__(155);
+	var LazyWrapper = __webpack_require__(170),
+	    LodashWrapper = __webpack_require__(177),
+	    arrayCopy = __webpack_require__(166);
 
 	/**
 	 * Creates a clone of `wrapper`.
@@ -18056,11 +11673,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 168 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(155),
-	    isIndex = __webpack_require__(85);
+	var arrayCopy = __webpack_require__(166),
+	    isIndex = __webpack_require__(93);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeMin = Math.min;
@@ -18091,7 +11708,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 169 */
+/* 180 */
 /***/ function(module, exports) {
 
 	/** Used as the internal argument placeholder. */
@@ -18125,11 +11742,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 170 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseSetData = __webpack_require__(149),
-	    now = __webpack_require__(135);
+	var baseSetData = __webpack_require__(160),
+	    now = __webpack_require__(143);
 
 	/** Used to detect when a function becomes hot. */
 	var HOT_COUNT = 150,
@@ -18172,10 +11789,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 171 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(152);
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(163);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1;
@@ -18222,13 +11839,13 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 172 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(155),
-	    composeArgs = __webpack_require__(156),
-	    composeArgsRight = __webpack_require__(157),
-	    replaceHolders = __webpack_require__(169);
+	var arrayCopy = __webpack_require__(166),
+	    composeArgs = __webpack_require__(167),
+	    composeArgsRight = __webpack_require__(168),
+	    replaceHolders = __webpack_require__(180);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -18317,16 +11934,26 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 173 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    reduce = __webpack_require__(94);
+	var forEach = __webpack_require__(136),
+	    reduce = __webpack_require__(102);
 
-	var GraphicsUtil = __webpack_require__(174),
-	    domClear = __webpack_require__(175);
+	var GraphicsUtil = __webpack_require__(185);
+
+	var translate = __webpack_require__(186).translate;
+
+	var domClear = __webpack_require__(187);
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClasses = __webpack_require__(148),
+	    svgCreate = __webpack_require__(75),
+	    svgRemove = __webpack_require__(57);
+
 
 	/**
 	 * A factory that creates graphical elements
@@ -18356,7 +11983,10 @@ var InfoxBpmnModeler =
 	  } else {
 	    childrenGfx = GraphicsUtil.getChildren(gfx);
 	    if (!childrenGfx) {
-	      childrenGfx = gfx.parent().group().attr('class', 'djs-children');
+	      childrenGfx = svgCreate('g');
+	      svgClasses(childrenGfx).add('djs-children');
+
+	      svgAppend(gfx.parentNode, childrenGfx);
 	    }
 	  }
 
@@ -18370,7 +12000,7 @@ var InfoxBpmnModeler =
 	GraphicsFactory.prototype._clear = function(gfx) {
 	  var visual = GraphicsUtil.getVisual(gfx);
 
-	  domClear(visual.node);
+	  domClear(visual);
 
 	  return visual;
 	};
@@ -18399,11 +12029,22 @@ var InfoxBpmnModeler =
 	 * @param {String} type the type of the element, i.e. shape | connection
 	 */
 	GraphicsFactory.prototype._createContainer = function(type, parentGfx) {
-	  var outerGfx = parentGfx.group().attr('class', 'djs-group'),
-	      gfx = outerGfx.group().attr('class', 'djs-element djs-' + type);
+	  var outerGfx = svgCreate('g');
+	  svgClasses(outerGfx).add('djs-group');
+
+	  svgAppend(parentGfx, outerGfx);
+
+	  var gfx = svgCreate('g');
+	  svgClasses(gfx).add('djs-element');
+	  svgClasses(gfx).add('djs-' + type);
+
+	  svgAppend(outerGfx, gfx);
 
 	  // create visual
-	  gfx.group().attr('class', 'djs-visual');
+	  var visual = svgCreate('g');
+	  svgClasses(visual).add('djs-visual');
+
+	  svgAppend(gfx, visual);
 
 	  return gfx;
 	};
@@ -18413,13 +12054,11 @@ var InfoxBpmnModeler =
 	  return this._createContainer(type, childrenGfx);
 	};
 
-
 	GraphicsFactory.prototype.updateContainments = function(elements) {
 
 	  var self = this,
 	      elementRegistry = this._elementRegistry,
 	      parents;
-
 
 	  parents = reduce(elements, function(map, e) {
 
@@ -18443,7 +12082,8 @@ var InfoxBpmnModeler =
 
 	    forEach(children.slice().reverse(), function(c) {
 	      var gfx = elementRegistry.getGraphics(c);
-	      gfx.parent().prependTo(childGfx);
+
+	      prependTo(gfx.parentNode, childGfx);
 	    });
 	  });
 	};
@@ -18485,7 +12125,7 @@ var InfoxBpmnModeler =
 	    this.drawShape(visual, element);
 
 	    // update positioning
-	    gfx.translate(element.x, element.y);
+	    translate(gfx, element.x, element.y);
 	  } else
 	  if (type === 'connection') {
 	    this.drawConnection(visual, element);
@@ -18493,22 +12133,34 @@ var InfoxBpmnModeler =
 	    throw new Error('unknown type: ' + type);
 	  }
 
-	  gfx.attr('display', element.hidden ? 'none' : 'block');
+	  if (element.hidden) {
+	    svgAttr(gfx, 'display', 'none');
+	  } else {
+	    svgAttr(gfx, 'display', 'block');
+	  }
 	};
 
 	GraphicsFactory.prototype.remove = function(element) {
 	  var gfx = this._elementRegistry.getGraphics(element);
 
 	  // remove
-	  gfx.parent().remove();
+	  svgRemove(gfx.parentNode);
 	};
+
+	////////// helpers ///////////
+
+	function prependTo(newNode, parentNode) {
+	  parentNode.insertBefore(newNode, parentNode.firstChild);
+	}
 
 
 /***/ },
-/* 174 */
-/***/ function(module, exports) {
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
+
+	var domQuery = __webpack_require__(52);
 
 	/**
 	 * SVGs for elements are generated by the {@link GraphicsFactory}.
@@ -18525,7 +12177,7 @@ var InfoxBpmnModeler =
 	 * @return {Snap<SVGElement>}
 	 */
 	function getVisual(gfx) {
-	  return gfx.select('.djs-visual');
+	  return domQuery('.djs-visual', gfx);
 	}
 
 	/**
@@ -18535,27 +12187,84 @@ var InfoxBpmnModeler =
 	 * @return {Snap<SVGElement>}
 	 */
 	function getChildren(gfx) {
-	  return gfx.parent().children()[1];
+	  return gfx.parentNode.childNodes[1];
 	}
-
-	/**
-	 * Returns the visual bbox of an element
-	 *
-	 * @param {Snap<SVGElement>} gfx
-	 *
-	 * @return {Bounds}
-	 */
-	function getBBox(gfx) {
-	  return getVisual(gfx).select('*').getBBox();
-	}
-
 
 	module.exports.getVisual = getVisual;
 	module.exports.getChildren = getChildren;
-	module.exports.getBBox = getBBox;
+
 
 /***/ },
-/* 175 */
+/* 186 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var svgTransform = __webpack_require__(149);
+
+	var createTransform = __webpack_require__(150).createTransform;
+
+
+	/**
+	 * @param {<SVGElement>} element
+	 * @param {Number} x
+	 * @param {Number} y
+	 * @param {Number} angle
+	 * @param {Number} amount
+	 */
+	module.exports.transform = function(gfx, x, y, angle, amount) {
+	  var translate = createTransform();
+	  translate.setTranslate(x, y);
+
+	  var rotate = createTransform();
+	  rotate.setRotate(angle, 0, 0);
+
+	  var scale = createTransform();
+	  scale.setScale(amount || 1, amount || 1);
+
+	  svgTransform(gfx, [ translate, rotate, scale ]);
+	};
+
+
+	/**
+	 * @param {SVGElement} element
+	 * @param {Number} x
+	 * @param {Number} y
+	 */
+	module.exports.translate = function(gfx, x, y) {
+	  var translate = createTransform();
+	  translate.setTranslate(x, y);
+
+	  svgTransform(gfx, translate);
+	};
+
+
+	/**
+	 * @param {SVGElement} element
+	 * @param {Number} angle
+	 */
+	module.exports.rotate = function(gfx, angle) {
+	  var rotate = createTransform();
+	  rotate.setRotate(angle, 0, 0);
+
+	  svgTransform(gfx, rotate);
+	};
+
+
+	/**
+	 * @param {SVGElement} element
+	 * @param {Number} amount
+	 */
+	module.exports.scale = function(gfx, amount) {
+	  var scale = createTransform();
+	  scale.setScale(amount, amount);
+
+	  svgTransform(gfx, scale);
+	};
+
+
+/***/ },
+/* 187 */
 /***/ function(module, exports) {
 
 	module.exports = function(el) {
@@ -18571,26 +12280,26 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 176 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(177);
+	module.exports = __webpack_require__(189);
 
 /***/ },
-/* 177 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(178);
+	var assign = __webpack_require__(190);
 
-	var BpmnModdle = __webpack_require__(202);
+	var BpmnModdle = __webpack_require__(214);
 
 	var packages = {
-	  bpmn: __webpack_require__(377),
-	  bpmndi: __webpack_require__(378),
-	  dc: __webpack_require__(379),
-	  di: __webpack_require__(380)
+	  bpmn: __webpack_require__(394),
+	  bpmndi: __webpack_require__(395),
+	  dc: __webpack_require__(396),
+	  di: __webpack_require__(397)
 	};
 
 	module.exports = function(additionalPackages, options) {
@@ -18598,12 +12307,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 178 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignWith = __webpack_require__(179),
-	    baseAssign = __webpack_require__(195),
-	    createAssigner = __webpack_require__(197);
+	var assignWith = __webpack_require__(191),
+	    baseAssign = __webpack_require__(207),
+	    createAssigner = __webpack_require__(209);
 
 	/**
 	 * Assigns own enumerable properties of source object(s) to the destination
@@ -18647,10 +12356,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 179 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(180);
+	var keys = __webpack_require__(192);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -18685,13 +12394,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 180 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(181),
-	    isArrayLike = __webpack_require__(186),
-	    isObject = __webpack_require__(184),
-	    shimKeys = __webpack_require__(190);
+	var getNative = __webpack_require__(193),
+	    isArrayLike = __webpack_require__(198),
+	    isObject = __webpack_require__(196),
+	    shimKeys = __webpack_require__(202);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -18736,10 +12445,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 181 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(182);
+	var isNative = __webpack_require__(194);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -18758,11 +12467,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 182 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(183),
-	    isObjectLike = __webpack_require__(185);
+	var isFunction = __webpack_require__(195),
+	    isObjectLike = __webpack_require__(197);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -18812,10 +12521,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 183 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(184);
+	var isObject = __webpack_require__(196);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -18856,7 +12565,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 184 */
+/* 196 */
 /***/ function(module, exports) {
 
 	/**
@@ -18890,7 +12599,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 185 */
+/* 197 */
 /***/ function(module, exports) {
 
 	/**
@@ -18908,11 +12617,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 186 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(187),
-	    isLength = __webpack_require__(189);
+	var getLength = __webpack_require__(199),
+	    isLength = __webpack_require__(201);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -18929,10 +12638,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 187 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(188);
+	var baseProperty = __webpack_require__(200);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -18950,7 +12659,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 188 */
+/* 200 */
 /***/ function(module, exports) {
 
 	/**
@@ -18970,7 +12679,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 189 */
+/* 201 */
 /***/ function(module, exports) {
 
 	/**
@@ -18996,14 +12705,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 190 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(191),
-	    isArray = __webpack_require__(192),
-	    isIndex = __webpack_require__(193),
-	    isLength = __webpack_require__(189),
-	    keysIn = __webpack_require__(194);
+	var isArguments = __webpack_require__(203),
+	    isArray = __webpack_require__(204),
+	    isIndex = __webpack_require__(205),
+	    isLength = __webpack_require__(201),
+	    keysIn = __webpack_require__(206);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -19043,11 +12752,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 191 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(186),
-	    isObjectLike = __webpack_require__(185);
+	var isArrayLike = __webpack_require__(198),
+	    isObjectLike = __webpack_require__(197);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -19083,12 +12792,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 192 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(181),
-	    isLength = __webpack_require__(189),
-	    isObjectLike = __webpack_require__(185);
+	var getNative = __webpack_require__(193),
+	    isLength = __webpack_require__(201),
+	    isObjectLike = __webpack_require__(197);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -19129,7 +12838,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 193 */
+/* 205 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -19159,14 +12868,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 194 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(191),
-	    isArray = __webpack_require__(192),
-	    isIndex = __webpack_require__(193),
-	    isLength = __webpack_require__(189),
-	    isObject = __webpack_require__(184);
+	var isArguments = __webpack_require__(203),
+	    isArray = __webpack_require__(204),
+	    isIndex = __webpack_require__(205),
+	    isLength = __webpack_require__(201),
+	    isObject = __webpack_require__(196);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -19229,11 +12938,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 195 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(196),
-	    keys = __webpack_require__(180);
+	var baseCopy = __webpack_require__(208),
+	    keys = __webpack_require__(192);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -19254,7 +12963,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 196 */
+/* 208 */
 /***/ function(module, exports) {
 
 	/**
@@ -19283,12 +12992,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 197 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(198),
-	    isIterateeCall = __webpack_require__(200),
-	    restParam = __webpack_require__(201);
+	var bindCallback = __webpack_require__(210),
+	    isIterateeCall = __webpack_require__(212),
+	    restParam = __webpack_require__(213);
 
 	/**
 	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -19330,10 +13039,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 198 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(199);
+	var identity = __webpack_require__(211);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -19375,7 +13084,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 199 */
+/* 211 */
 /***/ function(module, exports) {
 
 	/**
@@ -19401,12 +13110,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 200 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(186),
-	    isIndex = __webpack_require__(193),
-	    isObject = __webpack_require__(184);
+	var isArrayLike = __webpack_require__(198),
+	    isIndex = __webpack_require__(205),
+	    isObject = __webpack_require__(196);
 
 	/**
 	 * Checks if the provided arguments are from an iteratee call.
@@ -19435,7 +13144,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 201 */
+/* 213 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -19499,18 +13208,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 202 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isString = __webpack_require__(203),
-	    isFunction = __webpack_require__(183),
-	    assign = __webpack_require__(178);
+	var isString = __webpack_require__(215),
+	    isFunction = __webpack_require__(195),
+	    assign = __webpack_require__(190);
 
-	var Moddle = __webpack_require__(204),
-	    XmlReader = __webpack_require__(279),
-	    XmlWriter = __webpack_require__(369);
+	var Moddle = __webpack_require__(216),
+	    XmlReader = __webpack_require__(291),
+	    XmlWriter = __webpack_require__(386);
 
 	/**
 	 * A sub class of {@link Moddle} with support for import and export of BPMN 2.0 xml files.
@@ -19584,10 +13293,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 203 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(185);
+	var isObjectLike = __webpack_require__(197);
 
 	/** `Object#toString` result references. */
 	var stringTag = '[object String]';
@@ -19625,28 +13334,28 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 204 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(205);
+	module.exports = __webpack_require__(217);
 
 /***/ },
-/* 205 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isString = __webpack_require__(206),
-	    isObject = __webpack_require__(208),
-	    forEach = __webpack_require__(209),
-	    find = __webpack_require__(233);
+	var isString = __webpack_require__(218),
+	    isObject = __webpack_require__(220),
+	    forEach = __webpack_require__(221),
+	    find = __webpack_require__(245);
 
 
-	var Factory = __webpack_require__(259),
-	    Registry = __webpack_require__(261),
-	    Properties = __webpack_require__(278);
+	var Factory = __webpack_require__(271),
+	    Registry = __webpack_require__(273),
+	    Properties = __webpack_require__(290);
 
-	var parseNameNs = __webpack_require__(277).parseName;
+	var parseNameNs = __webpack_require__(289).parseName;
 
 
 	//// Moddle implementation /////////////////////////////////////////////////
@@ -19854,10 +13563,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 206 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(207);
+	var isObjectLike = __webpack_require__(219);
 
 	/** `Object#toString` result references. */
 	var stringTag = '[object String]';
@@ -19895,7 +13604,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 207 */
+/* 219 */
 /***/ function(module, exports) {
 
 	/**
@@ -19913,7 +13622,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 208 */
+/* 220 */
 /***/ function(module, exports) {
 
 	/**
@@ -19947,12 +13656,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 209 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(210),
-	    baseEach = __webpack_require__(211),
-	    createForEach = __webpack_require__(230);
+	var arrayEach = __webpack_require__(222),
+	    baseEach = __webpack_require__(223),
+	    createForEach = __webpack_require__(242);
 
 	/**
 	 * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -19990,7 +13699,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 210 */
+/* 222 */
 /***/ function(module, exports) {
 
 	/**
@@ -20018,11 +13727,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 211 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(212),
-	    createBaseEach = __webpack_require__(229);
+	var baseForOwn = __webpack_require__(224),
+	    createBaseEach = __webpack_require__(241);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -20039,11 +13748,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 212 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(213),
-	    keys = __webpack_require__(216);
+	var baseFor = __webpack_require__(225),
+	    keys = __webpack_require__(228);
 
 	/**
 	 * The base implementation of `_.forOwn` without support for callback
@@ -20062,10 +13771,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 213 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(214);
+	var createBaseFor = __webpack_require__(226);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -20085,10 +13794,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 214 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(215);
+	var toObject = __webpack_require__(227);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -20118,10 +13827,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 215 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(208);
+	var isObject = __webpack_require__(220);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -20138,13 +13847,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 216 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(217),
-	    isArrayLike = __webpack_require__(220),
-	    isObject = __webpack_require__(208),
-	    shimKeys = __webpack_require__(224);
+	var getNative = __webpack_require__(229),
+	    isArrayLike = __webpack_require__(232),
+	    isObject = __webpack_require__(220),
+	    shimKeys = __webpack_require__(236);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -20189,10 +13898,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 217 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(218);
+	var isNative = __webpack_require__(230);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -20211,11 +13920,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 218 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(219),
-	    isObjectLike = __webpack_require__(207);
+	var isFunction = __webpack_require__(231),
+	    isObjectLike = __webpack_require__(219);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -20265,10 +13974,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 219 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(208);
+	var isObject = __webpack_require__(220);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -20309,11 +14018,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 220 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(221),
-	    isLength = __webpack_require__(223);
+	var getLength = __webpack_require__(233),
+	    isLength = __webpack_require__(235);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -20330,10 +14039,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 221 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(222);
+	var baseProperty = __webpack_require__(234);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -20351,7 +14060,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 222 */
+/* 234 */
 /***/ function(module, exports) {
 
 	/**
@@ -20371,7 +14080,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 223 */
+/* 235 */
 /***/ function(module, exports) {
 
 	/**
@@ -20397,14 +14106,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 224 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(225),
-	    isArray = __webpack_require__(226),
-	    isIndex = __webpack_require__(227),
-	    isLength = __webpack_require__(223),
-	    keysIn = __webpack_require__(228);
+	var isArguments = __webpack_require__(237),
+	    isArray = __webpack_require__(238),
+	    isIndex = __webpack_require__(239),
+	    isLength = __webpack_require__(235),
+	    keysIn = __webpack_require__(240);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -20444,11 +14153,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 225 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(220),
-	    isObjectLike = __webpack_require__(207);
+	var isArrayLike = __webpack_require__(232),
+	    isObjectLike = __webpack_require__(219);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -20484,12 +14193,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 226 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(217),
-	    isLength = __webpack_require__(223),
-	    isObjectLike = __webpack_require__(207);
+	var getNative = __webpack_require__(229),
+	    isLength = __webpack_require__(235),
+	    isObjectLike = __webpack_require__(219);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -20530,7 +14239,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 227 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -20560,14 +14269,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 228 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(225),
-	    isArray = __webpack_require__(226),
-	    isIndex = __webpack_require__(227),
-	    isLength = __webpack_require__(223),
-	    isObject = __webpack_require__(208);
+	var isArguments = __webpack_require__(237),
+	    isArray = __webpack_require__(238),
+	    isIndex = __webpack_require__(239),
+	    isLength = __webpack_require__(235),
+	    isObject = __webpack_require__(220);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -20630,12 +14339,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 229 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(221),
-	    isLength = __webpack_require__(223),
-	    toObject = __webpack_require__(215);
+	var getLength = __webpack_require__(233),
+	    isLength = __webpack_require__(235),
+	    toObject = __webpack_require__(227);
 
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -20667,11 +14376,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 230 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(231),
-	    isArray = __webpack_require__(226);
+	var bindCallback = __webpack_require__(243),
+	    isArray = __webpack_require__(238);
 
 	/**
 	 * Creates a function for `_.forEach` or `_.forEachRight`.
@@ -20693,10 +14402,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 231 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(232);
+	var identity = __webpack_require__(244);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -20738,7 +14447,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 232 */
+/* 244 */
 /***/ function(module, exports) {
 
 	/**
@@ -20764,11 +14473,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 233 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(211),
-	    createFind = __webpack_require__(234);
+	var baseEach = __webpack_require__(223),
+	    createFind = __webpack_require__(246);
 
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -20826,13 +14535,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 234 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(235),
-	    baseFind = __webpack_require__(257),
-	    baseFindIndex = __webpack_require__(258),
-	    isArray = __webpack_require__(226);
+	var baseCallback = __webpack_require__(247),
+	    baseFind = __webpack_require__(269),
+	    baseFindIndex = __webpack_require__(270),
+	    isArray = __webpack_require__(238);
 
 	/**
 	 * Creates a `_.find` or `_.findLast` function.
@@ -20857,14 +14566,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 235 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(236),
-	    baseMatchesProperty = __webpack_require__(248),
-	    bindCallback = __webpack_require__(231),
-	    identity = __webpack_require__(232),
-	    property = __webpack_require__(255);
+	var baseMatches = __webpack_require__(248),
+	    baseMatchesProperty = __webpack_require__(260),
+	    bindCallback = __webpack_require__(243),
+	    identity = __webpack_require__(244),
+	    property = __webpack_require__(267);
 
 	/**
 	 * The base implementation of `_.callback` which supports specifying the
@@ -20898,12 +14607,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 236 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(237),
-	    getMatchData = __webpack_require__(245),
-	    toObject = __webpack_require__(215);
+	var baseIsMatch = __webpack_require__(249),
+	    getMatchData = __webpack_require__(257),
+	    toObject = __webpack_require__(227);
 
 	/**
 	 * The base implementation of `_.matches` which does not clone `source`.
@@ -20934,11 +14643,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 237 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(238),
-	    toObject = __webpack_require__(215);
+	var baseIsEqual = __webpack_require__(250),
+	    toObject = __webpack_require__(227);
 
 	/**
 	 * The base implementation of `_.isMatch` without support for callback
@@ -20992,12 +14701,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 238 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(239),
-	    isObject = __webpack_require__(208),
-	    isObjectLike = __webpack_require__(207);
+	var baseIsEqualDeep = __webpack_require__(251),
+	    isObject = __webpack_require__(220),
+	    isObjectLike = __webpack_require__(219);
 
 	/**
 	 * The base implementation of `_.isEqual` without support for `this` binding
@@ -21026,14 +14735,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 239 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(240),
-	    equalByTag = __webpack_require__(242),
-	    equalObjects = __webpack_require__(243),
-	    isArray = __webpack_require__(226),
-	    isTypedArray = __webpack_require__(244);
+	var equalArrays = __webpack_require__(252),
+	    equalByTag = __webpack_require__(254),
+	    equalObjects = __webpack_require__(255),
+	    isArray = __webpack_require__(238),
+	    isTypedArray = __webpack_require__(256);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -21134,10 +14843,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 240 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(241);
+	var arraySome = __webpack_require__(253);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -21191,7 +14900,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 241 */
+/* 253 */
 /***/ function(module, exports) {
 
 	/**
@@ -21220,7 +14929,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 242 */
+/* 254 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -21274,10 +14983,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 243 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(216);
+	var keys = __webpack_require__(228);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -21347,11 +15056,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 244 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(223),
-	    isObjectLike = __webpack_require__(207);
+	var isLength = __webpack_require__(235),
+	    isObjectLike = __webpack_require__(219);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -21427,11 +15136,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 245 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(246),
-	    pairs = __webpack_require__(247);
+	var isStrictComparable = __webpack_require__(258),
+	    pairs = __webpack_require__(259);
 
 	/**
 	 * Gets the propery names, values, and compare flags of `object`.
@@ -21454,10 +15163,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 246 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(208);
+	var isObject = __webpack_require__(220);
 
 	/**
 	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -21475,11 +15184,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 247 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(216),
-	    toObject = __webpack_require__(215);
+	var keys = __webpack_require__(228),
+	    toObject = __webpack_require__(227);
 
 	/**
 	 * Creates a two dimensional array of the key-value pairs for `object`,
@@ -21514,18 +15223,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 248 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(249),
-	    baseIsEqual = __webpack_require__(238),
-	    baseSlice = __webpack_require__(250),
-	    isArray = __webpack_require__(226),
-	    isKey = __webpack_require__(251),
-	    isStrictComparable = __webpack_require__(246),
-	    last = __webpack_require__(252),
-	    toObject = __webpack_require__(215),
-	    toPath = __webpack_require__(253);
+	var baseGet = __webpack_require__(261),
+	    baseIsEqual = __webpack_require__(250),
+	    baseSlice = __webpack_require__(262),
+	    isArray = __webpack_require__(238),
+	    isKey = __webpack_require__(263),
+	    isStrictComparable = __webpack_require__(258),
+	    last = __webpack_require__(264),
+	    toObject = __webpack_require__(227),
+	    toPath = __webpack_require__(265);
 
 	/**
 	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -21565,10 +15274,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 249 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(215);
+	var toObject = __webpack_require__(227);
 
 	/**
 	 * The base implementation of `get` without support for string paths
@@ -21600,7 +15309,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 250 */
+/* 262 */
 /***/ function(module, exports) {
 
 	/**
@@ -21638,11 +15347,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 251 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(226),
-	    toObject = __webpack_require__(215);
+	var isArray = __webpack_require__(238),
+	    toObject = __webpack_require__(227);
 
 	/** Used to match property names within property paths. */
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
@@ -21672,7 +15381,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 252 */
+/* 264 */
 /***/ function(module, exports) {
 
 	/**
@@ -21697,11 +15406,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 253 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(254),
-	    isArray = __webpack_require__(226);
+	var baseToString = __webpack_require__(266),
+	    isArray = __webpack_require__(238);
 
 	/** Used to match property names within property paths. */
 	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
@@ -21731,7 +15440,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 254 */
+/* 266 */
 /***/ function(module, exports) {
 
 	/**
@@ -21750,12 +15459,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 255 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(222),
-	    basePropertyDeep = __webpack_require__(256),
-	    isKey = __webpack_require__(251);
+	var baseProperty = __webpack_require__(234),
+	    basePropertyDeep = __webpack_require__(268),
+	    isKey = __webpack_require__(263);
 
 	/**
 	 * Creates a function that returns the property value at `path` on a
@@ -21787,11 +15496,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 256 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(249),
-	    toPath = __webpack_require__(253);
+	var baseGet = __webpack_require__(261),
+	    toPath = __webpack_require__(265);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -21812,7 +15521,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 257 */
+/* 269 */
 /***/ function(module, exports) {
 
 	/**
@@ -21843,7 +15552,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 258 */
+/* 270 */
 /***/ function(module, exports) {
 
 	/**
@@ -21872,14 +15581,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 259 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(209);
+	var forEach = __webpack_require__(221);
 
-	var Base = __webpack_require__(260);
+	var Base = __webpack_require__(272);
 
 
 	function Factory(model, properties) {
@@ -21934,7 +15643,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 260 */
+/* 272 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21953,18 +15662,18 @@ var InfoxBpmnModeler =
 	module.exports = Base;
 
 /***/ },
-/* 261 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(262),
-	    forEach = __webpack_require__(209);
+	var assign = __webpack_require__(274),
+	    forEach = __webpack_require__(221);
 
-	var Types = __webpack_require__(269),
-	    DescriptorBuilder = __webpack_require__(270);
+	var Types = __webpack_require__(281),
+	    DescriptorBuilder = __webpack_require__(282);
 
-	var parseNameNs = __webpack_require__(277).parseName,
+	var parseNameNs = __webpack_require__(289).parseName,
 	    isBuiltInType = Types.isBuiltIn;
 
 
@@ -22142,12 +15851,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 262 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignWith = __webpack_require__(263),
-	    baseAssign = __webpack_require__(264),
-	    createAssigner = __webpack_require__(266);
+	var assignWith = __webpack_require__(275),
+	    baseAssign = __webpack_require__(276),
+	    createAssigner = __webpack_require__(278);
 
 	/**
 	 * Assigns own enumerable properties of source object(s) to the destination
@@ -22191,10 +15900,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 263 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(216);
+	var keys = __webpack_require__(228);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -22229,11 +15938,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 264 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(265),
-	    keys = __webpack_require__(216);
+	var baseCopy = __webpack_require__(277),
+	    keys = __webpack_require__(228);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -22254,7 +15963,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 265 */
+/* 277 */
 /***/ function(module, exports) {
 
 	/**
@@ -22283,12 +15992,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 266 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(231),
-	    isIterateeCall = __webpack_require__(267),
-	    restParam = __webpack_require__(268);
+	var bindCallback = __webpack_require__(243),
+	    isIterateeCall = __webpack_require__(279),
+	    restParam = __webpack_require__(280);
 
 	/**
 	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -22330,12 +16039,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 267 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(220),
-	    isIndex = __webpack_require__(227),
-	    isObject = __webpack_require__(208);
+	var isArrayLike = __webpack_require__(232),
+	    isIndex = __webpack_require__(239),
+	    isObject = __webpack_require__(220);
 
 	/**
 	 * Checks if the provided arguments are from an iteratee call.
@@ -22364,7 +16073,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 268 */
+/* 280 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -22428,7 +16137,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 269 */
+/* 281 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22483,16 +16192,16 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 270 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pick = __webpack_require__(271),
-	    assign = __webpack_require__(262),
-	    forEach = __webpack_require__(209);
+	var pick = __webpack_require__(283),
+	    assign = __webpack_require__(274),
+	    forEach = __webpack_require__(221);
 
-	var parseNameNs = __webpack_require__(277).parseName;
+	var parseNameNs = __webpack_require__(289).parseName;
 
 
 	function DescriptorBuilder(nameNs) {
@@ -22712,14 +16421,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 271 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(272),
-	    bindCallback = __webpack_require__(231),
-	    pickByArray = __webpack_require__(274),
-	    pickByCallback = __webpack_require__(275),
-	    restParam = __webpack_require__(268);
+	var baseFlatten = __webpack_require__(284),
+	    bindCallback = __webpack_require__(243),
+	    pickByArray = __webpack_require__(286),
+	    pickByCallback = __webpack_require__(287),
+	    restParam = __webpack_require__(280);
 
 	/**
 	 * Creates an object composed of the picked `object` properties. Property
@@ -22760,14 +16469,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 272 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayPush = __webpack_require__(273),
-	    isArguments = __webpack_require__(225),
-	    isArray = __webpack_require__(226),
-	    isArrayLike = __webpack_require__(220),
-	    isObjectLike = __webpack_require__(207);
+	var arrayPush = __webpack_require__(285),
+	    isArguments = __webpack_require__(237),
+	    isArray = __webpack_require__(238),
+	    isArrayLike = __webpack_require__(232),
+	    isObjectLike = __webpack_require__(219);
 
 	/**
 	 * The base implementation of `_.flatten` with added support for restricting
@@ -22807,7 +16516,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 273 */
+/* 285 */
 /***/ function(module, exports) {
 
 	/**
@@ -22833,10 +16542,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 274 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(215);
+	var toObject = __webpack_require__(227);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties specified
@@ -22867,10 +16576,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 275 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(276);
+	var baseForIn = __webpack_require__(288);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties `predicate`
@@ -22895,11 +16604,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 276 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(213),
-	    keysIn = __webpack_require__(228);
+	var baseFor = __webpack_require__(225),
+	    keysIn = __webpack_require__(240);
 
 	/**
 	 * The base implementation of `_.forIn` without support for callback
@@ -22918,7 +16627,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 277 */
+/* 289 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22959,7 +16668,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 278 */
+/* 290 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23082,25 +16791,25 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 279 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var reduce = __webpack_require__(280),
-	    forEach = __webpack_require__(329),
-	    find = __webpack_require__(332),
-	    assign = __webpack_require__(336),
-	    defer = __webpack_require__(343);
+	var reduce = __webpack_require__(292),
+	    forEach = __webpack_require__(341),
+	    find = __webpack_require__(344),
+	    assign = __webpack_require__(348),
+	    defer = __webpack_require__(355);
 
-	var Stack = __webpack_require__(345),
-	    SaxParser = __webpack_require__(346).parser,
-	    Moddle = __webpack_require__(204),
-	    parseNameNs = __webpack_require__(277).parseName,
-	    Types = __webpack_require__(269),
+	var Stack = __webpack_require__(357),
+	    SaxParser = __webpack_require__(358).parser,
+	    Moddle = __webpack_require__(216),
+	    parseNameNs = __webpack_require__(289).parseName,
+	    Types = __webpack_require__(281),
 	    coerceType = Types.coerceType,
 	    isSimpleType = Types.isSimple,
-	    common = __webpack_require__(368),
+	    common = __webpack_require__(385),
 	    XSI_TYPE = common.XSI_TYPE,
 	    XSI_URI = common.DEFAULT_NS_MAP.xsi,
 	    serializeAsType = common.serializeAsType,
@@ -23816,12 +17525,12 @@ var InfoxBpmnModeler =
 	module.exports.ElementHandler = ElementHandler;
 
 /***/ },
-/* 280 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayReduce = __webpack_require__(281),
-	    baseEach = __webpack_require__(282),
-	    createReduce = __webpack_require__(303);
+	var arrayReduce = __webpack_require__(293),
+	    baseEach = __webpack_require__(294),
+	    createReduce = __webpack_require__(315);
 
 	/**
 	 * Reduces `collection` to a value which is the accumulated result of running
@@ -23866,7 +17575,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 281 */
+/* 293 */
 /***/ function(module, exports) {
 
 	/**
@@ -23898,11 +17607,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 282 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(283),
-	    createBaseEach = __webpack_require__(302);
+	var baseForOwn = __webpack_require__(295),
+	    createBaseEach = __webpack_require__(314);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -23919,11 +17628,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 283 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(284),
-	    keys = __webpack_require__(288);
+	var baseFor = __webpack_require__(296),
+	    keys = __webpack_require__(300);
 
 	/**
 	 * The base implementation of `_.forOwn` without support for callback
@@ -23942,10 +17651,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 284 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(285);
+	var createBaseFor = __webpack_require__(297);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -23965,10 +17674,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 285 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(286);
+	var toObject = __webpack_require__(298);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -23998,10 +17707,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 286 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(287);
+	var isObject = __webpack_require__(299);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -24018,7 +17727,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 287 */
+/* 299 */
 /***/ function(module, exports) {
 
 	/**
@@ -24052,13 +17761,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 288 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(289),
-	    isArrayLike = __webpack_require__(293),
-	    isObject = __webpack_require__(287),
-	    shimKeys = __webpack_require__(297);
+	var getNative = __webpack_require__(301),
+	    isArrayLike = __webpack_require__(305),
+	    isObject = __webpack_require__(299),
+	    shimKeys = __webpack_require__(309);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -24103,10 +17812,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 289 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(290);
+	var isNative = __webpack_require__(302);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -24125,11 +17834,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 290 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(291),
-	    isObjectLike = __webpack_require__(292);
+	var isFunction = __webpack_require__(303),
+	    isObjectLike = __webpack_require__(304);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -24179,10 +17888,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 291 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(287);
+	var isObject = __webpack_require__(299);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -24223,7 +17932,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 292 */
+/* 304 */
 /***/ function(module, exports) {
 
 	/**
@@ -24241,11 +17950,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 293 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(294),
-	    isLength = __webpack_require__(296);
+	var getLength = __webpack_require__(306),
+	    isLength = __webpack_require__(308);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -24262,10 +17971,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 294 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(295);
+	var baseProperty = __webpack_require__(307);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -24283,7 +17992,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 295 */
+/* 307 */
 /***/ function(module, exports) {
 
 	/**
@@ -24303,7 +18012,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 296 */
+/* 308 */
 /***/ function(module, exports) {
 
 	/**
@@ -24329,14 +18038,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 297 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(298),
-	    isArray = __webpack_require__(299),
-	    isIndex = __webpack_require__(300),
-	    isLength = __webpack_require__(296),
-	    keysIn = __webpack_require__(301);
+	var isArguments = __webpack_require__(310),
+	    isArray = __webpack_require__(311),
+	    isIndex = __webpack_require__(312),
+	    isLength = __webpack_require__(308),
+	    keysIn = __webpack_require__(313);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -24376,11 +18085,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 298 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(293),
-	    isObjectLike = __webpack_require__(292);
+	var isArrayLike = __webpack_require__(305),
+	    isObjectLike = __webpack_require__(304);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -24416,12 +18125,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 299 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(289),
-	    isLength = __webpack_require__(296),
-	    isObjectLike = __webpack_require__(292);
+	var getNative = __webpack_require__(301),
+	    isLength = __webpack_require__(308),
+	    isObjectLike = __webpack_require__(304);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -24462,7 +18171,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 300 */
+/* 312 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -24492,14 +18201,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 301 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(298),
-	    isArray = __webpack_require__(299),
-	    isIndex = __webpack_require__(300),
-	    isLength = __webpack_require__(296),
-	    isObject = __webpack_require__(287);
+	var isArguments = __webpack_require__(310),
+	    isArray = __webpack_require__(311),
+	    isIndex = __webpack_require__(312),
+	    isLength = __webpack_require__(308),
+	    isObject = __webpack_require__(299);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -24562,12 +18271,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 302 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(294),
-	    isLength = __webpack_require__(296),
-	    toObject = __webpack_require__(286);
+	var getLength = __webpack_require__(306),
+	    isLength = __webpack_require__(308),
+	    toObject = __webpack_require__(298);
 
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -24599,12 +18308,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 303 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(304),
-	    baseReduce = __webpack_require__(328),
-	    isArray = __webpack_require__(299);
+	var baseCallback = __webpack_require__(316),
+	    baseReduce = __webpack_require__(340),
+	    isArray = __webpack_require__(311);
 
 	/**
 	 * Creates a function for `_.reduce` or `_.reduceRight`.
@@ -24627,14 +18336,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 304 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(305),
-	    baseMatchesProperty = __webpack_require__(317),
-	    bindCallback = __webpack_require__(324),
-	    identity = __webpack_require__(325),
-	    property = __webpack_require__(326);
+	var baseMatches = __webpack_require__(317),
+	    baseMatchesProperty = __webpack_require__(329),
+	    bindCallback = __webpack_require__(336),
+	    identity = __webpack_require__(337),
+	    property = __webpack_require__(338);
 
 	/**
 	 * The base implementation of `_.callback` which supports specifying the
@@ -24668,12 +18377,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 305 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(306),
-	    getMatchData = __webpack_require__(314),
-	    toObject = __webpack_require__(286);
+	var baseIsMatch = __webpack_require__(318),
+	    getMatchData = __webpack_require__(326),
+	    toObject = __webpack_require__(298);
 
 	/**
 	 * The base implementation of `_.matches` which does not clone `source`.
@@ -24704,11 +18413,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 306 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(307),
-	    toObject = __webpack_require__(286);
+	var baseIsEqual = __webpack_require__(319),
+	    toObject = __webpack_require__(298);
 
 	/**
 	 * The base implementation of `_.isMatch` without support for callback
@@ -24762,12 +18471,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 307 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(308),
-	    isObject = __webpack_require__(287),
-	    isObjectLike = __webpack_require__(292);
+	var baseIsEqualDeep = __webpack_require__(320),
+	    isObject = __webpack_require__(299),
+	    isObjectLike = __webpack_require__(304);
 
 	/**
 	 * The base implementation of `_.isEqual` without support for `this` binding
@@ -24796,14 +18505,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 308 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(309),
-	    equalByTag = __webpack_require__(311),
-	    equalObjects = __webpack_require__(312),
-	    isArray = __webpack_require__(299),
-	    isTypedArray = __webpack_require__(313);
+	var equalArrays = __webpack_require__(321),
+	    equalByTag = __webpack_require__(323),
+	    equalObjects = __webpack_require__(324),
+	    isArray = __webpack_require__(311),
+	    isTypedArray = __webpack_require__(325);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -24904,10 +18613,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 309 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(310);
+	var arraySome = __webpack_require__(322);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -24961,7 +18670,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 310 */
+/* 322 */
 /***/ function(module, exports) {
 
 	/**
@@ -24990,7 +18699,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 311 */
+/* 323 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -25044,10 +18753,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 312 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(288);
+	var keys = __webpack_require__(300);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -25117,11 +18826,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 313 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(296),
-	    isObjectLike = __webpack_require__(292);
+	var isLength = __webpack_require__(308),
+	    isObjectLike = __webpack_require__(304);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -25197,11 +18906,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 314 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(315),
-	    pairs = __webpack_require__(316);
+	var isStrictComparable = __webpack_require__(327),
+	    pairs = __webpack_require__(328);
 
 	/**
 	 * Gets the propery names, values, and compare flags of `object`.
@@ -25224,10 +18933,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 315 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(287);
+	var isObject = __webpack_require__(299);
 
 	/**
 	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -25245,11 +18954,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 316 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(288),
-	    toObject = __webpack_require__(286);
+	var keys = __webpack_require__(300),
+	    toObject = __webpack_require__(298);
 
 	/**
 	 * Creates a two dimensional array of the key-value pairs for `object`,
@@ -25284,18 +18993,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 317 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(318),
-	    baseIsEqual = __webpack_require__(307),
-	    baseSlice = __webpack_require__(319),
-	    isArray = __webpack_require__(299),
-	    isKey = __webpack_require__(320),
-	    isStrictComparable = __webpack_require__(315),
-	    last = __webpack_require__(321),
-	    toObject = __webpack_require__(286),
-	    toPath = __webpack_require__(322);
+	var baseGet = __webpack_require__(330),
+	    baseIsEqual = __webpack_require__(319),
+	    baseSlice = __webpack_require__(331),
+	    isArray = __webpack_require__(311),
+	    isKey = __webpack_require__(332),
+	    isStrictComparable = __webpack_require__(327),
+	    last = __webpack_require__(333),
+	    toObject = __webpack_require__(298),
+	    toPath = __webpack_require__(334);
 
 	/**
 	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -25335,10 +19044,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 318 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(286);
+	var toObject = __webpack_require__(298);
 
 	/**
 	 * The base implementation of `get` without support for string paths
@@ -25370,7 +19079,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 319 */
+/* 331 */
 /***/ function(module, exports) {
 
 	/**
@@ -25408,11 +19117,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 320 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(299),
-	    toObject = __webpack_require__(286);
+	var isArray = __webpack_require__(311),
+	    toObject = __webpack_require__(298);
 
 	/** Used to match property names within property paths. */
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
@@ -25442,7 +19151,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 321 */
+/* 333 */
 /***/ function(module, exports) {
 
 	/**
@@ -25467,11 +19176,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 322 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(323),
-	    isArray = __webpack_require__(299);
+	var baseToString = __webpack_require__(335),
+	    isArray = __webpack_require__(311);
 
 	/** Used to match property names within property paths. */
 	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
@@ -25501,7 +19210,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 323 */
+/* 335 */
 /***/ function(module, exports) {
 
 	/**
@@ -25520,10 +19229,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 324 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(325);
+	var identity = __webpack_require__(337);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -25565,7 +19274,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 325 */
+/* 337 */
 /***/ function(module, exports) {
 
 	/**
@@ -25591,12 +19300,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 326 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(295),
-	    basePropertyDeep = __webpack_require__(327),
-	    isKey = __webpack_require__(320);
+	var baseProperty = __webpack_require__(307),
+	    basePropertyDeep = __webpack_require__(339),
+	    isKey = __webpack_require__(332);
 
 	/**
 	 * Creates a function that returns the property value at `path` on a
@@ -25628,11 +19337,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 327 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(318),
-	    toPath = __webpack_require__(322);
+	var baseGet = __webpack_require__(330),
+	    toPath = __webpack_require__(334);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -25653,7 +19362,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 328 */
+/* 340 */
 /***/ function(module, exports) {
 
 	/**
@@ -25683,12 +19392,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 329 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(330),
-	    baseEach = __webpack_require__(282),
-	    createForEach = __webpack_require__(331);
+	var arrayEach = __webpack_require__(342),
+	    baseEach = __webpack_require__(294),
+	    createForEach = __webpack_require__(343);
 
 	/**
 	 * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -25726,7 +19435,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 330 */
+/* 342 */
 /***/ function(module, exports) {
 
 	/**
@@ -25754,11 +19463,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 331 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(324),
-	    isArray = __webpack_require__(299);
+	var bindCallback = __webpack_require__(336),
+	    isArray = __webpack_require__(311);
 
 	/**
 	 * Creates a function for `_.forEach` or `_.forEachRight`.
@@ -25780,11 +19489,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 332 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(282),
-	    createFind = __webpack_require__(333);
+	var baseEach = __webpack_require__(294),
+	    createFind = __webpack_require__(345);
 
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -25842,13 +19551,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 333 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(304),
-	    baseFind = __webpack_require__(334),
-	    baseFindIndex = __webpack_require__(335),
-	    isArray = __webpack_require__(299);
+	var baseCallback = __webpack_require__(316),
+	    baseFind = __webpack_require__(346),
+	    baseFindIndex = __webpack_require__(347),
+	    isArray = __webpack_require__(311);
 
 	/**
 	 * Creates a `_.find` or `_.findLast` function.
@@ -25873,7 +19582,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 334 */
+/* 346 */
 /***/ function(module, exports) {
 
 	/**
@@ -25904,7 +19613,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 335 */
+/* 347 */
 /***/ function(module, exports) {
 
 	/**
@@ -25933,12 +19642,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 336 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignWith = __webpack_require__(337),
-	    baseAssign = __webpack_require__(338),
-	    createAssigner = __webpack_require__(340);
+	var assignWith = __webpack_require__(349),
+	    baseAssign = __webpack_require__(350),
+	    createAssigner = __webpack_require__(352);
 
 	/**
 	 * Assigns own enumerable properties of source object(s) to the destination
@@ -25982,10 +19691,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 337 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(288);
+	var keys = __webpack_require__(300);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -26020,11 +19729,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 338 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(339),
-	    keys = __webpack_require__(288);
+	var baseCopy = __webpack_require__(351),
+	    keys = __webpack_require__(300);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -26045,7 +19754,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 339 */
+/* 351 */
 /***/ function(module, exports) {
 
 	/**
@@ -26074,12 +19783,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 340 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(324),
-	    isIterateeCall = __webpack_require__(341),
-	    restParam = __webpack_require__(342);
+	var bindCallback = __webpack_require__(336),
+	    isIterateeCall = __webpack_require__(353),
+	    restParam = __webpack_require__(354);
 
 	/**
 	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -26121,12 +19830,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 341 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(293),
-	    isIndex = __webpack_require__(300),
-	    isObject = __webpack_require__(287);
+	var isArrayLike = __webpack_require__(305),
+	    isIndex = __webpack_require__(312),
+	    isObject = __webpack_require__(299);
 
 	/**
 	 * Checks if the provided arguments are from an iteratee call.
@@ -26155,7 +19864,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 342 */
+/* 354 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -26219,11 +19928,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 343 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseDelay = __webpack_require__(344),
-	    restParam = __webpack_require__(342);
+	var baseDelay = __webpack_require__(356),
+	    restParam = __webpack_require__(354);
 
 	/**
 	 * Defers invoking the `func` until the current call stack has cleared. Any
@@ -26250,7 +19959,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 344 */
+/* 356 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -26277,7 +19986,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 345 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26398,7 +20107,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 346 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {// wrapper for non-node envs
@@ -26557,7 +20266,7 @@ var InfoxBpmnModeler =
 	  }
 
 	try {
-	  var Stream = __webpack_require__(351).Stream
+	  var Stream = __webpack_require__(363).Stream
 	} catch (ex) {
 	  var Stream = function () {}
 	}
@@ -26621,7 +20330,7 @@ var InfoxBpmnModeler =
 	      typeof Buffer.isBuffer === 'function' &&
 	      Buffer.isBuffer(data)) {
 	    if (!this._decoder) {
-	      var SD = __webpack_require__(361).StringDecoder
+	      var SD = __webpack_require__(378).StringDecoder
 	      this._decoder = new SD('utf8')
 	    }
 	    data = this._decoder.write(data);
@@ -27812,13 +21521,13 @@ var InfoxBpmnModeler =
 
 	})( false ? sax = {} : exports);
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(347).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(359).Buffer))
 
 /***/ },
-/* 347 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
+	/* WEBPACK VAR INJECTION */(function(global) {/*!
 	 * The buffer module from node.js, for the browser.
 	 *
 	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
@@ -27828,9 +21537,9 @@ var InfoxBpmnModeler =
 
 	'use strict'
 
-	var base64 = __webpack_require__(348)
-	var ieee754 = __webpack_require__(349)
-	var isArray = __webpack_require__(350)
+	var base64 = __webpack_require__(360)
+	var ieee754 = __webpack_require__(361)
+	var isArray = __webpack_require__(362)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -29608,14 +23317,15 @@ var InfoxBpmnModeler =
 	  return val !== val // eslint-disable-line no-self-compare
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(347).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 348 */
+/* 360 */
 /***/ function(module, exports) {
 
 	'use strict'
 
+	exports.byteLength = byteLength
 	exports.toByteArray = toByteArray
 	exports.fromByteArray = fromByteArray
 
@@ -29623,23 +23333,17 @@ var InfoxBpmnModeler =
 	var revLookup = []
 	var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
 
-	function init () {
-	  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-	  for (var i = 0, len = code.length; i < len; ++i) {
-	    lookup[i] = code[i]
-	    revLookup[code.charCodeAt(i)] = i
-	  }
-
-	  revLookup['-'.charCodeAt(0)] = 62
-	  revLookup['_'.charCodeAt(0)] = 63
+	var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+	for (var i = 0, len = code.length; i < len; ++i) {
+	  lookup[i] = code[i]
+	  revLookup[code.charCodeAt(i)] = i
 	}
 
-	init()
+	revLookup['-'.charCodeAt(0)] = 62
+	revLookup['_'.charCodeAt(0)] = 63
 
-	function toByteArray (b64) {
-	  var i, j, l, tmp, placeHolders, arr
+	function placeHoldersCount (b64) {
 	  var len = b64.length
-
 	  if (len % 4 > 0) {
 	    throw new Error('Invalid string. Length must be a multiple of 4')
 	  }
@@ -29649,9 +23353,19 @@ var InfoxBpmnModeler =
 	  // represent one byte
 	  // if there is only one, then the three characters before it represent 2 bytes
 	  // this is just a cheap hack to not do indexOf twice
-	  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+	  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+	}
 
+	function byteLength (b64) {
 	  // base64 is 4/3 + up to two characters of the original data
+	  return b64.length * 3 / 4 - placeHoldersCount(b64)
+	}
+
+	function toByteArray (b64) {
+	  var i, j, l, tmp, placeHolders, arr
+	  var len = b64.length
+	  placeHolders = placeHoldersCount(b64)
+
 	  arr = new Arr(len * 3 / 4 - placeHolders)
 
 	  // if there are placeholders, only get up to the last complete 4 chars
@@ -29726,7 +23440,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 349 */
+/* 361 */
 /***/ function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -29816,7 +23530,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 350 */
+/* 362 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -29827,7 +23541,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 351 */
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -29853,15 +23567,15 @@ var InfoxBpmnModeler =
 
 	module.exports = Stream;
 
-	var EE = __webpack_require__(352).EventEmitter;
+	var EE = __webpack_require__(364).EventEmitter;
 	var inherits = __webpack_require__(3);
 
 	inherits(Stream, EE);
-	Stream.Readable = __webpack_require__(353);
-	Stream.Writable = __webpack_require__(364);
-	Stream.Duplex = __webpack_require__(365);
-	Stream.Transform = __webpack_require__(366);
-	Stream.PassThrough = __webpack_require__(367);
+	Stream.Readable = __webpack_require__(365);
+	Stream.Writable = __webpack_require__(381);
+	Stream.Duplex = __webpack_require__(382);
+	Stream.Transform = __webpack_require__(383);
+	Stream.PassThrough = __webpack_require__(384);
 
 	// Backwards-compat with node 0.4.x
 	Stream.Stream = Stream;
@@ -29960,7 +23674,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 352 */
+/* 364 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -30268,24 +23982,30 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 353 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = __webpack_require__(355);
-	exports.Stream = __webpack_require__(351);
+	/* WEBPACK VAR INJECTION */(function(process) {var Stream = (function (){
+	  try {
+	    return __webpack_require__(363); // hack to fix a circular dependency issue when used with browserify
+	  } catch(_){}
+	}());
+	exports = module.exports = __webpack_require__(367);
+	exports.Stream = Stream || exports;
 	exports.Readable = exports;
-	exports.Writable = __webpack_require__(360);
-	exports.Duplex = __webpack_require__(359);
-	exports.Transform = __webpack_require__(362);
-	exports.PassThrough = __webpack_require__(363);
-	if (!process.browser && process.env.READABLE_STREAM === 'disable') {
-	  module.exports = __webpack_require__(351);
+	exports.Writable = __webpack_require__(374);
+	exports.Duplex = __webpack_require__(373);
+	exports.Transform = __webpack_require__(379);
+	exports.PassThrough = __webpack_require__(380);
+
+	if (!process.browser && process.env.READABLE_STREAM === 'disable' && Stream) {
+	  module.exports = Stream;
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(354)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(366)))
 
 /***/ },
-/* 354 */
+/* 366 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -30471,88 +24191,109 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 355 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	module.exports = Readable;
 
 	/*<replacement>*/
-	var isArray = __webpack_require__(356);
+	var processNextTick = __webpack_require__(368);
 	/*</replacement>*/
 
+	/*<replacement>*/
+	var isArray = __webpack_require__(362);
+	/*</replacement>*/
 
 	/*<replacement>*/
-	var Buffer = __webpack_require__(347).Buffer;
+	var Duplex;
 	/*</replacement>*/
 
 	Readable.ReadableState = ReadableState;
 
-	var EE = __webpack_require__(352).EventEmitter;
-
 	/*<replacement>*/
-	if (!EE.listenerCount) EE.listenerCount = function(emitter, type) {
+	var EE = __webpack_require__(364).EventEmitter;
+
+	var EElistenerCount = function (emitter, type) {
 	  return emitter.listeners(type).length;
 	};
 	/*</replacement>*/
 
-	var Stream = __webpack_require__(351);
+	/*<replacement>*/
+	var Stream;
+	(function () {
+	  try {
+	    Stream = __webpack_require__(363);
+	  } catch (_) {} finally {
+	    if (!Stream) Stream = __webpack_require__(364).EventEmitter;
+	  }
+	})();
+	/*</replacement>*/
+
+	var Buffer = __webpack_require__(359).Buffer;
+	/*<replacement>*/
+	var bufferShim = __webpack_require__(369);
+	/*</replacement>*/
 
 	/*<replacement>*/
-	var util = __webpack_require__(357);
+	var util = __webpack_require__(370);
 	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
-	var StringDecoder;
-
-
 	/*<replacement>*/
-	var debug = __webpack_require__(358);
-	if (debug && debug.debuglog) {
-	  debug = debug.debuglog('stream');
+	var debugUtil = __webpack_require__(371);
+	var debug = void 0;
+	if (debugUtil && debugUtil.debuglog) {
+	  debug = debugUtil.debuglog('stream');
 	} else {
 	  debug = function () {};
 	}
 	/*</replacement>*/
 
+	var BufferList = __webpack_require__(372);
+	var StringDecoder;
 
 	util.inherits(Readable, Stream);
 
+	function prependListener(emitter, event, fn) {
+	  // Sadly this is not cacheable as some libraries bundle their own
+	  // event emitter implementation with them.
+	  if (typeof emitter.prependListener === 'function') {
+	    return emitter.prependListener(event, fn);
+	  } else {
+	    // This is a hack to make sure that our error handler is attached before any
+	    // userland ones.  NEVER DO THIS. This is here only because this code needs
+	    // to continue to work with older versions of Node.js that do not include
+	    // the prependListener() method. The goal is to eventually remove this hack.
+	    if (!emitter._events || !emitter._events[event]) emitter.on(event, fn);else if (isArray(emitter._events[event])) emitter._events[event].unshift(fn);else emitter._events[event] = [fn, emitter._events[event]];
+	  }
+	}
+
 	function ReadableState(options, stream) {
-	  var Duplex = __webpack_require__(359);
+	  Duplex = Duplex || __webpack_require__(373);
 
 	  options = options || {};
+
+	  // object stream flag. Used to make read(n) ignore n and to
+	  // make all the buffer merging and length checks go away
+	  this.objectMode = !!options.objectMode;
+
+	  if (stream instanceof Duplex) this.objectMode = this.objectMode || !!options.readableObjectMode;
 
 	  // the point at which it stops calling _read() to fill the buffer
 	  // Note: 0 is a valid value, means "don't call _read preemptively ever"
 	  var hwm = options.highWaterMark;
-	  var defaultHwm = options.objectMode ? 16 : 16 * 1024;
-	  this.highWaterMark = (hwm || hwm === 0) ? hwm : defaultHwm;
+	  var defaultHwm = this.objectMode ? 16 : 16 * 1024;
+	  this.highWaterMark = hwm || hwm === 0 ? hwm : defaultHwm;
 
 	  // cast to ints.
-	  this.highWaterMark = ~~this.highWaterMark;
+	  this.highWaterMark = ~ ~this.highWaterMark;
 
-	  this.buffer = [];
+	  // A linked list is used to store data chunks instead of an array because the
+	  // linked list can remove elements from the beginning faster than
+	  // array.shift()
+	  this.buffer = new BufferList();
 	  this.length = 0;
 	  this.pipes = null;
 	  this.pipesCount = 0;
@@ -30572,14 +24313,7 @@ var InfoxBpmnModeler =
 	  this.needReadable = false;
 	  this.emittedReadable = false;
 	  this.readableListening = false;
-
-
-	  // object stream flag. Used to make read(n) ignore n and to
-	  // make all the buffer merging and length checks go away
-	  this.objectMode = !!options.objectMode;
-
-	  if (stream instanceof Duplex)
-	    this.objectMode = this.objectMode || !!options.readableObjectMode;
+	  this.resumeScheduled = false;
 
 	  // Crypto is kind of old and crusty.  Historically, its default string
 	  // encoding is 'binary' so we have to make this configurable.
@@ -30599,23 +24333,23 @@ var InfoxBpmnModeler =
 	  this.decoder = null;
 	  this.encoding = null;
 	  if (options.encoding) {
-	    if (!StringDecoder)
-	      StringDecoder = __webpack_require__(361).StringDecoder;
+	    if (!StringDecoder) StringDecoder = __webpack_require__(378).StringDecoder;
 	    this.decoder = new StringDecoder(options.encoding);
 	    this.encoding = options.encoding;
 	  }
 	}
 
 	function Readable(options) {
-	  var Duplex = __webpack_require__(359);
+	  Duplex = Duplex || __webpack_require__(373);
 
-	  if (!(this instanceof Readable))
-	    return new Readable(options);
+	  if (!(this instanceof Readable)) return new Readable(options);
 
 	  this._readableState = new ReadableState(options, this);
 
 	  // legacy
 	  this.readable = true;
+
+	  if (options && typeof options.read === 'function') this._read = options.read;
 
 	  Stream.call(this);
 	}
@@ -30624,13 +24358,13 @@ var InfoxBpmnModeler =
 	// This returns true if the highWaterMark has not been hit yet,
 	// similar to how Writable.write() returns true if you should
 	// write() some more.
-	Readable.prototype.push = function(chunk, encoding) {
+	Readable.prototype.push = function (chunk, encoding) {
 	  var state = this._readableState;
 
-	  if (util.isString(chunk) && !state.objectMode) {
+	  if (!state.objectMode && typeof chunk === 'string') {
 	    encoding = encoding || state.defaultEncoding;
 	    if (encoding !== state.encoding) {
-	      chunk = new Buffer(chunk, encoding);
+	      chunk = bufferShim.from(chunk, encoding);
 	      encoding = '';
 	    }
 	  }
@@ -30639,47 +24373,52 @@ var InfoxBpmnModeler =
 	};
 
 	// Unshift should *always* be something directly out of read()
-	Readable.prototype.unshift = function(chunk) {
+	Readable.prototype.unshift = function (chunk) {
 	  var state = this._readableState;
 	  return readableAddChunk(this, state, chunk, '', true);
+	};
+
+	Readable.prototype.isPaused = function () {
+	  return this._readableState.flowing === false;
 	};
 
 	function readableAddChunk(stream, state, chunk, encoding, addToFront) {
 	  var er = chunkInvalid(state, chunk);
 	  if (er) {
 	    stream.emit('error', er);
-	  } else if (util.isNullOrUndefined(chunk)) {
+	  } else if (chunk === null) {
 	    state.reading = false;
-	    if (!state.ended)
-	      onEofChunk(stream, state);
+	    onEofChunk(stream, state);
 	  } else if (state.objectMode || chunk && chunk.length > 0) {
 	    if (state.ended && !addToFront) {
 	      var e = new Error('stream.push() after EOF');
 	      stream.emit('error', e);
 	    } else if (state.endEmitted && addToFront) {
-	      var e = new Error('stream.unshift() after end event');
-	      stream.emit('error', e);
+	      var _e = new Error('stream.unshift() after end event');
+	      stream.emit('error', _e);
 	    } else {
-	      if (state.decoder && !addToFront && !encoding)
+	      var skipAdd;
+	      if (state.decoder && !addToFront && !encoding) {
 	        chunk = state.decoder.write(chunk);
+	        skipAdd = !state.objectMode && chunk.length === 0;
+	      }
 
-	      if (!addToFront)
-	        state.reading = false;
+	      if (!addToFront) state.reading = false;
 
-	      // if we want the data now, just emit it.
-	      if (state.flowing && state.length === 0 && !state.sync) {
-	        stream.emit('data', chunk);
-	        stream.read(0);
-	      } else {
-	        // update the buffer info.
-	        state.length += state.objectMode ? 1 : chunk.length;
-	        if (addToFront)
-	          state.buffer.unshift(chunk);
-	        else
-	          state.buffer.push(chunk);
+	      // Don't add to the buffer if we've decoded to an empty string chunk and
+	      // we're not in object mode
+	      if (!skipAdd) {
+	        // if we want the data now, just emit it.
+	        if (state.flowing && state.length === 0 && !state.sync) {
+	          stream.emit('data', chunk);
+	          stream.read(0);
+	        } else {
+	          // update the buffer info.
+	          state.length += state.objectMode ? 1 : chunk.length;
+	          if (addToFront) state.buffer.unshift(chunk);else state.buffer.push(chunk);
 
-	        if (state.needReadable)
-	          emitReadable(stream);
+	          if (state.needReadable) emitReadable(stream);
+	        }
 	      }
 
 	      maybeReadMore(stream, state);
@@ -30691,8 +24430,6 @@ var InfoxBpmnModeler =
 	  return needMoreData(state);
 	}
 
-
-
 	// if it's past the high water mark, we can push in some more.
 	// Also, if we have no data yet, we can stand some
 	// more bytes.  This is to work around cases where hwm=0,
@@ -30701,92 +24438,71 @@ var InfoxBpmnModeler =
 	// needReadable was set, then we ought to push more, so that another
 	// 'readable' event will be triggered.
 	function needMoreData(state) {
-	  return !state.ended &&
-	         (state.needReadable ||
-	          state.length < state.highWaterMark ||
-	          state.length === 0);
+	  return !state.ended && (state.needReadable || state.length < state.highWaterMark || state.length === 0);
 	}
 
 	// backwards compatibility.
-	Readable.prototype.setEncoding = function(enc) {
-	  if (!StringDecoder)
-	    StringDecoder = __webpack_require__(361).StringDecoder;
+	Readable.prototype.setEncoding = function (enc) {
+	  if (!StringDecoder) StringDecoder = __webpack_require__(378).StringDecoder;
 	  this._readableState.decoder = new StringDecoder(enc);
 	  this._readableState.encoding = enc;
 	  return this;
 	};
 
-	// Don't raise the hwm > 128MB
+	// Don't raise the hwm > 8MB
 	var MAX_HWM = 0x800000;
-	function roundUpToNextPowerOf2(n) {
+	function computeNewHighWaterMark(n) {
 	  if (n >= MAX_HWM) {
 	    n = MAX_HWM;
 	  } else {
-	    // Get the next highest power of 2
+	    // Get the next highest power of 2 to prevent increasing hwm excessively in
+	    // tiny amounts
 	    n--;
-	    for (var p = 1; p < 32; p <<= 1) n |= n >> p;
+	    n |= n >>> 1;
+	    n |= n >>> 2;
+	    n |= n >>> 4;
+	    n |= n >>> 8;
+	    n |= n >>> 16;
 	    n++;
 	  }
 	  return n;
 	}
 
+	// This function is designed to be inlinable, so please take care when making
+	// changes to the function body.
 	function howMuchToRead(n, state) {
-	  if (state.length === 0 && state.ended)
-	    return 0;
-
-	  if (state.objectMode)
-	    return n === 0 ? 0 : 1;
-
-	  if (isNaN(n) || util.isNull(n)) {
-	    // only flow one buffer at a time
-	    if (state.flowing && state.buffer.length)
-	      return state.buffer[0].length;
-	    else
-	      return state.length;
+	  if (n <= 0 || state.length === 0 && state.ended) return 0;
+	  if (state.objectMode) return 1;
+	  if (n !== n) {
+	    // Only flow one buffer at a time
+	    if (state.flowing && state.length) return state.buffer.head.data.length;else return state.length;
 	  }
-
-	  if (n <= 0)
+	  // If we're asking for more than the current hwm, then raise the hwm.
+	  if (n > state.highWaterMark) state.highWaterMark = computeNewHighWaterMark(n);
+	  if (n <= state.length) return n;
+	  // Don't have enough
+	  if (!state.ended) {
+	    state.needReadable = true;
 	    return 0;
-
-	  // If we're asking for more than the target buffer level,
-	  // then raise the water mark.  Bump up to the next highest
-	  // power of 2, to prevent increasing it excessively in tiny
-	  // amounts.
-	  if (n > state.highWaterMark)
-	    state.highWaterMark = roundUpToNextPowerOf2(n);
-
-	  // don't have that much.  return null, unless we've ended.
-	  if (n > state.length) {
-	    if (!state.ended) {
-	      state.needReadable = true;
-	      return 0;
-	    } else
-	      return state.length;
 	  }
-
-	  return n;
+	  return state.length;
 	}
 
 	// you can override either this method, or the async _read(n) below.
-	Readable.prototype.read = function(n) {
+	Readable.prototype.read = function (n) {
 	  debug('read', n);
+	  n = parseInt(n, 10);
 	  var state = this._readableState;
 	  var nOrig = n;
 
-	  if (!util.isNumber(n) || n > 0)
-	    state.emittedReadable = false;
+	  if (n !== 0) state.emittedReadable = false;
 
 	  // if we're doing read(0) to trigger a readable event, but we
 	  // already have a bunch of data in the buffer, then just trigger
 	  // the 'readable' event and move on.
-	  if (n === 0 &&
-	      state.needReadable &&
-	      (state.length >= state.highWaterMark || state.ended)) {
+	  if (n === 0 && state.needReadable && (state.length >= state.highWaterMark || state.ended)) {
 	    debug('read: emitReadable', state.length, state.ended);
-	    if (state.length === 0 && state.ended)
-	      endReadable(this);
-	    else
-	      emitReadable(this);
+	    if (state.length === 0 && state.ended) endReadable(this);else emitReadable(this);
 	    return null;
 	  }
 
@@ -30794,8 +24510,7 @@ var InfoxBpmnModeler =
 
 	  // if we've ended, and we're now clear, then finish it up.
 	  if (n === 0 && state.ended) {
-	    if (state.length === 0)
-	      endReadable(this);
+	    if (state.length === 0) endReadable(this);
 	    return null;
 	  }
 
@@ -30836,67 +24551,55 @@ var InfoxBpmnModeler =
 	  if (state.ended || state.reading) {
 	    doRead = false;
 	    debug('reading or ended', doRead);
-	  }
-
-	  if (doRead) {
+	  } else if (doRead) {
 	    debug('do read');
 	    state.reading = true;
 	    state.sync = true;
 	    // if the length is currently zero, then we *need* a readable event.
-	    if (state.length === 0)
-	      state.needReadable = true;
+	    if (state.length === 0) state.needReadable = true;
 	    // call internal read method
 	    this._read(state.highWaterMark);
 	    state.sync = false;
+	    // If _read pushed data synchronously, then `reading` will be false,
+	    // and we need to re-evaluate how much data we can return to the user.
+	    if (!state.reading) n = howMuchToRead(nOrig, state);
 	  }
-
-	  // If _read pushed data synchronously, then `reading` will be false,
-	  // and we need to re-evaluate how much data we can return to the user.
-	  if (doRead && !state.reading)
-	    n = howMuchToRead(nOrig, state);
 
 	  var ret;
-	  if (n > 0)
-	    ret = fromList(n, state);
-	  else
-	    ret = null;
+	  if (n > 0) ret = fromList(n, state);else ret = null;
 
-	  if (util.isNull(ret)) {
+	  if (ret === null) {
 	    state.needReadable = true;
 	    n = 0;
+	  } else {
+	    state.length -= n;
 	  }
 
-	  state.length -= n;
+	  if (state.length === 0) {
+	    // If we have nothing in the buffer, then we want to know
+	    // as soon as we *do* get something into the buffer.
+	    if (!state.ended) state.needReadable = true;
 
-	  // If we have nothing in the buffer, then we want to know
-	  // as soon as we *do* get something into the buffer.
-	  if (state.length === 0 && !state.ended)
-	    state.needReadable = true;
+	    // If we tried to read() past the EOF, then emit end on the next tick.
+	    if (nOrig !== n && state.ended) endReadable(this);
+	  }
 
-	  // If we tried to read() past the EOF, then emit end on the next tick.
-	  if (nOrig !== n && state.ended && state.length === 0)
-	    endReadable(this);
-
-	  if (!util.isNull(ret))
-	    this.emit('data', ret);
+	  if (ret !== null) this.emit('data', ret);
 
 	  return ret;
 	};
 
 	function chunkInvalid(state, chunk) {
 	  var er = null;
-	  if (!util.isBuffer(chunk) &&
-	      !util.isString(chunk) &&
-	      !util.isNullOrUndefined(chunk) &&
-	      !state.objectMode) {
+	  if (!Buffer.isBuffer(chunk) && typeof chunk !== 'string' && chunk !== null && chunk !== undefined && !state.objectMode) {
 	    er = new TypeError('Invalid non-string/buffer chunk');
 	  }
 	  return er;
 	}
 
-
 	function onEofChunk(stream, state) {
-	  if (state.decoder && !state.ended) {
+	  if (state.ended) return;
+	  if (state.decoder) {
 	    var chunk = state.decoder.end();
 	    if (chunk && chunk.length) {
 	      state.buffer.push(chunk);
@@ -30918,12 +24621,7 @@ var InfoxBpmnModeler =
 	  if (!state.emittedReadable) {
 	    debug('emitReadable', state.flowing);
 	    state.emittedReadable = true;
-	    if (state.sync)
-	      process.nextTick(function() {
-	        emitReadable_(stream);
-	      });
-	    else
-	      emitReadable_(stream);
+	    if (state.sync) processNextTick(emitReadable_, stream);else emitReadable_(stream);
 	  }
 	}
 
@@ -30932,7 +24630,6 @@ var InfoxBpmnModeler =
 	  stream.emit('readable');
 	  flow(stream);
 	}
-
 
 	// at this point, the user has presumably seen the 'readable' event,
 	// and called read() to consume some data.  that may have triggered
@@ -30943,23 +24640,18 @@ var InfoxBpmnModeler =
 	function maybeReadMore(stream, state) {
 	  if (!state.readingMore) {
 	    state.readingMore = true;
-	    process.nextTick(function() {
-	      maybeReadMore_(stream, state);
-	    });
+	    processNextTick(maybeReadMore_, stream, state);
 	  }
 	}
 
 	function maybeReadMore_(stream, state) {
 	  var len = state.length;
-	  while (!state.reading && !state.flowing && !state.ended &&
-	         state.length < state.highWaterMark) {
+	  while (!state.reading && !state.flowing && !state.ended && state.length < state.highWaterMark) {
 	    debug('maybeReadMore read 0');
 	    stream.read(0);
 	    if (len === state.length)
 	      // didn't get any data, stop spinning.
-	      break;
-	    else
-	      len = state.length;
+	      break;else len = state.length;
 	  }
 	  state.readingMore = false;
 	}
@@ -30968,11 +24660,11 @@ var InfoxBpmnModeler =
 	// call cb(er, data) where data is <= n in length.
 	// for virtual (non-string, non-buffer) streams, "length" is somewhat
 	// arbitrary, and perhaps not very meaningful.
-	Readable.prototype._read = function(n) {
-	  this.emit('error', new Error('not implemented'));
+	Readable.prototype._read = function (n) {
+	  this.emit('error', new Error('_read() is not implemented'));
 	};
 
-	Readable.prototype.pipe = function(dest, pipeOpts) {
+	Readable.prototype.pipe = function (dest, pipeOpts) {
 	  var src = this;
 	  var state = this._readableState;
 
@@ -30990,15 +24682,10 @@ var InfoxBpmnModeler =
 	  state.pipesCount += 1;
 	  debug('pipe count=%d opts=%j', state.pipesCount, pipeOpts);
 
-	  var doEnd = (!pipeOpts || pipeOpts.end !== false) &&
-	              dest !== process.stdout &&
-	              dest !== process.stderr;
+	  var doEnd = (!pipeOpts || pipeOpts.end !== false) && dest !== process.stdout && dest !== process.stderr;
 
 	  var endFn = doEnd ? onend : cleanup;
-	  if (state.endEmitted)
-	    process.nextTick(endFn);
-	  else
-	    src.once('end', endFn);
+	  if (state.endEmitted) processNextTick(endFn);else src.once('end', endFn);
 
 	  dest.on('unpipe', onunpipe);
 	  function onunpipe(readable) {
@@ -31020,6 +24707,7 @@ var InfoxBpmnModeler =
 	  var ondrain = pipeOnDrain(src);
 	  dest.on('drain', ondrain);
 
+	  var cleanedUp = false;
 	  function cleanup() {
 	    debug('cleanup');
 	    // cleanup event handlers once the pipe is broken
@@ -31032,24 +24720,36 @@ var InfoxBpmnModeler =
 	    src.removeListener('end', cleanup);
 	    src.removeListener('data', ondata);
 
+	    cleanedUp = true;
+
 	    // if the reader is waiting for a drain event from this
 	    // specific writer, then it would cause it to never start
 	    // flowing again.
 	    // So, if this is awaiting a drain, then we just call it now.
 	    // If we don't know, then assume that we are waiting for one.
-	    if (state.awaitDrain &&
-	        (!dest._writableState || dest._writableState.needDrain))
-	      ondrain();
+	    if (state.awaitDrain && (!dest._writableState || dest._writableState.needDrain)) ondrain();
 	  }
 
+	  // If the user pushes more data while we're writing to dest then we'll end up
+	  // in ondata again. However, we only want to increase awaitDrain once because
+	  // dest will only emit one 'drain' event for the multiple writes.
+	  // => Introduce a guard on increasing awaitDrain.
+	  var increasedAwaitDrain = false;
 	  src.on('data', ondata);
 	  function ondata(chunk) {
 	    debug('ondata');
+	    increasedAwaitDrain = false;
 	    var ret = dest.write(chunk);
-	    if (false === ret) {
-	      debug('false write response, pause',
-	            src._readableState.awaitDrain);
-	      src._readableState.awaitDrain++;
+	    if (false === ret && !increasedAwaitDrain) {
+	      // If the user unpiped during `dest.write()`, it is possible
+	      // to get stuck in a permanently paused state if that write
+	      // also returned false.
+	      // => Check whether `dest` is still a piping destination.
+	      if ((state.pipesCount === 1 && state.pipes === dest || state.pipesCount > 1 && indexOf(state.pipes, dest) !== -1) && !cleanedUp) {
+	        debug('false write response, pause', src._readableState.awaitDrain);
+	        src._readableState.awaitDrain++;
+	        increasedAwaitDrain = true;
+	      }
 	      src.pause();
 	    }
 	  }
@@ -31060,19 +24760,11 @@ var InfoxBpmnModeler =
 	    debug('onerror', er);
 	    unpipe();
 	    dest.removeListener('error', onerror);
-	    if (EE.listenerCount(dest, 'error') === 0)
-	      dest.emit('error', er);
+	    if (EElistenerCount(dest, 'error') === 0) dest.emit('error', er);
 	  }
-	  // This is a brutally ugly hack to make sure that our error handler
-	  // is attached before any userland ones.  NEVER DO THIS.
-	  if (!dest._events || !dest._events.error)
-	    dest.on('error', onerror);
-	  else if (isArray(dest._events.error))
-	    dest._events.error.unshift(onerror);
-	  else
-	    dest._events.error = [onerror, dest._events.error];
 
-
+	  // Make sure our error handler is attached before userland ones.
+	  prependListener(dest, 'error', onerror);
 
 	  // Both close and finish should trigger unpipe, but only once.
 	  function onclose() {
@@ -31105,41 +24797,35 @@ var InfoxBpmnModeler =
 	};
 
 	function pipeOnDrain(src) {
-	  return function() {
+	  return function () {
 	    var state = src._readableState;
 	    debug('pipeOnDrain', state.awaitDrain);
-	    if (state.awaitDrain)
-	      state.awaitDrain--;
-	    if (state.awaitDrain === 0 && EE.listenerCount(src, 'data')) {
+	    if (state.awaitDrain) state.awaitDrain--;
+	    if (state.awaitDrain === 0 && EElistenerCount(src, 'data')) {
 	      state.flowing = true;
 	      flow(src);
 	    }
 	  };
 	}
 
-
-	Readable.prototype.unpipe = function(dest) {
+	Readable.prototype.unpipe = function (dest) {
 	  var state = this._readableState;
 
 	  // if we're not piping anywhere, then do nothing.
-	  if (state.pipesCount === 0)
-	    return this;
+	  if (state.pipesCount === 0) return this;
 
 	  // just one destination.  most common case.
 	  if (state.pipesCount === 1) {
 	    // passed in one, but it's not the right one.
-	    if (dest && dest !== state.pipes)
-	      return this;
+	    if (dest && dest !== state.pipes) return this;
 
-	    if (!dest)
-	      dest = state.pipes;
+	    if (!dest) dest = state.pipes;
 
 	    // got a match.
 	    state.pipes = null;
 	    state.pipesCount = 0;
 	    state.flowing = false;
-	    if (dest)
-	      dest.emit('unpipe', this);
+	    if (dest) dest.emit('unpipe', this);
 	    return this;
 	  }
 
@@ -31153,20 +24839,18 @@ var InfoxBpmnModeler =
 	    state.pipesCount = 0;
 	    state.flowing = false;
 
-	    for (var i = 0; i < len; i++)
+	    for (var i = 0; i < len; i++) {
 	      dests[i].emit('unpipe', this);
-	    return this;
+	    }return this;
 	  }
 
 	  // try to find the right one.
-	  var i = indexOf(state.pipes, dest);
-	  if (i === -1)
-	    return this;
+	  var index = indexOf(state.pipes, dest);
+	  if (index === -1) return this;
 
-	  state.pipes.splice(i, 1);
+	  state.pipes.splice(index, 1);
 	  state.pipesCount -= 1;
-	  if (state.pipesCount === 1)
-	    state.pipes = state.pipes[0];
+	  if (state.pipesCount === 1) state.pipes = state.pipes[0];
 
 	  dest.emit('unpipe', this);
 
@@ -31175,27 +24859,19 @@ var InfoxBpmnModeler =
 
 	// set up data events if they are asked for
 	// Ensure readable listeners eventually get something
-	Readable.prototype.on = function(ev, fn) {
+	Readable.prototype.on = function (ev, fn) {
 	  var res = Stream.prototype.on.call(this, ev, fn);
 
-	  // If listening to data, and it has not explicitly been paused,
-	  // then call resume to start the flow of data on the next tick.
-	  if (ev === 'data' && false !== this._readableState.flowing) {
-	    this.resume();
-	  }
-
-	  if (ev === 'readable' && this.readable) {
+	  if (ev === 'data') {
+	    // Start flowing on next tick if stream isn't explicitly paused
+	    if (this._readableState.flowing !== false) this.resume();
+	  } else if (ev === 'readable') {
 	    var state = this._readableState;
-	    if (!state.readableListening) {
-	      state.readableListening = true;
+	    if (!state.endEmitted && !state.readableListening) {
+	      state.readableListening = state.needReadable = true;
 	      state.emittedReadable = false;
-	      state.needReadable = true;
 	      if (!state.reading) {
-	        var self = this;
-	        process.nextTick(function() {
-	          debug('readable nexttick read 0');
-	          self.read(0);
-	        });
+	        processNextTick(nReadingNextTick, this);
 	      } else if (state.length) {
 	        emitReadable(this, state);
 	      }
@@ -31206,17 +24882,18 @@ var InfoxBpmnModeler =
 	};
 	Readable.prototype.addListener = Readable.prototype.on;
 
+	function nReadingNextTick(self) {
+	  debug('readable nexttick read 0');
+	  self.read(0);
+	}
+
 	// pause() and resume() are remnants of the legacy readable stream API
 	// If the user uses them, then switch into old mode.
-	Readable.prototype.resume = function() {
+	Readable.prototype.resume = function () {
 	  var state = this._readableState;
 	  if (!state.flowing) {
 	    debug('resume');
 	    state.flowing = true;
-	    if (!state.reading) {
-	      debug('resume read 0');
-	      this.read(0);
-	    }
 	    resume(this, state);
 	  }
 	  return this;
@@ -31225,21 +24902,24 @@ var InfoxBpmnModeler =
 	function resume(stream, state) {
 	  if (!state.resumeScheduled) {
 	    state.resumeScheduled = true;
-	    process.nextTick(function() {
-	      resume_(stream, state);
-	    });
+	    processNextTick(resume_, stream, state);
 	  }
 	}
 
 	function resume_(stream, state) {
+	  if (!state.reading) {
+	    debug('resume read 0');
+	    stream.read(0);
+	  }
+
 	  state.resumeScheduled = false;
+	  state.awaitDrain = 0;
 	  stream.emit('resume');
 	  flow(stream);
-	  if (state.flowing && !state.reading)
-	    stream.read(0);
+	  if (state.flowing && !state.reading) stream.read(0);
 	}
 
-	Readable.prototype.pause = function() {
+	Readable.prototype.pause = function () {
 	  debug('call pause flowing=%j', this._readableState.flowing);
 	  if (false !== this._readableState.flowing) {
 	    debug('pause');
@@ -31252,38 +24932,33 @@ var InfoxBpmnModeler =
 	function flow(stream) {
 	  var state = stream._readableState;
 	  debug('flow', state.flowing);
-	  if (state.flowing) {
-	    do {
-	      var chunk = stream.read();
-	    } while (null !== chunk && state.flowing);
-	  }
+	  while (state.flowing && stream.read() !== null) {}
 	}
 
 	// wrap an old-style stream as the async data source.
 	// This is *not* part of the readable stream interface.
 	// It is an ugly unfortunate mess of history.
-	Readable.prototype.wrap = function(stream) {
+	Readable.prototype.wrap = function (stream) {
 	  var state = this._readableState;
 	  var paused = false;
 
 	  var self = this;
-	  stream.on('end', function() {
+	  stream.on('end', function () {
 	    debug('wrapped end');
 	    if (state.decoder && !state.ended) {
 	      var chunk = state.decoder.end();
-	      if (chunk && chunk.length)
-	        self.push(chunk);
+	      if (chunk && chunk.length) self.push(chunk);
 	    }
 
 	    self.push(null);
 	  });
 
-	  stream.on('data', function(chunk) {
+	  stream.on('data', function (chunk) {
 	    debug('wrapped data');
-	    if (state.decoder)
-	      chunk = state.decoder.write(chunk);
-	    if (!chunk || !state.objectMode && !chunk.length)
-	      return;
+	    if (state.decoder) chunk = state.decoder.write(chunk);
+
+	    // don't skip over falsy values in objectMode
+	    if (state.objectMode && (chunk === null || chunk === undefined)) return;else if (!state.objectMode && (!chunk || !chunk.length)) return;
 
 	    var ret = self.push(chunk);
 	    if (!ret) {
@@ -31295,22 +24970,24 @@ var InfoxBpmnModeler =
 	  // proxy all the other methods.
 	  // important when wrapping filters and duplexes.
 	  for (var i in stream) {
-	    if (util.isFunction(stream[i]) && util.isUndefined(this[i])) {
-	      this[i] = function(method) { return function() {
-	        return stream[method].apply(stream, arguments);
-	      }}(i);
+	    if (this[i] === undefined && typeof stream[i] === 'function') {
+	      this[i] = function (method) {
+	        return function () {
+	          return stream[method].apply(stream, arguments);
+	        };
+	      }(i);
 	    }
 	  }
 
 	  // proxy certain important events.
 	  var events = ['error', 'close', 'destroy', 'pause', 'resume'];
-	  forEach(events, function(ev) {
+	  forEach(events, function (ev) {
 	    stream.on(ev, self.emit.bind(self, ev));
 	  });
 
 	  // when we try to consume some more bytes, simply unpause the
 	  // underlying stream.
-	  self._read = function(n) {
+	  self._read = function (n) {
 	    debug('wrapped _read', n);
 	    if (paused) {
 	      paused = false;
@@ -31321,74 +24998,106 @@ var InfoxBpmnModeler =
 	  return self;
 	};
 
-
-
 	// exposed for testing purposes only.
 	Readable._fromList = fromList;
 
 	// Pluck off n bytes from an array of buffers.
 	// Length is the combined lengths of all the buffers in the list.
+	// This function is designed to be inlinable, so please take care when making
+	// changes to the function body.
 	function fromList(n, state) {
-	  var list = state.buffer;
-	  var length = state.length;
-	  var stringMode = !!state.decoder;
-	  var objectMode = !!state.objectMode;
+	  // nothing buffered
+	  if (state.length === 0) return null;
+
 	  var ret;
-
-	  // nothing in the list, definitely empty.
-	  if (list.length === 0)
-	    return null;
-
-	  if (length === 0)
-	    ret = null;
-	  else if (objectMode)
-	    ret = list.shift();
-	  else if (!n || n >= length) {
-	    // read it all, truncate the array.
-	    if (stringMode)
-	      ret = list.join('');
-	    else
-	      ret = Buffer.concat(list, length);
-	    list.length = 0;
+	  if (state.objectMode) ret = state.buffer.shift();else if (!n || n >= state.length) {
+	    // read it all, truncate the list
+	    if (state.decoder) ret = state.buffer.join('');else if (state.buffer.length === 1) ret = state.buffer.head.data;else ret = state.buffer.concat(state.length);
+	    state.buffer.clear();
 	  } else {
-	    // read just some of it.
-	    if (n < list[0].length) {
-	      // just take a part of the first list item.
-	      // slice is the same for buffers and strings.
-	      var buf = list[0];
-	      ret = buf.slice(0, n);
-	      list[0] = buf.slice(n);
-	    } else if (n === list[0].length) {
-	      // first list is a perfect match
-	      ret = list.shift();
-	    } else {
-	      // complex case.
-	      // we have enough to cover it, but it spans past the first buffer.
-	      if (stringMode)
-	        ret = '';
-	      else
-	        ret = new Buffer(n);
-
-	      var c = 0;
-	      for (var i = 0, l = list.length; i < l && c < n; i++) {
-	        var buf = list[0];
-	        var cpy = Math.min(n - c, buf.length);
-
-	        if (stringMode)
-	          ret += buf.slice(0, cpy);
-	        else
-	          buf.copy(ret, c, 0, cpy);
-
-	        if (cpy < buf.length)
-	          list[0] = buf.slice(cpy);
-	        else
-	          list.shift();
-
-	        c += cpy;
-	      }
-	    }
+	    // read part of list
+	    ret = fromListPartial(n, state.buffer, state.decoder);
 	  }
 
+	  return ret;
+	}
+
+	// Extracts only enough buffered data to satisfy the amount requested.
+	// This function is designed to be inlinable, so please take care when making
+	// changes to the function body.
+	function fromListPartial(n, list, hasStrings) {
+	  var ret;
+	  if (n < list.head.data.length) {
+	    // slice is the same for buffers and strings
+	    ret = list.head.data.slice(0, n);
+	    list.head.data = list.head.data.slice(n);
+	  } else if (n === list.head.data.length) {
+	    // first chunk is a perfect match
+	    ret = list.shift();
+	  } else {
+	    // result spans more than one buffer
+	    ret = hasStrings ? copyFromBufferString(n, list) : copyFromBuffer(n, list);
+	  }
+	  return ret;
+	}
+
+	// Copies a specified amount of characters from the list of buffered data
+	// chunks.
+	// This function is designed to be inlinable, so please take care when making
+	// changes to the function body.
+	function copyFromBufferString(n, list) {
+	  var p = list.head;
+	  var c = 1;
+	  var ret = p.data;
+	  n -= ret.length;
+	  while (p = p.next) {
+	    var str = p.data;
+	    var nb = n > str.length ? str.length : n;
+	    if (nb === str.length) ret += str;else ret += str.slice(0, n);
+	    n -= nb;
+	    if (n === 0) {
+	      if (nb === str.length) {
+	        ++c;
+	        if (p.next) list.head = p.next;else list.head = list.tail = null;
+	      } else {
+	        list.head = p;
+	        p.data = str.slice(nb);
+	      }
+	      break;
+	    }
+	    ++c;
+	  }
+	  list.length -= c;
+	  return ret;
+	}
+
+	// Copies a specified amount of bytes from the list of buffered data chunks.
+	// This function is designed to be inlinable, so please take care when making
+	// changes to the function body.
+	function copyFromBuffer(n, list) {
+	  var ret = bufferShim.allocUnsafe(n);
+	  var p = list.head;
+	  var c = 1;
+	  p.data.copy(ret);
+	  n -= p.data.length;
+	  while (p = p.next) {
+	    var buf = p.data;
+	    var nb = n > buf.length ? buf.length : n;
+	    buf.copy(ret, ret.length - n, 0, nb);
+	    n -= nb;
+	    if (n === 0) {
+	      if (nb === buf.length) {
+	        ++c;
+	        if (p.next) list.head = p.next;else list.head = list.tail = null;
+	      } else {
+	        list.head = p;
+	        p.data = buf.slice(nb);
+	      }
+	      break;
+	    }
+	    ++c;
+	  }
+	  list.length -= c;
 	  return ret;
 	}
 
@@ -31397,48 +25106,204 @@ var InfoxBpmnModeler =
 
 	  // If we get here before consuming all the bytes, then that is a
 	  // bug in node.  Should never happen.
-	  if (state.length > 0)
-	    throw new Error('endReadable called on non-empty stream');
+	  if (state.length > 0) throw new Error('"endReadable()" called on non-empty stream');
 
 	  if (!state.endEmitted) {
 	    state.ended = true;
-	    process.nextTick(function() {
-	      // Check that we didn't get one last unshift.
-	      if (!state.endEmitted && state.length === 0) {
-	        state.endEmitted = true;
-	        stream.readable = false;
-	        stream.emit('end');
-	      }
-	    });
+	    processNextTick(endReadableNT, state, stream);
 	  }
 	}
 
-	function forEach (xs, f) {
+	function endReadableNT(state, stream) {
+	  // Check that we didn't get one last unshift.
+	  if (!state.endEmitted && state.length === 0) {
+	    state.endEmitted = true;
+	    stream.readable = false;
+	    stream.emit('end');
+	  }
+	}
+
+	function forEach(xs, f) {
 	  for (var i = 0, l = xs.length; i < l; i++) {
 	    f(xs[i], i);
 	  }
 	}
 
-	function indexOf (xs, x) {
+	function indexOf(xs, x) {
 	  for (var i = 0, l = xs.length; i < l; i++) {
 	    if (xs[i] === x) return i;
 	  }
 	  return -1;
 	}
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(354)))
-
-/***/ },
-/* 356 */
-/***/ function(module, exports) {
-
-	module.exports = Array.isArray || function (arr) {
-	  return Object.prototype.toString.call(arr) == '[object Array]';
-	};
-
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(366)))
 
 /***/ },
-/* 357 */
+/* 368 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	if (!process.version ||
+	    process.version.indexOf('v0.') === 0 ||
+	    process.version.indexOf('v1.') === 0 && process.version.indexOf('v1.8.') !== 0) {
+	  module.exports = nextTick;
+	} else {
+	  module.exports = process.nextTick;
+	}
+
+	function nextTick(fn, arg1, arg2, arg3) {
+	  if (typeof fn !== 'function') {
+	    throw new TypeError('"callback" argument must be a function');
+	  }
+	  var len = arguments.length;
+	  var args, i;
+	  switch (len) {
+	  case 0:
+	  case 1:
+	    return process.nextTick(fn);
+	  case 2:
+	    return process.nextTick(function afterTickOne() {
+	      fn.call(null, arg1);
+	    });
+	  case 3:
+	    return process.nextTick(function afterTickTwo() {
+	      fn.call(null, arg1, arg2);
+	    });
+	  case 4:
+	    return process.nextTick(function afterTickThree() {
+	      fn.call(null, arg1, arg2, arg3);
+	    });
+	  default:
+	    args = new Array(len - 1);
+	    i = 0;
+	    while (i < args.length) {
+	      args[i++] = arguments[i];
+	    }
+	    return process.nextTick(function afterTick() {
+	      fn.apply(null, args);
+	    });
+	  }
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(366)))
+
+/***/ },
+/* 369 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+
+	var buffer = __webpack_require__(359);
+	var Buffer = buffer.Buffer;
+	var SlowBuffer = buffer.SlowBuffer;
+	var MAX_LEN = buffer.kMaxLength || 2147483647;
+	exports.alloc = function alloc(size, fill, encoding) {
+	  if (typeof Buffer.alloc === 'function') {
+	    return Buffer.alloc(size, fill, encoding);
+	  }
+	  if (typeof encoding === 'number') {
+	    throw new TypeError('encoding must not be number');
+	  }
+	  if (typeof size !== 'number') {
+	    throw new TypeError('size must be a number');
+	  }
+	  if (size > MAX_LEN) {
+	    throw new RangeError('size is too large');
+	  }
+	  var enc = encoding;
+	  var _fill = fill;
+	  if (_fill === undefined) {
+	    enc = undefined;
+	    _fill = 0;
+	  }
+	  var buf = new Buffer(size);
+	  if (typeof _fill === 'string') {
+	    var fillBuf = new Buffer(_fill, enc);
+	    var flen = fillBuf.length;
+	    var i = -1;
+	    while (++i < size) {
+	      buf[i] = fillBuf[i % flen];
+	    }
+	  } else {
+	    buf.fill(_fill);
+	  }
+	  return buf;
+	}
+	exports.allocUnsafe = function allocUnsafe(size) {
+	  if (typeof Buffer.allocUnsafe === 'function') {
+	    return Buffer.allocUnsafe(size);
+	  }
+	  if (typeof size !== 'number') {
+	    throw new TypeError('size must be a number');
+	  }
+	  if (size > MAX_LEN) {
+	    throw new RangeError('size is too large');
+	  }
+	  return new Buffer(size);
+	}
+	exports.from = function from(value, encodingOrOffset, length) {
+	  if (typeof Buffer.from === 'function' && (!global.Uint8Array || Uint8Array.from !== Buffer.from)) {
+	    return Buffer.from(value, encodingOrOffset, length);
+	  }
+	  if (typeof value === 'number') {
+	    throw new TypeError('"value" argument must not be a number');
+	  }
+	  if (typeof value === 'string') {
+	    return new Buffer(value, encodingOrOffset);
+	  }
+	  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+	    var offset = encodingOrOffset;
+	    if (arguments.length === 1) {
+	      return new Buffer(value);
+	    }
+	    if (typeof offset === 'undefined') {
+	      offset = 0;
+	    }
+	    var len = length;
+	    if (typeof len === 'undefined') {
+	      len = value.byteLength - offset;
+	    }
+	    if (offset >= value.byteLength) {
+	      throw new RangeError('\'offset\' is out of bounds');
+	    }
+	    if (len > value.byteLength - offset) {
+	      throw new RangeError('\'length\' is out of bounds');
+	    }
+	    return new Buffer(value.slice(offset, offset + len));
+	  }
+	  if (Buffer.isBuffer(value)) {
+	    var out = new Buffer(value.length);
+	    value.copy(out, 0, 0, value.length);
+	    return out;
+	  }
+	  if (value) {
+	    if (Array.isArray(value) || (typeof ArrayBuffer !== 'undefined' && value.buffer instanceof ArrayBuffer) || 'length' in value) {
+	      return new Buffer(value);
+	    }
+	    if (value.type === 'Buffer' && Array.isArray(value.data)) {
+	      return new Buffer(value.data);
+	    }
+	  }
+
+	  throw new TypeError('First argument must be a string, Buffer, ' + 'ArrayBuffer, Array, or array-like object.');
+	}
+	exports.allocUnsafeSlow = function allocUnsafeSlow(size) {
+	  if (typeof Buffer.allocUnsafeSlow === 'function') {
+	    return Buffer.allocUnsafeSlow(size);
+	  }
+	  if (typeof size !== 'number') {
+	    throw new TypeError('size must be a number');
+	  }
+	  if (size >= MAX_LEN) {
+	    throw new RangeError('size is too large');
+	  }
+	  return new SlowBuffer(size);
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {// Copyright Joyent, Inc. and other Node contributors.
@@ -31549,86 +25414,138 @@ var InfoxBpmnModeler =
 	  return Object.prototype.toString.call(o);
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(347).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(359).Buffer))
 
 /***/ },
-/* 358 */
+/* 371 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 359 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
+	'use strict';
+
+	var Buffer = __webpack_require__(359).Buffer;
+	/*<replacement>*/
+	var bufferShim = __webpack_require__(369);
+	/*</replacement>*/
+
+	module.exports = BufferList;
+
+	function BufferList() {
+	  this.head = null;
+	  this.tail = null;
+	  this.length = 0;
+	}
+
+	BufferList.prototype.push = function (v) {
+	  var entry = { data: v, next: null };
+	  if (this.length > 0) this.tail.next = entry;else this.head = entry;
+	  this.tail = entry;
+	  ++this.length;
+	};
+
+	BufferList.prototype.unshift = function (v) {
+	  var entry = { data: v, next: this.head };
+	  if (this.length === 0) this.tail = entry;
+	  this.head = entry;
+	  ++this.length;
+	};
+
+	BufferList.prototype.shift = function () {
+	  if (this.length === 0) return;
+	  var ret = this.head.data;
+	  if (this.length === 1) this.head = this.tail = null;else this.head = this.head.next;
+	  --this.length;
+	  return ret;
+	};
+
+	BufferList.prototype.clear = function () {
+	  this.head = this.tail = null;
+	  this.length = 0;
+	};
+
+	BufferList.prototype.join = function (s) {
+	  if (this.length === 0) return '';
+	  var p = this.head;
+	  var ret = '' + p.data;
+	  while (p = p.next) {
+	    ret += s + p.data;
+	  }return ret;
+	};
+
+	BufferList.prototype.concat = function (n) {
+	  if (this.length === 0) return bufferShim.alloc(0);
+	  if (this.length === 1) return this.head.data;
+	  var ret = bufferShim.allocUnsafe(n >>> 0);
+	  var p = this.head;
+	  var i = 0;
+	  while (p) {
+	    p.data.copy(ret, i);
+	    i += p.data.length;
+	    p = p.next;
+	  }
+	  return ret;
+	};
+
+/***/ },
+/* 373 */
+/***/ function(module, exports, __webpack_require__) {
 
 	// a duplex stream is just a stream that is both readable and writable.
 	// Since JS doesn't have multiple prototypal inheritance, this class
 	// prototypally inherits from Readable, and then parasitically from
 	// Writable.
 
+	'use strict';
+
+	/*<replacement>*/
+
+	var objectKeys = Object.keys || function (obj) {
+	  var keys = [];
+	  for (var key in obj) {
+	    keys.push(key);
+	  }return keys;
+	};
+	/*</replacement>*/
+
 	module.exports = Duplex;
 
 	/*<replacement>*/
-	var objectKeys = Object.keys || function (obj) {
-	  var keys = [];
-	  for (var key in obj) keys.push(key);
-	  return keys;
-	}
+	var processNextTick = __webpack_require__(368);
 	/*</replacement>*/
 
-
 	/*<replacement>*/
-	var util = __webpack_require__(357);
+	var util = __webpack_require__(370);
 	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
-	var Readable = __webpack_require__(355);
-	var Writable = __webpack_require__(360);
+	var Readable = __webpack_require__(367);
+	var Writable = __webpack_require__(374);
 
 	util.inherits(Duplex, Readable);
 
-	forEach(objectKeys(Writable.prototype), function(method) {
-	  if (!Duplex.prototype[method])
-	    Duplex.prototype[method] = Writable.prototype[method];
-	});
+	var keys = objectKeys(Writable.prototype);
+	for (var v = 0; v < keys.length; v++) {
+	  var method = keys[v];
+	  if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
+	}
 
 	function Duplex(options) {
-	  if (!(this instanceof Duplex))
-	    return new Duplex(options);
+	  if (!(this instanceof Duplex)) return new Duplex(options);
 
 	  Readable.call(this, options);
 	  Writable.call(this, options);
 
-	  if (options && options.readable === false)
-	    this.readable = false;
+	  if (options && options.readable === false) this.readable = false;
 
-	  if (options && options.writable === false)
-	    this.writable = false;
+	  if (options && options.writable === false) this.writable = false;
 
 	  this.allowHalfOpen = true;
-	  if (options && options.allowHalfOpen === false)
-	    this.allowHalfOpen = false;
+	  if (options && options.allowHalfOpen === false) this.allowHalfOpen = false;
 
 	  this.once('end', onend);
 	}
@@ -31637,97 +25554,109 @@ var InfoxBpmnModeler =
 	function onend() {
 	  // if we allow half-open state, or if the writable side ended,
 	  // then we're ok.
-	  if (this.allowHalfOpen || this._writableState.ended)
-	    return;
+	  if (this.allowHalfOpen || this._writableState.ended) return;
 
 	  // no more data can be written.
 	  // But allow more writes to happen in this tick.
-	  process.nextTick(this.end.bind(this));
+	  processNextTick(onEndNT, this);
 	}
 
-	function forEach (xs, f) {
+	function onEndNT(self) {
+	  self.end();
+	}
+
+	function forEach(xs, f) {
 	  for (var i = 0, l = xs.length; i < l; i++) {
 	    f(xs[i], i);
 	  }
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(354)))
-
 /***/ },
-/* 360 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-	// A bit simpler than readable streams.
-	// Implement an async ._write(chunk, cb), and it'll handle all
+	/* WEBPACK VAR INJECTION */(function(process, setImmediate) {// A bit simpler than readable streams.
+	// Implement an async ._write(chunk, encoding, cb), and it'll handle all
 	// the drain event emission and buffering.
+
+	'use strict';
 
 	module.exports = Writable;
 
 	/*<replacement>*/
-	var Buffer = __webpack_require__(347).Buffer;
+	var processNextTick = __webpack_require__(368);
+	/*</replacement>*/
+
+	/*<replacement>*/
+	var asyncWrite = !process.browser && ['v0.10', 'v0.9.'].indexOf(process.version.slice(0, 5)) > -1 ? setImmediate : processNextTick;
+	/*</replacement>*/
+
+	/*<replacement>*/
+	var Duplex;
 	/*</replacement>*/
 
 	Writable.WritableState = WritableState;
 
-
 	/*<replacement>*/
-	var util = __webpack_require__(357);
+	var util = __webpack_require__(370);
 	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
-	var Stream = __webpack_require__(351);
+	/*<replacement>*/
+	var internalUtil = {
+	  deprecate: __webpack_require__(377)
+	};
+	/*</replacement>*/
+
+	/*<replacement>*/
+	var Stream;
+	(function () {
+	  try {
+	    Stream = __webpack_require__(363);
+	  } catch (_) {} finally {
+	    if (!Stream) Stream = __webpack_require__(364).EventEmitter;
+	  }
+	})();
+	/*</replacement>*/
+
+	var Buffer = __webpack_require__(359).Buffer;
+	/*<replacement>*/
+	var bufferShim = __webpack_require__(369);
+	/*</replacement>*/
 
 	util.inherits(Writable, Stream);
+
+	function nop() {}
 
 	function WriteReq(chunk, encoding, cb) {
 	  this.chunk = chunk;
 	  this.encoding = encoding;
 	  this.callback = cb;
+	  this.next = null;
 	}
 
 	function WritableState(options, stream) {
-	  var Duplex = __webpack_require__(359);
+	  Duplex = Duplex || __webpack_require__(373);
 
 	  options = options || {};
-
-	  // the point at which write() starts returning false
-	  // Note: 0 is a valid value, means that we always return false if
-	  // the entire buffer is not flushed immediately on write()
-	  var hwm = options.highWaterMark;
-	  var defaultHwm = options.objectMode ? 16 : 16 * 1024;
-	  this.highWaterMark = (hwm || hwm === 0) ? hwm : defaultHwm;
 
 	  // object stream flag to indicate whether or not this stream
 	  // contains buffers or objects.
 	  this.objectMode = !!options.objectMode;
 
-	  if (stream instanceof Duplex)
-	    this.objectMode = this.objectMode || !!options.writableObjectMode;
+	  if (stream instanceof Duplex) this.objectMode = this.objectMode || !!options.writableObjectMode;
+
+	  // the point at which write() starts returning false
+	  // Note: 0 is a valid value, means that we always return false if
+	  // the entire buffer is not flushed immediately on write()
+	  var hwm = options.highWaterMark;
+	  var defaultHwm = this.objectMode ? 16 : 16 * 1024;
+	  this.highWaterMark = hwm || hwm === 0 ? hwm : defaultHwm;
 
 	  // cast to ints.
-	  this.highWaterMark = ~~this.highWaterMark;
+	  this.highWaterMark = ~ ~this.highWaterMark;
 
+	  // drain event flag.
 	  this.needDrain = false;
 	  // at the start of calling end()
 	  this.ending = false;
@@ -31770,7 +25699,7 @@ var InfoxBpmnModeler =
 	  this.bufferProcessing = false;
 
 	  // the callback that's passed to _write(chunk,cb)
-	  this.onwrite = function(er) {
+	  this.onwrite = function (er) {
 	    onwrite(stream, er);
 	  };
 
@@ -31780,7 +25709,8 @@ var InfoxBpmnModeler =
 	  // the amount that is being written when _write is called.
 	  this.writelen = 0;
 
-	  this.buffer = [];
+	  this.bufferedRequest = null;
+	  this.lastBufferedRequest = null;
 
 	  // number of pending user-supplied write callbacks
 	  // this must be 0 before 'finish' can be emitted
@@ -31792,37 +25722,91 @@ var InfoxBpmnModeler =
 
 	  // True if the error was already emitted and should not be thrown again
 	  this.errorEmitted = false;
+
+	  // count buffered requests
+	  this.bufferedRequestCount = 0;
+
+	  // allocate the first CorkedRequest, there is always
+	  // one allocated and free to use, and we maintain at most two
+	  this.corkedRequestsFree = new CorkedRequest(this);
+	}
+
+	WritableState.prototype.getBuffer = function getBuffer() {
+	  var current = this.bufferedRequest;
+	  var out = [];
+	  while (current) {
+	    out.push(current);
+	    current = current.next;
+	  }
+	  return out;
+	};
+
+	(function () {
+	  try {
+	    Object.defineProperty(WritableState.prototype, 'buffer', {
+	      get: internalUtil.deprecate(function () {
+	        return this.getBuffer();
+	      }, '_writableState.buffer is deprecated. Use _writableState.getBuffer ' + 'instead.')
+	    });
+	  } catch (_) {}
+	})();
+
+	// Test _writableState for inheritance to account for Duplex streams,
+	// whose prototype chain only points to Readable.
+	var realHasInstance;
+	if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.prototype[Symbol.hasInstance] === 'function') {
+	  realHasInstance = Function.prototype[Symbol.hasInstance];
+	  Object.defineProperty(Writable, Symbol.hasInstance, {
+	    value: function (object) {
+	      if (realHasInstance.call(this, object)) return true;
+
+	      return object && object._writableState instanceof WritableState;
+	    }
+	  });
+	} else {
+	  realHasInstance = function (object) {
+	    return object instanceof this;
+	  };
 	}
 
 	function Writable(options) {
-	  var Duplex = __webpack_require__(359);
+	  Duplex = Duplex || __webpack_require__(373);
 
-	  // Writable ctor is applied to Duplexes, though they're not
-	  // instanceof Writable, they're instanceof Readable.
-	  if (!(this instanceof Writable) && !(this instanceof Duplex))
+	  // Writable ctor is applied to Duplexes, too.
+	  // `realHasInstance` is necessary because using plain `instanceof`
+	  // would return false, as no `_writableState` property is attached.
+
+	  // Trying to use the custom `instanceof` for Writable here will also break the
+	  // Node.js LazyTransform implementation, which has a non-trivial getter for
+	  // `_writableState` that would lead to infinite recursion.
+	  if (!realHasInstance.call(Writable, this) && !(this instanceof Duplex)) {
 	    return new Writable(options);
+	  }
 
 	  this._writableState = new WritableState(options, this);
 
 	  // legacy.
 	  this.writable = true;
 
+	  if (options) {
+	    if (typeof options.write === 'function') this._write = options.write;
+
+	    if (typeof options.writev === 'function') this._writev = options.writev;
+	  }
+
 	  Stream.call(this);
 	}
 
 	// Otherwise people can pipe Writable streams, which is just wrong.
-	Writable.prototype.pipe = function() {
-	  this.emit('error', new Error('Cannot pipe. Not readable.'));
+	Writable.prototype.pipe = function () {
+	  this.emit('error', new Error('Cannot pipe, not readable'));
 	};
 
-
-	function writeAfterEnd(stream, state, cb) {
+	function writeAfterEnd(stream, cb) {
 	  var er = new Error('write after end');
 	  // TODO: defer error events consistently everywhere, not just the cb
 	  stream.emit('error', er);
-	  process.nextTick(function() {
-	    cb(er);
-	  });
+	  processNextTick(cb, er);
 	}
 
 	// If we get something that is not a buffer, string, null, or undefined,
@@ -31832,40 +25816,37 @@ var InfoxBpmnModeler =
 	// how many bytes or characters.
 	function validChunk(stream, state, chunk, cb) {
 	  var valid = true;
-	  if (!util.isBuffer(chunk) &&
-	      !util.isString(chunk) &&
-	      !util.isNullOrUndefined(chunk) &&
-	      !state.objectMode) {
-	    var er = new TypeError('Invalid non-string/buffer chunk');
+	  var er = false;
+	  // Always throw error if a null is written
+	  // if we are not in object mode then throw
+	  // if it is not a buffer, string, or undefined.
+	  if (chunk === null) {
+	    er = new TypeError('May not write null values to stream');
+	  } else if (!Buffer.isBuffer(chunk) && typeof chunk !== 'string' && chunk !== undefined && !state.objectMode) {
+	    er = new TypeError('Invalid non-string/buffer chunk');
+	  }
+	  if (er) {
 	    stream.emit('error', er);
-	    process.nextTick(function() {
-	      cb(er);
-	    });
+	    processNextTick(cb, er);
 	    valid = false;
 	  }
 	  return valid;
 	}
 
-	Writable.prototype.write = function(chunk, encoding, cb) {
+	Writable.prototype.write = function (chunk, encoding, cb) {
 	  var state = this._writableState;
 	  var ret = false;
 
-	  if (util.isFunction(encoding)) {
+	  if (typeof encoding === 'function') {
 	    cb = encoding;
 	    encoding = null;
 	  }
 
-	  if (util.isBuffer(chunk))
-	    encoding = 'buffer';
-	  else if (!encoding)
-	    encoding = state.defaultEncoding;
+	  if (Buffer.isBuffer(chunk)) encoding = 'buffer';else if (!encoding) encoding = state.defaultEncoding;
 
-	  if (!util.isFunction(cb))
-	    cb = function() {};
+	  if (typeof cb !== 'function') cb = nop;
 
-	  if (state.ended)
-	    writeAfterEnd(this, state, cb);
-	  else if (validChunk(this, state, chunk, cb)) {
+	  if (state.ended) writeAfterEnd(this, cb);else if (validChunk(this, state, chunk, cb)) {
 	    state.pendingcb++;
 	    ret = writeOrBuffer(this, state, chunk, encoding, cb);
 	  }
@@ -31873,32 +25854,33 @@ var InfoxBpmnModeler =
 	  return ret;
 	};
 
-	Writable.prototype.cork = function() {
+	Writable.prototype.cork = function () {
 	  var state = this._writableState;
 
 	  state.corked++;
 	};
 
-	Writable.prototype.uncork = function() {
+	Writable.prototype.uncork = function () {
 	  var state = this._writableState;
 
 	  if (state.corked) {
 	    state.corked--;
 
-	    if (!state.writing &&
-	        !state.corked &&
-	        !state.finished &&
-	        !state.bufferProcessing &&
-	        state.buffer.length)
-	      clearBuffer(this, state);
+	    if (!state.writing && !state.corked && !state.finished && !state.bufferProcessing && state.bufferedRequest) clearBuffer(this, state);
 	  }
 	};
 
+	Writable.prototype.setDefaultEncoding = function setDefaultEncoding(encoding) {
+	  // node::ParseEncoding() requires lower case.
+	  if (typeof encoding === 'string') encoding = encoding.toLowerCase();
+	  if (!(['hex', 'utf8', 'utf-8', 'ascii', 'binary', 'base64', 'ucs2', 'ucs-2', 'utf16le', 'utf-16le', 'raw'].indexOf((encoding + '').toLowerCase()) > -1)) throw new TypeError('Unknown encoding: ' + encoding);
+	  this._writableState.defaultEncoding = encoding;
+	  return this;
+	};
+
 	function decodeChunk(state, chunk, encoding) {
-	  if (!state.objectMode &&
-	      state.decodeStrings !== false &&
-	      util.isString(chunk)) {
-	    chunk = new Buffer(chunk, encoding);
+	  if (!state.objectMode && state.decodeStrings !== false && typeof chunk === 'string') {
+	    chunk = bufferShim.from(chunk, encoding);
 	  }
 	  return chunk;
 	}
@@ -31908,21 +25890,28 @@ var InfoxBpmnModeler =
 	// If we return false, then we need a drain event, so set that flag.
 	function writeOrBuffer(stream, state, chunk, encoding, cb) {
 	  chunk = decodeChunk(state, chunk, encoding);
-	  if (util.isBuffer(chunk))
-	    encoding = 'buffer';
+
+	  if (Buffer.isBuffer(chunk)) encoding = 'buffer';
 	  var len = state.objectMode ? 1 : chunk.length;
 
 	  state.length += len;
 
 	  var ret = state.length < state.highWaterMark;
 	  // we must ensure that previous needDrain will not be reset to false.
-	  if (!ret)
-	    state.needDrain = true;
+	  if (!ret) state.needDrain = true;
 
-	  if (state.writing || state.corked)
-	    state.buffer.push(new WriteReq(chunk, encoding, cb));
-	  else
+	  if (state.writing || state.corked) {
+	    var last = state.lastBufferedRequest;
+	    state.lastBufferedRequest = new WriteReq(chunk, encoding, cb);
+	    if (last) {
+	      last.next = state.lastBufferedRequest;
+	    } else {
+	      state.bufferedRequest = state.lastBufferedRequest;
+	    }
+	    state.bufferedRequestCount += 1;
+	  } else {
 	    doWrite(stream, state, false, len, chunk, encoding, cb);
+	  }
 
 	  return ret;
 	}
@@ -31932,23 +25921,13 @@ var InfoxBpmnModeler =
 	  state.writecb = cb;
 	  state.writing = true;
 	  state.sync = true;
-	  if (writev)
-	    stream._writev(chunk, state.onwrite);
-	  else
-	    stream._write(chunk, encoding, state.onwrite);
+	  if (writev) stream._writev(chunk, state.onwrite);else stream._write(chunk, encoding, state.onwrite);
 	  state.sync = false;
 	}
 
 	function onwriteError(stream, state, sync, er, cb) {
-	  if (sync)
-	    process.nextTick(function() {
-	      state.pendingcb--;
-	      cb(er);
-	    });
-	  else {
-	    state.pendingcb--;
-	    cb(er);
-	  }
+	  --state.pendingcb;
+	  if (sync) processNextTick(cb, er);else cb(er);
 
 	  stream._writableState.errorEmitted = true;
 	  stream.emit('error', er);
@@ -31968,32 +25947,26 @@ var InfoxBpmnModeler =
 
 	  onwriteStateUpdate(state);
 
-	  if (er)
-	    onwriteError(stream, state, sync, er, cb);
-	  else {
+	  if (er) onwriteError(stream, state, sync, er, cb);else {
 	    // Check if we're actually ready to finish, but don't emit yet
-	    var finished = needFinish(stream, state);
+	    var finished = needFinish(state);
 
-	    if (!finished &&
-	        !state.corked &&
-	        !state.bufferProcessing &&
-	        state.buffer.length) {
+	    if (!finished && !state.corked && !state.bufferProcessing && state.bufferedRequest) {
 	      clearBuffer(stream, state);
 	    }
 
 	    if (sync) {
-	      process.nextTick(function() {
-	        afterWrite(stream, state, finished, cb);
-	      });
+	      /*<replacement>*/
+	      asyncWrite(afterWrite, stream, state, finished, cb);
+	      /*</replacement>*/
 	    } else {
-	      afterWrite(stream, state, finished, cb);
-	    }
+	        afterWrite(stream, state, finished, cb);
+	      }
 	  }
 	}
 
 	function afterWrite(stream, state, finished, cb) {
-	  if (!finished)
-	    onwriteDrain(stream, state);
+	  if (!finished) onwriteDrain(stream, state);
 	  state.pendingcb--;
 	  cb();
 	  finishMaybe(stream, state);
@@ -32009,80 +25982,83 @@ var InfoxBpmnModeler =
 	  }
 	}
 
-
 	// if there's something in the buffer waiting, then process it
 	function clearBuffer(stream, state) {
 	  state.bufferProcessing = true;
+	  var entry = state.bufferedRequest;
 
-	  if (stream._writev && state.buffer.length > 1) {
+	  if (stream._writev && entry && entry.next) {
 	    // Fast case, write everything using _writev()
-	    var cbs = [];
-	    for (var c = 0; c < state.buffer.length; c++)
-	      cbs.push(state.buffer[c].callback);
+	    var l = state.bufferedRequestCount;
+	    var buffer = new Array(l);
+	    var holder = state.corkedRequestsFree;
+	    holder.entry = entry;
 
-	    // count the one we are adding, as well.
-	    // TODO(isaacs) clean this up
+	    var count = 0;
+	    while (entry) {
+	      buffer[count] = entry;
+	      entry = entry.next;
+	      count += 1;
+	    }
+
+	    doWrite(stream, state, true, state.length, buffer, '', holder.finish);
+
+	    // doWrite is almost always async, defer these to save a bit of time
+	    // as the hot path ends with doWrite
 	    state.pendingcb++;
-	    doWrite(stream, state, true, state.length, state.buffer, '', function(err) {
-	      for (var i = 0; i < cbs.length; i++) {
-	        state.pendingcb--;
-	        cbs[i](err);
-	      }
-	    });
-
-	    // Clear buffer
-	    state.buffer = [];
+	    state.lastBufferedRequest = null;
+	    if (holder.next) {
+	      state.corkedRequestsFree = holder.next;
+	      holder.next = null;
+	    } else {
+	      state.corkedRequestsFree = new CorkedRequest(state);
+	    }
 	  } else {
 	    // Slow case, write chunks one-by-one
-	    for (var c = 0; c < state.buffer.length; c++) {
-	      var entry = state.buffer[c];
+	    while (entry) {
 	      var chunk = entry.chunk;
 	      var encoding = entry.encoding;
 	      var cb = entry.callback;
 	      var len = state.objectMode ? 1 : chunk.length;
 
 	      doWrite(stream, state, false, len, chunk, encoding, cb);
-
+	      entry = entry.next;
 	      // if we didn't call the onwrite immediately, then
 	      // it means that we need to wait until it does.
 	      // also, that means that the chunk and cb are currently
 	      // being processed, so move the buffer counter past them.
 	      if (state.writing) {
-	        c++;
 	        break;
 	      }
 	    }
 
-	    if (c < state.buffer.length)
-	      state.buffer = state.buffer.slice(c);
-	    else
-	      state.buffer.length = 0;
+	    if (entry === null) state.lastBufferedRequest = null;
 	  }
 
+	  state.bufferedRequestCount = 0;
+	  state.bufferedRequest = entry;
 	  state.bufferProcessing = false;
 	}
 
-	Writable.prototype._write = function(chunk, encoding, cb) {
-	  cb(new Error('not implemented'));
-
+	Writable.prototype._write = function (chunk, encoding, cb) {
+	  cb(new Error('_write() is not implemented'));
 	};
 
 	Writable.prototype._writev = null;
 
-	Writable.prototype.end = function(chunk, encoding, cb) {
+	Writable.prototype.end = function (chunk, encoding, cb) {
 	  var state = this._writableState;
 
-	  if (util.isFunction(chunk)) {
+	  if (typeof chunk === 'function') {
 	    cb = chunk;
 	    chunk = null;
 	    encoding = null;
-	  } else if (util.isFunction(encoding)) {
+	  } else if (typeof encoding === 'function') {
 	    cb = encoding;
 	    encoding = null;
 	  }
 
-	  if (!util.isNullOrUndefined(chunk))
-	    this.write(chunk, encoding);
+	  if (chunk !== null && chunk !== undefined) this.write(chunk, encoding);
 
 	  // .end() fully uncorks
 	  if (state.corked) {
@@ -32091,16 +26067,11 @@ var InfoxBpmnModeler =
 	  }
 
 	  // ignore unnecessary end() calls.
-	  if (!state.ending && !state.finished)
-	    endWritable(this, state, cb);
+	  if (!state.ending && !state.finished) endWritable(this, state, cb);
 	};
 
-
-	function needFinish(stream, state) {
-	  return (state.ending &&
-	          state.length === 0 &&
-	          !state.finished &&
-	          !state.writing);
+	function needFinish(state) {
+	  return state.ending && state.length === 0 && state.bufferedRequest === null && !state.finished && !state.writing;
 	}
 
 	function prefinish(stream, state) {
@@ -32111,14 +26082,15 @@ var InfoxBpmnModeler =
 	}
 
 	function finishMaybe(stream, state) {
-	  var need = needFinish(stream, state);
+	  var need = needFinish(state);
 	  if (need) {
 	    if (state.pendingcb === 0) {
 	      prefinish(stream, state);
 	      state.finished = true;
 	      stream.emit('finish');
-	    } else
+	    } else {
 	      prefinish(stream, state);
+	    }
 	  }
 	  return need;
 	}
@@ -32127,18 +26099,366 @@ var InfoxBpmnModeler =
 	  state.ending = true;
 	  finishMaybe(stream, state);
 	  if (cb) {
-	    if (state.finished)
-	      process.nextTick(cb);
-	    else
-	      stream.once('finish', cb);
+	    if (state.finished) processNextTick(cb);else stream.once('finish', cb);
 	  }
 	  state.ended = true;
+	  stream.writable = false;
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(354)))
+	// It seems a linked list but it is not
+	// there will be only 2 of these for each stream
+	function CorkedRequest(state) {
+	  var _this = this;
+
+	  this.next = null;
+	  this.entry = null;
+
+	  this.finish = function (err) {
+	    var entry = _this.entry;
+	    _this.entry = null;
+	    while (entry) {
+	      var cb = entry.callback;
+	      state.pendingcb--;
+	      cb(err);
+	      entry = entry.next;
+	    }
+	    if (state.corkedRequestsFree) {
+	      state.corkedRequestsFree.next = _this;
+	    } else {
+	      state.corkedRequestsFree = _this;
+	    }
+	  };
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(366), __webpack_require__(375).setImmediate))
 
 /***/ },
-/* 361 */
+/* 375 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var apply = Function.prototype.apply;
+
+	// DOM APIs, for completeness
+
+	exports.setTimeout = function() {
+	  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+	};
+	exports.setInterval = function() {
+	  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+	};
+	exports.clearTimeout =
+	exports.clearInterval = function(timeout) {
+	  if (timeout) {
+	    timeout.close();
+	  }
+	};
+
+	function Timeout(id, clearFn) {
+	  this._id = id;
+	  this._clearFn = clearFn;
+	}
+	Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+	Timeout.prototype.close = function() {
+	  this._clearFn.call(window, this._id);
+	};
+
+	// Does not start the time, just sets up the members needed.
+	exports.enroll = function(item, msecs) {
+	  clearTimeout(item._idleTimeoutId);
+	  item._idleTimeout = msecs;
+	};
+
+	exports.unenroll = function(item) {
+	  clearTimeout(item._idleTimeoutId);
+	  item._idleTimeout = -1;
+	};
+
+	exports._unrefActive = exports.active = function(item) {
+	  clearTimeout(item._idleTimeoutId);
+
+	  var msecs = item._idleTimeout;
+	  if (msecs >= 0) {
+	    item._idleTimeoutId = setTimeout(function onTimeout() {
+	      if (item._onTimeout)
+	        item._onTimeout();
+	    }, msecs);
+	  }
+	};
+
+	// setimmediate attaches itself to the global object
+	__webpack_require__(376);
+	exports.setImmediate = setImmediate;
+	exports.clearImmediate = clearImmediate;
+
+
+/***/ },
+/* 376 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
+	    "use strict";
+
+	    if (global.setImmediate) {
+	        return;
+	    }
+
+	    var nextHandle = 1; // Spec says greater than zero
+	    var tasksByHandle = {};
+	    var currentlyRunningATask = false;
+	    var doc = global.document;
+	    var registerImmediate;
+
+	    function setImmediate(callback) {
+	      // Callback can either be a function or a string
+	      if (typeof callback !== "function") {
+	        callback = new Function("" + callback);
+	      }
+	      // Copy function arguments
+	      var args = new Array(arguments.length - 1);
+	      for (var i = 0; i < args.length; i++) {
+	          args[i] = arguments[i + 1];
+	      }
+	      // Store and register the task
+	      var task = { callback: callback, args: args };
+	      tasksByHandle[nextHandle] = task;
+	      registerImmediate(nextHandle);
+	      return nextHandle++;
+	    }
+
+	    function clearImmediate(handle) {
+	        delete tasksByHandle[handle];
+	    }
+
+	    function run(task) {
+	        var callback = task.callback;
+	        var args = task.args;
+	        switch (args.length) {
+	        case 0:
+	            callback();
+	            break;
+	        case 1:
+	            callback(args[0]);
+	            break;
+	        case 2:
+	            callback(args[0], args[1]);
+	            break;
+	        case 3:
+	            callback(args[0], args[1], args[2]);
+	            break;
+	        default:
+	            callback.apply(undefined, args);
+	            break;
+	        }
+	    }
+
+	    function runIfPresent(handle) {
+	        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
+	        // So if we're currently running a task, we'll need to delay this invocation.
+	        if (currentlyRunningATask) {
+	            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
+	            // "too much recursion" error.
+	            setTimeout(runIfPresent, 0, handle);
+	        } else {
+	            var task = tasksByHandle[handle];
+	            if (task) {
+	                currentlyRunningATask = true;
+	                try {
+	                    run(task);
+	                } finally {
+	                    clearImmediate(handle);
+	                    currentlyRunningATask = false;
+	                }
+	            }
+	        }
+	    }
+
+	    function installNextTickImplementation() {
+	        registerImmediate = function(handle) {
+	            process.nextTick(function () { runIfPresent(handle); });
+	        };
+	    }
+
+	    function canUsePostMessage() {
+	        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
+	        // where `global.postMessage` means something completely different and can't be used for this purpose.
+	        if (global.postMessage && !global.importScripts) {
+	            var postMessageIsAsynchronous = true;
+	            var oldOnMessage = global.onmessage;
+	            global.onmessage = function() {
+	                postMessageIsAsynchronous = false;
+	            };
+	            global.postMessage("", "*");
+	            global.onmessage = oldOnMessage;
+	            return postMessageIsAsynchronous;
+	        }
+	    }
+
+	    function installPostMessageImplementation() {
+	        // Installs an event handler on `global` for the `message` event: see
+	        // * https://developer.mozilla.org/en/DOM/window.postMessage
+	        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
+
+	        var messagePrefix = "setImmediate$" + Math.random() + "$";
+	        var onGlobalMessage = function(event) {
+	            if (event.source === global &&
+	                typeof event.data === "string" &&
+	                event.data.indexOf(messagePrefix) === 0) {
+	                runIfPresent(+event.data.slice(messagePrefix.length));
+	            }
+	        };
+
+	        if (global.addEventListener) {
+	            global.addEventListener("message", onGlobalMessage, false);
+	        } else {
+	            global.attachEvent("onmessage", onGlobalMessage);
+	        }
+
+	        registerImmediate = function(handle) {
+	            global.postMessage(messagePrefix + handle, "*");
+	        };
+	    }
+
+	    function installMessageChannelImplementation() {
+	        var channel = new MessageChannel();
+	        channel.port1.onmessage = function(event) {
+	            var handle = event.data;
+	            runIfPresent(handle);
+	        };
+
+	        registerImmediate = function(handle) {
+	            channel.port2.postMessage(handle);
+	        };
+	    }
+
+	    function installReadyStateChangeImplementation() {
+	        var html = doc.documentElement;
+	        registerImmediate = function(handle) {
+	            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+	            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+	            var script = doc.createElement("script");
+	            script.onreadystatechange = function () {
+	                runIfPresent(handle);
+	                script.onreadystatechange = null;
+	                html.removeChild(script);
+	                script = null;
+	            };
+	            html.appendChild(script);
+	        };
+	    }
+
+	    function installSetTimeoutImplementation() {
+	        registerImmediate = function(handle) {
+	            setTimeout(runIfPresent, 0, handle);
+	        };
+	    }
+
+	    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
+	    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
+	    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
+
+	    // Don't get fooled by e.g. browserify environments.
+	    if ({}.toString.call(global.process) === "[object process]") {
+	        // For Node.js before 0.9
+	        installNextTickImplementation();
+
+	    } else if (canUsePostMessage()) {
+	        // For non-IE10 modern browsers
+	        installPostMessageImplementation();
+
+	    } else if (global.MessageChannel) {
+	        // For web workers, where supported
+	        installMessageChannelImplementation();
+
+	    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
+	        // For IE 6–8
+	        installReadyStateChangeImplementation();
+
+	    } else {
+	        // For older browsers
+	        installSetTimeoutImplementation();
+	    }
+
+	    attachTo.setImmediate = setImmediate;
+	    attachTo.clearImmediate = clearImmediate;
+	}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(366)))
+
+/***/ },
+/* 377 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	/**
+	 * Module exports.
+	 */
+
+	module.exports = deprecate;
+
+	/**
+	 * Mark that a method should not be used.
+	 * Returns a modified function which warns once by default.
+	 *
+	 * If `localStorage.noDeprecation = true` is set, then it is a no-op.
+	 *
+	 * If `localStorage.throwDeprecation = true` is set, then deprecated functions
+	 * will throw an Error when invoked.
+	 *
+	 * If `localStorage.traceDeprecation = true` is set, then deprecated functions
+	 * will invoke `console.trace()` instead of `console.error()`.
+	 *
+	 * @param {Function} fn - the function to deprecate
+	 * @param {String} msg - the string to print to the console when `fn` is invoked
+	 * @returns {Function} a new "deprecated" version of `fn`
+	 * @api public
+	 */
+
+	function deprecate (fn, msg) {
+	  if (config('noDeprecation')) {
+	    return fn;
+	  }
+
+	  var warned = false;
+	  function deprecated() {
+	    if (!warned) {
+	      if (config('throwDeprecation')) {
+	        throw new Error(msg);
+	      } else if (config('traceDeprecation')) {
+	        console.trace(msg);
+	      } else {
+	        console.warn(msg);
+	      }
+	      warned = true;
+	    }
+	    return fn.apply(this, arguments);
+	  }
+
+	  return deprecated;
+	}
+
+	/**
+	 * Checks `localStorage` for boolean values for the given `name`.
+	 *
+	 * @param {String} name
+	 * @returns {Boolean}
+	 * @api private
+	 */
+
+	function config (name) {
+	  // accessing global.localStorage can trigger a DOMException in sandboxed iframes
+	  try {
+	    if (!global.localStorage) return false;
+	  } catch (_) {
+	    return false;
+	  }
+	  var val = global.localStorage[name];
+	  if (null == val) return false;
+	  return String(val).toLowerCase() === 'true';
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -32162,7 +26482,7 @@ var InfoxBpmnModeler =
 	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 	// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-	var Buffer = __webpack_require__(347).Buffer;
+	var Buffer = __webpack_require__(359).Buffer;
 
 	var isBufferEncoding = Buffer.isEncoding
 	  || function(encoding) {
@@ -32365,30 +26685,8 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 362 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
-
-	// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 
 	// a transform stream is a readable/writable stream where you do
 	// something with the data.  Sometimes it's called a "filter",
@@ -32432,20 +26730,21 @@ var InfoxBpmnModeler =
 	// would be consumed, and then the rest would wait (un-transformed) until
 	// the results of the previous transformed chunk were consumed.
 
+	'use strict';
+
 	module.exports = Transform;
 
-	var Duplex = __webpack_require__(359);
+	var Duplex = __webpack_require__(373);
 
 	/*<replacement>*/
-	var util = __webpack_require__(357);
+	var util = __webpack_require__(370);
 	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
 	util.inherits(Transform, Duplex);
 
-
-	function TransformState(options, stream) {
-	  this.afterTransform = function(er, data) {
+	function TransformState(stream) {
+	  this.afterTransform = function (er, data) {
 	    return afterTransform(stream, er, data);
 	  };
 
@@ -32453,6 +26752,7 @@ var InfoxBpmnModeler =
 	  this.transforming = false;
 	  this.writecb = null;
 	  this.writechunk = null;
+	  this.writeencoding = null;
 	}
 
 	function afterTransform(stream, er, data) {
@@ -32461,17 +26761,14 @@ var InfoxBpmnModeler =
 
 	  var cb = ts.writecb;
 
-	  if (!cb)
-	    return stream.emit('error', new Error('no writecb in Transform class'));
+	  if (!cb) return stream.emit('error', new Error('no writecb in Transform class'));
 
 	  ts.writechunk = null;
 	  ts.writecb = null;
 
-	  if (!util.isNullOrUndefined(data))
-	    stream.push(data);
+	  if (data !== null && data !== undefined) stream.push(data);
 
-	  if (cb)
-	    cb(er);
+	  cb(er);
 
 	  var rs = stream._readableState;
 	  rs.reading = false;
@@ -32480,16 +26777,13 @@ var InfoxBpmnModeler =
 	  }
 	}
 
-
 	function Transform(options) {
-	  if (!(this instanceof Transform))
-	    return new Transform(options);
+	  if (!(this instanceof Transform)) return new Transform(options);
 
 	  Duplex.call(this, options);
 
-	  this._transformState = new TransformState(options, this);
+	  this._transformState = new TransformState(this);
 
-	  // when the writable side finishes, then flush out anything remaining.
 	  var stream = this;
 
 	  // start out asking for a readable event once data is transformed.
@@ -32500,17 +26794,21 @@ var InfoxBpmnModeler =
 	  // sync guard flag.
 	  this._readableState.sync = false;
 
-	  this.once('prefinish', function() {
-	    if (util.isFunction(this._flush))
-	      this._flush(function(er) {
-	        done(stream, er);
-	      });
-	    else
-	      done(stream);
+	  if (options) {
+	    if (typeof options.transform === 'function') this._transform = options.transform;
+
+	    if (typeof options.flush === 'function') this._flush = options.flush;
+	  }
+
+	  // When the writable side finishes, then flush out anything remaining.
+	  this.once('prefinish', function () {
+	    if (typeof this._flush === 'function') this._flush(function (er, data) {
+	      done(stream, er, data);
+	    });else done(stream);
 	  });
 	}
 
-	Transform.prototype.push = function(chunk, encoding) {
+	Transform.prototype.push = function (chunk, encoding) {
 	  this._transformState.needTransform = false;
 	  return Duplex.prototype.push.call(this, chunk, encoding);
 	};
@@ -32525,31 +26823,28 @@ var InfoxBpmnModeler =
 	// Call `cb(err)` when you are done with this chunk.  If you pass
 	// an error, then that'll put the hurt on the whole operation.  If you
 	// never call cb(), then you'll never get another chunk.
-	Transform.prototype._transform = function(chunk, encoding, cb) {
-	  throw new Error('not implemented');
+	Transform.prototype._transform = function (chunk, encoding, cb) {
+	  throw new Error('_transform() is not implemented');
 	};
 
-	Transform.prototype._write = function(chunk, encoding, cb) {
+	Transform.prototype._write = function (chunk, encoding, cb) {
 	  var ts = this._transformState;
 	  ts.writecb = cb;
 	  ts.writechunk = chunk;
 	  ts.writeencoding = encoding;
 	  if (!ts.transforming) {
 	    var rs = this._readableState;
-	    if (ts.needTransform ||
-	        rs.needReadable ||
-	        rs.length < rs.highWaterMark)
-	      this._read(rs.highWaterMark);
+	    if (ts.needTransform || rs.needReadable || rs.length < rs.highWaterMark) this._read(rs.highWaterMark);
 	  }
 	};
 
 	// Doesn't matter what the args are here.
 	// _transform does all the work.
 	// That we got here means that the readable side wants more data.
-	Transform.prototype._read = function(n) {
+	Transform.prototype._read = function (n) {
 	  var ts = this._transformState;
 
-	  if (!util.isNull(ts.writechunk) && ts.writecb && !ts.transforming) {
+	  if (ts.writechunk !== null && ts.writecb && !ts.transforming) {
 	    ts.transforming = true;
 	    this._transform(ts.writechunk, ts.writeencoding, ts.afterTransform);
 	  } else {
@@ -32559,108 +26854,84 @@ var InfoxBpmnModeler =
 	  }
 	};
 
+	function done(stream, er, data) {
+	  if (er) return stream.emit('error', er);
 
-	function done(stream, er) {
-	  if (er)
-	    return stream.emit('error', er);
+	  if (data !== null && data !== undefined) stream.push(data);
 
 	  // if there's nothing in the write buffer, then that means
 	  // that nothing more will ever be provided
 	  var ws = stream._writableState;
 	  var ts = stream._transformState;
 
-	  if (ws.length)
-	    throw new Error('calling transform done when ws.length != 0');
+	  if (ws.length) throw new Error('Calling transform done when ws.length != 0');
 
-	  if (ts.transforming)
-	    throw new Error('calling transform done when still transforming');
+	  if (ts.transforming) throw new Error('Calling transform done when still transforming');
 
 	  return stream.push(null);
 	}
 
-
 /***/ },
-/* 363 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
-
-	// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	// a passthrough stream.
 	// basically just the most minimal sort of Transform stream.
 	// Every written chunk gets output as-is.
 
+	'use strict';
+
 	module.exports = PassThrough;
 
-	var Transform = __webpack_require__(362);
+	var Transform = __webpack_require__(379);
 
 	/*<replacement>*/
-	var util = __webpack_require__(357);
+	var util = __webpack_require__(370);
 	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
 	util.inherits(PassThrough, Transform);
 
 	function PassThrough(options) {
-	  if (!(this instanceof PassThrough))
-	    return new PassThrough(options);
+	  if (!(this instanceof PassThrough)) return new PassThrough(options);
 
 	  Transform.call(this, options);
 	}
 
-	PassThrough.prototype._transform = function(chunk, encoding, cb) {
+	PassThrough.prototype._transform = function (chunk, encoding, cb) {
 	  cb(null, chunk);
 	};
 
-
 /***/ },
-/* 364 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(360)
+	module.exports = __webpack_require__(374)
 
 
 /***/ },
-/* 365 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(359)
+	module.exports = __webpack_require__(373)
 
 
 /***/ },
-/* 366 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(362)
+	module.exports = __webpack_require__(379)
 
 
 /***/ },
-/* 367 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(363)
+	module.exports = __webpack_require__(380)
 
 
 /***/ },
-/* 368 */
+/* 385 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32713,20 +26984,20 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 369 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var map = __webpack_require__(370),
-	    forEach = __webpack_require__(329),
-	    isString = __webpack_require__(373),
-	    filter = __webpack_require__(374),
-	    assign = __webpack_require__(336);
+	var map = __webpack_require__(387),
+	    forEach = __webpack_require__(341),
+	    isString = __webpack_require__(390),
+	    filter = __webpack_require__(391),
+	    assign = __webpack_require__(348);
 
-	var Types = __webpack_require__(269),
-	    parseNameNs = __webpack_require__(277).parseName,
-	    common = __webpack_require__(368),
+	var Types = __webpack_require__(281),
+	    parseNameNs = __webpack_require__(289).parseName,
+	    common = __webpack_require__(385),
 	    nameToAlias = common.nameToAlias,
 	    serializeAsType = common.serializeAsType,
 	    serializeAsProperty = common.serializeAsProperty;
@@ -33401,13 +27672,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 370 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayMap = __webpack_require__(371),
-	    baseCallback = __webpack_require__(304),
-	    baseMap = __webpack_require__(372),
-	    isArray = __webpack_require__(299);
+	var arrayMap = __webpack_require__(388),
+	    baseCallback = __webpack_require__(316),
+	    baseMap = __webpack_require__(389),
+	    isArray = __webpack_require__(311);
 
 	/**
 	 * Creates an array of values by running each element in `collection` through
@@ -33475,7 +27746,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 371 */
+/* 388 */
 /***/ function(module, exports) {
 
 	/**
@@ -33502,11 +27773,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 372 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(282),
-	    isArrayLike = __webpack_require__(293);
+	var baseEach = __webpack_require__(294),
+	    isArrayLike = __webpack_require__(305);
 
 	/**
 	 * The base implementation of `_.map` without support for callback shorthands
@@ -33531,10 +27802,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 373 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(292);
+	var isObjectLike = __webpack_require__(304);
 
 	/** `Object#toString` result references. */
 	var stringTag = '[object String]';
@@ -33572,13 +27843,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 374 */
+/* 391 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(375),
-	    baseCallback = __webpack_require__(304),
-	    baseFilter = __webpack_require__(376),
-	    isArray = __webpack_require__(299);
+	var arrayFilter = __webpack_require__(392),
+	    baseCallback = __webpack_require__(316),
+	    baseFilter = __webpack_require__(393),
+	    isArray = __webpack_require__(311);
 
 	/**
 	 * Iterates over elements of `collection`, returning an array of all elements
@@ -33639,7 +27910,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 375 */
+/* 392 */
 /***/ function(module, exports) {
 
 	/**
@@ -33670,10 +27941,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 376 */
+/* 393 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(282);
+	var baseEach = __webpack_require__(294);
 
 	/**
 	 * The base implementation of `_.filter` without support for callback
@@ -33698,7 +27969,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 377 */
+/* 394 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -34161,7 +28432,9 @@ var InfoxBpmnModeler =
 					},
 					{
 						"name": "definition",
-						"type": "ExtensionDefinition"
+						"type": "ExtensionDefinition",
+						"isAttr": true,
+						"isReference": true
 					}
 				]
 			},
@@ -35222,7 +29495,14 @@ var InfoxBpmnModeler =
 				"superClass": [
 					"BaseElement"
 				],
-				"isAbstract": true
+				"isAbstract": false,
+				"properties": [
+					{
+						"name": "body",
+						"type": "String",
+						"isBody": true
+					}
+				]
 			},
 			{
 				"name": "FormalExpression",
@@ -35234,11 +29514,6 @@ var InfoxBpmnModeler =
 						"name": "language",
 						"isAttr": true,
 						"type": "String"
-					},
-					{
-						"name": "body",
-						"type": "String",
-						"isBody": true
 					},
 					{
 						"name": "evaluatesToTypeRef",
@@ -36652,7 +30927,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 378 */
+/* 395 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -36850,7 +31125,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 379 */
+/* 396 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -36954,7 +31229,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 380 */
+/* 397 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -37197,12 +31472,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 381 */
+/* 398 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var BpmnTreeWalker = __webpack_require__(382);
+	var BpmnTreeWalker = __webpack_require__(399);
 
 
 	/**
@@ -37272,18 +31547,18 @@ var InfoxBpmnModeler =
 	module.exports.importBpmnDiagram = importBpmnDiagram;
 
 /***/ },
-/* 382 */
+/* 399 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(383),
-	    find = __webpack_require__(411),
-	    forEach = __webpack_require__(415);
+	var filter = __webpack_require__(400),
+	    find = __webpack_require__(428),
+	    forEach = __webpack_require__(432);
 
-	var Refs = __webpack_require__(143);
+	var Refs = __webpack_require__(154);
 
-	var elementToString = __webpack_require__(418).elementToString;
+	var elementToString = __webpack_require__(435).elementToString;
 
 	var diRefs = new Refs({ name: 'bpmnElement', enumerable: true }, { name: 'di' });
 
@@ -37723,12 +31998,12 @@ var InfoxBpmnModeler =
 	module.exports = BpmnTreeWalker;
 
 /***/ },
-/* 383 */
+/* 400 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(384),
-	    baseCallback = __webpack_require__(385),
-	    baseFilter = __webpack_require__(407),
+	var arrayFilter = __webpack_require__(401),
+	    baseCallback = __webpack_require__(402),
+	    baseFilter = __webpack_require__(424),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -37790,7 +32065,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 384 */
+/* 401 */
 /***/ function(module, exports) {
 
 	/**
@@ -37821,14 +32096,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 385 */
+/* 402 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(386),
-	    baseMatchesProperty = __webpack_require__(398),
+	var baseMatches = __webpack_require__(403),
+	    baseMatchesProperty = __webpack_require__(415),
 	    bindCallback = __webpack_require__(27),
 	    identity = __webpack_require__(28),
-	    property = __webpack_require__(405);
+	    property = __webpack_require__(422);
 
 	/**
 	 * The base implementation of `_.callback` which supports specifying the
@@ -37862,11 +32137,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 386 */
+/* 403 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(387),
-	    getMatchData = __webpack_require__(395),
+	var baseIsMatch = __webpack_require__(404),
+	    getMatchData = __webpack_require__(412),
 	    toObject = __webpack_require__(43);
 
 	/**
@@ -37898,10 +32173,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 387 */
+/* 404 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(388),
+	var baseIsEqual = __webpack_require__(405),
 	    toObject = __webpack_require__(43);
 
 	/**
@@ -37956,10 +32231,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 388 */
+/* 405 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(389),
+	var baseIsEqualDeep = __webpack_require__(406),
 	    isObject = __webpack_require__(13),
 	    isObjectLike = __webpack_require__(14);
 
@@ -37990,14 +32265,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 389 */
+/* 406 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(390),
-	    equalByTag = __webpack_require__(392),
-	    equalObjects = __webpack_require__(393),
+	var equalArrays = __webpack_require__(407),
+	    equalByTag = __webpack_require__(409),
+	    equalObjects = __webpack_require__(410),
 	    isArray = __webpack_require__(21),
-	    isTypedArray = __webpack_require__(394);
+	    isTypedArray = __webpack_require__(411);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -38098,10 +32373,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 390 */
+/* 407 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(391);
+	var arraySome = __webpack_require__(408);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -38155,7 +32430,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 391 */
+/* 408 */
 /***/ function(module, exports) {
 
 	/**
@@ -38184,7 +32459,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 392 */
+/* 409 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -38238,7 +32513,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 393 */
+/* 410 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(9);
@@ -38311,7 +32586,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 394 */
+/* 411 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isLength = __webpack_require__(18),
@@ -38391,11 +32666,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 395 */
+/* 412 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(396),
-	    pairs = __webpack_require__(397);
+	var isStrictComparable = __webpack_require__(413),
+	    pairs = __webpack_require__(414);
 
 	/**
 	 * Gets the propery names, values, and compare flags of `object`.
@@ -38418,7 +32693,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 396 */
+/* 413 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(13);
@@ -38439,7 +32714,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 397 */
+/* 414 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(9),
@@ -38478,18 +32753,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 398 */
+/* 415 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(399),
-	    baseIsEqual = __webpack_require__(388),
-	    baseSlice = __webpack_require__(400),
+	var baseGet = __webpack_require__(416),
+	    baseIsEqual = __webpack_require__(405),
+	    baseSlice = __webpack_require__(417),
 	    isArray = __webpack_require__(21),
-	    isKey = __webpack_require__(401),
-	    isStrictComparable = __webpack_require__(396),
-	    last = __webpack_require__(402),
+	    isKey = __webpack_require__(418),
+	    isStrictComparable = __webpack_require__(413),
+	    last = __webpack_require__(419),
 	    toObject = __webpack_require__(43),
-	    toPath = __webpack_require__(403);
+	    toPath = __webpack_require__(420);
 
 	/**
 	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -38529,7 +32804,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 399 */
+/* 416 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var toObject = __webpack_require__(43);
@@ -38564,7 +32839,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 400 */
+/* 417 */
 /***/ function(module, exports) {
 
 	/**
@@ -38602,7 +32877,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 401 */
+/* 418 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isArray = __webpack_require__(21),
@@ -38636,7 +32911,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 402 */
+/* 419 */
 /***/ function(module, exports) {
 
 	/**
@@ -38661,10 +32936,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 403 */
+/* 420 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(404),
+	var baseToString = __webpack_require__(421),
 	    isArray = __webpack_require__(21);
 
 	/** Used to match property names within property paths. */
@@ -38695,7 +32970,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 404 */
+/* 421 */
 /***/ function(module, exports) {
 
 	/**
@@ -38714,12 +32989,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 405 */
+/* 422 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseProperty = __webpack_require__(17),
-	    basePropertyDeep = __webpack_require__(406),
-	    isKey = __webpack_require__(401);
+	    basePropertyDeep = __webpack_require__(423),
+	    isKey = __webpack_require__(418);
 
 	/**
 	 * Creates a function that returns the property value at `path` on a
@@ -38751,11 +33026,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 406 */
+/* 423 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(399),
-	    toPath = __webpack_require__(403);
+	var baseGet = __webpack_require__(416),
+	    toPath = __webpack_require__(420);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -38776,10 +33051,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 407 */
+/* 424 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(408);
+	var baseEach = __webpack_require__(425);
 
 	/**
 	 * The base implementation of `_.filter` without support for callback
@@ -38804,11 +33079,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 408 */
+/* 425 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(409),
-	    createBaseEach = __webpack_require__(410);
+	var baseForOwn = __webpack_require__(426),
+	    createBaseEach = __webpack_require__(427);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -38825,7 +33100,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 409 */
+/* 426 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseFor = __webpack_require__(46),
@@ -38848,7 +33123,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 410 */
+/* 427 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var getLength = __webpack_require__(16),
@@ -38885,11 +33160,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 411 */
+/* 428 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(408),
-	    createFind = __webpack_require__(412);
+	var baseEach = __webpack_require__(425),
+	    createFind = __webpack_require__(429);
 
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -38947,12 +33222,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 412 */
+/* 429 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(385),
-	    baseFind = __webpack_require__(413),
-	    baseFindIndex = __webpack_require__(414),
+	var baseCallback = __webpack_require__(402),
+	    baseFind = __webpack_require__(430),
+	    baseFindIndex = __webpack_require__(431),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -38978,7 +33253,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 413 */
+/* 430 */
 /***/ function(module, exports) {
 
 	/**
@@ -39009,7 +33284,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 414 */
+/* 431 */
 /***/ function(module, exports) {
 
 	/**
@@ -39038,12 +33313,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 415 */
+/* 432 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(416),
-	    baseEach = __webpack_require__(408),
-	    createForEach = __webpack_require__(417);
+	var arrayEach = __webpack_require__(433),
+	    baseEach = __webpack_require__(425),
+	    createForEach = __webpack_require__(434);
 
 	/**
 	 * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -39081,7 +33356,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 416 */
+/* 433 */
 /***/ function(module, exports) {
 
 	/**
@@ -39109,7 +33384,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 417 */
+/* 434 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var bindCallback = __webpack_require__(27),
@@ -39135,7 +33410,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 418 */
+/* 435 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -39149,29 +33424,29 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 419 */
+/* 436 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(420),
-	    __webpack_require__(445)
+	    __webpack_require__(437),
+	    __webpack_require__(462)
 	  ]
 	};
 
 /***/ },
-/* 420 */
+/* 437 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'bpmnRenderer' ],
-	  bpmnRenderer: [ 'type', __webpack_require__(421) ],
-	  pathMap: [ 'type', __webpack_require__(444) ]
+	  bpmnRenderer: [ 'type', __webpack_require__(438) ],
+	  pathMap: [ 'type', __webpack_require__(461) ]
 	};
 
 
 /***/ },
-/* 421 */
+/* 438 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39179,29 +33454,39 @@ var InfoxBpmnModeler =
 	var inherits = __webpack_require__(3),
 	    isObject = __webpack_require__(13),
 	    assign = __webpack_require__(7),
-	    forEach = __webpack_require__(415),
-	    every = __webpack_require__(422),
-	    includes = __webpack_require__(425),
-	    some = __webpack_require__(428);
+	    forEach = __webpack_require__(432),
+	    every = __webpack_require__(439),
+	    includes = __webpack_require__(442),
+	    some = __webpack_require__(445);
 
-	var BaseRenderer = __webpack_require__(64),
-	    TextUtil = __webpack_require__(430),
-	    DiUtil = __webpack_require__(442);
+	var BaseRenderer = __webpack_require__(72),
+	    TextUtil = __webpack_require__(447),
+	    DiUtil = __webpack_require__(459);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var RenderUtil = __webpack_require__(65);
+	var RenderUtil = __webpack_require__(73);
 
 	var componentsToPath = RenderUtil.componentsToPath,
 	    createLine = RenderUtil.createLine;
 
+	var domQuery = __webpack_require__(52);
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgCreate = __webpack_require__(75),
+	    svgClasses = __webpack_require__(148);
+
+	var rotate = __webpack_require__(186).rotate,
+	    transform = __webpack_require__(186).transform,
+	    translate = __webpack_require__(186).translate;
 
 	var TASK_BORDER_RADIUS = 10;
 	var INNER_OUTER_DIST = 3;
 
 	var LABEL_STYLE = {
 	  fontFamily: 'Arial, sans-serif',
-	  fontSize: '12px'
+	  fontSize: 12
 	};
 
 
@@ -39223,7 +33508,9 @@ var InfoxBpmnModeler =
 	  }
 
 	  function marker(id) {
-	    return markers[id];
+	    var marker = markers[id];
+
+	    return 'url(#' + marker.id + ')';
 	  }
 
 	  function initMarkers(svg) {
@@ -39246,26 +33533,49 @@ var InfoxBpmnModeler =
 	        attrs.strokeDasharray = [10000, 1];
 	      }
 
-	      var marker = options.element
-	                     .attr(attrs)
-	                     .marker(0, 0, 20, 20, ref.x, ref.y)
-	                     .attr({
-	                       markerWidth: 20 * scale,
-	                       markerHeight: 20 * scale
-	                     });
+	      var marker = svgCreate('marker');
+
+	      svgAttr(options.element, attrs);
+
+	      svgAppend(marker, options.element);
+
+	      svgAttr(marker, {
+	        id: id,
+	        viewBox: '0 0 20 20',
+	        refX: ref.x,
+	        refY: ref.y,
+	        markerWidth: 20 * scale,
+	        markerHeight: 20 * scale,
+	        orient: 'auto'
+	      });
+
+	      var defs = domQuery('defs', svg);
+
+	      if (!defs) {
+	        defs = svgCreate('defs');
+
+	        svgAppend(svg, defs);
+	      }
+
+	      svgAppend(defs, marker);
 
 	      return addMarker(id, marker);
 	    }
 
+	    var sequenceflowEnd = svgCreate('path');
+	    svgAttr(sequenceflowEnd, { d: 'M 1 5 L 11 10 L 1 15 Z' });
 
 	    createMarker('sequenceflow-end', {
-	      element: svg.path('M 1 5 L 11 10 L 1 15 Z'),
+	      element: sequenceflowEnd,
 	      ref: { x: 11, y: 10 },
 	      scale: 0.5
 	    });
 
+	    var messageflowStart = svgCreate('circle');
+	    svgAttr(messageflowStart, { cx: 6, cy: 6, r: 3.5 });
+
 	    createMarker('messageflow-start', {
-	      element: svg.circle(6, 6, 3.5),
+	      element: messageflowStart,
 	      attrs: {
 	        fill: 'white',
 	        stroke: 'black'
@@ -39273,8 +33583,11 @@ var InfoxBpmnModeler =
 	      ref: { x: 6, y: 6 }
 	    });
 
+	    var messageflowEnd = svgCreate('path');
+	    svgAttr(messageflowEnd, { d: 'm 1 5 l 0 -3 l 7 3 l -7 3 z' });
+
 	    createMarker('messageflow-end', {
-	      element: svg.path('m 1 5 l 0 -3 l 7 3 l -7 3 z'),
+	      element: messageflowEnd,
 	      attrs: {
 	        fill: 'white',
 	        stroke: 'black',
@@ -39283,8 +33596,11 @@ var InfoxBpmnModeler =
 	      ref: { x: 8.5, y: 5 }
 	    });
 
+	    var associationStart = svgCreate('path');
+	    svgAttr(associationStart, { d: 'M 11 5 L 1 10 L 11 15' });
+
 	    createMarker('association-start', {
-	      element: svg.path('M 11 5 L 1 10 L 11 15'),
+	      element: associationStart,
 	      attrs: {
 	        fill: 'none',
 	        stroke: 'black',
@@ -39294,8 +33610,11 @@ var InfoxBpmnModeler =
 	      scale: 0.5
 	    });
 
+	    var associationEnd = svgCreate('path');
+	    svgAttr(associationEnd, { d: 'M 1 5 L 11 10 L 1 15' });
+
 	    createMarker('association-end', {
-	      element: svg.path('M 1 5 L 11 10 L 1 15'),
+	      element: associationEnd,
 	      attrs: {
 	        fill: 'none',
 	        stroke: 'black',
@@ -39305,8 +33624,11 @@ var InfoxBpmnModeler =
 	      scale: 0.5
 	    });
 
+	    var conditionalflowMarker = svgCreate('path');
+	    svgAttr(conditionalflowMarker, { d: 'M 0 10 L 8 6 L 16 10 L 8 14 Z' });
+
 	    createMarker('conditional-flow-marker', {
-	      element: svg.path('M 0 10 L 8 6 L 16 10 L 8 14 Z'),
+	      element: conditionalflowMarker,
 	      attrs: {
 	        fill: 'white',
 	        stroke: 'black'
@@ -39315,8 +33637,11 @@ var InfoxBpmnModeler =
 	      scale: 0.5
 	    });
 
+	    var conditionaldefaultflowMarker = svgCreate('path');
+	    svgAttr(conditionaldefaultflowMarker, { d: 'M 1 4 L 5 16' });
+
 	    createMarker('conditional-default-flow-marker', {
-	      element: svg.path('M 1 4 L 5 16'),
+	      element: conditionaldefaultflowMarker,
 	      attrs: {
 	        stroke: 'black'
 	      },
@@ -39325,7 +33650,7 @@ var InfoxBpmnModeler =
 	    });
 	  }
 
-	  function drawCircle(p, width, height, offset, attrs) {
+	  function drawCircle(parentGfx, width, height, offset, attrs) {
 
 	    if (isObject(offset)) {
 	      attrs = offset;
@@ -39343,10 +33668,20 @@ var InfoxBpmnModeler =
 	    var cx = width / 2,
 	        cy = height / 2;
 
-	    return p.circle(cx, cy, Math.round((width + height) / 4 - offset)).attr(attrs);
+	    var circle = svgCreate('circle');
+	    svgAttr(circle, {
+	      cx: cx,
+	      cy: cy,
+	      r: Math.round((width + height) / 4 - offset)
+	    });
+	    svgAttr(circle, attrs);
+
+	    svgAppend(parentGfx, circle);
+
+	    return circle;
 	  }
 
-	  function drawRect(p, width, height, r, offset, attrs) {
+	  function drawRect(parentGfx, width, height, r, offset, attrs) {
 
 	    if (isObject(offset)) {
 	      attrs = offset;
@@ -39361,15 +33696,32 @@ var InfoxBpmnModeler =
 	      fill: 'white'
 	    });
 
-	    return p.rect(offset, offset, width - offset * 2, height - offset * 2, r).attr(attrs);
+	    var rect = svgCreate('rect');
+	    svgAttr(rect, {
+	      x: offset,
+	      y: offset,
+	      width: width - offset * 2,
+	      height: height - offset * 2,
+	      rx: r,
+	      ry: r
+	    });
+	    svgAttr(rect, attrs);
+
+	    svgAppend(parentGfx, rect);
+
+	    return rect;
 	  }
 
-	  function drawDiamond(p, width, height, attrs) {
+	  function drawDiamond(parentGfx, width, height, attrs) {
 
 	    var x_2 = width / 2;
 	    var y_2 = height / 2;
 
-	    var points = [x_2, 0, width, y_2, x_2, height, 0, y_2 ];
+	    var points = [{ x: x_2, y: 0 }, { x: width, y: y_2 }, { x: x_2, y: height }, { x: 0, y: y_2 }];
+
+	    var pointsString = points.map(function(point) {
+	      return point.x + ',' + point.y;
+	    }).join(' ');
 
 	    attrs = computeStyle(attrs, {
 	      stroke: 'black',
@@ -39377,36 +33729,54 @@ var InfoxBpmnModeler =
 	      fill: 'white'
 	    });
 
-	    return p.polygon(points).attr(attrs);
+	    var polygon = svgCreate('polygon');
+	    svgAttr(polygon, {
+	      points: pointsString
+	    });
+	    svgAttr(polygon, attrs);
+
+	    svgAppend(parentGfx, polygon);
+
+	    return polygon;
 	  }
 
-	  function drawLine(p, waypoints, attrs) {
+	  function drawLine(parentGfx, waypoints, attrs) {
 	    attrs = computeStyle(attrs, [ 'no-fill' ], {
 	      stroke: 'black',
 	      strokeWidth: 2,
 	      fill: 'none'
 	    });
 
-	    return createLine(waypoints, attrs).appendTo(p);
+	    var line = createLine(waypoints, attrs);
+
+	    svgAppend(parentGfx, line);
+
+	    return line;
 	  }
 
-	  function drawPath(p, d, attrs) {
+	  function drawPath(parentGfx, d, attrs) {
 
 	    attrs = computeStyle(attrs, [ 'no-fill' ], {
 	      strokeWidth: 2,
 	      stroke: 'black'
 	    });
 
-	    return p.path(d).attr(attrs);
+	    var path = svgCreate('path');
+	    svgAttr(path, { d: d });
+	    svgAttr(path, attrs);
+
+	    svgAppend(parentGfx, path);
+
+	    return path;
 	  }
 
-	  function drawMarker(type, p, path, attrs) {
-	    return drawPath(p, path, assign({ 'data-marker': type }, attrs));
+	  function drawMarker(type, parentGfx, path, attrs) {
+	    return drawPath(parentGfx, path, assign({ 'data-marker': type }, attrs));
 	  }
 
 	  function as(type) {
-	    return function(p, element) {
-	      return handlers[type](p, element);
+	    return function(parentGfx, element) {
+	      return handlers[type](parentGfx, element);
 	    };
 	  }
 
@@ -39414,74 +33784,77 @@ var InfoxBpmnModeler =
 	    return handlers[type];
 	  }
 
-	  function renderEventContent(element, p) {
+	  function renderEventContent(element, parentGfx) {
 
 	    var event = getSemantic(element);
 	    var isThrowing = isThrowEvent(event);
 
 	    if (isTypedEvent(event, 'bpmn:MessageEventDefinition')) {
-	      return renderer('bpmn:MessageEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:MessageEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:TimerEventDefinition')) {
-	      return renderer('bpmn:TimerEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:TimerEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:ConditionalEventDefinition')) {
-	      return renderer('bpmn:ConditionalEventDefinition')(p, element);
+	      return renderer('bpmn:ConditionalEventDefinition')(parentGfx, element);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:SignalEventDefinition')) {
-	      return renderer('bpmn:SignalEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:SignalEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:CancelEventDefinition') &&
 	      isTypedEvent(event, 'bpmn:TerminateEventDefinition', { parallelMultiple: false })) {
-	      return renderer('bpmn:MultipleEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:MultipleEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:CancelEventDefinition') &&
 	      isTypedEvent(event, 'bpmn:TerminateEventDefinition', { parallelMultiple: true })) {
-	      return renderer('bpmn:ParallelMultipleEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:ParallelMultipleEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:EscalationEventDefinition')) {
-	      return renderer('bpmn:EscalationEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:EscalationEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:LinkEventDefinition')) {
-	      return renderer('bpmn:LinkEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:LinkEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:ErrorEventDefinition')) {
-	      return renderer('bpmn:ErrorEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:ErrorEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:CancelEventDefinition')) {
-	      return renderer('bpmn:CancelEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:CancelEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:CompensateEventDefinition')) {
-	      return renderer('bpmn:CompensateEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:CompensateEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    if (isTypedEvent(event, 'bpmn:TerminateEventDefinition')) {
-	      return renderer('bpmn:TerminateEventDefinition')(p, element, isThrowing);
+	      return renderer('bpmn:TerminateEventDefinition')(parentGfx, element, isThrowing);
 	    }
 
 	    return null;
 	  }
 
-	  function renderLabel(p, label, options) {
-	    return textUtil.createText(p, label || '', options).addClass('djs-label');
+	  function renderLabel(parentGfx, label, options) {
+	    var text = textUtil.createText(parentGfx, label || '', options);
+	    svgClasses(text).add('djs-label');
+
+	    return text;
 	  }
 
-	  function renderEmbeddedLabel(p, element, align) {
+	  function renderEmbeddedLabel(parentGfx, element, align) {
 	    var semantic = getSemantic(element);
-	    return renderLabel(p, semantic.name, { box: element, align: align, padding: 5 });
+	    return renderLabel(parentGfx, semantic.name, { box: element, align: align, padding: 5 });
 	  }
 
-	  function renderExternalLabel(p, element) {
+	  function renderExternalLabel(parentGfx, element) {
 	    var semantic = getSemantic(element);
 	    var box = {
 	      width: 90,
@@ -39490,20 +33863,18 @@ var InfoxBpmnModeler =
 	      y: element.height / 2 + element.y
 	    };
 
-	    return renderLabel(p, semantic.name, { box: box, style: { fontSize: '11px' } });
+	    return renderLabel(parentGfx, semantic.name, { box: box, style: { fontSize: '11px' } });
 	  }
 
-	  function renderLaneLabel(p, text, element) {
-	    var textBox = renderLabel(p, text, {
+	  function renderLaneLabel(parentGfx, text, element) {
+	    var textBox = renderLabel(parentGfx, text, {
 	      box: { height: 30, width: element.height },
 	      align: 'center-middle'
 	    });
 
 	    var top = -1 * element.height;
-	    textBox.transform(
-	      'rotate(270) ' +
-	      'translate(' + top + ',' + 0 + ')'
-	    );
+
+	    transform(textBox, 0, -top, 270);
 	  }
 
 	  function createPathFromConnection(connection) {
@@ -39517,10 +33888,10 @@ var InfoxBpmnModeler =
 	  }
 
 	  var handlers = this.handlers = {
-	    'bpmn:Event': function(p, element, attrs) {
-	      return drawCircle(p, element.width, element.height,  attrs);
+	    'bpmn:Event': function(parentGfx, element, attrs) {
+	      return drawCircle(parentGfx, element.width, element.height,  attrs);
 	    },
-	    'bpmn:StartEvent': function(p, element) {
+	    'bpmn:StartEvent': function(parentGfx, element) {
 	      var attrs = {};
 	      var semantic = getSemantic(element);
 
@@ -39531,13 +33902,13 @@ var InfoxBpmnModeler =
 	        };
 	      }
 
-	      var circle = renderer('bpmn:Event')(p, element, attrs);
+	      var circle = renderer('bpmn:Event')(parentGfx, element, attrs);
 
-	      renderEventContent(element, p);
+	      renderEventContent(element, parentGfx);
 
 	      return circle;
 	    },
-	    'bpmn:MessageEventDefinition': function(p, element, isThrowing) {
+	    'bpmn:MessageEventDefinition': function(parentGfx, element, isThrowing) {
 	      var pathData = pathMap.getScaledPath('EVENT_MESSAGE', {
 	        xScaleFactor: 0.9,
 	        yScaleFactor: 0.9,
@@ -39552,7 +33923,7 @@ var InfoxBpmnModeler =
 	      var fill = isThrowing ? 'black' : 'white';
 	      var stroke = isThrowing ? 'white' : 'black';
 
-	      var messagePath = drawPath(p, pathData, {
+	      var messagePath = drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: fill,
 	        stroke: stroke
@@ -39560,9 +33931,9 @@ var InfoxBpmnModeler =
 
 	      return messagePath;
 	    },
-	    'bpmn:TimerEventDefinition': function(p, element) {
+	    'bpmn:TimerEventDefinition': function(parentGfx, element) {
 
-	      var circle = drawCircle(p, element.width, element.height, 0.2 * element.height, {
+	      var circle = drawCircle(parentGfx, element.width, element.height, 0.2 * element.height, {
 	        strokeWidth: 2
 	      });
 
@@ -39577,7 +33948,7 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      drawPath(p, pathData, {
+	      drawPath(parentGfx, pathData, {
 	        strokeWidth: 2,
 	        strokeLinecap: 'square'
 	      });
@@ -39598,7 +33969,7 @@ var InfoxBpmnModeler =
 	        var width = element.width / 2;
 	        var height = element.height / 2;
 
-	        drawPath(p, linePathData, {
+	        drawPath(parentGfx, linePathData, {
 	          strokeWidth: 1,
 	          strokeLinecap: 'square',
 	          transform: 'rotate(' + (i * 30) + ',' + height + ',' + width + ')'
@@ -39607,7 +33978,7 @@ var InfoxBpmnModeler =
 
 	      return circle;
 	    },
-	    'bpmn:EscalationEventDefinition': function(p, event, isThrowing) {
+	    'bpmn:EscalationEventDefinition': function(parentGfx, event, isThrowing) {
 	      var pathData = pathMap.getScaledPath('EVENT_ESCALATION', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -39621,12 +33992,12 @@ var InfoxBpmnModeler =
 
 	      var fill = isThrowing ? 'black' : 'none';
 
-	      return drawPath(p, pathData, {
+	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: fill
 	      });
 	    },
-	    'bpmn:ConditionalEventDefinition': function(p, event) {
+	    'bpmn:ConditionalEventDefinition': function(parentGfx, event) {
 	      var pathData = pathMap.getScaledPath('EVENT_CONDITIONAL', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -39638,11 +34009,11 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      return drawPath(p, pathData, {
+	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1
 	      });
 	    },
-	    'bpmn:LinkEventDefinition': function(p, event, isThrowing) {
+	    'bpmn:LinkEventDefinition': function(parentGfx, event, isThrowing) {
 	      var pathData = pathMap.getScaledPath('EVENT_LINK', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -39656,12 +34027,12 @@ var InfoxBpmnModeler =
 
 	      var fill = isThrowing ? 'black' : 'none';
 
-	      return drawPath(p, pathData, {
+	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: fill
 	      });
 	    },
-	    'bpmn:ErrorEventDefinition': function(p, event, isThrowing) {
+	    'bpmn:ErrorEventDefinition': function(parentGfx, event, isThrowing) {
 	      var pathData = pathMap.getScaledPath('EVENT_ERROR', {
 	        xScaleFactor: 1.1,
 	        yScaleFactor: 1.1,
@@ -39675,12 +34046,12 @@ var InfoxBpmnModeler =
 
 	      var fill = isThrowing ? 'black' : 'none';
 
-	      return drawPath(p, pathData, {
+	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: fill
 	      });
 	    },
-	    'bpmn:CancelEventDefinition': function(p, event, isThrowing) {
+	    'bpmn:CancelEventDefinition': function(parentGfx, event, isThrowing) {
 	      var pathData = pathMap.getScaledPath('EVENT_CANCEL_45', {
 	        xScaleFactor: 1.0,
 	        yScaleFactor: 1.0,
@@ -39694,12 +34065,16 @@ var InfoxBpmnModeler =
 
 	      var fill = isThrowing ? 'black' : 'none';
 
-	      return drawPath(p, pathData, {
+	      var path = drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: fill
-	      }).transform('rotate(45)');
+	      });
+
+	      rotate(path, 45);
+
+	      return path;
 	    },
-	    'bpmn:CompensateEventDefinition': function(p, event, isThrowing) {
+	    'bpmn:CompensateEventDefinition': function(parentGfx, event, isThrowing) {
 	      var pathData = pathMap.getScaledPath('EVENT_COMPENSATION', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -39713,12 +34088,12 @@ var InfoxBpmnModeler =
 
 	      var fill = isThrowing ? 'black' : 'none';
 
-	      return drawPath(p, pathData, {
+	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: fill
 	      });
 	    },
-	    'bpmn:SignalEventDefinition': function(p, event, isThrowing) {
+	    'bpmn:SignalEventDefinition': function(parentGfx, event, isThrowing) {
 	      var pathData = pathMap.getScaledPath('EVENT_SIGNAL', {
 	        xScaleFactor: 0.9,
 	        yScaleFactor: 0.9,
@@ -39732,12 +34107,12 @@ var InfoxBpmnModeler =
 
 	      var fill = isThrowing ? 'black' : 'none';
 
-	      return drawPath(p, pathData, {
+	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: fill
 	      });
 	    },
-	    'bpmn:MultipleEventDefinition': function(p, event, isThrowing) {
+	    'bpmn:MultipleEventDefinition': function(parentGfx, event, isThrowing) {
 	      var pathData = pathMap.getScaledPath('EVENT_MULTIPLE', {
 	        xScaleFactor: 1.1,
 	        yScaleFactor: 1.1,
@@ -39751,12 +34126,12 @@ var InfoxBpmnModeler =
 
 	      var fill = isThrowing ? 'black' : 'none';
 
-	      return drawPath(p, pathData, {
+	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: fill
 	      });
 	    },
-	    'bpmn:ParallelMultipleEventDefinition': function(p, event) {
+	    'bpmn:ParallelMultipleEventDefinition': function(parentGfx, event) {
 	      var pathData = pathMap.getScaledPath('EVENT_PARALLEL_MULTIPLE', {
 	        xScaleFactor: 1.2,
 	        yScaleFactor: 1.2,
@@ -39768,50 +34143,50 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      return drawPath(p, pathData, {
+	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1
 	      });
 	    },
-	    'bpmn:EndEvent': function(p, element) {
-	      var circle = renderer('bpmn:Event')(p, element, {
+	    'bpmn:EndEvent': function(parentGfx, element) {
+	      var circle = renderer('bpmn:Event')(parentGfx, element, {
 	        strokeWidth: 4
 	      });
 
-	      renderEventContent(element, p, true);
+	      renderEventContent(element, parentGfx, true);
 
 	      return circle;
 	    },
-	    'bpmn:TerminateEventDefinition': function(p, element) {
-	      var circle = drawCircle(p, element.width, element.height, 8, {
+	    'bpmn:TerminateEventDefinition': function(parentGfx, element) {
+	      var circle = drawCircle(parentGfx, element.width, element.height, 8, {
 	        strokeWidth: 4,
 	        fill: 'black'
 	      });
 
 	      return circle;
 	    },
-	    'bpmn:IntermediateEvent': function(p, element) {
-	      var outer = renderer('bpmn:Event')(p, element, { strokeWidth: 1 });
-	      /* inner */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, { strokeWidth: 1, fill: 'none' });
+	    'bpmn:IntermediateEvent': function(parentGfx, element) {
+	      var outer = renderer('bpmn:Event')(parentGfx, element, { strokeWidth: 1 });
+	      /* inner */ drawCircle(parentGfx, element.width, element.height, INNER_OUTER_DIST, { strokeWidth: 1, fill: 'none' });
 
-	      renderEventContent(element, p);
+	      renderEventContent(element, parentGfx);
 
 	      return outer;
 	    },
 	    'bpmn:IntermediateCatchEvent': as('bpmn:IntermediateEvent'),
 	    'bpmn:IntermediateThrowEvent': as('bpmn:IntermediateEvent'),
 
-	    'bpmn:Activity': function(p, element, attrs) {
-	      return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, attrs);
+	    'bpmn:Activity': function(parentGfx, element, attrs) {
+	      return drawRect(parentGfx, element.width, element.height, TASK_BORDER_RADIUS, attrs);
 	    },
 
-	    'bpmn:Task': function(p, element, attrs) {
-	      var rect = renderer('bpmn:Activity')(p, element, attrs);
-	      renderEmbeddedLabel(p, element, 'center-middle');
-	      attachTaskMarkers(p, element);
+	    'bpmn:Task': function(parentGfx, element, attrs) {
+	      var rect = renderer('bpmn:Activity')(parentGfx, element, attrs);
+	      renderEmbeddedLabel(parentGfx, element, 'center-middle');
+	      attachTaskMarkers(parentGfx, element);
 	      return rect;
 	    },
-	    'bpmn:ServiceTask': function(p, element) {
-	      var task = renderer('bpmn:Task')(p, element);
+	    'bpmn:ServiceTask': function(parentGfx, element) {
+	      var task = renderer('bpmn:Task')(parentGfx, element);
 
 	      var pathDataBG = pathMap.getScaledPath('TASK_TYPE_SERVICE', {
 	        abspos: {
@@ -39820,7 +34195,7 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* service bg */ drawPath(p, pathDataBG, {
+	      /* service bg */ drawPath(parentGfx, pathDataBG, {
 	        strokeWidth: 1,
 	        fill: 'none'
 	      });
@@ -39832,7 +34207,7 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* service fill */ drawPath(p, fillPathData, {
+	      /* service fill */ drawPath(parentGfx, fillPathData, {
 	        strokeWidth: 0,
 	        stroke: 'none',
 	        fill: 'white'
@@ -39845,15 +34220,15 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* service */ drawPath(p, pathData, {
+	      /* service */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: 'white'
 	      });
 
 	      return task;
 	    },
-	    'bpmn:UserTask': function(p, element) {
-	      var task = renderer('bpmn:Task')(p, element);
+	    'bpmn:UserTask': function(parentGfx, element) {
+	      var task = renderer('bpmn:Task')(parentGfx, element);
 
 	      var x = 15;
 	      var y = 12;
@@ -39865,7 +34240,7 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* user path */ drawPath(p, pathData, {
+	      /* user path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 0.5,
 	        fill: 'none'
 	      });
@@ -39877,7 +34252,7 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* user2 path */ drawPath(p, pathData2, {
+	      /* user2 path */ drawPath(parentGfx, pathData2, {
 	        strokeWidth: 0.5,
 	        fill: 'none'
 	      });
@@ -39889,15 +34264,15 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* user3 path */ drawPath(p, pathData3, {
+	      /* user3 path */ drawPath(parentGfx, pathData3, {
 	        strokeWidth: 0.5,
 	        fill: 'black'
 	      });
 
 	      return task;
 	    },
-	    'bpmn:ManualTask': function(p, element) {
-	      var task = renderer('bpmn:Task')(p, element);
+	    'bpmn:ManualTask': function(parentGfx, element) {
+	      var task = renderer('bpmn:Task')(parentGfx, element);
 
 	      var pathData = pathMap.getScaledPath('TASK_TYPE_MANUAL', {
 	        abspos: {
@@ -39906,7 +34281,7 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* manual path */ drawPath(p, pathData, {
+	      /* manual path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 0.25,
 	        fill: 'white',
 	        stroke: 'black'
@@ -39914,8 +34289,8 @@ var InfoxBpmnModeler =
 
 	      return task;
 	    },
-	    'bpmn:SendTask': function(p, element) {
-	      var task = renderer('bpmn:Task')(p, element);
+	    'bpmn:SendTask': function(parentGfx, element) {
+	      var task = renderer('bpmn:Task')(parentGfx, element);
 
 	      var pathData = pathMap.getScaledPath('TASK_TYPE_SEND', {
 	        xScaleFactor: 1,
@@ -39928,7 +34303,7 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* send path */ drawPath(p, pathData, {
+	      /* send path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: 'black',
 	        stroke: 'white'
@@ -39936,14 +34311,14 @@ var InfoxBpmnModeler =
 
 	      return task;
 	    },
-	    'bpmn:ReceiveTask' : function(p, element) {
+	    'bpmn:ReceiveTask' : function(parentGfx, element) {
 	      var semantic = getSemantic(element);
 
-	      var task = renderer('bpmn:Task')(p, element);
+	      var task = renderer('bpmn:Task')(parentGfx, element);
 	      var pathData;
 
 	      if (semantic.instantiate) {
-	        drawCircle(p, 28, 28, 20 * 0.22, { strokeWidth: 1 });
+	        drawCircle(parentGfx, 28, 28, 20 * 0.22, { strokeWidth: 1 });
 
 	        pathData = pathMap.getScaledPath('TASK_TYPE_INSTANTIATING_SEND', {
 	          abspos: {
@@ -39965,14 +34340,14 @@ var InfoxBpmnModeler =
 	        });
 	      }
 
-	      /* receive path */ drawPath(p, pathData, {
+	      /* receive path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1
 	      });
 
 	      return task;
 	    },
-	    'bpmn:ScriptTask': function(p, element) {
-	      var task = renderer('bpmn:Task')(p, element);
+	    'bpmn:ScriptTask': function(parentGfx, element) {
+	      var task = renderer('bpmn:Task')(parentGfx, element);
 
 	      var pathData = pathMap.getScaledPath('TASK_TYPE_SCRIPT', {
 	        abspos: {
@@ -39981,14 +34356,14 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* script path */ drawPath(p, pathData, {
+	      /* script path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1
 	      });
 
 	      return task;
 	    },
-	    'bpmn:BusinessRuleTask': function(p, element) {
-	      var task = renderer('bpmn:Task')(p, element);
+	    'bpmn:BusinessRuleTask': function(parentGfx, element) {
+	      var task = renderer('bpmn:Task')(parentGfx, element);
 
 	      var headerPathData = pathMap.getScaledPath('TASK_TYPE_BUSINESS_RULE_HEADER', {
 	        abspos: {
@@ -39997,8 +34372,8 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var businessHeaderPath = drawPath(p, headerPathData);
-	      businessHeaderPath.attr({
+	      var businessHeaderPath = drawPath(parentGfx, headerPathData);
+	      svgAttr(businessHeaderPath, {
 	        strokeWidth: 1,
 	        fill: 'AAA'
 	      });
@@ -40010,59 +34385,59 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var businessPath = drawPath(p, headerData);
-	      businessPath.attr({
+	      var businessPath = drawPath(parentGfx, headerData);
+	      svgAttr(businessPath, {
 	        strokeWidth: 1
 	      });
 
 	      return task;
 	    },
-	    'bpmn:SubProcess': function(p, element, attrs) {
+	    'bpmn:SubProcess': function(parentGfx, element, attrs) {
 
 	      attrs = assign({ fillOpacity: 0.95 }, attrs);
 
-	      var rect = renderer('bpmn:Activity')(p, element, attrs);
+	      var rect = renderer('bpmn:Activity')(parentGfx, element, attrs);
 
 	      var expanded = DiUtil.isExpanded(element);
 
 	      var isEventSubProcess = DiUtil.isEventSubProcess(element);
 
 	      if (isEventSubProcess) {
-	        rect.attr({
+	        svgAttr(rect, {
 	          strokeDasharray: '1,2'
 	        });
 	      }
 
-	      renderEmbeddedLabel(p, element, expanded ? 'center-top' : 'center-middle');
+	      renderEmbeddedLabel(parentGfx, element, expanded ? 'center-top' : 'center-middle');
 
 	      if (expanded) {
-	        attachTaskMarkers(p, element);
+	        attachTaskMarkers(parentGfx, element);
 	      } else {
-	        attachTaskMarkers(p, element, ['SubProcessMarker']);
+	        attachTaskMarkers(parentGfx, element, ['SubProcessMarker']);
 	      }
 
 	      return rect;
 	    },
-	    'bpmn:AdHocSubProcess': function(p, element) {
-	      return renderer('bpmn:SubProcess')(p, element);
+	    'bpmn:AdHocSubProcess': function(parentGfx, element) {
+	      return renderer('bpmn:SubProcess')(parentGfx, element);
 	    },
-	    'bpmn:Transaction': function(p, element) {
-	      var outer = renderer('bpmn:SubProcess')(p, element);
+	    'bpmn:Transaction': function(parentGfx, element) {
+	      var outer = renderer('bpmn:SubProcess')(parentGfx, element);
 
 	      var innerAttrs = styles.style([ 'no-fill', 'no-events' ]);
 
-	      /* inner path */ drawRect(p, element.width, element.height, TASK_BORDER_RADIUS - 2, INNER_OUTER_DIST, innerAttrs);
+	      /* inner path */ drawRect(parentGfx, element.width, element.height, TASK_BORDER_RADIUS - 2, INNER_OUTER_DIST, innerAttrs);
 
 	      return outer;
 	    },
-	    'bpmn:CallActivity': function(p, element) {
-	      return renderer('bpmn:SubProcess')(p, element, {
+	    'bpmn:CallActivity': function(parentGfx, element) {
+	      return renderer('bpmn:SubProcess')(parentGfx, element, {
 	        strokeWidth: 5
 	      });
 	    },
-	    'bpmn:Participant': function(p, element) {
+	    'bpmn:Participant': function(parentGfx, element) {
 
-	      var lane = renderer('bpmn:Lane')(p, element, {
+	      var lane = renderer('bpmn:Lane')(parentGfx, element, {
 	        fillOpacity: 0.95,
 	        fill: 'White'
 	      });
@@ -40070,28 +34445,28 @@ var InfoxBpmnModeler =
 	      var expandedPool = DiUtil.isExpanded(element);
 
 	      if (expandedPool) {
-	        drawLine(p, [
+	        drawLine(parentGfx, [
 	          { x: 30, y: 0 },
 	          { x: 30, y: element.height }
 	        ]);
 	        var text = getSemantic(element).name;
-	        renderLaneLabel(p, text, element);
+	        renderLaneLabel(parentGfx, text, element);
 	      } else {
 	        // Collapsed pool draw text inline
 	        var text2 = getSemantic(element).name;
-	        renderLabel(p, text2, { box: element, align: 'center-middle' });
+	        renderLabel(parentGfx, text2, { box: element, align: 'center-middle' });
 	      }
 
 	      var participantMultiplicity = !!(getSemantic(element).participantMultiplicity);
 
 	      if (participantMultiplicity) {
-	        renderer('ParticipantMultiplicityMarker')(p, element);
+	        renderer('ParticipantMultiplicityMarker')(parentGfx, element);
 	      }
 
 	      return lane;
 	    },
-	    'bpmn:Lane': function(p, element, attrs) {
-	      var rect = drawRect(p, element.width, element.height, 0, attrs || {
+	    'bpmn:Lane': function(parentGfx, element, attrs) {
+	      var rect = drawRect(parentGfx, element.width, element.height, 0, attrs || {
 	        fill: 'none'
 	      });
 
@@ -40099,24 +34474,24 @@ var InfoxBpmnModeler =
 
 	      if (semantic.$type === 'bpmn:Lane') {
 	        var text = semantic.name;
-	        renderLaneLabel(p, text, element);
+	        renderLaneLabel(parentGfx, text, element);
 	      }
 
 	      return rect;
 	    },
-	    'bpmn:InclusiveGateway': function(p, element) {
-	      var diamond = drawDiamond(p, element.width, element.height);
+	    'bpmn:InclusiveGateway': function(parentGfx, element) {
+	      var diamond = drawDiamond(parentGfx, element.width, element.height);
 
 	      /* circle path */
-	      drawCircle(p, element.width, element.height, element.height * 0.24, {
+	      drawCircle(parentGfx, element.width, element.height, element.height * 0.24, {
 	        strokeWidth: 2.5,
 	        fill: 'none'
 	      });
 
 	      return diamond;
 	    },
-	    'bpmn:ExclusiveGateway': function(p, element) {
-	      var diamond = drawDiamond(p, element.width, element.height);
+	    'bpmn:ExclusiveGateway': function(parentGfx, element) {
+	      var diamond = drawDiamond(parentGfx, element.width, element.height);
 
 	      var pathData = pathMap.getScaledPath('GATEWAY_EXCLUSIVE', {
 	        xScaleFactor: 0.4,
@@ -40130,7 +34505,7 @@ var InfoxBpmnModeler =
 	      });
 
 	      if ((getDi(element).isMarkerVisible)) {
-	        drawPath(p, pathData, {
+	        drawPath(parentGfx, pathData, {
 	          strokeWidth: 1,
 	          fill: 'black'
 	        });
@@ -40138,8 +34513,8 @@ var InfoxBpmnModeler =
 
 	      return diamond;
 	    },
-	    'bpmn:ComplexGateway': function(p, element) {
-	      var diamond = drawDiamond(p, element.width, element.height);
+	    'bpmn:ComplexGateway': function(parentGfx, element) {
+	      var diamond = drawDiamond(parentGfx, element.width, element.height);
 
 	      var pathData = pathMap.getScaledPath('GATEWAY_COMPLEX', {
 	        xScaleFactor: 0.5,
@@ -40152,15 +34527,15 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* complex path */ drawPath(p, pathData, {
+	      /* complex path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: 'black'
 	      });
 
 	      return diamond;
 	    },
-	    'bpmn:ParallelGateway': function(p, element) {
-	      var diamond = drawDiamond(p, element.width, element.height);
+	    'bpmn:ParallelGateway': function(parentGfx, element) {
+	      var diamond = drawDiamond(parentGfx, element.width, element.height);
 
 	      var pathData = pathMap.getScaledPath('GATEWAY_PARALLEL', {
 	        xScaleFactor: 0.6,
@@ -40173,20 +34548,20 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      /* parallel path */ drawPath(p, pathData, {
+	      /* parallel path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
 	        fill: 'black'
 	      });
 
 	      return diamond;
 	    },
-	    'bpmn:EventBasedGateway': function(p, element) {
+	    'bpmn:EventBasedGateway': function(parentGfx, element) {
 
 	      var semantic = getSemantic(element);
 
-	      var diamond = drawDiamond(p, element.width, element.height);
+	      var diamond = drawDiamond(parentGfx, element.width, element.height);
 
-	      /* outer circle path */ drawCircle(p, element.width, element.height, element.height * 0.20, {
+	      /* outer circle path */ drawCircle(parentGfx, element.width, element.height, element.height * 0.20, {
 	        strokeWidth: 1,
 	        fill: 'none'
 	      });
@@ -40207,7 +34582,7 @@ var InfoxBpmnModeler =
 	          }
 	        });
 
-	        /* event path */ drawPath(p, pathData, {
+	        /* event path */ drawPath(parentGfx, pathData, {
 	          strokeWidth: 2,
 	          fill: 'none'
 	        });
@@ -40226,16 +34601,16 @@ var InfoxBpmnModeler =
 	          }
 	        });
 
-	        var parallelPath = drawPath(p, pathData);
-	        parallelPath.attr({
+	        var parallelPath = drawPath(parentGfx, pathData);
+	        svgAttr(parallelPath, {
 	          strokeWidth: 1,
 	          fill: 'none'
 	        });
 	      } else if (type === 'Exclusive') {
 
 	        if (!instantiate) {
-	          var innerCircle = drawCircle(p, element.width, element.height, element.height * 0.26);
-	          innerCircle.attr({
+	          var innerCircle = drawCircle(parentGfx, element.width, element.height, element.height * 0.26);
+	          svgAttr(innerCircle, {
 	            strokeWidth: 1,
 	            fill: 'none'
 	          });
@@ -40247,12 +34622,12 @@ var InfoxBpmnModeler =
 
 	      return diamond;
 	    },
-	    'bpmn:Gateway': function(p, element) {
-	      return drawDiamond(p, element.width, element.height);
+	    'bpmn:Gateway': function(parentGfx, element) {
+	      return drawDiamond(parentGfx, element.width, element.height);
 	    },
-	    'bpmn:SequenceFlow': function(p, element) {
+	    'bpmn:SequenceFlow': function(parentGfx, element) {
 	      var pathData = createPathFromConnection(element);
-	      var path = drawPath(p, pathData, {
+	      var path = drawPath(parentGfx, pathData, {
 	        strokeLinejoin: 'round',
 	        markerEnd: marker('sequenceflow-end')
 	      });
@@ -40262,7 +34637,7 @@ var InfoxBpmnModeler =
 
 	      // conditional flow marker
 	      if (sequenceFlow.conditionExpression && source.$instanceOf('bpmn:Activity')) {
-	        path.attr({
+	        svgAttr(path, {
 	          markerStart: marker('conditional-flow-marker')
 	        });
 	      }
@@ -40270,14 +34645,14 @@ var InfoxBpmnModeler =
 	      // default marker
 	      if (source.default && (source.$instanceOf('bpmn:Gateway') || source.$instanceOf('bpmn:Activity')) &&
 	          source.default === sequenceFlow) {
-	        path.attr({
+	        svgAttr(path, {
 	          markerStart: marker('conditional-default-flow-marker')
 	        });
 	      }
 
 	      return path;
 	    },
-	    'bpmn:Association': function(p, element, attrs) {
+	    'bpmn:Association': function(parentGfx, element, attrs) {
 
 	      var semantic = getSemantic(element);
 
@@ -40296,25 +34671,25 @@ var InfoxBpmnModeler =
 	        attrs.markerStart = marker('association-start');
 	      }
 
-	      return drawLine(p, element.waypoints, attrs);
+	      return drawLine(parentGfx, element.waypoints, attrs);
 	    },
-	    'bpmn:DataInputAssociation': function(p, element) {
-	      return renderer('bpmn:Association')(p, element, {
+	    'bpmn:DataInputAssociation': function(parentGfx, element) {
+	      return renderer('bpmn:Association')(parentGfx, element, {
 	        markerEnd: marker('association-end')
 	      });
 	    },
-	    'bpmn:DataOutputAssociation': function(p, element) {
-	      return renderer('bpmn:Association')(p, element, {
+	    'bpmn:DataOutputAssociation': function(parentGfx, element) {
+	      return renderer('bpmn:Association')(parentGfx, element, {
 	        markerEnd: marker('association-end')
 	      });
 	    },
-	    'bpmn:MessageFlow': function(p, element) {
+	    'bpmn:MessageFlow': function(parentGfx, element) {
 
 	      var semantic = getSemantic(element),
 	          di = getDi(element);
 
 	      var pathData = createPathFromConnection(element);
-	      var path = drawPath(p, pathData, {
+	      var path = drawPath(parentGfx, pathData, {
 	        markerEnd: marker('messageflow-end'),
 	        markerStart: marker('messageflow-start'),
 	        strokeDasharray: '10, 12',
@@ -40343,12 +34718,12 @@ var InfoxBpmnModeler =
 	          messageAttrs.stroke = 'white';
 	        }
 
-	        drawPath(p, markerPathData, messageAttrs);
+	        drawPath(parentGfx, markerPathData, messageAttrs);
 	      }
 
 	      return path;
 	    },
-	    'bpmn:DataObject': function(p, element) {
+	    'bpmn:DataObject': function(parentGfx, element) {
 	      var pathData = pathMap.getScaledPath('DATA_OBJECT_PATH', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -40360,42 +34735,42 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var elementObject = drawPath(p, pathData, { fill: 'white' });
+	      var elementObject = drawPath(parentGfx, pathData, { fill: 'white' });
 
 	      var semantic = getSemantic(element);
 
 	      if (isCollection(semantic)) {
-	        renderDataItemCollection(p, element);
+	        renderDataItemCollection(parentGfx, element);
 	      }
 
 	      return elementObject;
 	    },
 	    'bpmn:DataObjectReference': as('bpmn:DataObject'),
-	    'bpmn:DataInput': function(p, element) {
+	    'bpmn:DataInput': function(parentGfx, element) {
 
 	      var arrowPathData = pathMap.getRawPath('DATA_ARROW');
 
 	      // page
-	      var elementObject = renderer('bpmn:DataObject')(p, element);
+	      var elementObject = renderer('bpmn:DataObject')(parentGfx, element);
 
-	      /* input arrow path */ drawPath(p, arrowPathData, { strokeWidth: 1 });
+	      /* input arrow path */ drawPath(parentGfx, arrowPathData, { strokeWidth: 1 });
 
 	      return elementObject;
 	    },
-	    'bpmn:DataOutput': function(p, element) {
+	    'bpmn:DataOutput': function(parentGfx, element) {
 	      var arrowPathData = pathMap.getRawPath('DATA_ARROW');
 
 	      // page
-	      var elementObject = renderer('bpmn:DataObject')(p, element);
+	      var elementObject = renderer('bpmn:DataObject')(parentGfx, element);
 
-	      /* output arrow path */ drawPath(p, arrowPathData, {
+	      /* output arrow path */ drawPath(parentGfx, arrowPathData, {
 	        strokeWidth: 1,
 	        fill: 'black'
 	      });
 
 	      return elementObject;
 	    },
-	    'bpmn:DataStoreReference': function(p, element) {
+	    'bpmn:DataStoreReference': function(parentGfx, element) {
 	      var DATA_STORE_PATH = pathMap.getScaledPath('DATA_STORE', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -40407,14 +34782,14 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var elementStore = drawPath(p, DATA_STORE_PATH, {
+	      var elementStore = drawPath(parentGfx, DATA_STORE_PATH, {
 	        strokeWidth: 2,
 	        fill: 'white'
 	      });
 
 	      return elementStore;
 	    },
-	    'bpmn:BoundaryEvent': function(p, element) {
+	    'bpmn:BoundaryEvent': function(parentGfx, element) {
 
 	      var semantic = getSemantic(element),
 	          cancel = semantic.cancelActivity;
@@ -40428,50 +34803,58 @@ var InfoxBpmnModeler =
 	        attrs.strokeLinecap = 'round';
 	      }
 
-	      var outer = renderer('bpmn:Event')(p, element, attrs);
-	      /* inner path */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, assign(attrs, { fill: 'none' }));
+	      var outer = renderer('bpmn:Event')(parentGfx, element, attrs);
+	      /* inner path */ drawCircle(parentGfx, element.width, element.height, INNER_OUTER_DIST, assign(attrs, { fill: 'none' }));
 
-	      renderEventContent(element, p);
+	      renderEventContent(element, parentGfx);
 
 	      return outer;
 	    },
-	    'bpmn:Group': function(p, element) {
-	      return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, {
+	    'bpmn:Group': function(parentGfx, element) {
+	      return drawRect(parentGfx, element.width, element.height, TASK_BORDER_RADIUS, {
 	        strokeWidth: 1,
 	        strokeDasharray: '8,3,1,3',
 	        fill: 'none',
 	        pointerEvents: 'none'
 	      });
 	    },
-	    'label': function(p, element) {
+	    'label': function(parentGfx, element) {
 	      // Update external label size and bounds during rendering when
 	      // we have the actual rendered bounds anyway.
 
-	      var textElement = renderExternalLabel(p, element);
+	      var textElement = renderExternalLabel(parentGfx, element);
 
-	      var textBBox = textElement.getBBox();
+	      var textBBox;
+
+	      try {
+	        textBBox = textElement.getBBox();
+	      } catch (e) {
+	        textBBox = { width: 0, height: 0, x: 0 };
+	      }
 
 	      // update element.x so that the layouted text is still
 	      // center alligned (newX = oldMidX - newWidth / 2)
-	      element.x = Math.round(element.x + element.width / 2) - Math.round((textBBox.width / 2));
+	      element.x = Math.ceil(element.x + element.width / 2) - Math.ceil((textBBox.width / 2));
 
 	      // take element width, height from actual bounds
 	      element.width = Math.ceil(textBBox.width);
 	      element.height = Math.ceil(textBBox.height);
 
 	      // compensate bounding box x
-	      textElement.attr({
+	      svgAttr(textElement, {
 	        transform: 'translate(' + (-1 * textBBox.x) + ',0)'
 	      });
 
 	      return textElement;
 	    },
-	    'bpmn:TextAnnotation': function(p, element) {
+	    'bpmn:TextAnnotation': function(parentGfx, element) {
 	      var style = {
 	        'fill': 'none',
 	        'stroke': 'none'
 	      };
-	      var textElement = drawRect(p, element.width, element.height, 0, 0, style);
+
+	      var textElement = drawRect(parentGfx, element.width, element.height, 0, 0, style);
+
 	      var textPathData = pathMap.getScaledPath('TEXT_ANNOTATION', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -40482,14 +34865,14 @@ var InfoxBpmnModeler =
 	          my: 0.0
 	        }
 	      });
-	      drawPath(p, textPathData);
+	      drawPath(parentGfx, textPathData);
 
 	      var text = getSemantic(element).text || '';
-	      renderLabel(p, text, { box: element, align: 'left-middle', padding: 5 });
+	      renderLabel(parentGfx, text, { box: element, align: 'left-middle', padding: 5 });
 
 	      return textElement;
 	    },
-	    'ParticipantMultiplicityMarker': function(p, element) {
+	    'ParticipantMultiplicityMarker': function(parentGfx, element) {
 	      var markerPath = pathMap.getScaledPath('MARKER_PARALLEL', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -40501,16 +34884,16 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      drawMarker('participant-multiplicity', p, markerPath);
+	      drawMarker('participant-multiplicity', parentGfx, markerPath);
 	    },
-	    'SubProcessMarker': function(p, element) {
-	      var markerRect = drawRect(p, 14, 14, 0, {
+	    'SubProcessMarker': function(parentGfx, element) {
+	      var markerRect = drawRect(parentGfx, 14, 14, 0, {
 	        strokeWidth: 1
 	      });
 
 	      // Process marker is placed in the middle of the box
 	      // therefore fixed values can be used here
-	      markerRect.transform('translate(' + (element.width / 2 - 7.5) + ',' + (element.height - 20) + ')');
+	      translate(markerRect, element.width / 2 - 7.5, element.height - 20);
 
 	      var markerPath = pathMap.getScaledPath('MARKER_SUB_PROCESS', {
 	        xScaleFactor: 1.5,
@@ -40523,9 +34906,9 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      drawMarker('sub-process', p, markerPath);
+	      drawMarker('sub-process', parentGfx, markerPath);
 	    },
-	    'ParallelMarker': function(p, element, position) {
+	    'ParallelMarker': function(parentGfx, element, position) {
 	      var markerPath = pathMap.getScaledPath('MARKER_PARALLEL', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -40537,9 +34920,9 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      drawMarker('parallel', p, markerPath);
+	      drawMarker('parallel', parentGfx, markerPath);
 	    },
-	    'SequentialMarker': function(p, element, position) {
+	    'SequentialMarker': function(parentGfx, element, position) {
 	      var markerPath = pathMap.getScaledPath('MARKER_SEQUENTIAL', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -40551,9 +34934,9 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      drawMarker('sequential', p, markerPath);
+	      drawMarker('sequential', parentGfx, markerPath);
 	    },
-	    'CompensationMarker': function(p, element, position) {
+	    'CompensationMarker': function(parentGfx, element, position) {
 	      var markerMath = pathMap.getScaledPath('MARKER_COMPENSATION', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -40565,9 +34948,9 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      drawMarker('compensation', p, markerMath, { strokeWidth: 1 });
+	      drawMarker('compensation', parentGfx, markerMath, { strokeWidth: 1 });
 	    },
-	    'LoopMarker': function(p, element, position) {
+	    'LoopMarker': function(parentGfx, element, position) {
 	      var markerPath = pathMap.getScaledPath('MARKER_LOOP', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -40579,14 +34962,14 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      drawMarker('loop', p, markerPath, {
+	      drawMarker('loop', parentGfx, markerPath, {
 	        strokeWidth: 1,
 	        fill: 'none',
 	        strokeLinecap: 'round',
 	        strokeMiterlimit: 0.5
 	      });
 	    },
-	    'AdhocMarker': function(p, element, position) {
+	    'AdhocMarker': function(parentGfx, element, position) {
 	      var markerPath = pathMap.getScaledPath('MARKER_ADHOC', {
 	        xScaleFactor: 1,
 	        yScaleFactor: 1,
@@ -40598,14 +34981,14 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      drawMarker('adhoc', p, markerPath, {
+	      drawMarker('adhoc', parentGfx, markerPath, {
 	        strokeWidth: 1,
 	        fill: 'black'
 	      });
 	    }
 	  };
 
-	  function attachTaskMarkers(p, element, taskMarkers) {
+	  function attachTaskMarkers(parentGfx, element, taskMarkers) {
 	    var obj = getSemantic(element);
 
 	    var subprocess = includes(taskMarkers, 'SubProcessMarker');
@@ -40630,15 +35013,15 @@ var InfoxBpmnModeler =
 	    }
 
 	    forEach(taskMarkers, function(marker) {
-	      renderer(marker)(p, element, position);
+	      renderer(marker)(parentGfx, element, position);
 	    });
 
 	    if (obj.isForCompensation) {
-	      renderer('CompensationMarker')(p, element, position);
+	      renderer('CompensationMarker')(parentGfx, element, position);
 	    }
 
 	    if (obj.$type === 'bpmn:AdHocSubProcess') {
-	      renderer('AdhocMarker')(p, element, position);
+	      renderer('AdhocMarker')(parentGfx, element, position);
 	    }
 
 	    var loopCharacteristics = obj.loopCharacteristics,
@@ -40647,20 +35030,20 @@ var InfoxBpmnModeler =
 	    if (loopCharacteristics) {
 
 	      if (isSequential === undefined) {
-	        renderer('LoopMarker')(p, element, position);
+	        renderer('LoopMarker')(parentGfx, element, position);
 	      }
 
 	      if (isSequential === false) {
-	        renderer('ParallelMarker')(p, element, position);
+	        renderer('ParallelMarker')(parentGfx, element, position);
 	      }
 
 	      if (isSequential === true) {
-	        renderer('SequentialMarker')(p, element, position);
+	        renderer('SequentialMarker')(parentGfx, element, position);
 	      }
 	    }
 	  }
 
-	  function renderDataItemCollection(p, element) {
+	  function renderDataItemCollection(parentGfx, element) {
 
 	    var yPosition = (element.height - 16) / element.height;
 
@@ -40675,7 +35058,7 @@ var InfoxBpmnModeler =
 	      }
 	    });
 
-	    /* collection path */ drawPath(p, pathData, {
+	    /* collection path */ drawPath(parentGfx, pathData, {
 	      strokeWidth: 2
 	    });
 	  }
@@ -40699,20 +35082,20 @@ var InfoxBpmnModeler =
 	  return is(element, 'bpmn:BaseElement');
 	};
 
-	BpmnRenderer.prototype.drawShape = function(visuals, element) {
+	BpmnRenderer.prototype.drawShape = function(parentGfx, element) {
 	  var type = element.type;
 	  var h = this.handlers[type];
 
 	  /* jshint -W040 */
-	  return h(visuals, element);
+	  return h(parentGfx, element);
 	};
 
-	BpmnRenderer.prototype.drawConnection = function(visuals, element) {
+	BpmnRenderer.prototype.drawConnection = function(parentGfx, element) {
 	  var type = element.type;
 	  var h = this.handlers[type];
 
 	  /* jshint -W040 */
-	  return h(visuals, element);
+	  return h(parentGfx, element);
 	};
 
 	BpmnRenderer.prototype.getShapePath = function(element) {
@@ -40857,12 +35240,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 422 */
+/* 439 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEvery = __webpack_require__(423),
-	    baseCallback = __webpack_require__(385),
-	    baseEvery = __webpack_require__(424),
+	var arrayEvery = __webpack_require__(440),
+	    baseCallback = __webpack_require__(402),
+	    baseEvery = __webpack_require__(441),
 	    isArray = __webpack_require__(21),
 	    isIterateeCall = __webpack_require__(29);
 
@@ -40929,7 +35312,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 423 */
+/* 440 */
 /***/ function(module, exports) {
 
 	/**
@@ -40958,10 +35341,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 424 */
+/* 441 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(408);
+	var baseEach = __webpack_require__(425);
 
 	/**
 	 * The base implementation of `_.every` without support for callback
@@ -40986,7 +35369,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 425 */
+/* 442 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseIndexOf = __webpack_require__(34),
@@ -40995,7 +35378,7 @@ var InfoxBpmnModeler =
 	    isIterateeCall = __webpack_require__(29),
 	    isLength = __webpack_require__(18),
 	    isString = __webpack_require__(48),
-	    values = __webpack_require__(426);
+	    values = __webpack_require__(443);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeMax = Math.max;
@@ -41049,10 +35432,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 426 */
+/* 443 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseValues = __webpack_require__(427),
+	var baseValues = __webpack_require__(444),
 	    keys = __webpack_require__(9);
 
 	/**
@@ -41088,7 +35471,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 427 */
+/* 444 */
 /***/ function(module, exports) {
 
 	/**
@@ -41116,12 +35499,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 428 */
+/* 445 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(391),
-	    baseCallback = __webpack_require__(385),
-	    baseSome = __webpack_require__(429),
+	var arraySome = __webpack_require__(408),
+	    baseCallback = __webpack_require__(402),
+	    baseSome = __webpack_require__(446),
 	    isArray = __webpack_require__(21),
 	    isIterateeCall = __webpack_require__(29);
 
@@ -41189,10 +35572,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 429 */
+/* 446 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(408);
+	var baseEach = __webpack_require__(425);
 
 	/**
 	 * The base implementation of `_.some` without support for callback shorthands
@@ -41218,19 +35601,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 430 */
+/* 447 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isObject = __webpack_require__(74),
-	    assign = __webpack_require__(77),
-	    pick = __webpack_require__(431),
-	    forEach = __webpack_require__(128),
-	    reduce = __webpack_require__(94),
-	    merge = __webpack_require__(437);
+	var isObject = __webpack_require__(82),
+	    assign = __webpack_require__(85),
+	    pick = __webpack_require__(448),
+	    forEach = __webpack_require__(136),
+	    reduce = __webpack_require__(102),
+	    merge = __webpack_require__(454);
 
-	var Snap = __webpack_require__(66);
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgCreate = __webpack_require__(75),
+	    svgRemove = __webpack_require__(57);
 
 	var DEFAULT_BOX_PADDING = 0;
 
@@ -41265,8 +35651,27 @@ var InfoxBpmnModeler =
 	}
 
 	function getTextBBox(text, fakeText) {
+
 	  fakeText.textContent = text;
-	  return pick(fakeText.getBBox(), [ 'width', 'height' ]);
+
+	  try {
+	    var bbox,
+	        emptyLine = text === '';
+
+	    // add dummy text, when line is empty to determine correct height
+	    fakeText.textContent = emptyLine ? 'dummy' : text;
+
+	    bbox = pick(fakeText.getBBox(), [ 'width', 'height' ]);
+
+	    if (emptyLine) {
+	      // correct width
+	      bbox.width = 0;
+	    }
+
+	    return bbox;
+	  } catch (e) {
+	    return { width: 0, height: 0 };
+	  }
 	}
 
 
@@ -41415,7 +35820,11 @@ var InfoxBpmnModeler =
 
 	  // FF regression: ensure text is shown during rendering
 	  // by attaching it directly to the body
-	  var fakeText = parent.paper.text(0, 0, '').attr(style).node;
+	  var fakeText = svgCreate('text');
+	  svgAttr(fakeText, { x: 0, y: 0 });
+	  svgAttr(fakeText, style);
+
+	  svgAppend(parent, fakeText);
 
 	  while (lines.length) {
 	    layouted.push(layoutNext(lines, maxWidth, fakeText));
@@ -41437,7 +35846,11 @@ var InfoxBpmnModeler =
 	    y = padding.top;
 	  }
 
-	  var textElement = parent.text().attr(style);
+	  var textElement = svgCreate('text');
+
+	  svgAttr(textElement, style);
+
+	  svgAppend(parent, textElement);
 
 	  forEach(layouted, function(line) {
 	    y += line.height;
@@ -41456,15 +35869,16 @@ var InfoxBpmnModeler =
 	      x = Math.max(((maxWidth - line.width) / 2 + padding.left), 0);
 	    }
 
+	    var tspan = svgCreate('tspan');
+	    svgAttr(tspan, { x: x, y: y });
 
-	    var tspan = Snap.create('tspan', { x: x, y: y }).node;
 	    tspan.textContent = line.text;
 
-	    textElement.append(tspan);
+	    svgAppend(textElement, tspan);
 	  });
 
 	  // remove fake text
-	  fakeText.parentNode.removeChild(fakeText);
+	  svgRemove(fakeText);
 
 	  return textElement;
 	};
@@ -41474,14 +35888,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 431 */
+/* 448 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(432),
-	    bindCallback = __webpack_require__(90),
-	    pickByArray = __webpack_require__(434),
-	    pickByCallback = __webpack_require__(435),
-	    restParam = __webpack_require__(93);
+	var baseFlatten = __webpack_require__(449),
+	    bindCallback = __webpack_require__(98),
+	    pickByArray = __webpack_require__(451),
+	    pickByCallback = __webpack_require__(452),
+	    restParam = __webpack_require__(101);
 
 	/**
 	 * Creates an object composed of the picked `object` properties. Property
@@ -41522,14 +35936,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 432 */
+/* 449 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayPush = __webpack_require__(433),
-	    isArguments = __webpack_require__(84),
-	    isArray = __webpack_require__(70),
-	    isArrayLike = __webpack_require__(80),
-	    isObjectLike = __webpack_require__(75);
+	var arrayPush = __webpack_require__(450),
+	    isArguments = __webpack_require__(92),
+	    isArray = __webpack_require__(78),
+	    isArrayLike = __webpack_require__(88),
+	    isObjectLike = __webpack_require__(83);
 
 	/**
 	 * The base implementation of `_.flatten` with added support for restricting
@@ -41569,7 +35983,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 433 */
+/* 450 */
 /***/ function(module, exports) {
 
 	/**
@@ -41595,10 +36009,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 434 */
+/* 451 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(100);
+	var toObject = __webpack_require__(108);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties specified
@@ -41629,10 +36043,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 435 */
+/* 452 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(436);
+	var baseForIn = __webpack_require__(453);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties `predicate`
@@ -41657,11 +36071,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 436 */
+/* 453 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(98),
-	    keysIn = __webpack_require__(86);
+	var baseFor = __webpack_require__(106),
+	    keysIn = __webpack_require__(94);
 
 	/**
 	 * The base implementation of `_.forIn` without support for callback
@@ -41680,11 +36094,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 437 */
+/* 454 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMerge = __webpack_require__(438),
-	    createAssigner = __webpack_require__(89);
+	var baseMerge = __webpack_require__(455),
+	    createAssigner = __webpack_require__(97);
 
 	/**
 	 * Recursively merges own enumerable properties of the source object(s), that
@@ -41740,17 +36154,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 438 */
+/* 455 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(129),
-	    baseMergeDeep = __webpack_require__(439),
-	    isArray = __webpack_require__(70),
-	    isArrayLike = __webpack_require__(80),
-	    isObject = __webpack_require__(74),
-	    isObjectLike = __webpack_require__(75),
-	    isTypedArray = __webpack_require__(112),
-	    keys = __webpack_require__(79);
+	var arrayEach = __webpack_require__(137),
+	    baseMergeDeep = __webpack_require__(456),
+	    isArray = __webpack_require__(78),
+	    isArrayLike = __webpack_require__(88),
+	    isObject = __webpack_require__(82),
+	    isObjectLike = __webpack_require__(83),
+	    isTypedArray = __webpack_require__(120),
+	    keys = __webpack_require__(87);
 
 	/**
 	 * The base implementation of `_.merge` without support for argument juggling,
@@ -41802,16 +36216,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 439 */
+/* 456 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(155),
-	    isArguments = __webpack_require__(84),
-	    isArray = __webpack_require__(70),
-	    isArrayLike = __webpack_require__(80),
-	    isPlainObject = __webpack_require__(440),
-	    isTypedArray = __webpack_require__(112),
-	    toPlainObject = __webpack_require__(441);
+	var arrayCopy = __webpack_require__(166),
+	    isArguments = __webpack_require__(92),
+	    isArray = __webpack_require__(78),
+	    isArrayLike = __webpack_require__(88),
+	    isPlainObject = __webpack_require__(457),
+	    isTypedArray = __webpack_require__(120),
+	    toPlainObject = __webpack_require__(458);
 
 	/**
 	 * A specialized version of `baseMerge` for arrays and objects which performs
@@ -41875,12 +36289,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 440 */
+/* 457 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(436),
-	    isArguments = __webpack_require__(84),
-	    isObjectLike = __webpack_require__(75);
+	var baseForIn = __webpack_require__(453),
+	    isArguments = __webpack_require__(92),
+	    isObjectLike = __webpack_require__(83);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -41952,11 +36366,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 441 */
+/* 458 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(88),
-	    keysIn = __webpack_require__(86);
+	var baseCopy = __webpack_require__(96),
+	    keysIn = __webpack_require__(94);
 
 	/**
 	 * Converts `value` to a plain object flattening inherited enumerable
@@ -41989,13 +36403,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 442 */
+/* 459 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(443).is,
-	    getBusinessObject = __webpack_require__(443).getBusinessObject;
+	var is = __webpack_require__(460).is,
+	    getBusinessObject = __webpack_require__(460).getBusinessObject;
+
+	var forEach = __webpack_require__(432);
 
 	module.exports.isExpanded = function(element) {
 
@@ -42022,9 +36438,38 @@ var InfoxBpmnModeler =
 	  return element && !!getBusinessObject(element).triggeredByEvent;
 	};
 
+	function hasEventDefinition(element, eventType) {
+	  var bo = getBusinessObject(element),
+	      hasEventDefinition = false;
+
+	  if (bo.eventDefinitions) {
+	    forEach(bo.eventDefinitions, function(event) {
+	      if (is(event, eventType)) {
+	        hasEventDefinition = true;
+	      }
+	    });
+	  }
+
+	  return hasEventDefinition;
+	}
+
+	module.exports.hasEventDefinition = hasEventDefinition;
+
+	module.exports.hasErrorEventDefinition = function(element) {
+	  return hasEventDefinition(element, 'bpmn:ErrorEventDefinition');
+	};
+
+	module.exports.hasEscalationEventDefinition = function(element) {
+	  return hasEventDefinition(element, 'bpmn:EscalationEventDefinition');
+	};
+
+	module.exports.hasCompensateEventDefinition = function(element) {
+	  return hasEventDefinition(element, 'bpmn:CompensateEventDefinition');
+	};
+
 
 /***/ },
-/* 443 */
+/* 460 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -42061,12 +36506,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 444 */
-/***/ function(module, exports, __webpack_require__) {
+/* 461 */
+/***/ function(module, exports) {
 
 	'use strict';
-
-	var Snap = __webpack_require__(66);
 
 	/**
 	 * Map containing SVG paths needed by BpmnRenderer.
@@ -42504,7 +36947,7 @@ var InfoxBpmnModeler =
 	    }
 
 	    //Apply value to raw path
-	    var path = Snap.format(
+	    var path = format(
 	      rawPath.d, {
 	        mx: mx,
 	        my: my,
@@ -42517,28 +36960,56 @@ var InfoxBpmnModeler =
 
 	module.exports = PathMap;
 
+	////////// helpers //////////
+
+	// copied from https://github.com/adobe-webplatform/Snap.svg/blob/master/src/svg.js
+	var tokenRegex = /\{([^\}]+)\}/g,
+	    objNotationRegex = /(?:(?:^|\.)(.+?)(?=\[|\.|$|\()|\[('|")(.+?)\2\])(\(\))?/g; // matches .xxxxx or ["xxxxx"] to run over object properties
+
+	function replacer(all, key, obj) {
+	  var res = obj;
+	  key.replace(objNotationRegex, function(all, name, quote, quotedName, isFunc) {
+	    name = name || quotedName;
+	    if (res) {
+	      if (name in res) {
+	        res = res[name];
+	      }
+	      typeof res == 'function' && isFunc && (res = res());
+	    }
+	  });
+	  res = (res == null || res == obj ? all : res) + '';
+
+	  return res;
+	}
+
+	function format(str, obj) {
+	  return String(str).replace(tokenRegex, function(all, key) {
+	    return replacer(all, key, obj);
+	  });
+	}
+
 
 /***/ },
-/* 445 */
+/* 462 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(446)
+	    __webpack_require__(463)
 	  ],
-	  bpmnImporter: [ 'type', __webpack_require__(448) ]
+	  bpmnImporter: [ 'type', __webpack_require__(465) ]
 	};
 
 /***/ },
-/* 446 */
+/* 463 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  translate: [ 'value', __webpack_require__(447) ]
+	  translate: [ 'value', __webpack_require__(464) ]
 	};
 
 /***/ },
-/* 447 */
+/* 464 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -42571,22 +37042,22 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 448 */
+/* 465 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(7),
-	    map = __webpack_require__(449);
+	    map = __webpack_require__(466);
 
-	var LabelUtil = __webpack_require__(451);
+	var LabelUtil = __webpack_require__(468);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	var hasExternalLabel = LabelUtil.hasExternalLabel,
 	    getExternalLabelBounds = LabelUtil.getExternalLabelBounds,
-	    isExpanded = __webpack_require__(442).isExpanded,
-	    elementToString = __webpack_require__(418).elementToString;
+	    isExpanded = __webpack_require__(459).isExpanded,
+	    elementToString = __webpack_require__(435).elementToString;
 
 
 	function elementData(semantic, attrs) {
@@ -42831,12 +37302,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 449 */
+/* 466 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayMap = __webpack_require__(32),
-	    baseCallback = __webpack_require__(385),
-	    baseMap = __webpack_require__(450),
+	    baseCallback = __webpack_require__(402),
+	    baseMap = __webpack_require__(467),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -42905,10 +37376,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 450 */
+/* 467 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(408),
+	var baseEach = __webpack_require__(425),
 	    isArrayLike = __webpack_require__(15);
 
 	/**
@@ -42934,14 +37405,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 451 */
+/* 468 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(7);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	var DEFAULT_LABEL_SIZE = module.exports.DEFAULT_LABEL_SIZE = {
 	  width: 90,
@@ -43079,45 +37550,48 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 452 */
+/* 469 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'selectionVisuals', 'selectionBehavior' ],
 	  __depends__: [
-	    __webpack_require__(453),
-	    __webpack_require__(463)
+	    __webpack_require__(470),
+	    __webpack_require__(480)
 	  ],
-	  selection: [ 'type', __webpack_require__(465) ],
-	  selectionVisuals: [ 'type', __webpack_require__(466) ],
-	  selectionBehavior: [ 'type', __webpack_require__(467) ]
+	  selection: [ 'type', __webpack_require__(482) ],
+	  selectionVisuals: [ 'type', __webpack_require__(483) ],
+	  selectionBehavior: [ 'type', __webpack_require__(484) ]
 	};
 
 
 /***/ },
-/* 453 */
+/* 470 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'interactionEvents' ],
-	  interactionEvents: [ 'type', __webpack_require__(454) ]
+	  interactionEvents: [ 'type', __webpack_require__(471) ]
 	};
 
 /***/ },
-/* 454 */
+/* 471 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    domDelegate = __webpack_require__(455);
+	var forEach = __webpack_require__(136),
+	    domDelegate = __webpack_require__(472);
 
+	var isPrimaryButton = __webpack_require__(477).isPrimaryButton;
 
-	var isPrimaryButton = __webpack_require__(460).isPrimaryButton;
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgCreate = __webpack_require__(75);
 
-	var Snap = __webpack_require__(66);
+	var domQuery = __webpack_require__(52);
 
-	var renderUtil = __webpack_require__(65);
+	var renderUtil = __webpack_require__(73);
 
 	var createLine = renderUtil.createLine,
 	    updateLine = renderUtil.updateLine;
@@ -43170,7 +37644,7 @@ var InfoxBpmnModeler =
 	      target = event.delegateTarget || event.target;
 
 	      if (target) {
-	        gfx = new Snap(target);
+	        gfx = target;
 	        element = elementRegistry.get(gfx);
 	      }
 	    } else {
@@ -43253,13 +37727,13 @@ var InfoxBpmnModeler =
 
 	  function registerEvents(svg) {
 	    forEach(bindings, function(val, key) {
-	      registerEvent(svg.node, key, val);
+	      registerEvent(svg, key, val);
 	    });
 	  }
 
 	  function unregisterEvents(svg) {
 	    forEach(bindings, function(val, key) {
-	      unregisterEvent(svg.node, key, val);
+	      unregisterEvent(svg, key, val);
 	    });
 	  }
 
@@ -43280,10 +37754,18 @@ var InfoxBpmnModeler =
 	    if (element.waypoints) {
 	      hit = createLine(element.waypoints);
 	    } else {
-	      hit = Snap.create('rect', { x: 0, y: 0, width: element.width, height: element.height });
+	      hit = svgCreate('rect');
+	      svgAttr(hit, {
+	        x: 0,
+	        y: 0,
+	        width: element.width,
+	        height: element.height
+	      });
 	    }
 
-	    hit.attr(HIT_STYLE).appendTo(gfx.node);
+	    svgAttr(hit, HIT_STYLE);
+
+	    svgAppend(gfx, hit);
 	  });
 
 	  // Update djs-hit on change.
@@ -43293,9 +37775,9 @@ var InfoxBpmnModeler =
 
 	    var element = event.element,
 	        gfx = event.gfx,
-	        hit = gfx.select('.djs-hit');
+	        hit = domQuery('.djs-hit', gfx);
 
-	    hit.attr({
+	    svgAttr(hit, {
 	      width: element.width,
 	      height: element.height
 	    });
@@ -43305,7 +37787,7 @@ var InfoxBpmnModeler =
 
 	    var element = event.element,
 	        gfx = event.gfx,
-	        hit = gfx.select('.djs-hit');
+	        hit = domQuery('.djs-hit', gfx);
 
 	    updateLine(hit, element.waypoints);
 	  });
@@ -43336,7 +37818,7 @@ var InfoxBpmnModeler =
 	 *
 	 * @type {Object}
 	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
+	 * @property {SVGElement} gfx
 	 * @property {Event} originalEvent
 	 */
 
@@ -43347,7 +37829,7 @@ var InfoxBpmnModeler =
 	 *
 	 * @type {Object}
 	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
+	 * @property {SVGElement} gfx
 	 * @property {Event} originalEvent
 	 */
 
@@ -43358,7 +37840,7 @@ var InfoxBpmnModeler =
 	 *
 	 * @type {Object}
 	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
+	 * @property {SVGElement} gfx
 	 * @property {Event} originalEvent
 	 */
 
@@ -43369,7 +37851,7 @@ var InfoxBpmnModeler =
 	 *
 	 * @type {Object}
 	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
+	 * @property {SVGElement} gfx
 	 * @property {Event} originalEvent
 	 */
 
@@ -43380,7 +37862,7 @@ var InfoxBpmnModeler =
 	 *
 	 * @type {Object}
 	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
+	 * @property {SVGElement} gfx
 	 * @property {Event} originalEvent
 	 */
 
@@ -43391,19 +37873,19 @@ var InfoxBpmnModeler =
 	 *
 	 * @type {Object}
 	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
+	 * @property {SVGElement} gfx
 	 * @property {Event} originalEvent
 	 */
 
 
 /***/ },
-/* 455 */
+/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(456);
+	module.exports = __webpack_require__(473);
 
 /***/ },
-/* 456 */
+/* 473 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43411,15 +37893,15 @@ var InfoxBpmnModeler =
 	 */
 
 	try {
-	  var closest = __webpack_require__(457);
+	  var closest = __webpack_require__(474);
 	} catch(err) {
-	  var closest = __webpack_require__(457);
+	  var closest = __webpack_require__(474);
 	}
 
 	try {
-	  var event = __webpack_require__(459);
+	  var event = __webpack_require__(476);
 	} catch(err) {
-	  var event = __webpack_require__(459);
+	  var event = __webpack_require__(476);
 	}
 
 	/**
@@ -43460,10 +37942,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 457 */
+/* 474 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var matches = __webpack_require__(458)
+	var matches = __webpack_require__(475)
 
 	module.exports = function (element, selector, checkYoSelf, root) {
 	  element = checkYoSelf ? {parentNode: element} : element
@@ -43485,7 +37967,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 458 */
+/* 475 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43541,7 +38023,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 459 */
+/* 476 */
 /***/ function(module, exports) {
 
 	var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
@@ -43581,14 +38063,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 460 */
+/* 477 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getOriginalEvent = __webpack_require__(461).getOriginal;
+	var getOriginalEvent = __webpack_require__(478).getOriginal;
 
-	var isMac = __webpack_require__(462).isMac;
+	var isMac = __webpack_require__(479).isMac;
 
 
 	function isPrimaryButton(event) {
@@ -43624,7 +38106,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 461 */
+/* 478 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -43699,7 +38181,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 462 */
+/* 479 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -43709,25 +38191,34 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 463 */
+/* 480 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'outline' ],
-	  outline: [ 'type', __webpack_require__(464) ]
+	  outline: [ 'type', __webpack_require__(481) ]
 	};
 
 /***/ },
-/* 464 */
+/* 481 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getBBox = __webpack_require__(137).getBBox;
+	var getBBox = __webpack_require__(145).getBBox;
 
 	var LOW_PRIORITY = 500;
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgCreate = __webpack_require__(75);
+
+	var domQuery = __webpack_require__(52);
+
+	var assign = __webpack_require__(85);
+
 
 	/**
 	 * @class
@@ -43748,7 +38239,18 @@ var InfoxBpmnModeler =
 	  var self = this;
 
 	  function createOutline(gfx, bounds) {
-	    return gfx.rect(10, 10, 0, 0).attr(OUTLINE_STYLE);
+	    var outline = svgCreate('rect');
+
+	    svgAttr(outline, assign({
+	      x: 10,
+	      y: 10,
+	      width: 100,
+	      height: 100
+	    }, OUTLINE_STYLE));
+
+	    svgAppend(gfx, outline);
+
+	    return outline;
 	  }
 
 	  // A low priortity is necessary, because outlines of labels have to be updated
@@ -43757,7 +38259,7 @@ var InfoxBpmnModeler =
 	    var element = event.element,
 	        gfx     = event.gfx;
 
-	    var outline = gfx.select('.djs-outline');
+	    var outline = domQuery('.djs-outline', gfx);
 
 	    if (!outline) {
 	      outline = createOutline(gfx, element);
@@ -43770,7 +38272,7 @@ var InfoxBpmnModeler =
 	    var element = event.element,
 	        gfx     = event.gfx;
 
-	    var outline = gfx.select('.djs-outline');
+	    var outline = domQuery('.djs-outline', gfx);
 
 	    if (!outline) {
 	      outline = createOutline(gfx, element);
@@ -43790,7 +38292,7 @@ var InfoxBpmnModeler =
 	 */
 	Outline.prototype.updateShapeOutline = function(outline, element) {
 
-	  outline.attr({
+	  svgAttr(outline, {
 	    x: -this.offset,
 	    y: -this.offset,
 	    width: element.width + this.offset * 2,
@@ -43811,7 +38313,7 @@ var InfoxBpmnModeler =
 
 	  var bbox = getBBox(connection);
 
-	  outline.attr({
+	  svgAttr(outline, {
 	    x: bbox.x - this.offset,
 	    y: bbox.y - this.offset,
 	    width: bbox.width + this.offset * 2,
@@ -43827,13 +38329,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 465 */
+/* 482 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isArray = __webpack_require__(70),
-	    forEach = __webpack_require__(128);
+	var isArray = __webpack_require__(78),
+	    forEach = __webpack_require__(136);
 
 
 	/**
@@ -43930,12 +38432,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 466 */
+/* 483 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
 	var MARKER_HOVER = 'hover',
 	    MARKER_SELECTED = 'selected';
@@ -43953,7 +38455,7 @@ var InfoxBpmnModeler =
 	 * @param {SelectionService} selection
 	 * @param {Canvas} canvas
 	 */
-	function SelectionVisuals(events, canvas, selection, graphicsFactory, styles) {
+	function SelectionVisuals(events, canvas, selection, styles) {
 
 	  this._multiSelectionBox = null;
 
@@ -44004,7 +38506,6 @@ var InfoxBpmnModeler =
 	  'eventBus',
 	  'canvas',
 	  'selection',
-	  'graphicsFactory',
 	  'styles'
 	];
 
@@ -44012,14 +38513,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 467 */
+/* 484 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
 
-	var find = __webpack_require__(468);
+	var find = __webpack_require__(485);
 
 
 	function SelectionBehavior(eventBus, selection, canvas, elementRegistry) {
@@ -44096,11 +38597,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 468 */
+/* 485 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(96),
-	    createFind = __webpack_require__(469);
+	var baseEach = __webpack_require__(104),
+	    createFind = __webpack_require__(486);
 
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -44158,13 +38659,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 469 */
+/* 486 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(103),
-	    baseFind = __webpack_require__(470),
-	    baseFindIndex = __webpack_require__(471),
-	    isArray = __webpack_require__(70);
+	var baseCallback = __webpack_require__(111),
+	    baseFind = __webpack_require__(487),
+	    baseFindIndex = __webpack_require__(488),
+	    isArray = __webpack_require__(78);
 
 	/**
 	 * Creates a `_.find` or `_.findLast` function.
@@ -44189,7 +38690,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 470 */
+/* 487 */
 /***/ function(module, exports) {
 
 	/**
@@ -44220,7 +38721,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 471 */
+/* 488 */
 /***/ function(module, exports) {
 
 	/**
@@ -44249,38 +38750,40 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 472 */
+/* 489 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'overlays' ],
-	  overlays: [ 'type', __webpack_require__(473) ]
+	  overlays: [ 'type', __webpack_require__(490) ]
 	};
 
 /***/ },
-/* 473 */
+/* 490 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isArray = __webpack_require__(70),
-	    isString = __webpack_require__(474),
-	    isObject = __webpack_require__(74),
-	    assign = __webpack_require__(77),
-	    forEach = __webpack_require__(128),
-	    find = __webpack_require__(468),
-	    filter = __webpack_require__(475);
+	var isArray = __webpack_require__(78),
+	    isString = __webpack_require__(491),
+	    isObject = __webpack_require__(82),
+	    assign = __webpack_require__(85),
+	    forEach = __webpack_require__(136),
+	    find = __webpack_require__(485),
+	    filter = __webpack_require__(492);
 
 	var domify = __webpack_require__(50),
-	    domClasses = __webpack_require__(478),
-	    domAttr = __webpack_require__(481),
+	    domClasses = __webpack_require__(495),
+	    domAttr = __webpack_require__(498),
 	    domRemove = __webpack_require__(54),
-	    domClear = __webpack_require__(175);
+	    domClear = __webpack_require__(187);
 
-	var getBBox = __webpack_require__(137).getBBox;
+	var getBBox = __webpack_require__(145).getBBox;
 
 	// document wide unique overlay ids
-	var ids = new (__webpack_require__(482))('ov');
+	var ids = new (__webpack_require__(499))('ov');
+
+	var LOW_PRIORITY = 500;
 
 
 	function createRoot(parent) {
@@ -44779,9 +39282,7 @@ var InfoxBpmnModeler =
 
 	  // move integration
 
-	  eventBus.on([
-	    'element.changed'
-	  ], function(e) {
+	  eventBus.on('element.changed', LOW_PRIORITY, function(e) {
 	    var element = e.element;
 
 	    var container = self._getOverlayContainer(element, true);
@@ -44813,10 +39314,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 474 */
+/* 491 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(75);
+	var isObjectLike = __webpack_require__(83);
 
 	/** `Object#toString` result references. */
 	var stringTag = '[object String]';
@@ -44854,13 +39355,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 475 */
+/* 492 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(476),
-	    baseCallback = __webpack_require__(103),
-	    baseFilter = __webpack_require__(477),
-	    isArray = __webpack_require__(70);
+	var arrayFilter = __webpack_require__(493),
+	    baseCallback = __webpack_require__(111),
+	    baseFilter = __webpack_require__(494),
+	    isArray = __webpack_require__(78);
 
 	/**
 	 * Iterates over elements of `collection`, returning an array of all elements
@@ -44921,7 +39422,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 476 */
+/* 493 */
 /***/ function(module, exports) {
 
 	/**
@@ -44952,10 +39453,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 477 */
+/* 494 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(96);
+	var baseEach = __webpack_require__(104);
 
 	/**
 	 * The base implementation of `_.filter` without support for callback
@@ -44980,13 +39481,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 478 */
+/* 495 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(479);
+	module.exports = __webpack_require__(496);
 
 /***/ },
-/* 479 */
+/* 496 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44994,9 +39495,9 @@ var InfoxBpmnModeler =
 	 */
 
 	try {
-	  var index = __webpack_require__(480);
+	  var index = __webpack_require__(497);
 	} catch (err) {
-	  var index = __webpack_require__(480);
+	  var index = __webpack_require__(497);
 	}
 
 	/**
@@ -45183,7 +39684,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 480 */
+/* 497 */
 /***/ function(module, exports) {
 
 	module.exports = function(arr, obj){
@@ -45195,7 +39696,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 481 */
+/* 498 */
 /***/ function(module, exports) {
 
 	/**
@@ -45225,7 +39726,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 482 */
+/* 499 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45262,7 +39763,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 483 */
+/* 500 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45275,7 +39776,7 @@ var InfoxBpmnModeler =
 
 	var domify = __webpack_require__(50);
 
-	var domDelegate = __webpack_require__(455);
+	var domDelegate = __webpack_require__(472);
 
 	/* jshint -W101 */
 
@@ -45350,13 +39851,13 @@ var InfoxBpmnModeler =
 	module.exports.open = open;
 
 /***/ },
-/* 484 */
+/* 501 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(459);
+	module.exports = __webpack_require__(476);
 
 /***/ },
-/* 485 */
+/* 502 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45380,8 +39881,8 @@ var InfoxBpmnModeler =
 	module.exports = NavigatedViewer;
 
 	NavigatedViewer.prototype._navigationModules = [
-	  __webpack_require__(486),
-	  __webpack_require__(491)
+	  __webpack_require__(503),
+	  __webpack_require__(508)
 	];
 
 	NavigatedViewer.prototype._modules = [].concat(
@@ -45389,34 +39890,34 @@ var InfoxBpmnModeler =
 	  NavigatedViewer.prototype._navigationModules);
 
 /***/ },
-/* 486 */
+/* 503 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'zoomScroll' ],
-	  zoomScroll: [ 'type', __webpack_require__(487) ]
+	  zoomScroll: [ 'type', __webpack_require__(504) ]
 	};
 
 /***/ },
-/* 487 */
+/* 504 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(484),
-	    domClosest = __webpack_require__(488);
+	var domEvent = __webpack_require__(501),
+	    domClosest = __webpack_require__(505);
 
-	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier,
-	    hasSecondaryModifier = __webpack_require__(460).hasSecondaryModifier;
+	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier,
+	    hasSecondaryModifier = __webpack_require__(477).hasSecondaryModifier;
 
-	var isMac = __webpack_require__(462).isMac;
+	var isMac = __webpack_require__(479).isMac;
 
-	var getStepRange = __webpack_require__(489).getStepRange,
-	    cap = __webpack_require__(489).cap;
+	var getStepRange = __webpack_require__(506).getStepRange,
+	    cap = __webpack_require__(506).cap;
 
-	var log10 = __webpack_require__(490).log10;
+	var log10 = __webpack_require__(507).log10;
 
-	var bind = __webpack_require__(147);
+	var bind = __webpack_require__(158);
 
 	var RANGE = { min: 0.2, max: 4 },
 	    NUM_STEPS = 10;
@@ -45591,19 +40092,19 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 488 */
+/* 505 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(457);
+	module.exports = __webpack_require__(474);
 
 /***/ },
-/* 489 */
+/* 506 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 
-	var log10 = __webpack_require__(490).log10;
+	var log10 = __webpack_require__(507).log10;
 
 	/**
 	 * Get the linear range between two zoom steps based on the
@@ -45625,7 +40126,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 490 */
+/* 507 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45652,26 +40153,26 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 491 */
+/* 508 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'moveCanvas' ],
-	  moveCanvas: [ 'type', __webpack_require__(492) ]
+	  moveCanvas: [ 'type', __webpack_require__(509) ]
 	};
 
 /***/ },
-/* 492 */
+/* 509 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Cursor = __webpack_require__(493),
-	    ClickTrap = __webpack_require__(494),
-	    substract = __webpack_require__(490).substract,
-	    domEvent = __webpack_require__(484),
-	    domClosest = __webpack_require__(488),
-	    EventUtil = __webpack_require__(461);
+	var Cursor = __webpack_require__(510),
+	    ClickTrap = __webpack_require__(511),
+	    substract = __webpack_require__(507).substract,
+	    domEvent = __webpack_require__(501),
+	    domClosest = __webpack_require__(505),
+	    EventUtil = __webpack_require__(478);
 
 
 	function length(point) {
@@ -45762,12 +40263,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 493 */
+/* 510 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domClasses = __webpack_require__(478);
+	var domClasses = __webpack_require__(495);
 
 	var CURSOR_CLS_PATTERN = /^djs-cursor-.*$/;
 
@@ -45794,13 +40295,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 494 */
+/* 511 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(484),
-	    stopEvent = __webpack_require__(461).stopEvent;
+	var domEvent = __webpack_require__(501),
+	    stopEvent = __webpack_require__(478).stopEvent;
 
 	function trap(event) {
 	  stopEvent(event);
@@ -45829,36 +40330,35 @@ var InfoxBpmnModeler =
 	module.exports.install = install;
 
 /***/ },
-/* 495 */
+/* 512 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(496) ]
+	  __depends__: [ __webpack_require__(513) ]
 	};
 
 /***/ },
-/* 496 */
+/* 513 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(453) ],
+	  __depends__: [ __webpack_require__(470) ],
 	  __init__: [ 'touchInteractionEvents' ],
-	  touchInteractionEvents: [ 'type', __webpack_require__(497) ],
-	  touchFix: [ 'type', __webpack_require__(499) ]
+	  touchInteractionEvents: [ 'type', __webpack_require__(514) ],
+	  touchFix: [ 'type', __webpack_require__(516) ]
 	};
 
 /***/ },
-/* 497 */
+/* 514 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    domEvent = __webpack_require__(484),
-	    domClosest = __webpack_require__(488),
-	    Hammer = __webpack_require__(498),
-	    Snap = __webpack_require__(66),
-	    Event = __webpack_require__(461);
+	var forEach = __webpack_require__(136),
+	    domEvent = __webpack_require__(501),
+	    domClosest = __webpack_require__(505),
+	    Hammer = __webpack_require__(515),
+	    Event = __webpack_require__(478);
 
 	var MIN_ZOOM = 0.2,
 	    MAX_ZOOM = 4;
@@ -45989,7 +40489,7 @@ var InfoxBpmnModeler =
 
 	  function getGfx(target) {
 	    var node = domClosest(target, 'svg, .djs-element', true);
-	    return node && new Snap(node);
+	    return node;
 	  }
 
 	  function initEvents(svg) {
@@ -46166,7 +40666,7 @@ var InfoxBpmnModeler =
 	  }
 
 	  eventBus.on('canvas.init', function(event) {
-	    initEvents(event.svg.node);
+	    initEvents(event.svg);
 	  });
 	}
 
@@ -46182,8 +40682,9 @@ var InfoxBpmnModeler =
 
 	module.exports = TouchInteractionEvents;
 
+
 /***/ },
-/* 498 */
+/* 515 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
@@ -48832,10 +43333,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 499 */
-/***/ function(module, exports) {
+/* 516 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgCreate = __webpack_require__(75);
+
 
 	function TouchFix(canvas, eventBus) {
 
@@ -48858,33 +43364,52 @@ var InfoxBpmnModeler =
 	 * So touchstart event is only fired when the <g class="viewport"> element was hit.
 	 * Putting an element over and below the 'viewport' fixes that behavior.
 	 */
-	TouchFix.prototype.addBBoxMarker = function(paper) {
+	TouchFix.prototype.addBBoxMarker = function(svg) {
 
 	  var markerStyle = {
 	    fill: 'none',
 	    class: 'outer-bound-marker'
 	  };
 
-	  paper.rect(-10000, -10000, 10, 10).attr(markerStyle);
-	  paper.rect(10000, 10000, 10, 10).attr(markerStyle);
+	  var rect1 = svgCreate('rect');
+	  svgAttr(rect1, {
+	    x: -10000,
+	    y: 10000,
+	    width: 10,
+	    height: 10
+	  });
+	  svgAttr(rect1, markerStyle);
+
+	  svgAppend(svg, rect1);
+
+	  var rect2 = svgCreate('rect');
+	  svgAttr(rect2, {
+	    x: 10000,
+	    y: 10000,
+	    width: 10,
+	    height: 10
+	  });
+	  svgAttr(rect2, markerStyle);
+
+	  svgAppend(svg, rect2);
 	};
 
 
 /***/ },
-/* 500 */
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(501),
-	    __webpack_require__(504)
+	    __webpack_require__(518),
+	    __webpack_require__(521)
 	  ],
 	  __init__: [ 'autoScroll' ],
-	  autoScroll: [ 'type', __webpack_require__(506) ]
+	  autoScroll: [ 'type', __webpack_require__(523) ]
 	};
 
 /***/ },
-/* 501 */
+/* 518 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -48892,14 +43417,14 @@ var InfoxBpmnModeler =
 	    'hoverFix'
 	  ],
 	  __depends__: [
-	    __webpack_require__(452)
+	    __webpack_require__(469)
 	  ],
-	  dragging: [ 'type', __webpack_require__(502) ],
-	  hoverFix: [ 'type', __webpack_require__(503) ]
+	  dragging: [ 'type', __webpack_require__(519) ],
+	  hoverFix: [ 'type', __webpack_require__(520) ]
 	};
 
 /***/ },
-/* 502 */
+/* 519 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48908,14 +43433,14 @@ var InfoxBpmnModeler =
 
 	var round = Math.round;
 
-	var assign = __webpack_require__(77);
+	var assign = __webpack_require__(85);
 
-	var domEvent = __webpack_require__(484),
-	    Event = __webpack_require__(461),
-	    ClickTrap = __webpack_require__(494),
-	    Cursor = __webpack_require__(493);
+	var domEvent = __webpack_require__(501),
+	    Event = __webpack_require__(478),
+	    ClickTrap = __webpack_require__(511),
+	    Cursor = __webpack_require__(510);
 
-	var EventBusEvent = __webpack_require__(146).Event;
+	var EventBusEvent = __webpack_require__(157).Event;
 
 	var DRAG_ACTIVE_CLS = 'djs-drag-active';
 
@@ -49413,20 +43938,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 503 */
+/* 520 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domClosest = __webpack_require__(488);
+	var domClosest = __webpack_require__(505);
 
-	var Snap = __webpack_require__(66);
-
-	var Event = __webpack_require__(461);
+	var Event = __webpack_require__(478);
 
 	function getGfx(target) {
 	  var node = domClosest(target, 'svg, .djs-element', true);
-	  return node && new Snap(node);
+	  return node;
 	}
 
 
@@ -49508,25 +44031,26 @@ var InfoxBpmnModeler =
 
 	module.exports = HoverFix;
 
+
 /***/ },
-/* 504 */
+/* 521 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'mouseTracking' ],
-	  mouseTracking: [ 'type', __webpack_require__(505) ]
+	  mouseTracking: [ 'type', __webpack_require__(522) ]
 	};
 
 
 /***/ },
-/* 505 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var bind = __webpack_require__(147);
+	var bind = __webpack_require__(158);
 
 
 	function MouseTracking(eventBus, canvas) {
@@ -49586,14 +44110,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 506 */
+/* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77);
+	var assign = __webpack_require__(85);
 
-	var EventUtil = __webpack_require__(461);
+	var EventUtil = __webpack_require__(478);
 
 
 	/**
@@ -49734,31 +44258,31 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 507 */
+/* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(501), __webpack_require__(508) ],
+	  __depends__: [ __webpack_require__(518), __webpack_require__(525) ],
 	  __init__: [ 'bendpoints', 'bendpointSnapping' ],
-	  bendpoints: [ 'type', __webpack_require__(510) ],
-	  bendpointMove: [ 'type', __webpack_require__(514) ],
-	  connectionSegmentMove: [ 'type', __webpack_require__(515) ],
-	  bendpointSnapping: [ 'type', __webpack_require__(522) ]
+	  bendpoints: [ 'type', __webpack_require__(527) ],
+	  bendpointMove: [ 'type', __webpack_require__(532) ],
+	  connectionSegmentMove: [ 'type', __webpack_require__(533) ],
+	  bendpointSnapping: [ 'type', __webpack_require__(540) ]
 	};
 
 
 /***/ },
-/* 508 */
+/* 525 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'rules' ],
-	  rules: [ 'type', __webpack_require__(509) ]
+	  rules: [ 'type', __webpack_require__(526) ]
 	};
 
 
 /***/ },
-/* 509 */
+/* 526 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -49813,21 +44337,32 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 510 */
+/* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(484),
-	    BendpointUtil = __webpack_require__(511);
+	var forEach = __webpack_require__(136);
 
-	var pointsAligned = __webpack_require__(512).pointsAligned,
-	    getMidPoint = __webpack_require__(512).getMidPoint;
+	var domEvent = __webpack_require__(501),
+	    domQuery = __webpack_require__(52),
+	    BendpointUtil = __webpack_require__(528);
+
+	var pointsAligned = __webpack_require__(529).pointsAligned,
+	    getMidPoint = __webpack_require__(529).getMidPoint;
 
 	var BENDPOINT_CLS = BendpointUtil.BENDPOINT_CLS,
 	    SEGMENT_DRAGGER_CLS = BendpointUtil.SEGMENT_DRAGGER_CLS;
 
-	var getApproxIntersection = __webpack_require__(513).getApproxIntersection;
+	var getApproxIntersection = __webpack_require__(530).getApproxIntersection;
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClasses = __webpack_require__(148),
+	    svgCreate = __webpack_require__(75),
+	    svgRemove = __webpack_require__(57);
+
+	var translate = __webpack_require__(186).translate;
 
 
 	/**
@@ -49888,14 +44423,18 @@ var InfoxBpmnModeler =
 	  function getBendpointsContainer(element, create) {
 
 	    var layer = canvas.getLayer('overlays'),
-	        gfx = layer.select('.djs-bendpoints[data-element-id=' + element.id + ']');
+	        gfx = domQuery('.djs-bendpoints[data-element-id=' + element.id + ']', layer);
 
 	    if (!gfx && create) {
-	      gfx = layer.group().addClass('djs-bendpoints').attr('data-element-id', element.id);
+	      gfx = svgCreate('g');
+	      svgAttr(gfx, { 'data-element-id': element.id });
+	      svgClasses(gfx).add('djs-bendpoints');
 
-	      bindInteractionEvents(gfx.node, 'mousedown', element);
-	      bindInteractionEvents(gfx.node, 'click', element);
-	      bindInteractionEvents(gfx.node, 'dblclick', element);
+	      svgAppend(layer, gfx);
+
+	      bindInteractionEvents(gfx, 'mousedown', element);
+	      bindInteractionEvents(gfx, 'click', element);
+	      bindInteractionEvents(gfx, 'dblclick', element);
 	    }
 
 	    return gfx;
@@ -49903,7 +44442,11 @@ var InfoxBpmnModeler =
 
 	  function createBendpoints(gfx, connection) {
 	    connection.waypoints.forEach(function(p, idx) {
-	      BendpointUtil.addBendpoint(gfx).translate(p.x, p.y);
+	      var bendpoint = BendpointUtil.addBendpoint(gfx);
+
+	      svgAppend(gfx, bendpoint);
+
+	      translate(bendpoint, p.x, p.y);
 	    });
 
 	    // add floating bendpoint
@@ -49929,14 +44472,14 @@ var InfoxBpmnModeler =
 	  }
 
 	  function clearBendpoints(gfx) {
-	    gfx.selectAll('.' + BENDPOINT_CLS).forEach(function(s) {
-	      s.remove();
+	    forEach(domQuery.all('.' + BENDPOINT_CLS, gfx), function(node) {
+	      svgRemove(node);
 	    });
 	  }
 
 	  function clearSegmentDraggers(gfx) {
-	    gfx.selectAll('.' + SEGMENT_DRAGGER_CLS).forEach(function(s) {
-	      s.remove();
+	    forEach(domQuery.all('.' + SEGMENT_DRAGGER_CLS, gfx), function(node) {
+	      svgRemove(node);
 	    });
 	  }
 
@@ -49974,7 +44517,7 @@ var InfoxBpmnModeler =
 	    var gfx = getBendpointsContainer(event.element);
 
 	    if (gfx) {
-	      gfx.remove();
+	      svgRemove(gfx);
 	    }
 	  });
 
@@ -49988,7 +44531,12 @@ var InfoxBpmnModeler =
 	    }
 
 	    bendpointsGfx = addHandles(element);
-	    bendpointsGfx[event.add ? 'addClass' : 'removeClass'](event.marker);
+
+	    if (event.add) {
+	      svgClasses(bendpointsGfx).add(event.marker);
+	    } else {
+	      svgClasses(bendpointsGfx).remove(event.marker);
+	    }
 	  });
 
 	  eventBus.on('element.mousemove', function(event) {
@@ -50000,9 +44548,8 @@ var InfoxBpmnModeler =
 	        intersection;
 
 	    if (waypoints) {
-
 	      bendpointsGfx = getBendpointsContainer(element, true);
-	      floating = bendpointsGfx.select('.floating');
+	      floating = domQuery('.floating', bendpointsGfx);
 
 	      if (!floating) {
 	        return;
@@ -50011,7 +44558,7 @@ var InfoxBpmnModeler =
 	      intersection = getConnectionIntersection(waypoints, event.originalEvent);
 
 	      if (intersection) {
-	        floating.translate(intersection.point.x, intersection.point.y);
+	        translate(floating, intersection.point.x, intersection.point.y);
 	      }
 	    }
 	  });
@@ -50043,12 +44590,12 @@ var InfoxBpmnModeler =
 
 	    if (element.waypoints) {
 	      addHandles(element);
-	      interactionEvents.registerEvent(event.gfx.node, 'mousemove', 'element.mousemove');
+	      interactionEvents.registerEvent(event.gfx, 'mousemove', 'element.mousemove');
 	    }
 	  });
 
 	  eventBus.on('element.out', function(event) {
-	    interactionEvents.unregisterEvent(event.gfx.node, 'mousemove', 'element.mousemove');
+	    interactionEvents.unregisterEvent(event.gfx, 'mousemove', 'element.mousemove');
 	  });
 
 	  // API
@@ -50067,18 +44614,24 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 511 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Events = __webpack_require__(461),
-	    Geometry = __webpack_require__(512);
-
-	var Snap = __webpack_require__(66);
+	var Events = __webpack_require__(478),
+	    Geometry = __webpack_require__(529);
 
 	var BENDPOINT_CLS = module.exports.BENDPOINT_CLS = 'djs-bendpoint';
 	var SEGMENT_DRAGGER_CLS = module.exports.SEGMENT_DRAGGER_CLS = 'djs-segment-dragger';
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClasses = __webpack_require__(148),
+	    svgCreate = __webpack_require__(75);
+
+	var rotate = __webpack_require__(186).rotate,
+	    translate = __webpack_require__(186).translate;
 
 
 	module.exports.toCanvasCoordinates = function(canvas, event) {
@@ -50105,20 +44658,42 @@ var InfoxBpmnModeler =
 	};
 
 	module.exports.addBendpoint = function(parentGfx, cls) {
-	  var groupGfx = parentGfx.group().addClass(BENDPOINT_CLS);
+	  var groupGfx = svgCreate('g');
+	  svgClasses(groupGfx).add(BENDPOINT_CLS);
 
-	  groupGfx.circle(0, 0, 4).addClass('djs-visual');
-	  groupGfx.circle(0, 0, 10).addClass('djs-hit');
+	  svgAppend(parentGfx, groupGfx);
+
+	  var visual = svgCreate('circle');
+	  svgAttr(visual, {
+	    cx: 0,
+	    cy: 0,
+	    r: 4
+	  });
+	  svgClasses(visual).add('djs-visual');
+
+	  svgAppend(groupGfx, visual);
+
+	  var hit = svgCreate('circle');
+	  svgAttr(hit, {
+	    cx: 0,
+	    cy: 0,
+	    r: 10
+	  });
+	  svgClasses(hit).add('djs-hit');
+
+	  svgAppend(groupGfx, hit);
 
 	  if (cls) {
-	    groupGfx.addClass(cls);
+	    svgClasses(groupGfx).add(cls);
 	  }
 
 	  return groupGfx;
 	};
 
 	function createParallelDragger(parentGfx, position, alignment) {
-	  var draggerGfx = parentGfx.group();
+	  var draggerGfx = svgCreate('g');
+
+	  svgAppend(parentGfx, draggerGfx);
 
 	  var width = 14,
 	      height = 3,
@@ -50126,12 +44701,29 @@ var InfoxBpmnModeler =
 	      hitWidth = width + padding,
 	      hitHeight = height + padding;
 
-	  draggerGfx.rect(-width / 2, -height / 2, width, height).addClass('djs-visual');
-	  draggerGfx.rect(-hitWidth / 2, -hitHeight / 2, hitWidth, hitHeight).addClass('djs-hit');
+	  var visual = svgCreate('rect');
+	  svgAttr(visual, {
+	    x: -width / 2,
+	    y: -height / 2,
+	    width: width,
+	    height: height
+	  });
+	  svgClasses(visual).add('djs-visual');
 
-	  var matrix = new Snap.Matrix().rotate(alignment === 'h' ? 90 : 0, 0, 0);
+	  svgAppend(draggerGfx, visual);
 
-	  draggerGfx.transform(matrix);
+	  var hit = svgCreate('rect');
+	  svgAttr(hit, {
+	    x: -hitWidth / 2,
+	    y: -hitHeight / 2,
+	    width: hitWidth,
+	    height: hitHeight
+	  });
+	  svgClasses(hit).add('djs-hit');
+
+	  svgAppend(draggerGfx, hit);
+
+	  rotate(draggerGfx, alignment === 'h' ? 90 : 0, 0, 0);
 
 	  return draggerGfx;
 	}
@@ -50139,22 +44731,25 @@ var InfoxBpmnModeler =
 
 	module.exports.addSegmentDragger = function(parentGfx, segmentStart, segmentEnd) {
 
-	  var groupGfx = parentGfx.group(),
+	  var groupGfx = svgCreate('g'),
 	      mid = Geometry.getMidPoint(segmentStart, segmentEnd),
 	      alignment = Geometry.pointsAligned(segmentStart, segmentEnd);
 
+	  svgAppend(parentGfx, groupGfx);
+
 	  createParallelDragger(groupGfx, mid, alignment);
 
-	  groupGfx.addClass(SEGMENT_DRAGGER_CLS);
-	  groupGfx.addClass(alignment === 'h' ? 'vertical' : 'horizontal');
-	  groupGfx.translate(mid.x, mid.y);
+	  svgClasses(groupGfx).add(SEGMENT_DRAGGER_CLS);
+	  svgClasses(groupGfx).add(alignment === 'h' ? 'vertical' : 'horizontal');
+
+	  translate(groupGfx, mid.x, mid.y);
 
 	  return groupGfx;
 	};
 
 
 /***/ },
-/* 512 */
+/* 529 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50263,14 +44858,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 513 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pointDistance = __webpack_require__(512).pointDistance;
+	var pointDistance = __webpack_require__(529).pointDistance;
 
-	var Snap = __webpack_require__(66);
+	var intersection = __webpack_require__(531).intersection;
 
 	var round = Math.round,
 	    max = Math.max;
@@ -50322,7 +44917,7 @@ var InfoxBpmnModeler =
 
 	function getPathIntersection(waypoints, reference) {
 
-	  var intersections = Snap.path.intersection(circlePath(reference, INTERSECTION_THRESHOLD), linePath(waypoints));
+	  var intersections = intersection(circlePath(reference, INTERSECTION_THRESHOLD), linePath(waypoints));
 
 	  var a = intersections[0],
 	      b = intersections[intersections.length - 1],
@@ -50378,14 +44973,1413 @@ var InfoxBpmnModeler =
 	  return getBendpointIntersection(waypoints, reference) || getPathIntersection(waypoints, reference);
 	};
 
+
 /***/ },
-/* 514 */
+/* 531 */
+/***/ function(module, exports) {
+
+	/* eslint no-fallthrough: "off" */
+
+	'use strict';
+
+	var has = 'hasOwnProperty',
+	    p2s = /,?([a-z]),?/gi,
+	    toFloat = parseFloat,
+	    math = Math,
+	    PI = math.PI,
+	    mmin = math.min,
+	    mmax = math.max,
+	    pow = math.pow,
+	    abs = math.abs,
+	    pathCommand = /([a-z])[\s,]*((-?\d*\.?\d*(?:e[\-+]?\d+)?[\s]*,?[\s]*)+)/ig,
+	    pathValues = /(-?\d*\.?\d*(?:e[\-+]?\\d+)?)[\s]*,?[\s]*/ig;
+
+	function is(o, type) {
+	  type = String.prototype.toLowerCase.call(type);
+
+	  if (type == 'finite') {
+	    return isFinite(o);
+	  }
+
+	  if (type == 'array' && (o instanceof Array || Array.isArray && Array.isArray(o))) {
+	    return true;
+	  }
+
+	  return  (type == 'null' && o === null) ||
+	          (type == typeof o && o !== null) ||
+	          (type == 'object' && o === Object(o)) ||
+	          Object.prototype.toString.call(o).slice(8, -1).toLowerCase() == type;
+	}
+
+	function clone(obj) {
+
+	  if (typeof obj == 'function' || Object(obj) !== obj) {
+	    return obj;
+	  }
+
+	  var res = new obj.constructor;
+
+	  for (var key in obj) if (obj[has](key)) {
+	    res[key] = clone(obj[key]);
+	  }
+
+	  return res;
+	}
+
+	function repush(array, item) {
+	  for (var i = 0, ii = array.length; i < ii; i++) if (array[i] === item) {
+	    return array.push(array.splice(i, 1)[0]);
+	  }
+	}
+
+	function cacher(f, scope, postprocessor) {
+
+	  function newf() {
+
+	    var arg = Array.prototype.slice.call(arguments, 0),
+	        args = arg.join('\u2400'),
+	        cache = newf.cache = newf.cache || {},
+	        count = newf.count = newf.count || [];
+
+	    if (cache[has](args)) {
+	      repush(count, args);
+	      return postprocessor ? postprocessor(cache[args]) : cache[args];
+	    }
+
+	    count.length >= 1e3 && delete cache[count.shift()];
+	    count.push(args);
+	    cache[args] = f.apply(scope, arg);
+
+	    return postprocessor ? postprocessor(cache[args]) : cache[args];
+	  }
+	  return newf;
+	}
+
+	function parsePathString(pathString) {
+
+	  if (!pathString) {
+	    return null;
+	  }
+
+	  var pth = paths(pathString);
+
+	  if (pth.arr) {
+	    return clone(pth.arr);
+	  }
+
+	  var paramCounts = { a: 7, c: 6, o: 2, h: 1, l: 2, m: 2, r: 4, q: 4, s: 4, t: 2, v: 1, u: 3, z: 0 },
+	      data = [];
+
+	  if (is(pathString, 'array') && is(pathString[0], 'array')) { // rough assumption
+	    data = clone(pathString);
+	  }
+
+	  if (!data.length) {
+
+	    String(pathString).replace(pathCommand, function(a, b, c) {
+	      var params = [],
+	          name = b.toLowerCase();
+
+	      c.replace(pathValues, function(a, b) {
+	        b && params.push(+b);
+	      });
+
+	      if (name == 'm' && params.length > 2) {
+	        data.push([b].concat(params.splice(0, 2)));
+	        name = 'l';
+	        b = b == 'm' ? 'l' : 'L';
+	      }
+
+	      if (name == 'o' && params.length == 1) {
+	        data.push([b, params[0]]);
+	      }
+
+	      if (name == 'r') {
+	        data.push([b].concat(params));
+	      } else while (params.length >= paramCounts[name]) {
+	        data.push([b].concat(params.splice(0, paramCounts[name])));
+	        if (!paramCounts[name]) {
+	          break;
+	        }
+	      }
+	    });
+	  }
+
+	  data.toString = paths.toString;
+	  pth.arr = clone(data);
+
+	  return data;
+	}
+
+	function paths(ps) {
+	  var p = paths.ps = paths.ps || {};
+
+	  if (p[ps]) {
+	    p[ps].sleep = 100;
+	  } else {
+	    p[ps] = {
+	      sleep: 100
+	    };
+	  }
+
+	  setTimeout(function() {
+	    for (var key in p) if (p[has](key) && key != ps) {
+	      p[key].sleep--;
+	      !p[key].sleep && delete p[key];
+	    }
+	  });
+
+	  return p[ps];
+	}
+
+	function box(x, y, width, height) {
+	  if (x == null) {
+	    x = y = width = height = 0;
+	  }
+
+	  if (y == null) {
+	    y = x.y;
+	    width = x.width;
+	    height = x.height;
+	    x = x.x;
+	  }
+
+	  return {
+	    x: x,
+	    y: y,
+	    width: width,
+	    w: width,
+	    height: height,
+	    h: height,
+	    x2: x + width,
+	    y2: y + height,
+	    cx: x + width / 2,
+	    cy: y + height / 2,
+	    r1: math.min(width, height) / 2,
+	    r2: math.max(width, height) / 2,
+	    r0: math.sqrt(width * width + height * height) / 2,
+	    path: rectPath(x, y, width, height),
+	    vb: [x, y, width, height].join(' ')
+	  };
+	}
+
+	function toString() {
+	  return this.join(',').replace(p2s, '$1');
+	}
+
+	function pathClone(pathArray) {
+	  var res = clone(pathArray);
+	  res.toString = toString;
+	  return res;
+	}
+
+	function getPointAtSegmentLength(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, length) {
+	  if (length == null) {
+	    return bezlen(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y);
+	  } else {
+	    return findDotsAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y,
+	      getTotLen(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, length));
+	  }
+	}
+
+	function getLengthFactory(istotal, subpath) {
+	  function O(val) {
+	    return +(+val).toFixed(3);
+	  }
+
+	  return cacher(function(path, length, onlystart) {
+
+	    if (path instanceof Element) {
+	      path = path.attr('d');
+	    }
+
+	    path = path2curve(path);
+
+	    var x, y, p, l, sp = '', subpaths = {}, point,
+	        len = 0;
+
+	    for (var i = 0, ii = path.length; i < ii; i++) {
+	      p = path[i];
+
+	      if (p[0] == 'M') {
+	        x = +p[1];
+	        y = +p[2];
+	      } else {
+	        l = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6]);
+
+	        if (len + l > length) {
+
+	          if (subpath && !subpaths.start) {
+	            point = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6], length - len);
+
+	            sp += [
+	              'C' + O(point.start.x),
+	              O(point.start.y),
+	              O(point.m.x),
+	              O(point.m.y),
+	              O(point.x),
+	              O(point.y)
+	            ];
+
+	            if (onlystart) {
+	              return sp;
+	            }
+
+	            subpaths.start = sp;
+	            sp = [
+	              'M' + O(point.x),
+	              O(point.y) + 'C' + O(point.n.x),
+	              O(point.n.y),
+	              O(point.end.x),
+	              O(point.end.y),
+	              O(p[5]),
+	              O(p[6])
+	            ].join();
+	            len += l;
+	            x = +p[5];
+	            y = +p[6];
+	            continue;
+	          }
+
+	          if (!istotal && !subpath) {
+	            point = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6], length - len);
+	            return point;
+	          }
+	        }
+
+	        len += l;
+	        x = +p[5];
+	        y = +p[6];
+	      }
+
+	      sp += p.shift() + p;
+	    }
+
+	    subpaths.end = sp;
+	    point = istotal ? len : subpath ? subpaths : findDotsAtSegment(x, y, p[0], p[1], p[2], p[3], p[4], p[5], 1);
+	    return point;
+	  }, null, clone);
+	}
+
+	var getTotalLength = getLengthFactory(1),
+	    getPointAtLength = getLengthFactory();
+
+	function findDotsAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t) {
+	  var t1 = 1 - t,
+	      t13 = pow(t1, 3),
+	      t12 = pow(t1, 2),
+	      t2 = t * t,
+	      t3 = t2 * t,
+	      x = t13 * p1x + t12 * 3 * t * c1x + t1 * 3 * t * t * c2x + t3 * p2x,
+	      y = t13 * p1y + t12 * 3 * t * c1y + t1 * 3 * t * t * c2y + t3 * p2y,
+	      mx = p1x + 2 * t * (c1x - p1x) + t2 * (c2x - 2 * c1x + p1x),
+	      my = p1y + 2 * t * (c1y - p1y) + t2 * (c2y - 2 * c1y + p1y),
+	      nx = c1x + 2 * t * (c2x - c1x) + t2 * (p2x - 2 * c2x + c1x),
+	      ny = c1y + 2 * t * (c2y - c1y) + t2 * (p2y - 2 * c2y + c1y),
+	      ax = t1 * p1x + t * c1x,
+	      ay = t1 * p1y + t * c1y,
+	      cx = t1 * c2x + t * p2x,
+	      cy = t1 * c2y + t * p2y,
+	      alpha = (90 - math.atan2(mx - nx, my - ny) * 180 / PI);
+
+	  // (mx > nx || my < ny) && (alpha += 180);
+
+	  return {
+	    x: x,
+	    y: y,
+	    m: { x: mx, y: my },
+	    n: { x: nx, y: ny },
+	    start: { x: ax, y: ay },
+	    end: { x: cx, y: cy },
+	    alpha: alpha
+	  };
+	}
+
+	function bezierBBox(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y) {
+
+	  if (!is(p1x, 'array')) {
+	    p1x = [p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y];
+	  }
+
+	  var bbox = curveDim.apply(null, p1x);
+
+	  return box(
+	    bbox.min.x,
+	    bbox.min.y,
+	    bbox.max.x - bbox.min.x,
+	    bbox.max.y - bbox.min.y
+	  );
+	}
+
+	function isPointInsideBBox(bbox, x, y) {
+	  return x >= bbox.x &&
+	    x <= bbox.x + bbox.width &&
+	    y >= bbox.y &&
+	    y <= bbox.y + bbox.height;
+	}
+
+	function isBBoxIntersect(bbox1, bbox2) {
+	  bbox1 = box(bbox1);
+	  bbox2 = box(bbox2);
+	  return isPointInsideBBox(bbox2, bbox1.x, bbox1.y)
+	    || isPointInsideBBox(bbox2, bbox1.x2, bbox1.y)
+	    || isPointInsideBBox(bbox2, bbox1.x, bbox1.y2)
+	    || isPointInsideBBox(bbox2, bbox1.x2, bbox1.y2)
+	    || isPointInsideBBox(bbox1, bbox2.x, bbox2.y)
+	    || isPointInsideBBox(bbox1, bbox2.x2, bbox2.y)
+	    || isPointInsideBBox(bbox1, bbox2.x, bbox2.y2)
+	    || isPointInsideBBox(bbox1, bbox2.x2, bbox2.y2)
+	    || (bbox1.x < bbox2.x2 && bbox1.x > bbox2.x
+	        || bbox2.x < bbox1.x2 && bbox2.x > bbox1.x)
+	    && (bbox1.y < bbox2.y2 && bbox1.y > bbox2.y
+	        || bbox2.y < bbox1.y2 && bbox2.y > bbox1.y);
+	}
+
+	function base3(t, p1, p2, p3, p4) {
+	  var t1 = -3 * p1 + 9 * p2 - 9 * p3 + 3 * p4,
+	      t2 = t * t1 + 6 * p1 - 12 * p2 + 6 * p3;
+	  return t * t2 - 3 * p1 + 3 * p2;
+	}
+
+	function bezlen(x1, y1, x2, y2, x3, y3, x4, y4, z) {
+
+	  if (z == null) {
+	    z = 1;
+	  }
+
+	  z = z > 1 ? 1 : z < 0 ? 0 : z;
+
+	  var z2 = z / 2,
+	      n = 12,
+	      Tvalues = [-.1252,.1252,-.3678,.3678,-.5873,.5873,-.7699,.7699,-.9041,.9041,-.9816,.9816],
+	      Cvalues = [0.2491,0.2491,0.2335,0.2335,0.2032,0.2032,0.1601,0.1601,0.1069,0.1069,0.0472,0.0472],
+	      sum = 0;
+
+	  for (var i = 0; i < n; i++) {
+	    var ct = z2 * Tvalues[i] + z2,
+	        xbase = base3(ct, x1, x2, x3, x4),
+	        ybase = base3(ct, y1, y2, y3, y4),
+	        comb = xbase * xbase + ybase * ybase;
+
+	    sum += Cvalues[i] * math.sqrt(comb);
+	  }
+
+	  return z2 * sum;
+	}
+
+	function getTotLen(x1, y1, x2, y2, x3, y3, x4, y4, ll) {
+
+	  if (ll < 0 || bezlen(x1, y1, x2, y2, x3, y3, x4, y4) < ll) {
+	    return;
+	  }
+
+	  var t = 1,
+	      step = t / 2,
+	      t2 = t - step,
+	      l,
+	      e = .01;
+
+	  l = bezlen(x1, y1, x2, y2, x3, y3, x4, y4, t2);
+
+	  while (abs(l - ll) > e) {
+	    step /= 2;
+	    t2 += (l < ll ? 1 : -1) * step;
+	    l = bezlen(x1, y1, x2, y2, x3, y3, x4, y4, t2);
+	  }
+
+	  return t2;
+	}
+
+	function intersect(x1, y1, x2, y2, x3, y3, x4, y4) {
+
+	  if (
+	      mmax(x1, x2) < mmin(x3, x4) ||
+	      mmin(x1, x2) > mmax(x3, x4) ||
+	      mmax(y1, y2) < mmin(y3, y4) ||
+	      mmin(y1, y2) > mmax(y3, y4)
+	  ) {
+	    return;
+	  }
+
+	  var nx = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4),
+	      ny = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4),
+	      denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+
+	  if (!denominator) {
+	    return;
+	  }
+
+	  var px = nx / denominator,
+	      py = ny / denominator,
+	      px2 = +px.toFixed(2),
+	      py2 = +py.toFixed(2);
+
+	  if (
+	      px2 < +mmin(x1, x2).toFixed(2) ||
+	      px2 > +mmax(x1, x2).toFixed(2) ||
+	      px2 < +mmin(x3, x4).toFixed(2) ||
+	      px2 > +mmax(x3, x4).toFixed(2) ||
+	      py2 < +mmin(y1, y2).toFixed(2) ||
+	      py2 > +mmax(y1, y2).toFixed(2) ||
+	      py2 < +mmin(y3, y4).toFixed(2) ||
+	      py2 > +mmax(y3, y4).toFixed(2)
+	  ) {
+	    return;
+	  }
+
+	  return { x: px, y: py };
+	}
+
+	function interHelper(bez1, bez2, justCount) {
+	  var bbox1 = bezierBBox(bez1),
+	      bbox2 = bezierBBox(bez2);
+
+	  if (!isBBoxIntersect(bbox1, bbox2)) {
+	    return justCount ? 0 : [];
+	  }
+
+	  var l1 = bezlen.apply(0, bez1),
+	      l2 = bezlen.apply(0, bez2),
+	      n1 = ~~(l1 / 8),
+	      n2 = ~~(l2 / 8),
+	      dots1 = [],
+	      dots2 = [],
+	      xy = {},
+	      res = justCount ? 0 : [];
+
+	  for (var i = 0; i < n1 + 1; i++) {
+	    var p = findDotsAtSegment.apply(0, bez1.concat(i / n1));
+	    dots1.push({ x: p.x, y: p.y, t: i / n1 });
+	  }
+
+	  for (i = 0; i < n2 + 1; i++) {
+	    p = findDotsAtSegment.apply(0, bez2.concat(i / n2));
+	    dots2.push({ x: p.x, y: p.y, t: i / n2 });
+	  }
+
+	  for (i = 0; i < n1; i++) {
+
+	    for (var j = 0; j < n2; j++) {
+	      var di = dots1[i],
+	          di1 = dots1[i + 1],
+	          dj = dots2[j],
+	          dj1 = dots2[j + 1],
+	          ci = abs(di1.x - di.x) < .001 ? 'y' : 'x',
+	          cj = abs(dj1.x - dj.x) < .001 ? 'y' : 'x',
+	          is = intersect(di.x, di.y, di1.x, di1.y, dj.x, dj.y, dj1.x, dj1.y);
+
+	      if (is) {
+
+	        if (xy[is.x.toFixed(4)] == is.y.toFixed(4)) {
+	          continue;
+	        }
+
+	        xy[is.x.toFixed(4)] = is.y.toFixed(4);
+
+	        var t1 = di.t + abs((is[ci] - di[ci]) / (di1[ci] - di[ci])) * (di1.t - di.t),
+	            t2 = dj.t + abs((is[cj] - dj[cj]) / (dj1[cj] - dj[cj])) * (dj1.t - dj.t);
+
+	        if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
+
+	          if (justCount) {
+	            res++;
+	          } else {
+	            res.push({
+	              x: is.x,
+	              y: is.y,
+	              t1: t1,
+	              t2: t2
+	            });
+	          }
+	        }
+	      }
+	    }
+	  }
+
+	  return res;
+	}
+
+	function pathIntersection(path1, path2) {
+	  return interPathHelper(path1, path2);
+	}
+
+	function pathIntersectionNumber(path1, path2) {
+	  return interPathHelper(path1, path2, 1);
+	}
+
+	function interPathHelper(path1, path2, justCount) {
+	  path1 = path2curve(path1);
+	  path2 = path2curve(path2);
+
+	  var x1, y1, x2, y2, x1m, y1m, x2m, y2m, bez1, bez2,
+	      res = justCount ? 0 : [];
+
+	  for (var i = 0, ii = path1.length; i < ii; i++) {
+	    var pi = path1[i];
+
+	    if (pi[0] == 'M') {
+	      x1 = x1m = pi[1];
+	      y1 = y1m = pi[2];
+	    } else {
+
+	      if (pi[0] == 'C') {
+	        bez1 = [x1, y1].concat(pi.slice(1));
+	        x1 = bez1[6];
+	        y1 = bez1[7];
+	      } else {
+	        bez1 = [x1, y1, x1, y1, x1m, y1m, x1m, y1m];
+	        x1 = x1m;
+	        y1 = y1m;
+	      }
+
+	      for (var j = 0, jj = path2.length; j < jj; j++) {
+	        var pj = path2[j];
+
+	        if (pj[0] == 'M') {
+	          x2 = x2m = pj[1];
+	          y2 = y2m = pj[2];
+	        } else {
+
+	          if (pj[0] == 'C') {
+	            bez2 = [x2, y2].concat(pj.slice(1));
+	            x2 = bez2[6];
+	            y2 = bez2[7];
+	          } else {
+	            bez2 = [x2, y2, x2, y2, x2m, y2m, x2m, y2m];
+	            x2 = x2m;
+	            y2 = y2m;
+	          }
+
+	          var intr = interHelper(bez1, bez2, justCount);
+
+	          if (justCount) {
+	            res += intr;
+	          } else {
+
+	            for (var k = 0, kk = intr.length; k < kk; k++) {
+	              intr[k].segment1 = i;
+	              intr[k].segment2 = j;
+	              intr[k].bez1 = bez1;
+	              intr[k].bez2 = bez2;
+	            }
+
+	            res = res.concat(intr);
+	          }
+	        }
+	      }
+	    }
+	  }
+
+	  return res;
+	}
+
+	function isPointInsidePath(path, x, y) {
+	  var bbox = pathBBox(path);
+
+	  return isPointInsideBBox(bbox, x, y) &&
+	         interPathHelper(path, [['M', x, y], ['H', bbox.x2 + 10]], 1) % 2 == 1;
+	}
+
+	function pathBBox(path) {
+	  var pth = paths(path);
+
+	  if (pth.bbox) {
+	    return clone(pth.bbox);
+	  }
+
+	  if (!path) {
+	    return box();
+	  }
+
+	  path = path2curve(path);
+
+	  var x = 0,
+	      y = 0,
+	      X = [],
+	      Y = [],
+	      p;
+
+	  for (var i = 0, ii = path.length; i < ii; i++) {
+	    p = path[i];
+
+	    if (p[0] == 'M') {
+	      x = p[1];
+	      y = p[2];
+	      X.push(x);
+	      Y.push(y);
+	    } else {
+	      var dim = curveDim(x, y, p[1], p[2], p[3], p[4], p[5], p[6]);
+	      X = X.concat(dim.min.x, dim.max.x);
+	      Y = Y.concat(dim.min.y, dim.max.y);
+	      x = p[5];
+	      y = p[6];
+	    }
+	  }
+
+	  var xmin = mmin.apply(0, X),
+	      ymin = mmin.apply(0, Y),
+	      xmax = mmax.apply(0, X),
+	      ymax = mmax.apply(0, Y),
+	      bb = box(xmin, ymin, xmax - xmin, ymax - ymin);
+
+	  pth.bbox = clone(bb);
+
+	  return bb;
+	}
+
+	function rectPath(x, y, w, h, r) {
+	  if (r) {
+	    return [
+	      ['M', +x + (+r), y],
+	      ['l', w - r * 2, 0],
+	      ['a', r, r, 0, 0, 1, r, r],
+	      ['l', 0, h - r * 2],
+	      ['a', r, r, 0, 0, 1, -r, r],
+	      ['l', r * 2 - w, 0],
+	      ['a', r, r, 0, 0, 1, -r, -r],
+	      ['l', 0, r * 2 - h],
+	      ['a', r, r, 0, 0, 1, r, -r],
+	      ['z']
+	    ];
+	  }
+
+	  var res = [['M', x, y], ['l', w, 0], ['l', 0, h], ['l', -w, 0], ['z']];
+	  res.toString = toString;
+
+	  return res;
+	}
+
+	function ellipsePath(x, y, rx, ry, a) {
+	  if (a == null && ry == null) {
+	    ry = rx;
+	  }
+
+	  x = +x;
+	  y = +y;
+	  rx = +rx;
+	  ry = +ry;
+
+	  if (a != null) {
+	    var rad = Math.PI / 180,
+	        x1 = x + rx * Math.cos(-ry * rad),
+	        x2 = x + rx * Math.cos(-a * rad),
+	        y1 = y + rx * Math.sin(-ry * rad),
+	        y2 = y + rx * Math.sin(-a * rad),
+	        res = [['M', x1, y1], ['A', rx, rx, 0, +(a - ry > 180), 0, x2, y2]];
+	  } else {
+	    res = [
+	      ['M', x, y],
+	      ['m', 0, -ry],
+	      ['a', rx, ry, 0, 1, 1, 0, 2 * ry],
+	      ['a', rx, ry, 0, 1, 1, 0, -2 * ry],
+	      ['z']
+	    ];
+	  }
+
+	  res.toString = toString;
+
+	  return res;
+	}
+
+	function pathToRelative(pathArray) {
+	  var pth = paths(pathArray),
+	      lowerCase = String.prototype.toLowerCase;
+
+	  if (pth.rel) {
+	    return pathClone(pth.rel);
+	  }
+
+	  if (!is(pathArray, 'array') || !is(pathArray && pathArray[0], 'array')) {
+	    pathArray = parsePathString(pathArray);
+	  }
+
+	  var res = [],
+	      x = 0,
+	      y = 0,
+	      mx = 0,
+	      my = 0,
+	      start = 0;
+
+	  if (pathArray[0][0] == 'M') {
+	    x = pathArray[0][1];
+	    y = pathArray[0][2];
+	    mx = x;
+	    my = y;
+	    start++;
+	    res.push(['M', x, y]);
+	  }
+
+	  for (var i = start, ii = pathArray.length; i < ii; i++) {
+	    var r = res[i] = [],
+	        pa = pathArray[i];
+
+	    if (pa[0] != lowerCase.call(pa[0])) {
+	      r[0] = lowerCase.call(pa[0]);
+
+	      switch (r[0]) {
+	      case 'a':
+	        r[1] = pa[1];
+	        r[2] = pa[2];
+	        r[3] = pa[3];
+	        r[4] = pa[4];
+	        r[5] = pa[5];
+	        r[6] = +(pa[6] - x).toFixed(3);
+	        r[7] = +(pa[7] - y).toFixed(3);
+	        break;
+	      case 'v':
+	        r[1] = +(pa[1] - y).toFixed(3);
+	        break;
+	      case 'm':
+	        mx = pa[1];
+	        my = pa[2];
+	      default:
+	        for (var j = 1, jj = pa.length; j < jj; j++) {
+	          r[j] = +(pa[j] - ((j % 2) ? x : y)).toFixed(3);
+	        }
+	      }
+	    } else {
+	      r = res[i] = [];
+
+	      if (pa[0] == 'm') {
+	        mx = pa[1] + x;
+	        my = pa[2] + y;
+	      }
+
+	      for (var k = 0, kk = pa.length; k < kk; k++) {
+	        res[i][k] = pa[k];
+	      }
+	    }
+
+	    var len = res[i].length;
+
+	    switch (res[i][0]) {
+	    case 'z':
+	      x = mx;
+	      y = my;
+	      break;
+	    case 'h':
+	      x += +res[i][len - 1];
+	      break;
+	    case 'v':
+	      y += +res[i][len - 1];
+	      break;
+	    default:
+	      x += +res[i][len - 2];
+	      y += +res[i][len - 1];
+	    }
+	  }
+
+	  res.toString = toString;
+	  pth.rel = pathClone(res);
+
+	  return res;
+	}
+
+	function pathToAbsolute(pathArray) {
+	  var pth = paths(pathArray);
+
+	  if (pth.abs) {
+	    return pathClone(pth.abs);
+	  }
+
+	  if (!is(pathArray, 'array') || !is(pathArray && pathArray[0], 'array')) { // rough assumption
+	    pathArray = parsePathString(pathArray);
+	  }
+
+	  if (!pathArray || !pathArray.length) {
+	    return [['M', 0, 0]];
+	  }
+
+	  var res = [],
+	      x = 0,
+	      y = 0,
+	      mx = 0,
+	      my = 0,
+	      start = 0,
+	      pa0;
+
+	  if (pathArray[0][0] == 'M') {
+	    x = +pathArray[0][1];
+	    y = +pathArray[0][2];
+	    mx = x;
+	    my = y;
+	    start++;
+	    res[0] = ['M', x, y];
+	  }
+
+	  var crz = pathArray.length == 3 &&
+	      pathArray[0][0] == 'M' &&
+	      pathArray[1][0].toUpperCase() == 'R' &&
+	      pathArray[2][0].toUpperCase() == 'Z';
+
+	  for (var r, pa, i = start, ii = pathArray.length; i < ii; i++) {
+	    res.push(r = []);
+	    pa = pathArray[i];
+	    pa0 = pa[0];
+
+	    if (pa0 != pa0.toUpperCase()) {
+	      r[0] = pa0.toUpperCase();
+
+	      switch (r[0]) {
+	      case 'A':
+	        r[1] = pa[1];
+	        r[2] = pa[2];
+	        r[3] = pa[3];
+	        r[4] = pa[4];
+	        r[5] = pa[5];
+	        r[6] = +pa[6] + x;
+	        r[7] = +pa[7] + y;
+	        break;
+	      case 'V':
+	        r[1] = +pa[1] + y;
+	        break;
+	      case 'H':
+	        r[1] = +pa[1] + x;
+	        break;
+	      case 'R':
+	        var dots = [x, y].concat(pa.slice(1));
+
+	        for (var j = 2, jj = dots.length; j < jj; j++) {
+	          dots[j] = +dots[j] + x;
+	          dots[++j] = +dots[j] + y;
+	        }
+
+	        res.pop();
+	        res = res.concat(catmullRom2bezier(dots, crz));
+	        break;
+	      case 'O':
+	        res.pop();
+	        dots = ellipsePath(x, y, pa[1], pa[2]);
+	        dots.push(dots[0]);
+	        res = res.concat(dots);
+	        break;
+	      case 'U':
+	        res.pop();
+	        res = res.concat(ellipsePath(x, y, pa[1], pa[2], pa[3]));
+	        r = ['U'].concat(res[res.length - 1].slice(-2));
+	        break;
+	      case 'M':
+	        mx = +pa[1] + x;
+	        my = +pa[2] + y;
+	      default:
+
+	        for (j = 1, jj = pa.length; j < jj; j++) {
+	          r[j] = +pa[j] + ((j % 2) ? x : y);
+	        }
+	      }
+	    } else if (pa0 == 'R') {
+	      dots = [x, y].concat(pa.slice(1));
+	      res.pop();
+	      res = res.concat(catmullRom2bezier(dots, crz));
+	      r = ['R'].concat(pa.slice(-2));
+	    } else if (pa0 == 'O') {
+	      res.pop();
+	      dots = ellipsePath(x, y, pa[1], pa[2]);
+	      dots.push(dots[0]);
+	      res = res.concat(dots);
+	    } else if (pa0 == 'U') {
+	      res.pop();
+	      res = res.concat(ellipsePath(x, y, pa[1], pa[2], pa[3]));
+	      r = ['U'].concat(res[res.length - 1].slice(-2));
+	    } else {
+
+	      for (var k = 0, kk = pa.length; k < kk; k++) {
+	        r[k] = pa[k];
+	      }
+	    }
+	    pa0 = pa0.toUpperCase();
+
+	    if (pa0 != 'O') {
+	      switch (r[0]) {
+	      case 'Z':
+	        x = +mx;
+	        y = +my;
+	        break;
+	      case 'H':
+	        x = r[1];
+	        break;
+	      case 'V':
+	        y = r[1];
+	        break;
+	      case 'M':
+	        mx = r[r.length - 2];
+	        my = r[r.length - 1];
+	      default:
+	        x = r[r.length - 2];
+	        y = r[r.length - 1];
+	      }
+	    }
+	  }
+
+	  res.toString = toString;
+	  pth.abs = pathClone(res);
+
+	  return res;
+	}
+
+	function l2c(x1, y1, x2, y2) {
+	  return [x1, y1, x2, y2, x2, y2];
+	}
+
+	function q2c(x1, y1, ax, ay, x2, y2) {
+	  var _13 = 1 / 3,
+	      _23 = 2 / 3;
+
+	  return [
+	    _13 * x1 + _23 * ax,
+	    _13 * y1 + _23 * ay,
+	    _13 * x2 + _23 * ax,
+	    _13 * y2 + _23 * ay,
+	    x2,
+	    y2
+	  ];
+	}
+
+	function a2c(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
+
+	  // for more information of where this math came from visit:
+	  // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
+	  var _120 = PI * 120 / 180,
+	      rad = PI / 180 * (+angle || 0),
+	      res = [],
+	      xy,
+	      rotate = cacher(function(x, y, rad) {
+	        var X = x * math.cos(rad) - y * math.sin(rad),
+	            Y = x * math.sin(rad) + y * math.cos(rad);
+
+	        return { x: X, y: Y };
+	      });
+
+	  if (!recursive) {
+	    xy = rotate(x1, y1, -rad);
+	    x1 = xy.x;
+	    y1 = xy.y;
+	    xy = rotate(x2, y2, -rad);
+	    x2 = xy.x;
+	    y2 = xy.y;
+
+	    var x = (x1 - x2) / 2,
+	        y = (y1 - y2) / 2;
+
+	    var h = (x * x) / (rx * rx) + (y * y) / (ry * ry);
+
+	    if (h > 1) {
+	      h = math.sqrt(h);
+	      rx = h * rx;
+	      ry = h * ry;
+	    }
+
+	    var rx2 = rx * rx,
+	        ry2 = ry * ry,
+	        k = (large_arc_flag == sweep_flag ? -1 : 1) *
+	            math.sqrt(abs((rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x))),
+	        cx = k * rx * y / ry + (x1 + x2) / 2,
+	        cy = k * -ry * x / rx + (y1 + y2) / 2,
+	        f1 = math.asin(((y1 - cy) / ry).toFixed(9)),
+	        f2 = math.asin(((y2 - cy) / ry).toFixed(9));
+
+	    f1 = x1 < cx ? PI - f1 : f1;
+	    f2 = x2 < cx ? PI - f2 : f2;
+	    f1 < 0 && (f1 = PI * 2 + f1);
+	    f2 < 0 && (f2 = PI * 2 + f2);
+
+	    if (sweep_flag && f1 > f2) {
+	      f1 = f1 - PI * 2;
+	    }
+	    if (!sweep_flag && f2 > f1) {
+	      f2 = f2 - PI * 2;
+	    }
+	  } else {
+	    f1 = recursive[0];
+	    f2 = recursive[1];
+	    cx = recursive[2];
+	    cy = recursive[3];
+	  }
+
+	  var df = f2 - f1;
+
+	  if (abs(df) > _120) {
+	    var f2old = f2,
+	        x2old = x2,
+	        y2old = y2;
+
+	    f2 = f1 + _120 * (sweep_flag && f2 > f1 ? 1 : -1);
+	    x2 = cx + rx * math.cos(f2);
+	    y2 = cy + ry * math.sin(f2);
+	    res = a2c(x2, y2, rx, ry, angle, 0, sweep_flag, x2old, y2old, [f2, f2old, cx, cy]);
+	  }
+
+	  df = f2 - f1;
+
+	  var c1 = math.cos(f1),
+	      s1 = math.sin(f1),
+	      c2 = math.cos(f2),
+	      s2 = math.sin(f2),
+	      t = math.tan(df / 4),
+	      hx = 4 / 3 * rx * t,
+	      hy = 4 / 3 * ry * t,
+	      m1 = [x1, y1],
+	      m2 = [x1 + hx * s1, y1 - hy * c1],
+	      m3 = [x2 + hx * s2, y2 - hy * c2],
+	      m4 = [x2, y2];
+
+	  m2[0] = 2 * m1[0] - m2[0];
+	  m2[1] = 2 * m1[1] - m2[1];
+
+	  if (recursive) {
+	    return [m2, m3, m4].concat(res);
+	  } else {
+	    res = [m2, m3, m4].concat(res).join().split(',');
+	    var newres = [];
+
+	    for (var i = 0, ii = res.length; i < ii; i++) {
+	      newres[i] = i % 2 ? rotate(res[i - 1], res[i], rad).y : rotate(res[i], res[i + 1], rad).x;
+	    }
+
+	    return newres;
+	  }
+	}
+
+	// Returns bounding box of cubic bezier curve.
+	// Source: http://blog.hackers-cafe.net/2009/06/how-to-calculate-bezier-curves-bounding.html
+	// Original version: NISHIO Hirokazu
+	// Modifications: https://github.com/timo22345
+	function curveDim(x0, y0, x1, y1, x2, y2, x3, y3) {
+	  var tvalues = [],
+	      bounds = [[], []],
+	      a, b, c, t, t1, t2, b2ac, sqrtb2ac;
+
+	  for (var i = 0; i < 2; ++i) {
+
+	    if (i == 0) {
+	      b = 6 * x0 - 12 * x1 + 6 * x2;
+	      a = -3 * x0 + 9 * x1 - 9 * x2 + 3 * x3;
+	      c = 3 * x1 - 3 * x0;
+	    } else {
+	      b = 6 * y0 - 12 * y1 + 6 * y2;
+	      a = -3 * y0 + 9 * y1 - 9 * y2 + 3 * y3;
+	      c = 3 * y1 - 3 * y0;
+	    }
+
+	    if (abs(a) < 1e-12) {
+
+	      if (abs(b) < 1e-12) {
+	        continue;
+	      }
+
+	      t = -c / b;
+
+	      if (0 < t && t < 1) {
+	        tvalues.push(t);
+	      }
+
+	      continue;
+	    }
+
+	    b2ac = b * b - 4 * c * a;
+	    sqrtb2ac = math.sqrt(b2ac);
+
+	    if (b2ac < 0) {
+	      continue;
+	    }
+
+	    t1 = (-b + sqrtb2ac) / (2 * a);
+
+	    if (0 < t1 && t1 < 1) {
+	      tvalues.push(t1);
+	    }
+
+	    t2 = (-b - sqrtb2ac) / (2 * a);
+
+	    if (0 < t2 && t2 < 1) {
+	      tvalues.push(t2);
+	    }
+	  }
+
+	  var j = tvalues.length,
+	      jlen = j,
+	      mt;
+
+	  while (j--) {
+	    t = tvalues[j];
+	    mt = 1 - t;
+	    bounds[0][j] = (mt * mt * mt * x0) + (3 * mt * mt * t * x1) + (3 * mt * t * t * x2) + (t * t * t * x3);
+	    bounds[1][j] = (mt * mt * mt * y0) + (3 * mt * mt * t * y1) + (3 * mt * t * t * y2) + (t * t * t * y3);
+	  }
+
+	  bounds[0][jlen] = x0;
+	  bounds[1][jlen] = y0;
+	  bounds[0][jlen + 1] = x3;
+	  bounds[1][jlen + 1] = y3;
+	  bounds[0].length = bounds[1].length = jlen + 2;
+
+	  return {
+	    min: { x: mmin.apply(0, bounds[0]), y: mmin.apply(0, bounds[1]) },
+	    max: { x: mmax.apply(0, bounds[0]), y: mmax.apply(0, bounds[1]) }
+	  };
+	}
+
+	function path2curve(path, path2) {
+	  var pth = !path2 && paths(path);
+
+	  if (!path2 && pth.curve) {
+	    return pathClone(pth.curve);
+	  }
+
+	  var p = pathToAbsolute(path),
+	      p2 = path2 && pathToAbsolute(path2),
+	      attrs = { x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null },
+	      attrs2 = { x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null },
+	      processPath = function(path, d, pcom) {
+	        var nx, ny;
+
+	        if (!path) {
+	          return ['C', d.x, d.y, d.x, d.y, d.x, d.y];
+	        }
+
+	        !(path[0] in { T: 1, Q: 1 }) && (d.qx = d.qy = null);
+
+	        switch (path[0]) {
+	        case 'M':
+	          d.X = path[1];
+	          d.Y = path[2];
+	          break;
+	        case 'A':
+	          path = ['C'].concat(a2c.apply(0, [d.x, d.y].concat(path.slice(1))));
+	          break;
+	        case 'S':
+	          if (pcom == 'C' || pcom == 'S') { // In 'S' case we have to take into account, if the previous command is C/S.
+	            nx = d.x * 2 - d.bx;          // And reflect the previous
+	            ny = d.y * 2 - d.by;          // command's control point relative to the current point.
+	          }
+	          else {                            // or some else or nothing
+	            nx = d.x;
+	            ny = d.y;
+	          }
+	          path = ['C', nx, ny].concat(path.slice(1));
+	          break;
+	        case 'T':
+	          if (pcom == 'Q' || pcom == 'T') { // In 'T' case we have to take into account, if the previous command is Q/T.
+	            d.qx = d.x * 2 - d.qx;        // And make a reflection similar
+	            d.qy = d.y * 2 - d.qy;        // to case 'S'.
+	          }
+	          else {                            // or something else or nothing
+	            d.qx = d.x;
+	            d.qy = d.y;
+	          }
+	          path = ['C'].concat(q2c(d.x, d.y, d.qx, d.qy, path[1], path[2]));
+	          break;
+	        case 'Q':
+	          d.qx = path[1];
+	          d.qy = path[2];
+	          path = ['C'].concat(q2c(d.x, d.y, path[1], path[2], path[3], path[4]));
+	          break;
+	        case 'L':
+	          path = ['C'].concat(l2c(d.x, d.y, path[1], path[2]));
+	          break;
+	        case 'H':
+	          path = ['C'].concat(l2c(d.x, d.y, path[1], d.y));
+	          break;
+	        case 'V':
+	          path = ['C'].concat(l2c(d.x, d.y, d.x, path[1]));
+	          break;
+	        case 'Z':
+	          path = ['C'].concat(l2c(d.x, d.y, d.X, d.Y));
+	          break;
+	        }
+
+	        return path;
+	      },
+
+	      fixArc = function(pp, i) {
+
+	        if (pp[i].length > 7) {
+	          pp[i].shift();
+	          var pi = pp[i];
+
+	          while (pi.length) {
+	            pcoms1[i] = 'A'; // if created multiple C:s, their original seg is saved
+	            p2 && (pcoms2[i] = 'A'); // the same as above
+	            pp.splice(i++, 0, ['C'].concat(pi.splice(0, 6)));
+	          }
+
+	          pp.splice(i, 1);
+	          ii = mmax(p.length, p2 && p2.length || 0);
+	        }
+	      },
+
+	      fixM = function(path1, path2, a1, a2, i) {
+
+	        if (path1 && path2 && path1[i][0] == 'M' && path2[i][0] != 'M') {
+	          path2.splice(i, 0, ['M', a2.x, a2.y]);
+	          a1.bx = 0;
+	          a1.by = 0;
+	          a1.x = path1[i][1];
+	          a1.y = path1[i][2];
+	          ii = mmax(p.length, p2 && p2.length || 0);
+	        }
+	      },
+
+	      pcoms1 = [], // path commands of original path p
+	      pcoms2 = [], // path commands of original path p2
+	      pfirst = '', // temporary holder for original path command
+	      pcom = ''; // holder for previous path command of original path
+
+	  for (var i = 0, ii = mmax(p.length, p2 && p2.length || 0); i < ii; i++) {
+	    p[i] && (pfirst = p[i][0]); // save current path command
+
+	    if (pfirst != 'C') // C is not saved yet, because it may be result of conversion
+	    {
+	      pcoms1[i] = pfirst; // Save current path command
+	      i && ( pcom = pcoms1[i - 1]); // Get previous path command pcom
+	    }
+	    p[i] = processPath(p[i], attrs, pcom); // Previous path command is inputted to processPath
+
+	    if (pcoms1[i] != 'A' && pfirst == 'C') pcoms1[i] = 'C'; // A is the only command
+	    // which may produce multiple C:s
+	    // so we have to make sure that C is also C in original path
+
+	    fixArc(p, i); // fixArc adds also the right amount of A:s to pcoms1
+
+	    if (p2) { // the same procedures is done to p2
+	      p2[i] && (pfirst = p2[i][0]);
+
+	      if (pfirst != 'C') {
+	        pcoms2[i] = pfirst;
+	        i && (pcom = pcoms2[i - 1]);
+	      }
+
+	      p2[i] = processPath(p2[i], attrs2, pcom);
+
+	      if (pcoms2[i] != 'A' && pfirst == 'C') {
+	        pcoms2[i] = 'C';
+	      }
+
+	      fixArc(p2, i);
+	    }
+
+	    fixM(p, p2, attrs, attrs2, i);
+	    fixM(p2, p, attrs2, attrs, i);
+
+	    var seg = p[i],
+	        seg2 = p2 && p2[i],
+	        seglen = seg.length,
+	        seg2len = p2 && seg2.length;
+
+	    attrs.x = seg[seglen - 2];
+	    attrs.y = seg[seglen - 1];
+	    attrs.bx = toFloat(seg[seglen - 4]) || attrs.x;
+	    attrs.by = toFloat(seg[seglen - 3]) || attrs.y;
+	    attrs2.bx = p2 && (toFloat(seg2[seg2len - 4]) || attrs2.x);
+	    attrs2.by = p2 && (toFloat(seg2[seg2len - 3]) || attrs2.y);
+	    attrs2.x = p2 && seg2[seg2len - 2];
+	    attrs2.y = p2 && seg2[seg2len - 1];
+	  }
+
+	  if (!p2) {
+	    pth.curve = pathClone(p);
+	  }
+
+	  return p2 ? [p, p2] : p;
+	}
+
+	function mapPath(path, matrix) {
+
+	  if (!matrix) {
+	    return path;
+	  }
+
+	  var x, y, i, j, ii, jj, pathi;
+	  path = path2curve(path);
+
+	  for (i = 0, ii = path.length; i < ii; i++) {
+	    pathi = path[i];
+
+	    for (j = 1, jj = pathi.length; j < jj; j += 2) {
+	      x = matrix.x(pathi[j], pathi[j + 1]);
+	      y = matrix.y(pathi[j], pathi[j + 1]);
+	      pathi[j] = x;
+	      pathi[j + 1] = y;
+	    }
+	  }
+
+	  return path;
+	}
+
+	// http://schepers.cc/getting-to-the-point
+	function catmullRom2bezier(crp, z) {
+	  var d = [];
+
+	  for (var i = 0, iLen = crp.length; iLen - 2 * !z > i; i += 2) {
+	    var p = [
+	      { x: +crp[i - 2], y: +crp[i - 1] },
+	      { x: +crp[i],     y: +crp[i + 1] },
+	      { x: +crp[i + 2], y: +crp[i + 3] },
+	      { x: +crp[i + 4], y: +crp[i + 5] }
+	    ];
+
+	    if (z) {
+
+	      if (!i) {
+	        p[0] = { x: +crp[iLen - 2], y: +crp[iLen - 1] };
+	      } else if (iLen - 4 == i) {
+	        p[3] = { x: +crp[0], y: +crp[1] };
+	      } else if (iLen - 2 == i) {
+	        p[2] = { x: +crp[0], y: +crp[1] };
+	        p[3] = { x: +crp[2], y: +crp[3] };
+	      }
+
+	    } else {
+
+	      if (iLen - 4 == i) {
+	        p[3] = p[2];
+	      } else if (!i) {
+	        p[0] = { x: +crp[i], y: +crp[i + 1] };
+	      }
+
+	    }
+
+	    d.push(['C',
+	      (-p[0].x + 6 * p[1].x + p[2].x) / 6,
+	      (-p[0].y + 6 * p[1].y + p[2].y) / 6,
+	      (p[1].x + 6 * p[2].x - p[3].x) / 6,
+	      (p[1].y + 6*p[2].y - p[3].y) / 6,
+	      p[2].x,
+	      p[2].y
+	    ]);
+	  }
+
+	  return d;
+	}
+
+	paths.getTotalLength = getTotalLength;
+	paths.getPointAtLength = getPointAtLength;
+	paths.findDotsAtSegment = findDotsAtSegment;
+	paths.bezierBBox = bezierBBox;
+	paths.isPointInsideBBox = isPointInsideBBox;
+	paths.isBBoxIntersect = isBBoxIntersect;
+	paths.intersection = pathIntersection;
+	paths.intersectionNumber = pathIntersectionNumber;
+	paths.isPointInside = isPointInsidePath;
+	paths.getBBox = pathBBox;
+	paths.toRelative = pathToRelative;
+	paths.toAbsolute = pathToAbsolute;
+	paths.toCubic = path2curve;
+	paths.map = mapPath;
+	paths.toString = toString;
+	paths.clone = pathClone;
+
+	module.exports.intersection = pathIntersection;
+
+
+/***/ },
+/* 532 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Geometry = __webpack_require__(512),
-	    BendpointUtil = __webpack_require__(511);
+	var Geometry = __webpack_require__(529),
+	    BendpointUtil = __webpack_require__(528);
 
 	var MARKER_OK = 'connect-ok',
 	    MARKER_NOT_OK = 'connect-not-ok',
@@ -50397,6 +46391,11 @@ var InfoxBpmnModeler =
 	    COMMAND_RECONNECT_END = 'connection.reconnectEnd';
 
 	var round = Math.round;
+
+	var svgClasses = __webpack_require__(148),
+	    svgRemove = __webpack_require__(57);
+
+	var translate = __webpack_require__(186).translate;
 
 
 	/**
@@ -50499,7 +46498,7 @@ var InfoxBpmnModeler =
 
 	    // add dragger gfx
 	    context.draggerGfx = BendpointUtil.addBendpoint(canvas.getLayer('overlays'));
-	    context.draggerGfx.addClass('djs-dragging');
+	    svgClasses(context.draggerGfx).add('djs-dragging');
 
 	    canvas.addMarker(connection, MARKER_CONNECT_UPDATING);
 	  });
@@ -50572,7 +46571,7 @@ var InfoxBpmnModeler =
 	    }
 
 	    // add dragger gfx
-	    context.draggerGfx.translate(e.x, e.y);
+	    translate(context.draggerGfx, e.x, e.y);
 
 	    redrawConnection(e);
 	  });
@@ -50587,7 +46586,7 @@ var InfoxBpmnModeler =
 	        connection = context.connection;
 
 	    // remove dragger gfx
-	    context.draggerGfx.remove();
+	    svgRemove(context.draggerGfx);
 	    context.newWaypoints = connection.waypoints.slice();
 	    connection.waypoints = context.originalWaypoints;
 	    canvas.removeMarker(connection, MARKER_CONNECT_UPDATING);
@@ -50648,17 +46647,23 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 515 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Geometry = __webpack_require__(512),
-	    BendpointUtil = __webpack_require__(511),
-	    LayoutUtil = __webpack_require__(516);
+	var Geometry = __webpack_require__(529),
+	    BendpointUtil = __webpack_require__(528),
+	    LayoutUtil = __webpack_require__(534);
 
 	var MARKER_CONNECT_HOVER = 'connect-hover',
 	    MARKER_CONNECT_UPDATING = 'djs-updating';
+
+	var svgClasses = __webpack_require__(148),
+	    svgRemove = __webpack_require__(57);
+
+	var translate = __webpack_require__(186).translate;
+
 
 	function axisAdd(point, axis, delta) {
 	  return axisSet(point, axis, point[axis] + delta);
@@ -50825,7 +46830,7 @@ var InfoxBpmnModeler =
 	    var draggerPosition = axisFenced(event, segmentStart, segmentEnd, axis);
 
 	    // update dragger
-	    context.draggerGfx.translate(draggerPosition.x, draggerPosition.y);
+	    translate(context.draggerGfx, draggerPosition.x, draggerPosition.y);
 	  }
 
 	  /**
@@ -50869,7 +46874,7 @@ var InfoxBpmnModeler =
 
 	    // add dragger gfx
 	    context.draggerGfx = BendpointUtil.addSegmentDragger(layer, context.segmentStart, context.segmentEnd);
-	    context.draggerGfx.addClass('djs-dragging');
+	    svgClasses(context.draggerGfx).add('djs-dragging');
 
 	    canvas.addMarker(connection, MARKER_CONNECT_UPDATING);
 	  });
@@ -50985,7 +46990,7 @@ var InfoxBpmnModeler =
 
 	    // remove dragger gfx
 	    if (context.draggerGfx) {
-	      context.draggerGfx.remove();
+	      svgRemove(context.draggerGfx);
 	    }
 
 	    canvas.removeMarker(connection, MARKER_CONNECT_UPDATING);
@@ -51049,16 +47054,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 516 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isObject = __webpack_require__(74),
-	    sortBy = __webpack_require__(517),
-	    pointDistance = __webpack_require__(512).pointDistance;
+	var isObject = __webpack_require__(82),
+	    sortBy = __webpack_require__(535),
+	    pointDistance = __webpack_require__(529).pointDistance;
 
-	var Snap = __webpack_require__(66);
+	var intersection = __webpack_require__(531).intersection;
 
 
 	function roundBounds(bounds) {
@@ -51236,21 +47241,21 @@ var InfoxBpmnModeler =
 
 
 	function getIntersections(a, b) {
-	  return Snap.path.intersection(a, b);
+	  return intersection(a, b);
 	}
 
 	module.exports.getIntersections = getIntersections;
 
 
 /***/ },
-/* 517 */
+/* 535 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(103),
-	    baseMap = __webpack_require__(518),
-	    baseSortBy = __webpack_require__(519),
-	    compareAscending = __webpack_require__(520),
-	    isIterateeCall = __webpack_require__(92);
+	var baseCallback = __webpack_require__(111),
+	    baseMap = __webpack_require__(536),
+	    baseSortBy = __webpack_require__(537),
+	    compareAscending = __webpack_require__(538),
+	    isIterateeCall = __webpack_require__(100);
 
 	/**
 	 * Creates an array of elements, sorted in ascending order by the results of
@@ -51320,11 +47325,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 518 */
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(96),
-	    isArrayLike = __webpack_require__(80);
+	var baseEach = __webpack_require__(104),
+	    isArrayLike = __webpack_require__(88);
 
 	/**
 	 * The base implementation of `_.map` without support for callback shorthands
@@ -51349,7 +47354,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 519 */
+/* 537 */
 /***/ function(module, exports) {
 
 	/**
@@ -51376,10 +47381,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 520 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCompareAscending = __webpack_require__(521);
+	var baseCompareAscending = __webpack_require__(539);
 
 	/**
 	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
@@ -51398,7 +47403,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 521 */
+/* 539 */
 /***/ function(module, exports) {
 
 	/**
@@ -51438,23 +47443,45 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 522 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77),
-	    forEach = __webpack_require__(128);
+	var assign = __webpack_require__(85),
+	    forEach = __webpack_require__(136),
+	    isArray = __webpack_require__(78);
 
-	var Snap = __webpack_require__(66);
+	var abs= Math.abs,
+	    round = Math.round;
 
-	var round = Math.round;
+	var TOLERANCE = 10;
 
 
 	function BendpointSnapping(eventBus) {
 
-	  function snapTo(candidates, point) {
-	    return Snap.snapTo(candidates, point);
+	  function snapTo(values, value) {
+
+	    if (isArray(values)) {
+	      var i = values.length;
+
+	      while (i--) if (abs(values[i] - value) <= TOLERANCE) {
+	        return values[i];
+	      }
+	    } else {
+	      values = +values;
+	      var rem = value % values;
+
+	      if (rem < TOLERANCE) {
+	        return value - rem;
+	      }
+
+	      if (rem > values - TOLERANCE) {
+	        return value - rem + values;
+	      }
+	    }
+
+	    return value;
 	  }
 
 	  function mid(element) {
@@ -51618,46 +47645,50 @@ var InfoxBpmnModeler =
 
 	module.exports = BendpointSnapping;
 
+
 /***/ },
-/* 523 */
+/* 541 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(453),
-	    __webpack_require__(452),
-	    __webpack_require__(463),
-	    __webpack_require__(508),
-	    __webpack_require__(501),
-	    __webpack_require__(524)
+	    __webpack_require__(470),
+	    __webpack_require__(469),
+	    __webpack_require__(480),
+	    __webpack_require__(525),
+	    __webpack_require__(518),
+	    __webpack_require__(542)
 	  ],
 	  __init__: [ 'move', 'movePreview' ],
-	  move: [ 'type', __webpack_require__(526) ],
-	  movePreview: [ 'type', __webpack_require__(527) ]
+	  move: [ 'type', __webpack_require__(545) ],
+	  movePreview: [ 'type', __webpack_require__(546) ]
 	};
 
 
 /***/ },
-/* 524 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'previewSupport' ],
-	  previewSupport: [ 'type', __webpack_require__(525) ]
+	  previewSupport: [ 'type', __webpack_require__(543) ]
 	};
 
 
 /***/ },
-/* 525 */
+/* 543 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
-	var Snap = __webpack_require__(66);
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClone = __webpack_require__(544),
+	    svgCreate = __webpack_require__(75);
 
 	/**
 	 * Adds support for previews of moving/resizing elements.
@@ -51678,51 +47709,53 @@ var InfoxBpmnModeler =
 	 *
 	 * @param {djs.model.Base} element
 	 *
-	 * @return {Snap<SVGElement>}
+	 * @return {SVGElement}
 	 */
 	PreviewSupport.prototype.getGfx = function(element) {
 	  return this._elementRegistry.getGraphics(element);
 	};
 
 	/**
-	 * Adds a move preview of a given shape to a given snapsvg group.
+	 * Adds a move preview of a given shape to a given svg group.
 	 *
 	 * @param {djs.model.Base} element
-	 * @param {Snap<SVGElement>} group
+	 * @param {SVGElement} group
 	 *
-	 * @return {Snap<SVGElement>} dragger
+	 * @return {SVGElement} dragger
 	 */
 	PreviewSupport.prototype.addDragger = function(shape, group) {
 	  var gfx = this.getGfx(shape);
-	  var dragger = gfx.clone();
-	  var bbox = gfx.getBBox();
+
+	  // clone is not included in tsvg for some reason
+	  var dragger = svgClone(gfx);
+	  var bbox = gfx.getBoundingClientRect();
 
 	  // remove markers from connections
 	  if (isConnection(shape)) {
 	    removeMarkers(dragger);
 	  }
 
-	  dragger.attr(this._styles.cls('djs-dragger', [], {
-	    x: bbox.x,
-	    y: bbox.y
+	  svgAttr(dragger, this._styles.cls('djs-dragger', [], {
+	    x: bbox.top,
+	    y: bbox.left
 	  }));
 
-	  group.add(dragger);
+	  svgAppend(group, dragger);
 
 	  return dragger;
 	};
 
 	/**
-	 * Adds a resize preview of a given shape to a given snapsvg group.
+	 * Adds a resize preview of a given shape to a given svg group.
 	 *
 	 * @param {djs.model.Base} element
-	 * @param {Snap<SVGElement>} group
+	 * @param {SVGElement} group
 	 *
-	 * @return {Snap<SVGElement>} frame
+	 * @return {SVGElement} frame
 	 */
 	PreviewSupport.prototype.addFrame = function(shape, group) {
 
-	  var frame = Snap.create('rect', {
+	  var frame = svgCreate('rect', {
 	    class: 'djs-resize-overlay',
 	    width:  shape.width,
 	    height: shape.height,
@@ -51730,7 +47763,7 @@ var InfoxBpmnModeler =
 	    y: shape.y
 	  });
 
-	  group.add(frame);
+	  svgAppend(group, frame);
 
 	  return frame;
 	};
@@ -51740,36 +47773,23 @@ var InfoxBpmnModeler =
 	/**
 	 * Removes all svg marker references from an SVG.
 	 *
-	 * @param {Snap<SVGElement>} gfx
+	 * @param {SVGElement} gfx
 	 */
 	function removeMarkers(gfx) {
 
-	  if (gfx.node) {
+	  if (gfx.children) {
 
-	    // snapsvg paper element
-	    forEach(gfx.node.childNodes, function(childNode) {
-	      if (childNode.node) {
+	    forEach(gfx.children, function(child) {
 
-	        // recursion
-	        removeMarkers(childNode.node);
+	      // recursion
+	      removeMarkers(child);
 
-	      } else if (childNode.childNodes) {
-
-	        forEach(childNode.childNodes, function(childNodeChild) {
-
-	          // recursion
-	          removeMarkers(childNodeChild);
-	        });
-
-	      }
 	    });
 
-	  } else {
-
-	    // plain svg element
-	    gfx.style.markerStart = '';
-	    gfx.style.markerEnd = '';
 	  }
+
+	  gfx.style.markerStart = '';
+	  gfx.style.markerEnd = '';
 
 	}
 
@@ -51782,20 +47802,30 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 526 */
+/* 544 */
+/***/ function(module, exports) {
+
+	module.exports = clone;
+
+	function clone(element) {
+	  return element.cloneNode(true);
+	}
+
+/***/ },
+/* 545 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77),
-	    filter = __webpack_require__(475),
-	    groupBy = __webpack_require__(138);
+	var assign = __webpack_require__(85),
+	    filter = __webpack_require__(492),
+	    groupBy = __webpack_require__(146);
 
 	var LOW_PRIORITY = 500,
 	    MEDIUM_PRIORITY = 1250,
 	    HIGH_PRIORITY = 1500;
 
-	var getOriginalEvent = __webpack_require__(461).getOriginal;
+	var getOriginalEvent = __webpack_require__(478).getOriginal;
 
 	var round = Math.round;
 
@@ -52010,20 +48040,27 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 527 */
+/* 546 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var flatten = __webpack_require__(528),
-	    forEach = __webpack_require__(128),
-	    filter = __webpack_require__(475),
-	    find = __webpack_require__(468),
-	    size = __webpack_require__(529),
-	    groupBy = __webpack_require__(138),
-	    map = __webpack_require__(530);
+	var flatten = __webpack_require__(547),
+	    forEach = __webpack_require__(136),
+	    filter = __webpack_require__(492),
+	    find = __webpack_require__(485),
+	    size = __webpack_require__(548),
+	    groupBy = __webpack_require__(146),
+	    map = __webpack_require__(549);
 
-	var Elements = __webpack_require__(137);
+	var Elements = __webpack_require__(145);
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClear = __webpack_require__(56),
+	    svgCreate = __webpack_require__(75);
+
+	var translate = __webpack_require__(186).translate;
 
 	var LOW_PRIORITY = 500;
 
@@ -52105,8 +48142,14 @@ var InfoxBpmnModeler =
 	    var visuallyDraggedShapes = getVisualDragShapes(dragShapes);
 
 	    if (!context.dragGroup) {
-	      context.dragGroup = canvas.getDefaultLayer().group()
-	        .attr(styles.cls('djs-drag-group', [ 'no-events' ]));
+	      var dragGroup = svgCreate('g');
+	      svgAttr(dragGroup, styles.cls('djs-drag-group', [ 'no-events' ]));
+
+	      var defaultLayer = canvas.getDefaultLayer();
+
+	      svgAppend(defaultLayer, dragGroup);
+
+	      context.dragGroup = dragGroup;
 	    }
 
 	    // add previews
@@ -52152,7 +48195,7 @@ var InfoxBpmnModeler =
 	      }
 	    }
 
-	    dragGroup.translate(event.dx, event.dy);
+	    translate(dragGroup, event.dx, event.dy);
 	  });
 
 	  eventBus.on([ 'shape.move.out', 'shape.move.cleanup' ], function(event) {
@@ -52178,7 +48221,7 @@ var InfoxBpmnModeler =
 	    });
 
 	    if (dragGroup) {
-	      dragGroup.remove();
+	      svgClear(dragGroup);
 	    }
 	  });
 	}
@@ -52221,11 +48264,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 528 */
+/* 547 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(432),
-	    isIterateeCall = __webpack_require__(92);
+	var baseFlatten = __webpack_require__(449),
+	    isIterateeCall = __webpack_require__(100);
 
 	/**
 	 * Flattens a nested array. If `isDeep` is `true` the array is recursively
@@ -52259,12 +48302,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 529 */
+/* 548 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(81),
-	    isLength = __webpack_require__(76),
-	    keys = __webpack_require__(79);
+	var getLength = __webpack_require__(89),
+	    isLength = __webpack_require__(84),
+	    keys = __webpack_require__(87);
 
 	/**
 	 * Gets the size of `collection` by returning its length for array-like
@@ -52295,13 +48338,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 530 */
+/* 549 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayMap = __webpack_require__(531),
-	    baseCallback = __webpack_require__(103),
-	    baseMap = __webpack_require__(518),
-	    isArray = __webpack_require__(70);
+	var arrayMap = __webpack_require__(550),
+	    baseCallback = __webpack_require__(111),
+	    baseMap = __webpack_require__(536),
+	    isArray = __webpack_require__(78);
 
 	/**
 	 * Creates an array of values by running each element in `collection` through
@@ -52369,7 +48412,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 531 */
+/* 550 */
 /***/ function(module, exports) {
 
 	/**
@@ -52396,35 +48439,35 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 532 */
+/* 551 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(508),
-	    __webpack_require__(501),
-	    __webpack_require__(524)
+	    __webpack_require__(525),
+	    __webpack_require__(518),
+	    __webpack_require__(542)
 	  ],
 	  __init__: [ 'resize', 'resizePreview', 'resizeHandles' ],
-	  resize: [ 'type', __webpack_require__(533) ],
-	  resizePreview: [ 'type', __webpack_require__(535) ],
-	  resizeHandles: [ 'type', __webpack_require__(536) ]
+	  resize: [ 'type', __webpack_require__(552) ],
+	  resizePreview: [ 'type', __webpack_require__(554) ],
+	  resizeHandles: [ 'type', __webpack_require__(555) ]
 	};
 
 
 /***/ },
-/* 533 */
+/* 552 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pick = __webpack_require__(431),
-	    assign = __webpack_require__(77);
+	var pick = __webpack_require__(448),
+	    assign = __webpack_require__(85);
 
-	var ResizeUtil = __webpack_require__(534);
+	var ResizeUtil = __webpack_require__(553);
 
-	var asTRBL = __webpack_require__(516).asTRBL,
-	    roundBounds = __webpack_require__(516).roundBounds;
+	var asTRBL = __webpack_require__(534).asTRBL,
+	    roundBounds = __webpack_require__(534).roundBounds;
 
 	var DEFAULT_MIN_WIDTH = 10;
 
@@ -52608,23 +48651,23 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 534 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(475);
+	var filter = __webpack_require__(492);
 
 	var max = Math.max,
 	    min = Math.min;
 
 	var DEFAULT_CHILD_BOX_PADDING = 20;
 
-	var getBBox = __webpack_require__(137).getBBox;
+	var getBBox = __webpack_require__(145).getBBox;
 
 
-	var asTRBL = __webpack_require__(516).asTRBL,
-	    asBounds = __webpack_require__(516).asBounds;
+	var asTRBL = __webpack_require__(534).asTRBL,
+	    asBounds = __webpack_require__(534).asBounds;
 
 	function isNumber(a) {
 	  return typeof a === 'number';
@@ -52876,8 +48919,8 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 535 */
-/***/ function(module, exports) {
+/* 554 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -52885,6 +48928,12 @@ var InfoxBpmnModeler =
 	    MARKER_RESIZE_NOT_OK = 'resize-not-ok';
 
 	var LOW_PRIORITY = 500;
+
+	var svgAttr = __webpack_require__(74),
+	    svgRemove = __webpack_require__(57);
+
+	var svgClasses = __webpack_require__(148);
+
 
 	/**
 	 * Provides previews for resizing shapes when resizing.
@@ -52910,14 +48959,19 @@ var InfoxBpmnModeler =
 	    }
 
 	    if (bounds.width > 5) {
-	      frame.attr({ x: bounds.x, width: bounds.width });
+	      svgAttr(frame, { x: bounds.x, width: bounds.width });
 	    }
 
 	    if (bounds.height > 5) {
-	      frame.attr({ y: bounds.y, height: bounds.height });
+	      svgAttr(frame, { y: bounds.y, height: bounds.height });
 	    }
 
-	    frame[context.canExecute ? 'removeClass' : 'addClass'](MARKER_RESIZE_NOT_OK);
+	    if (context.canExecute) {
+	      svgClasses(frame).remove(MARKER_RESIZE_NOT_OK);
+	    } else {
+	      svgClasses(frame).add(MARKER_RESIZE_NOT_OK);
+	    }
+
 	  });
 
 	  // remove previews
@@ -52927,7 +48981,7 @@ var InfoxBpmnModeler =
 	        frame = context.frame;
 
 	    if (frame) {
-	      context.frame.remove();
+	      svgRemove(context.frame);
 	    }
 
 	    canvas.removeMarker(shape, MARKER_RESIZING);
@@ -52940,14 +48994,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 536 */
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
-
-	var Snap = __webpack_require__(66);
+	var forEach = __webpack_require__(136);
 
 	var HANDLE_OFFSET = -2,
 	    HANDLE_SIZE  = 5,
@@ -52955,11 +49007,19 @@ var InfoxBpmnModeler =
 
 	var CLS_RESIZER   = 'djs-resizer';
 
-	var domEvent = __webpack_require__(484);
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClasses = __webpack_require__(148),
+	    svgClear = __webpack_require__(56),
+	    svgCreate = __webpack_require__(75);
 
-	var isPrimaryButton = __webpack_require__(460).isPrimaryButton;
+	var domEvent = __webpack_require__(501);
 
-	var asTRBL = __webpack_require__(516).asTRBL;
+	var isPrimaryButton = __webpack_require__(477).isPrimaryButton;
+
+	var asTRBL = __webpack_require__(534).asTRBL;
+
+	var transform = __webpack_require__(186).transform;
 
 
 	/**
@@ -53011,28 +49071,47 @@ var InfoxBpmnModeler =
 	    }
 	  }
 
-	  domEvent.bind(gfx.node, 'mousedown', startResize);
-	  domEvent.bind(gfx.node, 'touchstart', startResize);
+	  domEvent.bind(gfx, 'mousedown', startResize);
+	  domEvent.bind(gfx, 'touchstart', startResize);
 	};
 
 
 	ResizeHandles.prototype._createResizer = function(element, x, y, rotation, direction) {
 	  var resizersParent = this._getResizersParent();
 
-	  var group = resizersParent.group()
-	                  .addClass(CLS_RESIZER)
-	                  .addClass(CLS_RESIZER + '-' + element.id)
-	                  .addClass(CLS_RESIZER + '-' + direction);
+	  var group = svgCreate('g');
+	  svgClasses(group).add(CLS_RESIZER);
+	  svgClasses(group).add(CLS_RESIZER + '-' + element.id);
+	  svgClasses(group).add(CLS_RESIZER + '-' + direction);
+
+	  svgAppend(resizersParent, group);
 
 	  var origin = -HANDLE_SIZE + HANDLE_OFFSET;
 
 	  // Create four drag indicators on the outline
-	  group.rect(origin, origin, HANDLE_SIZE, HANDLE_SIZE).addClass(CLS_RESIZER + '-visual');
-	  group.rect(origin, origin, HANDLE_HIT_SIZE, HANDLE_HIT_SIZE).addClass(CLS_RESIZER + '-hit');
+	  var visual = svgCreate('rect');
+	  svgAttr(visual, {
+	    x: origin,
+	    y: origin,
+	    width: HANDLE_SIZE,
+	    height: HANDLE_SIZE
+	  });
+	  svgClasses(visual).add(CLS_RESIZER + '-visual');
 
-	  var matrix = new Snap.Matrix().translate(x, y).rotate(rotation, 0, 0);
+	  svgAppend(group, visual);
 
-	  group.transform(matrix);
+	  var hit = svgCreate('rect');
+	  svgAttr(hit, {
+	    x: origin,
+	    y: origin,
+	    width: HANDLE_HIT_SIZE,
+	    height: HANDLE_HIT_SIZE
+	  });
+	  svgClasses(hit).add(CLS_RESIZER + '-hit');
+
+	  svgAppend(group, hit);
+
+	  transform(group, x, y, rotation);
 
 	  return group;
 	};
@@ -53079,14 +49158,9 @@ var InfoxBpmnModeler =
 	 * Remove all resizers
 	 */
 	ResizeHandles.prototype.removeResizers = function() {
-
 	  var resizersParent = this._getResizersParent();
 
-	  var resizers = resizersParent.selectAll('.' + CLS_RESIZER);
-
-	  forEach(resizers, function(resizer) {
-	    resizer.remove();
-	  });
+	  svgClear(resizersParent);
 	};
 
 	ResizeHandles.prototype._getResizersParent = function() {
@@ -53099,25 +49173,25 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 537 */
+/* 556 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'bpmnAutoResize', 'bpmnAutoResizeProvider' ],
-	  bpmnAutoResize: [ 'type', __webpack_require__(538) ],
-	  bpmnAutoResizeProvider: [ 'type', __webpack_require__(543) ]
+	  bpmnAutoResize: [ 'type', __webpack_require__(557) ],
+	  bpmnAutoResizeProvider: [ 'type', __webpack_require__(562) ]
 	};
 
 
 /***/ },
-/* 538 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AutoResize = __webpack_require__(539);
+	var AutoResize = __webpack_require__(558);
 
 	var inherits = __webpack_require__(3);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	/**
 	 * Sub class of the AutoResize module which implements a BPMN
@@ -53150,25 +49224,25 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 539 */
+/* 558 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var getBoundingBox = __webpack_require__(137).getBBox;
+	var getBoundingBox = __webpack_require__(145).getBBox;
 
-	var asTRBL = __webpack_require__(516).asTRBL,
-	    asBounds = __webpack_require__(516).asBounds;
+	var asTRBL = __webpack_require__(534).asTRBL,
+	    asBounds = __webpack_require__(534).asBounds;
 
-	var assign = __webpack_require__(77),
-	    forEach = __webpack_require__(128),
-	    values = __webpack_require__(540),
-	    flatten = __webpack_require__(528),
-	    groupBy = __webpack_require__(138);
+	var assign = __webpack_require__(85),
+	    forEach = __webpack_require__(136),
+	    values = __webpack_require__(559),
+	    flatten = __webpack_require__(547),
+	    groupBy = __webpack_require__(146);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 
 	/**
@@ -53344,11 +49418,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 540 */
+/* 559 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseValues = __webpack_require__(541),
-	    keys = __webpack_require__(79);
+	var baseValues = __webpack_require__(560),
+	    keys = __webpack_require__(87);
 
 	/**
 	 * Creates an array of the own enumerable property values of `object`.
@@ -53383,7 +49457,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 541 */
+/* 560 */
 /***/ function(module, exports) {
 
 	/**
@@ -53411,15 +49485,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 542 */
+/* 561 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    isFunction = __webpack_require__(73),
-	    isArray = __webpack_require__(70),
-	    isNumber = __webpack_require__(127);
+	var forEach = __webpack_require__(136),
+	    isFunction = __webpack_require__(81),
+	    isArray = __webpack_require__(78),
+	    isNumber = __webpack_require__(135);
 
 
 	var DEFAULT_PRIORITY = 1000;
@@ -53566,18 +49640,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 543 */
+/* 562 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	var inherits = __webpack_require__(3);
 
-	var forEach = __webpack_require__(415);
+	var forEach = __webpack_require__(432);
 
-	var AutoResizeProvider = __webpack_require__(544);
+	var AutoResizeProvider = __webpack_require__(563);
 
 	/**
 	 * This module is a provider for automatically resizing parent BPMN elements
@@ -53623,10 +49697,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 544 */
+/* 563 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var RuleProvider = __webpack_require__(545);
+	var RuleProvider = __webpack_require__(564);
 
 	var inherits = __webpack_require__(3);
 
@@ -53663,7 +49737,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 545 */
+/* 564 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -53671,7 +49745,7 @@ var InfoxBpmnModeler =
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 	/**
 	 * A basic provider that may be extended to implement modeling rules.
@@ -53760,48 +49834,47 @@ var InfoxBpmnModeler =
 	RuleProvider.prototype.init = function() {};
 
 /***/ },
-/* 546 */
+/* 565 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(547),
-	    __webpack_require__(549),
-	    __webpack_require__(559),
-	    __webpack_require__(563),
-	    __webpack_require__(565),
-	    __webpack_require__(569),
-	    __webpack_require__(577),
-	    __webpack_require__(579),
-	    __webpack_require__(569),
-	    __webpack_require__(583),
-	    __webpack_require__(592)
+	    __webpack_require__(566),
+	    __webpack_require__(568),
+	    __webpack_require__(578),
+	    __webpack_require__(582),
+	    __webpack_require__(584),
+	    __webpack_require__(588),
+	    __webpack_require__(596),
+	    __webpack_require__(598),
+	    __webpack_require__(602),
+	    __webpack_require__(611)
 	  ],
-	  editorActions: [ 'type', __webpack_require__(798) ]
+	  editorActions: [ 'type', __webpack_require__(817) ]
 	};
 
 
 /***/ },
-/* 547 */
+/* 566 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'alignElements' ],
-	  alignElements: [ 'type', __webpack_require__(548) ]
+	  alignElements: [ 'type', __webpack_require__(567) ]
 	};
 
 
 /***/ },
-/* 548 */
+/* 567 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(475),
-	    forEach = __webpack_require__(128),
-	    sortBy = __webpack_require__(517);
+	var filter = __webpack_require__(492),
+	    forEach = __webpack_require__(136),
+	    sortBy = __webpack_require__(535);
 
 	function last(arr) {
 	  return arr && arr[arr.length - 1];
@@ -53972,46 +50045,46 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 549 */
+/* 568 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(452),
-	    __webpack_require__(550),
-	    __webpack_require__(486)
+	    __webpack_require__(469),
+	    __webpack_require__(569),
+	    __webpack_require__(503)
 	  ],
 	  __init__: [ 'editorActions' ],
-	  editorActions: [ 'type', __webpack_require__(558) ]
+	  editorActions: [ 'type', __webpack_require__(577) ]
 	};
 
 
 /***/ },
-/* 550 */
+/* 569 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(551),
-	    __webpack_require__(508),
-	    __webpack_require__(504)
+	    __webpack_require__(570),
+	    __webpack_require__(525),
+	    __webpack_require__(521)
 	  ],
 	  __init__: [ 'copyPaste' ],
-	  copyPaste: [ 'type', __webpack_require__(553) ]
+	  copyPaste: [ 'type', __webpack_require__(572) ]
 	};
 
 
 /***/ },
-/* 551 */
+/* 570 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  clipboard: [ 'type', __webpack_require__(552) ]
+	  clipboard: [ 'type', __webpack_require__(571) ]
 	};
 
 
 /***/ },
-/* 552 */
+/* 571 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -54045,25 +50118,25 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 553 */
+/* 572 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isArray = __webpack_require__(70),
-	    forEach = __webpack_require__(128),
-	    map = __webpack_require__(530),
-	    find = __webpack_require__(468),
-	    findIndex = __webpack_require__(554),
-	    sortBy = __webpack_require__(517),
-	    reduce = __webpack_require__(94);
+	var isArray = __webpack_require__(78),
+	    forEach = __webpack_require__(136),
+	    map = __webpack_require__(549),
+	    find = __webpack_require__(485),
+	    findIndex = __webpack_require__(573),
+	    sortBy = __webpack_require__(535),
+	    reduce = __webpack_require__(102);
 
-	var getBBox = __webpack_require__(137).getBBox;
+	var getBBox = __webpack_require__(145).getBBox;
 
-	var PositionUtil = __webpack_require__(556);
+	var PositionUtil = __webpack_require__(575);
 
-	var CopyPasteUtil = __webpack_require__(557),
-	    ElementsUtil = __webpack_require__(137);
+	var CopyPasteUtil = __webpack_require__(576),
+	    ElementsUtil = __webpack_require__(145);
 
 
 
@@ -54512,10 +50585,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 554 */
+/* 573 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createFindIndex = __webpack_require__(555);
+	var createFindIndex = __webpack_require__(574);
 
 	/**
 	 * This method is like `_.find` except that it returns the index of the first
@@ -54571,11 +50644,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 555 */
+/* 574 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(103),
-	    baseFindIndex = __webpack_require__(471);
+	var baseCallback = __webpack_require__(111),
+	    baseFindIndex = __webpack_require__(488);
 
 	/**
 	 * Creates a `_.findIndex` or `_.findLastIndex` function.
@@ -54598,7 +50671,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 556 */
+/* 575 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -54624,12 +50697,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 557 */
+/* 576 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
 	function getTopLevel(elements) {
 	  var topLevel = {},
@@ -54674,13 +50747,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 558 */
+/* 577 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    isArray = __webpack_require__(70);
+	var forEach = __webpack_require__(136),
+	    isArray = __webpack_require__(78);
 
 	var NOT_REGISTERED_ERROR = 'is not a registered action',
 	    IS_REGISTERED_ERROR = 'is already registered';
@@ -54892,38 +50965,38 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 559 */
+/* 578 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(560) ],
+	  __depends__: [ __webpack_require__(579) ],
 	  __init__: [ 'handTool' ],
-	  handTool: [ 'type', __webpack_require__(562) ]
+	  handTool: [ 'type', __webpack_require__(581) ]
 	};
 
 
 /***/ },
-/* 560 */
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(501) ],
+	  __depends__: [ __webpack_require__(518) ],
 	  __init__: [ 'toolManager' ],
-	  toolManager: [ 'type', __webpack_require__(561) ]
+	  toolManager: [ 'type', __webpack_require__(580) ]
 	};
 
 
 /***/ },
-/* 561 */
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
 	var LOW_PRIORITY = 250;
 
@@ -55009,7 +51082,7 @@ var InfoxBpmnModeler =
 	    // We defer the de-activation of the tool to the .activate phase,
 	    // so we're able to check if we want to toggle off the current active tool or switch to a new one
 	    if (!this._active ||
-	        (originalEvent && originalEvent.target.parentElement.getAttribute('data-group') === 'tools')) {
+	        (originalEvent && originalEvent.target.parentNode.getAttribute('data-group') === 'tools')) {
 	      return;
 	    }
 
@@ -55019,12 +51092,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 562 */
+/* 581 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
 
 
 	var HIGH_PRIORITY = 1500;
@@ -55145,31 +51218,34 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 563 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(560) ],
+	  __depends__: [ __webpack_require__(579) ],
 	  __init__: [ 'lassoTool' ],
-	  lassoTool: [ 'type', __webpack_require__(564) ]
+	  lassoTool: [ 'type', __webpack_require__(583) ]
 	};
 
 
 /***/ },
-/* 564 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var values = __webpack_require__(540);
+	var values = __webpack_require__(559);
 
-	var getEnclosedElements = __webpack_require__(137).getEnclosedElements;
+	var getEnclosedElements = __webpack_require__(145).getEnclosedElements;
 
-	var hasSecondaryModifier = __webpack_require__(460).hasSecondaryModifier;
+	var hasSecondaryModifier = __webpack_require__(477).hasSecondaryModifier;
 
-	var Snap = __webpack_require__(66);
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgCreate = __webpack_require__(75),
+	    svgRemove = __webpack_require__(57);
 
 	var LASSO_TOOL_CURSOR = 'crosshair';
 
@@ -55192,7 +51268,8 @@ var InfoxBpmnModeler =
 	      var container = canvas.getDefaultLayer(),
 	          frame;
 
-	      frame = context.frame = Snap.create('rect', {
+	      frame = context.frame = svgCreate('rect');
+	      svgAttr(frame, {
 	        class: 'djs-lasso-overlay',
 	        width:  1,
 	        height: 1,
@@ -55200,14 +51277,14 @@ var InfoxBpmnModeler =
 	        y: 0
 	      });
 
-	      frame.appendTo(container);
+	      svgAppend(container, frame);
 	    },
 
 	    update: function(context) {
 	      var frame = context.frame,
 	          bbox  = context.bbox;
 
-	      frame.attr({
+	      svgAttr(frame, {
 	        x: bbox.x,
 	        y: bbox.y,
 	        width: bbox.width,
@@ -55218,7 +51295,7 @@ var InfoxBpmnModeler =
 	    remove: function(context) {
 
 	      if (context.frame) {
-	        context.frame.remove();
+	        svgRemove(context.frame);
 	      }
 	    }
 	  };
@@ -55269,13 +51346,6 @@ var InfoxBpmnModeler =
 
 	    context.bbox = toBBox(event);
 	    visuals.update(context);
-	  });
-
-	  eventBus.on('lasso.end', function(event) {
-
-	    var context = event.context;
-
-	    visuals.remove(context);
 	  });
 
 	  eventBus.on('lasso.cleanup', function(event) {
@@ -55419,7 +51489,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 565 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55427,27 +51497,27 @@ var InfoxBpmnModeler =
 	module.exports = {
 	  __init__: ['spaceToolPreview'],
 	  __depends__: [
-	    __webpack_require__(501),
-	    __webpack_require__(508),
-	    __webpack_require__(560),
-	    __webpack_require__(524)
+	    __webpack_require__(518),
+	    __webpack_require__(525),
+	    __webpack_require__(579),
+	    __webpack_require__(542)
 	  ],
-	  spaceTool: ['type', __webpack_require__(566)],
-	  spaceToolPreview: ['type', __webpack_require__(568) ]
+	  spaceTool: ['type', __webpack_require__(585)],
+	  spaceToolPreview: ['type', __webpack_require__(587) ]
 	};
 
 
 /***/ },
-/* 566 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var SpaceUtil = __webpack_require__(567);
+	var SpaceUtil = __webpack_require__(586);
 
-	var Cursor = __webpack_require__(493);
+	var Cursor = __webpack_require__(510);
 
-	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
 
 	var abs = Math.abs,
 	    round = Math.round;
@@ -55458,10 +51528,10 @@ var InfoxBpmnModeler =
 	var AXIS_TO_DIMENSION = { x: 'width', y: 'height' },
 	    AXIS_INVERTED = { x: 'y', y: 'x' };
 
-	var getAllChildren = __webpack_require__(137).selfAndAllChildren;
+	var getAllChildren = __webpack_require__(145).selfAndAllChildren;
 
-	var assign = __webpack_require__(77),
-	    forEach = __webpack_require__(128);
+	var assign = __webpack_require__(85),
+	    forEach = __webpack_require__(136);
 
 
 	/**
@@ -55728,7 +51798,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 567 */
+/* 586 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -55822,17 +51892,25 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 568 */
+/* 587 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
 	var MARKER_DRAGGING = 'djs-dragging',
 	    MARKER_RESIZING = 'djs-resizing';
 
 	var LOW_PRIORITY = 250;
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClasses = __webpack_require__(148),
+	    svgCreate = __webpack_require__(75),
+	    svgRemove = __webpack_require__(57);
+
+	var translate = __webpack_require__(186).translate;
 
 
 	/**
@@ -55864,10 +51942,24 @@ var InfoxBpmnModeler =
 	      y: 'M -10000,0 L 10000,0'
 	    };
 
-	    var crosshairGroup = space.group().attr(styles.cls('djs-crosshair-group', [ 'no-events' ]));
+	    var crosshairGroup = svgCreate('g');
+	    svgAttr(crosshairGroup, styles.cls('djs-crosshair-group', [ 'no-events' ]));
 
-	    crosshairGroup.path(orientation.x).addClass('djs-crosshair');
-	    crosshairGroup.path(orientation.y).addClass('djs-crosshair');
+	    svgAppend(space, crosshairGroup);
+
+	    // horizontal path
+	    var pathX = svgCreate('path');
+	    svgAttr(pathX, 'd', orientation.x);
+	    svgClasses(pathX).add('djs-crosshair');
+
+	    svgAppend(crosshairGroup, pathX);
+
+	    // vertical path
+	    var pathY = svgCreate('path');
+	    svgAttr(pathY, 'd', orientation.y);
+	    svgClasses(pathY).add('djs-crosshair');
+
+	    svgAppend(crosshairGroup, pathY);
 
 	    context.crosshairGroup = crosshairGroup;
 	  });
@@ -55876,7 +51968,7 @@ var InfoxBpmnModeler =
 	  eventBus.on('spaceTool.selection.move', function(event) {
 	    var crosshairGroup = event.context.crosshairGroup;
 
-	    crosshairGroup.translate(event.x, event.y);
+	    translate(crosshairGroup, event.x, event.y);
 	  });
 
 	  // remove crosshair
@@ -55885,7 +51977,7 @@ var InfoxBpmnModeler =
 	        crosshairGroup = context.crosshairGroup;
 
 	    if (crosshairGroup) {
-	      crosshairGroup.remove();
+	      svgRemove(crosshairGroup);
 	    }
 	  });
 
@@ -55904,16 +51996,25 @@ var InfoxBpmnModeler =
 
 	    if (!context.dragGroup) {
 	      var spaceLayer = canvas.getLayer('space');
-	      line = spaceLayer.path('M0,0 L0,0').addClass('djs-crosshair');
+
+	      line = svgCreate('path');
+	      svgAttr(line, 'd', 'M0,0 L0,0');
+	      svgClasses(line).add('djs-crosshair');
+
+	      svgAppend(spaceLayer, line);
 
 	      context.line  = line;
-	      var dragGroup = canvas.getDefaultLayer().group().attr(styles.cls('djs-drag-group', [ 'no-events' ]));
+
+	      var dragGroup = svgCreate('g');
+	      svgAttr(dragGroup, styles.cls('djs-drag-group', [ 'no-events' ]));
+
+	      svgAppend(canvas.getDefaultLayer(), dragGroup);
 
 	      // shapes
 	      addPreviewGfx(movingShapes, dragGroup);
 
 	      // connections
-	      var movingConnections = context.movingConnections = elementRegistry.filter(function(element, gfx) {
+	      var movingConnections = context.movingConnections = elementRegistry.filter(function(element) {
 	        var sourceIsMoving = false;
 
 	        forEach(movingShapes, function(shape) {
@@ -55966,8 +52067,12 @@ var InfoxBpmnModeler =
 	    }
 
 	    if (!context.frameGroup) {
-	      var frameGroup = canvas.getDefaultLayer().group().attr(styles.cls('djs-frame-group', [ 'no-events' ])),
-	          frames = [];
+	      var frameGroup = svgCreate('g');
+	      svgAttr(frameGroup, styles.cls('djs-frame-group', [ 'no-events' ]));
+
+	      svgAppend(canvas.getDefaultLayer(), frameGroup);
+
+	      var frames = [];
 
 	      forEach(resizingShapes, function(shape) {
 	        var frame = previewSupport.addFrame(shape, frameGroup);
@@ -55990,26 +52095,23 @@ var InfoxBpmnModeler =
 	      y: 'M -10000, ' + event.y + ' L 10000, ' + event.y
 	    };
 
-	    line.attr({
-	      path: orientation[ axis ],
-	      display: ''
-	    });
+	    svgAttr(line, { path: orientation[ axis ], display: '' });
 
 	    var opposite = { x: 'y', y: 'x' };
 	    var delta = { x: event.dx, y: event.dy };
 	    delta[ opposite[ context.axis ] ] = 0;
 
 	    // update move previews
-	    context.dragGroup.translate(delta.x, delta.y);
+	    translate(context.dragGroup, delta.x, delta.y);
 
 	    // update resize previews
 	    forEach(context.frames, function(frame) {
 	      if (frame.initialWidth + delta.x > 5) {
-	        frame.element.attr({ width: frame.initialWidth + delta.x });
+	        svgAttr(frame.element, { width: frame.initialWidth + delta.x });
 	      }
 
 	      if (frame.initialHeight + delta.y > 5) {
-	        frame.element.attr({ height: frame.initialHeight + delta.y });
+	        svgAttr(frame.element, { height: frame.initialHeight + delta.y });
 	      }
 	    });
 
@@ -56037,8 +52139,8 @@ var InfoxBpmnModeler =
 	    });
 
 	    if (dragGroup) {
-	      line.remove();
-	      dragGroup.remove();
+	      svgRemove(line);
+	      svgRemove(dragGroup);
 	    }
 
 	    forEach(resizingShapes, function(shape) {
@@ -56046,7 +52148,7 @@ var InfoxBpmnModeler =
 	    });
 
 	    if (frameGroup) {
-	      frameGroup.remove();
+	      svgRemove(frameGroup);
 	    }
 	  });
 	}
@@ -56066,57 +52168,62 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 569 */
+/* 588 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(570)
+	    __webpack_require__(589)
 	  ],
 	  __init__: [ 'bpmnGlobalConnect' ],
-	  bpmnGlobalConnect: [ 'type', __webpack_require__(574) ]
+	  bpmnGlobalConnect: [ 'type', __webpack_require__(593) ]
 	};
 
 
 /***/ },
-/* 570 */
+/* 589 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(571),
-	    __webpack_require__(508),
-	    __webpack_require__(501),
-	    __webpack_require__(560)
+	    __webpack_require__(590),
+	    __webpack_require__(525),
+	    __webpack_require__(518),
+	    __webpack_require__(579)
 	  ],
-	  globalConnect: [ 'type', __webpack_require__(573) ]
+	  globalConnect: [ 'type', __webpack_require__(592) ]
 	};
 
 
 /***/ },
-/* 571 */
+/* 590 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(452),
-	    __webpack_require__(508),
-	    __webpack_require__(501)
+	    __webpack_require__(469),
+	    __webpack_require__(525),
+	    __webpack_require__(518)
 	  ],
-	  connect: [ 'type', __webpack_require__(572) ]
+	  connect: [ 'type', __webpack_require__(591) ]
 	};
 
 
 /***/ },
-/* 572 */
+/* 591 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var LayoutUtil = __webpack_require__(516);
+	var LayoutUtil = __webpack_require__(534);
 
 	var MARKER_OK = 'connect-ok',
 	    MARKER_NOT_OK = 'connect-not-ok';
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgCreate = __webpack_require__(75),
+	    svgRemove = __webpack_require__(57);
 
 
 	function Connect(eventBus, dragging, modeling, rules, canvas, graphicsFactory) {
@@ -56169,7 +52276,7 @@ var InfoxBpmnModeler =
 
 	    waypoints = crop(sourcePosition, endPosition, source, target);
 
-	    visual.attr('points', [ waypoints[0].x, waypoints[0].y, waypoints[1].x, waypoints[1].y ]);
+	    svgAttr(visual, { 'points': [ waypoints[0].x, waypoints[0].y, waypoints[1].x, waypoints[1].y ] });
 	  });
 
 	  eventBus.on('connect.hover', function(event) {
@@ -56204,7 +52311,7 @@ var InfoxBpmnModeler =
 	    var context = event.context;
 
 	    if (context.visual) {
-	      context.visual.remove();
+	      svgRemove(context.visual);
 	    }
 	  });
 
@@ -56212,12 +52319,15 @@ var InfoxBpmnModeler =
 	    var context = event.context,
 	        visual;
 
-	    visual = canvas.getDefaultLayer().polyline().attr({
+	    visual = svgCreate('polyline');
+	    svgAttr(visual, {
 	      'stroke': '#333',
 	      'strokeDasharray': [ 1 ],
 	      'strokeWidth': 2,
 	      'pointer-events': 'none'
 	    });
+
+	    svgAppend(canvas.getDefaultLayer(), visual);
 
 	    context.visual = visual;
 	  });
@@ -56288,7 +52398,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 573 */
+/* 592 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56410,12 +52520,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 574 */
+/* 593 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isAny = __webpack_require__(575).isAny;
+	var isAny = __webpack_require__(594).isAny;
 
 	/**
 	 * Extention of GlobalConnect tool that implements BPMN specific rules about
@@ -56465,14 +52575,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 575 */
+/* 594 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var any = __webpack_require__(576);
+	var any = __webpack_require__(595);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 
 	function getParents(element) {
@@ -56537,37 +52647,37 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 576 */
+/* 595 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(428);
+	module.exports = __webpack_require__(445);
 
 
 /***/ },
-/* 577 */
+/* 596 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(550)
+	    __webpack_require__(569)
 	  ],
 	  __init__: [ 'bpmnCopyPaste' ],
-	  bpmnCopyPaste: [ 'type', __webpack_require__(578) ]
+	  bpmnCopyPaste: [ 'type', __webpack_require__(597) ]
 	};
 
 
 /***/ },
-/* 578 */
+/* 597 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ModelUtil = __webpack_require__(443),
+	var ModelUtil = __webpack_require__(460),
 	    getBusinessObject = ModelUtil.getBusinessObject,
 	    is = ModelUtil.is;
 
-	var map = __webpack_require__(449),
-	    forEach = __webpack_require__(415);
+	var map = __webpack_require__(466),
+	    forEach = __webpack_require__(432);
 
 
 	function setProperties(descriptor, data, properties) {
@@ -56767,39 +52877,39 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 579 */
+/* 598 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(580)
+	    __webpack_require__(599)
 	  ],
 	  __init__: [ 'bpmnDistributeElements' ],
-	  bpmnDistributeElements: [ 'type', __webpack_require__(582) ]
+	  bpmnDistributeElements: [ 'type', __webpack_require__(601) ]
 	};
 
 
 /***/ },
-/* 580 */
+/* 599 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'distributeElements' ],
-	  distributeElements: [ 'type', __webpack_require__(581) ]
+	  distributeElements: [ 'type', __webpack_require__(600) ]
 	};
 
 
 /***/ },
-/* 581 */
+/* 600 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var sortBy = __webpack_require__(517),
-	    forEach = __webpack_require__(128),
-	    filter = __webpack_require__(475);
+	var sortBy = __webpack_require__(535),
+	    forEach = __webpack_require__(136),
+	    filter = __webpack_require__(492);
 
 	var AXIS_DIMENSIONS = {
 	  horizontal: [ 'x', 'width' ],
@@ -57015,14 +53125,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 582 */
+/* 601 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(383);
+	var filter = __webpack_require__(400);
 
-	var isAny = __webpack_require__(575).isAny;
+	var isAny = __webpack_require__(594).isAny;
 
 	/**
 	 * Registers element exclude filters for elements that currently do 
@@ -57055,45 +53165,45 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 583 */
+/* 602 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(584)
+	    __webpack_require__(603)
 	  ],
 	  __init__: [ 'bpmnSearch'],
-	  bpmnSearch: [ 'type', __webpack_require__(586) ]
+	  bpmnSearch: [ 'type', __webpack_require__(605) ]
 	};
 
 
 /***/ },
-/* 584 */
+/* 603 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(472),
-	    __webpack_require__(452)
+	    __webpack_require__(489),
+	    __webpack_require__(469)
 	  ],
-	  searchPad: [ 'type', __webpack_require__(585) ]
+	  searchPad: [ 'type', __webpack_require__(604) ]
 	};
 
 
 /***/ },
-/* 585 */
+/* 604 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domClear = __webpack_require__(175),
-	    domDelegate = __webpack_require__(455),
+	var domClear = __webpack_require__(187),
+	    domDelegate = __webpack_require__(472),
 	    domQuery = __webpack_require__(52),
-	    domClasses = __webpack_require__(478),
-	    domAttr = __webpack_require__(481),
+	    domClasses = __webpack_require__(495),
+	    domAttr = __webpack_require__(498),
 	    domify = __webpack_require__(50);
 
-	var getBoundingBox = __webpack_require__(137).getBBox;
+	var getBoundingBox = __webpack_require__(145).getBBox;
 
 
 	/**
@@ -57635,16 +53745,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 586 */
+/* 605 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var map = __webpack_require__(449),
-	    filter = __webpack_require__(383),
-	    sortBy = __webpack_require__(587);
+	var map = __webpack_require__(466),
+	    filter = __webpack_require__(400),
+	    sortBy = __webpack_require__(606);
 
-	var labelUtil = __webpack_require__(591);
+	var labelUtil = __webpack_require__(610);
 
 
 	/**
@@ -57769,13 +53879,13 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 587 */
+/* 606 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(385),
-	    baseMap = __webpack_require__(450),
-	    baseSortBy = __webpack_require__(588),
-	    compareAscending = __webpack_require__(589),
+	var baseCallback = __webpack_require__(402),
+	    baseMap = __webpack_require__(467),
+	    baseSortBy = __webpack_require__(607),
+	    compareAscending = __webpack_require__(608),
 	    isIterateeCall = __webpack_require__(29);
 
 	/**
@@ -57846,7 +53956,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 588 */
+/* 607 */
 /***/ function(module, exports) {
 
 	/**
@@ -57873,10 +53983,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 589 */
+/* 608 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCompareAscending = __webpack_require__(590);
+	var baseCompareAscending = __webpack_require__(609);
 
 	/**
 	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
@@ -57895,7 +54005,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 590 */
+/* 609 */
 /***/ function(module, exports) {
 
 	/**
@@ -57935,12 +54045,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 591 */
+/* 610 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	function getLabelAttr(semantic) {
 	  if (is(semantic, 'bpmn:FlowElement') ||
@@ -57984,36 +54094,36 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 592 */
+/* 611 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'modeling', 'bpmnUpdater' ],
 	  __depends__: [
-	    __webpack_require__(593),
-	    __webpack_require__(619),
-	    __webpack_require__(722),
-	    __webpack_require__(725),
-	    __webpack_require__(730),
-	    __webpack_require__(620),
-	    __webpack_require__(736),
-	    __webpack_require__(738),
-	    __webpack_require__(740),
-	    __webpack_require__(452),
-	    __webpack_require__(632),
-	    __webpack_require__(565)
+	    __webpack_require__(612),
+	    __webpack_require__(638),
+	    __webpack_require__(741),
+	    __webpack_require__(744),
+	    __webpack_require__(749),
+	    __webpack_require__(639),
+	    __webpack_require__(755),
+	    __webpack_require__(757),
+	    __webpack_require__(759),
+	    __webpack_require__(469),
+	    __webpack_require__(651),
+	    __webpack_require__(584)
 	  ],
-	  bpmnFactory: [ 'type', __webpack_require__(745) ],
-	  bpmnUpdater: [ 'type', __webpack_require__(746) ],
-	  elementFactory: [ 'type', __webpack_require__(747) ],
-	  modeling: [ 'type', __webpack_require__(748) ],
-	  layouter: [ 'type', __webpack_require__(792) ],
-	  connectionDocking: [ 'type', __webpack_require__(797) ]
+	  bpmnFactory: [ 'type', __webpack_require__(764) ],
+	  bpmnUpdater: [ 'type', __webpack_require__(765) ],
+	  elementFactory: [ 'type', __webpack_require__(766) ],
+	  modeling: [ 'type', __webpack_require__(767) ],
+	  layouter: [ 'type', __webpack_require__(811) ],
+	  connectionDocking: [ 'type', __webpack_require__(816) ]
 	};
 
 
 /***/ },
-/* 593 */
+/* 612 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -58039,40 +54149,40 @@ var InfoxBpmnModeler =
 	    'unclaimIdBehavior',
 	    'toggleElementCollapseBehaviour'
 	  ],
-	  appendBehavior: [ 'type', __webpack_require__(594) ],
-	  copyPasteBehavior: [ 'type', __webpack_require__(595) ],
-	  createBoundaryEventBehavior: [ 'type', __webpack_require__(596) ],
-	  createDataObjectBehavior: [ 'type', __webpack_require__(597) ],
-	  createOnFlowBehavior: [ 'type', __webpack_require__(598) ],
-	  createParticipantBehavior: [ 'type', __webpack_require__(599) ],
-	  dataInputAssociationBehavior: [ 'type', __webpack_require__(600) ],
-	  deleteLaneBehavior: [ 'type', __webpack_require__(601) ],
-	  importDockingFix: [ 'type', __webpack_require__(603) ],
-	  labelBehavior: [ 'type', __webpack_require__(605) ],
-	  modelingFeedback: [ 'type', __webpack_require__(609) ],
-	  removeParticipantBehavior: [ 'type', __webpack_require__(610) ],
-	  replaceConnectionBehavior: [ 'type', __webpack_require__(611) ],
-	  replaceElementBehaviour: [ 'type', __webpack_require__(612) ],
-	  resizeLaneBehavior: [ 'type', __webpack_require__(613) ],
-	  unsetDefaultFlowBehavior: [ 'type', __webpack_require__(614) ],
-	  updateFlowNodeRefsBehavior: [ 'type', __webpack_require__(615) ],
-	  removeElementBehavior: [ 'type', __webpack_require__(616) ],
-	  unclaimIdBehavior: [ 'type', __webpack_require__(617) ],
-	  toggleElementCollapseBehaviour : [ 'type', __webpack_require__(618) ]
+	  appendBehavior: [ 'type', __webpack_require__(613) ],
+	  copyPasteBehavior: [ 'type', __webpack_require__(614) ],
+	  createBoundaryEventBehavior: [ 'type', __webpack_require__(615) ],
+	  createDataObjectBehavior: [ 'type', __webpack_require__(616) ],
+	  createOnFlowBehavior: [ 'type', __webpack_require__(617) ],
+	  createParticipantBehavior: [ 'type', __webpack_require__(618) ],
+	  dataInputAssociationBehavior: [ 'type', __webpack_require__(619) ],
+	  deleteLaneBehavior: [ 'type', __webpack_require__(620) ],
+	  importDockingFix: [ 'type', __webpack_require__(622) ],
+	  labelBehavior: [ 'type', __webpack_require__(624) ],
+	  modelingFeedback: [ 'type', __webpack_require__(628) ],
+	  removeParticipantBehavior: [ 'type', __webpack_require__(629) ],
+	  replaceConnectionBehavior: [ 'type', __webpack_require__(630) ],
+	  replaceElementBehaviour: [ 'type', __webpack_require__(631) ],
+	  resizeLaneBehavior: [ 'type', __webpack_require__(632) ],
+	  unsetDefaultFlowBehavior: [ 'type', __webpack_require__(633) ],
+	  updateFlowNodeRefsBehavior: [ 'type', __webpack_require__(634) ],
+	  removeElementBehavior: [ 'type', __webpack_require__(635) ],
+	  unclaimIdBehavior: [ 'type', __webpack_require__(636) ],
+	  toggleElementCollapseBehaviour : [ 'type', __webpack_require__(637) ]
 	};
 
 
 /***/ },
-/* 594 */
+/* 613 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 
 	function AppendBehavior(eventBus, elementFactory, bpmnRules) {
@@ -58111,18 +54221,18 @@ var InfoxBpmnModeler =
 	module.exports = AppendBehavior;
 
 /***/ },
-/* 595 */
+/* 614 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var forEach = __webpack_require__(415);
+	var forEach = __webpack_require__(432);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 
 	function CopyPasteBehavior(eventBus, modeling, canvas) {
@@ -58186,16 +54296,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 596 */
+/* 615 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 
 	/**
@@ -58243,16 +54353,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 597 */
+/* 616 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	/**
 	 * BPMN specific create data object behavior
@@ -58286,7 +54396,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 598 */
+/* 617 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58295,9 +54405,9 @@ var InfoxBpmnModeler =
 
 	var assign = __webpack_require__(7);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var getApproxIntersection = __webpack_require__(513).getApproxIntersection;
+	var getApproxIntersection = __webpack_require__(530).getApproxIntersection;
 
 
 	function copy(obj) {
@@ -58387,16 +54497,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 599 */
+/* 618 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	/**
 	 * BPMN specific create participant behavior
@@ -58484,20 +54594,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 600 */
+/* 619 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var Collections = __webpack_require__(136);
+	var Collections = __webpack_require__(144);
 
-	var find = __webpack_require__(411);
+	var find = __webpack_require__(428);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	var TARGET_REF_PLACEHOLDER_NAME = '__targetRef_placeholder';
 
@@ -58641,20 +54751,20 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 601 */
+/* 620 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var getChildLanes = __webpack_require__(602).getChildLanes;
+	var getChildLanes = __webpack_require__(621).getChildLanes;
 
-	var eachElement = __webpack_require__(137).eachElement;
+	var eachElement = __webpack_require__(145).eachElement;
 
 
 	var LOW_PRIORITY = 500;
@@ -58754,18 +54864,18 @@ var InfoxBpmnModeler =
 	module.exports = DeleteLaneBehavior;
 
 /***/ },
-/* 602 */
+/* 621 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var getParent = __webpack_require__(575).getParent;
+	var getParent = __webpack_require__(594).getParent;
 
-	var asTRBL = __webpack_require__(516).asTRBL,
-	    substractTRBL = __webpack_require__(534).substractTRBL,
-	    resizeTRBL = __webpack_require__(534).resizeTRBL;
+	var asTRBL = __webpack_require__(534).asTRBL,
+	    substractTRBL = __webpack_require__(553).substractTRBL,
+	    resizeTRBL = __webpack_require__(553).resizeTRBL;
 
 	var abs = Math.abs;
 
@@ -58917,14 +55027,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 603 */
+/* 622 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getMid = __webpack_require__(516).getMid;
+	var getMid = __webpack_require__(534).getMid;
 
-	var lineIntersect = __webpack_require__(604);
+	var lineIntersect = __webpack_require__(623);
 
 
 	/**
@@ -59003,7 +55113,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 604 */
+/* 623 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -59045,7 +55155,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 605 */
+/* 624 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -59053,9 +55163,9 @@ var InfoxBpmnModeler =
 	var assign = __webpack_require__(7),
 	    inherits = __webpack_require__(3);
 
-	var LabelUtil = __webpack_require__(451),
-	    LabelLayoutUtil = __webpack_require__(606),
-	    ModelUtil = __webpack_require__(443),
+	var LabelUtil = __webpack_require__(468),
+	    LabelLayoutUtil = __webpack_require__(625),
+	    ModelUtil = __webpack_require__(460),
 	    is = ModelUtil.is,
 	    getBusinessObject = ModelUtil.getBusinessObject;
 
@@ -59063,7 +55173,7 @@ var InfoxBpmnModeler =
 	    getExternalLabelMid = LabelUtil.getExternalLabelMid,
 	    getLabelAdjustment = LabelLayoutUtil.getLabelAdjustment;
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 
 	/**
@@ -59226,16 +55336,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 606 */
+/* 625 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var GeometricUtil = __webpack_require__(607);
+	var GeometricUtil = __webpack_require__(626);
 
-	var getDistancePointPoint = __webpack_require__(607).getDistancePointPoint;
+	var getDistancePointPoint = __webpack_require__(626).getDistancePointPoint;
 
-	var getAttachment = __webpack_require__(608).getAttachment;
+	var getAttachment = __webpack_require__(627).getAttachment;
 
 
 	function findNewLabelLineStartIndex(oldWaypoints, newWaypoints, attachment, hints) {
@@ -59449,7 +55559,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 607 */
+/* 626 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -59584,7 +55694,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 608 */
+/* 627 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -59817,12 +55927,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 609 */
+/* 628 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	var COLLAB_ERR_MSG = 'flow elements must be children of pools/participants',
 	    PROCESS_ERR_MSG = 'participants cannot be pasted onto a non-empty process diagram';
@@ -59873,16 +55983,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 610 */
+/* 629 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 
 	/**
@@ -59929,18 +56039,18 @@ var InfoxBpmnModeler =
 	module.exports = RemoveParticipantBehavior;
 
 /***/ },
-/* 611 */
+/* 630 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(415),
-	    find = __webpack_require__(411),
+	var forEach = __webpack_require__(432),
+	    find = __webpack_require__(428),
 	    inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
 
@@ -60063,19 +56173,19 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 612 */
+/* 631 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var forEach = __webpack_require__(415);
+	var forEach = __webpack_require__(432);
 
-	var isEventSubProcess = __webpack_require__(442).isEventSubProcess;
-	var is = __webpack_require__(443).is;
+	var isEventSubProcess = __webpack_require__(459).isEventSubProcess;
+	var is = __webpack_require__(460).is;
 
 	/**
 	 * Defines the behaviour of what happens to the elements inside a container
@@ -60185,16 +56295,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 613 */
+/* 632 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var roundBounds = __webpack_require__(516).roundBounds;
+	var roundBounds = __webpack_require__(534).roundBounds;
 
-	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
 
 	var SLIGHTLY_HIGHER_PRIORITY = 1001;
 
@@ -60250,17 +56360,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 614 */
+/* 633 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var is = __webpack_require__(443).is,
-	    getBusinessObject = __webpack_require__(443).getBusinessObject;
+	var is = __webpack_require__(460).is,
+	    getBusinessObject = __webpack_require__(460).getBusinessObject;
 
 	/**
 	 * A behavior that unsets the Default property of
@@ -60310,7 +56420,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 615 */
+/* 634 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -60318,9 +56428,9 @@ var InfoxBpmnModeler =
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 	var LOW_PRIORITY = 500,
 	    HIGH_PRIORITY = 5000;
@@ -60472,16 +56582,16 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 616 */
+/* 635 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
-	var lineIntersect = __webpack_require__(604);
+	var lineIntersect = __webpack_require__(623);
 
 
 	function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
@@ -60551,16 +56661,16 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 617 */
+/* 636 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(415);
+	var forEach = __webpack_require__(432);
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 	function UnclaimIdBehavior(eventBus, modeling) {
 
@@ -60584,17 +56694,17 @@ var InfoxBpmnModeler =
 	module.exports = UnclaimIdBehavior;
 
 /***/ },
-/* 618 */
+/* 637 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542),
-	    getBusinessObject = __webpack_require__(443).getBusinessObject,
-	    is = __webpack_require__(443).is,
-	    computeChildrenBBox = __webpack_require__(534).computeChildrenBBox;
+	var CommandInterceptor = __webpack_require__(561),
+	    getBusinessObject = __webpack_require__(460).getBusinessObject,
+	    is = __webpack_require__(460).is,
+	    computeChildrenBBox = __webpack_require__(553).computeChildrenBBox;
 
 
 	var LOW_PRIORITY = 500;
@@ -60728,39 +56838,39 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 619 */
+/* 638 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(620),
-	    __webpack_require__(632),
-	    __webpack_require__(634)
+	    __webpack_require__(639),
+	    __webpack_require__(651),
+	    __webpack_require__(653)
 	  ],
 	  __init__: [ 'labelEditingProvider' ],
-	  labelEditingProvider: [ 'type', __webpack_require__(720) ]
+	  labelEditingProvider: [ 'type', __webpack_require__(739) ]
 	};
 
 /***/ },
-/* 620 */
+/* 639 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  commandStack: [ 'type', __webpack_require__(621) ]
+	  commandStack: [ 'type', __webpack_require__(640) ]
 	};
 
 
 /***/ },
-/* 621 */
+/* 640 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var unique = __webpack_require__(622),
-	    isArray = __webpack_require__(70),
-	    assign = __webpack_require__(77);
+	var unique = __webpack_require__(641),
+	    isArray = __webpack_require__(78),
+	    assign = __webpack_require__(85);
 
-	var InternalEvent = __webpack_require__(146).Event;
+	var InternalEvent = __webpack_require__(157).Event;
 
 
 	/**
@@ -61259,20 +57369,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 622 */
+/* 641 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(623);
+	module.exports = __webpack_require__(642);
 
 
 /***/ },
-/* 623 */
+/* 642 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(103),
-	    baseUniq = __webpack_require__(624),
-	    isIterateeCall = __webpack_require__(92),
-	    sortedUniq = __webpack_require__(631);
+	var baseCallback = __webpack_require__(111),
+	    baseUniq = __webpack_require__(643),
+	    isIterateeCall = __webpack_require__(100),
+	    sortedUniq = __webpack_require__(650);
 
 	/**
 	 * Creates a duplicate-free version of an array, using
@@ -61343,12 +57453,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 624 */
+/* 643 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(625),
-	    cacheIndexOf = __webpack_require__(627),
-	    createCache = __webpack_require__(628);
+	var baseIndexOf = __webpack_require__(644),
+	    cacheIndexOf = __webpack_require__(646),
+	    createCache = __webpack_require__(647);
 
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -61409,10 +57519,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 625 */
+/* 644 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var indexOfNaN = __webpack_require__(626);
+	var indexOfNaN = __webpack_require__(645);
 
 	/**
 	 * The base implementation of `_.indexOf` without support for binary searches.
@@ -61442,7 +57552,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 626 */
+/* 645 */
 /***/ function(module, exports) {
 
 	/**
@@ -61471,10 +57581,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 627 */
+/* 646 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(74);
+	var isObject = __webpack_require__(82);
 
 	/**
 	 * Checks if `value` is in `cache` mimicking the return signature of
@@ -61496,11 +57606,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 628 */
+/* 647 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(629),
-	    getNative = __webpack_require__(71);
+	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(648),
+	    getNative = __webpack_require__(79);
 
 	/** Native method references. */
 	var Set = getNative(global, 'Set');
@@ -61524,11 +57634,11 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 629 */
+/* 648 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(630),
-	    getNative = __webpack_require__(71);
+	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(649),
+	    getNative = __webpack_require__(79);
 
 	/** Native method references. */
 	var Set = getNative(global, 'Set');
@@ -61560,10 +57670,10 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 630 */
+/* 649 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(74);
+	var isObject = __webpack_require__(82);
 
 	/**
 	 * Adds `value` to the cache.
@@ -61586,7 +57696,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 631 */
+/* 650 */
 /***/ function(module, exports) {
 
 	/**
@@ -61621,21 +57731,21 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 632 */
+/* 651 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'changeSupport'],
-	  changeSupport: [ 'type', __webpack_require__(633) ]
+	  changeSupport: [ 'type', __webpack_require__(652) ]
 	};
 
 /***/ },
-/* 633 */
+/* 652 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getElementType = __webpack_require__(137).getType;
+	var getElementType = __webpack_require__(145).getType;
 
 	/**
 	 * Adds change support to the diagram, including
@@ -61697,25 +57807,25 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 634 */
+/* 653 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(453) ],
+	  __depends__: [ __webpack_require__(470) ],
 	  __init__: [ 'directEditing' ],
-	  directEditing: [ 'type', __webpack_require__(635) ]
+	  directEditing: [ 'type', __webpack_require__(654) ]
 	};
 
 /***/ },
-/* 635 */
+/* 654 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var bind = __webpack_require__(636),
-	    find = __webpack_require__(673);
+	var bind = __webpack_require__(655),
+	    find = __webpack_require__(692);
 
-	var TextBox = __webpack_require__(713);
+	var TextBox = __webpack_require__(732);
 
 
 	/**
@@ -61873,12 +57983,12 @@ var InfoxBpmnModeler =
 	module.exports = DirectEditing;
 
 /***/ },
-/* 636 */
+/* 655 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createWrapper = __webpack_require__(637),
-	    replaceHolders = __webpack_require__(667),
-	    restParam = __webpack_require__(672);
+	var createWrapper = __webpack_require__(656),
+	    replaceHolders = __webpack_require__(686),
+	    restParam = __webpack_require__(691);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -61935,16 +58045,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 637 */
+/* 656 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseSetData = __webpack_require__(638),
-	    createBindWrapper = __webpack_require__(646),
-	    createHybridWrapper = __webpack_require__(649),
-	    createPartialWrapper = __webpack_require__(670),
-	    getData = __webpack_require__(656),
-	    mergeData = __webpack_require__(671),
-	    setData = __webpack_require__(668);
+	var baseSetData = __webpack_require__(657),
+	    createBindWrapper = __webpack_require__(665),
+	    createHybridWrapper = __webpack_require__(668),
+	    createPartialWrapper = __webpack_require__(689),
+	    getData = __webpack_require__(675),
+	    mergeData = __webpack_require__(690),
+	    setData = __webpack_require__(687);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -62027,11 +58137,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 638 */
+/* 657 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(639),
-	    metaMap = __webpack_require__(640);
+	var identity = __webpack_require__(658),
+	    metaMap = __webpack_require__(659);
 
 	/**
 	 * The base implementation of `setData` without support for hot loop detection.
@@ -62050,7 +58160,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 639 */
+/* 658 */
 /***/ function(module, exports) {
 
 	/**
@@ -62076,10 +58186,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 640 */
+/* 659 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(641);
+	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(660);
 
 	/** Native method references. */
 	var WeakMap = getNative(global, 'WeakMap');
@@ -62092,10 +58202,10 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 641 */
+/* 660 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(642);
+	var isNative = __webpack_require__(661);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -62114,11 +58224,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 642 */
+/* 661 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(643),
-	    isObjectLike = __webpack_require__(645);
+	var isFunction = __webpack_require__(662),
+	    isObjectLike = __webpack_require__(664);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -62168,10 +58278,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 643 */
+/* 662 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(644);
+	var isObject = __webpack_require__(663);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -62212,7 +58322,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 644 */
+/* 663 */
 /***/ function(module, exports) {
 
 	/**
@@ -62246,7 +58356,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 645 */
+/* 664 */
 /***/ function(module, exports) {
 
 	/**
@@ -62264,10 +58374,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 646 */
+/* 665 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(647);
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(666);
 
 	/**
 	 * Creates a function that wraps `func` and invokes it with the `this`
@@ -62293,11 +58403,11 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 647 */
+/* 666 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCreate = __webpack_require__(648),
-	    isObject = __webpack_require__(644);
+	var baseCreate = __webpack_require__(667),
+	    isObject = __webpack_require__(663);
 
 	/**
 	 * Creates a function that produces an instance of `Ctor` regardless of
@@ -62336,10 +58446,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 648 */
+/* 667 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(644);
+	var isObject = __webpack_require__(663);
 
 	/**
 	 * The base implementation of `_.create` without support for assigning
@@ -62365,17 +58475,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 649 */
+/* 668 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(650),
-	    composeArgs = __webpack_require__(651),
-	    composeArgsRight = __webpack_require__(652),
-	    createCtorWrapper = __webpack_require__(647),
-	    isLaziable = __webpack_require__(653),
-	    reorder = __webpack_require__(665),
-	    replaceHolders = __webpack_require__(667),
-	    setData = __webpack_require__(668);
+	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(669),
+	    composeArgs = __webpack_require__(670),
+	    composeArgsRight = __webpack_require__(671),
+	    createCtorWrapper = __webpack_require__(666),
+	    isLaziable = __webpack_require__(672),
+	    reorder = __webpack_require__(684),
+	    replaceHolders = __webpack_require__(686),
+	    setData = __webpack_require__(687);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -62483,7 +58593,7 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 650 */
+/* 669 */
 /***/ function(module, exports) {
 
 	/**
@@ -62509,7 +58619,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 651 */
+/* 670 */
 /***/ function(module, exports) {
 
 	/* Native method references for those with the same name as other `lodash` methods. */
@@ -62549,7 +58659,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 652 */
+/* 671 */
 /***/ function(module, exports) {
 
 	/* Native method references for those with the same name as other `lodash` methods. */
@@ -62591,13 +58701,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 653 */
+/* 672 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var LazyWrapper = __webpack_require__(654),
-	    getData = __webpack_require__(656),
-	    getFuncName = __webpack_require__(658),
-	    lodash = __webpack_require__(660);
+	var LazyWrapper = __webpack_require__(673),
+	    getData = __webpack_require__(675),
+	    getFuncName = __webpack_require__(677),
+	    lodash = __webpack_require__(679);
 
 	/**
 	 * Checks if `func` has a lazy counterpart.
@@ -62624,11 +58734,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 654 */
+/* 673 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCreate = __webpack_require__(648),
-	    baseLodash = __webpack_require__(655);
+	var baseCreate = __webpack_require__(667),
+	    baseLodash = __webpack_require__(674);
 
 	/** Used as references for `-Infinity` and `Infinity`. */
 	var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
@@ -62656,7 +58766,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 655 */
+/* 674 */
 /***/ function(module, exports) {
 
 	/**
@@ -62672,11 +58782,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 656 */
+/* 675 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var metaMap = __webpack_require__(640),
-	    noop = __webpack_require__(657);
+	var metaMap = __webpack_require__(659),
+	    noop = __webpack_require__(676);
 
 	/**
 	 * Gets metadata for `func`.
@@ -62693,7 +58803,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 657 */
+/* 676 */
 /***/ function(module, exports) {
 
 	/**
@@ -62718,10 +58828,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 658 */
+/* 677 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var realNames = __webpack_require__(659);
+	var realNames = __webpack_require__(678);
 
 	/**
 	 * Gets the name of `func`.
@@ -62749,7 +58859,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 659 */
+/* 678 */
 /***/ function(module, exports) {
 
 	/** Used to lookup unminified function names. */
@@ -62759,15 +58869,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 660 */
+/* 679 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var LazyWrapper = __webpack_require__(654),
-	    LodashWrapper = __webpack_require__(661),
-	    baseLodash = __webpack_require__(655),
-	    isArray = __webpack_require__(662),
-	    isObjectLike = __webpack_require__(645),
-	    wrapperClone = __webpack_require__(664);
+	var LazyWrapper = __webpack_require__(673),
+	    LodashWrapper = __webpack_require__(680),
+	    baseLodash = __webpack_require__(674),
+	    isArray = __webpack_require__(681),
+	    isObjectLike = __webpack_require__(664),
+	    wrapperClone = __webpack_require__(683);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -62890,11 +59000,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 661 */
+/* 680 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCreate = __webpack_require__(648),
-	    baseLodash = __webpack_require__(655);
+	var baseCreate = __webpack_require__(667),
+	    baseLodash = __webpack_require__(674);
 
 	/**
 	 * The base constructor for creating `lodash` wrapper objects.
@@ -62917,12 +59027,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 662 */
+/* 681 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(641),
-	    isLength = __webpack_require__(663),
-	    isObjectLike = __webpack_require__(645);
+	var getNative = __webpack_require__(660),
+	    isLength = __webpack_require__(682),
+	    isObjectLike = __webpack_require__(664);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -62963,7 +59073,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 663 */
+/* 682 */
 /***/ function(module, exports) {
 
 	/**
@@ -62989,12 +59099,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 664 */
+/* 683 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var LazyWrapper = __webpack_require__(654),
-	    LodashWrapper = __webpack_require__(661),
-	    arrayCopy = __webpack_require__(650);
+	var LazyWrapper = __webpack_require__(673),
+	    LodashWrapper = __webpack_require__(680),
+	    arrayCopy = __webpack_require__(669);
 
 	/**
 	 * Creates a clone of `wrapper`.
@@ -63013,11 +59123,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 665 */
+/* 684 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(650),
-	    isIndex = __webpack_require__(666);
+	var arrayCopy = __webpack_require__(669),
+	    isIndex = __webpack_require__(685);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeMin = Math.min;
@@ -63048,7 +59158,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 666 */
+/* 685 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -63078,7 +59188,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 667 */
+/* 686 */
 /***/ function(module, exports) {
 
 	/** Used as the internal argument placeholder. */
@@ -63112,11 +59222,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 668 */
+/* 687 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseSetData = __webpack_require__(638),
-	    now = __webpack_require__(669);
+	var baseSetData = __webpack_require__(657),
+	    now = __webpack_require__(688);
 
 	/** Used to detect when a function becomes hot. */
 	var HOT_COUNT = 150,
@@ -63159,10 +59269,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 669 */
+/* 688 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(641);
+	var getNative = __webpack_require__(660);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeNow = getNative(Date, 'now');
@@ -63189,10 +59299,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 670 */
+/* 689 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(647);
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(666);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1;
@@ -63239,13 +59349,13 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 671 */
+/* 690 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(650),
-	    composeArgs = __webpack_require__(651),
-	    composeArgsRight = __webpack_require__(652),
-	    replaceHolders = __webpack_require__(667);
+	var arrayCopy = __webpack_require__(669),
+	    composeArgs = __webpack_require__(670),
+	    composeArgsRight = __webpack_require__(671),
+	    replaceHolders = __webpack_require__(686);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -63334,7 +59444,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 672 */
+/* 691 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -63398,11 +59508,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 673 */
+/* 692 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(674),
-	    createFind = __webpack_require__(687);
+	var baseEach = __webpack_require__(693),
+	    createFind = __webpack_require__(706);
 
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -63460,11 +59570,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 674 */
+/* 693 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(675),
-	    createBaseEach = __webpack_require__(686);
+	var baseForOwn = __webpack_require__(694),
+	    createBaseEach = __webpack_require__(705);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -63481,11 +59591,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 675 */
+/* 694 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(676),
-	    keys = __webpack_require__(679);
+	var baseFor = __webpack_require__(695),
+	    keys = __webpack_require__(698);
 
 	/**
 	 * The base implementation of `_.forOwn` without support for callback
@@ -63504,10 +59614,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 676 */
+/* 695 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(677);
+	var createBaseFor = __webpack_require__(696);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -63527,10 +59637,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 677 */
+/* 696 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(678);
+	var toObject = __webpack_require__(697);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -63560,10 +59670,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 678 */
+/* 697 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(644);
+	var isObject = __webpack_require__(663);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -63580,13 +59690,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 679 */
+/* 698 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(641),
-	    isArrayLike = __webpack_require__(680),
-	    isObject = __webpack_require__(644),
-	    shimKeys = __webpack_require__(683);
+	var getNative = __webpack_require__(660),
+	    isArrayLike = __webpack_require__(699),
+	    isObject = __webpack_require__(663),
+	    shimKeys = __webpack_require__(702);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -63631,11 +59741,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 680 */
+/* 699 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(681),
-	    isLength = __webpack_require__(663);
+	var getLength = __webpack_require__(700),
+	    isLength = __webpack_require__(682);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -63652,10 +59762,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 681 */
+/* 700 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(682);
+	var baseProperty = __webpack_require__(701);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -63673,7 +59783,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 682 */
+/* 701 */
 /***/ function(module, exports) {
 
 	/**
@@ -63693,14 +59803,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 683 */
+/* 702 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(684),
-	    isArray = __webpack_require__(662),
-	    isIndex = __webpack_require__(666),
-	    isLength = __webpack_require__(663),
-	    keysIn = __webpack_require__(685);
+	var isArguments = __webpack_require__(703),
+	    isArray = __webpack_require__(681),
+	    isIndex = __webpack_require__(685),
+	    isLength = __webpack_require__(682),
+	    keysIn = __webpack_require__(704);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -63740,11 +59850,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 684 */
+/* 703 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(680),
-	    isObjectLike = __webpack_require__(645);
+	var isArrayLike = __webpack_require__(699),
+	    isObjectLike = __webpack_require__(664);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -63780,14 +59890,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 685 */
+/* 704 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(684),
-	    isArray = __webpack_require__(662),
-	    isIndex = __webpack_require__(666),
-	    isLength = __webpack_require__(663),
-	    isObject = __webpack_require__(644);
+	var isArguments = __webpack_require__(703),
+	    isArray = __webpack_require__(681),
+	    isIndex = __webpack_require__(685),
+	    isLength = __webpack_require__(682),
+	    isObject = __webpack_require__(663);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -63850,12 +59960,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 686 */
+/* 705 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(681),
-	    isLength = __webpack_require__(663),
-	    toObject = __webpack_require__(678);
+	var getLength = __webpack_require__(700),
+	    isLength = __webpack_require__(682),
+	    toObject = __webpack_require__(697);
 
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -63887,13 +59997,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 687 */
+/* 706 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(688),
-	    baseFind = __webpack_require__(711),
-	    baseFindIndex = __webpack_require__(712),
-	    isArray = __webpack_require__(662);
+	var baseCallback = __webpack_require__(707),
+	    baseFind = __webpack_require__(730),
+	    baseFindIndex = __webpack_require__(731),
+	    isArray = __webpack_require__(681);
 
 	/**
 	 * Creates a `_.find` or `_.findLast` function.
@@ -63918,14 +60028,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 688 */
+/* 707 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(689),
-	    baseMatchesProperty = __webpack_require__(701),
-	    bindCallback = __webpack_require__(708),
-	    identity = __webpack_require__(639),
-	    property = __webpack_require__(709);
+	var baseMatches = __webpack_require__(708),
+	    baseMatchesProperty = __webpack_require__(720),
+	    bindCallback = __webpack_require__(727),
+	    identity = __webpack_require__(658),
+	    property = __webpack_require__(728);
 
 	/**
 	 * The base implementation of `_.callback` which supports specifying the
@@ -63959,12 +60069,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 689 */
+/* 708 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(690),
-	    getMatchData = __webpack_require__(698),
-	    toObject = __webpack_require__(678);
+	var baseIsMatch = __webpack_require__(709),
+	    getMatchData = __webpack_require__(717),
+	    toObject = __webpack_require__(697);
 
 	/**
 	 * The base implementation of `_.matches` which does not clone `source`.
@@ -63995,11 +60105,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 690 */
+/* 709 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(691),
-	    toObject = __webpack_require__(678);
+	var baseIsEqual = __webpack_require__(710),
+	    toObject = __webpack_require__(697);
 
 	/**
 	 * The base implementation of `_.isMatch` without support for callback
@@ -64053,12 +60163,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 691 */
+/* 710 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(692),
-	    isObject = __webpack_require__(644),
-	    isObjectLike = __webpack_require__(645);
+	var baseIsEqualDeep = __webpack_require__(711),
+	    isObject = __webpack_require__(663),
+	    isObjectLike = __webpack_require__(664);
 
 	/**
 	 * The base implementation of `_.isEqual` without support for `this` binding
@@ -64087,14 +60197,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 692 */
+/* 711 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(693),
-	    equalByTag = __webpack_require__(695),
-	    equalObjects = __webpack_require__(696),
-	    isArray = __webpack_require__(662),
-	    isTypedArray = __webpack_require__(697);
+	var equalArrays = __webpack_require__(712),
+	    equalByTag = __webpack_require__(714),
+	    equalObjects = __webpack_require__(715),
+	    isArray = __webpack_require__(681),
+	    isTypedArray = __webpack_require__(716);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -64195,10 +60305,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 693 */
+/* 712 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(694);
+	var arraySome = __webpack_require__(713);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -64252,7 +60362,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 694 */
+/* 713 */
 /***/ function(module, exports) {
 
 	/**
@@ -64281,7 +60391,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 695 */
+/* 714 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -64335,10 +60445,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 696 */
+/* 715 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(679);
+	var keys = __webpack_require__(698);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -64408,11 +60518,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 697 */
+/* 716 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(663),
-	    isObjectLike = __webpack_require__(645);
+	var isLength = __webpack_require__(682),
+	    isObjectLike = __webpack_require__(664);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -64488,11 +60598,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 698 */
+/* 717 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(699),
-	    pairs = __webpack_require__(700);
+	var isStrictComparable = __webpack_require__(718),
+	    pairs = __webpack_require__(719);
 
 	/**
 	 * Gets the propery names, values, and compare flags of `object`.
@@ -64515,10 +60625,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 699 */
+/* 718 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(644);
+	var isObject = __webpack_require__(663);
 
 	/**
 	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -64536,11 +60646,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 700 */
+/* 719 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(679),
-	    toObject = __webpack_require__(678);
+	var keys = __webpack_require__(698),
+	    toObject = __webpack_require__(697);
 
 	/**
 	 * Creates a two dimensional array of the key-value pairs for `object`,
@@ -64575,18 +60685,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 701 */
+/* 720 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(702),
-	    baseIsEqual = __webpack_require__(691),
-	    baseSlice = __webpack_require__(703),
-	    isArray = __webpack_require__(662),
-	    isKey = __webpack_require__(704),
-	    isStrictComparable = __webpack_require__(699),
-	    last = __webpack_require__(705),
-	    toObject = __webpack_require__(678),
-	    toPath = __webpack_require__(706);
+	var baseGet = __webpack_require__(721),
+	    baseIsEqual = __webpack_require__(710),
+	    baseSlice = __webpack_require__(722),
+	    isArray = __webpack_require__(681),
+	    isKey = __webpack_require__(723),
+	    isStrictComparable = __webpack_require__(718),
+	    last = __webpack_require__(724),
+	    toObject = __webpack_require__(697),
+	    toPath = __webpack_require__(725);
 
 	/**
 	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -64626,10 +60736,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 702 */
+/* 721 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(678);
+	var toObject = __webpack_require__(697);
 
 	/**
 	 * The base implementation of `get` without support for string paths
@@ -64661,7 +60771,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 703 */
+/* 722 */
 /***/ function(module, exports) {
 
 	/**
@@ -64699,11 +60809,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 704 */
+/* 723 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(662),
-	    toObject = __webpack_require__(678);
+	var isArray = __webpack_require__(681),
+	    toObject = __webpack_require__(697);
 
 	/** Used to match property names within property paths. */
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
@@ -64733,7 +60843,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 705 */
+/* 724 */
 /***/ function(module, exports) {
 
 	/**
@@ -64758,11 +60868,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 706 */
+/* 725 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(707),
-	    isArray = __webpack_require__(662);
+	var baseToString = __webpack_require__(726),
+	    isArray = __webpack_require__(681);
 
 	/** Used to match property names within property paths. */
 	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
@@ -64792,7 +60902,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 707 */
+/* 726 */
 /***/ function(module, exports) {
 
 	/**
@@ -64811,10 +60921,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 708 */
+/* 727 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(639);
+	var identity = __webpack_require__(658);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -64856,12 +60966,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 709 */
+/* 728 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(682),
-	    basePropertyDeep = __webpack_require__(710),
-	    isKey = __webpack_require__(704);
+	var baseProperty = __webpack_require__(701),
+	    basePropertyDeep = __webpack_require__(729),
+	    isKey = __webpack_require__(723);
 
 	/**
 	 * Creates a function that returns the property value at `path` on a
@@ -64893,11 +61003,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 710 */
+/* 729 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(702),
-	    toPath = __webpack_require__(706);
+	var baseGet = __webpack_require__(721),
+	    toPath = __webpack_require__(725);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -64918,7 +61028,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 711 */
+/* 730 */
 /***/ function(module, exports) {
 
 	/**
@@ -64949,7 +61059,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 712 */
+/* 731 */
 /***/ function(module, exports) {
 
 	/**
@@ -64978,13 +61088,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 713 */
+/* 732 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(714),
-	    domEvent = __webpack_require__(484),
+	var assign = __webpack_require__(733),
+	    domEvent = __webpack_require__(501),
 	    domRemove = __webpack_require__(54);
 
 	function stopPropagation(event) {
@@ -65061,14 +61171,7 @@ var InfoxBpmnModeler =
 
 	  container.appendChild(content);
 
-	  var self = this;
-
-	  setTimeout(function() {
-	    if (content.parent) {
-	      content.select();
-	    }
-	    self.setCursor();
-	  }, 100);
+	  this.setCursor();
 
 	  return content;
 	};
@@ -65111,28 +61214,41 @@ var InfoxBpmnModeler =
 	 */
 	TextBox.prototype.setCursor = function() {
 
+	  this.content.focus();
+
 	  // scroll to the bottom
 	  this.content.scrollTop = this.content.scrollHeight;
 
-	  var range = document.createRange();
+	  if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
 
-	  range.selectNodeContents(this.content);
-	  range.collapse(false);
+	    var range = document.createRange();
 
-	  var selection = window.getSelection();
+	    range.selectNodeContents(this.content);
+	    range.collapse(false);
 
-	  selection.removeAllRanges();
-	  selection.addRange(range);
+	    var selection = window.getSelection();
+
+	    selection.removeAllRanges();
+	    selection.addRange(range);
+
+	  } else if (typeof document.body.createTextRange != 'undefined') {
+
+	    var textRange = document.body.createTextRange();
+
+	    textRange.moveToElementText(this.content);
+	    textRange.collapse(false);
+	    textRange.select();
+	  }
 	};
 
 
 /***/ },
-/* 714 */
+/* 733 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignWith = __webpack_require__(715),
-	    baseAssign = __webpack_require__(716),
-	    createAssigner = __webpack_require__(718);
+	var assignWith = __webpack_require__(734),
+	    baseAssign = __webpack_require__(735),
+	    createAssigner = __webpack_require__(737);
 
 	/**
 	 * Assigns own enumerable properties of source object(s) to the destination
@@ -65176,10 +61292,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 715 */
+/* 734 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(679);
+	var keys = __webpack_require__(698);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -65214,11 +61330,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 716 */
+/* 735 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(717),
-	    keys = __webpack_require__(679);
+	var baseCopy = __webpack_require__(736),
+	    keys = __webpack_require__(698);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -65239,7 +61355,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 717 */
+/* 736 */
 /***/ function(module, exports) {
 
 	/**
@@ -65268,12 +61384,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 718 */
+/* 737 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(708),
-	    isIterateeCall = __webpack_require__(719),
-	    restParam = __webpack_require__(672);
+	var bindCallback = __webpack_require__(727),
+	    isIterateeCall = __webpack_require__(738),
+	    restParam = __webpack_require__(691);
 
 	/**
 	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -65315,12 +61431,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 719 */
+/* 738 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(680),
-	    isIndex = __webpack_require__(666),
-	    isObject = __webpack_require__(644);
+	var isArrayLike = __webpack_require__(699),
+	    isIndex = __webpack_require__(685),
+	    isObject = __webpack_require__(663);
 
 	/**
 	 * Checks if the provided arguments are from an iteratee call.
@@ -65349,17 +61465,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 720 */
+/* 739 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var UpdateLabelHandler = __webpack_require__(721);
+	var UpdateLabelHandler = __webpack_require__(740);
 
-	var LabelUtil = __webpack_require__(591);
+	var LabelUtil = __webpack_require__(610);
 
-	var is = __webpack_require__(443).is,
-	    isExpanded = __webpack_require__(442).isExpanded;
+	var is = __webpack_require__(460).is,
+	    isExpanded = __webpack_require__(459).isExpanded;
 
 	var LINE_HEIGHT = 14,
 	    PADDING = 6;
@@ -65548,12 +61664,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 721 */
+/* 740 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var LabelUtil = __webpack_require__(591);
+	var LabelUtil = __webpack_require__(610);
 
 
 	/**
@@ -65599,43 +61715,46 @@ var InfoxBpmnModeler =
 	module.exports = UpdateLabelHandler;
 
 /***/ },
-/* 722 */
+/* 741 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(508)
+	    __webpack_require__(525)
 	  ],
 	  __init__: [ 'bpmnRules' ],
-	  bpmnRules: [ 'type', __webpack_require__(723) ]
+	  bpmnRules: [ 'type', __webpack_require__(742) ]
 	};
 
 
 /***/ },
-/* 723 */
+/* 742 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var find = __webpack_require__(411),
-	    any = __webpack_require__(576),
-	    every = __webpack_require__(422),
-	    filter = __webpack_require__(383),
-	    forEach = __webpack_require__(415),
+	var find = __webpack_require__(428),
+	    any = __webpack_require__(595),
+	    every = __webpack_require__(439),
+	    filter = __webpack_require__(400),
+	    forEach = __webpack_require__(432),
 	    inherits = __webpack_require__(3);
 
-	var getParents = __webpack_require__(575).getParents,
-	    is = __webpack_require__(443).is,
-	    isAny = __webpack_require__(575).isAny,
-	    getBusinessObject = __webpack_require__(443).getBusinessObject,
-	    isExpanded = __webpack_require__(442).isExpanded,
-	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
-	    isInterrupting = __webpack_require__(442).isInterrupting;
+	var getParents = __webpack_require__(594).getParents,
+	    is = __webpack_require__(460).is,
+	    isAny = __webpack_require__(594).isAny,
+	    getBusinessObject = __webpack_require__(460).getBusinessObject,
+	    isExpanded = __webpack_require__(459).isExpanded,
+	    isEventSubProcess = __webpack_require__(459).isEventSubProcess,
+	    isInterrupting = __webpack_require__(459).isInterrupting,
+	    hasErrorEventDefinition = __webpack_require__(459).hasErrorEventDefinition,
+	    hasEscalationEventDefinition = __webpack_require__(459).hasEscalationEventDefinition,
+	    hasCompensateEventDefinition = __webpack_require__(459).hasCompensateEventDefinition;
 
 
-	var RuleProvider = __webpack_require__(545);
+	var RuleProvider = __webpack_require__(564);
 
-	var isBoundaryAttachment = __webpack_require__(724).getBoundaryAttachment;
+	var isBoundaryAttachment = __webpack_require__(743).getBoundaryAttachment;
 
 	/**
 	 * BPMN specific modeling rule
@@ -66037,7 +62156,9 @@ var InfoxBpmnModeler =
 	  }
 
 	  if (is(element, 'bpmn:MessageFlow')) {
-	    return is(target, 'bpmn:Collaboration');
+	    return is(target, 'bpmn:Collaboration')
+	      || element.source.parent == target
+	      || element.target.parent == target;
 	  }
 
 	  return false;
@@ -66179,19 +62300,31 @@ var InfoxBpmnModeler =
 
 	  forEach(elements, function(element) {
 
-	    // replace a non-interrupting start event by a blank interrupting start event
-	    // when the target is not an event sub process
 	    if (!isEventSubProcess(target)) {
 
 	      if (is(element, 'bpmn:StartEvent') &&
-	          !isInterrupting(element) &&
 	          element.type !== 'label' &&
 	          canDrop(element, target)) {
 
-	        canExecute.replacements.push({
-	          oldElementId: element.id,
-	          newElementType: 'bpmn:StartEvent'
-	        });
+	        // replace a non-interrupting start event by a blank interrupting start event
+	        // when the target is not an event sub process
+	        if (!isInterrupting(element)) {
+	          canExecute.replacements.push({
+	            oldElementId: element.id,
+	            newElementType: 'bpmn:StartEvent'
+	          });
+	        }
+
+	        // replace an error/escalation/compansate start event by a blank interrupting start event
+	        // when the target is not an event sub process
+	        if (hasErrorEventDefinition(element) ||
+	            hasEscalationEventDefinition(element) ||
+	            hasCompensateEventDefinition(element)) {
+	          canExecute.replacements.push({
+	            oldElementId: element.id,
+	            newElementType: 'bpmn:StartEvent'
+	          });
+	        }
 	      }
 	    }
 
@@ -66361,12 +62494,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 724 */
+/* 743 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getOrientation = __webpack_require__(516).getOrientation;
+	var getOrientation = __webpack_require__(534).getOrientation;
 
 
 	function getBoundaryAttachment(position, targetBounds) {
@@ -66386,12 +62519,12 @@ var InfoxBpmnModeler =
 
 	// participant snapping box implementation /////////////////
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var asTRBL = __webpack_require__(516).asTRBL;
+	var asTRBL = __webpack_require__(534).asTRBL;
 
-	var collectLanes = __webpack_require__(602).collectLanes,
-	    getLanesRoot = __webpack_require__(602).getLanesRoot;
+	var collectLanes = __webpack_require__(621).collectLanes,
+	    getLanesRoot = __webpack_require__(621).getLanesRoot;
 
 	var abs = Math.abs,
 	    min = Math.min,
@@ -66526,32 +62659,32 @@ var InfoxBpmnModeler =
 	module.exports.getParticipantSizeConstraints = getParticipantSizeConstraints;
 
 /***/ },
-/* 725 */
+/* 744 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'bpmnOrderingProvider' ],
 	  __depends__: [
-	    __webpack_require__(446)
+	    __webpack_require__(463)
 	  ],
-	  bpmnOrderingProvider: [ 'type', __webpack_require__(726) ]
+	  bpmnOrderingProvider: [ 'type', __webpack_require__(745) ]
 	};
 
 /***/ },
-/* 726 */
+/* 745 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var OrderingProvider = __webpack_require__(727);
+	var OrderingProvider = __webpack_require__(746);
 
-	var isAny = __webpack_require__(575).isAny;
+	var isAny = __webpack_require__(594).isAny;
 
-	var findIndex = __webpack_require__(728);
+	var findIndex = __webpack_require__(747);
 
-	var find = __webpack_require__(411);
+	var find = __webpack_require__(428);
 
 
 	/**
@@ -66691,14 +62824,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 727 */
+/* 746 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 
 	/**
@@ -66795,10 +62928,10 @@ var InfoxBpmnModeler =
 	module.exports = OrderingProvider;
 
 /***/ },
-/* 728 */
+/* 747 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createFindIndex = __webpack_require__(729);
+	var createFindIndex = __webpack_require__(748);
 
 	/**
 	 * This method is like `_.find` except that it returns the index of the first
@@ -66854,11 +62987,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 729 */
+/* 748 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(385),
-	    baseFindIndex = __webpack_require__(414);
+	var baseCallback = __webpack_require__(402),
+	    baseFindIndex = __webpack_require__(431);
 
 	/**
 	 * Creates a `_.findIndex` or `_.findLastIndex` function.
@@ -66881,31 +63014,31 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 730 */
+/* 749 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(731),
-	    __webpack_require__(452)
+	    __webpack_require__(750),
+	    __webpack_require__(469)
 	  ],
-	  bpmnReplace: [ 'type', __webpack_require__(733) ]
+	  bpmnReplace: [ 'type', __webpack_require__(752) ]
 	};
 
 /***/ },
-/* 731 */
+/* 750 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'replace' ],
-	  replace: [ 'type', __webpack_require__(732) ]
+	  replace: [ 'type', __webpack_require__(751) ]
 	};
 
 
 /***/ },
-/* 732 */
+/* 751 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -66958,18 +63091,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 733 */
+/* 752 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pick = __webpack_require__(734),
+	var pick = __webpack_require__(753),
 	    assign = __webpack_require__(7),
-	    has = __webpack_require__(735);
+	    has = __webpack_require__(754);
 
-	var is = __webpack_require__(443).is,
-	    isExpanded = __webpack_require__(442).isExpanded,
-	    isEventSubProcess = __webpack_require__(442).isEventSubProcess;
+	var is = __webpack_require__(460).is,
+	    isExpanded = __webpack_require__(459).isExpanded,
+	    isEventSubProcess = __webpack_require__(459).isEventSubProcess;
 
 	var CUSTOM_PROPERTIES = [
 	  'cancelActivity',
@@ -67131,7 +63264,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 734 */
+/* 753 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseFlatten = __webpack_require__(40),
@@ -67179,18 +63312,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 735 */
+/* 754 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(399),
-	    baseSlice = __webpack_require__(400),
+	var baseGet = __webpack_require__(416),
+	    baseSlice = __webpack_require__(417),
 	    isArguments = __webpack_require__(20),
 	    isArray = __webpack_require__(21),
 	    isIndex = __webpack_require__(22),
-	    isKey = __webpack_require__(401),
+	    isKey = __webpack_require__(418),
 	    isLength = __webpack_require__(18),
-	    last = __webpack_require__(402),
-	    toPath = __webpack_require__(403);
+	    last = __webpack_require__(419),
+	    toPath = __webpack_require__(420);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -67242,33 +63375,33 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 736 */
+/* 755 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'tooltips' ],
-	  tooltips: [ 'type', __webpack_require__(737) ]
+	  tooltips: [ 'type', __webpack_require__(756) ]
 	};
 
 /***/ },
-/* 737 */
+/* 756 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isString = __webpack_require__(474),
-	    assign = __webpack_require__(77),
-	    forEach = __webpack_require__(128);
+	var isString = __webpack_require__(491),
+	    assign = __webpack_require__(85),
+	    forEach = __webpack_require__(136);
 
 	var domify = __webpack_require__(50),
-	    domAttr = __webpack_require__(481),
-	    domClasses = __webpack_require__(478),
+	    domAttr = __webpack_require__(498),
+	    domClasses = __webpack_require__(495),
 	    domRemove = __webpack_require__(54),
-	    domDelegate = __webpack_require__(455);
+	    domDelegate = __webpack_require__(472);
 
 
 	// document wide unique tooltip ids
-	var ids = new (__webpack_require__(482))('tt');
+	var ids = new (__webpack_require__(499))('tt');
 
 
 	function createRoot(parent) {
@@ -67620,32 +63753,32 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 738 */
+/* 757 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(523)
+	    __webpack_require__(541)
 	  ],
 	  __init__: [ 'labelSupport'],
-	  labelSupport: [ 'type', __webpack_require__(739) ]
+	  labelSupport: [ 'type', __webpack_require__(758) ]
 	};
 
 
 /***/ },
-/* 739 */
+/* 758 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    filter = __webpack_require__(475),
+	var forEach = __webpack_require__(136),
+	    filter = __webpack_require__(492),
 	    inherits = __webpack_require__(3);
 
 	var LOW_PRIORITY = 250,
 	    HIGH_PRIORITY = 1400;
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 
 	/**
@@ -67742,42 +63875,42 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 740 */
+/* 759 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(523),
-	    __webpack_require__(738)
+	    __webpack_require__(541),
+	    __webpack_require__(757)
 	  ],
 	  __init__: [ 'attachSupport'],
-	  attachSupport: [ 'type', __webpack_require__(741) ]
+	  attachSupport: [ 'type', __webpack_require__(760) ]
 	};
 
 
 /***/ },
-/* 741 */
+/* 760 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    flatten = __webpack_require__(528),
-	    union = __webpack_require__(742),
-	    filter = __webpack_require__(475),
-	    groupBy = __webpack_require__(138),
-	    map = __webpack_require__(530);
+	var forEach = __webpack_require__(136),
+	    flatten = __webpack_require__(547),
+	    union = __webpack_require__(761),
+	    filter = __webpack_require__(492),
+	    groupBy = __webpack_require__(146),
+	    map = __webpack_require__(549);
 
-	var saveClear = __webpack_require__(743).saveClear,
-	    Collections = __webpack_require__(136);
+	var saveClear = __webpack_require__(762).saveClear,
+	    Collections = __webpack_require__(144);
 
-	var getNewAttachShapeDelta = __webpack_require__(744).getNewAttachShapeDelta;
+	var getNewAttachShapeDelta = __webpack_require__(763).getNewAttachShapeDelta;
 
 	var inherits = __webpack_require__(3);
 
 	var HIGH_PRIORITY = 1500;
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 
 	function AttachSupport(eventBus, modeling, movePreview, rules) {
@@ -68049,12 +64182,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 742 */
+/* 761 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(432),
-	    baseUniq = __webpack_require__(624),
-	    restParam = __webpack_require__(93);
+	var baseFlatten = __webpack_require__(449),
+	    baseUniq = __webpack_require__(643),
+	    restParam = __webpack_require__(101);
 
 	/**
 	 * Creates an array of unique values, in order, from all of the provided arrays
@@ -68079,7 +64212,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 743 */
+/* 762 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -68122,15 +64255,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 744 */
+/* 763 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var roundPoint = __webpack_require__(516).roundPoint;
+	var roundPoint = __webpack_require__(534).roundPoint;
 
-	var center = __webpack_require__(556).center,
-	    delta = __webpack_require__(556).delta;
+	var center = __webpack_require__(575).center,
+	    delta = __webpack_require__(575).delta;
 
 
 	/**
@@ -68198,14 +64331,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 745 */
+/* 764 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var map = __webpack_require__(449),
+	var map = __webpack_require__(466),
 	    assign = __webpack_require__(7),
-	    pick = __webpack_require__(734);
+	    pick = __webpack_require__(753);
 
 
 	function BpmnFactory(moddle) {
@@ -68301,22 +64434,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 746 */
+/* 765 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(415),
+	    forEach = __webpack_require__(432),
 	    inherits = __webpack_require__(3);
 
-	var Collections = __webpack_require__(136),
-	    Model = __webpack_require__(142);
+	var Collections = __webpack_require__(144),
+	    Model = __webpack_require__(153);
 
-	var getBusinessObject = __webpack_require__(443).getBusinessObject,
-	    is = __webpack_require__(443).is;
+	var getBusinessObject = __webpack_require__(460).getBusinessObject,
+	    is = __webpack_require__(460).is;
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 	/**
 	 * A handler responsible for updating the underlying BPMN 2.0 XML + DI
@@ -68519,7 +64652,7 @@ var InfoxBpmnModeler =
 	    }
 
 	    // on reconnectStart -> default flow
-	    if (oldSource && oldSource.default) {
+	    if (oldSource && oldSource.default === businessObject) {
 	      context.default = oldSource.default;
 	      oldSource.default = undefined;
 	    }
@@ -68677,6 +64810,21 @@ var InfoxBpmnModeler =
 	    Collections.add(newRefs, businessObject);
 	  }
 	};
+
+
+	// update existing sourceElement and targetElement di information
+	BpmnUpdater.prototype.updateDiConnection = function(di, newSource, newTarget) {
+
+	  if (di.sourceElement && di.sourceElement.bpmnElement !== newSource) {
+	    di.sourceElement = newSource && newSource.di;
+	  }
+
+	  if (di.targetElement && di.targetElement.bpmnElement !== newTarget) {
+	    di.targetElement = newTarget && newTarget.di;
+	  }
+
+	};
+
 
 	BpmnUpdater.prototype.updateDiParent = function(di, parentDi) {
 
@@ -68942,6 +65090,8 @@ var InfoxBpmnModeler =
 	  }
 
 	  this.updateConnectionWaypoints(connection);
+
+	  this.updateDiConnection(businessObject.di, newSource, newTarget);
 	};
 
 
@@ -68978,7 +65128,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 747 */
+/* 766 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68986,12 +65136,12 @@ var InfoxBpmnModeler =
 	var assign = __webpack_require__(7),
 	    inherits = __webpack_require__(3);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var isExpanded = __webpack_require__(442).isExpanded;
+	var isExpanded = __webpack_require__(459).isExpanded;
 
-	var BaseElementFactory = __webpack_require__(141),
-	    LabelUtil = __webpack_require__(451);
+	var BaseElementFactory = __webpack_require__(152),
+	    LabelUtil = __webpack_require__(468);
 
 	/**
 	 * A bpmn-aware factory for diagram-js shapes
@@ -69169,22 +65319,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 748 */
+/* 767 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var BaseModeling = __webpack_require__(749);
+	var BaseModeling = __webpack_require__(768);
 
-	var UpdatePropertiesHandler = __webpack_require__(783),
-	    UpdateCanvasRootHandler = __webpack_require__(786),
-	    AddLaneHandler = __webpack_require__(787),
-	    SplitLaneHandler = __webpack_require__(788),
-	    ResizeLaneHandler = __webpack_require__(789),
-	    UpdateFlowNodeRefsHandler = __webpack_require__(790),
-	    IdClaimHandler = __webpack_require__(791);
+	var UpdatePropertiesHandler = __webpack_require__(802),
+	    UpdateCanvasRootHandler = __webpack_require__(805),
+	    AddLaneHandler = __webpack_require__(806),
+	    SplitLaneHandler = __webpack_require__(807),
+	    ResizeLaneHandler = __webpack_require__(808),
+	    UpdateFlowNodeRefsHandler = __webpack_require__(809),
+	    IdClaimHandler = __webpack_require__(810);
 
 
 	/**
@@ -69341,14 +65491,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 749 */
+/* 768 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
-	var model = __webpack_require__(142);
+	var model = __webpack_require__(153);
 
 
 	/**
@@ -69378,37 +65528,37 @@ var InfoxBpmnModeler =
 
 	Modeling.prototype.getHandlers = function() {
 	  return {
-	    'shape.append': __webpack_require__(750),
-	    'shape.create': __webpack_require__(755),
-	    'shape.delete': __webpack_require__(756),
-	    'shape.move': __webpack_require__(757),
-	    'shape.resize': __webpack_require__(760),
-	    'shape.replace': __webpack_require__(761),
-	    'shape.toggleCollapse': __webpack_require__(762),
+	    'shape.append': __webpack_require__(769),
+	    'shape.create': __webpack_require__(774),
+	    'shape.delete': __webpack_require__(775),
+	    'shape.move': __webpack_require__(776),
+	    'shape.resize': __webpack_require__(779),
+	    'shape.replace': __webpack_require__(780),
+	    'shape.toggleCollapse': __webpack_require__(781),
 
-	    'spaceTool': __webpack_require__(763),
+	    'spaceTool': __webpack_require__(782),
 
-	    'label.create': __webpack_require__(764),
+	    'label.create': __webpack_require__(783),
 
-	    'connection.create': __webpack_require__(765),
-	    'connection.delete': __webpack_require__(766),
-	    'connection.move': __webpack_require__(767),
-	    'connection.layout': __webpack_require__(768),
+	    'connection.create': __webpack_require__(784),
+	    'connection.delete': __webpack_require__(785),
+	    'connection.move': __webpack_require__(786),
+	    'connection.layout': __webpack_require__(787),
 
-	    'connection.updateWaypoints': __webpack_require__(769),
+	    'connection.updateWaypoints': __webpack_require__(788),
 
-	    'connection.reconnectStart': __webpack_require__(770),
-	    'connection.reconnectEnd': __webpack_require__(770),
+	    'connection.reconnectStart': __webpack_require__(789),
+	    'connection.reconnectEnd': __webpack_require__(789),
 
-	    'elements.move': __webpack_require__(771),
-	    'elements.delete': __webpack_require__(772),
+	    'elements.move': __webpack_require__(790),
+	    'elements.delete': __webpack_require__(791),
 
-	    'elements.distribute': __webpack_require__(773),
-	    'elements.align': __webpack_require__(774),
+	    'elements.distribute': __webpack_require__(792),
+	    'elements.align': __webpack_require__(793),
 
-	    'element.updateAttachment': __webpack_require__(775),
+	    'element.updateAttachment': __webpack_require__(794),
 
-	    'elements.paste': __webpack_require__(776)
+	    'elements.paste': __webpack_require__(795)
 	  };
 	};
 
@@ -69777,12 +65927,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 750 */
+/* 769 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var any = __webpack_require__(751);
+	var any = __webpack_require__(770);
 
 	var inherits = __webpack_require__(3);
 
@@ -69799,7 +65949,7 @@ var InfoxBpmnModeler =
 	  this._modeling = modeling;
 	}
 
-	inherits(AppendShapeHandler, __webpack_require__(754));
+	inherits(AppendShapeHandler, __webpack_require__(773));
 
 
 	AppendShapeHandler.$inject = [ 'modeling' ];
@@ -69848,21 +65998,21 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 751 */
+/* 770 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(752);
+	module.exports = __webpack_require__(771);
 
 
 /***/ },
-/* 752 */
+/* 771 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(109),
-	    baseCallback = __webpack_require__(103),
-	    baseSome = __webpack_require__(753),
-	    isArray = __webpack_require__(70),
-	    isIterateeCall = __webpack_require__(92);
+	var arraySome = __webpack_require__(117),
+	    baseCallback = __webpack_require__(111),
+	    baseSome = __webpack_require__(772),
+	    isArray = __webpack_require__(78),
+	    isIterateeCall = __webpack_require__(100);
 
 	/**
 	 * Checks if `predicate` returns truthy for **any** element of `collection`.
@@ -69928,10 +66078,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 753 */
+/* 772 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(96);
+	var baseEach = __webpack_require__(104);
 
 	/**
 	 * The base implementation of `_.some` without support for callback shorthands
@@ -69957,7 +66107,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 754 */
+/* 773 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -69970,12 +66120,12 @@ var InfoxBpmnModeler =
 	NoopHandler.prototype.revert = function() {};
 
 /***/ },
-/* 755 */
+/* 774 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77);
+	var assign = __webpack_require__(85);
 
 	var round = Math.round;
 
@@ -70047,14 +66197,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 756 */
+/* 775 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Collections = __webpack_require__(136);
+	var Collections = __webpack_require__(144);
 
-	var saveClear = __webpack_require__(743).saveClear;
+	var saveClear = __webpack_require__(762).saveClear;
 
 
 	/**
@@ -70157,20 +66307,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 757 */
+/* 776 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77),
-	    forEach = __webpack_require__(128),
-	    pick = __webpack_require__(431);
+	var assign = __webpack_require__(85),
+	    forEach = __webpack_require__(136),
+	    pick = __webpack_require__(448);
 
-	var MoveHelper = __webpack_require__(758),
-	    Collections = __webpack_require__(136);
+	var MoveHelper = __webpack_require__(777),
+	    Collections = __webpack_require__(144);
 
-	var getMovedSourceAnchor = __webpack_require__(759).getMovedSourceAnchor,
-	    getMovedTargetAnchor = __webpack_require__(759).getMovedTargetAnchor;
+	var getMovedSourceAnchor = __webpack_require__(778).getMovedSourceAnchor,
+	    getMovedTargetAnchor = __webpack_require__(778).getMovedTargetAnchor;
 
 
 	/**
@@ -70276,17 +66426,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 758 */
+/* 777 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
-	var Elements = __webpack_require__(137);
+	var Elements = __webpack_require__(145);
 
-	var getMovedSourceAnchor = __webpack_require__(759).getMovedSourceAnchor,
-	    getMovedTargetAnchor = __webpack_require__(759).getMovedTargetAnchor;
+	var getMovedSourceAnchor = __webpack_require__(778).getMovedSourceAnchor,
+	    getMovedTargetAnchor = __webpack_require__(778).getMovedTargetAnchor;
 
 	/**
 	 * A helper that is able to carry out serialized move operations on multiple elements.
@@ -70379,12 +66529,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 759 */
+/* 778 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNewAttachPoint = __webpack_require__(744).getNewAttachPoint;
+	var getNewAttachPoint = __webpack_require__(763).getNewAttachPoint;
 
 	function getResizedSourceAnchor(connection, shape, oldBounds) {
 
@@ -70454,16 +66604,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 760 */
+/* 779 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77),
-	    forEach = __webpack_require__(128);
+	var assign = __webpack_require__(85),
+	    forEach = __webpack_require__(136);
 
-	var getResizedSourceAnchor = __webpack_require__(759).getResizedSourceAnchor,
-	    getResizedTargetAnchor = __webpack_require__(759).getResizedTargetAnchor;
+	var getResizedSourceAnchor = __webpack_require__(778).getResizedSourceAnchor,
+	    getResizedTargetAnchor = __webpack_require__(778).getResizedTargetAnchor;
 
 	/**
 	 * A handler that implements reversible resizing of shapes.
@@ -70562,12 +66712,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 761 */
+/* 780 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
 
 	/**
@@ -70724,7 +66874,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 762 */
+/* 781 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -70814,14 +66964,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 763 */
+/* 782 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
-	var SpaceUtil = __webpack_require__(567);
+	var SpaceUtil = __webpack_require__(586);
 
 	/**
 	 * A handler that implements reversible creating and removing of space.
@@ -70869,14 +67019,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 764 */
+/* 783 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CreateShapeHandler = __webpack_require__(755);
+	var CreateShapeHandler = __webpack_require__(774);
 
 
 	/**
@@ -70946,7 +67096,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 765 */
+/* 784 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -71012,12 +67162,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 766 */
+/* 785 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Collections = __webpack_require__(136);
+	var Collections = __webpack_require__(144);
 
 
 	/**
@@ -71089,14 +67239,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 767 */
+/* 786 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
-	var Collections = __webpack_require__(136);
+	var Collections = __webpack_require__(144);
 
 
 	/**
@@ -71175,12 +67325,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 768 */
+/* 787 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77);
+	var assign = __webpack_require__(85);
 
 
 	/**
@@ -71274,7 +67424,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 769 */
+/* 788 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -71306,12 +67456,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 770 */
+/* 789 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isArray = __webpack_require__(70);
+	var isArray = __webpack_require__(78);
 
 
 	/**
@@ -71385,12 +67535,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 771 */
+/* 790 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var MoveHelper = __webpack_require__(758);
+	var MoveHelper = __webpack_require__(777);
 
 
 	/**
@@ -71427,12 +67577,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 772 */
+/* 791 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
+	var forEach = __webpack_require__(136),
 	    inherits = __webpack_require__(3);
 
 
@@ -71441,7 +67591,7 @@ var InfoxBpmnModeler =
 	  this._elementRegistry = elementRegistry;
 	}
 
-	inherits(DeleteElementsHandler, __webpack_require__(754));
+	inherits(DeleteElementsHandler, __webpack_require__(773));
 
 	DeleteElementsHandler.$inject = [ 'modeling', 'elementRegistry' ];
 
@@ -71471,13 +67621,13 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 773 */
+/* 792 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    sortBy = __webpack_require__(517);
+	var forEach = __webpack_require__(136),
+	    sortBy = __webpack_require__(535);
 
 	/**
 	 * A handler that distributes elements evenly.
@@ -71632,12 +67782,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 774 */
+/* 793 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
 	/**
 	 * A handler that align elements in a certain way.
@@ -71695,12 +67845,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 775 */
+/* 794 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Collections = __webpack_require__(136);
+	var Collections = __webpack_require__(144);
 
 	/**
 	 * A handler that implements reversible attaching/detaching of shapes.
@@ -71773,15 +67923,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 776 */
+/* 795 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    map = __webpack_require__(530),
-	    sortBy = __webpack_require__(517),
-	    clone = __webpack_require__(777);
+	var forEach = __webpack_require__(136),
+	    map = __webpack_require__(549),
+	    sortBy = __webpack_require__(535),
+	    clone = __webpack_require__(796);
 
 	var inherits = __webpack_require__(3);
 
@@ -71814,7 +67964,7 @@ var InfoxBpmnModeler =
 	  this._rules = rules;
 	}
 
-	inherits(PasteHandler, __webpack_require__(754));
+	inherits(PasteHandler, __webpack_require__(773));
 
 
 	PasteHandler.$inject = [
@@ -72062,12 +68212,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 777 */
+/* 796 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseClone = __webpack_require__(778),
-	    bindCallback = __webpack_require__(90),
-	    isIterateeCall = __webpack_require__(92);
+	var baseClone = __webpack_require__(797),
+	    bindCallback = __webpack_require__(98),
+	    isIterateeCall = __webpack_require__(100);
 
 	/**
 	 * Creates a clone of `value`. If `isDeep` is `true` nested objects are cloned,
@@ -72138,18 +68288,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 778 */
+/* 797 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(155),
-	    arrayEach = __webpack_require__(129),
-	    baseAssign = __webpack_require__(87),
-	    baseForOwn = __webpack_require__(97),
-	    initCloneArray = __webpack_require__(779),
-	    initCloneByTag = __webpack_require__(780),
-	    initCloneObject = __webpack_require__(782),
-	    isArray = __webpack_require__(70),
-	    isObject = __webpack_require__(74);
+	var arrayCopy = __webpack_require__(166),
+	    arrayEach = __webpack_require__(137),
+	    baseAssign = __webpack_require__(95),
+	    baseForOwn = __webpack_require__(105),
+	    initCloneArray = __webpack_require__(798),
+	    initCloneByTag = __webpack_require__(799),
+	    initCloneObject = __webpack_require__(801),
+	    isArray = __webpack_require__(78),
+	    isObject = __webpack_require__(82);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -72272,7 +68422,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 779 */
+/* 798 */
 /***/ function(module, exports) {
 
 	/** Used for native method references. */
@@ -72304,10 +68454,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 780 */
+/* 799 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bufferClone = __webpack_require__(781);
+	var bufferClone = __webpack_require__(800);
 
 	/** `Object#toString` result references. */
 	var boolTag = '[object Boolean]',
@@ -72373,7 +68523,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 781 */
+/* 800 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/** Native method references. */
@@ -72400,7 +68550,7 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 782 */
+/* 801 */
 /***/ function(module, exports) {
 
 	/**
@@ -72422,17 +68572,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 783 */
+/* 802 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var reduce = __webpack_require__(784),
+	var reduce = __webpack_require__(803),
 	    keys = __webpack_require__(9),
-	    forEach = __webpack_require__(415),
+	    forEach = __webpack_require__(432),
 	    assign = __webpack_require__(7);
 
-	var getBusinessObject = __webpack_require__(443).getBusinessObject;
+	var getBusinessObject = __webpack_require__(460).getBusinessObject;
 
 	var DEFAULT_FLOW = 'default',
 	    NAME = 'name',
@@ -72602,17 +68752,17 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 784 */
+/* 803 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(416),
-	    baseCallback = __webpack_require__(385),
-	    baseCreate = __webpack_require__(785),
-	    baseForOwn = __webpack_require__(409),
+	var arrayEach = __webpack_require__(433),
+	    baseCallback = __webpack_require__(402),
+	    baseCreate = __webpack_require__(804),
+	    baseForOwn = __webpack_require__(426),
 	    isArray = __webpack_require__(21),
 	    isFunction = __webpack_require__(12),
 	    isObject = __webpack_require__(13),
-	    isTypedArray = __webpack_require__(394);
+	    isTypedArray = __webpack_require__(411);
 
 	/**
 	 * An alternative to `_.reduce`; this method transforms `object` to a new
@@ -72669,7 +68819,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 785 */
+/* 804 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(13);
@@ -72698,12 +68848,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 786 */
+/* 805 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Collections = __webpack_require__(136);
+	var Collections = __webpack_require__(144);
 
 
 	function UpdateCanvasRootHandler(canvas, modeling) {
@@ -72782,18 +68932,18 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 787 */
+/* 806 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(383);
+	var filter = __webpack_require__(400);
 
-	var Elements = __webpack_require__(137);
+	var Elements = __webpack_require__(145);
 
-	var getLanesRoot = __webpack_require__(602).getLanesRoot,
-	    getChildLanes = __webpack_require__(602).getChildLanes,
-	    LANE_INDENTATION = __webpack_require__(602).LANE_INDENTATION;
+	var getLanesRoot = __webpack_require__(621).getLanesRoot,
+	    getChildLanes = __webpack_require__(621).getChildLanes,
+	    LANE_INDENTATION = __webpack_require__(621).LANE_INDENTATION;
 
 	/**
 	 * A handler that allows us to add a new lane
@@ -72871,14 +69021,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 788 */
+/* 807 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getChildLanes = __webpack_require__(602).getChildLanes;
+	var getChildLanes = __webpack_require__(621).getChildLanes;
 
-	var LANE_INDENTATION = __webpack_require__(602).LANE_INDENTATION;
+	var LANE_INDENTATION = __webpack_require__(621).LANE_INDENTATION;
 
 	/**
 	 * A handler that splits a lane into a number of sub-lanes,
@@ -72959,20 +69109,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 789 */
+/* 808 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var getLanesRoot = __webpack_require__(602).getLanesRoot,
-	    computeLanesResize = __webpack_require__(602).computeLanesResize;
+	var getLanesRoot = __webpack_require__(621).getLanesRoot,
+	    computeLanesResize = __webpack_require__(621).computeLanesResize;
 
-	var eachElement = __webpack_require__(137).eachElement;
+	var eachElement = __webpack_require__(145).eachElement;
 
-	var asTRBL = __webpack_require__(516).asTRBL,
-	    substractTRBL = __webpack_require__(534).substractTRBL;
+	var asTRBL = __webpack_require__(534).asTRBL,
+	    substractTRBL = __webpack_require__(553).substractTRBL;
 
 
 	/**
@@ -73090,20 +69240,20 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 790 */
+/* 809 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var collectLanes = __webpack_require__(602).collectLanes;
+	var collectLanes = __webpack_require__(621).collectLanes;
 
-	var getLanesRoot = __webpack_require__(602).getLanesRoot;
+	var getLanesRoot = __webpack_require__(621).getLanesRoot;
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var Collections = __webpack_require__(136);
+	var Collections = __webpack_require__(144);
 
-	var asTRBL = __webpack_require__(516).asTRBL;
+	var asTRBL = __webpack_require__(534).asTRBL;
 
 	var FLOW_NODE_REFS_ATTR = 'flowNodeRef',
 	    LANES_ATTR = 'lanes';
@@ -73281,7 +69431,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 791 */
+/* 810 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -73328,7 +69478,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 792 */
+/* 811 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73337,17 +69487,17 @@ var InfoxBpmnModeler =
 
 	var assign = __webpack_require__(7);
 
-	var BaseLayouter = __webpack_require__(793),
-	    ManhattanLayout = __webpack_require__(794);
+	var BaseLayouter = __webpack_require__(812),
+	    ManhattanLayout = __webpack_require__(813);
 
-	var LayoutUtil = __webpack_require__(516);
+	var LayoutUtil = __webpack_require__(534);
 
-	var isExpanded = __webpack_require__(442).isExpanded;
+	var isExpanded = __webpack_require__(459).isExpanded;
 
 	var getMid = LayoutUtil.getMid,
 	    getOrientation = LayoutUtil.getOrientation;
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
 
 	function BpmnLayouter() {}
@@ -73525,12 +69675,12 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 793 */
+/* 812 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getMid = __webpack_require__(516).getMid;
+	var getMid = __webpack_require__(534).getMid;
 
 
 	/**
@@ -73568,18 +69718,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 794 */
+/* 813 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isArray = __webpack_require__(70),
-	    find = __webpack_require__(468),
-	    without = __webpack_require__(795),
-	    assign = __webpack_require__(77);
+	var isArray = __webpack_require__(78),
+	    find = __webpack_require__(485),
+	    without = __webpack_require__(814),
+	    assign = __webpack_require__(85);
 
-	var LayoutUtil = __webpack_require__(516),
-	    Geometry = __webpack_require__(512);
+	var LayoutUtil = __webpack_require__(534),
+	    Geometry = __webpack_require__(529);
 
 	var getOrientation = LayoutUtil.getOrientation,
 	    getMid = LayoutUtil.getMid,
@@ -74055,12 +70205,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 795 */
+/* 814 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseDifference = __webpack_require__(796),
-	    isArrayLike = __webpack_require__(80),
-	    restParam = __webpack_require__(93);
+	var baseDifference = __webpack_require__(815),
+	    isArrayLike = __webpack_require__(88),
+	    restParam = __webpack_require__(101);
 
 	/**
 	 * Creates an array excluding all provided values using
@@ -74088,12 +70238,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 796 */
+/* 815 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(625),
-	    cacheIndexOf = __webpack_require__(627),
-	    createCache = __webpack_require__(628);
+	var baseIndexOf = __webpack_require__(644),
+	    cacheIndexOf = __webpack_require__(646),
+	    createCache = __webpack_require__(647);
 
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -74149,14 +70299,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 797 */
+/* 816 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(77);
+	var assign = __webpack_require__(85);
 
-	var LayoutUtil = __webpack_require__(516);
+	var LayoutUtil = __webpack_require__(534);
 
 
 	function dockingToPoint(docking) {
@@ -74250,20 +70400,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 798 */
+/* 817 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var EditorActions = __webpack_require__(558);
+	var EditorActions = __webpack_require__(577);
 
-	var filter = __webpack_require__(383);
+	var filter = __webpack_require__(400);
 
-	var is = __webpack_require__(443).is;
+	var is = __webpack_require__(460).is;
 
-	var getBBox = __webpack_require__(137).getBBox;
+	var getBBox = __webpack_require__(145).getBBox;
 
 	function BpmnEditorActions(
 	    injector,
@@ -74379,48 +70529,49 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 799 */
+/* 818 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(634),
-	    __webpack_require__(800),
-	    __webpack_require__(452),
-	    __webpack_require__(571),
-	    __webpack_require__(802),
-	    __webpack_require__(804)
+	    __webpack_require__(653),
+	    __webpack_require__(819),
+	    __webpack_require__(469),
+	    __webpack_require__(590),
+	    __webpack_require__(821),
+	    __webpack_require__(823)
 	  ],
 	  __init__: [ 'contextPadProvider' ],
-	  contextPadProvider: [ 'type', __webpack_require__(811) ]
+	  contextPadProvider: [ 'type', __webpack_require__(830) ]
 	};
 
 /***/ },
-/* 800 */
+/* 819 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(453),
-	    __webpack_require__(472)
+	    __webpack_require__(470),
+	    __webpack_require__(489)
 	  ],
-	  contextPad: [ 'type', __webpack_require__(801) ]
+	  contextPad: [ 'type', __webpack_require__(820) ]
 	};
 
 /***/ },
-/* 801 */
+/* 820 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isFunction = __webpack_require__(73),
-	    forEach = __webpack_require__(128),
+	var isFunction = __webpack_require__(81),
+	    isArray = __webpack_require__(78),
+	    forEach = __webpack_require__(136),
 
-	    domDelegate = __webpack_require__(455),
-	    domEvent = __webpack_require__(484),
-	    domAttr = __webpack_require__(481),
+	    domDelegate = __webpack_require__(472),
+	    domEvent = __webpack_require__(501),
+	    domAttr = __webpack_require__(498),
 	    domQuery = __webpack_require__(52),
-	    domClasses = __webpack_require__(478),
+	    domClasses = __webpack_require__(495),
 	    domify = __webpack_require__(50);
 
 
@@ -74447,6 +70598,9 @@ var InfoxBpmnModeler =
 	}
 
 	ContextPad.$inject = [ 'eventBus', 'overlays' ];
+
+	module.exports = ContextPad;
+
 
 	/**
 	 * Registers events needed for interaction with other components
@@ -74603,7 +70757,7 @@ var InfoxBpmnModeler =
 	    container.appendChild(control);
 
 	    if (entry.className) {
-	      domClasses(control).add(entry.className);
+	      addClasses(control, entry.className);
 	    }
 
 	    if (entry.title) {
@@ -74695,26 +70849,38 @@ var InfoxBpmnModeler =
 	  return !!this._current && (!element ? true : this._current.element === element);
 	};
 
-	module.exports = ContextPad;
 
+
+
+	////////// helpers /////////////////////////////
+
+	function addClasses(element, classNames) {
+
+	  var classes = domClasses(element);
+
+	  var actualClassNames = isArray(classNames) ? classNames : classNames.split(/\s+/g);
+	  actualClassNames.forEach(function(cls) {
+	    classes.add(cls);
+	  });
+	}
 
 /***/ },
-/* 802 */
+/* 821 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(501),
-	    __webpack_require__(452),
-	    __webpack_require__(508)
+	    __webpack_require__(518),
+	    __webpack_require__(469),
+	    __webpack_require__(525)
 	  ],
-	  create: [ 'type', __webpack_require__(803) ]
+	  create: [ 'type', __webpack_require__(822) ]
 	};
 
 
 /***/ },
-/* 803 */
-/***/ function(module, exports) {
+/* 822 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -74724,6 +70890,14 @@ var InfoxBpmnModeler =
 	    MARKER_NOT_OK = 'drop-not-ok',
 	    MARKER_ATTACH = 'attach-ok',
 	    MARKER_NEW_PARENT = 'new-parent';
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClasses = __webpack_require__(148),
+	    svgCreate = __webpack_require__(75),
+	    svgRemove = __webpack_require__(57);
+
+	var translate = __webpack_require__(186).translate;
 
 
 	function Create(eventBus, dragging, rules, modeling, canvas, styles, graphicsFactory) {
@@ -74768,13 +70942,24 @@ var InfoxBpmnModeler =
 	  function createVisual(shape) {
 	    var group, preview, visual;
 
-	    group = canvas.getDefaultLayer().group().attr(styles.cls('djs-drag-group', [ 'no-events' ]));
+	    group = svgCreate('g');
+	    svgAttr(group, styles.cls('djs-drag-group', [ 'no-events' ]));
 
-	    preview = group.group().addClass('djs-dragger');
+	    svgAppend(canvas.getDefaultLayer(), group);
 
-	    preview.translate(shape.width / -2, shape.height / -2);
+	    preview = svgCreate('g');
+	    svgClasses(preview).add('djs-dragger');
 
-	    visual = preview.group().addClass('djs-visual');
+	    svgAppend(group, preview);
+
+	    translate(preview, shape.width / -2, shape.height / -2);
+
+	    var visualGroup = svgCreate('g');
+	    svgClasses(visualGroup).add('djs-visual');
+
+	    svgAppend(preview, visualGroup);
+
+	    visual = visualGroup;
 
 	    // hijack renderer to draw preview
 	    graphicsFactory.drawShape(visual, shape);
@@ -74822,7 +71007,7 @@ var InfoxBpmnModeler =
 	      visual = context.visual = createVisual(shape);
 	    }
 
-	    visual.translate(event.x, event.y);
+	    translate(visual, event.x, event.y);
 	  });
 
 
@@ -74871,7 +71056,7 @@ var InfoxBpmnModeler =
 	    var context = event.context;
 
 	    if (context.visual) {
-	      context.visual.remove();
+	      svgRemove(context.visual);
 	    }
 	  });
 
@@ -74899,44 +71084,44 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 804 */
+/* 823 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(805),
-	    __webpack_require__(730)
+	    __webpack_require__(824),
+	    __webpack_require__(749)
 	  ],
 	  __init__: [ 'replaceMenuProvider' ],
-	  replaceMenuProvider: [ 'type', __webpack_require__(807) ]
+	  replaceMenuProvider: [ 'type', __webpack_require__(826) ]
 	};
 
 /***/ },
-/* 805 */
+/* 824 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'popupMenu' ],
-	  popupMenu: [ 'type', __webpack_require__(806) ]
+	  popupMenu: [ 'type', __webpack_require__(825) ]
 	};
 
 
 /***/ },
-/* 806 */
+/* 825 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128),
-	    assign = __webpack_require__(77),
-	    find = __webpack_require__(468);
+	var forEach = __webpack_require__(136),
+	    assign = __webpack_require__(85),
+	    find = __webpack_require__(485);
 
-	var domDelegate = __webpack_require__(455),
+	var domDelegate = __webpack_require__(472),
 	    domify = __webpack_require__(50),
-	    domClasses = __webpack_require__(478),
-	    domAttr = __webpack_require__(481),
+	    domClasses = __webpack_require__(495),
+	    domAttr = __webpack_require__(498),
 	    domRemove = __webpack_require__(54);
 
 	var DATA_REF = 'data-id';
@@ -75364,22 +71549,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 807 */
+/* 826 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(443).is,
-	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
-	    getBusinessObject = __webpack_require__(443).getBusinessObject,
-	    isExpanded = __webpack_require__(442).isExpanded,
-	    isDifferentType = __webpack_require__(808).isDifferentType;
+	var is = __webpack_require__(460).is,
+	    isEventSubProcess = __webpack_require__(459).isEventSubProcess,
+	    getBusinessObject = __webpack_require__(460).getBusinessObject,
+	    isExpanded = __webpack_require__(459).isExpanded,
+	    isDifferentType = __webpack_require__(827).isDifferentType;
 
-	var forEach = __webpack_require__(415),
-	    filter = __webpack_require__(383),
-	    reject = __webpack_require__(809);
+	var forEach = __webpack_require__(432),
+	    filter = __webpack_require__(400),
+	    reject = __webpack_require__(828);
 
-	var replaceOptions = __webpack_require__ (810);
+	var replaceOptions = __webpack_require__ (829);
 
 
 	/**
@@ -75849,13 +72034,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 808 */
+/* 827 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getBusinessObject = __webpack_require__(443).getBusinessObject;
-	var isExpanded = __webpack_require__(442).isExpanded;
+	var getBusinessObject = __webpack_require__(460).getBusinessObject;
+	var isExpanded = __webpack_require__(459).isExpanded;
 
 	/**
 	 * Returns true, if an element is from a different type
@@ -75896,12 +72081,12 @@ var InfoxBpmnModeler =
 	module.exports.isDifferentType = isDifferentType;
 
 /***/ },
-/* 809 */
+/* 828 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(384),
-	    baseCallback = __webpack_require__(385),
-	    baseFilter = __webpack_require__(407),
+	var arrayFilter = __webpack_require__(401),
+	    baseCallback = __webpack_require__(402),
+	    baseFilter = __webpack_require__(424),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -75952,7 +72137,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 810 */
+/* 829 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -76745,21 +72930,21 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 811 */
+/* 830 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 
 	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(415),
+	    forEach = __webpack_require__(432),
 	    isArray = __webpack_require__(21),
-	    is = __webpack_require__(443).is,
-	    isExpanded = __webpack_require__(442).isExpanded,
-	    isAny = __webpack_require__(575).isAny,
-	    getChildLanes = __webpack_require__(602).getChildLanes,
-	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
-	    hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+	    is = __webpack_require__(460).is,
+	    isExpanded = __webpack_require__(459).isExpanded,
+	    isAny = __webpack_require__(594).isAny,
+	    getChildLanes = __webpack_require__(621).getChildLanes,
+	    isEventSubProcess = __webpack_require__(459).isEventSubProcess,
+	    hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
 
 	/**
 	 * A provider for BPMN 2.0 elements context pad
@@ -76784,10 +72969,15 @@ var InfoxBpmnModeler =
 
 
 	  eventBus.on('create.end', 250, function(event) {
-	    var shape = event.shape,
-	        entries = contextPad.getEntries(shape);
+	    var shape = event.context.shape;
 
-	    if (hasPrimaryModifier(event) && entries.replace) {
+	    if (!hasPrimaryModifier(event)) {
+	      return;
+	    }
+
+	    var entries = contextPad.getEntries(shape);
+
+	    if (entries.replace) {
 	      entries.replace.action.click(event, shape);
 	    }
 	  });
@@ -77120,36 +73310,36 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 812 */
+/* 831 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(813)
+	    __webpack_require__(832)
 	  ],
 	  __init__: [ 'bpmnKeyBindings' ],
-	  bpmnKeyBindings: [ 'type', __webpack_require__(816) ]
+	  bpmnKeyBindings: [ 'type', __webpack_require__(835) ]
 	};
 
 
 /***/ },
-/* 813 */
+/* 832 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'keyboard' ],
-	  keyboard: [ 'type', __webpack_require__(814) ]
+	  keyboard: [ 'type', __webpack_require__(833) ]
 	};
 
 
 /***/ },
-/* 814 */
+/* 833 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(484),
-	    domMatches = __webpack_require__(815);
+	var domEvent = __webpack_require__(501),
+	    domMatches = __webpack_require__(834);
 
 	/**
 	 * A keyboard abstraction that may be activated and
@@ -77462,13 +73652,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 815 */
+/* 834 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(458);
+	module.exports = __webpack_require__(475);
 
 /***/ },
-/* 816 */
+/* 835 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -77546,54 +73736,55 @@ var InfoxBpmnModeler =
 	module.exports = BpmnKeyBindings;
 
 /***/ },
-/* 817 */
+/* 836 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(818),
-	    __webpack_require__(802),
-	    __webpack_require__(565),
-	    __webpack_require__(563),
-	    __webpack_require__(559),
-	    __webpack_require__(446),
-	    __webpack_require__(569)
+	    __webpack_require__(837),
+	    __webpack_require__(821),
+	    __webpack_require__(584),
+	    __webpack_require__(582),
+	    __webpack_require__(578),
+	    __webpack_require__(463),
+	    __webpack_require__(588)
 	  ],
 	  __init__: [ 'paletteProvider' ],
-	  paletteProvider: [ 'type', __webpack_require__(820) ]
+	  paletteProvider: [ 'type', __webpack_require__(839) ]
 	};
 
 
 /***/ },
-/* 818 */
+/* 837 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(560) ],
+	  __depends__: [ __webpack_require__(579) ],
 	  __init__: [ 'palette' ],
-	  palette: [ 'type', __webpack_require__(819) ]
+	  palette: [ 'type', __webpack_require__(838) ]
 	};
 
 
 /***/ },
-/* 819 */
+/* 838 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isFunction = __webpack_require__(73),
-	    forEach = __webpack_require__(128);
+	var isFunction = __webpack_require__(81),
+	    isArray = __webpack_require__(78),
+	    forEach = __webpack_require__(136);
 
 	var domify = __webpack_require__(50),
 	    domQuery = __webpack_require__(52),
-	    domAttr = __webpack_require__(481),
-	    domClear = __webpack_require__(175),
-	    domClasses = __webpack_require__(478),
-	    domMatches = __webpack_require__(815),
-	    domDelegate = __webpack_require__(455),
-	    domEvent = __webpack_require__(484);
+	    domAttr = __webpack_require__(498),
+	    domClear = __webpack_require__(187),
+	    domClasses = __webpack_require__(495),
+	    domMatches = __webpack_require__(834),
+	    domDelegate = __webpack_require__(472),
+	    domEvent = __webpack_require__(501);
 
 
 	var toggleSelector = '.djs-palette-toggle',
@@ -77707,13 +73898,7 @@ var InfoxBpmnModeler =
 	    html: container
 	  });
 
-	  eventBus.on('canvas.resized', function() {
-	    if (parent.clientHeight < 650) {
-	      domClasses(container).add('two-column');
-	    } else {
-	      domClasses(container).remove('two-column');
-	    }
-	  });
+	  eventBus.on('canvas.resized', this.triggerTwoColumn, this);
 	};
 
 
@@ -77751,7 +73936,7 @@ var InfoxBpmnModeler =
 	      }
 
 	      if (entry.className) {
-	        domClasses(control).add(entry.className);
+	        addClasses(control, entry.className);
 	      }
 
 	      if (entry.imageUrl) {
@@ -77808,12 +73993,30 @@ var InfoxBpmnModeler =
 	  event.preventDefault();
 	};
 
+	Palette.prototype.triggerTwoColumn = function() {
+	  var canvas = this._canvas;
+
+	  var parent = canvas.getContainer();
+
+	  if (parent.clientHeight < 650) {
+	    domClasses(parent).add('two-column');
+	  } else {
+	    domClasses(parent).remove('two-column');
+	  }
+	};
+
 
 	/**
 	 * Close the palette
 	 */
 	Palette.prototype.close = function() {
+	  var canvas = this._canvas;
+
+	  var parent = canvas.getContainer();
+
 	  domClasses(this._container).remove('open');
+
+	  domClasses(parent).remove('two-column');
 	};
 
 
@@ -77822,6 +74025,8 @@ var InfoxBpmnModeler =
 	 */
 	Palette.prototype.open = function() {
 	  domClasses(this._container).add('open');
+
+	  this.triggerTwoColumn();
 	};
 
 
@@ -77894,8 +74099,21 @@ var InfoxBpmnModeler =
 	  '</div>';
 
 
+	////////// helpers /////////////////////////////
+
+	function addClasses(element, classNames) {
+
+	  var classes = domClasses(element);
+
+	  var actualClassNames = isArray(classNames) ? classNames : classNames.split(/\s+/g);
+	  actualClassNames.forEach(function(cls) {
+	    classes.add(cls);
+	  });
+	}
+
+
 /***/ },
-/* 820 */
+/* 839 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -78059,28 +74277,32 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 821 */
+/* 840 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(524) ],
+	  __depends__: [ __webpack_require__(542) ],
 	  __init__: [ 'bpmnReplacePreview' ],
-	  bpmnReplacePreview: [ 'type', __webpack_require__(822) ]
+	  bpmnReplacePreview: [ 'type', __webpack_require__(841) ]
 	};
 
 
 /***/ },
-/* 822 */
+/* 841 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var CommandInterceptor = __webpack_require__(542);
+	var CommandInterceptor = __webpack_require__(561);
 
 	var inherits = __webpack_require__(3);
 
 	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(415);
+	    forEach = __webpack_require__(432);
+
+	var domQuery = __webpack_require__(52);
+
+	var svgAttr = __webpack_require__(74);
 
 	var LOW_PRIORITY = 250;
 
@@ -78120,10 +74342,10 @@ var InfoxBpmnModeler =
 	      canvas.addShape(tempShape, element.parent);
 
 	      // select the original SVG element related to the element and hide it
-	      var gfx = context.dragGroup.select('[data-element-id=' + element.id + ']');
+	      var gfx = domQuery('[data-element-id=' + element.id + ']', context.dragGroup);
 
 	      if (gfx) {
-	        gfx.attr({ display: 'none' });
+	        svgAttr(gfx, { display: 'none' });
 	      }
 
 	      // clone the gfx of the temporary shape and add it to the drag group
@@ -78146,10 +74368,10 @@ var InfoxBpmnModeler =
 
 	    forEach(visualReplacements, function(dragger, id) {
 
-	      var originalGfx = context.dragGroup.select('[data-element-id=' + id + ']');
+	      var originalGfx = domQuery('[data-element-id=' + id + ']', context.dragGroup);
 
 	      if (originalGfx) {
-	        originalGfx.attr({ display: 'inline' });
+	        svgAttr(originalGfx, { display: 'inline' });
 	      }
 
 	      dragger.remove();
@@ -78185,16 +74407,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 823 */
+/* 842 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'snapping' ],
-	  snapping: [ 'type', __webpack_require__(824) ]
+	  snapping: [ 'type', __webpack_require__(843) ]
 	};
 
 /***/ },
-/* 824 */
+/* 843 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -78203,20 +74425,20 @@ var InfoxBpmnModeler =
 
 	var abs = Math.abs;
 
-	var forEach = __webpack_require__(415),
-	    filter = __webpack_require__(383),
+	var forEach = __webpack_require__(432),
+	    filter = __webpack_require__(400),
 	    assign = __webpack_require__(7);
 
-	var getBoundingBox = __webpack_require__(137).getBBox;
+	var getBoundingBox = __webpack_require__(145).getBBox;
 
-	var is = __webpack_require__(443).is,
-	    isAny = __webpack_require__(575).isAny,
-	    isExpanded = __webpack_require__(442).isExpanded;
+	var is = __webpack_require__(460).is,
+	    isAny = __webpack_require__(594).isAny,
+	    isExpanded = __webpack_require__(459).isExpanded;
 
-	var Snapping = __webpack_require__(825),
-	    SnapUtil = __webpack_require__(826);
+	var Snapping = __webpack_require__(844),
+	    SnapUtil = __webpack_require__(845);
 
-	var asTRBL = __webpack_require__(516).asTRBL;
+	var asTRBL = __webpack_require__(534).asTRBL;
 
 	var round = Math.round;
 
@@ -78226,9 +74448,9 @@ var InfoxBpmnModeler =
 	    isSnapped = SnapUtil.isSnapped,
 	    setSnapped = SnapUtil.setSnapped;
 
-	var getBoundaryAttachment = __webpack_require__(724).getBoundaryAttachment,
-	    getParticipantSizeConstraints = __webpack_require__(724).getParticipantSizeConstraints,
-	    getLanesRoot = __webpack_require__(602).getLanesRoot;
+	var getBoundaryAttachment = __webpack_require__(743).getBoundaryAttachment,
+	    getParticipantSizeConstraints = __webpack_require__(743).getParticipantSizeConstraints,
+	    getLanesRoot = __webpack_require__(621).getLanesRoot;
 
 	var HIGH_PRIORITY = 1500;
 
@@ -78695,26 +74917,30 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 825 */
+/* 844 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(475),
-	    forEach = __webpack_require__(128),
-	    debounce = __webpack_require__(134);
+	var filter = __webpack_require__(492),
+	    forEach = __webpack_require__(136),
+	    debounce = __webpack_require__(142);
 
+	var mid = __webpack_require__(845).mid;
 
-	var mid = __webpack_require__(826).mid;
+	var SnapContext = __webpack_require__(846);
 
-	var SnapContext = __webpack_require__(827);
-
-	var SnapUtil = __webpack_require__(826);
+	var SnapUtil = __webpack_require__(845);
 
 	var HIGHER_PRIORITY = 1250;
 
 	var isSnapped = SnapUtil.isSnapped,
 	    setSnapped = SnapUtil.setSnapped;
+
+	var svgAppend = __webpack_require__(76),
+	    svgAttr = __webpack_require__(74),
+	    svgClasses = __webpack_require__(148),
+	    svgCreate = __webpack_require__(75);
 
 
 	/**
@@ -78862,22 +75088,28 @@ var InfoxBpmnModeler =
 
 	  var root = this._canvas.getLayer('snap');
 
-	  var line = root.path('M0,0 L0,0').addClass('djs-snap-line');
+	  // var line = root.path('M0,0 L0,0').addClass('djs-snap-line');
+
+	  var line = svgCreate('path');
+	  svgAttr(line, { d: 'M0,0 L0,0' });
+	  svgClasses(line).add('djs-snap-line');
+
+	  svgAppend(root, line);
 
 	  return {
 	    update: function(position) {
 
 	      if (typeof position !== 'number') {
-	        line.attr({ display: 'none' });
+	        svgAttr(line, { display: 'none' });
 	      } else {
 	        if (orientation === 'horizontal') {
-	          line.attr({
-	            path: 'M-100000,' + position + ' L+100000,' + position,
+	          svgAttr(line, {
+	            d: 'M-100000,' + position + ' L+100000,' + position,
 	            display: ''
 	          });
 	        } else {
-	          line.attr({
-	            path: 'M ' + position + ',-100000 L ' + position + ', +100000',
+	          svgAttr(line, {
+	            d: 'M ' + position + ',-100000 L ' + position + ', +100000',
 	            display: ''
 	          });
 	        }
@@ -78938,8 +75170,9 @@ var InfoxBpmnModeler =
 	  });
 	};
 
+
 /***/ },
-/* 826 */
+/* 845 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -79074,14 +75307,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 827 */
+/* 846 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(128);
+	var forEach = __webpack_require__(136);
 
-	var snapTo = __webpack_require__(826).snapTo;
+	var snapTo = __webpack_require__(845).snapTo;
 
 
 	/**
@@ -79249,12 +75482,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 828 */
+/* 847 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var PaletteProvider = __webpack_require__(820);
-	var assign = __webpack_require__(829);
+	var PaletteProvider = __webpack_require__(839);
+	var assign = __webpack_require__(848);
 
 	function InfoxPaletteProvider(palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate) {
 	    PaletteProvider.call(this, palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate);
@@ -79309,27 +75542,21 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 829 */
+/* 848 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(830),
-	    copyObject = __webpack_require__(832),
-	    createAssigner = __webpack_require__(833),
-	    isArrayLike = __webpack_require__(837),
-	    isPrototype = __webpack_require__(842),
-	    keys = __webpack_require__(843);
+	var assignValue = __webpack_require__(849),
+	    copyObject = __webpack_require__(867),
+	    createAssigner = __webpack_require__(868),
+	    isArrayLike = __webpack_require__(878),
+	    isPrototype = __webpack_require__(881),
+	    keys = __webpack_require__(882);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
 
 	/** Used to check objects for own properties. */
 	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/** Built-in value references. */
-	var propertyIsEnumerable = objectProto.propertyIsEnumerable;
-
-	/** Detect if properties shadowing those on `Object.prototype` are non-enumerable. */
-	var nonEnumShadows = !propertyIsEnumerable.call({ 'valueOf': 1 }, 'valueOf');
 
 	/**
 	 * Assigns own enumerable string keyed properties of source objects to the
@@ -79364,7 +75591,7 @@ var InfoxBpmnModeler =
 	 * // => { 'a': 1, 'c': 3 }
 	 */
 	var assign = createAssigner(function(object, source) {
-	  if (nonEnumShadows || isPrototype(source) || isArrayLike(source)) {
+	  if (isPrototype(source) || isArrayLike(source)) {
 	    copyObject(source, keys(source), object);
 	    return;
 	  }
@@ -79379,10 +75606,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 830 */
+/* 849 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(831);
+	var baseAssignValue = __webpack_require__(850),
+	    eq = __webpack_require__(866);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -79404,7 +75632,7 @@ var InfoxBpmnModeler =
 	  var objValue = object[key];
 	  if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) ||
 	      (value === undefined && !(key in object))) {
-	    object[key] = value;
+	    baseAssignValue(object, key, value);
 	  }
 	}
 
@@ -79412,7 +75640,453 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 831 */
+/* 850 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var defineProperty = __webpack_require__(851);
+
+	/**
+	 * The base implementation of `assignValue` and `assignMergeValue` without
+	 * value checks.
+	 *
+	 * @private
+	 * @param {Object} object The object to modify.
+	 * @param {string} key The key of the property to assign.
+	 * @param {*} value The value to assign.
+	 */
+	function baseAssignValue(object, key, value) {
+	  if (key == '__proto__' && defineProperty) {
+	    defineProperty(object, key, {
+	      'configurable': true,
+	      'enumerable': true,
+	      'value': value,
+	      'writable': true
+	    });
+	  } else {
+	    object[key] = value;
+	  }
+	}
+
+	module.exports = baseAssignValue;
+
+
+/***/ },
+/* 851 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getNative = __webpack_require__(852);
+
+	var defineProperty = (function() {
+	  try {
+	    var func = getNative(Object, 'defineProperty');
+	    func({}, '', {});
+	    return func;
+	  } catch (e) {}
+	}());
+
+	module.exports = defineProperty;
+
+
+/***/ },
+/* 852 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsNative = __webpack_require__(853),
+	    getValue = __webpack_require__(865);
+
+	/**
+	 * Gets the native function at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {string} key The key of the method to get.
+	 * @returns {*} Returns the function if it's native, else `undefined`.
+	 */
+	function getNative(object, key) {
+	  var value = getValue(object, key);
+	  return baseIsNative(value) ? value : undefined;
+	}
+
+	module.exports = getNative;
+
+
+/***/ },
+/* 853 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isFunction = __webpack_require__(854),
+	    isMasked = __webpack_require__(862),
+	    isObject = __webpack_require__(861),
+	    toSource = __webpack_require__(864);
+
+	/**
+	 * Used to match `RegExp`
+	 * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
+	 */
+	var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+
+	/** Used to detect host constructors (Safari). */
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+	/** Used for built-in method references. */
+	var funcProto = Function.prototype,
+	    objectProto = Object.prototype;
+
+	/** Used to resolve the decompiled source of functions. */
+	var funcToString = funcProto.toString;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/** Used to detect if a method is native. */
+	var reIsNative = RegExp('^' +
+	  funcToString.call(hasOwnProperty).replace(reRegExpChar, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+
+	/**
+	 * The base implementation of `_.isNative` without bad shim checks.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function,
+	 *  else `false`.
+	 */
+	function baseIsNative(value) {
+	  if (!isObject(value) || isMasked(value)) {
+	    return false;
+	  }
+	  var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
+	  return pattern.test(toSource(value));
+	}
+
+	module.exports = baseIsNative;
+
+
+/***/ },
+/* 854 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGetTag = __webpack_require__(855),
+	    isObject = __webpack_require__(861);
+
+	/** `Object#toString` result references. */
+	var asyncTag = '[object AsyncFunction]',
+	    funcTag = '[object Function]',
+	    genTag = '[object GeneratorFunction]',
+	    proxyTag = '[object Proxy]';
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  if (!isObject(value)) {
+	    return false;
+	  }
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in Safari 9 which returns 'object' for typed arrays and other constructors.
+	  var tag = baseGetTag(value);
+	  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+	}
+
+	module.exports = isFunction;
+
+
+/***/ },
+/* 855 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Symbol = __webpack_require__(856),
+	    getRawTag = __webpack_require__(859),
+	    objectToString = __webpack_require__(860);
+
+	/** `Object#toString` result references. */
+	var nullTag = '[object Null]',
+	    undefinedTag = '[object Undefined]';
+
+	/** Built-in value references. */
+	var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+	/**
+	 * The base implementation of `getTag` without fallbacks for buggy environments.
+	 *
+	 * @private
+	 * @param {*} value The value to query.
+	 * @returns {string} Returns the `toStringTag`.
+	 */
+	function baseGetTag(value) {
+	  if (value == null) {
+	    return value === undefined ? undefinedTag : nullTag;
+	  }
+	  value = Object(value);
+	  return (symToStringTag && symToStringTag in value)
+	    ? getRawTag(value)
+	    : objectToString(value);
+	}
+
+	module.exports = baseGetTag;
+
+
+/***/ },
+/* 856 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var root = __webpack_require__(857);
+
+	/** Built-in value references. */
+	var Symbol = root.Symbol;
+
+	module.exports = Symbol;
+
+
+/***/ },
+/* 857 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var freeGlobal = __webpack_require__(858);
+
+	/** Detect free variable `self`. */
+	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+	/** Used as a reference to the global object. */
+	var root = freeGlobal || freeSelf || Function('return this')();
+
+	module.exports = root;
+
+
+/***/ },
+/* 858 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
+	var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+	module.exports = freeGlobal;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 859 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Symbol = __webpack_require__(856);
+
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var nativeObjectToString = objectProto.toString;
+
+	/** Built-in value references. */
+	var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+	/**
+	 * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+	 *
+	 * @private
+	 * @param {*} value The value to query.
+	 * @returns {string} Returns the raw `toStringTag`.
+	 */
+	function getRawTag(value) {
+	  var isOwn = hasOwnProperty.call(value, symToStringTag),
+	      tag = value[symToStringTag];
+
+	  try {
+	    value[symToStringTag] = undefined;
+	    var unmasked = true;
+	  } catch (e) {}
+
+	  var result = nativeObjectToString.call(value);
+	  if (unmasked) {
+	    if (isOwn) {
+	      value[symToStringTag] = tag;
+	    } else {
+	      delete value[symToStringTag];
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = getRawTag;
+
+
+/***/ },
+/* 860 */
+/***/ function(module, exports) {
+
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var nativeObjectToString = objectProto.toString;
+
+	/**
+	 * Converts `value` to a string using `Object.prototype.toString`.
+	 *
+	 * @private
+	 * @param {*} value The value to convert.
+	 * @returns {string} Returns the converted string.
+	 */
+	function objectToString(value) {
+	  return nativeObjectToString.call(value);
+	}
+
+	module.exports = objectToString;
+
+
+/***/ },
+/* 861 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is the
+	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(_.noop);
+	 * // => true
+	 *
+	 * _.isObject(null);
+	 * // => false
+	 */
+	function isObject(value) {
+	  var type = typeof value;
+	  return value != null && (type == 'object' || type == 'function');
+	}
+
+	module.exports = isObject;
+
+
+/***/ },
+/* 862 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var coreJsData = __webpack_require__(863);
+
+	/** Used to detect methods masquerading as native. */
+	var maskSrcKey = (function() {
+	  var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+	  return uid ? ('Symbol(src)_1.' + uid) : '';
+	}());
+
+	/**
+	 * Checks if `func` has its source masked.
+	 *
+	 * @private
+	 * @param {Function} func The function to check.
+	 * @returns {boolean} Returns `true` if `func` is masked, else `false`.
+	 */
+	function isMasked(func) {
+	  return !!maskSrcKey && (maskSrcKey in func);
+	}
+
+	module.exports = isMasked;
+
+
+/***/ },
+/* 863 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var root = __webpack_require__(857);
+
+	/** Used to detect overreaching core-js shims. */
+	var coreJsData = root['__core-js_shared__'];
+
+	module.exports = coreJsData;
+
+
+/***/ },
+/* 864 */
+/***/ function(module, exports) {
+
+	/** Used for built-in method references. */
+	var funcProto = Function.prototype;
+
+	/** Used to resolve the decompiled source of functions. */
+	var funcToString = funcProto.toString;
+
+	/**
+	 * Converts `func` to its source code.
+	 *
+	 * @private
+	 * @param {Function} func The function to convert.
+	 * @returns {string} Returns the source code.
+	 */
+	function toSource(func) {
+	  if (func != null) {
+	    try {
+	      return funcToString.call(func);
+	    } catch (e) {}
+	    try {
+	      return (func + '');
+	    } catch (e) {}
+	  }
+	  return '';
+	}
+
+	module.exports = toSource;
+
+
+/***/ },
+/* 865 */
+/***/ function(module, exports) {
+
+	/**
+	 * Gets the value at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} [object] The object to query.
+	 * @param {string} key The key of the property to get.
+	 * @returns {*} Returns the property value.
+	 */
+	function getValue(object, key) {
+	  return object == null ? undefined : object[key];
+	}
+
+	module.exports = getValue;
+
+
+/***/ },
+/* 866 */
 /***/ function(module, exports) {
 
 	/**
@@ -79455,10 +76129,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 832 */
+/* 867 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(830);
+	var assignValue = __webpack_require__(849),
+	    baseAssignValue = __webpack_require__(850);
 
 	/**
 	 * Copies properties of `source` to `object`.
@@ -79471,6 +76146,7 @@ var InfoxBpmnModeler =
 	 * @returns {Object} Returns `object`.
 	 */
 	function copyObject(source, props, object, customizer) {
+	  var isNew = !object;
 	  object || (object = {});
 
 	  var index = -1,
@@ -79483,7 +76159,14 @@ var InfoxBpmnModeler =
 	      ? customizer(object[key], source[key], key, object, source)
 	      : undefined;
 
-	    assignValue(object, key, newValue === undefined ? source[key] : newValue);
+	    if (newValue === undefined) {
+	      newValue = source[key];
+	    }
+	    if (isNew) {
+	      baseAssignValue(object, key, newValue);
+	    } else {
+	      assignValue(object, key, newValue);
+	    }
 	  }
 	  return object;
 	}
@@ -79492,11 +76175,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 833 */
+/* 868 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseRest = __webpack_require__(834),
-	    isIterateeCall = __webpack_require__(836);
+	var baseRest = __webpack_require__(869),
+	    isIterateeCall = __webpack_require__(877);
 
 	/**
 	 * Creates a function like `_.assign`.
@@ -79535,13 +76218,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 834 */
+/* 869 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var apply = __webpack_require__(835);
-
-	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
+	var identity = __webpack_require__(870),
+	    overRest = __webpack_require__(871),
+	    setToString = __webpack_require__(873);
 
 	/**
 	 * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -79552,6 +76234,58 @@ var InfoxBpmnModeler =
 	 * @returns {Function} Returns the new function.
 	 */
 	function baseRest(func, start) {
+	  return setToString(overRest(func, start, identity), func + '');
+	}
+
+	module.exports = baseRest;
+
+
+/***/ },
+/* 870 */
+/***/ function(module, exports) {
+
+	/**
+	 * This method returns the first argument it receives.
+	 *
+	 * @static
+	 * @since 0.1.0
+	 * @memberOf _
+	 * @category Util
+	 * @param {*} value Any value.
+	 * @returns {*} Returns `value`.
+	 * @example
+	 *
+	 * var object = { 'a': 1 };
+	 *
+	 * console.log(_.identity(object) === object);
+	 * // => true
+	 */
+	function identity(value) {
+	  return value;
+	}
+
+	module.exports = identity;
+
+
+/***/ },
+/* 871 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var apply = __webpack_require__(872);
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * A specialized version of `baseRest` which transforms the rest array.
+	 *
+	 * @private
+	 * @param {Function} func The function to apply a rest parameter to.
+	 * @param {number} [start=func.length-1] The start position of the rest parameter.
+	 * @param {Function} transform The rest array transform.
+	 * @returns {Function} Returns the new function.
+	 */
+	function overRest(func, start, transform) {
 	  start = nativeMax(start === undefined ? (func.length - 1) : start, 0);
 	  return function() {
 	    var args = arguments,
@@ -79567,16 +76301,16 @@ var InfoxBpmnModeler =
 	    while (++index < start) {
 	      otherArgs[index] = args[index];
 	    }
-	    otherArgs[start] = array;
+	    otherArgs[start] = transform(array);
 	    return apply(func, this, otherArgs);
 	  };
 	}
 
-	module.exports = baseRest;
+	module.exports = overRest;
 
 
 /***/ },
-/* 835 */
+/* 872 */
 /***/ function(module, exports) {
 
 	/**
@@ -79603,13 +76337,136 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 836 */
+/* 873 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(831),
-	    isArrayLike = __webpack_require__(837),
-	    isIndex = __webpack_require__(841),
-	    isObject = __webpack_require__(839);
+	var baseSetToString = __webpack_require__(874),
+	    shortOut = __webpack_require__(876);
+
+	/**
+	 * Sets the `toString` method of `func` to return `string`.
+	 *
+	 * @private
+	 * @param {Function} func The function to modify.
+	 * @param {Function} string The `toString` result.
+	 * @returns {Function} Returns `func`.
+	 */
+	var setToString = shortOut(baseSetToString);
+
+	module.exports = setToString;
+
+
+/***/ },
+/* 874 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var constant = __webpack_require__(875),
+	    defineProperty = __webpack_require__(851),
+	    identity = __webpack_require__(870);
+
+	/**
+	 * The base implementation of `setToString` without support for hot loop shorting.
+	 *
+	 * @private
+	 * @param {Function} func The function to modify.
+	 * @param {Function} string The `toString` result.
+	 * @returns {Function} Returns `func`.
+	 */
+	var baseSetToString = !defineProperty ? identity : function(func, string) {
+	  return defineProperty(func, 'toString', {
+	    'configurable': true,
+	    'enumerable': false,
+	    'value': constant(string),
+	    'writable': true
+	  });
+	};
+
+	module.exports = baseSetToString;
+
+
+/***/ },
+/* 875 */
+/***/ function(module, exports) {
+
+	/**
+	 * Creates a function that returns `value`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 2.4.0
+	 * @category Util
+	 * @param {*} value The value to return from the new function.
+	 * @returns {Function} Returns the new constant function.
+	 * @example
+	 *
+	 * var objects = _.times(2, _.constant({ 'a': 1 }));
+	 *
+	 * console.log(objects);
+	 * // => [{ 'a': 1 }, { 'a': 1 }]
+	 *
+	 * console.log(objects[0] === objects[1]);
+	 * // => true
+	 */
+	function constant(value) {
+	  return function() {
+	    return value;
+	  };
+	}
+
+	module.exports = constant;
+
+
+/***/ },
+/* 876 */
+/***/ function(module, exports) {
+
+	/** Used to detect hot functions by number of calls within a span of milliseconds. */
+	var HOT_COUNT = 800,
+	    HOT_SPAN = 16;
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeNow = Date.now;
+
+	/**
+	 * Creates a function that'll short out and invoke `identity` instead
+	 * of `func` when it's called `HOT_COUNT` or more times in `HOT_SPAN`
+	 * milliseconds.
+	 *
+	 * @private
+	 * @param {Function} func The function to restrict.
+	 * @returns {Function} Returns the new shortable function.
+	 */
+	function shortOut(func) {
+	  var count = 0,
+	      lastCalled = 0;
+
+	  return function() {
+	    var stamp = nativeNow(),
+	        remaining = HOT_SPAN - (stamp - lastCalled);
+
+	    lastCalled = stamp;
+	    if (remaining > 0) {
+	      if (++count >= HOT_COUNT) {
+	        return arguments[0];
+	      }
+	    } else {
+	      count = 0;
+	    }
+	    return func.apply(undefined, arguments);
+	  };
+	}
+
+	module.exports = shortOut;
+
+
+/***/ },
+/* 877 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var eq = __webpack_require__(866),
+	    isArrayLike = __webpack_require__(878),
+	    isIndex = __webpack_require__(880),
+	    isObject = __webpack_require__(861);
 
 	/**
 	 * Checks if the given arguments are from an iteratee call.
@@ -79639,11 +76496,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 837 */
+/* 878 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(838),
-	    isLength = __webpack_require__(840);
+	var isFunction = __webpack_require__(854),
+	    isLength = __webpack_require__(879);
 
 	/**
 	 * Checks if `value` is array-like. A value is considered array-like if it's
@@ -79678,91 +76535,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 838 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(839);
-
-	/** `Object#toString` result references. */
-	var funcTag = '[object Function]',
-	    genTag = '[object GeneratorFunction]';
-
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
-
-	/**
-	 * Checks if `value` is classified as a `Function` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a function, else `false`.
-	 * @example
-	 *
-	 * _.isFunction(_);
-	 * // => true
-	 *
-	 * _.isFunction(/abc/);
-	 * // => false
-	 */
-	function isFunction(value) {
-	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in Safari 8-9 which returns 'object' for typed array and other constructors.
-	  var tag = isObject(value) ? objectToString.call(value) : '';
-	  return tag == funcTag || tag == genTag;
-	}
-
-	module.exports = isFunction;
-
-
-/***/ },
-/* 839 */
-/***/ function(module, exports) {
-
-	/**
-	 * Checks if `value` is the
-	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
-	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(_.noop);
-	 * // => true
-	 *
-	 * _.isObject(null);
-	 * // => false
-	 */
-	function isObject(value) {
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	module.exports = isObject;
-
-
-/***/ },
-/* 840 */
+/* 879 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -79803,7 +76576,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 841 */
+/* 880 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -79831,7 +76604,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 842 */
+/* 881 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -79855,12 +76628,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 843 */
+/* 882 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayLikeKeys = __webpack_require__(844),
-	    baseKeys = __webpack_require__(850),
-	    isArrayLike = __webpack_require__(837);
+	var arrayLikeKeys = __webpack_require__(883),
+	    baseKeys = __webpack_require__(896),
+	    isArrayLike = __webpack_require__(878);
 
 	/**
 	 * Creates an array of the own enumerable property names of `object`.
@@ -79898,13 +76671,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 844 */
+/* 883 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseTimes = __webpack_require__(845),
-	    isArguments = __webpack_require__(846),
-	    isArray = __webpack_require__(849),
-	    isIndex = __webpack_require__(841);
+	var baseTimes = __webpack_require__(884),
+	    isArguments = __webpack_require__(885),
+	    isArray = __webpack_require__(888),
+	    isBuffer = __webpack_require__(889),
+	    isIndex = __webpack_require__(880),
+	    isTypedArray = __webpack_require__(892);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -79921,18 +76696,26 @@ var InfoxBpmnModeler =
 	 * @returns {Array} Returns the array of property names.
 	 */
 	function arrayLikeKeys(value, inherited) {
-	  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
-	  // Safari 9 makes `arguments.length` enumerable in strict mode.
-	  var result = (isArray(value) || isArguments(value))
-	    ? baseTimes(value.length, String)
-	    : [];
-
-	  var length = result.length,
-	      skipIndexes = !!length;
+	  var isArr = isArray(value),
+	      isArg = !isArr && isArguments(value),
+	      isBuff = !isArr && !isArg && isBuffer(value),
+	      isType = !isArr && !isArg && !isBuff && isTypedArray(value),
+	      skipIndexes = isArr || isArg || isBuff || isType,
+	      result = skipIndexes ? baseTimes(value.length, String) : [],
+	      length = result.length;
 
 	  for (var key in value) {
 	    if ((inherited || hasOwnProperty.call(value, key)) &&
-	        !(skipIndexes && (key == 'length' || isIndex(key, length)))) {
+	        !(skipIndexes && (
+	           // Safari 9 has enumerable `arguments.length` in strict mode.
+	           key == 'length' ||
+	           // Node.js 0.10 has enumerable non-index properties on buffers.
+	           (isBuff && (key == 'offset' || key == 'parent')) ||
+	           // PhantomJS 2 has enumerable non-index properties on typed arrays.
+	           (isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset')) ||
+	           // Skip index properties.
+	           isIndex(key, length)
+	        ))) {
 	      result.push(key);
 	    }
 	  }
@@ -79943,7 +76726,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 845 */
+/* 884 */
 /***/ function(module, exports) {
 
 	/**
@@ -79969,26 +76752,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 846 */
+/* 885 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLikeObject = __webpack_require__(847);
-
-	/** `Object#toString` result references. */
-	var argsTag = '[object Arguments]';
+	var baseIsArguments = __webpack_require__(886),
+	    isObjectLike = __webpack_require__(887);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
 
 	/** Used to check objects for own properties. */
 	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
 
 	/** Built-in value references. */
 	var propertyIsEnumerable = objectProto.propertyIsEnumerable;
@@ -80011,56 +76785,40 @@ var InfoxBpmnModeler =
 	 * _.isArguments([1, 2, 3]);
 	 * // => false
 	 */
-	function isArguments(value) {
-	  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
-	  return isArrayLikeObject(value) && hasOwnProperty.call(value, 'callee') &&
-	    (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
-	}
+	var isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
+	  return isObjectLike(value) && hasOwnProperty.call(value, 'callee') &&
+	    !propertyIsEnumerable.call(value, 'callee');
+	};
 
 	module.exports = isArguments;
 
 
 /***/ },
-/* 847 */
+/* 886 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(837),
-	    isObjectLike = __webpack_require__(848);
+	var baseGetTag = __webpack_require__(855),
+	    isObjectLike = __webpack_require__(887);
+
+	/** `Object#toString` result references. */
+	var argsTag = '[object Arguments]';
 
 	/**
-	 * This method is like `_.isArrayLike` except that it also checks if `value`
-	 * is an object.
+	 * The base implementation of `_.isArguments`.
 	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
+	 * @private
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an array-like object,
-	 *  else `false`.
-	 * @example
-	 *
-	 * _.isArrayLikeObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isArrayLikeObject(document.body.children);
-	 * // => true
-	 *
-	 * _.isArrayLikeObject('abc');
-	 * // => false
-	 *
-	 * _.isArrayLikeObject(_.noop);
-	 * // => false
+	 * @returns {boolean} Returns `true` if `value` is an `arguments` object,
 	 */
-	function isArrayLikeObject(value) {
-	  return isObjectLike(value) && isArrayLike(value);
+	function baseIsArguments(value) {
+	  return isObjectLike(value) && baseGetTag(value) == argsTag;
 	}
 
-	module.exports = isArrayLikeObject;
+	module.exports = baseIsArguments;
 
 
 /***/ },
-/* 848 */
+/* 887 */
 /***/ function(module, exports) {
 
 	/**
@@ -80088,14 +76846,14 @@ var InfoxBpmnModeler =
 	 * // => false
 	 */
 	function isObjectLike(value) {
-	  return !!value && typeof value == 'object';
+	  return value != null && typeof value == 'object';
 	}
 
 	module.exports = isObjectLike;
 
 
 /***/ },
-/* 849 */
+/* 888 */
 /***/ function(module, exports) {
 
 	/**
@@ -80127,11 +76885,244 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 850 */
+/* 889 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isPrototype = __webpack_require__(842),
-	    nativeKeys = __webpack_require__(851);
+	/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(857),
+	    stubFalse = __webpack_require__(891);
+
+	/** Detect free variable `exports`. */
+	var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+
+	/** Detect free variable `module`. */
+	var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+
+	/** Detect the popular CommonJS extension `module.exports`. */
+	var moduleExports = freeModule && freeModule.exports === freeExports;
+
+	/** Built-in value references. */
+	var Buffer = moduleExports ? root.Buffer : undefined;
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;
+
+	/**
+	 * Checks if `value` is a buffer.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.3.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
+	 * @example
+	 *
+	 * _.isBuffer(new Buffer(2));
+	 * // => true
+	 *
+	 * _.isBuffer(new Uint8Array(2));
+	 * // => false
+	 */
+	var isBuffer = nativeIsBuffer || stubFalse;
+
+	module.exports = isBuffer;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(890)(module)))
+
+/***/ },
+/* 890 */
+/***/ function(module, exports) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
+
+/***/ },
+/* 891 */
+/***/ function(module, exports) {
+
+	/**
+	 * This method returns `false`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.13.0
+	 * @category Util
+	 * @returns {boolean} Returns `false`.
+	 * @example
+	 *
+	 * _.times(2, _.stubFalse);
+	 * // => [false, false]
+	 */
+	function stubFalse() {
+	  return false;
+	}
+
+	module.exports = stubFalse;
+
+
+/***/ },
+/* 892 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsTypedArray = __webpack_require__(893),
+	    baseUnary = __webpack_require__(894),
+	    nodeUtil = __webpack_require__(895);
+
+	/* Node.js helper references. */
+	var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+
+	/**
+	 * Checks if `value` is classified as a typed array.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 3.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+	 * @example
+	 *
+	 * _.isTypedArray(new Uint8Array);
+	 * // => true
+	 *
+	 * _.isTypedArray([]);
+	 * // => false
+	 */
+	var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+
+	module.exports = isTypedArray;
+
+
+/***/ },
+/* 893 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGetTag = __webpack_require__(855),
+	    isLength = __webpack_require__(879),
+	    isObjectLike = __webpack_require__(887);
+
+	/** `Object#toString` result references. */
+	var argsTag = '[object Arguments]',
+	    arrayTag = '[object Array]',
+	    boolTag = '[object Boolean]',
+	    dateTag = '[object Date]',
+	    errorTag = '[object Error]',
+	    funcTag = '[object Function]',
+	    mapTag = '[object Map]',
+	    numberTag = '[object Number]',
+	    objectTag = '[object Object]',
+	    regexpTag = '[object RegExp]',
+	    setTag = '[object Set]',
+	    stringTag = '[object String]',
+	    weakMapTag = '[object WeakMap]';
+
+	var arrayBufferTag = '[object ArrayBuffer]',
+	    dataViewTag = '[object DataView]',
+	    float32Tag = '[object Float32Array]',
+	    float64Tag = '[object Float64Array]',
+	    int8Tag = '[object Int8Array]',
+	    int16Tag = '[object Int16Array]',
+	    int32Tag = '[object Int32Array]',
+	    uint8Tag = '[object Uint8Array]',
+	    uint8ClampedTag = '[object Uint8ClampedArray]',
+	    uint16Tag = '[object Uint16Array]',
+	    uint32Tag = '[object Uint32Array]';
+
+	/** Used to identify `toStringTag` values of typed arrays. */
+	var typedArrayTags = {};
+	typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
+	typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
+	typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
+	typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
+	typedArrayTags[uint32Tag] = true;
+	typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
+	typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
+	typedArrayTags[dataViewTag] = typedArrayTags[dateTag] =
+	typedArrayTags[errorTag] = typedArrayTags[funcTag] =
+	typedArrayTags[mapTag] = typedArrayTags[numberTag] =
+	typedArrayTags[objectTag] = typedArrayTags[regexpTag] =
+	typedArrayTags[setTag] = typedArrayTags[stringTag] =
+	typedArrayTags[weakMapTag] = false;
+
+	/**
+	 * The base implementation of `_.isTypedArray` without Node.js optimizations.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+	 */
+	function baseIsTypedArray(value) {
+	  return isObjectLike(value) &&
+	    isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
+	}
+
+	module.exports = baseIsTypedArray;
+
+
+/***/ },
+/* 894 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.unary` without support for storing metadata.
+	 *
+	 * @private
+	 * @param {Function} func The function to cap arguments for.
+	 * @returns {Function} Returns the new capped function.
+	 */
+	function baseUnary(func) {
+	  return function(value) {
+	    return func(value);
+	  };
+	}
+
+	module.exports = baseUnary;
+
+
+/***/ },
+/* 895 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(858);
+
+	/** Detect free variable `exports`. */
+	var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+
+	/** Detect free variable `module`. */
+	var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+
+	/** Detect the popular CommonJS extension `module.exports`. */
+	var moduleExports = freeModule && freeModule.exports === freeExports;
+
+	/** Detect free variable `process` from Node.js. */
+	var freeProcess = moduleExports && freeGlobal.process;
+
+	/** Used to access faster Node.js helpers. */
+	var nodeUtil = (function() {
+	  try {
+	    return freeProcess && freeProcess.binding && freeProcess.binding('util');
+	  } catch (e) {}
+	}());
+
+	module.exports = nodeUtil;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(890)(module)))
+
+/***/ },
+/* 896 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isPrototype = __webpack_require__(881),
+	    nativeKeys = __webpack_require__(897);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -80163,10 +77154,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 851 */
+/* 897 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(852);
+	var overArg = __webpack_require__(898);
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = overArg(Object.keys, Object);
@@ -80175,7 +77166,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 852 */
+/* 898 */
 /***/ function(module, exports) {
 
 	/**
@@ -80196,13 +77187,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 853 */
+/* 899 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var ReplaceMenuProvider = __webpack_require__(807);
-	var is = __webpack_require__(443).is;
-	var isAny = __webpack_require__(575).isAny;
+	var ReplaceMenuProvider = __webpack_require__(826);
+	var is = __webpack_require__(460).is;
+	var isAny = __webpack_require__(594).isAny;
 
 	function InfoxReplaceMenuProvider(popupMenu, modeling, moddle, bpmnReplace, rules, translate) {
 	    ReplaceMenuProvider.call(this, popupMenu, modeling, moddle, bpmnReplace, rules, translate);
@@ -80238,14 +77229,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 854 */
+/* 900 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var ContextPadProvider = __webpack_require__(811);
-	var assign = __webpack_require__(829);
-	var is = __webpack_require__(443).is;
-	var isAny = __webpack_require__(575).isAny;
+	var ContextPadProvider = __webpack_require__(830);
+	var assign = __webpack_require__(848);
+	var is = __webpack_require__(460).is;
+	var isAny = __webpack_require__(594).isAny;
 
 	function InfoxContextPadProvider(eventBus, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate, parallelGatewayDirectionProvider, infoxModeler) {
 	    ContextPadProvider.call(this, eventBus, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate);
@@ -80387,12 +77378,12 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 855 */
+/* 901 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var BpmnRules = __webpack_require__(723);
-	var is = __webpack_require__(443).is;
+	var BpmnRules = __webpack_require__(742);
+	var is = __webpack_require__(460).is;
 
 	function InfoxBpmnRules(eventBus) {
 	    BpmnRules.call(this, eventBus);
@@ -80430,7 +77421,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 856 */
+/* 902 */
 /***/ function(module, exports) {
 
 	function brazilianPortugueseTranslate(template, replacements) {
@@ -80504,7 +77495,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 857 */
+/* 903 */
 /***/ function(module, exports) {
 
 	function ParallelGatewayDirectionProvider(popupMenu, translate, modeling) {
@@ -80544,13 +77535,13 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 858 */
+/* 904 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var LabelEditingProvider = __webpack_require__(720);
-	var is = __webpack_require__(443).is;
+	var LabelEditingProvider = __webpack_require__(739);
+	var is = __webpack_require__(460).is;
 	var inherits = __webpack_require__(3);
 
 	function InfoxLabelEditingProvider(eventBus, canvas, directEditing, commandStack) {
