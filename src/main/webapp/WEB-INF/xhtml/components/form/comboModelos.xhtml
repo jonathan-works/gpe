@@ -10,12 +10,9 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-		<ui:param
-		 name="modelo"
-		 value="#{id}" />
 		<s:decorate
 			id="#{id}Decoration"
-			rendered="#{not readonly}"
+			rendered="#{not readonly and home.possuiModelo(props.variavelModelos)}"
 			template="/WEB-INF/xhtml/components/templates/edit.xhtml">
 			<ui:define name="label">#{infoxMessages['modeloDocumento.modeloDocumento']}</ui:define>
 			
@@ -34,7 +31,7 @@
 					var="v"
 					noSelectionLabel="[Selecione o modelo]"
 					label="#{v}"
-					value="#{home.getModeloItems(modelo)}" />
+					value="#{home.getModeloItems(props.variavelModelos)}" />
 		
 			</h:selectOneMenu>
 		</s:decorate>

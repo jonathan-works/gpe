@@ -31,6 +31,10 @@ import br.com.infox.epp.access.entity.UsuarioPerfil_;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class LocalizacaoSearch {
 
+    public Localizacao find(Integer idLocalizacao) {
+        return getEntityManager().find(Localizacao.class, idLocalizacao);
+    }
+
 	public Localizacao getLocalizacaoByCodigo(String codigoLocalizacao) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Localizacao> cq = cb.createQuery(Localizacao.class);

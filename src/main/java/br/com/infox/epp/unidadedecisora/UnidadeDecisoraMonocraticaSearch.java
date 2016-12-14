@@ -179,4 +179,8 @@ public class UnidadeDecisoraMonocraticaSearch extends PersistenceController {
 
         return getEntityManager().createQuery(cq).getResultList();
     }
+
+    public UnidadeDecisoraMonocratica find(Integer idUdm) {
+        return getEntityManager().find(UnidadeDecisoraMonocratica.class, idUdm);
+    }
 }

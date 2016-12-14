@@ -330,6 +330,7 @@ public class Authenticator implements Serializable {
 		LOG.info("unAuthenticate sessao do usuário: " + Contexts.getSessionContext().get(USUARIO_LOGADO));
 		Identity.instance().unAuthenticate();
 		Identity.instance().logout();
+		limparContexto();
 		return "/login.seam";
     }
 
