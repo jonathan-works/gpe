@@ -6,7 +6,7 @@ CKEDITOR.dialog.add('showProtectedDialog', function(editor) {
         minHeight : 60,
         onOk : function() {
             var newSourceValue = this.getContentElement('info', 'txtProtectedSource').getValue();
-
+            newSourceValue=CKEDITOR.plugins.showprotected.encapsulateToken(newSourceValue);
             var encodedSourceValue = CKEDITOR.plugins.showprotected.encodeProtectedSource(newSourceValue);
             this._.selectedElement.setAttribute('data-cke-realelement', encodedSourceValue);
             this._.selectedElement.setText(newSourceValue.slice(2, newSourceValue.length - 1));
@@ -21,7 +21,7 @@ CKEDITOR.dialog.add('showProtectedDialog', function(editor) {
             this._.selectedElement = editor.getSelection().getSelectedElement();
             var decodedSourceValue = CKEDITOR.plugins.showprotected.decodeProtectedSource(this._.selectedElement
                     .getAttribute('data-cke-realelement'));
-
+            decodedSourceValue=CKEDITOR.plugins.showprotected.unencapsulateToken(decodedSourceValue);
             this.setValueOf('info', 'txtProtectedSource', decodedSourceValue);
         },
         contents : [ {

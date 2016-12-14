@@ -6,9 +6,7 @@ CKEDITOR.plugins.add('showprotected', {
             return template.replace(/%1/g, dir == 'rtl' ? 'right' : 'left').replace(/%2/g, 'cke_contents_' + dir);
         }
 
-        var template = '.%2 span.cke_protected' + '{' + 'cursor:pointer;' + '-webkit-user-select: none;'
-                + '-moz-user-select: none;' + '-ms-user-select: none;' + 'user-select: none;'
-                + 'border: 1px dotted #00f;'
+        var template = '.%2 span.cke_protected' + '{' + 'cursor:pointer;' + 'border: 1px dotted #00f;'
         '}';
 
         CKEDITOR.addCss(cssWithDir(template, 'ltr') + cssWithDir(template, 'rtl'));
@@ -42,9 +40,8 @@ CKEDITOR.plugins.add('showprotected', {
                                 commentElement, 'cke_protected', 'protected' ]);
                         var cleanedCommentText = CKEDITOR.plugins.showprotected.decodeProtectedSource(commentText);
                         fakeElement.attributes.title = cleanedCommentText;
-
-                        fakeElement.add(new CKEDITOR.htmlParser.text(cleanedCommentText.slice(2,
-                                cleanedCommentText.length - 1)));
+                        
+                        fakeElement.add(new CKEDITOR.htmlParser.text(CKEDITOR.plugins.showprotected.unencapsulateToken(cleanedCommentText)));
                         return fakeElement;
                     }
 
@@ -81,7 +78,12 @@ CKEDITOR.plugins.showprotected = {
         return encodeURIComponent('<!--' + CKEDITOR.plugins.showprotected.protectedSourceMarker)
                 + encodeURIComponent(protectedSource).replace(/--/g, '%2D%2D') + encodeURIComponent('-->');
     },
-
+    encapsulateToken : function (text){
+        return ['#{',text,'}'].join('');
+    },
+    unencapsulateToken : function (text){
+        return text.slice(2, text.length - 1);
+    },
     createFakeParserElement : function(realElement, className, realElementType) {
         var lang = this.lang.fakeobjects, label = lang[realElementType] || lang.unknown, html;
 
@@ -93,7 +95,8 @@ CKEDITOR.plugins.showprotected = {
             'class' : className,
             'data-cke-realelement' : encodeURIComponent(html),
             'data-cke-real-node-type' : realElement.type,
-            align : realElement.attributes.align || ''
+            align : realElement.attributes.align || '',
+            contenteditable:"false"
         };
 
         if (!CKEDITOR.env.hc)
