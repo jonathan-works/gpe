@@ -21,9 +21,9 @@ public interface ParametroQuery {
     String EXISTE_PARAMETRO_QUERY = "select 1 from Parametro o where o.nomeVariavel = :" + PARAM_NOME;
 
     String PARAMETRO_BY_NOME = "Parametro.nome";
-    String PARAMETRO_BY_NOME_QUERY = "select p from Parametro p where nomeVariavel = :" + PARAM_NOME;
+    String PARAMETRO_BY_NOME_QUERY = "select p from Parametro p where p.nomeVariavel = :" + PARAM_NOME;
 
     String PARAMETRO_BY_VALOR = "Parametro.valor";
-    String PARAMETRO_BY_VALOR_QUERY = "select p from Parametro p where valorVariavel = :" + PARAM_VALOR;
+    String PARAMETRO_BY_VALOR_QUERY = "select p from Parametro p where p.valorVariavel = :" + PARAM_VALOR;
 
 }

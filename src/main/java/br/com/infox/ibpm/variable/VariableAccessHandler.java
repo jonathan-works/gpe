@@ -19,6 +19,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 import org.jbpm.taskmgmt.def.Task;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.crud.VariavelClassificacaoDocumentoAction;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
@@ -385,7 +386,7 @@ public class VariableAccessHandler implements Serializable {
 
     private void setMappedName(String name, VariableType type, Object... extra) {
         if (name == null) {
-            throw new IllegalStateException("Existe uma variável sem nome na tarefa ");
+            throw new IllegalStateException(InfoxMessages.getInstance().get("processBuilder.validationError.varSemNome"));
         }
         StringBuilder sb = new StringBuilder().append(type.name()).append(":").append(name);
         for (Object value : extra) {

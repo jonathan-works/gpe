@@ -265,6 +265,7 @@
 					<script>
 						function closeModalImportarFluxo() {
 							if (#{fluxoUploader.fluxoImportado}) {
+								clearFluxoImportMessages();
 								#{rich:component('modalImportFluxo')}.hide();
 							}
 						}

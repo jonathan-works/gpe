@@ -204,6 +204,7 @@ public class QuartzJobsInfo implements Serializable {
         }
     }
 
+    @Transactional
     public void apagarJobs() {
         List<Map<String, Object>> jobs = getDetailJobsInfo();
 

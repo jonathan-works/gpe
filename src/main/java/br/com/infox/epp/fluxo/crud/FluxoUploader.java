@@ -37,6 +37,8 @@ public class FluxoUploader implements Serializable{
 	private BpmnJpdlService bpmnJpdlService;
 	@Inject
 	private FluxoImporterService fluxoImporterService;
+	@Inject
+	private FluxoController fluxoController;
 	
 	private Fluxo fluxo;
 	private List<String> mensagens;
@@ -87,6 +89,7 @@ public class FluxoUploader implements Serializable{
 			} else {
 				fluxo = fluxoImporterService.importarFluxo(eppFluxoFile, fluxo);
 			}
+			fluxoController.setFluxo(fluxo);
 			fluxoImportado = true;
 			FacesMessages.instance().add("Fluxo importado com sucesso");
 		} catch (ValidationException e) {

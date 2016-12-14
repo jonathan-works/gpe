@@ -56,9 +56,6 @@ import br.com.infox.seam.exception.BusinessRollbackException;
 @TransactionManagement(TransactionManagementType.BEAN)
 public class FluxoMergeService {
 
-    private static final int START_NODE = 0;
-    private static final int TAREFA = 1;
-
     @Inject
     private EntityManager entityManager;
     @Inject
@@ -210,40 +207,67 @@ public class FluxoMergeService {
         List<Node> nodes = processDefinition.getNodes();
         for (Node node : nodes) {
             if (node.getNodeType().equals(NodeType.Task)) {
-                validateVariables(TAREFA, node.getName(), ((TaskNode) node).getTask(node.getName()).getTaskController());
+                validateVariablesTaskNode(node.getName(), ((TaskNode) node).getTask(node.getName()).getTaskController());
             } else if (node.getNodeType().equals(NodeType.StartState)) {
                 Task startTask = ((StartState) node).getProcessDefinition().getTaskMgmtDefinition().getStartTask();
                 if (startTask != null) {
                     TaskController taskController = startTask.getTaskController();
-                    validateVariables(START_NODE, null, taskController);
+                    validateVariablesNoInicio(taskController);
                 }
             }
         }
     }
 
-    private void validateVariables(int nodeType, String nodeName, TaskController taskController) {
+    private void validateVariablesTaskNode(String nodeName, TaskController taskController) {
         if (taskController != null) {
             List<VariableAccess> variables = taskController.getVariableAccesses();
             for (VariableAccess variable : variables) {
                 String[] tokens = variable.getMappedName().split(":");
                 if (tokens.length == 1) {
                     throw new BusinessRollbackException(MessageFormat.format(
-                            InfoxMessages.getInstance().get("processBuilder.validationError.varSemNome"), nodeName));
+                            InfoxMessages.getInstance().get("processBuilder.validationError.task.varSemNome"), nodeName));
                 } else if (VariableType.NULL.name().equals(tokens[0])) {
                     throw new BusinessRollbackException(MessageFormat.format(
-                            InfoxMessages.getInstance().get("processBuilder.validationError.varSemTipo"), tokens[1], nodeType, nodeName));
+                            InfoxMessages.getInstance().get("processBuilder.validationError.task.varSemTipo"), tokens[1], nodeName));
                 } else if (VariableType.DATE.name().equals(tokens[0]) && variable.getConfiguration() == null) {
                     throw new BusinessRollbackException(MessageFormat.format(
-                            InfoxMessages.getInstance().get("processBuilder.validationError.dataSemValidacao"), tokens[1], nodeType, nodeName));
+                            InfoxMessages.getInstance().get("processBuilder.validationError.task.dataSemValidacao"), tokens[1], nodeName));
                 } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && variable.getConfiguration() == null) {
                     throw new BusinessRollbackException(MessageFormat.format(
-                            InfoxMessages.getInstance().get("processBuilder.validationError.listaSemValor"), tokens[1], nodeType, nodeName));
+                            InfoxMessages.getInstance().get("processBuilder.validationError.task.listaSemValor"), tokens[1], nodeName));
                 } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(tokens[0]) && variable.getConfiguration() == null) {
                     throw new BusinessRollbackException(MessageFormat.format(
-                            InfoxMessages.getInstance().get("processBuilder.validationError.lMutilpaSemValor"), tokens[1], nodeType, nodeName));
+                            InfoxMessages.getInstance().get("processBuilder.validationError.task.lMutilpaSemValor"), tokens[1], nodeName));
                 } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
                     throw new BusinessRollbackException(MessageFormat.format(
-                            InfoxMessages.getInstance().get("processBuilder.validationError.listaPersonSemValor"), tokens[1], nodeType, nodeName));
+                            InfoxMessages.getInstance().get("processBuilder.validationError.task.listaPersonSemValor"), tokens[1], nodeName));
+                }
+            }
+        }
+    }
+
+    private void validateVariablesNoInicio(TaskController taskController) {
+        if (taskController != null) {
+            List<VariableAccess> variables = taskController.getVariableAccesses();
+            for (VariableAccess variable : variables) {
+                String[] tokens = variable.getMappedName().split(":");
+                if (tokens.length == 1) {
+                    throw new BusinessRollbackException(InfoxMessages.getInstance().get("processBuilder.validationError.start.varSemNome"));
+                } else if (VariableType.NULL.name().equals(tokens[0])) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.start.varSemTipo"), tokens[1]));
+                } else if (VariableType.DATE.name().equals(tokens[0]) && variable.getConfiguration() == null) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.start.dataSemValidacao"), tokens[1]));
+                } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && variable.getConfiguration() == null) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.start.listaSemValor"), tokens[1]));
+                } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(tokens[0]) && variable.getConfiguration() == null) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.start.lMutilpaSemValor"), tokens[1]));
+                } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.start.listaPersonSemValor"), tokens[1]));
                 }
             }
         }
@@ -255,7 +279,8 @@ public class FluxoMergeService {
             if (node instanceof ProcessState) {
                 ProcessState subprocess = (ProcessState) node;
                 if (Strings.isNullOrEmpty(subprocess.getSubProcessName())) {
-                    throw new BusinessRollbackException("O nó " + subprocess.getName() + " é do tipo subprocesso e deve possuir um fluxo associado.");
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.subProcesso"), subprocess.getName()));
                 }
             }
         }
@@ -267,10 +292,12 @@ public class FluxoMergeService {
             if (node instanceof InfoxMailNode) {
                 InfoxMailNode mailNode = (InfoxMailNode) node;
                 if (Strings.isNullOrEmpty(mailNode.getTo())) {
-                    throw new BusinessRollbackException("O nó de email " + mailNode.getName() + " deve possuir pelo menos um destinatário.");
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.emailDestinatario"), mailNode.getName()));
                 }
                 if (mailNode.getModeloDocumento() == null) {
-                    throw new BusinessRollbackException("O nó de email " + mailNode.getName() + " deve possuir um modelo de documento associado.");
+                    throw new BusinessRollbackException(MessageFormat.format(
+                            InfoxMessages.getInstance().get("processBuilder.validationError.emailModeloDocumento"), mailNode.getName()));
                 }
             }
         }
@@ -281,14 +308,15 @@ public class FluxoMergeService {
         for (Node node : nodes) {
             if (!node.getNodeType().equals(NodeType.EndState)
                     && (node.getLeavingTransitions() == null || node.getLeavingTransitions().isEmpty())) {
-                throw new BusinessRollbackException("O nó " + node.getName() + " não possui transição de saída.");
+                throw new BusinessRollbackException(MessageFormat.format(
+                        InfoxMessages.getInstance().get("processBuilder.validationError.transicao"), node.getName()));
             }
         }
 
         Node start = processDefinition.getStartState();
         Set<Node> visitedNodes = new HashSet<>();
         if (!findPathToEndState(start, visitedNodes, false)) {
-            throw new BusinessRollbackException("Fluxo mal-definido, não há como alcançar o nó de término.");
+            throw new BusinessRollbackException(InfoxMessages.getInstance().get("processBuilder.validationError.saida"));
         }
     }
     

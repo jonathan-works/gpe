@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,9 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.dao.PerfilTemplateDAO;
 import br.com.infox.epp.documento.ClassificacaoDocumentoSearch;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
@@ -74,7 +77,9 @@ public class FluxoImporterService extends PersistenceController {
 		try {
 			xpdl = convertToXml(doc);
 			fluxo.setXml(xpdl);
+			fluxo.setBpmn(null);;//FIXME isso aqui vai ser alterado quando o arquivo exportado contiver o bpmn
 			fluxo = getEntityManager().merge(fluxo);
+			getEntityManager().flush();
 			return fluxo;
 		} catch (IOException e) {
 			LOG.error("Erro ao gerar o xml", e);
@@ -109,13 +114,9 @@ public class FluxoImporterService extends PersistenceController {
 				String[] att = configurationModelo.split("=");
 				String codigo = att[1];
 				if (!modeloDocumentoSearch.existeModeloByCodigo(codigo)) {
-					StringBuilder msgErro = new StringBuilder();
-					msgErro.append("Não foi encontrado o modelo de documento com código '");
-					msgErro.append(codigo);
-					msgErro.append("' utilizado no nó de email '");
-					msgErro.append(mailNode.getAttributeValue("name"));
-					msgErro.append("'");
-		        	erros.add(msgErro.toString());
+                    erros.add(MessageFormat.format(
+                            InfoxMessages.getInstance().get("importador.erro.emailModeloDocumento"), codigo,
+                            mailNode.getAttributeValue("name")));
 				}
 			}
 		}
@@ -128,24 +129,14 @@ public class FluxoImporterService extends PersistenceController {
 				if (eventType.startsWith("listener-")) {
 					String codigo = eventType.replaceFirst("listener-", "");
 					if (!signalSearch.existeSignalByCodigo(codigo)) {
-						StringBuilder msgErro = new StringBuilder();
-						msgErro.append("Não foi encontrado o sinal com código '");
-						msgErro.append(codigo);
-						msgErro.append("' utilizado em um observador de sinal do nó '");
-						msgErro.append(event.getParentElement().getAttributeValue("name"));
-						msgErro.append("'");
-			        	erros.add(msgErro.toString());
+                        erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.sinalCodigo"),
+                                codigo, event.getParentElement().getAttributeValue("name")));
 					}
 				} else if (eventType.equals("dispatcher")) {
 					String codigo = DispatcherConfiguration.fromJson(event.getAttributeValue("configuration")).getCodigoSinal();
 					if (!signalSearch.existeSignalByCodigo(codigo)) {
-						StringBuilder msgErro = new StringBuilder();
-						msgErro.append("Não foi encontrado o sinal com código '");
-						msgErro.append(codigo);
-						msgErro.append("' utilizado em um observador de sinal do nó '");
-						msgErro.append(event.getParentElement().getAttributeValue("name"));
-						msgErro.append("'");
-			        	erros.add(msgErro.toString());
+					    erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.sinalCodigo"),
+                                codigo, event.getParentElement().getAttributeValue("name")));
 					}
 				}
 			}
@@ -173,60 +164,41 @@ public class FluxoImporterService extends PersistenceController {
 	private void validaDominioConfiguration(Element variableNode, List<String> erros) {
 		EnumerationConfig configuration = VariableDominioEnumerationHandler.fromJson(variableNode.getAttributeValue("configuration"));
 		if (!dominioVariavelTarefaSearch.existeDominioByCodigo(configuration.getCodigoDominio())) {
-			StringBuilder msgErro = new StringBuilder();
-			msgErro.append("Não foi encontrado o domínio de dados com o código '");
-			msgErro.append(configuration.getCodigoDominio());
-			msgErro.append("' utilizado na variável '");
-        	msgErro.append(variableNode.getAttributeValue("name"));
-        	msgErro.append("' do nó '");
-			msgErro.append(variableNode.getParentElement().getParentElement().getParentElement().getAttributeValue("name"));
-			msgErro.append("'");
-        	erros.add(msgErro.toString());
+            erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.dominioCodigo"),
+                    configuration.getCodigoDominio(), variableNode.getAttributeValue("name"),
+                    variableNode.getParentElement().getParentElement().getParentElement().getAttributeValue("name")));
 		}
 	}
 
 	private void validaFileConfiguration(Element variableNode, List<String> erros) {
 		FileConfig configuration = VariableEditorModeloHandler.fromJson(variableNode.getAttributeValue("configuration"));
-		if (configuration.getCodigosModeloDocumento() != null && !configuration.getCodigosModeloDocumento().isEmpty()) {
-			StringBuilder msgErro = new StringBuilder();
-			for (String codigo : configuration.getCodigosModeloDocumento()) {
-				if (!modeloDocumentoSearch.existeModeloByCodigo(codigo)) {
-					msgErro.append("'");
-					msgErro.append(codigo);
-					msgErro.append("', ");
-				}
-			}
-			if (msgErro.length() > 0) {
-	        	msgErro.insert(0,"Não foram encontrados modelos de documento com os códigos: ");
-	        	msgErro.setLength(msgErro.length() - 2);
-	        	msgErro.append(". Utilizados na variável '");
-	        	msgErro.append(variableNode.getAttributeValue("name"));
-	        	msgErro.append("' do nó '");
-				msgErro.append(variableNode.getParentElement().getParentElement().getParentElement().getAttributeValue("name"));
-				msgErro.append("'");
-	        	erros.add(msgErro.toString());
-	        }
-		}
-		if (configuration.getCodigosClassificacaoDocumento() != null && !configuration.getCodigosClassificacaoDocumento().isEmpty()) {
-			StringBuilder msgErro = new StringBuilder();
-			for (String codigo : configuration.getCodigosClassificacaoDocumento()) {
-				if (!classificacaoDocumentoSearch.existeClassificacaoByCodigo(codigo)) {
-					msgErro.append("'");
-					msgErro.append(codigo);
-					msgErro.append("', ");
-				}
-			}
-			if (msgErro.length() > 0) {
-	        	msgErro.insert(0,"Não foram encontradas classificações de documento com os códigos: ");
-	        	msgErro.setLength(msgErro.length() - 2);
-	        	msgErro.append(". Utilizadas na variável '");
-	        	msgErro.append(variableNode.getAttributeValue("name"));
-	        	msgErro.append("' do nó '");
-				msgErro.append(variableNode.getParentElement().getParentElement().getParentElement().getAttributeValue("name"));
-	        	msgErro.append("'");
-				erros.add(msgErro.toString());
-	        }
-		}
+        if (configuration.getCodigosModeloDocumento() != null && !configuration.getCodigosModeloDocumento().isEmpty()) {
+            List<String> codigosModeloInexistentes = new ArrayList<>();
+            for (String codigo : configuration.getCodigosModeloDocumento()) {
+                if (!modeloDocumentoSearch.existeModeloByCodigo(codigo)) {
+                    codigosModeloInexistentes.add(codigo);
+                }
+            }
+            if (codigosModeloInexistentes.size() > 0) {
+                erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.fileModelo"),
+                        StringUtil.concatList(codigosModeloInexistentes, ", "), variableNode.getAttributeValue("name"),
+                        variableNode.getParentElement().getParentElement().getParentElement().getAttributeValue("name")));
+            }
+        }
+        if (configuration.getCodigosClassificacaoDocumento() != null && !configuration.getCodigosClassificacaoDocumento().isEmpty()) {
+            List<String> codigosClassificacaoInexistentes = new ArrayList<>();
+            for (String codigo : configuration.getCodigosClassificacaoDocumento()) {
+                if (!classificacaoDocumentoSearch.existeClassificacaoByCodigo(codigo)) {
+                    codigosClassificacaoInexistentes.add(codigo);
+                }
+            }
+            if (codigosClassificacaoInexistentes.size() > 0) {
+                erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.fileClassificacao"),
+                        StringUtil.concatList(codigosClassificacaoInexistentes, ", "),
+                        variableNode.getAttributeValue("name"), variableNode.getParentElement().getParentElement()
+                                .getParentElement().getAttributeValue("name")));
+            }
+        }
 	}
 
 	private void validaActions(Document doc, List<String> erros) {
@@ -243,45 +215,29 @@ public class FluxoImporterService extends PersistenceController {
 		if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getAttributeValue("name"))) {
 			GenerateDocumentoConfiguration configuration = new GenerateDocumentoHandler(action.getText()).getConfiguration();
 			if (!classificacaoDocumentoSearch.existeClassificacaoByCodigo(configuration.getCodigoClassificacaoDocumento())) {
-				StringBuilder msgErro = new StringBuilder();
-				msgErro.append("Não foi encontrada a classificação de documento com o código '");
-				msgErro.append(configuration.getCodigoClassificacaoDocumento());
-				msgErro.append("' utilizada para geração de documento no nó '");
-				msgErro.append(action.getParentElement().getParentElement().getAttributeValue("name"));
-				msgErro.append("'");
-				erros.add(msgErro.toString());
+                erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.geracaoClassificacao"),
+                        configuration.getCodigoClassificacaoDocumento(),
+                        action.getParentElement().getParentElement().getAttributeValue("name")));
 			}
 			if (!modeloDocumentoSearch.existeModeloByCodigo(configuration.getCodigoModeloDocumento())) {
-				StringBuilder msgErro = new StringBuilder();
-				msgErro.append("Não foi encontrado o modelo de documento com o código '");
-				msgErro.append(configuration.getCodigoModeloDocumento());
-				msgErro.append("' utilizada para geração de documento no nó '");
-				msgErro.append(action.getParentElement().getParentElement().getAttributeValue("name"));
-				msgErro.append("'");
-				erros.add(msgErro.toString());
+                erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.geracaoModelo"),
+                        configuration.getCodigoModeloDocumento(),
+                        action.getParentElement().getParentElement().getAttributeValue("name")));
 			}
 		}
 	}
 
 	private void validaConfiguracaoStatusProcesso(Element action, List<String> erros) {
-		StringBuilder msgErro = new StringBuilder();
 		if (StatusProcesso.STATUS_PROCESSO_ACTION_NAME.equals(action.getAttributeValue("name"))) {
-			String codigo = new StatusHandler(action.getText()).getCodigoStatusProcesso();
+		    String codigo = new StatusHandler(action.getText()).getCodigoStatusProcesso();
 			if (!statusProcessoSearch.existeStatusProcessoByNome(codigo)) {
-				msgErro.append("'");
-				msgErro.append(codigo);
-				msgErro.append("', ");
+                erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.statusCodigo"), codigo));
 			}
 		}
-		if (msgErro.length() > 0) {
-        	msgErro.insert(0,"Não foram encontrados status do processo com os nomes: ");
-        	msgErro.setLength(msgErro.length() - 2);
-        	erros.add(msgErro.toString());
-        }
 	}
 
 	private void validaConfiguracaoRaiaPerfil(Document doc, List<String> erros) {
-		StringBuilder msgErro = new StringBuilder();
+	    List<String> codigosInexistentes = new ArrayList<>();
 		for (Element swinlaneNode : doc.getDescendants(new ElementFilter("swimlane"))) {
         	for (Element assignment : swinlaneNode.getChildren("assignment", swinlaneNode.getNamespace())) {
         		String listaCodigos = assignment.getAttributeValue("pooled-actors");
@@ -289,18 +245,15 @@ public class FluxoImporterService extends PersistenceController {
         			String[] codigos = listaCodigos.split(",");
         			for (String codigo : codigos) {
         				if (!perfilTemplateDAO.existePerfilTemplateByCodigo(codigo)) {
-        					msgErro.append("'");
-        					msgErro.append(codigo);
-        					msgErro.append("', ");
+                            codigosInexistentes.add(codigo);
         				}
         			}
 				}
 			}
         }
-        if (msgErro.length() > 0) {
-        	msgErro.insert(0,"Não foram encontrados perfis com os códigos: ");
-        	msgErro.setLength(msgErro.length() - 2);
-        	erros.add(msgErro.toString());
+        if (codigosInexistentes.size() > 0) {
+            erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.raiaCodigo"),
+                    StringUtil.concatList(codigosInexistentes, ", ")));
         }
 	}
 	
