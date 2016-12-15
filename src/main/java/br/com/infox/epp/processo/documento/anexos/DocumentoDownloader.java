@@ -82,7 +82,7 @@ public class DocumentoDownloader implements Serializable {
     public void downloadDocumento(Documento documento, boolean gerarMargens) {
     	if (validarSigilo(documento)) {
     	    try {
-    	        getFileDownloader().downloadDocumentoViaServlet(documento);
+    	        getFileDownloader().downloadDocumento(documento);
             } catch (IOException e) {
                 getActionMessagesService().handleException(null, e);
             }
@@ -110,7 +110,7 @@ public class DocumentoDownloader implements Serializable {
 
     public void downloadDocumento(DocumentoBin documento, boolean gerarMargens) {
         try {
-            getFileDownloader().downloadDocumentoViaServlet(documento);
+            getFileDownloader().downloadDocumento(documento);
         } catch (IOException e) {
             getActionMessagesService().handleException(null, e);
         }
@@ -128,7 +128,7 @@ public class DocumentoDownloader implements Serializable {
 	public void downloadPdf(Documento documento, byte[] pdf, String nome) {
     	if (validarSigilo(documento)) {
     	    try {
-    	        getFileDownloader().downloadDocumentoViaServlet(documento);
+    	        getFileDownloader().downloadDocumento(documento);
             } catch (IOException e) {
                 getActionMessagesService().handleException(null, e);
             }

@@ -46,7 +46,7 @@ public class DownloadComunicacaoAction implements Serializable{
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
 			
-			fileDownloader.downloadDocumentoViaServlet(pdf, "application/pdf", "Comunicação.pdf");
+			fileDownloader.downloadDocumento(pdf, "application/pdf", "Comunicação.pdf");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
