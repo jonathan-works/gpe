@@ -62,7 +62,7 @@ public class TaskHandlerVisitor {
             if (NodeType.Task.equals(type)) {
                 TaskNode tn = (TaskNode) from;
                 addTaskNodeVariables(tn);
-            }else if (NodeType.StartState.equals(type)) {
+            }else if (NodeType.StartState.equals(type) && from.getProcessDefinition().getTaskMgmtDefinition().getStartTask() != null) {
             	addTaskVariables(false, from.getProcessDefinition().getTaskMgmtDefinition().getStartTask());
             }
             
@@ -81,7 +81,7 @@ public class TaskHandlerVisitor {
 
 	private void addTaskVariables(boolean filtered, Task tsk) {
 		TaskController tc = tsk.getTaskController();
-		if (tc != null) {
+		if (tc != null && tc.getVariableAccesses() != null) {
 		    List<VariableAccess> accesses = tc.getVariableAccesses();
 		    for (VariableAccess v : accesses) {
 		        String mappedName = v.getMappedName();
