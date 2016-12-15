@@ -16,13 +16,13 @@
                 <p:outputPanel id="#{f.id}TipoDocDiv">
                     <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
                         label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-                        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), taskInstanceHome.currentTaskInstance)}" 
+                        items="#{home.getUseableClassificacaoDocumento(true, home.getVariableName(id), home.currentTaskInstance)}" 
                         showLabelSelecione="true" required="#{wi:get(required, false)}"
-                        value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
-                        readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
-        			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}"
-                        disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
-        			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}">
+                        value="#{home.variaveisDocumento[id].classificacaoDocumento}"
+                        readonly="#{readonly or home.getUseableClassificacaoDocumento(true, home.getVariableName(id), home.currentTaskInstance).size eq 1 
+        			or home.variaveisDocumento[id].hasAssinatura()}"
+                        disabled="#{readonly or home.getUseableClassificacaoDocumento(true, home.getVariableName(id), home.currentTaskInstance).size eq 1 
+        			or home.variaveisDocumento[id].hasAssinatura()}">
                         <f:validateBean disabled="true"/>
                         <f:validator validatorId="classificacaoEditorValidator" for="@this"/>
 						<f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>

@@ -246,7 +246,8 @@ public class TaskInstanceHome implements Serializable {
 
 	private void loadClassificacaoDocumentoDefault(TaskVariableRetriever variableRetriever, Documento documento) {
 		Integer idFluxo = processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
-		List<ClassificacaoDocumento> classificacoes = getUseableClassificacaoDocumento(false, variableRetriever.getName(), idFluxo);
+		
+		List<ClassificacaoDocumento> classificacoes = getUseableClassificacaoDocumento(variableRetriever.isEditor(), variableRetriever.getName(), variableRetriever.taskInstance);
 		if (classificacoes != null && classificacoes.size() == 1) {
 			documento.setClassificacaoDocumento(classificacoes.get(0));
 		}

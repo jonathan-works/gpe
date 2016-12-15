@@ -17,6 +17,8 @@
 			<ui:define name="label">#{infoxMessages['modeloDocumento.modeloDocumento']}</ui:define>
 			
 			<h:selectOneMenu
+                readonly="#{readonly or home.getModeloItems(props.variavelModelos).size eq 1}"
+                disabled="#{readonly or home.getModeloItems(props.variavelModelos).size eq 1}"
 				value="#{home.modeloDocumento}">
 			
 				<a:ajax
