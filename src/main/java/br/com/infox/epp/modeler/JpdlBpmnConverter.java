@@ -1,4 +1,4 @@
-package br.com.infox.epp.modeler.converter;
+package br.com.infox.epp.modeler;
 
 import java.io.StringReader;
 import java.util.ArrayList;

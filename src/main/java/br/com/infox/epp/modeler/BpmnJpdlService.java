@@ -1,4 +1,4 @@
-package br.com.infox.epp.modeler.converter;
+package br.com.infox.epp.modeler;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
@@ -17,6 +17,7 @@ import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.GatewayDirection;
 import org.camunda.bpm.model.bpmn.builder.ProcessBuilder;
 import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
+import org.camunda.bpm.model.bpmn.instance.BoundaryEvent;
 import org.camunda.bpm.model.bpmn.instance.Collaboration;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.Lane;
@@ -131,6 +132,7 @@ public class BpmnJpdlService {
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(newProcessDefinitionXml);
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
     	atualizarNomeFluxo(fluxo, bpmnModel, processDefinition);
+    	ConfiguracoesTarefa.resolverMarcadoresBpmn(processDefinition, bpmnModel);
     	
     	newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
     	// Validar consistência do JPDL
@@ -242,6 +244,9 @@ public class BpmnJpdlService {
 	
 	private void updateNodes(BpmnJpdlTranslation translation, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
 		for (FlowNode flowNode : bpmnModel.getModelElementsByType(FlowNode.class)) {
+			if (flowNode instanceof BoundaryEvent) {
+				continue;
+			}
 			Node node = processDefinition.getNode(flowNode.getId());
 			Node newCandidateNode = NodeFactory.createNode(flowNode, processDefinition);
 			if (!newCandidateNode.getClass().equals(node.getClass())) {

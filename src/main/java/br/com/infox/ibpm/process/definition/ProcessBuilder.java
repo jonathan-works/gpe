@@ -24,6 +24,7 @@ import br.com.infox.epp.fluxo.crud.FluxoController;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.list.HistoricoProcessDefinitionList;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.modeler.ProcessDefinitionService;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.process.definition.fitter.EventFitter;

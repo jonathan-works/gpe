@@ -12,6 +12,7 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 import org.jbpm.scheduler.def.CancelTimerAction;
+import org.jbpm.scheduler.def.CreateTimerAction;
 
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.ibpm.node.handler.NodeHandler;
@@ -79,13 +80,13 @@ public class EventHandler implements Serializable {
         for (Event event : events.values()) {
             if (!isIgnoreEvent(event)) {
                 EventHandler eh = new EventHandler(event);
-                ret.add(eh);
+            	ret.add(eh);
             }
         }
         return ret;
     }
     
-    private static boolean isIgnoreEvent(Event event) {
+    public static boolean isIgnoreEvent(Event event) {
         return event.isListener() || Event.EVENTTYPE_DISPATCHER.equals(event.getEventType()) 
                 || MultiInstanceActivityBehavior.NONE_EVENT_BEHAVIOR.equals(event.getEventType()) 
                 || MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR.equals(event.getEventType());
@@ -140,13 +141,10 @@ public class EventHandler implements Serializable {
             if (actionList != null) {
                 for (Iterator<Action> it = actionList.iterator(); it.hasNext();) {
                     Action action = it.next();
-                    if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName()) || action instanceof CancelTimerAction || 
+                    if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName()) || action instanceof CancelTimerAction ||
+                    		action instanceof CreateTimerAction ||
                     		StatusProcesso.STATUS_PROCESSO_ACTION_NAME.equals(action.getName())) {
                         it.remove();
-                    }
-                    if (action instanceof CancelTimerAction) {
-                    	it.remove();
-                        break;
                     }
                 }
             }

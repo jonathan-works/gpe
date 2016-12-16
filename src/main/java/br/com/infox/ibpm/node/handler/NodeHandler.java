@@ -736,10 +736,10 @@ public class NodeHandler implements Serializable {
     
     public boolean canRemoveEvent(EventHandler eventHandler) {
     	if (eventHandler != null) {
-    		if (eventHandler.getEvent().getEventType().equals(Event.EVENTTYPE_NODE_LEAVE)) {
-    			return retrieveGenerateDocumentoEvent(eventHandler.getEvent()) == null;
-    		} else if (eventHandler.getEvent().getEventType().equals(Event.EVENTTYPE_NODE_ENTER)) {
-    			return retrieveStatusProcessoEvent(eventHandler.getEvent()) == null;
+    		if (eventHandler.getActions() != null) {
+    			return eventHandler.getActions().size() == eventHandler.getEvent().getActions().size();
+    		} else {
+    			return eventHandler.getEvent().getActions() == null || eventHandler.getEvent().getActions().isEmpty();
     		}
     	}
     	return true;

@@ -1,4 +1,4 @@
-package br.com.infox.epp.modeler.converter;
+package br.com.infox.epp.modeler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.instance.BoundaryEvent;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.Lane;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
@@ -122,7 +123,9 @@ class BpmnJpdlTranslation {
 		}
 		
 		for (FlowNode flowNode : bpmnModel.getModelElementsByType(FlowNode.class)) {
-			flowNodes.put(flowNode.getId(), flowNode);
+			if (!(flowNode instanceof BoundaryEvent)) {
+				flowNodes.put(flowNode.getId(), flowNode);
+			}
 		}
 
 		for (String flowNodeId : flowNodes.keySet()) {

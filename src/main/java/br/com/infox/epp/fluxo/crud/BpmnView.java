@@ -20,7 +20,7 @@ import com.google.gson.JsonObject;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.modeler.converter.BpmnJpdlService;
+import br.com.infox.epp.modeler.BpmnJpdlService;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.log.LogProvider;

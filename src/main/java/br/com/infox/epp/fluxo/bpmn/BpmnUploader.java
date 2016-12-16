@@ -18,7 +18,7 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.fluxo.crud.FluxoController;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.modeler.converter.BpmnJpdlService;
+import br.com.infox.epp.modeler.BpmnJpdlService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;

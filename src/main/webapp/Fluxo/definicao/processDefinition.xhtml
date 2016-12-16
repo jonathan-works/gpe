@@ -50,6 +50,7 @@
 		<script>
 			function updateBpmn() {
 				doUpdate(JSON.stringify(modeler.getBpmnInformation()));
+				window.modeler = null;
 			}
 			
 			function initModelador(container) {

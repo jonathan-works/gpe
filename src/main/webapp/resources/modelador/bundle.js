@@ -77346,6 +77346,10 @@ var InfoxBpmnModeler =
 	        });
 	    }
 
+	    if (isAny(bo, ['bpmn:BoundaryEvent', 'bpmn:DataObjectReference', 'bpmn:DataOutputAssociation'])) {
+	        entries = {};
+	    }
+
 	    return entries;
 	};
 

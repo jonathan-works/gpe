@@ -1,6 +1,7 @@
-package br.com.infox.ibpm.process.definition;
+package br.com.infox.epp.modeler;
 
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
@@ -16,8 +17,6 @@ import org.jbpm.graph.def.ProcessDefinition;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.service.HistoricoProcessDefinitionService;
-import br.com.infox.epp.modeler.converter.BpmnJpdlService;
-import br.com.infox.epp.modeler.converter.JpdlBpmnConverter;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
@@ -39,8 +38,14 @@ public class ProcessDefinitionService {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Fluxo atualizarDefinicao(Fluxo fluxo, String newProcessDefinitionXml, Collection<Tarefa> tarefasModificadas) {
 		historicoProcessDefinitionService.registrarHistorico(fluxo);
+		
+		ProcessDefinition newProcessDefinition = new InfoxJpdlXmlReader(new StringReader(newProcessDefinitionXml)).readProcessDefinition();
+		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(fluxo.getBpmn().getBytes(StandardCharsets.UTF_8)));
+		ConfiguracoesTarefa.resolverMarcadoresBpmn(newProcessDefinition, bpmnModel);
+		fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
 		fluxo.setXml(newProcessDefinitionXml);
 		fluxo = fluxoManager.update(fluxo);
+		
 		if (tarefasModificadas != null) {
 			for (Tarefa tarefa : tarefasModificadas) {
 				tarefaManager.update(tarefa);
