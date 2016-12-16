@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.documento.sigilo.action;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -40,8 +39,6 @@ public class SigiloDocumentoAction implements Serializable {
 
     public static final String NAME = "sigiloDocumentoAction";
     private static final long serialVersionUID = 1L;
-    private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
-    private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
     private static final String MOTIVO_COMPONENT_ID = ":visualizarProcessoTabPanel:sigiloDocumentoForm:motivoDecoration:motivo";
     private static final LogProvider LOG = Logging.getLogProvider(SigiloDocumentoAction.class);
 
@@ -81,13 +78,6 @@ public class SigiloDocumentoAction implements Serializable {
         return sigiloDocumentoMap;
     }
 
-    public String getViewUrl(Documento documento) {
-        if (documento.getDocumentoBin().isBinario()) {
-            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), Integer.toString(documento.getId()));
-        }
-        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), Integer.toString(documento.getId()));
-    }
-    
     public boolean isSigiloso(Documento documento) {
         return sigiloDocumentoManager.isSigiloso(documento.getId());
     }

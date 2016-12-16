@@ -5,6 +5,7 @@
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:a="http://richfaces.org/a4j"
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 	
@@ -23,10 +24,12 @@
 				<ui:define name="toolBar">
 					<rich:column styleClass="dt-toolbar-col">
 						<h:form>
-						<a:commandLink
-								onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(row)}');">
+                            <a:commandLink execute="@this" render="@this"
+                                action="#{jsfUtil.applyLastPhaseFlashAction}"
+                                oncomplete="#{fileDownloader.getWindowOpen(row.documentoBin)}">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
-						</a:commandLink>
+                                <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+                            </a:commandLink>
 						</h:form>
 					</rich:column>
 				</ui:define>

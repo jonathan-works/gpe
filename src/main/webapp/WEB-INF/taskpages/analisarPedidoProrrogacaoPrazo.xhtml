@@ -39,8 +39,10 @@
 			value="#{analisarPedidoProrrogacaoPrazoAction.documentosAnalise}" var="row">
 			<rich:column styleClass="dt-toolbar-col">
 				<h:form>
-					<a:commandLink id="baixarDocumentoAnalise" 
-						 onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(row)}');">
+					<a:commandLink id="baixarDocumentoAnalise"
+                        action="jsfUtil.applyLastPhaseFlashAction()"
+                        oncomplete="fileDownloader.getWindowOpen(row.documentoBin)}">
+                        <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
 						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
 					</a:commandLink>
 				</h:form>

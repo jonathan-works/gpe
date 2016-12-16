@@ -33,8 +33,11 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.path.PathResolver;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(FileDownloader.NAME)
 @Scope(ScopeType.EVENT)
@@ -54,6 +57,10 @@ public class FileDownloader implements Serializable {
     private InfoxMessages infoxMessages;
     @Inject
     private DocumentoBinManager documentoBinManager;
+    @Inject
+    private DocumentoManager documentoManager;
+
+    private PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
     
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)
@@ -227,5 +234,20 @@ public class FileDownloader implements Serializable {
     public void download(DocumentoBin documentoBin) {
     	byte[] data = getData(documentoBin);
     	download(data, "application/" + documentoBin.getExtensao(), documentoBin.getNomeArquivo());
+    }
+
+    public String getWindowOpen(Boolean isPdf) {
+        return isPdf
+                ? "window.open('" + pathResolver.getContextPath() + "/downloadDocumento.seam', '_blank');"
+                : "window.open('" + pathResolver.getContextPath() + "/downloadDocumento.seam', '_self');";
+    }
+
+    public String getWindowOpen(DocumentoBin documentoBin) {
+        return getWindowOpen(isPdf(documentoBin));
+    }
+
+    public String getWindowOpenByIdDocumento(Integer idDocumento) {
+        Documento documento = documentoManager.find(idDocumento);
+        return documento == null ? "" : getWindowOpen(documento.getDocumentoBin());
     }
 }

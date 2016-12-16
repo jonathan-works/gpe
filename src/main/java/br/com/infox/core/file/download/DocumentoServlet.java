@@ -25,6 +25,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 
 @WebServlet(urlPatterns = DocumentoServlet.BASE_SERVLET_PATH + "/*")
+@Deprecated() // Método obsoleto de download, referências removidas em #86359
 public class DocumentoServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
