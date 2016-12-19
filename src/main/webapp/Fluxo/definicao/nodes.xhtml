@@ -135,6 +135,18 @@
                                     value="#{nodeFitter.nodeName}" />
                             </h:panelGrid>
                         </f:facet>
+                        
+                        <ui:fragment rendered="#{nodeFitter.currentNode.nodeType eq 'Node'}">
+                        	<div>
+                        		<h:form>
+									<wi:selectBooleanCheckbox value="#{nodeFitter.currentNode.async}"
+										label="#{infoxMessages['process.node.async']}" id="nodeAsync">
+										<a:ajax event="change" />
+									</wi:selectBooleanCheckbox>
+								</h:form>
+                        	</div>
+                        </ui:fragment>
+                        
                         <div class="#{nodeFitter.currentNode.nodeType ne 'Decision' ? 'flex-displayed-container' : ''}">
                             <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
                                 <ui:include src="transition.xhtml">
