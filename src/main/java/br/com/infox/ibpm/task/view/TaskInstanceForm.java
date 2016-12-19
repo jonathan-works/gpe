@@ -176,6 +176,11 @@ public class TaskInstanceForm implements Serializable {
                         }
                     }
                         break;
+                    case EDITOR: {
+                        ff.getProperties().put("editorId", var.getVariableName() + "-" + taskInstance.getId());
+                        ff.getProperties().put("variavelModelos", var.getVariableName() + "Modelo");
+                    }
+                    	break;
                     default:
                         break;
                     }

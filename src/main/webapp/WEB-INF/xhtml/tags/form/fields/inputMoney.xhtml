@@ -18,7 +18,7 @@
 	    
 	    <s:div rendered="#{not readonly}" >
 		    <script>
-		  		maskMoney(document.getElementById("#{rich:clientId(id.concat('Input'))}"));
+		  		maskMoney(document.getElementById("#{rich:clientId(id.concat('Input'))}"), {nullable: #{nullable ? "true" : "false"}});
 		   	</script>
 	   	</s:div>
    	</s:div>

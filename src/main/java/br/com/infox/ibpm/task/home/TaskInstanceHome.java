@@ -21,6 +21,7 @@ import javax.transaction.SystemException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Factory;
@@ -30,6 +31,7 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.transaction.Transaction;
@@ -239,6 +241,9 @@ public class TaskInstanceHome implements Serializable {
 				variaveisDocumento.put(getFieldName(variableRetriever.getName()), documento);
 			else
 				variaveisDocumento.put(variableRetriever.getName(), documento);
+			if (variableRetriever.isEditor() && documento.getId() == null) {
+				setModeloWhenExists(variableRetriever, documento);
+			}
 		}
 	}
 
@@ -249,6 +254,16 @@ public class TaskInstanceHome implements Serializable {
 		}
 	}
 
+	private void setModeloWhenExists(TaskVariableRetriever variableRetriever, Documento documentoEditor) {
+		String modelo = getModeloFromProcessInstance(variableRetriever.getName());
+		if (modelo != null) {
+			if (!variableRetriever.hasVariable()) {
+				setModeloDocumento(getModeloDocumentoFromModelo(modelo));
+				assignModeloDocumento(getFieldName(variableRetriever.getName()));
+			}
+		}
+	}
+	
 	private void setModeloReadonly(String variavelEditor) {
 		Form form = ComponentUtil.getComponent(TaskInstanceForm.NAME);
 		String variavelComboModelo = variavelEditor + "Modelo";
@@ -258,6 +273,15 @@ public class TaskInstanceHome implements Serializable {
 				break;
 			}
 		}
+	}
+
+	private String getModeloFromProcessInstance(String variableName) {
+		return (String) ProcessInstance.instance().getContextInstance().getVariable(variableName + "Modelo");
+	}
+
+	private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
+		String s = modelo.split(",")[0].trim();
+		return modeloDocumentoManager.find(Integer.parseInt(s));
 	}
 
 	@Factory("menuMovimentar")
@@ -332,7 +356,12 @@ public class TaskInstanceHome implements Serializable {
                 } else if (variableInfo.getVariableType() == VariableType.FRAME){
                 	continue;
                 } else if (value == null || (value instanceof String && ((String) value).isEmpty())) {
-                    failedInputIds.add(String.format("%s:%sDecoration:%s", TASK_INSTANCE_FORM_ID, fieldName, fieldName));
+                	String inputFieldName =  fieldName;
+                	if(variableInfo.getVariableType() == VariableType.MONETARY) {
+                		inputFieldName = fieldName + "Input";
+                	}
+                	String inputId = String.format("%s:%sDecoration:%s", TASK_INSTANCE_FORM_ID, inputFieldName, inputFieldName);
+                    failedInputIds.add(inputId);
                 }
             }                
         }
@@ -659,24 +688,41 @@ public class TaskInstanceHome implements Serializable {
 				return null;
 			}
 			this.currentTaskInstance = null;
-			finalizarTaskDoJbpm(transition);
-			// Flush para que a consulta do canOpenTask consiga ver o pooled
-			// actor que o jbpm criou
-			// no TaskInstance#create, caso contrário, o epp achará que o
-			// usuário não pode ver a tarefa seguinte,
-			// mesmo que possa
 			try {
+			    finalizarTaskDoJbpm(transition);
+    			// Flush para que a consulta do canOpenTask consiga ver o pooled
+    			// actor que o jbpm criou
+    			// no TaskInstance#create, caso contrário, o epp achará que o
+    			// usuário não pode ver a tarefa seguinte,
+    			// mesmo que possa
 				if (Transaction.instance().isActive()) {
 					JbpmUtil.getJbpmSession().flush();
 				}
-			} catch (HibernateException | SystemException e) {
-				LOG.error("", e);
-			}
-			mapaDeVariaveis = null;
-			atualizarPaginaDeMovimentacao();
+				mapaDeVariaveis = null;
+	            atualizarPaginaDeMovimentacao();
+		    } catch (HibernateException | SystemException | JbpmException | DAOException e) {
+		        LOG.error("", e);
+		        actionMessagesService.handleGenericException(e);
+		        rollbackActions();
+		        try {
+                    if (Transaction.instance().isActive()) {
+                        Transaction.instance().setRollbackOnly();
+                    }
+                } catch (IllegalStateException | SystemException e1) {
+                    LOG.error("", e1);
+                    actionMessagesService.handleGenericException(e1);
+                }
+		    }
 		}
 		return null;
 	}
+
+    private void rollbackActions() {
+        Session session = ManagedJbpmContext.instance().getSession();
+        session.refresh(taskInstance.getToken());
+        session.refresh(taskInstance.getProcessInstance().getTaskMgmtInstance());
+        setCurrentTaskInstance(taskInstance);
+    }
 
 	private boolean validEditor() {
 	    if (possuiTask()) {
@@ -785,24 +831,16 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	private void finalizarTaskDoJbpm(String transition) {
-		try {
-			BusinessProcess.instance().endTask(transition);
-			atualizarBam();
-		} catch (JbpmException e) {
-			LOG.error(".end()", e);
-		}
+		BusinessProcess.instance().endTask(transition);
+		atualizarBam();
 	}
 
 	private void atualizarBam() {
 		ProcessoTarefa pt = processoTarefaManager.getByTaskInstance(taskInstance.getId());
 		Date dtFinalizacao = taskInstance.getEnd();
 		pt.setDataFim(dtFinalizacao);
-		try {
-			processoTarefaManager.update(pt);
-			processoTarefaManager.updateTempoGasto(dtFinalizacao, pt);
-		} catch (DAOException e) {
-			LOG.error(".atualizarBam()", e);
-		}
+		processoTarefaManager.update(pt);
+		processoTarefaManager.updateTempoGasto(dtFinalizacao, pt);
 	}
 
 	private void checkCurrentTask() {
@@ -905,6 +943,11 @@ public class TaskInstanceHome implements Serializable {
 		if (taskId == null) {
 			setTaskId(org.jboss.seam.bpm.TaskInstance.instance().getId());
 		}
+	}
+	
+	public boolean possuiModelo(String variavelModelo) {
+		String listaModelos = (String) taskInstance.getContextInstance().getVariable(variavelModelo);
+		return listaModelos != null;
 	}
 
 	public List<ModeloDocumento> getModeloItems(String idComboModelo) {

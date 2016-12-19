@@ -18,15 +18,16 @@
                         label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
                         items="#{home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id))}"
                         showLabelSelecione="true" required="#{wi:get(required, false)}"
-                        value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
+                        value="#{home.variaveisDocumento[id].classificacaoDocumento}"
                         readonly="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
-        			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}"
+        			or home.variaveisDocumento[id].hasAssinatura()}"
                         disabled="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
-        			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}">
+        			or home.variaveisDocumento[id].hasAssinatura()}">
                         <f:validateBean disabled="true"/>
                         <f:validator validatorId="classificacaoEditorValidator" for="@this"/>
 						<f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>
                     </wi:selectOneMenuEntity>
+                    <ui:include src="/WEB-INF/xhtml/components/form/comboModelos.xhtml" />
                 </p:outputPanel>
                 <p:outputPanel id="#{id}EditorDiv">
                     <i:help id="#{editorId.replace('-','')}ToolTipDiv"
