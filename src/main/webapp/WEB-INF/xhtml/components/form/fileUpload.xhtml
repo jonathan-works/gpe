@@ -7,23 +7,43 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:wi="http://www.itx.com.br/jsf">
 	<ui:param name="template"
 		value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
 	<ui:param name="readonly"
 		value="#{empty readonly ? true : (props.readonly or not empty taskInstanceHome.variaveisDocumento[id].documentoBin.assinaturas 
   									 or taskInstanceHome.variaveisDocumento[id].documentoBin.suficientementeAssinado)}" />
+  									 
+    <c:set property="pastaPadrao" target="#{taskInstanceHome}" value="#{wi:get(props.pastaPadrao, '')}" />    
+  									 
 	<f:subview id="#{f.id}SubView">
 		<fieldset>
 			<legend>
 				<h:outputText styleClass="property-field-edit-name" value="#{label}" />
 			</legend>
+			
+			<p:outputPanel id="#{f.id}PastaDestino" styleClass="padding-top-10">
+                <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"
+                    label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+                    value="#{taskInstanceHome.variaveisDocumento[id].pasta}"
+                    items="#{taskInstanceHome.listaPastas}"
+                    required="#{wi:get(required, false)}" showLabelSelecione="true"
+                    rendered="#{not readonly}">
+                    <a:ajax
+                        render="#{f.id}TipoDocDiv #{f.id}Div #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
+                        event="change" execute="@this"
+                        listener="#{taskInstanceHome.removerDocumento(f.id)}"
+                        limitRender="true" />
+                    <f:validateBean disabled="true" />
+                </wi:selectOneMenuEntity>
+            </p:outputPanel>
 
 			<p:outputPanel id="#{f.id}TipoDocDiv" styleClass="padding-top-10">
 				<wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
 					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 					value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
-        items="#{taskInstanceHome.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id))}"
+                    items="#{taskInstanceHome.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id))}"
 					required="#{wi:get(required, false)}" showLabelSelecione="true"
 					rendered="#{not readonly}">
 					<a:ajax

@@ -49,6 +49,7 @@ public class VariableAccessHandler implements Serializable {
     private VariableDataHandler dataHandler = new VariableDataHandler();
     private VariableDominioEnumerationHandler dominioHandler = new VariableDominioEnumerationHandler();
     private VariableMaxMinHandler maxMinHandler = new VariableMaxMinHandler();
+    private VariableFileHandler fileHander = new VariableFileHandler();
     private VariableStringHandler stringHandler = new VariableStringHandler();
     
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
@@ -81,7 +82,10 @@ public class VariableAccessHandler implements Serializable {
                     break;
                 case EDITOR:
                 	getModeloEditorHandler().init(this.variableAccess);
-                    break; 
+                    break;
+                case FILE:
+                	getFileHander().init(this.variableAccess);
+                	break;
                 default:
                     break;
                 }
@@ -358,6 +362,9 @@ public class VariableAccessHandler implements Serializable {
                 case ENUMERATION_MULTIPLE:
                     getDominioHandler().init(getVariableAccess());
                     break;
+                    case FILE:
+                    	getFileHander().init(getVariableAccess());
+                    	break;
                 default:
                 	break;
                 }
@@ -427,6 +434,7 @@ public class VariableAccessHandler implements Serializable {
         getMaxMinHandler().init(getVariableAccess());
         getStringHandler().init(getVariableAccess());
         getDominioHandler().init(getVariableAccess());
+        getFileHander().init(getVariableAccess());
     }
 
     public FragmentConfiguration getFragmentConfiguration() {
@@ -472,6 +480,14 @@ public class VariableAccessHandler implements Serializable {
 
 	public void setDominioHandler(VariableDominioEnumerationHandler dominioHandler) {
 		this.dominioHandler = dominioHandler;
+	}
+
+	public VariableFileHandler getFileHander() {
+		return fileHander;
+	}
+
+	public void setFileHander(VariableFileHandler fileHander) {
+		this.fileHander = fileHander;
 	}
 
 	public boolean isNumericOrMonetary() {

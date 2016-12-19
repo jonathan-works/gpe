@@ -183,6 +183,7 @@ public class TaskInstanceHome implements Serializable {
 	private Map<String, Documento> variaveisDocumento;
 	private Documento documentoToSign;
 	private String tokenToSign;
+	private String pastaPadrao;
 	
 	private Map<String, VariableAccess> mapVarAccess;
 
@@ -1122,5 +1123,30 @@ public class TaskInstanceHome implements Serializable {
 	        }
 	    }
 	    return null;
+	}
+
+	public String getPastaPadrao() {
+		return pastaPadrao;
+	}
+
+	public void setPastaPadrao(String pastaPadrao) {
+		this.pastaPadrao = pastaPadrao;
+	}
+	
+	public List<Pasta> getListaPastas() {
+		Pasta pasta = pastaManager.getByCodigoAndProcesso(pastaPadrao, processoEpaHome.getInstance());
+		if (pasta != null) {
+			List<Pasta> lista = new ArrayList<Pasta>();
+			lista.add(pasta);
+			return lista;
+		}
+		/*se existe pasta
+		  seleciona ela e trava
+		senão
+		  se o usuário tem permissão de inclusão em alguma pasta
+		    mostra a combo de seleção
+		se o usuário não tem permissão para nenhuma pasta
+		  considera a pasta padrão (deixa documento.pasta null)*/
+		return pastaManager.getByProcesso(processoEpaHome.getInstance());
 	}
 }

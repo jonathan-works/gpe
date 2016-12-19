@@ -242,6 +242,13 @@
                             </wi:inputText>
                         </div>
                     </h:form>
+                    <h:form rendered="#{var.type eq 'FILE'}">
+                        <div id="input">
+                            <wi:inputText id="inputPastaPadrao" label="Pasta padrão" value="#{var.fileHander.pasta}">
+                                <a:ajax event="change" execute="@this" status=":status" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </h:form>
                 </h:form>
             </rich:column>
         </rich:dataTable>
