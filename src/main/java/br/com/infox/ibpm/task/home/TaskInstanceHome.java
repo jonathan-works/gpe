@@ -241,9 +241,6 @@ public class TaskInstanceHome implements Serializable {
 				variaveisDocumento.put(getFieldName(variableRetriever.getName()), documento);
 			else
 				variaveisDocumento.put(variableRetriever.getName(), documento);
-			if (variableRetriever.isEditor() && documento.getId() == null) {
-				setModeloWhenExists(variableRetriever, documento);
-			}
 		}
 	}
 
@@ -254,16 +251,6 @@ public class TaskInstanceHome implements Serializable {
 		}
 	}
 
-	private void setModeloWhenExists(TaskVariableRetriever variableRetriever, Documento documentoEditor) {
-		String modelo = getModeloFromProcessInstance(variableRetriever.getName());
-		if (modelo != null) {
-			if (!variableRetriever.hasVariable()) {
-				setModeloDocumento(getModeloDocumentoFromModelo(modelo));
-				assignModeloDocumento(getFieldName(variableRetriever.getName()));
-			}
-		}
-	}
-	
 	private void setModeloReadonly(String variavelEditor) {
 		Form form = ComponentUtil.getComponent(TaskInstanceForm.NAME);
 		String variavelComboModelo = variavelEditor + "Modelo";
@@ -273,15 +260,6 @@ public class TaskInstanceHome implements Serializable {
 				break;
 			}
 		}
-	}
-
-	private String getModeloFromProcessInstance(String variableName) {
-		return (String) ProcessInstance.instance().getContextInstance().getVariable(variableName + "Modelo");
-	}
-
-	private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
-		String s = modelo.split(",")[0].trim();
-		return modeloDocumentoManager.find(Integer.parseInt(s));
 	}
 
 	@Factory("menuMovimentar")
@@ -945,17 +923,15 @@ public class TaskInstanceHome implements Serializable {
 		}
 	}
 	
-	public boolean possuiModelo(String variavelModelo) {
-		String listaModelos = (String) taskInstance.getContextInstance().getVariable(variavelModelo);
-		return listaModelos != null;
+	public boolean possuiModelo(String editorId) {
+	    VariableAccess varAccess = mapVarAccess.get(getVariableName(editorId));
+		return varAccess.getConfiguration() != null && !varAccess.getConfiguration().isEmpty() &&
+                VariableEditorModeloHandler.fromJson(varAccess.getConfiguration()).getCodigosModeloDocumento() != null &&
+                !VariableEditorModeloHandler.fromJson(varAccess.getConfiguration()).getCodigosModeloDocumento().isEmpty();
 	}
 
-	public List<ModeloDocumento> getModeloItems(String idComboModelo) {
-		String suffixComboModelo = "Modelo";
-		if (!idComboModelo.endsWith(suffixComboModelo)) {
-			return null;
-		}
-		String variableName = idComboModelo.substring(0, idComboModelo.length() - suffixComboModelo.length());
+	public List<ModeloDocumento> getModeloItems(String editorId) {
+		String variableName = getVariableName(editorId);
 		VariableAccess var = mapVarAccess.get(variableName);
 		return modeloDocumentoSearch.getModeloDocumentoListByListCodigos(VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento());
 	}

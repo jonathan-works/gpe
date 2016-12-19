@@ -12,13 +12,13 @@
 	
 		<s:decorate
 			id="#{id}Decoration"
-			rendered="#{not readonly and home.possuiModelo(props.variavelModelos)}"
+			rendered="#{not readonly and home.possuiModelo(props.editorId)}"
 			template="/WEB-INF/xhtml/components/templates/edit.xhtml">
 			<ui:define name="label">#{infoxMessages['modeloDocumento.modeloDocumento']}</ui:define>
 			
 			<h:selectOneMenu
-                readonly="#{readonly or home.getModeloItems(props.variavelModelos).size eq 1}"
-                disabled="#{readonly or home.getModeloItems(props.variavelModelos).size eq 1}"
+                readonly="#{readonly or home.getModeloItems(props.editorId).size eq 1}"
+                disabled="#{readonly or home.getModeloItems(props.editorId).size eq 1}"
 				value="#{home.modeloDocumento}">
 			
 				<a:ajax
@@ -33,7 +33,7 @@
 					var="v"
 					noSelectionLabel="[Selecione o modelo]"
 					label="#{v}"
-					value="#{home.getModeloItems(props.variavelModelos)}" />
+					value="#{home.getModeloItems(props.editorId)}" />
 		
 			</h:selectOneMenu>
 		</s:decorate>
