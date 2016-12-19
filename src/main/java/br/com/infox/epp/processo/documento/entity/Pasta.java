@@ -2,10 +2,8 @@ package br.com.infox.epp.processo.documento.entity;
 
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_NOME;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_NOME_QUERY;
-import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_AND_DESCRICAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_AND_DESCRICAO_QUERY;
-import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA_QUERY;
 
@@ -13,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,7 +35,6 @@ import br.com.infox.epp.processo.entity.Processo;
 @Entity
 @Table(name = Pasta.TABLE_NAME)
 @NamedQueries({
-    @NamedQuery(name = GET_BY_PROCESSO, query = GET_BY_PROCESSO_QUERY),
     @NamedQuery(name = TOTAL_DOCUMENTOS_PASTA, query = TOTAL_DOCUMENTOS_PASTA_QUERY),
     @NamedQuery(name = GET_BY_PROCESSO_AND_DESCRICAO, query = GET_BY_PROCESSO_AND_DESCRICAO_QUERY),
     @NamedQuery(name = GET_BY_NOME, query = GET_BY_NOME_QUERY)
@@ -89,10 +87,13 @@ public class Pasta implements Serializable, Cloneable {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
     private List<Documento> documentosList = new ArrayList<>(0);
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
     private List<PastaRestricao> pastaRestricaoList = new ArrayList<>(0);
     
+    @OneToMany(mappedBy = "pasta", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<PastaCompartilhamento> compartilhamentoList;
+
     @PostPersist
     private void postPersist() {
         if (processo != null && !processo.getPastaList().contains(this)) {
