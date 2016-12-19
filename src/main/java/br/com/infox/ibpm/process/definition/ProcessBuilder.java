@@ -37,6 +37,7 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.jpdl.JpdlException;
+import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.Problem;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
@@ -49,10 +50,12 @@ import org.xml.sax.InputSource;
 import com.google.common.base.Strings;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.ELUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.transaction.Transactional;
@@ -473,6 +476,7 @@ public class ProcessBuilder implements Serializable {
                 taskFitter.checkCurrentTaskPersistenceState();
                 atualizarRaiaPooledActors(instance.getId());
                 atualizarTimer();
+                atualizarParametros(instance.getId());
                 FacesMessages.instance().clear();
                 FacesMessages.instance().add("Fluxo publicado com sucesso!");
             } catch (Exception e) {
@@ -481,6 +485,28 @@ public class ProcessBuilder implements Serializable {
             }
         }
         return true;
+    }
+    
+    public void atualizarParametros(Long idProcessDefinition) {
+        List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition);
+        
+        for (TaskInstance taskInstance : taskInstances) {
+            taskInstance = JbpmContextProducer.getJbpmContext().getTaskInstance(taskInstance.getId());
+            if (taskInstance.getTask().getTaskController() != null && taskInstance.getTask().getTaskController().getVariableAccesses() != null) {
+                List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();
+                for (VariableAccess variableAccess : variableAccesses) {
+                    ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
+                    executionContext.setTaskInstance(taskInstance);
+                    String type = variableAccess.getMappedName().split(":")[0];
+                    if ( VariableType.PARAMETER.name().equals(type) ) {
+                        String defaultValue = variableAccess.getValue();
+                        Object novoValor = ELUtil.isEL(defaultValue) ? JbpmExpressionEvaluator.evaluate(defaultValue, executionContext) : defaultValue;
+                        String variableName = variableAccess.getVariableName();
+                        taskInstance.setVariableLocally(variableName, novoValor);
+                    }
+                }
+            }
+        }
     }
     
     public void updatePostDeploy(ProcessDefinition processDefinition) throws DAOException {
