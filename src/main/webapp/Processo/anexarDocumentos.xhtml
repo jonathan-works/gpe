@@ -24,7 +24,7 @@
 			
 				<wi:inputText id="uploadDescricao" required="true"
 					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
-					value="#{anexarDocumentosView.descricaoUploader}" />
+					value="#{anexarDocumentosView.descricaoUploader}" maxlength="260" />
 				<wi:selectOneMenuEntity id="uploadClassificacao" required="true"
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 					value="#{anexarDocumentosView.classificacaoDocumentoUploader}"
@@ -171,7 +171,7 @@
 				<wi:inputText id="editorDescricao" required="true"
 					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
 					value="#{anexarDocumentosView.documentoEditor.descricao}"
-					disabled="#{not minuta}" readonly="#{not minuta}" />
+					disabled="#{not minuta}" readonly="#{not minuta}" maxlength="260" />
 
 				<wi:selectOneMenuEntity id="editorClassificacao" required="true"
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
