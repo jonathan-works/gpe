@@ -49,6 +49,7 @@ public class VariableAccessHandler implements Serializable {
     private VariableDataHandler dataHandler = new VariableDataHandler();
     private VariableDominioEnumerationHandler dominioHandler = new VariableDominioEnumerationHandler();
     private VariableMaxMinHandler maxMinHandler = new VariableMaxMinHandler();
+    private VariableStringHandler stringHandler = new VariableStringHandler();
     
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -67,6 +68,8 @@ public class VariableAccessHandler implements Serializable {
                 case INTEGER:	
                 	getMaxMinHandler().init(this.variableAccess);
                 	break;
+                case STRING:
+                	getStringHandler().init(this.variableAccess);
                 case ENUMERATION:
                 case ENUMERATION_MULTIPLE:
                 	getDominioHandler().init(getVariableAccess());
@@ -224,6 +227,7 @@ public class VariableAccessHandler implements Serializable {
     private boolean isNumericoOuMonetario(VariableType type) {
         return VariableType.INTEGER.equals(type) || VariableType.MONETARY.equals(type);
     }
+     
     
     private boolean isTipoFragment(VariableType type) {
         return VariableType.FRAGMENT.equals(type);
@@ -347,6 +351,9 @@ public class VariableAccessHandler implements Serializable {
                 case INTEGER:	
                 	getMaxMinHandler().init(getVariableAccess());
                 	break;
+                case STRING:
+                	getStringHandler().init(getVariableAccess());
+                	break;
                 case ENUMERATION:
                 case ENUMERATION_MULTIPLE:
                     getDominioHandler().init(getVariableAccess());
@@ -418,6 +425,7 @@ public class VariableAccessHandler implements Serializable {
         v.setCurrentVariable(getVariableAccess());
         getDataHandler().init(getVariableAccess());
         getMaxMinHandler().init(getVariableAccess());
+        getStringHandler().init(getVariableAccess());
         getDominioHandler().init(getVariableAccess());
     }
 
@@ -480,6 +488,14 @@ public class VariableAccessHandler implements Serializable {
 
 	public void setMaxMinHandler(VariableMaxMinHandler maxMinHandler) {
 		this.maxMinHandler = maxMinHandler;
+	}
+
+	public VariableStringHandler getStringHandler() {
+		return stringHandler;
+	}
+
+	public void setStringHandler(VariableStringHandler stringHandler) {
+		this.stringHandler = stringHandler;
 	}
     
 }

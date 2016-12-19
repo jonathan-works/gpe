@@ -32,6 +32,7 @@ import br.com.infox.ibpm.variable.VariableDataHandler;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
 import br.com.infox.ibpm.variable.VariableMaxMinHandler;
+import br.com.infox.ibpm.variable.VariableStringHandler;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
@@ -135,6 +136,11 @@ public class TaskInstanceForm implements Serializable {
 							ff.getProperties().put("valorMaximo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMaximo());
 							ff.getProperties().put("valorMinimo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMinimo());
                     	}
+                    	break;
+                    case STRING:
+						if (var.getConfiguration() != null && var.getConfiguration().length() > 0) { 
+							ff.getProperties().put("mascara", VariableStringHandler.fromJson(var.getConfiguration()).getMascara());
+						}
                     	break;
                     case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {

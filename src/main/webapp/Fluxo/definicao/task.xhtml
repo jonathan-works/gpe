@@ -227,6 +227,14 @@
                             </wi:inputText>
                         </div>
                     </rich:panel>
+                    <rich:panel id="definicaoMascara" rendered="#{var.type eq 'STRING'}">
+                        <div id="input">
+                            <wi:inputText id="mascaraString" label="Máscara" value="#{var.stringHandler.mascara}">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, pageBodyDialogMessage, varDiv" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </rich:panel>
                     <h:form rendered="#{var.type eq 'PARAMETER'}">
                         <div id="input">
                             <wi:inputText id="inputDefaultValue" label="Valor padrão da variável" value="#{var.value}">
