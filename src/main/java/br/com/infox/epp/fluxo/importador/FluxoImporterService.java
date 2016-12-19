@@ -68,25 +68,25 @@ public class FluxoImporterService extends PersistenceController {
 		Document doc = readDocument(xpdl);
 		validarExistenciaCodigos(doc);
 		atualizaNameProcessDefinition(doc, fluxo);
-		fluxo = gravarXpdlFluxo(fluxo, doc);
-		return fluxo;
-	}
 
-	private Fluxo gravarXpdlFluxo(Fluxo fluxo, Document doc) {
-		String xpdl;
-		try {
-			xpdl = convertToXml(doc);
-			fluxo.setXml(xpdl);
-			fluxo.setBpmn(null);;//FIXME isso aqui vai ser alterado quando o arquivo exportado contiver o bpmn
-			fluxo = getEntityManager().merge(fluxo);
-			getEntityManager().flush();
-			return fluxo;
-		} catch (IOException e) {
-			LOG.error("Erro ao gerar o xml", e);
-			throw new BusinessRollbackException("Erro na conversão do xml.");
-		}
-	}
-	
+        String bpmn = xmls.get(FluxoExporterService.FLUXO_BPMN);
+
+        try {
+            xpdl = convertToXml(doc);
+            fluxo.setXml(xpdl);
+            if (bpmn != null && !bpmn.isEmpty()) {
+                fluxo.setBpmn(bpmn);
+            }
+            fluxo = getEntityManager().merge(fluxo);
+            getEntityManager().flush();
+        } catch (IOException e) {
+            LOG.error("Erro ao gerar o xml", e);
+            throw new BusinessRollbackException("Erro na conversão do xml.");
+        }
+
+        return fluxo;
+    }
+
 	private void atualizaNameProcessDefinition(Document doc, Fluxo fluxo) {
 	    Element processDefinition = doc.getRootElement();
 	    if (processDefinition.getName().equals("process-definition")) {

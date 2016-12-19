@@ -131,5 +131,9 @@ public class FluxoCrudAction implements Controller {
 		fluxoController.setFluxo(instance);
 		this.hasProcessoRunning = fluxoManager.existemProcessoEmAndamento(getInstance());
 	}
+
+	public boolean canExportar() {
+	    return getInstance() != null && getInstance().getXml() != null;
+	}
     
 }

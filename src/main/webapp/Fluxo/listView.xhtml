@@ -198,7 +198,7 @@
      
                 <a:commandButton id="exportButton" styleClass="buttons" type="button"
                     oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Fluxo/definicao/exportarFluxo.seam','1024');"
-                    execute="@this" render="@this" rendered="#{fluxoCrudAction.managed}" value="#{infoxMessages['fluxo.exportar']}">
+                    execute="@this" render="@this" rendered="#{fluxoCrudAction.canExportar()}" value="#{infoxMessages['fluxo.exportar']}">
                         <f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
                         <infox:flashcopy/>
                 </a:commandButton>

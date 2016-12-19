@@ -14,17 +14,25 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 public class FluxoExporterService {
 
     public static final String FLUXO_XML = "fluxo.xml";
+    public static final String FLUXO_BPMN = "diagram.bpmn";
 
-	public byte[] exportarFluxo(Fluxo fluxo) throws IOException, JAXBException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ZipOutputStream zos = new ZipOutputStream(baos);
+    public byte[] exportarFluxo(Fluxo fluxo) throws IOException, JAXBException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ZipOutputStream zos = new ZipOutputStream(baos);
 
-		ZipEntry ze = new ZipEntry(FLUXO_XML);
-		zos.putNextEntry(ze);
-		zos.write(fluxo.getXml().getBytes());
-		zos.closeEntry();
+        ZipEntry ze = new ZipEntry(FLUXO_XML);
+        zos.putNextEntry(ze);
+        zos.write(fluxo.getXml().getBytes());
+        zos.closeEntry();
 
-		zos.close();
-		return baos.toByteArray();
-	}
+        if (fluxo.getBpmn() != null && !fluxo.getBpmn().isEmpty()) {
+            ze = new ZipEntry(FLUXO_BPMN);
+            zos.putNextEntry(ze);
+            zos.write(fluxo.getBpmn().getBytes());
+            zos.closeEntry();
+        }
+
+        zos.close();
+        return baos.toByteArray();
+    }
 }
