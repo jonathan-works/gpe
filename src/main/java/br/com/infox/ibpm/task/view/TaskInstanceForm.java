@@ -30,6 +30,9 @@ import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.VariableDataHandler;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
+import br.com.infox.ibpm.variable.VariableMaxMinHandler;
+import br.com.infox.ibpm.variable.VariableMaxMinHandler.MaxMinConfig;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
@@ -127,6 +130,13 @@ public class TaskInstanceForm implements Serializable {
                         }
                         ff.getProperties().put("urlFrame", url);
                         break; 
+                    case MONETARY:
+                    case INTEGER:
+                    	if(VariableMaxMinHandler.fromJson(var.getConfiguration()) != null) {
+							ff.getProperties().put("valorMaximo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMaximo());
+							ff.getProperties().put("valorMinimo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMinimo());
+                    	}
+                    	break;
                     case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {
                         DominioVariavelTarefaSearch dominioVariavelTarefaSearch = BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);;
