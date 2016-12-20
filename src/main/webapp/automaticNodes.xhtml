@@ -31,6 +31,11 @@
                 </rich:column>
 
                 <rich:column>
+                    <f:facet name="header">#{infoxMessages['automaticNodesInfo.processName']}</f:facet>
+                    <h:outputText value="#{row.processName}" />
+                </rich:column>
+                
+                <rich:column>
                     <f:facet name="header">#{infoxMessages['automaticNodesInfo.nodeName']}</f:facet>
                     <h:outputText value="#{row.nodeName}" />
                 </rich:column>

@@ -33,9 +33,10 @@ public final class HibernateUtil {
 		return EntityManagerProducer.getEntityManager().unwrap(Session.class);
 	}
 
-	public static Object removeProxy(Object object) {
+        @SuppressWarnings("unchecked")
+	public static <T> T removeProxy(T object) {
 		if (object instanceof HibernateProxy) {
-			return ((HibernateProxy) object).getHibernateLazyInitializer().getImplementation();
+			return (T)((HibernateProxy) object).getHibernateLazyInitializer().getImplementation();
 		}
 		return object;
 	}

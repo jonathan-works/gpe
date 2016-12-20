@@ -14,6 +14,7 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
@@ -56,6 +57,8 @@ public class AutomaticNodesInfo implements Serializable {
                     continue;
                 NodeBean node = new NodeBean();
                 Node jbpmNode = (Node) HibernateUtil.removeProxy(token.getNode());
+                ProcessDefinition processDefinition = HibernateUtil.removeProxy(jbpmNode.getProcessDefinition());
+                node.setProcessName(processDefinition.getName());
                 node.setNodeName(jbpmNode.getName());
                 node.setNumeroProcesso(numeroProcesso);
                 node.setTokenId(token.getId());
@@ -88,13 +91,22 @@ public class AutomaticNodesInfo implements Serializable {
         private String numeroProcesso;
         private Long tokenId;
         private String nodeType;
+        private String processName;
         
         public String getNodeName() {
             return nodeName;
         }
-        
+
         public void setNodeName(String nodeName) {
             this.nodeName = nodeName;
+        }
+        
+        public String getProcessName() {
+            return processName;
+        }
+        
+        public void setProcessName(String name) {
+            this.processName = name;
         }
         
         public String getNumeroProcesso() {
