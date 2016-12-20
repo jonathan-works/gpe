@@ -77335,7 +77335,6 @@ var InfoxBpmnModeler =
 	            }
 	        });
 	    } else if (is(bo, 'bpmn:EndEvent')) {
-	        delete entries['delete'];
 	        delete entries.connect;
 	    }
 
