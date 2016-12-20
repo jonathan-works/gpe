@@ -6,7 +6,6 @@
     
     <h:body>
     	<c:if test="#{not empty flash.idFluxo}" >
-    		<script type="text/javascript">alert('1')</script>
     		<f:event listener="#{fluxoDownloader.exportarFluxo(flash.idFluxo)}" type="preRenderView"/>
     	</c:if>
     	<c:if test="#{empty flash.idFluxo}" >

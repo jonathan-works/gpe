@@ -8,6 +8,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -23,32 +25,33 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.dao.PerfilTemplateDAO;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.documento.ClassificacaoDocumentoSearch;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.exportador.FluxoExporterService;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
+import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.sinal.DispatcherConfiguration;
 import br.com.infox.ibpm.sinal.SignalSearch;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
 import br.com.infox.ibpm.task.handler.StatusHandler;
+import br.com.infox.ibpm.type.PooledActorType;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler.EnumerationConfig;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler.FileConfig;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.seam.exception.ValidationException;
 
 @Stateless
 public class FluxoImporterService extends PersistenceController {
-	private static final LogProvider LOG = Logging.getLogProvider(FluxoImporterService.class);
+    private static final Pattern PATTERN_EXPRESSION = Pattern.compile("#[{][^{}]+[}]");
 	
 	@Inject
 	private PerfilTemplateDAO perfilTemplateDAO;
@@ -62,6 +65,10 @@ public class FluxoImporterService extends PersistenceController {
 	private DominioVariavelTarefaSearch dominioVariavelTarefaSearch;
 	@Inject
 	private SignalSearch signalSearch;
+	@Inject
+	private UsuarioLoginSearch usuarioLoginSearch;
+	@Inject
+	private LocalizacaoManager localizacaoManager;
 	
 	public Fluxo importarFluxo(HashMap<String, String> xmls, Fluxo fluxo) {
 		String xpdl = xmls.get(FluxoExporterService.FLUXO_XML);
@@ -80,7 +87,6 @@ public class FluxoImporterService extends PersistenceController {
             fluxo = getEntityManager().merge(fluxo);
             getEntityManager().flush();
         } catch (IOException e) {
-            LOG.error("Erro ao gerar o xml", e);
             throw new BusinessRollbackException("Erro na conversão do xml.");
         }
 
@@ -96,7 +102,7 @@ public class FluxoImporterService extends PersistenceController {
 	
 	private void validarExistenciaCodigos(Document doc) {
 		List<String> erros = new ArrayList<String>();
-		validaConfiguracaoRaiaPerfil(doc, erros);
+		validaConfiguracaoAssigments(doc, erros);
 		validaActions(doc, erros);
 		validaEvents(doc, erros);
 		validaMailNode(doc, erros);
@@ -236,27 +242,69 @@ public class FluxoImporterService extends PersistenceController {
 		}
 	}
 
-	private void validaConfiguracaoRaiaPerfil(Document doc, List<String> erros) {
-	    List<String> codigosInexistentes = new ArrayList<>();
-		for (Element swinlaneNode : doc.getDescendants(new ElementFilter("swimlane"))) {
-        	for (Element assignment : swinlaneNode.getChildren("assignment", swinlaneNode.getNamespace())) {
-        		String listaCodigos = assignment.getAttributeValue("pooled-actors");
-        		if (listaCodigos != null && !listaCodigos.isEmpty()) {
-        			String[] codigos = listaCodigos.split(",");
-        			for (String codigo : codigos) {
-        				if (!perfilTemplateDAO.existePerfilTemplateByCodigo(codigo)) {
-                            codigosInexistentes.add(codigo);
-        				}
-        			}
-				}
-			}
+    private void validaConfiguracaoAssigments(Document doc, List<String> erros) {
+        List<String> perfisInexistentes = new ArrayList<>();
+        List<String> localizacoesInexistentes = new ArrayList<>();
+        List<String> usuariosInexistentes = new ArrayList<>();
+        for (Element assignment : doc.getDescendants(new ElementFilter("assignment"))) {
+            String pooledActor = assignment.getAttributeValue("pooled-actors");
+            if (pooledActor != null && !pooledActor.isEmpty()) {
+                String pooledActorExpressions = removeEL(pooledActor);
+                if (!pooledActorExpressions.isEmpty()) {
+                    for (String token : pooledActorExpressions.split(",")) {
+                        String configuration = token.trim();
+                        if (!configuration.isEmpty()) {
+                            String[] configs = configuration.split(":");
+                            if (configuration.startsWith(PooledActorType.USER.getValue())) {
+                                String login = configs[1];
+                                if (!usuarioLoginSearch.existeUsuarioByLogin(login)) {
+                                    usuariosInexistentes.add(login);
+                                }
+                            } else if (configuration.startsWith(PooledActorType.LOCAL.getValue())) {
+                                String localizacao = configs[1];
+                                if (localizacaoManager.getLocalizacaoByCodigo(localizacao) == null) {
+                                    localizacoesInexistentes.add(localizacao);
+                                }
+                            } else if (configuration.startsWith(PooledActorType.GROUP.getValue())) {
+                                String[] groupConfig = configs[1].split("&");
+                                if (localizacaoManager.getLocalizacaoByCodigo(groupConfig[0]) == null) {
+                                    localizacoesInexistentes.add(groupConfig[0]);
+                                }
+                                if (!perfilTemplateDAO.existePerfilTemplateByCodigo(groupConfig[1])) {
+                                    perfisInexistentes.add(groupConfig[1]);
+                                }
+                            } else if (!perfilTemplateDAO.existePerfilTemplateByCodigo(configuration)) {
+                                perfisInexistentes.add(configuration);
+                            }
+                        }
+                    }
+                }
+            }
         }
-        if (codigosInexistentes.size() > 0) {
+        if (perfisInexistentes.size() > 0) {
             erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.raiaCodigo"),
-                    StringUtil.concatList(codigosInexistentes, ", ")));
+                    StringUtil.concatList(perfisInexistentes, ", ")));
         }
-	}
-	
+        if (localizacoesInexistentes.size() > 0) {
+            erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.localizacaoCodigo"),
+                    StringUtil.concatList(localizacoesInexistentes, ", ")));
+        }
+        if (usuariosInexistentes.size() > 0) {
+            erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.usuario"),
+                    StringUtil.concatList(usuariosInexistentes, ", ")));
+        }
+    }
+
+    private String removeEL(String expression) {
+        Matcher matcher = PATTERN_EXPRESSION.matcher(expression);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "");
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
 	private String convertToXml(Document doc) throws IOException {
 		StringWriter stringWriter = new StringWriter();
 		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat().setIndent("    "));
@@ -272,7 +320,6 @@ public class FluxoImporterService extends PersistenceController {
 			Document doc = builder.build(inputStream);
 			return doc;
 		} catch (Exception e) {
-			LOG.info("Erro ao importar fluxo", e);
 			throw new BusinessException("Erro na leitura do xml.");
 		}
 	}
