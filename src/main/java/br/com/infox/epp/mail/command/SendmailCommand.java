@@ -5,6 +5,7 @@ import static java.text.MessageFormat.format;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Renderer;
+import org.jbpm.JbpmException;
 
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -25,7 +26,7 @@ public class SendmailCommand {
             LOG.info(format(SENDMAIL_LOG_PATTERN, sw.getTime()));
         } catch (Exception e) {
             LOG.error(format(SENDMAIL_LOG_PATTERN, sw.getTime()), e);
-            throw new BusinessException("Erro ao enviar eMail", e);
+            throw new JbpmException("Erro ao enviar eMail", e);
         }
     }
 }

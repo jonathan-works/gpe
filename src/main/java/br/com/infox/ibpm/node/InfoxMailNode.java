@@ -53,18 +53,6 @@ public class InfoxMailNode extends MailNode {
     private ListaEmail currentListaEmail = new ListaEmail();
 
     @Override
-    public void raiseException(Throwable exception,
-            ExecutionContext executionContext) {
-        JbpmContext jbpmContext = executionContext.getJbpmContext();
-        DbPersistenceService persistenceService = (DbPersistenceService) jbpmContext.getServices().getPersistenceService();
-        persistenceService.endTransaction();
-        persistenceService.beginTransaction();
-        super.raiseException(exception, executionContext);
-        persistenceService.endTransaction();
-        LOG.warn(MessageFormat.format("Erro ao enviar email (nó {0})", getName()), exception);
-    }
-
-    @Override
     public void read(Element element, JpdlXmlReader jpdlReader) {
         template = element.attributeValue("template");
         actors = element.attributeValue("actors");
