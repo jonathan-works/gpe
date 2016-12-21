@@ -244,7 +244,7 @@
                     </h:form>
                     <h:form rendered="#{var.type eq 'FILE' or var.type eq 'EDITOR'}">
                         <div id="input">
-                            <wi:inputText id="inputPastaPadrao" label="Pasta padrão" value="#{var.modeloEditorHandler.pasta}">
+                            <wi:inputText id="inputPastaPadrao" label="#{infoxMessages['process.def.var.codigoPasta']}" value="#{var.modeloEditorHandler.pasta}">
                                 <a:ajax event="change" execute="@this" status=":status" limitRender="true" />
                             </wi:inputText>
                         </div>
