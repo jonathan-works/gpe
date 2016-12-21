@@ -7,12 +7,30 @@
     <ui:param name="editorId" value="#{id}Editor" />
     <ui:param name="idSignature" value="#{id}signature" />
     <ui:param name="idCertChain" value="#{id}certChain" />
+    
+<f:event listener="#{documentoVariavelController.setFormFieldEditor(f)}" type="preRenderView"></f:event>
+    
     <f:subview id="#{f.id}SubView">
         <p:outputPanel id="#{f.id}Block">
             <fieldset>
                 <legend>
                     <h:outputText styleClass="property-field-edit-name" value="#{label}" />
                 </legend>
+            <p:outputPanel id="#{f.id}PastaDestino" styleClass="padding-top-10">
+                <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"
+                    label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+                    rendered="#{documentoVariavelController.pastasEditor.size gt 1}"
+                    value="#{taskInstanceHome.variaveisDocumento[id].pasta}"
+                    items="#{documentoVariavelController.pastasEditor}"
+                    showLabelSelecione="true">
+                    <a:ajax
+                        render="#{f.id}TipoDocDiv #{f.id}Div #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
+                        event="change" execute="@this"
+                        listener="#{documentoVariavelController.selecionarPastaPadrao(f.id)}"
+                        limitRender="true" />
+                    <f:validateBean disabled="true" />
+                </wi:selectOneMenuEntity>
+            </p:outputPanel>
                 <p:outputPanel id="#{f.id}TipoDocDiv">
                     <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
                         label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"

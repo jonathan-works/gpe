@@ -24,6 +24,7 @@ public class VariableEditorModeloHandler {
 
 	private VariableAccess variableAccess;
 	private List<ModeloDocumento> modeloDocumentoList;
+	private String pasta;
 	
 	public void init(VariableAccess variableAccess) {
 		this.variableAccess = variableAccess;
@@ -34,6 +35,7 @@ public class VariableEditorModeloHandler {
     	modeloDocumentoList = new ArrayList<>();
     	if (!StringUtil.isEmpty(this.variableAccess.getConfiguration())) {
     		FileConfig configuracoes = fromJson(this.variableAccess.getConfiguration());
+    		pasta = configuracoes.pasta;
     		if (configuracoes.getCodigosModeloDocumento() != null && !configuracoes.getCodigosModeloDocumento().isEmpty()) {
 	    		ModeloDocumentoSearch modeloDocumentoSearch = BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
 	    		modeloDocumentoList.addAll(modeloDocumentoSearch.getModeloDocumentoListByListCodigos(configuracoes.getCodigosModeloDocumento()));
@@ -101,6 +103,23 @@ public class VariableEditorModeloHandler {
         return modeloDocumentoList;
     }
 	
+    public void setPasta(String pasta) {
+    	this.pasta = pasta;
+    	FileConfig configuration = null;
+		if (!StringUtil.isEmpty(this.variableAccess.getConfiguration())) {
+			configuration = fromJson(this.variableAccess.getConfiguration());
+		}
+		if (configuration ==  null) {
+			configuration = new FileConfig();
+		}
+		configuration.setPasta(pasta);
+		this.variableAccess.setConfiguration(toJson(configuration));
+    }
+    
+    public String getPasta() {
+    	return pasta;
+    }
+    
 	public static FileConfig fromJson(String configuration) {
 		return new Gson().fromJson(configuration, FileConfig.class);
 	}
@@ -112,6 +131,7 @@ public class VariableEditorModeloHandler {
 	public static class FileConfig {
 		private List<String> codigosModeloDocumento;
 		private List<String> codigosClassificacaoDocumento;
+		private String pasta;
 
 		public List<String> getCodigosModeloDocumento() {
 			return codigosModeloDocumento;
@@ -127,6 +147,14 @@ public class VariableEditorModeloHandler {
 
 		public void setCodigosClassificacaoDocumento(List<String> codigosClassificacaoDocumento) {
 			this.codigosClassificacaoDocumento = codigosClassificacaoDocumento;
+		}
+
+		public String getPasta() {
+			return pasta;
+		}
+
+		public void setPasta(String pasta) {
+			this.pasta = pasta;
 		}
 	}
 }

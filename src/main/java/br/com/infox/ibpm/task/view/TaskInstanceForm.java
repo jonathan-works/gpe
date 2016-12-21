@@ -33,7 +33,6 @@ import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.VariableDataHandler;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
-import br.com.infox.ibpm.variable.VariableFileHandler;
 import br.com.infox.ibpm.variable.VariableMaxMinHandler;
 import br.com.infox.ibpm.variable.VariableStringHandler;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
@@ -191,8 +190,9 @@ public class TaskInstanceForm implements Serializable {
                         }
                     }
                         break;
+                    case EDITOR:
                     case FILE:
-                    	ff.getProperties().put("pastaPadrao", VariableFileHandler.fromJson(var.getConfiguration()).getPasta());
+                    	ff.getProperties().put("pastaPadrao", VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
                     	break;
                     case EDITOR: {
                         ff.getProperties().put("editorId", var.getVariableName() + "-" + taskInstance.getId());

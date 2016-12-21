@@ -49,7 +49,6 @@ public class VariableAccessHandler implements Serializable {
     private VariableDataHandler dataHandler = new VariableDataHandler();
     private VariableDominioEnumerationHandler dominioHandler = new VariableDominioEnumerationHandler();
     private VariableMaxMinHandler maxMinHandler = new VariableMaxMinHandler();
-    private VariableFileHandler fileHander = new VariableFileHandler();
     private VariableStringHandler stringHandler = new VariableStringHandler();
     
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
@@ -80,12 +79,10 @@ public class VariableAccessHandler implements Serializable {
                         setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
                     }
                     break;
+                case FILE:
                 case EDITOR:
                 	getModeloEditorHandler().init(this.variableAccess);
                     break;
-                case FILE:
-                	getFileHander().init(this.variableAccess);
-                	break;
                 default:
                     break;
                 }
@@ -363,7 +360,8 @@ public class VariableAccessHandler implements Serializable {
                     getDominioHandler().init(getVariableAccess());
                     break;
                     case FILE:
-                    	getFileHander().init(getVariableAccess());
+                    case EDITOR:
+                    	getModeloEditorHandler().init(getVariableAccess());
                     	break;
                 default:
                 	break;
@@ -434,7 +432,6 @@ public class VariableAccessHandler implements Serializable {
         getMaxMinHandler().init(getVariableAccess());
         getStringHandler().init(getVariableAccess());
         getDominioHandler().init(getVariableAccess());
-        getFileHander().init(getVariableAccess());
     }
 
     public FragmentConfiguration getFragmentConfiguration() {
@@ -481,13 +478,6 @@ public class VariableAccessHandler implements Serializable {
 	public void setDominioHandler(VariableDominioEnumerationHandler dominioHandler) {
 		this.dominioHandler = dominioHandler;
 	}
-
-	public VariableFileHandler getFileHander() {
-		return fileHander;
-	}
-
-	public void setFileHander(VariableFileHandler fileHander) {
-		this.fileHander = fileHander;
 	}
 
 	public boolean isNumericOrMonetary() {
@@ -512,6 +502,4 @@ public class VariableAccessHandler implements Serializable {
 
 	public void setStringHandler(VariableStringHandler stringHandler) {
 		this.stringHandler = stringHandler;
-	}
-    
 }
