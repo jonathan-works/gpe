@@ -142,7 +142,7 @@
                                             title="#{infoxMessages['pasta.compartilhamento.remover']}" />
                                     </p:commandLink>
                                     <a:commandLink render="documentoListDiv pageBodyDialogMessage" execute="@form"
-                                        action="#{pastaAction.selectPasta(pasta)}"
+                                        action="#{pastaAction.selectPastaCompartilhada(pasta)}"
                                         onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
                                         styleClass="folder" limitRender="true">
                                         <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'folder_shared')}" title="#{pasta}" />
@@ -166,7 +166,7 @@
 					</rich:dragIndicator>
 				</rich:dragSource>
                 <p:commandLink process="@this" update="@(.documentoCompModal)"
-                    rendered="#{security.checkPage('documentoCompartilhamento') and not pastaAction.documentoCompartilhado}"
+                    rendered="#{security.checkPage('documentoCompartilhamento') and not pastaAction.pastaCompartilhada and not pastaAction.documentoCompartilhado}"
                     onstart="infox.showLoading();" oncomplete="PF('documentoCompModal').show(); infox.hideLoading();"
                     action="#{pastaAction.configurarCompartilhamentoDocumento(row)}">
                     <h:graphicImage title="#{eventCache.get('pastaAction.getNomeDocumentoConfigurarCompartilhamento(row)', row.id)}"

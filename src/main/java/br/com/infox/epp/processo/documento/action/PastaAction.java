@@ -84,6 +84,7 @@ public class PastaAction implements Serializable {
     private Pasta compartilhamentoToRemove;
     private Documento compartilhamentoDocumentoToRemove;
     private boolean documentoCompartilhado = false;
+    private boolean pastaCompartilhada = false;
 
     private String msgConfigurarCompartilhamento;
     private String msgConfigurarCompartilhamentoDoc;
@@ -107,7 +108,7 @@ public class PastaAction implements Serializable {
         setRestricoes(new HashMap<Integer, PastaRestricaoBean>());
     }
 
-    public void selectPasta(Pasta pasta) {
+    private void changeSelectedPasta(Pasta pasta) {
         documentoList.selectPasta(pasta);
         setInstance(pasta);
         setShowGrid(true);
@@ -115,6 +116,16 @@ public class PastaAction implements Serializable {
         for (Documento documento : documentoList.list(15)) {
             documentoProcessoAction.deveMostrarCadeado(documento);
         }
+    }
+
+    public void selectPasta(Pasta pasta) {
+        changeSelectedPasta(pasta);
+        setPastaCompartilhada(false);
+    }
+
+    public void selectPastaCompartilhada(Pasta pasta) {
+        changeSelectedPasta(pasta);
+        setPastaCompartilhada(true);
     }
 
     public void selectPastaDocumentosCompartilhados(Processo processo) {
@@ -438,5 +449,13 @@ public class PastaAction implements Serializable {
     public void setDocumentoCompartilhado(boolean documentoCompartilhado) {
         this.documentoCompartilhado = documentoCompartilhado;
         documentoProcessoAction.setDocumentoCompartilhado(documentoCompartilhado);
+    }
+
+    public boolean isPastaCompartilhada() {
+        return pastaCompartilhada;
+    }
+
+    public void setPastaCompartilhada(boolean pastaCompartilhada) {
+        this.pastaCompartilhada = pastaCompartilhada;
     }
 }
