@@ -2,7 +2,6 @@ package br.com.infox.epp.processo.node;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -17,10 +16,8 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
-import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
-import br.com.infox.ibpm.node.NodeType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -46,22 +43,7 @@ public class AutomaticNodesInfo implements Serializable {
     
     public List<NodeBean> getNodesNotEnded() {
         if (nodes == null) {
-            nodes = new ArrayList<>();
-            List<Token> tokens = JbpmUtil.getTokensOfAutomaticNodesNotEnded();
-            for (Token token : tokens) {
-                if (token.getProcessInstance() == null)
-                    continue;
-                String numeroProcesso =processoManager.getNumeroProcessoByIdJbpm(token.getProcessInstance().getRoot().getId());
-                if (StringUtil.isEmpty(numeroProcesso))
-                    continue;
-                NodeBean node = new NodeBean();
-                Node jbpmNode = (Node) HibernateUtil.removeProxy(token.getNode());
-                node.setNodeName(jbpmNode.getName());
-                node.setNumeroProcesso(numeroProcesso);
-                node.setTokenId(token.getId());
-                node.setNodeType(NodeType.getNodeType(jbpmNode).getLabel());
-                nodes.add(node);
-            }
+            nodes = JbpmUtil.getNodeBeansOfAutomaticNodesNotEnded();
         }
         return nodes;
     }
@@ -81,44 +63,5 @@ public class AutomaticNodesInfo implements Serializable {
             FacesMessages.instance().add("Erro ao executar nó: \n " + e.getMessage() );
         }
         this.nodes = null;
-    }
-    
-    public static final class NodeBean {
-        private String nodeName;
-        private String numeroProcesso;
-        private Long tokenId;
-        private String nodeType;
-        
-        public String getNodeName() {
-            return nodeName;
-        }
-        
-        public void setNodeName(String nodeName) {
-            this.nodeName = nodeName;
-        }
-        
-        public String getNumeroProcesso() {
-            return numeroProcesso;
-        }
-        
-        public void setNumeroProcesso(String numeroProcesso) {
-            this.numeroProcesso = numeroProcesso;
-        }
-        
-        public Long getTokenId() {
-            return tokenId;
-        }
-        
-        public void setTokenId(Long tokenId) {
-            this.tokenId = tokenId;
-        }
-        
-        public String getNodeType() {
-            return nodeType;
-        }
-        
-        public void setNodeType(String nodeType) {
-            this.nodeType = nodeType;
-        }
     }
 }
