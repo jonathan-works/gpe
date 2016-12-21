@@ -45,7 +45,7 @@
 			<a:param name="elementKey" assignTo="#{bpmnView.elementKey}" />
 		</a:jsFunction>
      	
-     	<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmn}" />
+     	<h:inputHidden id="bpmnOriginal" value="#{bpmnView.fluxo.bpmn}" />
 		
 		<script>
 			function updateBpmn() {
@@ -53,16 +53,20 @@
 				window.modeler = null;
 			}
 			
-			function initModelador(container) {
-				var bpmn;
-				if (!window.modeler) {
-					bpmn = document.getElementById("#{rich:clientId('bpmn')}").value;
-				} else {
-					bpmn = window.modeler.getBpmnInformation().bpmn;
+			function updateTransientBpmn() {
+				if (window.modeler.getRenderer().container.parentNode.id === 'processDefinition:modelador') {
+					window.bpmn = window.modeler.getBpmnInformation().bpmn;
 				}
+			}
+			
+			function initModelador(container) {
+				if (!window.modeler) {
+					window.bpmn = document.getElementById("#{rich:clientId('bpmnOriginal')}").value;
+				}
+				
 		        window.modeler = new InfoxBpmnModeler({
 		        	'container': document.getElementById(container),
-		        	'bpmn': bpmn,
+		        	'bpmn': window.bpmn,
 		        	'configureElement': configureElement
 		        });
 			}
@@ -80,7 +84,8 @@
         name="propriedadesTab"
         id="propriedadesTab"
         title="#{infoxMessages['processBuilder.properties']}"
-        render="processDefinitionButtonsForm">
+        render="processDefinitionButtonsForm"
+        onclick="updateTransientBpmn()">
         <rich:panel header="#{infoxMessages['processBuilder.info']}">
           <h:form>
             <wi:inputText
@@ -121,7 +126,8 @@
         name="nodesTab"
         id="nodesTab"
         title="#{infoxMessages['processBuilder.nodes']}"
-        render="processDefinitionButtonsForm">
+        render="processDefinitionButtonsForm"
+        onclick="updateTransientBpmn()">
         <ui:include src="nodes.xhtml" />
         <p:outputPanel layout="block" id="modeladorAbaNos" style="visibility: hidden; width: 0px; height: 0px;" />
         <script>
