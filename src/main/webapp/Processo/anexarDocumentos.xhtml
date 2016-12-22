@@ -35,7 +35,7 @@
 						limitRender="true" execute="@this"
 						listener="#{anexarDocumentosView.onChangeUploadClassificacaoDocumento()}" />
 				</wi:selectOneMenuEntity>
-
+ 
 				<wi:selectOneMenuEntity id="uploadPastaUploader"
 					label="#{infoxMessages['pasta.pasta']}"
 					value="#{anexarDocumentosView.pastaUploader}"
@@ -190,7 +190,6 @@
 					label="#{infoxMessages['pasta.pasta']}"
 					value="#{anexarDocumentosView.documentoEditor.pasta}"
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}"
-					rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
 					disabled="#{not minuta}" />
 				
 				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
