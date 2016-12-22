@@ -1,10 +1,5 @@
 package br.com.infox.epp.modeler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.Activity;
 import org.camunda.bpm.model.bpmn.instance.BaseElement;
@@ -28,56 +23,9 @@ class BpmnDiagramAdapter implements BpmnAdapter {
 		normalizeNodeSizes();
 		normalizeSequenceFlowSizes();
 		translateDiagram();
-		adjustParticipantSize();
 		return bpmnModel;
 	}
 	
-	private void adjustParticipantSize() {
-		Participant participant = bpmnModel.getModelElementsByType(Participant.class).iterator().next();
-		BpmnShape participantShape = (BpmnShape) participant.getDiagramElement();
-		double maxWidth = participantShape.getBounds().getWidth();
-		for (Bounds bounds : bpmnModel.getModelElementsByType(Bounds.class)) {
-			if (!bounds.equals(participantShape.getBounds()) && (bounds.getX() + bounds.getWidth()) > (maxWidth + participantShape.getBounds().getX())) {
-				maxWidth += bounds.getWidth();
-			}
-		}
-		if (maxWidth != participantShape.getBounds().getWidth()) {
-			maxWidth += DiagramUtil.FLOW_NODE_X_OFFSET;
-			participantShape.getBounds().setWidth(maxWidth);
-		}
-		
-		List<Lane> lanesOrderedByYPosition = new ArrayList<>(bpmnModel.getModelElementsByType(Lane.class));
-		Collections.sort(lanesOrderedByYPosition, new Comparator<Lane>() {
-			@Override
-			public int compare(Lane o1, Lane o2) {
-				return ((BpmnShape) o1.getDiagramElement()).getBounds().getY().compareTo(((BpmnShape) o2.getDiagramElement()).getBounds().getY());
-			}
-		});
-		
-		double lastOffset = 0;
-		double participantHeight = 0;
-		for (Lane lane : lanesOrderedByYPosition) {
-			Bounds laneBounds = ((BpmnShape) lane.getDiagramElement()).getBounds();
-			laneBounds.setWidth(maxWidth - DiagramUtil.PARTICIPANT_LANE_OFFSET);
-			double maxHeight = laneBounds.getHeight();
-			for (FlowNode flowNode : lane.getFlowNodeRefs()) {
-				Bounds bounds = ((BpmnShape) flowNode.getDiagramElement()).getBounds();
-				if ((bounds.getY() + bounds.getHeight()) > (maxHeight + laneBounds.getHeight())) {
-					maxHeight += bounds.getHeight();
-				}
-			}
-			
-			double oldLaneHeight = laneBounds.getHeight();
-			laneBounds.setY(lastOffset + laneBounds.getY());
-			if (maxHeight != oldLaneHeight) {
-				laneBounds.setHeight(maxHeight + DiagramUtil.FLOW_NODE_Y_OFFSET);
-				lastOffset += laneBounds.getHeight() - oldLaneHeight;
-			}
-			participantHeight += laneBounds.getHeight();
-		}
-		participantShape.getBounds().setHeight(participantHeight);
-	}
-
 	private void normalizeNodeSizes() {
 		for (FlowNode flowNode : bpmnModel.getModelElementsByType(FlowNode.class)) {
 			BpmnShape shape = (BpmnShape) flowNode.getDiagramElement();
