@@ -478,7 +478,6 @@ public class VariableAccessHandler implements Serializable {
 	public void setDominioHandler(VariableDominioEnumerationHandler dominioHandler) {
 		this.dominioHandler = dominioHandler;
 	}
-	}
 
 	public boolean isNumericOrMonetary() {
 		return isNumericOrMonetary;
@@ -502,4 +501,5 @@ public class VariableAccessHandler implements Serializable {
 
 	public void setStringHandler(VariableStringHandler stringHandler) {
 		this.stringHandler = stringHandler;
+	}
 }
