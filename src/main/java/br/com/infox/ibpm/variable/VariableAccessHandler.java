@@ -79,9 +79,10 @@ public class VariableAccessHandler implements Serializable {
                         setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
                     }
                     break;
+                case FILE:
                 case EDITOR:
                 	getModeloEditorHandler().init(this.variableAccess);
-                    break; 
+                    break;
                 default:
                     break;
                 }
@@ -358,6 +359,10 @@ public class VariableAccessHandler implements Serializable {
                 case ENUMERATION_MULTIPLE:
                     getDominioHandler().init(getVariableAccess());
                     break;
+                    case FILE:
+                    case EDITOR:
+                    	getModeloEditorHandler().init(getVariableAccess());
+                    	break;
                 default:
                 	break;
                 }
@@ -473,6 +478,7 @@ public class VariableAccessHandler implements Serializable {
 	public void setDominioHandler(VariableDominioEnumerationHandler dominioHandler) {
 		this.dominioHandler = dominioHandler;
 	}
+	}
 
 	public boolean isNumericOrMonetary() {
 		return isNumericOrMonetary;
@@ -496,6 +502,4 @@ public class VariableAccessHandler implements Serializable {
 
 	public void setStringHandler(VariableStringHandler stringHandler) {
 		this.stringHandler = stringHandler;
-	}
-    
 }

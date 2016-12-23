@@ -39,7 +39,8 @@ public class FileVariableHandler {
 	public void gravarDocumento(UploadedFile file, String variableFieldName) {
 		TaskInstanceHome taskInstanceHome = TaskInstanceHome.instance();
 		ProcessoEpaHome processoEpaHome = ComponentUtil.getComponent(ProcessoEpaHome.NAME);
-		ClassificacaoDocumento classificacaoDocumento = TaskInstanceHome.instance().getVariaveisDocumento().get(variableFieldName).getClassificacaoDocumento();
+		//ClassificacaoDocumento classificacaoDocumento = TaskInstanceHome.instance().getVariaveisDocumento().get(variableFieldName).getClassificacaoDocumento();
+		Documento documentoOriginal = TaskInstanceHome.instance().getVariaveisDocumento().get(variableFieldName);
 		Integer idDocumentoExistente = (Integer) taskInstanceHome.getValueOfVariableFromTaskInstance(taskInstanceHome.getVariableName(variableFieldName));
         if (idDocumentoExistente != null) {
             try {
@@ -48,7 +49,7 @@ public class FileVariableHandler {
                 throw new BusinessRollbackException(e);
             }
         }
-        Documento documento = createDocumento(file, classificacaoDocumento);
+        Documento documento = createDocumento(file, documentoOriginal);
         try {
             documentoManager.gravarDocumentoNoProcesso(processoEpaHome.getInstance(), documento);
             taskInstanceHome.getInstance().put(variableFieldName, documento.getId());
@@ -73,6 +74,7 @@ public class FileVariableHandler {
 	public void gravarDocumento(UploadedFile file, String variableFieldName, FormField formField, Processo processo) {
 	    Documento documento = formField.getTypedValue(Documento.class);
 	    ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
+	    documento.setClassificacaoDocumento(classificacaoDocumento);
         if (documento != null) {
             try {
                 removeDocumento(documento);
@@ -80,7 +82,7 @@ public class FileVariableHandler {
                 throw new BusinessRollbackException(e);
             }
         }
-        documento = createDocumento(file, classificacaoDocumento);
+        documento = createDocumento(file, documento);
         try {
             documentoManager.gravarDocumentoNoProcesso(processo, documento);
             formField.setValue(documento);
@@ -97,12 +99,14 @@ public class FileVariableHandler {
         documentoBinarioManager.remove(documento.getDocumentoBin().getId());
     }
 	
-	private Documento createDocumento(UploadedFile file, ClassificacaoDocumento classificacaoDocumento) {
+	private Documento createDocumento(UploadedFile file, Documento documentoOriginal) {
         Documento documento = new Documento();
         documento.setDescricao(file.getName());
         documento.setAnexo(true);
         documento.setDocumentoBin(createDocumentoBin(file));
-        documento.setClassificacaoDocumento(classificacaoDocumento);
+		if (documentoOriginal.getPasta() != null)
+			documento.setPasta(documentoOriginal.getPasta());
+        documento.setClassificacaoDocumento(documentoOriginal.getClassificacaoDocumento());
         documento.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         documento.setLocalizacao(Authenticator.getLocalizacaoAtual());
         return documento;
