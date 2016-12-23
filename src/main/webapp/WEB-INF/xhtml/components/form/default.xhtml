@@ -4,6 +4,7 @@
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:a="http://richfaces.org/a4j"
     xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
@@ -11,6 +12,9 @@
 
     <ui:param name="template"
         value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
+    <ui:param
+        name="mascara"
+        value="#{wi:get(props.mascara, '')}" />
 
     <s:decorate id="#{id}Decoration" template="#{template}"
         rendered="#{empty rendered or rendered}">
@@ -23,9 +27,13 @@
             onkeypress="#{onkeypress}"
             maxlength="#{empty maxlength ? 255 : maxlength}">
             <ui:insert />
-            <f:converter
-                converterId="#{empty converterId ? 'stringConverter' : converterId}" />
+            <f:converter converterId="#{empty converterId ? 'stringConverter' : converterId}" />
         </h:inputText>
     </s:decorate>
+
+
+    <c:if test="#{not empty mascara}">
+        <wi:mask selector="##{id}" mask="#{mascara}" />
+    </c:if>
 
 </ui:composition>

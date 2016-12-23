@@ -42,11 +42,14 @@ public class VariableAccessHandler implements Serializable {
     private boolean isData = false;
     private boolean isFile;
     private boolean fragment;
+    private boolean isNumericOrMonetary;
     private FragmentConfiguration fragmentConfiguration;
     
     private VariableEditorModeloHandler modeloEditorHandler = new VariableEditorModeloHandler();
     private VariableDataHandler dataHandler = new VariableDataHandler();
     private VariableDominioEnumerationHandler dominioHandler = new VariableDominioEnumerationHandler();
+    private VariableMaxMinHandler maxMinHandler = new VariableMaxMinHandler();
+    private VariableStringHandler stringHandler = new VariableStringHandler();
     
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -61,6 +64,12 @@ public class VariableAccessHandler implements Serializable {
                 case DATE:
                     getDataHandler().init(this.variableAccess);
                     break;
+                case MONETARY:
+                case INTEGER:	
+                	getMaxMinHandler().init(this.variableAccess);
+                	break;
+                case STRING:
+                	getStringHandler().init(this.variableAccess);
                 case ENUMERATION:
                 case ENUMERATION_MULTIPLE:
                 	getDominioHandler().init(getVariableAccess());
@@ -89,6 +98,7 @@ public class VariableAccessHandler implements Serializable {
         this.possuiDominio = tipoPossuiDominio(this.type);
         this.isData = isTipoData(this.type);
         this.isFile = isTipoFile(this.type);
+        this.isNumericOrMonetary = isNumericoOuMonetario(this.type);
     }
 
     private boolean tipoPossuiDominio(VariableType type) {
@@ -211,8 +221,14 @@ public class VariableAccessHandler implements Serializable {
         this.isData = isTipoData(type);
         this.isFile = isTipoFile(type);
         this.fragment = isTipoFragment(type);
+        this.isNumericOrMonetary = isNumericoOuMonetario(type);
     }
 
+    private boolean isNumericoOuMonetario(VariableType type) {
+        return VariableType.INTEGER.equals(type) || VariableType.MONETARY.equals(type);
+    }
+     
+    
     private boolean isTipoFragment(VariableType type) {
         return VariableType.FRAGMENT.equals(type);
     }
@@ -328,15 +344,22 @@ public class VariableAccessHandler implements Serializable {
                         setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
                     }
                     break;
-                    case DATE:
-                        getDataHandler().init(getVariableAccess());
+                case DATE:
+                    getDataHandler().init(getVariableAccess());
                     break;
-                    case ENUMERATION:
-                    case ENUMERATION_MULTIPLE:
-                        getDominioHandler().init(getVariableAccess());
+                case MONETARY:
+                case INTEGER:	
+                	getMaxMinHandler().init(getVariableAccess());
+                	break;
+                case STRING:
+                	getStringHandler().init(getVariableAccess());
+                	break;
+                case ENUMERATION:
+                case ENUMERATION_MULTIPLE:
+                    getDominioHandler().init(getVariableAccess());
                     break;
-                    default:
-                    break;
+                default:
+                	break;
                 }
             }
         }
@@ -401,6 +424,8 @@ public class VariableAccessHandler implements Serializable {
         VariavelClassificacaoDocumentoAction v = BeanManager.INSTANCE.getReference(VariavelClassificacaoDocumentoAction.class);
         v.setCurrentVariable(getVariableAccess());
         getDataHandler().init(getVariableAccess());
+        getMaxMinHandler().init(getVariableAccess());
+        getStringHandler().init(getVariableAccess());
         getDominioHandler().init(getVariableAccess());
     }
 
@@ -447,6 +472,30 @@ public class VariableAccessHandler implements Serializable {
 
 	public void setDominioHandler(VariableDominioEnumerationHandler dominioHandler) {
 		this.dominioHandler = dominioHandler;
+	}
+
+	public boolean isNumericOrMonetary() {
+		return isNumericOrMonetary;
+	}
+
+	public void setNumericOrMonetary(boolean isNumericOrMonetary) {
+		this.isNumericOrMonetary = isNumericOrMonetary;
+	}
+
+	public VariableMaxMinHandler getMaxMinHandler() {
+		return maxMinHandler;
+	}
+
+	public void setMaxMinHandler(VariableMaxMinHandler maxMinHandler) {
+		this.maxMinHandler = maxMinHandler;
+	}
+
+	public VariableStringHandler getStringHandler() {
+		return stringHandler;
+	}
+
+	public void setStringHandler(VariableStringHandler stringHandler) {
+		this.stringHandler = stringHandler;
 	}
     
 }

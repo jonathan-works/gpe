@@ -213,6 +213,28 @@
                             <f:converter converterId="fragmentConfigurationConverter" />
                         </wi:selectOneMenu>
                     </rich:panel>
+                    <rich:panel id="definicaoNumerico" rendered="#{var.numericOrMonetary}">
+                        <div id="input">
+                            <wi:inputText id="valorMax" label="Valor Máximo" value="#{var.maxMinHandler.maximo}" converterId="javax.faces.Double">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, pageBodyDialogMessage, varDiv" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                        <div id="input">
+                            <wi:inputText id="valorMin" label="Valor Mínimo" value="#{var.maxMinHandler.minimo}" converterId="javax.faces.Double">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, pageBodyDialogMessage, varDiv" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </rich:panel>
+                    <rich:panel id="definicaoMascara" rendered="#{var.type eq 'STRING'}">
+                        <div id="input">
+                            <wi:inputText id="mascaraString" label="Máscara" value="#{var.stringHandler.mascara}">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, pageBodyDialogMessage, varDiv" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </rich:panel>
                     <h:form rendered="#{var.type eq 'PARAMETER'}">
                         <div id="input">
                             <wi:inputText id="inputDefaultValue" label="Valor padrão da variável" value="#{var.value}">
