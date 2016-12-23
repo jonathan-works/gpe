@@ -416,8 +416,8 @@
                                 <artifactItem>
                                     <groupId>br.com.infox.certificadoDigital</groupId>
                                     <artifactId>certificado-digital</artifactId>
-                                    <version>0.0.4</version>
-                                    <classifier>jar-with-dependencies</classifier>
+                                    <version>${version.certificado-digital}</version>
+                                    <classifier>runnable</classifier>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/assinador-auto-assinado</outputDirectory>
                                     <destFileName>certificado_digital.jar</destFileName>

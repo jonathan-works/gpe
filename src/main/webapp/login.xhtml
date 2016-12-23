@@ -52,8 +52,7 @@
                         </div>
                         <h:form id="loginComCertificado" styleClass="field-block">
                             <i:certificadoDigital id="certificacao"
-                               tokenField="#{certificateAuthenticator.token}"
-                               signAction="#{certificateAuthenticator.authenticate}"
+                               callbackHandler="#{certificateAuthenticator}"
                                assinavelProvider="#{certificateAuthenticator.assinavelProvider}"
                                execute="@this"
                                render="DialogMessage"

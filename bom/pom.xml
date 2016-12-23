@@ -18,6 +18,7 @@
     <properties>
         <version.epp>2.14.11</version.epp>
         <version.liquibase-epp>2.14.11</version.liquibase-epp>
+        <version.certificado-digital>1.0.9</version.certificado-digital>
         <version.git-commit-id-plugin>2.2.1</version.git-commit-id-plugin>
         <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
         <version.maven-source-plugin>2.4</version.maven-source-plugin>
@@ -248,7 +249,7 @@
             <dependency>
 				<groupId>br.com.infox.certificadoDigital</groupId>
 				<artifactId>certificado-digital</artifactId>
-				<version>1.0.6</version>
+				<version>${version.certificado-digital}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>org.apache.cxf</groupId>
