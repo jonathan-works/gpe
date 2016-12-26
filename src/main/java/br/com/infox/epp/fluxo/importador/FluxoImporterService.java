@@ -7,7 +7,9 @@ import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -243,9 +245,9 @@ public class FluxoImporterService extends PersistenceController {
 	}
 
     private void validaConfiguracaoAssigments(Document doc, List<String> erros) {
-        List<String> perfisInexistentes = new ArrayList<>();
-        List<String> localizacoesInexistentes = new ArrayList<>();
-        List<String> usuariosInexistentes = new ArrayList<>();
+        Set<String> perfisInexistentes = new HashSet<>();
+        Set<String> localizacoesInexistentes = new HashSet<>();
+        Set<String> usuariosInexistentes = new HashSet<>();
         for (Element assignment : doc.getDescendants(new ElementFilter("assignment"))) {
             String pooledActor = assignment.getAttributeValue("pooled-actors");
             if (pooledActor != null && !pooledActor.isEmpty()) {
