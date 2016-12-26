@@ -5,7 +5,6 @@ import static java.text.MessageFormat.format;
 import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.ibpm.process.definition.variable.constants.VariableConstants;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
@@ -107,20 +105,6 @@ public class TaskInstanceForm implements Serializable {
                     }
                     String name = var.getVariableName();
                     String label = var.getLabel();
-                    if (VariableType.EDITOR.equals(type) && var.getConfiguration() != null && !var.getConfiguration().isEmpty() && 
-                    		VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento() != null &&
-                    		!VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento().isEmpty()) {
-                    	FormField ff = new FormField();
-                        ff.setFormId(form.getFormId());
-                        ff.setId(name + "Modelo");
-                        ff.setLabel("Modelo");
-                        ff.setType("comboModelos");
-                        Map<String, Object> props = getInNewLineMap();
-                        props.put("editorId", var.getVariableName() + "-" + taskInstance.getId());
-                        props.put("pagePath", MessageFormat.format(VariableConstants.DEFAULT_PATH, "comboModelos"));
-                        ff.setProperties(props);
-                        form.getFields().add(ff);
-                    }
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
                     ff.setId(var.getVariableName() + "-" + taskInstance.getId());
