@@ -250,7 +250,9 @@ public class TaskInstanceHome implements Serializable {
 			documento.setClassificacaoDocumento(classificacoes.get(0));
 		}
 	}
-
+	public void setModeloReadonly(FormField formField){
+	    setModeloReadonly(formField.getId().split("-")[0]);
+	}
 	private void setModeloReadonly(String variavelEditor) {
 		Form form = ComponentUtil.getComponent(TaskInstanceForm.NAME);
 		String variavelComboModelo = variavelEditor + "Modelo";

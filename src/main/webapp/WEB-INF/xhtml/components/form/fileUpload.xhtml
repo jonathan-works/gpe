@@ -141,21 +141,15 @@
 			<p:outputPanel id="assinaturaDocumentoDiv#{f.id}">
 				<p:outputPanel id="conteudoAssinatura#{f.id}"
 					rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
-					<a:jsFunction name="assinar"
-						action="#{taskInstanceHome.assinarDocumento()}"
-						execute="@this, assinaturaDocumentoDiv#{f.id}"
-						render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Div, #{f.id}documentoExistente"
-						oncomplete="infox.hideLoading();" />
-
-                    <wi:certificadoDigital id="botaoAssinatura"
-						signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-						reRender="pageBodyDialogMessage, @form"
-						tokenField="#{taskInstanceHome.tokenToSign}"
-                        documentoBinList="#{taskInstanceHome.variaveisDocumento[id].documentoBin}"
-						propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
-						functionPreSign="infox.showLoading();"
-						functionPosSign="assinar();">
-					</wi:certificadoDigital>
+                    <i:certificadoDigital id="botaoAssinatura"
+                       callbackHandler="#{documentoVariavelController}"
+                       assinavelProvider="#{documentoVariavelController.assinavelProvider}"
+                       execute="@this, assinaturaDocumentoDiv#{f.id}"
+                       render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Div, #{f.id}documentoExistente"
+                       onbegin="infox.showLoading();"
+                       oncomplete="infox.hideLoading();"
+                       value="#{infoxMessages['assinaturas.assinar']}">
+                    </i:certificadoDigital>
 				</p:outputPanel>
 			</p:outputPanel>
 		</fieldset>

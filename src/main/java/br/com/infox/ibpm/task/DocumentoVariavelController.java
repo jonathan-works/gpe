@@ -5,16 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.POST;
 
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
+
+import br.com.infox.assinador.rest.api.StatusToken;
+import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.CollectionUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
+import br.com.infox.epp.assinador.view.AssinaturaCallback;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
 import br.com.infox.epp.processo.documento.entity.Pasta;
@@ -22,17 +32,17 @@ import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoManager;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
-import br.com.infox.ibpm.task.view.Form;
 import br.com.infox.ibpm.task.view.FormField;
-import br.com.infox.ibpm.task.view.TaskInstanceForm;
-import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Named
 
 @ViewScoped
-public class DocumentoVariavelController implements Serializable {
+public class DocumentoVariavelController implements Serializable, AssinaturaCallback {
 
 	private static final long serialVersionUID = 1L;
+	private static final LogProvider LOG = Logging.getLogProvider(DocumentoVariavelController.class);
 
 	private ProcessoEpaHome processoEpaHome;
 	@Inject
@@ -41,6 +51,10 @@ public class DocumentoVariavelController implements Serializable {
 	private PastaRestricaoManager pastaRestricaoManager;
 	@Inject
 	private PastaDAO pastaDAO;
+	@Inject
+	private AssinadorService assinadorService;
+	@Inject
+	private InfoxMessages infoxMessages;
 
 	private String pastaPadrao;
 	private List<Pasta> pastasEditor;
@@ -135,5 +149,31 @@ public class DocumentoVariavelController implements Serializable {
 		if (pastaEditor != null && formField != null)
 			TaskInstanceHome.instance().getVariaveisDocumento().get(formField.getId()).setPasta(pastaEditor);
 	}
+	
+	public AssinavelProvider getAssinavelProvider(){
+	    return new AssinavelDocumentoBinProvider(TaskInstanceHome.instance().getVariaveisDocumento().get(formField.getId()).getDocumentoBin());
+	}
+	
+    @Override
+    @ExceptionHandled
+    public void onSuccess(List<DadosAssinatura> dadosAssinatura) {
+        if (CollectionUtil.isEmpty(dadosAssinatura)) {
+            FacesMessages.instance().add("Sem documento para assinar");
+        } else {
+            try {
+                assinadorService.assinar(dadosAssinatura, Authenticator.getUsuarioPerfilAtual());
+                TaskInstanceHome.instance().setModeloReadonly(formField);
+                FacesMessages.instance().add(Severity.INFO, infoxMessages.get("assinatura.assinadoSucesso"));
+            } catch (AssinaturaException | DAOException e) {
+                FacesMessages.instance().add(e.getMessage());
+                LOG.error("assinarDocumento()", e);
+            }
+        }
+    }
 
+    @Override
+    @ExceptionHandled
+    public void onFail(StatusToken statusToken, List<DadosAssinatura> dadosAssinatura) {
+        FacesMessages.instance().add(Severity.INFO, infoxMessages.get("termoAdesao.sign.fail"));
+    }
 }

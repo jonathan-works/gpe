@@ -64,19 +64,15 @@
                 <p:outputPanel id="assinaturaDocumentoDiv#{f.id}">
                     <p:outputPanel id="conteudoAssinatura#{f.id}"
                         rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
-                        <a:jsFunction name="assinar" action="#{taskInstanceHome.assinarDocumento()}"
-                            execute="@this, assinaturaDocumentoDiv#{f.id}"
-				render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form, botaoAssinatura" 
-                            oncomplete="infox.hideLoading();" />
-                        <wi:certificadoDigital id="botaoAssinatura"
-                            signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-                            reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
-                            tokenField="#{taskInstanceHome.tokenToSign}" propertyValue="#{f.id}"
-                            propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
-                            documentoBinList="#{taskInstanceHome.variaveisDocumento[id].documentoBin}"
-                            functionPreSign="infox.showLoading();" functionPosSign="assinar();">
-                        </wi:certificadoDigital>
-
+                        <i:certificadoDigital id="botaoAssinatura"
+                           callbackHandler="#{documentoVariavelController}"
+                           assinavelProvider="#{documentoVariavelController.assinavelProvider}"
+                           execute="@this assinaturaDocumentoDiv#{f.id}"
+                           render="assinaturaDocumentoDiv#{f.id} #{id}EditorDiv pageBodyDialogMessage @form botaoAssinatura"
+                           onbegin="infox.showLoading();"
+                           oncomplete="infox.hideLoading();"
+                           value="#{infoxMessages['assinaturas.assinar']}">
+                        </i:certificadoDigital>
                     </p:outputPanel>
                 </p:outputPanel>
             </fieldset>

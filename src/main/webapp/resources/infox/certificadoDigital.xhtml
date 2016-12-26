@@ -7,7 +7,7 @@
     <composite:attribute name="tokenField" type="java.lang.String" required="false" />
     <composite:attribute name="assinavelProvider" type="br.com.infox.epp.assinador.assinavel.AssinavelProvider" required="false" />
     <composite:attribute name="callbackHandler" type="br.com.infox.epp.assinador.view.AssinaturaCallback"  required="false" />
-    <composite:attribute name="value" type="java.lang.String" default="Assinar Digitalmente" />
+    <composite:attribute name="value" type="java.lang.String" default="#{infoxMessages['assinaturas.assinar']}" />
     <composite:attribute name="action" />
     <composite:attribute name="execute" default="@this" />
     <composite:attribute name="render" default="@this" />
