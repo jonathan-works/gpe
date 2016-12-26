@@ -17,6 +17,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
@@ -106,6 +107,10 @@ public class AssinaturaDocumentoService {
     public boolean isDocumentoTotalmenteAssinado(Documento documento) {
         if (documento.getDocumentoBin().isMinuta()) {
             return false;
+        }
+
+        if (!EntityManagerProducer.getEntityManager().contains(documento.getClassificacaoDocumento())){
+            documento.setClassificacaoDocumento(EntityManagerProducer.getEntityManager().find(ClassificacaoDocumento.class, documento.getClassificacaoDocumento().getId()));
         }
         List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
         Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas = new HashMap<>();
