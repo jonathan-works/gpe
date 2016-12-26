@@ -1,9 +1,12 @@
 package br.com.infox.epp.fluxo.list;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.infox.core.list.DataList;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.fluxo.crud.FluxoController;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.HistoricoProcessDefinition;
 
 @Named
@@ -11,7 +14,8 @@ import br.com.infox.epp.fluxo.entity.HistoricoProcessDefinition;
 public class HistoricoProcessDefinitionList extends DataList<HistoricoProcessDefinition> {
 	private static final long serialVersionUID = 1L;
 
-	private Integer idFluxo;
+	@Inject
+	private FluxoController fluxoController;
 	
 	@Override
 	protected String getDefaultOrder() {
@@ -25,14 +29,10 @@ public class HistoricoProcessDefinitionList extends DataList<HistoricoProcessDef
 	
 	@Override
 	protected String getDefaultWhere() {
-		return "where o.fluxo.idFluxo = #{historicoProcessDefinitionList.idFluxo}";
-	}
-
-	public Integer getIdFluxo() {
-		return idFluxo;
+		return "where o.fluxo = #{historicoProcessDefinitionList.fluxo}";
 	}
 	
-	public void setIdFluxo(Integer idFluxo) {
-		this.idFluxo = idFluxo;
+	public Fluxo getFluxo() {
+	    return fluxoController.getFluxo();
 	}
 }

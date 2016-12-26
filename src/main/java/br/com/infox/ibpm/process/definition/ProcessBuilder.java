@@ -86,6 +86,8 @@ public class ProcessBuilder implements Serializable {
     public void load() {
     	try {
     		if(!FacesContext.getCurrentInstance().isPostback()){
+    		    String cdFluxo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cdFluxo");
+    		    fluxoController.setFluxo(fluxoManager.getFluxoByCodigo(cdFluxo));
     			load(getFluxo());
     		}
     	} catch (JpdlException e){
