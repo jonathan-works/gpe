@@ -39,6 +39,7 @@ import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.util.FileUtil;
+import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -283,5 +284,11 @@ public class CertificateManager {
 		CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
 		return certificateSignatures.get(token);
 	}
+
+    public CertificadoDadosPessoaFisica getDadosPessoaFisica(DadosAssinatura dadosAssinatura) throws CertificadoException {
+        Certificado c = CertificadoFactory.createCertificado(dadosAssinatura.getCertChainBase64());
+        CertificadoDadosPessoaFisica certificadoDadosPessoaFisica = (CertificadoDadosPessoaFisica) c;
+        return certificadoDadosPessoaFisica;
+    }
 
 }
