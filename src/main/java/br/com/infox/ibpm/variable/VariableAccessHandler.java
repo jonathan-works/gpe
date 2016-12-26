@@ -42,7 +42,8 @@ public class VariableAccessHandler implements Serializable {
     private boolean isData = false;
     private boolean isFile;
     private boolean fragment;
-    private boolean isNumericOrMonetary;
+    private boolean numerico;
+    private boolean monetario;
     private FragmentConfiguration fragmentConfiguration;
     
     private VariableEditorModeloHandler modeloEditorHandler = new VariableEditorModeloHandler();
@@ -99,7 +100,8 @@ public class VariableAccessHandler implements Serializable {
         this.possuiDominio = tipoPossuiDominio(this.type);
         this.isData = isTipoData(this.type);
         this.isFile = isTipoFile(this.type);
-        this.isNumericOrMonetary = isNumericoOuMonetario(this.type);
+        this.numerico = isNumerico(type);
+        this.monetario = isMonetario(type);
     }
 
     private boolean tipoPossuiDominio(VariableType type) {
@@ -222,13 +224,17 @@ public class VariableAccessHandler implements Serializable {
         this.isData = isTipoData(type);
         this.isFile = isTipoFile(type);
         this.fragment = isTipoFragment(type);
-        this.isNumericOrMonetary = isNumericoOuMonetario(type);
+        this.numerico = isNumerico(type);
+        this.monetario = isMonetario(type);
     }
 
-    private boolean isNumericoOuMonetario(VariableType type) {
-        return VariableType.INTEGER.equals(type) || VariableType.MONETARY.equals(type);
+    private boolean isMonetario(VariableType type) {
+        return VariableType.MONETARY.equals(type);
     }
-     
+    
+    private boolean isNumerico(VariableType type) {
+        return VariableType.INTEGER.equals(type);
+    }     
     
     private boolean isTipoFragment(VariableType type) {
         return VariableType.FRAGMENT.equals(type);
@@ -479,14 +485,6 @@ public class VariableAccessHandler implements Serializable {
 		this.dominioHandler = dominioHandler;
 	}
 
-	public boolean isNumericOrMonetary() {
-		return isNumericOrMonetary;
-	}
-
-	public void setNumericOrMonetary(boolean isNumericOrMonetary) {
-		this.isNumericOrMonetary = isNumericOrMonetary;
-	}
-
 	public VariableMaxMinHandler getMaxMinHandler() {
 		return maxMinHandler;
 	}
@@ -501,5 +499,21 @@ public class VariableAccessHandler implements Serializable {
 
 	public void setStringHandler(VariableStringHandler stringHandler) {
 		this.stringHandler = stringHandler;
+	}
+
+	public boolean isNumerico() {
+		return numerico;
+	}
+
+	public void setNumerico(boolean numerico) {
+		this.numerico = numerico;
+	}
+
+	public boolean isMonetario() {
+		return monetario;
+	}
+
+	public void setMonetario(boolean monetario) {
+		this.monetario = monetario;
 	}
 }
