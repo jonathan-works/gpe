@@ -135,6 +135,22 @@ public class AssinadorController implements Serializable, AssinaturaCallback {
             }
         }
     }
+    
+    public AssinavelProvider criarAssinavelProvider(String textoAssinavel) {
+        return new AssinavelGenericoProvider(textoAssinavel);
+    }
+
+    public AssinavelProvider criarAssinavelProvider(List<String> textoAssinavelList) {
+        return new AssinavelGenericoProvider(textoAssinavelList);
+    }
+
+    public AssinavelProvider criarAssinavelProviderBin(DocumentoBin documentoBin) {
+        return new AssinavelDocumentoBinProvider(documentoBin);
+    }
+
+    public AssinavelProvider criarAssinavelProviderBin(List<DocumentoBin> documentoBinList) {
+        return new AssinavelDocumentoBinProvider(documentoBinList);
+    }
 
     @Override
     public void onSuccess(List<DadosAssinatura> dadosAssinatura) {
