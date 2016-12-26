@@ -1,5 +1,4 @@
 package br.com.infox.ibpm.variable.file;
-
 import java.util.Date;
 
 import javax.ejb.Stateless;
@@ -73,15 +72,17 @@ public class FileVariableHandler {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void gravarDocumento(UploadedFile file, String variableFieldName, FormField formField, Processo processo) {
 	    Documento documento = formField.getTypedValue(Documento.class);
-	    ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
-	    documento.setClassificacaoDocumento(classificacaoDocumento);
         if (documento != null) {
             try {
                 removeDocumento(documento);
             } catch (DAOException e) {
                 throw new BusinessRollbackException(e);
             }
+        } else {
+            documento = new Documento();
         }
+        ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
+        documento.setClassificacaoDocumento(classificacaoDocumento);
         documento = createDocumento(file, documento);
         try {
             documentoManager.gravarDocumentoNoProcesso(processo, documento);
