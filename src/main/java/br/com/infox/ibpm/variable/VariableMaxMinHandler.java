@@ -34,34 +34,36 @@ public class VariableMaxMinHandler {
 		return maximo;
 	}
 
-	public void setMaximo(Double maximo) {
-		this.maximo = maximo;
-    	if (this.maximo != null) {
-    		MaxMinConfig config;
-    		if(this.variableAccess.getConfiguration() != null)
-    			config = fromJson(this.variableAccess.getConfiguration());
-    		else
-    			config = new MaxMinConfig();
-            config.setMaximo(maximo);
-            this.variableAccess.setConfiguration(new Gson().toJson(config, MaxMinConfig.class));
-        }
+	public void setMaximo(Double max) {
+		/*if (max == null) {
+			max = 0D;
+		}*/
+		maximo = max;
+		MaxMinConfig config;
+		if (this.variableAccess.getConfiguration() != null)
+			config = fromJson(this.variableAccess.getConfiguration());
+		else
+			config = new MaxMinConfig();
+		config.setMaximo(maximo);
+		this.variableAccess.setConfiguration(new Gson().toJson(config, MaxMinConfig.class));
 	}
 
 	public Double getMinimo() {
 		return minimo;
 	}
 
-	public void setMinimo(Double minimo) {
-		this.minimo = minimo;
-    	if (this.minimo != null) {
-    		MaxMinConfig config;
-    		if(this.variableAccess.getConfiguration() != null)
-    			config = fromJson(this.variableAccess.getConfiguration());
-    		else
-    			config = new MaxMinConfig();
-            config.setMinimo(minimo);
-            this.variableAccess.setConfiguration(new Gson().toJson(config, MaxMinConfig.class));
-        }
+	public void setMinimo(Double min) {
+		/*if (min == null) {
+			min = 0D;
+		}*/
+		minimo = min;
+		MaxMinConfig config;
+		if (this.variableAccess.getConfiguration() != null)
+			config = fromJson(this.variableAccess.getConfiguration());
+		else
+			config = new MaxMinConfig();
+		config.setMinimo(minimo);
+		this.variableAccess.setConfiguration(new Gson().toJson(config, MaxMinConfig.class));
 	}
 
 	public static class MaxMinConfig {
