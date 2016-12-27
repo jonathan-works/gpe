@@ -48,7 +48,7 @@
                 <h:form>
                     <h:outputText value="#{transicaoHandler.name}" />
                     <a:commandLink
-                        render="nodesDiv"
+                        render="nodes"
                         title="#{infoxMessages['process.transition.goto']}"
                         execute="@this"
                         action="#{nodeFitter.setCurrentNode(transicaoHandler, type)}"
