@@ -1,4 +1,4 @@
-package br.com.infox.epp.modeler;
+package br.com.infox.epp.fluxo.definicao.modeler;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package br.com.infox.epp.modeler;
+package br.com.infox.epp.fluxo.definicao.modeler;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
@@ -38,10 +38,11 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
+import br.com.infox.cdi.dao.Dao;
+import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.service.HistoricoProcessDefinitionService;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
@@ -54,11 +55,12 @@ import br.com.infox.seam.exception.BusinessRollbackException;
 public class BpmnJpdlService {
 	
 	@Inject
-	private FluxoManager fluxoManager;
-	@Inject
 	private InfoxMessages infoxMessages;
 	@Inject
 	private HistoricoProcessDefinitionService historicoProcessDefinitionService;
+	@Inject
+	@GenericDao
+	private Dao<DefinicaoProcesso, Long> definicaoProcessoDao;
 
 	public BpmnModelInstance createInitialBpmn(String processName) {
     	String processKey = BpmUtil.generateKey();
@@ -127,26 +129,26 @@ public class BpmnJpdlService {
     }
 	
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public Fluxo atualizarDefinicao(Fluxo fluxo, String newProcessDefinitionXml, String newBpmnXml, String newSvg) {
+	public DefinicaoProcesso atualizarDefinicao(DefinicaoProcesso definicaoProcesso, String newProcessDefinitionXml, String newBpmnXml, String newSvg) {
     	BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8)));
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(newProcessDefinitionXml);
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
-    	atualizarNomeFluxo(fluxo, bpmnModel, processDefinition);
+    	atualizarNomeFluxo(definicaoProcesso.getFluxo().getFluxo(), bpmnModel, processDefinition);
     	ConfiguracoesTarefa.resolverMarcadoresBpmn(processDefinition, bpmnModel);
     	
     	newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
     	// Validar consistência do JPDL
 		InfoxJpdlXmlReader.readProcessDefinition(newProcessDefinitionXml);
 
-		historicoProcessDefinitionService.registrarHistorico(fluxo);
-		fluxo.setXml(newProcessDefinitionXml);
-		fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
-		fluxo.setSvg(newSvg);
-		return fluxoManager.update(fluxo);
+		historicoProcessDefinitionService.registrarHistorico(definicaoProcesso);
+		definicaoProcesso.setXml(newProcessDefinitionXml);
+		definicaoProcesso.setBpmn(Bpmn.convertToString(bpmnModel));
+		definicaoProcesso.setSvg(newSvg);
+		return definicaoProcessoDao.update(definicaoProcesso);
 	}
     
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public Fluxo importarBpmn(Fluxo fluxo, String bpmn) {
+	public DefinicaoProcesso importarBpmn(DefinicaoProcesso definicaoProcesso, String bpmn) {
 		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmn.getBytes(StandardCharsets.UTF_8)));
 		BpmnAdapter[] adapters = getAdapters();
 		for (BpmnAdapter adapter : adapters) {
@@ -160,30 +162,30 @@ public class BpmnJpdlService {
 			throw new BusinessRollbackException("O BPMN deve conter apenas 1 participante");
 		}
 		
-    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(fluxo.getXml());
+    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(definicaoProcesso.getXml());
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
 
     	Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
     	processDefinition.setKey(process.getId());
-		atualizarNomeFluxo(fluxo, bpmnModel, processDefinition);
+		atualizarNomeFluxo(definicaoProcesso.getFluxo().getFluxo(), bpmnModel, processDefinition);
 		
 		String newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
 		// Validar consistência do JPDL
 		InfoxJpdlXmlReader.readProcessDefinition(newProcessDefinitionXml);
 		
-		historicoProcessDefinitionService.registrarHistorico(fluxo);
-		fluxo.setXml(newProcessDefinitionXml);
-		fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
-		fluxo.setSvg(null);
-		return fluxoManager.update(fluxo);
+//		historicoProcessDefinitionService.registrarHistorico(fluxo);
+		definicaoProcesso.setXml(newProcessDefinitionXml);
+		definicaoProcesso.setBpmn(Bpmn.convertToString(bpmnModel));
+		definicaoProcesso.setSvg(null);
+		return definicaoProcessoDao.update(definicaoProcesso);
 	}
 
-	public void atualizarNomeFluxo(Fluxo fluxo, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
+	public void atualizarNomeFluxo(String nomeFluxo, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
 		Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
-		process.setName(fluxo.getFluxo());
-		processDefinition.setName(fluxo.getFluxo());
+		process.setName(nomeFluxo);
+		processDefinition.setName(nomeFluxo);
 		Participant participant = bpmnModel.getModelElementsByType(Participant.class).iterator().next();
-		participant.setName(fluxo.getFluxo());
+		participant.setName(nomeFluxo);
 	}
 	
 	private void updateDefinitionsFromBpmn(BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {

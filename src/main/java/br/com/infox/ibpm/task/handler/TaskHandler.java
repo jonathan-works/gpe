@@ -15,7 +15,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import com.google.common.base.Strings;
 
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 import br.com.infox.seam.util.ComponentUtil;

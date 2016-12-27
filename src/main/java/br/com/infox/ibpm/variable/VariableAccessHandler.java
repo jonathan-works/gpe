@@ -22,7 +22,7 @@ import org.jbpm.taskmgmt.def.Task;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.crud.VariavelClassificacaoDocumentoAction;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 
@@ -113,7 +113,7 @@ public class VariableAccessHandler implements Serializable {
             if (VariableType.PAGE.equals(type) && !pageExists(auxiliarName)) {
                 return;
             }
-            Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getFluxo().getIdFluxo(), this.name, auxiliarName);
+            Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getDefinicaoProcesso().getFluxo().getIdFluxo(), this.name, auxiliarName);
             this.name = auxiliarName;
             variableAccess.setVariableName(auxiliarName);
             

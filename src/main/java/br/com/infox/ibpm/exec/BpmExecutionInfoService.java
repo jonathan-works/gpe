@@ -14,6 +14,7 @@ import javax.persistence.TupleElement;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -26,6 +27,8 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
+import br.com.infox.epp.fluxo.entity.DefinicaoProcesso_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
 
@@ -72,10 +75,14 @@ public class BpmExecutionInfoService implements Serializable {
 		CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
 		
 		Root<Fluxo> fluxo = cq.from(Fluxo.class);
+		Join<Fluxo, DefinicaoProcesso> definicaoProcesso = fluxo.join(Fluxo_.definicaoProcesso, JoinType.INNER);
 		
 		Predicate ativo = cb.isTrue(fluxo.get(Fluxo_.ativo));
 		Predicate publicado = cb.isTrue(fluxo.get(Fluxo_.publicado));
-		Predicate possuiSvg = cb.and(cb.isNotNull(fluxo.get(Fluxo_.svg)), cb.not(cb.equal(cb.trim(fluxo.get(Fluxo_.svg)), cb.literal(""))));
+		Predicate possuiSvg = cb.and(
+	        cb.isNotNull(definicaoProcesso.get(DefinicaoProcesso_.svg)), 
+	        cb.not(cb.equal(cb.trim(definicaoProcesso.get(DefinicaoProcesso_.svg)), cb.literal("")))
+        );
 		
 		cq = cq.select(fluxo);
 		cq = cq.where(ativo, publicado, possuiSvg);

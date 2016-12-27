@@ -60,7 +60,7 @@ public class GraphicExecutionService {
     private FluxoManager fluxoManager;
     
     public String performGraphicExecution(Token token, Map<String, GraphImageBean> graphImageBeans) throws TransformerFactoryConfigurationError {
-        String svg = fluxoManager.getFluxoByDescricao(token.getProcessInstance().getProcessDefinition().getName()).getSvgExecucao();
+        String svg = fluxoManager.getFluxoByDescricao(token.getProcessInstance().getProcessDefinition().getName()).getDefinicaoProcesso().getSvgExecucao();
         try {
             Document document = createDocument(svg);
             

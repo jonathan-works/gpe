@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.process.definition;
+package br.com.infox.epp.fluxo.definicao;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,11 +20,8 @@ import org.richfaces.context.ExtendedPartialViewContext;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.fluxo.crud.FluxoController;
-import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.list.HistoricoProcessDefinitionList;
-import br.com.infox.epp.fluxo.manager.FluxoManager;
-import br.com.infox.epp.modeler.ProcessDefinitionService;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.process.definition.fitter.EventFitter;
@@ -62,15 +59,15 @@ public class ProcessBuilder implements Serializable {
     @Inject
     private JsfComponentTreeValidator jsfComponentTreeValidator;
     @Inject
-    private FluxoManager fluxoManager;
-    @Inject
     private HistoricoProcessDefinitionList historicoProcessDefinitionList;
     @Inject
-    private ProcessDefinitionService processDefinitionService;
+    private DefinicaoProcessoService definicaoProcessoService;
     @Inject
     private ActionMessagesService actionMessagesService;
     @Inject
-    private FluxoController fluxoController;
+    private DefinicaoProcessoController definicaoProcessoController;
+    @Inject
+    private DefinicaoProcessoSearch definicaoProcessoSearch;
  
     private ProcessDefinition instance;
     private String tab;
@@ -87,8 +84,8 @@ public class ProcessBuilder implements Serializable {
     	try {
     		if(!FacesContext.getCurrentInstance().isPostback()){
     		    String cdFluxo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cdFluxo");
-    		    fluxoController.setFluxo(fluxoManager.getFluxoByCodigo(cdFluxo));
-    			load(getFluxo());
+    		    definicaoProcessoController.setDefinicaoProcesso(definicaoProcessoSearch.getByCodigoFluxo(cdFluxo));
+    			load(definicaoProcessoController.getDefinicaoProcesso());
     		}
     	} catch (JpdlException e){
     		logJpdlException(e);
@@ -112,12 +109,12 @@ public class ProcessBuilder implements Serializable {
 		}
 	}
 
-    public void load(Fluxo fluxo) {
+    public void load(DefinicaoProcesso definicaoProcesso) {
     	try {
-    		fluxoController.setFluxo(processDefinitionService.loadDefinicoes(fluxo));
-    		fluxo = getFluxo();
+    		definicaoProcessoController.setDefinicaoProcesso(definicaoProcessoService.loadDefinicoes(definicaoProcesso));
 	        clear();
-	        instance = InfoxJpdlXmlReader.readProcessDefinition(fluxo.getXml());
+	        definicaoProcesso = getDefinicaoProcesso();
+	        instance = InfoxJpdlXmlReader.readProcessDefinition(definicaoProcesso.getXml());
 	        taskFitter.setStarTaskHandler(new TaskHandler(instance.getTaskMgmtDefinition().getStartTask()));
 	        taskFitter.getTasks();
 	        historicoProcessDefinitionList.refresh();
@@ -155,17 +152,19 @@ public class ProcessBuilder implements Serializable {
     }
     
     public void update() {
-    	Fluxo fluxo = getFluxo();
-        if (fluxo != null) {
+    	DefinicaoProcesso definicaoProcesso = getDefinicaoProcesso();
+        if (definicaoProcesso != null) {
             String xmlDef = JpdlXmlWriter.toString(instance);
-            String xmlFluxo = fluxo.getXml();
+            String xmlFluxo = definicaoProcesso.getXml();
 
             if (xmlFluxo == null || !xmlFluxo.equals(xmlDef)) {
                 try {
                 	// verifica a consistencia do fluxo para evitar salva-lo com
                     // erros.
                     InfoxJpdlXmlReader.readProcessDefinition(xmlDef);
-                    fluxoController.setFluxo(processDefinitionService.atualizarDefinicao(fluxo, xmlDef, taskFitter.getTarefasModificadas()));
+                    definicaoProcessoController.setDefinicaoProcesso(
+                        definicaoProcessoService.atualizarDefinicaoProcesso(definicaoProcesso, xmlDef, taskFitter.getTarefasModificadas())
+                    );
                     historicoProcessDefinitionList.refresh();
                     FacesMessages.instance().add("Fluxo salvo com sucesso!");
                 } catch (JpdlException e) {
@@ -179,11 +178,12 @@ public class ProcessBuilder implements Serializable {
     }
 
     public void clearDefinition() {
-    	Fluxo fluxo = getFluxo();
-    	fluxo.setXml(null);
-    	fluxo.setBpmn(null);
-    	fluxo.setSvg(null);
-        load(fluxo);
+    	DefinicaoProcesso definicaoProcesso = getDefinicaoProcesso();
+    	definicaoProcesso.setXml(null);
+    	definicaoProcesso.setBpmn(null);
+    	definicaoProcesso.setSvg(null);
+        load(definicaoProcesso);
+        FacesMessages.instance().add("Definição de processo refeita com sucesso");
     }
 
     public static ProcessBuilder instance() {
@@ -221,15 +221,7 @@ public class ProcessBuilder implements Serializable {
         return nodeFitter;
     }
 
-    public Fluxo getFluxo() {
-        return fluxoController.getFluxo();
-    }
-
-    public void setIdFluxo(Integer idFluxo) {
-    	if (idFluxo == null) {
-    		fluxoController.setFluxo(null);
-    	} else {
-    		fluxoController.setFluxo(fluxoManager.find(idFluxo));
-    	}
+    public DefinicaoProcesso getDefinicaoProcesso() {
+        return definicaoProcessoController.getDefinicaoProcesso();
     }
 }

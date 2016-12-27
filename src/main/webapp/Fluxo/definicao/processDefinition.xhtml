@@ -44,7 +44,7 @@
 			<a:param name="elementKey" assignTo="#{bpmnView.elementKey}" />
 		</a:jsFunction>
      	
-     	<h:inputHidden id="bpmnOriginal" value="#{bpmnView.fluxo.bpmn}" />
+     	<h:inputHidden id="bpmnOriginal" value="#{bpmnView.definicaoProcesso.bpmn}" />
 		
 		<script>
 			function updateBpmn() {
@@ -90,7 +90,7 @@
             <wi:inputText
               id="codFluxo"
               label="#{infoxMessages['fluxo.codFluxo']}"
-              value="#{processBuilder.fluxo.codFluxo}"
+              value="#{processBuilder.definicaoProcesso.fluxo.codFluxo}"
               readonly="true">
               <f:validator validatorId="jsfComponentIdValidator" />
             </wi:inputText>
@@ -161,9 +161,10 @@
         id="new"
         action="#{processBuilder.clearDefinition}"
         value="#{infoxMessages['processBuilder.newBtn']}"
-        render=":processDefinition, @form"
-        onclick="return confirm('#{infoxMessages['processBuilder.confirmNew']}');"
+        render=":processDefinition @form :modeladorForm :pageBodyDialogMessage"
+        onclick="if (!confirm('#{infoxMessages['processBuilder.confirmNew']}')) return false; infox.showLoading();"
         onbeforedomupdate="delete window.modeler;"
+        oncomplete="infox.hideLoading();"
         styleClass="buttons #{wi:get(styleClass, '')}" />
     </h:form>
     <s:div id="actionTemplate">

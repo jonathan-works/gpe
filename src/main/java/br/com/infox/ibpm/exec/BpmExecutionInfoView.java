@@ -17,7 +17,6 @@ import br.com.infox.core.token.AccessTokenManager;
 import br.com.infox.core.token.TokenRequester;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.manager.FluxoManager;
 
 @Named
 @ViewScoped
@@ -46,7 +45,7 @@ public class BpmExecutionInfoView implements Serializable {
 	
 	public Boolean getShowGraph(){
 		return fluxo != null 
-				&& fluxo.getSvg() != null && !fluxo.getSvg().trim().isEmpty();
+				&& fluxo.getDefinicaoProcesso().getSvg() != null && !fluxo.getDefinicaoProcesso().getSvg().trim().isEmpty();
 	}
 	
 	public String getToken() {

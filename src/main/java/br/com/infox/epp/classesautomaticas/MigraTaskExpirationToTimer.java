@@ -104,20 +104,20 @@ public class MigraTaskExpirationToTimer implements Serializable {
 		for (Fluxo fluxo : getFluxos()) {
 			List<Object[]> taskExpirations = getTaskExpirationsByIdFluxo(fluxo.getIdFluxo());
 			if (taskExpirations != null && !taskExpirations.isEmpty()) {
-				if (fluxo.getXmlExecucao() != null && !fluxo.getXmlExecucao().isEmpty()) {
-					String xmlExecucao = adicionaTimer(fluxo.getXmlExecucao(), taskExpirations);
-					if (!fluxo.getXmlExecucao().equals(xmlExecucao)) {
-						fluxo.setXmlExecucao(xmlExecucao);
+				if (fluxo.getDefinicaoProcesso().getXmlExecucao() != null && !fluxo.getDefinicaoProcesso().getXmlExecucao().isEmpty()) {
+					String xmlExecucao = adicionaTimer(fluxo.getDefinicaoProcesso().getXmlExecucao(), taskExpirations);
+					if (!fluxo.getDefinicaoProcesso().getXmlExecucao().equals(xmlExecucao)) {
+						fluxo.getDefinicaoProcesso().setXmlExecucao(xmlExecucao);
 					}
 				}
-				if (fluxo.getXml() != null && !fluxo.getXml().isEmpty()) {
-					String xml = adicionaTimer(fluxo.getXml(), taskExpirations);
-					if (!fluxo.getXml().equals(xml)) {
-						fluxo.setXml(xml);
+				if (fluxo.getDefinicaoProcesso().getXml() != null && !fluxo.getDefinicaoProcesso().getXml().isEmpty()) {
+					String xml = adicionaTimer(fluxo.getDefinicaoProcesso().getXml(), taskExpirations);
+					if (!fluxo.getDefinicaoProcesso().getXml().equals(xml)) {
+						fluxo.getDefinicaoProcesso().setXml(xml);
 					}
 				}
 			}
-			if (fluxo.getXmlExecucao() != null && !fluxo.getXmlExecucao().isEmpty()) {
+			if (fluxo.getDefinicaoProcesso().getXmlExecucao() != null && !fluxo.getDefinicaoProcesso().getXmlExecucao().isEmpty()) {
 				fluxo = publishTimerToDefinition(fluxo);
 			}
 			getEntityManager().merge(fluxo);
@@ -125,13 +125,14 @@ public class MigraTaskExpirationToTimer implements Serializable {
 	}
 	
 	private Fluxo publishTimerToDefinition(Fluxo fluxo) {
-		String xmlEdicao = fluxo.getXml();
-		fluxo.setXml(fluxo.getXmlExecucao());
-		fluxo.setXmlExecucao(null);
+		String xmlEdicao = fluxo.getDefinicaoProcesso().getXml();
+		fluxo.getDefinicaoProcesso().setXml(fluxo.getDefinicaoProcesso().getXmlExecucao());
+		fluxo.getDefinicaoProcesso().setXmlExecucao(null);
 		getFluxoMergeService().publish(fluxo, null);
+		getEntityManager().detach(fluxo.getDefinicaoProcesso());
 		getEntityManager().detach(fluxo);
 		fluxo = getEntityManager().find(Fluxo.class, fluxo.getIdFluxo());
-		fluxo.setXml(xmlEdicao);
+		fluxo.getDefinicaoProcesso().setXml(xmlEdicao);
 		return fluxo;
 	}
 	

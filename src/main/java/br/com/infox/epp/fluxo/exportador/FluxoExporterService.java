@@ -22,13 +22,13 @@ public class FluxoExporterService {
 
         ZipEntry ze = new ZipEntry(FLUXO_XML);
         zos.putNextEntry(ze);
-        zos.write(fluxo.getXml().getBytes());
+        zos.write(fluxo.getDefinicaoProcesso().getXml().getBytes());
         zos.closeEntry();
 
-        if (fluxo.getBpmn() != null && !fluxo.getBpmn().isEmpty()) {
+        if (fluxo.getDefinicaoProcesso().getBpmn() != null && !fluxo.getDefinicaoProcesso().getBpmn().isEmpty()) {
             ze = new ZipEntry(FLUXO_BPMN);
             zos.putNextEntry(ze);
-            zos.write(fluxo.getBpmn().getBytes());
+            zos.write(fluxo.getDefinicaoProcesso().getBpmn().getBytes());
             zos.closeEntry();
         }
 

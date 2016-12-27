@@ -1,7 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 
 public abstract class Fitter {
 

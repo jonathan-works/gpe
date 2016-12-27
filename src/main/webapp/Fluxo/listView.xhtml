@@ -72,7 +72,7 @@
                 columnHeader="#{infoxMessages['fluxo.publicado']}"
                 value="#{row.publicado}" />
                 
-            <wi:columnBoolean columnId="possuirAlteracoes" columnHeader="#{infoxMessages['fluxo.alterado']}" value="#{not (row.xml eq row.xmlExecucao)}"/>
+            <wi:columnBoolean columnId="possuirAlteracoes" columnHeader="#{infoxMessages['fluxo.alterado']}" value="#{not (row.definicaoProcesso.xml eq row.definicaoProcesso.xmlExecucao)}"/>
             <wi:columnSituacao
                 columnId="ativo"
                 columnHeader="#{infoxMessages['field.situacao']}"
@@ -83,7 +83,7 @@
                         action="#{fluxoMergeView.deploy(row)}"
                         onclick="if (!confirm('#{infoxMessages['fluxo.publicar.confirm']}')) { return false; }"
                         onbegin="infox.showLoading();"
-                        rendered="#{not empty row.xml and (row.xml ne row.xmlExecucao or not row.publicado)}"
+                        rendered="#{not empty row.definicaoProcesso.xml and (row.definicaoProcesso.xml ne row.definicaoProcesso.xmlExecucao or not row.publicado)}"
                         render="fluxoListPanel pageBodyDialogMessage modalDeployForm"
                         oncomplete="infox.hideLoading();opener.refreshPage();">
                         <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{layoutController.getResourceUrlByPath('/imagens/deploy.png')}" />
@@ -459,7 +459,7 @@
             name="monitorTab"
             id="monitorTab"
             title="#{infoxMessages['monitorProcesso.title']}"
-            rendered="#{home.isManaged() and not empty home.instance.svgExecucao}"
+            rendered="#{home.isManaged() and not empty home.instance.definicaoProcesso.svgExecucao}"
             action="#{monitorProcessoView.selectFluxo()}">
             <ui:include src="definicao/monitorProcesso.xhtml" />
         </infox:tab>

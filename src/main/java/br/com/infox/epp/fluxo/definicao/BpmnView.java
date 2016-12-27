@@ -1,4 +1,4 @@
-package br.com.infox.epp.fluxo.crud;
+package br.com.infox.epp.fluxo.definicao;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
@@ -19,10 +19,9 @@ import com.google.gson.JsonObject;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
-import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.modeler.BpmnJpdlService;
+import br.com.infox.epp.fluxo.definicao.modeler.BpmnJpdlService;
+import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -35,34 +34,37 @@ public class BpmnView implements Serializable {
 	@Inject
 	private BpmnJpdlService bpmnJpdlService;
 	@Inject
-	private FluxoController fluxoController;
+	private DefinicaoProcessoController definicaoProcessoController;
 	
 	private String bpmnInformation;
 	private String elementKey;
 
-	public Fluxo getFluxo() {
-		return fluxoController.getFluxo();
+	public DefinicaoProcesso getDefinicaoProcesso() {
+	    return definicaoProcessoController.getDefinicaoProcesso();
 	}
 	
 	@ExceptionHandled
 	public void update() {
-		Fluxo fluxo = getFluxo();
+		DefinicaoProcesso definicaoProcesso = getDefinicaoProcesso();
 		JsonObject bpmnInfo = new Gson().fromJson(bpmnInformation, JsonObject.class);
 		
 		String newProcessDefinitionXml = JpdlXmlWriter.toString(ProcessBuilder.instance().getInstance());
 		String newBpmnXml = bpmnInfo.get("bpmn").getAsString();
 		newBpmnXml = Bpmn.convertToString(Bpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8))));
 		
-		if (!newProcessDefinitionXml.equals(fluxo.getXml()) || !newBpmnXml.equals(fluxo.getBpmn())) {
+		if (!newProcessDefinitionXml.equals(definicaoProcesso.getXml()) || !newBpmnXml.equals(definicaoProcesso.getBpmn())) {
 			try {
-				fluxoController.setFluxo(bpmnJpdlService.atualizarDefinicao(fluxo, newProcessDefinitionXml, newBpmnXml, bpmnInfo.get("svg").getAsString()));
-				fluxo = getFluxo();
+				definicaoProcessoController.setDefinicaoProcesso(
+			        bpmnJpdlService.atualizarDefinicao(definicaoProcesso, newProcessDefinitionXml, newBpmnXml, bpmnInfo.get("svg").getAsString())
+		        );
+				
+				definicaoProcesso = getDefinicaoProcesso();
 			} catch (JpdlException e) {
 				logJpdlException(e);
 				return;
 			}
 			String currentNodeKey = ProcessBuilder.instance().getNodeFitter().getCurrentNode() != null ? ProcessBuilder.instance().getNodeFitter().getCurrentNode().getKey() : null;
-			ProcessBuilder.instance().load(fluxo);
+			ProcessBuilder.instance().load(definicaoProcesso);
 			ProcessBuilder.instance().getNodeFitter().setCurrentNodeByKey(currentNodeKey);
 			bpmnInformation = null;
 			FacesMessages.instance().add("Fluxo salvo com sucesso!");

@@ -80,9 +80,9 @@ public class FluxoImporterService extends PersistenceController {
 
         try {
             xpdl = convertToXml(doc);
-            fluxo.setXml(xpdl);
+            fluxo.getDefinicaoProcesso().setXml(xpdl);
             if (bpmn != null && !bpmn.isEmpty()) {
-                fluxo.setBpmn(bpmn);
+                fluxo.getDefinicaoProcesso().setBpmn(bpmn);
             }
             fluxo = getEntityManager().merge(fluxo);
             getEntityManager().flush();

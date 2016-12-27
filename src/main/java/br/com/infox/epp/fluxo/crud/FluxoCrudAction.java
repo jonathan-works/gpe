@@ -7,11 +7,11 @@ import javax.inject.Named;
 
 import org.jboss.seam.faces.FacesMessages;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.controller.Controller;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
-import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 
@@ -24,8 +24,6 @@ public class FluxoCrudAction implements Controller {
     private FluxoController fluxoController;
     @Inject
     private FluxoManager fluxoManager;
-    @Inject
-    private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
     
     private Fluxo replica;
     private String tab = TAB_SEARCH;
@@ -57,7 +55,6 @@ public class FluxoCrudAction implements Controller {
     @ExceptionHandled(MethodType.PERSIST)
     public void persist() {
     	fluxoManager.persist(getInstance());
-    	definicaoVariavelProcessoManager.createDefaultDefinicaoVariavelProcessoList(getInstance());
         this.hasProcessoRunning = false;
     }
     
@@ -90,6 +87,7 @@ public class FluxoCrudAction implements Controller {
     public void onClickSearchTab() {
     	if (isManaged()) {
     		fluxoManager.detach(getInstance());
+    		EntityManagerProducer.getEntityManager().detach(getInstance().getDefinicaoProcesso());
     	}
     	newInstance();
     }
@@ -133,7 +131,7 @@ public class FluxoCrudAction implements Controller {
 	}
 
 	public boolean canExportar() {
-	    return getInstance() != null && getInstance().getXml() != null;
+	    return getInstance() != null && getInstance().getIdFluxo() != null && getInstance().getDefinicaoProcesso().getXml() != null;
 	}
     
 }

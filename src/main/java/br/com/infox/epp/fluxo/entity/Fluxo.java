@@ -45,8 +45,6 @@ import static br.com.infox.epp.fluxo.query.FluxoQuery.PRAZO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.PUBLICADO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.SEQUENCE_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.TABLE_FLUXO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.XML_FLUXO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.XML_FLUXO_EXECUCAO;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -135,26 +133,14 @@ public class Fluxo implements Serializable {
     @Column(name = DATA_FIM_PUBLICACAO)
     private Date dataFimPublicacao;
     
-    @Column(name = XML_FLUXO)
-    private String xml;
-    
-    @Column(name = XML_FLUXO_EXECUCAO)
-    private String xmlExecucao;
-    
-    @Column(name = "ds_bpmn")
-    private String bpmn;
-    
-    @Column(name = "ds_svg")
-    private String svg;
-
-    @Column(name = "ds_svg_exec")
-    private String svgExecucao;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0);
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<ModeloPasta> modeloPastaList = new ArrayList<>(0); 
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fluxo")
+    private List<DefinicaoProcesso> definicaoProcesso = new ArrayList<>();
 
     public Fluxo() {
     }
@@ -216,22 +202,6 @@ public class Fluxo implements Serializable {
         }
     }
 
-    public String getXml() {
-        return this.xml;
-    }
-
-    public void setXml(final String xml) {
-        this.xml = xml;
-    }
-
-    public String getXmlExecucao() {
-        return xmlExecucao;
-    }
-
-    public void setXmlExecucao(String xmlExecucao) {
-        this.xmlExecucao = xmlExecucao;
-    }
-
     public Boolean getAtivo() {
         return this.ativo;
     }
@@ -270,30 +240,6 @@ public class Fluxo implements Serializable {
 
     public void setDataFimPublicacao(final Date dataFimPublicacao) {
         this.dataFimPublicacao = dataFimPublicacao;
-    }
-    
-    public String getBpmn() {
-		return bpmn;
-	}
-    
-    public void setBpmn(String bpmn) {
-		this.bpmn = bpmn;
-	}
-    
-    public String getSvg() {
-		return svg;
-	}
-    
-    public void setSvg(String svg) {
-		this.svg = svg;
-	}
-
-    public String getSvgExecucao() {
-        return svgExecucao;
-    }
-
-    public void setSvgExecucao(String svgExecucao) {
-        this.svgExecucao = svgExecucao;
     }
 
     @Override
@@ -343,6 +289,15 @@ public class Fluxo implements Serializable {
         return modeloPastaList;
     }
     
+    public DefinicaoProcesso getDefinicaoProcesso() {
+        return definicaoProcesso.isEmpty() ? null : definicaoProcesso.get(0);
+    }
+    
+    public void setDefinicaoProcesso(DefinicaoProcesso definicaoProcesso) {
+        this.definicaoProcesso.clear();
+        this.definicaoProcesso.add(definicaoProcesso);
+    }
+    
     @Transient
     public String getDataInicioFormatada() {
         return DateFormat.getDateInstance().format(dataInicioPublicacao);
@@ -360,13 +315,10 @@ public class Fluxo implements Serializable {
     public Fluxo makeCopy() {
     	Fluxo fluxo = new Fluxo();
     	fluxo.setAtivo(getAtivo());
-    	fluxo.setBpmn(getBpmn());
     	fluxo.setDataFimPublicacao(getDataFimPublicacao());
     	fluxo.setDataInicioPublicacao(getDataInicioPublicacao());
     	fluxo.setPublicado(false);
     	fluxo.setQtPrazo(getQtPrazo());
-    	fluxo.setSvg(getSvg());
-    	fluxo.setXml(getXml());
     	return fluxo;
     }
 }

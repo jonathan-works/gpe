@@ -21,6 +21,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
+import br.com.infox.epp.fluxo.definicao.DefinicaoProcessoService;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
@@ -41,6 +42,8 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
     private RaiaPerfilManager raiaPerfilManager;
     @Inject
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+    @Inject
+    private DefinicaoProcessoService definicaoProcessoService;
     
     private boolean isValidDataFim(Fluxo fluxo, Date now){
         final Date date = fluxo.getDataFimPublicacao();
@@ -136,6 +139,7 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         beforePersistOrUpdate(o);
         o = super.persist(o);
         definicaoVariavelProcessoManager.createDefaultDefinicaoVariavelProcessoList(o);
+        definicaoProcessoService.criarDefinicaoProcesso(o);
         return o;
     }
 

@@ -14,10 +14,9 @@ import javax.persistence.criteria.Subquery;
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.entity.HistoricoProcessDefinition;
 import br.com.infox.epp.fluxo.entity.HistoricoProcessDefinition_;
-import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessRollbackException;
@@ -31,45 +30,45 @@ public class HistoricoProcessDefinitionService {
 	@Inject
 	@GenericDao
 	private Dao<HistoricoProcessDefinition, Long> historicoProcessDefinitionDao;
-	
 	@Inject
-	private FluxoManager fluxoManager;
+	@GenericDao
+	private Dao<DefinicaoProcesso, Long> definicaoProcessoDao;
 	
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public Fluxo restaurar(HistoricoProcessDefinition historicoProcessDefinition) {
-		Fluxo fluxo = historicoProcessDefinition.getFluxo();
+	public DefinicaoProcesso restaurar(HistoricoProcessDefinition historicoProcessDefinition) {
+		DefinicaoProcesso definicaoProcesso = historicoProcessDefinition.getDefinicaoProcesso();
 
-		String oldBpmn = fluxo.getBpmn();
-		String oldProcessDefinition = fluxo.getXml();
-		String oldSvg = fluxo.getSvg();
+		String oldBpmn = definicaoProcesso.getBpmn();
+		String oldProcessDefinition = definicaoProcesso.getXml();
+		String oldSvg = definicaoProcesso.getSvg();
 
-		registrarHistorico(fluxo);
-		fluxo.setBpmn(historicoProcessDefinition.getBpmn());
-		fluxo.setXml(historicoProcessDefinition.getProcessDefinition());
-		fluxo.setSvg(historicoProcessDefinition.getSvg());
+		registrarHistorico(definicaoProcesso);
+		definicaoProcesso.setBpmn(historicoProcessDefinition.getBpmn());
+		definicaoProcesso.setXml(historicoProcessDefinition.getProcessDefinition());
+		definicaoProcesso.setSvg(historicoProcessDefinition.getSvg());
 		try {
-			return fluxoManager.update(fluxo);
+			return definicaoProcessoDao.update(definicaoProcesso);
 		} catch (Exception e) {
-			fluxo.setBpmn(oldBpmn);
-			fluxo.setXml(oldProcessDefinition);
-			fluxo.setSvg(oldSvg);
+		    definicaoProcesso.setBpmn(oldBpmn);
+		    definicaoProcesso.setXml(oldProcessDefinition);
+		    definicaoProcesso.setSvg(oldSvg);
 			LOG.error("", e);
 			throw new BusinessRollbackException("Erro ao restaurar a definição", e);
 		}
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void registrarHistorico(Fluxo fluxo) {
-		if (fluxo.getXml() != null) {
+	public void registrarHistorico(DefinicaoProcesso definicaoProcesso) {
+		if (definicaoProcesso.getXml() != null) {
 			HistoricoProcessDefinition novoHistorico = new HistoricoProcessDefinition();
-			novoHistorico.setFluxo(fluxo);
-			novoHistorico.setBpmn(fluxo.getBpmn());
-			novoHistorico.setProcessDefinition(fluxo.getXml());
-			novoHistorico.setSvg(fluxo.getSvg());
-			novoHistorico.setRevisao(getMaiorRevisao(fluxo) + 1);
+			novoHistorico.setDefinicaoProcesso(definicaoProcesso);
+			novoHistorico.setBpmn(definicaoProcesso.getBpmn());
+			novoHistorico.setProcessDefinition(definicaoProcesso.getXml());
+			novoHistorico.setSvg(definicaoProcesso.getSvg());
+			novoHistorico.setRevisao(getMaiorRevisao(definicaoProcesso) + 1);
 			
-			if (getTotalHistoricos(fluxo) >= 20) {
-				historicoProcessDefinitionDao.remove(getPrimeiroHistorico(fluxo));
+			if (getTotalHistoricos(definicaoProcesso) >= 20) {
+				historicoProcessDefinitionDao.remove(getPrimeiroHistorico(definicaoProcesso));
 			}
 			
 			historicoProcessDefinitionDao.persist(novoHistorico);
@@ -77,46 +76,46 @@ public class HistoricoProcessDefinitionService {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void limparHistoricos(Fluxo fluxo) {
+	public void limparHistoricos(DefinicaoProcesso definicaoProcesso) {
 		try {
-			historicoProcessDefinitionDao.getEntityManager().createQuery("delete from HistoricoProcessDefinition where fluxo = :fluxo")
-				.setParameter("fluxo", fluxo).executeUpdate();
+			historicoProcessDefinitionDao.getEntityManager().createQuery("delete from HistoricoProcessDefinition where definicaoProcesso = :definicaoProcesso")
+				.setParameter("definicaoProcesso", definicaoProcesso).executeUpdate();
 			historicoProcessDefinitionDao.getEntityManager().flush();
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
 	}
 	
-	private long getTotalHistoricos(Fluxo fluxo) {
+	private long getTotalHistoricos(DefinicaoProcesso definicaoProcesso) {
 		CriteriaBuilder cb = historicoProcessDefinitionDao.getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> query = cb.createQuery(Long.class);
 		Root<HistoricoProcessDefinition> root = query.from(HistoricoProcessDefinition.class);
 		query.select(cb.count(root));
-		query.where(cb.equal(root.get(HistoricoProcessDefinition_.fluxo), fluxo));
+		query.where(cb.equal(root.get(HistoricoProcessDefinition_.definicaoProcesso), definicaoProcesso));
 		return historicoProcessDefinitionDao.getEntityManager().createQuery(query).getSingleResult();
 	}
 	
-	private HistoricoProcessDefinition getPrimeiroHistorico(Fluxo fluxo) {
+	private HistoricoProcessDefinition getPrimeiroHistorico(DefinicaoProcesso definicaoProcesso) {
 		CriteriaBuilder cb = historicoProcessDefinitionDao.getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<HistoricoProcessDefinition> query = cb.createQuery(HistoricoProcessDefinition.class);
 		Root<HistoricoProcessDefinition> root = query.from(HistoricoProcessDefinition.class);
-		query.where(cb.equal(root.get(HistoricoProcessDefinition_.fluxo), fluxo));
+		query.where(cb.equal(root.get(HistoricoProcessDefinition_.definicaoProcesso), definicaoProcesso));
 		
 		Subquery<Date> subquery = query.subquery(Date.class);
 		Root<HistoricoProcessDefinition> subRoot = subquery.from(HistoricoProcessDefinition.class);
 		subquery.select(cb.least(subRoot.get(HistoricoProcessDefinition_.dataAlteracao)));
-		subquery.where(cb.equal(subRoot.get(HistoricoProcessDefinition_.fluxo), fluxo));
+		subquery.where(cb.equal(subRoot.get(HistoricoProcessDefinition_.definicaoProcesso), definicaoProcesso));
 		
 		query.where(query.getRestriction(), cb.equal(root.get(HistoricoProcessDefinition_.dataAlteracao), subquery));
 		
 		return historicoProcessDefinitionDao.getEntityManager().createQuery(query).getSingleResult();
 	}
 	
-	private int getMaiorRevisao(Fluxo fluxo) {
+	private int getMaiorRevisao(DefinicaoProcesso definicaoProcesso) {
 		CriteriaBuilder cb = historicoProcessDefinitionDao.getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
 		Root<HistoricoProcessDefinition> root = query.from(HistoricoProcessDefinition.class);
-		query.where(cb.equal(root.get(HistoricoProcessDefinition_.fluxo), fluxo));
+		query.where(cb.equal(root.get(HistoricoProcessDefinition_.definicaoProcesso), definicaoProcesso));
 		query.select(cb.coalesce(cb.max(root.get(HistoricoProcessDefinition_.revisao)), 0));
 		
 		return historicoProcessDefinitionDao.getEntityManager().createQuery(query).getSingleResult();

@@ -38,7 +38,7 @@ public class MonitorProcessoService {
 
     public MonitorProcessoDTO createSvgMonitoramentoProcesso(Fluxo fluxo, String key) throws TransformerException,
             ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-        Document svgDocument = createDocument(fluxo.getSvgExecucao());
+        Document svgDocument = createDocument(fluxo.getDefinicaoProcesso().getSvgExecucao());
         ProcessDefinition processDefinition = monitorProcessoSearch.getProcessDefinitionByFluxo(fluxo);
         List<MonitorTarefaDTO> humanTaskList = monitorProcessoSearch.listTarefaHumanaByProcessDefinition(processDefinition.getId(), key);
         List<MonitorTarefaDTO> automaticNodeList = monitorProcessoSearch.listNosAutomaticosByProcessDefinition(processDefinition.getId(), key);

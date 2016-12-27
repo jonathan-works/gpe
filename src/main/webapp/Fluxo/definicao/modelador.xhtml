@@ -28,7 +28,7 @@
         	var bpmn = modeler.getBpmnInformation()['bpmn'];
         	var element = document.createElement('a');
         	element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(bpmn));
-        	element.setAttribute('download', '#{bpmnView.fluxo.fluxo}.bpmn');
+        	element.setAttribute('download', '#{bpmnView.definicaoProcesso.fluxo.fluxo}.bpmn');
         	element.style.display = 'none';
         	document.body.appendChild(element);
         	element.click();

@@ -1,4 +1,4 @@
-package br.com.infox.epp.modeler;
+package br.com.infox.epp.fluxo.definicao.modeler;
 
 import java.util.List;
 import java.util.Map;
@@ -30,13 +30,13 @@ import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.jbpm.event.EventHandler;
 
-class ConfiguracoesTarefa {
+public class ConfiguracoesTarefa {
 	
 	private static enum Position {
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
 	}
 	
-	static void resolverMarcadoresBpmn(ProcessDefinition processDefinition, BpmnModelInstance bpmnModel) {
+	public static void resolverMarcadoresBpmn(ProcessDefinition processDefinition, BpmnModelInstance bpmnModel) {
 		for (Node node : processDefinition.getNodes()) {
 			if (node.getNodeType().equals(NodeType.Task)) {
 				resolverTimer((TaskNode) node, bpmnModel);

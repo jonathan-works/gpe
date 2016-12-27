@@ -31,10 +31,13 @@ import org.xml.sax.InputSource;
 
 import com.google.common.base.Strings;
 
+import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.cdi.transaction.Transactional.TxType;
+import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
@@ -74,6 +77,9 @@ public class FluxoMergeService {
     private ProcessoManager processoManager;
     @Inject
     private HistoricoProcessDefinitionService historicoProcessDefinitionService;
+    @Inject
+    @GenericDao
+    private Dao<DefinicaoProcesso, Long> definicaoProcessoDao;
 
     private List<MergePoint> getMergePoints(ProcessDefinition processDefinition){
         TypedQuery<MergePoint> query = entityManager.createQuery(GET_MERGE_POINTS_QUERY, MergePoint.class);
@@ -92,8 +98,8 @@ public class FluxoMergeService {
     }
     
     public MergePointsBundle verifyMerge(Fluxo fluxo){
-        String modifiedXml = fluxo.getXml();
-        String publishedXml = fluxo.getXmlExecucao();
+        String modifiedXml = fluxo.getDefinicaoProcesso().getXml();
+        String publishedXml = fluxo.getDefinicaoProcesso().getXmlExecucao();
         if (Objects.equals(modifiedXml, publishedXml)) {
             return null;
         }
@@ -118,8 +124,8 @@ public class FluxoMergeService {
     
     @Transactional(value = TxType.REQUIRED, timeout = 1800)
     public MergePointsBundle publish(Fluxo fluxo, MergePointsBundle mergePointsBundle) {
-        String modifiedXml = fluxo.getXml();
-        String publishedXml = fluxo.getXmlExecucao();
+        String modifiedXml = fluxo.getDefinicaoProcesso().getXml();
+        String publishedXml = fluxo.getDefinicaoProcesso().getXmlExecucao();
         ProcessDefinition modifiedProcessDef = jpdlToProcessDefinition(modifiedXml);
         
         validateJbpmGraph(modifiedProcessDef);
@@ -150,13 +156,14 @@ public class FluxoMergeService {
 	        
             JbpmUtil.getGraphSession().deployProcessDefinition(newProcessDefinition);
             JbpmUtil.getJbpmSession().flush();
-            fluxo.setXmlExecucao(fluxo.getXml());
-            fluxo.setSvgExecucao(fluxo.getSvg());
+            fluxo.getDefinicaoProcesso().setXmlExecucao(fluxo.getDefinicaoProcesso().getXml());
+            fluxo.getDefinicaoProcesso().setSvgExecucao(fluxo.getDefinicaoProcesso().getSvg());
             
             if (!fluxo.getPublicado()) {
                 fluxo.setPublicado(true);
             }
             
+            fluxo.setDefinicaoProcesso(definicaoProcessoDao.update(fluxo.getDefinicaoProcesso()));
             fluxoManager.update(fluxo);
             updatePostDeploy(newProcessDefinition);
             
@@ -165,7 +172,7 @@ public class FluxoMergeService {
             JbpmUtil.instance().deleteTimers(newProcessDefinition);
             JbpmUtil.instance().createTimers(newProcessDefinition);
             
-            historicoProcessDefinitionService.limparHistoricos(fluxo);
+            historicoProcessDefinitionService.limparHistoricos(fluxo.getDefinicaoProcesso());
         } catch (Exception e) {
             fluxo.setPublicado(false);
             throw new BusinessRollbackException(e);

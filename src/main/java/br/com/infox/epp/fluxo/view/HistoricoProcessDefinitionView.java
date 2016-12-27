@@ -8,11 +8,11 @@ import javax.inject.Named;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
-import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
+import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.entity.HistoricoProcessDefinition;
 import br.com.infox.epp.fluxo.list.HistoricoProcessDefinitionList;
 import br.com.infox.epp.fluxo.service.HistoricoProcessDefinitionService;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Named
 @ViewScoped
@@ -29,9 +29,9 @@ public class HistoricoProcessDefinitionView implements Serializable {
 	
 	@ExceptionHandled(successMessage = "Definição restaurada com sucesso")
 	public void restaurar(HistoricoProcessDefinition historicoProcessDefinition) {
-		Fluxo fluxo = historicoProcessDefinitionService.restaurar(historicoProcessDefinition);
+		DefinicaoProcesso definicaoProcesso = historicoProcessDefinitionService.restaurar(historicoProcessDefinition);
 		historicoProcessDefinitionList.refresh();
-		ProcessBuilder.instance().load(fluxo);
+		ProcessBuilder.instance().load(definicaoProcesso);
 	}
 	
 	public void selecionarHistorico(HistoricoProcessDefinition historicoProcessDefinition) {

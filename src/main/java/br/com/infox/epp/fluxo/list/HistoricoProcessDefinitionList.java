@@ -5,8 +5,8 @@ import javax.inject.Named;
 
 import br.com.infox.core.list.DataList;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.fluxo.crud.FluxoController;
-import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.definicao.DefinicaoProcessoController;
+import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.entity.HistoricoProcessDefinition;
 
 @Named
@@ -15,7 +15,7 @@ public class HistoricoProcessDefinitionList extends DataList<HistoricoProcessDef
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private FluxoController fluxoController;
+	private DefinicaoProcessoController definicaoProcessoController;
 	
 	@Override
 	protected String getDefaultOrder() {
@@ -29,10 +29,10 @@ public class HistoricoProcessDefinitionList extends DataList<HistoricoProcessDef
 	
 	@Override
 	protected String getDefaultWhere() {
-		return "where o.fluxo = #{historicoProcessDefinitionList.fluxo}";
+		return "where o.definicaoProcesso = #{historicoProcessDefinitionList.definicaoProcesso}";
 	}
 	
-	public Fluxo getFluxo() {
-	    return fluxoController.getFluxo();
+	public DefinicaoProcesso getDefinicaoProcesso() {
+	    return definicaoProcessoController.getDefinicaoProcesso();
 	}
 }

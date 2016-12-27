@@ -30,8 +30,8 @@ public class HistoricoProcessDefinition implements Serializable {
 	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_fluxo", nullable = false)
-	private Fluxo fluxo;
+	@JoinColumn(name = "id_definicao_processo", nullable = false)
+	private DefinicaoProcesso definicaoProcesso;
 	
 	@NotNull
 	@Column(name = "ds_process_definition", nullable = false)
@@ -64,13 +64,13 @@ public class HistoricoProcessDefinition implements Serializable {
 		this.id = id;
 	}
 
-	public Fluxo getFluxo() {
-		return fluxo;
-	}
-
-	public void setFluxo(Fluxo fluxo) {
-		this.fluxo = fluxo;
-	}
+	public DefinicaoProcesso getDefinicaoProcesso() {
+        return definicaoProcesso;
+    }
+	
+	public void setDefinicaoProcesso(DefinicaoProcesso definicaoProcesso) {
+        this.definicaoProcesso = definicaoProcesso;
+    }
 
 	public String getProcessDefinition() {
 		return processDefinition;
