@@ -141,7 +141,7 @@
 			<p:outputPanel id="assinaturaDocumentoDiv#{f.id}">
 				<p:outputPanel id="conteudoAssinatura#{f.id}"
 					rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
-                    <i:certificadoDigital id="botaoAssinatura"
+                    <i:certificadoDigital id="botaoAssinatura#{f.id}"
                        callbackHandler="#{documentoVariavelController}"
                        assinavelProvider="#{documentoVariavelController.assinavelProvider}"
                        execute="@this, assinaturaDocumentoDiv#{f.id}"
