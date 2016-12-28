@@ -30,6 +30,9 @@ import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.VariableDataHandler;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
+import br.com.infox.ibpm.variable.VariableMaxMinHandler;
+import br.com.infox.ibpm.variable.VariableStringHandler;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
@@ -127,6 +130,18 @@ public class TaskInstanceForm implements Serializable {
                         }
                         ff.getProperties().put("urlFrame", url);
                         break; 
+                    case MONETARY:
+                    case INTEGER:
+                    	if(VariableMaxMinHandler.fromJson(var.getConfiguration()) != null) {
+							ff.getProperties().put("valorMaximo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMaximo());
+							ff.getProperties().put("valorMinimo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMinimo());
+                    	}
+                    	break;
+                    case STRING:
+						if (var.getConfiguration() != null && var.getConfiguration().length() > 0) { 
+							ff.getProperties().put("mascara", VariableStringHandler.fromJson(var.getConfiguration()).getMascara());
+						}
+                    	break;
                     case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {
                         DominioVariavelTarefaSearch dominioVariavelTarefaSearch = BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);;
@@ -159,7 +174,11 @@ public class TaskInstanceForm implements Serializable {
                         }
                     }
                         break;
+                    case FILE:
+                    	ff.getProperties().put("pastaPadrao", VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
+                    	break;
                     case EDITOR: {
+                        ff.getProperties().put("pastaPadrao", VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
                         ff.getProperties().put("editorId", var.getVariableName() + "-" + taskInstance.getId());
                     }
                     	break;

@@ -213,9 +213,60 @@
                             <f:converter converterId="fragmentConfigurationConverter" />
                         </wi:selectOneMenu>
                     </rich:panel>
+                    <rich:panel id="definicaoMonetario" rendered="#{var.monetario}">
+                        <div id="input">
+                            <wi:inputMoney id="valorMin" label="Valor Mínimo" value="#{var.maxMinHandler.minimo}" converterId="javax.faces.Double" nullable="true">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :processDefinition, :pageBodyDialogMessage, varDiv" limitRender="true" />
+                                <f:validator validatorId="numberRangeValidator" />
+                                <f:attribute name="max" value="#{var.maxMinHandler.maximo}" />
+                            </wi:inputMoney>
+                        </div>
+                        <div id="input">
+                            <wi:inputMoney id="valorMax" label="Valor Máximo" value="#{var.maxMinHandler.maximo}" converterId="javax.faces.Double" nullable="true">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :processDefinition, pageBodyDialogMessage, varDiv" limitRender="true" />
+                                <f:validator validatorId="numberRangeValidator" />
+                                <f:attribute name="min" value="#{var.maxMinHandler.minimo}" />
+                            </wi:inputMoney>
+                        </div>
+                    </rich:panel>
+                    <rich:panel id="definicaoNumerico" rendered="#{var.numerico}">
+                        <div id="input">
+                            <wi:inputNumber id="valorMin" label="Valor Mínimo" value="#{var.maxMinHandler.minimo}" converterId="javax.faces.Double">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :processDefinition, :pageBodyDialogMessage, varDiv" limitRender="true" />
+                                <f:validator validatorId="numberRangeValidator" />
+                                <f:attribute name="max" value="#{var.maxMinHandler.maximo}" />
+                            </wi:inputNumber>
+                        </div>
+                        <div id="input">
+                            <wi:inputNumber id="valorMax" label="Valor Máximo" value="#{var.maxMinHandler.maximo}" converterId="javax.faces.Double">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :processDefinition, pageBodyDialogMessage, varDiv" limitRender="true" />
+                                <f:validator validatorId="numberRangeValidator" />
+                                <f:attribute name="min" value="#{var.maxMinHandler.minimo}" />
+                            </wi:inputNumber>
+                        </div>
+                    </rich:panel>
+                    <rich:panel id="definicaoMascara" rendered="#{var.type eq 'STRING'}">
+                        <div id="input">
+                            <wi:inputText id="mascaraString" label="Máscara" value="#{var.stringHandler.mascara}">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :pageBodyDialogMessage, varDiv" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </rich:panel>
                     <h:form rendered="#{var.type eq 'PARAMETER'}">
                         <div id="input">
                             <wi:inputText id="inputDefaultValue" label="Valor padrão da variável" value="#{var.value}">
+                                <a:ajax event="change" execute="@this" status=":status" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </h:form>
+                    <h:form rendered="#{var.type eq 'FILE' or var.type eq 'EDITOR'}">
+                        <div id="input">
+                            <wi:inputText id="inputPastaPadrao" label="#{infoxMessages['process.def.var.codigoPasta']}" value="#{var.modeloEditorHandler.pasta}">
                                 <a:ajax event="change" execute="@this" status=":status" limitRender="true" />
                             </wi:inputText>
                         </div>

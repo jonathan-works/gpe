@@ -130,10 +130,14 @@ public class AssinadorService implements Serializable {
 
 	public void assinar(String tokenGrupo, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
 		List<DadosAssinatura> dadosAssinaturas = groupService.getDadosAssinatura(tokenGrupo);
-		for (DadosAssinatura dadosAssinatura : dadosAssinaturas) {
-			assinar(dadosAssinatura, usuarioPerfil);
-		}
+		assinar(dadosAssinaturas, usuarioPerfil);
 	}
+
+        public void assinar(List<DadosAssinatura> dadosAssinaturas, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
+            for (DadosAssinatura dadosAssinatura : dadosAssinaturas) {
+                assinar(dadosAssinatura, usuarioPerfil);
+            }
+        }
 
 	public void assinar(String tokenGrupo, UUID uuidAssinavel, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
 		DadosAssinatura dadosAssinatura = groupService.getDadosAssinatura(tokenGrupo, uuidAssinavel);
@@ -273,9 +277,7 @@ public class AssinadorService implements Serializable {
 	 */
 	public void assinarToken(String tokenGrupo, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
 		List<DadosAssinatura> dadosAssinaturaList = getDadosAssinatura(tokenGrupo);
-		for(DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
-			assinar(dadosAssinatura, usuarioPerfil);
-		}
+		assinar(dadosAssinaturaList, usuarioPerfil);
 		apagarGrupo(tokenGrupo);
 	}
 

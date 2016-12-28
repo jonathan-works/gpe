@@ -43,6 +43,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.node.NodeBean;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.com.infox.log.LogProvider;
@@ -245,6 +246,12 @@ public class JbpmUtil {
     public static List<Token> getTokensOfAutomaticNodesNotEnded() {
         EntityManager entityManager = EntityManagerProducer.getEntityManager();
         return entityManager.createQuery(JbpmQueries.TOKENS_OF_AUTOMATIC_NODES_NOT_ENDED_QUERY, Token.class).getResultList();
+    }
+
+    public static List<NodeBean> getNodeBeansOfAutomaticNodesNotEnded() {
+        EntityManager entityManager = EntityManagerProducer.getEntityManager();
+        return entityManager.createQuery(JbpmQueries.NODE_BEANS_OF_AUTOMATIC_NODES_NOT_ENDED_QUERY,
+                NodeBean.class).getResultList();
     }
     
     private DocumentoManager documentoManager() {
