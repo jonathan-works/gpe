@@ -110,12 +110,4 @@ public class CertificateAuthenticator implements Serializable, AssinaturaCallbac
         return this.assinavelProvider;
     }
     
-    public boolean isCertificateLogin() {
-        return certificateLogin || ParametroUtil.isLoginComAssinatura();
-    }
-
-    public void setCertificateLogin(final boolean certificateLogin) {
-        this.certificateLogin = certificateLogin;
-    }
-
 }

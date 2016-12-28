@@ -371,17 +371,17 @@ public class AssinaturaDocumentoService {
             CertificateManager.instance().verificaCertificado(certChain);
         } catch (CertificateExpiredException e) {
         	LOG.error("Certificado expirado", e);
-            if (ParametroUtil.isProducao()) {
+            if (ParametroUtil.isValidaAssinatura()) {
     			throw new CertificadoException("Certificado expirado. ");
             }
         } catch (CertificateNotYetValidException e) {
         	LOG.error("Certificado ainda não válido", e);
-            if (ParametroUtil.isProducao()) {
+            if (ParametroUtil.isValidaAssinatura()) {
     			throw new CertificadoException("O certificado ainda não está válido. ");
             }
 		} catch (CertificateException e) {
             LOG.error("Erro ao verificar a validade do certificado", e);
-            if (ParametroUtil.isProducao()) {
+            if (ParametroUtil.isValidaAssinatura()) {
     			throw new CertificadoException(e.getMessage());
             }
         }

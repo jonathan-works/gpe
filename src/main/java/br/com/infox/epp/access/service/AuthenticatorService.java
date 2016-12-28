@@ -278,7 +278,7 @@ public class AuthenticatorService {
             CertificateManager.instance().verificaCertificado(c.getCertChain());
         } catch (CertificateException e) {
             LOG.error(CHECK_VALIDADE_CERTIFICADO, e);
-            if (ParametroUtil.isProducao()) {
+            if (ParametroUtil.isValidaAssinatura()) {
                 throw e;
             }
         }

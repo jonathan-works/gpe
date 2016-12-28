@@ -53,7 +53,8 @@ public class ValidadorAssinaturaPadrao implements ValidadorAssinatura, Validador
 			if (pessoaFisica == null) {
 				throw new AssinaturaException(Motivo.USUARIO_SEM_PESSOA_FISICA);
 			}
-			if (Strings.isEmpty(pessoaFisica.getCertChain())) {
+			if (ParametroUtil.isValidaCpfAssinatura()) {
+			    if (Strings.isEmpty(pessoaFisica.getCertChain())) {
 				final Certificado certificado = CertificadoFactory.createCertificado(certChainBase64Encoded); 
 				if (!(certificado instanceof CertificadoDadosPessoaFisica)) {
 					throw new CertificadoException("Este certificado não é de pessoa física");
@@ -64,14 +65,15 @@ public class ValidadorAssinaturaPadrao implements ValidadorAssinatura, Validador
 				} else {
 					throw new AssinaturaException(Motivo.CADASTRO_USUARIO_NAO_ASSINADO);
 				}
+			    }
+    			    PessoaFisica pessoaFisicaCertificado = getPessoaFisicaFromCertChain(certChainBase64Encoded);
+    			    if (!pessoaFisica.equals(pessoaFisicaCertificado)) {
+    				throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
+    			    }
+    			    if (!pessoaFisicaCertificado.checkCertChain(certChainBase64Encoded)) {
+    			        throw new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
+    			    }
 			}
-			PessoaFisica pessoaFisicaCertificado = getPessoaFisicaFromCertChain(certChainBase64Encoded);
-			if (!pessoaFisica.equals(pessoaFisicaCertificado)) {
-				throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
-			}
-			if (!pessoaFisicaCertificado.checkCertChain(certChainBase64Encoded)) {
-				throw new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
-			}			
 		}
 		catch(CertificadoException e) {
 			throw new AssinaturaException(e);

@@ -151,8 +151,13 @@ public class AssinadorService implements Serializable {
 			if(documentoBin == null) {
 				throw new RuntimeException("Documento com UUID " + uuidDocumentoBin + " não encontrado no banco de dados");
 			}
-			assinarDocumento(documentoBin, usuarioPerfil.getPerfilTemplate().getCodigo(),
-					usuarioPerfil.getLocalizacao().getCodigo(), dadosAssinatura.getAssinatura(), dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData());
+			
+			try {
+	                        assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(),
+	                                        TipoAssinatura.PKCS7, dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData());
+	                } catch (DAOException | CertificadoException | AssinaturaException e) {
+	                        throw new RuntimeException("Erro ao assinar documento", e);
+	                }
 		}
 		else {
 			validarAssinatura(dadosAssinatura, usuarioPerfil.getUsuarioLogin().getPessoaFisica());			

@@ -20,6 +20,8 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.util.Conversions;
 import org.jboss.seam.util.Conversions.PropertyValue;
 
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.log.LogProvider;
@@ -71,7 +73,11 @@ public class ParametroUtil {
             return "false";
         }
     }
-
+    
+    /**
+     * @deprecated Não é mais utilizado pelo sistema. Agora a verificação se o usuário deve realizar login com assinatura se baseia em valor na entidade {@link UsuarioLogin}
+     */
+    @Deprecated
     public static boolean isLoginComAssinatura() {
         return isParameterActiveAndTrue("loginComAssinatura");
     }
@@ -108,6 +114,13 @@ public class ParametroUtil {
     public static boolean isDebug(){
     	Map<String, Conversions.PropertyValue> properties = (Map<String, PropertyValue>) Contexts.getApplicationContext().get(Component.PROPERTIES);
     	return "true".equals(properties.get("org.jboss.seam.core.init.debug").getSingleValue());
+    }
+
+    public static boolean isValidaCpfAssinatura() {
+        return isParameterActiveAndTrue(Parametros.VALIDA_CPF_ASSINATURA.getLabel());
+    }
+    public static boolean isValidaAssinatura() {
+        return isParameterActiveAndTrue(Parametros.VALIDA_ASSINATURA.getLabel());
     }
     
 }
