@@ -55,9 +55,9 @@
         </h:panelGroup>
     </h:panelGroup>
 
-    <p:dataTable id="instanciaDataTable"
-        rendered="#{not monitorProcessoView.executionGraphic}"
-        value="#{monitorProcessoView.instances}" var="row">
+    <p:dataTable id="instanciaDataTable" lazy="true" rows="10" paginator="true"
+        rendered="#{not monitorProcessoView.executionGraphic}" paginatorAlwaysVisible="false"
+        value="#{monitorProcessoView.monitorProcessoDataModel}" var="row">
 
         <p:column id="state" styleClass="dt-toolbar-col" style="width: 60px">
             <h:panelGroup rendered="#{row.state eq 'ERROR'}">
@@ -96,5 +96,14 @@
                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
             </h:outputText>
         </p:column>
-    </p:dataTable>
+
+		<f:facet name="footer">
+			<div class="ui-datatable-footer-paginator">
+				<div class="ui-datatable-footer-paginator-right">
+					#{infoxMessages['list.resultPrefix']}
+					#{monitorProcessoView.monitorProcessoDataModel.rowCount}
+					#{infoxMessages['list.resultSufix']}</div>
+			</div>
+		</f:facet>
+	</p:dataTable>
 </ui:composition>

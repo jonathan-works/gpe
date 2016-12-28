@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.jbpm.graph.exe.Token;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
+
 public class MonitorProcessoInstanceDTO {
 
     private String numero;
@@ -12,13 +14,12 @@ public class MonitorProcessoInstanceDTO {
     private MonitorProcessoState state;
     private Token token;
 
-    public MonitorProcessoInstanceDTO(String numero, String nodeName, Date dataInicio, String state, Token token) {
-        super();
+    public MonitorProcessoInstanceDTO(String numero, String nodeName, Date dataInicio, String state, Long idToken) {
         this.numero = numero;
         this.nodeName = nodeName;
         this.dataInicio = dataInicio;
         this.state = MonitorProcessoState.valueOf(state);
-        this.token = token;
+        this.token = EntityManagerProducer.getEntityManager().find(Token.class, idToken);
     }
 
     public String getNumero() {
