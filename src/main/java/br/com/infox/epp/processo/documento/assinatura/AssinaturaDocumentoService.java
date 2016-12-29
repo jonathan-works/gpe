@@ -26,6 +26,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.CertificateManager;
+import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.assinador.ValidadorAssinatura;
 import br.com.infox.epp.assinador.ValidadorUsuarioCertificado;
 import br.com.infox.epp.assinador.assinavel.TipoSignedData;
@@ -251,6 +252,9 @@ public class AssinaturaDocumentoService {
 		checkValidadeCertificado(certChain);    	
     }
 
+    public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, DadosAssinatura dadosAssinatura) throws CertificadoException, AssinaturaException, DAOException {
+        assinarDocumento(documentoBin, usuarioPerfilAtual, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(), TipoAssinatura.PKCS7, dadosAssinatura.getSignedData(), TipoSignedData.SHA256);
+    }
 	public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
 			String signature, TipoAssinatura tipoAssinatura, byte[] signedData, TipoSignedData tipoSignedData) throws CertificadoException, AssinaturaException, DAOException {
 		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
