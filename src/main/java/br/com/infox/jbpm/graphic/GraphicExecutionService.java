@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -30,6 +32,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.IOUtils;
@@ -56,6 +59,8 @@ import br.com.infox.hibernate.util.HibernateUtil;
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class GraphicExecutionService {
     
+    private static final Pattern STYLE_PATTERN = Pattern.compile("(stroke|marker-end):.+?;");
+    
     @Inject
     private FluxoManager fluxoManager;
     
@@ -65,6 +70,8 @@ public class GraphicExecutionService {
             Document document = createDocument(svg);
             
             XPath xPath =  XPathFactory.newInstance().newXPath();
+            
+            createRedSequenceFlowEnd(document, xPath);
             
             Set<Long> tokens = getTokens(token);
             
@@ -88,8 +95,8 @@ public class GraphicExecutionService {
                         newChild.setAttribute("style", "stroke-width: 2; fill: #ff0000; fill-opacity: 0.18; stroke: #ff0000;");
                         node.appendChild(newChild);
                     } else {
-                        Node attrStyle = graphNode.getAttributes().getNamedItem("stroke");
-                        attrStyle.setTextContent("#FF0000");
+                        Node attrStyle = graphNode.getAttributes().getNamedItem("style");
+                        attrStyle.setTextContent(changeToRed(attrStyle.getTextContent()));
                     }
                     if (!"path".equals(graphNode.getNodeName())) {
                         Node styleNode = node.getAttributes().getNamedItem("style");
@@ -103,6 +110,32 @@ public class GraphicExecutionService {
         } catch (Exception e) {
             return "Erro ao renderizar gráfico: " + e.getMessage();
         }
+    }
+    
+    private void createRedSequenceFlowEnd(Document document, XPath xPath) throws XPathExpressionException {
+        Element sequenceFlowEnd = (Element) xPath.compile("//marker[@id='sequenceflow-end']").evaluate(document, XPathConstants.NODE);
+        Element redSequenceFlowEnd = (Element) sequenceFlowEnd.cloneNode(true);
+        redSequenceFlowEnd.setAttribute("id", "sequenceflow-end-red");
+        Element path = (Element) redSequenceFlowEnd.getFirstChild();
+        String style = path.getAttribute("style");
+        path.setAttribute("style", style.replaceAll("fill: .+?;", "fill: #FF0000;"));
+        sequenceFlowEnd.getParentNode().appendChild(redSequenceFlowEnd);
+    }
+
+    private String changeToRed(String style) {
+        Matcher matcher = STYLE_PATTERN.matcher(style);
+        StringBuffer sb = new StringBuffer();
+        
+        while (matcher.find()) {
+            if (matcher.group(1).equals("stroke")) {
+                matcher.appendReplacement(sb, "stroke: #FF0000;");
+            } else if (matcher.group(1).equals("marker-end")) {
+                matcher.appendReplacement(sb, "marker-end: url('#sequenceflow-end-red')");
+            }
+        }
+        
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
     private String writeDocumentToString(Document document)
