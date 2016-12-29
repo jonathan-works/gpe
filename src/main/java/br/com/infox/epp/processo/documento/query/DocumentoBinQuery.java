@@ -14,10 +14,8 @@ public interface DocumentoBinQuery {
     		+ " bin = :" + QUERY_PARAM_DOCUMENTO_BIN +
     		" and bin.minuta = false and bin.suficientementeAssinado = false";
     
-    String IS_DOCUMENTO_ASSINADO_POR_PAPEL_QUERY = "select count(ass.id) "
+    String IS_DOCUMENTO_ASSINADO_POR_PAPEL_QUERY = "select count(ass.idAssinatura) "
             + "from AssinaturaDocumento ass "
-                + "inner join ass.usuarioPerfil up "
-                + "inner join up.perfilTemplate pt "
             + "where ass.documentoBin = :" + PARAM_DOCUMENTO_BIN + " "
-                + "and pt.papel = :" + PARAM_PAPEL;
+                + "and ass.papel = :" + PARAM_PAPEL;
 }
