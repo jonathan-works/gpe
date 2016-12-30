@@ -1,6 +1,7 @@
 package br.com.infox.epp.usuario;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -16,6 +17,8 @@ import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao_;
+import br.com.infox.epp.access.entity.Papel_;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
@@ -161,5 +164,24 @@ public class UsuarioLoginSearch extends PersistenceController {
         
         return getEntityManager().createQuery(cq).getSingleResult() > 0L;
     }
+    
+    public List<UsuarioLogin> getUsuariosByNome(String nome, int maxResult) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<UsuarioLogin> cq = cb.createQuery(UsuarioLogin.class);
+		
+		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
+		Join<UsuarioLogin, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica);
+		
+		Predicate ativo = usuarioAtivoPredicate(usuario);
+		Predicate podeFazerLogin = podeFazerLoginPredicate(usuario);
+		//Predicate cpfIgual = cb.equal(pessoa.get(PessoaFisica_.cpf), cpf);
+		Predicate nomePred = cb.like(cb.lower(usuario.get(UsuarioLogin_.nomeUsuario)), cb.lower(cb.literal("%" + nome + "%"))); 
+		
+		cq = cq.select(usuario).where(cb.and(ativo, podeFazerLogin, nomePred));
+		//query.orderBy(cb.asc(from.get(Localizacao_.caminhoCompleto)));
+		cq.orderBy(cb.asc(usuario.get(UsuarioLogin_.nomeUsuario)));
+		
+		return getEntityManager().createQuery(cq).setMaxResults(maxResult).getResultList();
+	}
 	
 }
