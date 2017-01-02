@@ -36,9 +36,12 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.jbpm.activity.exe.MultiInstanceActivityBehavior;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.graph.log.NodeLog;
 import org.jbpm.graph.log.TransitionLog;
+import org.jbpm.graph.node.Activity;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -76,11 +79,24 @@ public class GraphicExecutionService {
             Set<Long> tokens = getTokens(token);
             
             List<GraphImageBean> graphImageBeanList = getGraphImageBeanList(tokens);
-            
             NodeLog nodeLog = new NodeLog(token.getNode(), token.getNodeEnter(), DateTime.now().toDate());
             nodeLog.setToken(token);
-            
             graphImageBeanList.add(new NodeGraphImage(nodeLog, true));
+
+            Set<GraphImageBean> forkedImageBeans = new HashSet<>();
+            for (GraphImageBean bean : graphImageBeanList) {
+                if (bean instanceof NodeGraphImage) {
+                    NodeGraphImage nodeGraphImage = (NodeGraphImage) bean;
+                    if (!nodeGraphImage.getNode().equals(bean.getToken().getNode())) {
+                        NodeLog newNodeLog = new NodeLog(bean.getToken().getNode(), bean.getToken().getNodeEnter(), DateTime.now().toDate());
+                        newNodeLog.setToken(bean.getToken());
+                        forkedImageBeans.add(new NodeGraphImage(newNodeLog, bean.getToken().getEnd() == null));
+                    }
+                }
+            }
+            
+            graphImageBeanList.addAll(forkedImageBeans);
+            
             
             for (GraphImageBean graphElementBean : graphImageBeanList) {
                 
@@ -90,7 +106,7 @@ public class GraphicExecutionService {
                     graphImageBeans.put(graphElementBean.getKey(), graphElementBean);
                     Node node = (Node) xPath.compile("//g[@data-element-id='" + graphElementBean.getKey() + "']").evaluate(document, XPathConstants.NODE);
                     Element newChild = null;
-                    if (token.getNode().getKey().equals(graphElementBean.getKey())) {
+                    if (graphElementBean instanceof NodeGraphImage && ((NodeGraphImage) graphElementBean).isCurrent() && "rect".equals(graphNode.getNodeName())) {
                         newChild = createCurrentNodeElement(graphNode, document, 6);
                         newChild.setAttribute("style", "stroke-width: 2; fill: #ff0000; fill-opacity: 0.18; stroke: #ff0000;");
                         node.appendChild(newChild);
@@ -103,12 +119,41 @@ public class GraphicExecutionService {
                         styleNode.setTextContent(styleNode.getTextContent() + " cursor: pointer;");
                         ((Element) node).setAttribute("onclick", "onSelectNodeElement(" + getParameters(graphElementBean) + ")");
                     }
+                    
+                    if (graphElementBean instanceof NodeGraphImage && isMultiInstanceActivity(((NodeGraphImage) graphElementBean).getNode())) {
+                        addActiveInstancesInformation(graphElementBean.getToken(), document, graphNode);
+                    }
                 }
             }
             
             return writeDocumentToString(document);
         } catch (Exception e) {
+            e.printStackTrace();
             return "Erro ao renderizar gráfico: " + e.getMessage();
+        }
+    }
+
+    private boolean isMultiInstanceActivity(org.jbpm.graph.def.Node node) {
+        org.jbpm.graph.def.Node jbpmNode = (org.jbpm.graph.def.Node) HibernateUtil.removeProxy(node);
+        return jbpmNode instanceof Activity && ((Activity) jbpmNode).getActivityBehavior() instanceof MultiInstanceActivityBehavior;
+    }
+    
+    private void addActiveInstancesInformation(Token token, Document document, Node graphNode) {
+        ExecutionContext executionContext;
+        if (token.getSubProcessInstance() != null) {
+            executionContext = new ExecutionContext(token.getSubProcessInstance().getRootToken());
+        } else {
+            executionContext = new ExecutionContext(token);
+        }
+        Integer activeInstances = (Integer) executionContext.getContextInstance().
+                getVariable(MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES, executionContext.getToken());
+        
+        if (activeInstances > 0) {
+            Element circle = createCircleElement(document, "15", "60", "21", "blue", "2", "white");
+            graphNode.getParentNode().appendChild(circle);
+
+            Element text = createTextElement(document, "66", "14", "blue", "style=\"font-size: 13px;\"", activeInstances.toString());
+            graphNode.getParentNode().appendChild(text);
         }
     }
     
@@ -207,18 +252,21 @@ public class GraphicExecutionService {
     
     private Set<Long> getTokens(Token token) {
         Set<Long> tokens = new HashSet<>();
-        tokens.add(token.getId());
+        while (token != null) {
+            tokens.add(token.getId());
+            addChildTokens(token, tokens);
+            token = token.getParent();
+        }
+        return tokens;
+    }
+    
+    private void addChildTokens(Token token, Set<Long> tokenIds) {
         if (token.getChildren() != null) {
             Collection<Token> children = token.getChildren().values();
             for (Token child : children) {
-                tokens.add(child.getId());
+                tokenIds.add(child.getId());
             }
         }
-        while (token.getParent() != null) {
-            token = token.getParent();
-            tokens.add(token.getId());
-        }
-        return tokens;
     }
     
     private Element createCurrentNodeElement(Node graphNode, Document document, int margin) {
@@ -279,4 +327,24 @@ public class GraphicExecutionService {
         return "[{name: 'key', value:'" + graphImageBean.getKey() + "'}]";
     }
 
+    private Element createCircleElement(Document doc, String r, String cy, String cx, String stroke, String strokeWidth, String fill) {
+        Element circle = doc.createElement("circle");
+        circle.setAttribute("r", r);
+        circle.setAttribute("cy", cy);
+        circle.setAttribute("cx", cx);
+        circle.setAttribute("stroke", stroke);
+        circle.setAttribute("stroke-width", strokeWidth);
+        circle.setAttribute("fill", fill);
+        return circle;
+    }
+
+    private Element createTextElement(Document doc, String y, String x, String fill, String style, String textContent) {
+        Element text = doc.createElement("text");
+        text.setAttribute("y", y);
+        text.setAttribute("x", x);
+        text.setAttribute("fill", fill);
+        text.setAttribute("style", style);
+        text.setTextContent(textContent);
+        return text;
+    }
 }

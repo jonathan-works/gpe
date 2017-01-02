@@ -55,7 +55,9 @@ public class MonitorProcessoSearch {
         String where = "where token.end IS NULL "
                 + "and token.lock is null "
                 + "and node.class IN ('N', 'M', 'D') "
-                + "and node.processDefinition.id = :idProcessDefinition ";
+                + "and node.processDefinition.id = :idProcessDefinition "
+                + "and exists(select 1 from LongInstance v where v.name = 'processo' and v.token = token "
+                + " and exists(select 1 from Processo p where p.idProcesso = v.value)) ";
         if (!Strings.isNullOrEmpty(key)) {
             where += "and node.key = :key ";
         }
