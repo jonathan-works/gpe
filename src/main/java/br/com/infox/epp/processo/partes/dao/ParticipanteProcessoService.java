@@ -53,27 +53,38 @@ public class ParticipanteProcessoService {
 			boolean mesmoSuperior = false;
 			if ((existente.getParticipantePai() != null && parte.getParticipantePai() != null
 					&& existente.getParticipantePai().getId() == parte.getParticipantePai().getId())
-					|| (existente.getParticipantePai() == null && parte.getParticipantePai() == null)
-			)
+					|| (existente.getParticipantePai() == null && parte.getParticipantePai() == null))
 				mesmoSuperior = true;
 
-			boolean mesmoPeriodo = false;
 			Date ptIni = parte.getDataInicio();
 			Date ptFim = parte.getDataFim();
 			Date exIni = existente.getDataInicio();
 			Date exFim = existente.getDataFim();
-			
-			if (ptIni.before(exIni) && (ptFim == null || (ptFim != null && ptFim.after(exIni)))) {
-				mesmoPeriodo = true;
-				existente.setDataInicio(ptIni);
-			}
 
-			if (ptFim != null && exFim != null && ptFim.after(exFim)) {
-				mesmoPeriodo = true;
-				existente.setDataFim(ptFim);
-			}
-			
+			boolean mesmoPeriodo = (exIni.compareTo(ptIni) == 0)
+					&& ((exFim == null && ptFim == null) || (exFim != null && ptFim != null && exFim.compareTo(ptFim) == 0));
+
 			if (mesmoTipo && mesmoSuperior && mesmoPeriodo) {
+				// se é tudo igual nao faz nada
+			} else if (mesmoTipo && mesmoSuperior && !mesmoPeriodo) {
+				if (ptIni.before(exIni) && (ptFim == null || (ptFim != null && ptFim.after(exIni)))) {
+					mesmoPeriodo = false;
+					existente.setDataInicio(ptIni);
+				}
+
+				if (ptFim == null || (ptFim != null && exFim != null && ptFim.after(exFim))) {
+					mesmoPeriodo = false;
+					existente.setDataFim(ptFim);
+				}
+				
+				if (existente.getDataFim() != null && existente.getDataFim().compareTo(ptIni) == 1) {
+					existente.setDataFim(ptFim);
+				}
+				
+				if (parte.getDataFim() != null && existente.getDataInicio().compareTo(parte.getDataFim()) == 1) {
+					existente.setDataInicio(ptIni);
+				}
+
 				participanteProcessoManager.update(existente);
 			} else {
 				insereParticipante = true;
