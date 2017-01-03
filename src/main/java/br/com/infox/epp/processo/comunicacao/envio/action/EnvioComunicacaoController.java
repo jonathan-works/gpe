@@ -71,7 +71,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private static final TipoUsoComunicacaoEnum TIPO = TipoUsoComunicacaoEnum.E;
 	//Parametros disponíveis para configuração da página de tarefa
 	private static final String CODIGO_TIPO_COMUNICACAO = "tipoComunicacao";
-	private static final String PRAZO_PRADRAO_RESPOSTA = "prazoPradraoResposta";
+	private static final String PRAZO_PADRAO_RESPOSTA = "prazoPadraoResposta";
 	private static final String CODIGO_LOCALIZACAO_ASSINATURA = "localizacaoAssinaturaComunicacao";
 	private static final String CODIGO_PERFIL_ASSINATURA = "perfilAssinatura";
 	private static final String EM_ELABORACAO = "emElaboracao";
@@ -111,7 +111,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private Localizacao localizacaoRaizComunicacao;
 	private Localizacao localizacaoRaizAssinaturaComunicacao;
 	private Long processInstanceId;
-	@TaskpageParameter(name = PRAZO_PRADRAO_RESPOSTA, type="Integer", description = "enviarComunicacao.parameter.prazo")
+	@TaskpageParameter(name = PRAZO_PADRAO_RESPOSTA, type="Integer", description = "enviarComunicacao.parameter.prazo")
 	private Integer prazoDefaultComunicacao = null;
 	@TaskpageParameter(name = CODIGO_LOCALIZACAO_ASSINATURA, type="String", description = "enviarComunicacao.parameter.codLocalizacaoAssinatura")
     private Localizacao localizacaoAssinatura;
@@ -172,7 +172,7 @@ public class EnvioComunicacaoController implements Serializable {
                 }
             }
 
-            String prazo = (String) TaskInstance.instance().getVariable(PRAZO_PRADRAO_RESPOSTA);
+            String prazo = (String) TaskInstance.instance().getVariable(PRAZO_PADRAO_RESPOSTA);
             if (!Strings.isNullOrEmpty(prazo)) {
                 try {
                     prazoDefaultComunicacao = new Integer(prazo);
