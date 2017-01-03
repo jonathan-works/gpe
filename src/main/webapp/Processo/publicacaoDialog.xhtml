@@ -10,15 +10,14 @@
             <p:column headerText="#{infoxMessages['publicacao.certidao']}" style="text-align: center">
                 <p:outputPanel style="text-align: center" rendered="#{not empty row.certidao}">
                     <h:form>
-                        <infox:flashcopy/>
-                        <h:commandLink
-                            execute="@this" render="@form">
+                        <p:commandLink process="@this" update="@form"
+                            action="#{jsfUtil.applyLastPhaseFlashAction}"
+                            oncomplete="#{fileDownloader.getWindowOpen(row.certidao.documentoBin)}">
                             <h:graphicImage styleClass="opacityHover" title="#{infoxMessages['processoDocumento.visualizar']}"
                                 url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-                            <f:setPropertyActionListener value="#{row.certidao.id}" target="#{flash.idDocumento}" />
+                            <f:setPropertyActionListener value="#{row.certidao.documentoBin.id}" target="#{flash.idDocumentoBin}" />
                             <f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
-                            <p:ajax oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{fileDownloader.getDownloadUrl(row.certidao.documentoBin)}','1024');" />
-                        </h:commandLink>
+                        </p:commandLink>
                     </h:form>
                 </p:outputPanel>
             </p:column>

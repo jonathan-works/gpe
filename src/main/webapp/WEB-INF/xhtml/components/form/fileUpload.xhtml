@@ -101,14 +101,13 @@
 						<br />
 						<h:outputText id="file#{id}"
 							value="Documento: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].documentoBin.nomeArquivo : value}" />
-						<h:graphicImage
-							url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}"
-							title="Visualizar" style="cursor: pointer"
-							rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and taskInstanceHome.isPdf(id.split('-')[0])}"
-							onclick="infox.openPopUp('documento', '#{taskInstanceHome.getViewUrlDownload(id.split('-')[0])}');" />
-						<p:commandLink ajax="false"
-							action="#{taskInstanceHome.downloadDocumento(id.split('-')[0])}"
-							rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and not taskInstanceHome.isPdf(id.split('-')[0])}">
+						<p:commandLink
+							action="#{jsfUtil.applyLastPhaseFlashAction}"
+                            process="@this" update="@this"
+                            onclick="infox.showLoading();"
+                            oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(taskInstanceHome.isPdf(id.split('-')[0]))}"
+							rendered="#{not readonly or not empty taskInstanceHome.variaveisDocumento[id]}">
+                            <f:setPropertyActionListener value="#{taskInstanceHome.getDocumentoFromVariableName(id.split('-')[0]).documentoBin.id}" target="#{flash.idDocumentoBin}" />
 							<h:graphicImage
 								url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}"
 								title="Visualizar" style="cursor: pointer" />

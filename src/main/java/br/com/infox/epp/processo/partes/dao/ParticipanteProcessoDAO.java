@@ -80,12 +80,20 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
     	return getNamedResultList(PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, params);
     }
     
-    @Deprecated // FIXME esta consulta não funciona no oracle
     public List<Pessoa> getPessoasFisicasParticipantesProcesso(Processo processo){
-		String query = "select distinct p from ParticipanteProcesso pp "
-				+ "inner join  pp.pessoa p "
-				+ "where pp.processo = :processo and p.tipoPessoa = '"+TipoPessoaEnum.F+ "' ";
-		return getEntityManager().createQuery(query,Pessoa.class).setParameter("processo", processo).getResultList();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Pessoa> query = cb.createQuery(Pessoa.class);
+        Root<Pessoa> pessoa = query.from(Pessoa.class);
+
+        Subquery<Integer> subParticipante = query.subquery(Integer.class);
+        Root<ParticipanteProcesso> pp = subParticipante.from(ParticipanteProcesso.class);
+        subParticipante.where(cb.equal(pp.get(ParticipanteProcesso_.processo), processo),
+                cb.equal(pp.get(ParticipanteProcesso_.pessoa), pessoa));
+        subParticipante.select(cb.literal(1));
+
+        query.where(cb.equal(pessoa.get(Pessoa_.tipoPessoa), TipoPessoaEnum.F), cb.exists(subParticipante));
+
+        return getEntityManager().createQuery(query).getResultList();
     }
 
     public List<PessoaFisica> getPessoasFisicasParticipantesProcessoAtivo(Processo processo) {

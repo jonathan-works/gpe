@@ -30,6 +30,23 @@
             label="#{infoxMessages['usuarioLogin.nome']}"
             value="#{usuarioLoginList.entity.nomeUsuario}"
             maxlength="150" />
+          <wi:inputText
+            id="login"
+            label="#{infoxMessages['usuarioLogin.login']}"
+            value="#{usuarioLoginList.entity.login}"
+            maxlength="150" />
+          <wi:inputText
+              id="cpf"
+              converterId="cpfConverter"
+              size="15"
+              maxlength="15"
+              value="#{usuarioLoginList.cpf}"
+              label="#{infoxMessages['pessoaFisica.cpf']}"
+              styleClass="inputCpf">
+          </wi:inputText>
+          <wi:mask
+              selector=".inputCpf"
+              mask="999.999.999-99" />
           <wi:tree id="localizacao"
                assignTo="usuarioLoginList.localizacao"
                tree="#{localizacaoTree}"

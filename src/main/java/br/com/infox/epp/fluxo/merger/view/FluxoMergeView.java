@@ -75,8 +75,15 @@ public class FluxoMergeView implements Serializable {
         try {
             mergePointsBundle = fluxoMergeService.publish(fluxo, getMergePointsBundle());
         } catch (RuntimeException e) {
-            FacesMessages.instance().add(e.getMessage());
+            FacesMessages.instance().add(handleExceptionMessage(e));
         }
+    }
+
+    private String handleExceptionMessage(Exception exception) {
+        if (exception.getCause() == null) {
+            return exception.getMessage();
+        }
+        return handleExceptionMessage((Exception) exception.getCause());
     }
 
 }

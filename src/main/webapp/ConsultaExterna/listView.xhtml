@@ -192,22 +192,15 @@
 	                                        rowKeyVar="key" var="doc">
 	                                        <rich:column>
 	                                        	<h:form>
-		                                            <a:commandLink rendered="#{empty doc.documentoBin.extensao}" execute="@this" render="@form" action="#{jsfUtil.applyLastPhaseFlashAction()}"
-		                                                oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');" >
-		                                                <f:setPropertyActionListener value="#{doc.id}" target="#{flash.idDocumento}" />
+		                                            <a:commandLink execute="@this" render="@form" action="#{jsfUtil.applyLastPhaseFlashAction()}"
+		                                                oncomplete="#{fileDownloader.getWindowOpen(doc.documentoBin)}" >
+		                                                <f:setPropertyActionListener value="#{doc.documentoBin.id}" target="#{flash.idDocumentoBin}" />
 	            										<f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
 		                                                <h:graphicImage
 		                                                    title="Visualizar"
-		                                                    url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+		                                                    url="#{layoutController.getResourceUrlByPath(empty doc.documentoBin.extensao ? '/imagens/view.png' : '/imagens/mod/pdf.gif')}" />
 		                                            </a:commandLink>
 	                                            </h:form>
-	                                            <h:commandLink target="idPdf#{row}"
-	                                                rendered="#{not empty doc.documentoBin.extensao}"
-	                                                action="#{documentoDownloader.downloadDocumento(doc)}">
-	                                                <h:graphicImage
-	                                                    value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
-	                                                    title="#{doc.documentoBin.nomeArquivo} (#{documentoDownloader.getFormattedKb(doc.documentoBin)})" />
-	                                            </h:commandLink>
 	                                        </rich:column>
 	                                        <rich:column>
 	                                            <h:outputText

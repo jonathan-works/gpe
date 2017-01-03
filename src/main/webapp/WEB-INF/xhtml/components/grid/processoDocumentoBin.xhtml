@@ -10,7 +10,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf" 
 	xmlns:infox="http://www.infox.com.br/jsf"
-	xmlns:p="http://primefaces.org/ui"
+    xmlns:p="http://primefaces.org/ui"
     xmlns:i="http://java.sun.com/jsf/composite/infox">
 	
     <ui:param name="bin" value="#{empty bin ? c.value : bin}" />
@@ -20,19 +20,15 @@
     <span>
         <span class="#{row.excluido ? 'inativo' : ''}" />
         
-        <a:commandLink
-            execute="@this" render="@form" action="#{jsfUtil.applyLastPhaseFlashAction}" rendered="#{fileDownloader.isPdf(bin)}"
-            oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+        <p:commandLink process="@this" update="@form"
+            action="#{jsfUtil.applyLastPhaseFlashAction}"
+            onstart="infox.showLoading();" oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(row.documentoBin)}">
             <h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>
-            <f:setPropertyActionListener value="#{row.id}" target="#{flash.idDocumento}" />
+            <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
             <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
-        </a:commandLink>
+        </p:commandLink>
 
- 	<p:commandLink ajax="false" rendered="#{not fileDownloader.isPdf(bin)}"  action="#{fileDownloader.download(bin)}">
- 		<h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
-                title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>
- 	</p:commandLink>
         <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover" renderedLock="#{bin.suficientementeAssinado}" />
 
         <p:commandLink

@@ -24,7 +24,7 @@
 			
 				<wi:inputText id="uploadDescricao" required="true"
 					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
-					value="#{anexarDocumentosView.descricaoUploader}" />
+					value="#{anexarDocumentosView.descricaoUploader}" maxlength="260" />
 				<wi:selectOneMenuEntity id="uploadClassificacao" required="true"
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 					value="#{anexarDocumentosView.classificacaoDocumentoUploader}"
@@ -35,7 +35,7 @@
 						limitRender="true" execute="@this"
 						listener="#{anexarDocumentosView.onChangeUploadClassificacaoDocumento()}" />
 				</wi:selectOneMenuEntity>
-
+ 
 				<wi:selectOneMenuEntity id="uploadPastaUploader"
 					label="#{infoxMessages['pasta.pasta']}"
 					value="#{anexarDocumentosView.pastaUploader}"
@@ -171,7 +171,7 @@
 				<wi:inputText id="editorDescricao" required="true"
 					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
 					value="#{anexarDocumentosView.documentoEditor.descricao}"
-					disabled="#{not minuta}" readonly="#{not minuta}" />
+					disabled="#{not minuta}" readonly="#{not minuta}" maxlength="260" />
 
 				<wi:selectOneMenuEntity id="editorClassificacao" required="true"
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
@@ -190,7 +190,6 @@
 					label="#{infoxMessages['pasta.pasta']}"
 					value="#{anexarDocumentosView.documentoEditor.pasta}"
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}"
-					rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
 					disabled="#{not minuta}" />
 				
 				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
@@ -299,7 +298,7 @@
 								value="#{empty row.documentoBin.extensao}" />
 
 							<a:commandLink id="viewMinutaLink" execute="@form"
-								rendered="#{isModelo and row.documentoBin.minuta}"
+								rendered="#{row.documentoBin.minuta}"
 								render="editorForm" limitRender="true" status=":status"
 								styleClass="opacityHover" onclick="infox.showLoading();"
 								oncomplete="infox.hideLoading();"
@@ -307,31 +306,15 @@
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
 							</a:commandLink>
 
-							<a:commandLink id="viewEditorLink" execute="@form"
+							<a:commandLink id="downloadLink" execute="@form"
 								action="#{jsfUtil.applyLastPhaseFlashAction}"
-								rendered="#{isModelo and not row.documentoBin.minuta}"
+								rendered="#{not row.documentoBin.minuta}"
 								status=":status" styleClass="opacityHover"
 								onclick="infox.showLoading();" render="@this"
-								oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documentoBin.id}', '#{pathResolver.contextPath}/Processo/downloadDocumento.seam',screen.availWidth,screen.availHeight);">
+								oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(row.documentoBin)}">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-								<f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
+								<f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
 							</a:commandLink>
-
-						   <a:commandLink id="downloadLinkPDF"
-                               execute="@form" action="#{jsfUtil.applyLastPhaseFlashAction}"
-                               rendered="#{not isModelo and fileDownloader.isPdf(row.documentoBin)}" render="@this pageBodyDialogMessage" limitRender="true"
-                               status=":status" styleClass="opacityHover"
-                               onclick="infox.showLoading();"
-                               oncomplete="infox.hideLoading(); infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/downloadDocumento.seam','1024');">
-                               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-                               <f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
-                            </a:commandLink>
-                            
-                             <p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documentoBin)}"
-                               rendered="#{not isModelo and not fileDownloader.isPdf(row.documentoBin)}" 
-                               styleClass="opacityHover" ajax="false">
-                               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-                            </p:commandLink>
 
 							<a:commandLink
 								oncomplete="#{rich:component('assinaturasDocumento')}.show();"

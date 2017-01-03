@@ -1,2 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html></html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:body id="body">
+    <c:if test="#{not empty flash.idDocumentoBin}">
+        <f:event listener="#{documentoDownloader.downloadDocumentoBin(flash.idDocumentoBin)}" type="preRenderView" />
+    </c:if>
+
+    <c:if test="#{not empty flash.idDocumento}">
+        <f:event listener="#{documentoDownloader.downloadDocumento(flash.idDocumento)}" type="preRenderView" />
+    </c:if>
+</h:body>
+</html>

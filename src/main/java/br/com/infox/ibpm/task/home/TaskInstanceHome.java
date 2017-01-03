@@ -4,7 +4,6 @@ import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -606,21 +605,7 @@ public class TaskInstanceHome implements Serializable {
 		return "pdf".equalsIgnoreCase(documento.getDocumentoBin().getExtensao()) || StringUtils.isEmpty(documento.getDocumentoBin().getExtensao());
 	}
 	
-	public void downloadDocumento(String variableName){
-		Documento documento = getDocumentoFromVariableName(variableName);
-		byte[] data = documentoBinarioManager.getData(documento.getDocumentoBin().getId());
-		FileDownloader.download(data, "application/" + documento.getDocumentoBin().getExtensao(), documento.getDocumentoBin().getNomeArquivo());
-	}
-
-	public String getViewUrlDownload(String variableName) {
-		Documento documento = getDocumentoFromVariableName(variableName);
-		if (documento.getDocumentoBin().isBinario()) {
-			return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId().toString());
-		}
-		return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId().toString());
-	}
-
-	private Documento getDocumentoFromVariableName(String variableName) {
+	public Documento getDocumentoFromVariableName(String variableName) {
 		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:" + variableName);
 		return documentoManager.find(idDocumento);
 	}

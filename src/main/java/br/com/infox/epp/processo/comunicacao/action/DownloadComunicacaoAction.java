@@ -13,7 +13,6 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
@@ -47,7 +46,7 @@ public class DownloadComunicacaoAction implements Serializable{
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
 			
-			fileDownloader.downloadDocumentoViaServlet(pdf, "application/pdf", "Comunicação.pdf");
+			fileDownloader.downloadDocumento(pdf, "application/pdf", "Comunicação.pdf");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);

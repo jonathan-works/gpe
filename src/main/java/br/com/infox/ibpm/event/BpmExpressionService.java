@@ -44,7 +44,10 @@ import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
+import br.com.infox.epp.processo.documento.action.DocumentoCompartilhamentoService;
+import br.com.infox.epp.processo.documento.action.PastaCompartilhamentoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -58,6 +61,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.custom.variables.CustomVariableSearch;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
@@ -111,6 +115,10 @@ public class BpmExpressionService {
     protected LocalPublicacaoSearch localPublicacaoSearch;
     @Inject
     protected PublicacaoDocumentoService publicacaoDocumentoService;
+    @Inject
+    protected PastaCompartilhamentoService pastaCompartilhamentoService;
+    @Inject
+    protected DocumentoCompartilhamentoService documentoCompartilhamentoService;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip", expressionType = ExpressionType.EVENTOS)
     public void atribuirCiencia() {
@@ -536,6 +544,65 @@ public class BpmExpressionService {
                     tooltip = "process.events.expression.formataData.param.tooltip", selectable = true)})
     public String formatarDataPorExtenso(Date data) {
         return DateUtil.formatarDataPorExtenso(data);
+    }
+
+    @External(expressionType = ExpressionType.EVENTOS, tooltip = "process.events.expression.compartilharPasta.tooltip",
+        value = {
+            @Parameter(selectable = true, defaultValue = "'codigoPasta'",
+                label = "process.events.expression.compartilharPasta.codigoPasta.label",
+                tooltip = "process.events.expression.compartilharPasta.codigoPasta.tooltip"),
+            @Parameter(selectable = true, defaultValue = "'numeroProcessoAlvo'",
+                label = "process.events.expression.compartilharPasta.numeroProcessoAlvo.label",
+                tooltip = "process.events.expression.compartilharPasta.numeroProcessoAlvo.tooltip")
+    })
+    public void compartilharPasta(String codigoPasta, String numeroProcessoAlvo) {
+        Integer idProcessoRoot = getProcessoAtual().getProcessoRoot().getIdProcesso();
+        Processo processoAlvo = processoManager.getProcessoByNumero(numeroProcessoAlvo);
+        if (processoAlvo == null) {
+            throw new BusinessException("Não foi encontrado processo com o número '" + numeroProcessoAlvo + "'.");
+        }
+        String idUsuarioSistema = Parametros.ID_USUARIO_SISTEMA.getValue();
+        if (idUsuarioSistema == null) {
+            throw new BusinessException("O parâmetro '" + Parametros.ID_USUARIO_SISTEMA.getLabel() + "' não está configurado corretamente.");
+        }
+        UsuarioLogin usuarioSistema = usuarioLoginManager.find(Integer.valueOf(idUsuarioSistema));
+        if (usuarioSistema == null) {
+            throw new BusinessException("Não foi possível recuperar o usuário sistema.");
+        }
+        Pasta pasta = pastaSearch.getPastaByCodigoIdProcesso(codigoPasta, idProcessoRoot);
+        if (pasta == null) {
+            throw new BusinessException("Não foi possível encontrar a pasta com código '" + codigoPasta + "' no processo de id '" + idProcessoRoot + "'");
+        }
+        pastaCompartilhamentoService.adicionarCompartilhamento(pasta, processoAlvo, usuarioSistema);
+    }
+
+    @External(expressionType = ExpressionType.EVENTOS, tooltip = "process.events.expression.compartilharDocumento.tooltip",
+            value = {
+                @Parameter(selectable = true, defaultValue = "idDocumento",
+                    label = "process.events.expression.compartilharDocumento.idDocumento.label",
+                    tooltip = "process.events.expression.compartilharDocumento.idDocumento.tooltip"),
+                @Parameter(selectable = true, defaultValue = "'numeroProcessoAlvo'",
+                    label = "process.events.expression.compartilharPasta.numeroProcessoAlvo.label",
+                    tooltip = "process.events.expression.compartilharPasta.numeroProcessoAlvo.tooltip")
+        })
+    public void compartilharDocumento(Integer idDocumento, String numeroProcessoAlvo) {
+        Processo processoAlvo = processoManager.getProcessoByNumero(numeroProcessoAlvo);
+        if (processoAlvo == null) {
+            throw new BusinessException("Não foi encontrado processo com o número '" + numeroProcessoAlvo + "'.");
+        }
+        String idUsuarioSistema = Parametros.ID_USUARIO_SISTEMA.getValue();
+        if (idUsuarioSistema == null) {
+            throw new BusinessException("O parâmetro '" + Parametros.ID_USUARIO_SISTEMA.getLabel() + "' não está configurado corretamente.");
+        }
+        UsuarioLogin usuarioSistema = usuarioLoginManager.find(Integer.valueOf(idUsuarioSistema));
+        if (usuarioSistema == null) {
+            throw new BusinessException("Não foi possível recuperar o usuário sistema.");
+        }
+        Documento documento = documentoManager.find(idDocumento);
+        if (documento == null) {
+            throw new BusinessException("Não foi possível encontrar documento com id '" + idDocumento + "'");
+        }
+        documentoCompartilhamentoService.adicionarCompartilhamento(documento, processoAlvo, usuarioSistema);
     }
 
     public List<ExternalMethod> getExternalMethods() {
