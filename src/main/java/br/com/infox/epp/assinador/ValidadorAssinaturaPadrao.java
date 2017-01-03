@@ -111,8 +111,10 @@ public class ValidadorAssinaturaPadrao implements ValidadorAssinatura, Validador
 	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature) throws AssinaturaException {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
 		try {
-			validarCertificado(dadosAssinaturaLegada.getCertChain());
-			cmsAdapter.validarAssinatura(signedData, tipoSignedData, signature);
+			if (ParametroUtil.isValidaAssinatura()) {
+			    validarCertificado(dadosAssinaturaLegada.getCertChain());
+			    cmsAdapter.validarAssinatura(signedData, tipoSignedData, signature);
+			}
 		} catch (CertificadoException e) {
 			throw new AssinaturaException(e);
 		}
