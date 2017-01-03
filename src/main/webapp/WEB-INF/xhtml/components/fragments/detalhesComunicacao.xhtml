@@ -68,8 +68,11 @@
 			id="#{id}baixarComunicacaoBtn"
 			value="#{infoxMessages['comunicacao.visualizarComunicacao']}"
 			styleClass="buttons" type="button" 
-			onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(documentoComunicacao)}');"
-			rendered="#{empty showDownloadDocumentoPrincipal ? false : showDownloadDocumentoPrincipal}" />
+            action="#{jsfUtil.applyLastPhaseFlashAction}"
+			oncomplete="#{fileDownloader.getWindowOpen(documentoComunicacao.documentoBin)}"
+			rendered="#{empty showDownloadDocumentoPrincipal ? false : showDownloadDocumentoPrincipal}">
+            <f:setPropertyActionListener value="#{documentoComunicacao.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+        </a:commandButton>
 		<a:commandButton id="#{id}visualizarComunicacao" 
 			   action="#{jsfUtil.applyLastPhaseFlashAction}"
                value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
@@ -81,7 +84,7 @@
 		<a:commandButton id="#{id}visualizarComunicacaoAnexo"
             value="#{infoxMessages['comunicacao.visualizarComunicacao']}"
             styleClass="buttons" render="@this" execute="@this" action="#{jsfUtil.applyLastPhaseFlashAction()}"
-            oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');"
+            oncomplete="#{fileDownloader.getWindowOpenByIdDocumento(idDocumentoComunicacao)}"
             rendered="#{isAnexo and empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}" >
             <f:setPropertyActionListener value="#{idDocumentoComunicacao}" target="#{flash.idDocumento}" />
             <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />

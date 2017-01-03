@@ -19,7 +19,6 @@ import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.ibpm.variable.file.FileVariableHandler;
 import br.com.infox.seam.exception.BusinessRollbackException;
-import br.com.infox.seam.path.PathResolver;
 
 public class UploadFormType extends FileFormType {
     
@@ -66,12 +65,6 @@ public class UploadFormType extends FileFormType {
             LOG.log(Level.SEVERE, "", e);
             getActionMessagesService().handleGenericException(e, "Registro alterado por outro usuário, tente novamente");
         }
-    }
-    
-    public String getUrlDownload(FormField formfield) {
-        Documento documento = formfield.getTypedValue(Documento.class);
-        PathResolver pathResolver = BeanManager.INSTANCE.getReference(PathResolver.class);
-        return String.format("%s/downloadDocumento.seam?id=%d", pathResolver.getContextPath(), documento.getId());
     }
     
     protected DocumentoUploaderService getDocumentoUploadService() {

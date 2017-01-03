@@ -233,11 +233,13 @@
 						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}" 
 							styleClass="opacityHover"/>
 					</a:commandLink>
-					<h:commandLink action="#{documentoDownloader.downloadDocumento(row.documento)}"
-						rendered="#{not empty row.documento.documentoBin.extensao}" >
+					<a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction()}"
+						rendered="#{not empty row.documento.documentoBin.extensao}" 
+                        oncomplete="#{fileDownloader.getWindowOpen(row.documento.documentoBin)}">
 						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"
 							styleClass="opacityHover"/>
-					</h:commandLink>
+                        <f:setPropertyActionListener value="#{row.documento.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+                    </a:commandLink>
 					<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row.documento)}"
 						render="respostasPanel, editorRespostaComunicacaoForm, pageBodyDialogMessage, taskButtonsForm"
 						rendered="#{respostaComunicacaoAction.podeRemoverDocumento(row.documento)}"

@@ -220,4 +220,14 @@ public class DocumentoDAO extends DAO<Documento> {
         cq.select(from).where(cb.equal(from.get("documentoBin"), documentoBin));
         return entityManager.createQuery(cq).getResultList();
     }
+
+    public List<Documento> getDocumentosByIdDocumentoBin(Integer idDocumentoBin) {
+        EntityManager entityManager = getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Documento> cq = cb.createQuery(Documento.class);
+        Root<Documento> from = cq.from(Documento.class);
+        Join<Documento, DocumentoBin> bin = from.join(Documento_.documentoBin, JoinType.INNER);
+        cq.where(cb.equal(bin.get(DocumentoBin_.id), idDocumentoBin));
+        return entityManager.createQuery(cq).getResultList();
+    }
 }

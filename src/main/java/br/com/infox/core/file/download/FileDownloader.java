@@ -13,8 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,8 +33,11 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.path.PathResolver;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(FileDownloader.NAME)
 @Scope(ScopeType.EVENT)
@@ -50,10 +51,16 @@ public class FileDownloader implements Serializable {
     
     @Inject
     private DocumentoBinarioManager documentoBinarioManager;
-    @Inject private PdfManager pdfManager;
-    @Inject private InfoxMessages infoxMessages;
-    @Inject private DownloadResourceFactory downloadResourceFactory;
-    @Inject private DocumentoBinManager documentoBinManager;
+    @Inject
+    private PdfManager pdfManager;
+    @Inject
+    private InfoxMessages infoxMessages;
+    @Inject
+    private DocumentoBinManager documentoBinManager;
+    @Inject
+    private DocumentoManager documentoManager;
+
+    private PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
     
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)
@@ -118,76 +125,54 @@ public class FileDownloader implements Serializable {
     public boolean isPdf(DocumentoTemporario documento){
         return isPdf(documento.getDocumentoBin());
     }
+
     public boolean isPdf(Documento documento){
         return isPdf(documento.getDocumentoBin());
     }
+
     public boolean isPdf(DocumentoBin documentoBin){
         return "pdf".equalsIgnoreCase(documentoBin.getExtensao()) || StringUtils.isEmpty(documentoBin.getExtensao());
     }
-    
-    public String getDownloadUrl(DocumentoTemporario documento){
-        return getDownloadUrl(documento == null ? null : documento.getDocumentoBin());
-    }
-    public String getDownloadUrl(Documento documento){
-        return getDownloadUrl(documento == null ? null : documento.getDocumentoBin());
-    }
-    public String getDownloadUrl(DocumentoBin documentoBin){
-        String contextPath = getRequest().getContextPath();
-        UriBuilder uriBuilder = UriBuilder.fromPath(contextPath);
-        uriBuilder = uriBuilder.path(DocumentoServlet.BASE_SERVLET_PATH);
-        if (documentoBin != null){
-            uriBuilder = uriBuilder.path(documentoBin.getUuid().toString());
-        }
-        uriBuilder = uriBuilder.path(DocumentoServletOperation.DOWNLOAD.getPath());
-        return uriBuilder.build().toString();
-    }
-    
-    public String getDownloadUrlDocumentoPublico(DocumentoTemporario documento){
-        return getDownloadUrl(documento.getDocumentoBin());
-    }
-    public String getDownloadUrlDocumentoPublico(Documento documento){
-        return getDownloadUrl(documento.getDocumentoBin());
-    }
-    public String getDownloadUrlDocumentoPublico(DocumentoBin documentoBin){
-        String contextPath = getRequest().getContextPath();
-        UriBuilder uriBuilder = UriBuilder.fromPath(contextPath);
-        uriBuilder = uriBuilder.path(DocumentoServlet.BASE_SERVLET_PATH);
-        uriBuilder = uriBuilder.path(documentoBin.getUuid().toString());
-        uriBuilder = uriBuilder.path(DocumentoServletOperation.DOWNLOAD.getPath());
-        return uriBuilder.build().toString();
-    }
-    
+
     public String getContentType(DocumentoTemporario documento){
         return getContentType(documento.getDocumentoBin());
     }
+
     public String getContentType(Documento documento){
         return getContentType(documento.getDocumentoBin());
     }
+
     public String getContentType(DocumentoBin documentoBin){
         return String.format("application/%s", documentoBin.getExtensao());
     }
-    public void downloadDocumentoViaServlet(DocumentoBin documentoBin) throws IOException {
+
+    public void downloadDocumento(DocumentoBin documentoBin) throws IOException {
         if (documentoBin == null)
             return;
         
-        downloadDocumentoViaServlet(getData(documentoBin), getContentType(documentoBin), extractNomeArquivo(documentoBin));
+        downloadDocumento(getData(documentoBin), getContentType(documentoBin), extractNomeArquivo(documentoBin));
     }
-    public void downloadDocumentoViaServlet(Documento documento) throws IOException {
+
+    public void downloadDocumento(Documento documento) throws IOException {
         if (documento == null)
             return;
-        downloadDocumentoViaServlet(documento.getDocumentoBin());
+        downloadDocumento(documento.getDocumentoBin());
     }
-    
-    public void downloadDocumentoViaServlet(byte[] data, String contentType, String fileName) throws IOException{
-        DownloadResource downloadResource = downloadResourceFactory.create(fileName, contentType, data);
-        HttpSession session = getRequest().getSession();
-        session.setAttribute("documentoDownload", downloadResource);
-        getResponse().sendRedirect(getDownloadUrl((DocumentoBin)null));
+
+    public void downloadDocumento(byte[] data, String contentType, String fileName) throws IOException{
+        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        response.setContentType(contentType);
+        response.addHeader("Content-disposition", "filename=\"" + fileName + "\"");
+        response.setContentLength(data.length);
+        response.getOutputStream().write(data, 0, data.length);
+        response.getOutputStream().flush();
+        FacesContext.getCurrentInstance().responseComplete();
     }
 
     public String getMensagemDocumentoNulo() {
         return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
+
     public String extractNomeArquivo(DocumentoBin documento) {
         String nomeArquivo=documento.getNomeArquivo();
         String extensao = documento.getExtensao();
@@ -249,5 +234,25 @@ public class FileDownloader implements Serializable {
     public void download(DocumentoBin documentoBin) {
     	byte[] data = getData(documentoBin);
     	download(data, "application/" + documentoBin.getExtensao(), documentoBin.getNomeArquivo());
+    }
+
+    public String getWindowOpen(Boolean isPdf) {
+        return isPdf
+                ? "window.open('" + pathResolver.getContextPath() + "/downloadDocumento.seam', '_blank');"
+                : "window.open('" + pathResolver.getContextPath() + "/downloadDocumento.seam', '_self');";
+    }
+
+    public String getWindowOpen(DocumentoBin documentoBin) {
+        return getWindowOpen(isPdf(documentoBin));
+    }
+
+    public String getWindowOpenByIdDocumento(Integer idDocumento) {
+        Documento documento = documentoManager.find(idDocumento);
+        return documento == null ? "" : getWindowOpen(documento.getDocumentoBin());
+    }
+
+    public String getWindowOpenByIdDocumentoBin(Integer idDocumentoBin) {
+        DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
+        return getWindowOpen(documentoBin);
     }
 }

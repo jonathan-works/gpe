@@ -79,9 +79,9 @@
     		<h:form>
     			<a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction}"
 					render="@this" execute="@this"
-					oncomplete="infox.openPopUp('download#{row.idProcesso}', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+					oncomplete="#{fileDownloader.getWindowOpenByIdDocumento(comunicacaoInternaView.getIdDocumentoComunicacao(row))}">
 					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
-					<f:setPropertyActionListener value="#{comunicacaoInternaView.getIdDocumentoComunicacao(row)}" target="#{flash.idDocumento}" />
+                    <f:setPropertyActionListener value="#{comunicacaoInternaView.getIdDocumentoComunicacao(row)}" target="#{flash.idDocumento}" />
 					<f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
 				</a:commandLink>
     		</h:form>

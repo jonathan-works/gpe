@@ -41,22 +41,10 @@
       styleClass="tree">
       <s:div id="#{id}HiddenId">
         <h:inputHidden
-          id="#{id}Hidden"
+          id="#{id}HiddenRequired"
           required="#{required and empty tree.selected}"
           rendered="#{required}"
-          value="#{tree.selected}">
-          <s:convertEntity />
-        </h:inputHidden>
-        <h:outputScript>
-        //<![CDATA[
-          invoke(["infox.escapeId"],function(EscapeId) {
-            if (#{empty tree.selected} && #{required}) {
-              var id = EscapeId("##{rich:clientId(id.concat('Hidden'))}"); 
-              $(id).val(-1);
-            }
-          });
-        //]]>
-        </h:outputScript>
+        />
       </s:div>
       <ui:param
         name="border"

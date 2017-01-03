@@ -66,8 +66,8 @@ public class DocumentoTemporario implements Serializable {
     private Processo processo;
 
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
-    @Column(name = "ds_documento", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
+    @Size(max = Documento.TAMANHO_MAX_DESCRICAO_DOCUMENTO)
+    @Column(name = "ds_documento", nullable = false, length=Documento.TAMANHO_MAX_DESCRICAO_DOCUMENTO)
     private String descricao;
 
     @NotNull

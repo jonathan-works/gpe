@@ -12,10 +12,6 @@ public interface PastaQuery {
     String PARAM_DESCRICAO = "descricao";
     String PARAM_USUARIO_PERMISSAO = "usuarioPermissao";
     
-    String GET_BY_PROCESSO = "getByProcesso";
-    String GET_BY_PROCESSO_QUERY = "select o from Pasta o where o.processo = :" + PARAM_PROCESSO
-            + " order by o.ordem";
-    
     String TOTAL_DOCUMENTOS_PASTA = "Pasta.totalDocumentosPasta";
     String TOTAL_DOCUMENTOS_PASTA_QUERY = "select count(o) from Documento o inner join o.documentoBin bin "
     		+ " where o.pasta = :" + PARAM_PASTA

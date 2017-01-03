@@ -36,8 +36,13 @@
                <h:outputText value="#{infoxMessages['sigiloDocumento.documento.documento']}" />
            </f:facet>
            <center>
-               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer"
-                   onclick="infox.openPopUp('documento', '#{sigiloDocumentoAction.getViewUrl(row)}');"/>
+               <a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction}"
+                   execute="@this" render="@this"
+                   onclick="infox.showLoading();"
+                   oncomplete="#{fileDownloader.getWindowOpen(row.documentoBin)} infox.hideLoading()">
+                   <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" />
+                   <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+               </a:commandLink>
            </center>
        </rich:column>
        

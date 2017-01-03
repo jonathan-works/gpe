@@ -18,6 +18,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.list.DataList;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
@@ -26,6 +27,7 @@ import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
+import br.com.infox.epp.processo.documento.list.DocumentoCompartilhamentoList;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
@@ -54,6 +56,7 @@ public class DocumentoProcessoAction implements Serializable {
 	private Processo processo;
 	private DocumentoFilter documentoFilter = new DocumentoFilter();
 	private List<String> identificadoresPapeisHerdeirosUsuarioExterno;
+	private boolean documentoCompartilhado = false;
 	
 	@Inject
 	private DocumentoManager documentoManager;
@@ -66,7 +69,9 @@ public class DocumentoProcessoAction implements Serializable {
 	@Inject
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 	@Inject
-	protected MarcadorSearch marcadorSearch; 
+	protected MarcadorSearch marcadorSearch;
+	@Inject
+	private DocumentoCompartilhamentoList documentoCompartilhamentoList;
 	@In
 	private DocumentoList documentoList;
 		
@@ -168,23 +173,30 @@ public class DocumentoProcessoAction implements Serializable {
 	
 	public void filtrarDocumentos() {
 		if (documentoFilter.getIdClassificacaoDocumento() != null) {
-			documentoList.setClassificacaoDocumento(classificacaoDocumentoManager.find(documentoFilter.getIdClassificacaoDocumento()));
+			ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.find(documentoFilter.getIdClassificacaoDocumento());
+            documentoList.setClassificacaoDocumento(classificacaoDocumento);
+			documentoCompartilhamentoList.setClassificacaoDocumento(classificacaoDocumento);
 		} else {
 			documentoList.setClassificacaoDocumento(null);
+			documentoCompartilhamentoList.setClassificacaoDocumento(null);
 		}
 		
 		if (documentoFilter.getNumeroDocumento() != null) {
 			documentoList.setNumeroDocumento(documentoFilter.getNumeroDocumento());
+			documentoCompartilhamentoList.setNumeroDocumento(documentoFilter.getNumeroDocumento());
 		} else {
 			documentoList.setNumeroDocumento(null);
+			documentoCompartilhamentoList.setNumeroDocumento(null);
 		}
 		
 		if (documentoFilter.getMarcadores() != null) {
 		    documentoList.setCodigoMarcadores(documentoFilter.getMarcadores());
+		    documentoCompartilhamentoList.setCodigoMarcadores(documentoFilter.getMarcadores());
 		} else {
 		    documentoList.setCodigoMarcadores(null);
+		    documentoCompartilhamentoList.setCodigoMarcadores(null);
 		}
-		documentoList.refresh();
+		getActiveBean().refresh();
 	}
 	
 	public Processo getProcesso() {
@@ -218,5 +230,17 @@ public class DocumentoProcessoAction implements Serializable {
 	protected Map<String, Boolean> getCache() {
 		return cache;
 	}
+
+	private DataList<Documento> getActiveBean() {
+	    return documentoCompartilhado ? documentoCompartilhamentoList : documentoList;
+	}
+
+	public boolean isDocumentoCompartilhado() {
+        return documentoCompartilhado;
+    }
+
+    public void setDocumentoCompartilhado(boolean documentoCompartilhado) {
+        this.documentoCompartilhado = documentoCompartilhado;
+    }
 }
 
