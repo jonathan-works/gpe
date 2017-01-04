@@ -51,6 +51,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.usuario.UsuarioLoginSearch;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.Taskpage;
 import br.com.infox.ibpm.variable.TaskpageParameter;
@@ -607,7 +608,7 @@ public class EnvioComunicacaoController implements Serializable {
     }
     
     public boolean isExibirTransicoes() {
-        return exibirTransicoes && getModeloComunicacao().getFinalizada() && (!podeAssinar() || assinouComunicacao());
+        return exibirTransicoes && getModeloComunicacao().getFinalizada();
     }
 
     private boolean podeAssinar() {
@@ -627,5 +628,13 @@ public class EnvioComunicacaoController implements Serializable {
 
     public boolean isExibirResponsaveisAssinatura() {
         return exibirResponsaveisAssinatura;
+    }
+    
+    public void endTask(String transition) {
+        if (!TaskInstanceHome.instance().isTransitionValidateForm(transition) || !podeAssinar() || assinouComunicacao()) {
+            TaskInstanceHome.instance().end(transition);
+        } else {
+            FacesMessages.instance().add("É necessário assinar a comunicação para continuar");
+        }
     }
 }
