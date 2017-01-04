@@ -143,15 +143,15 @@ public class EnvioComunicacaoController implements Serializable {
 	public void init() {
 		String idJbpm = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("jbpmProcessId");
 		String idModelo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idModeloComunicacao");
+		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
 		if (idJbpm != null) { // Nova comunicação fora da aba de saída
 			processInstanceId = Long.valueOf(idJbpm);
 		} else if (idModelo == null) { // Nova comunicação dentro da aba de saída
 			processInstanceId = Long.valueOf(JbpmUtil.getProcesso().getIdJbpm());
-			inTask = true;
+			inTask = taskInstance != null;
 		}
-		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
 		if (taskInstance != null) {
-			idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
+		    idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
 		}
 		initModelo(idModelo == null ? null : Long.valueOf(idModelo));
 		initParametros();
