@@ -365,7 +365,7 @@ public class NodeHandler implements Serializable {
         newTimer.setTimerName(getGeneratedTimerName());
         newTimer.setDueDate(BASE_DUE_DATE);
         final List<Transition> leavingTransitions = node.getLeavingTransitions();
-        if (leavingTransitions.size() > 0) {
+        if (leavingTransitions != null && leavingTransitions.size() > 0) {
             newTimer.setTransitionName(leavingTransitions.get(0).getName());
         }
         return newTimer;
