@@ -54,31 +54,34 @@ public class CaptchaService {
 		}
 		return null;
 	}
-
-	public boolean isMostrarCaptcha() {
+	
+	private CookieCaptcha getCookieCaptchaRequest() {
 		Cookie cookieRequest = getCookieRequest();
 		if (cookieRequest == null) {
-			return true;
+			return null;
 		}
 		String clientId = cookieRequest.getValue();
-		CookieCaptcha cookieCaptcha = cookieCaptchaSearch.findByClientId(clientId);
-		if (cookieCaptcha != null && !isLoginInvalidosExcedidos(cookieCaptcha.getId())) {
+		return cookieCaptchaSearch.findByClientId(clientId);
+	}
+
+	public boolean isMostrarCaptcha() {
+		CookieCaptcha cookieCaptcha = getCookieCaptchaRequest();
+		if(cookieCaptcha == null) {
+			return true;
+		}
+		if (cookieCaptcha != null && cookieCaptcha.getUsuarios().size() > 0 && !isLoginInvalidosExcedidos(cookieCaptcha.getId())) {
 			return false;
 		}
 		return true;
 	}
 
 	public boolean isMostrarCaptcha(String login) {
-		Cookie cookieRequest = getCookieRequest();
-		if (cookieRequest == null) {
+		if(isMostrarCaptcha()) {
 			return true;
 		}
-		String clientId = cookieRequest.getValue();
-		CookieCaptcha cookieCaptcha = cookieCaptchaSearch.findByClientId(clientId);
-		if (cookieCaptcha != null) {
-			if (cookieCaptcha.getUsuarios().contains(login)) {
-				return false;
-			}
+		CookieCaptcha cookieCaptcha = getCookieCaptchaRequest();
+		if (cookieCaptcha != null && cookieCaptcha.getUsuarios().contains(login)) {
+			return false;
 		}
 		return true;
 	}
@@ -141,11 +144,11 @@ public class CaptchaService {
 	        getEntityManager().flush();
 	    }
 		
-	    resetTentativasLoginInvalido(cookieCaptcha.getId());
+	    resetTentativasLoginInvalido(cookieCaptcha.getId(), username);
 	}
 	
-	protected void resetTentativasLoginInvalido(Integer cookieCaptchaId) {
-		List<LoginInvalido> loginsInvalidos = cookieCaptchaSearch.listTentativasLoginInvalido(cookieCaptchaId);
+	protected void resetTentativasLoginInvalido(Integer cookieCaptchaId, String login) {
+		List<LoginInvalido> loginsInvalidos = cookieCaptchaSearch.listTentativasLoginInvalido(cookieCaptchaId, login);
 		if(loginsInvalidos.size() == 0) {
 			return;
 		}
@@ -166,6 +169,7 @@ public class CaptchaService {
 		LoginInvalido loginInvalido = new LoginInvalido();
 		loginInvalido.setData(new Date());
 		loginInvalido.setCookieCaptcha(cookieCaptcha);
+		loginInvalido.setLogin(username);
 		getEntityManager().persist(loginInvalido);
 		getEntityManager().flush();
 	}
