@@ -70,19 +70,23 @@
                             </div>
                             <div class="field-block">
                                 <div>
-                                    <h:inputText id="username" value="#{credentials.username}" class="input-text-login" />
+                                    <h:inputText id="username" value="#{credentials.username}" class="input-text-login">
+                                        <p:ajax event="blur" update="divCaptcha"/>
+                                    </h:inputText>
                                 </div>
                                 <div>
                                     <h:inputSecret id="password" value="#{credentials.password}" class="input-text-login" />
                                 </div>
                             </div>
-                            <p:outputPanel rendered="#{loginView.mostrarCaptcha}" styleClass="field-block">
-                                <div class="field">
-                                    <p:captcha id="captcha" label="Captcha" language="pt_BR"
-                                        validatorMessage="#{infoxMessages['captcha.incorreto']}"
-                                        requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
-                                    <p:messages for="captcha" severity="error" />
-                                </div>
+                            <p:outputPanel id="divCaptcha">
+	                            <p:outputPanel rendered="#{loginView.mostrarCaptcha}" styleClass="field-block">
+	                                <div class="field">
+	                                    <p:captcha id="captcha" label="Captcha" language="pt_BR"
+	                                        validatorMessage="#{infoxMessages['captcha.incorreto']}"
+	                                        requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+	                                    <p:messages for="captcha" severity="error" />
+	                                </div>
+	                            </p:outputPanel>
                             </p:outputPanel>
                         </div>
                         <p:outputPanel>
