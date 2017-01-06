@@ -69,6 +69,10 @@ public class GraphicExecutionService {
     
     public String performGraphicExecution(Token token, Map<String, GraphImageBean> graphImageBeans) throws TransformerFactoryConfigurationError {
         String svg = fluxoManager.getFluxoByDescricao(token.getProcessInstance().getProcessDefinition().getName()).getDefinicaoProcesso().getSvgExecucao();
+        if (svg == null) {
+            return "Este processo não possui gráfico associado";
+        }
+        
         try {
             Document document = createDocument(svg);
             
@@ -128,7 +132,6 @@ public class GraphicExecutionService {
             
             return writeDocumentToString(document);
         } catch (Exception e) {
-            e.printStackTrace();
             return "Erro ao renderizar gráfico: " + e.getMessage();
         }
     }
