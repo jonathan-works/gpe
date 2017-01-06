@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
 @Table(name = PessoaJuridica.TABLE_NAME)
@@ -72,6 +73,7 @@ public class PessoaJuridica extends Pessoa {
         if (obj == null) {
             return false;
         }
+        obj = HibernateUtil.removeProxy(obj);        
         if (!(obj instanceof PessoaJuridica)) {
             return false;
         }
