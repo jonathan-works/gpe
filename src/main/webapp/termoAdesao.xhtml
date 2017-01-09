@@ -44,7 +44,7 @@ body {
             <p:outputPanel styleClass="termo-adesao-buttons">
                 <p:outputPanel id="termoAdesaoFormPanel">
                     <h:form id="termoAdesaoForm" rendered="#{not termoAdesaoViewController.termoAdesaoAssinado}">
-                        <i:certificadoDigital id="termoAdesao"
+                        <wi:assinador id="termoAdesao"
                             callbackHandler="#{termoAdesaoViewController}"
                             assinavelProvider="#{termoAdesaoViewController.assinavelProvider}"
                             execute="@this" styleClass="buttons-primary"
@@ -52,7 +52,7 @@ body {
                             onbegin="infox.showLoading();"
                             oncomplete="infox.hideLoading();"
                             value="#{infoxMessages['login.assinarTermoAdesao']}">
-                        </i:certificadoDigital>
+                        </wi:assinador>
                     </h:form>
                 </p:outputPanel>
                 <button onclick="infox.redirect({url:window.document.referrer})"
