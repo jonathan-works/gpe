@@ -91,6 +91,7 @@ public class CustomVariable implements Serializable {
 			case LONG:
 				return new Long(getValor());
 			case STRING:
+			case EL:
 				return getValor();
 			default:
 				break;
