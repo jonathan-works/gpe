@@ -48,6 +48,7 @@ public class UnidadeDecisoraMonocraticaList extends EntityList<UnidadeDecisoraMo
 		addSearchField("nome", SearchCriteria.CONTENDO);
 		addSearchField("localizacao", SearchCriteria.IGUAL);
 		addSearchField("ativo", SearchCriteria.IGUAL);
+		addSearchField("recebeDistribuicao", SearchCriteria.IGUAL);
 	}
 	
 	@Override

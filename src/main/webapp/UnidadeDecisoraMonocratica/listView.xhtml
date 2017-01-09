@@ -45,6 +45,11 @@
 	                        id="ativo"
 	                        label="#{infoxMessages['field.situacao']}"
 	                        value="#{bean.entity.ativo}"/>
+	                        
+					<wi:selectBooleanMenu
+		             	id="recebeDistribuicao"
+		             	label="#{infoxMessages['unidadeDecisoraMonocratica.recebeDistribuicao']}"
+		             	value="#{bean.entity.recebeDistribuicao}" />
                         
                 </wi:searchForm>
             </ui:define>
@@ -59,6 +64,11 @@
                 columnHeader="#{infoxMessages['unidadeDecisoraMonocratica.localizacao']}"
                 value="#{row.localizacao}"/>
             
+            <wi:columnBoolean
+                columnId="recebe"
+                columnHeader="#{infoxMessages['unidadeDecisoraMonocratica.recebeDistribuicao']}"
+                value="#{row.recebeDistribuicao}"/>
+                
             <wi:columnSituacao
                 columnId="ativo"
                 columnHeader="#{infoxMessages['field.situacao']}"
@@ -95,6 +105,11 @@
                   label="#{infoxMessages['unidadeDecisoraMonocratica.chefeGabinete']}" rendered="#{unidadeDecisoraMonocraticaCrudAction.managed}" 
                   items="#{unidadeDecisoraMonocraticaCrudAction.possiveisChefesGabinete}" required="true"
                   optionLabel="#{item.cpf} - #{item.nome.toUpperCase()}"/>
+	               
+             <wi:selectBooleanCheckbox
+             	id="recebeDistribuicao"
+             	label="#{infoxMessages['unidadeDecisoraMonocratica.recebeDistribuicao']}"
+             	value="#{unidadeDecisoraMonocraticaCrudAction.instance.recebeDistribuicao}" />
             
              <wi:selectSituacaoRadio
 	               id="ativo"

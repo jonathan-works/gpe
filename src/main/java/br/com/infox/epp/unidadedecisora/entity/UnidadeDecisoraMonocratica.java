@@ -75,6 +75,10 @@ public class UnidadeDecisoraMonocratica implements Serializable {
     @OrderBy("unidadeDecisoraColegiada ASC")
     private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
 
+    @NotNull
+    @Column(name="in_recebe_districuicao", nullable=false)
+    private Boolean recebeDistribuicao;
+    
     public Integer getIdUnidadeDecisoraMonocratica() {
         return idUnidadeDecisoraMonocratica;
     }
@@ -170,6 +174,14 @@ public class UnidadeDecisoraMonocratica implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public Boolean getRecebeDistribuicao() {
+        return recebeDistribuicao;
+    }
+
+    public void setRecebeDistribuicao(Boolean recebeDistribuicao) {
+        this.recebeDistribuicao = recebeDistribuicao;
     }
 
 }
