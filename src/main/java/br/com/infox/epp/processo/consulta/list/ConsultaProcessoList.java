@@ -285,5 +285,9 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     public void setDataFim(Date dataFim) {
         this.dataFim = dataFim;
     }
+
+    public PanelDefinition getPanelDefinition() {
+        return panelDefinition;
+    }
     
 }
