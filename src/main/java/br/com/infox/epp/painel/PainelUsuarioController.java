@@ -22,6 +22,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
@@ -90,16 +91,48 @@ public class PainelUsuarioController implements Serializable {
 	protected void verificaHouveAlteracao(List<FluxoBean> fluxosDisponiveisTemp) throws IOException {
 	    ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 	    if (fluxosDisponiveisTemp.size() != fluxosDisponiveis.size()) {
-            FacesContext.getCurrentInstance().getExternalContext().redirect(servletContext.getContextPath() + "/Painel/list.seam");
+            //FacesContext.getCurrentInstance().getExternalContext().redirect(servletContext.getContextPath() + "/Painel/list.seam");
+	    	init();
         } else {
             fluxosDisponiveisTemp.removeAll(fluxosDisponiveis);
             if (!fluxosDisponiveisTemp.isEmpty()) {
-                FacesContext.getCurrentInstance().getExternalContext().redirect(servletContext.getContextPath() + "/Painel/list.seam");
+                //FacesContext.getCurrentInstance().getExternalContext().redirect(servletContext.getContextPath() + "/Painel/list.seam");
             }
         }
 	    fluxosDisponiveisTemp.clear();
 	}
 
+	public void recarregarTela() {
+		PanelDefinition key = painelTreeHandler.getSelected();
+		init();
+		painelTreeHandler.clearTree();
+		selectFluxo();
+		if (painelTreeHandler.getFluxoBean() != null) {
+			if (key instanceof CaixaDefinitionBean) {
+				List<PainelEntityNode> tarefasRoots = painelTreeHandler.getTarefasRoots();
+				for (PainelEntityNode node : tarefasRoots) {
+					for (PainelEntityNode caixa : node.getCaixas()) {
+						if (caixa.getEntity().getId().equals(key.getId())) {
+							painelTreeHandler.setSelected(caixa.getEntity());
+							painelTreeHandler.setSelectedNode(caixa);
+							break;
+						}
+					}
+				}
+			} else {
+				List<PainelEntityNode> tarefasRoots = painelTreeHandler.getTarefasRoots();
+				for (PainelEntityNode node : tarefasRoots) {
+					if (node.getEntity().getId().equals(key.getId())) {
+						painelTreeHandler.setSelected(node.getEntity());
+						painelTreeHandler.setSelectedNode(node);
+						break;
+					}
+				}
+			}
+			consultaProcessoList.onSelectNode(getSelected());
+		}
+	}
+	
 	private void loadFluxosDisponiveis() {
 		fluxosDisponiveis = situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso());
 	}
@@ -236,6 +269,10 @@ public class PainelUsuarioController implements Serializable {
 
 	public void setIdProcessDefinition(String idProcessDefinition) {
 		this.idProcessDefinition = idProcessDefinition;
+	}
+	
+	public String getIdProcessDefinition() {
+		return this.idProcessDefinition;
 	}
 	
 	public void setExpedida(Boolean expedida) {

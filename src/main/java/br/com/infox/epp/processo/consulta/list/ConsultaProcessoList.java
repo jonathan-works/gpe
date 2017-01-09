@@ -223,9 +223,12 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
         return null;
     }
     
-    public List<TaskBean> getTasks() {
-        return panelDefinition.getTasks();
-    }
+	public List<TaskBean> getTasks() {
+		if (panelDefinition != null)
+			return panelDefinition.getTasks();
+		else
+			return new ArrayList<TaskBean>();
+	}
 
     public List<TaskBean> getFilteredTasks() {
         return filteredTasks;

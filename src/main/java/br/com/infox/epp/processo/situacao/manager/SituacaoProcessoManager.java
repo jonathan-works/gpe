@@ -49,7 +49,7 @@ public class SituacaoProcessoManager {
 	}
 	
 	public void loadTasks(FluxoBean fluxoBean) {
-	    if (fluxoBean.getTasks() == null) {
+	    if (fluxoBean != null && fluxoBean.getTasks() == null) {
 	        List<TaskBean> taskBeans = situacaoProcessoDAO.getTaskIntances(fluxoBean);
             for (TaskBean taskBean : taskBeans) {
                 fluxoBean.addTaskDefinition(taskBean);

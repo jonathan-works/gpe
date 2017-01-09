@@ -12,11 +12,12 @@ import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.painel.FluxoBean;
 import br.com.infox.epp.painel.PainelUsuarioController;
+import br.com.infox.epp.painel.PanelDefinition;
 import br.com.infox.epp.painel.TaskDefinitionBean;
 
 @Named
 @ViewScoped
-public class PainelTreeHandler extends AbstractTreeHandler<TaskDefinitionBean> {
+public class PainelTreeHandler extends AbstractTreeHandler<PanelDefinition> {
 
     private static final long serialVersionUID = 1L;
     
