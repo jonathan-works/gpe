@@ -179,7 +179,7 @@ public class AssinadorController implements Serializable, AssinaturaCallback {
         } else {
             groupStatus = CertificateSignatureGroupStatus.U;
         }
-        FacesMessages.instance().add(InfoxMessages.getInstance().get(groupStatus));
+        FacesMessages.instance().add(InfoxMessages.getInstance().get(groupStatus.getLabel()));
     }
 
 }
