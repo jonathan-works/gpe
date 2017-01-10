@@ -479,6 +479,7 @@
                         tokenField="#{anexarDocumentosView.tokenAssinatura}"
                         assinavelProvider="#{anexarDocumentosView.assinavelProvider}"
                         execute="@this"
+                        rendered="#{not empty anexarDocumentosView.documentosAssinaveis}"
                         render="pageBodyDialogMessage documentoDiv assinarDocumentosPopUpPanelOutput"
                         onbegin="infox.showLoading();"
                         oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();"
