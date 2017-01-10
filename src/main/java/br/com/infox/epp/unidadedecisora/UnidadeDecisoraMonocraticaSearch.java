@@ -150,6 +150,18 @@ public class UnidadeDecisoraMonocraticaSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
+    public List<UnidadeDecisoraMonocratica> findAtivasOrdenadasByNome() {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
+        Root<UnidadeDecisoraMonocratica> udm = cq.from(UnidadeDecisoraMonocratica.class);
+
+        cq.select(udm);
+        cq.orderBy(cb.asc(udm.get(UnidadeDecisoraMonocratica_.nome)));
+        cq.where(cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo)));
+
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
     public List<UnidadeDecisoraMonocratica> findAtivas(String descricao) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
