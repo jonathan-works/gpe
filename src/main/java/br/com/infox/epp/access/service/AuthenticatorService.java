@@ -193,9 +193,6 @@ public class AuthenticatorService {
         }
         final UsuarioLogin usuarioLogin;
         usuarioLogin = usuarioLoginManager.getUsuarioLoginByPessoaFisica(pessoaFisica);
-        if (!usuarioLogin.isLoginComCertificadoHabilitado()){
-            throw new LoginException(infoxMessages.get(LOGIN_ERROR_LOGIN_CERTIFICADO_DESABILITADO));
-        }
         checkValidadeUsuarioLogin(usuarioLogin, UsuarioEnum.C);
         return usuarioLogin;
     }

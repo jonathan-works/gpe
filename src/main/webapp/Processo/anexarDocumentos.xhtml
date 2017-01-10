@@ -474,15 +474,15 @@
 
 			<div align="center">
 				<h:form>
-                    <i:certificadoDigital
+                    <wi:assinador
                         id="assinarButton"
                         tokenField="#{anexarDocumentosView.tokenAssinatura}"
                         assinavelProvider="#{anexarDocumentosView.assinavelProvider}"
                         execute="@this"
                         render="pageBodyDialogMessage documentoDiv assinarDocumentosPopUpPanelOutput"
+                        onbegin="infox.showLoading();"
                         oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();"
-                        signAction="#{anexarDocumentosView.signDocuments}"
-                        limitRender="true" />
+                        signAction="#{anexarDocumentosView.signDocuments}" />
 
 					<a:commandButton id="cancelarAssinaturaButton" styleClass="buttons"
 						value="#{infoxMessages['button.cancelar']}"

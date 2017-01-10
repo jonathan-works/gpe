@@ -51,14 +51,16 @@
                             <span><h:outputText value="#{infoxMessages['login.comCertificadoLabel']}" /></span>
                         </div>
                         <h:form id="loginComCertificado" styleClass="field-block">
-                            <i:certificadoDigital id="certificacao"
+                            <wi:assinador id="certificacao"
                                callbackHandler="#{certificateAuthenticator}"
                                assinavelProvider="#{certificateAuthenticator.assinavelProvider}"
                                execute="@this"
                                render="DialogMessage"
+                               onbegin="infox.showLoading();"
                                oncomplete="infox.hideLoading();"
+                               styleClass="buttons"
                                value="#{infoxMessages['signature.loginBtn']}">
-                            </i:certificadoDigital>
+                            </wi:assinador>
                         </h:form>
                     </div>
                     <h:form id="loginSemCertificado">
