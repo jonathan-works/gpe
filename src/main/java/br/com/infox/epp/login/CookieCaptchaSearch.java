@@ -44,13 +44,13 @@ public class CookieCaptchaSearch {
         return getSingleResult(getEntityManager().createQuery(cq));	
 	}
 	
-	public List<LoginInvalido> listTentativasLoginInvalido(Integer cookieId) {
+	public List<LoginInvalido> listTentativasLoginInvalido(Integer cookieId, String login) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<LoginInvalido> cq = cb.createQuery(LoginInvalido.class);
         Root<LoginInvalido> loginInvalido = cq.from(LoginInvalido.class);
-        //Path<CookieCaptcha> cookieCaptcha = loginInvalido.join(LoginInvalido_.cookieCaptcha);
         cq.where(
-            cb.equal(loginInvalido.get(LoginInvalido_.cookieCaptcha), cookieId)
+            cb.equal(loginInvalido.get(LoginInvalido_.cookieCaptcha), cookieId),
+            cb.equal(loginInvalido.get(LoginInvalido_.login), login)
         );
         return getEntityManager().createQuery(cq).getResultList();		
 	}
