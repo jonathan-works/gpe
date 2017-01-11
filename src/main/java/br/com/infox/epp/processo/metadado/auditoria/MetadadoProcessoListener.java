@@ -31,13 +31,14 @@ public class MetadadoProcessoListener extends PersistenceController {
 		gravarLog(TipoOperacaoLogEnum.D, metadadoProcesso);
 	}
 	
-	private void gravarLog(TipoOperacaoLogEnum acao, MetadadoProcesso metadadoProcesso) {
+	private void gravarLog(TipoOperacaoLogEnum acao, MetadadoProcesso mp) {
 		HistoricoMetadadoProcesso log = new HistoricoMetadadoProcesso();
-		log.setIdMetadadoProcesso(metadadoProcesso.getId());
-		log.setNome(metadadoProcesso.getMetadadoType());
-		log.setValor(metadadoProcesso.getValor());
-		log.setTipo(metadadoProcesso.getMetadadoType());
-		log.setIdProcesso(metadadoProcesso.getProcesso().getIdProcesso().longValue());
+		log.setIdMetadadoProcesso(mp.getId());
+		log.setNome(mp.getMetadadoType());
+		log.setValor(mp.getValor());
+		String tipo = mp.getClassType() != null ? mp.getClassType().getTypeName() : "";
+		log.setTipo(tipo);
+		log.setIdProcesso(mp.getProcesso().getIdProcesso().longValue());
 		log.setDataRegistro(DateTime.now().toDate());
 		log.setAcao(acao.getLabel());
 		
