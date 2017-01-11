@@ -38,7 +38,6 @@
           <wi:inputText
               id="cpf"
               converterId="cpfConverter"
-              size="15"
               maxlength="15"
               value="#{usuarioLoginList.cpf}"
               label="#{infoxMessages['pessoaFisica.cpf']}"
@@ -86,11 +85,17 @@
         columnId="nomeUsuario"
         columnHeader="#{infoxMessages['usuarioLogin.nome']}"
         value="#{row.nomeUsuario}" />
-      <wi:columnOutputText
-        columnId="usuarioPerfilList"
+      <wi:column columnId="usuarioPerfilList"
         columnHeader="#{infoxMessages['usuarioLogin.perfis']}"
-        value="#{row.perfisFormatados}"
-        hideOrder="true" />
+        hideOrder="true">
+        <infox:div styleClass="truncated-list">
+            <ui:repeat var="perfil" value="#{row.usuarioPerfilList}">
+                <infox:div rendered="#{perfil.ativo}">
+                    <h:outputText value="#{perfil}" />
+                </infox:div>
+            </ui:repeat>
+        </infox:div>
+      </wi:column>
       <wi:columnOutputText
         columnId="tipoLogin"
         columnHeader="#{infoxMessages['usuario.tipoLogin']}"
