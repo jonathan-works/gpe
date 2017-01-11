@@ -22,7 +22,7 @@
 			converter="javax.faces.Integer" />
 	</a:jsFunction>
 
-	<rich:collapsiblePanel expanded="true"
+	<rich:collapsiblePanel expanded="true" id="documentoFilterPanel"
 		header="#{infoxMessages['searchForm.title']}" switchType="client">
 		<h:form>
 			<i:selectOneMenu id="classificacaoFilter" label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}" 
@@ -425,7 +425,7 @@
             </h3>
             <h:form>
                 <a:commandButton id="confirmRemoverCompartilhamento" styleClass="buttons"
-                    execute="@this" render="documentoListDiv" limitRender="true"
+                    execute="@this" render="documentoListDiv documentoFilterPanel" limitRender="true"
                     action="#{pastaAction.removerCompartilhamento()}"
                     onbegin="infox.showLoading();" oncomplete="PF('confirmaRemoverCompModal').hide(); infox.hideLoading();"
                     value="#{infoxMessages['pasta.compartilhamento.remover']}" />
@@ -478,7 +478,7 @@
             </h3>
             <h:form>
                 <a:commandButton id="confirmRemoverCompartilhamento" styleClass="buttons"
-                    execute="@this" render="documentoListDiv" limitRender="true"
+                    execute="@this" render="documentoListDiv documentoFilterPanel" limitRender="true"
                     action="#{pastaAction.removerCompartilhamentoDocumento()}"
                     onbegin="infox.showLoading();" oncomplete="PF('confirmaRemoverCompDocModal').hide(); infox.hideLoading();"
                     value="#{infoxMessages['pasta.compartilhamento.remover']}" />

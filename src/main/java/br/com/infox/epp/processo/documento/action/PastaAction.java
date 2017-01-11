@@ -364,6 +364,7 @@ public class PastaAction implements Serializable {
             if (getInstance().equals(compartilhamentoToRemove)) {
                 setShowGrid(false);
             }
+            documentoProcessoAction.setListClassificacaoDocumento(null);
             FacesMessages.instance().add("Compartilhamento removido com sucesso.");
         } catch (Exception e) {
             FacesMessages.instance().add("Falha ao tentar remover compartilhamento. Favor tentar novamente.");
@@ -376,6 +377,7 @@ public class PastaAction implements Serializable {
             documentoCompartilhamentoService.removerCompartilhamento(compartilhamentoDocumentoToRemove, processo, Authenticator.getUsuarioLogado());
             loadDadosCompartilhamento(Authenticator.getUsuarioLogado(), Authenticator.getLocalizacaoAtual(), Authenticator.getPapelAtual());
             setShowGrid(false);
+            documentoProcessoAction.setListClassificacaoDocumento(null);
             for (PastaCompartilhamentoProcessoVO processoVO : processoPastaCompList) {
                 if (compartilhamentoDocumentoToRemove.getPasta().getProcesso().getNumeroProcessoRoot().equals(processoVO.getNumeroProcesso())) {
                     if (processoVO.isDocumentoCompartilhado()) {
