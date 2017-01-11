@@ -641,7 +641,7 @@ public class TaskInstanceHome implements Serializable {
 	public String end(String transition) {
 		if (checkAccess()) {
 			checkCurrentTask();
-			boolean validateForm = getTransition(transition).getConfiguration().isValidateForm();
+			boolean validateForm = isTransitionValidateForm(transition);
 			if (!update(validateForm)) {
 				return null;
 			}
@@ -1108,5 +1108,9 @@ public class TaskInstanceHome implements Serializable {
 	        }
 	    }
 	    return null;
+	}
+	
+	public boolean isTransitionValidateForm(String transition) {
+	    return getTransition(transition).getConfiguration().isValidateForm();
 	}
 }
