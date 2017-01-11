@@ -6,8 +6,8 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="id" value="#{wi:get(id, facesContext.viewRoot.createUniqueId())}" />
-   
-    <div style="display: none" id="#{id}Functions">
+    <ui:param name="rendered" value="#{wi:get(rendered, true)}" />
+    <infox:div rendered="#{rendered}" style="display: none" id="#{id}Functions">
         <h:form>
             <a:jsFunction name="#{id}OpenAjuda" execute="@this" render="@this" limitRender="true"
                 actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}"
@@ -29,13 +29,13 @@
             	action="#{authenticator.unAuthenticate()}">
             </a:jsFunction>
         </h:form>
-    </div>
+    </infox:div>
         
     <div id="#{id}MenuContent">
         <ui:insert />
     </div>
-    <div id="#{id}"></div>
-    <script>
+    <infox:div rendered="#{rendered}" id="#{id}"></infox:div>
+    <h:outputScript rendered="#{rendered}">
     	(function(){
         	var #{id}MenuFunctions={
                 handlePerfilClick:function(event, itm){
@@ -88,11 +88,10 @@
                     }
                 };
              ReactDOM.render(
-                     
-                     React.createElement(window['react-components'].NavigationMenu, menuConfig),
-                     document.getElementById("#{id}")
+                 React.createElement(window['react-components'].NavigationMenu, menuConfig),
+                 document.getElementById("#{wi:clientId(id)}")
             );
     	})();
-    </script>
+    </h:outputScript>
 
 </ui:composition>
