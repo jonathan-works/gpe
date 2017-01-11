@@ -347,10 +347,13 @@ public class PastaAction implements Serializable {
     }
 
     public String getMsgRemoverCompartilhamentoDocumento() {
-        return compartilhamentoDocumentoToRemove == null ? ""
-                : String.format(msgRemoverCompartilhamentoDocumento,
+        if (compartilhamentoDocumentoToRemove == null) return "";
+        String descricaoDocumento = compartilhamentoDocumentoToRemove.getDescricao();
+        String descricao = descricaoDocumento != null && !descricaoDocumento.isEmpty() && !descricaoDocumento.equals("-")
+                ? descricaoDocumento : compartilhamentoDocumentoToRemove.getClassificacaoDocumento().getDescricao();
+        return String.format(msgRemoverCompartilhamentoDocumento,
                         compartilhamentoDocumentoToRemove.getNumeroDocumento().toString(),
-                        compartilhamentoDocumentoToRemove.getDescricao(),
+                        descricao,
                         compartilhamentoDocumentoToRemove.getPasta().getProcesso().getNumeroProcessoRoot());
     }
 
