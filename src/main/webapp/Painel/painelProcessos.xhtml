@@ -16,7 +16,7 @@
 			<wi:dataTable values="#{consultaProcessoList.list(10)}"
 				styleClass="p-list-dtable"
 				bean="#{consultaProcessoList}"
-				tableTitle="#{infoxMessages['consultaProcesso.processos']}"
+				tableTitle="#{infoxMessages['consultaProcesso.processos']} (#{consultaProcessoList.panelDefinition.name.toUpperCase()})"
 				id="consultaProcessoList" rowId="#{row.idProcesso}"
 				searchFormStyleClass="p-list-search"
 				panelStyleClass="p-list-panel" hideOrder="true">
