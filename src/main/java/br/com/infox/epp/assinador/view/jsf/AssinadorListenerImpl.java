@@ -31,11 +31,8 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
         case UPDATE:
             updateStatusEvent((AssinadorUpdateEvent) assinadorEvent);
             break;
-        case COMPLETE:{
-            ((Assinador)((AssinadorCompleteEvent)assinadorEvent).getComponent()).setCurrentPhase(SignPhase.BEFORE_CLICK);
-        }
-            break;
         default:
+            ((Assinador)((AssinadorCompleteEvent)assinadorEvent).getComponent()).setCurrentPhase(SignPhase.BEFORE_CLICK);
             break;
         }
     }
@@ -69,8 +66,9 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
                 button.setTokenField(evt.getToken());
                 jndi(AssinadorController.class).assinaturasRecebidas(evt.getToken(), button.getCallbackHandler());
             }
-
-            button.setCurrentPhase(SignPhase.SIGNED);
+            button.setStatus(null);
+            button.setToken(null);
+            button.setCurrentPhase(null);
         }
     }
 

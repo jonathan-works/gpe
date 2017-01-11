@@ -54,11 +54,6 @@ public class AssinadorRenderer extends Renderer {
                 switch (behaviorEvent) {
                 case "sign":
                     signEvent = new AssinadorSignEvent(component, button.getToken());
-                    System.out.println(context.getPartialViewContext().getRenderIds());
-                    break;
-                case "signaturecomplete":
-                    signEvent = new AssinadorCompleteEvent(component);
-                    System.out.println(context.getPartialViewContext().getRenderIds());
                     break;
                 case "updatestatus":
                     signEvent = new AssinadorUpdateEvent(component);
@@ -126,12 +121,6 @@ public class AssinadorRenderer extends Renderer {
     }
     
     private String createSignBehavior(final FacesContext context, final Assinador button){
-        return AjaxRequestBuilderFactory.create(context).from(button).execute("@this").render("@this")
-                .behavior("sign")
-                .preventDefault().build();
-    }
-    
-    private String createCompletedBehavior(final FacesContext context, final Assinador button) {
         ComponentUtil componentUtil = new ComponentUtil();
         String render = button.getRender();
         if (render != null && !render.isEmpty()) {
@@ -170,6 +159,13 @@ public class AssinadorRenderer extends Renderer {
             execute = sb.toString().trim();
         }
         return AjaxRequestBuilderFactory.create(context).from(button).execute(execute).render(render)
+                .oncomplete(button.getOncomplete())
+                .behavior("sign")
+                .preventDefault().build();
+    }
+    
+    private String createCompletedBehavior(final FacesContext context, final Assinador button) {
+        return AjaxRequestBuilderFactory.create(context).from(button).execute("").render("")
         .oncomplete(button.getOncomplete())
         .behavior("signaturecomplete")
         .preventDefault().build();
@@ -194,26 +190,27 @@ public class AssinadorRenderer extends Renderer {
         writer.writeAttribute("type", "text/javascript", null);
         writer.write("(function(){");
         if (SignPhase.AFTER_CLICK.equals(button.getCurrentPhase())) {
-            writer.write(String.format("location.href = \"%s\";", UriBuilder.fromPath(jndi(AssinadorController.class).getJNLPUrl()).queryParam("token", button.getToken()).build()));
+            writer.write(createJnlpDownloadStatement(button));
         }
         StatusToken status = button.getStatus();
         switch (button.getCurrentPhase()) {
         case AFTER_CLICK:
         case WAITING_SIGNATURE:
-            if (status != null && !StatusToken.AGUARDANDO_ASSINATURA.equals(status)){
-                createTimeoutFunction(context, createSignBehavior(context, button), 1);
-            } else {
+            if (is(status).in(StatusToken.AGUARDANDO_ASSINATURA, null)) {
                 createTimeoutFunction(context, createUpdateStatusBehavior(context, button), button.getTimeout());
+            } else {
+                createTimeoutFunction(context, createSignBehavior(context, button), 1);
             }
-            break;
-        case SIGNED:
-            createTimeoutFunction(context, createCompletedBehavior(context, button), 1);
             break;
         default:
             break;
         }
         writer.write("})();");
         writer.endElement("script");
+    }
+
+    private String createJnlpDownloadStatement(Assinador button) {
+        return String.format("location.href = \"%s\";", UriBuilder.fromPath(jndi(AssinadorController.class).getJNLPUrl()).queryParam("token", button.getToken()).build());
     }
 
     private void createTimeoutFunction(FacesContext context, String innerFunction, Number timeout) throws IOException {
