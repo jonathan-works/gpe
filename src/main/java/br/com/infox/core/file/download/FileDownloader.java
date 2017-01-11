@@ -59,8 +59,8 @@ public class FileDownloader implements Serializable {
     private DocumentoBinManager documentoBinManager;
     @Inject
     private DocumentoManager documentoManager;
-
-    private PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
+    @Inject
+    private PathResolver pathResolver;
     
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)
