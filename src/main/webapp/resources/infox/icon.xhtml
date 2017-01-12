@@ -19,17 +19,21 @@
     <c:if test="#{cc.attrs.materialDesignIcon}">
         <span class="#{cc.attrs.styleClass}" style="#{cc.attrs.style}" onclick="#{cc.attrs.onclick}" title="#{cc.attrs.text}">
             <i class="material-icons"><h:outputText value="#{cc.attrs.value}" /></i>
-            <div class="#{cc.attrs.showText ? '':'hidden-text'}">
-                <h:outputText value="#{cc.attrs.text}" />
-            </div>
+            <ui:fragment rendered="#{cc.attrs.showText}">
+	            <div>
+	                <h:outputText value="#{cc.attrs.text}" />
+	            </div>
+            </ui:fragment>
         </span>
     </c:if>
     <c:if test="#{not cc.attrs.materialDesignIcon}">
         <span class="#{cc.attrs.styleClass}" style="#{cc.attrs.style}" onclick="#{cc.attrs.onclick}" title="#{cc.attrs.text}">
             <i class="fa fa-#{cc.attrs.value}"></i>
-            <div class="#{cc.attrs.showText ? '':'hidden-text'}">
-                <h:outputText value="#{cc.attrs.text}" />
-            </div>
+            <ui:fragment rendered="#{cc.attrs.showText}">
+	            <div>
+	                <h:outputText value="#{cc.attrs.text}" />
+	            </div>
+            </ui:fragment>
         </span>
     </c:if>
 </composite:implementation>
