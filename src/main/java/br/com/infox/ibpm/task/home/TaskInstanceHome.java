@@ -48,7 +48,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import com.google.common.base.Strings;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -175,7 +174,6 @@ public class TaskInstanceHome implements Serializable {
 	private Long taskId;
 	private List<Transition> availableTransitions;
 	private List<Transition> leavingTransitions;
-	private ModeloDocumento modeloDocumento;
 	private String varName;
 	private String name;
 	private TaskInstance currentTaskInstance;
@@ -233,7 +231,17 @@ public class TaskInstanceHome implements Serializable {
 				documento = new Documento();
 				loadClassificacaoDocumentoDefault(variableAccess.getVariableName(), documento);
 				if (variableRetriever.isEditor()) {
-					documento.setDocumentoBin(new DocumentoBin());
+					DocumentoBin documentoBin = new DocumentoBin();
+					
+					documento.setDocumentoBin(documentoBin);
+					
+					if(variableAccess.getConfiguration() != null) {
+						List<String> codigosModelos = VariableEditorModeloHandler.fromJson(variableAccess.getConfiguration()).getCodigosModeloDocumento();
+						if(codigosModelos.size() == 1) {
+							ModeloDocumento modelo = modeloDocumentoSearch.getModeloDocumentoByCodigo(codigosModelos.get(0));
+							documentoBin.setModeloDocumento(evaluateModeloDocumento(modelo));						
+						}
+					}
 				}
 			}
 			if(variableAccess.isWritable())
@@ -354,7 +362,6 @@ public class TaskInstanceHome implements Serializable {
 	}
 
     private void prepareForUpdate() {
-		modeloDocumento = null;
 		taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 	}
 
@@ -915,17 +922,30 @@ public class TaskInstanceHome implements Serializable {
                 VariableEditorModeloHandler.fromJson(varAccess.getConfiguration()).getCodigosModeloDocumento() != null &&
                 !VariableEditorModeloHandler.fromJson(varAccess.getConfiguration()).getCodigosModeloDocumento().isEmpty();
 	}
-
-	public List<ModeloDocumento> getModeloItems(String editorId) {
+	
+	public List<String> getCodigosModelos(String editorId) {
 		String variableName = getVariableName(editorId);
 		VariableAccess var = mapVarAccess.get(variableName);
-		return modeloDocumentoSearch.getModeloDocumentoListByListCodigos(VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento());
+		
+		if(var.getConfiguration() == null) {
+			return null;
+		}
+		
+		return VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento();		
 	}
 
-	public void assignModeloDocumento(String id) {
+	public List<ModeloDocumento> getModeloItems(String editorId) {
+		return modeloDocumentoSearch.getModeloDocumentoListByListCodigos(getCodigosModelos(editorId));
+	}
+	
+	private String evaluateModeloDocumento(ModeloDocumento modelo) {
+		ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processoEpaHome.getInstance().getIdProcesso(), getCurrentTaskInstance());
+		return modeloDocumentoManager.evaluateModeloDocumento(modelo, chain);		
+	}
+
+	public void assignModeloDocumento(String id, ModeloDocumento modeloDocumento) {
 		if (modeloDocumento != null) {
-			ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processoEpaHome.getInstance().getIdProcesso(), getCurrentTaskInstance());
-			String modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
+			String modelo = evaluateModeloDocumento(modeloDocumento);
 			variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);
 		} else {
 			variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento("");
@@ -955,15 +975,6 @@ public class TaskInstanceHome implements Serializable {
 	public void clear() {
 		this.mapaDeVariaveis = null;
 		this.taskInstance = null;
-	}
-
-	public ModeloDocumento getModeloDocumento() {
-		createInstance();
-		return modeloDocumento;
-	}
-
-	public void setModeloDocumento(ModeloDocumento modelo) {
-		this.modeloDocumento = modelo;
 	}
 
 	public String getHomeName() {

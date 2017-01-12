@@ -10,32 +10,19 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-		<s:decorate
-			id="#{id}Decoration"
-			rendered="#{not readonly and home.possuiModelo(props.editorId)}"
-			template="/WEB-INF/xhtml/components/templates/edit.xhtml">
-			<ui:define name="label">#{infoxMessages['modeloDocumento.modeloDocumento']}</ui:define>
-			
-			<h:selectOneMenu
-                readonly="#{readonly or home.getModeloItems(props.editorId).size eq 1}"
-                disabled="#{readonly or home.getModeloItems(props.editorId).size eq 1}"
-				value="#{home.modeloDocumento}">
-			
-				<a:ajax
-					event="change"
-					status=":status"
-					listener="#{home.assignModeloDocumento(props.editorId)}"
-					render="#{props.editorId}EditorDiv"
-					execute="@this" />
-				<s:convertEntity />
-				
-				<s:selectItems
-					var="v"
-					noSelectionLabel="[Selecione o modelo]"
-					label="#{v}"
-					value="#{home.getModeloItems(props.editorId)}" />
-		
-			</h:selectOneMenu>
-		</s:decorate>
-
+        <wi:selectOneMenuEntity id="#{id}Decoration"
+            label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+            rendered="#{not readonly and home.getCodigosModelos(props.editorId).size() > 1}"
+            items="#{home.getModeloItems(props.editorId)}"
+            showLabelSelecione="true">
+            <a:ajax
+                event="change"
+                status=":status" 
+                listener="#{home.assignModeloDocumento(props.editorId, component.value)}"
+                render="#{props.editorId}EditorDiv"
+                execute="@this"
+                 />
+            <f:validateBean disabled="true" />
+        </wi:selectOneMenuEntity>
+                
 </ui:composition>
