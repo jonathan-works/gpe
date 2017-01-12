@@ -121,6 +121,22 @@
           <ui:include src="../pastaRestricao.xhtml" />
         </ui:decorate>
       </infox:tab>
+      
+
+      <infox:tab
+        id="tabHistoricoMetadado"
+        name="tabHistoricoMetadado"
+        immediate="true"
+        actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
+        status=":status"
+        rendered="#{security.checkPage('/pages/Processo/historicoMetadado.seam')}"
+        title="#{infoxMessages['historicoMetadado.titleTab']}">
+		<ui:include src="../historicoMetadado.xhtml">
+			<ui:param name="processo" value="#{consultaController.processo}" />
+		</ui:include>	
+      </infox:tab>
+      
+      
       <ui:include src="/Processo/Consulta/abasCustomizadasDoDetalheDoProcesso.xhtml"/>
       <c:forEach var="tab" items="#{extensaoConsultar.tabs}">
         <ui:include src="#{tab}" />

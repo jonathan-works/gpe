@@ -5,13 +5,17 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import br.com.infox.constants.LengthConstants;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name="tb_historico_metadado_processo")
@@ -34,8 +38,8 @@ public class HistoricoMetadadoProcesso implements Serializable {
 	@Column(name = "vl_metadado_processo", nullable = true, length=LengthConstants.DESCRICAO_MEDIA)
 	private String valor;
 	
-	@Column(name = "ds_tipo", nullable = true, length=LengthConstants.NOME_PADRAO)
-	private String tipo;
+	@Column(name = "ds_tipo", nullable = false)
+    private Class<?> classType;
 	
 	@Column(name = "id_processo", nullable = true)
 	private Long idProcesso;
@@ -46,8 +50,12 @@ public class HistoricoMetadadoProcesso implements Serializable {
 	@Column(name = "dt_registro", nullable = true)
 	private Date dataRegistro;
 	
-	@Column(name = "id_usuario_logado", nullable = true)
-	private Long idUsuarioLogado;
+	@Column(name = "ds_valor_objeto", nullable = true)
+    private String valorObjeto;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario_logado", nullable = true)
+    private UsuarioLogin usuarioLogin;
 	
 	@Column(name = "ds_acao", nullable = true, length=LengthConstants.CODIGO_DOCUMENTO)
 	private String acao;
@@ -84,13 +92,13 @@ public class HistoricoMetadadoProcesso implements Serializable {
 		this.valor = valor;
 	}
 
-	public String getTipo() {
-		return tipo;
-	}
+	public Class<?> getClassType() {
+        return classType;
+    }
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
+    public void setClassType(Class<?> classType) {
+        this.classType = classType;
+    }
 
 	public Long getIdProcesso() {
 		return idProcesso;
@@ -116,14 +124,6 @@ public class HistoricoMetadadoProcesso implements Serializable {
 		this.dataRegistro = dataRegistro;
 	}
 
-	public Long getIdUsuarioLogado() {
-		return idUsuarioLogado;
-	}
-
-	public void setIdUsuarioLogado(Long idUsuarioLogado) {
-		this.idUsuarioLogado = idUsuarioLogado;
-	}
-
 	public String getAcao() {
 		return acao;
 	}
@@ -131,5 +131,22 @@ public class HistoricoMetadadoProcesso implements Serializable {
 	public void setAcao(String acao) {
 		this.acao = acao;
 	}
+
+    public UsuarioLogin getUsuarioLogin() {
+        return usuarioLogin;
+    }
+
+    public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
+        this.usuarioLogin = usuarioLogin;
+    }
+
+    public String getValorObjeto() {
+        return valorObjeto;
+    }
+
+    public void setValorObjeto(String valorObjeto) {
+        this.valorObjeto = valorObjeto;
+    }
+    
 	
 }

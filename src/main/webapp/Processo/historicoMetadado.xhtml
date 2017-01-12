@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:f="http://java.sun.com/jsf/core" xmlns:a="http://richfaces.org/a4j"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" xmlns:wi="http://www.itx.com.br/jsf" xmlns:p="http://primefaces.org/ui">
+
+	<f:event type="preRenderView" listener="#{historicoMetadadoProcessoView.setProcesso(processo)}" />
+
+	<h:form>
+		<p:panel header="#{infoxMessages['historicoMetadado.titleTab']}" id="metadadosPanel">
+			<p:dataTable var="row" value="#{historicoMetadadoProcessoView.metadados}" rowIndexVar="key">
+				<p:column width="5%">
+					<a:commandLink execute="@form" render="historicoDialog" oncomplete="PF('historicoDialog').show();">
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+						<f:setPropertyActionListener target="#{historicoMetadadoProcessoView.metadado}" value="#{row}" />
+					</a:commandLink>
+				</p:column>
+				<p:column headerText="#{infoxMessages['historicoMetadado.codigo']}">
+					<h:outputText value="#{row.id}" />
+				</p:column>
+				<p:column headerText="#{infoxMessages['historicoMetadado.nome']}">
+					<h:outputText value="#{row.metadadoType}" />
+				</p:column>
+				<p:column headerText="#{infoxMessages['historicoMetadado.valor']}">
+					<h:outputText value="#{row}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+
+		<p:dialog modal="true" widgetVar="historicoDialog" id="historicoDialog" appendTo="@(body)" width="80%" closable="false">
+			<p:panelGrid columns="1">
+				<p:panel header="#{infoxMessages['historicoMetadado.titleTabHistorico']}" id="historicoMetaPanel">
+					<p:dataTable var="row" value="#{historicoMetadadoProcessoView.historico}" rendered="#{not empty historicoMetadadoProcessoView.metadado}">
+						<p:column headerText="#{infoxMessages['historicoMetadado.nome']}">
+							<h:outputText value="#{row.nome}" />
+						</p:column>
+						<p:column headerText="#{infoxMessages['historicoMetadado.valor']}">
+							<h:outputText value="(#{row.valor})  #{row.valorObjeto}" />
+						</p:column>
+						<p:column headerText="#{infoxMessages['historicoMetadado.tipo']}">
+							<div style="overflow: auto;">
+								<h:outputText value="#{row.classType}" />
+							</div>
+						</p:column>
+						<p:column headerText="#{infoxMessages['historicoMetadado.dataRegistro']}" styleClass="rf-dt-crud">
+							<h:outputText value="#{row.dataRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="#{infoxMessages['historicoMetadado.usuario']}">
+							<h:outputText value="#{row.usuarioLogin}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<a:commandButton value="Fechar" onclick="PF('historicoDialog').hide()" />
+			</p:panelGrid>
+		</p:dialog>
+
+	</h:form>
+
+</ui:composition>
