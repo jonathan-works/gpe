@@ -23,6 +23,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
+import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
@@ -33,8 +34,10 @@ import com.google.common.base.Strings;
 
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.util.ELUtil;
 import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.cdi.transaction.Transactional.TxType;
 import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
@@ -168,7 +171,7 @@ public class FluxoMergeService {
             updatePostDeploy(newProcessDefinition);
             
             atualizarRaiaPooledActors(newProcessDefinition.getId());
-            
+            atualizarParametros(newProcessDefinition.getId());
             JbpmUtil.instance().deleteTimers(newProcessDefinition);
             JbpmUtil.instance().createTimers(newProcessDefinition);
             
@@ -203,6 +206,28 @@ public class FluxoMergeService {
            }
        }
 	}
+    
+    public void atualizarParametros(Long idProcessDefinition) {
+        List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition);
+        
+        for (TaskInstance taskInstance : taskInstances) {
+            taskInstance = JbpmContextProducer.getJbpmContext().getTaskInstance(taskInstance.getId());
+            if (taskInstance.getTask().getTaskController() != null && taskInstance.getTask().getTaskController().getVariableAccesses() != null) {
+                List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();
+                for (VariableAccess variableAccess : variableAccesses) {
+                    ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
+                    executionContext.setTaskInstance(taskInstance);
+                    String type = variableAccess.getMappedName().split(":")[0];
+                    if ( VariableType.PARAMETER.name().equals(type) ) {
+                        String defaultValue = variableAccess.getValue();
+                        Object novoValor = ELUtil.isEL(defaultValue) ? JbpmExpressionEvaluator.evaluate(defaultValue, executionContext) : defaultValue;
+                        String variableName = variableAccess.getVariableName();
+                        taskInstance.setVariableLocally(variableName, novoValor);
+                    }
+                }
+            }
+        }
+    }
 
     private void updatePostDeploy(ProcessDefinition processDefinition) {
         processoManager.atualizarProcessos(processDefinition.getId(), processDefinition.getName());
