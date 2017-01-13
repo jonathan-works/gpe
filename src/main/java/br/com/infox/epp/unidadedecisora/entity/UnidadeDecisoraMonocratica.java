@@ -77,7 +77,7 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 
     @NotNull
     @Column(name="in_recebe_districuicao", nullable=false)
-    private Boolean recebeDistribuicao;
+    private Boolean recebeDistribuicao = Boolean.TRUE;
     
     public Integer getIdUnidadeDecisoraMonocratica() {
         return idUnidadeDecisoraMonocratica;
