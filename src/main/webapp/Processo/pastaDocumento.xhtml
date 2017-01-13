@@ -54,6 +54,7 @@
 			<div>
 				<h:commandButton id="btnFiltrarDocumentos"
 					value="#{infoxMessages['button.pesquisar']}"
+                    actionListener="#{pastaAction.resetarContadoresDocumentosCompartilhados()}"
 					action="#{documentoProcessoAction.filtrarDocumentos()}"
 					styleClass="buttons buttons">
 					<f:ajax immediate="true" execute="@form"
@@ -129,7 +130,8 @@
                                     onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
                                     styleClass="folder" limitRender="true">
                                     <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'folder_shared')}" title="#{pasta}" />
-                                    <h:outputText class="folder" value="#{infoxMessages['documento.compartilhamento.nomePasta']}" />
+                                    <h:outputText class="folder"
+                                        value="#{infoxMessages['documento.compartilhamento.nomePasta']} (#{pastaAction.getQtdDocumentoCompartilhado(processo)})" />
                                 </a:commandLink>
                             </s:div>
                             <ui:repeat var="pasta" value="#{processo.pastas}">

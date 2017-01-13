@@ -12,6 +12,7 @@ public class PastaCompartilhamentoProcessoVO {
     private String numeroProcesso;
     private boolean documentoCompartilhado;
     private List<Pasta> pastas;
+    private Long qtdDocumentoCompartilhado;
 
     public PastaCompartilhamentoProcessoVO(Processo processo, Pasta pasta) {
         this.setProcesso(processo);
@@ -19,6 +20,7 @@ public class PastaCompartilhamentoProcessoVO {
         this.documentoCompartilhado = false;
         this.pastas = new ArrayList<>(1);
         this.pastas.add(pasta);
+        this.qtdDocumentoCompartilhado = null;
     }
 
     public PastaCompartilhamentoProcessoVO(Processo processo, boolean documentoCompartilhado) {
@@ -26,6 +28,7 @@ public class PastaCompartilhamentoProcessoVO {
         this.numeroProcesso = processo.getNumeroProcessoRoot();
         this.documentoCompartilhado = documentoCompartilhado;
         this.pastas = new ArrayList<>(0);
+        this.qtdDocumentoCompartilhado = null;
     }
 
     public void addPasta(Pasta pasta) {
@@ -62,6 +65,14 @@ public class PastaCompartilhamentoProcessoVO {
 
     public void setPastas(List<Pasta> pastas) {
         this.pastas = pastas;
+    }
+
+    public Long getQtdDocumentoCompartilhado() {
+        return qtdDocumentoCompartilhado;
+    }
+
+    public void setQtdDocumentoCompartilhado(Long qtdDocumentoCompartilhado) {
+        this.qtdDocumentoCompartilhado = qtdDocumentoCompartilhado;
     }
 
     @Override

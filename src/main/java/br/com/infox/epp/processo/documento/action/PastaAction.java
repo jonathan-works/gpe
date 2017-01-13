@@ -393,6 +393,20 @@ public class PastaAction implements Serializable {
         }
     }
 
+    public void resetarContadoresDocumentosCompartilhados() {
+        for (PastaCompartilhamentoProcessoVO processoVO : processoPastaCompList) {
+            processoVO.setQtdDocumentoCompartilhado(null);
+        }
+    }
+
+    public Long getQtdDocumentoCompartilhado(PastaCompartilhamentoProcessoVO processoVO) {
+        if (processoVO.getQtdDocumentoCompartilhado() == null) {
+            documentoCompartilhamentoList.setProcesso(processoVO.getProcesso());
+            processoVO.setQtdDocumentoCompartilhado(documentoCompartilhamentoList.getResultCount());
+        }
+        return processoVO.getQtdDocumentoCompartilhado();
+    }
+
     public DataList<Documento> getActiveBean() {
         return documentoCompartilhado ? documentoCompartilhamentoList : documentoList;
     }
