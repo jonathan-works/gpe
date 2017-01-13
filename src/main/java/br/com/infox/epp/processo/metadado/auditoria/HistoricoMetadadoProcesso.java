@@ -57,7 +57,7 @@ public class HistoricoMetadadoProcesso implements Serializable {
     @JoinColumn(name = "id_usuario_logado", nullable = true)
     private UsuarioLogin usuarioLogin;
 	
-	@Column(name = "ds_acao", nullable = true, length=LengthConstants.CODIGO_DOCUMENTO)
+	@Column(name = "ds_acao", nullable = true, length=LengthConstants.DESCRICAO_GRANDE)
 	private String acao;
 
 	public Long getId() {
