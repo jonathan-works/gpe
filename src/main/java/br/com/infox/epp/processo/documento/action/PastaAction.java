@@ -129,7 +129,6 @@ public class PastaAction implements Serializable {
     }
 
     public void selectPastaDocumentosCompartilhados(Processo processo) {
-        documentoCompartilhamentoList.setPastas(pastaDocCompartilhamentoList);
         documentoCompartilhamentoList.setProcesso(processo);
         documentoCompartilhamentoList.refresh();
         setInstance(null);
@@ -270,7 +269,7 @@ public class PastaAction implements Serializable {
                 pastaDocCompartilhamentoList.add(pasta);
             }
         }
-        documentoCompartilhamentoList.setPastas(pastas);
+        documentoCompartilhamentoList.setPastas(pastaDocCompartilhamentoList);
         restricoes.putAll(map);
     }
 
