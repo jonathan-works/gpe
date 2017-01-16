@@ -237,7 +237,7 @@ public class TaskInstanceHome implements Serializable {
 					
 					if(variableAccess.getConfiguration() != null) {
 						List<String> codigosModelos = VariableEditorModeloHandler.fromJson(variableAccess.getConfiguration()).getCodigosModeloDocumento();
-						if(codigosModelos.size() == 1) {
+						if(codigosModelos != null && codigosModelos.size() == 1) {
 							ModeloDocumento modelo = modeloDocumentoSearch.getModeloDocumentoByCodigo(codigosModelos.get(0));
 							documentoBin.setModeloDocumento(evaluateModeloDocumento(modelo));						
 						}
