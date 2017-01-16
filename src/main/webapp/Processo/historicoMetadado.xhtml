@@ -32,7 +32,9 @@
 				<p:panel header="#{infoxMessages['historicoMetadado.titleTabHistorico']}" id="historicoMetaPanel">
 					<p:dataTable var="row" value="#{historicoMetadadoProcessoView.historico}" rendered="#{not empty historicoMetadadoProcessoView.metadado}">
 						<p:column headerText="#{infoxMessages['historicoMetadado.nome']}">
-							<h:outputText value="#{row.nome}" />
+							<div style="overflow: auto;">
+								<h:outputText value="#{row.nome}" />
+							</div>
 						</p:column>
 						<p:column headerText="#{infoxMessages['historicoMetadado.valor']}">
 							<h:outputText value="(#{row.valor})  #{row.valorObjeto}" />
@@ -46,6 +48,9 @@
 							<h:outputText value="#{row.dataRegistro}">
 								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
 							</h:outputText>
+						</p:column>
+						<p:column headerText="#{infoxMessages['historicoMetadado.acao']}">
+							<h:outputText value="#{row.acao}" />
 						</p:column>
 						<p:column headerText="#{infoxMessages['historicoMetadado.usuario']}">
 							<h:outputText value="#{row.usuarioLogin}" />
