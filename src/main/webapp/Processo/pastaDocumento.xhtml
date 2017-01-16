@@ -391,7 +391,7 @@
         <p:ajax event="close" process="@this" update="documentoListPanel documentoListSearchForm"
             onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
         <h:panelGroup id="pastaCompartilhamentoModalPanel" styleClass="pastaCompartilhamentoModalPanel" rendered="#{not empty pastaCompartilhamentoView.pasta}">
-            <p:dataTable value="#{pastaCompartilhamentoView.processosRelacionados}" var="processo">
+            <p:dataTable value="#{pastaCompartilhamentoView.processosRelacionados}" var="processo" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
                 <p:column styleClass="dt-toolbar-col">
                     <p:commandLink rendered="#{not pastaCompartilhamentoView.possuiCompartilhamento(processo)}"
                         action="#{pastaCompartilhamentoView.adicionarCompartilhamento(processo)}"
@@ -439,12 +439,12 @@
     </p:dialog>
 
     <p:dialog id="documentoCompModal" widgetVar="documentoCompModal" styleClass="documentoCompModal"
-        modal="true" width="50%" position="center top" visible="false"
+        modal="true" width="50%" position="center top" visible="false" 
         header="#{documentoCompartilhamentoView.dialogTitle}">
         <p:ajax event="close" process="@this" update="documentoListPanel"
             onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
         <h:panelGroup id="documentoCompModalPanel" styleClass="documentoCompModalPanel" rendered="#{not empty documentoCompartilhamentoView.documento}">
-            <p:dataTable value="#{documentoCompartilhamentoView.processosRelacionados}" var="processo">
+            <p:dataTable value="#{documentoCompartilhamentoView.processosRelacionados}" var="processo" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
                 <p:column styleClass="dt-toolbar-col">
                     <p:commandLink rendered="#{not documentoCompartilhamentoView.possuiCompartilhamento(processo)}"
                         action="#{documentoCompartilhamentoView.adicionarCompartilhamento(processo)}"
