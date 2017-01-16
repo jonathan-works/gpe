@@ -16,8 +16,10 @@ import javax.persistence.Table;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.system.annotation.Ignore;
 
 @Entity
+@Ignore
 @Table(name="tb_historico_metadado_processo")
 public class HistoricoMetadadoProcesso implements Serializable {
 	
