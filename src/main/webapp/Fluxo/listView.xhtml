@@ -196,12 +196,12 @@
                 <wi:commandButton id="botaoGerarReplica" action="fluxoCrudAction.gerarReplica()" reRender="modalReplicaForm"
                     rendered="#{fluxoCrudAction.managed}" value="#{infoxMessages['fluxo.duplicar']}" oncomplete="#{rich:component('modalReplica')}.show()"/>
      
-                <a:commandButton id="exportButton" styleClass="buttons" type="button"
-                    oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Fluxo/definicao/exportarFluxo.seam','1024');"
+                <a:commandButton id="exportButton" styleClass="buttons" type="button" action="#{jsfUtil.applyLastPhaseFlashAction}"
+                    oncomplete="infox.openPopUp('_self', '#{pathResolver.contextPath}/Fluxo/definicao/exportarFluxo.seam','1024');"
                     execute="@this" render="@this" rendered="#{fluxoCrudAction.canExportar()}" value="#{infoxMessages['fluxo.exportar']}">
-                        <f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
-                        <infox:flashcopy/>
+                	<f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
                 </a:commandButton>
+                
                 <wi:commandButton
                     id="definicao"
                     value="#{infoxMessages['fluxo.definicao']}"
