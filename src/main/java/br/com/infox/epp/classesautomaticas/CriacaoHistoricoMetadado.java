@@ -2,6 +2,7 @@ package br.com.infox.epp.classesautomaticas;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,24 +15,21 @@ import org.jboss.seam.contexts.Lifecycle;
 import org.joda.time.DateTime;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.epp.processo.metadado.auditoria.HistoricoMetadadoProcesso;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.log.Logging;
+import br.com.infox.epp.system.Configuration;
 
 public class CriacaoHistoricoMetadado implements Serializable {
-
-    
     
     private static final long serialVersionUID = 1L;
-    private static final Logger log = Logger.getLogger(CriacaoHistoricoMetadado.class.getName());
     
     public static final String NAME = "criacaoHistoricoMetadado";
     public final String DESCRICAO_ACAO = "Carga inicial";
 
+    private static Logger log = Logger.getLogger(CriacaoHistoricoMetadado.class.getName());
     private EntityManager entityManager;
     private ControleClassesAutomaticas controle;
-    private TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
+    private TransactionManager transactionManager;
 
     private CriacaoHistoricoMetadado() {
     }
@@ -41,33 +39,23 @@ public class CriacaoHistoricoMetadado implements Serializable {
     }
 
     public void init() throws Exception {
-        entityManager = EntityManagerProducer.instance().getEntityManagerNotManaged();
+        transactionManager = Configuration.getInstance().getApplicationServer().getTransactionManager();
+        Lifecycle.beginCall();
         try {
-            Lifecycle.beginCall();
+            transactionManager.setTransactionTimeout(3600);
+            transactionManager.begin();
+            entityManager = EntityManagerProducer.instance().getEntityManagerTransactional();
             if (isExecucaoValida()) {
                 executar();
                 updateExecucao();
             }
+            transactionManager.commit();
         } catch (Exception e) {
-            Logging.getLogProvider(CriacaoHistoricoMetadado.class).error("", e);
-            excluirDadosInseridosParcialmente();
+            log.log(Level.SEVERE, "Erro ao excluir carga inicial do histórico dos metadados", e);
+            transactionManager.rollback();
             throw e;
         } finally {
             Lifecycle.endCall();
-            entityManager.close();
-        }
-
-    }
-
-    private void excluirDadosInseridosParcialmente() throws Exception {
-        try {
-            beginTransaction();
-            String sql = "delete from tb_historico_metadado_processo where ds_acao = '" + DESCRICAO_ACAO + "'";
-            entityManager.createNativeQuery(sql).executeUpdate();
-            commitTransaction();
-        } catch (Exception ex) {
-            log.log(Level.SEVERE, "Erro ao excluir carga inicial do histórico dos metadados", ex);
-            throw ex;
         }
     }
 
@@ -80,6 +68,7 @@ public class CriacaoHistoricoMetadado implements Serializable {
             controle.setNomeClasse(NAME);
             controle.setExecutar(true);
             entityManager.persist(controle);
+            entityManager.flush();
             return true;
         }
     }
@@ -91,25 +80,23 @@ public class CriacaoHistoricoMetadado implements Serializable {
 
     private void updateExecucao() throws Exception {
         controle.setExecutar(false);
-        beginTransaction();
         controle = entityManager.merge(controle);
         entityManager.flush();
-        commitTransaction();
     }
 
     private void executar() throws Exception {
         int contador = 0;
-        List<MetadadoProcesso> lista = getMedados();
-        beginTransaction();
+        Date hoje = DateTime.now().toDate();
+        List<MetadadoProcesso> lista = getMetadados();
         for (MetadadoProcesso mp : lista) {
             HistoricoMetadadoProcesso log = new HistoricoMetadadoProcesso();
             log.setIdMetadadoProcesso(mp.getId());
             log.setNome(mp.getMetadadoType());
             log.setValor(mp.getValor());
-            log.setValorObjeto(mp.toString());
+            log.setDescricao(mp.toString());
             log.setClassType(mp.getClassType());
             log.setIdProcesso(mp.getProcesso().getIdProcesso().longValue());
-            log.setDataRegistro(DateTime.now().toDate());
+            log.setDataRegistro(hoje);
             log.setAcao(DESCRICAO_ACAO);
             entityManager.persist(log);
 
@@ -120,25 +107,18 @@ public class CriacaoHistoricoMetadado implements Serializable {
             }
             contador++;
         }
-        commitTransaction();
     }
 
-    private void beginTransaction() throws Exception {
-        transactionManager.begin();
-        transactionManager.setTransactionTimeout(3600);
-    }
-
-    private void commitTransaction() throws Exception {
-        entityManager.flush();
-        transactionManager.commit();
-    }
-
-    private List<MetadadoProcesso> getMedados() {
-        List<MetadadoProcesso> resultList = entityManager.createQuery("select m from MetadadoProcesso m inner join fetch m.processo", MetadadoProcesso.class).getResultList();
-        if (resultList != null && !resultList.isEmpty()) {
-            return resultList;
+    private List<MetadadoProcesso> getMetadados() {
+        List<MetadadoProcesso> resultList = entityManager.createQuery("select m from MetadadoProcesso m inner join fetch m.processo ", MetadadoProcesso.class).getResultList();
+        try {
+            if (resultList != null && !resultList.isEmpty()) {
+                return resultList;
+            }
+            return new ArrayList<MetadadoProcesso>();
+        } finally {
+            entityManager.clear(); //limpa o entityManager para remover os dados da consulta do cache de 1º nível
         }
-        return new ArrayList<MetadadoProcesso>();
     }
 
 }

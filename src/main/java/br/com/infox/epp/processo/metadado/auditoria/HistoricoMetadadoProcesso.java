@@ -52,14 +52,14 @@ public class HistoricoMetadadoProcesso implements Serializable {
 	@Column(name = "dt_registro", nullable = true)
 	private Date dataRegistro;
 	
-	@Column(name = "ds_valor_objeto", nullable = true)
-    private String valorObjeto;
+	@Column(name = "ds_objeto", nullable = true)
+    private String descricao;
 	
 	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario_logado", nullable = true)
     private UsuarioLogin usuarioLogin;
 	
-	@Column(name = "ds_acao", nullable = true, length=LengthConstants.DESCRICAO_GRANDE)
+	@Column(name = "ds_acao", nullable = true, length = LengthConstants.DESCRICAO_GRANDE)
 	private String acao;
 
 	public Long getId() {
@@ -142,13 +142,37 @@ public class HistoricoMetadadoProcesso implements Serializable {
         this.usuarioLogin = usuarioLogin;
     }
 
-    public String getValorObjeto() {
-        return valorObjeto;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setValorObjeto(String valorObjeto) {
-        this.valorObjeto = valorObjeto;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
-    
-	
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof HistoricoMetadadoProcesso))
+            return false;
+        HistoricoMetadadoProcesso other = (HistoricoMetadadoProcesso) obj;
+        if (getId() == null) {
+            if (other.getId() != null)
+                return false;
+        } else if (!getId().equals(other.getId()))
+            return false;
+        return true;
+    }
+
 }

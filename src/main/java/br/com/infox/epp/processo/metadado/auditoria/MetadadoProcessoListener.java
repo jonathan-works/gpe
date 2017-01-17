@@ -36,7 +36,7 @@ public class MetadadoProcessoListener extends PersistenceController {
 		log.setIdMetadadoProcesso(mp.getId());
 		log.setNome(mp.getMetadadoType());
 		log.setValor(mp.getValor());
-		log.setValorObjeto(mp.toString());
+		log.setDescricao(mp.toString());
 		log.setClassType(mp.getClassType());
 		log.setIdProcesso(mp.getProcesso().getIdProcesso().longValue());
 		log.setDataRegistro(DateTime.now().toDate());
