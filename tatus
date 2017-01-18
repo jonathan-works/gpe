@@ -1,216 +1,0 @@
-[1mdiff --git a/src/main/java/br/com/infox/ibpm/task/home/TaskInstanceHome.java b/src/main/java/br/com/infox/ibpm/task/home/TaskInstanceHome.java[m
-[1mindex 5b02fa851..7c70fee9a 100644[m
-[1m--- a/src/main/java/br/com/infox/ibpm/task/home/TaskInstanceHome.java[m
-[1m+++ b/src/main/java/br/com/infox/ibpm/task/home/TaskInstanceHome.java[m
-[36m@@ -48,7 +48,6 @@[m [mimport org.jbpm.taskmgmt.exe.TaskInstance;[m
- import com.google.common.base.Strings;[m
- [m
- import br.com.infox.core.action.ActionMessagesService;[m
-[31m-import br.com.infox.core.file.download.FileDownloader;[m
- import br.com.infox.core.file.encode.MD5Encoder;[m
- import br.com.infox.core.messages.InfoxMessages;[m
- import br.com.infox.core.persistence.DAOException;[m
-[36m@@ -175,7 +174,6 @@[m [mpublic class TaskInstanceHome implements Serializable {[m
- 	private Long taskId;[m
- 	private List<Transition> availableTransitions;[m
- 	private List<Transition> leavingTransitions;[m
-[31m-	private ModeloDocumento modeloDocumento;[m
- 	private String varName;[m
- 	private String name;[m
- 	private TaskInstance currentTaskInstance;[m
-[36m@@ -233,7 +231,17 @@[m [mpublic class TaskInstanceHome implements Serializable {[m
- 				documento = new Documento();[m
- 				loadClassificacaoDocumentoDefault(variableAccess.getVariableName(), documento);[m
- 				if (variableRetriever.isEditor()) {[m
-[31m-					documento.setDocumentoBin(new DocumentoBin());[m
-[32m+[m					[32mDocumentoBin documentoBin = new DocumentoBin();[m
-[32m+[m[41m					[m
-[32m+[m					[32mdocumento.setDocumentoBin(documentoBin);[m
-[32m+[m[41m					[m
-[32m+[m					[32mif(variableAccess.getConfiguration() != null) {[m
-[32m+[m						[32mList<String> codigosModelos = VariableEditorModeloHandler.fromJson(variableAccess.getConfiguration()).getCodigosModeloDocumento();[m
-[32m+[m						[32mif(codigosModelos.size() == 1) {[m
-[32m+[m							[32mModeloDocumento modelo = modeloDocumentoSearch.getModeloDocumentoByCodigo(codigosModelos.get(0));[m
-[32m+[m							[32mdocumentoBin.setModeloDocumento(evaluateModeloDocumento(modelo));[m[41m						[m
-[32m+[m						[32m}[m
-[32m+[m					[32m}[m
- 				}[m
- 			}[m
- 			if(variableAccess.isWritable())[m
-[36m@@ -354,7 +362,6 @@[m [mpublic class TaskInstanceHome implements Serializable {[m
- 	}[m
- [m
-     private void prepareForUpdate() {[m
-[31m-		modeloDocumento = null;[m
- 		taskInstance = org.jboss.seam.bpm.TaskInstance.instance();[m
- 	}[m
- [m
-[36m@@ -915,17 +922,30 @@[m [mpublic class TaskInstanceHome implements Serializable {[m
-                 VariableEditorModeloHandler.fromJson(varAccess.getConfiguration()).getCodigosModeloDocumento() != null &&[m
-                 !VariableEditorModeloHandler.fromJson(varAccess.getConfiguration()).getCodigosModeloDocumento().isEmpty();[m
- 	}[m
-[31m-[m
-[31m-	public List<ModeloDocumento> getModeloItems(String editorId) {[m
-[32m+[m[41m	[m
-[32m+[m	[32mpublic List<String> getCodigosModelos(String editorId) {[m
- 		String variableName = getVariableName(editorId);[m
- 		VariableAccess var = mapVarAccess.get(variableName);[m
-[31m-		return modeloDocumentoSearch.getModeloDocumentoListByListCodigos(VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento());[m
-[32m+[m[41m		[m
-[32m+[m		[32mif(var.getConfiguration() == null) {[m
-[32m+[m			[32mreturn null;[m
-[32m+[m		[32m}[m
-[32m+[m[41m		[m
-[32m+[m		[32mreturn VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento();[m[41m		[m
-[32m+[m	[32m}[m
-[32m+[m
-[32m+[m	[32mpublic List<ModeloDocumento> getModeloItems(String editorId) {[m
-[32m+[m		[32mreturn modeloDocumentoSearch.getModeloDocumentoListByListCodigos(getCodigosModelos(editorId));[m
-[32m+[m	[32m}[m
-[32m+[m[41m	[m
-[32m+[m	[32mprivate String evaluateModeloDocumento(ModeloDocumento modelo) {[m
-[32m+[m		[32mExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processoEpaHome.getInstance().getIdProcesso(), getCurrentTaskInstance());[m
-[32m+[m		[32mreturn modeloDocumentoManager.evaluateModeloDocumento(modelo, chain);[m[41m		[m
- 	}[m
- [m
-[31m-	public void assignModeloDocumento(String id) {[m
-[32m+[m	[32mpublic void assignModeloDocumento(String id, ModeloDocumento modeloDocumento) {[m
- 		if (modeloDocumento != null) {[m
-[31m-			ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processoEpaHome.getInstance().getIdProcesso(), getCurrentTaskInstance());[m
-[31m-			String modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);[m
-[32m+[m			[32mString modelo = evaluateModeloDocumento(modeloDocumento);[m
- 			variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);[m
- 		} else {[m
- 			variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento("");[m
-[36m@@ -957,15 +977,6 @@[m [mpublic class TaskInstanceHome implements Serializable {[m
- 		this.taskInstance = null;[m
- 	}[m
- [m
-[31m-	public ModeloDocumento getModeloDocumento() {[m
-[31m-		createInstance();[m
-[31m-		return modeloDocumento;[m
-[31m-	}[m
-[31m-[m
-[31m-	public void setModeloDocumento(ModeloDocumento modelo) {[m
-[31m-		this.modeloDocumento = modelo;[m
-[31m-	}[m
-[31m-[m
- 	public String getHomeName() {[m
- 		return NAME;[m
- 	}[m
-[1mdiff --git a/src/main/java/br/com/infox/ibpm/task/view/TaskInstanceForm.java b/src/main/java/br/com/infox/ibpm/task/view/TaskInstanceForm.java[m
-[1mindex 0c6e59292..6c390152c 100644[m
-[1m--- a/src/main/java/br/com/infox/ibpm/task/view/TaskInstanceForm.java[m
-[1m+++ b/src/main/java/br/com/infox/ibpm/task/view/TaskInstanceForm.java[m
-[36m@@ -178,7 +178,7 @@[m [mpublic class TaskInstanceForm implements Serializable {[m
-                     	ff.getProperties().put("pastaPadrao", VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());[m
-                     	break;[m
-                     case EDITOR: {[m
-[31m-                        ff.getProperties().put("pastaPadrao", VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());[m
-[32m+[m[32m                        ff.getProperties().put("pastaPadrao", var.getConfiguration() == null ? null : VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());[m
-                         ff.getProperties().put("editorId", var.getVariableName() + "-" + taskInstance.getId());[m
-                     }[m
-                     	break;[m
-[1mdiff --git a/src/main/webapp/WEB-INF/xhtml/components/form/comboModelos.xhtml b/src/main/webapp/WEB-INF/xhtml/components/form/comboModelos.xhtml[m
-[1mindex d547e8557..143be48d6 100644[m
-[1m--- a/src/main/webapp/WEB-INF/xhtml/components/form/comboModelos.xhtml[m
-[1m+++ b/src/main/webapp/WEB-INF/xhtml/components/form/comboModelos.xhtml[m
-[36m@@ -10,32 +10,19 @@[m
- 	 xmlns:s="http://jboss.org/schema/seam/taglib"[m
- 	 xmlns:wi="http://www.itx.com.br/jsf">[m
- 	[m
-[31m-		<s:decorate[m
-[31m-			id="#{id}Decoration"[m
-[31m-			rendered="#{not readonly and home.possuiModelo(props.editorId)}"[m
-[31m-			template="/WEB-INF/xhtml/components/templates/edit.xhtml">[m
-[31m-			<ui:define name="label">#{infoxMessages['modeloDocumento.modeloDocumento']}</ui:define>[m
-[31m-			[m
-[31m-			<h:selectOneMenu[m
-[31m-                readonly="#{readonly or home.getModeloItems(props.editorId).size eq 1}"[m
-[31m-                disabled="#{readonly or home.getModeloItems(props.editorId).size eq 1}"[m
-[31m-				value="#{home.modeloDocumento}">[m
-[31m-			[m
-[31m-				<a:ajax[m
-[31m-					event="change"[m
-[31m-					status=":status"[m
-[31m-					listener="#{home.assignModeloDocumento(props.editorId)}"[m
-[31m-					render="#{props.editorId}EditorDiv"[m
-[31m-					execute="@this" />[m
-[31m-				<s:convertEntity />[m
-[31m-				[m
-[31m-				<s:selectItems[m
-[31m-					var="v"[m
-[31m-					noSelectionLabel="[Selecione o modelo]"[m
-[31m-					label="#{v}"[m
-[31m-					value="#{home.getModeloItems(props.editorId)}" />[m
-[31m-		[m
-[31m-			</h:selectOneMenu>[m
-[31m-		</s:decorate>[m
-[31m-[m
-[32m+[m[32m        <wi:selectOneMenuEntity id="#{id}Decoration"[m[41m[m
-[32m+[m[32m            label="#{infoxMessages['modeloDocumento.modeloDocumento']}"[m[41m[m
-[32m+[m[32m            rendered="#{not readonly and home.getCodigosModelos(props.editorId).size() > 1}"[m[41m[m
-[32m+[m[32m            items="#{home.getModeloItems(props.editorId)}"[m[41m[m
-[32m+[m[32m            showLabelSelecione="true">[m[41m[m
-[32m+[m[32m            <a:ajax[m[41m[m
-[32m+[m[32m                event="change"[m[41m[m
-[32m+[m[32m                status=":status"[m[41m [m
-[32m+[m[32m                listener="#{home.assignModeloDocumento(props.editorId, component.value)}"[m[41m[m
-[32m+[m[32m                render="#{props.editorId}EditorDiv"[m[41m[m
-[32m+[m[32m                execute="@this"[m[41m[m
-[32m+[m[32m                 />[m[41m[m
-[32m+[m[32m            <f:validateBean disabled="true" />[m[41m[m
-[32m+[m[32m        </wi:selectOneMenuEntity>[m[41m[m
-[32m+[m[41m                [m
- </ui:composition>[m
-[1mdiff --git a/src/main/webapp/WEB-INF/xhtml/components/form/textEditSignature.xhtml b/src/main/webapp/WEB-INF/xhtml/components/form/textEditSignature.xhtml[m
-[1mindex a8656e6b1..71af25d36 100644[m
-[1m--- a/src/main/webapp/WEB-INF/xhtml/components/form/textEditSignature.xhtml[m
-[1m+++ b/src/main/webapp/WEB-INF/xhtml/components/form/textEditSignature.xhtml[m
-[36m@@ -16,7 +16,20 @@[m
-                 <legend>[m
-                     <h:outputText styleClass="property-field-edit-name" value="#{label}" />[m
-                 </legend>[m
-[31m-            <p:outputPanel id="#{f.id}PastaDestino" styleClass="padding-top-10">[m
-[32m+[m[32m                <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"[m[41m[m
-[32m+[m[32m                    label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"[m[41m[m
-[32m+[m[32m                    items="#{home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id))}"[m[41m[m
-[32m+[m[32m                    showLabelSelecione="true" required="#{wi:get(required, false)}"[m[41m[m
-[32m+[m[32m                    value="#{home.variaveisDocumento[id].classificacaoDocumento}"[m[41m[m
-[32m+[m[32m                    readonly="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1[m[41m [m
-[32m+[m[41m    [m			[32mor home.variaveisDocumento[id].hasAssinatura()}"[m[41m[m
-[32m+[m[32m                    disabled="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1[m[41m [m
-[32m+[m[41m    [m			[32mor home.variaveisDocumento[id].hasAssinatura()}">[m[41m[m
-[32m+[m[32m                    <f:validateBean disabled="true"/>[m[41m[m
-[32m+[m[32m                    <f:validator validatorId="classificacaoEditorValidator" for="@this"/>[m[41m[m
-[32m+[m[32m                    <f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>[m[41m[m
-[32m+[m[32m                </wi:selectOneMenuEntity>[m[41m[m
-[32m+[m[32m                <ui:include src="/WEB-INF/xhtml/components/form/comboModelos.xhtml" />[m[41m[m
-                 <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"[m
-                     label="#{infoxMessages['documentoProcesso.pastaDocumento']}"[m
-                     rendered="#{documentoVariavelController.pastasEditor.size gt 1}"[m
-[36m@@ -30,23 +43,7 @@[m
-                         limitRender="true" />[m
-                     <f:validateBean disabled="true" />[m
-                 </wi:selectOneMenuEntity>[m
-[31m-            </p:outputPanel>[m
-[31m-                <p:outputPanel id="#{f.id}TipoDocDiv">[m
-[31m-                    <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"[m
-[31m-                        label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"[m
-[31m-                        items="#{home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id))}"[m
-[31m-                        showLabelSelecione="true" required="#{wi:get(required, false)}"[m
-[31m-                        value="#{home.variaveisDocumento[id].classificacaoDocumento}"[m
-[31m-                        readonly="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 [m
-[31m-        			or home.variaveisDocumento[id].hasAssinatura()}"[m
-[31m-                        disabled="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 [m
-[31m-        			or home.variaveisDocumento[id].hasAssinatura()}">[m
-[31m-                        <f:validateBean disabled="true"/>[m
-[31m-                        <f:validator validatorId="classificacaoEditorValidator" for="@this"/>[m
-[31m-						<f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>[m
-[31m-                    </wi:selectOneMenuEntity>[m
-[31m-                    <ui:include src="/WEB-INF/xhtml/components/form/comboModelos.xhtml" />[m
-[31m-                </p:outputPanel>[m
-[32m+[m[41m                [m
-                 <p:outputPanel id="#{id}EditorDiv">[m
-                     <i:help id="#{editorId.replace('-','')}ToolTipDiv"[m
-                         rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao and not (readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura())}">[m
