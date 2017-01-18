@@ -15,7 +15,7 @@ public interface SigiloProcessoQuery {
     String QUERY_PARAM_USUARIO_LOGIN = "usuarioLogin";
 
     String NAMED_QUERY_SIGILO_PROCESSO_ATIVO = "SigiloProcesso.sigiloProcessoAtivo";
-    String QUERY_SIGILO_PROCESSO_ATIVO = "select o from SigiloProcesso o where o.ativo = true and o.processo = :"
+    String QUERY_SIGILO_PROCESSO_ATIVO = "select o from SigiloProcesso o where o.ativo = true and sigiloso = true and o.processo = :"
             + QUERY_PARAM_PROCESSO;
     
     String NAMED_QUERY_SIGILO_PROCESSO_USUARIO = "SigiloProcesso.sigiloProcessoUsuario";
