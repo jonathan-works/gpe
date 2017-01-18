@@ -453,7 +453,8 @@ public class TaskInstanceHome implements Serializable {
 		if (defaultFolder == null) {
 			throw new BusinessRollbackException(infoxMessages.get("documento.erro.processSemPasta"));
 		}
-		documento.setPasta(defaultFolder);
+		if(documento.getPasta() == null)
+		    documento.setPasta(defaultFolder);
 		documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
 		documento.setIdJbpmTask(getCurrentTaskInstance().getId());
 		String descricao = variableAccess.getLabel();

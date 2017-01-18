@@ -8,8 +8,6 @@
     <ui:param name="idSignature" value="#{id}signature" />
     <ui:param name="idCertChain" value="#{id}certChain" />
     
-<f:event listener="#{documentoVariavelController.setFormFieldEditor(f)}" type="preRenderView"></f:event>
-    
     <f:subview id="#{f.id}SubView">
         <p:outputPanel id="#{f.id}Block">
             <fieldset>
@@ -32,15 +30,12 @@
                 <ui:include src="/WEB-INF/xhtml/components/form/comboModelos.xhtml" />
                 <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"
                     label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
-                    rendered="#{documentoVariavelController.pastasEditor.size gt 1}"
                     value="#{taskInstanceHome.variaveisDocumento[id].pasta}"
-                    items="#{documentoVariavelController.pastasEditor}"
+                    items="#{props.documentoVariavelController.pastas}"
+                    readonly="#{readonly or home.variaveisDocumento[id].hasAssinatura()}"
+                    disabled="#{readonly or home.variaveisDocumento[id].hasAssinatura()}"
                     showLabelSelecione="true">
-                    <a:ajax
-                        render="#{f.id}TipoDocDiv #{f.id}Div #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
-                        event="change" execute="@this"
-                        listener="#{documentoVariavelController.selecionarPastaPadrao(f.id)}"
-                        limitRender="true" />
+                    <a:ajax render="@this" event="change" execute="@this" limitRender="true" />
                     <f:validateBean disabled="true" />
                 </wi:selectOneMenuEntity>
                 
@@ -62,8 +57,8 @@
                     <p:outputPanel id="conteudoAssinatura#{f.id}"
                         rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
                         <wi:assinador id="botaoAssinatura#{f.id}"
-                           callbackHandler="#{documentoVariavelController}"
-                           assinavelProvider="#{documentoVariavelController.assinavelProvider}"
+                           callbackHandler="#{props.documentoVariavelController}"
+                           assinavelProvider="#{props.documentoVariavelController.assinavelProvider}"
                            execute="@this assinaturaDocumentoDiv#{f.id}"
                            render="assinaturaDocumentoDiv#{f.id} #{id}EditorDiv pageBodyDialogMessage @form botaoAssinatura"
                            onbegin="infox.showLoading();"

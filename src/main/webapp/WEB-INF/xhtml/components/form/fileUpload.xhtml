@@ -14,32 +14,18 @@
 	<ui:param name="readonly"
 		value="#{empty readonly ? true : (props.readonly or not empty taskInstanceHome.variaveisDocumento[id].documentoBin.assinaturas 
   									 or taskInstanceHome.variaveisDocumento[id].documentoBin.suficientementeAssinado)}" />
-  									 
-    <f:event listener="#{documentoVariavelController.setFormFieldFileUpload(f)}" type="preRenderView"></f:event>    
-  									 
+	
+	<c:if test="#{not empty props.documentoVariavelController.pasta}">
+		<c:set target="#{taskInstanceHome.variaveisDocumento[id]}" property="pasta" value="#{props.documentoVariavelController.pasta}" />
+	</c:if>
+	  									 
 	<f:subview id="#{f.id}SubView">
 		<fieldset>
 			<legend>
 				<h:outputText styleClass="property-field-edit-name" value="#{label}" />
 			</legend>
-			
-			<p:outputPanel id="#{f.id}PastaDestino" styleClass="padding-top-10">
-                <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"
-                    label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
-                    rendered="#{documentoVariavelController.pastasFileUpload.size gt 1}"
-                    value="#{taskInstanceHome.variaveisDocumento[id].pasta}"
-                    items="#{documentoVariavelController.pastasFileUpload}"
-                    showLabelSelecione="true">
-                    <a:ajax
-                        render="#{f.id}TipoDocDiv #{f.id}Div #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
-                        event="change" execute="@this"
-                        listener="#{documentoVariavelController.selecionarPastaPadrao(f.id)}"
-                        limitRender="true" />
-                    <f:validateBean disabled="true" />
-                </wi:selectOneMenuEntity>
-            </p:outputPanel>
 
-			<p:outputPanel id="#{f.id}TipoDocDiv" styleClass="padding-top-10">
+			<p:outputPanel id="#{f.id}PastaDestino" styleClass="padding-top-10;" style="display: inline-block;">
 				<wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
 					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 					value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
@@ -55,7 +41,24 @@
 						limitRender="true" />
 					<f:validateBean disabled="true" />
 				</wi:selectOneMenuEntity>
-			</p:outputPanel>
+            </p:outputPanel>
+
+			<p:outputPanel id="#{f.id}TipoDocDiv" styleClass="padding-top-10" style="display: inline-block; margin-left: 1rem;">
+                <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"
+                    label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+                    value="#{taskInstanceHome.variaveisDocumento[id].pasta}"
+                    items="#{props.documentoVariavelController.pastas}"
+                    readonly="#{props.documentoVariavelController.disableSelectOne}"
+                    disabled="#{props.documentoVariavelController.disableSelectOne}"
+                    rendered="#{not readonly}"
+                    noSelectionLabel="[Padrão]" showLabelSelecione="true">
+                    <a:ajax event="change" execute="@this" limitRender="true"
+                    render="#{f.id}TipoDocDiv #{f.id}Div #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
+                    listener="#{taskInstanceHome.removerDocumento(f.id)}" />
+                    <f:validateBean disabled="true" />
+                </wi:selectOneMenuEntity>
+            </p:outputPanel>
+			
 			<p:outputPanel id="#{f.id}ToolTipDivExterna">
 				<i:help id="#{f.id}ToolTipDiv"
 					rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}">
@@ -120,7 +123,10 @@
 							? '(já assinado, não pode ser substituído)' : ''}</legend>
 						<h:outputText
 							value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.descricao : props.classificacaoDocumento}" />
-						<br />
+						<div>
+							<h:outputText id="pastaLabel#{id}" value="#{infoxMessages['documentoProcesso.pastaDocumento']}:" />
+							<h:outputText id="pastaArquivo#{id}" value="#{taskInstanceHome.variaveisDocumento[id].pasta.nome}" />
+						</div>
 						<h:outputText id="file#{id}"
 							value="Documento: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].documentoBin.nomeArquivo : value}" />
 						<p:commandLink
@@ -141,10 +147,10 @@
 				<p:outputPanel id="conteudoAssinatura#{f.id}"
 					rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
                     <wi:assinador id="botaoAssinatura#{f.id}"
-                       callbackHandler="#{documentoVariavelController}"
-                       assinavelProvider="#{documentoVariavelController.assinavelProvider}"
+                       callbackHandler="#{props.documentoVariavelController}"
+                       assinavelProvider="#{props.documentoVariavelController.assinavelProvider}"
                        execute="@this, assinaturaDocumentoDiv#{f.id}"
-                       render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Div, #{f.id}documentoExistente"
+                       render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Div, #{f.id}documentoExistente, #{f.id}tipoProcessoDocumento"
                        onbegin="infox.showLoading();"
                        oncomplete="infox.hideLoading();"
                        value="#{infoxMessages['assinaturas.assinar']}">

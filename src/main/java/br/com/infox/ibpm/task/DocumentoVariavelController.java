@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -22,7 +21,6 @@ import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.view.AssinaturaCallback;
-import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
@@ -30,130 +28,64 @@ import br.com.infox.epp.processo.documento.dao.PastaDAO;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoManager;
-import br.com.infox.epp.processo.home.ProcessoEpaHome;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.view.FormField;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@Named
-
-@ViewScoped
 public class DocumentoVariavelController implements Serializable, AssinaturaCallback {
 
-	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(DocumentoVariavelController.class);
+    private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(DocumentoVariavelController.class);
 
-	private ProcessoEpaHome processoEpaHome;
-	@Inject
-	private PastaManager pastaManager;
-	@Inject
-	private PastaRestricaoManager pastaRestricaoManager;
-	@Inject
-	private PastaDAO pastaDAO;
-	@Inject
-	private AssinadorService assinadorService;
-	@Inject
-	private InfoxMessages infoxMessages;
+    @Inject
+    private PastaManager pastaManager;
+    @Inject
+    private PastaRestricaoManager pastaRestricaoManager;
+    @Inject
+    private PastaDAO pastaDAO;
+    @Inject
+    private AssinadorService assinadorService;
+    @Inject
+    private InfoxMessages infoxMessages;
 
-	private String pastaPadrao;
-	private List<Pasta> pastasEditor;
-	private List<Pasta> pastasFileUpload;
-	private FormField formField;
-	private Pasta pastaUpload;
-	private Pasta pastaEditor;
+    private Processo processo;
+    private List<Pasta> pastas;
+    private Pasta pasta;
+    private FormField formField;
 
-	public Pasta consultaPastas(List<Pasta> pastas) {
-		processoEpaHome = ProcessoEpaHome.instance();
+    public void init(Processo processo, FormField formField) {
+        this.processo = processo;
+        this.formField = formField;
+        pastas = new ArrayList<Pasta>();
+        String pastaPadraoFluxo = (String) formField.getProperties().get("pastaPadrao");
+        if (pastaPadraoFluxo != null) {
+            pasta = pastaManager.getByCodigoAndProcesso(pastaPadraoFluxo, getProcesso());
+        }
+        if (pasta != null) {
+            // se existe pasta especifica na configuracao da variavel atribui ao documento
+            pastas.add(pasta);
+        } else {
+            UsuarioPerfil usuario = Authenticator.getUsuarioPerfilAtual();
+            Map<Integer, PastaRestricaoBean> restricoes = pastaRestricaoManager.loadRestricoes(getProcesso(), usuario.getUsuarioLogin(),
+                    usuario.getLocalizacao(), usuario.getPerfilTemplate().getPapel());
+            for (Integer id : restricoes.keySet()) {
+                if (Boolean.TRUE.equals(restricoes.get(id).getWrite())) {
+                    Pasta pastaComPermissao = pastaDAO.find(id);
+                    pastas.add(pastaComPermissao);
+                }
+            }
+            if (pastas.size() == 1) {
+                pastas.get(0);
+            }
+        }
+    }
 
-		if (formField != null) {
-			Map<String, Object> properties = formField.getProperties();
-			for (String key : properties.keySet()) {
-				if (key.equalsIgnoreCase("pastaPadrao")) {
-					if (properties.get(key) != null) {
-						pastaPadrao = properties.get(key).toString();
-						break;
-					}
-				}
-			}
-		}
+    public AssinavelProvider getAssinavelProvider() {
+        return new AssinavelDocumentoBinProvider(TaskInstanceHome.instance().getVariaveisDocumento().get(formField.getId()).getDocumentoBin());
+    }
 
-		if (processoEpaHome.getInstance().getIdProcesso() != null) {
-			Pasta pasta = pastaManager.getByCodigoAndProcesso(pastaPadrao, processoEpaHome.getInstance());
-			if (pasta != null) {
-				// se existe pasta especifica na configuracao da variavel atribui ao documento
-				pastas.add(pasta);
-				return pasta;
-
-			} else {
-				return verificaUsuarioTemPermissao(pastas);
-			}
-		}
-		return null;
-	}
-
-	private Pasta verificaUsuarioTemPermissao(List<Pasta> pastas) {
-		UsuarioPerfil usuario = Authenticator.getUsuarioPerfilAtual();
-		Map<Integer, PastaRestricaoBean> restricoes = pastaRestricaoManager.loadRestricoes(
-				processoEpaHome.getInstance(), usuario.getUsuarioLogin(), usuario.getLocalizacao(),
-				usuario.getPerfilTemplate().getPapel());
-		for (Integer id : restricoes.keySet()) {
-			if (Boolean.TRUE.equals(restricoes.get(id).getWrite())) {
-				Pasta pasta = pastaDAO.find(id);
-				pastas.add(pasta);
-			}
-		}
-		if (pastas.size() == 1) {
-			return pastas.get(0);
-		}
-
-		return null;
-	}
-
-	public List<Pasta> getPastasFileUpload() {
-		return pastasFileUpload;
-	}
-
-	public List<Pasta> getPastasEditor() {
-		return pastasEditor;
-	}
-
-	public void selecionarPastaPadrao(String variableFieldName) {
-		System.out.println("do nothing " + variableFieldName);
-	}
-
-	public void setFormFieldFileUpload(FormField formField) {
-		this.formField = formField;
-		if (pastasFileUpload == null) {
-			pastasFileUpload = new ArrayList<Pasta>();
-			pastaUpload = consultaPastas(pastasFileUpload);
-		}
-		setaPastaUpload();
-	}
-
-	private void setaPastaUpload() {
-		if (pastaUpload != null && formField != null)
-			TaskInstanceHome.instance().getVariaveisDocumento().get(formField.getId()).setPasta(pastaUpload);
-	}
-
-	public void setFormFieldEditor(FormField formField) {
-		this.formField = formField;
-		if (pastasEditor == null) {
-			pastasEditor = new ArrayList<Pasta>();
-			pastaEditor = consultaPastas(pastasEditor);
-		}
-		setaPastaEditor();
-	}
-
-	private void setaPastaEditor() {
-		if (pastaEditor != null && formField != null)
-			TaskInstanceHome.instance().getVariaveisDocumento().get(formField.getId()).setPasta(pastaEditor);
-	}
-	
-	public AssinavelProvider getAssinavelProvider(){
-	    return new AssinavelDocumentoBinProvider(TaskInstanceHome.instance().getVariaveisDocumento().get(formField.getId()).getDocumentoBin());
-	}
-	
     @Override
     @ExceptionHandled
     public void onSuccess(List<DadosAssinatura> dadosAssinatura) {
@@ -175,5 +107,37 @@ public class DocumentoVariavelController implements Serializable, AssinaturaCall
     @ExceptionHandled
     public void onFail(StatusToken statusToken, List<DadosAssinatura> dadosAssinatura) {
         FacesMessages.instance().add(Severity.INFO, infoxMessages.get("termoAdesao.sign.fail"));
+    }
+
+    public Processo getProcesso() {
+        return processo;
+    }
+
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
+    }
+
+    public List<Pasta> getPastas() {
+        return pastas;
+    }
+
+    public void setPastas(List<Pasta> pastas) {
+        this.pastas = pastas;
+    }
+
+    public FormField getFormField() {
+        return formField;
+    }
+
+    public void setFormField(FormField formField) {
+        this.formField = formField;
+    }
+
+    public boolean isDisableSelectOne() {
+        return pasta != null;
+    }
+
+    public Pasta getPasta() {
+        return pasta;
     }
 }

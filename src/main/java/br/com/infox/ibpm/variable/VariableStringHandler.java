@@ -33,6 +33,8 @@ public class VariableStringHandler {
 	}
 
 	public void setMascara(String mascara) {
+	    if(mascara == null)
+	        mascara = "";
 		this.mascara = mascara;
     	if (this.mascara != null) {
     		StringConfig config;

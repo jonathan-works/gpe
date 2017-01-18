@@ -30,7 +30,7 @@ public class PastaSearch extends PersistenceController {
 		CriteriaQuery<Pasta> cq = cb.createQuery(Pasta.class);
 		Root<Pasta> from = cq.from(Pasta.class);
 		Join<Pasta, Processo> processo = from.join(Pasta_.processo);
-		cq.where(cb.equal(from.get(Pasta_.codigo), codigoPasta),
+		cq.where(cb.equal(from.get(Pasta_.nome), codigoPasta),
 				cb.equal(processo.get(Processo_.idProcesso), idProcesso));
 		try {
 			return getEntityManager().createQuery(cq).getSingleResult();

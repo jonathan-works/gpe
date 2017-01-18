@@ -24,7 +24,11 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.task.DocumentoVariavelController;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
@@ -96,6 +100,7 @@ public class TaskInstanceForm implements Serializable {
      */
     private void addVariablesToForm(List<VariableAccess> list) {
         if (list != null) {
+            Processo processo = getProcesso();
             for (VariableAccess var : list) {
                 if (var.isReadable() && var.isWritable() && !var.getAccess().hasAccess("hidden")) {
                     String[] tokens = var.getMappedName().split(":");
@@ -175,11 +180,17 @@ public class TaskInstanceForm implements Serializable {
                     }
                         break;
                     case FILE:
-                    	ff.getProperties().put("pastaPadrao", VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
+                        ff.getProperties().put("pastaPadrao", var.getConfiguration() == null ? null : VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
+                        DocumentoVariavelController documentoVariavelController = BeanManager.INSTANCE.getReference(DocumentoVariavelController.class);
+                        documentoVariavelController.init(processo, ff);
+                        ff.getProperties().put("documentoVariavelController", documentoVariavelController);
                     	break;
                     case EDITOR: {
                         ff.getProperties().put("pastaPadrao", var.getConfiguration() == null ? null : VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
                         ff.getProperties().put("editorId", var.getVariableName() + "-" + taskInstance.getId());
+                        DocumentoVariavelController documentoVariavelController2 = BeanManager.INSTANCE.getReference(DocumentoVariavelController.class);
+                        documentoVariavelController2.init(processo, ff);
+                        ff.getProperties().put("documentoVariavelController", documentoVariavelController2);
                     }
                     	break;
                     default:
@@ -210,4 +221,12 @@ public class TaskInstanceForm implements Serializable {
         return mapProperties;
     }
 
+    private Processo getProcesso() {
+        Integer idProcesso = (Integer) taskInstance.getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
+        return getProcessoManager().find(idProcesso);
+    }
+    
+    private ProcessoManager getProcessoManager() {
+        return BeanManager.INSTANCE.getReference(ProcessoManager.class);
+    }
 }
