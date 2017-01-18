@@ -18,6 +18,7 @@ import javax.persistence.criteria.Root;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Localizacao_;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.Papel_;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -171,13 +172,14 @@ public class UsuarioLoginSearch extends PersistenceController {
 		
 		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
 		Join<UsuarioLogin, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica);
+		Join<UsuarioLogin, Papel> papel = usuario.join(UsuarioLogin_.papelSet);
 		
+		Predicate assina = cb.equal(papel.get(Papel_.termoAdesao), true);
 		Predicate ativo = usuarioAtivoPredicate(usuario);
 		Predicate podeFazerLogin = podeFazerLoginPredicate(usuario);
-		//Predicate cpfIgual = cb.equal(pessoa.get(PessoaFisica_.cpf), cpf);
 		Predicate nomePred = cb.like(cb.lower(usuario.get(UsuarioLogin_.nomeUsuario)), cb.lower(cb.literal("%" + nome + "%"))); 
 		
-		cq = cq.select(usuario).where(cb.and(ativo, podeFazerLogin, nomePred));
+		cq = cq.select(usuario).where(cb.and(ativo, podeFazerLogin, nomePred, assina));
 		//query.orderBy(cb.asc(from.get(Localizacao_.caminhoCompleto)));
 		cq.orderBy(cb.asc(usuario.get(UsuarioLogin_.nomeUsuario)));
 		
