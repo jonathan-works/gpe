@@ -25,7 +25,7 @@
 				<h:outputText styleClass="property-field-edit-name" value="#{label}" />
 			</legend>
 
-			<p:outputPanel id="#{f.id}PastaDestino" styleClass="padding-top-10;" style="display: inline-block;">
+			<p:outputPanel id="#{f.id}TipoDocDiv" styleClass="padding-top-10;" style="display: inline-block;">
 				<wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
 					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 					value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
@@ -43,7 +43,7 @@
 				</wi:selectOneMenuEntity>
             </p:outputPanel>
 
-			<p:outputPanel id="#{f.id}TipoDocDiv" styleClass="padding-top-10" style="display: inline-block; margin-left: 1rem;">
+			<p:outputPanel id="#{f.id}PastaDestino" styleClass="padding-top-10" style="display: inline-block; margin-left: 1rem;">
                 <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"
                     label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
                     value="#{taskInstanceHome.variaveisDocumento[id].pasta}"
@@ -108,7 +108,7 @@
 							sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
 							maxFilesQuantity="10" listHeight="50px" immediateUpload="true"
 							noDuplicate="true"
-							render="#{id}Div, #{id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente, assinaturaDocumentoDiv#{f.id}"
+							render="#{id}Div #{id} pageBodyDialogMessage #{f.id}PastaDestino #{f.id}TipoDocDiv #{f.id}documentoExistente, assinaturaDocumentoDiv#{f.id}"
 							acceptedTypes="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.acceptedTypes}"
 							ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
 						</rich:fileUpload>
@@ -150,7 +150,7 @@
                        callbackHandler="#{props.documentoVariavelController}"
                        assinavelProvider="#{props.documentoVariavelController.assinavelProvider}"
                        execute="@this, assinaturaDocumentoDiv#{f.id}"
-                       render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Div, #{f.id}documentoExistente, #{f.id}tipoProcessoDocumento"
+                       render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Div, #{f.id}documentoExistente, #{f.id}tipoProcessoDocumento, #{f.id}PastaDestino"
                        onbegin="infox.showLoading();"
                        oncomplete="infox.hideLoading();"
                        value="#{infoxMessages['assinaturas.assinar']}">
