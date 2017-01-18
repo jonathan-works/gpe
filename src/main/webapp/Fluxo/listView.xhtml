@@ -182,7 +182,7 @@
                 value="#{fluxoCrudAction.instance.ativo}" />
             <ui:define name="buttons">
                 <a:commandButton value="#{infoxMessages['crud.persist']}" action="#{fluxoCrudAction.persist}" execute="@form"
-					limitRender="true" render="pageBodyDialogMessage @form" rendered="#{not fluxoCrudAction.managed}"
+					limitRender="true" render=":pageBodyDialogMessage :defaultTabPanel" rendered="#{not fluxoCrudAction.managed}"
 					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
 					
 				<a:commandButton value="#{infoxMessages['crud.update']}" action="#{fluxoCrudAction.update}" execute="@form"
@@ -190,7 +190,7 @@
 					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
 					
                 <a:commandButton value="#{infoxMessages['crud.new']}" action="#{fluxoCrudAction.newInstance}" execute="@this"
-					limitRender="true" render="pageBodyDialogMessage @form"
+					limitRender="true" render=":pageBodyDialogMessage :defaultTabPanel"
 					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
 					
                 <wi:commandButton id="botaoGerarReplica" action="fluxoCrudAction.gerarReplica()" reRender="modalReplicaForm"
