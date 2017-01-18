@@ -189,7 +189,8 @@
 					limitRender="true" render="pageBodyDialogMessage @form" rendered="#{fluxoCrudAction.managed}"
 					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
 					
-                <a:commandButton value="#{infoxMessages['crud.new']}" action="#{fluxoCrudAction.newInstance}" execute="@this"
+                <a:commandButton value="#{infoxMessages['crud.new']}" actionListener="#{jsfUtil.clearForm}"  
+                	action="#{fluxoCrudAction.newInstance}" execute="@this"
 					limitRender="true" render=":pageBodyDialogMessage :defaultTabPanel"
 					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
 					

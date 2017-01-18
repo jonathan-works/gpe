@@ -9,6 +9,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
+import javax.faces.component.UIForm;
 import javax.faces.component.html.HtmlInputHidden;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -68,7 +69,21 @@ public class JsfUtil {
 	
 	public void clearForm(String formId) {
         UIComponent formComponent = context.getViewRoot().findComponent(formId);
-        List<UIComponent> children = formComponent.getChildren();
+        clearForm(formComponent);
+	}
+	
+	public void clearForm() {
+	    UIComponent component = UIComponent.getCurrentComponent(context);
+	    while ( component != null && !(component instanceof UIForm) ) {
+	        component = component.getParent();
+	    }
+	    if ( component != null ) {
+	        clearForm(component);
+	    }
+	}
+	
+	private void clearForm(UIComponent formComponent) {
+	    List<UIComponent> children = formComponent.getChildren();
         for (UIComponent uiComponent : children) {
             clear(uiComponent);
         }
