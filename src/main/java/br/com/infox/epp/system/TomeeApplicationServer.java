@@ -70,4 +70,9 @@ public class TomeeApplicationServer extends AbstractApplicationServer {
         return logDir == null ? super.getLogDir() : logDir;
     }
 
+    @Override
+    public String getUserTransactionJndi() {
+        return "java:comp/UserTransaction";
+    }
+
 }

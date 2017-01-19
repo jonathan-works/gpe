@@ -9,7 +9,6 @@ import java.util.Map;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Swimlane;
 
-import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.seam.util.ComponentUtil;
@@ -37,13 +36,6 @@ public class SwimlaneHandler implements Serializable {
 
     public String getName() {
         return swimlane.getName();
-    }
-
-    public void setName(String name) {
-        Map<String, Swimlane> swimlanes = swimlane.getTaskMgmtDefinition().getSwimlanes();
-        swimlanes.remove(swimlane.getName());
-        ReflectionsUtil.setValue(swimlane, "name", name);
-        swimlane.getTaskMgmtDefinition().addSwimlane(swimlane);
     }
 
     public void setPerfil(PerfilTemplate perfilTemplate) {
@@ -79,7 +71,7 @@ public class SwimlaneHandler implements Serializable {
                 if (!first) {
                     sb.append(",");
                 }
-                sb.append(perfil.getId());
+                sb.append(perfil.getCodigo());
                 first = false;
             }
             String expression = sb.toString();
@@ -99,11 +91,11 @@ public class SwimlaneHandler implements Serializable {
             SwimlaneHandler sh = new SwimlaneHandler(swimlane);
             sh.setPerfilList(new ArrayList<PerfilTemplate>());
             String exp = swimlane.getPooledActorsExpression();
-            if (exp != null && !exp.isEmpty()) {
+            if (exp != null && !exp.isEmpty()) { //FIXME verificar se existe alguma base com isso ainda, se não existir retirar esse if
                 String[] perfis = exp.split(",");
                 if (!perfis[0].startsWith("#")) { // Se começar com # é expressão com perfis, fluxo antigo
                     for (String perfil : perfis) {
-                        sh.getPerfilList().add(perfilManager().find(Integer.valueOf(perfil)));
+                        sh.getPerfilList().add(perfilManager().getPerfilTemplateByCodigo(perfil));
                     }
                 }
             }

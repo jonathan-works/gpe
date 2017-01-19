@@ -12,8 +12,6 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_COM_EXPIRACAO;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_COM_EXPIRACAO_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_ENDED;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_ENDED_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
@@ -56,7 +54,6 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
     @NamedQuery(name = TAREFA_PROXIMA_LIMITE, query = TAREFA_PROXIMA_LIMITE_QUERY),
     @NamedQuery(name = TAREFA_ENDED, query = TAREFA_ENDED_QUERY),
     @NamedQuery(name = DATA_INICIO_PRIMEIRA_TAREFA, query = DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
-    @NamedQuery(name = TAREFA_COM_EXPIRACAO, query = TAREFA_COM_EXPIRACAO_QUERY),
     @NamedQuery(name = PROCESSO_TAREFA_ABERTO, query = PROCESSO_TAREFA_ABERTO_QUERY),
     @NamedQuery(name = ProcessoTarefaQuery.PROCESSOS_TAREFA, query = ProcessoTarefaQuery.PROCESSOS_TAREFA_QUERY),
     @NamedQuery(name = ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA, query = ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA_QUERY),

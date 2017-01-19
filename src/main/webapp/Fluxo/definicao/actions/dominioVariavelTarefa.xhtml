@@ -49,23 +49,20 @@
                             <ui:define name="headerToolBar" />
                             <ui:define name="toolBar">
                                 <h:form>
-	                                <a:commandLink execute="@this" render="defaultTabPanel" limitRender="true">
-	                                   <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.gif')}" title="Editar" />
-								       <f:setPropertyActionListener
-								            target="#{dominioVariavelTarefaCrudAction.id}" value="#{row.id}" />
-								       <f:setPropertyActionListener
-								            target="#{dominioVariavelTarefaCrudAction.tab}" value="form" />
+	                                <a:commandLink execute="@this" render="defaultTabPanel" limitRender="true"
+	                                	action="#{dominioVariavelTarefaCrudAction.editDominio(row)}">
+	                                   <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" title="Editar" />
 								    </a:commandLink>
-                                    <a:commandLink action="#{dominioVariavelTarefaCrudAction.selecionarDominio}"
+                                    <a:commandLink action="#{dominioVariavelTarefaCrudAction.currentVariable.dominioHandler.setDominioVariavelTarefa(row)}"
                                         onbegin="showLoading()" execute="@this" limitRender="true" 
                                         oncomplete="hideLoading(); #{rich:component('dominioVariavelTarefaPanel')}.hide()">
-                                        <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.instance}" value="#{row}" />
                                         <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['dominioVariavelTarefa.select']}" />
                                     </a:commandLink>
                                 </h:form>
                             </ui:define>
                             
                             <wi:columnOutputText columnId="nome" columnHeader="#{infoxMessages['dominioVariavelTarefa.nome']}" value="#{row.nome}" />
+                            <wi:columnOutputText columnId="codigo" columnHeader="#{infoxMessages['dominioVariavelTarefa.codigo']}" value="#{row.codigo}" />
                             
                         </wi:dataTable>
                     </s:div>
@@ -82,18 +79,26 @@
                  style="border-style: solid; border-width: 1px; border-color: lightgray">
                 <a:region>
                     <wi:dataForm formId="dominioVariavelTarefaForm" formTitle="#{infoxMessages['dominioVariavelTarefa.form']}">
+                        <wi:inputText id="codigo" label="#{infoxMessages['dominioVariavelTarefa.codigo']}"
+                                    value="#{dominioVariavelTarefaCrudAction.codigo}" required="true"/>
                         <wi:inputText id="nome" label="#{infoxMessages['dominioVariavelTarefa.nome']}"
-                                    value="#{dominioVariavelTarefaCrudAction.instance.nome}" required="true"/>
+                                    value="#{dominioVariavelTarefaCrudAction.nome}" required="true"/>
                         <wi:inputTextarea id="dominio" label="#{infoxMessages['dominioVariavelTarefa.dominio']}"
-                            required="true" value="#{dominioVariavelTarefaCrudAction.instance.dominio}" 
+                            required="true" value="#{dominioVariavelTarefaCrudAction.dominio}" 
                             showCounter="false">
                             <f:validator validatorId="dominioVariavelTarefaValidator" />
                         </wi:inputTextarea>
                             
                         <ui:define name="buttons">
-                            <wi:commandButtonSave reRender="defaultTabPanel pageBodyDialogMessage" styleClass="buttons" />
-                            <wi:commandButtonNew reRender="defaultTabPanel pageBodyDialogMessage" styleClass="buttons" />
-                            <a:commandButton action="#{dominioVariavelTarefaCrudAction.selecionarDominio}"
+                            <a:commandButton render="defaultTabPanel pageBodyDialogMessage" styleClass="buttons"
+                            	action="#{dominioVariavelTarefaCrudAction.save()}" rendered="#{not dominioVariavelTarefaCrudAction.managed}"
+                            	value="#{infoxMessages['crud.persist']}"/>
+                           	<a:commandButton render="defaultTabPanel pageBodyDialogMessage" styleClass="buttons"
+                            	action="#{dominioVariavelTarefaCrudAction.update()}" rendered="#{dominioVariavelTarefaCrudAction.managed}"
+                            	value="#{infoxMessages['crud.update']}"/>
+                            <wi:commandButtonNew reRender="defaultTabPanel pageBodyDialogMessage" styleClass="buttons" 
+                            	newInstanceAction="#{dominioVariavelTarefaCrudAction.newInstance()}"/>
+                            <a:commandButton action="#{dominioVariavelTarefaCrudAction.setDominioConfig()}"
 								onbegin="showLoading()" execute="@this" limitRender="true" 
 								oncomplete="hideLoading(); #{rich:component('dominioVariavelTarefaPanel')}.hide()" 
 								value="#{infoxMessages['dominioVariavelTarefa.select']}" 

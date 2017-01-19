@@ -81,7 +81,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
         ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
         Processo processo = ComponentUtil.<ProcessoManager>getComponent(ProcessoManager.NAME).getProcessoByIdJbpm(executionContext.getProcessInstance().getId());
         ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processo.getIdProcesso(), executionContext);
-        data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento")), chain));
+        data.setBody(modeloDocumentoManager.getConteudo(parameters.get("codigoModeloDocumento"), chain));
         String idGrupo = parameters.get("idGrupo");
         List<String> recipList = null;
         if (idGrupo != null) {

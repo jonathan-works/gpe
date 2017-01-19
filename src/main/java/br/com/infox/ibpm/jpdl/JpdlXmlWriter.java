@@ -59,8 +59,8 @@ public class JpdlXmlWriter {
 
     private static final LogProvider LOG = Logging.getLogProvider(JpdlXmlWriter.class);
 
-    private static final String DEFAULT_ENCODING = "UTF-8";
-    private static final int DEFAULT_IDENT_SIZE = 4;
+    public static final String DEFAULT_ENCODING = "UTF-8";
+    public static final int DEFAULT_IDENT_SIZE = 4;
     private static final String ELEMENT_NAME = "name";
     static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
     static final Namespace JBPM_NAMESPACE = new Namespace(null, JPDL_NAMESPACE);
@@ -263,7 +263,6 @@ public class JpdlXmlWriter {
 
 	@SuppressWarnings({ UNCHECKED, RAWTYPES })
     private void writeProcessState(ProcessState node, Element nodeElement) {
-        Element subProcess = addElement(nodeElement, "sub-process");
         String subProcessName;
         if (node.getSubProcessDefinition() != null) { // Importação
             subProcessName = node.getSubProcessDefinition().getName();
@@ -274,10 +273,14 @@ public class JpdlXmlWriter {
         if (node.getActivityBehavior() != null){
             node.getActivityBehavior().write(nodeElement);
         }
-        subProcess.addAttribute(ELEMENT_NAME, subProcessName);
-        subProcess.addAttribute("binding", "late");
-        Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");
-        writeVariables(nodeElement, variableAccess);
+        
+        if (subProcessName != null) {
+        	Element subProcess = addElement(nodeElement, "sub-process");
+	        subProcess.addAttribute(ELEMENT_NAME, subProcessName);
+	        subProcess.addAttribute("binding", "late");
+	        Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");
+	        writeVariables(nodeElement, variableAccess);
+        }
     }
    
     private void writeAssignment(Task task, Element element){
@@ -335,6 +338,9 @@ public class JpdlXmlWriter {
             return;
         }
         for (VariableAccess va : list) {
+        	if(StringUtil.isEmpty(va.getMappedName()) || StringUtil.isEmpty(va.getVariableName())){
+        		continue;
+        	}
             Element ve = addElement(controller, "variable");
             addAttribute(ve, ELEMENT_NAME, va.getVariableName());
             addAttribute(ve, "mapped-name", va.getMappedName());
@@ -349,6 +355,9 @@ public class JpdlXmlWriter {
             }
             if (!StringUtil.isEmpty(va.getLabel())) {
             	addAttribute(ve, "label", va.getLabel());
+            }
+            if (!StringUtil.isEmpty(va.getConfiguration())) {
+            	addAttribute(ve, "configuration", va.getConfiguration());
             }
         }
     }
@@ -481,7 +490,9 @@ public class JpdlXmlWriter {
     			actionDelegation.getConfiguration() != null) { 
 	    	addAttribute(actionElement, "name", action.getName());
 			addAttribute(actionElement, "class", actionDelegation.getClassName());
-	    	addAttribute(actionElement, "async", "true");
+	    	if (action.isAsyncExclusive() || action.isAsync()) {
+	    		addAttribute(actionElement, "async", "true");
+	    	}
 	    	addAttribute(actionElement, "config-type", "constructor");
 
 	    	String configuration = actionDelegation.getConfiguration();
@@ -512,6 +523,9 @@ public class JpdlXmlWriter {
         boolean valid = false;
         if (writeTimer(parentElement, action)) {
             return false;
+        }
+        if (action instanceof CancelTimerAction) {
+        	return false;
         }
         
         String actionName = ActionTypes.getActionName(action.getClass());

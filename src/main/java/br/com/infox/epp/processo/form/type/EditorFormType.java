@@ -3,18 +3,19 @@ package br.com.infox.epp.processo.form.type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jbpm.graph.def.Event;
-
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler.FileConfig;
 
 public class EditorFormType extends FileFormType {
 
@@ -107,19 +108,22 @@ public class EditorFormType extends FileFormType {
     }
     
     private List<ModeloDocumento> readModelosDocumento(FormField formField, FormData formData) {
-        Event event = formData.getNode().getEvent(Event.EVENTTYPE_NODE_ENTER);
-        List<ModeloDocumento> modelos = new ArrayList<>();
-        if (event != null && event.getAction(formField.getId()) != null) {
-            String expression = event.getAction(formField.getId()).getActionExpression();
-            int start = expression.indexOf(",");
-            int end = expression.indexOf(")", start);
-            String modeloIds = expression.substring(start + 1, end);
-            modelos = getModeloDocumentoManager().getModelosDocumentoInListaModelo(modeloIds);
+    	String configuration = (String) formField.getProperties().get("configuration");
+    	List<ModeloDocumento> modelos = new ArrayList<>();
+    	if (configuration != null && !configuration.isEmpty()) {
+    		FileConfig editorConfiguration = VariableEditorModeloHandler.fromJson(configuration);
+    		if (editorConfiguration.getCodigosModeloDocumento() != null && !editorConfiguration.getCodigosModeloDocumento().isEmpty()) {
+    			modelos = getModeloDocumentoSearch().getModeloDocumentoListByListCodigos(editorConfiguration.getCodigosModeloDocumento());
+    		}
         }
         return modelos;
     }
     
     protected ModeloDocumentoManager getModeloDocumentoManager() {
         return BeanManager.INSTANCE.getReference(ModeloDocumentoManager.class);
+    }
+    
+    protected ModeloDocumentoSearch getModeloDocumentoSearch() {
+    	return BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
     }
 }

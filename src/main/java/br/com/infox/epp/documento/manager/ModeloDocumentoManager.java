@@ -9,6 +9,9 @@ import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jboss.seam.annotations.AutoCreate;
@@ -20,6 +23,7 @@ import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.dao.VariavelDAO;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.type.Expression;
@@ -230,8 +234,12 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         return evaluateModeloDocumento(modeloDocumento);
     }
     
-    public String getConteudo(int idModeloDocumento, ExpressionResolver resolver) {
-        final ModeloDocumento modeloDocumento = find(idModeloDocumento);
+    public String getConteudo(String codigoModeloDocumento, ExpressionResolver resolver) {
+    	CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ModeloDocumento> cq = cb.createQuery(ModeloDocumento.class);
+		Root<ModeloDocumento> fromModelo = cq.from(ModeloDocumento.class);
+		cq.where(cb.equal(fromModelo.get(ModeloDocumento_.codigo), cb.literal(codigoModeloDocumento)));
+    	ModeloDocumento modeloDocumento = getDao().getEntityManager().createQuery(cq).getSingleResult(); 
         return evaluateModeloDocumento(modeloDocumento, resolver);
     }
     

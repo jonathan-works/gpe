@@ -1,19 +1,13 @@
 package br.com.infox.ibpm.variable;
 
-import static br.com.infox.constants.WarningConstants.RAWTYPES;
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static java.text.MessageFormat.format;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
@@ -25,25 +19,12 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 import org.jbpm.taskmgmt.def.Task;
 
-import br.com.infox.core.list.EntityList;
-import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.entity.VariavelTipoModelo;
-import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
-import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
-import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.epp.fluxo.crud.VariavelClassificacaoDocumentoAction;
+import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
-import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
-import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
-import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableAccessHandler implements Serializable {
 
@@ -51,25 +32,25 @@ public class VariableAccessHandler implements Serializable {
 	public static final String EVENT_JBPM_VARIABLE_NAME_CHANGED = "jbpmVariableNameChanged";
     private static final String COMMA = ",";
     private static final long serialVersionUID = -4113688503786103974L;
-    private static final String PREFIX = "#{modeloDocumento.set('";
-    private static final LogProvider LOG = Logging.getLogProvider(VariableAccessHandler.class);
     private VariableAccess variableAccess;
     private String name;
-    private String label;
-    private String value;
     private VariableType type;
+    private String value;
     private boolean[] access;
-    private List<Integer> modeloList;
-    private List<ModeloDocumento> modeloDocumentoList;
     private Task task;
-    private boolean mudouModelo;
-    private DominioVariavelTarefa dominioVariavelTarefa;
     private boolean possuiDominio = false;
-    private ValidacaoDataEnum validacaoDataEnum;
     private boolean isData = false;
     private boolean isFile;
     private boolean fragment;
+    private boolean numerico;
+    private boolean monetario;
     private FragmentConfiguration fragmentConfiguration;
+    
+    private VariableEditorModeloHandler modeloEditorHandler = new VariableEditorModeloHandler();
+    private VariableDataHandler dataHandler = new VariableDataHandler();
+    private VariableDominioEnumerationHandler dominioHandler = new VariableDominioEnumerationHandler();
+    private VariableMaxMinHandler maxMinHandler = new VariableMaxMinHandler();
+    private VariableStringHandler stringHandler = new VariableStringHandler();
     
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -82,27 +63,27 @@ public class VariableAccessHandler implements Serializable {
             this.value = variableAccess.getValue();
             switch (type) {
                 case DATE:
-                    if (tokens.length < 3) {
-                    setValidacaoDataEnum(ValidacaoDataEnum.L);
-                    } else {
-                    setValidacaoDataEnum(ValidacaoDataEnum.valueOf(tokens[2]));
-                    }
+                    getDataHandler().init(this.variableAccess);
                     break;
+                case MONETARY:
+                case INTEGER:	
+                	getMaxMinHandler().init(this.variableAccess);
+                	break;
+                case STRING:
+                	getStringHandler().init(this.variableAccess);
                 case ENUMERATION:
                 case ENUMERATION_MULTIPLE:
-                    if (tokens.length >= 3) {
-                        DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                        this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
-                    }
+                	getDominioHandler().init(getVariableAccess());
                     break;
                 case FRAGMENT:
                     if (tokens.length >= 3) {
                         setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
                     }
                     break;
-                case EDITOR: 
-                    carregarModeloList();
-                    break; 
+                case FILE:
+                case EDITOR:
+                	getModeloEditorHandler().init(this.variableAccess);
+                    break;
                 default:
                     break;
                 }
@@ -119,17 +100,8 @@ public class VariableAccessHandler implements Serializable {
         this.possuiDominio = tipoPossuiDominio(this.type);
         this.isData = isTipoData(this.type);
         this.isFile = isTipoFile(this.type);
-    }
-
-    private void carregarModeloList() {
-        Action action = getActionNodeEnterByName(variableAccess.getVariableName());
-        if (action == null || action.getActionExpression() == null) return;
-        String expression = action.getActionExpression();
-        String[] modelos = expression.substring(expression.indexOf(",") + 1, expression.indexOf(")")).split(",");
-        modeloList = new ArrayList<>();
-        for (String idModelo : modelos) {
-            modeloList.add(Integer.valueOf(idModelo));
-        }
+        this.numerico = isNumerico(type);
+        this.monetario = isMonetario(type);
     }
 
     private boolean tipoPossuiDominio(VariableType type) {
@@ -154,19 +126,12 @@ public class VariableAccessHandler implements Serializable {
             if (VariableType.PAGE.equals(type) && !pageExists(auxiliarName)) {
                 return;
             }
-            Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getFluxo().getIdFluxo(), this.name, auxiliarName);
-            if (type == VariableType.EDITOR) {
-                changeModeloDocumentoAction(auxiliarName);
-            }
+            Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getDefinicaoProcesso().getFluxo().getIdFluxo(), this.name, auxiliarName);
             this.name = auxiliarName;
-            ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
+            variableAccess.setVariableName(auxiliarName);
             
-            if (isData || type == VariableType.DATE) {
-                setValidacaoDataEnum(validacaoDataEnum);
-            } else if (isFragment()){
+            if (isFragment()){
                 setFragmentConfiguration(fragmentConfiguration);
-            } else if (isPossuiDominio()) {
-                setDominioVariavelTarefa(dominioVariavelTarefa);
             } else {
                 setMappedName(auxiliarName, type);
             }
@@ -182,127 +147,38 @@ public class VariableAccessHandler implements Serializable {
         variableAccess.setValue(value);
     }
 
-    private void changeModeloDocumentoAction(String newName) {
-        Action action = getActionNodeEnterByName(name);
-        if (action == null || action.getActionExpression() == null) return;
-        action.setName(newName);
-        action.setActionExpression(action.getActionExpression().replace(name, newName));
-    }
-
-    public DominioVariavelTarefa getDominioVariavelTarefa() {
-        return dominioVariavelTarefa;
-    }
-
-    public void setDominioVariavelTarefa(DominioVariavelTarefa dominioVariavelTarefa) {
-        this.dominioVariavelTarefa = dominioVariavelTarefa;
-        if (this.dominioVariavelTarefa != null && name != null) {
-            setMappedName(name, type, this.dominioVariavelTarefa.getId());
-        } else {
-            setMappedName(name, type);
-        }
-    }
-
     public VariableAccess update() {
-        if (modeloList != null && mudouModelo) {
-            updateModelo();
-        }
         variableAccess = new VariableAccess(name, getAccess(), format("{0}:{1}", type.name(), name));
+    	limparConfiguracoes();
         return variableAccess;
-    }
-
-    private void updateModelo() {
-        StringBuilder newExpression = new StringBuilder(PREFIX).append(name).append("',");
-        Action action = getAction(newExpression.toString());
-        if (!modeloList.isEmpty()) {
-            for (int i = 0; i < modeloList.size(); i++) {
-                Integer id = modeloList.get(i);
-                newExpression.append(id);
-                if (i < modeloList.size() - 1) {
-                    newExpression.append(COMMA);
-                }
-            }
-            newExpression.append(")}");
-            action.setName(name);
-            action.setActionExpression(newExpression.toString());
-        } else {
-            removeAction(action);
-        }
     }
     
     @SuppressWarnings("unchecked")
-	public void removeTaskAction(String actionName){
-    	GraphElement parent = task.getParent();
-    	if (parent.getEvents() == null) return;
-        for (Object entry : parent.getEvents().entrySet()) {
-			Event event = ((Map.Entry<String,Event>)entry).getValue();
-			if (event.hasActions()) {
-				for (Object o : event.getActions()) {
-	                Action a = (Action) o;
-	                String name = a.getName();
-	                String exp = a.getActionExpression();
-	                if ( (name != null && name.equalsIgnoreCase(actionName) ) || ( exp != null  && exp.contains("'"+ actionName +"'") ) ) {
-	                	event.removeAction(a);
-	                	if (event.getActions().isEmpty()) {
-	                         event.getGraphElement().removeEvent(event);
-	                    }
-	                    return ;
-	                }
-	            }
-			}
-		}
-    }
-
-    private void removeAction(Action action) {
-        action.setActionExpression(null);
-        Event event = action.getEvent();
-        event.removeAction(action);
-        if (event.getActions().isEmpty()) {
-            event.getGraphElement().removeEvent(event);
-        }
-    }
-
-    private Action getAction(String newExpression) {
+    public void removeTaskAction(String actionName) {
         GraphElement parent = task.getParent();
-        Event e = parent.getEvent(Event.EVENTTYPE_NODE_ENTER);
-        if (e == null) {
-            e = new Event(parent, Event.EVENTTYPE_NODE_ENTER);
-            parent.addEvent(e);
-        }
-        if (e.getActions() != null) {
-            for (Object o : e.getActions()) {
-                Action a = (Action) o;
-                String exp = a.getActionExpression();
-                if (exp != null && exp.startsWith(newExpression)) {
-                    return a;
+        if (parent.getEvents() == null)
+            return;
+        for (Object entry : parent.getEvents().entrySet()) {
+            Event event = ((Map.Entry<String, Event>) entry).getValue();
+            if (event.hasActions()) {
+                for (Object o : event.getActions()) {
+                    Action a = (Action) o;
+                    String name = a.getName();
+                    String exp = a.getActionExpression();
+                    if ((name != null && name.equalsIgnoreCase(actionName))
+                            || (exp != null && exp.contains("'" + actionName + "'"))) {
+                        event.removeAction(a);
+                        if (a.getProcessDefinition() != null) {
+                            a.getProcessDefinition().removeAction(a);
+                        }
+                        if (event.getActions().isEmpty()) {
+                            event.getGraphElement().removeEvent(event);
+                        }
+                        return;
+                    }
                 }
             }
         }
-        Action action = new Action();
-        e.addAction(action);
-        return action;
-    }
-    
-    
-    private Action getActionNodeEnterByName(String name) {
-    	GraphElement parent = task.getParent();
-    	Event e = parent.getEvent(Event.EVENTTYPE_NODE_ENTER);
-        if (e == null) {
-            e = new Event(parent, Event.EVENTTYPE_NODE_ENTER);
-            parent.addEvent(e);
-        }
-    	if (e.getActions() != null) {
-    		for (Object o : e.getActions()) {
-    			Action a = (Action) o;
-    			String expName = a.getName();
-    			if (expName != null && expName.equalsIgnoreCase(name)) {
-    				return a;
-    			}
-    		}
-    	}
-    	Action action = new Action();
-    	action.setName(name);
-    	e.addAction(action);
-    	return action;
     }
 
     public VariableAccess getVariableAccess() {
@@ -329,6 +205,7 @@ public class VariableAccessHandler implements Serializable {
 
     public void setType(VariableType type) {
         this.type = type;
+        this.variableAccess.setType(type.name());
         switch (type) {
             case PAGE:
                 if (!pageExists(name)) {
@@ -347,8 +224,18 @@ public class VariableAccessHandler implements Serializable {
         this.isData = isTipoData(type);
         this.isFile = isTipoFile(type);
         this.fragment = isTipoFragment(type);
+        this.numerico = isNumerico(type);
+        this.monetario = isMonetario(type);
     }
 
+    private boolean isMonetario(VariableType type) {
+        return VariableType.MONETARY.equals(type);
+    }
+    
+    private boolean isNumerico(VariableType type) {
+        return VariableType.INTEGER.equals(type);
+    }     
+    
     private boolean isTipoFragment(VariableType type) {
         return VariableType.FRAGMENT.equals(type);
     }
@@ -361,7 +248,7 @@ public class VariableAccessHandler implements Serializable {
         if (readable != variableAccess.isReadable()) {
             access[0] = readable;
             access[3] = !access[0];
-            ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
+            variableAccess.setAccess(new Access(getAccess()));
         }
     }
 
@@ -375,7 +262,7 @@ public class VariableAccessHandler implements Serializable {
             if (access[1]) {
                 access[0] = !access[3];
             }
-            ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
+            variableAccess.setAccess(new Access(getAccess()));
             if (!writable) {
             	setIniciaVazia(false);
             }
@@ -394,7 +281,7 @@ public class VariableAccessHandler implements Serializable {
                 access[1] = true;
                 access[2] = false;
             }
-            ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
+            variableAccess.setAccess(new Access(getAccess()));
         }
     }
 
@@ -410,7 +297,7 @@ public class VariableAccessHandler implements Serializable {
                 access[1] = true;
                 access[3] = false;
             }
-            ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
+            variableAccess.setAccess(new Access(getAccess()));
         }
     }
 
@@ -450,63 +337,12 @@ public class VariableAccessHandler implements Serializable {
         sb.append(permission);
     }
 
-    public List<Integer> getModeloList() {
-        return modeloList;
-    }
-
-    public void setModeloList(List<Integer> list) {
-        modeloList = list;
-    }
-
-    public List<ModeloDocumento> getModeloDocumentoList() {
-        if (modeloDocumentoList == null && modeloList != null) {
-            modeloDocumentoList = new ArrayList<ModeloDocumento>();
-            ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
-            for (Integer id : modeloList) {
-                modeloDocumentoList.add(modeloDocumentoManager.find(id));
-            }
-        }
-        return modeloDocumentoList;
-    }
-
-    // TODO: Esse entityList está bizarro, é a causa dos 2 warnings abaixo
-    @SuppressWarnings({ UNCHECKED, RAWTYPES })
-    public void addModelo(ModeloDocumento modelo) {
-        if (modeloDocumentoList == null) {
-            modeloDocumentoList = new ArrayList<>();
-            modeloList = new ArrayList<>();
-        }
-        modeloDocumentoList.add(modelo);
-        modeloList.add(modelo.getIdModeloDocumento());
-        EntityList modeloDocumentoList = ComponentUtil.getComponent(AssociatedTipoModeloVariavelList.NAME);
-        modeloDocumentoList.getResultList().add(modelo);
-        refreshModelosAssociados();
-        mudouModelo = true;
-        updateModelo();
-    }
-
-    private void refreshModelosAssociados() {
-        AssociativeModeloDocumentoList associativeModeloDocumentoList = ComponentUtil.getComponent(AssociativeModeloDocumentoList.NAME);
-        associativeModeloDocumentoList.refreshModelosAssociados();
-    }
-
-    public void removeModelo(ModeloDocumento modelo) {
-        modeloDocumentoList.remove(modelo);
-        modeloList.remove(Integer.valueOf(modelo.getIdModeloDocumento()));
-        EntityList<VariavelTipoModelo> modeloDocumentoList = ComponentUtil.getComponent(AssociatedTipoModeloVariavelList.NAME);
-        modeloDocumentoList.getResultList().remove(modelo);
-        refreshModelosAssociados();
-        mudouModelo = true;
-        updateModelo();
-    }
-
     public void copyVariable() {
         TaskHandlerVisitor visitor = new TaskHandlerVisitor(true);
         visitor.visit(task);
         for (String v : visitor.getVariables()) {
             String[] tokens = v.split(":");
             if (tokens.length > 1 && tokens[1].equals(name)) {
-                this.label = getLabel();
                 setType(VariableType.valueOf(tokens[0]));
                 setWritable(false);
                 switch (type) {
@@ -515,65 +351,40 @@ public class VariableAccessHandler implements Serializable {
                         setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
                     }
                     break;
-                    case DATE:
-                        if (tokens.length < 3) {
-                            setValidacaoDataEnum(ValidacaoDataEnum.L);
-                        } else {
-                            setValidacaoDataEnum(ValidacaoDataEnum.valueOf(tokens[2]));
-                        }
+                case DATE:
+                    getDataHandler().init(getVariableAccess());
                     break;
-                    case ENUMERATION:
-                    case ENUMERATION_MULTIPLE:
-                        if (tokens.length >= 3) {
-                            DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                            setDominioVariavelTarefa(dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2])));
-                        }
+                case MONETARY:
+                case INTEGER:	
+                	getMaxMinHandler().init(getVariableAccess());
+                	break;
+                case STRING:
+                	getStringHandler().init(getVariableAccess());
+                	break;
+                case ENUMERATION:
+                case ENUMERATION_MULTIPLE:
+                    getDominioHandler().init(getVariableAccess());
                     break;
-                    default:
-                    break;
+                    case FILE:
+                    case EDITOR:
+                    	getModeloEditorHandler().init(getVariableAccess());
+                    	break;
+                default:
+                	break;
                 }
             }
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     public static List<VariableAccessHandler> getList(Task task) {
         List<VariableAccessHandler> ret = new ArrayList<>();
         if (task.getTaskController() == null) {
             return ret;
         }
-        Map<String, List<Integer>> modeloMap = new HashMap<String, List<Integer>>();
-        GraphElement parent = task.getParent();
-        Event e = parent.getEvent(Event.EVENTTYPE_NODE_ENTER);
-
-        if (e != null && e.getActions() != null) {
-            Action action = (Action) e.getActions().get(0);
-            modeloMap = getModeloMap(action.getActionExpression());
-        }
-
         List<VariableAccess> list = task.getTaskController().getVariableAccesses();
         for (VariableAccess v : list) {
             VariableAccessHandler vh = new VariableAccessHandler(v, task);
-            String name = v.getVariableName();
-            if (modeloMap.containsKey(name)) {
-                vh.setModeloList(modeloMap.get(name));
-            }
             ret.add(vh);
-        }
-        return ret;
-    }
-
-    private static Map<String, List<Integer>> getModeloMap(String texto) {
-        Map<String, List<Integer>> ret = new LinkedHashMap<String, List<Integer>>();
-        if (texto != null && texto.startsWith(PREFIX)) {
-            String textoAuxiliar = texto.substring(PREFIX.length());
-            StringTokenizer st = new StringTokenizer(textoAuxiliar, ",')}");
-            List<Integer> values = new ArrayList<Integer>();
-            ret.put(st.nextToken(), values);
-            while (st.hasMoreTokens()) {
-                String s = st.nextToken();
-                values.add(Integer.parseInt(s.trim()));
-            }
         }
         return ret;
     }
@@ -584,40 +395,11 @@ public class VariableAccessHandler implements Serializable {
     }
 
     public void setLabel(String label) {
-        String labelAuxiliar = label.trim();
-        if (!labelAuxiliar.equals(this.label) && !"".equals(labelAuxiliar)) {
-            this.label = labelAuxiliar;
-            storeLabel(name, labelAuxiliar);
-        }
-    }
-
-    // TODO verificar por que tem registro duplicado na base
-    private void storeLabel(String name, String label) {
-        Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
-        final String mappedVariableName = format("{0}:{1}", task.getProcessDefinition().getName(), name);
-        final String old = map.get(mappedVariableName);
-        if (!label.equals(old)) {
-            map.put(mappedVariableName, label);
-            JbpmVariavelLabel j = new JbpmVariavelLabel();
-            j.setNomeVariavel(mappedVariableName);
-            j.setLabelVariavel(label);
-            try {
-                genericManager().persist(j);
-            } catch (DAOException e) {
-                LOG.error(format("Não foi possível gravar a JbpmVariavelLabel: {0}", j), e);
-            }
-        }
+        variableAccess.setLabel(label.trim());
     }
 
     public String getLabel() {
-        if (!"".equals(name)) {
-            setLabel(VariableHandler.getLabel(format("{0}:{1}", task.getProcessDefinition().getName(), name)));
-        }
-        return this.label;
-    }
-
-    public GenericManager genericManager() {
-        return ComponentUtil.getComponent(GenericManager.NAME);
+        return variableAccess.getLabel();
     }
 
     public boolean isFragment() {
@@ -636,41 +418,26 @@ public class VariableAccessHandler implements Serializable {
         return isFile;
     }
 
-    public ValidacaoDataEnum[] getTypeDateValues() {
-        return ValidacaoDataEnum.values();
-    }
-
-    public ValidacaoDataEnum getValidacaoDataEnum() {
-        return validacaoDataEnum;
-    }
-
-    public void setValidacaoDataEnum(ValidacaoDataEnum validacaoDataEnum) {
-        if ((this.validacaoDataEnum = validacaoDataEnum) != null && name != null) {
-            setMappedName(name, type, this.validacaoDataEnum.toString());
-        } else {
-            setMappedName(name, type);
-        }
-    }
-
     private void setMappedName(String name, VariableType type, Object... extra) {
         if (name == null) {
-            throw new IllegalStateException("Existe uma variável sem nome na tarefa ");
+            throw new IllegalStateException(InfoxMessages.getInstance().get("processBuilder.validationError.varSemNome"));
         }
         StringBuilder sb = new StringBuilder().append(type.name()).append(":").append(name);
         for (Object value : extra) {
             sb.append(":").append(value);
         }
-        variableAccess.setMappedName(sb.toString());
+        this.variableAccess.setMappedName(sb.toString());
     }
 
-    public void limparModelos() {
-        List<ModeloDocumento> modelos = getModeloDocumentoList();
-        if (modelos != null) {
-            modelos = new ArrayList<>(modelos);
-            for (ModeloDocumento modelo : modelos) {
-                removeModelo(modelo);
-            }
-        }
+    public void limparConfiguracoes() {
+    	getVariableAccess().setConfiguration(null);
+        getModeloEditorHandler().init(getVariableAccess());
+        VariavelClassificacaoDocumentoAction v = BeanManager.INSTANCE.getReference(VariavelClassificacaoDocumentoAction.class);
+        v.setCurrentVariable(getVariableAccess());
+        getDataHandler().init(getVariableAccess());
+        getMaxMinHandler().init(getVariableAccess());
+        getStringHandler().init(getVariableAccess());
+        getDominioHandler().init(getVariableAccess());
     }
 
     public FragmentConfiguration getFragmentConfiguration() {
@@ -697,5 +464,56 @@ public class VariableAccessHandler implements Serializable {
     public boolean podeIniciarVazia() {
     	return isWritable() && type != VariableType.FRAGMENT && type != VariableType.FRAME && type != VariableType.PAGE && type != VariableType.TASK_PAGE;
     }
-    
+
+	public VariableEditorModeloHandler getModeloEditorHandler() {
+		return modeloEditorHandler;
+	}
+
+	public VariableDataHandler getDataHandler() {
+		return dataHandler;
+	}
+
+	public void setDataHandler(VariableDataHandler dataHandler) {
+		this.dataHandler = dataHandler;
+	}
+
+	public VariableDominioEnumerationHandler getDominioHandler() {
+		return dominioHandler;
+	}
+
+	public void setDominioHandler(VariableDominioEnumerationHandler dominioHandler) {
+		this.dominioHandler = dominioHandler;
+	}
+
+	public VariableMaxMinHandler getMaxMinHandler() {
+		return maxMinHandler;
+	}
+
+	public void setMaxMinHandler(VariableMaxMinHandler maxMinHandler) {
+		this.maxMinHandler = maxMinHandler;
+	}
+
+	public VariableStringHandler getStringHandler() {
+		return stringHandler;
+	}
+
+	public void setStringHandler(VariableStringHandler stringHandler) {
+		this.stringHandler = stringHandler;
+	}
+
+	public boolean isNumerico() {
+		return numerico;
+	}
+
+	public void setNumerico(boolean numerico) {
+		this.numerico = numerico;
+	}
+
+	public boolean isMonetario() {
+		return monetario;
+	}
+
+	public void setMonetario(boolean monetario) {
+		this.monetario = monetario;
+	}
 }

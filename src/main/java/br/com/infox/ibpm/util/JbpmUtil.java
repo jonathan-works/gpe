@@ -2,9 +2,7 @@ package br.com.infox.ibpm.util;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -17,12 +15,12 @@ import javax.persistence.criteria.Subquery;
 
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jboss.seam.contexts.Contexts;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
@@ -38,8 +36,8 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.constants.FloatFormatConstants;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -48,7 +46,6 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.node.NodeBean;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
-import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -64,7 +61,6 @@ public class JbpmUtil {
     public static final String NAME = "jbpmUtil";
     public static final int FROM_TASK_TRANSITION = 0;
     public static final int TO_TASK_TRANSITION = 1;
-    private static Map<String, String> messagesMap;
 
     /**
      * Busca a localização de uma tarefa
@@ -96,7 +92,11 @@ public class JbpmUtil {
     }
 
     public static Session getJbpmSession() {
-        return ManagedJbpmContext.instance().getSession();
+    	if (Contexts.isEventContextActive()) {
+    		return ManagedJbpmContext.instance().getSession();
+    	} else {
+    		return JbpmContextProducer.getJbpmContext().getSession();
+    	}
     }
     
     public void deleteTimers(ProcessDefinition processDefinition) {
@@ -180,22 +180,6 @@ public class JbpmUtil {
         return result.isEmpty() ? null : result.get(0);
     }
 
-    @Factory(value = "jbpmMessages", scope = ScopeType.APPLICATION)
-    public Map<String, String> getMessages() {
-        return getJbpmMessages();
-    }
-
-    public static synchronized Map<String, String> getJbpmMessages() {
-        if (messagesMap == null) {
-            messagesMap = new HashMap<String, String>();
-            List<JbpmVariavelLabel> l = genericManager().findAll(JbpmVariavelLabel.class);
-            for (JbpmVariavelLabel j : l) {
-                messagesMap.put(j.getNomeVariavel(), j.getLabelVariavel());
-            }
-        }
-        return messagesMap;
-    }
-
     @SuppressWarnings(UNCHECKED)
     public static <T> T getProcessVariable(String name) {
         ProcessInstance processInstance = org.jboss.seam.bpm.ProcessInstance.instance();
@@ -276,10 +260,6 @@ public class JbpmUtil {
 
     private static ProcessoManager processoManager() {
         return ComponentUtil.getComponent(ProcessoManager.NAME);
-    }
-
-    private static GenericManager genericManager() {
-        return ComponentUtil.getComponent(GenericManager.NAME);
     }
 
     private static UsuarioTaskInstanceManager usuarioTaskInstanceManager() {

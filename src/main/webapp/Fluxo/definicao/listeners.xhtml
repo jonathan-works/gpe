@@ -16,7 +16,7 @@
     		disabled="#{nodeFitter.managedCatchSignal}"/>
 
     	<wi:selectOneMenu id="transitionListener"
-            label="#{infoxMessages['process.expiration.transition']}" valueItems="#{nodeFitter.currentNode.leavingTransitions}" 
+            label="#{infoxMessages['process.timer.transition']}" valueItems="#{nodeFitter.currentNode.leavingTransitions}" 
             showLabelSelecione="true" required="true" showRequired="true" optionLabel="#{item.name}" optionValue="#{item.key}" 
             value="#{nodeFitter.transicaoCatchSignal}"/>
             

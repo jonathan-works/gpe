@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.inject.Inject;
@@ -21,6 +20,8 @@ import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
@@ -38,9 +39,9 @@ import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 
-@Stateful
 @AutoCreate
 @Name(ConsultaController.NAME)
+@ContextDependency
 public class ConsultaController extends AbstractController {
 
     private static final long serialVersionUID = 1L;

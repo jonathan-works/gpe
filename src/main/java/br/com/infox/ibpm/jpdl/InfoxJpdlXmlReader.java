@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.jpdl;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.URL;
 
 import org.dom4j.Element;
@@ -30,6 +32,10 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
     public InfoxJpdlXmlReader(InputSource source) {
         super(source);
     }
+    
+    public InfoxJpdlXmlReader(Reader reader) {
+    	super(reader);
+	}
 
     @Override
     /**
@@ -43,7 +49,7 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
     		StringBuilder sb = new StringBuilder(e.getMessage());
     		for (Object o : e.getProblems()) {
     			sb.append("\n");
-    			sb.append(((Problem) o).getDescription());
+    			sb.append(((Problem) o).getDescription() + " (severidade: " + ((Problem) o).getLevel() + ")");
     		}
     		ReflectionsUtil.setValue(e, "detailMessage", sb.toString());
     		throw e;
@@ -68,7 +74,8 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
         }
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected TaskController readTaskController(Element taskControllerElement) {
     	TaskController taskController = new TaskController();
         if (taskControllerElement.attributeValue("class") != null) {
@@ -78,5 +85,10 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
 	    }
         taskController.setVariableAccesses(readVariableAccesses(taskControllerElement));
         return taskController;
+    }
+    
+    public static ProcessDefinition readProcessDefinition(String xml) {
+    	StringReader reader = new StringReader(xml);
+    	return new InfoxJpdlXmlReader(reader).readProcessDefinition();
     }
 }

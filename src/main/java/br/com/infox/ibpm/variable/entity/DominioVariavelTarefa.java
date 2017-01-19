@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 
@@ -37,6 +39,11 @@ public class DominioVariavelTarefa implements Serializable {
 
     @Column(name = COLUMN_NOME, nullable = false, length = LengthConstants.NOME_MEDIO)
     private String nome;
+    
+    @NotNull
+    @Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA)
+    @Column(name = "cd_dominio_variavel_tarefa", length = LengthConstants.DESCRICAO_PEQUENA)
+    private String codigo;
 
     public Integer getId() {
         return id;
@@ -66,6 +73,14 @@ public class DominioVariavelTarefa implements Serializable {
     public boolean isDominioSqlQuery(){
     	return dominio.startsWith("select");
     }
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
 
 	@Override
 	public int hashCode() {

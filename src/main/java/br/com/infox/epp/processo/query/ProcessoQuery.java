@@ -252,6 +252,9 @@ public interface ProcessoQuery {
 			+ " ;\n"
 			+ "DELETE FROM jbpm_processinstance WHERE id_ = :" + PARAM_ID_JBPM + " ;";
 
+	String REMOVER_JBPM_LOG = "removerJbpmLog";
+	String REMOVER_JBPM_LOG_QUERY = "DELETE FROM jbpm_log WHERE token_ = :" + PARAM_ID_TOKEN;
+
 	String GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST = "getIdTaskMgmInstanceAndIdTokenByProcInst";
 	String GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY = "select taskmgmtinstance_ , token_ "
 			+ "from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM;

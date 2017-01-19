@@ -3,6 +3,7 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
     xmlns:a="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" xmlns:h="http://java.sun.com/jsf/html"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
     template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
     <ui:define name="title">#{infoxMessages['termoAdesao.titlePage']}</ui:define>
     
@@ -43,17 +44,15 @@ body {
             <p:outputPanel styleClass="termo-adesao-buttons">
                 <p:outputPanel id="termoAdesaoFormPanel">
                     <h:form id="termoAdesaoForm" rendered="#{not termoAdesaoViewController.termoAdesaoAssinado}">
-                        <a:jsFunction name="assinarTermo" action="#{termoAdesaoViewController.assinarTermoAdesao}"
-                            rendered="#{not termoAdesaoViewController.termoAdesaoAssinado}"
-                            execute="@this termoAdesaoToken" render="DialogMessage termoAdesaoFormPanel" limitRender="true"
-                            oncomplete="infox.hideLoading();" />
-                        <wi:certificadoDigital id="termoAdesao"
-                            rendered="#{not termoAdesaoViewController.termoAdesaoAssinado}" 
-                            styleClass="buttons-primary" tokenField="#{termoAdesaoViewController.token}"
-                            signableData="#{termoAdesaoViewController.digestDocumento}"
-                            functionPreSign="infox.showLoading();" functionPosSign="assinarTermo();"
-                            signButtonCaption="#{infoxMessages['login.assinarTermoAdesao']}" />
-    
+                        <wi:assinador id="termoAdesao"
+                            callbackHandler="#{termoAdesaoViewController}"
+                            assinavelProvider="#{termoAdesaoViewController.assinavelProvider}"
+                            execute="@this" styleClass="buttons-primary"
+                            render="DialogMessage termoAdesaoFormPanel"
+                            onbegin="infox.showLoading();"
+                            oncomplete="infox.hideLoading();"
+                            value="#{infoxMessages['login.assinarTermoAdesao']}">
+                        </wi:assinador>
                     </h:form>
                 </p:outputPanel>
                 <button onclick="infox.redirect({url:window.document.referrer})"

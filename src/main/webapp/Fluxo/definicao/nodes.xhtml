@@ -7,134 +7,38 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:p="http://primefaces.org/ui"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
     <s:div id="nodes">
-        <s:div id="divNodesGeral">
-            <s:div
-                id="nodesDiv"
-                styleClass="node-instance-p">
-                <s:div styleClass="node-instance-l">
-                    <ui:decorate template="dataTable.xhtml">
-                        <ui:param
-                            name="values"
-                            value="#{nodeFitter.nodes}" />
-                        <ui:param
-                            name="styleClass"
-                            value="tabelaVariaveis" />
-                        <ui:param
-                            name="id"
-                            value="nodesTable" />
-                        <ui:define name="headerToolBar">
-                            <h:form>
-                                <a:commandLink
-                                    action="#{nodeFitter.setCurrentNode(null)}"
-                                    render="nodesDiv"
-                                    limitRender="true">
-                                    <h:graphicImage
-                                        title="#{infoxMessages['process.node.add']}"
-                                        url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
-                                </a:commandLink>
-                            </h:form>
-                        </ui:define>
-                        <ui:define name="toolBar">
-                            <h:form>
-                                <h:graphicImage
-                                    title="#{infoxMessages['process.node.remove']}"
-                                    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
-                                    styleClass="opacityHover"
-                                    rendered="#{not (row.nodeType eq 'StartState' or row.nodeType eq 'Join')}">
-                                    <a:ajax
-                                        event="click"
-                                        listener="#{nodeFitter.removeNode(row)}"
-                                        onbeforesubmit="return confirm(\'#{infoxMessages['processBuilder.confirm']}\');"
-                                        execute="@this"
-                                        render="nodesDiv, pageBodyDialogMessage"
-                                        limitRender="true" />
-                                </h:graphicImage>
-                                <h:graphicImage
-                                    title="#{infoxMessages['process.node.up']}"
-                                    rendered="#{key != 0}"
-                                    url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/up.gif')}"
-                                    styleClass="opacityHover">
-                                    <a:ajax
-                                        event="click"
-                                        listener="#{nodeFitter.moveUp(row)}"
-                                        execute="@this"
-                                        render="nodesTable"
-                                        limitRender="true" />
-                                </h:graphicImage>
-                                <h:graphicImage
-                                    title="#{infoxMessages['process.node.down']}"
-                                    rendered="#{key lt nodeFitter.nodes.size - 1}"
-                                    url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}"
-                                    styleClass="opacityHover">
-                                    <a:ajax
-                                        event="click"
-                                        listener="#{nodeFitter.moveDown(row)}"
-                                        execute="@this"
-                                        render="nodesTable"
-                                        limitRender="true" />
-                                </h:graphicImage>
-                            </h:form>
-                        </ui:define>
-                        <ui:define name="columns">
-                            <rich:column>
-                                <f:facet name="header">#{infoxMessages['process.nodes']}</f:facet>
-                                <ui:param
-                                    name="current"
-                                    value="#{row == nodeFitter.currentNode}" />
-                                <ui:param
-                                    name="styleNodeName"
-                                    value="#{current ? 'font-weight:bold' : ''}" />
-                                <h:form>
-                                    <a:commandLink
-                                        action="#{nodeFitter.setCurrentNode(row)}"
-                                        render="divNodesGeral pageBodyDialogMessage"
-                                        execute="@this"
-                                        onbegin="infox.showLoading('Carregando dados da tarefa...');"
-                                        oncomplete="infox.hideLoading();"
-                                        limitRender="true"
-                                        styleClass="#{row.equals(nodeFitter.currentNode) ? 'bold-link' : '' } link">
-                                        <a:outputPanel>
-                                            <h:panelGrid
-                                                columns="2"
-                                                cellspacing="0"
-                                                cellpadding="0">
-                                                <c:set var="pathResource" value="/imagens/jbpm/#{nodeFitter.getIcon(row)}.gif" />
-                                                <h:graphicImage
-                                                    url="#{layoutController.getResourceUrlByPath(pathResource)}"
-                                                    title="#{row.nodeType}" />
-                                                <h:outputText
-                                                    value="#{row.name}"
-                                                    title="#{nodeFitter.getMessage(row)}" />
-                                            </h:panelGrid>
-                                        </a:outputPanel>
-                                    </a:commandLink>
-                                </h:form>
-                            </rich:column>
-                        </ui:define>
-                    </ui:decorate>
-                </s:div>
-                <s:div
-                    id="nodeDiv"
-                    styleClass="node-instance-e">
-                    <rich:panel
-                        bodyClass="panel"
-                        rendered="#{not empty nodeFitter.currentNode}">
-                        <f:facet name="header">
-                            <h:panelGrid
-                                columns="2"
-                                cellpadding="0"
-                                cellspacing="0">
-                                <c:set var="pathResource" value="/imagens/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif" />
-                                <h:graphicImage
-                                    url="#{layoutController.getResourceUrlByPath(pathResource)}"
-                                    title="#{nodeFitter.currentNode.nodeType}" />
-                                <h:outputText
-                                    value="#{nodeFitter.nodeName}" />
-                            </h:panelGrid>
-                        </f:facet>
+		<h:form>
+			<div class="property-field-edit-name">
+				<h:outputLabel id="nodesCompleteLabel" for="nodesComplete" value="Nós" />
+			</div>
+        	<p:autoComplete id="nodesComplete" value="#{nodeFitter.currentNode}" scrollHeight="300"
+				completeMethod="#{nodeFitter.getNodesAutocomplete}" forceSelection="true"
+				var="item" itemLabel="#{item.name}"	itemValue="#{item}" converter="jbpmNodeConverter"
+				minQueryLength="3" dropdown="true" inputStyle="width: 450px;">
+				<p:column style="text-align:center; width: 10%;">
+					<p:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/jbpm/'.concat(nodeFitter.getIcon(item)).concat('.gif'))}" />
+				</p:column>
+				<p:column style="width: 90%">#{item.name}</p:column>
+				<a:ajax event="itemSelect" render="nodes :pageBodyDialogMessage" execute="@this"
+					onbegin="infox.showLoading('Carregando dados da tarefa...');" oncomplete="infox.hideLoading()"/>
+			</p:autoComplete>
+		</h:form>
+		<rich:panel bodyClass="panel"
+			rendered="#{not empty nodeFitter.currentNode}">
+			<f:facet name="header">
+				<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+					<c:set var="pathResource"
+						value="/imagens/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif" />
+					<h:graphicImage
+						url="#{layoutController.getResourceUrlByPath(pathResource)}"
+						title="#{nodeFitter.currentNode.nodeType}" />
+					<h:outputText value="#{nodeFitter.nodeName}" />
+				</h:panelGrid>
+			</f:facet>
                         
                         <ui:fragment rendered="#{nodeFitter.currentNode.nodeType eq 'Node'}">
                         	<div>
@@ -147,83 +51,73 @@
                         	</div>
                         </ui:fragment>
                         
-                        <div class="#{nodeFitter.currentNode.nodeType ne 'Decision' ? 'flex-displayed-container' : ''}">
-                            <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
-                                <ui:include src="transition.xhtml">
-                                    <ui:param name="type" value="from" />
-                                </ui:include>
-                            </s:fragment>
-                            <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'EndState'}">
-                                <ui:include src="transition.xhtml">
-                                    <ui:param name="type" value="to" />
-                                </ui:include>
-                            </s:fragment>
-                        </div>
-                        <ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'StartState'}">
-                            <ui:include src="startStateTask.xhtml" />
-                        </ui:fragment>
-                        <ui:fragment rendered="#{nodeFitter.nodeHandler.activity}">
-                            <ui:include src="activity/activity.xhtml"/>
-                        </ui:fragment>
-                        <ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
-                            <ui:include src="tasks.xhtml" />
-                        </ui:fragment>
-                        <ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
-                            <ui:include src="timers.xhtml" />
-                        </ui:fragment>
-                        <ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
-                            <ui:include src="expirations.xhtml" />
-                        </ui:fragment>
-                        <s:div rendered="#{! empty nodeFitter.nodeForm}">
-                            <h:form>
-                                <ui:include
-                                    src="forms/#{nodeFitter.nodeForm}.xhtml" />
-                            </h:form>
-                        </s:div>
-                        <h:form>
-							<rich:collapsiblePanel
-								switchType="ajax"
-								expanded="true"
-								rendered="#{nodeFitter.nodeType == 'Task' || nodeFitter.nodeType == 'Node'}"
-								header="#{infoxMessages['process.status.nome']}">
-								<wi:selectOneMenuEntity
-									id="statusProcesso"
-									label="#{infoxMessages['process.status.nome']}"
-									value="#{nodeFitter.nodeHandler.statusProcesso}"
-									items="#{nodeFitter.statusProcessoList}"
-									showLabelSelecione="true">
-									<a:ajax event="change"
-										execute="@this"
-										limitRender="true"
-										render="@this" />
-								</wi:selectOneMenuEntity>
-							</rich:collapsiblePanel>
-						</h:form>
-						<h:form id="documentoGenerateForm">
-							<rich:collapsiblePanel
-								switchType="ajax"
-								expanded="true"
-								rendered="#{nodeFitter.nodeType == 'Task' || nodeFitter.nodeType == 'Node'}"
-								header="#{infoxMessages['process.documento.generate']}">
-								<wi:selectOneMenuEntity id="classificacaoDocumentoGenerate"
-									label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
-									value="#{nodeFitter.nodeHandler.classificacaoDocumento}"
-									items="#{nodeFitter.classificacoesDocumento}"
-									showLabelSelecione="true">
-									<a:ajax event="change" execute="@this" limitRender="true" render="documentoGenerateForm, eventsForm" />
-								</wi:selectOneMenuEntity>
-								<wi:selectOneMenuEntity
-									id="modeloDocumentoGenerate"
-									label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
-									value="#{nodeFitter.nodeHandler.modeloDocumento}"
-									items="#{nodeFitter.modeloDocumentoList}"
-									showLabelSelecione="true" 
-									rendered="#{not empty nodeFitter.nodeHandler.classificacaoDocumento}">
-									<a:ajax event="change"
-										execute="@this"
-										limitRender="true"
-										render="documentoGenerateForm, eventsForm" />
-								</wi:selectOneMenuEntity>
+                        <div
+				class="#{nodeFitter.currentNode.nodeType ne 'Decision' ? 'flex-displayed-container' : ''}">
+				<s:fragment
+					rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
+					<ui:include src="transition.xhtml">
+						<ui:param name="type" value="from" />
+					</ui:include>
+				</s:fragment>
+				<s:fragment
+					rendered="#{nodeFitter.currentNode.nodeType != 'EndState'}">
+					<ui:include src="transition.xhtml">
+						<ui:param name="type" value="to" />
+					</ui:include>
+				</s:fragment>
+			</div>
+			<ui:fragment
+				rendered="#{nodeFitter.currentNode.nodeType == 'StartState'}">
+				<ui:include src="startStateTask.xhtml" />
+			</ui:fragment>
+			<ui:fragment rendered="#{nodeFitter.nodeHandler.activity}">
+				<ui:include src="activity/activity.xhtml" />
+			</ui:fragment>
+			<ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
+				<ui:include src="tasks.xhtml" />
+			</ui:fragment>
+			<ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
+				<ui:include src="timers.xhtml" />
+			</ui:fragment>
+			<s:div rendered="#{! empty nodeFitter.nodeForm}">
+				<h:form>
+					<ui:include src="forms/#{nodeFitter.nodeForm}.xhtml" />
+				</h:form>
+			</s:div>
+			<h:form>
+				<rich:collapsiblePanel switchType="ajax" expanded="true"
+					rendered="#{nodeFitter.nodeType == 'Task' || nodeFitter.nodeType == 'Node'}"
+					header="#{infoxMessages['process.status.nome']}">
+					<wi:selectOneMenuEntity id="statusProcesso"
+						label="#{infoxMessages['process.status.nome']}"
+						value="#{nodeFitter.nodeHandler.statusProcesso}"
+						items="#{nodeFitter.statusProcessoList}" showLabelSelecione="true">
+						<a:ajax event="change" execute="@this" limitRender="true"
+							render="@this" />
+					</wi:selectOneMenuEntity>
+				</rich:collapsiblePanel>
+			</h:form>
+			<h:form id="documentoGenerateForm">
+				<rich:collapsiblePanel switchType="ajax" expanded="true"
+					rendered="#{nodeFitter.nodeType == 'Task' || nodeFitter.nodeType == 'Node'}"
+					header="#{infoxMessages['process.documento.generate']}">
+					<wi:selectOneMenuEntity id="classificacaoDocumentoGenerate"
+						label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
+						value="#{nodeFitter.nodeHandler.classificacaoDocumento}"
+						items="#{nodeFitter.classificacoesDocumento}"
+						showLabelSelecione="true">
+						<a:ajax event="change" execute="@this" limitRender="true"
+							render="documentoGenerateForm, eventsForm" />
+					</wi:selectOneMenuEntity>
+					<wi:selectOneMenuEntity id="modeloDocumentoGenerate"
+						label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
+						value="#{nodeFitter.nodeHandler.modeloDocumento}"
+						items="#{nodeFitter.modeloDocumentoList}"
+						showLabelSelecione="true"
+						rendered="#{not empty nodeFitter.nodeHandler.classificacaoDocumento}">
+						<a:ajax event="change" execute="@this" limitRender="true"
+							render="documentoGenerateForm, eventsForm" />
+					</wi:selectOneMenuEntity>
 								<wi:inputText id="modeloPastaGenerate"
 									label="#{infoxMessages['pasta.codigoPasta']}"
 									value="#{nodeFitter.nodeHandler.codigoPasta}"
@@ -233,146 +127,39 @@
 										onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
 										render="documentoGenerateForm, eventsForm" />
 								</wi:inputText>
-							</rich:collapsiblePanel>
-						</h:form>
-                        <h:form>
-                            <rich:collapsiblePanel
-                                switchType="ajax"
-                                expanded="false"
-                                header="#{infoxMessages['jbpm.taskNode.description']}">
-                                <wi:editor
-                                    id="nodeDescription"
-                                    label=""
-                                    value="#{nodeFitter.currentNode.description}">
-                                    <a:ajax
-                                        event="blur"
-                                        execute="@this"
-                                        limitRender="true" />
-                                </wi:editor>
-                            </rich:collapsiblePanel>
-                        </h:form>
-                        
-                       	<rich:collapsiblePanel switchType="client" expanded="false" header="Observadores de Sinal" rendered="#{nodeFitter.canAddCatchSignalToNode()}">
-                   			<ui:include src="listeners.xhtml" />
-                       	</rich:collapsiblePanel>
-                       	
-                       	<rich:collapsiblePanel switchType="client" expanded="false" header="Disparador de Sinal" rendered="#{nodeFitter.canAddDispatcherSignalToNode()}">
-                   			<ui:include src="dispatchers.xhtml" />
-                       	</rich:collapsiblePanel>
-                       	
-                       	<h:form id="eventsForm">
-                            <rich:collapsiblePanel
-                                switchType="ajax"
-                                expanded="false"
-                                header="#{infoxMessages['process.events']}">
-                                <ui:include src="events.xhtml">
-                                    <ui:param
-                                        name="parent"
-                                        value="#{nodeFitter.nodeHandler}" />
-                                    <ui:param
-                                        name="id"
-                                        value="nodeEvent" />
-                                </ui:include>
-                            </rich:collapsiblePanel>
-                        </h:form>
-					</rich:panel>
+				</rich:collapsiblePanel>
+			</h:form>
+			<h:form>
+				<rich:collapsiblePanel switchType="ajax" expanded="false"
+					header="#{infoxMessages['jbpm.taskNode.description']}">
+					<wi:editor id="nodeDescription" label=""
+						value="#{nodeFitter.currentNode.description}">
+						<a:ajax event="blur" execute="@this" limitRender="true" />
+					</wi:editor>
+				</rich:collapsiblePanel>
+			</h:form>
 
-                    <rich:panel
-                        header="#{infoxMessages['process.node.new']}"
-                        rendered="#{empty nodeFitter.currentNode}">
-                        <rich:dataTable
-                            id="nodeTypes"
-                            value="#{nodeFitter.nodeTypes}"
-                            var="node">
-                            <f:facet name="header">
-                                <h:outputText
-                                    value="#{infoxMessages['process.node.type']}" />
-                            </f:facet>
-                            <rich:column>
-                                <c:set var="pathResource" value="/imagens/jbpm/#{node[0]}.gif" />
-                                <h:graphicImage
-                                    url="#{layoutController.getResourceUrlByPath(pathResource)}" />
-                            </rich:column>
-                            <rich:column>
-                                <h:outputText value="#{node[1]}" />
-                            </rich:column>
-                            <rich:column>
-                                <h:form>
-                                <c:set var="pathResource" value="/imagens/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif" />
-                                <h:graphicImage
-                                        url="#{layoutController.getResourceUrlByPath(pathResource)}" >
-                                        <a:ajax
-                                            event="click"
-                                            listener="#{nodeFitter.setNewNodeType(node[0])}"
-                                            execute="@this"
-                                            render="nodeTypes,inTransition"
-                                            limitRender="true" />
-                                    </h:graphicImage>
-                                </h:form>
-                            </rich:column>
-                        </rich:dataTable>
-                        <s:div>
-                            <h:form>
-                                <s:decorate
-                                    template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-                                    id="newNodeNameDecoration">
-                                    <ui:define name="label">#{infoxMessages['process.node.name']}</ui:define>
-                                    <h:inputText
-                                        id="newNodeName"
-                                        styleClass="inputText"
-                                        value="#{nodeFitter.newNodeName}"
-                                        maxlength="150"
-                                        required="true">
-                                        <a:ajax
-                                            event="change"
-                                            execute="@this"
-                                            render="newNodeNameDecoration"
-                                            limitRender="true" />
-                                        <f:validator
-                                            validatorId="nodeNameValidator" />
-                                        <f:converter
-                                            converterId="nodeNameConverter" />
-                                    </h:inputText>
-                                </s:decorate>
-                                <s:decorate
-                                    template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-                                    id="afterDecoration">
-                                    <ui:define name="label">#{infoxMessages['process.node.after']}</ui:define>
-                                    <h:selectOneMenu
-                                        id="after" style="width:75%;"
-                                        value="#{nodeFitter.newNodeAfter}"
-                                        required="true">
-                                        <f:selectItems
-                                            value="#{nodeFitter.nodesItems}" />
-                                    </h:selectOneMenu>
-                                </s:decorate>
-                                <s:div id="inTransition">
-                                    <s:decorate
-                                        rendered="#{nodeFitter.newNodeType != 'EndState'}"
-                                        template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-                                        id="inTransitionDecoration">
-                                        <ui:define name="label">#{infoxMessages['process.node.at']}</ui:define>
-                                        <h:selectOneMenu
-                                            id="inTransition" style="width:75%;"
-                                            value="#{transitionFitter.newNodeTransitionName}"
-                                            required="true">
-                                            <f:selectItems
-                                                value="#{transitionFitter.getTransitionsItems(nodeFitter.getNodes())}" />
-                                        </h:selectOneMenu>
-                                    </s:decorate>
-                                </s:div>
-                                <a:commandButton
-                                    styleClass="buttons"
-                                    value="#{infoxMessages['process.node.insert']}"
-                                    render="nodesDiv"
-                                    execute="@form"
-                                    action="#{nodeFitter.addNewNode()}"
-                                    limitRender="true" />
-                            </h:form>
-                        </s:div>
-                    </rich:panel>
-                </s:div>
-            </s:div>
-        </s:div>
+			<rich:collapsiblePanel switchType="client" expanded="false"
+				header="Observadores de Sinal"
+				rendered="#{nodeFitter.canAddCatchSignalToNode()}">
+				<ui:include src="listeners.xhtml" />
+			</rich:collapsiblePanel>
+
+			<rich:collapsiblePanel switchType="client" expanded="false"
+				header="Disparador de Sinal"
+				rendered="#{nodeFitter.canAddDispatcherSignalToNode()}">
+				<ui:include src="dispatchers.xhtml" />
+			</rich:collapsiblePanel>
+
+			<h:form id="eventsForm">
+				<rich:collapsiblePanel switchType="ajax" expanded="false"
+					header="#{infoxMessages['process.events']}">
+					<ui:include src="events.xhtml">
+						<ui:param name="parent" value="#{nodeFitter.nodeHandler}" />
+						<ui:param name="id" value="nodeEvent" />
+					</ui:include>
+				</rich:collapsiblePanel>
+			</h:form>
+		</rich:panel>
     </s:div>
 </ui:composition>

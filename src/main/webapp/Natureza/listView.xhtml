@@ -18,7 +18,7 @@
     <ui:define name="searchGrid">
         <wi:dataTable values="#{naturezaList.list(15)}"
             bean="#{naturezaList}"
-            tableTitle="#{epp_messages['natureza.tableTitle']}"
+            tableTitle="#{infoxMessages['natureza.tableTitle']}"
             id="naturezaList" rowId="#{row.idNatureza}"
             actionInactive="naturezaCrudAction.inactive">
             <ui:define name="searchForm">

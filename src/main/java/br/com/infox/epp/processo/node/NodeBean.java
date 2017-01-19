@@ -8,12 +8,14 @@ public class NodeBean {
     private String numeroProcesso;
     private Long tokenId;
     private String nodeType;
+    private String processName;
 
-    public NodeBean(Long tokenId, String nodeName, char nodeClass, String numeroProcesso) {
+    public NodeBean(Long tokenId, String nodeName, char nodeClass, String numeroProcesso, String processName) {
         this.tokenId = tokenId;
         this.nodeName = nodeName;
         this.nodeType = NodeType.valueOf(Character.toString(nodeClass)).getLabel();
         this.numeroProcesso = numeroProcesso;
+        this.processName = processName;
     }
 
     public String getNodeName() {
@@ -46,5 +48,13 @@ public class NodeBean {
 
     public void setNodeType(String nodeType) {
         this.nodeType = nodeType;
+    }
+
+    public String getProcessName() {
+        return processName;
+    }
+
+    public void setProcessName(String processName) {
+        this.processName = processName;
     }
 }

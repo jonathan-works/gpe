@@ -4,21 +4,16 @@ import java.util.List;
 
 import org.jboss.seam.faces.FacesMessages;
 
-import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
-import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
-import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -27,13 +22,13 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
 import br.com.infox.seam.exception.BusinessException;
 
 public abstract class FileFormType implements FormType {
     
     protected String name;
     protected String path;
-    protected Documento documentoToSign;
     protected String tokenToSign;
     
     public FileFormType(String name, String path) {
@@ -62,9 +57,12 @@ public abstract class FileFormType implements FormType {
     
     @Override
     public void performValue(FormField formField, FormData formData) {
-        String variableName = formField.getId();
-        Integer idFluxo = formData.getProcesso().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
-        List<ClassificacaoDocumento> classificacoes = getVariavelClassificacaoDocumentoManager().listClassificacoesPublicadasDaVariavel(variableName, idFluxo);
+    	String configuration = (String) formField.getProperties().get("configuration");
+    	List<String> codigos = null;
+        if (configuration != null && !configuration.isEmpty()) {
+            codigos = VariableEditorModeloHandler.fromJson(configuration).getCodigosClassificacaoDocumento(); 
+        } 
+        List<ClassificacaoDocumento> classificacoes = getClassificacaoDocumentoFacade().getUseableClassificacaoDocumentoVariavel(codigos, false);
         formField.addProperty("classificacoesDocumento", classificacoes);
         if (classificacoes.size() == 1) {
             formField.addProperty("classificacaoDocumento", classificacoes.get(0));
@@ -87,18 +85,11 @@ public abstract class FileFormType implements FormType {
     }
 
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
-    public void assinar() throws DAOException, CertificadoException, AssinaturaException {
+    public void assinar() throws DAOException, AssinaturaException {
         try {
-            CertificateSignatureBundleBean certificateSignatureBundle = getCertificateSignatures().get(tokenToSign);
-            if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-                FacesMessages.instance().add("Erro ao assinar");
-            } else {
-                CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
-                getAssinaturaDocumentoService().assinarDocumento(documentoToSign, Authenticator.getUsuarioPerfilAtual(),
-                        signatureBean.getCertChain(), signatureBean.getSignature());
-            }
+    		getAssinadorService().assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
+    		FacesMessages.instance().add(InfoxMessages.getInstance().get("assinatura.assinadoSucesso"));
         } finally {
-            setDocumentoToSign(null);
             setTokenToSign(null);
         }
     }
@@ -117,14 +108,6 @@ public abstract class FileFormType implements FormType {
                 && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());
     }
     
-    public Documento getDocumentoToSign() {
-        return documentoToSign;
-    }
-
-    public void setDocumentoToSign(Documento documentoToSign) {
-        this.documentoToSign = documentoToSign;
-    }
-
     public String getTokenToSign() {
         return tokenToSign;
     }
@@ -137,11 +120,11 @@ public abstract class FileFormType implements FormType {
     public boolean isPersistable() {
         return true;
     }
-
-    protected CertificateSignatures getCertificateSignatures() {
-        return BeanManager.INSTANCE.getReference(CertificateSignatures.class);
-    }
     
+    private AssinadorService getAssinadorService() {
+        return BeanManager.INSTANCE.getReference(AssinadorService.class);
+    }
+
     protected AssinaturaDocumentoService getAssinaturaDocumentoService() {
         return BeanManager.INSTANCE.getReference(AssinaturaDocumentoService.class);
     }
@@ -156,10 +139,6 @@ public abstract class FileFormType implements FormType {
     
     protected ClassificacaoDocumentoFacade getClassificacaoDocumentoFacade() {
         return BeanManager.INSTANCE.getReference(ClassificacaoDocumentoFacade.class);
-    }
-    
-    protected VariavelClassificacaoDocumentoManager getVariavelClassificacaoDocumentoManager() {
-        return BeanManager.INSTANCE.getReference(VariavelClassificacaoDocumentoManager.class);
     }
     
 }

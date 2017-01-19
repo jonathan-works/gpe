@@ -16,9 +16,11 @@ interface JbpmQueries {
             + "and exists (select 1 from Processo p where p.idProcesso = vi.value)";
 
     String NODE_BEANS_OF_AUTOMATIC_NODES_NOT_ENDED_QUERY = "select new br.com.infox.epp.processo.node.NodeBean("
-            + "tk.id, tk.node.name, tk.node.class, p.numeroProcesso) "
+            + "tk.id, tk.node.name, tk.node.class, p.numeroProcesso, procDef.name) "
             + "from org.jbpm.context.exe.variableinstance.LongInstance vi, Processo p "
             + "inner join vi.token tk "
+            + "inner join tk.node node "
+            + "inner join node.processDefinition procDef "
             + "where vi.name = 'processo' "
             + "and tk.end is null " + "and tk.lock is null "
             + "and tk.node.class in ('N', 'M', 'D')"

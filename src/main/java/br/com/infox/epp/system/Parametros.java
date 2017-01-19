@@ -42,7 +42,10 @@ public enum Parametros {
     REST_THREAD_POOL_EXECUTOR_MAXIMUM_POOL_SIZE("restPublicApi", "restThreadPoolExecutorMaximumPoolSize"),
     REST_THREAD_POOL_EXECUTOR_CORE_POOL_SIZE("restPublicApi", "restThreadPoolExecutorCorePoolSize", true),
     REST_THREAD_POOL_EXECUTOR_KEEP_ALIVE_TIME("restPublicApi", "restThreadPoolExecutorKeepAliveTime", true),
-    PRODUCAO("producao");
+    PRODUCAO("producao"),
+    VALIDA_CPF_ASSINATURA("digital-signature","validaCpfAssinatura", FieldType.BOOLEAN),
+    VALIDA_ASSINATURA("digital-signature","validacaoAssinatura", FieldType.BOOLEAN),
+    ;
 
     private final String label;
     private final ParametroDefinition<?> parametroDefinition;

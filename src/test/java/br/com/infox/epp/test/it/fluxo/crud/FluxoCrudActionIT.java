@@ -85,7 +85,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         // final ActionContainer<Fluxo> initEntityAction =
         // FluxoCrudActionIT.initEntityAction;
         final PersistSuccessTest<Fluxo> persistSuccessTest = new PersistSuccessTest<Fluxo>(
-                FluxoCrudAction.NAME, FluxoCrudActionIT.initEntityAction);
+                "", FluxoCrudActionIT.initEntityAction);
         for (final Date dataFim : datasFim) {
             for (final Boolean publicado : FluxoCrudActionIT.allBooleans) {
                 for (final Boolean ativo : FluxoCrudActionIT.booleans) {
@@ -105,7 +105,8 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
 
     @Override
     protected String getComponentName() {
-        return FluxoCrudAction.NAME;
+//        return FluxoCrudAction.NAME;
+    	return "";
     }
 
     private static int id = 0;

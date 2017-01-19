@@ -2,18 +2,15 @@ package br.com.infox.ibpm.variable.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 
-@Name(DominioVariavelTarefaList.NAME)
-@Scope(ScopeType.PAGE)
-@AutoCreate
+@Named
+@ViewScoped
 public class DominioVariavelTarefaList extends EntityList<DominioVariavelTarefa> {
 
     private static final long serialVersionUID = 1L;

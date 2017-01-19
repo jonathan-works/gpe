@@ -2,20 +2,21 @@
 	@max-list-size:3;
 	
 	.standard {
-		& *:nth-child(n+4) {
-		   transform:scale(1);
+		& *:nth-child(2n) {
+		   background-color:rgba(0,0,0,0.15);
+		}
+		&:not(:hover) *:nth-child(n+4) {
 		   visibility:hidden;
 		   height:0;
 		}
-		& *:nth-child(4){
-		   height:auto;
-		   margin-bottom:-1em;
+		&:not(:hover) *:nth-child(4){
+		   height:1em;
 		}
-		& *:nth-child(4)::before {
+		&:not(:hover) *:nth-child(4)::before {
 		   content:"...";
 		   display:block;
-		   height:1em;
 		   visibility:visible;
+		   background-color:rgba(0,0,0,0.15);
 		}
 	}
 }

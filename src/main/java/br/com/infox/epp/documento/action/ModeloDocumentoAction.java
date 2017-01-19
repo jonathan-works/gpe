@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.Startup;
 import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.jbpm.action.ActionTemplate;
 
 @Name(ModeloDocumentoAction.NAME)

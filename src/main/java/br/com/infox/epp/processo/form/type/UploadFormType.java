@@ -52,7 +52,8 @@ public class UploadFormType extends FileFormType {
         try {
             getDocumentoUploadService().validaDocumento(file, classificacao, file.getData());
             getFileVariableHandler().gravarDocumento(file, uploadFile.getId(), formField, formData.getProcesso());
-            formData.setVariable(formField.getId(), new TypedValue(formField.getValue(), formField.getType().getValueType()));
+            TypedValue typedValue = new TypedValue(formField.getValue(), formField.getType().getValueType());
+            formData.setVariable(formField.getId(), typedValue);
         } catch (BusinessRollbackException e) {
              LOG.log(Level.SEVERE, "Erro ao remover o documento existente", e);
              if (e.getCause() instanceof DAOException) {

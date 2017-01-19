@@ -69,10 +69,11 @@ public class ModeloPastaRestricaoAction implements Serializable {
     private InfoxMessages infoxMessages;
     @In(StatusMessages.COMPONENT_NAME)
     private StatusMessages statusMessage;
+    @Inject
+    private FluxoController fluxoController;
 
 	private ModeloPasta instance;
 	private List<ModeloPasta> listModeloPastas;
-	private Fluxo fluxo;
 	private Integer id;
 	private List<ModeloPastaRestricao> restricoes;
 	private ModeloPastaRestricao restricaoInstance;
@@ -83,9 +84,9 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	private Localizacao alvoRestricaoLocalizacao;
 	private Boolean alvoRestricaoParticipante;
 	
-	public void init(final Fluxo fluxo) {
+	public void init() {
 		newRestricaoInstance();
-		setFluxo(fluxo);
+		setFluxo(fluxoController.getFluxo());
 		newInstance();
 		// Isto está aqui para evitar erro ao editar uma restrição do tipo localização na primeira vez que entra na tela,
 		// causado pela injeção a este componente que
@@ -403,11 +404,11 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	}
 
 	public Fluxo getFluxo() {
-		return fluxo;
+		return fluxoController.getFluxo();
 	}
 
 	public void setFluxo(Fluxo fluxo) {
-		this.fluxo = fluxo;
+		fluxoController.setFluxo(fluxo);
 		initModeloPastaList(fluxo);
 	}
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="body">
+        <h:form style="text-align:center;">
+            <wi:selectOneMenuEntity id="comboFluxo" value="#{bpmExecutionInfoView.fluxo}"
+                label="#{infoxMessages['fluxo.fluxo']}" items="#{bpmExecutionInfoView.fluxos}">
+                <a:ajax execute="@this" render="fluxoAtivo"/>
+                </wi:selectOneMenuEntity>
+                <a:poll interval="10000" execute="@none" render="fluxoAtivo"/>
+        </h:form>
+        <s:div id="fluxoAtivo" style="text-align:center;">
+            <h:panelGroup rendered="#{bpmExecutionInfoView.showGraph}">
+            <div id="svgImage">
+                <h:outputText escape="false" value="#{bpmExecutionInfoView.fluxo.svg}" />
+            </div>
+            <script type="text/javascript">
+                $("document").ready(function() {
+                  var infoxSvgConfig = {
+                    "codigoFluxo": "#{bpmExecutionInfoView.fluxo.codFluxo}",
+                    "token": "#{bpmExecutionInfoView.token}",
+                    "restApiUrl": "#{bpmExecutionInfoView.restApiUrl}"
+                  };
+                  var getConfig = {
+                    url: [infoxSvgConfig.restApiUrl, 'bpm-execution-info', infoxSvgConfig.codigoFluxo].join('/'),
+                    headers: {
+                      "EPP-AccessToken": infoxSvgConfig.token
+                    },
+                    success: function(data, status, jqHR) {
+                      $(".data-element-instances-count").detach();
+                      for (var key in data) {
+                        parent = $('g.djs-element.djs-shape[data-element-id="' + key + '"] text')[0];
+                        if (!parent) {
+                          parent = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+                          parent.setAttribute("y", 0);
+                          $('g.djs-element.djs-shape[data-element-id="' + key + '"]').append(parent);
+                        }
+                        content = document.createElementNS("http://www.w3.org/2000/svg", 'tspan');
+                        content.classList.add("data-element-instances-count");
+                        content.textContent = ['(', data[key], ')'].join(' ');
+                        content.setAttribute("y", -5);
+                        parent.appendChild(content);
+                      }
+                    },
+                    error: function(jqXHR, status, error) {
+                      console.error(status, error);
+                      $.ajax(getConfig);
+                    }
+                  };
+                  $.ajax(getConfig);
+                });
+			</script>
+            </h:panelGroup>
+        </s:div>
+    </ui:define>
+</ui:composition>

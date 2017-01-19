@@ -85,7 +85,7 @@
              
 					<wi:certificadoDigital id="appletAssinatura"
                         tokenField="#{envioComunicacaoController.token}"
-						signableData="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin.md5Documento}"
+						documentoBinList="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin}"
 						functionPreSign="infox.showLoading();"
 						functionPosSign="assinar();"
 						rendered="#{envioComunicacaoController.podeRenderizarApplet() and not envioComunicacaoController.comunicacaoSuficientementeAssinada}"

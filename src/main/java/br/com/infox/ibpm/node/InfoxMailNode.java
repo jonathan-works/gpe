@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.action.ActionTypes;
@@ -22,8 +23,9 @@ import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.persistence.db.DbPersistenceService;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.mail.entity.ListaEmail;
 import br.com.infox.epp.mail.manager.ListaEmailManager;
 import br.com.infox.epp.system.annotation.Ignore;
@@ -49,18 +51,6 @@ public class InfoxMailNode extends MailNode {
     private int idGrupo;
     private List<ListaEmail> listaEmail;
     private ListaEmail currentListaEmail = new ListaEmail();
-
-    @Override
-    public void raiseException(Throwable exception,
-            ExecutionContext executionContext) {
-        JbpmContext jbpmContext = executionContext.getJbpmContext();
-        DbPersistenceService persistenceService = (DbPersistenceService) jbpmContext.getServices().getPersistenceService();
-        persistenceService.endTransaction();
-        persistenceService.beginTransaction();
-        super.raiseException(exception, executionContext);
-        persistenceService.endTransaction();
-        LOG.warn(MessageFormat.format("Erro ao enviar email (nó {0})", getName()), exception);
-    }
 
     @Override
     public void read(Element element, JpdlXmlReader jpdlReader) {
@@ -106,17 +96,17 @@ public class InfoxMailNode extends MailNode {
             String[] att = string.split("=");
             if (att.length < 2) {
                 continue;
-            } else if ("idModeloDocumento".equals(att[0])) {
-                modeloDocumento = modeloDocumentoManager().find(Integer.parseInt(att[1]));
-            } else if ("idTwitterTemplate".equals(att[0])) {
+            } else if ("codigoModeloDocumento".equals(att[0]) && Contexts.isApplicationContextActive()) {
+                modeloDocumento = getModeloDocumentoSearch().getModeloDocumentoByCodigo(att[1]);
+            } else if ("idTwitterTemplate".equals(att[0]) && Contexts.isApplicationContextActive()) { //FIXME: Não foi atualizado na #72871 pois não estã funcionando nada relacionado a twitter
                 modeloTwitter = twitterTemplateManager().find(Integer.parseInt(att[1]));
                 usaTwitter = true;
             }
         }
     }
 
-    private ModeloDocumentoManager modeloDocumentoManager() {
-        return ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+    private ModeloDocumentoSearch getModeloDocumentoSearch() {
+    	return BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
     }
 
     private TwitterTemplateManager twitterTemplateManager() {
@@ -132,7 +122,7 @@ public class InfoxMailNode extends MailNode {
     private String getParametros() {
         Map<String, String> parametros = new HashMap<String, String>();
         if (modeloDocumento != null) {
-            parametros.put("idModeloDocumento", String.valueOf(modeloDocumento.getIdModeloDocumento()));
+            parametros.put("codigoModeloDocumento", modeloDocumento.getCodigo());
         }
         if (modeloTwitter != null && usaTwitter) {
             parametros.put("idTwitterTemplate", String.valueOf(modeloTwitter.getIdTwitterTemplate()));

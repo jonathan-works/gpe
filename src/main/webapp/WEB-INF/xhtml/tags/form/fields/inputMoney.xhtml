@@ -5,16 +5,48 @@
     xmlns:a="http://richfaces.org/a4j"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:jsp="http://java.sun.com/JSP/Page"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <h:outputScript library="js" name="infox.maskmoney.js" />
+
+    <ui:param name="template"
+        value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+    <ui:param
+     name="maximo"
+     value="#{wi:get(props.valorMaximo, '')}" />
+    <ui:param
+     name="minimo"
+     value="#{wi:get(props.valorMinimo, '')}" />
+    
 	<s:div id="#{id}" style="display: inline">
-	    <wi:inputText id="#{id}Input" converterId="monetarioConverter">
-	        <ui:insert />
-	    </wi:inputText>
+	    <s:decorate id="#{id}Decoration" template="#{template}"
+	        styleClass="decoration-div inputText-div #{wi:get(decorationClass,'')}"
+	        rendered="#{wi:get(rendered, true)}">
+	        <ui:define name="label">#{label}</ui:define>
+	        <h:inputText id="#{id}Input" value="#{value}" readonly="#{readonly}"
+	            disabled="#{disabled}" required="#{required}" size="#{size}"
+	            styleClass="#{readonly ? 'readOnly' : styleClass } input text crud"
+	            onblur="#{onblur}" onchange="#{onchange}"
+	            onkeypress="#{onkeypress}" onkeyup="#{onkeyup}"
+	            maxlength="#{wi:get(maxlength, 255)}"
+	            immediate="#{immediate}">
+	            <ui:insert />
+	            <f:converter converterId="monetarioConverter" />
+                <c:if test="#{not empty maximo and not empty minimo}">
+                     <f:validateDoubleRange maximum="#{maximo}" minimum="#{minimo}" />
+                </c:if>
+                <c:if test="#{not empty maximo and empty minimo}">
+                     <f:validateDoubleRange maximum="#{maximo}" />
+                </c:if>
+                <c:if test="#{empty maximo and not empty minimo}">
+                     <f:validateDoubleRange minimum="#{minimo}" />
+                </c:if>
+	        </h:inputText>
+	    </s:decorate>
 	    
 	    <s:div rendered="#{not readonly}" >
 		    <script>
@@ -22,4 +54,5 @@
 		   	</script>
 	   	</s:div>
    	</s:div>
+   	 	
 </ui:composition>

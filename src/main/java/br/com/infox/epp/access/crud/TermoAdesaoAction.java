@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.text.MessageFormat;
+import java.util.List;
 
+import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.ScopeType;
@@ -15,11 +17,7 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -27,6 +25,10 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
+import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -44,6 +46,7 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 @Scope(ScopeType.CONVERSATION)
 @Name(value = TermoAdesaoAction.NAME)
 @Transactional
+@ContextDependency
 public class TermoAdesaoAction implements Serializable {
 	
     private static final String TERMS_CONDITIONS_SIGN_SUCCESS = "termoAdesao.sign.success";
@@ -73,8 +76,8 @@ public class TermoAdesaoAction implements Serializable {
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private PessoaFisicaManager pessoaFisicaManager;
-    @In
-    private CertificateSignatures certificateSignatures;
+    @Inject
+    private AssinadorService assinadorService;
     @In
     private Authenticator authenticator;
     @In
@@ -84,15 +87,14 @@ public class TermoAdesaoAction implements Serializable {
 
     public String assinarTermoAdesao() {
         try {
-        	CertificateSignatureBundleBean bundle = getSignature();
-        	if(bundle == null || bundle.getSignatureBeanList() == null || bundle.getSignatureBeanList().get(0) == null){
-        		throw new CertificadoException(infoxMessages.get(METHOD_ASSINAR_TERMO_ADESAO));
-        	}
-        	String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
+        	List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(token);
+        	
+        	DadosAssinatura dadosAssinatura = dadosAssinaturaList.get(0);
+        	String certChain = dadosAssinatura.getCertChainBase64();
+        	String signature = dadosAssinatura.getAssinaturaBase64();
         	if(certChain == null){
         		throw new CertificadoException(infoxMessages.get(TERMO_ADESAO_CERT_CHAIN_ERROR));
         	}
-        	String signature = bundle.getSignatureBeanList().get(0).getSignature();
         	if(signature == null){
         		throw new CertificadoException(infoxMessages.get(TERMO_ADESAO_SIGNATURE_ERROR));
         	}
@@ -105,7 +107,7 @@ public class TermoAdesaoAction implements Serializable {
             
             UsuarioPerfil perfil = papelManager.getPerfilTermoAdesao(usuarioLogin);
             if (perfil != null) {
-                assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature);
+                assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature, TipoAssinatura.PKCS7, dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData());
                 PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
                 pessoaFisica.setTermoAdesao(bin);
             }
@@ -125,8 +127,8 @@ public class TermoAdesaoAction implements Serializable {
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
         } catch (AssinaturaException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
+            throw new RedirectToLoginApplicationException(e.getMessage(), e);
         }
-        return null;
     }
 
     public String getTermoAdesao() {
@@ -158,19 +160,5 @@ public class TermoAdesaoAction implements Serializable {
     
     public void setToken(String token) {
 		this.token = token;
-	}
-    
-    public String getMd5Sum() {
-        return MD5Encoder.encode(getTermoAdesao());
-    }
-    
-    private CertificateSignatureBundleBean getSignature() throws CertificadoException {
-    	CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
-    	if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-    	    
-    		throw new CertificadoException("termoAdesao.sign.error");
-    	}
-    	return bundle;
-    }
-
+	}    
 }

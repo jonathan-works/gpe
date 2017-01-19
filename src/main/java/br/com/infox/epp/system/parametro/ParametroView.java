@@ -79,7 +79,7 @@ public class ParametroView implements Serializable {
         ff.setLabel(infoxMessages.get(String.format("parametro.%s.label", definicaoParametro.getNome())));
         String descricaoKey = String.format("parametro.%s.descricao", definicaoParametro.getNome());
         String descricao = infoxMessages.get(descricaoKey);
-        ff.setTooltip(descricaoKey.equals(descricao) ? parametro.getDescricaoVariavel() : descricao);
+        ff.setTooltip(descricaoKey.equals(descricao) && parametro != null ? parametro.getDescricaoVariavel() : descricao);
         ff.setPath(MessageFormat.format("{0}.{1}", Introspector.decapitalize(ParametroView.class.getSimpleName()), "formFields"));
         if (definicaoParametro.getKeyAttribute() != null && definicaoParametro.getLabelAttribute() != null) {
             List<SelectItem> items = parametroService.getItems(definicaoParametro);

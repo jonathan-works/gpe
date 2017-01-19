@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,6 +27,7 @@ import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.auditoria.MetadadoProcessoListener;
 import br.com.infox.epp.processo.metadado.query.MetadadoProcessoQuery;
 
 @Entity
@@ -36,6 +39,7 @@ import br.com.infox.epp.processo.metadado.query.MetadadoProcessoQuery;
 					 query = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_VISIVEL_BY_PROCESSO_QUERY),
 		@NamedQuery(name = MetadadoProcessoQuery.GET_METADADO, query = MetadadoProcessoQuery.GET_METADADO_QUERY),
 		@NamedQuery(name = MetadadoProcessoQuery.REMOVER_METADADO, query = MetadadoProcessoQuery.REMOVER_METADADO_QUERY)})
+@EntityListeners(MetadadoProcessoListener.class)
 public class MetadadoProcesso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -132,7 +136,11 @@ public class MetadadoProcesso implements Serializable {
 				try {
 					value = new SimpleDateFormat(DATE_PATTERN).parse(getValor());
 				} catch (ParseException e) {
-					throw new RuntimeException("Erro ao converter data", e);
+				    try{
+				        value = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", new Locale("en_US")).parse(getValor());
+				    }catch(Exception ex){
+				        throw new RuntimeException("Erro ao converter data", ex);
+				    }
 				}
 			} else if (getClassType() != String.class) {
 				value = ReflectionsUtil.newInstance(getClassType(), String.class, getValor());

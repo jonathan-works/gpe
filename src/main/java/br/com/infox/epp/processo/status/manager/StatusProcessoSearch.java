@@ -28,5 +28,14 @@ public class StatusProcessoSearch extends PersistenceController {
         List<StatusProcesso> result = getEntityManager().createQuery(cq).setMaxResults(1).getResultList();
         return result.isEmpty() ? null : result.get(0);
     }
+    
+	public Boolean existeStatusProcessoByNome(String nome) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<StatusProcesso> statusProcesso = cq.from(StatusProcesso.class);
+		cq.where(cb.equal(statusProcesso.get(StatusProcesso_.nome), cb.literal(nome)));
+		cq.select(cb.count(statusProcesso));
+		return getEntityManager().createQuery(cq).getSingleResult() > 0;
+	}
 
 }

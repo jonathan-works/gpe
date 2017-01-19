@@ -12,7 +12,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.type.FormTypes;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
 
 public abstract class AbstractFormData implements FormData {
@@ -42,14 +41,12 @@ public abstract class AbstractFormData implements FormData {
     }
 
     private void createFormField(ProcessDefinition processDefinition, VariableAccess variableAccess) {
-        String type = variableAccess.getMappedName().split(":")[0];
         String variableName = variableAccess.getVariableName();
-        String label = JbpmUtil.instance().getMessages().get(processDefinition.getName() + ":" + variableName);
         FormField formField = new FormField();
-        FormType formType = createFormType(type);
+        FormType formType = createFormType(variableAccess.getType());
         formField.setType(formType);
         formField.setId(variableName);
-        formField.setLabel(label);
+        formField.setLabel(variableAccess.getLabel());
         formField.setValue(formType.convertToFormValue(getVariable(variableName)));
         formField.setProperties(createProperties(variableAccess));
         formType.performValue(formField, this);
@@ -73,9 +70,8 @@ public abstract class AbstractFormData implements FormData {
         if (!variableAccess.isWritable()) {
             properties.put("readonly", "true");
         }
-        String[] tokens = variableAccess.getMappedName().split(":");
-        if (tokens.length > 2) {
-            properties.put("extendedProperties", tokens[2]);
+        if (variableAccess.getConfiguration() != null && !variableAccess.getConfiguration().isEmpty()) {
+        	properties.put("configuration", variableAccess.getConfiguration());
         }
         return properties;
     }

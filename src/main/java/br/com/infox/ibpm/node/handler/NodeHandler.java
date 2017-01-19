@@ -46,12 +46,13 @@ import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
-import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
-import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
+import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
@@ -170,21 +171,21 @@ public class NodeHandler implements Serializable {
                 if (actionDelegation != null) {
                 	if (StatusHandler.class.getName().equals(actionDelegation.getClassName())) {
                         String configuration = actionDelegation.getConfiguration();
-                        Pattern pattern = Pattern.compile("<statusProcesso>(\\d+)</statusProcesso>");
+                        Pattern pattern = Pattern.compile("<statusProcesso>(.+?)</statusProcesso>");
                         Matcher matcher = pattern.matcher(configuration);
                         if (matcher.find()) {
                             String status = matcher.group(1);
-                            StatusProcessoManager manager = ComponentUtil.getComponent(StatusProcessoManager.NAME);
-                            this.statusProcesso = manager.find(Integer.parseInt(status, 10));
+                            StatusProcessoSearch search = BeanManager.INSTANCE.getReference(StatusProcessoSearch.class);
+                            this.statusProcesso = search.getStatusByName(status);
                         }
                     } else if (GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
                     	String configuration = new GenerateDocumentoHandler().parseJbpmConfiguration(actionDelegation.getConfiguration());
                     	try {
                     		GenerateDocumentoConfiguration generateDocumentoConfiguration = new Gson().fromJson(configuration, GenerateDocumentoConfiguration.class);
-                            ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+                    		ModeloDocumentoSearch modeloDocumentoSearch = BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
                             ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
-                            this.modeloDocumento = modeloDocumentoManager.find(generateDocumentoConfiguration.getIdModeloDocumento());
-                            this.classificacaoDocumento = classificacaoDocumentoManager.find(generateDocumentoConfiguration.getIdClassificacaoDocumento());
+                            this.modeloDocumento = modeloDocumentoSearch.getModeloDocumentoByCodigo(generateDocumentoConfiguration.getCodigoModeloDocumento());
+                            this.classificacaoDocumento = classificacaoDocumentoManager.findByCodigo(generateDocumentoConfiguration.getCodigoClassificacaoDocumento());
                         	this.codigoPasta = generateDocumentoConfiguration.getCodigoPasta();
                         } catch (JsonSyntaxException e) {
                         	LOG.warn("Erro ao ler configuração da action GenerateDocumento no nó " + this.node.getName(), e);
@@ -364,7 +365,7 @@ public class NodeHandler implements Serializable {
         newTimer.setTimerName(getGeneratedTimerName());
         newTimer.setDueDate(BASE_DUE_DATE);
         final List<Transition> leavingTransitions = node.getLeavingTransitions();
-        if (leavingTransitions.size() > 0) {
+        if (leavingTransitions != null && leavingTransitions.size() > 0) {
             newTimer.setTransitionName(leavingTransitions.get(0).getName());
         }
         return newTimer;
@@ -576,11 +577,14 @@ public class NodeHandler implements Serializable {
                 event = this.node.getEvent(Event.EVENTTYPE_NODE_ENTER);
                 if (statusProcesso == null) {
                     event.removeAction(action);
+                    if (action.getProcessDefinition() != null) {
+                    	action.getProcessDefinition().removeAction(action);
+                    }
                 } else {
                     actionDelegation.setConfigType("constructor");
                     actionDelegation.setConfiguration(MessageFormat.format(
                             "<statusProcesso>{0}</statusProcesso>",
-                            statusProcesso.getIdStatusProcesso()));
+                            statusProcesso.getNome()));
                 }
             }
         } else if (statusProcesso != null) {
@@ -607,11 +611,14 @@ public class NodeHandler implements Serializable {
                 event = this.node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
                 if (modeloDocumento == null) {
                     event.removeAction(action);
+                    if (action.getProcessDefinition() != null) {
+                    	action.getProcessDefinition().removeAction(action);
+                    }
                 } else {
                     actionDelegation.setConfigType("constructor");
                     GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
-                    configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
-                    configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+                    configuration.setCodigoClassificacaoDocumento(classificacaoDocumento.getCodigoDocumento());
+                    configuration.setCodigoModeloDocumento(modeloDocumento.getCodigo());
                     actionDelegation.setConfiguration(new Gson().toJson(configuration));
                 }
             }
@@ -639,7 +646,7 @@ public class NodeHandler implements Serializable {
 		return this.codigoPasta;
 	}
     
-    public void setCodigoPasta(String codigoPasta) { //TODO Ajustar quando integrar a branch do exportador
+    public void setCodigoPasta(String codigoPasta) {
     	Action action = null;
     	if (codigoPasta != null){
 	        if (this.node.hasEvent(Event.EVENTTYPE_NODE_LEAVE)) {
@@ -648,8 +655,8 @@ public class NodeHandler implements Serializable {
 	            if (actionDelegation != null && GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
 	            	actionDelegation.setConfigType("constructor");
 	            	GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
-	            	configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
-	            	configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+	            	configuration.setCodigoClassificacaoDocumento(classificacaoDocumento.getCodigoDocumento());
+	            	configuration.setCodigoModeloDocumento(modeloDocumento.getCodigo());
 	            	configuration.setCodigoPasta(codigoPasta);
 	            	actionDelegation.setConfiguration(new Gson().toJson(configuration));
 	            }
@@ -661,12 +668,14 @@ public class NodeHandler implements Serializable {
     private Action retrieveStatusProcessoEvent(Event event) {
         List<?> actions = event.getActions();
         Action result = null;
-        for (Object object : actions) {
-            Action action = (Action) object;
-            if (STATUS_PROCESSO_ACTION_NAME.equals(action.getName())) {
-                result = action;
-                break;
-            }
+        if (actions != null) {
+	        for (Object object : actions) {
+	            Action action = (Action) object;
+	            if (STATUS_PROCESSO_ACTION_NAME.equals(action.getName())) {
+	                result = action;
+	                break;
+	            }
+	        }
         }
         return result;
     }
@@ -699,7 +708,7 @@ public class NodeHandler implements Serializable {
         delegation.setConfigType("constructor");
         delegation.setConfiguration(MessageFormat.format(
                 "<statusProcesso>{0}</statusProcesso>",
-                statusProcesso.getIdStatusProcesso()));
+                statusProcesso.getNome()));
         action.setActionDelegation(delegation);
         event.addAction(action);
         return event;
@@ -717,8 +726,8 @@ public class NodeHandler implements Serializable {
         Delegation delegation = new Delegation(GenerateDocumentoHandler.class.getName());
         delegation.setConfigType("constructor");
         GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
-        configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
-        configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+        configuration.setCodigoClassificacaoDocumento(classificacaoDocumento.getCodigoDocumento());
+        configuration.setCodigoModeloDocumento(modeloDocumento.getCodigo());
         delegation.setConfiguration(new Gson().toJson(configuration));
         action.setActionDelegation(delegation);
         event.addAction(action);
@@ -726,8 +735,12 @@ public class NodeHandler implements Serializable {
     }
     
     public boolean canRemoveEvent(EventHandler eventHandler) {
-    	if (eventHandler != null && eventHandler.getEvent().getEventType().equals(Event.EVENTTYPE_NODE_LEAVE)) {
-    		return retrieveGenerateDocumentoEvent(eventHandler.getEvent()) == null;
+    	if (eventHandler != null) {
+    		if (eventHandler.getActions() != null) {
+    			return eventHandler.getActions().size() == eventHandler.getEvent().getActions().size();
+    		} else {
+    			return eventHandler.getEvent().getActions() == null || eventHandler.getEvent().getActions().isEmpty();
+    		}
     	}
     	return true;
     }

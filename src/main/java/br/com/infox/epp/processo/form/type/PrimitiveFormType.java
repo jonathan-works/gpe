@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.form.type;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
+import br.com.infox.ibpm.variable.VariableDataHandler;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -114,12 +115,12 @@ public abstract class PrimitiveFormType implements FormType {
         @Override
         public void performValue(FormField formField, FormData formData) {
             super.performValue(formField, formData);
-            String extendedProperties = (String) formField.getProperties().get("extendedProperties");
+            String configuration = (String) formField.getProperties().get("configuration");
             ValidacaoDataEnum validacaoData = null;
-            if (extendedProperties == null) {
+            if (configuration == null) {
                 validacaoData = ValidacaoDataEnum.L;
             } else {
-                validacaoData = ValidacaoDataEnum.valueOf(extendedProperties);
+                validacaoData = VariableDataHandler.fromJson(configuration).getTipoValidacaoData();
             }
             formField.getProperties().put("validatorId", validacaoData.getValidatorId());
         }

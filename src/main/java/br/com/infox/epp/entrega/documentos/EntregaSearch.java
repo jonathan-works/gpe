@@ -117,6 +117,7 @@ public class EntregaSearch extends PersistenceController {
 			
 			cq.where(cb.or(cb.exists(pessoaFisicaQuery), cb.exists(pessoaJuridicaQuery)));
 		}
+		cq.where(cq.getRestriction(), cb.isTrue(pessoa.get(Pessoa_.ativo)));
 		
 		return entityManager.createQuery(cq).setMaxResults(10).getResultList();
 	}

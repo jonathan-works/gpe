@@ -3,7 +3,6 @@ package br.com.infox.epp.access;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,9 +12,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.lowagie.text.DocumentException;
 
-import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.exception.SystemExceptionFactory;
 import br.com.infox.core.file.download.DocumentoServlet;
@@ -27,6 +23,8 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.provider.TermoAdesaoVariableProducer;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ArbitraryExpressionResolver;
@@ -74,8 +72,6 @@ public class TermoAdesaoService {
     @Inject 
     private UsuarioLoginSearch usuarioLoginSearch;
     @Inject 
-    private CertificateSignatures certificateSignatures;
-    @Inject 
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @Inject 
     private TermoAdesaoVariableProducer termoAdesaoVariableProducer;
@@ -83,6 +79,8 @@ public class TermoAdesaoService {
     private InfoxMessages infoxMessages;
     @Inject 
     private PapelManager papelManager;
+    @Inject
+    private AssinadorService assinadorService;
 
     public String buildUrlDownload(String contextPath, String jwt, String uidTermoAdesao) {
         UriBuilder uriBuilder = UriBuilder.fromPath(contextPath);
@@ -156,32 +154,26 @@ public class TermoAdesaoService {
         return ExpressionResolverChainBuilder.with(new ArbitraryExpressionResolver(variables))
                 .and(new SeamExpressionResolver()).build();
     }
-
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void assinarTermoAdesao(String token, PessoaFisica pessoaFisica, UUID uuidTermoAdesao) {
-        try {
-            CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
-            if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-                throw new CertificadoException("termoAdesao.sign.error");
-            }
-            String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
-            String signature = bundle.getSignatureBeanList().get(0).getSignature();
-            UsuarioLogin usuarioLogin = pessoaFisica.getUsuarioLogin();
-            assinaturaDocumentoService.verificaCertificadoUsuarioLogado(certChain, usuarioLogin.getPessoaFisica());
-
+    public void assinarTermoAdesao(DadosAssinatura dadosAssinatura, PessoaFisica pessoaFisica){
+        UsuarioLogin usuarioLogin = pessoaFisica.getUsuarioLogin();
+        if (usuarioLogin == null){
+            throw new BusinessException(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA);
+        }
+        try{
+            assinaturaDocumentoService.verificaCertificadoUsuarioLogado(dadosAssinatura.getCertChainBase64(), usuarioLogin.getPessoaFisica());
             UsuarioPerfil perfil = papelManager.getPerfilTermoAdesao(usuarioLogin);
             if (perfil == null){
                 perfil = usuarioLogin.getUsuarioPerfilList() == null || usuarioLogin.getUsuarioPerfilList().isEmpty() ? null : usuarioLogin.getUsuarioPerfilList().get(0);
             }
             if (perfil != null) {
-                assinaturaDocumentoService.assinarDocumento(pessoaFisica.getTermoAdesao(), perfil, certChain, signature);
+                assinadorService.assinar(dadosAssinatura, perfil);
             } else {
                 throw new BusinessException(AuthenticatorService.LOGIN_ERROR_USUARIO_SEM_PERFIL);
             }
         } catch (CertificadoException | AssinaturaException e) {
             throw new BusinessException(e.getMessage());
         }
-
     }
     
     public PessoaFisica retrievePessoaFisica(String jwt) {

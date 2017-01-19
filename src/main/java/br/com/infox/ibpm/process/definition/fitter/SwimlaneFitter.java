@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,20 +27,6 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 
     @Inject
     private PerfilTemplateManager perfilTemplateManager;
-
-    public void addSwimlane() {
-        Swimlane s = new Swimlane("Raia " + (swimlanes.size() + 1));
-        s.setKey("key_" + UUID.randomUUID().toString());
-        setCurrentSwimlane(new SwimlaneHandler(s));
-        getProcessBuilder().getInstance().getTaskMgmtDefinition().addSwimlane(s);
-        swimlanes.add(currentSwimlane);
-    }
-
-    public void removeSwimlane(SwimlaneHandler s) {
-        swimlanes.remove(s);
-        setCurrentSwimlane(null);
-        getProcessBuilder().getInstance().getTaskMgmtDefinition().getSwimlanes().remove(s.getSwimlane().getName());
-    }
 
     public SwimlaneHandler getCurrentSwimlane() {
         return currentSwimlane;

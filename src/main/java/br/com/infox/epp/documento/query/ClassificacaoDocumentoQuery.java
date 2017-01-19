@@ -29,5 +29,13 @@ public interface ClassificacaoDocumentoQuery {
     String LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO_QUERY = "select distinct(cd) from Documento d "
     			+ "inner join d.pasta p "
     			+ "inner join d.classificacaoDocumento cd "
-    		+ " where p.processo = :" + PARAM_PROCESSO + " order by cd.descricao";
+    		+ "where p.processo = :" + PARAM_PROCESSO + " "
+    		    + "or d in ("
+    		        + "select docComp.documento from DocumentoCompartilhamento docComp "
+    		        + "where docComp.processoAlvo = :" + PARAM_PROCESSO + " and docComp.ativo = true"
+    		    + ") or p in ("
+    		        + "select pastaComp.pasta from PastaCompartilhamento pastaComp "
+    		        + "where pastaComp.processoAlvo = :" + PARAM_PROCESSO + " and pastaComp.ativo = true"
+    		    + ")"
+    		+ "order by cd.descricao";
 }

@@ -69,5 +69,10 @@ public class JBossEapApplicationServer extends AbstractApplicationServer {
         String logDir = System.getProperty("jboss.server.log.dir");
         return logDir == null ? super.getLogDir() : logDir;
     }
+
+    @Override
+    public String getUserTransactionJndi() {
+        return "java:jboss/UserTransaction";
+    }
     
 }

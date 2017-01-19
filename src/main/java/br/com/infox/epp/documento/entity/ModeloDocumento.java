@@ -32,6 +32,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.constants.LengthConstants;
+
 @Entity
 @Table(name = TABLE_MODELO_DOCUMENTO)
 @NamedQueries(value = {
@@ -43,11 +45,16 @@ public class ModeloDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_MODELO_DOCUMENTO)
     @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_MODELO_DOCUMENTO)
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_MODELO_DOCUMENTO, unique = true, nullable = false)
     private int idModeloDocumento;
+    
+    @NotNull
+    @Size(min = 1, max = 30)
+    @Column(name = "cd_modelo_documento", nullable = false, unique = true)
+    private String codigo;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_TIPO_MODELO_DOCUMENTO, nullable = false)
@@ -76,6 +83,14 @@ public class ModeloDocumento implements java.io.Serializable {
 
     public void setIdModeloDocumento(int idModeloDocumento) {
         this.idModeloDocumento = idModeloDocumento;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public TipoModeloDocumento getTipoModeloDocumento() {

@@ -1,11 +1,8 @@
 package br.com.infox.ibpm.variable;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
@@ -21,7 +18,6 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(VariableHandler.NAME)
 @Transactional
@@ -44,7 +40,6 @@ public class VariableHandler implements Serializable {
         return getVariables(taskId, true);
     }
 
-    @SuppressWarnings(UNCHECKED)
     private List<Variavel> getVariables(long taskId, boolean readOnly) {
         List<Variavel> ret = new ArrayList<Variavel>();
         TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskId);
@@ -72,20 +67,15 @@ public class VariableHandler implements Serializable {
         return ret;
     }
 
-    public static String getLabel(String name) {
-        Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
-        if (map.containsKey(name)) {
-            return map.get(name);
+    public static String getLabel(String name) {//FIXME ver se isso aqui ainda funciona
+        String[] split = name.split(":");
+        String altName = split[split.length-1];
+        if (altName.length() > 1) {
+            String label = altName.substring(0, 1).toUpperCase()
+                    + altName.substring(1);
+            return label.replaceAll("_", " ");
         } else {
-            String[] split = name.split(":");
-            String altName = split[split.length-1];
-            if (altName.length() > 1) {
-                String label = altName.substring(0, 1).toUpperCase()
-                        + altName.substring(1);
-                return label.replaceAll("_", " ");
-            } else {
-                return altName;
-            }
+            return altName;
         }
     }
 

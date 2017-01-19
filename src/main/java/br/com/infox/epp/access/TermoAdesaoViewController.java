@@ -2,6 +2,7 @@ package br.com.infox.epp.access;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJBException;
@@ -16,11 +17,17 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
 
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.core.exception.SystemException;
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.util.CollectionUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
+import br.com.infox.epp.assinador.view.AssinaturaCallback;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -29,7 +36,7 @@ import br.com.infox.seam.exception.BusinessException;
 
 @Named
 @ViewScoped
-public class TermoAdesaoViewController implements Serializable {
+public class TermoAdesaoViewController implements Serializable, AssinaturaCallback {
 
     private static final long serialVersionUID = 1L;
 
@@ -42,7 +49,6 @@ public class TermoAdesaoViewController implements Serializable {
     private DocumentoBin termoAdesao;
 
     private String digestDocumento;
-    private String token;
 
     private String jwt;
     private boolean viaLoginUsuario = false;
@@ -82,12 +88,12 @@ public class TermoAdesaoViewController implements Serializable {
                 }
             }
         }
-
-        this.termoAdesao = retrieveTermoAdesao();
-        this.setDigestDocumento(this.termoAdesao.getMd5Documento());
-
+        if (getTermoAdesao() == null) {
+            this.setTermoAdesao(retrieveTermoAdesao());
+            this.setDigestDocumento(this.getTermoAdesao().getMd5Documento());
+        }
         this.urlTermoAdesao = termoAdesaoService.buildUrlDownload(getContextPath(), jwt,
-                this.termoAdesao.getUuid().toString());
+                this.getTermoAdesao().getUuid().toString());
     }
 
     @ExceptionHandled
@@ -99,12 +105,12 @@ public class TermoAdesaoViewController implements Serializable {
         return urlTermoAdesao;
     }
 
-    public String getToken() {
-        return token;
+    public DocumentoBin getTermoAdesao() {
+        return termoAdesao;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setTermoAdesao(DocumentoBin termoAdesao) {
+        this.termoAdesao = termoAdesao;
     }
 
     public String getDigestDocumento() {
@@ -114,18 +120,27 @@ public class TermoAdesaoViewController implements Serializable {
     public void setDigestDocumento(String digestDocumento) {
         this.digestDocumento = digestDocumento;
     }
-
+    @Override
     @ExceptionHandled
-    public void assinarTermoAdesao() {
-        this.termoAdesaoService.assinarTermoAdesao(token, pessoaFisica, pessoaFisica.getTermoAdesao().getUuid());
-        if (viaLoginUsuario) {
-            authenticatorService.loginWithoutPassword(pessoaFisica.getUsuarioLogin());
-            Redirect redirect = Redirect.instance();
-            redirect.getParameters().clear();
-            redirect.setViewId(Authenticator.instance().getCaminhoPainel());
-            redirect.execute();
+    public void onSuccess(List<DadosAssinatura> dadosAssinatura) {
+        if (!CollectionUtil.isEmpty(dadosAssinatura)){
+            this.termoAdesaoService.assinarTermoAdesao(dadosAssinatura.get(0), pessoaFisica);
+            if (viaLoginUsuario) {
+                authenticatorService.loginWithoutPassword(pessoaFisica.getUsuarioLogin());
+                Redirect redirect = Redirect.instance();
+                redirect.getParameters().clear();
+                redirect.setViewId(Authenticator.instance().getCaminhoPainel());
+                redirect.execute();
+            }
+            FacesMessages.instance().add(Severity.INFO, infoxMessages.get("termoAdesao.sign.success"));
+        } else {
+            FacesMessages.instance().add(Severity.INFO, infoxMessages.get("termoAdesao.sign.fail"));
         }
-        FacesMessages.instance().add(Severity.INFO, infoxMessages.get("termoAdesao.sign.success"));
+    }
+    @Override
+    @ExceptionHandled
+    public void onFail(StatusToken statusToken, List<DadosAssinatura> dadosAssinatura) {
+        FacesMessages.instance().add(Severity.INFO, infoxMessages.get("termoAdesao.sign.fail"));
     }
 
     private String getRequestParameter(String name) {
@@ -146,6 +161,10 @@ public class TermoAdesaoViewController implements Serializable {
 
     private HttpServletRequest getHttpServletRequest() {
         return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    }
+
+    public AssinavelProvider getAssinavelProvider() {
+        return new AssinavelDocumentoBinProvider(getTermoAdesao());
     }
 
 }

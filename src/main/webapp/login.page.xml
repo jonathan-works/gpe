@@ -9,7 +9,6 @@ xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/s
 
     <action if="#{identity.loggedIn}" execute="#{authenticator.redirectToPainelDoUsuario()}" />
     
-    <param name="loginComAssinatura" value="#{certificateAuthenticator.certificateLogin}"/>
     <navigation from-action="#{identity.login}">
         <rule if="#{identity.loggedIn and !usuarioLogado.provisorio}">
             <redirect view-id="/home.xhtml" />

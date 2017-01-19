@@ -50,7 +50,13 @@ public class DocumentoCompartilhamentoView implements Serializable {
     }
 
     public String getDialogTitle() {
-        return documento == null ? "" : documento.getNumeroDocumento() + " - " + documento.getDescricao();
+        if (documento == null) return "";
+        Integer numero = documento.getNumeroDocumento();
+        String descricao = documento.getDescricao();
+        String classificacao = documento.getClassificacaoDocumento().getDescricao();
+        return descricao == null || descricao.isEmpty() || descricao.equals("-")
+                ? numero + " - " + classificacao
+                : numero + " - " + descricao;
     }
 
     public Boolean possuiCompartilhamento(Processo processo) {

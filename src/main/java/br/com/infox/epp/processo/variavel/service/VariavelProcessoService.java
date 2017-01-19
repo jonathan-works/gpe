@@ -31,10 +31,14 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
@@ -47,6 +51,8 @@ public class VariavelProcessoService {
     public static final String NAME = "variavelProcessoService";
 
     @Inject
+    private MetadadoProcessoManager metadadoProcessoManager;
+    @Inject
     private ProcessoManager processoManager;
     @Inject
     private ProcessoTarefaManager processoTarefaManager;
@@ -54,6 +60,8 @@ public class VariavelProcessoService {
     private FluxoManager fluxoManager;
     @Inject
     private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
+    
+    private final LogProvider LOG = Logging.getLogProvider(VariavelProcessoService.class);
 
     public List<VariavelProcesso> getVariaveis(Processo processo, String recursoVariavel, boolean usuarioExterno) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
@@ -114,53 +122,53 @@ public class VariavelProcessoService {
     }
 
     private VariavelProcesso getVariavelProcesso(Processo processo, DefinicaoVariavelProcesso definicao, TaskInstance taskInstance) {
+        Long idJbpm = processo.getIdJbpm();
         VariavelProcesso variavelProcesso = inicializaVariavelProcesso(definicao);
-        String valorPadrao = definicao.getValorPadrao();
-        if (valorPadrao != null) {
-            variavelProcesso.setValor(resolveVariavelByValorPadrao(taskInstance, processo, valorPadrao));
-        } else {
-            String nomeVariavelAsEL = "#{" + definicao.getNome() + "}";
-            variavelProcesso.setValor(resolveVariavelByEL(taskInstance, processo, nomeVariavelAsEL));
+        if (idJbpm != null) {
+            ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(idJbpm);
+            Object variable;
+            if (taskInstance != null) {
+            	// Aqui já pega do processInstance caso não tenha na taskInstance por causa da hierarquia de VariableContainer do jBPM
+            		variable = taskInstance.getVariable(definicao.getNome());
+            } else {
+            	variable = processInstance.getContextInstance().getVariable(definicao.getNome());
+            }
+            if (variable != null) {
+            	 variavelProcesso.setValor(formatarValor(variable));
+            } else {
+            	try{
+	                List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo,
+	                        definicao.getNome());
+	                
+	                if (metadados != null && metadados.size() > 0) {
+	                    setValor(processo, metadados, variavelProcesso);
+	                } else {
+	                    final String valorPadrao = definicao.getValorPadrao();
+	                    if (valorPadrao != null) {
+	                    	Object valorJbpmExpressionEvaluator = null;
+                            try {
+                                if ((valorPadrao.startsWith("#") || valorPadrao.startsWith("$")) && taskInstance != null) {
+                                    valorJbpmExpressionEvaluator = JbpmExpressionEvaluator.evaluate(valorPadrao, new ExecutionContext(taskInstance.getToken()));
+                                    if (valorJbpmExpressionEvaluator != null) {
+                                        variavelProcesso.setValor(formatarValor(valorJbpmExpressionEvaluator));
+                                    }
+                                }
+                            } catch (Exception e) {}
+	                    	
+	                    	if(valorJbpmExpressionEvaluator == null){
+	                    		setValor(valorPadrao, processo, variavelProcesso);
+	                    	}
+	                    } else {
+	                        variavelProcesso.setValor(null);
+	                    }
+	                }
+            	}catch(Exception e){
+            		variavelProcesso.setValor(null);
+            		LOG.error("Não foi possível recuperar o metadado "+ definicao.getNome() + " do processo id="+ processo.getIdProcesso().toString(), e);
+            	}
+            }
         }
         return variavelProcesso;
-    }
-
-    private String resolveVariavelByValorPadrao(TaskInstance taskInstance, Processo processo, String valorPadrao) {
-        String resolved = resolveVariavelByEL(taskInstance, processo, valorPadrao);
-        if (resolved != null) return resolved;
-        try {
-            Object evaluated = resolveByExpression(valorPadrao, processo);
-            if (evaluated != null) {
-                return formatarValor(evaluated);
-            }
-        } catch (Exception e) {
-            // Não obteve valor avaliando como methodExpression
-        }
-        return null;
-    }
-
-    private String resolveVariavelByEL(TaskInstance taskInstance, Processo processo, String el) {
-        Object evaluated = null;
-        try {
-            if (taskInstance != null) {
-                ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
-                executionContext.setTaskInstance(taskInstance);
-                evaluated = JbpmExpressionEvaluator.evaluate(el, executionContext);
-                if (evaluated != null) {
-                    return formatarValor(evaluated);
-                }
-            } else if (processo != null) {
-                ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processo.getIdJbpm());
-                ExecutionContext executionContext = new ExecutionContext(processInstance.getRootToken());
-                evaluated = JbpmExpressionEvaluator.evaluate(el, executionContext);
-                if (evaluated != null) {
-                    return formatarValor(evaluated);
-                }
-            }
-        } catch (Exception e) {
-            // Não obteve valor avaliando el
-        }
-        return null;
     }
 
     private String formatarValor(Object variable) {
@@ -198,7 +206,7 @@ public class VariavelProcessoService {
      * @param variavelProcesso
      * @return
      */
-    private Object resolveByExpression(String valorPadrao, Processo processo) {
+    private void setValor(String valorPadrao, Processo processo, VariavelProcesso variavelProcesso) {
         Object value = null;
         Expressions expressions = Expressions.instance();
         try {
@@ -208,7 +216,28 @@ public class VariavelProcessoService {
         	MethodExpression<Object> methodExpression = expressions.createMethodExpression(valorPadrao, Object.class, Processo.class);
             value = methodExpression.invoke(processo);
         }
-        return value;
+        variavelProcesso.setValor(value != null ? value.toString() : null);
+    }
+
+    /**
+     * Adiciona valor baseado em metadado de processo ao container de variável de processo
+     * 
+     * @param processo
+     * @param variavelProcesso
+     * @param metadados
+     * @return
+     */
+    private void setValor(Processo processo, List<MetadadoProcesso> metadados, VariavelProcesso variavelProcesso) {
+        StringBuilder sb = new StringBuilder();
+        boolean firstValue = true;
+        for (MetadadoProcesso metadadoProcesso : metadados) {
+            if (!firstValue) {
+                sb.append(", ");
+            }
+            sb.append(formatarValor(metadadoProcesso.getValue()));
+            firstValue = false;
+        }
+        variavelProcesso.setValor(sb.toString());
     }
 
     private VariavelProcesso inicializaVariavelProcesso(DefinicaoVariavelProcesso definicao) {

@@ -62,8 +62,8 @@ public class JpdlXmlWriterTest {
 		Delegation delegation = new Delegation(GenerateDocumentoHandler.class.getName());
 		delegation.setConfigType("constructor");
 		GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
-		configuration.setIdClassificacaoDocumento(1);
-		configuration.setIdModeloDocumento(1);
+		configuration.setCodigoClassificacaoDocumento("1");
+		configuration.setCodigoModeloDocumento("1");
 		delegation.setConfiguration(new Gson().toJson(configuration));
 		action.setActionDelegation(delegation);
 		addAction(taskNode, Event.EVENTTYPE_NODE_ENTER, action);

@@ -72,7 +72,7 @@ public class DocumentoDAO extends DAO<Documento> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoDAO";
 
-    @In
+    @In(value="sigiloDocumentoService")
     private SigiloDocumentoService sigiloDocumentoService;
 
     public Integer getNextSequencial(Processo processo) {

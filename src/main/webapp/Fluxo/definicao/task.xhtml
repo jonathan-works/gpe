@@ -3,22 +3,9 @@
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
-    <s:div id="taskDiv">
-        <h:form>
-            <wi:inputText id="taskName" value="#{taskFitter.taskName}" widthDiv="230px"
-                label="#{infoxMessages['process.task.name']}" converterId="nodeNameConverter" required="true">
-                <a:ajax event="change" render="nodesDiv" limitRender="true" execute="@this"
-                    listener="#{nodeFitter.setCurrentNodeName(taskFitter.taskName)}" />
-                <f:validator validatorId="taskNameValidator" />
-            </wi:inputText>
-        </h:form>
-    </s:div>
     <rich:collapsiblePanel expanded="true" switchType="client" header="#{infoxMessages['process.task.responsavel']}">
         <h:form>
-            <wi:selectOneMenu id="swimlaneTask" valueItems="#{swimlaneFitter.swimlaneList}" widthDiv="230px"
-                showLabelSelecione="false" value="#{t.swimlaneName}" label="#{infoxMessages['process.def.assignment.type.swimlane']}">
-                <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
-            </wi:selectOneMenu>
+            <wi:outputText id="swimlaneTask" value="#{t.swimlaneName}" label="#{infoxMessages['process.def.assignment.type.swimlane']}" />
 	        <ui:include src="helpers/expressoesAjuda.xhtml">
 				<ui:param name="id" value="expressoesAjudaRaiaDinamicaPopUpPanel" />
 				<ui:param name="methods" value="#{bpmExpressionService.externalRaiaDinamicaMethods}" />
@@ -67,15 +54,15 @@
                             <h:graphicImage title="#{infoxMessages['process.task.removeVariable']}"
               					url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
                         </a:commandLink>
-                        <a:commandLink id="setCurrentVariableLink" execute="@this" render="actionTemplate"
+                        <a:commandLink id="setCurrentVariableLink" execute="@this" render="modeloDocumentoVariavelEditorPanel"
                             limitRender="true" status=":status"
                             action="#{taskFitter.currentTask.setCurrentVariable(var)}" styleClass="opacityHover"
-                            oncomplete="#{rich:component('actionTemplatePanel')}.show()"
+                            oncomplete="#{rich:component('modeloDocumentoVariavelEditorPanel')}.show()"
                             rendered="#{var.type eq 'EDITOR'}">
                             <h:graphicImage title="#{infoxMessages['process.task.var.modelo']}"
-                                rendered="#{empty var.modeloList}" url="#{layoutController.getResourceUrlByPath('/imagens/newfile.gif')}" />
-                            <h:graphicImage title="#{var.modeloDocumentoList.toString()}"
-              					rendered="#{not empty var.modeloList}" url="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}" />
+                                rendered="#{empty var.modeloEditorHandler.modeloDocumentoList}" url="#{layoutController.getResourceUrlByPath('/imagens/newfile.gif')}" />
+                            <h:graphicImage title="#{var.modeloEditorHandler.modeloDocumentoList.toString()}"
+              					rendered="#{not empty var.modeloEditorHandler.modeloDocumentoList}" url="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}" />
                         </a:commandLink>
                         <a:commandLink id="setVariableForVariavelClassificacaoDocumentoLink" execute="@this"
                             limitRender="true" status=":status" render="classificacoesParaVariavelPanel"
@@ -85,8 +72,7 @@
                             <h:graphicImage
                                 title="#{infoxMessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
                                 status=":status" url="#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}" />
-                            <f:setPropertyActionListener value="#{var.name}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
-                            <f:setPropertyActionListener value="#{var.type}" target="#{variavelClassificacaoDocumentoAction.currentVariableType}" />
+                            <f:setPropertyActionListener value="#{var.variableAccess}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
                         </a:commandLink>
                     </h:form>
                 </div>
@@ -99,7 +85,7 @@
                         <h:inputText id="varName" rendered="#{!empty var.name or empty t.previousVariables}"
                             value="#{var.name}">
                             <a:ajax execute="@this" event="change"
-                                render="varDiv, varLabel, pageBodyDialogMessage,formVariableType, resetVariableForm" limitRender="true" />
+                                render="varDiv, varLabelForm, pageBodyDialogMessage,formVariableType, resetVariableForm" limitRender="true" />
                             <f:validator validatorId="jsfComponentIdValidator" />
                         </h:inputText>
                         <h:outputScript>
@@ -116,9 +102,9 @@
                             autocompleteList="#{t.previousVariables}" mode="client" minChars="2"
                             clientFilterFunction="customFilter">
                             <a:ajax status=":status" listener="#{var.copyVariable()}" event="blur"
-                                render="varDiv,writable,varLabel,formVariableType,resetVariableForm" limitRender="true" />
+                                render="varDiv,writable,varLabelForm,formVariableType,resetVariableForm" limitRender="true" />
                             <a:ajax status=":status" listener="#{var.copyVariable()}" event="selectitem"
-                                render="varDiv,writable,varLabel,formVariableType,resetVariableForm" limitRender="true" />
+                                render="varDiv,writable,varLabelForm,formVariableType,resetVariableForm" limitRender="true" />
                         </rich:autocomplete>
                         <s:div rendered="#{(var.type eq 'TASK_PAGE' or var.type eq 'FRAME') and taskpageMapLoader.getTaskpage(var.name) ne null}" style="display: inline-block">
                             <ui:include src="helpers/taskpageAjuda.xhtml">
@@ -132,7 +118,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">#{infoxMessages['process.task.var.label']}</f:facet>
-                <h:form>
+                <h:form id="varLabelForm">
                     <s:div id="varLabel">
                         <h:inputText value="#{var.label}">
                             <a:ajax execute="@this" limitRender="true" event="change" render="varLabel" />
@@ -185,41 +171,38 @@
                             render="varTable, addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
                             limitRender="true" />
                     </wi:selectOneMenu>
-                    <a:jsFunction name="renderDominio" execute="@this" render="definicaoDominio" limitRender="true"
-                        oncomplete="hideLoading();" onbegin="showLoading();"
-                        action="#{dominioVariavelTarefaCrudAction.reset}" />
+                    <a:jsFunction name="renderDominio" execute="@this" render="varTable" limitRender="true"
+                        oncomplete="hideLoading();" onbegin="showLoading();" />
                     <a:jsFunction name="renderData" execute="@this" render="definicaoTipoData" limitRender="true"
                         oncomplete="hideLoading();" onbegin="showLoading();" />
                     <rich:panel id="definicaoTipoData" rendered="#{var.data}">
                         <wi:selectOneMenuEnum id="tipoDeData" label="#{infoxMessages['data.tipoData']}"
-                            showLabelSelecione="true" items="#{var.getTypeDateValues()}"
-                            value="#{var.validacaoDataEnum}">
+                            showLabelSelecione="true" items="#{var.dataHandler.getTypeDateValues()}"
+                            value="#{var.dataHandler.validacaoDataEnum}">
                             <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
                                 render="addVarDiv, @this, pageBodyDialogMessage, varDiv" limitRender="true" />
                         </wi:selectOneMenuEnum>
                     </rich:panel>
                     <rich:panel id="definicaoDominio" rendered="#{var.possuiDominio}">
-                        <ui:param name="dominio" value="#{var.dominioVariavelTarefa}" />
+                        <ui:param name="dominio" value="#{var.dominioHandler.dominioVariavelTarefa}" />
                         <ui:param name="params"
                             value="#{not empty dominio ? '?id='.concat(dominio.id).concat('&amp;tab=form') : ''}" />
                         <f:facet name="header">
                             <h:outputText value="Valor" />
                         </f:facet>
                         <wi:outputText id="dominioAtual" label="Valor atual"
-                            value="#{empty var.dominioVariavelTarefa ? 'Nenhum' : var.dominioVariavelTarefa.nome}" />
+                            value="#{empty var.dominioHandler.dominioVariavelTarefa ? 'Nenhum' : var.dominioHandler.dominioVariavelTarefa.nome}" />
                         <div />
                         <a:commandLink value="Configurar valor" onclick="showLoading()" limitRender="true"
                             render="dominioVariavelTarefaPanel" execute="@this"
                             oncomplete="hideLoading();#{rich:component('dominioVariavelTarefaPanel')}.show()"
                             style="padding-right: 5px">
-                            <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.currentVariable}"
-                                value="#{var}" />
+                            <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.currentVariable}" value="#{var}" />
                         </a:commandLink>
                         <a:commandLink value="Remover valor" onclick="showLoading()" limitRender="true"
                             render="definicaoDominio" execute="@this" oncomplete="hideLoading();"
-                            rendered="#{not empty var.dominioVariavelTarefa}">
-                            <f:setPropertyActionListener target="#{var.dominioVariavelTarefa}" value="#{null}" />
-                        </a:commandLink>
+                            rendered="#{not empty var.dominioHandler.dominioVariavelTarefa}"
+                            action="#{var.dominioHandler.setDominioVariavelTarefa(null)}" />
                     </rich:panel>
                     <rich:panel id="definicaoFragmento" rendered="#{var.fragment}">
                         <wi:selectOneMenu id="tipoDeFragmento" value="#{var.fragmentConfiguration}"
@@ -230,9 +213,60 @@
                             <f:converter converterId="fragmentConfigurationConverter" />
                         </wi:selectOneMenu>
                     </rich:panel>
+                    <rich:panel id="definicaoMonetario" rendered="#{var.monetario}">
+                        <div id="input">
+                            <wi:inputMoney id="valorMin" label="Valor Mínimo" value="#{var.maxMinHandler.minimo}" converterId="javax.faces.Double" nullable="true">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :processDefinition, :pageBodyDialogMessage, varDiv" limitRender="true" />
+                                <f:validator validatorId="numberRangeValidator" />
+                                <f:attribute name="max" value="#{var.maxMinHandler.maximo}" />
+                            </wi:inputMoney>
+                        </div>
+                        <div id="input">
+                            <wi:inputMoney id="valorMax" label="Valor Máximo" value="#{var.maxMinHandler.maximo}" converterId="javax.faces.Double" nullable="true">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :processDefinition, pageBodyDialogMessage, varDiv" limitRender="true" />
+                                <f:validator validatorId="numberRangeValidator" />
+                                <f:attribute name="min" value="#{var.maxMinHandler.minimo}" />
+                            </wi:inputMoney>
+                        </div>
+                    </rich:panel>
+                    <rich:panel id="definicaoNumerico" rendered="#{var.numerico}">
+                        <div id="input">
+                            <wi:inputNumber id="valorMin" label="Valor Mínimo" value="#{var.maxMinHandler.minimo}" converterId="javax.faces.Double">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :processDefinition, :pageBodyDialogMessage, varDiv" limitRender="true" />
+                                <f:validator validatorId="numberRangeValidator" />
+                                <f:attribute name="max" value="#{var.maxMinHandler.maximo}" />
+                            </wi:inputNumber>
+                        </div>
+                        <div id="input">
+                            <wi:inputNumber id="valorMax" label="Valor Máximo" value="#{var.maxMinHandler.maximo}" converterId="javax.faces.Double">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :processDefinition, pageBodyDialogMessage, varDiv" limitRender="true" />
+                                <f:validator validatorId="numberRangeValidator" />
+                                <f:attribute name="min" value="#{var.maxMinHandler.minimo}" />
+                            </wi:inputNumber>
+                        </div>
+                    </rich:panel>
+                    <rich:panel id="definicaoMascara" rendered="#{var.type eq 'STRING'}">
+                        <div id="input">
+                            <wi:inputText id="mascaraString" label="Máscara" value="#{var.stringHandler.mascara}">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :pageBodyDialogMessage, varDiv" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </rich:panel>
                     <h:form rendered="#{var.type eq 'PARAMETER'}">
                         <div id="input">
                             <wi:inputText id="inputDefaultValue" label="Valor padrão da variável" value="#{var.value}">
+                                <a:ajax event="change" execute="@this" status=":status" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </h:form>
+                    <h:form rendered="#{var.type eq 'FILE' or var.type eq 'EDITOR'}">
+                        <div id="input">
+                            <wi:inputText id="inputPastaPadrao" label="#{infoxMessages['process.def.var.codigoPasta']}" value="#{var.modeloEditorHandler.pasta}">
                                 <a:ajax event="change" execute="@this" status=":status" limitRender="true" />
                             </wi:inputText>
                         </div>

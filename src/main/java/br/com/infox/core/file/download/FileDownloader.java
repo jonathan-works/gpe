@@ -37,7 +37,6 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(FileDownloader.NAME)
 @Scope(ScopeType.EVENT)
@@ -59,8 +58,8 @@ public class FileDownloader implements Serializable {
     private DocumentoBinManager documentoBinManager;
     @Inject
     private DocumentoManager documentoManager;
-
-    private PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
+    @Inject
+    private PathResolver pathResolver;
     
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)

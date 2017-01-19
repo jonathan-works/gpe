@@ -5,7 +5,6 @@ import static java.text.MessageFormat.format;
 import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -26,16 +24,22 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.ibpm.process.definition.variable.constants.VariableConstants;
+import br.com.infox.ibpm.task.DocumentoVariavelController;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
+import br.com.infox.ibpm.variable.VariableDataHandler;
+import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
+import br.com.infox.ibpm.variable.VariableMaxMinHandler;
+import br.com.infox.ibpm.variable.VariableStringHandler;
+import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
-import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
-import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 import br.com.infox.seam.util.ComponentUtil;
 
 /**
@@ -96,16 +100,16 @@ public class TaskInstanceForm implements Serializable {
      */
     private void addVariablesToForm(List<VariableAccess> list) {
         if (list != null) {
+            Processo processo = getProcesso();
             for (VariableAccess var : list) {
                 if (var.isReadable() && var.isWritable() && !var.getAccess().hasAccess("hidden")) {
                     String[] tokens = var.getMappedName().split(":");
-                    VariableType type = VariableType.valueOf(tokens[0]);
+                    VariableType type = VariableType.valueOf(var.getType());
                     if (VariableType.TASK_PAGE.equals(type)){
                         continue;
                     }
-                    String name = tokens[1];
-                    String label = JbpmUtil.instance().getMessages()
-                            .get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + name);
+                    String name = var.getVariableName();
+                    String label = var.getLabel();
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
                     ff.setId(var.getVariableName() + "-" + taskInstance.getId());
@@ -131,12 +135,23 @@ public class TaskInstanceForm implements Serializable {
                         }
                         ff.getProperties().put("urlFrame", url);
                         break; 
+                    case MONETARY:
+                    case INTEGER:
+                    	if(VariableMaxMinHandler.fromJson(var.getConfiguration()) != null) {
+							ff.getProperties().put("valorMaximo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMaximo());
+							ff.getProperties().put("valorMinimo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMinimo());
+                    	}
+                    	break;
+                    case STRING:
+						if (var.getConfiguration() != null && var.getConfiguration().length() > 0) { 
+							ff.getProperties().put("mascara", VariableStringHandler.fromJson(var.getConfiguration()).getMascara());
+						}
+                    	break;
                     case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {
-                        DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component
-                                .getInstance(DominioVariavelTarefaManager.NAME);
-                        Integer id = Integer.valueOf(tokens[2]);
-                        DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
+                        DominioVariavelTarefaSearch dominioVariavelTarefaSearch = BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);;
+                        DominioVariavelTarefa dominio = dominioVariavelTarefaSearch.findByCodigo(
+                        		VariableDominioEnumerationHandler.fromJson(var.getConfiguration()).getCodigoDominio());
                         List<SelectItem> selectItens = new ArrayList<>();
                         if (dominio.isDominioSqlQuery()) {
                             ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
@@ -152,11 +167,7 @@ public class TaskInstanceForm implements Serializable {
                     }
                         break;
                     case DATE: {
-                        if (tokens.length < 3) {
-                            ff.getProperties().put("tipoValidacao", ValidacaoDataEnum.L.name());
-                        } else {
-                            ff.getProperties().put("tipoValidacao", tokens[2]);
-                        }
+                        ff.getProperties().put("tipoValidacao", VariableDataHandler.fromJson(var.getConfiguration()).getTipoValidacaoData());
                     }
                         break;
                     case FRAGMENT: {
@@ -168,9 +179,18 @@ public class TaskInstanceForm implements Serializable {
                         }
                     }
                         break;
+                    case FILE:
+                        ff.getProperties().put("pastaPadrao", var.getConfiguration() == null ? null : VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
+                        DocumentoVariavelController documentoVariavelController = BeanManager.INSTANCE.getReference(DocumentoVariavelController.class);
+                        documentoVariavelController.init(processo, ff);
+                        ff.getProperties().put("documentoVariavelController", documentoVariavelController);
+                    	break;
                     case EDITOR: {
+                        ff.getProperties().put("pastaPadrao", var.getConfiguration() == null ? null : VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
                         ff.getProperties().put("editorId", var.getVariableName() + "-" + taskInstance.getId());
-                        ff.getProperties().put("variavelModelos", var.getVariableName() + "Modelo");
+                        DocumentoVariavelController documentoVariavelController2 = BeanManager.INSTANCE.getReference(DocumentoVariavelController.class);
+                        documentoVariavelController2.init(processo, ff);
+                        ff.getProperties().put("documentoVariavelController", documentoVariavelController2);
                     }
                     	break;
                     default:
@@ -201,4 +221,12 @@ public class TaskInstanceForm implements Serializable {
         return mapProperties;
     }
 
+    private Processo getProcesso() {
+        Integer idProcesso = (Integer) taskInstance.getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
+        return getProcessoManager().find(idProcesso);
+    }
+    
+    private ProcessoManager getProcessoManager() {
+        return BeanManager.INSTANCE.getReference(ProcessoManager.class);
+    }
 }

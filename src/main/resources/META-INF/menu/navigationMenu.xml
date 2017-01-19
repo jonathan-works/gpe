@@ -23,6 +23,7 @@
     <value>menu.administracao/menu.fluxos/menu.agrupamento/item.menuText:/Item/listView.seam</value>
     <value>menu.administracao/menu.fluxos/tipoParte.menuText:/TipoParte/listView.seam</value>
     <value>menu.administracao/menu.fluxos/signal.menuText:/Sinal/listView.seam</value>
+    <value>menu.administracao/menu.fluxos/statusProcesso.menuText:/StatusProcesso/listView.seam</value>
     <value>menu.administracao/log.logs/log.menuText:/Consulta/Log/list.seam</value>
     <value>menu.administracao/log.logs/log.erro.menuText:/Consulta/Log/Erro/listView.seam</value>
     <value>menu.administracao/log.logs/quartzLog.menuText:/Consulta/Log/Quartz/listView.seam</value>

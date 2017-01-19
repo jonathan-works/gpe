@@ -11,11 +11,11 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
-import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -32,9 +32,6 @@ public class AutomaticNodesInfo implements Serializable {
     private static final LogProvider LOG = Logging.getLogProvider(AutomaticNodesInfo.class);
 
     public static final String NAME = "automaticNodesInfo";
-    
-    @In("org.jboss.seam.bpm.jbpmContext")
-    private JbpmContext jbpmContext;
     
     @In
     private ProcessoManager processoManager;
@@ -53,7 +50,7 @@ public class AutomaticNodesInfo implements Serializable {
         String nodeName = null;
         long processId = 0;
         try {
-            Token token = jbpmContext.getTokenForUpdate(tokenId);
+            Token token = JbpmContextProducer.getJbpmContext().getTokenForUpdate(tokenId);
             Node node = (Node) HibernateUtil.removeProxy(token.getNode());
             nodeName = node.getName();
             processId = token.getProcessInstance().getId();

@@ -11,15 +11,13 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
-import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import com.google.common.base.Strings;
 
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
-import br.com.infox.jbpm.action.ActionTemplateHandler;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class TaskHandler implements Serializable {
@@ -72,17 +70,6 @@ public class TaskHandler implements Serializable {
         return task == null || task.getSwimlane() == null ? null : task.getSwimlane().getName();
     }
 
-    public void setSwimlaneName(String swimlaneName) {
-        if (swimlaneName == null) {
-        	task.setSwimlane(null);
-        } else {
-            if (task.getTaskMgmtDefinition() == null) {
-                task.setTaskMgmtDefinition(new TaskMgmtDefinition());
-            }
-            task.setSwimlane(task.getTaskMgmtDefinition().getSwimlane(swimlaneName));
-        }
-    }
-
     public boolean isDirty() {
         return dirty;
     }
@@ -111,15 +98,6 @@ public class TaskHandler implements Serializable {
         currentVariable = var;
         AssociativeModeloDocumentoList associativeModeloDocumentoList = ComponentUtil.getComponent(AssociativeModeloDocumentoList.NAME);
         associativeModeloDocumentoList.refreshModelosAssociados();
-        StringBuilder sb = new StringBuilder();
-        sb.append("#{modeloDocumento.set('").append(currentVariable.getName()).append("'");
-        if (currentVariable.getModeloList() != null) {
-            for (Integer i : currentVariable.getModeloList()) {
-                sb.append(",").append(i);
-            }
-        }
-        sb.append(")}");
-        ActionTemplateHandler.instance().setCurrentActionTemplate(sb.toString());
     }
 
     public VariableAccessHandler getCurrentVariable() {
@@ -232,7 +210,7 @@ public class TaskHandler implements Serializable {
 
     public void processVarTypeChange(VariableAccessHandler var) {
         clearHasTaskPage();
-        var.limparModelos();
+        var.limparConfiguracoes();
         var.setValue(null);
         if (!var.podeIniciarVazia()) {
         	var.setIniciaVazia(false);
@@ -248,9 +226,11 @@ public class TaskHandler implements Serializable {
 
     public List<String> getTransitions() {
 	    List<String> transitions = new ArrayList<>();
-	    List<Transition> leavingTransitions = this.task.getTaskNode().getLeavingTransitions();
-	    for (Transition leavingTransition : leavingTransitions) {
-	        transitions.add(leavingTransition.getName());
+	    if (this.task.getTaskNode().getLeavingTransitions() != null) {
+	    	List<Transition> leavingTransitions = this.task.getTaskNode().getLeavingTransitions();
+	    	for (Transition leavingTransition : leavingTransitions) {
+		        transitions.add(leavingTransition.getName());
+		    }
 	    }
 	    return transitions;
 	}

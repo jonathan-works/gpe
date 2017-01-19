@@ -116,7 +116,7 @@
 								oncomplete="infox.hideLoading();" />
 					<wi:certificadoDigital id="appletAssinatura"
                             tokenField="#{expedicaoComunicacaoAction.token}"
-							signableData="#{expedicaoComunicacaoAction.md5Comunicacao}"
+							documentoBinList="#{expedicaoComunicacaoAction.documentoBinComunicacao}"
 							functionPreSign="infox.showLoading();"
 							functionPosSign="assinar();"
 							rendered="#{expedicaoComunicacaoAction.podeRenderizarApplet() and not expedicaoComunicacaoAction.destinatario.expedido}"

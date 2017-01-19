@@ -7,7 +7,7 @@
 		<class>br.com.infox.epp.ws.interceptors.TokenAuthenticationInterceptor</class>
 		<class>br.com.infox.epp.ws.interceptors.ValidacaoInterceptor</class>
 		<class>br.com.infox.epp.cdi.exception.ExceptionInterceptor</class>
-        <class>br.com.infox.core.token.AccessTokenAuthenticationInterceptor</class>
+		<class>br.com.infox.core.token.AccessTokenAuthenticationInterceptor</class>
         <class>br.com.infox.core.rest.RestThreadPoolInterceptor</class>
 	</interceptors>
 	

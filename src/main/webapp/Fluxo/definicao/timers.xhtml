@@ -11,29 +11,14 @@
     xmlns:p="http://primefaces.org/ui"
 	xmlns:i="http://java.sun.com/jsf/composite/infox">
 	
-    <rich:panel bodyClass="panel">
+	<rich:collapsiblePanel expanded="true" switchType="client" header="#{infoxMessages['process.timer']}">
         <s:div id="timersDiv">
-            <ui:param
-                name="node"
-                value="#{nodeFitter.nodeHandler}"
-            />
+            <ui:param name="node" value="#{nodeFitter.nodeHandler}" />
             <ui:decorate template="dataTable.xhtml">
-                <ui:param
-                    name="values"
-                    value="#{node.timerList}"
-                />
-                <ui:param
-                    name="styleClass"
-                    value="tabelaVariaveis"
-                />
-                <ui:param
-                    name="id"
-                    value="timersTable"
-                />
-                <ui:param
-                    name="style"
-                    value="width:100%"
-                />
+                <ui:param name="values" value="#{node.timerList}" />
+                <ui:param name="styleClass" value="tabelaVariaveis" />
+                <ui:param name="id" value="timersTable" />
+                <ui:param name="style" value="width:100%" />
                 <ui:define name="headerToolBar">
                     <h:form>
                         <a:commandLink
@@ -41,12 +26,10 @@
                             execute="@this"
                             immediate="true"
                             render="timersDiv,timerDiv"
-                            limitRender="true"
-                        >
+                            limitRender="true">
                             <h:graphicImage
                                 url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
-                                title="#{infoxMessages['process.timer.new']}"
-                            />
+                                title="#{infoxMessages['process.timer.new']}" />
                         </a:commandLink>
                     </h:form>
                 </ui:define>
@@ -55,16 +38,14 @@
                         <h:graphicImage
                             title="#{infoxMessages['process.timer.remove']}"
                             url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
-                            styleClass="cursor-pointer"
-                        >
+                            styleClass="cursor-pointer" >
                             <a:ajax
                                 event="click"
                                 listener="#{node.removeTimer(row)}"
                                 onbeforesubmit="if(!confirm('Confirma?')) return false;"
                                 execute="@this"
                                 render="timersDiv,timerDiv"
-                                limitRender="true"
-                            />
+                                limitRender="true" />
                         </h:graphicImage>
                     </h:form>
                 </ui:define>
@@ -134,5 +115,5 @@
                 </s:div>
             </h:form>
         </s:div>
-    </rich:panel>
+    </rich:collapsiblePanel>
 </ui:composition>

@@ -41,7 +41,17 @@ public class UsuarioLoginSearch extends PersistenceController {
 		
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
-	
+
+    public boolean existeUsuarioByLogin(String login) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
+        cq.where(cb.equal(usuario.get(UsuarioLogin_.login), login), usuarioAtivoPredicate(usuario),
+                podeFazerLoginPredicate(usuario));
+        cq.select(cb.count(usuario));
+        return getEntityManager().createQuery(cq).getSingleResult() > 0;
+    }
+
 	public String getLoginByPessoaFisica(PessoaFisica pessoaFisica) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<String> cq = cb.createQuery(String.class);

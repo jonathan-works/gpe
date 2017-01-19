@@ -309,6 +309,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     	Object[] ids = getDao().getIdTaskMgmInstanceAndIdTokenByidJbpm(idJbpm);
     	Long idTaskMgmInstance = ((Number) ids[0]).longValue();
     	Long idToken = ((Number) ids[1]).longValue();
+    	getDao().removeLogJbpm(idToken);
     	getDao().removerProcessoJbpm(processo.getIdProcesso(), idJbpm, idTaskMgmInstance, idToken);
     	processo.setIdJbpm(null);
     }

@@ -5,7 +5,7 @@
     xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" xmlns:a="http://richfaces.org/a4j"
     xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:wi="http://www.itx.com.br/jsf" xmlns:p="http://primefaces.org/ui"
-    xmlns:infox="http://www.infox.com.br/jsf" template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:i="http://java.sun.com/jsf/composite/infox" template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
     <ui:define name="baseHead">
         <style>
 .recaptchatable {
@@ -51,13 +51,16 @@
                             <span><h:outputText value="#{infoxMessages['login.comCertificadoLabel']}" /></span>
                         </div>
                         <h:form id="loginComCertificado" styleClass="field-block">
-                            <wi:certificadoDigital id="certificacao" tokenField="#{certificateAuthenticator.token}"
-                                signableData="" functionPreSign="infox.showLoading();" functionPosSign="submitForm();"
-                                signButtonCaption="#{infoxMessages['login.comCertificadoButton']}">
-                            </wi:certificadoDigital>
-                            <a:jsFunction name="submitForm" action="#{certificateAuthenticator.authenticate()}"
-                                execute="certificacaoToken, @this" render="DialogMessage" limitRender="true" 
-                                oncomplete="infox.hideLoading();"/>
+                            <wi:assinador id="certificacao"
+                               callbackHandler="#{certificateAuthenticator}"
+                               assinavelProvider="#{certificateAuthenticator.assinavelProvider}"
+                               execute="@this"
+                               render="DialogMessage"
+                               onbegin="infox.showLoading();"
+                               oncomplete="infox.hideLoading();"
+                               styleClass="buttons"
+                               value="#{infoxMessages['signature.loginBtn']}">
+                            </wi:assinador>
                         </h:form>
                     </div>
                     <h:form id="loginSemCertificado">

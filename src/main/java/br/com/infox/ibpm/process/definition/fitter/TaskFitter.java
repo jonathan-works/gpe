@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,21 +18,18 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
-import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.processo.timer.TaskExpiration;
-import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.InfoxTaskControllerHandler;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.task.manager.JbpmTaskManager;
+import br.com.infox.ibpm.util.BpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -47,53 +43,25 @@ public class TaskFitter extends Fitter implements Serializable {
     private TaskHandler startTaskHandler;
     private TaskHandler currentTask;
     private String taskName;
-    private Map<Number, String> modifiedTasks = new HashMap<>();
     private Tarefa tarefaAtual;
     private Set<Tarefa> tarefasModificadas = new HashSet<>();
     private boolean currentJbpmTaskPersisted;
     private List<VariableType> typeList;
-    private TaskExpiration taskExpiration;
+    private Map<String, List<TaskHandler>> taskNodeMap = new HashMap<>();
 
     @Inject
     private JbpmTaskManager jbpmTaskManager;
     @Inject
     private TarefaManager tarefaManager;
-    @Inject
-    private TaskExpirationManager taskExpirationManager;
-    
-    public void addTask() {
-        Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
-        ProcessDefinition process = getProcessBuilder().getInstance();
-        getTasks();
-        TaskNode taskNode = (TaskNode) currentNode;
-        Task task = new Task();
-        task.setKey("key_" + UUID.randomUUID().toString());
-        task.setProcessDefinition(process);
-        task.setTaskMgmtDefinition(process.getTaskMgmtDefinition());
-        List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(currentNode);
-        task.setName(currentNode.getName());
-        taskNode.addTask(task);
-        taskNode.setEndTasks(true);
-        task.setSwimlane((Swimlane) process.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
-        task.setTaskController(new TaskController());
-        task.getTaskController().setVariableAccesses(new ArrayList<VariableAccess>());
-        Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
-        delegation.setProcessDefinition(task.getProcessDefinition());
-        task.getTaskController().setTaskControllerDelegation(delegation);
-        TaskHandler th = new TaskHandler(task);
-        list.add(th);
-        setCurrentTask(th);
-    }
     
     public void addStartStateTask() {
         StartState startState = (StartState) getProcessBuilder().getNodeFitter().getCurrentNode();
         ProcessDefinition processDefinition = getProcessBuilder().getInstance();
         getTasks();
         Task startTask = new Task();
-        startTask.setKey("key_" + UUID.randomUUID().toString());
+        startTask.setKey(BpmUtil.generateKey());
         startTask.setProcessDefinition(processDefinition);
         startTask.setTaskMgmtDefinition(processDefinition.getTaskMgmtDefinition());
-        List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(startState);
         startTask.setName(startState.getName());
         startTask.setStartState(startState);
         startTask.setTaskController(new TaskController());
@@ -102,21 +70,13 @@ public class TaskFitter extends Fitter implements Serializable {
         delegation.setProcessDefinition(startTask.getProcessDefinition());
         startTask.getTaskController().setTaskControllerDelegation(delegation);
         TaskHandler taskHandler = new TaskHandler(startTask);
-        list.add(taskHandler);
         setCurrentTask(taskHandler);
-    }
-
-    public void removeTask(TaskHandler t) {
-        Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
-        if (currentNode instanceof TaskNode) {
-            TaskNode tn = (TaskNode) currentNode;
-            tn.getTasks().remove(t.getTask());
-            getProcessBuilder().getTaskNodeMap().remove(currentNode);
+        List<TaskHandler> list = taskNodeMap.get(startState);
+        if (list == null) {
+        	list = new ArrayList<>();
+        	taskNodeMap.put(startState.getKey(), list);
         }
-
-        if (currentTask != null && currentTask.equals(t)) {
-            clear();
-        }
+        list.add(taskHandler);
     }
 
     public TaskHandler getCurrentTask() {
@@ -126,7 +86,6 @@ public class TaskFitter extends Fitter implements Serializable {
     public void setCurrentTask(TaskHandler cTask) {
         this.currentTask = cTask;
         this.tarefaAtual = null;
-        this.taskExpiration = null;
         checkCurrentTaskPersistenceState();
     }
 
@@ -136,27 +95,6 @@ public class TaskFitter extends Fitter implements Serializable {
             this.tarefaAtual = tarefaManager.getTarefa(getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName()).longValue());
         }
         return tarefaAtual;
-    }
-
-    public void setTaskName(String taskName) {
-        if (this.taskName != null && !this.taskName.equals(taskName)) {
-            if (currentTask != null && currentTask.getTask() != null) {
-                currentTask.getTask().setName(taskName);
-                Number idTaskModificada = getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName());
-                if (idTaskModificada != null) {
-                    modifiedTasks.put(idTaskModificada, taskName);
-                }
-            }
-            if (taskExpiration != null && taskExpiration.getId() != null) {
-                taskExpiration.setTarefa(taskName);
-                try {
-                    taskExpirationManager.update(taskExpiration);
-                } catch (DAOException e) {
-                    LOG.error("taskFitter.setTaskName", e);
-                }
-            }
-            this.taskName = taskName;
-        }
     }
 
     public String getTaskName() {
@@ -178,33 +116,15 @@ public class TaskFitter extends Fitter implements Serializable {
         startTaskHandler = startTask;
     }
 
-    public Map<Number, String> getModifiedTasks() {
-        return modifiedTasks;
-    }
-
-    public void setModifiedTasks(Map<Number, String> modifiedTasks) {
-        this.modifiedTasks = modifiedTasks;
-    }
-
-    public void modifyTasks() {
-        jbpmTaskManager.atualizarTarefasModificadas(modifiedTasks);
-        modifiedTasks = new HashMap<Number, String>();
-    }
-
     public List<TaskHandler> getTasks() {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
-        Map<Node, List<TaskHandler>> taskNodeMap = getProcessBuilder().getTaskNodeMap();
         List<TaskHandler> taskList = new ArrayList<TaskHandler>();
         if (currentNode instanceof TaskNode) {
             TaskNode node = (TaskNode) currentNode;
-            if (taskNodeMap == null) {
-                getProcessBuilder().setTaskNodeMap(new HashMap<Node, List<TaskHandler>>());
-                taskNodeMap = getProcessBuilder().getTaskNodeMap();
-            }
-            taskList = taskNodeMap.get(node);
+            taskList = taskNodeMap.get(node.getKey());
             if (taskList == null) {
                 taskList = TaskHandler.createList(node);
-                taskNodeMap.put(node, taskList);
+                taskNodeMap.put(node.getKey(), taskList);
             }
             if (!taskList.isEmpty()) {
                 setCurrentTask(taskList.get(0));
@@ -223,6 +143,7 @@ public class TaskFitter extends Fitter implements Serializable {
     @Override
     public void clear() {
         setCurrentTask(null);
+        taskNodeMap = new HashMap<>();
     }
 
     public void marcarTarefaAtual() {
@@ -230,17 +151,10 @@ public class TaskFitter extends Fitter implements Serializable {
             tarefasModificadas.add(tarefaAtual);
         }
     }
-
-    public void updateTarefas() {
-        for (Tarefa tarefa : tarefasModificadas) {
-            try {
-                tarefaManager.merge(tarefa);
-            } catch (DAOException e) {
-                LOG.error("Erro ao dar merge na tarefa " + tarefa, e);
-            }
-        }
-        tarefaManager.flush();
-    }
+    
+    public Set<Tarefa> getTarefasModificadas() {
+		return tarefasModificadas;
+	}
 
     public boolean isCurrentJbpmTaskPersisted() {
         return currentJbpmTaskPersisted;
@@ -259,10 +173,6 @@ public class TaskFitter extends Fitter implements Serializable {
         return null;
     }
     
-    public boolean canChangeCurrentTaskName() {
-        return currentTask != null && !getProcessBuilder().existemProcessosAssociadosAoFluxo();
-    }
-
     public List<VariableType> getTypeList() {
         if (typeList == null) {
             typeList = Arrays.asList(VariableType.values());
@@ -274,46 +184,4 @@ public class TaskFitter extends Fitter implements Serializable {
         this.typeList = typeList;
     }
 
-    public TaskExpiration getTaskExpiration() {
-        if (taskExpiration == null) {
-            setTaskExpiration(new TaskExpiration());
-        }
-        return taskExpiration;
-    }
-
-    public void setTaskExpiration(TaskExpiration taskExpiration) {
-        this.taskExpiration = taskExpiration;
-    }
-    
-    public void addExpiration() {
-        ProcessBuilder processBuilder = ProcessBuilder.instance();
-        taskExpiration.setFluxo(processBuilder.getFluxo());
-        taskExpiration.setTarefa(getTaskName());
-        if (taskExpiration.getExpiration() != null && taskExpiration.getTransition() != null) {
-            try {
-                taskExpirationManager.persist(taskExpiration);
-            } catch (DAOException e) {
-                LOG.error("taskFitter.addExpiration()", e);
-            }
-        }
-    }
-    
-    public void removeExpiration(TaskExpiration te) {
-        try {
-            taskExpirationManager.remove(te);
-            setTaskExpiration(new TaskExpiration());
-        } catch (DAOException e) {
-            LOG.error("taskFitter.removeExpiration()", e);
-        }
-    }
-    
-    public boolean hasTaskExpiration() {
-        if (taskExpiration == null) {
-            TaskExpiration te = taskExpirationManager.getByFluxoAndTaskName(ProcessBuilder.instance().getFluxo(), taskName);
-            taskExpiration = te == null ? new TaskExpiration() : te;
-        }
-        return taskExpiration != null && taskExpiration.getId() != null;
-    }
-    
-    
 }

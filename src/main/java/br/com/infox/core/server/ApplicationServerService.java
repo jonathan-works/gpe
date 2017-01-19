@@ -14,6 +14,8 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -77,6 +79,14 @@ public class ApplicationServerService implements Serializable {
 	
 	public TransactionManager getTransactionManager() {
         return Configuration.getInstance().getApplicationServer().getTransactionManager();
+	}
+	
+	public Transaction getTransaction() {
+	    try {
+            return getTransactionManager().getTransaction();
+        } catch (SystemException e) {
+            return null;
+        }
 	}
             
     public String getInstanceName() {

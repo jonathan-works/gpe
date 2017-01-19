@@ -61,13 +61,29 @@
                 currentPageReportTemplate="Página {currentPage} de {totalPages} em {totalRecords} registros" >
                 
                 <p:column styleClass="dt-toolbar-col" exportable="false">
-                    <a:commandLink id="downloadDocumento"
+                    <a:commandLink id="downloadDocumentoPDF" rendered="#{row.documento.documentoBin.extensao ne null and fileDownloader.isPdf(row.documento.documentoBin)}" 
                     	action="#{jsfUtil.applyLastPhaseFlashAction}"
                         style="margin-right: 0.5em;" title="#{row.documento.descricao}"
                         onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
-                        oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(row.documento.documentoBin)}">
-                        <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
-                        <f:setPropertyActionListener value="#{row.documento.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+                        oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documento.documentoBin.id}', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documento.documentoBin.id}&amp;binario=true',screen.availWidth,screen.availHeight);">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
+                        <f:setPropertyActionListener value="#{row.documento.documentoBin}" target="#{flash.documentoBin}" />
+                    </a:commandLink>
+
+                     <p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documento.documentoBin)}" ajax="false"
+                               rendered="#{row.documento.documentoBin.extensao ne null and not fileDownloader.isPdf(row.documento.documentoBin)}" >
+                               <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
+                     </p:commandLink>
+           
+                    
+                    <a:commandLink id="viewEditor" rendered="#{row.documento.documentoBin.extensao eq null}"
+                        style="margin-right: 0.5em;" title="#{row.documento.descricao}"
+                        action="#{jsfUtil.applyLastPhaseFlashAction}"
+                        onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
+                        oncomplete="infox.hideLoading(); infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{row.documento.documentoBin}" styleClass="opacityHover" />
+                        <f:setPropertyActionListener value="#{row.documento.id}" target="#{flash.idDocumento}" />
+                        <f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
                     </a:commandLink>
                 </p:column>
                 

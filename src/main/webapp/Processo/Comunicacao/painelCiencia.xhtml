@@ -88,8 +88,7 @@
                                 execute="@this documentoCienciaTexto"
                                 reRender="buttonDarCiencia"
                                 tokenField="#{darCienciaAction.tokenAssinaturaDocumentoCiencia}"
-                                signableData="#{darCienciaAction.signableDocumentoCiencia}"
-                                preSignAction="#{darCienciaAction.updateSignableCiencia()}"
+                                assinavelProvider="#{darCienciaAction.assinavelProvider}"
                                 functionPreSign="infox.showLoading();"
                                 functionPosSign="assinarDocumentoCiencia();"
                                 signButtonCaption="${infoxMessages['comunicacao.painelCiencia.assinar']}" />

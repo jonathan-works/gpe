@@ -1,5 +1,6 @@
 package br.com.infox.core.util;
 
+import java.util.Collection;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -36,7 +37,7 @@ public final class StringUtil {
     	return string;
     }
 
-    public static <E> String concatList(List<E> list, String delimitador) {
+    public static <E> String concatList(Collection<E> list, String delimitador) {
         StringBuilder sb = new StringBuilder();
         for (E object : list) {
             if (sb.length() > 0) {

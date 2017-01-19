@@ -44,6 +44,8 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_JBPM_LOG;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_JBPM_LOG_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
@@ -107,6 +109,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     @NamedNativeQuery(name = ATUALIZAR_PROCESSOS3, query = ATUALIZAR_PROCESSOS_QUERY3),
     @NamedNativeQuery(name = ATUALIZAR_PROCESSOS4, query = ATUALIZAR_PROCESSOS_QUERY4),
     @NamedNativeQuery(name = REMOVER_PROCESSO_JBMP, query = REMOVER_PROCESSO_JBMP_QUERY),
+    @NamedNativeQuery(name = REMOVER_JBPM_LOG, query = REMOVER_JBPM_LOG_QUERY),
     @NamedNativeQuery(name = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, query = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY),
     @NamedNativeQuery(name = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO, query = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY,
     				  resultClass = Processo.class)

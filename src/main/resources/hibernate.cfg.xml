@@ -55,7 +55,6 @@
     <!-- Simple memory-only cache -->
     
     <property name="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</property>
-    
     <!-- logging properties --> 
 <!--      <property name="hibernate.show_sql">${desenvolvimento}</property>
     <property name="hibernate.format_sql">false</property>
@@ -205,6 +204,7 @@
     <mapping resource="org/jbpm/context/log/variableinstance/HibernateStringUpdateLog.hbm.xml"/>
     <mapping resource="org/jbpm/context/log/variableinstance/LongUpdateLog.hbm.xml"/>
     <mapping resource="org/jbpm/context/log/variableinstance/StringUpdateLog.hbm.xml"/>
+    <mapping resource="org/jbpm/context/log/variableinstance/JpaUpdateLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/TaskLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/TaskCreateLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/TaskAssignLog.hbm.xml"/>
@@ -212,6 +212,7 @@
     <mapping resource="org/jbpm/taskmgmt/log/SwimlaneLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/SwimlaneCreateLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/SwimlaneAssignLog.hbm.xml"/>
+    <mapping resource="org/jbpm/taskmgmt/log/TaskAssigneeLog.hbm.xml"/>
 
     <!-- ################## -->
     <!-- # cache settings # -->

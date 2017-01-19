@@ -16,6 +16,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
@@ -58,14 +59,15 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
 		DocumentoBinManager documentoBinManager = ComponentUtil.getComponent(DocumentoBinManager.NAME);
 		ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+		ModeloDocumentoSearch modeloDocumentoSearch = BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
 		ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
 		PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
 		Processo processo = processoManager.getProcessoByIdJbpm(executionContext.getProcessInstance().getId());
 		Processo processoRaiz = processo.getProcessoRoot();
-		ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.find(configuration.idClassificacaoDocumento);
+		ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.findByCodigo(configuration.codigoClassificacaoDocumento);
 		try {
-			ModeloDocumento modeloDocumento = modeloDocumentoManager.find(configuration.idModeloDocumento);
+			ModeloDocumento modeloDocumento = modeloDocumentoSearch.getModeloDocumentoByCodigo(configuration.codigoModeloDocumento);
 			ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processo.getIdProcesso(), executionContext);
 			String texto = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin(modeloDocumento.getTituloModeloDocumento(), texto);
@@ -91,29 +93,33 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 			}
 		} catch (Exception e) {
 			LOG.error(MessageFormat.format("Erro ao gerar documento para o id de modelo de documento: {0}, no processo com id: {1}, nó: {2}", 
-					configuration.idModeloDocumento, processo.getIdProcesso(), executionContext.getNode().getName()), e);
+					configuration.codigoModeloDocumento, processo.getIdProcesso(), executionContext.getNode().getName()), e);
 		}
 	}
 	
+	public GenerateDocumentoConfiguration getConfiguration() {
+		return this.configuration;
+	}
+	
 	public static class GenerateDocumentoConfiguration {
-		private Integer idModeloDocumento;
-		private Integer idClassificacaoDocumento;
+		private String codigoModeloDocumento;
+		private String codigoClassificacaoDocumento;
 		private String codigoPasta;
 		
-		public Integer getIdClassificacaoDocumento() {
-			return idClassificacaoDocumento;
+		public String getCodigoClassificacaoDocumento() {
+			return codigoClassificacaoDocumento;
 		}
 		
-		public void setIdClassificacaoDocumento(Integer idClassificacaoDocumento) {
-			this.idClassificacaoDocumento = idClassificacaoDocumento;
+		public void setCodigoClassificacaoDocumento(String codigoClassificacaoDocumento) {
+			this.codigoClassificacaoDocumento = codigoClassificacaoDocumento;
 		}
 		
-		public Integer getIdModeloDocumento() {
-			return idModeloDocumento;
+		public String getCodigoModeloDocumento() {
+			return codigoModeloDocumento;
 		}
 		
-		public void setIdModeloDocumento(Integer idModeloDocumento) {
-			this.idModeloDocumento = idModeloDocumento;
+		public void setCodigoModeloDocumento(String codigoModeloDocumento) {
+			this.codigoModeloDocumento = codigoModeloDocumento;
 		}
 
 		public String getCodigoPasta() {

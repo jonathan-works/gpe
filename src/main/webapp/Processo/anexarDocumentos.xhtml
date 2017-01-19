@@ -474,20 +474,16 @@
 
 			<div align="center">
 				<h:form>
-					<a:jsFunction name="assinarForm"
-						actionListener="#{anexarDocumentosView.signDocuments}"
-						action="#{elFunctions.invokeMethod(actionPosSign)}"
-						execute="@this assinarButtonToken"
-						render="pageBodyDialogMessage documentoDiv assinarDocumentosPopUpPanelOutput"
-						onbegin="infox.showLoading('Assinando Documento(s)');"
-						oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();" />
-
-					<wi:certificadoDigital id="assinarButton"
-						rendered="#{not empty anexarDocumentosView.documentosAssinaveis}"
-						tokenField="#{anexarDocumentosView.tokenAssinatura}"
-						documentData="#{anexarDocumentosView.signDocuments}"
-						functionPreSign="infox.showLoading('Aguardando Usuário');"
-						functionPosSign="assinarForm();" />
+                    <wi:assinador
+                        id="assinarButton"
+                        tokenField="#{anexarDocumentosView.tokenAssinatura}"
+                        assinavelProvider="#{anexarDocumentosView.assinavelProvider}"
+                        execute="@this"
+                        rendered="#{not empty anexarDocumentosView.documentosAssinaveis}"
+                        render="pageBodyDialogMessage documentoDiv assinarDocumentosPopUpPanelOutput"
+                        onbegin="infox.showLoading();"
+                        oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();"
+                        signAction="#{anexarDocumentosView.signDocuments}" />
 
 					<a:commandButton id="cancelarAssinaturaButton" styleClass="buttons"
 						value="#{infoxMessages['button.cancelar']}"

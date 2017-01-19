@@ -69,17 +69,16 @@
 			<a:jsFunction name="assinar"
 				action="#{controller.assinar()}"
 				execute="@this, #{varId}AssinaturaDocumento"
-				render="#{varId}Div, :pageBodyDialogMessage" 
+				render="#{varId}Div :pageBodyDialogMessage" 
 				oncomplete="infox.hideLoading();"/>
 				
 			<wi:certificadoDigital
-	            id="#{varId}appletAssinatura"
+	            id="#{varId}CertificadoDigital"
+	            execute="#{varId}EditorDiv"
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-				reRender="#{varId}AssinaturaDocumento, :pageBodyDialogMessage"
 				tokenField="#{controller.tokenToSign}"
-				propertyValue="#{formField.value}"
-				propertyTarget="#{controller.documentoToSign}"
-				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
+				reRender="#{varId}ClassificacaoDocumento #{varId}ModeloDocumento #{varId}EditorDiv #{varId}AssinaturaDocumento :pageBodyDialogMessage"
+				documentoBin="#{formField.value.documentoBin}"
 				functionPreSign="infox.showLoading();"
 				functionPosSign="assinar();" >
 	       </wi:certificadoDigital>

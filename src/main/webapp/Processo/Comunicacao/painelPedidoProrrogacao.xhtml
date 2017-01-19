@@ -97,8 +97,7 @@
 	                                execute="@this"
 	                                reRender="buttonPedirProrrogacao"
 	                                tokenField="#{pedirProrrogacaoPrazoAction.tokenAssinaturaDocumentoPedidoProrrogacao}"
-	                                signableData="#{pedirProrrogacaoPrazoAction.signableDocumentoPedidoProrrogacao}"
-	                                preSignAction="#{pedirProrrogacaoPrazoAction.updateSignablePedidoProrrogacao()}"
+	                                assinavelProvider="#{pedirProrrogacaoPrazoAction.assinavelProvider}"
 	                                functionPreSign="infox.showLoading();"
 	                                functionPosSign="assinarDocumentoPedidoProrrogacao();"
 	                                signButtonCaption="${infoxMessages['comunicacao.painelPedidoProrrogacao.assinar']}" />

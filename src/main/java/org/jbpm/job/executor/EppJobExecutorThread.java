@@ -40,7 +40,6 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
             // if an exception occurs, acquireJob() returns null
             if (job != null) {
                 try {
-                    EntityManagerProducer.clear();
                     executeJob(job);
                 } catch (Exception e) {
                     // save exception stack trace
@@ -51,10 +50,9 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
                     // if another exception occurs, it is not rethrown
                     unlockJob(job);
                     throw e;
-                } finally {
-                    EntityManagerProducer.clear();
                 }
             }
+            EntityManagerProducer.getEntityManager().clear();
         }
         log.info(getName() + " leaves cyberspace");
     }
@@ -69,7 +67,7 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
         try {
             // reattach job to persistence context
             JobSession jobSession = jbpmContext.getJobSession();
-            jobSession.reattachJob(job);
+            job = (Job) jbpmContext.getSession().merge(job);
 
             // register process instance for automatic save
             // https://jira.jboss.org/browse/JBPM-1015
@@ -78,8 +76,7 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
 
             // if job is exclusive, lock process instance
             if (job.isExclusive()) {
-                jbpmContext.getGraphSession().lockProcessInstance(
-                        processInstance);
+                jbpmContext.getGraphSession().lockProcessInstance(processInstance);
             }
 
             if (log.isDebugEnabled())
@@ -109,8 +106,7 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
             log.error("failed to execute " + job, exception);
         }
 
-        JbpmContext jbpmContext = jobExecutor.getJbpmConfiguration()
-                .createJbpmContext();
+        JbpmContext jbpmContext = jobExecutor.getJbpmConfiguration().createJbpmContext();
         try {
             // do not reattach existing job as it contains undesired updates
             jbpmContext.getSession().refresh(job);
@@ -124,7 +120,7 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
             job.setLockOwner(null);
             job.setLockTime(null);
             int waitPeriod = jobExecutor.getRetryInterval() / 2;
-            waitPeriod += random.nextInt(waitPeriod);
+            waitPeriod += random.nextInt(waitPeriod == 0 ? 1 : waitPeriod);
             job.setDueDate(new Date(System.currentTimeMillis() + waitPeriod));
         } catch (RuntimeException e) {
             jbpmContext.setRollbackOnly();

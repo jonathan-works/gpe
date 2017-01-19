@@ -19,6 +19,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.certificado.dao.CertificateSignatureGroupDAO;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
 import br.com.infox.util.time.DateRange;
 
@@ -41,7 +42,12 @@ public class CertificateSignatureGroupManager extends Manager<CertificateSignatu
     public CertificateSignatureGroup getByToken(String token) throws CertificateException {
         CertificateSignatureGroup group = getDao().getByToken(token);
         if (group == null) {
-            throw new CertificateException("certificate.token.invalid");
+        	throw new CertificateException("certificate.token.invalid");
+        }
+    	//FIXME: Remover o refresh depois de descobrir uma forma melhor de localizar os objetos sem utilizar o cache da sessão
+        getDao().refresh(group);
+        for(CertificateSignature cs : group.getCertificateSignatureList()) {
+        	getDao().getEntityManager().refresh(cs);        	
         }
         if (isTokenExpired(group)) {
             throw new CertificateException("certificate.token.expired");
@@ -97,6 +103,7 @@ public class CertificateSignatureGroupManager extends Manager<CertificateSignatu
                 List<CertificateSignature> list = new ArrayList<>();
                 for (CertificateSignatureBean bean : bundle.getSignatureBeanList()) {
                     CertificateSignature signature = new CertificateSignature();
+                    signature.setSignatureType(TipoAssinatura.MD5_ASSINADO);
                     signature.setCertificateChain(bean.getCertChain());
                     signature.setSignature(bean.getSignature());
                     signature.setSignedData(bean.getDocumentMD5());
