@@ -352,6 +352,13 @@ public class Authenticator implements Serializable {
      * @throws LoginException 
      */
     public void setUsuarioPerfilAtual(UsuarioPerfil usuarioPerfil) throws LoginException {
+        setUsuarioPerfilAtual(usuarioPerfil, true);
+    }
+    
+    private String setUsuarioPerfilAtual(UsuarioPerfil usuarioPerfil, boolean doRedirect) throws LoginException {
+        if (!usuarioPerfil.getUsuarioLogin().equals(getUsuarioLogado())) {
+            throw new LoginException("Perfil não permitido: " + usuarioPerfil.getPerfilTemplate().getDescricao());
+        }
         Set<String> roleSet = getRolesAtuais(usuarioPerfil);
         Contexts.getSessionContext().remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
         getAuthenticatorService().removeRolesAntigas();
@@ -362,12 +369,22 @@ public class Authenticator implements Serializable {
         BeanManager.INSTANCE.getReference(MenuNavigation.class).refresh();
         
         if (!isUsuarioExterno()) {
-        	if (!hasToSignTermoAdesao()) {
-        		redirectToPainelDoUsuario();
-        	} else {
-        		redirectToTermoAdesao();
-        	}
+            if (!hasToSignTermoAdesao()) {
+                if (doRedirect) {
+                    redirectToPainelDoUsuario();
+                } else {
+                    return getCaminhoPainel();
+                }
+            } else {
+                if (doRedirect) {
+                    redirectToTermoAdesao();
+                } else {
+                    return "/termoAdesao.seam";
+                }
+            }
         }
+        
+        return null;
     }
 
     public void redirectToPainelDoUsuario() {
@@ -501,6 +518,10 @@ public class Authenticator implements Serializable {
         return list;
     }
 
+    public String trocarPerfil(Integer id) throws LoginException {
+        return setUsuarioPerfilAtual(getUsuarioPerfilDAO().find(id), false);
+    }
+    
     public void setUsuarioPerfilAtualCombo(Integer id) throws LoginException {
         setUsuarioPerfilAtual(getUsuarioPerfilDAO().find(id));
     }
@@ -539,14 +560,32 @@ public class Authenticator implements Serializable {
         }
     }
     
-    public void setColegiadaParaMonocraticaLogadaCombo(Integer idColegiada) {
+    public String trocarColegiada(Integer idColegiada) throws LoginException {
+        UnidadeDecisoraColegiada decisoraColegiada = EntityManagerProducer.getEntityManager().find(UnidadeDecisoraColegiada.class, idColegiada);
+        return setColegiadaParaMonocraticaLogada(decisoraColegiada, false);
+    }
+    
+    public void setColegiadaParaMonocraticaLogadaCombo(Integer idColegiada) throws LoginException {
         UnidadeDecisoraColegiada decisoraColegiada=EntityManagerProducer.getEntityManager().find(UnidadeDecisoraColegiada.class, idColegiada);
         setColegiadaParaMonocraticaLogada(decisoraColegiada);
     }
     
-    public void setColegiadaParaMonocraticaLogada(UnidadeDecisoraColegiada decisoraColegiada) {
+    public void setColegiadaParaMonocraticaLogada(UnidadeDecisoraColegiada decisoraColegiada) throws LoginException {
+        setColegiadaParaMonocraticaLogada(decisoraColegiada, true);
+    }
+    
+    private String setColegiadaParaMonocraticaLogada(UnidadeDecisoraColegiada decisoraColegiada, boolean doRedirect) throws LoginException {
+        if (!getColegiadasParaMonocraticaLogada().contains(decisoraColegiada)) {
+            throw new LoginException("Unidade decisora colegiada não permitida: " + decisoraColegiada.getNome());
+        }
         Contexts.getSessionContext().set(COLEGIADA_DA_MONOCRATICA_LOGADA, decisoraColegiada);
-        redirectToPainelDoUsuario();
+        if (doRedirect) {
+            redirectToPainelDoUsuario();
+        } else {
+            return getCaminhoPainel();
+        }
+        
+        return null;
     }
     
     public UnidadeDecisoraColegiada getColegiadaParaMonocraticaLogada() {
