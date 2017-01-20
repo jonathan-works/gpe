@@ -58,20 +58,18 @@ public class EntityNode<E> implements Serializable {
         if (nodes == null) {
             nodes = new ArrayList<EntityNode<E>>();
             boolean parent = true;
-            if (queryChildrenList != null) {
-                for (String query : queryChildrenList) {
-                    if (!isLeaf()) {
-                        List<E> children = getChildrenList(query, entity);
-                        for (E n : children) {
-                            if (!n.equals(ignore)) {
-                                EntityNode<E> node = createChildNode(n);
-                                node.setIgnore(ignore);
-                                node.setLeaf(!parent);
-                                nodes.add(node);
-                            }
+            for (String query : queryChildrenList) {
+                if (!isLeaf()) {
+                    List<E> children = getChildrenList(query, entity);
+                    for (E n : children) {
+                        if (!n.equals(ignore)) {
+                            EntityNode<E> node = createChildNode(n);
+                            node.setIgnore(ignore);
+                            node.setLeaf(!parent);
+                            nodes.add(node);
                         }
-                        parent = false;
                     }
+                    parent = false;
                 }
             }
         }

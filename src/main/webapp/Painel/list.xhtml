@@ -23,17 +23,12 @@
     <s:div id="baseBody">
 	  
 	    <h:outputScript>
-	      function atualizaPainelFluxo() {
-	        //location = '#{pathResolver.contextPath}/Painel/list.seam'; 
+	      function atualizaPainelFluxo() { 
+	        location = '#{pathResolver.contextPath}/Painel/list.seam'; 
 	      }
 	      function selectFluxoStyle(component) {
 	      	$('.fluxo-sel').removeClass('fluxo-sel');
 	      	$(component).addClass('fluxo-sel');
-	      }
-	      function selectFluxoStyleId(idFlux) {
-	      	infox.hideLoading();
-	      	$('.fluxo-sel').removeClass('fluxo-sel');
-	      	$("#divFluxo_" + idFlux).addClass('fluxo-sel');
 	      }
 	    </h:outputScript>
 	    
@@ -61,15 +56,6 @@
 						<a:param name="fluxo" assignTo="#{painelUsuarioController.idProcessDefinition}" />
 						<a:param name="expedida" assignTo="#{painelUsuarioController.expedida}" />
 					</a:jsFunction>
-					
-					
-					<a:jsFunction id="recarregar" name="recarregar" immediate="true" execute="@this"
-					    onbegin="infox.showLoading('Aguarde...');"
-		    			oncomplete="selectFluxoStyleId('#{painelUsuarioController.idProcessDefinition}');" 
-		    			render="divPainelProcessos, form-fluxo, divPainelProcessosInterna" action="#{painelUsuarioController.recarregarTela}" >
-		    			
-					</a:jsFunction>
-					
 					<s:div rendered="#{painelUsuarioController.showFiltroInfo}"
 						style="border: 1px solid #c0c0c0; padding:0.5em;">
 						<h:outputLabel id="labelFiltroGlobalPainelUsuario" 
@@ -85,7 +71,7 @@
 					<h:outputText value="#{infoxMessages['process.noAvailableProcesses']}" rendered="#{empty painelUsuarioController.fluxosDisponiveis}" />
 			    	<ui:repeat var="fluxo" value="#{painelUsuarioController.fluxosDisponiveis}" >
 			    	  	  <div onmouseup="selectFluxo(#{fluxo.processDefinitionId}, #{fluxo.expedida}); selectFluxoStyle(this);" 
-			    	  	      style="padding: 0.5em; cursor:pointer; margin-top: 0.5em;" id="divFluxo_#{fluxo.processDefinitionId}" >
+			    	  	      style="padding: 0.5em; cursor:pointer; margin-top: 0.5em;" >
 			    	  	  	<h:outputText value="#{fluxo.name} (#{fluxo.quantidadeProcessos})" styleClass="fluxo-div" />
 			    	  	  </div>
 			    	</ui:repeat>
