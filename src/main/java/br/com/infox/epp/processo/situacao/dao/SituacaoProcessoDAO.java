@@ -8,7 +8,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.AbstractQuery;
-import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
@@ -139,17 +138,24 @@ public class SituacaoProcessoDAO extends PersistenceController {
         Selection<Integer> idCaixa =  caixa.get(Caixa_.idCaixa);
         Selection<String> nomeFluxo =  fluxo.get(Fluxo_.fluxo);
         Selection<Integer> idFluxo =  fluxo.get(Fluxo_.idFluxo);
-        
         Selection<String> nomeNatureza = natureza.get(Natureza_.natureza); 
         Selection<String> nomeCategoria = categoria.get(Categoria_.categoria); 
         Selection<String> numeroProcessoRoot = processoRoot.get(Processo_.numeroProcesso);
         Selection<String> nomeNaturezaProcessoRoot = naturezaRoot.get(Natureza_.natureza); 
         Selection<String> nomeCategoriaProcessoRoot = categoriaRoot.get(Categoria_.categoria);
         Selection<String> nomeUsuarioSolicitante = usuarioSolicitante.get(UsuarioLogin_.nomeUsuario);
+        Selection<Integer> idPrioridadeProcesso = prioridadeProcesso.get(PrioridadeProcesso_.idPrioridade);
+        Selection<String> nomePrioridade = prioridadeProcesso.get(PrioridadeProcesso_.descricaoPrioridade);
+        Selection<Integer> pesoPrioridade = prioridadeProcesso.get(PrioridadeProcesso_.peso);
+        Selection<Date> dataInicio = processo.get(Processo_.dataInicio);
+        Selection<Integer> idProcesso = processo.get(Processo_.idProcesso);
+        Selection<Integer> idProcessoRoot = processoRoot.get(Processo_.idProcesso);
+        Selection<String> numeroProcesso = processo.get(Processo_.numeroProcesso);
         
-        cq.select(getTaskBeanSelection(cb, idTaskInstance, taskName, assignee, idProcessInstance, taskNodeKey, nomeCaixa,
-                idCaixa, nomeFluxo, idFluxo, nomeNatureza, nomeCategoria, numeroProcessoRoot, nomeNaturezaProcessoRoot, 
-                nomeCategoriaProcessoRoot, nomeUsuarioSolicitante, prioridadeProcesso, processo));
+        cq.select(cb.construct(TaskBean.class, idTaskInstance, taskName, assignee, idProcessInstance, taskNodeKey,
+                idProcesso, nomeCaixa, idCaixa, nomeFluxo, idFluxo, nomeNatureza, nomeCategoria, numeroProcesso, idProcessoRoot,
+                numeroProcessoRoot, nomeUsuarioSolicitante, idPrioridadeProcesso, nomePrioridade, pesoPrioridade, dataInicio,
+                nomeNaturezaProcessoRoot, nomeCategoriaProcessoRoot));
 
         cq.where(
                 cb.equal(processDefinition.get("name"), fluxo.get(Fluxo_.fluxo)),
@@ -168,30 +174,10 @@ public class SituacaoProcessoDAO extends PersistenceController {
         if (!StringUtil.isEmpty(fluxoBean.getNumeroProcessoRootFilter())) {
             appendNumeroProcessoRootFilter(cq, fluxoBean.getNumeroProcessoRootFilter(), processoRoot);
         }
-        return getEntityManager().createQuery(cq).getResultList();
+        List<TaskBean> resultList = getEntityManager().createQuery(cq).getResultList();
+        return resultList;
     }
 
-    protected CompoundSelection<? extends TaskBean> getTaskBeanSelection(CriteriaBuilder cb,
-            Selection<String> idTaskInstance, Selection<String> taskName, Selection<String> assignee,
-            Selection<String> idProcessInstance, Selection<String> taskNodeKey, Selection<String> nomeCaixa,
-            Selection<Integer> idCaixa, Selection<String> nomeFluxo, Selection<Integer> idFluxo,
-            Selection<String> nomeNatureza, Selection<String> nomeCategoria, Selection<String> numeroProcessoRoot,
-            Selection<String> nomeNaturezaProcessoRoot, Selection<String> nomeCategoriaProcessoRoot,
-            Selection<String> nomeUsuarioSolicitante, Join<Processo, PrioridadeProcesso> prioridadeProcesso,
-            Root<Processo> processo) {
-
-        Selection<String> nomePrioridade = prioridadeProcesso.get(PrioridadeProcesso_.descricaoPrioridade);
-        Selection<Integer> pesoPrioridade = prioridadeProcesso.get(PrioridadeProcesso_.peso);
-        Selection<Date> dataInicio = processo.get(Processo_.dataInicio);
-        Selection<Integer> idProcesso = processo.get(Processo_.idProcesso);
-        Selection<String> numeroProcesso = processo.get(Processo_.numeroProcesso);
-
-        return cb.construct(TaskBean.class, idTaskInstance, taskName, assignee, idProcessInstance, taskNodeKey,
-                idProcesso, nomeCaixa, idCaixa, nomeFluxo, idFluxo, nomeNatureza, nomeCategoria, numeroProcesso,
-                numeroProcessoRoot, nomeUsuarioSolicitante, nomePrioridade, pesoPrioridade, dataInicio,
-                nomeNaturezaProcessoRoot, nomeCategoriaProcessoRoot);
-    }
-	
     protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcesso, Path<Processo> processoRoot) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Predicate predicate = abstractQuery.getRestriction();
@@ -216,7 +202,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         }
     }
 	
-	private void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery, Path<Processo> processo) {
+	protected void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> existsSigiloProcesso = principalQuery.subquery(Integer.class);
         Root<SigiloProcesso> sigiloProcesso = existsSigiloProcesso.from(SigiloProcesso.class);
@@ -330,7 +316,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         return subquery;
     }
 	
-    private void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
+    protected void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
