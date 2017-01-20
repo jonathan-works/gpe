@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -135,7 +136,11 @@ public class MetadadoProcesso implements Serializable {
 				try {
 					value = new SimpleDateFormat(DATE_PATTERN).parse(getValor());
 				} catch (ParseException e) {
-					throw new RuntimeException("Erro ao converter data", e);
+				    try{
+				        value = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", new Locale("en_US")).parse(getValor());
+				    }catch(Exception ex){
+				        throw new RuntimeException("Erro ao converter data", ex);
+				    }
 				}
 			} else if (getClassType() != String.class) {
 				value = ReflectionsUtil.newInstance(getClassType(), String.class, getValor());

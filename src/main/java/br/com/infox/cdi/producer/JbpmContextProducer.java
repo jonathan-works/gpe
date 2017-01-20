@@ -29,15 +29,16 @@ public final class JbpmContextProducer {
         return registeredJbpmContext.get(transaction);
     }
 
-    public synchronized static void createJbpmContextTransactional() {
+    public synchronized static JbpmContext createJbpmContextTransactional() {
         Transaction transaction = getTransaction();
-        createJbpmContextTransactional(transaction);
+        return createJbpmContextTransactional(transaction);
     }
     
-    private static void createJbpmContextTransactional(Transaction transaction) {
+    private static JbpmContext createJbpmContextTransactional(Transaction transaction) {
         JbpmContext jbpmContext = JbpmConfiguration.getInstance().createJbpmContext();
         registerSynchronization(jbpmContext, transaction);
         registeredJbpmContext.put(transaction, jbpmContext);
+        return jbpmContext;
     }
     
     private static void registerSynchronization(JbpmContext jbpmContext, Transaction transaction) {

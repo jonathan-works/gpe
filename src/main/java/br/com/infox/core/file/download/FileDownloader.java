@@ -37,7 +37,6 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(FileDownloader.NAME)
 @Scope(ScopeType.EVENT)

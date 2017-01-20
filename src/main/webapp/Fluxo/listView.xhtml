@@ -182,26 +182,27 @@
                 value="#{fluxoCrudAction.instance.ativo}" />
             <ui:define name="buttons">
                 <a:commandButton value="#{infoxMessages['crud.persist']}" action="#{fluxoCrudAction.persist}" execute="@form"
-					limitRender="true" render="pageBodyDialogMessage @form" rendered="#{not fluxoCrudAction.managed}"
+					limitRender="true" render=":pageBodyDialogMessage :defaultTabPanel" rendered="#{not fluxoCrudAction.managed}"
 					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
 					
 				<a:commandButton value="#{infoxMessages['crud.update']}" action="#{fluxoCrudAction.update}" execute="@form"
 					limitRender="true" render="pageBodyDialogMessage @form" rendered="#{fluxoCrudAction.managed}"
 					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
 					
-                <a:commandButton value="#{infoxMessages['crud.new']}" action="#{fluxoCrudAction.newInstance}" execute="@this"
-					limitRender="true" render="pageBodyDialogMessage @form"
+                <a:commandButton value="#{infoxMessages['crud.new']}" actionListener="#{jsfUtil.clearForm}"  
+                	action="#{fluxoCrudAction.newInstance}" execute="@this"
+					limitRender="true" render=":pageBodyDialogMessage :defaultTabPanel"
 					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
 					
                 <wi:commandButton id="botaoGerarReplica" action="fluxoCrudAction.gerarReplica()" reRender="modalReplicaForm"
                     rendered="#{fluxoCrudAction.managed}" value="#{infoxMessages['fluxo.duplicar']}" oncomplete="#{rich:component('modalReplica')}.show()"/>
      
-                <a:commandButton id="exportButton" styleClass="buttons" type="button"
-                    oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Fluxo/definicao/exportarFluxo.seam','1024');"
+                <a:commandButton id="exportButton" styleClass="buttons" type="button" action="#{jsfUtil.applyLastPhaseFlashAction}"
+                    oncomplete="infox.openPopUp('_self', '#{pathResolver.contextPath}/Fluxo/definicao/exportarFluxo.seam','1024');"
                     execute="@this" render="@this" rendered="#{fluxoCrudAction.canExportar()}" value="#{infoxMessages['fluxo.exportar']}">
-                        <f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
-                        <infox:flashcopy/>
+                	<f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
                 </a:commandButton>
+                
                 <wi:commandButton
                     id="definicao"
                     value="#{infoxMessages['fluxo.definicao']}"

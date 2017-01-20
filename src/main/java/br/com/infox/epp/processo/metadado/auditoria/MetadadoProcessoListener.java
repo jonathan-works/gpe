@@ -31,19 +31,20 @@ public class MetadadoProcessoListener extends PersistenceController {
 		gravarLog(TipoOperacaoLogEnum.D, metadadoProcesso);
 	}
 	
-	private void gravarLog(TipoOperacaoLogEnum acao, MetadadoProcesso metadadoProcesso) {
+	private void gravarLog(TipoOperacaoLogEnum acao, MetadadoProcesso mp) {
 		HistoricoMetadadoProcesso log = new HistoricoMetadadoProcesso();
-		log.setIdMetadadoProcesso(metadadoProcesso.getId());
-		log.setNome(metadadoProcesso.getMetadadoType());
-		log.setValor(metadadoProcesso.getValor());
-		log.setTipo(metadadoProcesso.getMetadadoType());
-		log.setIdProcesso(metadadoProcesso.getProcesso().getIdProcesso().longValue());
+		log.setIdMetadadoProcesso(mp.getId());
+		log.setNome(mp.getMetadadoType());
+		log.setValor(mp.getValor());
+		log.setDescricao(mp.toString());
+		log.setClassType(mp.getClassType());
+		log.setIdProcesso(mp.getProcesso().getIdProcesso().longValue());
 		log.setDataRegistro(DateTime.now().toDate());
 		log.setAcao(acao.getLabel());
 		
 		UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
 		if(usuarioLogado != null)
-			log.setIdUsuarioLogado(usuarioLogado.getIdUsuarioLogin().longValue());
+			log.setUsuarioLogin(usuarioLogado);
 		
 		 EntityManager em = EntityManagerProducer.instance().getEntityManagerNotManaged();
 		 em.persist(log);

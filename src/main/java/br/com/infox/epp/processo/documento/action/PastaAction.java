@@ -129,7 +129,6 @@ public class PastaAction implements Serializable {
     }
 
     public void selectPastaDocumentosCompartilhados(Processo processo) {
-        documentoCompartilhamentoList.setPastas(pastaDocCompartilhamentoList);
         documentoCompartilhamentoList.setProcesso(processo);
         documentoCompartilhamentoList.refresh();
         setInstance(null);
@@ -270,7 +269,7 @@ public class PastaAction implements Serializable {
                 pastaDocCompartilhamentoList.add(pasta);
             }
         }
-        documentoCompartilhamentoList.setPastas(pastas);
+        documentoCompartilhamentoList.setPastas(pastaDocCompartilhamentoList);
         restricoes.putAll(map);
     }
 
@@ -391,6 +390,20 @@ public class PastaAction implements Serializable {
             FacesMessages.instance().add("Falha ao tentar remover compartilhamento. Favor tentar novamente", e);
             LOG.error("pastaAction.removerCompartilhamentoDocumento", e);
         }
+    }
+
+    public void resetarContadoresDocumentosCompartilhados() {
+        for (PastaCompartilhamentoProcessoVO processoVO : processoPastaCompList) {
+            processoVO.setQtdDocumentoCompartilhado(null);
+        }
+    }
+
+    public Long getQtdDocumentoCompartilhado(PastaCompartilhamentoProcessoVO processoVO) {
+        if (processoVO.getQtdDocumentoCompartilhado() == null) {
+            documentoCompartilhamentoList.setProcesso(processoVO.getProcesso());
+            processoVO.setQtdDocumentoCompartilhado(documentoCompartilhamentoList.getResultCount());
+        }
+        return processoVO.getQtdDocumentoCompartilhado();
     }
 
     public DataList<Documento> getActiveBean() {

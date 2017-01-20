@@ -2,6 +2,8 @@ package br.com.infox.epp.quartz.ws.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -21,7 +23,6 @@ import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.calendario.CalendarioEventosService;
 import br.com.infox.epp.cdi.transaction.Transactional;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
@@ -30,14 +31,11 @@ import br.com.infox.epp.quartz.ws.BamResource;
 import br.com.infox.epp.quartz.ws.QuartzResource;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 @RequestScoped
 public class QuartzResourceImpl implements QuartzResource {
     
-    private static final LogProvider LOG = Logging.getLogProvider(QuartzRestImpl.class);
+    private static final Logger LOG = Logger.getLogger(QuartzRestImpl.class.getName());
     
     @Inject
     private BloqueioUsuarioManager bloqueioUsuarioManager;
@@ -63,7 +61,7 @@ public class QuartzResourceImpl implements QuartzResource {
                 try {
                     bloqueioUsuarioManager.desfazerBloqueioUsuario(bloqueio.getUsuario());
                 } catch (DAOException e) {
-                    LOG.error("quartzRestImpl.processBloqueioUsuario()", e);
+                    LOG.log(Level.SEVERE, "quartzRestImpl.processBloqueioUsuario()", e);
                 }
             }
         }
@@ -84,19 +82,18 @@ public class QuartzResourceImpl implements QuartzResource {
                 TransactionManager transactionManager = applicationServerService.getTransactionManager();
                 try {
                     transactionManager.begin();
-                    JbpmContextProducer.createJbpmContextTransactional();
-                    JbpmContext jbpmContext = ComponentUtil.getComponent("org.jboss.seam.bpm.jbpmContext");
+                    JbpmContext jbpmContext = JbpmContextProducer.createJbpmContextTransactional();
                     Token tokenForUpdate = jbpmContext.getTokenForUpdate(token.getId());
                     Node node = (Node) HibernateUtil.removeProxy(tokenForUpdate.getNode());
                     ExecutionContext executionContext = new ExecutionContext(tokenForUpdate);
                     node.execute(executionContext);
                     transactionManager.commit();
                 } catch (Exception e) {
-                    LOG.error("quartzRestImpl.processTaskExpiration()", e);
+                    LOG.log(Level.SEVERE, "quartzRestImpl.processTaskExpiration()", e);
                     try {
                         transactionManager.rollback();
                     } catch (IllegalStateException | SecurityException | SystemException e1) {
-                        LOG.error("Error rolling back transaction", e1);
+                        LOG.log(Level.SEVERE, "Error rolling back transaction", e1);
                     }
                 }
             }

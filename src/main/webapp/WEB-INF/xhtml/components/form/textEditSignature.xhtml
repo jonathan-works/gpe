@@ -8,45 +8,37 @@
     <ui:param name="idSignature" value="#{id}signature" />
     <ui:param name="idCertChain" value="#{id}certChain" />
     
-<f:event listener="#{documentoVariavelController.setFormFieldEditor(f)}" type="preRenderView"></f:event>
-    
     <f:subview id="#{f.id}SubView">
         <p:outputPanel id="#{f.id}Block">
             <fieldset>
                 <legend>
                     <h:outputText styleClass="property-field-edit-name" value="#{label}" />
                 </legend>
-            <p:outputPanel id="#{f.id}PastaDestino" styleClass="padding-top-10">
+                <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
+                    label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+                    items="#{home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id))}"
+                    showLabelSelecione="true" required="#{wi:get(required, false)}"
+                    value="#{home.variaveisDocumento[id].classificacaoDocumento}"
+                    readonly="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
+    			or home.variaveisDocumento[id].hasAssinatura()}"
+                    disabled="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
+    			or home.variaveisDocumento[id].hasAssinatura()}">
+                    <f:validateBean disabled="true"/>
+                    <f:validator validatorId="classificacaoEditorValidator" for="@this"/>
+                    <f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>
+                </wi:selectOneMenuEntity>
+                <ui:include src="/WEB-INF/xhtml/components/form/comboModelos.xhtml" />
                 <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"
                     label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
-                    rendered="#{documentoVariavelController.pastasEditor.size gt 1}"
                     value="#{taskInstanceHome.variaveisDocumento[id].pasta}"
-                    items="#{documentoVariavelController.pastasEditor}"
+                    items="#{props.documentoVariavelController.pastas}"
+                    readonly="#{readonly or home.variaveisDocumento[id].hasAssinatura()}"
+                    disabled="#{readonly or home.variaveisDocumento[id].hasAssinatura()}"
                     showLabelSelecione="true">
-                    <a:ajax
-                        render="#{f.id}TipoDocDiv #{f.id}Div #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
-                        event="change" execute="@this"
-                        listener="#{documentoVariavelController.selecionarPastaPadrao(f.id)}"
-                        limitRender="true" />
+                    <a:ajax render="@this" event="change" execute="@this" limitRender="true" />
                     <f:validateBean disabled="true" />
                 </wi:selectOneMenuEntity>
-            </p:outputPanel>
-                <p:outputPanel id="#{f.id}TipoDocDiv">
-                    <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
-                        label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-                        items="#{home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id))}"
-                        showLabelSelecione="true" required="#{wi:get(required, false)}"
-                        value="#{home.variaveisDocumento[id].classificacaoDocumento}"
-                        readonly="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
-        			or home.variaveisDocumento[id].hasAssinatura()}"
-                        disabled="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
-        			or home.variaveisDocumento[id].hasAssinatura()}">
-                        <f:validateBean disabled="true"/>
-                        <f:validator validatorId="classificacaoEditorValidator" for="@this"/>
-						<f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>
-                    </wi:selectOneMenuEntity>
-                    <ui:include src="/WEB-INF/xhtml/components/form/comboModelos.xhtml" />
-                </p:outputPanel>
+                
                 <p:outputPanel id="#{id}EditorDiv">
                     <i:help id="#{editorId.replace('-','')}ToolTipDiv"
                         rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao and not (readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura())}">
@@ -65,8 +57,8 @@
                     <p:outputPanel id="conteudoAssinatura#{f.id}"
                         rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
                         <wi:assinador id="botaoAssinatura#{f.id}"
-                           callbackHandler="#{documentoVariavelController}"
-                           assinavelProvider="#{documentoVariavelController.assinavelProvider}"
+                           callbackHandler="#{props.documentoVariavelController}"
+                           assinavelProvider="#{props.documentoVariavelController.assinavelProvider}"
                            execute="@this assinaturaDocumentoDiv#{f.id}"
                            render="assinaturaDocumentoDiv#{f.id} #{id}EditorDiv pageBodyDialogMessage @form botaoAssinatura"
                            onbegin="infox.showLoading();"
