@@ -214,7 +214,7 @@ public class DynamicFieldSet extends UIComponentBase {
     }
 
     private void encodeSortFieldsScript(ResponseWriter writer) throws IOException {
-        final String labelCssSelector = String.format(".%",LABEL_STYLE_CLASS);
+        final String labelCssSelector = String.format(".%s",LABEL_STYLE_CLASS);
         final String fieldsetCssSelector = String.format("fieldset.%s", STYLE_CLASS);
         final String groupsCssSelector = fieldsetCssSelector + " " + String.format(".%s", GROUP_STYLE_CLASS);
         
