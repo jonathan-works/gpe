@@ -40,6 +40,7 @@
 			<property name="hibernate.cache.infinispan.br.com.infox.epp.access.entity.Permissao.expiration.lifespan" value="10000"/> 
 			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.entity.Processo.expiration.lifespan" value="10000"/> 
 			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.sigilo.entity.SigiloProcesso.expiration.lifespan" value="10000"/>
+            <property name="hibernate.cache.infinispan.br.com.infox.epp.turno.entity.LocalizacaoTurno.expiration.lifespan" value="3600000"/>
 		</properties>
 	</persistence-unit>
 

@@ -87,7 +87,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.persistence.generator.CustomIdGenerator;
-import br.com.infox.core.util.CollectionUtil;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -407,7 +406,7 @@ public class Processo implements Serializable {
 	}
 	
     public boolean hasPartes(){
-    	return naturezaCategoriaFluxo.getNatureza().getHasPartes() || !CollectionUtil.isEmpty(getParticipantes());
+    	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
 	
 	@Transient

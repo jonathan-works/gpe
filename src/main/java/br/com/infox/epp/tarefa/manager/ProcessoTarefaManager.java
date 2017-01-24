@@ -89,35 +89,17 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         return this.localizacaoTurnoDAO.countTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana - 1]) > 0;
     }
 
-    /**
-     * Atualiza os atributos referentes ao tempo gasto em uma tarefa caso exista
-     * incremento.
-     *
-     * @param fireTime
-     * @param tipoPrazo
-     * @throws DAOException
-     */
-    public void updateTarefasNaoFinalizadas(final Date fireTime, final PrazoEnum tipoPrazo) throws DAOException {
-        for (final ProcessoTarefa pt : getTarefaNotEnded(tipoPrazo)) {
-            updateTempoGasto(fireTime, pt);
-        }
-    }
-
-    public void updateTempoGasto(final Date fireTime,
-            final ProcessoTarefa processoTarefa) throws DAOException {
-        if (processoTarefa.getTarefa().getTipoPrazo() == null) {
-            return;
-        }
-        if (processoTarefa.getUltimoDisparo().before(fireTime)) {
-            final float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoTarefa);
-            final Integer prazo = processoTarefa.getTarefa().getPrazo();
+    public void updateTempoGasto(Date fireTime, ProcessoTarefa processoTarefa) throws DAOException {
+        if (processoTarefa.getTarefa().getTipoPrazo() != null && processoTarefa.getUltimoDisparo().before(fireTime)) {
+            float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoTarefa);
+            Integer prazo = processoTarefa.getTarefa().getPrazo();
             int porcentagem = 0;
-            final int tempoGasto = (int) (processoTarefa.getTempoGasto() + incrementoTempoGasto);
+            int tempoGasto = (int) (processoTarefa.getTempoGasto() + incrementoTempoGasto);
             if (prazo != null && prazo.compareTo(Integer.valueOf(0)) > 0) {
                 porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / (prazo * 60);
             }
 
-            final Processo processo = processoTarefa.getProcesso();
+            Processo processo = processoTarefa.getProcesso();
             if (porcentagem > PORCENTAGEM_MAXIMA) {
                 processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
             }
@@ -130,9 +112,9 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     }
 
     public void updateTempoGasto(final Processo processo) throws DAOException {
-        final Map<String, Object> result = this.processoDAO.getTempoGasto(processo);
+        Map<String, Object> result = this.processoDAO.getTempoGasto(processo);
         if (result != null) {
-            final Date dataFim = processo.getDataFim();
+            Date dataFim = processo.getDataFim();
             DateRange dateRange;
             if (dataFim != null) {
                 dateRange = new DateRange(processo.getDataInicio(), dataFim);
