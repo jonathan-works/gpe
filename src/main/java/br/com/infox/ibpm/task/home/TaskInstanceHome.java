@@ -581,9 +581,12 @@ public class TaskInstanceHome implements Serializable {
 		Integer idDocumento = (Integer) taskInstance.getVariable(variableInfo.getMappedName());
 		if (idDocumento != null) {
 			Documento documento = documentoManager.find(idDocumento);
-			return documento != null 
-			        && documento.isDocumentoAssinavel(Authenticator.getPapelAtual())
-			        && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());
+			Papel papelAtual = Authenticator.getPapelAtual();
+			if (documento != null) {
+    			boolean papelPermiteAssinaturaMultipla = documento.papelPermiteAssinaturaMultipla(papelAtual);
+                return (papelPermiteAssinaturaMultipla && !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado())) ||
+    			        (!papelPermiteAssinaturaMultipla && documento.isDocumentoAssinavel(papelAtual) && !documento.isDocumentoAssinado(papelAtual));
+			}
 		}
 		return false;
 	}

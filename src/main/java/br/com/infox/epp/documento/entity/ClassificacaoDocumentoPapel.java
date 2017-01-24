@@ -62,6 +62,10 @@ public class ClassificacaoDocumentoPapel implements Serializable {
     @Column(name = "in_redator", nullable = false)
     private Boolean podeRedigir = Boolean.FALSE;
 
+    @NotNull
+    @Column(name = "in_assinatura_multipla", nullable = false)
+    private Boolean assinaturasMultiplas = false;
+    
 	public Integer getId() {
 		return id;
 	}
@@ -101,6 +105,14 @@ public class ClassificacaoDocumentoPapel implements Serializable {
 	public void setPodeRedigir(Boolean podeRedigir) {
 		this.podeRedigir = podeRedigir;
 	}
+	
+	public Boolean getAssinaturasMultiplas() {
+        return assinaturasMultiplas;
+    }
+	
+	public void setAssinaturasMultiplas(Boolean assinaturasMultiplas) {
+        this.assinaturasMultiplas = assinaturasMultiplas;
+    }
 
 	@Override
 	public int hashCode() {
