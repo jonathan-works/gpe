@@ -2,7 +2,7 @@ package br.com.infox.epp.test.crud;
 
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
 import static br.com.infox.core.action.AbstractAction.REMOVED;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public abstract class NotUpdatableEntityRemoveSuccessTest<E> extends RunnableTest<E> {
 
