@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 
 import javax.faces.context.FacesContext;
+import javax.validation.ValidationException;
 import javax.ws.rs.core.UriBuilder;
 
 import br.com.infox.assinador.rest.api.StatusToken;
@@ -48,8 +49,7 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
                     .getStatus();
             button.setStatus(status);
         } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ValidationException("invalid url");
         }
         if (SignPhase.AFTER_CLICK.equals(button.getCurrentPhase()))
             button.setCurrentPhase(SignPhase.WAITING_SIGNATURE);
