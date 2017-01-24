@@ -15,9 +15,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.pessoa.entity.Pessoa;
-
-@Entity
-@Table(name = PessoaEndereco.TABLE_NAME)
+//TODO corrigir para integrar epp 2.14
+//@Entity
+//@Table(name = PessoaEndereco.TABLE_NAME)
 public class PessoaEndereco implements Serializable {
     static final String TABLE_NAME = "tb_pessoa_endereco";
     private static final long serialVersionUID = 1L;

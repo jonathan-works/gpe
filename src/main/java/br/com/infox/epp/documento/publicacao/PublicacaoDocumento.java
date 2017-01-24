@@ -20,8 +20,9 @@ import javax.validation.constraints.Size;
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.processo.documento.entity.Documento;
 
-@Entity
-@Table(name="tb_publicacao_documento")
+//TODO corrigir para integrar epp 2.14
+//@Entity
+//@Table(name="tb_publicacao_documento")
 public class PublicacaoDocumento {
 	
     private static final String GENERATOR_NAME = "PublicacaoDocumentoGenerator";

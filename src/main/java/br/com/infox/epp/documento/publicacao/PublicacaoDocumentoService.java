@@ -9,7 +9,8 @@ import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 
-@Stateless
+//TODO corrigir para integrar epp 2.14
+//@Stateless
 public class PublicacaoDocumentoService {
 
 	@Inject

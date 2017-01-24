@@ -154,9 +154,10 @@ public class Documento implements Serializable, Cloneable {
     @OrderBy(value="dataAlteracao DESC")
     private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento")
-    @OrderBy(value="dataPublicacao DESC")
-    private List<PublicacaoDocumento> publicacoes = new ArrayList<>();
+    // TODO corrigir para integrar epp 2.14
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento")
+//    @OrderBy(value="dataPublicacao DESC")
+//    private List<PublicacaoDocumento> publicacoes = new ArrayList<>();
     
     @PrePersist
     private void prePersist(){
@@ -481,8 +482,9 @@ public class Documento implements Serializable, Cloneable {
 		return cDocumento;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<PublicacaoDocumento> getPublicacoes() {
-		return Collections.unmodifiableList(publicacoes);
-	}
+	// TODO corrigir para integrar epp 2.14
+//	@SuppressWarnings("unchecked")
+//	public List<PublicacaoDocumento> getPublicacoes() {
+//		return Collections.unmodifiableList(publicacoes);
+//	}
 }

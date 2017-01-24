@@ -17,7 +17,8 @@ public class PublicacaoDialogView implements Serializable {
 	private List<PublicacaoDocumento> publicacoes;
 
 	public void setDocumento(Documento documento) {
-		publicacoes = documento.getPublicacoes();
+	 // TODO corrigir para integrar epp 2.14
+//		publicacoes = documento.getPublicacoes();
 	}
 	
 	public List<PublicacaoDocumento> getPublicacoes() {
