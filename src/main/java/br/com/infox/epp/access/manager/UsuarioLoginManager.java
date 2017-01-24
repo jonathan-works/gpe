@@ -120,7 +120,6 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         Object id = EntityUtil.getIdValue(super.persist(usuario));
         UsuarioLogin persisted = find(id);
         passwordService.changePassword(persisted, password);
-        //TODO ADICIONAR LOCALIZAÇÃO, PAPEL E ESTRUTURA PADRÃO?
         return update(persisted);
     }
 
