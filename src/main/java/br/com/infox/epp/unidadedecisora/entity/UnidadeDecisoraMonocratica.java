@@ -76,7 +76,7 @@ public class UnidadeDecisoraMonocratica implements Serializable {
     private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
 
     @NotNull
-    @Column(name="in_recebe_districuicao", nullable=false)
+    @Column(name="in_recebe_distribuicao", nullable=false)
     private Boolean recebeDistribuicao = Boolean.TRUE;
     
     public Integer getIdUnidadeDecisoraMonocratica() {
