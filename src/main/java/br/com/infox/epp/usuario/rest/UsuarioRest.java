@@ -44,7 +44,11 @@ public interface UsuarioRest {
 	@Path("/signin")
 	Response loginGet(@QueryParam(PARAM_NAME_JWT) String jwt);
 	
-	//FIXME serviço criado pro tcmba, movido para essa classe pela urgência do bug #74700. Avaliar no futuro padronização desse serviço
+	/**
+     * @deprecated serviço criado pro tcmba, movido para essa classe pela urgência do bug #74700. Utilizar {@link UsuarioRest#adicionarUsuario}
+     * 
+     */
+    @Deprecated
     @POST
     @Path(PATH_GRAVAR_USUARIO)
     @Produces(MediaType.TEXT_PLAIN)
