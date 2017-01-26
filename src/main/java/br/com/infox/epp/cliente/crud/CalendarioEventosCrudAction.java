@@ -133,6 +133,7 @@ public class CalendarioEventosCrudAction implements Serializable {
         remover(calendarioEventos);
     }
 
+    //FIXME O remover não vai surtir efeito nos prazos já cadastrados.
     @ExceptionHandled(MethodType.REMOVE)
     public void removerSerie() {
         CalendarioEventos calendarioEventos = calendarioEventosSearch.find(getId());
@@ -141,6 +142,7 @@ public class CalendarioEventosCrudAction implements Serializable {
         newInstance();
     }
 
+    //FIXME Ao alterar será permitido apenas modificar o título do evento e dessa forma não haverá modificação nos prazos.
     @ExceptionHandled(MethodType.UPDATE)
     public void update() {
         CalendarioEventos eventoAlterar = calendarioEventosSearch.find(getId());

@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -16,6 +17,7 @@ import br.com.infox.epp.webservice.log.dao.LogWebserviceClientDAO;
 import br.com.infox.epp.webservice.log.entity.LogWebserviceClient;
 
 @Stateless
+@AutoCreate
 @Name(LogWebserviceClientManager.NAME)
 public class LogWebserviceClientManager extends Manager<LogWebserviceClientDAO, LogWebserviceClient> {
 

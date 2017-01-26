@@ -1077,19 +1077,6 @@ public class TaskInstanceHome implements Serializable {
 			listCodigos = VariableEditorModeloHandler.fromJson(configuration).getCodigosClassificacaoDocumento();
 		}
 		return classificacaoDocumentoFacade.getUseableClassificacaoDocumentoVariavel(listCodigos, isModelo);
-    }
-	
-	public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, TaskInstance taskInstance) {
-	    String nomeFluxo = taskInstance.getTask().getProcessDefinition().getName();
-	    Fluxo fluxo = fluxoManager.getFluxoByDescricao(nomeFluxo);
-	    if (fluxo != null) {
-	        return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, fluxo.getIdFluxo());
-	    } else {
-	        return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false);
-	    }
-	}
-	public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
-		return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, idFluxo);
 	}
 
 	public void setVariavelDocumentoToSign(String variavelDocumentoToSign) {

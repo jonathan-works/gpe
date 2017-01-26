@@ -16,7 +16,8 @@ public class PublicacaoDocumentoSearch extends PersistenceController {
 		CriteriaQuery<PublicacaoDocumento> cq = cb.createQuery(PublicacaoDocumento.class);
 		Root<PublicacaoDocumento> from = cq.from(PublicacaoDocumento.class);
 		
-		cq.where(cb.equal(from.get(PublicacaoDocumento_.documento), documento));
+		// TODO corrigir para integrar epp 2.14
+//		cq.where(cb.equal(from.get(PublicacaoDocumento_.documento), documento));
 			return getEntityManager().createQuery(cq).getResultList();
 	}
 	

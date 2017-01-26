@@ -1,7 +1,7 @@
 package br.com.infox.epp.test.crud;
 
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class NotUpdatablePersistSuccessTest<E> extends RunnableTest<E>{
 

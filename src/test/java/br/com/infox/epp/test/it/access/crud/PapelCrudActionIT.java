@@ -33,7 +33,7 @@ import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 //@RunWith(Arquillian.class)
 public class PapelCrudActionIT extends AbstractCrudTest<Papel> {

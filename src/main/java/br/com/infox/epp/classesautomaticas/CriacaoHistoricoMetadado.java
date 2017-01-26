@@ -60,17 +60,19 @@ public class CriacaoHistoricoMetadado implements Serializable {
     }
 
     private boolean isExecucaoValida() {
-        try {
-            controle = getControle();
-            return controle.isExecutar();
-        } catch (NoResultException e) {
-            controle = new ControleClassesAutomaticas();
-            controle.setNomeClasse(NAME);
-            controle.setExecutar(true);
-            entityManager.persist(controle);
-            entityManager.flush();
-            return true;
-        }
+     // TODO corrigir para integrar epp 2.14
+//        try {
+//            controle = getControle();
+//            return controle.isExecutar();
+//        } catch (NoResultException e) {
+//            controle = new ControleClassesAutomaticas();
+//            controle.setNomeClasse(NAME);
+//            controle.setExecutar(true);
+//            entityManager.persist(controle);
+//            entityManager.flush();
+//            return true;
+//        }
+        return false;
     }
 
     private ControleClassesAutomaticas getControle() {

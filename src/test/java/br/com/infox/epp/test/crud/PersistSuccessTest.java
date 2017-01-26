@@ -1,9 +1,9 @@
 package br.com.infox.epp.test.crud;
 
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class PersistSuccessTest<E> extends RunnableTest<E>{
 

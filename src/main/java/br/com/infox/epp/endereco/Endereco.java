@@ -15,8 +15,9 @@ import javax.persistence.Table;
 
 import br.com.infox.epp.municipio.Municipio;
 
-@Entity
-@Table(name=Endereco.TABLE_NAME)
+//TODO corrigir para integrar epp 2.14
+//@Entity
+//@Table(name=Endereco.TABLE_NAME)
 public class Endereco implements Serializable {
     public static final String TABLE_NAME = "tb_endereco";
     private static final long serialVersionUID = 1L;
