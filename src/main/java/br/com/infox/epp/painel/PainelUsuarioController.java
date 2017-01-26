@@ -87,12 +87,12 @@ public class PainelUsuarioController implements Serializable {
 	    verificaHouveAlteracao(fluxosDisponiveisTemp);
 	}
 	
-	protected void verificaHouveAlteracao(List<FluxoBean> fluxosDisponiveisTemp) throws IOException {
+	protected void verificaHouveAlteracao(List<? extends FluxoBean> fluxosDisponiveisTemp) throws IOException {
 	    ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-	    if (fluxosDisponiveisTemp.size() != fluxosDisponiveis.size()) {
+	    if (fluxosDisponiveisTemp.size() != getFluxosDisponiveis().size()) {
             FacesContext.getCurrentInstance().getExternalContext().redirect(servletContext.getContextPath() + "/Painel/list.seam");
         } else {
-            fluxosDisponiveisTemp.removeAll(fluxosDisponiveis);
+            fluxosDisponiveisTemp.removeAll(getFluxosDisponiveis());
             if (!fluxosDisponiveisTemp.isEmpty()) {
                 FacesContext.getCurrentInstance().getExternalContext().redirect(servletContext.getContextPath() + "/Painel/list.seam");
             }
@@ -101,7 +101,7 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	private void loadFluxosDisponiveis() {
-		fluxosDisponiveis = situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso());
+		setFluxosDisponiveis(situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso()));
 	}
 
 	protected void loadTipoProcessoDisponiveis() {
@@ -118,10 +118,15 @@ public class PainelUsuarioController implements Serializable {
 		}
 	}
 
-	public List<FluxoBean> getFluxosDisponiveis() {
-		return fluxosDisponiveis;
-	}
-	
+    public List<? extends FluxoBean> getFluxosDisponiveis() {
+        return fluxosDisponiveis;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setFluxosDisponiveis(List<? extends FluxoBean> fluxosDisponiveis) {
+        this.fluxosDisponiveis = (List<FluxoBean>) fluxosDisponiveis;
+    }
+
 	public void onSelectFluxo() {
 		painelTreeHandler.clearTree();
 		painelTreeHandler.setFluxoBean(getSelectedFluxo());
@@ -237,15 +242,23 @@ public class PainelUsuarioController implements Serializable {
 	public void setIdProcessDefinition(String idProcessDefinition) {
 		this.idProcessDefinition = idProcessDefinition;
 	}
-	
+
+    public String getIdProcessDefinition() {
+        return idProcessDefinition;
+    }
+
 	public void setExpedida(Boolean expedida) {
 		this.expedida = expedida;
 	}
 
+    public Boolean getExpedida() {
+        return expedida;
+    }
+
 	public void selectFluxo() {
 		FluxoBean fluxoBean = null;
 		if (idProcessDefinition != null) {
-    		for (FluxoBean fluxoBeanDisponivel : fluxosDisponiveis) {
+    		for (FluxoBean fluxoBeanDisponivel : getFluxosDisponiveis()) {
                 if (fluxoBeanDisponivel.getProcessDefinitionId().equals(idProcessDefinition) 
                                 && fluxoBeanDisponivel.getExpedida().equals(expedida)){
                     fluxoBean = fluxoBeanDisponivel;
@@ -287,17 +300,17 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	public boolean isShowPainelComunicacoesEletronicasComum() {
-		return getSelectedFluxo() != null && TipoProcesso.COMUNICACAO.equals(selectedFluxo.getTipoProcesso()) && getSelectedFluxo().getProcessDefinitionId() != null
+		return getSelectedFluxo() != null && TipoProcesso.COMUNICACAO.equals(getSelectedFluxo().getTipoProcesso()) && getSelectedFluxo().getProcessDefinitionId() != null
 				&& !getSelectedFluxo().isBpmn20();
 	}
 
 	public boolean isShowPainelComunicacoesNaoEletronicasComum() {
-		return getSelectedFluxo() != null && TipoProcesso.COMUNICACAO_NAO_ELETRONICA.equals(selectedFluxo.getTipoProcesso()) && getSelectedFluxo().getProcessDefinitionId() != null
+		return getSelectedFluxo() != null && TipoProcesso.COMUNICACAO_NAO_ELETRONICA.equals(getSelectedFluxo().getTipoProcesso()) && getSelectedFluxo().getProcessDefinitionId() != null
 				&& !getSelectedFluxo().isBpmn20();
 	}
 
 	public boolean isShowPainelDocumentosComum() {
-		return getSelectedFluxo() != null && TipoProcesso.DOCUMENTO.equals(selectedFluxo.getTipoProcesso()) && getSelectedFluxo().getProcessDefinitionId() != null
+		return getSelectedFluxo() != null && TipoProcesso.DOCUMENTO.equals(getSelectedFluxo().getTipoProcesso()) && getSelectedFluxo().getProcessDefinitionId() != null
 				&& !getSelectedFluxo().isBpmn20();
 	}
 	
@@ -332,5 +345,5 @@ public class PainelUsuarioController implements Serializable {
 	public void setNumeroProcesso(String numeroProcesso) {
 		this.numeroProcesso = numeroProcesso;
 	}
-	
+
 }

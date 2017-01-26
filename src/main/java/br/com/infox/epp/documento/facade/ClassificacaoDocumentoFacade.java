@@ -20,6 +20,8 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 
 @Stateless
 @AutoCreate
@@ -33,6 +35,8 @@ public class ClassificacaoDocumentoFacade {
     private ClassificacaoDocumentoManager classificacaoDocumentoManager;
     @Inject
     private ClassificacaoDocumentoSearch classificacaoDocumentoSearch;
+    @Inject
+    private FluxoManager fluxoManager;
 
     public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
         return TipoDocumentoEnum.values();

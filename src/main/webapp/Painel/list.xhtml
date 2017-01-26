@@ -70,10 +70,7 @@
 					</s:div>
 					<h:outputText value="#{infoxMessages['process.noAvailableProcesses']}" rendered="#{empty painelUsuarioController.fluxosDisponiveis}" />
 			    	<ui:repeat var="fluxo" value="#{painelUsuarioController.fluxosDisponiveis}" >
-			    	  	  <div onmouseup="selectFluxo(#{fluxo.processDefinitionId}, #{fluxo.expedida}); selectFluxoStyle(this);" 
-			    	  	      style="padding: 0.5em; cursor:pointer; margin-top: 0.5em;" >
-			    	  	  	<h:outputText value="#{fluxo.name} (#{fluxo.quantidadeProcessos})" styleClass="fluxo-div" />
-			    	  	  </div>
+			    	  	  <ui:include src="/Painel/fluxoBean.xhtml" />
 			    	</ui:repeat>
 		    	</h:form>
 	    	</rich:panel>

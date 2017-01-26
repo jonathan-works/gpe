@@ -67,6 +67,8 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.menu.MenuMovimentar;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -151,6 +153,8 @@ public class TaskInstanceHome implements Serializable {
 	private InfoxMessages infoxMessages;
 	@Inject
 	private AssinadorService assinadorService;
+	@Inject
+	private FluxoManager fluxoManager;
 	@In
 	private PathResolver pathResolver;
 	@In
@@ -249,6 +253,17 @@ public class TaskInstanceHome implements Serializable {
 			else
 				variaveisDocumento.put(variableRetriever.getName(), documento);
 		}
+	}
+	
+	public Integer getIdfluxo(TaskInstance taskInstance){
+		Integer idFluxo = null;
+		String nomeFluxo = taskInstance.getProcessInstance().getProcessDefinition().getName();
+		Fluxo fluxoByDescricao = fluxoManager.getFluxoByDescricao(nomeFluxo);
+		if(fluxoByDescricao != null)
+			idFluxo = fluxoByDescricao.getIdFluxo();
+		else
+			idFluxo = processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
+		return idFluxo;
 	}
 
 	private void loadClassificacaoDocumentoDefault(String variableName, Documento documento) {
@@ -570,11 +585,12 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	public boolean podeAssinarDocumento(String variableName) {
-		VariableInfo variableInfo = variableTypeResolver.getVariableInfoMap().get(variableName);
 		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 		if (taskInstance == null){
 			return false;
 		}
+		variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
+		VariableInfo variableInfo = variableTypeResolver.getVariableInfoMap().get(variableName);
 		if (variableInfo == null){
 			return false;
 		}
@@ -1061,6 +1077,19 @@ public class TaskInstanceHome implements Serializable {
 			listCodigos = VariableEditorModeloHandler.fromJson(configuration).getCodigosClassificacaoDocumento();
 		}
 		return classificacaoDocumentoFacade.getUseableClassificacaoDocumentoVariavel(listCodigos, isModelo);
+    }
+	
+	public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, TaskInstance taskInstance) {
+	    String nomeFluxo = taskInstance.getTask().getProcessDefinition().getName();
+	    Fluxo fluxo = fluxoManager.getFluxoByDescricao(nomeFluxo);
+	    if (fluxo != null) {
+	        return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, fluxo.getIdFluxo());
+	    } else {
+	        return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false);
+	    }
+	}
+	public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
+		return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, idFluxo);
 	}
 
 	public void setVariavelDocumentoToSign(String variavelDocumentoToSign) {

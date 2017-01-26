@@ -1,8 +1,6 @@
 package br.com.infox.epp.cliente.entity;
 
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_BY_SERIE;
-import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_BY_SERIE_AFTER_DATE;
-import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_BY_SERIE_AFTER_DATE_QUERY;
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_BY_SERIE_QUERY;
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_CALENDARIO_BY;
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_CALENDARIO_BY_QUERY;
@@ -16,7 +14,6 @@ import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_ULTIMO_E
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Date;
-import java.util.Objects;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -38,10 +35,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -63,7 +61,6 @@ import br.com.infox.util.time.DateRange;
         @NamedQuery(name = GET_PERIODICOS_NAO_ATUALIZADOS, query = GET_PERIODICOS_NAO_ATUALIZADOS_QUERY),
         @NamedQuery(name = GET_BY_SERIE, query = GET_BY_SERIE_QUERY),
         @NamedQuery(name = GET_ULTIMO_EVENTO_SERIE, query = GET_ULTIMO_EVENTO_SERIE_QUERY),
-        @NamedQuery(name = GET_BY_SERIE_AFTER_DATE, query = GET_BY_SERIE_AFTER_DATE_QUERY),
         @NamedQuery(name = GET_ORPHAN_SERIES, query = GET_ORPHAN_SERIES_QUERY) })
 @Cacheable
 public class CalendarioEventos implements Serializable {
@@ -92,6 +89,7 @@ public class CalendarioEventos implements Serializable {
     @Column(name = "dt_inicio", nullable = false)
     private Date dataInicio;
     
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_fim", nullable = false)
     private Date dataFim;
@@ -100,11 +98,15 @@ public class CalendarioEventos implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "tp_evento", nullable = false)
     private TipoEvento tipoEvento;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_criacao_evento", nullable = true)
+    private Date dataCriacaoEvento;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_serie_eventos", nullable = true)
     private SerieEventos serie;
-
+    
     public Integer getIdCalendarioEvento() {
         return idCalendarioEvento;
     }
@@ -137,12 +139,22 @@ public class CalendarioEventos implements Serializable {
         this.dataInicio = dataInicio;
     }
 
+    @Transient
+    public DateTime getDateTimeInicio() {
+        return new DateTime(dataInicio.getTime());
+    }
+
     public Date getDataFim() {
         return dataFim;
     }
 
     public void setDataFim(Date dataFim) {
         this.dataFim = dataFim;
+    }
+
+    @Transient
+    public DateTime getDateTimeFim() {
+        return new DateTime(dataFim.getTime());
     }
 
     public SerieEventos getSerie() {
@@ -160,10 +172,19 @@ public class CalendarioEventos implements Serializable {
     public void setTipoEvento(TipoEvento tipoEvento) {
         this.tipoEvento = tipoEvento;
     }
+    
+    public Date getDataCriacaoEvento() {
+		return dataCriacaoEvento;
+	}
 
-    @PrePersist
+	public void setDataCriacaoEvento(Date dataCriacaoEvento) {
+		this.dataCriacaoEvento = dataCriacaoEvento;
+	}
+
+	@PrePersist
     private void beforePersist() {
         setDefaultValues();
+       	dataCriacaoEvento = new Date();
     }
 
     @PreUpdate
@@ -182,19 +203,9 @@ public class CalendarioEventos implements Serializable {
 
     public CalendarioEventos plusYears(int ammount) {
         CalendarioEventos newCalendario = new CalendarioEventos();
-        newCalendario.setDataInicio(new br.com.infox.util.time.Date(getDataInicio()).plusYears(ammount).toDate());
-        newCalendario.setDataFim(new br.com.infox.util.time.Date(getDataFim() != null ? getDataFim() : getDataInicio()).plusYears(ammount).toDate());
-        newCalendario.setDescricaoEvento(getDescricaoEvento());
-        newCalendario.setLocalizacao(getLocalizacao());
-        newCalendario.setSerie(getSerie());
-        newCalendario.setTipoEvento(getTipoEvento());
-        return newCalendario;
-    }
-
-    public CalendarioEventos withYear(int year) {
-        CalendarioEventos newCalendario = new CalendarioEventos();
-        newCalendario.setDataInicio(LocalDate.fromDateFields(getDataInicio()).withYear(year).toDate());
-        newCalendario.setDataFim(LocalDate.fromDateFields(getDataFim()).withYear(year).toDate());
+        newCalendario.setDataInicio(getDateTimeInicio().plusYears(ammount).toDate());
+        DateTime dataFim = new DateTime(getDataFim() != null ? getDataFim().getTime() : getDataInicio().getTime());
+		newCalendario.setDataFim(dataFim.plusYears(ammount).toDate());
         newCalendario.setDescricaoEvento(getDescricaoEvento());
         newCalendario.setLocalizacao(getLocalizacao());
         newCalendario.setSerie(getSerie());
@@ -239,30 +250,8 @@ public class CalendarioEventos implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((idCalendarioEvento == null) ? 0 : idCalendarioEvento.hashCode());
+        result = prime * result + ((getIdCalendarioEvento() == null) ? 0 : getIdCalendarioEvento().hashCode());
         return result;
-    }
-
-    public boolean isSimilar(CalendarioEventos other) {
-        if (other == null){
-            return false;
-        }
-        if (!Objects.equals(getDataInicio(), other.getDataInicio())) {
-            return false;
-        }
-        if (!Objects.equals(getDataFim(), other.getDataFim())) {
-            return false;
-        }
-        if (!Objects.equals(getTipoEvento(), other.getTipoEvento())) {
-            return false;
-        }
-        if (!Objects.equals(getLocalizacao(), other.getLocalizacao())) {
-            return false;
-        }
-        if (!Objects.equals(getDescricaoEvento(), other.getDescricaoEvento())) {
-            return false;
-        }
-        return true;
     }
 
     @Override
@@ -277,11 +266,11 @@ public class CalendarioEventos implements Serializable {
             return false;
         }
         CalendarioEventos other = (CalendarioEventos) obj;
-        if (idCalendarioEvento == null) {
-            if (other.idCalendarioEvento != null) {
+        if (getIdCalendarioEvento() == null) {
+            if (other.getIdCalendarioEvento() != null) {
                 return false;
             }
-        } else if (!idCalendarioEvento.equals(other.idCalendarioEvento)) {
+        } else if (!getIdCalendarioEvento().equals(other.getIdCalendarioEvento())) {
             return false;
         }
         return true;
