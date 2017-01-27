@@ -8,8 +8,8 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:p="http://primefaces.org/ui"
   xmlns:a="http://richfaces.org/a4j"
-  xmlns:dojo="http://www.itx.com.br/dojo"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
 >
   <ui:define name="title">#{infoxMessages['bam.pageTitle']}</ui:define>
@@ -22,21 +22,6 @@
     value="#{not empty processoTarefaList.entity.processo}"
   />
   <ui:define name="head">
-    <ui:remove>
-        <!-- DOJO RETIRADO DO PROJETO. REVER ESTE COMPONENTE -->
-        <h:outputScript
-          name="dojo.js"
-          library="js/dojo"
-        />
-        <h:outputScript
-          name="defaultGauge.js"
-          library="js/dojoCustom/gauges"
-        />
-        <h:outputScript
-          name="progressBarGauge.js"
-          library="js/dojoCustom/gauges"
-        />
-    </ui:remove>
   </ui:define>
   <ui:define name="searchGrid">
     <wi:dataTable
@@ -66,20 +51,8 @@
             value="#{processoEpaNaoFinalizadoList.entity.processo.situacaoPrazo}"
           />
         </wi:searchForm>
-        <ui:remove>
-            <!-- DOJO RETIRADO DO PROJETO. REVER ESTE COMPONENTE -->
-            <dojo:defaultGauge
-              id="processo"
-              max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
-              width="250"
-              height="200"
-              radius="50"
-              label="#{infoxMessages['bam.medidorProcSel']}"
-              draggable="false"
-              indicatorLabel="#{infoxMessages['bam.tempoMedio']}"
-              value="#{processoEpaNaoFinalizadoList.mediaTempoGastoDesdeInicioProcesso}"
-            />
-        </ui:remove>
+        <p:chart type="metergauge" model="#{processoEpaNaoFinalizadoList.meterMediaTempoGastoDesdeInicioProcesso}"
+             style="width:250px;height:200px" />
       </ui:define>
       <ui:define name="headerToolBar" />
       <ui:define name="toolBar">
@@ -147,6 +120,7 @@
       </rich:column>
       <wi:columnOutputText
         columnId="tempoGastoTarefa"
+        hideOrder="false"
         columnHeader="#{infoxMessages['processoEpa.tempoGastoTarefa']}"
         value="#{row.tempoGastoFormatado}"
       />
@@ -159,18 +133,7 @@
     </wi:dataTable>
   </ui:define>
   <ui:define name="form">
-    <dojo:defaultGauge
-      id="#{processoTarefaList.entity.processo.numeroProcessoRoot}"
-      max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
-      width="210"
-      height="200"
-      radius="50"
-      label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
-      draggable="true"
-      containerStyleClass="organized"
-      indicatorLabel="#{infoxMessages['processoEpa.tempoGasto']} (dias)"
-      value="#{processoEpaTarefaList.diasDesdeInicioProcesso}"
-    />
+    <p:chart type="metergauge" styleClass="organized" model="#{processoTarefaList.meterTempoGastoDesdeInicioProcesso}" style="width:210px;height:200px" />
     <wi:dataTable
       values="#{processoTarefaList.list(15)}"
       bean="#{processoTarefaList}"
@@ -183,28 +146,14 @@
     >
       <ui:define name="toolBar"></ui:define>
       <ui:define name="headerToolBar"></ui:define>
-      <ui:remove>
-            <!-- DOJO RETIRADO DO PROJETO. REVER ESTE COMPONENTE -->
           <wi:columnOutputText
             columnId="medidor"
             columnHeader="#{infoxMessages['bam.medidor']}"
             hideOrder="true"
             columnWidth="60"
           >
-            <dojo:progressBarGauge
-              id="#{row.idProcessoTarefa}"
-              width="60"
-              height="13"
-              barWidth="60"
-              barHeight="13"
-              min="0"
-              max="100"
-              value="#{row.porcentagem}"
-              hideTicks="true"
-            >
-            </dojo:progressBarGauge>
+            <p:progressBar value="#{row.porcentagem}" labelTemplate="{value}%" displayOnly="true"/>
           </wi:columnOutputText>
-      </ui:remove>
       <wi:columnOutputText
         columnId="tarefa"
         columnHeader="Tarefa"

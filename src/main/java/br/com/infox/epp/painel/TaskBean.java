@@ -22,10 +22,12 @@ public class TaskBean {
     private String nomeNatureza;
     private String nomeCategoria;
     private String numeroProcesso;
+    private Integer idProcessoRoot; 
     private String numeroProcessoRoot;
     private String nomeNaturezaProcessoRoot;
     private String nomeCategoriaProcessoRoot;
     private String nomeUsuarioSolicitante;
+    private Integer idPrioridadeProcesso;
     private String prioridadeProcesso;
     private Integer pesoPrioridadeProcesso;
     private Date dataInicio;
@@ -34,9 +36,9 @@ public class TaskBean {
     
     public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
             Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeFluxo, Integer idFluxo, String nomeNatureza, 
-            String nomeCategoria, String numeroProcesso, String numeroProcessoRoot, String nomeUsuarioSolicitante, 
-            String prioridadeProcesso, Integer pesoPrioridadeProcesso, Date dataInicio, String nomeNaturezaProcessoRoot, 
-            String nomeCategoriaProcessoRoot) {
+            String nomeCategoria, String numeroProcesso, Integer idProcessoRoot, String numeroProcessoRoot, String nomeUsuarioSolicitante, 
+            Integer idPrioridadeProcesso, String prioridadeProcesso, Integer pesoPrioridadeProcesso, Date dataInicio, 
+            String nomeNaturezaProcessoRoot, String nomeCategoriaProcessoRoot) {
         this.idTaskInstance = idTaskInstance;
         this.taskName = taskName;
         this.assignee = assignee;
@@ -50,10 +52,12 @@ public class TaskBean {
         this.nomeNatureza = nomeNatureza;
         this.nomeCategoria = nomeCategoria;
         this.numeroProcesso = numeroProcesso;
+        this.idProcessoRoot = idProcessoRoot;
         this.numeroProcessoRoot = numeroProcessoRoot;
         this.nomeNaturezaProcessoRoot = nomeNaturezaProcessoRoot;
         this.nomeCategoriaProcessoRoot = nomeCategoriaProcessoRoot;
         this.nomeUsuarioSolicitante = nomeUsuarioSolicitante;
+        this.idPrioridadeProcesso = idPrioridadeProcesso;
         this.prioridadeProcesso = prioridadeProcesso;
         this.pesoPrioridadeProcesso = pesoPrioridadeProcesso == null ? -1 : pesoPrioridadeProcesso;
         this.dataInicio = dataInicio;
@@ -114,6 +118,10 @@ public class TaskBean {
     public String getNumeroProcesso() {
         return numeroProcesso;
     }
+    
+    public Integer getIdProcessoRoot() {
+        return idProcessoRoot;
+    }
 
     public String getNumeroProcessoRoot() {
         return numeroProcessoRoot;
@@ -133,6 +141,10 @@ public class TaskBean {
 
     public Date getDataInicio() {
         return dataInicio;
+    }
+    
+    public Integer getIdPrioridadeProcesso() {
+        return idPrioridadeProcesso;
     }
 
     public String getPrioridadeProcesso() {
@@ -162,13 +174,14 @@ public class TaskBean {
 
     @Override
     public String toString() {
-        return "TaskBean [idTaskInstance=" + idTaskInstance + ", taskName=" + taskName + ", assignee=" + assignee
-                + ", idProcessInstance=" + idProcessInstance + ", taskNodeKey=" + taskNodeKey + ", idProcesso="
-                + idProcesso + ", nomeCaixa=" + nomeCaixa + ", idCaixa=" + idCaixa + ", nomeFluxo=" + nomeFluxo
-                + ", idFluxo=" + idFluxo + ", nomeNatureza=" + nomeNatureza + ", nomeCategoria=" + nomeCategoria
-                + ", numeroProcesso=" + numeroProcesso + ", numeroProcessoRoot=" + numeroProcessoRoot
-                + ", nomeUsuarioSolicitante=" + nomeUsuarioSolicitante + ", prioridadeProcesso=" + prioridadeProcesso
-                + ", dataInicio=" + dataInicio + "]";
+        return "TaskBean [idTaskInstance=" + idTaskInstance + ", taskName=" + taskName + ", assignee=" + assignee + ", idProcessInstance="
+                + idProcessInstance + ", taskNodeKey=" + taskNodeKey + ", idProcesso=" + idProcesso + ", nomeCaixa=" + nomeCaixa + ", idCaixa="
+                + idCaixa + ", nomeFluxo=" + nomeFluxo + ", idFluxo=" + idFluxo + ", nomeNatureza=" + nomeNatureza + ", nomeCategoria="
+                + nomeCategoria + ", numeroProcesso=" + numeroProcesso + ", idProcessoRoot=" + idProcessoRoot + ", numeroProcessoRoot="
+                + numeroProcessoRoot + ", nomeNaturezaProcessoRoot=" + nomeNaturezaProcessoRoot + ", nomeCategoriaProcessoRoot="
+                + nomeCategoriaProcessoRoot + ", nomeUsuarioSolicitante=" + nomeUsuarioSolicitante + ", idPrioridadeProcesso=" + idPrioridadeProcesso
+                + ", prioridadeProcesso=" + prioridadeProcesso + ", pesoPrioridadeProcesso=" + pesoPrioridadeProcesso + ", dataInicio=" + dataInicio
+                + ", nomeUsuarioTarefa=" + nomeUsuarioTarefa + "]";
     }
 
     @Override

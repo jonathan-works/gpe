@@ -581,9 +581,12 @@ public class TaskInstanceHome implements Serializable {
 		Integer idDocumento = (Integer) taskInstance.getVariable(variableInfo.getMappedName());
 		if (idDocumento != null) {
 			Documento documento = documentoManager.find(idDocumento);
-			return documento != null 
-			        && documento.isDocumentoAssinavel(Authenticator.getPapelAtual())
-			        && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());
+			Papel papelAtual = Authenticator.getPapelAtual();
+			if (documento != null) {
+    			boolean papelPermiteAssinaturaMultipla = documento.papelPermiteAssinaturaMultipla(papelAtual);
+                return (papelPermiteAssinaturaMultipla && !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado())) ||
+    			        (!papelPermiteAssinaturaMultipla && documento.isDocumentoAssinavel(papelAtual) && !documento.isDocumentoAssinado(papelAtual));
+			}
 		}
 		return false;
 	}
@@ -649,7 +652,7 @@ public class TaskInstanceHome implements Serializable {
 	public String end(String transition) {
 		if (checkAccess()) {
 			checkCurrentTask();
-			boolean validateForm = getTransition(transition).getConfiguration().isValidateForm();
+			boolean validateForm = isTransitionValidateForm(transition);
 			if (!update(validateForm)) {
 				return null;
 			}
@@ -1120,5 +1123,9 @@ public class TaskInstanceHome implements Serializable {
 	        }
 	    }
 	    return null;
+	}
+	
+	public boolean isTransitionValidateForm(String transition) {
+	    return getTransition(transition).getConfiguration().isValidateForm();
 	}
 }

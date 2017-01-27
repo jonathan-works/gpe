@@ -10,7 +10,7 @@
     </ui:define>
     <ui:define name="baseBody">
         <h:outputScript library="js" name="jqueryExt.js" />
-        <wi:menu id="menu" menuHandler="#{menuNavigation}">
+        <wi:menu id="menu" menuHandler="#{menuNavigation}" rendered="#{not wi:get(flash.hideMenu,  false)}">
             <s:div styleClass="pageBody" id="pageBody">
                 <div>
                     <ui:insert name="body" />

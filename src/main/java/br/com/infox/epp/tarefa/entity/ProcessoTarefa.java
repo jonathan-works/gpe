@@ -40,10 +40,12 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.system.annotation.Ignore;
 import br.com.infox.epp.tarefa.query.ProcessoTarefaQuery;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
+@Ignore
 @Table(name = ProcessoTarefa.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = GET_PROCESSO_TAREFA_BY_TASKINSTNACE, query = GET_PROCESSO_TAREFA_BY_TASKINSTNACE_QUERY),

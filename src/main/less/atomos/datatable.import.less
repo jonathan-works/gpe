@@ -156,45 +156,26 @@
 				overflow-x: visible;
 				overflow-y: auto;
 				>tbody{
-					.prefixed-value(display, flex);
-					.prefixed-atrib(flex-wrap, wrap);
-					.prefixed-atrib(justify-content, space-between);
 					overflow-x: hidden;
 					padding: 0 4px 0 0;
+  				display: block;
 				}
 	}
 	.flex-table-row{
-		display:block;
-		.prefixed-atrib(flex-grow, 0);
-		.prefixed-atrib(flex-shrink, 0);
-		.prefixed-atrib(flex-basis, ~"calc(50% - 5px)");
-		
         padding:2px 2px;
-        &:nth-child(4n+1),&:nth-child(4n){
-        }
-        &:nth-child(4n+2),&:nth-child(4n+3){
+				display: block;
+        &:nth-child(2n+1){
             background-color:rgba(0,0,0,0.15);
         }
-		
+		>td{
+			display:block;
+		}
 		&.hidden{
 		    display:none;
 		}
-		>td {
-		    display: block;
-				>.ui-outputpanel {
-					.prefixed-value(display, flex);
-					> * {
-					    .prefixed-atrib(flex-grow, 0);
-					    .prefixed-atrib(flex-shrink, 0);
-					}
-					>.text-content {
-					    .prefixed-atrib(flex-grow, 1);
-					    .prefixed-atrib(flex-shrink, 1);
-					}
-				}
-		}
 	}
 	.flex-table-colors{
+
 	}
 	.flex-table-row-colors{
 	}

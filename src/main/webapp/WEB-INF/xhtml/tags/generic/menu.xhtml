@@ -6,54 +6,36 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="id" value="#{wi:get(id, facesContext.viewRoot.createUniqueId())}" />
-   
-    <div style="display: none" id="#{id}Functions">
-        <h:form>
-            <a:jsFunction name="#{id}OpenAjuda" execute="@this" render="@this" limitRender="true"
-                actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}"
-                onbegin="infox.showLoading();"
-                oncomplete="openPopUp('helpwnd', '#{pathResolver.contextPath}/help/show.seam?scid=#{conversation.id}', 800,600);infox.hideLoading();">
-            </a:jsFunction>
-            <a:jsFunction name="#{id}PerfilSwitcher" onbegin="infox.showLoading();" oncomplete="infox.hideLoading();">
-                <a:param name="idPerfil" assignTo="#{authenticator.usuarioPerfilAtualCombo}"
-                 converter="javax.faces.Integer" />
-            </a:jsFunction>
-            <a:jsFunction name="#{id}UDCSwitcher" onbegin="infox.showLoading();" oncomplete="infox.hideLoading();">
-                <a:param name="idUDC" assignTo="#{authenticator.colegiadaParaMonocraticaLogadaCombo}"
-                 converter="javax.faces.Integer" />
-            </a:jsFunction>
-            <a:jsFunction name="#{id}SkinSwitcher" onbegin="infox.showLoading();" oncomplete="location.reload(true);">
-                <a:param name="idSkin" assignTo="#{wiSkin.skin}" />
-            </a:jsFunction>
-            <a:jsFunction name="#{id}Logout" onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
-            	action="#{authenticator.unAuthenticate()}">
-            </a:jsFunction>
-        </h:form>
-    </div>
+    <ui:param name="rendered" value="#{wi:get(rendered, true)}" />
         
     <div id="#{id}MenuContent">
         <ui:insert />
     </div>
-    <div id="#{id}"></div>
-    <script>
+    <infox:div rendered="#{rendered}" id="#{id}"></infox:div>
+    <h:outputScript rendered="#{rendered}">
     	(function(){
         	var #{id}MenuFunctions={
                 handlePerfilClick:function(event, itm){
-                   #{id}PerfilSwitcher(itm);
+                   infox.showLoading();
+                   location.href = '#{pathResolver.contextPath}/trocarPerfil?idPerfil=' + itm;
                 },
                 handleColegiadaClick:function(event, itm){
-                   #{id}UDCSwitcher(itm);
+                   infox.showLoading();
+                   location.href = '#{pathResolver.contextPath}/trocarColegiada?idColegiada=' + itm;
                 },
                 handleOpenAjuda:function(event, itm){
                    infox.showLoading();
-                   #{id}OpenAjuda();
+                   var viewId = '#{facesContext.viewRoot.viewId.replace('.xhtml', '.seam')}';
+                   openPopUp('helpwnd', '#{pathResolver.contextPath}/openHelp?scid=#{conversation.id}&amp;viewId=' + viewId, 800, 600);
+                   infox.hideLoading();
                 },
                 handleSkinSwapClick:function(event, itm){
                     infox.showLoading();
-                    #{id}SkinSwitcher(itm);
+                    location.href = '#{pathResolver.contextPath}/trocarSkin?idSkin=' + itm;
                 },
                 handleLogoutClick:function(event, itm){
-                    #{id}Logout();
+                	infox.showLoading();
+                    location.href = '#{pathResolver.contextPath}/logout';
                 }
             };
     		var menuConfig={
@@ -88,11 +70,10 @@
                     }
                 };
              ReactDOM.render(
-                     
-                     React.createElement(window['react-components'].NavigationMenu, menuConfig),
-                     document.getElementById("#{id}")
+                 React.createElement(window['react-components'].NavigationMenu, menuConfig),
+                 document.getElementById("#{wi:clientId(id)}")
             );
     	})();
-    </script>
+    </h:outputScript>
 
 </ui:composition>

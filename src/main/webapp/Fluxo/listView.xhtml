@@ -464,6 +464,13 @@
             action="#{monitorProcessoView.selectFluxo()}">
             <ui:include src="definicao/monitorProcesso.xhtml" />
         </infox:tab>
+        
+        
+        <c:forEach items="#{fluxoCrudAction.pagesExtensao}" var="pagina">
+	        <ui:include src="#{pagina}" />
+        </c:forEach>
+        
+        
     </ui:define>
     
     <ui:define name="extraContent">

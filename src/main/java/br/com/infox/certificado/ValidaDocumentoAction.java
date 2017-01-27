@@ -111,13 +111,7 @@ public class ValidaDocumentoAction implements Serializable {
 		if (documento == null || !usuarioPerfil.getAtivo())
 			return false;
 
-		boolean isAssinavel = documento.isDocumentoAssinavel(usuarioPerfil.getPerfilTemplate().getPapel());
-		if (!isAssinavel)
-			return false;
-
-		boolean assinadoPor = isAssinadoPor(usuarioPerfil);
-
-		return isAssinavel && !assinadoPor;
+		return documento.isDocumentoAssinavel(usuarioPerfil.getUsuarioLogin().getPessoaFisica(), usuarioPerfil.getPerfilTemplate().getPapel());
 	}
 
 	public boolean isAssinadoPor(UsuarioPerfil usuarioPerfil) {

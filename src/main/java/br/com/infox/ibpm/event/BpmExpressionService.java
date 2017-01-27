@@ -58,6 +58,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
@@ -117,6 +118,8 @@ public class BpmExpressionService {
     protected PublicacaoDocumentoService publicacaoDocumentoService;
     @Inject
     protected PastaCompartilhamentoService pastaCompartilhamentoService;
+    @Inject
+    private ParticipanteProcessoService participanteProcessoService;
     @Inject
     protected DocumentoCompartilhamentoService documentoCompartilhamentoService;
 
@@ -546,6 +549,11 @@ public class BpmExpressionService {
         return DateUtil.formatarDataPorExtenso(data);
     }
 
+    @External(tooltip = "process.events.expression.copiarParticipante.tooltip", expressionType = ExpressionType.EVENTOS)
+    public void copiaParticipantesDosProcessosRelacionados() {
+        participanteProcessoService.adicionaParticipantesProcessoRelacionado(getProcessoAtual());
+    }
+    
     @External(expressionType = ExpressionType.EVENTOS, tooltip = "process.events.expression.compartilharPasta.tooltip",
         value = {
             @Parameter(selectable = true, defaultValue = "'codigoPasta'",

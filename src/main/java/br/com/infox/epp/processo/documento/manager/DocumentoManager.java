@@ -206,19 +206,14 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     }
     
     /**
-     * Diz se um usuário pode assinar um documento (verificando se o documento já foi assinado por esse papel)
+     * Diz se um usuário pode assinar um documento 
+     * (verificando se o documento já foi assinado por esse papel ou se o papel permite assinatura múltipla)
      */
     public boolean podeAssinar(Documento documento, UsuarioPerfil usuarioPerfil) {
 		if (documento == null || !usuarioPerfil.getAtivo())
 			return false;
 
-		boolean isAssinavel = documento.isDocumentoAssinavel(usuarioPerfil.getPerfilTemplate().getPapel());
-		if (!isAssinavel)
-			return false;
-
-		boolean assinadoPor = assinaturaDocumentoService.isDocumentoAssinado(documento, usuarioPerfil);
-
-		return isAssinavel && !assinadoPor;
+		return documento.isDocumentoAssinavel(usuarioPerfil.getUsuarioLogin().getPessoaFisica(), usuarioPerfil.getPerfilTemplate().getPapel());
     }
     
 	public Documento copiarDocumento(Documento original, Pasta novaPasta) throws CloneNotSupportedException {

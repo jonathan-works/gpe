@@ -11,6 +11,7 @@ import org.jboss.seam.Component;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.security.Credentials;
+import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.api.Authenticator;
@@ -36,6 +37,11 @@ public class LoginView implements Serializable {
 	private boolean forcarMostrarCaptcha = false;
 	
 	public boolean isMostrarCaptcha() {
+		String login = Identity.instance().getCredentials().getUsername();
+		if(login != null && captchaService.isMostrarCaptcha(login)) {
+			return true;
+		}
+		
 		return captchaService.isMostrarCaptcha() || forcarMostrarCaptcha;
 	}
 	

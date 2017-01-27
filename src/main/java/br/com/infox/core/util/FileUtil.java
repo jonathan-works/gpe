@@ -90,18 +90,19 @@ public final class FileUtil {
             if (file != null && matcher.matches(file)) {
                 fileMatches.add(file);
             } else if (file != null && file.toString().endsWith(".jar")) {
-                Map<String, String> jarProperties = new HashMap<>();
-                URI jarFile = URI.create("jar:file:" + file.toUri().getPath());
-                jarProperties.put("create", "false");
-                jarProperties.put("encoding", "UTF-8");
-                ResourceFrameFinder finder = new ResourceFrameFinder(matcher);
-                try (FileSystem jarFileS = FileSystems.newFileSystem(jarFile, jarProperties)) {
-                    Path rootPath = jarFileS.getPath("/fragmentos");
-                    Files.walkFileTree(rootPath, finder);
-                } catch (IOException e) {
-                    LOG.error(e);
-                }
-                fileMatches.addAll(finder.getPathsMatched());
+            	try {
+            		Map<String, String> jarProperties = new HashMap<>();
+            		URI jarFile = URI.create("jar:file:" + file.toUri().getPath());
+            		jarProperties.put("create", "false");
+            		jarProperties.put("encoding", "UTF-8");
+            		ResourceFrameFinder finder = new ResourceFrameFinder(matcher);
+            		FileSystem jarFileS = FileSystems.newFileSystem(jarFile, jarProperties);
+            		Path rootPath = jarFileS.getPath("/fragmentos");
+            		Files.walkFileTree(rootPath, finder);
+            		fileMatches.addAll(finder.getPathsMatched());
+            	} catch (Exception e) {
+            		LOG.error(e);
+            	}
             }
             if (!fileMatches.isEmpty() && findFirst) {
                 return FileVisitResult.TERMINATE;

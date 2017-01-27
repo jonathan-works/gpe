@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -31,10 +32,18 @@ import br.com.infox.epp.turno.type.DiaSemanaEnum;
         @NamedQuery(name = LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO, query = LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO_QUERY),
         @NamedQuery(name = LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM, query = LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM_QUERY),
         @NamedQuery(name = LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM, query = LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM_QUERY),
-        @NamedQuery(name = LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, query = LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY),
-        @NamedQuery(name = LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA, query = LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY),
+        @NamedQuery(name = LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, query = LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY,
+                    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+                            @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.turno.entity.LocalizacaoTurno")}),
+        @NamedQuery(name = LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA, query = LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY,
+                    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+                            @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.turno.entity.LocalizacaoTurno")}),
         @NamedQuery(name = LocalizacaoTurnoQuery.DELETE_TURNOS_ANTERIORES, query = LocalizacaoTurnoQuery.DELETE_TURNOS_ANTERIORES_QUERY),
-        @NamedQuery(name = LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA, query = LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_QUERY) })
+        @NamedQuery(name = LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA, query = LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_QUERY,
+                    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+                            @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.turno.entity.LocalizacaoTurno")}) 
+        }
+)
 public class LocalizacaoTurno implements Serializable {
 
     private static final long serialVersionUID = -1258132003358073362L;

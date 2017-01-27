@@ -142,6 +142,12 @@
 		                value="#{classificacaoDocumentoPapelCrudAction.instance.podeRedigir}">
 		                <a:ajax event="change" execute="@this" limitRender="true" />
 		            </wi:selectBooleanCheckbox>
+		            <wi:selectBooleanCheckbox
+		                label="#{infoxMessages['tipoProcessoDocumentoPapel.assinaturaMultipla']}"
+		                id="assinaturaMultipla"
+		                value="#{classificacaoDocumentoPapelCrudAction.instance.assinaturasMultiplas}">
+		                <a:ajax event="change" execute="@this" limitRender="true" />
+		            </wi:selectBooleanCheckbox>
                     <ui:define name="buttons">
                         <wi:commandButtonPersist
                             home="#{classificacaoDocumentoPapelCrudAction}"
@@ -166,6 +172,10 @@
                     <wi:columnOutputText colummId="podeRedigir"
                     	columnHeader="#{infoxMessages['tipoProcessoDocumentoPapel.podeRedigir']}"
                     	value="#{row.podeRedigir ? 'Sim' : 'Não'}"
+                    	hideOrder="true"/>
+                    <wi:columnOutputText colummId="assinaturaMultipla"
+                    	columnHeader="#{infoxMessages['tipoProcessoDocumentoPapel.assinaturaMultipla']}"
+                    	value="#{row.assinaturasMultiplas ? 'Sim' : 'Não'}"
                     	hideOrder="true"/>
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">

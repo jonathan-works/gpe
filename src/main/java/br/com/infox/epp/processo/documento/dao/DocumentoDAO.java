@@ -50,6 +50,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
@@ -229,5 +230,16 @@ public class DocumentoDAO extends DAO<Documento> {
         Join<Documento, DocumentoBin> bin = from.join(Documento_.documentoBin, JoinType.INNER);
         cq.where(cb.equal(bin.get(DocumentoBin_.id), idDocumentoBin));
         return entityManager.createQuery(cq).getResultList();
+    }
+    
+    public List<Documento> getDocumentosDoProcessoPorClassificacao(Fluxo fluxo, Processo processo) {
+        EntityManager entityManager = getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Documento> cq = cb.createQuery(Documento.class);
+        Root<Documento> from = cq.from(Documento.class);
+        
+        Join<Documento, Pasta> pasta = from.join(Documento_.pasta, JoinType.INNER);
+        
+        return null;
     }
 }
