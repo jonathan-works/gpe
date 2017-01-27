@@ -3,6 +3,7 @@ package br.com.infox.epp.painel;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
@@ -119,7 +121,8 @@ public class PainelUsuarioController implements Serializable {
 	}
 
     public List<? extends FluxoBean> getFluxosDisponiveis() {
-        return fluxosDisponiveis;
+        // TODO corrigir para integrar epp 2.14
+        return ObjectUtils.defaultIfNull(fluxosDisponiveis, Collections.<FluxoBean>emptyList());
     }
 
     @SuppressWarnings("unchecked")
