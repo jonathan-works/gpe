@@ -3,6 +3,7 @@ package br.com.infox.epp.fluxo.crud;
 import static org.jboss.seam.international.StatusMessage.Severity.ERROR;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.enterprise.inject.Any;
@@ -146,9 +147,10 @@ public class FluxoCrudAction implements Controller {
 
     public List<String> getPagesExtensao() {
         List<String> pages = new ArrayList<>();
-        for (ExtensaoFluxo extensaoFluxo : extensaoFluxo) {
-            pages.addAll(extensaoFluxo.getExtensoes());
-        }
+        for (Iterator<ExtensaoFluxo> iterator = extensaoFluxo.iterator(); iterator.hasNext();) {
+			ExtensaoFluxo extensaoFluxo = iterator.next();
+			pages.addAll(extensaoFluxo.getExtensoes());
+		}
         return pages;
     }
     
