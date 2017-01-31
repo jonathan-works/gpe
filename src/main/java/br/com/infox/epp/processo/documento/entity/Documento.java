@@ -61,7 +61,6 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
-import edu.emory.mathcs.backport.java.util.Collections;
 
 @Entity
 @Table(name = Documento.TABLE_NAME)
@@ -154,10 +153,9 @@ public class Documento implements Serializable, Cloneable {
     @OrderBy(value="dataAlteracao DESC")
     private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
     
-    // TODO corrigir para integrar epp 2.14
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento")
-//    @OrderBy(value="dataPublicacao DESC")
-//    private List<PublicacaoDocumento> publicacoes = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento")
+    @OrderBy(value="dataPublicacao DESC")
+    private List<PublicacaoDocumento> publicacoes = new ArrayList<>();
     
     @PrePersist
     private void prePersist(){
