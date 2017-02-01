@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.list;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -44,7 +43,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     
     private static final String DEFAULT_ORDER = "p.idProcesso";
     private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
-    private static final String R2 = "p.situacaoPrazo = #{processoEpaNaoFinalizadoList.entity.processo.situacaoPrazo}";
+    private static final String R2 = "p.situacaoPrazo = #{processoEpaNaoFinalizadoList.situacaoPrazo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
 
     private static final Map<String, String> CUSTOM_ORDER_MAP;
@@ -61,6 +60,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
 
     private Fluxo fluxo;
     private List<Fluxo> fluxoList;
+    private SituacaoPrazoEnum situacaoPrazo;
     private boolean updateFluxoList = true;
 
     @In
@@ -89,13 +89,9 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
 
     @Override
     public void newInstance() {
-        List<Fluxo> fluxos = getFluxoList();
-        if (!fluxos.isEmpty()) {
-            fluxo = fluxos.get(0);
-        }
+        this.fluxo = null;
+        this.situacaoPrazo = null;
         super.newInstance();
-        getEntity().setProcesso(new Processo());
-        getEntity().getProcesso().setSituacaoPrazo(SituacaoPrazoEnum.PAT);
     }
 
     public Fluxo getFluxo() {
@@ -107,42 +103,48 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     }
 
     public MeterGaugeChartModel getMeterMediaTempoGastoDesdeInicioProcesso(){
-        MeterGaugeChartModel gauge = new MeterGaugeChartModel();
-        gauge.setValue(getMediaTempoGastoDesdeInicioProcesso());
-        gauge.setMin(0);
-        gauge.setMax(getFluxo().getQtPrazo());
-        gauge.setGaugeLabel(InfoxMessages.getInstance().get("bam.medidorProcSel"));
-        gauge.setShowTickLabels(true);
-        return gauge;
+        if(fluxo!= null){
+            MeterGaugeChartModel gauge = new MeterGaugeChartModel();
+            gauge.setGaugeLabel(InfoxMessages.getInstance().get("bam.medidorProcSel"));
+            gauge.setMin(0);
+            gauge.setValue(getMediaTempoGastoDesdeInicioProcesso());
+            gauge.setMax(getFluxo().getQtPrazo());
+            gauge.setShowTickLabels(true);
+            return gauge;
+        }else
+            return null;
     }
     
     public long getMediaTempoGastoDesdeInicioProcesso() {
-        long media = 0;
-        StringBuilder hql = new StringBuilder("select p.dataInicio from Processo p ");
-        hql.append("inner join p.naturezaCategoriaFluxo ncf ");
-        hql.append("where p.dataFim is null ");
-        if (getFluxo() != null) {
-            hql.append("and ncf.fluxo = :fluxo ");
-        }
-        if (getEntity().getProcesso().getSituacaoPrazo() != null) {
-            hql.append("and p.situacaoPrazo = :situacaoPrazo ");
-        }
-        TypedQuery<Date> query = getEntityManager().createQuery(hql.toString(), Date.class);
-        if (getFluxo() != null) {
-            query.setParameter("fluxo", getFluxo());
-        }
-        if (getEntity().getProcesso().getSituacaoPrazo() != null) {
-            query.setParameter("situacaoPrazo", getEntity().getProcesso().getSituacaoPrazo());
-        }
-
-        LocalDate now = LocalDate.now();
-        List<Date> result = query.getResultList();
-        for (Date dataInicio : result) {
-            LocalDate data = LocalDate.fromDateFields(dataInicio);
-            media += Days.daysBetween(data, now).getDays();
-        }
-
-        return !result.isEmpty() ? media / result.size() : 0;
+        if(fluxo != null && getEntity().getProcesso() != null) {
+            long media = 0;
+            StringBuilder hql = new StringBuilder("select p.dataInicio from Processo p ");
+            hql.append("inner join p.naturezaCategoriaFluxo ncf ");
+            hql.append("where p.dataFim is null ");
+            if (getFluxo() != null) {
+                hql.append("and ncf.fluxo = :fluxo ");
+            }
+            if (getEntity().getProcesso().getSituacaoPrazo() != null) {
+                hql.append("and p.situacaoPrazo = :situacaoPrazo ");
+            }
+            TypedQuery<Date> query = getEntityManager().createQuery(hql.toString(), Date.class);
+            if (getFluxo() != null) {
+                query.setParameter("fluxo", getFluxo());
+            }
+            if (getEntity().getProcesso().getSituacaoPrazo() != null) {
+                query.setParameter("situacaoPrazo", getEntity().getProcesso().getSituacaoPrazo());
+            }
+    
+            LocalDate now = LocalDate.now();
+            List<Date> result = query.getResultList();
+            for (Date dataInicio : result) {
+                LocalDate data = LocalDate.fromDateFields(dataInicio);
+                media += Days.daysBetween(data, now).getDays();
+            }
+    
+            return !result.isEmpty() ? media / result.size() : 0;
+        }else
+            return 0;
     }
 
     public List<SituacaoPrazoEnum> getTiposSituacaoPrazo() {
@@ -173,5 +175,13 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
 
     public int getDiasDesdeInicioProcesso(Processo processo) {
         return processoTarefaManager.getDiasDesdeInicioProcesso(processo);
+    }
+
+    public SituacaoPrazoEnum getSituacaoPrazo() {
+        return situacaoPrazo;
+    }
+
+    public void setSituacaoPrazo(SituacaoPrazoEnum situacaoPrazo) {
+        this.situacaoPrazo = situacaoPrazo;
     }
 }

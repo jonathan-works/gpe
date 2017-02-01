@@ -9,9 +9,10 @@
   xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:p="http://primefaces.org/ui"
+  xmlns:i="http://java.sun.com/jsf/composite/infox"
   xmlns:a="http://richfaces.org/a4j"
-  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
->
+  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+  
   <ui:define name="title">#{infoxMessages['bam.pageTitle']}</ui:define>
   <ui:param
     name="home"
@@ -20,6 +21,10 @@
   <ui:param
     name="showFormTab"
     value="#{not empty processoTarefaList.entity.processo}"
+  />
+  <ui:param
+    name="titleFormTab"
+    value="#{infoxMessages['process.def.var.enum']}"
   />
   <ui:define name="head">
   </ui:define>
@@ -38,21 +43,21 @@
           formId="pesquisaFluxoForm"
           formTitle="#{infoxMessages['searchForm.title']}"
         >
-          <wi:selectOneMenuEntity
-            id="comboFluxo"
+          <i:selectOneMenu
+            id="comboFluxo" required="true" converterId="org.jboss.seam.ui.EntityConverter"
             value="#{processoEpaNaoFinalizadoList.fluxo}"
             label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
             items="#{processoEpaNaoFinalizadoList.fluxoList}"
           />
-          <wi:selectOneMenuEnum
-            id="tipoDeprocesso"
+          <i:selectOneMenu
+            id="tipoDeprocesso" required="true" itemLabel="#{item.label}"
             label="#{infoxMessages['bam.tipoAtraso']}"
             items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
-            value="#{processoEpaNaoFinalizadoList.entity.processo.situacaoPrazo}"
+            value="#{processoEpaNaoFinalizadoList.situacaoPrazo}"
           />
         </wi:searchForm>
         <p:chart type="metergauge" model="#{processoEpaNaoFinalizadoList.meterMediaTempoGastoDesdeInicioProcesso}"
-             style="width:250px;height:200px" />
+             rendered="#{not empty processoEpaNaoFinalizadoList.meterMediaTempoGastoDesdeInicioProcesso}" style="width:250px;height:200px" />
       </ui:define>
       <ui:define name="headerToolBar" />
       <ui:define name="toolBar">
