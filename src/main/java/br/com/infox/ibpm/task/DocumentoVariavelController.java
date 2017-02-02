@@ -76,9 +76,9 @@ public class DocumentoVariavelController implements Serializable, AssinaturaCall
                     pastas.add(pastaComPermissao);
                 }
             }
-            if (pastas.size() == 1) {
-                pastas.get(0);
-            }
+        }
+        if (pastas.size() == 1) {
+        	pasta = pastas.get(0);
         }
     }
 

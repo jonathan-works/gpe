@@ -3,11 +3,15 @@
     xmlns:a="http://richfaces.org/a4j"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
     xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="editorId" value="#{id}Editor" />
     <ui:param name="idSignature" value="#{id}signature" />
     <ui:param name="idCertChain" value="#{id}certChain" />
     
+   	<c:if test="#{not empty props.documentoVariavelController.pasta}">
+		<c:set target="#{taskInstanceHome.variaveisDocumento[id]}" property="pasta" value="#{props.documentoVariavelController.pasta}" />
+	</c:if>
     <f:subview id="#{f.id}SubView">
         <p:outputPanel id="#{f.id}Block">
             <fieldset>
@@ -30,11 +34,11 @@
                 <ui:include src="/WEB-INF/xhtml/components/form/comboModelos.xhtml" />
                 <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"
                     label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
-                    value="#{taskInstanceHome.variaveisDocumento[id].pasta}"
+                    value="#{home.variaveisDocumento[id].pasta}"
                     items="#{props.documentoVariavelController.pastas}"
-                    readonly="#{readonly or home.variaveisDocumento[id].hasAssinatura()}"
-                    disabled="#{readonly or home.variaveisDocumento[id].hasAssinatura()}"
-                    showLabelSelecione="true">
+                    readonly="#{readonly or home.variaveisDocumento[id].hasAssinatura() or props.documentoVariavelController.disableSelectOne}"
+                    disabled="#{readonly or home.variaveisDocumento[id].hasAssinatura() or props.documentoVariavelController.disableSelectOne}"
+                    showLabelSelecione="true" noSelectionLabel="[Padrão]">
                     <a:ajax render="@this" event="change" execute="@this" limitRender="true" />
                     <f:validateBean disabled="true" />
                 </wi:selectOneMenuEntity>
