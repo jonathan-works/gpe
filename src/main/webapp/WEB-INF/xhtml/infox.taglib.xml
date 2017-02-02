@@ -269,6 +269,11 @@ version="2.0">
         <function-class>br.com.infox.jsf.function.JsfFunctions</function-class>
         <function-signature>java.lang.Integer splitLength(java.lang.String, java.lang.String)</function-signature>
     </function>
+    <function>
+        <function-name>truncateList</function-name>
+        <function-class>br.com.infox.jsf.function.JsfFunctions</function-class>
+        <function-signature>java.util.List truncateList(java.util.List, int, int)</function-signature>
+    </function>
     <tag>
         <tag-name>dataTable</tag-name>
         <source>tags/grid/dataTable.xhtml</source>
