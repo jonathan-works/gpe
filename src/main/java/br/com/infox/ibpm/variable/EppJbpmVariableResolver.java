@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.jpdl.el.ELException;
+import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.el.impl.JbpmVariableResolver;
 
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -16,6 +17,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.system.custom.variables.CustomVariable;
+import br.com.infox.epp.system.custom.variables.CustomVariableSearch;
+import br.com.infox.epp.system.custom.variables.TipoCustomVariableEnum;
 
 public class EppJbpmVariableResolver extends JbpmVariableResolver {
     
@@ -39,6 +43,11 @@ public class EppJbpmVariableResolver extends JbpmVariableResolver {
                 object = resolveMetadadoProcesso(name, processo);
             }
         }
+        
+        if (object == null) {
+        	object = resolveCustomVariable(name);
+        }
+        
         return object;
     }
     
@@ -67,4 +76,18 @@ public class EppJbpmVariableResolver extends JbpmVariableResolver {
         }
     }
     
+    private Object resolveCustomVariable(String name) {
+    	ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+    	CustomVariableSearch customVariableSearch = BeanManager.INSTANCE.getReference(CustomVariableSearch.class);
+    	Object result = null;
+		CustomVariable customVariable = customVariableSearch.getCustomVariable(name);
+		if (customVariable != null) {
+			if (customVariable.getTipo() == TipoCustomVariableEnum.EL) {
+				result = JbpmExpressionEvaluator.evaluate(customVariable.getValor(), executionContext);
+			} else {
+				result = customVariable.getTypedValue();
+			}
+		}
+		return result;
+    }
 }

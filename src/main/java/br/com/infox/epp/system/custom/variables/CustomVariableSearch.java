@@ -37,4 +37,16 @@ public class CustomVariableSearch extends PersistenceController {
 			return null;
 		}
 	}
+	
+	public CustomVariable getCustomVariable(String codigo) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<CustomVariable> cq = cb.createQuery(CustomVariable.class);
+		Root<CustomVariable> from = cq.from(CustomVariable.class);
+		cq.where(cb.equal(from.get(CustomVariable_.codigo), codigo));
+		try {
+			return getEntityManager().createQuery(cq).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 }

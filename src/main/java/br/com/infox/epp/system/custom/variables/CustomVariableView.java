@@ -124,7 +124,7 @@ public class CustomVariableView implements Serializable{
 	
 	public boolean isTipoString() {
 		return TipoCustomVariableEnum.STRING.equals(getTipoVariavel()) || TipoCustomVariableEnum.DOUBLE.equals(getTipoVariavel()) || 
-				TipoCustomVariableEnum.LONG.equals(getTipoVariavel());
+				TipoCustomVariableEnum.LONG.equals(getTipoVariavel()) || TipoCustomVariableEnum.EL.equals(getTipoVariavel());
 	}
 	
 	public TipoCustomVariableEnum[] getTiposDisponiveis() {

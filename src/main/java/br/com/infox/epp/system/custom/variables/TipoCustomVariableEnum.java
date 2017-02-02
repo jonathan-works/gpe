@@ -7,7 +7,8 @@ public enum TipoCustomVariableEnum implements Displayable{
 	DATE("Data"),
 	DOUBLE("Número decimal"),
 	LONG("Número inteiro"),
-	STRING("Texto")
+	STRING("Texto"),
+	EL("Expressão")
 	;
 
 	private String label;
