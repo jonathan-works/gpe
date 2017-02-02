@@ -29,7 +29,6 @@ public abstract class FileFormType implements FormType {
     
     protected String name;
     protected String path;
-    protected String tokenToSign;
     
     public FileFormType(String name, String path) {
         this.name = name;
@@ -84,15 +83,15 @@ public abstract class FileFormType implements FormType {
         }
     }
 
-    @ExceptionHandled(value = MethodType.UNSPECIFIED)
-    public void assinar() throws DAOException, AssinaturaException {
-        try {
-    		getAssinadorService().assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
-    		FacesMessages.instance().add(InfoxMessages.getInstance().get("assinatura.assinadoSucesso"));
-        } finally {
-            setTokenToSign(null);
-        }
-    }
+//    @ExceptionHandled(value = MethodType.UNSPECIFIED)
+//    public void assinar() throws DAOException, AssinaturaException {
+//        try {
+//    		getAssinadorService().assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
+//    		FacesMessages.instance().add(InfoxMessages.getInstance().get("assinatura.assinadoSucesso"));
+//        } finally {
+//            setTokenToSign(null);
+//        }
+//    }
     
     protected boolean validarAssinaturaDocumento(Documento documento) {
         Papel papel = Authenticator.getPapelAtual();
@@ -110,21 +109,9 @@ public abstract class FileFormType implements FormType {
                     (!papelPermiteAssinaturaMultipla && documento.isDocumentoAssinavel(papelAtual) && !documento.isDocumentoAssinado(papelAtual)); 
     }
     
-    public String getTokenToSign() {
-        return tokenToSign;
-    }
-
-    public void setTokenToSign(String tokenToSign) {
-        this.tokenToSign = tokenToSign;
-    }
-
     @Override
     public boolean isPersistable() {
         return true;
-    }
-    
-    private AssinadorService getAssinadorService() {
-        return BeanManager.INSTANCE.getReference(AssinadorService.class);
     }
 
     protected AssinaturaDocumentoService getAssinaturaDocumentoService() {

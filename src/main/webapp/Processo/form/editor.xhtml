@@ -65,24 +65,14 @@
 	<p:outputPanel id="#{varId}AssinaturaDocumento" >
 	   
 	    <p:outputPanel rendered="#{controller.podeAssinar(formField)}">
-	    
-			<a:jsFunction name="assinar"
-				action="#{controller.assinar()}"
-				execute="@this, #{varId}AssinaturaDocumento"
-				render="#{varId}Div :pageBodyDialogMessage" 
-				oncomplete="infox.hideLoading();"/>
-				
-			<wi:certificadoDigital
-	            id="#{varId}CertificadoDigital"
-	            execute="#{varId}EditorDiv"
-				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-				tokenField="#{controller.tokenToSign}"
-				reRender="#{varId}ClassificacaoDocumento #{varId}ModeloDocumento #{varId}EditorDiv #{varId}AssinaturaDocumento :pageBodyDialogMessage"
-				documentoBin="#{formField.value.documentoBin}"
-				functionPreSign="infox.showLoading();"
-				functionPosSign="assinar();" >
-	       </wi:certificadoDigital>
-	       
+		   <wi:assinador 
+               id="#{varId}CertificadoDigital"
+               execute="#{varId}EditorDiv"
+               render="#{varId}Div :pageBodyDialogMessage"
+               onbegin="infox.showLoading();"
+               oncomplete="infox.hideLoading();"
+               assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
+               value="#{infoxMessages['assinaturas.assinar']}" />
 		</p:outputPanel>
 	
 	</p:outputPanel>

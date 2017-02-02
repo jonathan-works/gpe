@@ -81,7 +81,7 @@
 	             <br />
 	             <h:outputText id="file#{varId}" value="Documento: #{formField.value.documentoBin.nomeArquivo}"/>
 	            	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" 
-	            		style="cursor: pointer" onclick="infox.openPopUp('documento', '#{controller.getUrlDownload(formField)}');" />
+	            		style="cursor: pointer" onclick="#{fileDownloader.getWindowOpen(formField.value.documentoBin)}" />
 	          </fieldset>
 	      </ui:fragment>
 	    
@@ -90,22 +90,14 @@
     <p:outputPanel id="#{varId}assinaturaDocumentoDiv" >
 	   
 	    <p:outputPanel id="#{varId}conteudoAssinatura" rendered="#{controller.podeAssinar(formField)}">
-			
-			<a:jsFunction name="assinar" action="#{controller.assinar()}"
-				execute="@this, #{varId}assinaturaDocumentoDiv"
-				render="#{varId}Div :pageBodyDialogMessage" 
-				oncomplete="infox.hideLoading();"/>
-				
-			<wi:certificadoDigital
-	            id="#{varId}CertificadoDigital"
-				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-				tokenField="#{controller.tokenToSign}"
-				reRender="#{varId}ClassificacaoDocumento #{varId}UploadDiv #{varId}assinaturaDocumentoDiv :pageBodyDialogMessage"
-				documentoBin="#{formField.value.documentoBin}"
-				functionPreSign="infox.showLoading();"
-				functionPosSign="assinar();" >
-	       </wi:certificadoDigital>
-	       
+		   <wi:assinador 
+               id="#{varId}CertificadoDigital"
+               execute="#{varId}EditorDiv"
+               render="#{varId}Div :pageBodyDialogMessage"
+               onbegin="infox.showLoading();"
+               oncomplete="infox.hideLoading();"
+               assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
+               value="#{infoxMessages['assinaturas.assinar']}" />
 		</p:outputPanel>
 		
 	</p:outputPanel>
