@@ -93,4 +93,9 @@ public class DefinicaoProcessoService {
         
         return definicaoProcesso;
     }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public DefinicaoProcesso update(DefinicaoProcesso definicaoProcesso){
+        return definicaoProcessoDao.update(definicaoProcesso);
+    }
 }
