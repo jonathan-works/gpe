@@ -62,8 +62,9 @@ public class PastaAction implements Serializable {
     private PastaCompartilhamentoService pastaCompartilhamentoService;
     @Inject
     private PastaCompartilhamentoView pastaCompartilhamentoView;
-
-    private DocumentoProcessoAction documentoProcessoAction = ComponentUtil.getComponent(DocumentoProcessoAction.NAME);
+    @Inject
+    private DocumentoProcessoAction documentoProcessoAction;
+    
     private DocumentoList documentoList = ComponentUtil.getComponent(DocumentoList.NAME);
 
     private LogProvider LOG = Logging.getLogProvider(PastaAction.class);
