@@ -25,8 +25,7 @@ public class PessoaEnderecoSearch {
     	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     	CriteriaQuery<PessoaEndereco> query = cb.createQuery(PessoaEndereco.class);
     	Root<PessoaEndereco> pessoaEndereco = query.from(PessoaEndereco.class);
-    	// TODO corrigir para integrar epp 2.14
-//    	query.where(cb.equal(pessoaEndereco.get(PessoaEndereco_.pessoa), pessoa));
+    	query.where(cb.equal(pessoaEndereco.get(PessoaEndereco_.pessoa), pessoa));
     	try {
     		return getEntityManager().createQuery(query).getSingleResult();
     	} catch (NoResultException e) {
