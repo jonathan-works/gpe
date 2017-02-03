@@ -17,6 +17,7 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.lIST_DOCU
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -480,9 +481,7 @@ public class Documento implements Serializable, Cloneable {
 		return cDocumento;
 	}
 
-	// TODO corrigir para integrar epp 2.14
-//	@SuppressWarnings("unchecked")
-//	public List<PublicacaoDocumento> getPublicacoes() {
-//		return Collections.unmodifiableList(publicacoes);
-//	}
+	public List<PublicacaoDocumento> getPublicacoes() {
+		return Collections.unmodifiableList(publicacoes);
+	}
 }
