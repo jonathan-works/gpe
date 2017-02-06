@@ -17,6 +17,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
 
 import org.jbpm.graph.exe.ExecutionContext;
 
@@ -32,6 +33,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
+import br.com.infox.epp.distribuicao.DistribuicaoRelatoriaService;
 import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.documento.publicacao.LocalPublicacao;
 import br.com.infox.epp.documento.publicacao.LocalPublicacaoSearch;
@@ -64,6 +66,8 @@ import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.custom.variables.CustomVariableSearch;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 import br.com.infox.seam.exception.BusinessException;
@@ -122,6 +126,8 @@ public class BpmExpressionService {
     private ParticipanteProcessoService participanteProcessoService;
     @Inject
     protected DocumentoCompartilhamentoService documentoCompartilhamentoService;
+    @Inject
+    private DistribuicaoRelatoriaService distribuicaoRelatoriaService;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip", expressionType = ExpressionType.EVENTOS)
     public void atribuirCiencia() {
@@ -611,6 +617,25 @@ public class BpmExpressionService {
             throw new BusinessException("Não foi possível encontrar documento com id '" + idDocumento + "'");
         }
         documentoCompartilhamentoService.adicionarCompartilhamento(documento, processoAlvo, usuarioSistema);
+    }
+    
+    @External(expressionType = ExpressionType.EVENTOS, tooltip = "process.events.expression.distribuirMonocraticaColegiada.tooltip",
+            value = { 
+            		@Parameter(selectable = true, 
+            				defaultValue = "idUnidadeDecisoraMonocratica",
+                            label = "process.events.expression.distribuirMonocraticaColegiada.idUnidadeDecisoraMonocratica.label")
+            })
+    public void distribuirMonocraticaColegiada(Integer idUnidadeDecisoraMonocratica) {
+    	if ( idUnidadeDecisoraMonocratica == null ) {
+    		throw new BusinessException("O id da unidade decisora não pode ser nulo");
+    	}
+    	Processo processo = getProcessoAtual();
+    	distribuicaoRelatoriaService.distribuirRelatoria(idUnidadeDecisoraMonocratica, processo);
+    	UnidadeDecisoraMonocratica udm = processo.getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA).getValue();
+    	List<UnidadeDecisoraColegiada> udcs = udm.getUnidadeDecisoraColegiadaList();
+    	if ( !udcs.isEmpty() ) {
+    		metadadoProcessoManager.setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo, udcs.get(0));
+    	}
     }
 
     public List<ExternalMethod> getExternalMethods() {
