@@ -17,64 +17,67 @@
   	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
   	<ui:param name="modelosDocumento" value="#{formField.properties.modelosDocumento}"/>
   	
-	<wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
-		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-		items="#{classificacoesDocumento}"
-		required="#{wi:get(required, false)}"
-		showLabelSelecione="true"
-		value="#{formField.properties.classificacaoDocumento}"
-		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
-		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
-		<f:validator validatorId="classificacaoEditorValidator" for="@this"/>
-		<f:attribute name="editorId" value="#{rich:clientId(varId)}"/>
-	</wi:selectOneMenuEntity>
-	
-    <wi:selectOneMenuEntity id="#{varId}ModeloDocumento"
-		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
-		items="#{formField.properties.modelosDocumento}"
-		noSelectionLabel="[Selecione o modelo]"
-		required="false"
-		value="#{formField.properties.modeloDocumento}"
-		rendered="#{not readonly and not formField.value.hasAssinatura()}">
-		<a:ajax event="change" render="#{varId}EditorDiv" execute="@this" limitRender="true" 
-			listener="#{controller.performModeloDocumento(formField, formData)}"/>
-	</wi:selectOneMenuEntity>
-	   
-	<p:outputPanel id="#{varId}EditorDiv">
-	   	<s:div id="#{varId}ToolTipDivExterna">
-		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
-			  	<h:graphicImage id="#{varId}helpEditTipImg" 
-			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
-				<div class="epp-tooltip">
-					<div class="tooltip-panel">
-						<div><h:outputText value="Observação:"/></div>
-						<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}"/>
-					</div>
-				</div>
-		    </s:div>
-	    </s:div>
-	    
-	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
-	    	required="#{wi:get(required, false)}"
-	        readonly="#{readonly or formField.value.hasAssinatura()}" 
-	        label="#{formField.label}"/>
-	        
-	</p:outputPanel>
-	   
-	<p:outputPanel id="#{varId}AssinaturaDocumento" >
-	   
-	    <p:outputPanel rendered="#{controller.podeAssinar(formField)}">
-		   <wi:assinador 
-               id="#{varId}CertificadoDigital"
-               execute="#{varId}EditorDiv"
-               render="#{varId}Div :pageBodyDialogMessage"
-               onbegin="infox.showLoading();"
-               oncomplete="infox.hideLoading();"
-               assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
-               value="#{infoxMessages['assinaturas.assinar']}" />
-		</p:outputPanel>
-	
-	</p:outputPanel>
-  
+    <fieldset>
+        <legend>
+            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
+        </legend>
+    	<wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
+    		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+    		items="#{classificacoesDocumento}"
+    		required="#{wi:get(required, false)}"
+    		showLabelSelecione="true"
+    		value="#{formField.properties.classificacaoDocumento}"
+    		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
+    		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
+    		<f:validator validatorId="classificacaoEditorValidator" for="@this"/>
+    		<f:attribute name="editorId" value="#{rich:clientId(varId)}"/>
+            <a:ajax render="#{varId}EditorDiv #{varId}AssinaturaDocumento" event="change" execute="@this #{varId}EditorDiv" limitRender="true" />
+    	</wi:selectOneMenuEntity>
+        <wi:selectOneMenuEntity id="#{varId}ModeloDocumento"
+    		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+    		items="#{formField.properties.modelosDocumento}"
+    		noSelectionLabel="[Selecione o modelo]"
+    		required="false"
+    		value="#{formField.properties.modeloDocumento}"
+    		rendered="#{not readonly and not formField.value.hasAssinatura()}">
+    		<a:ajax event="change" render="#{varId}EditorDiv" execute="@this" limitRender="true" 
+    			listener="#{controller.performModeloDocumento(formField, formData)}"/>
+    	</wi:selectOneMenuEntity>
+    	   
+    	<p:outputPanel id="#{varId}EditorDiv">
+    	   	<s:div id="#{varId}ToolTipDivExterna">
+    		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+    			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
+    			  	<h:graphicImage id="#{varId}helpEditTipImg" 
+    			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+    				<div class="epp-tooltip">
+    					<div class="tooltip-panel">
+    						<div><h:outputText value="Observação:"/></div>
+    						<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}"/>
+    					</div>
+    				</div>
+    		    </s:div>
+    	    </s:div>
+    	    
+    	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
+    	    	required="#{wi:get(required, false)}"
+    	        readonly="#{readonly or formField.value.hasAssinatura()}"/>
+    	        
+    	</p:outputPanel>
+    	   
+    	<p:outputPanel id="#{varId}AssinaturaDocumento" >
+    	   
+    	    <p:outputPanel rendered="#{controller.podeAssinar(formField)}">
+    		   <wi:assinador 
+                   id="#{varId}CertificadoDigital"
+                   execute="#{varId}EditorDiv"
+                   render="#{varId}Div :pageBodyDialogMessage"
+                   onbegin="infox.showLoading();"
+                   oncomplete="infox.hideLoading();"
+                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
+                   value="#{infoxMessages['assinaturas.assinar']}" />
+    		</p:outputPanel>
+    	
+    	</p:outputPanel>
+    </fieldset>
 </ui:composition>
