@@ -1,5 +1,5 @@
 package br.com.infox.epp.assinador.assinavel;
 
-public interface AssinavelDocumentoBinSource extends AssinavelSource {
+public interface AssinavelDocumentoBinSource extends AssinavelSourceUUID {
 	public Integer getIdDocumentoBin();
 }

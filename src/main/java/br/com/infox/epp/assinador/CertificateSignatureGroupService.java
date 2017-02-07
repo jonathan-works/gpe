@@ -17,16 +17,14 @@ import org.jboss.seam.util.Base64;
 
 import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinSource;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelSource;
+import br.com.infox.epp.assinador.assinavel.AssinavelSourceUUID;
 import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.util.time.DateRange;
 
 @Stateless
@@ -42,8 +40,6 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	private CertificateSignatureService certificateSignatureService;
 	@Inject
 	private TokenAssinaturaService tokenAssinaturaService;
-	@Inject
-	private DocumentoBinManager documentoBinManager;
 
 	private static final int TOKEN_LIFESPAN = 8;
 
@@ -71,10 +67,8 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		certificateSignature.setSha256(assinavelSource.dataToSign(TipoSignedData.SHA256));
 		certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
 		
-		if(assinavelSource instanceof AssinavelDocumentoBinSource) {
-			Integer idDocumentoBin = ((AssinavelDocumentoBinSource)assinavelSource).getIdDocumentoBin();
-			DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
-			certificateSignature.setUuidDocumentoBin(documentoBin.getUuid());
+		if(assinavelSource instanceof AssinavelSourceUUID) {
+			certificateSignature.setUuidDocumentoBin(((AssinavelSourceUUID)assinavelSource).getUUIDAssinavel());
 		}
 		
 		getEntityManager().persist(certificateSignature);

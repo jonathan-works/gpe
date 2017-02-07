@@ -3,6 +3,7 @@ package br.com.infox.epp.assinador.assinavel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import br.com.infox.epp.assinador.DocumentoBinAssinavelService;
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -42,7 +43,10 @@ public class AssinavelDocumentoBinProvider implements AssinavelProvider {
 			super();
 			this.documentoBin = documentoBin;
 		}
-
+        @Override
+        public UUID getUUIDAssinavel() {
+            return documentoBin.getUuid();
+        }
 		@Override
 		public byte[] dataToSign(TipoSignedData tipoHash) {
 				byte[] data = getBinario(documentoBin);
