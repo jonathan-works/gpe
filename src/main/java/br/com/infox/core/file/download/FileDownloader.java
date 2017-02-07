@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.ejb.Stateless;
 import javax.faces.context.ExternalContext;
@@ -23,7 +24,12 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 
+import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfCopy;
+import com.lowagie.text.pdf.PdfDocument;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
@@ -160,6 +166,12 @@ public class FileDownloader implements Serializable {
     }
 
     public void downloadDocumento(byte[] data, String contentType, String fileName) throws IOException{
+//    	Descomentar código que inserir o Title do documento, possibilitando que o nome do arquivo apareça no cabeçalho do pdfViewer.
+    	if(contentType.contains("pdf")){
+    		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    		if(putTitleOfPDF(data,fileName,outputStream))
+    			data = outputStream.toByteArray();
+    	}
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
         response.setContentType(contentType);
         response.addHeader("Content-disposition", "filename=\"" + MimeUtility.encodeWord(fileName ) + "\"");
@@ -169,7 +181,37 @@ public class FileDownloader implements Serializable {
         FacesContext.getCurrentInstance().responseComplete();
     }
 
-    public String getMensagemDocumentoNulo() {
+    /**
+     * Método que insere o title de um pdf necessário para o PDFViewer do Chrome. 
+     * @param data
+     * @param fileName
+     * @param bos
+     * @return
+     */
+    private boolean putTitleOfPDF(byte[] data, String fileName, ByteArrayOutputStream bos ) {
+    	Document document = new Document();
+    	try {
+    		PdfReader pdfReader = new PdfReader(data);
+    		PdfCopy copy = null;
+    		copy = new PdfCopy(document, bos);
+    		document.open();
+
+    		for (int i = 1; i <= pdfReader.getNumberOfPages(); i++) {
+    			copy.addPage(copy.getImportedPage(pdfReader, i));
+    		}
+    		copy.freeReader(pdfReader);
+    		pdfReader.close();
+    		document.addTitle(fileName.substring(0,fileName.lastIndexOf('.')));
+    	}catch (Exception ex) {
+    		return false;
+    	}finally {
+			if(document.isOpen())
+				document.close();
+		}
+    	return true;
+	}
+
+	public String getMensagemDocumentoNulo() {
         return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
 
