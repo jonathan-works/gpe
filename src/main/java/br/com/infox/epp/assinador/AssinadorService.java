@@ -239,7 +239,10 @@ public class AssinadorService implements Serializable {
 	public void erroProcessamento(String token, UUID uuidAssinavel, String codigo, String mensagem) {
 		groupService.erroProcessamento(token, uuidAssinavel, codigo, mensagem);
 	}
-
+	/**
+	 * @deprecated Método não funciona com a assinatura em modo homologação 
+	 */
+	@Deprecated
 	public void assinarDocumento(DocumentoBin documentoBin, String codigoPerfil, String codigoLocalizacao,
 			byte[] signature, byte[] signedData, TipoSignedData tipoSignedData) {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
