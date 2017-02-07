@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -161,7 +162,7 @@ public class FileDownloader implements Serializable {
     public void downloadDocumento(byte[] data, String contentType, String fileName) throws IOException{
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
         response.setContentType(contentType);
-        response.addHeader("Content-disposition", "filename=\"" + fileName + "\"");
+        response.addHeader("Content-disposition", "filename=\"" + MimeUtility.encodeWord(fileName ) + "\"");
         response.setContentLength(data.length);
         response.getOutputStream().write(data, 0, data.length);
         response.getOutputStream().flush();
