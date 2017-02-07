@@ -20,7 +20,7 @@
     <span>
         <span class="#{row.excluido ? 'inativo' : ''}" />
         
-        <p:commandLink process="@this" update="@form"
+        <p:commandLink process="@this" update="@this"
             action="#{jsfUtil.applyLastPhaseFlashAction}"
             onstart="infox.showLoading();" oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(row.documentoBin)}">
             <h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
