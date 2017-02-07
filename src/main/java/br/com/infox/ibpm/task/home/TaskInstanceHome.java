@@ -303,6 +303,7 @@ public class TaskInstanceHome implements Serializable {
 	private boolean update(boolean validateForm) {
 	    prepareForUpdate();
         if (possuiTask()) {
+        	variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
             if (validateForm && !validateRequiredVariables()) {
                 return false;
             }
