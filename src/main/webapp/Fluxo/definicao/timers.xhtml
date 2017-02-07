@@ -99,9 +99,9 @@
 	                    
 	                    <p:outputPanel rendered="#{node.dueDateType.date}">
 		                    <wi:inputDate id="dueDateDate" value="#{nodeFitter.nodeHandler.dueDateDate}" widthDiv="255px" 
-		                    	label="#{infoxMessages['process.timer.data']}" required="true"
+		                    	label="#{infoxMessages['process.timer.data']}" required="true" 
 		                    	pattern="dd/MM/yyyy HH:mm" defaultTime="00:00:00">
-		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{nodeFitter.nodeHandler.onChangeDueDate}"/>
+		                        <a:ajax execute="@this" limitRender="true" event="inputchange" listener="#{nodeFitter.nodeHandler.onChangeDueDate}"/>
 		                    </wi:inputDate>
 	                    </p:outputPanel>
 	                    
