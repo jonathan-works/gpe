@@ -304,14 +304,14 @@ public class TaskInstanceHome implements Serializable {
 	    prepareForUpdate();
         if (possuiTask()) {
         	variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
-            if (validateForm && !validateRequiredVariables()) {
-                return false;
-            }
             TaskController taskController = taskInstance.getTask().getTaskController();
             TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
             if (taskController != null) {
                 if (!taskPageAction.getHasTaskPage(getCurrentTaskInstance())) {
                     try {
+                    	if (validateForm && !validateRequiredVariables()) {
+                    		return false;
+                    	}
                         updateVariables(taskController);
                     } catch (BusinessException e) {
                         LOG.error("", e);
@@ -356,7 +356,7 @@ public class TaskInstanceHome implements Serializable {
                     }
                 } else if (variableInfo.getVariableType() == VariableType.ENUMERATION_MULTIPLE && ((String[]) value).length == 0) {
                     failedInputIds.add(String.format("%s:%s:%sInput", TASK_INSTANCE_FORM_ID, fieldName, fieldName));
-                } else if (variableInfo.getVariableType() == VariableType.FRAME){
+                } else if (variableInfo.getVariableType() == VariableType.FRAME || variableInfo.getVariableType() == VariableType.TASK_PAGE){
                 	continue;
                 } else if (value == null || (value instanceof String && ((String) value).isEmpty())) {
                 	if(variableInfo.getVariableType() == VariableType.MONETARY) {
