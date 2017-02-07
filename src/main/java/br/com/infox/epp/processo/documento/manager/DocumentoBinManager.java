@@ -133,8 +133,25 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	public DocumentoBin getByUUID(final UUID uuid) {
 		return getDao().getByUUID(uuid);
 	}
+		
+	public static class MargemPdfException extends BusinessException {
+
+		private static final long serialVersionUID = 1L;
+		
+		public MargemPdfException(String mensagem) {
+			super(mensagem);
+		}
+		
+		public MargemPdfException(String mensagem, Throwable e) {
+			super(mensagem, e);
+		}
+		
+	}
 	
     public byte[] writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode) {
+    	if(InfoxPdfReader.isCriptografado(pdf)) {
+            throw new MargemPdfException("Documento somente leitura, não é possível gravar");    		
+    	}
         try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
             final PdfReader pdfReader = new PdfReader(pdf);
             final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
@@ -165,9 +182,9 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
             outStream.flush();
             return outStream.toByteArray();
         } catch (BadPasswordException e) {
-            throw new BusinessException("Documento somente leitura, não é possível gravar", e);
+            throw new MargemPdfException("Documento somente leitura, não é possível gravar", e);
         } catch (IOException | DocumentException e) {
-            throw new BusinessException("Erro ao gravar a margem do PDF", e);
+            throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
         }
     }
 
