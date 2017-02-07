@@ -47,13 +47,13 @@ var InfoxBpmnModeler =
 
 	var camundaModdle = __webpack_require__(1);
 	var BpmnModeler = __webpack_require__(2);
-	var InfoxPaletteProvider = __webpack_require__(847);
-	var InfoxReplaceMenuProvider = __webpack_require__(899);
-	var InfoxContextPadProvider = __webpack_require__(900);
-	var InfoxBpmnRules = __webpack_require__(901);
-	var brazilianPortugueseTranslation = __webpack_require__(902);
-	var ParallelGatewayDirectionProvider = __webpack_require__(903);
-	var InfoxLabelEditingProvider = __webpack_require__(904);
+	var InfoxPaletteProvider = __webpack_require__(846);
+	var InfoxReplaceMenuProvider = __webpack_require__(898);
+	var InfoxContextPadProvider = __webpack_require__(899);
+	var InfoxBpmnRules = __webpack_require__(900);
+	var brazilianPortugueseTranslation = __webpack_require__(901);
+	var ParallelGatewayDirectionProvider = __webpack_require__(902);
+	var InfoxLabelEditingProvider = __webpack_require__(903);
 	var BpmnModdle = __webpack_require__(188);
 
 	/**
@@ -1116,7 +1116,7 @@ var InfoxBpmnModeler =
 
 	var Viewer = __webpack_require__(6);
 
-	var NavigatedViewer = __webpack_require__(502);
+	var NavigatedViewer = __webpack_require__(500);
 
 	var initialDiagram =
 	  '<?xml version="1.0" encoding="UTF-8"?>' +
@@ -1283,26 +1283,26 @@ var InfoxBpmnModeler =
 
 	Modeler.prototype._interactionModules = [
 	  // non-modeling components
-	  __webpack_require__(508),
-	  __webpack_require__(512),
-	  __webpack_require__(503)
+	  __webpack_require__(506),
+	  __webpack_require__(510),
+	  __webpack_require__(501)
 	];
 
 	Modeler.prototype._modelingModules = [
 	  // modeling components
-	  __webpack_require__(517),
-	  __webpack_require__(524),
-	  __webpack_require__(541),
-	  __webpack_require__(551),
-	  __webpack_require__(556),
-	  __webpack_require__(565),
-	  __webpack_require__(818),
-	  __webpack_require__(831),
-	  __webpack_require__(638),
-	  __webpack_require__(611),
-	  __webpack_require__(836),
-	  __webpack_require__(840),
-	  __webpack_require__(842)
+	  __webpack_require__(515),
+	  __webpack_require__(522),
+	  __webpack_require__(539),
+	  __webpack_require__(549),
+	  __webpack_require__(554),
+	  __webpack_require__(563),
+	  __webpack_require__(817),
+	  __webpack_require__(830),
+	  __webpack_require__(636),
+	  __webpack_require__(609),
+	  __webpack_require__(835),
+	  __webpack_require__(839),
+	  __webpack_require__(841)
 	];
 
 
@@ -1547,7 +1547,7 @@ var InfoxBpmnModeler =
 
 	var inherits = __webpack_require__(3);
 
-	var Importer = __webpack_require__(398);
+	var Importer = __webpack_require__(399);
 
 
 	function checkValidationError(err) {
@@ -1953,10 +1953,10 @@ var InfoxBpmnModeler =
 
 	// modules the viewer is composed of
 	Viewer.prototype._modules = [
-	  __webpack_require__(436),
-	  __webpack_require__(463),
-	  __webpack_require__(469),
-	  __webpack_require__(489)
+	  __webpack_require__(437),
+	  __webpack_require__(461),
+	  __webpack_require__(467),
+	  __webpack_require__(487)
 	];
 
 	// default moddle extensions the viewer is composed of
@@ -1964,8 +1964,8 @@ var InfoxBpmnModeler =
 
 	/* <project-logo> */
 
-	var PoweredBy = __webpack_require__(500),
-	    domEvent = __webpack_require__(501);
+	var PoweredBy = __webpack_require__(498),
+	    domEvent = __webpack_require__(499);
 
 	/**
 	 * Adds the project logo to the diagram container as
@@ -12299,12 +12299,14 @@ var InfoxBpmnModeler =
 	  bpmn: __webpack_require__(394),
 	  bpmndi: __webpack_require__(395),
 	  dc: __webpack_require__(396),
-	  di: __webpack_require__(397)
+	  di: __webpack_require__(397),
+	  bioc: __webpack_require__(398)
 	};
 
 	module.exports = function(additionalPackages, options) {
 	  return new BpmnModdle(assign({}, packages, additionalPackages), options);
 	};
+
 
 /***/ },
 /* 190 */
@@ -31473,11 +31475,61 @@ var InfoxBpmnModeler =
 
 /***/ },
 /* 398 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"name": "bpmn.io colors for BPMN",
+		"uri": "http://bpmn.io/schema/bpmn/biocolor/1.0",
+		"prefix": "bioc",
+		"types": [
+			{
+				"name": "ColoredShape",
+				"extends": [
+					"bpmndi:BPMNShape"
+				],
+				"properties": [
+					{
+						"name": "stroke",
+						"isAttr": true,
+						"type": "String"
+					},
+					{
+						"name": "fill",
+						"isAttr": true,
+						"type": "String"
+					}
+				]
+			},
+			{
+				"name": "ColoredEdge",
+				"extends": [
+					"bpmndi:BPMNEdge"
+				],
+				"properties": [
+					{
+						"name": "stroke",
+						"isAttr": true,
+						"type": "String"
+					},
+					{
+						"name": "fill",
+						"isAttr": true,
+						"type": "String"
+					}
+				]
+			}
+		],
+		"emumerations": [],
+		"associations": []
+	};
+
+/***/ },
+/* 399 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var BpmnTreeWalker = __webpack_require__(399);
+	var BpmnTreeWalker = __webpack_require__(400);
 
 
 	/**
@@ -31547,18 +31599,18 @@ var InfoxBpmnModeler =
 	module.exports.importBpmnDiagram = importBpmnDiagram;
 
 /***/ },
-/* 399 */
+/* 400 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(400),
-	    find = __webpack_require__(428),
-	    forEach = __webpack_require__(432);
+	var filter = __webpack_require__(401),
+	    find = __webpack_require__(429),
+	    forEach = __webpack_require__(433);
 
 	var Refs = __webpack_require__(154);
 
-	var elementToString = __webpack_require__(435).elementToString;
+	var elementToString = __webpack_require__(436).elementToString;
 
 	var diRefs = new Refs({ name: 'bpmnElement', enumerable: true }, { name: 'di' });
 
@@ -31998,12 +32050,12 @@ var InfoxBpmnModeler =
 	module.exports = BpmnTreeWalker;
 
 /***/ },
-/* 400 */
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(401),
-	    baseCallback = __webpack_require__(402),
-	    baseFilter = __webpack_require__(424),
+	var arrayFilter = __webpack_require__(402),
+	    baseCallback = __webpack_require__(403),
+	    baseFilter = __webpack_require__(425),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -32065,7 +32117,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 401 */
+/* 402 */
 /***/ function(module, exports) {
 
 	/**
@@ -32096,14 +32148,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 402 */
+/* 403 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(403),
-	    baseMatchesProperty = __webpack_require__(415),
+	var baseMatches = __webpack_require__(404),
+	    baseMatchesProperty = __webpack_require__(416),
 	    bindCallback = __webpack_require__(27),
 	    identity = __webpack_require__(28),
-	    property = __webpack_require__(422);
+	    property = __webpack_require__(423);
 
 	/**
 	 * The base implementation of `_.callback` which supports specifying the
@@ -32137,11 +32189,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 403 */
+/* 404 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(404),
-	    getMatchData = __webpack_require__(412),
+	var baseIsMatch = __webpack_require__(405),
+	    getMatchData = __webpack_require__(413),
 	    toObject = __webpack_require__(43);
 
 	/**
@@ -32173,10 +32225,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 404 */
+/* 405 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(405),
+	var baseIsEqual = __webpack_require__(406),
 	    toObject = __webpack_require__(43);
 
 	/**
@@ -32231,10 +32283,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 405 */
+/* 406 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(406),
+	var baseIsEqualDeep = __webpack_require__(407),
 	    isObject = __webpack_require__(13),
 	    isObjectLike = __webpack_require__(14);
 
@@ -32265,14 +32317,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 406 */
+/* 407 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(407),
-	    equalByTag = __webpack_require__(409),
-	    equalObjects = __webpack_require__(410),
+	var equalArrays = __webpack_require__(408),
+	    equalByTag = __webpack_require__(410),
+	    equalObjects = __webpack_require__(411),
 	    isArray = __webpack_require__(21),
-	    isTypedArray = __webpack_require__(411);
+	    isTypedArray = __webpack_require__(412);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -32373,10 +32425,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 407 */
+/* 408 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(408);
+	var arraySome = __webpack_require__(409);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -32430,7 +32482,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 408 */
+/* 409 */
 /***/ function(module, exports) {
 
 	/**
@@ -32459,7 +32511,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 409 */
+/* 410 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -32513,7 +32565,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 410 */
+/* 411 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(9);
@@ -32586,7 +32638,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 411 */
+/* 412 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isLength = __webpack_require__(18),
@@ -32666,11 +32718,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 412 */
+/* 413 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(413),
-	    pairs = __webpack_require__(414);
+	var isStrictComparable = __webpack_require__(414),
+	    pairs = __webpack_require__(415);
 
 	/**
 	 * Gets the propery names, values, and compare flags of `object`.
@@ -32693,7 +32745,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 413 */
+/* 414 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(13);
@@ -32714,7 +32766,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 414 */
+/* 415 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(9),
@@ -32753,18 +32805,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 415 */
+/* 416 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(416),
-	    baseIsEqual = __webpack_require__(405),
-	    baseSlice = __webpack_require__(417),
+	var baseGet = __webpack_require__(417),
+	    baseIsEqual = __webpack_require__(406),
+	    baseSlice = __webpack_require__(418),
 	    isArray = __webpack_require__(21),
-	    isKey = __webpack_require__(418),
-	    isStrictComparable = __webpack_require__(413),
-	    last = __webpack_require__(419),
+	    isKey = __webpack_require__(419),
+	    isStrictComparable = __webpack_require__(414),
+	    last = __webpack_require__(420),
 	    toObject = __webpack_require__(43),
-	    toPath = __webpack_require__(420);
+	    toPath = __webpack_require__(421);
 
 	/**
 	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -32804,7 +32856,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 416 */
+/* 417 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var toObject = __webpack_require__(43);
@@ -32839,7 +32891,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 417 */
+/* 418 */
 /***/ function(module, exports) {
 
 	/**
@@ -32877,7 +32929,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 418 */
+/* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isArray = __webpack_require__(21),
@@ -32911,7 +32963,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 419 */
+/* 420 */
 /***/ function(module, exports) {
 
 	/**
@@ -32936,10 +32988,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 420 */
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(421),
+	var baseToString = __webpack_require__(422),
 	    isArray = __webpack_require__(21);
 
 	/** Used to match property names within property paths. */
@@ -32970,7 +33022,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 421 */
+/* 422 */
 /***/ function(module, exports) {
 
 	/**
@@ -32989,12 +33041,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 422 */
+/* 423 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseProperty = __webpack_require__(17),
-	    basePropertyDeep = __webpack_require__(423),
-	    isKey = __webpack_require__(418);
+	    basePropertyDeep = __webpack_require__(424),
+	    isKey = __webpack_require__(419);
 
 	/**
 	 * Creates a function that returns the property value at `path` on a
@@ -33026,11 +33078,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 423 */
+/* 424 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(416),
-	    toPath = __webpack_require__(420);
+	var baseGet = __webpack_require__(417),
+	    toPath = __webpack_require__(421);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -33051,10 +33103,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 424 */
+/* 425 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(425);
+	var baseEach = __webpack_require__(426);
 
 	/**
 	 * The base implementation of `_.filter` without support for callback
@@ -33079,11 +33131,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 425 */
+/* 426 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(426),
-	    createBaseEach = __webpack_require__(427);
+	var baseForOwn = __webpack_require__(427),
+	    createBaseEach = __webpack_require__(428);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -33100,7 +33152,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 426 */
+/* 427 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseFor = __webpack_require__(46),
@@ -33123,7 +33175,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 427 */
+/* 428 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var getLength = __webpack_require__(16),
@@ -33160,11 +33212,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 428 */
+/* 429 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(425),
-	    createFind = __webpack_require__(429);
+	var baseEach = __webpack_require__(426),
+	    createFind = __webpack_require__(430);
 
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -33222,12 +33274,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 429 */
+/* 430 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(402),
-	    baseFind = __webpack_require__(430),
-	    baseFindIndex = __webpack_require__(431),
+	var baseCallback = __webpack_require__(403),
+	    baseFind = __webpack_require__(431),
+	    baseFindIndex = __webpack_require__(432),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -33253,7 +33305,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 430 */
+/* 431 */
 /***/ function(module, exports) {
 
 	/**
@@ -33284,7 +33336,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 431 */
+/* 432 */
 /***/ function(module, exports) {
 
 	/**
@@ -33313,12 +33365,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 432 */
+/* 433 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(433),
-	    baseEach = __webpack_require__(425),
-	    createForEach = __webpack_require__(434);
+	var arrayEach = __webpack_require__(434),
+	    baseEach = __webpack_require__(426),
+	    createForEach = __webpack_require__(435);
 
 	/**
 	 * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -33356,7 +33408,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 433 */
+/* 434 */
 /***/ function(module, exports) {
 
 	/**
@@ -33384,7 +33436,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 434 */
+/* 435 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var bindCallback = __webpack_require__(27),
@@ -33410,7 +33462,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 435 */
+/* 436 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33424,29 +33476,29 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 436 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(437),
-	    __webpack_require__(462)
-	  ]
-	};
-
-/***/ },
 /* 437 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
+	  __depends__: [
+	    __webpack_require__(438),
+	    __webpack_require__(460)
+	  ]
+	};
+
+/***/ },
+/* 438 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
 	  __init__: [ 'bpmnRenderer' ],
-	  bpmnRenderer: [ 'type', __webpack_require__(438) ],
-	  pathMap: [ 'type', __webpack_require__(461) ]
+	  bpmnRenderer: [ 'type', __webpack_require__(439) ],
+	  pathMap: [ 'type', __webpack_require__(459) ]
 	};
 
 
 /***/ },
-/* 438 */
+/* 439 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33454,16 +33506,16 @@ var InfoxBpmnModeler =
 	var inherits = __webpack_require__(3),
 	    isObject = __webpack_require__(13),
 	    assign = __webpack_require__(7),
-	    forEach = __webpack_require__(432),
-	    every = __webpack_require__(439),
-	    includes = __webpack_require__(442),
-	    some = __webpack_require__(445);
+	    forEach = __webpack_require__(433),
+	    every = __webpack_require__(440),
+	    some = __webpack_require__(443);
 
 	var BaseRenderer = __webpack_require__(72),
-	    TextUtil = __webpack_require__(447),
-	    DiUtil = __webpack_require__(459);
+	    TextUtil = __webpack_require__(445),
+	    DiUtil = __webpack_require__(457);
 
-	var is = __webpack_require__(460).is;
+	var getBusinessObject = __webpack_require__(458).getBusinessObject,
+	    is = __webpack_require__(458).is;
 
 	var RenderUtil = __webpack_require__(73);
 
@@ -33490,7 +33542,7 @@ var InfoxBpmnModeler =
 	};
 
 
-	function BpmnRenderer(eventBus, styles, pathMap, priority) {
+	function BpmnRenderer(eventBus, styles, pathMap, canvas, priority) {
 
 	  BaseRenderer.call(this, eventBus, priority);
 
@@ -33503,151 +33555,170 @@ var InfoxBpmnModeler =
 
 	  var computeStyle = styles.computeStyle;
 
-	  function addMarker(id, element) {
-	    markers[id] = element;
-	  }
+	  function addMarker(id, options) {
+	    var attrs = assign({
+	      fill: 'black',
+	      strokeWidth: 1,
+	      strokeLinecap: 'round',
+	      strokeDasharray: 'none'
+	    }, options.attrs);
 
-	  function marker(id) {
-	    var marker = markers[id];
+	    var ref = options.ref || { x: 0, y: 0 };
 
-	    return 'url(#' + marker.id + ')';
-	  }
+	    var scale = options.scale || 1;
 
-	  function initMarkers(svg) {
-
-	    function createMarker(id, options) {
-	      var attrs = assign({
-	        fill: 'black',
-	        strokeWidth: 1,
-	        strokeLinecap: 'round',
-	        strokeDasharray: 'none'
-	      }, options.attrs);
-
-	      var ref = options.ref || { x: 0, y: 0 };
-
-	      var scale = options.scale || 1;
-
-	      // fix for safari / chrome / firefox bug not correctly
-	      // resetting stroke dash array
-	      if (attrs.strokeDasharray === 'none') {
-	        attrs.strokeDasharray = [10000, 1];
-	      }
-
-	      var marker = svgCreate('marker');
-
-	      svgAttr(options.element, attrs);
-
-	      svgAppend(marker, options.element);
-
-	      svgAttr(marker, {
-	        id: id,
-	        viewBox: '0 0 20 20',
-	        refX: ref.x,
-	        refY: ref.y,
-	        markerWidth: 20 * scale,
-	        markerHeight: 20 * scale,
-	        orient: 'auto'
-	      });
-
-	      var defs = domQuery('defs', svg);
-
-	      if (!defs) {
-	        defs = svgCreate('defs');
-
-	        svgAppend(svg, defs);
-	      }
-
-	      svgAppend(defs, marker);
-
-	      return addMarker(id, marker);
+	    // fix for safari / chrome / firefox bug not correctly
+	    // resetting stroke dash array
+	    if (attrs.strokeDasharray === 'none') {
+	      attrs.strokeDasharray = [10000, 1];
 	    }
 
-	    var sequenceflowEnd = svgCreate('path');
-	    svgAttr(sequenceflowEnd, { d: 'M 1 5 L 11 10 L 1 15 Z' });
+	    var marker = svgCreate('marker');
 
-	    createMarker('sequenceflow-end', {
-	      element: sequenceflowEnd,
-	      ref: { x: 11, y: 10 },
-	      scale: 0.5
+	    svgAttr(options.element, attrs);
+
+	    svgAppend(marker, options.element);
+
+	    svgAttr(marker, {
+	      id: id,
+	      viewBox: '0 0 20 20',
+	      refX: ref.x,
+	      refY: ref.y,
+	      markerWidth: 20 * scale,
+	      markerHeight: 20 * scale,
+	      orient: 'auto'
 	    });
 
-	    var messageflowStart = svgCreate('circle');
-	    svgAttr(messageflowStart, { cx: 6, cy: 6, r: 3.5 });
+	    var defs = domQuery('defs', canvas._svg);
 
-	    createMarker('messageflow-start', {
-	      element: messageflowStart,
-	      attrs: {
-	        fill: 'white',
-	        stroke: 'black'
-	      },
-	      ref: { x: 6, y: 6 }
-	    });
+	    if (!defs) {
+	      defs = svgCreate('defs');
 
-	    var messageflowEnd = svgCreate('path');
-	    svgAttr(messageflowEnd, { d: 'm 1 5 l 0 -3 l 7 3 l -7 3 z' });
+	      svgAppend(canvas._svg, defs);
+	    }
 
-	    createMarker('messageflow-end', {
-	      element: messageflowEnd,
-	      attrs: {
-	        fill: 'white',
-	        stroke: 'black',
-	        strokeLinecap: 'butt'
-	      },
-	      ref: { x: 8.5, y: 5 }
-	    });
+	    svgAppend(defs, marker);
 
-	    var associationStart = svgCreate('path');
-	    svgAttr(associationStart, { d: 'M 11 5 L 1 10 L 11 15' });
+	    markers[id] = marker;
+	  }
 
-	    createMarker('association-start', {
-	      element: associationStart,
-	      attrs: {
-	        fill: 'none',
-	        stroke: 'black',
-	        strokeWidth: 1.5
-	      },
-	      ref: { x: 1, y: 10 },
-	      scale: 0.5
-	    });
+	  function marker(type, fill, stroke) {
+	    var id = type + '-' + fill + '-' + stroke;
 
-	    var associationEnd = svgCreate('path');
-	    svgAttr(associationEnd, { d: 'M 1 5 L 11 10 L 1 15' });
+	    if (!markers[id]) {
+	      createMarker(type, fill, stroke);
+	    }
 
-	    createMarker('association-end', {
-	      element: associationEnd,
-	      attrs: {
-	        fill: 'none',
-	        stroke: 'black',
-	        strokeWidth: 1.5
-	      },
-	      ref: { x: 12, y: 10 },
-	      scale: 0.5
-	    });
+	    return 'url(#' + id +  ')';
+	  }
 
-	    var conditionalflowMarker = svgCreate('path');
-	    svgAttr(conditionalflowMarker, { d: 'M 0 10 L 8 6 L 16 10 L 8 14 Z' });
+	  function createMarker(type, fill, stroke) {
+	    var id = type + '-' + fill + '-' + stroke;
 
-	    createMarker('conditional-flow-marker', {
-	      element: conditionalflowMarker,
-	      attrs: {
-	        fill: 'white',
-	        stroke: 'black'
-	      },
-	      ref: { x: -1, y: 10 },
-	      scale: 0.5
-	    });
+	    if (type === 'sequenceflow-end') {
+	      var sequenceflowEnd = svgCreate('path');
+	      svgAttr(sequenceflowEnd, { d: 'M 1 5 L 11 10 L 1 15 Z' });
 
-	    var conditionaldefaultflowMarker = svgCreate('path');
-	    svgAttr(conditionaldefaultflowMarker, { d: 'M 1 4 L 5 16' });
+	      addMarker(id, {
+	        element: sequenceflowEnd,
+	        ref: { x: 11, y: 10 },
+	        scale: 0.5,
+	        attrs: {
+	          fill: stroke,
+	          stroke: stroke
+	        }
+	      });
+	    }
 
-	    createMarker('conditional-default-flow-marker', {
-	      element: conditionaldefaultflowMarker,
-	      attrs: {
-	        stroke: 'black'
-	      },
-	      ref: { x: -5, y: 10 },
-	      scale: 0.5
-	    });
+	    if (type === 'messageflow-start') {
+	      var messageflowStart = svgCreate('circle');
+	      svgAttr(messageflowStart, { cx: 6, cy: 6, r: 3.5 });
+
+	      addMarker(id, {
+	        element: messageflowStart,
+	        attrs: {
+	          fill: fill,
+	          stroke: stroke
+	        },
+	        ref: { x: 6, y: 6 }
+	      });
+	    }
+
+	    if (type === 'messageflow-end') {
+	      var messageflowEnd = svgCreate('path');
+	      svgAttr(messageflowEnd, { d: 'm 1 5 l 0 -3 l 7 3 l -7 3 z' });
+
+	      addMarker(id, {
+	        element: messageflowEnd,
+	        attrs: {
+	          fill: fill,
+	          stroke: stroke,
+	          strokeLinecap: 'butt'
+	        },
+	        ref: { x: 8.5, y: 5 }
+	      });
+	    }
+
+	    if (type === 'association-start') {
+	      var associationStart = svgCreate('path');
+	      svgAttr(associationStart, { d: 'M 11 5 L 1 10 L 11 15' });
+
+	      addMarker(id, {
+	        element: associationStart,
+	        attrs: {
+	          fill: 'none',
+	          stroke: stroke,
+	          strokeWidth: 1.5
+	        },
+	        ref: { x: 1, y: 10 },
+	        scale: 0.5
+	      });
+	    }
+
+	    if (type === 'association-end') {
+	      var associationEnd = svgCreate('path');
+	      svgAttr(associationEnd, { d: 'M 1 5 L 11 10 L 1 15' });
+
+	      addMarker(id, {
+	        element: associationEnd,
+	        attrs: {
+	          fill: 'none',
+	          stroke: stroke,
+	          strokeWidth: 1.5
+	        },
+	        ref: { x: 12, y: 10 },
+	        scale: 0.5
+	      });
+	    }
+
+	    if (type === 'conditional-flow-marker') {
+	      var conditionalflowMarker = svgCreate('path');
+	      svgAttr(conditionalflowMarker, { d: 'M 0 10 L 8 6 L 16 10 L 8 14 Z' });
+
+	      addMarker(id, {
+	        element: conditionalflowMarker,
+	        attrs: {
+	          fill: fill,
+	          stroke: stroke
+	        },
+	        ref: { x: -1, y: 10 },
+	        scale: 0.5
+	      });
+	    }
+
+	    if (type === 'conditional-default-flow-marker') {
+	      var conditionaldefaultflowMarker = svgCreate('path');
+	      svgAttr(conditionaldefaultflowMarker, { d: 'M 6 4 L 10 16' });
+
+	      addMarker(id, {
+	        element: conditionaldefaultflowMarker,
+	        attrs: {
+	          stroke: stroke
+	        },
+	        ref: { x: 0, y: 10 },
+	        scale: 0.5
+	      });
+	    }
 	  }
 
 	  function drawCircle(parentGfx, width, height, offset, attrs) {
@@ -33851,7 +33922,15 @@ var InfoxBpmnModeler =
 
 	  function renderEmbeddedLabel(parentGfx, element, align) {
 	    var semantic = getSemantic(element);
-	    return renderLabel(parentGfx, semantic.name, { box: element, align: align, padding: 5 });
+
+	    return renderLabel(parentGfx, semantic.name, {
+	      box: element,
+	      align: align,
+	      padding: 5,
+	      style: {
+	        fill: getStrokeColor(element)
+	      }
+	    });
 	  }
 
 	  function renderExternalLabel(parentGfx, element) {
@@ -33869,7 +33948,10 @@ var InfoxBpmnModeler =
 	  function renderLaneLabel(parentGfx, text, element) {
 	    var textBox = renderLabel(parentGfx, text, {
 	      box: { height: 30, width: element.height },
-	      align: 'center-middle'
+	      align: 'center-middle',
+	      style: {
+	        fill: getStrokeColor(element)
+	      }
 	    });
 
 	    var top = -1 * element.height;
@@ -33889,10 +33971,14 @@ var InfoxBpmnModeler =
 
 	  var handlers = this.handlers = {
 	    'bpmn:Event': function(parentGfx, element, attrs) {
-	      return drawCircle(parentGfx, element.width, element.height,  attrs);
+	      return drawCircle(parentGfx, element.width, element.height, attrs);
 	    },
 	    'bpmn:StartEvent': function(parentGfx, element) {
-	      var attrs = {};
+	      var attrs = {
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      };
+
 	      var semantic = getSemantic(element);
 
 	      if (!semantic.isInterrupting) {
@@ -33920,8 +34006,8 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var fill = isThrowing ? 'black' : 'white';
-	      var stroke = isThrowing ? 'white' : 'black';
+	      var fill = isThrowing ? getStrokeColor(element) : getFillColor(element);
+	      var stroke = isThrowing ? getFillColor(element) : getStrokeColor(element);
 
 	      var messagePath = drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
@@ -33932,9 +34018,10 @@ var InfoxBpmnModeler =
 	      return messagePath;
 	    },
 	    'bpmn:TimerEventDefinition': function(parentGfx, element) {
-
 	      var circle = drawCircle(parentGfx, element.width, element.height, 0.2 * element.height, {
-	        strokeWidth: 2
+	        strokeWidth: 2,
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      var pathData = pathMap.getScaledPath('EVENT_TIMER_WH', {
@@ -33950,7 +34037,8 @@ var InfoxBpmnModeler =
 
 	      drawPath(parentGfx, pathData, {
 	        strokeWidth: 2,
-	        strokeLinecap: 'square'
+	        strokeLinecap: 'square',
+	        stroke: getStrokeColor(element)
 	      });
 
 	      for (var i = 0;i < 12;i++) {
@@ -33972,7 +34060,8 @@ var InfoxBpmnModeler =
 	        drawPath(parentGfx, linePathData, {
 	          strokeWidth: 1,
 	          strokeLinecap: 'square',
-	          transform: 'rotate(' + (i * 30) + ',' + height + ',' + width + ')'
+	          transform: 'rotate(' + (i * 30) + ',' + height + ',' + width + ')',
+	          stroke: getStrokeColor(element)
 	        });
 	      }
 
@@ -33990,11 +34079,12 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var fill = isThrowing ? 'black' : 'none';
+	      var fill = isThrowing ? getStrokeColor(event) : 'none';
 
 	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
-	        fill: fill
+	        fill: fill,
+	        stroke: getStrokeColor(event)
 	      });
 	    },
 	    'bpmn:ConditionalEventDefinition': function(parentGfx, event) {
@@ -34010,7 +34100,8 @@ var InfoxBpmnModeler =
 	      });
 
 	      return drawPath(parentGfx, pathData, {
-	        strokeWidth: 1
+	        strokeWidth: 1,
+	        stroke: getStrokeColor(event)
 	      });
 	    },
 	    'bpmn:LinkEventDefinition': function(parentGfx, event, isThrowing) {
@@ -34025,11 +34116,12 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var fill = isThrowing ? 'black' : 'none';
+	      var fill = isThrowing ? getStrokeColor(event) : 'none';
 
 	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
-	        fill: fill
+	        fill: fill,
+	        stroke: getStrokeColor(event)
 	      });
 	    },
 	    'bpmn:ErrorEventDefinition': function(parentGfx, event, isThrowing) {
@@ -34044,11 +34136,12 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var fill = isThrowing ? 'black' : 'none';
+	      var fill = isThrowing ? getStrokeColor(event) : 'none';
 
 	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
-	        fill: fill
+	        fill: fill,
+	        stroke: getStrokeColor(event)
 	      });
 	    },
 	    'bpmn:CancelEventDefinition': function(parentGfx, event, isThrowing) {
@@ -34086,11 +34179,12 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var fill = isThrowing ? 'black' : 'none';
+	      var fill = isThrowing ? getStrokeColor(event) : 'none';
 
 	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
-	        fill: fill
+	        fill: fill,
+	        stroke: getStrokeColor(event)
 	      });
 	    },
 	    'bpmn:SignalEventDefinition': function(parentGfx, event, isThrowing) {
@@ -34105,11 +34199,12 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var fill = isThrowing ? 'black' : 'none';
+	      var fill = isThrowing ? getStrokeColor(event) : 'none';
 
 	      return drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
-	        fill: fill
+	        fill: fill,
+	        stroke: getStrokeColor(event)
 	      });
 	    },
 	    'bpmn:MultipleEventDefinition': function(parentGfx, event, isThrowing) {
@@ -34144,12 +34239,16 @@ var InfoxBpmnModeler =
 	      });
 
 	      return drawPath(parentGfx, pathData, {
-	        strokeWidth: 1
+	        strokeWidth: 1,
+	        fill: getStrokeColor(event),
+	        stroke: getStrokeColor(event)
 	      });
 	    },
 	    'bpmn:EndEvent': function(parentGfx, element) {
 	      var circle = renderer('bpmn:Event')(parentGfx, element, {
-	        strokeWidth: 4
+	        strokeWidth: 4,
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      renderEventContent(element, parentGfx, true);
@@ -34159,14 +34258,24 @@ var InfoxBpmnModeler =
 	    'bpmn:TerminateEventDefinition': function(parentGfx, element) {
 	      var circle = drawCircle(parentGfx, element.width, element.height, 8, {
 	        strokeWidth: 4,
-	        fill: 'black'
+	        fill: getStrokeColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return circle;
 	    },
 	    'bpmn:IntermediateEvent': function(parentGfx, element) {
-	      var outer = renderer('bpmn:Event')(parentGfx, element, { strokeWidth: 1 });
-	      /* inner */ drawCircle(parentGfx, element.width, element.height, INNER_OUTER_DIST, { strokeWidth: 1, fill: 'none' });
+	      var outer = renderer('bpmn:Event')(parentGfx, element, {
+	        strokeWidth: 1,
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      });
+
+	      /* inner */ drawCircle(parentGfx, element.width, element.height, INNER_OUTER_DIST, {
+	        strokeWidth: 1,
+	        fill: getFillColor(element, 'none'),
+	        stroke: getStrokeColor(element)
+	      });
 
 	      renderEventContent(element, parentGfx);
 
@@ -34179,10 +34288,17 @@ var InfoxBpmnModeler =
 	      return drawRect(parentGfx, element.width, element.height, TASK_BORDER_RADIUS, attrs);
 	    },
 
-	    'bpmn:Task': function(parentGfx, element, attrs) {
+	    'bpmn:Task': function(parentGfx, element) {
+	      var attrs = {
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      };
+
 	      var rect = renderer('bpmn:Activity')(parentGfx, element, attrs);
+
 	      renderEmbeddedLabel(parentGfx, element, 'center-middle');
 	      attachTaskMarkers(parentGfx, element);
+
 	      return rect;
 	    },
 	    'bpmn:ServiceTask': function(parentGfx, element) {
@@ -34197,7 +34313,8 @@ var InfoxBpmnModeler =
 
 	      /* service bg */ drawPath(parentGfx, pathDataBG, {
 	        strokeWidth: 1,
-	        fill: 'none'
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      var fillPathData = pathMap.getScaledPath('TASK_TYPE_SERVICE_FILL', {
@@ -34209,8 +34326,7 @@ var InfoxBpmnModeler =
 
 	      /* service fill */ drawPath(parentGfx, fillPathData, {
 	        strokeWidth: 0,
-	        stroke: 'none',
-	        fill: 'white'
+	        fill: getFillColor(element)
 	      });
 
 	      var pathData = pathMap.getScaledPath('TASK_TYPE_SERVICE', {
@@ -34222,7 +34338,8 @@ var InfoxBpmnModeler =
 
 	      /* service */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
-	        fill: 'white'
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return task;
@@ -34242,7 +34359,8 @@ var InfoxBpmnModeler =
 
 	      /* user path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 0.5,
-	        fill: 'none'
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      var pathData2 = pathMap.getScaledPath('TASK_TYPE_USER_2', {
@@ -34254,7 +34372,8 @@ var InfoxBpmnModeler =
 
 	      /* user2 path */ drawPath(parentGfx, pathData2, {
 	        strokeWidth: 0.5,
-	        fill: 'none'
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      var pathData3 = pathMap.getScaledPath('TASK_TYPE_USER_3', {
@@ -34266,7 +34385,8 @@ var InfoxBpmnModeler =
 
 	      /* user3 path */ drawPath(parentGfx, pathData3, {
 	        strokeWidth: 0.5,
-	        fill: 'black'
+	        fill: getStrokeColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return task;
@@ -34282,9 +34402,9 @@ var InfoxBpmnModeler =
 	      });
 
 	      /* manual path */ drawPath(parentGfx, pathData, {
-	        strokeWidth: 0.25,
-	        fill: 'white',
-	        stroke: 'black'
+	        strokeWidth: 0.5, // 0.25,
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return task;
@@ -34305,8 +34425,8 @@ var InfoxBpmnModeler =
 
 	      /* send path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
-	        fill: 'black',
-	        stroke: 'white'
+	        fill: getStrokeColor(element),
+	        stroke: getFillColor(element)
 	      });
 
 	      return task;
@@ -34341,7 +34461,9 @@ var InfoxBpmnModeler =
 	      }
 
 	      /* receive path */ drawPath(parentGfx, pathData, {
-	        strokeWidth: 1
+	        strokeWidth: 1,
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return task;
@@ -34357,7 +34479,8 @@ var InfoxBpmnModeler =
 	      });
 
 	      /* script path */ drawPath(parentGfx, pathData, {
-	        strokeWidth: 1
+	        strokeWidth: 1,
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return task;
@@ -34375,7 +34498,8 @@ var InfoxBpmnModeler =
 	      var businessHeaderPath = drawPath(parentGfx, headerPathData);
 	      svgAttr(businessHeaderPath, {
 	        strokeWidth: 1,
-	        fill: 'AAA'
+	        fill: getFillColor(element, '#aaaaaa'),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      var headerData = pathMap.getScaledPath('TASK_TYPE_BUSINESS_RULE_MAIN', {
@@ -34387,14 +34511,18 @@ var InfoxBpmnModeler =
 
 	      var businessPath = drawPath(parentGfx, headerData);
 	      svgAttr(businessPath, {
-	        strokeWidth: 1
+	        strokeWidth: 1,
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return task;
 	    },
 	    'bpmn:SubProcess': function(parentGfx, element, attrs) {
-
-	      attrs = assign({ fillOpacity: 0.95 }, attrs);
+	      attrs = assign({
+	        fillOpacity: 0.95,
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      }, attrs);
 
 	      var rect = renderer('bpmn:Activity')(parentGfx, element, attrs);
 
@@ -34424,7 +34552,9 @@ var InfoxBpmnModeler =
 	    'bpmn:Transaction': function(parentGfx, element) {
 	      var outer = renderer('bpmn:SubProcess')(parentGfx, element);
 
-	      var innerAttrs = styles.style([ 'no-fill', 'no-events' ]);
+	      var innerAttrs = styles.style([ 'no-fill', 'no-events' ], {
+	        stroke: getStrokeColor(element)
+	      });
 
 	      /* inner path */ drawRect(parentGfx, element.width, element.height, TASK_BORDER_RADIUS - 2, INNER_OUTER_DIST, innerAttrs);
 
@@ -34437,10 +34567,13 @@ var InfoxBpmnModeler =
 	    },
 	    'bpmn:Participant': function(parentGfx, element) {
 
-	      var lane = renderer('bpmn:Lane')(parentGfx, element, {
+	      var attrs = {
 	        fillOpacity: 0.95,
-	        fill: 'White'
-	      });
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      };
+
+	      var lane = renderer('bpmn:Lane')(parentGfx, element, attrs);
 
 	      var expandedPool = DiUtil.isExpanded(element);
 
@@ -34448,13 +34581,20 @@ var InfoxBpmnModeler =
 	        drawLine(parentGfx, [
 	          { x: 30, y: 0 },
 	          { x: 30, y: element.height }
-	        ]);
+	        ], {
+	          stroke: getStrokeColor(element)
+	        });
 	        var text = getSemantic(element).name;
 	        renderLaneLabel(parentGfx, text, element);
 	      } else {
 	        // Collapsed pool draw text inline
 	        var text2 = getSemantic(element).name;
-	        renderLabel(parentGfx, text2, { box: element, align: 'center-middle' });
+	        renderLabel(parentGfx, text2, {
+	          box: element, align: 'center-middle',
+	          style: {
+	            fill: getStrokeColor(element)
+	          }
+	        });
 	      }
 
 	      var participantMultiplicity = !!(getSemantic(element).participantMultiplicity);
@@ -34466,9 +34606,10 @@ var InfoxBpmnModeler =
 	      return lane;
 	    },
 	    'bpmn:Lane': function(parentGfx, element, attrs) {
-	      var rect = drawRect(parentGfx, element.width, element.height, 0, attrs || {
-	        fill: 'none'
-	      });
+	      var rect = drawRect(parentGfx, element.width, element.height, 0, assign({
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      }, attrs));
 
 	      var semantic = getSemantic(element);
 
@@ -34480,18 +34621,29 @@ var InfoxBpmnModeler =
 	      return rect;
 	    },
 	    'bpmn:InclusiveGateway': function(parentGfx, element) {
-	      var diamond = drawDiamond(parentGfx, element.width, element.height);
+	      var attrs = {
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      };
+
+	      var diamond = drawDiamond(parentGfx, element.width, element.height, attrs);
 
 	      /* circle path */
 	      drawCircle(parentGfx, element.width, element.height, element.height * 0.24, {
 	        strokeWidth: 2.5,
-	        fill: 'none'
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return diamond;
 	    },
 	    'bpmn:ExclusiveGateway': function(parentGfx, element) {
-	      var diamond = drawDiamond(parentGfx, element.width, element.height);
+	      var attrs = {
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      };
+
+	      var diamond = drawDiamond(parentGfx, element.width, element.height, attrs);
 
 	      var pathData = pathMap.getScaledPath('GATEWAY_EXCLUSIVE', {
 	        xScaleFactor: 0.4,
@@ -34507,14 +34659,20 @@ var InfoxBpmnModeler =
 	      if ((getDi(element).isMarkerVisible)) {
 	        drawPath(parentGfx, pathData, {
 	          strokeWidth: 1,
-	          fill: 'black'
+	          fill: getStrokeColor(element),
+	          stroke: getStrokeColor(element)
 	        });
 	      }
 
 	      return diamond;
 	    },
 	    'bpmn:ComplexGateway': function(parentGfx, element) {
-	      var diamond = drawDiamond(parentGfx, element.width, element.height);
+	      var attrs = {
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      };
+
+	      var diamond = drawDiamond(parentGfx, element.width, element.height, attrs);
 
 	      var pathData = pathMap.getScaledPath('GATEWAY_COMPLEX', {
 	        xScaleFactor: 0.5,
@@ -34529,13 +34687,19 @@ var InfoxBpmnModeler =
 
 	      /* complex path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
-	        fill: 'black'
+	        fill: getStrokeColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return diamond;
 	    },
 	    'bpmn:ParallelGateway': function(parentGfx, element) {
-	      var diamond = drawDiamond(parentGfx, element.width, element.height);
+	      var attrs = {
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      };
+
+	      var diamond = drawDiamond(parentGfx, element.width, element.height, attrs);
 
 	      var pathData = pathMap.getScaledPath('GATEWAY_PARALLEL', {
 	        xScaleFactor: 0.6,
@@ -34550,7 +34714,8 @@ var InfoxBpmnModeler =
 
 	      /* parallel path */ drawPath(parentGfx, pathData, {
 	        strokeWidth: 1,
-	        fill: 'black'
+	        fill: getStrokeColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return diamond;
@@ -34559,11 +34724,17 @@ var InfoxBpmnModeler =
 
 	      var semantic = getSemantic(element);
 
-	      var diamond = drawDiamond(parentGfx, element.width, element.height);
+	      var attrs = {
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      };
+
+	      var diamond = drawDiamond(parentGfx, element.width, element.height, attrs);
 
 	      /* outer circle path */ drawCircle(parentGfx, element.width, element.height, element.height * 0.20, {
 	        strokeWidth: 1,
-	        fill: 'none'
+	        fill: 'none',
+	        stroke: getStrokeColor(element)
 	      });
 
 	      var type = semantic.eventGatewayType;
@@ -34582,10 +34753,13 @@ var InfoxBpmnModeler =
 	          }
 	        });
 
-	        /* event path */ drawPath(parentGfx, pathData, {
+	        var attrs = {
 	          strokeWidth: 2,
-	          fill: 'none'
-	        });
+	          fill: getFillColor(element, 'none'),
+	          stroke: getStrokeColor(element)
+	        };
+
+	        /* event path */ drawPath(parentGfx, pathData, attrs);
 	      }
 
 	      if (type === 'Parallel') {
@@ -34612,7 +34786,8 @@ var InfoxBpmnModeler =
 	          var innerCircle = drawCircle(parentGfx, element.width, element.height, element.height * 0.26);
 	          svgAttr(innerCircle, {
 	            strokeWidth: 1,
-	            fill: 'none'
+	            fill: 'none',
+	            stroke: getStrokeColor(element)
 	          });
 	        }
 
@@ -34627,10 +34802,17 @@ var InfoxBpmnModeler =
 	    },
 	    'bpmn:SequenceFlow': function(parentGfx, element) {
 	      var pathData = createPathFromConnection(element);
-	      var path = drawPath(parentGfx, pathData, {
+
+	      var fill = getFillColor(element),
+	          stroke = getStrokeColor(element);
+
+	      var attrs = {
 	        strokeLinejoin: 'round',
-	        markerEnd: marker('sequenceflow-end')
-	      });
+	        markerEnd: marker('sequenceflow-end', fill, stroke),
+	        stroke: getStrokeColor(element)
+	      };
+
+	      var path = drawPath(parentGfx, pathData, attrs);
 
 	      var sequenceFlow = getSemantic(element);
 	      var source = element.source.businessObject;
@@ -34638,7 +34820,7 @@ var InfoxBpmnModeler =
 	      // conditional flow marker
 	      if (sequenceFlow.conditionExpression && source.$instanceOf('bpmn:Activity')) {
 	        svgAttr(path, {
-	          markerStart: marker('conditional-flow-marker')
+	          markerStart: marker('conditional-flow-marker', fill, stroke)
 	        });
 	      }
 
@@ -34646,7 +34828,7 @@ var InfoxBpmnModeler =
 	      if (source.default && (source.$instanceOf('bpmn:Gateway') || source.$instanceOf('bpmn:Activity')) &&
 	          source.default === sequenceFlow) {
 	        svgAttr(path, {
-	          markerStart: marker('conditional-default-flow-marker')
+	          markerStart: marker('conditional-default-flow-marker', fill, stroke)
 	        });
 	      }
 
@@ -34656,31 +34838,41 @@ var InfoxBpmnModeler =
 
 	      var semantic = getSemantic(element);
 
+	      var fill = getFillColor(element),
+	          stroke = getStrokeColor(element);
+
 	      attrs = assign({
 	        strokeDasharray: '0.5, 5',
 	        strokeLinecap: 'round',
-	        strokeLinejoin: 'round'
+	        strokeLinejoin: 'round',
+	        stroke: getStrokeColor(element)
 	      }, attrs || {});
 
 	      if (semantic.associationDirection === 'One' ||
 	          semantic.associationDirection === 'Both') {
-	        attrs.markerEnd = marker('association-end');
+	        attrs.markerEnd = marker('association-end', fill, stroke);
 	      }
 
 	      if (semantic.associationDirection === 'Both') {
-	        attrs.markerStart = marker('association-start');
+	        attrs.markerStart = marker('association-start', fill, stroke);
 	      }
 
 	      return drawLine(parentGfx, element.waypoints, attrs);
 	    },
 	    'bpmn:DataInputAssociation': function(parentGfx, element) {
+	      var fill = getFillColor(element),
+	          stroke = getStrokeColor(element);
+
 	      return renderer('bpmn:Association')(parentGfx, element, {
-	        markerEnd: marker('association-end')
+	        markerEnd: marker('association-end', fill, stroke)
 	      });
 	    },
 	    'bpmn:DataOutputAssociation': function(parentGfx, element) {
+	      var fill = getFillColor(element),
+	          stroke = getStrokeColor(element);
+
 	      return renderer('bpmn:Association')(parentGfx, element, {
-	        markerEnd: marker('association-end')
+	        markerEnd: marker('association-end', fill, stroke)
 	      });
 	    },
 	    'bpmn:MessageFlow': function(parentGfx, element) {
@@ -34688,15 +34880,22 @@ var InfoxBpmnModeler =
 	      var semantic = getSemantic(element),
 	          di = getDi(element);
 
+	      var fill = getFillColor(element),
+	          stroke = getStrokeColor(element);
+
 	      var pathData = createPathFromConnection(element);
-	      var path = drawPath(parentGfx, pathData, {
-	        markerEnd: marker('messageflow-end'),
-	        markerStart: marker('messageflow-start'),
+
+	      var attrs = {
+	        markerEnd: marker('messageflow-end', fill, stroke),
+	        markerStart: marker('messageflow-start', fill, stroke),
 	        strokeDasharray: '10, 12',
 	        strokeLinecap: 'round',
 	        strokeLinejoin: 'round',
-	        strokeWidth: '1.5px'
-	      });
+	        strokeWidth: '1.5px',
+	        stroke: getStrokeColor(element)
+	      };
+
+	      var path = drawPath(parentGfx, pathData, attrs);
 
 	      if (semantic.messageRef) {
 	        var midPoint = path.getPointAtLength(path.getTotalLength() / 2);
@@ -34735,7 +34934,10 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      var elementObject = drawPath(parentGfx, pathData, { fill: 'white' });
+	      var elementObject = drawPath(parentGfx, pathData, {
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      });
 
 	      var semantic = getSemantic(element);
 
@@ -34784,7 +34986,8 @@ var InfoxBpmnModeler =
 
 	      var elementStore = drawPath(parentGfx, DATA_STORE_PATH, {
 	        strokeWidth: 2,
-	        fill: 'white'
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      return elementStore;
@@ -34795,7 +34998,9 @@ var InfoxBpmnModeler =
 	          cancel = semantic.cancelActivity;
 
 	      var attrs = {
-	        strokeWidth: 1
+	        strokeWidth: 1,
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      };
 
 	      if (!cancel) {
@@ -34865,7 +35070,9 @@ var InfoxBpmnModeler =
 	          my: 0.0
 	        }
 	      });
-	      drawPath(parentGfx, textPathData);
+	      drawPath(parentGfx, textPathData, {
+	        stroke: getStrokeColor(element)
+	      });
 
 	      var text = getSemantic(element).text || '';
 	      renderLabel(parentGfx, text, { box: element, align: 'left-middle', padding: 5 });
@@ -34888,7 +35095,9 @@ var InfoxBpmnModeler =
 	    },
 	    'SubProcessMarker': function(parentGfx, element) {
 	      var markerRect = drawRect(parentGfx, 14, 14, 0, {
-	        strokeWidth: 1
+	        strokeWidth: 1,
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
 	      });
 
 	      // Process marker is placed in the middle of the box
@@ -34906,7 +35115,10 @@ var InfoxBpmnModeler =
 	        }
 	      });
 
-	      drawMarker('sub-process', parentGfx, markerPath);
+	      drawMarker('sub-process', parentGfx, markerPath, {
+	        fill: getFillColor(element),
+	        stroke: getStrokeColor(element)
+	      });
 	    },
 	    'ParallelMarker': function(parentGfx, element, position) {
 	      var markerPath = pathMap.getScaledPath('MARKER_PARALLEL', {
@@ -34991,7 +35203,7 @@ var InfoxBpmnModeler =
 	  function attachTaskMarkers(parentGfx, element, taskMarkers) {
 	    var obj = getSemantic(element);
 
-	    var subprocess = includes(taskMarkers, 'SubProcessMarker');
+	    var subprocess = taskMarkers && taskMarkers.indexOf('SubProcessMarker') !== -1;
 	    var position;
 
 	    if (subprocess) {
@@ -35062,18 +35274,12 @@ var InfoxBpmnModeler =
 	      strokeWidth: 2
 	    });
 	  }
-
-	  // hook onto canvas init event to initialize
-	  // connection start/end markers on svg
-	  eventBus.on('canvas.init', function(event) {
-	    initMarkers(event.svg);
-	  });
 	}
 
 
 	inherits(BpmnRenderer, BaseRenderer);
 
-	BpmnRenderer.$inject = [ 'eventBus', 'styles', 'pathMap' ];
+	BpmnRenderer.$inject = [ 'eventBus', 'styles', 'pathMap', 'canvas' ];
 
 	module.exports = BpmnRenderer;
 
@@ -35238,14 +35444,26 @@ var InfoxBpmnModeler =
 	  return componentsToPath(rectPath);
 	}
 
+	function getFillColor(element, defaultColor) {
+	  var bo = getBusinessObject(element);
+
+	  return bo.di.get('fill') || defaultColor || 'white';
+	}
+
+	function getStrokeColor(element, defaultColor) {
+	  var bo = getBusinessObject(element);
+
+	  return bo.di.get('stroke') || defaultColor || 'black';
+	}
+
 
 /***/ },
-/* 439 */
+/* 440 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEvery = __webpack_require__(440),
-	    baseCallback = __webpack_require__(402),
-	    baseEvery = __webpack_require__(441),
+	var arrayEvery = __webpack_require__(441),
+	    baseCallback = __webpack_require__(403),
+	    baseEvery = __webpack_require__(442),
 	    isArray = __webpack_require__(21),
 	    isIterateeCall = __webpack_require__(29);
 
@@ -35312,7 +35530,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 440 */
+/* 441 */
 /***/ function(module, exports) {
 
 	/**
@@ -35341,10 +35559,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 441 */
+/* 442 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(425);
+	var baseEach = __webpack_require__(426);
 
 	/**
 	 * The base implementation of `_.every` without support for callback
@@ -35369,142 +35587,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 442 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseIndexOf = __webpack_require__(34),
-	    getLength = __webpack_require__(16),
-	    isArray = __webpack_require__(21),
-	    isIterateeCall = __webpack_require__(29),
-	    isLength = __webpack_require__(18),
-	    isString = __webpack_require__(48),
-	    values = __webpack_require__(443);
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Checks if `target` is in `collection` using
-	 * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
-	 * for equality comparisons. If `fromIndex` is negative, it's used as the offset
-	 * from the end of `collection`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias contains, include
-	 * @category Collection
-	 * @param {Array|Object|string} collection The collection to search.
-	 * @param {*} target The value to search for.
-	 * @param {number} [fromIndex=0] The index to search from.
-	 * @param- {Object} [guard] Enables use as a callback for functions like `_.reduce`.
-	 * @returns {boolean} Returns `true` if a matching element is found, else `false`.
-	 * @example
-	 *
-	 * _.includes([1, 2, 3], 1);
-	 * // => true
-	 *
-	 * _.includes([1, 2, 3], 1, 2);
-	 * // => false
-	 *
-	 * _.includes({ 'user': 'fred', 'age': 40 }, 'fred');
-	 * // => true
-	 *
-	 * _.includes('pebbles', 'eb');
-	 * // => true
-	 */
-	function includes(collection, target, fromIndex, guard) {
-	  var length = collection ? getLength(collection) : 0;
-	  if (!isLength(length)) {
-	    collection = values(collection);
-	    length = collection.length;
-	  }
-	  if (typeof fromIndex != 'number' || (guard && isIterateeCall(target, fromIndex, guard))) {
-	    fromIndex = 0;
-	  } else {
-	    fromIndex = fromIndex < 0 ? nativeMax(length + fromIndex, 0) : (fromIndex || 0);
-	  }
-	  return (typeof collection == 'string' || !isArray(collection) && isString(collection))
-	    ? (fromIndex <= length && collection.indexOf(target, fromIndex) > -1)
-	    : (!!length && baseIndexOf(collection, target, fromIndex) > -1);
-	}
-
-	module.exports = includes;
-
-
-/***/ },
 /* 443 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseValues = __webpack_require__(444),
-	    keys = __webpack_require__(9);
-
-	/**
-	 * Creates an array of the own enumerable property values of `object`.
-	 *
-	 * **Note:** Non-object values are coerced to objects.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property values.
-	 * @example
-	 *
-	 * function Foo() {
-	 *   this.a = 1;
-	 *   this.b = 2;
-	 * }
-	 *
-	 * Foo.prototype.c = 3;
-	 *
-	 * _.values(new Foo);
-	 * // => [1, 2] (iteration order is not guaranteed)
-	 *
-	 * _.values('hi');
-	 * // => ['h', 'i']
-	 */
-	function values(object) {
-	  return baseValues(object, keys(object));
-	}
-
-	module.exports = values;
-
-
-/***/ },
-/* 444 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.values` and `_.valuesIn` which creates an
-	 * array of `object` property values corresponding to the property names
-	 * of `props`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @param {Array} props The property names to get values for.
-	 * @returns {Object} Returns the array of property values.
-	 */
-	function baseValues(object, props) {
-	  var index = -1,
-	      length = props.length,
-	      result = Array(length);
-
-	  while (++index < length) {
-	    result[index] = object[props[index]];
-	  }
-	  return result;
-	}
-
-	module.exports = baseValues;
-
-
-/***/ },
-/* 445 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arraySome = __webpack_require__(408),
-	    baseCallback = __webpack_require__(402),
-	    baseSome = __webpack_require__(446),
+	var arraySome = __webpack_require__(409),
+	    baseCallback = __webpack_require__(403),
+	    baseSome = __webpack_require__(444),
 	    isArray = __webpack_require__(21),
 	    isIterateeCall = __webpack_require__(29);
 
@@ -35572,10 +35660,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 446 */
+/* 444 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(425);
+	var baseEach = __webpack_require__(426);
 
 	/**
 	 * The base implementation of `_.some` without support for callback shorthands
@@ -35601,17 +35689,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 447 */
+/* 445 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isObject = __webpack_require__(82),
 	    assign = __webpack_require__(85),
-	    pick = __webpack_require__(448),
+	    pick = __webpack_require__(446),
 	    forEach = __webpack_require__(136),
 	    reduce = __webpack_require__(102),
-	    merge = __webpack_require__(454);
+	    merge = __webpack_require__(452);
 
 	var svgAppend = __webpack_require__(76),
 	    svgAttr = __webpack_require__(74),
@@ -35888,13 +35976,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 448 */
+/* 446 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(449),
+	var baseFlatten = __webpack_require__(447),
 	    bindCallback = __webpack_require__(98),
-	    pickByArray = __webpack_require__(451),
-	    pickByCallback = __webpack_require__(452),
+	    pickByArray = __webpack_require__(449),
+	    pickByCallback = __webpack_require__(450),
 	    restParam = __webpack_require__(101);
 
 	/**
@@ -35936,10 +36024,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 449 */
+/* 447 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayPush = __webpack_require__(450),
+	var arrayPush = __webpack_require__(448),
 	    isArguments = __webpack_require__(92),
 	    isArray = __webpack_require__(78),
 	    isArrayLike = __webpack_require__(88),
@@ -35983,7 +36071,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 450 */
+/* 448 */
 /***/ function(module, exports) {
 
 	/**
@@ -36009,7 +36097,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 451 */
+/* 449 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var toObject = __webpack_require__(108);
@@ -36043,10 +36131,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 452 */
+/* 450 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(453);
+	var baseForIn = __webpack_require__(451);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties `predicate`
@@ -36071,7 +36159,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 453 */
+/* 451 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseFor = __webpack_require__(106),
@@ -36094,10 +36182,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 454 */
+/* 452 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMerge = __webpack_require__(455),
+	var baseMerge = __webpack_require__(453),
 	    createAssigner = __webpack_require__(97);
 
 	/**
@@ -36154,11 +36242,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 455 */
+/* 453 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayEach = __webpack_require__(137),
-	    baseMergeDeep = __webpack_require__(456),
+	    baseMergeDeep = __webpack_require__(454),
 	    isArray = __webpack_require__(78),
 	    isArrayLike = __webpack_require__(88),
 	    isObject = __webpack_require__(82),
@@ -36216,16 +36304,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 456 */
+/* 454 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayCopy = __webpack_require__(166),
 	    isArguments = __webpack_require__(92),
 	    isArray = __webpack_require__(78),
 	    isArrayLike = __webpack_require__(88),
-	    isPlainObject = __webpack_require__(457),
+	    isPlainObject = __webpack_require__(455),
 	    isTypedArray = __webpack_require__(120),
-	    toPlainObject = __webpack_require__(458);
+	    toPlainObject = __webpack_require__(456);
 
 	/**
 	 * A specialized version of `baseMerge` for arrays and objects which performs
@@ -36289,10 +36377,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 457 */
+/* 455 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(453),
+	var baseForIn = __webpack_require__(451),
 	    isArguments = __webpack_require__(92),
 	    isObjectLike = __webpack_require__(83);
 
@@ -36366,7 +36454,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 458 */
+/* 456 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCopy = __webpack_require__(96),
@@ -36403,15 +36491,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 459 */
+/* 457 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(460).is,
-	    getBusinessObject = __webpack_require__(460).getBusinessObject;
+	var is = __webpack_require__(458).is,
+	    getBusinessObject = __webpack_require__(458).getBusinessObject;
 
-	var forEach = __webpack_require__(432);
+	var forEach = __webpack_require__(433);
 
 	module.exports.isExpanded = function(element) {
 
@@ -36469,7 +36557,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 460 */
+/* 458 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36506,7 +36594,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 461 */
+/* 459 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36990,26 +37078,26 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 462 */
+/* 460 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(463)
+	    __webpack_require__(461)
 	  ],
-	  bpmnImporter: [ 'type', __webpack_require__(465) ]
+	  bpmnImporter: [ 'type', __webpack_require__(463) ]
 	};
 
 /***/ },
-/* 463 */
+/* 461 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  translate: [ 'value', __webpack_require__(464) ]
+	  translate: [ 'value', __webpack_require__(462) ]
 	};
 
 /***/ },
-/* 464 */
+/* 462 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -37042,22 +37130,22 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 465 */
+/* 463 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(7),
-	    map = __webpack_require__(466);
+	    map = __webpack_require__(464);
 
-	var LabelUtil = __webpack_require__(468);
+	var LabelUtil = __webpack_require__(466);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	var hasExternalLabel = LabelUtil.hasExternalLabel,
 	    getExternalLabelBounds = LabelUtil.getExternalLabelBounds,
-	    isExpanded = __webpack_require__(459).isExpanded,
-	    elementToString = __webpack_require__(435).elementToString;
+	    isExpanded = __webpack_require__(457).isExpanded,
+	    elementToString = __webpack_require__(436).elementToString;
 
 
 	function elementData(semantic, attrs) {
@@ -37165,8 +37253,12 @@ var InfoxBpmnModeler =
 	      waypoints: collectWaypoints(semantic.di.waypoint)
 	    }));
 
-	    if (is(semantic, 'bpmn:DataInputAssociation') || is(semantic, 'bpmn:DataOutputAssociation')) {
-	      // implicit root element
+	    if (is(semantic, 'bpmn:DataAssociation')) {
+
+	      // render always on top; this ensures DataAssociations
+	      // are rendered correctly across different "hacks" people
+	      // love to model such as cross participant / sub process
+	      // associations
 	      parentElement = null;
 	    }
 
@@ -37302,12 +37394,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 466 */
+/* 464 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayMap = __webpack_require__(32),
-	    baseCallback = __webpack_require__(402),
-	    baseMap = __webpack_require__(467),
+	    baseCallback = __webpack_require__(403),
+	    baseMap = __webpack_require__(465),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -37376,10 +37468,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 467 */
+/* 465 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(425),
+	var baseEach = __webpack_require__(426),
 	    isArrayLike = __webpack_require__(15);
 
 	/**
@@ -37405,14 +37497,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 468 */
+/* 466 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(7);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	var DEFAULT_LABEL_SIZE = module.exports.DEFAULT_LABEL_SIZE = {
 	  width: 90,
@@ -37550,40 +37642,40 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 469 */
+/* 467 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'selectionVisuals', 'selectionBehavior' ],
 	  __depends__: [
-	    __webpack_require__(470),
-	    __webpack_require__(480)
+	    __webpack_require__(468),
+	    __webpack_require__(478)
 	  ],
-	  selection: [ 'type', __webpack_require__(482) ],
-	  selectionVisuals: [ 'type', __webpack_require__(483) ],
-	  selectionBehavior: [ 'type', __webpack_require__(484) ]
+	  selection: [ 'type', __webpack_require__(480) ],
+	  selectionVisuals: [ 'type', __webpack_require__(481) ],
+	  selectionBehavior: [ 'type', __webpack_require__(482) ]
 	};
 
 
 /***/ },
-/* 470 */
+/* 468 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'interactionEvents' ],
-	  interactionEvents: [ 'type', __webpack_require__(471) ]
+	  interactionEvents: [ 'type', __webpack_require__(469) ]
 	};
 
 /***/ },
-/* 471 */
+/* 469 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(136),
-	    domDelegate = __webpack_require__(472);
+	    domDelegate = __webpack_require__(470);
 
-	var isPrimaryButton = __webpack_require__(477).isPrimaryButton;
+	var isPrimaryButton = __webpack_require__(475).isPrimaryButton;
 
 	var svgAppend = __webpack_require__(76),
 	    svgAttr = __webpack_require__(74),
@@ -37879,13 +37971,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 472 */
+/* 470 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(473);
+	module.exports = __webpack_require__(471);
 
 /***/ },
-/* 473 */
+/* 471 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37893,15 +37985,15 @@ var InfoxBpmnModeler =
 	 */
 
 	try {
-	  var closest = __webpack_require__(474);
+	  var closest = __webpack_require__(472);
 	} catch(err) {
-	  var closest = __webpack_require__(474);
+	  var closest = __webpack_require__(472);
 	}
 
 	try {
-	  var event = __webpack_require__(476);
+	  var event = __webpack_require__(474);
 	} catch(err) {
-	  var event = __webpack_require__(476);
+	  var event = __webpack_require__(474);
 	}
 
 	/**
@@ -37942,10 +38034,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 474 */
+/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var matches = __webpack_require__(475)
+	var matches = __webpack_require__(473)
 
 	module.exports = function (element, selector, checkYoSelf, root) {
 	  element = checkYoSelf ? {parentNode: element} : element
@@ -37967,7 +38059,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 475 */
+/* 473 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -38023,7 +38115,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 476 */
+/* 474 */
 /***/ function(module, exports) {
 
 	var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
@@ -38063,14 +38155,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 477 */
+/* 475 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getOriginalEvent = __webpack_require__(478).getOriginal;
+	var getOriginalEvent = __webpack_require__(476).getOriginal;
 
-	var isMac = __webpack_require__(479).isMac;
+	var isMac = __webpack_require__(477).isMac;
 
 
 	function isPrimaryButton(event) {
@@ -38106,7 +38198,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 478 */
+/* 476 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38181,7 +38273,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 479 */
+/* 477 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38191,18 +38283,18 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 480 */
+/* 478 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'outline' ],
-	  outline: [ 'type', __webpack_require__(481) ]
+	  outline: [ 'type', __webpack_require__(479) ]
 	};
 
 /***/ },
-/* 481 */
+/* 479 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38329,7 +38421,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 482 */
+/* 480 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38432,7 +38524,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 483 */
+/* 481 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38513,14 +38605,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 484 */
+/* 482 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(475).hasPrimaryModifier;
 
-	var find = __webpack_require__(485);
+	var find = __webpack_require__(483);
 
 
 	function SelectionBehavior(eventBus, selection, canvas, elementRegistry) {
@@ -38597,11 +38689,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 485 */
+/* 483 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(104),
-	    createFind = __webpack_require__(486);
+	    createFind = __webpack_require__(484);
 
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -38659,12 +38751,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 486 */
+/* 484 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(111),
-	    baseFind = __webpack_require__(487),
-	    baseFindIndex = __webpack_require__(488),
+	    baseFind = __webpack_require__(485),
+	    baseFindIndex = __webpack_require__(486),
 	    isArray = __webpack_require__(78);
 
 	/**
@@ -38690,7 +38782,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 487 */
+/* 485 */
 /***/ function(module, exports) {
 
 	/**
@@ -38721,7 +38813,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 488 */
+/* 486 */
 /***/ function(module, exports) {
 
 	/**
@@ -38750,38 +38842,38 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 489 */
+/* 487 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'overlays' ],
-	  overlays: [ 'type', __webpack_require__(490) ]
+	  overlays: [ 'type', __webpack_require__(488) ]
 	};
 
 /***/ },
-/* 490 */
+/* 488 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isArray = __webpack_require__(78),
-	    isString = __webpack_require__(491),
+	    isString = __webpack_require__(489),
 	    isObject = __webpack_require__(82),
 	    assign = __webpack_require__(85),
 	    forEach = __webpack_require__(136),
-	    find = __webpack_require__(485),
-	    filter = __webpack_require__(492);
+	    find = __webpack_require__(483),
+	    filter = __webpack_require__(490);
 
 	var domify = __webpack_require__(50),
-	    domClasses = __webpack_require__(495),
-	    domAttr = __webpack_require__(498),
+	    domClasses = __webpack_require__(493),
+	    domAttr = __webpack_require__(496),
 	    domRemove = __webpack_require__(54),
 	    domClear = __webpack_require__(187);
 
 	var getBBox = __webpack_require__(145).getBBox;
 
 	// document wide unique overlay ids
-	var ids = new (__webpack_require__(499))('ov');
+	var ids = new (__webpack_require__(497))('ov');
 
 	var LOW_PRIORITY = 500;
 
@@ -39314,7 +39406,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 491 */
+/* 489 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObjectLike = __webpack_require__(83);
@@ -39355,12 +39447,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 492 */
+/* 490 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(493),
+	var arrayFilter = __webpack_require__(491),
 	    baseCallback = __webpack_require__(111),
-	    baseFilter = __webpack_require__(494),
+	    baseFilter = __webpack_require__(492),
 	    isArray = __webpack_require__(78);
 
 	/**
@@ -39422,7 +39514,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 493 */
+/* 491 */
 /***/ function(module, exports) {
 
 	/**
@@ -39453,7 +39545,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 494 */
+/* 492 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(104);
@@ -39481,13 +39573,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 495 */
+/* 493 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(496);
+	module.exports = __webpack_require__(494);
 
 /***/ },
-/* 496 */
+/* 494 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -39495,9 +39587,9 @@ var InfoxBpmnModeler =
 	 */
 
 	try {
-	  var index = __webpack_require__(497);
+	  var index = __webpack_require__(495);
 	} catch (err) {
-	  var index = __webpack_require__(497);
+	  var index = __webpack_require__(495);
 	}
 
 	/**
@@ -39684,7 +39776,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 497 */
+/* 495 */
 /***/ function(module, exports) {
 
 	module.exports = function(arr, obj){
@@ -39696,7 +39788,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 498 */
+/* 496 */
 /***/ function(module, exports) {
 
 	/**
@@ -39726,7 +39818,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 499 */
+/* 497 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -39763,7 +39855,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 500 */
+/* 498 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -39776,7 +39868,7 @@ var InfoxBpmnModeler =
 
 	var domify = __webpack_require__(50);
 
-	var domDelegate = __webpack_require__(472);
+	var domDelegate = __webpack_require__(470);
 
 	/* jshint -W101 */
 
@@ -39851,13 +39943,13 @@ var InfoxBpmnModeler =
 	module.exports.open = open;
 
 /***/ },
-/* 501 */
+/* 499 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(476);
+	module.exports = __webpack_require__(474);
 
 /***/ },
-/* 502 */
+/* 500 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39881,8 +39973,8 @@ var InfoxBpmnModeler =
 	module.exports = NavigatedViewer;
 
 	NavigatedViewer.prototype._navigationModules = [
-	  __webpack_require__(503),
-	  __webpack_require__(508)
+	  __webpack_require__(501),
+	  __webpack_require__(506)
 	];
 
 	NavigatedViewer.prototype._modules = [].concat(
@@ -39890,32 +39982,32 @@ var InfoxBpmnModeler =
 	  NavigatedViewer.prototype._navigationModules);
 
 /***/ },
-/* 503 */
+/* 501 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'zoomScroll' ],
-	  zoomScroll: [ 'type', __webpack_require__(504) ]
+	  zoomScroll: [ 'type', __webpack_require__(502) ]
 	};
 
 /***/ },
-/* 504 */
+/* 502 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(501),
-	    domClosest = __webpack_require__(505);
+	var domEvent = __webpack_require__(499),
+	    domClosest = __webpack_require__(503);
 
-	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier,
-	    hasSecondaryModifier = __webpack_require__(477).hasSecondaryModifier;
+	var hasPrimaryModifier = __webpack_require__(475).hasPrimaryModifier,
+	    hasSecondaryModifier = __webpack_require__(475).hasSecondaryModifier;
 
-	var isMac = __webpack_require__(479).isMac;
+	var isMac = __webpack_require__(477).isMac;
 
-	var getStepRange = __webpack_require__(506).getStepRange,
-	    cap = __webpack_require__(506).cap;
+	var getStepRange = __webpack_require__(504).getStepRange,
+	    cap = __webpack_require__(504).cap;
 
-	var log10 = __webpack_require__(507).log10;
+	var log10 = __webpack_require__(505).log10;
 
 	var bind = __webpack_require__(158);
 
@@ -40092,19 +40184,19 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 505 */
+/* 503 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(474);
+	module.exports = __webpack_require__(472);
 
 /***/ },
-/* 506 */
+/* 504 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 
-	var log10 = __webpack_require__(507).log10;
+	var log10 = __webpack_require__(505).log10;
 
 	/**
 	 * Get the linear range between two zoom steps based on the
@@ -40126,7 +40218,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 507 */
+/* 505 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -40153,26 +40245,26 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 508 */
+/* 506 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'moveCanvas' ],
-	  moveCanvas: [ 'type', __webpack_require__(509) ]
+	  moveCanvas: [ 'type', __webpack_require__(507) ]
 	};
 
 /***/ },
-/* 509 */
+/* 507 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Cursor = __webpack_require__(510),
-	    ClickTrap = __webpack_require__(511),
-	    substract = __webpack_require__(507).substract,
-	    domEvent = __webpack_require__(501),
-	    domClosest = __webpack_require__(505),
-	    EventUtil = __webpack_require__(478);
+	var Cursor = __webpack_require__(508),
+	    ClickTrap = __webpack_require__(509),
+	    substract = __webpack_require__(505).substract,
+	    domEvent = __webpack_require__(499),
+	    domClosest = __webpack_require__(503),
+	    EventUtil = __webpack_require__(476);
 
 
 	function length(point) {
@@ -40263,12 +40355,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 510 */
+/* 508 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domClasses = __webpack_require__(495);
+	var domClasses = __webpack_require__(493);
 
 	var CURSOR_CLS_PATTERN = /^djs-cursor-.*$/;
 
@@ -40295,13 +40387,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 511 */
+/* 509 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(501),
-	    stopEvent = __webpack_require__(478).stopEvent;
+	var domEvent = __webpack_require__(499),
+	    stopEvent = __webpack_require__(476).stopEvent;
 
 	function trap(event) {
 	  stopEvent(event);
@@ -40330,35 +40422,35 @@ var InfoxBpmnModeler =
 	module.exports.install = install;
 
 /***/ },
-/* 512 */
+/* 510 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(513) ]
+	  __depends__: [ __webpack_require__(511) ]
 	};
 
 /***/ },
-/* 513 */
+/* 511 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(470) ],
+	  __depends__: [ __webpack_require__(468) ],
 	  __init__: [ 'touchInteractionEvents' ],
-	  touchInteractionEvents: [ 'type', __webpack_require__(514) ],
-	  touchFix: [ 'type', __webpack_require__(516) ]
+	  touchInteractionEvents: [ 'type', __webpack_require__(512) ],
+	  touchFix: [ 'type', __webpack_require__(514) ]
 	};
 
 /***/ },
-/* 514 */
+/* 512 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(136),
-	    domEvent = __webpack_require__(501),
-	    domClosest = __webpack_require__(505),
-	    Hammer = __webpack_require__(515),
-	    Event = __webpack_require__(478);
+	    domEvent = __webpack_require__(499),
+	    domClosest = __webpack_require__(503),
+	    Hammer = __webpack_require__(513),
+	    Event = __webpack_require__(476);
 
 	var MIN_ZOOM = 0.2,
 	    MAX_ZOOM = 4;
@@ -40684,7 +40776,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 515 */
+/* 513 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
@@ -43333,7 +43425,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 516 */
+/* 514 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43396,20 +43488,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 517 */
+/* 515 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(518),
-	    __webpack_require__(521)
+	    __webpack_require__(516),
+	    __webpack_require__(519)
 	  ],
 	  __init__: [ 'autoScroll' ],
-	  autoScroll: [ 'type', __webpack_require__(523) ]
+	  autoScroll: [ 'type', __webpack_require__(521) ]
 	};
 
 /***/ },
-/* 518 */
+/* 516 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -43417,14 +43509,14 @@ var InfoxBpmnModeler =
 	    'hoverFix'
 	  ],
 	  __depends__: [
-	    __webpack_require__(469)
+	    __webpack_require__(467)
 	  ],
-	  dragging: [ 'type', __webpack_require__(519) ],
-	  hoverFix: [ 'type', __webpack_require__(520) ]
+	  dragging: [ 'type', __webpack_require__(517) ],
+	  hoverFix: [ 'type', __webpack_require__(518) ]
 	};
 
 /***/ },
-/* 519 */
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43435,10 +43527,10 @@ var InfoxBpmnModeler =
 
 	var assign = __webpack_require__(85);
 
-	var domEvent = __webpack_require__(501),
-	    Event = __webpack_require__(478),
-	    ClickTrap = __webpack_require__(511),
-	    Cursor = __webpack_require__(510);
+	var domEvent = __webpack_require__(499),
+	    Event = __webpack_require__(476),
+	    ClickTrap = __webpack_require__(509),
+	    Cursor = __webpack_require__(508);
 
 	var EventBusEvent = __webpack_require__(157).Event;
 
@@ -43938,14 +44030,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 520 */
+/* 518 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domClosest = __webpack_require__(505);
+	var domClosest = __webpack_require__(503);
 
-	var Event = __webpack_require__(478);
+	var Event = __webpack_require__(476);
 
 	function getGfx(target) {
 	  var node = domClosest(target, 'svg, .djs-element', true);
@@ -44033,19 +44125,19 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 521 */
+/* 519 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'mouseTracking' ],
-	  mouseTracking: [ 'type', __webpack_require__(522) ]
+	  mouseTracking: [ 'type', __webpack_require__(520) ]
 	};
 
 
 /***/ },
-/* 522 */
+/* 520 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44110,14 +44202,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 523 */
+/* 521 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(85);
 
-	var EventUtil = __webpack_require__(478);
+	var EventUtil = __webpack_require__(476);
 
 
 	/**
@@ -44258,31 +44350,31 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 524 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(518), __webpack_require__(525) ],
+	  __depends__: [ __webpack_require__(516), __webpack_require__(523) ],
 	  __init__: [ 'bendpoints', 'bendpointSnapping' ],
-	  bendpoints: [ 'type', __webpack_require__(527) ],
-	  bendpointMove: [ 'type', __webpack_require__(532) ],
-	  connectionSegmentMove: [ 'type', __webpack_require__(533) ],
-	  bendpointSnapping: [ 'type', __webpack_require__(540) ]
+	  bendpoints: [ 'type', __webpack_require__(525) ],
+	  bendpointMove: [ 'type', __webpack_require__(530) ],
+	  connectionSegmentMove: [ 'type', __webpack_require__(531) ],
+	  bendpointSnapping: [ 'type', __webpack_require__(538) ]
 	};
 
 
 /***/ },
-/* 525 */
+/* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'rules' ],
-	  rules: [ 'type', __webpack_require__(526) ]
+	  rules: [ 'type', __webpack_require__(524) ]
 	};
 
 
 /***/ },
-/* 526 */
+/* 524 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -44337,24 +44429,24 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 527 */
+/* 525 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(136);
 
-	var domEvent = __webpack_require__(501),
+	var domEvent = __webpack_require__(499),
 	    domQuery = __webpack_require__(52),
-	    BendpointUtil = __webpack_require__(528);
+	    BendpointUtil = __webpack_require__(526);
 
-	var pointsAligned = __webpack_require__(529).pointsAligned,
-	    getMidPoint = __webpack_require__(529).getMidPoint;
+	var pointsAligned = __webpack_require__(527).pointsAligned,
+	    getMidPoint = __webpack_require__(527).getMidPoint;
 
 	var BENDPOINT_CLS = BendpointUtil.BENDPOINT_CLS,
 	    SEGMENT_DRAGGER_CLS = BendpointUtil.SEGMENT_DRAGGER_CLS;
 
-	var getApproxIntersection = __webpack_require__(530).getApproxIntersection;
+	var getApproxIntersection = __webpack_require__(528).getApproxIntersection;
 
 	var svgAppend = __webpack_require__(76),
 	    svgAttr = __webpack_require__(74),
@@ -44614,13 +44706,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 528 */
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Events = __webpack_require__(478),
-	    Geometry = __webpack_require__(529);
+	var Events = __webpack_require__(476),
+	    Geometry = __webpack_require__(527);
 
 	var BENDPOINT_CLS = module.exports.BENDPOINT_CLS = 'djs-bendpoint';
 	var SEGMENT_DRAGGER_CLS = module.exports.SEGMENT_DRAGGER_CLS = 'djs-segment-dragger';
@@ -44749,7 +44841,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 529 */
+/* 527 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -44858,14 +44950,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 530 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pointDistance = __webpack_require__(529).pointDistance;
+	var pointDistance = __webpack_require__(527).pointDistance;
 
-	var intersection = __webpack_require__(531).intersection;
+	var intersection = __webpack_require__(529).intersection;
 
 	var round = Math.round,
 	    max = Math.max;
@@ -44975,7 +45067,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 531 */
+/* 529 */
 /***/ function(module, exports) {
 
 	/* eslint no-fallthrough: "off" */
@@ -46373,13 +46465,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 532 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Geometry = __webpack_require__(529),
-	    BendpointUtil = __webpack_require__(528);
+	var Geometry = __webpack_require__(527),
+	    BendpointUtil = __webpack_require__(526);
 
 	var MARKER_OK = 'connect-ok',
 	    MARKER_NOT_OK = 'connect-not-ok',
@@ -46647,14 +46739,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 533 */
+/* 531 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Geometry = __webpack_require__(529),
-	    BendpointUtil = __webpack_require__(528),
-	    LayoutUtil = __webpack_require__(534);
+	var Geometry = __webpack_require__(527),
+	    BendpointUtil = __webpack_require__(526),
+	    LayoutUtil = __webpack_require__(532);
 
 	var MARKER_CONNECT_HOVER = 'connect-hover',
 	    MARKER_CONNECT_UPDATING = 'djs-updating';
@@ -47054,16 +47146,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 534 */
+/* 532 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isObject = __webpack_require__(82),
-	    sortBy = __webpack_require__(535),
-	    pointDistance = __webpack_require__(529).pointDistance;
+	    sortBy = __webpack_require__(533),
+	    pointDistance = __webpack_require__(527).pointDistance;
 
-	var intersection = __webpack_require__(531).intersection;
+	var intersection = __webpack_require__(529).intersection;
 
 
 	function roundBounds(bounds) {
@@ -47248,13 +47340,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 535 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(111),
-	    baseMap = __webpack_require__(536),
-	    baseSortBy = __webpack_require__(537),
-	    compareAscending = __webpack_require__(538),
+	    baseMap = __webpack_require__(534),
+	    baseSortBy = __webpack_require__(535),
+	    compareAscending = __webpack_require__(536),
 	    isIterateeCall = __webpack_require__(100);
 
 	/**
@@ -47325,7 +47417,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 536 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(104),
@@ -47354,7 +47446,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 537 */
+/* 535 */
 /***/ function(module, exports) {
 
 	/**
@@ -47381,10 +47473,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 538 */
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCompareAscending = __webpack_require__(539);
+	var baseCompareAscending = __webpack_require__(537);
 
 	/**
 	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
@@ -47403,7 +47495,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 539 */
+/* 537 */
 /***/ function(module, exports) {
 
 	/**
@@ -47443,7 +47535,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 540 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47647,38 +47739,38 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 541 */
+/* 539 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(470),
-	    __webpack_require__(469),
-	    __webpack_require__(480),
-	    __webpack_require__(525),
-	    __webpack_require__(518),
-	    __webpack_require__(542)
+	    __webpack_require__(468),
+	    __webpack_require__(467),
+	    __webpack_require__(478),
+	    __webpack_require__(523),
+	    __webpack_require__(516),
+	    __webpack_require__(540)
 	  ],
 	  __init__: [ 'move', 'movePreview' ],
-	  move: [ 'type', __webpack_require__(545) ],
-	  movePreview: [ 'type', __webpack_require__(546) ]
+	  move: [ 'type', __webpack_require__(543) ],
+	  movePreview: [ 'type', __webpack_require__(544) ]
 	};
 
 
 /***/ },
-/* 542 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'previewSupport' ],
-	  previewSupport: [ 'type', __webpack_require__(543) ]
+	  previewSupport: [ 'type', __webpack_require__(541) ]
 	};
 
 
 /***/ },
-/* 543 */
+/* 541 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47687,7 +47779,7 @@ var InfoxBpmnModeler =
 
 	var svgAppend = __webpack_require__(76),
 	    svgAttr = __webpack_require__(74),
-	    svgClone = __webpack_require__(544),
+	    svgClone = __webpack_require__(542),
 	    svgCreate = __webpack_require__(75);
 
 	/**
@@ -47802,7 +47894,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 544 */
+/* 542 */
 /***/ function(module, exports) {
 
 	module.exports = clone;
@@ -47812,20 +47904,20 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 545 */
+/* 543 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(85),
-	    filter = __webpack_require__(492),
+	    filter = __webpack_require__(490),
 	    groupBy = __webpack_require__(146);
 
 	var LOW_PRIORITY = 500,
 	    MEDIUM_PRIORITY = 1250,
 	    HIGH_PRIORITY = 1500;
 
-	var getOriginalEvent = __webpack_require__(478).getOriginal;
+	var getOriginalEvent = __webpack_require__(476).getOriginal;
 
 	var round = Math.round;
 
@@ -48040,18 +48132,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 546 */
+/* 544 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var flatten = __webpack_require__(547),
+	var flatten = __webpack_require__(545),
 	    forEach = __webpack_require__(136),
-	    filter = __webpack_require__(492),
-	    find = __webpack_require__(485),
-	    size = __webpack_require__(548),
+	    filter = __webpack_require__(490),
+	    find = __webpack_require__(483),
+	    size = __webpack_require__(546),
 	    groupBy = __webpack_require__(146),
-	    map = __webpack_require__(549);
+	    map = __webpack_require__(547);
 
 	var Elements = __webpack_require__(145);
 
@@ -48264,10 +48356,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 547 */
+/* 545 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(449),
+	var baseFlatten = __webpack_require__(447),
 	    isIterateeCall = __webpack_require__(100);
 
 	/**
@@ -48302,7 +48394,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 548 */
+/* 546 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var getLength = __webpack_require__(89),
@@ -48338,12 +48430,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 549 */
+/* 547 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayMap = __webpack_require__(550),
+	var arrayMap = __webpack_require__(548),
 	    baseCallback = __webpack_require__(111),
-	    baseMap = __webpack_require__(536),
+	    baseMap = __webpack_require__(534),
 	    isArray = __webpack_require__(78);
 
 	/**
@@ -48412,7 +48504,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 550 */
+/* 548 */
 /***/ function(module, exports) {
 
 	/**
@@ -48439,35 +48531,35 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 551 */
+/* 549 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(525),
-	    __webpack_require__(518),
-	    __webpack_require__(542)
+	    __webpack_require__(523),
+	    __webpack_require__(516),
+	    __webpack_require__(540)
 	  ],
 	  __init__: [ 'resize', 'resizePreview', 'resizeHandles' ],
-	  resize: [ 'type', __webpack_require__(552) ],
-	  resizePreview: [ 'type', __webpack_require__(554) ],
-	  resizeHandles: [ 'type', __webpack_require__(555) ]
+	  resize: [ 'type', __webpack_require__(550) ],
+	  resizePreview: [ 'type', __webpack_require__(552) ],
+	  resizeHandles: [ 'type', __webpack_require__(553) ]
 	};
 
 
 /***/ },
-/* 552 */
+/* 550 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pick = __webpack_require__(448),
+	var pick = __webpack_require__(446),
 	    assign = __webpack_require__(85);
 
-	var ResizeUtil = __webpack_require__(553);
+	var ResizeUtil = __webpack_require__(551);
 
-	var asTRBL = __webpack_require__(534).asTRBL,
-	    roundBounds = __webpack_require__(534).roundBounds;
+	var asTRBL = __webpack_require__(532).asTRBL,
+	    roundBounds = __webpack_require__(532).roundBounds;
 
 	var DEFAULT_MIN_WIDTH = 10;
 
@@ -48651,12 +48743,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 553 */
+/* 551 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(492);
+	var filter = __webpack_require__(490);
 
 	var max = Math.max,
 	    min = Math.min;
@@ -48666,8 +48758,8 @@ var InfoxBpmnModeler =
 	var getBBox = __webpack_require__(145).getBBox;
 
 
-	var asTRBL = __webpack_require__(534).asTRBL,
-	    asBounds = __webpack_require__(534).asBounds;
+	var asTRBL = __webpack_require__(532).asTRBL,
+	    asBounds = __webpack_require__(532).asBounds;
 
 	function isNumber(a) {
 	  return typeof a === 'number';
@@ -48919,7 +49011,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 554 */
+/* 552 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48994,7 +49086,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 555 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49013,11 +49105,11 @@ var InfoxBpmnModeler =
 	    svgClear = __webpack_require__(56),
 	    svgCreate = __webpack_require__(75);
 
-	var domEvent = __webpack_require__(501);
+	var domEvent = __webpack_require__(499);
 
-	var isPrimaryButton = __webpack_require__(477).isPrimaryButton;
+	var isPrimaryButton = __webpack_require__(475).isPrimaryButton;
 
-	var asTRBL = __webpack_require__(534).asTRBL;
+	var asTRBL = __webpack_require__(532).asTRBL;
 
 	var transform = __webpack_require__(186).transform;
 
@@ -49173,25 +49265,25 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 556 */
+/* 554 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'bpmnAutoResize', 'bpmnAutoResizeProvider' ],
-	  bpmnAutoResize: [ 'type', __webpack_require__(557) ],
-	  bpmnAutoResizeProvider: [ 'type', __webpack_require__(562) ]
+	  bpmnAutoResize: [ 'type', __webpack_require__(555) ],
+	  bpmnAutoResizeProvider: [ 'type', __webpack_require__(560) ]
 	};
 
 
 /***/ },
-/* 557 */
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AutoResize = __webpack_require__(558);
+	var AutoResize = __webpack_require__(556);
 
 	var inherits = __webpack_require__(3);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	/**
 	 * Sub class of the AutoResize module which implements a BPMN
@@ -49224,7 +49316,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 558 */
+/* 556 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49233,16 +49325,16 @@ var InfoxBpmnModeler =
 
 	var getBoundingBox = __webpack_require__(145).getBBox;
 
-	var asTRBL = __webpack_require__(534).asTRBL,
-	    asBounds = __webpack_require__(534).asBounds;
+	var asTRBL = __webpack_require__(532).asTRBL,
+	    asBounds = __webpack_require__(532).asBounds;
 
 	var assign = __webpack_require__(85),
 	    forEach = __webpack_require__(136),
-	    values = __webpack_require__(559),
-	    flatten = __webpack_require__(547),
+	    values = __webpack_require__(557),
+	    flatten = __webpack_require__(545),
 	    groupBy = __webpack_require__(146);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 
 	/**
@@ -49418,10 +49510,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 559 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseValues = __webpack_require__(560),
+	var baseValues = __webpack_require__(558),
 	    keys = __webpack_require__(87);
 
 	/**
@@ -49457,7 +49549,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 560 */
+/* 558 */
 /***/ function(module, exports) {
 
 	/**
@@ -49485,7 +49577,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 561 */
+/* 559 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49640,18 +49732,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 562 */
+/* 560 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	var inherits = __webpack_require__(3);
 
-	var forEach = __webpack_require__(432);
+	var forEach = __webpack_require__(433);
 
-	var AutoResizeProvider = __webpack_require__(563);
+	var AutoResizeProvider = __webpack_require__(561);
 
 	/**
 	 * This module is a provider for automatically resizing parent BPMN elements
@@ -49697,10 +49789,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 563 */
+/* 561 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var RuleProvider = __webpack_require__(564);
+	var RuleProvider = __webpack_require__(562);
 
 	var inherits = __webpack_require__(3);
 
@@ -49737,7 +49829,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 564 */
+/* 562 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -49745,7 +49837,7 @@ var InfoxBpmnModeler =
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 	/**
 	 * A basic provider that may be extended to implement modeling rules.
@@ -49834,47 +49926,47 @@ var InfoxBpmnModeler =
 	RuleProvider.prototype.init = function() {};
 
 /***/ },
-/* 565 */
+/* 563 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
+	    __webpack_require__(564),
 	    __webpack_require__(566),
-	    __webpack_require__(568),
-	    __webpack_require__(578),
+	    __webpack_require__(576),
+	    __webpack_require__(580),
 	    __webpack_require__(582),
-	    __webpack_require__(584),
-	    __webpack_require__(588),
+	    __webpack_require__(586),
+	    __webpack_require__(594),
 	    __webpack_require__(596),
-	    __webpack_require__(598),
-	    __webpack_require__(602),
-	    __webpack_require__(611)
+	    __webpack_require__(600),
+	    __webpack_require__(609)
 	  ],
-	  editorActions: [ 'type', __webpack_require__(817) ]
+	  editorActions: [ 'type', __webpack_require__(816) ]
 	};
 
 
 /***/ },
-/* 566 */
+/* 564 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'alignElements' ],
-	  alignElements: [ 'type', __webpack_require__(567) ]
+	  alignElements: [ 'type', __webpack_require__(565) ]
 	};
 
 
 /***/ },
-/* 567 */
+/* 565 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(492),
+	var filter = __webpack_require__(490),
 	    forEach = __webpack_require__(136),
-	    sortBy = __webpack_require__(535);
+	    sortBy = __webpack_require__(533);
 
 	function last(arr) {
 	  return arr && arr[arr.length - 1];
@@ -50045,46 +50137,46 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 568 */
+/* 566 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(469),
-	    __webpack_require__(569),
-	    __webpack_require__(503)
+	    __webpack_require__(467),
+	    __webpack_require__(567),
+	    __webpack_require__(501)
 	  ],
 	  __init__: [ 'editorActions' ],
-	  editorActions: [ 'type', __webpack_require__(577) ]
+	  editorActions: [ 'type', __webpack_require__(575) ]
+	};
+
+
+/***/ },
+/* 567 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(568),
+	    __webpack_require__(523),
+	    __webpack_require__(519)
+	  ],
+	  __init__: [ 'copyPaste' ],
+	  copyPaste: [ 'type', __webpack_require__(570) ]
+	};
+
+
+/***/ },
+/* 568 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  clipboard: [ 'type', __webpack_require__(569) ]
 	};
 
 
 /***/ },
 /* 569 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(570),
-	    __webpack_require__(525),
-	    __webpack_require__(521)
-	  ],
-	  __init__: [ 'copyPaste' ],
-	  copyPaste: [ 'type', __webpack_require__(572) ]
-	};
-
-
-/***/ },
-/* 570 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  clipboard: [ 'type', __webpack_require__(571) ]
-	};
-
-
-/***/ },
-/* 571 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50118,24 +50210,24 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 572 */
+/* 570 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isArray = __webpack_require__(78),
 	    forEach = __webpack_require__(136),
-	    map = __webpack_require__(549),
-	    find = __webpack_require__(485),
-	    findIndex = __webpack_require__(573),
-	    sortBy = __webpack_require__(535),
+	    map = __webpack_require__(547),
+	    find = __webpack_require__(483),
+	    findIndex = __webpack_require__(571),
+	    sortBy = __webpack_require__(533),
 	    reduce = __webpack_require__(102);
 
 	var getBBox = __webpack_require__(145).getBBox;
 
-	var PositionUtil = __webpack_require__(575);
+	var PositionUtil = __webpack_require__(573);
 
-	var CopyPasteUtil = __webpack_require__(576),
+	var CopyPasteUtil = __webpack_require__(574),
 	    ElementsUtil = __webpack_require__(145);
 
 
@@ -50585,10 +50677,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 573 */
+/* 571 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createFindIndex = __webpack_require__(574);
+	var createFindIndex = __webpack_require__(572);
 
 	/**
 	 * This method is like `_.find` except that it returns the index of the first
@@ -50644,11 +50736,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 574 */
+/* 572 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(111),
-	    baseFindIndex = __webpack_require__(488);
+	    baseFindIndex = __webpack_require__(486);
 
 	/**
 	 * Creates a `_.findIndex` or `_.findLastIndex` function.
@@ -50671,7 +50763,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 575 */
+/* 573 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50697,7 +50789,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 576 */
+/* 574 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50747,7 +50839,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 577 */
+/* 575 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50965,33 +51057,33 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 578 */
+/* 576 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(579) ],
+	  __depends__: [ __webpack_require__(577) ],
 	  __init__: [ 'handTool' ],
-	  handTool: [ 'type', __webpack_require__(581) ]
+	  handTool: [ 'type', __webpack_require__(579) ]
 	};
 
 
 /***/ },
-/* 579 */
+/* 577 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(518) ],
+	  __depends__: [ __webpack_require__(516) ],
 	  __init__: [ 'toolManager' ],
-	  toolManager: [ 'type', __webpack_require__(580) ]
+	  toolManager: [ 'type', __webpack_require__(578) ]
 	};
 
 
 /***/ },
-/* 580 */
+/* 578 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51092,12 +51184,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 581 */
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(475).hasPrimaryModifier;
 
 
 	var HIGH_PRIORITY = 1500;
@@ -51218,29 +51310,29 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 582 */
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(579) ],
+	  __depends__: [ __webpack_require__(577) ],
 	  __init__: [ 'lassoTool' ],
-	  lassoTool: [ 'type', __webpack_require__(583) ]
+	  lassoTool: [ 'type', __webpack_require__(581) ]
 	};
 
 
 /***/ },
-/* 583 */
+/* 581 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var values = __webpack_require__(559);
+	var values = __webpack_require__(557);
 
 	var getEnclosedElements = __webpack_require__(145).getEnclosedElements;
 
-	var hasSecondaryModifier = __webpack_require__(477).hasSecondaryModifier;
+	var hasSecondaryModifier = __webpack_require__(475).hasSecondaryModifier;
 
 	var svgAppend = __webpack_require__(76),
 	    svgAttr = __webpack_require__(74),
@@ -51489,7 +51581,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 584 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51497,27 +51589,27 @@ var InfoxBpmnModeler =
 	module.exports = {
 	  __init__: ['spaceToolPreview'],
 	  __depends__: [
-	    __webpack_require__(518),
-	    __webpack_require__(525),
-	    __webpack_require__(579),
-	    __webpack_require__(542)
+	    __webpack_require__(516),
+	    __webpack_require__(523),
+	    __webpack_require__(577),
+	    __webpack_require__(540)
 	  ],
-	  spaceTool: ['type', __webpack_require__(585)],
-	  spaceToolPreview: ['type', __webpack_require__(587) ]
+	  spaceTool: ['type', __webpack_require__(583)],
+	  spaceToolPreview: ['type', __webpack_require__(585) ]
 	};
 
 
 /***/ },
-/* 585 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var SpaceUtil = __webpack_require__(586);
+	var SpaceUtil = __webpack_require__(584);
 
-	var Cursor = __webpack_require__(510);
+	var Cursor = __webpack_require__(508);
 
-	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(475).hasPrimaryModifier;
 
 	var abs = Math.abs,
 	    round = Math.round;
@@ -51798,7 +51890,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 586 */
+/* 584 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51892,7 +51984,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 587 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52168,15 +52260,44 @@ var InfoxBpmnModeler =
 
 
 /***/ },
+/* 586 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(587)
+	  ],
+	  __init__: [ 'bpmnGlobalConnect' ],
+	  bpmnGlobalConnect: [ 'type', __webpack_require__(591) ]
+	};
+
+
+/***/ },
+/* 587 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(588),
+	    __webpack_require__(523),
+	    __webpack_require__(516),
+	    __webpack_require__(577)
+	  ],
+	  globalConnect: [ 'type', __webpack_require__(590) ]
+	};
+
+
+/***/ },
 /* 588 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(589)
+	    __webpack_require__(467),
+	    __webpack_require__(523),
+	    __webpack_require__(516)
 	  ],
-	  __init__: [ 'bpmnGlobalConnect' ],
-	  bpmnGlobalConnect: [ 'type', __webpack_require__(593) ]
+	  connect: [ 'type', __webpack_require__(589) ]
 	};
 
 
@@ -52184,38 +52305,9 @@ var InfoxBpmnModeler =
 /* 589 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(590),
-	    __webpack_require__(525),
-	    __webpack_require__(518),
-	    __webpack_require__(579)
-	  ],
-	  globalConnect: [ 'type', __webpack_require__(592) ]
-	};
-
-
-/***/ },
-/* 590 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(469),
-	    __webpack_require__(525),
-	    __webpack_require__(518)
-	  ],
-	  connect: [ 'type', __webpack_require__(591) ]
-	};
-
-
-/***/ },
-/* 591 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
-	var LayoutUtil = __webpack_require__(534);
+	var LayoutUtil = __webpack_require__(532);
 
 	var MARKER_OK = 'connect-ok',
 	    MARKER_NOT_OK = 'connect-not-ok';
@@ -52398,7 +52490,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 592 */
+/* 590 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52520,12 +52612,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 593 */
+/* 591 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isAny = __webpack_require__(594).isAny;
+	var isAny = __webpack_require__(592).isAny;
 
 	/**
 	 * Extention of GlobalConnect tool that implements BPMN specific rules about
@@ -52575,32 +52667,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 594 */
+/* 592 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var any = __webpack_require__(595);
+	var any = __webpack_require__(593);
 
-	var is = __webpack_require__(460).is;
-
-
-	function getParents(element) {
-
-	  var parents = [];
-
-	  while (element) {
-	    element = element.parent;
-
-	    if (element) {
-	      parents.push(element);
-	    }
-	  }
-
-	  return parents;
-	}
-
-	module.exports.getParents = getParents;
+	var is = __webpack_require__(458).is;
 
 
 	/**
@@ -52647,37 +52721,37 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 595 */
+/* 593 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(445);
+	module.exports = __webpack_require__(443);
 
 
 /***/ },
-/* 596 */
+/* 594 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(569)
+	    __webpack_require__(567)
 	  ],
 	  __init__: [ 'bpmnCopyPaste' ],
-	  bpmnCopyPaste: [ 'type', __webpack_require__(597) ]
+	  bpmnCopyPaste: [ 'type', __webpack_require__(595) ]
 	};
 
 
 /***/ },
-/* 597 */
+/* 595 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ModelUtil = __webpack_require__(460),
+	var ModelUtil = __webpack_require__(458),
 	    getBusinessObject = ModelUtil.getBusinessObject,
 	    is = ModelUtil.is;
 
-	var map = __webpack_require__(466),
-	    forEach = __webpack_require__(432);
+	var map = __webpack_require__(464),
+	    forEach = __webpack_require__(433);
 
 
 	function setProperties(descriptor, data, properties) {
@@ -52877,39 +52951,39 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 598 */
+/* 596 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(599)
+	    __webpack_require__(597)
 	  ],
 	  __init__: [ 'bpmnDistributeElements' ],
-	  bpmnDistributeElements: [ 'type', __webpack_require__(601) ]
+	  bpmnDistributeElements: [ 'type', __webpack_require__(599) ]
 	};
 
 
 /***/ },
-/* 599 */
+/* 597 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'distributeElements' ],
-	  distributeElements: [ 'type', __webpack_require__(600) ]
+	  distributeElements: [ 'type', __webpack_require__(598) ]
 	};
 
 
 /***/ },
-/* 600 */
+/* 598 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var sortBy = __webpack_require__(535),
+	var sortBy = __webpack_require__(533),
 	    forEach = __webpack_require__(136),
-	    filter = __webpack_require__(492);
+	    filter = __webpack_require__(490);
 
 	var AXIS_DIMENSIONS = {
 	  horizontal: [ 'x', 'width' ],
@@ -53125,14 +53199,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 601 */
+/* 599 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(400);
+	var filter = __webpack_require__(401);
 
-	var isAny = __webpack_require__(594).isAny;
+	var isAny = __webpack_require__(592).isAny;
 
 	/**
 	 * Registers element exclude filters for elements that currently do 
@@ -53165,42 +53239,42 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 602 */
+/* 600 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(603)
+	    __webpack_require__(601)
 	  ],
 	  __init__: [ 'bpmnSearch'],
-	  bpmnSearch: [ 'type', __webpack_require__(605) ]
+	  bpmnSearch: [ 'type', __webpack_require__(603) ]
 	};
 
 
 /***/ },
-/* 603 */
+/* 601 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(489),
-	    __webpack_require__(469)
+	    __webpack_require__(487),
+	    __webpack_require__(467)
 	  ],
-	  searchPad: [ 'type', __webpack_require__(604) ]
+	  searchPad: [ 'type', __webpack_require__(602) ]
 	};
 
 
 /***/ },
-/* 604 */
+/* 602 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var domClear = __webpack_require__(187),
-	    domDelegate = __webpack_require__(472),
+	    domDelegate = __webpack_require__(470),
 	    domQuery = __webpack_require__(52),
-	    domClasses = __webpack_require__(495),
-	    domAttr = __webpack_require__(498),
+	    domClasses = __webpack_require__(493),
+	    domAttr = __webpack_require__(496),
 	    domify = __webpack_require__(50);
 
 	var getBoundingBox = __webpack_require__(145).getBBox;
@@ -53745,16 +53819,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 605 */
+/* 603 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var map = __webpack_require__(466),
-	    filter = __webpack_require__(400),
-	    sortBy = __webpack_require__(606);
+	var map = __webpack_require__(464),
+	    filter = __webpack_require__(401),
+	    sortBy = __webpack_require__(604);
 
-	var labelUtil = __webpack_require__(610);
+	var labelUtil = __webpack_require__(608);
 
 
 	/**
@@ -53879,13 +53953,13 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 606 */
+/* 604 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(402),
-	    baseMap = __webpack_require__(467),
-	    baseSortBy = __webpack_require__(607),
-	    compareAscending = __webpack_require__(608),
+	var baseCallback = __webpack_require__(403),
+	    baseMap = __webpack_require__(465),
+	    baseSortBy = __webpack_require__(605),
+	    compareAscending = __webpack_require__(606),
 	    isIterateeCall = __webpack_require__(29);
 
 	/**
@@ -53956,7 +54030,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 607 */
+/* 605 */
 /***/ function(module, exports) {
 
 	/**
@@ -53983,10 +54057,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 608 */
+/* 606 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCompareAscending = __webpack_require__(609);
+	var baseCompareAscending = __webpack_require__(607);
 
 	/**
 	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
@@ -54005,7 +54079,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 609 */
+/* 607 */
 /***/ function(module, exports) {
 
 	/**
@@ -54045,12 +54119,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 610 */
+/* 608 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	function getLabelAttr(semantic) {
 	  if (is(semantic, 'bpmn:FlowElement') ||
@@ -54094,36 +54168,36 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 611 */
+/* 609 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'modeling', 'bpmnUpdater' ],
 	  __depends__: [
-	    __webpack_require__(612),
-	    __webpack_require__(638),
-	    __webpack_require__(741),
-	    __webpack_require__(744),
-	    __webpack_require__(749),
-	    __webpack_require__(639),
+	    __webpack_require__(610),
+	    __webpack_require__(636),
+	    __webpack_require__(739),
+	    __webpack_require__(742),
+	    __webpack_require__(747),
+	    __webpack_require__(637),
+	    __webpack_require__(753),
 	    __webpack_require__(755),
 	    __webpack_require__(757),
-	    __webpack_require__(759),
-	    __webpack_require__(469),
-	    __webpack_require__(651),
-	    __webpack_require__(584)
+	    __webpack_require__(467),
+	    __webpack_require__(649),
+	    __webpack_require__(582)
 	  ],
-	  bpmnFactory: [ 'type', __webpack_require__(764) ],
-	  bpmnUpdater: [ 'type', __webpack_require__(765) ],
-	  elementFactory: [ 'type', __webpack_require__(766) ],
-	  modeling: [ 'type', __webpack_require__(767) ],
-	  layouter: [ 'type', __webpack_require__(811) ],
-	  connectionDocking: [ 'type', __webpack_require__(816) ]
+	  bpmnFactory: [ 'type', __webpack_require__(762) ],
+	  bpmnUpdater: [ 'type', __webpack_require__(763) ],
+	  elementFactory: [ 'type', __webpack_require__(764) ],
+	  modeling: [ 'type', __webpack_require__(765) ],
+	  layouter: [ 'type', __webpack_require__(810) ],
+	  connectionDocking: [ 'type', __webpack_require__(815) ]
 	};
 
 
 /***/ },
-/* 612 */
+/* 610 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -54149,40 +54223,40 @@ var InfoxBpmnModeler =
 	    'unclaimIdBehavior',
 	    'toggleElementCollapseBehaviour'
 	  ],
-	  appendBehavior: [ 'type', __webpack_require__(613) ],
-	  copyPasteBehavior: [ 'type', __webpack_require__(614) ],
-	  createBoundaryEventBehavior: [ 'type', __webpack_require__(615) ],
-	  createDataObjectBehavior: [ 'type', __webpack_require__(616) ],
-	  createOnFlowBehavior: [ 'type', __webpack_require__(617) ],
-	  createParticipantBehavior: [ 'type', __webpack_require__(618) ],
-	  dataInputAssociationBehavior: [ 'type', __webpack_require__(619) ],
-	  deleteLaneBehavior: [ 'type', __webpack_require__(620) ],
-	  importDockingFix: [ 'type', __webpack_require__(622) ],
-	  labelBehavior: [ 'type', __webpack_require__(624) ],
-	  modelingFeedback: [ 'type', __webpack_require__(628) ],
-	  removeParticipantBehavior: [ 'type', __webpack_require__(629) ],
-	  replaceConnectionBehavior: [ 'type', __webpack_require__(630) ],
-	  replaceElementBehaviour: [ 'type', __webpack_require__(631) ],
-	  resizeLaneBehavior: [ 'type', __webpack_require__(632) ],
-	  unsetDefaultFlowBehavior: [ 'type', __webpack_require__(633) ],
-	  updateFlowNodeRefsBehavior: [ 'type', __webpack_require__(634) ],
-	  removeElementBehavior: [ 'type', __webpack_require__(635) ],
-	  unclaimIdBehavior: [ 'type', __webpack_require__(636) ],
-	  toggleElementCollapseBehaviour : [ 'type', __webpack_require__(637) ]
+	  appendBehavior: [ 'type', __webpack_require__(611) ],
+	  copyPasteBehavior: [ 'type', __webpack_require__(612) ],
+	  createBoundaryEventBehavior: [ 'type', __webpack_require__(613) ],
+	  createDataObjectBehavior: [ 'type', __webpack_require__(614) ],
+	  createOnFlowBehavior: [ 'type', __webpack_require__(615) ],
+	  createParticipantBehavior: [ 'type', __webpack_require__(616) ],
+	  dataInputAssociationBehavior: [ 'type', __webpack_require__(617) ],
+	  deleteLaneBehavior: [ 'type', __webpack_require__(618) ],
+	  importDockingFix: [ 'type', __webpack_require__(620) ],
+	  labelBehavior: [ 'type', __webpack_require__(622) ],
+	  modelingFeedback: [ 'type', __webpack_require__(626) ],
+	  removeParticipantBehavior: [ 'type', __webpack_require__(627) ],
+	  replaceConnectionBehavior: [ 'type', __webpack_require__(628) ],
+	  replaceElementBehaviour: [ 'type', __webpack_require__(629) ],
+	  resizeLaneBehavior: [ 'type', __webpack_require__(630) ],
+	  unsetDefaultFlowBehavior: [ 'type', __webpack_require__(631) ],
+	  updateFlowNodeRefsBehavior: [ 'type', __webpack_require__(632) ],
+	  removeElementBehavior: [ 'type', __webpack_require__(633) ],
+	  unclaimIdBehavior: [ 'type', __webpack_require__(634) ],
+	  toggleElementCollapseBehaviour : [ 'type', __webpack_require__(635) ]
 	};
 
 
 /***/ },
-/* 613 */
+/* 611 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 
 	function AppendBehavior(eventBus, elementFactory, bpmnRules) {
@@ -54221,18 +54295,18 @@ var InfoxBpmnModeler =
 	module.exports = AppendBehavior;
 
 /***/ },
-/* 614 */
+/* 612 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var forEach = __webpack_require__(432);
+	var forEach = __webpack_require__(433);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 
 	function CopyPasteBehavior(eventBus, modeling, canvas) {
@@ -54296,16 +54370,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 615 */
+/* 613 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 
 	/**
@@ -54353,16 +54427,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 616 */
+/* 614 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	/**
 	 * BPMN specific create data object behavior
@@ -54396,7 +54470,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 617 */
+/* 615 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54405,9 +54479,9 @@ var InfoxBpmnModeler =
 
 	var assign = __webpack_require__(7);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var getApproxIntersection = __webpack_require__(530).getApproxIntersection;
+	var getApproxIntersection = __webpack_require__(528).getApproxIntersection;
 
 
 	function copy(obj) {
@@ -54497,16 +54571,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 618 */
+/* 616 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	/**
 	 * BPMN specific create participant behavior
@@ -54594,20 +54668,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 619 */
+/* 617 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 	var Collections = __webpack_require__(144);
 
-	var find = __webpack_require__(428);
+	var find = __webpack_require__(429);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	var TARGET_REF_PLACEHOLDER_NAME = '__targetRef_placeholder';
 
@@ -54751,18 +54825,18 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 620 */
+/* 618 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
-	var getChildLanes = __webpack_require__(621).getChildLanes;
+	var getChildLanes = __webpack_require__(619).getChildLanes;
 
 	var eachElement = __webpack_require__(145).eachElement;
 
@@ -54864,18 +54938,18 @@ var InfoxBpmnModeler =
 	module.exports = DeleteLaneBehavior;
 
 /***/ },
-/* 621 */
+/* 619 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
-	var getParent = __webpack_require__(594).getParent;
+	var getParent = __webpack_require__(592).getParent;
 
-	var asTRBL = __webpack_require__(534).asTRBL,
-	    substractTRBL = __webpack_require__(553).substractTRBL,
-	    resizeTRBL = __webpack_require__(553).resizeTRBL;
+	var asTRBL = __webpack_require__(532).asTRBL,
+	    substractTRBL = __webpack_require__(551).substractTRBL,
+	    resizeTRBL = __webpack_require__(551).resizeTRBL;
 
 	var abs = Math.abs;
 
@@ -55027,14 +55101,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 622 */
+/* 620 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getMid = __webpack_require__(534).getMid;
+	var getMid = __webpack_require__(532).getMid;
 
-	var lineIntersect = __webpack_require__(623);
+	var lineIntersect = __webpack_require__(621);
 
 
 	/**
@@ -55113,7 +55187,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 623 */
+/* 621 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -55155,7 +55229,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 624 */
+/* 622 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55163,9 +55237,9 @@ var InfoxBpmnModeler =
 	var assign = __webpack_require__(7),
 	    inherits = __webpack_require__(3);
 
-	var LabelUtil = __webpack_require__(468),
-	    LabelLayoutUtil = __webpack_require__(625),
-	    ModelUtil = __webpack_require__(460),
+	var LabelUtil = __webpack_require__(466),
+	    LabelLayoutUtil = __webpack_require__(623),
+	    ModelUtil = __webpack_require__(458),
 	    is = ModelUtil.is,
 	    getBusinessObject = ModelUtil.getBusinessObject;
 
@@ -55173,7 +55247,7 @@ var InfoxBpmnModeler =
 	    getExternalLabelMid = LabelUtil.getExternalLabelMid,
 	    getLabelAdjustment = LabelLayoutUtil.getLabelAdjustment;
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 
 	/**
@@ -55336,16 +55410,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 625 */
+/* 623 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var GeometricUtil = __webpack_require__(626);
+	var GeometricUtil = __webpack_require__(624);
 
-	var getDistancePointPoint = __webpack_require__(626).getDistancePointPoint;
+	var getDistancePointPoint = __webpack_require__(624).getDistancePointPoint;
 
-	var getAttachment = __webpack_require__(627).getAttachment;
+	var getAttachment = __webpack_require__(625).getAttachment;
 
 
 	function findNewLabelLineStartIndex(oldWaypoints, newWaypoints, attachment, hints) {
@@ -55559,7 +55633,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 626 */
+/* 624 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -55694,7 +55768,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 627 */
+/* 625 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -55927,12 +56001,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 628 */
+/* 626 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	var COLLAB_ERR_MSG = 'flow elements must be children of pools/participants',
 	    PROCESS_ERR_MSG = 'participants cannot be pasted onto a non-empty process diagram';
@@ -55983,16 +56057,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 629 */
+/* 627 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 
 	/**
@@ -56039,18 +56113,18 @@ var InfoxBpmnModeler =
 	module.exports = RemoveParticipantBehavior;
 
 /***/ },
-/* 630 */
+/* 628 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(432),
-	    find = __webpack_require__(428),
+	var forEach = __webpack_require__(433),
+	    find = __webpack_require__(429),
 	    inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
 
@@ -56173,19 +56247,19 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 631 */
+/* 629 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var forEach = __webpack_require__(432);
+	var forEach = __webpack_require__(433);
 
-	var isEventSubProcess = __webpack_require__(459).isEventSubProcess;
-	var is = __webpack_require__(460).is;
+	var isEventSubProcess = __webpack_require__(457).isEventSubProcess;
+	var is = __webpack_require__(458).is;
 
 	/**
 	 * Defines the behaviour of what happens to the elements inside a container
@@ -56295,16 +56369,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 632 */
+/* 630 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
-	var roundBounds = __webpack_require__(534).roundBounds;
+	var roundBounds = __webpack_require__(532).roundBounds;
 
-	var hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
+	var hasPrimaryModifier = __webpack_require__(475).hasPrimaryModifier;
 
 	var SLIGHTLY_HIGHER_PRIORITY = 1001;
 
@@ -56360,17 +56434,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 633 */
+/* 631 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var is = __webpack_require__(460).is,
-	    getBusinessObject = __webpack_require__(460).getBusinessObject;
+	var is = __webpack_require__(458).is,
+	    getBusinessObject = __webpack_require__(458).getBusinessObject;
 
 	/**
 	 * A behavior that unsets the Default property of
@@ -56420,7 +56494,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 634 */
+/* 632 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56428,9 +56502,9 @@ var InfoxBpmnModeler =
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	var LOW_PRIORITY = 500,
 	    HIGH_PRIORITY = 5000;
@@ -56582,16 +56656,16 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 635 */
+/* 633 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
-	var lineIntersect = __webpack_require__(623);
+	var lineIntersect = __webpack_require__(621);
 
 
 	function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
@@ -56661,16 +56735,16 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 636 */
+/* 634 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var forEach = __webpack_require__(432);
+	var forEach = __webpack_require__(433);
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 	function UnclaimIdBehavior(eventBus, modeling) {
 
@@ -56694,17 +56768,17 @@ var InfoxBpmnModeler =
 	module.exports = UnclaimIdBehavior;
 
 /***/ },
-/* 637 */
+/* 635 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561),
-	    getBusinessObject = __webpack_require__(460).getBusinessObject,
-	    is = __webpack_require__(460).is,
-	    computeChildrenBBox = __webpack_require__(553).computeChildrenBBox;
+	var CommandInterceptor = __webpack_require__(559),
+	    getBusinessObject = __webpack_require__(458).getBusinessObject,
+	    is = __webpack_require__(458).is,
+	    computeChildrenBBox = __webpack_require__(551).computeChildrenBBox;
 
 
 	var LOW_PRIORITY = 500;
@@ -56838,35 +56912,35 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 638 */
+/* 636 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(639),
-	    __webpack_require__(651),
-	    __webpack_require__(653)
+	    __webpack_require__(637),
+	    __webpack_require__(649),
+	    __webpack_require__(651)
 	  ],
 	  __init__: [ 'labelEditingProvider' ],
-	  labelEditingProvider: [ 'type', __webpack_require__(739) ]
+	  labelEditingProvider: [ 'type', __webpack_require__(737) ]
 	};
 
 /***/ },
-/* 639 */
+/* 637 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  commandStack: [ 'type', __webpack_require__(640) ]
+	  commandStack: [ 'type', __webpack_require__(638) ]
 	};
 
 
 /***/ },
-/* 640 */
+/* 638 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var unique = __webpack_require__(641),
+	var unique = __webpack_require__(639),
 	    isArray = __webpack_require__(78),
 	    assign = __webpack_require__(85);
 
@@ -57369,20 +57443,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 641 */
+/* 639 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(642);
+	module.exports = __webpack_require__(640);
 
 
 /***/ },
-/* 642 */
+/* 640 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(111),
-	    baseUniq = __webpack_require__(643),
+	    baseUniq = __webpack_require__(641),
 	    isIterateeCall = __webpack_require__(100),
-	    sortedUniq = __webpack_require__(650);
+	    sortedUniq = __webpack_require__(648);
 
 	/**
 	 * Creates a duplicate-free version of an array, using
@@ -57453,12 +57527,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 643 */
+/* 641 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(644),
-	    cacheIndexOf = __webpack_require__(646),
-	    createCache = __webpack_require__(647);
+	var baseIndexOf = __webpack_require__(642),
+	    cacheIndexOf = __webpack_require__(644),
+	    createCache = __webpack_require__(645);
 
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -57519,10 +57593,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 644 */
+/* 642 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var indexOfNaN = __webpack_require__(645);
+	var indexOfNaN = __webpack_require__(643);
 
 	/**
 	 * The base implementation of `_.indexOf` without support for binary searches.
@@ -57552,7 +57626,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 645 */
+/* 643 */
 /***/ function(module, exports) {
 
 	/**
@@ -57581,7 +57655,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 646 */
+/* 644 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(82);
@@ -57606,10 +57680,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 647 */
+/* 645 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(648),
+	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(646),
 	    getNative = __webpack_require__(79);
 
 	/** Native method references. */
@@ -57634,10 +57708,10 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 648 */
+/* 646 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(649),
+	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(647),
 	    getNative = __webpack_require__(79);
 
 	/** Native method references. */
@@ -57670,7 +57744,7 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 649 */
+/* 647 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(82);
@@ -57696,7 +57770,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 650 */
+/* 648 */
 /***/ function(module, exports) {
 
 	/**
@@ -57731,16 +57805,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 651 */
+/* 649 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'changeSupport'],
-	  changeSupport: [ 'type', __webpack_require__(652) ]
+	  changeSupport: [ 'type', __webpack_require__(650) ]
 	};
 
 /***/ },
-/* 652 */
+/* 650 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57807,25 +57881,25 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 653 */
+/* 651 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(470) ],
+	  __depends__: [ __webpack_require__(468) ],
 	  __init__: [ 'directEditing' ],
-	  directEditing: [ 'type', __webpack_require__(654) ]
+	  directEditing: [ 'type', __webpack_require__(652) ]
 	};
 
 /***/ },
-/* 654 */
+/* 652 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var bind = __webpack_require__(655),
-	    find = __webpack_require__(692);
+	var bind = __webpack_require__(653),
+	    find = __webpack_require__(690);
 
-	var TextBox = __webpack_require__(732);
+	var TextBox = __webpack_require__(730);
 
 
 	/**
@@ -57983,12 +58057,12 @@ var InfoxBpmnModeler =
 	module.exports = DirectEditing;
 
 /***/ },
-/* 655 */
+/* 653 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createWrapper = __webpack_require__(656),
-	    replaceHolders = __webpack_require__(686),
-	    restParam = __webpack_require__(691);
+	var createWrapper = __webpack_require__(654),
+	    replaceHolders = __webpack_require__(684),
+	    restParam = __webpack_require__(689);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -58045,16 +58119,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 656 */
+/* 654 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseSetData = __webpack_require__(657),
-	    createBindWrapper = __webpack_require__(665),
-	    createHybridWrapper = __webpack_require__(668),
-	    createPartialWrapper = __webpack_require__(689),
-	    getData = __webpack_require__(675),
-	    mergeData = __webpack_require__(690),
-	    setData = __webpack_require__(687);
+	var baseSetData = __webpack_require__(655),
+	    createBindWrapper = __webpack_require__(663),
+	    createHybridWrapper = __webpack_require__(666),
+	    createPartialWrapper = __webpack_require__(687),
+	    getData = __webpack_require__(673),
+	    mergeData = __webpack_require__(688),
+	    setData = __webpack_require__(685);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -58137,11 +58211,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 657 */
+/* 655 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(658),
-	    metaMap = __webpack_require__(659);
+	var identity = __webpack_require__(656),
+	    metaMap = __webpack_require__(657);
 
 	/**
 	 * The base implementation of `setData` without support for hot loop detection.
@@ -58160,7 +58234,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 658 */
+/* 656 */
 /***/ function(module, exports) {
 
 	/**
@@ -58186,10 +58260,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 659 */
+/* 657 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(660);
+	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(658);
 
 	/** Native method references. */
 	var WeakMap = getNative(global, 'WeakMap');
@@ -58202,10 +58276,10 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 660 */
+/* 658 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(661);
+	var isNative = __webpack_require__(659);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -58224,11 +58298,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 661 */
+/* 659 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(662),
-	    isObjectLike = __webpack_require__(664);
+	var isFunction = __webpack_require__(660),
+	    isObjectLike = __webpack_require__(662);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -58278,10 +58352,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 662 */
+/* 660 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(663);
+	var isObject = __webpack_require__(661);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -58322,7 +58396,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 663 */
+/* 661 */
 /***/ function(module, exports) {
 
 	/**
@@ -58356,7 +58430,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 664 */
+/* 662 */
 /***/ function(module, exports) {
 
 	/**
@@ -58374,10 +58448,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 665 */
+/* 663 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(666);
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(664);
 
 	/**
 	 * Creates a function that wraps `func` and invokes it with the `this`
@@ -58403,11 +58477,11 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 666 */
+/* 664 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCreate = __webpack_require__(667),
-	    isObject = __webpack_require__(663);
+	var baseCreate = __webpack_require__(665),
+	    isObject = __webpack_require__(661);
 
 	/**
 	 * Creates a function that produces an instance of `Ctor` regardless of
@@ -58446,10 +58520,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 667 */
+/* 665 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(663);
+	var isObject = __webpack_require__(661);
 
 	/**
 	 * The base implementation of `_.create` without support for assigning
@@ -58475,17 +58549,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 668 */
+/* 666 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(669),
-	    composeArgs = __webpack_require__(670),
-	    composeArgsRight = __webpack_require__(671),
-	    createCtorWrapper = __webpack_require__(666),
-	    isLaziable = __webpack_require__(672),
-	    reorder = __webpack_require__(684),
-	    replaceHolders = __webpack_require__(686),
-	    setData = __webpack_require__(687);
+	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(667),
+	    composeArgs = __webpack_require__(668),
+	    composeArgsRight = __webpack_require__(669),
+	    createCtorWrapper = __webpack_require__(664),
+	    isLaziable = __webpack_require__(670),
+	    reorder = __webpack_require__(682),
+	    replaceHolders = __webpack_require__(684),
+	    setData = __webpack_require__(685);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -58593,7 +58667,7 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 669 */
+/* 667 */
 /***/ function(module, exports) {
 
 	/**
@@ -58619,7 +58693,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 670 */
+/* 668 */
 /***/ function(module, exports) {
 
 	/* Native method references for those with the same name as other `lodash` methods. */
@@ -58659,7 +58733,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 671 */
+/* 669 */
 /***/ function(module, exports) {
 
 	/* Native method references for those with the same name as other `lodash` methods. */
@@ -58701,13 +58775,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 672 */
+/* 670 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var LazyWrapper = __webpack_require__(673),
-	    getData = __webpack_require__(675),
-	    getFuncName = __webpack_require__(677),
-	    lodash = __webpack_require__(679);
+	var LazyWrapper = __webpack_require__(671),
+	    getData = __webpack_require__(673),
+	    getFuncName = __webpack_require__(675),
+	    lodash = __webpack_require__(677);
 
 	/**
 	 * Checks if `func` has a lazy counterpart.
@@ -58734,11 +58808,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 673 */
+/* 671 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCreate = __webpack_require__(667),
-	    baseLodash = __webpack_require__(674);
+	var baseCreate = __webpack_require__(665),
+	    baseLodash = __webpack_require__(672);
 
 	/** Used as references for `-Infinity` and `Infinity`. */
 	var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
@@ -58766,7 +58840,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 674 */
+/* 672 */
 /***/ function(module, exports) {
 
 	/**
@@ -58782,11 +58856,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 675 */
+/* 673 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var metaMap = __webpack_require__(659),
-	    noop = __webpack_require__(676);
+	var metaMap = __webpack_require__(657),
+	    noop = __webpack_require__(674);
 
 	/**
 	 * Gets metadata for `func`.
@@ -58803,7 +58877,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 676 */
+/* 674 */
 /***/ function(module, exports) {
 
 	/**
@@ -58828,10 +58902,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 677 */
+/* 675 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var realNames = __webpack_require__(678);
+	var realNames = __webpack_require__(676);
 
 	/**
 	 * Gets the name of `func`.
@@ -58859,7 +58933,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 678 */
+/* 676 */
 /***/ function(module, exports) {
 
 	/** Used to lookup unminified function names. */
@@ -58869,15 +58943,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 679 */
+/* 677 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var LazyWrapper = __webpack_require__(673),
-	    LodashWrapper = __webpack_require__(680),
-	    baseLodash = __webpack_require__(674),
-	    isArray = __webpack_require__(681),
-	    isObjectLike = __webpack_require__(664),
-	    wrapperClone = __webpack_require__(683);
+	var LazyWrapper = __webpack_require__(671),
+	    LodashWrapper = __webpack_require__(678),
+	    baseLodash = __webpack_require__(672),
+	    isArray = __webpack_require__(679),
+	    isObjectLike = __webpack_require__(662),
+	    wrapperClone = __webpack_require__(681);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -59000,11 +59074,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 680 */
+/* 678 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCreate = __webpack_require__(667),
-	    baseLodash = __webpack_require__(674);
+	var baseCreate = __webpack_require__(665),
+	    baseLodash = __webpack_require__(672);
 
 	/**
 	 * The base constructor for creating `lodash` wrapper objects.
@@ -59027,12 +59101,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 681 */
+/* 679 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(660),
-	    isLength = __webpack_require__(682),
-	    isObjectLike = __webpack_require__(664);
+	var getNative = __webpack_require__(658),
+	    isLength = __webpack_require__(680),
+	    isObjectLike = __webpack_require__(662);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -59073,7 +59147,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 682 */
+/* 680 */
 /***/ function(module, exports) {
 
 	/**
@@ -59099,12 +59173,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 683 */
+/* 681 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var LazyWrapper = __webpack_require__(673),
-	    LodashWrapper = __webpack_require__(680),
-	    arrayCopy = __webpack_require__(669);
+	var LazyWrapper = __webpack_require__(671),
+	    LodashWrapper = __webpack_require__(678),
+	    arrayCopy = __webpack_require__(667);
 
 	/**
 	 * Creates a clone of `wrapper`.
@@ -59123,11 +59197,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 684 */
+/* 682 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(669),
-	    isIndex = __webpack_require__(685);
+	var arrayCopy = __webpack_require__(667),
+	    isIndex = __webpack_require__(683);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeMin = Math.min;
@@ -59158,7 +59232,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 685 */
+/* 683 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -59188,7 +59262,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 686 */
+/* 684 */
 /***/ function(module, exports) {
 
 	/** Used as the internal argument placeholder. */
@@ -59222,11 +59296,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 687 */
+/* 685 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseSetData = __webpack_require__(657),
-	    now = __webpack_require__(688);
+	var baseSetData = __webpack_require__(655),
+	    now = __webpack_require__(686);
 
 	/** Used to detect when a function becomes hot. */
 	var HOT_COUNT = 150,
@@ -59269,10 +59343,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 688 */
+/* 686 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(660);
+	var getNative = __webpack_require__(658);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeNow = getNative(Date, 'now');
@@ -59299,10 +59373,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 689 */
+/* 687 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(666);
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(664);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1;
@@ -59349,13 +59423,13 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 690 */
+/* 688 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(669),
-	    composeArgs = __webpack_require__(670),
-	    composeArgsRight = __webpack_require__(671),
-	    replaceHolders = __webpack_require__(686);
+	var arrayCopy = __webpack_require__(667),
+	    composeArgs = __webpack_require__(668),
+	    composeArgsRight = __webpack_require__(669),
+	    replaceHolders = __webpack_require__(684);
 
 	/** Used to compose bitmasks for wrapper metadata. */
 	var BIND_FLAG = 1,
@@ -59444,7 +59518,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 691 */
+/* 689 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -59508,11 +59582,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 692 */
+/* 690 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(693),
-	    createFind = __webpack_require__(706);
+	var baseEach = __webpack_require__(691),
+	    createFind = __webpack_require__(704);
 
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -59570,11 +59644,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 693 */
+/* 691 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(694),
-	    createBaseEach = __webpack_require__(705);
+	var baseForOwn = __webpack_require__(692),
+	    createBaseEach = __webpack_require__(703);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -59591,11 +59665,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 694 */
+/* 692 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(695),
-	    keys = __webpack_require__(698);
+	var baseFor = __webpack_require__(693),
+	    keys = __webpack_require__(696);
 
 	/**
 	 * The base implementation of `_.forOwn` without support for callback
@@ -59614,10 +59688,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 695 */
+/* 693 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(696);
+	var createBaseFor = __webpack_require__(694);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -59637,10 +59711,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 696 */
+/* 694 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(697);
+	var toObject = __webpack_require__(695);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -59670,10 +59744,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 697 */
+/* 695 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(663);
+	var isObject = __webpack_require__(661);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -59690,13 +59764,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 698 */
+/* 696 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(660),
-	    isArrayLike = __webpack_require__(699),
-	    isObject = __webpack_require__(663),
-	    shimKeys = __webpack_require__(702);
+	var getNative = __webpack_require__(658),
+	    isArrayLike = __webpack_require__(697),
+	    isObject = __webpack_require__(661),
+	    shimKeys = __webpack_require__(700);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -59741,11 +59815,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 699 */
+/* 697 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(700),
-	    isLength = __webpack_require__(682);
+	var getLength = __webpack_require__(698),
+	    isLength = __webpack_require__(680);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -59762,10 +59836,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 700 */
+/* 698 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(701);
+	var baseProperty = __webpack_require__(699);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -59783,7 +59857,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 701 */
+/* 699 */
 /***/ function(module, exports) {
 
 	/**
@@ -59803,14 +59877,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 702 */
+/* 700 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(703),
-	    isArray = __webpack_require__(681),
-	    isIndex = __webpack_require__(685),
-	    isLength = __webpack_require__(682),
-	    keysIn = __webpack_require__(704);
+	var isArguments = __webpack_require__(701),
+	    isArray = __webpack_require__(679),
+	    isIndex = __webpack_require__(683),
+	    isLength = __webpack_require__(680),
+	    keysIn = __webpack_require__(702);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -59850,11 +59924,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 703 */
+/* 701 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(699),
-	    isObjectLike = __webpack_require__(664);
+	var isArrayLike = __webpack_require__(697),
+	    isObjectLike = __webpack_require__(662);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -59890,14 +59964,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 704 */
+/* 702 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(703),
-	    isArray = __webpack_require__(681),
-	    isIndex = __webpack_require__(685),
-	    isLength = __webpack_require__(682),
-	    isObject = __webpack_require__(663);
+	var isArguments = __webpack_require__(701),
+	    isArray = __webpack_require__(679),
+	    isIndex = __webpack_require__(683),
+	    isLength = __webpack_require__(680),
+	    isObject = __webpack_require__(661);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -59960,12 +60034,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 705 */
+/* 703 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(700),
-	    isLength = __webpack_require__(682),
-	    toObject = __webpack_require__(697);
+	var getLength = __webpack_require__(698),
+	    isLength = __webpack_require__(680),
+	    toObject = __webpack_require__(695);
 
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -59997,13 +60071,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 706 */
+/* 704 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(707),
-	    baseFind = __webpack_require__(730),
-	    baseFindIndex = __webpack_require__(731),
-	    isArray = __webpack_require__(681);
+	var baseCallback = __webpack_require__(705),
+	    baseFind = __webpack_require__(728),
+	    baseFindIndex = __webpack_require__(729),
+	    isArray = __webpack_require__(679);
 
 	/**
 	 * Creates a `_.find` or `_.findLast` function.
@@ -60028,14 +60102,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 707 */
+/* 705 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(708),
-	    baseMatchesProperty = __webpack_require__(720),
-	    bindCallback = __webpack_require__(727),
-	    identity = __webpack_require__(658),
-	    property = __webpack_require__(728);
+	var baseMatches = __webpack_require__(706),
+	    baseMatchesProperty = __webpack_require__(718),
+	    bindCallback = __webpack_require__(725),
+	    identity = __webpack_require__(656),
+	    property = __webpack_require__(726);
 
 	/**
 	 * The base implementation of `_.callback` which supports specifying the
@@ -60069,12 +60143,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 708 */
+/* 706 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(709),
-	    getMatchData = __webpack_require__(717),
-	    toObject = __webpack_require__(697);
+	var baseIsMatch = __webpack_require__(707),
+	    getMatchData = __webpack_require__(715),
+	    toObject = __webpack_require__(695);
 
 	/**
 	 * The base implementation of `_.matches` which does not clone `source`.
@@ -60105,11 +60179,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 709 */
+/* 707 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(710),
-	    toObject = __webpack_require__(697);
+	var baseIsEqual = __webpack_require__(708),
+	    toObject = __webpack_require__(695);
 
 	/**
 	 * The base implementation of `_.isMatch` without support for callback
@@ -60163,12 +60237,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 710 */
+/* 708 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(711),
-	    isObject = __webpack_require__(663),
-	    isObjectLike = __webpack_require__(664);
+	var baseIsEqualDeep = __webpack_require__(709),
+	    isObject = __webpack_require__(661),
+	    isObjectLike = __webpack_require__(662);
 
 	/**
 	 * The base implementation of `_.isEqual` without support for `this` binding
@@ -60197,14 +60271,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 711 */
+/* 709 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(712),
-	    equalByTag = __webpack_require__(714),
-	    equalObjects = __webpack_require__(715),
-	    isArray = __webpack_require__(681),
-	    isTypedArray = __webpack_require__(716);
+	var equalArrays = __webpack_require__(710),
+	    equalByTag = __webpack_require__(712),
+	    equalObjects = __webpack_require__(713),
+	    isArray = __webpack_require__(679),
+	    isTypedArray = __webpack_require__(714);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -60305,10 +60379,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 712 */
+/* 710 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(713);
+	var arraySome = __webpack_require__(711);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -60362,7 +60436,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 713 */
+/* 711 */
 /***/ function(module, exports) {
 
 	/**
@@ -60391,7 +60465,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 714 */
+/* 712 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -60445,10 +60519,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 715 */
+/* 713 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(698);
+	var keys = __webpack_require__(696);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -60518,11 +60592,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 716 */
+/* 714 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(682),
-	    isObjectLike = __webpack_require__(664);
+	var isLength = __webpack_require__(680),
+	    isObjectLike = __webpack_require__(662);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -60598,11 +60672,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 717 */
+/* 715 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(718),
-	    pairs = __webpack_require__(719);
+	var isStrictComparable = __webpack_require__(716),
+	    pairs = __webpack_require__(717);
 
 	/**
 	 * Gets the propery names, values, and compare flags of `object`.
@@ -60625,10 +60699,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 718 */
+/* 716 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(663);
+	var isObject = __webpack_require__(661);
 
 	/**
 	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -60646,11 +60720,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 719 */
+/* 717 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(698),
-	    toObject = __webpack_require__(697);
+	var keys = __webpack_require__(696),
+	    toObject = __webpack_require__(695);
 
 	/**
 	 * Creates a two dimensional array of the key-value pairs for `object`,
@@ -60685,18 +60759,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 720 */
+/* 718 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(721),
-	    baseIsEqual = __webpack_require__(710),
-	    baseSlice = __webpack_require__(722),
-	    isArray = __webpack_require__(681),
-	    isKey = __webpack_require__(723),
-	    isStrictComparable = __webpack_require__(718),
-	    last = __webpack_require__(724),
-	    toObject = __webpack_require__(697),
-	    toPath = __webpack_require__(725);
+	var baseGet = __webpack_require__(719),
+	    baseIsEqual = __webpack_require__(708),
+	    baseSlice = __webpack_require__(720),
+	    isArray = __webpack_require__(679),
+	    isKey = __webpack_require__(721),
+	    isStrictComparable = __webpack_require__(716),
+	    last = __webpack_require__(722),
+	    toObject = __webpack_require__(695),
+	    toPath = __webpack_require__(723);
 
 	/**
 	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -60736,10 +60810,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 721 */
+/* 719 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(697);
+	var toObject = __webpack_require__(695);
 
 	/**
 	 * The base implementation of `get` without support for string paths
@@ -60771,7 +60845,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 722 */
+/* 720 */
 /***/ function(module, exports) {
 
 	/**
@@ -60809,11 +60883,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 723 */
+/* 721 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(681),
-	    toObject = __webpack_require__(697);
+	var isArray = __webpack_require__(679),
+	    toObject = __webpack_require__(695);
 
 	/** Used to match property names within property paths. */
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
@@ -60843,7 +60917,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 724 */
+/* 722 */
 /***/ function(module, exports) {
 
 	/**
@@ -60868,11 +60942,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 725 */
+/* 723 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(726),
-	    isArray = __webpack_require__(681);
+	var baseToString = __webpack_require__(724),
+	    isArray = __webpack_require__(679);
 
 	/** Used to match property names within property paths. */
 	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
@@ -60902,7 +60976,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 726 */
+/* 724 */
 /***/ function(module, exports) {
 
 	/**
@@ -60921,10 +60995,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 727 */
+/* 725 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(658);
+	var identity = __webpack_require__(656);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -60966,12 +61040,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 728 */
+/* 726 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(701),
-	    basePropertyDeep = __webpack_require__(729),
-	    isKey = __webpack_require__(723);
+	var baseProperty = __webpack_require__(699),
+	    basePropertyDeep = __webpack_require__(727),
+	    isKey = __webpack_require__(721);
 
 	/**
 	 * Creates a function that returns the property value at `path` on a
@@ -61003,11 +61077,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 729 */
+/* 727 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(721),
-	    toPath = __webpack_require__(725);
+	var baseGet = __webpack_require__(719),
+	    toPath = __webpack_require__(723);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -61028,7 +61102,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 730 */
+/* 728 */
 /***/ function(module, exports) {
 
 	/**
@@ -61059,7 +61133,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 731 */
+/* 729 */
 /***/ function(module, exports) {
 
 	/**
@@ -61088,13 +61162,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 732 */
+/* 730 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(733),
-	    domEvent = __webpack_require__(501),
+	var assign = __webpack_require__(731),
+	    domEvent = __webpack_require__(499),
 	    domRemove = __webpack_require__(54);
 
 	function stopPropagation(event) {
@@ -61243,12 +61317,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 733 */
+/* 731 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignWith = __webpack_require__(734),
-	    baseAssign = __webpack_require__(735),
-	    createAssigner = __webpack_require__(737);
+	var assignWith = __webpack_require__(732),
+	    baseAssign = __webpack_require__(733),
+	    createAssigner = __webpack_require__(735);
 
 	/**
 	 * Assigns own enumerable properties of source object(s) to the destination
@@ -61292,10 +61366,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 734 */
+/* 732 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(698);
+	var keys = __webpack_require__(696);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -61330,11 +61404,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 735 */
+/* 733 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(736),
-	    keys = __webpack_require__(698);
+	var baseCopy = __webpack_require__(734),
+	    keys = __webpack_require__(696);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -61355,7 +61429,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 736 */
+/* 734 */
 /***/ function(module, exports) {
 
 	/**
@@ -61384,12 +61458,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 737 */
+/* 735 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(727),
-	    isIterateeCall = __webpack_require__(738),
-	    restParam = __webpack_require__(691);
+	var bindCallback = __webpack_require__(725),
+	    isIterateeCall = __webpack_require__(736),
+	    restParam = __webpack_require__(689);
 
 	/**
 	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -61431,12 +61505,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 738 */
+/* 736 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(699),
-	    isIndex = __webpack_require__(685),
-	    isObject = __webpack_require__(663);
+	var isArrayLike = __webpack_require__(697),
+	    isIndex = __webpack_require__(683),
+	    isObject = __webpack_require__(661);
 
 	/**
 	 * Checks if the provided arguments are from an iteratee call.
@@ -61465,17 +61539,17 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 739 */
+/* 737 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var UpdateLabelHandler = __webpack_require__(740);
+	var UpdateLabelHandler = __webpack_require__(738);
 
-	var LabelUtil = __webpack_require__(610);
+	var LabelUtil = __webpack_require__(608);
 
-	var is = __webpack_require__(460).is,
-	    isExpanded = __webpack_require__(459).isExpanded;
+	var is = __webpack_require__(458).is,
+	    isExpanded = __webpack_require__(457).isExpanded;
 
 	var LINE_HEIGHT = 14,
 	    PADDING = 6;
@@ -61664,12 +61738,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 740 */
+/* 738 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var LabelUtil = __webpack_require__(610);
+	var LabelUtil = __webpack_require__(608);
 
 
 	/**
@@ -61715,46 +61789,45 @@ var InfoxBpmnModeler =
 	module.exports = UpdateLabelHandler;
 
 /***/ },
-/* 741 */
+/* 739 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(525)
+	    __webpack_require__(523)
 	  ],
 	  __init__: [ 'bpmnRules' ],
-	  bpmnRules: [ 'type', __webpack_require__(742) ]
+	  bpmnRules: [ 'type', __webpack_require__(740) ]
 	};
 
 
 /***/ },
-/* 742 */
+/* 740 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var find = __webpack_require__(428),
-	    any = __webpack_require__(595),
-	    every = __webpack_require__(439),
-	    filter = __webpack_require__(400),
-	    forEach = __webpack_require__(432),
+	var find = __webpack_require__(429),
+	    any = __webpack_require__(593),
+	    every = __webpack_require__(440),
+	    filter = __webpack_require__(401),
+	    forEach = __webpack_require__(433),
 	    inherits = __webpack_require__(3);
 
-	var getParents = __webpack_require__(594).getParents,
-	    is = __webpack_require__(460).is,
-	    isAny = __webpack_require__(594).isAny,
-	    getBusinessObject = __webpack_require__(460).getBusinessObject,
-	    isExpanded = __webpack_require__(459).isExpanded,
-	    isEventSubProcess = __webpack_require__(459).isEventSubProcess,
-	    isInterrupting = __webpack_require__(459).isInterrupting,
-	    hasErrorEventDefinition = __webpack_require__(459).hasErrorEventDefinition,
-	    hasEscalationEventDefinition = __webpack_require__(459).hasEscalationEventDefinition,
-	    hasCompensateEventDefinition = __webpack_require__(459).hasCompensateEventDefinition;
+	var is = __webpack_require__(458).is,
+	    isAny = __webpack_require__(592).isAny,
+	    getBusinessObject = __webpack_require__(458).getBusinessObject,
+	    isExpanded = __webpack_require__(457).isExpanded,
+	    isEventSubProcess = __webpack_require__(457).isEventSubProcess,
+	    isInterrupting = __webpack_require__(457).isInterrupting,
+	    hasErrorEventDefinition = __webpack_require__(457).hasErrorEventDefinition,
+	    hasEscalationEventDefinition = __webpack_require__(457).hasEscalationEventDefinition,
+	    hasCompensateEventDefinition = __webpack_require__(457).hasCompensateEventDefinition;
 
 
-	var RuleProvider = __webpack_require__(564);
+	var RuleProvider = __webpack_require__(562);
 
-	var isBoundaryAttachment = __webpack_require__(743).getBoundaryAttachment;
+	var isBoundaryAttachment = __webpack_require__(741).getBoundaryAttachment;
 
 	/**
 	 * BPMN specific modeling rule
@@ -62043,6 +62116,21 @@ var InfoxBpmnModeler =
 	  return element.waypoints;
 	}
 
+	function getParents(element) {
+
+	  var parents = [];
+
+	  while (element) {
+	    element = element.parent;
+
+	    if (element) {
+	      parents.push(element);
+	    }
+	  }
+
+	  return parents;
+	}
+
 	function isParent(possibleParent, element) {
 	  var allParents = getParents(element);
 	  return allParents.indexOf(possibleParent) !== -1;
@@ -62138,7 +62226,7 @@ var InfoxBpmnModeler =
 
 	  // drop flow elements onto flow element containers
 	  // and participants
-	  if (is(element, 'bpmn:FlowElement') || is(element, 'bpmn:DataAssociation')) {
+	  if (is(element, 'bpmn:FlowElement')) {
 	    if (is(target, 'bpmn:FlowElementsContainer')) {
 	      return isExpanded(target);
 	    }
@@ -62146,7 +62234,11 @@ var InfoxBpmnModeler =
 	    return isAny(target, [ 'bpmn:Participant', 'bpmn:Lane' ]);
 	  }
 
-	  if (is(element, 'bpmn:Artifact')) {
+	  // account for the fact that data associations are always
+	  // rendered and moved to top (Process or Collaboration level)
+	  //
+	  // artifacts may be placed wherever, too
+	  if (isAny(element, [ 'bpmn:Artifact', 'bpmn:DataAssociation' ])) {
 	    return isAny(target, [
 	      'bpmn:Collaboration',
 	      'bpmn:Lane',
@@ -62494,12 +62586,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 743 */
+/* 741 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getOrientation = __webpack_require__(534).getOrientation;
+	var getOrientation = __webpack_require__(532).getOrientation;
 
 
 	function getBoundaryAttachment(position, targetBounds) {
@@ -62519,12 +62611,12 @@ var InfoxBpmnModeler =
 
 	// participant snapping box implementation /////////////////
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
-	var asTRBL = __webpack_require__(534).asTRBL;
+	var asTRBL = __webpack_require__(532).asTRBL;
 
-	var collectLanes = __webpack_require__(621).collectLanes,
-	    getLanesRoot = __webpack_require__(621).getLanesRoot;
+	var collectLanes = __webpack_require__(619).collectLanes,
+	    getLanesRoot = __webpack_require__(619).getLanesRoot;
 
 	var abs = Math.abs,
 	    min = Math.min,
@@ -62659,32 +62751,32 @@ var InfoxBpmnModeler =
 	module.exports.getParticipantSizeConstraints = getParticipantSizeConstraints;
 
 /***/ },
-/* 744 */
+/* 742 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'bpmnOrderingProvider' ],
 	  __depends__: [
-	    __webpack_require__(463)
+	    __webpack_require__(461)
 	  ],
-	  bpmnOrderingProvider: [ 'type', __webpack_require__(745) ]
+	  bpmnOrderingProvider: [ 'type', __webpack_require__(743) ]
 	};
 
 /***/ },
-/* 745 */
+/* 743 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var OrderingProvider = __webpack_require__(746);
+	var OrderingProvider = __webpack_require__(744);
 
-	var isAny = __webpack_require__(594).isAny;
+	var isAny = __webpack_require__(592).isAny;
 
-	var findIndex = __webpack_require__(747);
+	var findIndex = __webpack_require__(745);
 
-	var find = __webpack_require__(428);
+	var find = __webpack_require__(429);
 
 
 	/**
@@ -62709,8 +62801,8 @@ var InfoxBpmnModeler =
 	        ]
 	      }
 	    },
-	    { type: 'bpmn:DataInputAssociation', order: { level: 9, containers: [ 'bpmn:Collaboration', 'bpmn:Process' ] } },
-	    { type: 'bpmn:DataOutputAssociation', order: { level: 9, containers: [ 'bpmn:Collaboration', 'bpmn:Process' ] } },
+	    // handle DataAssociation(s) like message flows and render them always on top
+	    { type: 'bpmn:DataAssociation', order: { level: 9, containers: [ 'bpmn:Collaboration', 'bpmn:Process' ] } },
 	    { type: 'bpmn:MessageFlow', order: { level: 9, containers: [ 'bpmn:Collaboration' ] } },
 	    {
 	      type: 'bpmn:Association',
@@ -62824,14 +62916,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 746 */
+/* 744 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 
 	/**
@@ -62928,10 +63020,10 @@ var InfoxBpmnModeler =
 	module.exports = OrderingProvider;
 
 /***/ },
-/* 747 */
+/* 745 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createFindIndex = __webpack_require__(748);
+	var createFindIndex = __webpack_require__(746);
 
 	/**
 	 * This method is like `_.find` except that it returns the index of the first
@@ -62987,11 +63079,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 748 */
+/* 746 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(402),
-	    baseFindIndex = __webpack_require__(431);
+	var baseCallback = __webpack_require__(403),
+	    baseFindIndex = __webpack_require__(432);
 
 	/**
 	 * Creates a `_.findIndex` or `_.findLastIndex` function.
@@ -63014,31 +63106,31 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 749 */
+/* 747 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(750),
-	    __webpack_require__(469)
+	    __webpack_require__(748),
+	    __webpack_require__(467)
 	  ],
-	  bpmnReplace: [ 'type', __webpack_require__(752) ]
+	  bpmnReplace: [ 'type', __webpack_require__(750) ]
 	};
 
 /***/ },
-/* 750 */
+/* 748 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'replace' ],
-	  replace: [ 'type', __webpack_require__(751) ]
+	  replace: [ 'type', __webpack_require__(749) ]
 	};
 
 
 /***/ },
-/* 751 */
+/* 749 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -63091,18 +63183,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 752 */
+/* 750 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var pick = __webpack_require__(753),
+	var pick = __webpack_require__(751),
 	    assign = __webpack_require__(7),
-	    has = __webpack_require__(754);
+	    has = __webpack_require__(752);
 
-	var is = __webpack_require__(460).is,
-	    isExpanded = __webpack_require__(459).isExpanded,
-	    isEventSubProcess = __webpack_require__(459).isEventSubProcess;
+	var is = __webpack_require__(458).is,
+	    isExpanded = __webpack_require__(457).isExpanded,
+	    isEventSubProcess = __webpack_require__(457).isEventSubProcess;
 
 	var CUSTOM_PROPERTIES = [
 	  'cancelActivity',
@@ -63264,7 +63356,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 753 */
+/* 751 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseFlatten = __webpack_require__(40),
@@ -63312,18 +63404,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 754 */
+/* 752 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(416),
-	    baseSlice = __webpack_require__(417),
+	var baseGet = __webpack_require__(417),
+	    baseSlice = __webpack_require__(418),
 	    isArguments = __webpack_require__(20),
 	    isArray = __webpack_require__(21),
 	    isIndex = __webpack_require__(22),
-	    isKey = __webpack_require__(418),
+	    isKey = __webpack_require__(419),
 	    isLength = __webpack_require__(18),
-	    last = __webpack_require__(419),
-	    toPath = __webpack_require__(420);
+	    last = __webpack_require__(420),
+	    toPath = __webpack_require__(421);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -63375,33 +63467,33 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 755 */
+/* 753 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'tooltips' ],
-	  tooltips: [ 'type', __webpack_require__(756) ]
+	  tooltips: [ 'type', __webpack_require__(754) ]
 	};
 
 /***/ },
-/* 756 */
+/* 754 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isString = __webpack_require__(491),
+	var isString = __webpack_require__(489),
 	    assign = __webpack_require__(85),
 	    forEach = __webpack_require__(136);
 
 	var domify = __webpack_require__(50),
-	    domAttr = __webpack_require__(498),
-	    domClasses = __webpack_require__(495),
+	    domAttr = __webpack_require__(496),
+	    domClasses = __webpack_require__(493),
 	    domRemove = __webpack_require__(54),
-	    domDelegate = __webpack_require__(472);
+	    domDelegate = __webpack_require__(470);
 
 
 	// document wide unique tooltip ids
-	var ids = new (__webpack_require__(499))('tt');
+	var ids = new (__webpack_require__(497))('tt');
 
 
 	function createRoot(parent) {
@@ -63753,32 +63845,32 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 757 */
+/* 755 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(541)
+	    __webpack_require__(539)
 	  ],
 	  __init__: [ 'labelSupport'],
-	  labelSupport: [ 'type', __webpack_require__(758) ]
+	  labelSupport: [ 'type', __webpack_require__(756) ]
 	};
 
 
 /***/ },
-/* 758 */
+/* 756 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(136),
-	    filter = __webpack_require__(492),
+	    filter = __webpack_require__(490),
 	    inherits = __webpack_require__(3);
 
 	var LOW_PRIORITY = 250,
 	    HIGH_PRIORITY = 1400;
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 
 	/**
@@ -63875,42 +63967,42 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 759 */
+/* 757 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(541),
-	    __webpack_require__(757)
+	    __webpack_require__(539),
+	    __webpack_require__(755)
 	  ],
 	  __init__: [ 'attachSupport'],
-	  attachSupport: [ 'type', __webpack_require__(760) ]
+	  attachSupport: [ 'type', __webpack_require__(758) ]
 	};
 
 
 /***/ },
-/* 760 */
+/* 758 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(136),
-	    flatten = __webpack_require__(547),
-	    union = __webpack_require__(761),
-	    filter = __webpack_require__(492),
+	    flatten = __webpack_require__(545),
+	    union = __webpack_require__(759),
+	    filter = __webpack_require__(490),
 	    groupBy = __webpack_require__(146),
-	    map = __webpack_require__(549);
+	    map = __webpack_require__(547);
 
-	var saveClear = __webpack_require__(762).saveClear,
+	var saveClear = __webpack_require__(760).saveClear,
 	    Collections = __webpack_require__(144);
 
-	var getNewAttachShapeDelta = __webpack_require__(763).getNewAttachShapeDelta;
+	var getNewAttachShapeDelta = __webpack_require__(761).getNewAttachShapeDelta;
 
 	var inherits = __webpack_require__(3);
 
 	var HIGH_PRIORITY = 1500;
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 
 	function AttachSupport(eventBus, modeling, movePreview, rules) {
@@ -64182,11 +64274,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 761 */
+/* 759 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(449),
-	    baseUniq = __webpack_require__(643),
+	var baseFlatten = __webpack_require__(447),
+	    baseUniq = __webpack_require__(641),
 	    restParam = __webpack_require__(101);
 
 	/**
@@ -64212,7 +64304,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 762 */
+/* 760 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -64255,15 +64347,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 763 */
+/* 761 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var roundPoint = __webpack_require__(534).roundPoint;
+	var roundPoint = __webpack_require__(532).roundPoint;
 
-	var center = __webpack_require__(575).center,
-	    delta = __webpack_require__(575).delta;
+	var center = __webpack_require__(573).center,
+	    delta = __webpack_require__(573).delta;
 
 
 	/**
@@ -64331,14 +64423,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 764 */
+/* 762 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var map = __webpack_require__(466),
+	var map = __webpack_require__(464),
 	    assign = __webpack_require__(7),
-	    pick = __webpack_require__(753);
+	    pick = __webpack_require__(751);
 
 
 	function BpmnFactory(moddle) {
@@ -64434,22 +64526,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 765 */
+/* 763 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(432),
+	    forEach = __webpack_require__(433),
 	    inherits = __webpack_require__(3);
 
 	var Collections = __webpack_require__(144),
 	    Model = __webpack_require__(153);
 
-	var getBusinessObject = __webpack_require__(460).getBusinessObject,
-	    is = __webpack_require__(460).is;
+	var getBusinessObject = __webpack_require__(458).getBusinessObject,
+	    is = __webpack_require__(458).is;
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 	/**
 	 * A handler responsible for updating the underlying BPMN 2.0 XML + DI
@@ -65128,7 +65220,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 766 */
+/* 764 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65136,12 +65228,12 @@ var InfoxBpmnModeler =
 	var assign = __webpack_require__(7),
 	    inherits = __webpack_require__(3);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
-	var isExpanded = __webpack_require__(459).isExpanded;
+	var isExpanded = __webpack_require__(457).isExpanded;
 
 	var BaseElementFactory = __webpack_require__(152),
-	    LabelUtil = __webpack_require__(468);
+	    LabelUtil = __webpack_require__(466);
 
 	/**
 	 * A bpmn-aware factory for diagram-js shapes
@@ -65319,22 +65411,23 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 767 */
+/* 765 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var BaseModeling = __webpack_require__(768);
+	var BaseModeling = __webpack_require__(766);
 
-	var UpdatePropertiesHandler = __webpack_require__(802),
-	    UpdateCanvasRootHandler = __webpack_require__(805),
-	    AddLaneHandler = __webpack_require__(806),
-	    SplitLaneHandler = __webpack_require__(807),
-	    ResizeLaneHandler = __webpack_require__(808),
-	    UpdateFlowNodeRefsHandler = __webpack_require__(809),
-	    IdClaimHandler = __webpack_require__(810);
+	var UpdatePropertiesHandler = __webpack_require__(800),
+	    UpdateCanvasRootHandler = __webpack_require__(803),
+	    AddLaneHandler = __webpack_require__(804),
+	    SplitLaneHandler = __webpack_require__(805),
+	    ResizeLaneHandler = __webpack_require__(806),
+	    UpdateFlowNodeRefsHandler = __webpack_require__(807),
+	    IdClaimHandler = __webpack_require__(808),
+	    SetColorHandler = __webpack_require__(809);
 
 
 	/**
@@ -65368,6 +65461,7 @@ var InfoxBpmnModeler =
 	  handlers['lane.split'] = SplitLaneHandler;
 	  handlers['lane.updateRefs'] = UpdateFlowNodeRefsHandler;
 	  handlers['id.updateClaim'] = IdClaimHandler;
+	  handlers['element.setColor'] = SetColorHandler;
 
 	  return handlers;
 	};
@@ -65489,9 +65583,20 @@ var InfoxBpmnModeler =
 	  });
 	};
 
+	Modeling.prototype.setColor = function(elements, colors) {
+	  if (!elements.length) {
+	    elements = [ elements ];
+	  }
+
+	  this._commandStack.execute('element.setColor', {
+	    elements: elements,
+	    colors: colors
+	  });
+	};
+
 
 /***/ },
-/* 768 */
+/* 766 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65528,37 +65633,37 @@ var InfoxBpmnModeler =
 
 	Modeling.prototype.getHandlers = function() {
 	  return {
-	    'shape.append': __webpack_require__(769),
-	    'shape.create': __webpack_require__(774),
-	    'shape.delete': __webpack_require__(775),
-	    'shape.move': __webpack_require__(776),
-	    'shape.resize': __webpack_require__(779),
-	    'shape.replace': __webpack_require__(780),
-	    'shape.toggleCollapse': __webpack_require__(781),
+	    'shape.append': __webpack_require__(767),
+	    'shape.create': __webpack_require__(772),
+	    'shape.delete': __webpack_require__(773),
+	    'shape.move': __webpack_require__(774),
+	    'shape.resize': __webpack_require__(777),
+	    'shape.replace': __webpack_require__(778),
+	    'shape.toggleCollapse': __webpack_require__(779),
 
-	    'spaceTool': __webpack_require__(782),
+	    'spaceTool': __webpack_require__(780),
 
-	    'label.create': __webpack_require__(783),
+	    'label.create': __webpack_require__(781),
 
-	    'connection.create': __webpack_require__(784),
-	    'connection.delete': __webpack_require__(785),
-	    'connection.move': __webpack_require__(786),
-	    'connection.layout': __webpack_require__(787),
+	    'connection.create': __webpack_require__(782),
+	    'connection.delete': __webpack_require__(783),
+	    'connection.move': __webpack_require__(784),
+	    'connection.layout': __webpack_require__(785),
 
-	    'connection.updateWaypoints': __webpack_require__(788),
+	    'connection.updateWaypoints': __webpack_require__(786),
 
-	    'connection.reconnectStart': __webpack_require__(789),
-	    'connection.reconnectEnd': __webpack_require__(789),
+	    'connection.reconnectStart': __webpack_require__(787),
+	    'connection.reconnectEnd': __webpack_require__(787),
 
-	    'elements.move': __webpack_require__(790),
-	    'elements.delete': __webpack_require__(791),
+	    'elements.move': __webpack_require__(788),
+	    'elements.delete': __webpack_require__(789),
 
-	    'elements.distribute': __webpack_require__(792),
-	    'elements.align': __webpack_require__(793),
+	    'elements.distribute': __webpack_require__(790),
+	    'elements.align': __webpack_require__(791),
 
-	    'element.updateAttachment': __webpack_require__(794),
+	    'element.updateAttachment': __webpack_require__(792),
 
-	    'elements.paste': __webpack_require__(795)
+	    'elements.paste': __webpack_require__(793)
 	  };
 	};
 
@@ -65927,12 +66032,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 769 */
+/* 767 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var any = __webpack_require__(770);
+	var any = __webpack_require__(768);
 
 	var inherits = __webpack_require__(3);
 
@@ -65949,7 +66054,7 @@ var InfoxBpmnModeler =
 	  this._modeling = modeling;
 	}
 
-	inherits(AppendShapeHandler, __webpack_require__(773));
+	inherits(AppendShapeHandler, __webpack_require__(771));
 
 
 	AppendShapeHandler.$inject = [ 'modeling' ];
@@ -65998,19 +66103,19 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 770 */
+/* 768 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(771);
+	module.exports = __webpack_require__(769);
 
 
 /***/ },
-/* 771 */
+/* 769 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arraySome = __webpack_require__(117),
 	    baseCallback = __webpack_require__(111),
-	    baseSome = __webpack_require__(772),
+	    baseSome = __webpack_require__(770),
 	    isArray = __webpack_require__(78),
 	    isIterateeCall = __webpack_require__(100);
 
@@ -66078,7 +66183,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 772 */
+/* 770 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(104);
@@ -66107,7 +66212,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 773 */
+/* 771 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -66120,7 +66225,7 @@ var InfoxBpmnModeler =
 	NoopHandler.prototype.revert = function() {};
 
 /***/ },
-/* 774 */
+/* 772 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -66197,14 +66302,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 775 */
+/* 773 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var Collections = __webpack_require__(144);
 
-	var saveClear = __webpack_require__(762).saveClear;
+	var saveClear = __webpack_require__(760).saveClear;
 
 
 	/**
@@ -66307,20 +66412,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 776 */
+/* 774 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(85),
 	    forEach = __webpack_require__(136),
-	    pick = __webpack_require__(448);
+	    pick = __webpack_require__(446);
 
-	var MoveHelper = __webpack_require__(777),
+	var MoveHelper = __webpack_require__(775),
 	    Collections = __webpack_require__(144);
 
-	var getMovedSourceAnchor = __webpack_require__(778).getMovedSourceAnchor,
-	    getMovedTargetAnchor = __webpack_require__(778).getMovedTargetAnchor;
+	var getMovedSourceAnchor = __webpack_require__(776).getMovedSourceAnchor,
+	    getMovedTargetAnchor = __webpack_require__(776).getMovedTargetAnchor;
 
 
 	/**
@@ -66426,7 +66531,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 777 */
+/* 775 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -66435,8 +66540,8 @@ var InfoxBpmnModeler =
 
 	var Elements = __webpack_require__(145);
 
-	var getMovedSourceAnchor = __webpack_require__(778).getMovedSourceAnchor,
-	    getMovedTargetAnchor = __webpack_require__(778).getMovedTargetAnchor;
+	var getMovedSourceAnchor = __webpack_require__(776).getMovedSourceAnchor,
+	    getMovedTargetAnchor = __webpack_require__(776).getMovedTargetAnchor;
 
 	/**
 	 * A helper that is able to carry out serialized move operations on multiple elements.
@@ -66529,12 +66634,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 778 */
+/* 776 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNewAttachPoint = __webpack_require__(763).getNewAttachPoint;
+	var getNewAttachPoint = __webpack_require__(761).getNewAttachPoint;
 
 	function getResizedSourceAnchor(connection, shape, oldBounds) {
 
@@ -66604,7 +66709,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 779 */
+/* 777 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -66612,8 +66717,8 @@ var InfoxBpmnModeler =
 	var assign = __webpack_require__(85),
 	    forEach = __webpack_require__(136);
 
-	var getResizedSourceAnchor = __webpack_require__(778).getResizedSourceAnchor,
-	    getResizedTargetAnchor = __webpack_require__(778).getResizedTargetAnchor;
+	var getResizedSourceAnchor = __webpack_require__(776).getResizedSourceAnchor,
+	    getResizedTargetAnchor = __webpack_require__(776).getResizedTargetAnchor;
 
 	/**
 	 * A handler that implements reversible resizing of shapes.
@@ -66712,7 +66817,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 780 */
+/* 778 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -66874,7 +66979,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 781 */
+/* 779 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -66964,14 +67069,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 782 */
+/* 780 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(136);
 
-	var SpaceUtil = __webpack_require__(586);
+	var SpaceUtil = __webpack_require__(584);
 
 	/**
 	 * A handler that implements reversible creating and removing of space.
@@ -67019,14 +67124,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 783 */
+/* 781 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CreateShapeHandler = __webpack_require__(774);
+	var CreateShapeHandler = __webpack_require__(772);
 
 
 	/**
@@ -67096,7 +67201,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 784 */
+/* 782 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -67162,7 +67267,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 785 */
+/* 783 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67239,7 +67344,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 786 */
+/* 784 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67325,7 +67430,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 787 */
+/* 785 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67424,7 +67529,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 788 */
+/* 786 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -67456,7 +67561,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 789 */
+/* 787 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67535,12 +67640,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 790 */
+/* 788 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var MoveHelper = __webpack_require__(777);
+	var MoveHelper = __webpack_require__(775);
 
 
 	/**
@@ -67577,7 +67682,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 791 */
+/* 789 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67591,7 +67696,7 @@ var InfoxBpmnModeler =
 	  this._elementRegistry = elementRegistry;
 	}
 
-	inherits(DeleteElementsHandler, __webpack_require__(773));
+	inherits(DeleteElementsHandler, __webpack_require__(771));
 
 	DeleteElementsHandler.$inject = [ 'modeling', 'elementRegistry' ];
 
@@ -67621,13 +67726,13 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 792 */
+/* 790 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(136),
-	    sortBy = __webpack_require__(535);
+	    sortBy = __webpack_require__(533);
 
 	/**
 	 * A handler that distributes elements evenly.
@@ -67782,7 +67887,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 793 */
+/* 791 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67845,7 +67950,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 794 */
+/* 792 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67923,15 +68028,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 795 */
+/* 793 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(136),
-	    map = __webpack_require__(549),
-	    sortBy = __webpack_require__(535),
-	    clone = __webpack_require__(796);
+	    map = __webpack_require__(547),
+	    sortBy = __webpack_require__(533),
+	    clone = __webpack_require__(794);
 
 	var inherits = __webpack_require__(3);
 
@@ -67964,7 +68069,7 @@ var InfoxBpmnModeler =
 	  this._rules = rules;
 	}
 
-	inherits(PasteHandler, __webpack_require__(773));
+	inherits(PasteHandler, __webpack_require__(771));
 
 
 	PasteHandler.$inject = [
@@ -68212,10 +68317,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 796 */
+/* 794 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseClone = __webpack_require__(797),
+	var baseClone = __webpack_require__(795),
 	    bindCallback = __webpack_require__(98),
 	    isIterateeCall = __webpack_require__(100);
 
@@ -68288,16 +68393,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 797 */
+/* 795 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayCopy = __webpack_require__(166),
 	    arrayEach = __webpack_require__(137),
 	    baseAssign = __webpack_require__(95),
 	    baseForOwn = __webpack_require__(105),
-	    initCloneArray = __webpack_require__(798),
-	    initCloneByTag = __webpack_require__(799),
-	    initCloneObject = __webpack_require__(801),
+	    initCloneArray = __webpack_require__(796),
+	    initCloneByTag = __webpack_require__(797),
+	    initCloneObject = __webpack_require__(799),
 	    isArray = __webpack_require__(78),
 	    isObject = __webpack_require__(82);
 
@@ -68422,7 +68527,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 798 */
+/* 796 */
 /***/ function(module, exports) {
 
 	/** Used for native method references. */
@@ -68454,10 +68559,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 799 */
+/* 797 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bufferClone = __webpack_require__(800);
+	var bufferClone = __webpack_require__(798);
 
 	/** `Object#toString` result references. */
 	var boolTag = '[object Boolean]',
@@ -68523,7 +68628,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 800 */
+/* 798 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/** Native method references. */
@@ -68550,7 +68655,7 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 801 */
+/* 799 */
 /***/ function(module, exports) {
 
 	/**
@@ -68572,21 +68677,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 802 */
+/* 800 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var reduce = __webpack_require__(803),
+	var reduce = __webpack_require__(801),
 	    keys = __webpack_require__(9),
-	    forEach = __webpack_require__(432),
+	    forEach = __webpack_require__(433),
 	    assign = __webpack_require__(7);
 
-	var getBusinessObject = __webpack_require__(460).getBusinessObject;
+	var getBusinessObject = __webpack_require__(458).getBusinessObject;
 
 	var DEFAULT_FLOW = 'default',
 	    NAME = 'name',
-	    ID = 'id';
+	    ID = 'id',
+	    DI = 'di';
 
 
 	/**
@@ -68624,7 +68730,7 @@ var InfoxBpmnModeler =
 	UpdatePropertiesHandler.prototype.execute = function(context) {
 
 	  var element = context.element,
-	      changed = [ element],
+	      changed = [ element ],
 	      translate = this._translate;
 
 	  if (!element) {
@@ -68636,7 +68742,7 @@ var InfoxBpmnModeler =
 
 	  var businessObject = element.businessObject,
 	      properties = unwrapBusinessObjects(context.properties),
-	      oldProperties = context.oldProperties || getProperties(businessObject, keys(properties));
+	      oldProperties = context.oldProperties || getProperties(businessObject, properties);
 
 	  if (isIdChange(properties, businessObject)) {
 	    ids.unclaim(businessObject[ID]);
@@ -68663,6 +68769,10 @@ var InfoxBpmnModeler =
 
 	    // show the label
 	    element.label.hidden = !properties[NAME];
+	  }
+
+	  if (DI in properties && businessObject.di) {
+	    setDiProperties(businessObject.di, properties.di);
 	  }
 
 	  // update properties
@@ -68692,6 +68802,10 @@ var InfoxBpmnModeler =
 	      elementRegistry = this._elementRegistry,
 	      ids = this._moddle.ids;
 
+	  if (DI in oldProperties && businessObject.di) {
+	    setDiProperties(businessObject.di, oldProperties.di);
+	  }
+
 	  // update properties
 	  setProperties(businessObject, oldProperties);
 
@@ -68712,9 +68826,27 @@ var InfoxBpmnModeler =
 	}
 
 
-	function getProperties(businessObject, propertyNames) {
+	function getProperties(businessObject, properties) {
+	  var propertyNames = keys(properties);
+
 	  return reduce(propertyNames, function(result, key) {
-	    result[key] = businessObject.get(key);
+
+	    // handle DI seperately
+	    if (key !== DI) {
+	      result[key] = businessObject.get(key);
+	    } else {
+	      result[key] = getDiProperties(businessObject.di, keys(properties.di));
+	    }
+
+	    return result;
+	  }, {});
+	}
+
+
+	function getDiProperties(di, propertyNames) {
+	  return reduce(propertyNames, function(result, key) {
+	    result[key] = di.get(key);
+
 	    return result;
 	  }, {});
 	}
@@ -68723,6 +68855,13 @@ var InfoxBpmnModeler =
 	function setProperties(businessObject, properties) {
 	  forEach(properties, function(value, key) {
 	    businessObject.set(key, value);
+	  });
+	}
+
+
+	function setDiProperties(di, properties) {
+	  forEach(properties, function(value, key) {
+	    di.set(key, value);
 	  });
 	}
 
@@ -68751,18 +68890,19 @@ var InfoxBpmnModeler =
 	  return unwrappedProps;
 	}
 
+
 /***/ },
-/* 803 */
+/* 801 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(433),
-	    baseCallback = __webpack_require__(402),
-	    baseCreate = __webpack_require__(804),
-	    baseForOwn = __webpack_require__(426),
+	var arrayEach = __webpack_require__(434),
+	    baseCallback = __webpack_require__(403),
+	    baseCreate = __webpack_require__(802),
+	    baseForOwn = __webpack_require__(427),
 	    isArray = __webpack_require__(21),
 	    isFunction = __webpack_require__(12),
 	    isObject = __webpack_require__(13),
-	    isTypedArray = __webpack_require__(411);
+	    isTypedArray = __webpack_require__(412);
 
 	/**
 	 * An alternative to `_.reduce`; this method transforms `object` to a new
@@ -68819,7 +68959,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 804 */
+/* 802 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(13);
@@ -68848,7 +68988,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 805 */
+/* 803 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68932,18 +69072,18 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 806 */
+/* 804 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(400);
+	var filter = __webpack_require__(401);
 
 	var Elements = __webpack_require__(145);
 
-	var getLanesRoot = __webpack_require__(621).getLanesRoot,
-	    getChildLanes = __webpack_require__(621).getChildLanes,
-	    LANE_INDENTATION = __webpack_require__(621).LANE_INDENTATION;
+	var getLanesRoot = __webpack_require__(619).getLanesRoot,
+	    getChildLanes = __webpack_require__(619).getChildLanes,
+	    LANE_INDENTATION = __webpack_require__(619).LANE_INDENTATION;
 
 	/**
 	 * A handler that allows us to add a new lane
@@ -69021,14 +69161,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 807 */
+/* 805 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getChildLanes = __webpack_require__(621).getChildLanes;
+	var getChildLanes = __webpack_require__(619).getChildLanes;
 
-	var LANE_INDENTATION = __webpack_require__(621).LANE_INDENTATION;
+	var LANE_INDENTATION = __webpack_require__(619).LANE_INDENTATION;
 
 	/**
 	 * A handler that splits a lane into a number of sub-lanes,
@@ -69109,20 +69249,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 808 */
+/* 806 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
-	var getLanesRoot = __webpack_require__(621).getLanesRoot,
-	    computeLanesResize = __webpack_require__(621).computeLanesResize;
+	var getLanesRoot = __webpack_require__(619).getLanesRoot,
+	    computeLanesResize = __webpack_require__(619).computeLanesResize;
 
 	var eachElement = __webpack_require__(145).eachElement;
 
-	var asTRBL = __webpack_require__(534).asTRBL,
-	    substractTRBL = __webpack_require__(553).substractTRBL;
+	var asTRBL = __webpack_require__(532).asTRBL,
+	    substractTRBL = __webpack_require__(551).substractTRBL;
 
 
 	/**
@@ -69240,20 +69380,20 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 809 */
+/* 807 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var collectLanes = __webpack_require__(621).collectLanes;
+	var collectLanes = __webpack_require__(619).collectLanes;
 
-	var getLanesRoot = __webpack_require__(621).getLanesRoot;
+	var getLanesRoot = __webpack_require__(619).getLanesRoot;
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	var Collections = __webpack_require__(144);
 
-	var asTRBL = __webpack_require__(534).asTRBL;
+	var asTRBL = __webpack_require__(532).asTRBL;
 
 	var FLOW_NODE_REFS_ATTR = 'flowNodeRef',
 	    LANES_ATTR = 'lanes';
@@ -69431,7 +69571,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 810 */
+/* 808 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -69478,7 +69618,56 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 811 */
+/* 809 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var assign = __webpack_require__(7),
+	    forEach = __webpack_require__(433);
+
+	function SetColorHandler(commandStack) {
+	  this._commandStack = commandStack;
+	}
+
+	SetColorHandler.$inject = [ 'commandStack' ];
+
+	module.exports = SetColorHandler;
+
+	SetColorHandler.prototype.postExecute = function(context) {
+	  var elements = context.elements,
+	      colors = context.colors || { fill: undefined, stroke: undefined };
+
+	  var that = this;
+
+	  var di = {};
+
+	  if ('fill' in colors) {
+	    assign(di, { fill: colors.fill });
+	  }
+
+	  if ('stroke' in colors) {
+	    assign(di, { stroke: colors.stroke });
+	  }
+
+	  forEach(elements, function(element) {
+	    that._commandStack.execute('element.updateProperties', {
+	      element: element,
+	      properties: {
+	        di: di
+	      }
+	    });
+	  });
+
+	};
+
+	SetColorHandler.prototype.execute = function(context) {};
+
+	SetColorHandler.prototype.revert = function(context) {};
+
+
+/***/ },
+/* 810 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69487,17 +69676,17 @@ var InfoxBpmnModeler =
 
 	var assign = __webpack_require__(7);
 
-	var BaseLayouter = __webpack_require__(812),
-	    ManhattanLayout = __webpack_require__(813);
+	var BaseLayouter = __webpack_require__(811),
+	    ManhattanLayout = __webpack_require__(812);
 
-	var LayoutUtil = __webpack_require__(534);
+	var LayoutUtil = __webpack_require__(532);
 
-	var isExpanded = __webpack_require__(459).isExpanded;
+	var isExpanded = __webpack_require__(457).isExpanded;
 
 	var getMid = LayoutUtil.getMid,
 	    getOrientation = LayoutUtil.getOrientation;
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 
 	function BpmnLayouter() {}
@@ -69675,12 +69864,12 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 812 */
+/* 811 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getMid = __webpack_require__(534).getMid;
+	var getMid = __webpack_require__(532).getMid;
 
 
 	/**
@@ -69718,18 +69907,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 813 */
+/* 812 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isArray = __webpack_require__(78),
-	    find = __webpack_require__(485),
-	    without = __webpack_require__(814),
+	    find = __webpack_require__(483),
+	    without = __webpack_require__(813),
 	    assign = __webpack_require__(85);
 
-	var LayoutUtil = __webpack_require__(534),
-	    Geometry = __webpack_require__(529);
+	var LayoutUtil = __webpack_require__(532),
+	    Geometry = __webpack_require__(527);
 
 	var getOrientation = LayoutUtil.getOrientation,
 	    getMid = LayoutUtil.getMid,
@@ -70205,10 +70394,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 814 */
+/* 813 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseDifference = __webpack_require__(815),
+	var baseDifference = __webpack_require__(814),
 	    isArrayLike = __webpack_require__(88),
 	    restParam = __webpack_require__(101);
 
@@ -70238,12 +70427,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 815 */
+/* 814 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(644),
-	    cacheIndexOf = __webpack_require__(646),
-	    createCache = __webpack_require__(647);
+	var baseIndexOf = __webpack_require__(642),
+	    cacheIndexOf = __webpack_require__(644),
+	    createCache = __webpack_require__(645);
 
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -70299,14 +70488,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 816 */
+/* 815 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var assign = __webpack_require__(85);
 
-	var LayoutUtil = __webpack_require__(534);
+	var LayoutUtil = __webpack_require__(532);
 
 
 	function dockingToPoint(docking) {
@@ -70400,18 +70589,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 817 */
+/* 816 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var EditorActions = __webpack_require__(577);
+	var EditorActions = __webpack_require__(575);
 
-	var filter = __webpack_require__(400);
+	var filter = __webpack_require__(401);
 
-	var is = __webpack_require__(460).is;
+	var is = __webpack_require__(458).is;
 
 	var getBBox = __webpack_require__(145).getBBox;
 
@@ -70477,6 +70666,13 @@ var InfoxBpmnModeler =
 	        alignElements.trigger(aligneableElements, type);
 	      }
 	    },
+	    setColor: function(opts) {
+	      var currentSelection = selection.get();
+
+	      if (currentSelection.length) {
+	        modeling.setColor(currentSelection, opts);
+	      }
+	    },
 	    directEditing: function() {
 	      var currentSelection = selection.get();
 
@@ -70529,36 +70725,36 @@ var InfoxBpmnModeler =
 
 
 /***/ },
+/* 817 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(651),
+	    __webpack_require__(818),
+	    __webpack_require__(467),
+	    __webpack_require__(588),
+	    __webpack_require__(820),
+	    __webpack_require__(822)
+	  ],
+	  __init__: [ 'contextPadProvider' ],
+	  contextPadProvider: [ 'type', __webpack_require__(829) ]
+	};
+
+/***/ },
 /* 818 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(653),
-	    __webpack_require__(819),
-	    __webpack_require__(469),
-	    __webpack_require__(590),
-	    __webpack_require__(821),
-	    __webpack_require__(823)
+	    __webpack_require__(468),
+	    __webpack_require__(487)
 	  ],
-	  __init__: [ 'contextPadProvider' ],
-	  contextPadProvider: [ 'type', __webpack_require__(830) ]
+	  contextPad: [ 'type', __webpack_require__(819) ]
 	};
 
 /***/ },
 /* 819 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(470),
-	    __webpack_require__(489)
-	  ],
-	  contextPad: [ 'type', __webpack_require__(820) ]
-	};
-
-/***/ },
-/* 820 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70567,11 +70763,11 @@ var InfoxBpmnModeler =
 	    isArray = __webpack_require__(78),
 	    forEach = __webpack_require__(136),
 
-	    domDelegate = __webpack_require__(472),
-	    domEvent = __webpack_require__(501),
-	    domAttr = __webpack_require__(498),
+	    domDelegate = __webpack_require__(470),
+	    domEvent = __webpack_require__(499),
+	    domAttr = __webpack_require__(496),
 	    domQuery = __webpack_require__(52),
-	    domClasses = __webpack_require__(495),
+	    domClasses = __webpack_require__(493),
 	    domify = __webpack_require__(50);
 
 
@@ -70865,21 +71061,21 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 821 */
+/* 820 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(518),
-	    __webpack_require__(469),
-	    __webpack_require__(525)
+	    __webpack_require__(516),
+	    __webpack_require__(467),
+	    __webpack_require__(523)
 	  ],
-	  create: [ 'type', __webpack_require__(822) ]
+	  create: [ 'type', __webpack_require__(821) ]
 	};
 
 
 /***/ },
-/* 822 */
+/* 821 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -71084,17 +71280,29 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 823 */
+/* 822 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(824),
-	    __webpack_require__(749)
+	    __webpack_require__(823),
+	    __webpack_require__(747)
 	  ],
 	  __init__: [ 'replaceMenuProvider' ],
-	  replaceMenuProvider: [ 'type', __webpack_require__(826) ]
+	  replaceMenuProvider: [ 'type', __webpack_require__(825) ]
 	};
+
+/***/ },
+/* 823 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  __init__: [ 'popupMenu' ],
+	  popupMenu: [ 'type', __webpack_require__(824) ]
+	};
+
 
 /***/ },
 /* 824 */
@@ -71102,26 +71310,14 @@ var InfoxBpmnModeler =
 
 	'use strict';
 
-	module.exports = {
-	  __init__: [ 'popupMenu' ],
-	  popupMenu: [ 'type', __webpack_require__(825) ]
-	};
-
-
-/***/ },
-/* 825 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	var forEach = __webpack_require__(136),
 	    assign = __webpack_require__(85),
-	    find = __webpack_require__(485);
+	    find = __webpack_require__(483);
 
-	var domDelegate = __webpack_require__(472),
+	var domDelegate = __webpack_require__(470),
 	    domify = __webpack_require__(50),
-	    domClasses = __webpack_require__(495),
-	    domAttr = __webpack_require__(498),
+	    domClasses = __webpack_require__(493),
+	    domAttr = __webpack_require__(496),
 	    domRemove = __webpack_require__(54);
 
 	var DATA_REF = 'data-id';
@@ -71549,22 +71745,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 826 */
+/* 825 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var is = __webpack_require__(460).is,
-	    isEventSubProcess = __webpack_require__(459).isEventSubProcess,
-	    getBusinessObject = __webpack_require__(460).getBusinessObject,
-	    isExpanded = __webpack_require__(459).isExpanded,
-	    isDifferentType = __webpack_require__(827).isDifferentType;
+	var is = __webpack_require__(458).is,
+	    isEventSubProcess = __webpack_require__(457).isEventSubProcess,
+	    getBusinessObject = __webpack_require__(458).getBusinessObject,
+	    isExpanded = __webpack_require__(457).isExpanded,
+	    isDifferentType = __webpack_require__(826).isDifferentType;
 
-	var forEach = __webpack_require__(432),
-	    filter = __webpack_require__(400),
-	    reject = __webpack_require__(828);
+	var forEach = __webpack_require__(433),
+	    filter = __webpack_require__(401),
+	    reject = __webpack_require__(827);
 
-	var replaceOptions = __webpack_require__ (829);
+	var replaceOptions = __webpack_require__ (828);
 
 
 	/**
@@ -72034,13 +72230,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 827 */
+/* 826 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getBusinessObject = __webpack_require__(460).getBusinessObject;
-	var isExpanded = __webpack_require__(459).isExpanded;
+	var getBusinessObject = __webpack_require__(458).getBusinessObject;
+	var isExpanded = __webpack_require__(457).isExpanded;
 
 	/**
 	 * Returns true, if an element is from a different type
@@ -72081,12 +72277,12 @@ var InfoxBpmnModeler =
 	module.exports.isDifferentType = isDifferentType;
 
 /***/ },
-/* 828 */
+/* 827 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayFilter = __webpack_require__(401),
-	    baseCallback = __webpack_require__(402),
-	    baseFilter = __webpack_require__(424),
+	var arrayFilter = __webpack_require__(402),
+	    baseCallback = __webpack_require__(403),
+	    baseFilter = __webpack_require__(425),
 	    isArray = __webpack_require__(21);
 
 	/**
@@ -72137,7 +72333,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 829 */
+/* 828 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -72930,21 +73126,21 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 830 */
+/* 829 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 
 	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(432),
+	    forEach = __webpack_require__(433),
 	    isArray = __webpack_require__(21),
-	    is = __webpack_require__(460).is,
-	    isExpanded = __webpack_require__(459).isExpanded,
-	    isAny = __webpack_require__(594).isAny,
-	    getChildLanes = __webpack_require__(621).getChildLanes,
-	    isEventSubProcess = __webpack_require__(459).isEventSubProcess,
-	    hasPrimaryModifier = __webpack_require__(477).hasPrimaryModifier;
+	    is = __webpack_require__(458).is,
+	    isExpanded = __webpack_require__(457).isExpanded,
+	    isAny = __webpack_require__(592).isAny,
+	    getChildLanes = __webpack_require__(619).getChildLanes,
+	    isEventSubProcess = __webpack_require__(457).isEventSubProcess,
+	    hasPrimaryModifier = __webpack_require__(475).hasPrimaryModifier;
 
 	/**
 	 * A provider for BPMN 2.0 elements context pad
@@ -73310,15 +73506,25 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 831 */
+/* 830 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(832)
+	    __webpack_require__(831)
 	  ],
 	  __init__: [ 'bpmnKeyBindings' ],
-	  bpmnKeyBindings: [ 'type', __webpack_require__(835) ]
+	  bpmnKeyBindings: [ 'type', __webpack_require__(834) ]
+	};
+
+
+/***/ },
+/* 831 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __init__: [ 'keyboard' ],
+	  keyboard: [ 'type', __webpack_require__(832) ]
 	};
 
 
@@ -73326,20 +73532,10 @@ var InfoxBpmnModeler =
 /* 832 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-	  __init__: [ 'keyboard' ],
-	  keyboard: [ 'type', __webpack_require__(833) ]
-	};
-
-
-/***/ },
-/* 833 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
-	var domEvent = __webpack_require__(501),
-	    domMatches = __webpack_require__(834);
+	var domEvent = __webpack_require__(499),
+	    domMatches = __webpack_require__(833);
 
 	/**
 	 * A keyboard abstraction that may be activated and
@@ -73652,13 +73848,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 834 */
+/* 833 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(475);
+	module.exports = __webpack_require__(473);
 
 /***/ },
-/* 835 */
+/* 834 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -73736,39 +73932,39 @@ var InfoxBpmnModeler =
 	module.exports = BpmnKeyBindings;
 
 /***/ },
-/* 836 */
+/* 835 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(837),
-	    __webpack_require__(821),
-	    __webpack_require__(584),
+	    __webpack_require__(836),
+	    __webpack_require__(820),
 	    __webpack_require__(582),
-	    __webpack_require__(578),
-	    __webpack_require__(463),
-	    __webpack_require__(588)
+	    __webpack_require__(580),
+	    __webpack_require__(576),
+	    __webpack_require__(461),
+	    __webpack_require__(586)
 	  ],
 	  __init__: [ 'paletteProvider' ],
-	  paletteProvider: [ 'type', __webpack_require__(839) ]
+	  paletteProvider: [ 'type', __webpack_require__(838) ]
 	};
 
 
 /***/ },
-/* 837 */
+/* 836 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(579) ],
+	  __depends__: [ __webpack_require__(577) ],
 	  __init__: [ 'palette' ],
-	  palette: [ 'type', __webpack_require__(838) ]
+	  palette: [ 'type', __webpack_require__(837) ]
 	};
 
 
 /***/ },
-/* 838 */
+/* 837 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73779,12 +73975,12 @@ var InfoxBpmnModeler =
 
 	var domify = __webpack_require__(50),
 	    domQuery = __webpack_require__(52),
-	    domAttr = __webpack_require__(498),
+	    domAttr = __webpack_require__(496),
 	    domClear = __webpack_require__(187),
-	    domClasses = __webpack_require__(495),
-	    domMatches = __webpack_require__(834),
-	    domDelegate = __webpack_require__(472),
-	    domEvent = __webpack_require__(501);
+	    domClasses = __webpack_require__(493),
+	    domMatches = __webpack_require__(833),
+	    domDelegate = __webpack_require__(470),
+	    domEvent = __webpack_require__(499);
 
 
 	var toggleSelector = '.djs-palette-toggle',
@@ -74113,7 +74309,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 839 */
+/* 838 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74277,28 +74473,28 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 840 */
+/* 839 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(542) ],
+	  __depends__: [ __webpack_require__(540) ],
 	  __init__: [ 'bpmnReplacePreview' ],
-	  bpmnReplacePreview: [ 'type', __webpack_require__(841) ]
+	  bpmnReplacePreview: [ 'type', __webpack_require__(840) ]
 	};
 
 
 /***/ },
-/* 841 */
+/* 840 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var CommandInterceptor = __webpack_require__(561);
+	var CommandInterceptor = __webpack_require__(559);
 
 	var inherits = __webpack_require__(3);
 
 	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(432);
+	    forEach = __webpack_require__(433);
 
 	var domQuery = __webpack_require__(52);
 
@@ -74407,16 +74603,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 842 */
+/* 841 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'snapping' ],
-	  snapping: [ 'type', __webpack_require__(843) ]
+	  snapping: [ 'type', __webpack_require__(842) ]
 	};
 
 /***/ },
-/* 843 */
+/* 842 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74425,20 +74621,20 @@ var InfoxBpmnModeler =
 
 	var abs = Math.abs;
 
-	var forEach = __webpack_require__(432),
-	    filter = __webpack_require__(400),
+	var forEach = __webpack_require__(433),
+	    filter = __webpack_require__(401),
 	    assign = __webpack_require__(7);
 
 	var getBoundingBox = __webpack_require__(145).getBBox;
 
-	var is = __webpack_require__(460).is,
-	    isAny = __webpack_require__(594).isAny,
-	    isExpanded = __webpack_require__(459).isExpanded;
+	var is = __webpack_require__(458).is,
+	    isAny = __webpack_require__(592).isAny,
+	    isExpanded = __webpack_require__(457).isExpanded;
 
-	var Snapping = __webpack_require__(844),
-	    SnapUtil = __webpack_require__(845);
+	var Snapping = __webpack_require__(843),
+	    SnapUtil = __webpack_require__(844);
 
-	var asTRBL = __webpack_require__(534).asTRBL;
+	var asTRBL = __webpack_require__(532).asTRBL;
 
 	var round = Math.round;
 
@@ -74448,9 +74644,9 @@ var InfoxBpmnModeler =
 	    isSnapped = SnapUtil.isSnapped,
 	    setSnapped = SnapUtil.setSnapped;
 
-	var getBoundaryAttachment = __webpack_require__(743).getBoundaryAttachment,
-	    getParticipantSizeConstraints = __webpack_require__(743).getParticipantSizeConstraints,
-	    getLanesRoot = __webpack_require__(621).getLanesRoot;
+	var getBoundaryAttachment = __webpack_require__(741).getBoundaryAttachment,
+	    getParticipantSizeConstraints = __webpack_require__(741).getParticipantSizeConstraints,
+	    getLanesRoot = __webpack_require__(619).getLanesRoot;
 
 	var HIGH_PRIORITY = 1500;
 
@@ -74917,20 +75113,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 844 */
+/* 843 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var filter = __webpack_require__(492),
+	var filter = __webpack_require__(490),
 	    forEach = __webpack_require__(136),
 	    debounce = __webpack_require__(142);
 
-	var mid = __webpack_require__(845).mid;
+	var mid = __webpack_require__(844).mid;
 
-	var SnapContext = __webpack_require__(846);
+	var SnapContext = __webpack_require__(845);
 
-	var SnapUtil = __webpack_require__(845);
+	var SnapUtil = __webpack_require__(844);
 
 	var HIGHER_PRIORITY = 1250;
 
@@ -75172,7 +75368,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 845 */
+/* 844 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -75307,14 +75503,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 846 */
+/* 845 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(136);
 
-	var snapTo = __webpack_require__(845).snapTo;
+	var snapTo = __webpack_require__(844).snapTo;
 
 
 	/**
@@ -75482,12 +75678,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 847 */
+/* 846 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var PaletteProvider = __webpack_require__(839);
-	var assign = __webpack_require__(848);
+	var PaletteProvider = __webpack_require__(838);
+	var assign = __webpack_require__(847);
 
 	function InfoxPaletteProvider(palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate) {
 	    PaletteProvider.call(this, palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate);
@@ -75542,15 +75738,15 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 848 */
+/* 847 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(849),
-	    copyObject = __webpack_require__(867),
-	    createAssigner = __webpack_require__(868),
-	    isArrayLike = __webpack_require__(878),
-	    isPrototype = __webpack_require__(881),
-	    keys = __webpack_require__(882);
+	var assignValue = __webpack_require__(848),
+	    copyObject = __webpack_require__(866),
+	    createAssigner = __webpack_require__(867),
+	    isArrayLike = __webpack_require__(877),
+	    isPrototype = __webpack_require__(880),
+	    keys = __webpack_require__(881);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -75606,11 +75802,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 849 */
+/* 848 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseAssignValue = __webpack_require__(850),
-	    eq = __webpack_require__(866);
+	var baseAssignValue = __webpack_require__(849),
+	    eq = __webpack_require__(865);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -75640,10 +75836,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 850 */
+/* 849 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var defineProperty = __webpack_require__(851);
+	var defineProperty = __webpack_require__(850);
 
 	/**
 	 * The base implementation of `assignValue` and `assignMergeValue` without
@@ -75671,10 +75867,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 851 */
+/* 850 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(852);
+	var getNative = __webpack_require__(851);
 
 	var defineProperty = (function() {
 	  try {
@@ -75688,11 +75884,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 852 */
+/* 851 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsNative = __webpack_require__(853),
-	    getValue = __webpack_require__(865);
+	var baseIsNative = __webpack_require__(852),
+	    getValue = __webpack_require__(864);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -75711,13 +75907,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 853 */
+/* 852 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(854),
-	    isMasked = __webpack_require__(862),
-	    isObject = __webpack_require__(861),
-	    toSource = __webpack_require__(864);
+	var isFunction = __webpack_require__(853),
+	    isMasked = __webpack_require__(861),
+	    isObject = __webpack_require__(860),
+	    toSource = __webpack_require__(863);
 
 	/**
 	 * Used to match `RegExp`
@@ -75764,11 +75960,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 854 */
+/* 853 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGetTag = __webpack_require__(855),
-	    isObject = __webpack_require__(861);
+	var baseGetTag = __webpack_require__(854),
+	    isObject = __webpack_require__(860);
 
 	/** `Object#toString` result references. */
 	var asyncTag = '[object AsyncFunction]',
@@ -75807,12 +76003,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 855 */
+/* 854 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Symbol = __webpack_require__(856),
-	    getRawTag = __webpack_require__(859),
-	    objectToString = __webpack_require__(860);
+	var Symbol = __webpack_require__(855),
+	    getRawTag = __webpack_require__(858),
+	    objectToString = __webpack_require__(859);
 
 	/** `Object#toString` result references. */
 	var nullTag = '[object Null]',
@@ -75832,8 +76028,7 @@ var InfoxBpmnModeler =
 	  if (value == null) {
 	    return value === undefined ? undefinedTag : nullTag;
 	  }
-	  value = Object(value);
-	  return (symToStringTag && symToStringTag in value)
+	  return (symToStringTag && symToStringTag in Object(value))
 	    ? getRawTag(value)
 	    : objectToString(value);
 	}
@@ -75842,10 +76037,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 856 */
+/* 855 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var root = __webpack_require__(857);
+	var root = __webpack_require__(856);
 
 	/** Built-in value references. */
 	var Symbol = root.Symbol;
@@ -75854,10 +76049,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 857 */
+/* 856 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var freeGlobal = __webpack_require__(858);
+	var freeGlobal = __webpack_require__(857);
 
 	/** Detect free variable `self`. */
 	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -75869,7 +76064,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 858 */
+/* 857 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
@@ -75880,10 +76075,10 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 859 */
+/* 858 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Symbol = __webpack_require__(856);
+	var Symbol = __webpack_require__(855);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -75932,7 +76127,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 860 */
+/* 859 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -75960,7 +76155,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 861 */
+/* 860 */
 /***/ function(module, exports) {
 
 	/**
@@ -75997,10 +76192,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 862 */
+/* 861 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var coreJsData = __webpack_require__(863);
+	var coreJsData = __webpack_require__(862);
 
 	/** Used to detect methods masquerading as native. */
 	var maskSrcKey = (function() {
@@ -76023,10 +76218,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 863 */
+/* 862 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var root = __webpack_require__(857);
+	var root = __webpack_require__(856);
 
 	/** Used to detect overreaching core-js shims. */
 	var coreJsData = root['__core-js_shared__'];
@@ -76035,7 +76230,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 864 */
+/* 863 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -76067,7 +76262,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 865 */
+/* 864 */
 /***/ function(module, exports) {
 
 	/**
@@ -76086,7 +76281,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 866 */
+/* 865 */
 /***/ function(module, exports) {
 
 	/**
@@ -76129,11 +76324,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 867 */
+/* 866 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(849),
-	    baseAssignValue = __webpack_require__(850);
+	var assignValue = __webpack_require__(848),
+	    baseAssignValue = __webpack_require__(849);
 
 	/**
 	 * Copies properties of `source` to `object`.
@@ -76175,11 +76370,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 868 */
+/* 867 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseRest = __webpack_require__(869),
-	    isIterateeCall = __webpack_require__(877);
+	var baseRest = __webpack_require__(868),
+	    isIterateeCall = __webpack_require__(876);
 
 	/**
 	 * Creates a function like `_.assign`.
@@ -76218,12 +76413,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 869 */
+/* 868 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(870),
-	    overRest = __webpack_require__(871),
-	    setToString = __webpack_require__(873);
+	var identity = __webpack_require__(869),
+	    overRest = __webpack_require__(870),
+	    setToString = __webpack_require__(872);
 
 	/**
 	 * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -76241,7 +76436,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 870 */
+/* 869 */
 /***/ function(module, exports) {
 
 	/**
@@ -76268,10 +76463,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 871 */
+/* 870 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var apply = __webpack_require__(872);
+	var apply = __webpack_require__(871);
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeMax = Math.max;
@@ -76310,7 +76505,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 872 */
+/* 871 */
 /***/ function(module, exports) {
 
 	/**
@@ -76337,11 +76532,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 873 */
+/* 872 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseSetToString = __webpack_require__(874),
-	    shortOut = __webpack_require__(876);
+	var baseSetToString = __webpack_require__(873),
+	    shortOut = __webpack_require__(875);
 
 	/**
 	 * Sets the `toString` method of `func` to return `string`.
@@ -76357,12 +76552,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 874 */
+/* 873 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var constant = __webpack_require__(875),
-	    defineProperty = __webpack_require__(851),
-	    identity = __webpack_require__(870);
+	var constant = __webpack_require__(874),
+	    defineProperty = __webpack_require__(850),
+	    identity = __webpack_require__(869);
 
 	/**
 	 * The base implementation of `setToString` without support for hot loop shorting.
@@ -76385,7 +76580,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 875 */
+/* 874 */
 /***/ function(module, exports) {
 
 	/**
@@ -76417,7 +76612,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 876 */
+/* 875 */
 /***/ function(module, exports) {
 
 	/** Used to detect hot functions by number of calls within a span of milliseconds. */
@@ -76460,13 +76655,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 877 */
+/* 876 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(866),
-	    isArrayLike = __webpack_require__(878),
-	    isIndex = __webpack_require__(880),
-	    isObject = __webpack_require__(861);
+	var eq = __webpack_require__(865),
+	    isArrayLike = __webpack_require__(877),
+	    isIndex = __webpack_require__(879),
+	    isObject = __webpack_require__(860);
 
 	/**
 	 * Checks if the given arguments are from an iteratee call.
@@ -76496,11 +76691,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 878 */
+/* 877 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(854),
-	    isLength = __webpack_require__(879);
+	var isFunction = __webpack_require__(853),
+	    isLength = __webpack_require__(878);
 
 	/**
 	 * Checks if `value` is array-like. A value is considered array-like if it's
@@ -76535,7 +76730,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 879 */
+/* 878 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -76576,7 +76771,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 880 */
+/* 879 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -76604,7 +76799,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 881 */
+/* 880 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -76628,12 +76823,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 882 */
+/* 881 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayLikeKeys = __webpack_require__(883),
-	    baseKeys = __webpack_require__(896),
-	    isArrayLike = __webpack_require__(878);
+	var arrayLikeKeys = __webpack_require__(882),
+	    baseKeys = __webpack_require__(895),
+	    isArrayLike = __webpack_require__(877);
 
 	/**
 	 * Creates an array of the own enumerable property names of `object`.
@@ -76671,15 +76866,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 883 */
+/* 882 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseTimes = __webpack_require__(884),
-	    isArguments = __webpack_require__(885),
-	    isArray = __webpack_require__(888),
-	    isBuffer = __webpack_require__(889),
-	    isIndex = __webpack_require__(880),
-	    isTypedArray = __webpack_require__(892);
+	var baseTimes = __webpack_require__(883),
+	    isArguments = __webpack_require__(884),
+	    isArray = __webpack_require__(887),
+	    isBuffer = __webpack_require__(888),
+	    isIndex = __webpack_require__(879),
+	    isTypedArray = __webpack_require__(891);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -76726,7 +76921,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 884 */
+/* 883 */
 /***/ function(module, exports) {
 
 	/**
@@ -76752,11 +76947,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 885 */
+/* 884 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsArguments = __webpack_require__(886),
-	    isObjectLike = __webpack_require__(887);
+	var baseIsArguments = __webpack_require__(885),
+	    isObjectLike = __webpack_require__(886);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -76794,11 +76989,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 886 */
+/* 885 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGetTag = __webpack_require__(855),
-	    isObjectLike = __webpack_require__(887);
+	var baseGetTag = __webpack_require__(854),
+	    isObjectLike = __webpack_require__(886);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]';
@@ -76818,7 +77013,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 887 */
+/* 886 */
 /***/ function(module, exports) {
 
 	/**
@@ -76853,7 +77048,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 888 */
+/* 887 */
 /***/ function(module, exports) {
 
 	/**
@@ -76885,11 +77080,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 889 */
+/* 888 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(857),
-	    stubFalse = __webpack_require__(891);
+	/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(856),
+	    stubFalse = __webpack_require__(890);
 
 	/** Detect free variable `exports`. */
 	var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -76927,10 +77122,10 @@ var InfoxBpmnModeler =
 
 	module.exports = isBuffer;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(890)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(889)(module)))
 
 /***/ },
-/* 890 */
+/* 889 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -76946,7 +77141,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 891 */
+/* 890 */
 /***/ function(module, exports) {
 
 	/**
@@ -76970,12 +77165,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 892 */
+/* 891 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsTypedArray = __webpack_require__(893),
-	    baseUnary = __webpack_require__(894),
-	    nodeUtil = __webpack_require__(895);
+	var baseIsTypedArray = __webpack_require__(892),
+	    baseUnary = __webpack_require__(893),
+	    nodeUtil = __webpack_require__(894);
 
 	/* Node.js helper references. */
 	var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -77003,12 +77198,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 893 */
+/* 892 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGetTag = __webpack_require__(855),
-	    isLength = __webpack_require__(879),
-	    isObjectLike = __webpack_require__(887);
+	var baseGetTag = __webpack_require__(854),
+	    isLength = __webpack_require__(878),
+	    isObjectLike = __webpack_require__(886);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -77069,7 +77264,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 894 */
+/* 893 */
 /***/ function(module, exports) {
 
 	/**
@@ -77089,10 +77284,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 895 */
+/* 894 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(858);
+	/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(857);
 
 	/** Detect free variable `exports`. */
 	var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -77115,14 +77310,14 @@ var InfoxBpmnModeler =
 
 	module.exports = nodeUtil;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(890)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(889)(module)))
 
 /***/ },
-/* 896 */
+/* 895 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isPrototype = __webpack_require__(881),
-	    nativeKeys = __webpack_require__(897);
+	var isPrototype = __webpack_require__(880),
+	    nativeKeys = __webpack_require__(896);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -77154,10 +77349,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 897 */
+/* 896 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(898);
+	var overArg = __webpack_require__(897);
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = overArg(Object.keys, Object);
@@ -77166,7 +77361,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 898 */
+/* 897 */
 /***/ function(module, exports) {
 
 	/**
@@ -77187,13 +77382,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 899 */
+/* 898 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var ReplaceMenuProvider = __webpack_require__(826);
-	var is = __webpack_require__(460).is;
-	var isAny = __webpack_require__(594).isAny;
+	var ReplaceMenuProvider = __webpack_require__(825);
+	var is = __webpack_require__(458).is;
+	var isAny = __webpack_require__(592).isAny;
 
 	function InfoxReplaceMenuProvider(popupMenu, modeling, moddle, bpmnReplace, rules, translate) {
 	    ReplaceMenuProvider.call(this, popupMenu, modeling, moddle, bpmnReplace, rules, translate);
@@ -77229,14 +77424,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 900 */
+/* 899 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var ContextPadProvider = __webpack_require__(830);
-	var assign = __webpack_require__(848);
-	var is = __webpack_require__(460).is;
-	var isAny = __webpack_require__(594).isAny;
+	var ContextPadProvider = __webpack_require__(829);
+	var assign = __webpack_require__(847);
+	var is = __webpack_require__(458).is;
+	var isAny = __webpack_require__(592).isAny;
 
 	function InfoxContextPadProvider(eventBus, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate, parallelGatewayDirectionProvider, infoxModeler) {
 	    ContextPadProvider.call(this, eventBus, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate);
@@ -77381,12 +77576,12 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 901 */
+/* 900 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var BpmnRules = __webpack_require__(742);
-	var is = __webpack_require__(460).is;
+	var BpmnRules = __webpack_require__(740);
+	var is = __webpack_require__(458).is;
 
 	function InfoxBpmnRules(eventBus) {
 	    BpmnRules.call(this, eventBus);
@@ -77424,7 +77619,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 902 */
+/* 901 */
 /***/ function(module, exports) {
 
 	function brazilianPortugueseTranslate(template, replacements) {
@@ -77498,7 +77693,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 903 */
+/* 902 */
 /***/ function(module, exports) {
 
 	function ParallelGatewayDirectionProvider(popupMenu, translate, modeling) {
@@ -77538,13 +77733,13 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 904 */
+/* 903 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var LabelEditingProvider = __webpack_require__(739);
-	var is = __webpack_require__(460).is;
+	var LabelEditingProvider = __webpack_require__(737);
+	var is = __webpack_require__(458).is;
 	var inherits = __webpack_require__(3);
 
 	function InfoxLabelEditingProvider(eventBus, canvas, directEditing, commandStack) {

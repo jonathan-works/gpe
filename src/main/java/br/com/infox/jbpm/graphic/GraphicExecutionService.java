@@ -161,7 +161,7 @@ public class GraphicExecutionService {
     }
     
     private void createRedSequenceFlowEnd(Document document, XPath xPath) throws XPathExpressionException {
-        Element sequenceFlowEnd = (Element) xPath.compile("//marker[@id='sequenceflow-end']").evaluate(document, XPathConstants.NODE);
+        Element sequenceFlowEnd = (Element) xPath.compile("//marker[@id='sequenceflow-end-white-black']").evaluate(document, XPathConstants.NODE);
         Element redSequenceFlowEnd = (Element) sequenceFlowEnd.cloneNode(true);
         redSequenceFlowEnd.setAttribute("id", "sequenceflow-end-red");
         Element path = (Element) redSequenceFlowEnd.getFirstChild();

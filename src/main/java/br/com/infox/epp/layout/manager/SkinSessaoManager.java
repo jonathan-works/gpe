@@ -30,13 +30,14 @@ public class SkinSessaoManager implements Serializable {
 	
 	public void setSkinCookie(String skin) {
 		PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
-		Cookie cookie = new Cookie(NOME_COOKIE_SKIN, skin);
-		cookie.setMaxAge(Selector.DEFAULT_MAX_AGE);
-		cookie.setPath(pathResolver.getContextPath());
-		
-		
-		HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-		response.addCookie(cookie);
+		setSkinCookie(skin, pathResolver.getContextPath(), (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse());
+	}
+	
+	public void setSkinCookie(String skin, String contextPath, HttpServletResponse response) {
+	    Cookie cookie = new Cookie(NOME_COOKIE_SKIN, skin);
+        cookie.setMaxAge(Selector.DEFAULT_MAX_AGE);
+        cookie.setPath(contextPath);
+        response.addCookie(cookie);
 	}
 	
 	public String getSkinCookie() {

@@ -9,6 +9,7 @@ import org.jboss.seam.async.QuartzTriggerHandle;
 import br.com.infox.epp.estatistica.abstracts.BamTimerProcessor;
 import br.com.infox.epp.estatistica.startup.BamTimerStarter;
 import br.com.infox.epp.quartz.client.QuartzRestFactory;
+import br.com.infox.epp.system.Configuration;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -23,7 +24,9 @@ public class ProcessoTimerProcessor implements BamTimerProcessor {
     @Asynchronous
     public QuartzTriggerHandle increaseTimeSpent(@IntervalCron String cron) {
         try {
-            QuartzRestFactory.create().getBamResource().processoTimerProcessor(BamTimerStarter.ID_INICIAR_PROCESSO_TIMER_PARAMETER, PrazoEnum.D);
+        	if(!Configuration.getInstance().isDesenvolvimento()){
+        		QuartzRestFactory.create().getBamResource().processoTimerProcessor(BamTimerStarter.ID_INICIAR_PROCESSO_TIMER_PARAMETER, PrazoEnum.D);
+        	}
         } catch (Exception e) {
             LOG.error(e);
         }

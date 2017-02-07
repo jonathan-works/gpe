@@ -237,6 +237,7 @@
    <h:form id="buttonsTaskPageComunicacaoForm">
 		<s:fragment rendered="#{envioComunicacaoController.inTask and (envioComunicacaoController.expedida or envioComunicacaoController.exibirTransicoes)}">
 			<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
+			<ui:param name="taskEndAction" value="envioComunicacaoController.endTask(taskInstanceHome.name)" />
 			<ui:include src="#{envioComunicacaoController.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml' : ''}" />
 		</s:fragment>
    </h:form>

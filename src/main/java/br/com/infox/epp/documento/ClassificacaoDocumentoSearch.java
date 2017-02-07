@@ -33,6 +33,18 @@ public class ClassificacaoDocumentoSearch extends PersistenceController {
         return em.createQuery(cq).getResultList();
     }
     
+    public List<ClassificacaoDocumento> findClassificacaoDocumentoWithDescricaoLikeSemTipo(String pattern) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<ClassificacaoDocumento> cq = cb.createQuery(ClassificacaoDocumento.class);
+        Root<ClassificacaoDocumento> classificacao = cq.from(ClassificacaoDocumento.class);
+
+        Predicate like = cb.like(cb.lower(classificacao.get(ClassificacaoDocumento_.descricao)), cb.lower(cb.literal("%" + pattern.toLowerCase() + "%")));
+        cq = cq.select(classificacao).where(like);
+        cq.orderBy(cb.asc(classificacao.get((ClassificacaoDocumento_.descricao))));
+        return em.createQuery(cq).getResultList();
+    }
+    
     public List<ClassificacaoDocumento> listClassificacoesDocumentoDisponiveisVariavelFluxo(List<String> codigosClassificacoesAdicionadas, 
     		TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento, int start, int max) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();

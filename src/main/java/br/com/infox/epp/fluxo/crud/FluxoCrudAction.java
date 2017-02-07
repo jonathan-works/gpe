@@ -2,6 +2,12 @@ package br.com.infox.epp.fluxo.crud;
 
 import static org.jboss.seam.international.StatusMessage.Severity.ERROR;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -12,6 +18,7 @@ import br.com.infox.core.controller.Controller;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.fluxo.entity.ExtensaoFluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 
@@ -24,6 +31,10 @@ public class FluxoCrudAction implements Controller {
     private FluxoController fluxoController;
     @Inject
     private FluxoManager fluxoManager;
+    
+    @Any
+    @Inject
+    private Instance<ExtensaoFluxo> extensaoFluxo;
     
     private Fluxo replica;
     private String tab = TAB_SEARCH;
@@ -133,5 +144,14 @@ public class FluxoCrudAction implements Controller {
 	public boolean canExportar() {
 	    return getInstance() != null && getInstance().getIdFluxo() != null && getInstance().getDefinicaoProcesso().getXml() != null;
 	}
+
+    public List<String> getPagesExtensao() {
+        List<String> pages = new ArrayList<>();
+        for (Iterator<ExtensaoFluxo> iterator = extensaoFluxo.iterator(); iterator.hasNext();) {
+			ExtensaoFluxo extensaoFluxo = iterator.next();
+			pages.addAll(extensaoFluxo.getExtensoes());
+		}
+        return pages;
+    }
     
 }

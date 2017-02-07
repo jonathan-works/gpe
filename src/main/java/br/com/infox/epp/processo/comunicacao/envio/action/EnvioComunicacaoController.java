@@ -51,6 +51,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.usuario.UsuarioLoginSearch;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.Taskpage;
 import br.com.infox.ibpm.variable.TaskpageParameter;
@@ -142,15 +143,15 @@ public class EnvioComunicacaoController implements Serializable {
 	public void init() {
 		String idJbpm = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("jbpmProcessId");
 		String idModelo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idModeloComunicacao");
+		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
 		if (idJbpm != null) { // Nova comunicação fora da aba de saída
 			processInstanceId = Long.valueOf(idJbpm);
 		} else if (idModelo == null) { // Nova comunicação dentro da aba de saída
 			processInstanceId = Long.valueOf(JbpmUtil.getProcesso().getIdJbpm());
-			inTask = true;
+			inTask = taskInstance != null;
 		}
-		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
 		if (taskInstance != null) {
-			idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
+		    idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
 		}
 		initModelo(idModelo == null ? null : Long.valueOf(idModelo));
 		initParametros();
@@ -607,7 +608,7 @@ public class EnvioComunicacaoController implements Serializable {
     }
     
     public boolean isExibirTransicoes() {
-        return exibirTransicoes && getModeloComunicacao().getFinalizada() && (!podeAssinar() || assinouComunicacao());
+        return exibirTransicoes && getModeloComunicacao().getFinalizada();
     }
 
     private boolean podeAssinar() {
@@ -627,5 +628,13 @@ public class EnvioComunicacaoController implements Serializable {
 
     public boolean isExibirResponsaveisAssinatura() {
         return exibirResponsaveisAssinatura;
+    }
+    
+    public void endTask(String transition) {
+        if (!TaskInstanceHome.instance().isTransitionValidateForm(transition) || !podeAssinar() || assinouComunicacao()) {
+            TaskInstanceHome.instance().end(transition);
+        } else {
+            FacesMessages.instance().add("É necessário assinar a comunicação para continuar");
+        }
     }
 }

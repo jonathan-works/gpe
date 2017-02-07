@@ -68,7 +68,6 @@ public class QuartzResourceImpl implements QuartzResource {
     }
     
     @Override
-    @Transactional
     public BamResource getBamResource() {
         return bamResourceImpl;
     }

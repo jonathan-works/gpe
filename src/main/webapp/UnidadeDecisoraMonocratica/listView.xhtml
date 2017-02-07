@@ -40,6 +40,11 @@
 			                clearRender="@this"
 			                label="#{infoxMessages['unidadeDecisoraMonocratica.localizacao']}" 
                             styleClass="#{empty item.entity.estruturaFilho ? 'tree-notselectable' : ''}"/>
+                            
+                    <wi:selectBooleanMenu
+		             	id="recebeDistribuicao"
+		             	label="#{infoxMessages['unidadeDecisoraMonocratica.recebeDistribuicao']}"
+		             	value="#{bean.entity.recebeDistribuicao}" />
                     
                     <wi:selectSituacaoOneMenu
 	                        id="ativo"
@@ -59,6 +64,11 @@
                 columnHeader="#{infoxMessages['unidadeDecisoraMonocratica.localizacao']}"
                 value="#{row.localizacao}"/>
             
+            <wi:columnBoolean
+                columnId="recebe"
+                columnHeader="#{infoxMessages['unidadeDecisoraMonocratica.recebeDistribuicao']}"
+                value="#{row.recebeDistribuicao}"/>
+                
             <wi:columnSituacao
                 columnId="ativo"
                 columnHeader="#{infoxMessages['field.situacao']}"
@@ -92,9 +102,15 @@
                     styleClass="#{empty item.entity.estruturaFilho ? 'tree-notselectable' : ''}"/>
                     
              <wi:selectOneMenuEntity id="chefeGabinete" value="#{unidadeDecisoraMonocraticaCrudAction.instance.chefeGabinete}" 
-                  label="#{infoxMessages['unidadeDecisoraMonocratica.chefeGabinete']}" rendered="#{unidadeDecisoraMonocraticaCrudAction.managed}" 
+                  label="#{infoxMessages['unidadeDecisoraMonocratica.chefeGabinete']}"
                   items="#{unidadeDecisoraMonocraticaCrudAction.possiveisChefesGabinete}" required="true"
-                  optionLabel="#{item.cpf} - #{item.nome.toUpperCase()}"/>
+                  optionLabel="#{item.cpf} - #{item.nome.toUpperCase()}"
+                  disabled="#{empty unidadeDecisoraMonocraticaCrudAction.localizacao}"/>
+	               
+             <wi:selectBooleanCheckbox
+             	id="recebeDistribuicao"
+             	label="#{infoxMessages['unidadeDecisoraMonocratica.recebeDistribuicao']}"
+             	value="#{unidadeDecisoraMonocraticaCrudAction.instance.recebeDistribuicao}" />
             
              <wi:selectSituacaoRadio
 	               id="ativo"

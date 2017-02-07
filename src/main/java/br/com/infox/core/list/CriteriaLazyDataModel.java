@@ -51,7 +51,7 @@ public class CriteriaLazyDataModel<T> extends LazyDataModel<T> {
 	public String getOrCreateAlias(Selection<?> selection) {
 		String alias = selection.getAlias();
 		if (alias == null) {
-			alias = "_" + selection.getJavaType().getSimpleName() + "_" + aliasCount++;
+			alias = selection.getJavaType().getSimpleName() + "_" + aliasCount++ + "_";
 			selection.alias(alias);
 		}
 		return alias;
@@ -90,7 +90,7 @@ public class CriteriaLazyDataModel<T> extends LazyDataModel<T> {
 	private void copyJoins(From<?,?> src, From<?, ?> dest) {
 		for(Join<?, ?> srcJoin : src.getJoins()) {
 			Join<?, ?> destJoin = dest.join(srcJoin.getAttribute().getName(), srcJoin.getJoinType());
-			destJoin.alias(getOrCreateAlias(src));
+			destJoin.alias(getOrCreateAlias(srcJoin));
 			copyJoins(srcJoin, destJoin);
 		}
 	}

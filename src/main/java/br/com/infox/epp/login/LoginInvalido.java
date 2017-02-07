@@ -1,6 +1,7 @@
 package br.com.infox.epp.login;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +29,9 @@ public class LoginInvalido {
 	
 	@Column(name="dt_login")
 	private Date data;
+	
+	@Column(name="ds_login")
+	private String login; 	
 
 	public CookieCaptcha getCookieCaptcha() {
 		return cookieCaptcha;
@@ -48,6 +52,13 @@ public class LoginInvalido {
 	public int getId() {
 		return id;
 	}
-	
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
 
 }

@@ -61,6 +61,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 
 @Entity
@@ -382,12 +383,16 @@ public class Documento implements Serializable, Cloneable {
     }
     
     public boolean isDocumentoAssinado(UsuarioLogin usuarioLogin){
-    	for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
-    		if (assinaturaDocumento.getPessoaFisica().equals(usuarioLogin.getPessoaFisica())){
-    			return true;
-    		}
-    	}
-    	return false;
+    	return isDocumentoAssinado(usuarioLogin.getPessoaFisica());
+    }
+    
+    public boolean isDocumentoAssinado(PessoaFisica pessoa){
+        for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
+            if (assinaturaDocumento.getPessoaFisica().equals(pessoa)){
+                return true;
+            }
+        }
+        return false;
     }
     
     public boolean hasAssinaturaSuficiente() {
@@ -424,6 +429,32 @@ public class Documento implements Serializable, Cloneable {
             }
         }
     	return TipoAssinaturaEnum.O.equals(tipoAssinaturaEncontrado) || (TipoAssinaturaEnum.S.equals(tipoAssinaturaEncontrado) && !existeObrigatoria);
+    }
+    
+    public boolean isDocumentoAssinavel(PessoaFisica pessoaFisica, Papel papel) {
+        if (getClassificacaoDocumento() == null || !isDocumentoAssinavel(papel)) {
+            return false;
+        }
+
+        boolean pessoaAssinouDocumento = isDocumentoAssinado(pessoaFisica);
+        boolean papelAssinouDocumento = isDocumentoAssinado(papel);
+        boolean permiteAssinaturaMultipla = papelPermiteAssinaturaMultipla(papel);
+        
+        return !pessoaAssinouDocumento && (permiteAssinaturaMultipla || !papelAssinouDocumento);
+    }
+    
+    public boolean papelPermiteAssinaturaMultipla(Papel papel) {
+        if (getClassificacaoDocumento() == null) {
+            return false;
+        }
+        
+        for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
+            if (classificacaoDocumentoPapel.getPapel().equals(papel)) {
+                return classificacaoDocumentoPapel.getAssinaturasMultiplas();
+            }
+        }
+        
+        return false;
     }
     
     @Transient

@@ -113,6 +113,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		try {
 			processoManager.iniciarTask(instance, getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
 			documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
+			carregarVariaveisDetalhe();
 		} catch (java.lang.NullPointerException e) {
 			LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
 		} catch (DAOException e) {
@@ -127,12 +128,13 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 			}
 		}
 	}
+	
+	private void carregarVariaveisDetalhe() {
+	    variaveisDetalhe = variavelProcessoService.getVariaveis(instance, 
+                DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
+	}
 
 	public List<VariavelProcesso> getVariaveisDetalhe() {
-		if (variaveisDetalhe == null) {
-			variaveisDetalhe = variavelProcessoService.getVariaveis(instance, 
-					DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
-		}
 		return variaveisDetalhe;
     }
 	

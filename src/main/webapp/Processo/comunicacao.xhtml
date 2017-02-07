@@ -143,11 +143,11 @@
 	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']}"
 	    		rendered="#{comunicacaoAction.documentos}">
 	    		<div>
-	    			<i:outputText id="numeroComunicacao" label="#{infoxMessages['comunicacao.numeroComunicacao']}"
+	    			<wi:outputText id="numeroComunicacao" label="#{infoxMessages['comunicacao.numeroComunicacao']}"
 	    				value="#{comunicacaoAction.destinatario.numeroComunicacao}"/>
-	    			<i:outputText id="destinatarioComunicacao" label="#{infoxMessages['comunicacao.destinatario']}"
+	    			<wi:outputText id="destinatarioComunicacao" label="#{infoxMessages['comunicacao.destinatario']}"
 	    				value="#{comunicacaoAction.destinatario.nome}"/>
-	    			<i:outputText id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
+	    			<wi:outputText id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
 	    				value="#{comunicacaoAction.destinatario.tipoComunicacao}"/>
 	    		</div>
 	    		<h:form id="documentoComunicacaoDownload" style="padding-bottom: 1em;">

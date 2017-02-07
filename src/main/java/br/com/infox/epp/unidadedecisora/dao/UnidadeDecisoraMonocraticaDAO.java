@@ -9,6 +9,7 @@ import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocratic
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_EXISTE_UDM_BY_LOCALIZACAO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_UDM_BY_USUARIO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -93,6 +95,18 @@ public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratic
 	    cq.where(cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo)));
 	    return getEntityManager().createQuery(cq).getResultList();
 	}
+	
+	public List<UnidadeDecisoraMonocratica> searchUnidadeDecisoraMonocratica(boolean ativo, boolean aceitaDistribuicao) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
+        Root<UnidadeDecisoraMonocratica> udm = cq.from(UnidadeDecisoraMonocratica.class);
+        cq.select(udm);
+        List<Predicate> predicates = new ArrayList<Predicate>();
+        predicates.add(cb.equal(udm.get(UnidadeDecisoraMonocratica_.ativo), ativo));
+        predicates.add(cb.equal(udm.get(UnidadeDecisoraMonocratica_.recebeDistribuicao), aceitaDistribuicao));
+        cq.where(predicates.toArray(new Predicate[]{}));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 	
 	@Override
 	public List<UnidadeDecisoraMonocratica> findAll() {
