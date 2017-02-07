@@ -228,7 +228,7 @@ public class ComunicacaoService {
 					}
 				}
 			}
-			
+			pdfDocument.addTitle("Comunicação");
 			pdfDocument.close();
 			
 			if (destinatario != null && destinatario.getExpedido()) {
