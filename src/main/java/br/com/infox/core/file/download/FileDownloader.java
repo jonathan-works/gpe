@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.Collection;
 
 import javax.ejb.Stateless;
 import javax.faces.context.ExternalContext;
@@ -27,9 +26,7 @@ import org.jboss.seam.faces.FacesMessages;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfCopy;
-import com.lowagie.text.pdf.PdfDocument;
 import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
@@ -152,11 +149,18 @@ public class FileDownloader implements Serializable {
         return String.format("application/%s", documentoBin.getExtensao());
     }
 
-    public void downloadDocumento(DocumentoBin documentoBin) throws IOException {
+    public void downloadDocumento(DocumentoBin documentoBin, boolean gerarMargens) throws IOException {
         if (documentoBin == null)
             return;
-        
-        downloadDocumento(getData(documentoBin), getContentType(documentoBin), extractNomeArquivo(documentoBin));
+        downloadDocumento(getData(documentoBin, gerarMargens), getContentType(documentoBin), extractNomeArquivo(documentoBin));    	
+    }
+    
+    public void downloadDocumentoOriginal(DocumentoBin documentoBin) throws IOException {
+    	downloadDocumento(documentoBin, false);
+    }
+    
+    public void downloadDocumento(DocumentoBin documentoBin) throws IOException {
+    	downloadDocumento(documentoBin, true);
     }
 
     public void downloadDocumento(Documento documento) throws IOException {
@@ -230,6 +234,10 @@ public class FileDownloader implements Serializable {
     }
 
     public byte[] getData(DocumentoBin documento) {
+    	return getData(documento, true);
+    }
+    
+    public byte[] getData(DocumentoBin documento, boolean gerarMargens) {
         byte[] data = new byte[0];
         if (documentoBinarioManager.existeBinario(documento.getId())) {
             data = documentoBinarioManager.getData(documento.getId());
@@ -245,7 +253,7 @@ public class FileDownloader implements Serializable {
             data = outputStream.toByteArray();
         }
          
-        if (podeExibirMargem(documento)) {
+        if (gerarMargens && podeExibirMargem(documento)) {
             data = documentoBinManager.writeMargemDocumento(data, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento));
         }
         return data;
