@@ -17,7 +17,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
 
 import org.jbpm.graph.exe.ExecutionContext;
 
@@ -636,6 +635,14 @@ public class BpmExpressionService {
     	if ( !udcs.isEmpty() ) {
     		metadadoProcessoManager.setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo, udcs.get(0));
     	}
+    }
+    
+    @External(expressionType = ExpressionType.EVENTOS, tooltip = "process.events.expression.removerDistribuicao.tooltip")
+    public void removerDistribuicao() {
+    	Processo processo = getProcessoAtual();
+    	metadadoProcessoManager.removerMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA, processo);
+    	metadadoProcessoManager.removerMetadado(EppMetadadoProvider.RELATOR, processo);
+    	metadadoProcessoManager.removerMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo);
     }
 
     public List<ExternalMethod> getExternalMethods() {
