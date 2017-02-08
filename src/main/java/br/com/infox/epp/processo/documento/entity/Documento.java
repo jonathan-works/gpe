@@ -17,7 +17,6 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.lIST_DOCU
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -509,10 +508,25 @@ public class Documento implements Serializable, Cloneable {
 			cList.add(cHistorico);
 		}
 		cDocumento.setHistoricoStatusDocumentoList(cList);
+		
+		List<PublicacaoDocumento> listPub = new ArrayList<>();
+		for (PublicacaoDocumento pd : cDocumento.getPublicacoes()) {
+			PublicacaoDocumento cPub = pd.makeCopy();
+			cPub.setDocumento(cDocumento);
+			listPub.add(cPub);
+		}
+		cDocumento.setPublicacoes(listPub);
 		return cDocumento;
 	}
 
 	public List<PublicacaoDocumento> getPublicacoes() {
-		return Collections.unmodifiableList(publicacoes);
+		return publicacoes;
 	}
+
+	public void setPublicacoes(List<PublicacaoDocumento> publicacoes) {
+		this.publicacoes = publicacoes;
+	}
+
+	
+
 }
