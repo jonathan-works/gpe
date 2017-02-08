@@ -18,6 +18,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.processo.prioridade.query.PrioridadeProcessoQuery;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
 @Table(name = PrioridadeProcessoQuery.TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = PrioridadeProcessoQuery.COLUMN_DESCRICAO))
@@ -87,6 +88,7 @@ public class PrioridadeProcesso implements Serializable, Comparable<PrioridadePr
 
     @Override
     public boolean equals(Object obj) {
+    	obj = HibernateUtil.removeProxy(obj);
         if (this == obj)
             return true;
         if (obj == null)
