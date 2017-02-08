@@ -48,6 +48,8 @@ import br.com.infox.seam.path.PathResolver;
 @BypassInterceptors
 public class FileDownloader implements Serializable {
 
+	private static final String EXTENSAO_PADRAO = "pdf";
+	
     private static final long serialVersionUID = 1L;
     public static final String NAME = "fileDownloader";
     private static final LogProvider LOG = Logging.getLogProvider(FileDownloader.class);
@@ -134,7 +136,8 @@ public class FileDownloader implements Serializable {
     }
 
     public boolean isPdf(DocumentoBin documentoBin){
-        return "pdf".equalsIgnoreCase(documentoBin.getExtensao()) || StringUtils.isEmpty(documentoBin.getExtensao());
+    	String extensao = getExtensao(documentoBin);
+        return "pdf".equalsIgnoreCase(extensao);
     }
 
     public String getContentType(DocumentoTemporario documento){
@@ -144,9 +147,13 @@ public class FileDownloader implements Serializable {
     public String getContentType(Documento documento){
         return getContentType(documento.getDocumentoBin());
     }
-
+    
+    private String getExtensao(DocumentoBin documentoBin) {
+    	return StringUtils.isEmpty(documentoBin.getExtensao()) ? EXTENSAO_PADRAO : documentoBin.getExtensao();
+    }
+    
     public String getContentType(DocumentoBin documentoBin){
-        return String.format("application/%s", documentoBin.getExtensao());
+        return String.format("application/%s", getExtensao(documentoBin));
     }
 
     public void downloadDocumento(DocumentoBin documentoBin, boolean gerarMargens) throws IOException {
@@ -223,7 +230,7 @@ public class FileDownloader implements Serializable {
         String nomeArquivo=documento.getNomeArquivo();
         String extensao = documento.getExtensao();
         if (StringUtil.isEmpty(extensao)){
-            documento.setExtensao("pdf");
+            documento.setExtensao(EXTENSAO_PADRAO);
         }
         if (StringUtil.isEmpty(nomeArquivo)){
             nomeArquivo=documento.getUuid().toString();
@@ -283,7 +290,7 @@ public class FileDownloader implements Serializable {
 
     public void download(DocumentoBin documentoBin) {
     	byte[] data = getData(documentoBin);
-    	download(data, "application/" + documentoBin.getExtensao(), documentoBin.getNomeArquivo());
+    	download(data, "application/" + getExtensao(documentoBin), documentoBin.getNomeArquivo());
     }
 
     public String getWindowOpen(Boolean isPdf) {
