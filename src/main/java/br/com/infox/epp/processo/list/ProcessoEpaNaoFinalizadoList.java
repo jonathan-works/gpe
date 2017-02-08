@@ -3,24 +3,23 @@ package br.com.infox.epp.processo.list;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
 import org.primefaces.model.chart.MeterGaugeChartModel;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.util.CollectionUtil;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
@@ -36,7 +35,7 @@ import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
 
     private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_EJBQL = "select o from ProcessoTarefa o "
+    private static final String DEFAULT_EJBQL = "select distinct p from ProcessoTarefa o "
             + "inner join o.processo p "
             + "inner join p.naturezaCategoriaFluxo ncf "
             + "where p.dataFim is null";
@@ -89,13 +88,12 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
 
     @Override
     public void newInstance() {
-        this.fluxo = null;
         this.situacaoPrazo = null;
         super.newInstance();
     }
 
     public Fluxo getFluxo() {
-        return fluxo;
+        return ObjectUtils.defaultIfNull(this.fluxo, CollectionUtil.firstOrNull(getFluxoList()));
     }
 
     public void setFluxo(Fluxo fluxo) {
@@ -103,48 +101,37 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     }
 
     public MeterGaugeChartModel getMeterMediaTempoGastoDesdeInicioProcesso(){
-        if(fluxo!= null){
-            MeterGaugeChartModel gauge = new MeterGaugeChartModel();
-            gauge.setGaugeLabel(InfoxMessages.getInstance().get("bam.medidorProcSel"));
-            gauge.setMin(0);
-            gauge.setValue(getMediaTempoGastoDesdeInicioProcesso());
-            gauge.setMax(getFluxo().getQtPrazo());
-            gauge.setShowTickLabels(true);
-            return gauge;
-        }else
-            return null;
+    	MeterGaugeChartModel gauge = new MeterGaugeChartModel();
+        gauge.setGaugeLabel(InfoxMessages.getInstance().get("bam.medidorProcSel"));
+        gauge.setGaugeLabelPosition("top");
+        gauge.setMin(0);
+        gauge.setValue(getMediaTempoGastoDesdeInicioProcesso());
+        gauge.setMax(getFluxo()!= null ? getFluxo().getQtPrazo(): 0);
+        gauge.setShowTickLabels(true);
+        return gauge;
     }
     
-    public long getMediaTempoGastoDesdeInicioProcesso() {
-        if(fluxo != null && getEntity().getProcesso() != null) {
-            long media = 0;
-            StringBuilder hql = new StringBuilder("select p.dataInicio from Processo p ");
+    public double getMediaTempoGastoDesdeInicioProcesso() {
+    	if(getFluxo() != null) {
+            StringBuilder hql = new StringBuilder("select avg(p.tempoGasto) from Processo p ");
             hql.append("inner join p.naturezaCategoriaFluxo ncf ");
             hql.append("where p.dataFim is null ");
             if (getFluxo() != null) {
                 hql.append("and ncf.fluxo = :fluxo ");
             }
-            if (getEntity().getProcesso().getSituacaoPrazo() != null) {
+            if (getSituacaoPrazo() != null) {
                 hql.append("and p.situacaoPrazo = :situacaoPrazo ");
             }
-            TypedQuery<Date> query = getEntityManager().createQuery(hql.toString(), Date.class);
+            TypedQuery<Double> query = getEntityManager().createQuery(hql.toString(), Double.class);
             if (getFluxo() != null) {
                 query.setParameter("fluxo", getFluxo());
             }
-            if (getEntity().getProcesso().getSituacaoPrazo() != null) {
-                query.setParameter("situacaoPrazo", getEntity().getProcesso().getSituacaoPrazo());
+            if (getSituacaoPrazo() != null) {
+                query.setParameter("situacaoPrazo", getSituacaoPrazo());
             }
     
-            LocalDate now = LocalDate.now();
-            List<Date> result = query.getResultList();
-            for (Date dataInicio : result) {
-                LocalDate data = LocalDate.fromDateFields(dataInicio);
-                media += Days.daysBetween(data, now).getDays();
-            }
-    
-            return !result.isEmpty() ? media / result.size() : 0;
-        }else
-            return 0;
+            return CollectionUtil.firstOrNull(query.getResultList());
+        } else return 0.0;
     }
 
     public List<SituacaoPrazoEnum> getTiposSituacaoPrazo() {
@@ -171,10 +158,6 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
         	Item item = metadadoProcesso.getValue();
             return MessageFormat.format("{0}/{1}/{2}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria(), item.getDescricaoItem());
         }
-    }
-
-    public int getDiasDesdeInicioProcesso(Processo processo) {
-        return processoTarefaManager.getDiasDesdeInicioProcesso(processo);
     }
 
     public SituacaoPrazoEnum getSituacaoPrazo() {

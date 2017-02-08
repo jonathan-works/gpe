@@ -10,7 +10,6 @@ import org.primefaces.model.chart.MeterGaugeChartModel;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -65,17 +64,14 @@ public class ProcessoTarefaList extends EntityList<ProcessoTarefa> {
     
     public MeterGaugeChartModel getMeterTempoGastoDesdeInicioProcesso(){
         MeterGaugeChartModel gauge = new MeterGaugeChartModel();
-        gauge.setValue(getDiasDesdeInicioProcesso());
+        gauge.setValue(getEntity().getProcesso().getTempoGasto());
         gauge.setMin(0);
         Fluxo fluxo = getEntity().getProcesso().getNaturezaCategoriaFluxo().getFluxo();
         gauge.setMax(fluxo.getQtPrazo());
         gauge.setGaugeLabel(fluxo.getFluxo());
+        gauge.setGaugeLabelPosition("top");
         gauge.setShowTickLabels(true);
-        //#{infoxMessages['processoEpa.tempoGasto']} (dias)
         return gauge;
     }
     
-    public int getDiasDesdeInicioProcesso() {
-        return processoTarefaManager.getDiasDesdeInicioProcesso(getEntity().getProcesso());
-    }
 }
