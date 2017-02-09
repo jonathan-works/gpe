@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
+import br.com.infox.core.exception.SystemException;
 import br.com.infox.core.exception.SystemExceptionFactory;
 import br.com.infox.core.net.UrlBuilder;
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -22,6 +23,8 @@ import br.com.infox.jwt.JWTBuilder;
 import br.com.infox.jwt.claims.JWTClaim;
 import br.com.infox.jwt.claims.JWTRegisteredClaims;
 import br.com.infox.jwt.encryption.Algorithm;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.security.rsa.RSAErrorCodes;
 import br.com.infox.security.rsa.RSAUtil;
@@ -29,7 +32,9 @@ import br.com.infox.security.rsa.RSAUtil;
 @Stateless
 public class LinkAplicacaoExternaService {
 
-    @Inject
+    private static final LogProvider LOG = Logging.getLogProvider(LinkAplicacaoExternaService.class);
+    
+	@Inject
     @GenericDao
     private Dao<LinkAplicacaoExterna, Integer> dao;
     
@@ -58,13 +63,21 @@ public class LinkAplicacaoExternaService {
     }
     
     public String appendJWTTokenToUrlQuery(LinkAplicacaoExterna linkAplicacaoExterna, Collection<Entry<JWTClaim,Object>> claims){
-        String jwtToken = generateTokenFor(claims);
-        return new UrlBuilder(linkAplicacaoExterna.getUrl()).query("epp.auth.jwt", jwtToken).build();
+        try {
+        	String jwtToken = generateTokenFor(claims);
+        	return new UrlBuilder(linkAplicacaoExterna.getUrl()).query("epp.auth.jwt", jwtToken).build();
+        } catch (SystemException e){
+        	if (e.getErrorCode() instanceof RSAErrorCodes){
+        		LOG.warn("Erro ao gerar token JWT", e);
+        		return new UrlBuilder(linkAplicacaoExterna.getUrl()).build();
+        	}
+        	throw e;
+        }
     }
 
     private byte[] getPrivateKey(){
         String base64RsaKey = Parametros.EPP_API_RSA_PRIVATE_KEY.getValue();
-        if (base64RsaKey == null || base64RsaKey.isEmpty() || base64RsaKey.equalsIgnoreCase("-1")){
+        if (base64RsaKey == null || base64RsaKey.isEmpty()){
             throw SystemExceptionFactory.create(RSAErrorCodes.INVALID_PRIVATE_KEY_STRUCTURE)
             .set(Parametros.EPP_API_RSA_PRIVATE_KEY.getLabel(), base64RsaKey);
         }
