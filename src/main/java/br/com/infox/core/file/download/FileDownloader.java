@@ -295,8 +295,8 @@ public class FileDownloader implements Serializable {
 
     public String getWindowOpen(Boolean isPdf) {
         return isPdf
-                ? "window.open('" + pathResolver.getContextPath() + "/downloadDocumento.seam', '_blank');"
-                : "window.open('" + pathResolver.getContextPath() + "/downloadDocumento.seam', '_self');";
+                ? "infox.openPopUp('_blank', '" + pathResolver.getContextPath() + "/downloadDocumento.seam');"
+                : "infox.openPopUp('_self', '" + pathResolver.getContextPath() + "/downloadDocumento.seam');";
     }
 
     public String getWindowOpen(DocumentoBin documentoBin) {
