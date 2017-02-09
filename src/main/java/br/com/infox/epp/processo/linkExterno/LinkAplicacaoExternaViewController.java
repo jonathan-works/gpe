@@ -10,8 +10,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.context.RequestContext;
-
 import com.google.gson.Gson;
 
 import br.com.infox.epp.access.api.Authenticator;
@@ -20,6 +18,7 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.jwt.JWT;
 import br.com.infox.jwt.claims.InfoxPrivateClaims;
 import br.com.infox.jwt.claims.JWTClaim;
@@ -96,7 +95,7 @@ public class LinkAplicacaoExternaViewController implements Serializable{
     @ExceptionHandled
     public void executar(LinkAplicacaoExterna link){
     	String callbackScript = MessageFormat.format("infox.openPopUp(''{0}'',''{1}'')", link.getDescricao(), retrieveUrlWithToken(link));
-		RequestContext.getCurrentInstance().execute(callbackScript);
+    	JsfUtil.instance().execute(callbackScript);
     }
     
     @ExceptionHandled
