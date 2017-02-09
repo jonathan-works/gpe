@@ -33,6 +33,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
 @Table(name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
@@ -159,6 +160,7 @@ public class PessoaFisica extends Pessoa {
         if (obj == null) {
             return false;
         }
+        obj = HibernateUtil.removeProxy(obj);
         if (!(obj instanceof PessoaFisica)) {
             return false;
         }

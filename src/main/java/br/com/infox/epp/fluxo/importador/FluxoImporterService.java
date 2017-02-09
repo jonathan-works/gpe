@@ -180,6 +180,8 @@ public class FluxoImporterService extends PersistenceController {
 
 	private void validaFileConfiguration(Element variableNode, List<String> erros) {
 		FileConfig configuration = VariableEditorModeloHandler.fromJson(variableNode.getAttributeValue("configuration"));
+		if (configuration == null)
+		    return;
         if (configuration.getCodigosModeloDocumento() != null && !configuration.getCodigosModeloDocumento().isEmpty()) {
             List<String> codigosModeloInexistentes = new ArrayList<>();
             for (String codigo : configuration.getCodigosModeloDocumento()) {

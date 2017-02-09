@@ -11,6 +11,7 @@ import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_DS_
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_FLUXO;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_NATUREZA;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -105,4 +106,18 @@ public class NaturezaCategoriaFluxoDAO extends DAO<NaturezaCategoriaFluxo> {
 		}
 		return result.get(0);
 	}
+	
+	public List<NaturezaCategoriaFluxo> getAtivosByIdsNatureza(Collection<?> idsNatureza) {
+        EntityManager entityManager = getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<NaturezaCategoriaFluxo> query = cb.createQuery(NaturezaCategoriaFluxo.class);
+        Root<NaturezaCategoriaFluxo> ncf = query.from(NaturezaCategoriaFluxo.class);
+        Join<NaturezaCategoriaFluxo, Natureza> natureza = ncf.join(NaturezaCategoriaFluxo_.natureza, JoinType.INNER);
+        query.select(ncf);
+        query.where(
+            cb.isTrue(natureza.<Boolean>get(Natureza_.ativo)),
+            natureza.get(Natureza_.idNatureza).in(idsNatureza)
+        );
+        return entityManager.createQuery(query).getResultList();
+    }
 }

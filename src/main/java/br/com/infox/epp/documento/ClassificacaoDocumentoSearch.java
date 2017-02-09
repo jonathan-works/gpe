@@ -56,7 +56,7 @@ public class ClassificacaoDocumentoSearch extends PersistenceController {
     	return getEntityManager().createQuery(cq).setFirstResult(start).setMaxResults(max).getResultList();
     }
     
-    protected void addRestrictions(CriteriaBuilder cb, CriteriaQuery<ClassificacaoDocumento> cq) {}
+    protected void addRestrictions(CriteriaBuilder cb, CriteriaQuery<?> query) {}
 
 	public Long countClassificacoesDocumentoDisponiveisVariavelFluxo(List<String> codigosClassificacoesAdicionadas, TipoDocumentoEnum tipoDocumento,
     		String nomeClassificacaoDocumento) {
@@ -65,6 +65,7 @@ public class ClassificacaoDocumentoSearch extends PersistenceController {
 		Root<ClassificacaoDocumento> from = createQueryClassificacaoDocumentoNotInList(codigosClassificacoesAdicionadas, tipoDocumento,
 				nomeClassificacaoDocumento, cb, cq);
 		cq.select(cb.count(from.get(ClassificacaoDocumento_.id)));
+		addRestrictions(cb, cq);
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
 

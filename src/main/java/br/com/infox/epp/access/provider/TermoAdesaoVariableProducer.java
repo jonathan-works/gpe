@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
@@ -29,22 +28,19 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-@Name(TermoAdesaoVariableProducer.NAME)
-@Named(TermoAdesaoVariableProducer.NAME)
 public class TermoAdesaoVariableProducer implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "termoAdesaoVariableProducer";
 
-    private static final String NOME = "nome";
-    private static final String CPF = "cpf";
-    private static final String EMAIL = "email";
-    private static final String DATA_NASCIMENTO = "dataNascimento";
-    private static final String IDENTIDADE = "identidade";
-    private static final String ORGAO_EXPEDIDOR = "orgaoExpedidor";
-    private static final String DATA_EXPEDICAO = "dataExpedicao";
-    private static final String TELEFONE_FIXO = "telefoneFixo";
-    private static final String TELEFONE_MOVEL = "telefoneMovel";
-    private static final String ESTADO_CIVIL = "estadoCivil";
+    protected static final String NOME = "nome";
+    protected static final String CPF = "cpf";
+    protected static final String EMAIL = "email";
+    protected static final String DATA_NASCIMENTO = "dataNascimento";
+    protected static final String IDENTIDADE = "identidade";
+    protected static final String ORGAO_EXPEDIDOR = "orgaoExpedidor";
+    protected static final String DATA_EXPEDICAO = "dataExpedicao";
+    protected static final String TELEFONE_FIXO = "telefoneFixo";
+    protected static final String TELEFONE_MOVEL = "telefoneMovel";
+    protected static final String ESTADO_CIVIL = "estadoCivil";
     
     @Inject
     private PessoaDocumentoManager pessoaDocumentoManager;
@@ -115,7 +111,7 @@ public class TermoAdesaoVariableProducer implements Serializable {
         return getUsuarioLogado() == null ? null : getUsuarioLogado().getPessoaFisica();
     }
 
-    private UsuarioLogin getUsuarioLogado() {
+    protected UsuarioLogin getUsuarioLogado() {
         UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
         if (usuario == null) {
             return null;
@@ -126,25 +122,38 @@ public class TermoAdesaoVariableProducer implements Serializable {
     private String convertDateToString(Date date){
         return MessageFormat.format("{0,date,dd/MM/yyyy}", date);
     }
+    
+    protected Map<String, String> getMapaVariaveis(PessoaFisica pessoaFisica) {
+        Map<String, String> variaveis = new HashMap<>();
+        
+        variaveis.put(NOME, getNome(pessoaFisica));
+        variaveis.put(CPF, getCpf(pessoaFisica));
+        variaveis.put(DATA_NASCIMENTO, getDataNascimento(pessoaFisica));
+        variaveis.put(ESTADO_CIVIL, getEstadoCivil(pessoaFisica));
+        
+        variaveis.put(IDENTIDADE, getIdentidade(pessoaFisica));
+        variaveis.put(ORGAO_EXPEDIDOR, getOrgaoExpedidor(pessoaFisica));
+        variaveis.put(DATA_EXPEDICAO, getDataExpedicao(pessoaFisica));
+        
+        variaveis.put(EMAIL, getEmail(pessoaFisica));
+        
+        variaveis.put(TELEFONE_FIXO, getTelefoneFixo(pessoaFisica));
+        
+        variaveis.put(TELEFONE_MOVEL, getTelefoneMovel(pessoaFisica));
+        
+        return variaveis;    	
+    }
 
     public Map<String, String> getTermoAdesaoVariables(PessoaFisica pessoaFisica) {
-        HashMap<String, String> variaveis = new HashMap<>();
-        variaveis.put(String.format("#{%s}", NOME), getNome(pessoaFisica));
-        variaveis.put(String.format("#{%s}", CPF), getCpf(pessoaFisica));
-        variaveis.put(String.format("#{%s}", DATA_NASCIMENTO), getDataNascimento(pessoaFisica));
-        variaveis.put(String.format("#{%s}", ESTADO_CIVIL), getEstadoCivil(pessoaFisica));
+        Map<String, String> variaveis = getMapaVariaveis(pessoaFisica);
         
-        variaveis.put(String.format("#{%s}", IDENTIDADE), getIdentidade(pessoaFisica));
-        variaveis.put(String.format("#{%s}", ORGAO_EXPEDIDOR), getOrgaoExpedidor(pessoaFisica));
-        variaveis.put(String.format("#{%s}", DATA_EXPEDICAO), getDataExpedicao(pessoaFisica));
+        Map<String, String> mapaELs = new HashMap<>();
         
-        variaveis.put(String.format("#{%s}",EMAIL), getEmail(pessoaFisica));
-        
-        variaveis.put(String.format("#{%s}",TELEFONE_FIXO), getTelefoneFixo(pessoaFisica));
-        
-        variaveis.put(String.format("#{%s}",TELEFONE_MOVEL), getTelefoneMovel(pessoaFisica));
-        
-        return variaveis;
+        for(String variavel : variaveis.keySet()) {
+        	String valor = variaveis.get(variavel);
+        	mapaELs.put(String.format("#{%s}", variavel), valor);
+        }
+        return mapaELs;
     }
 
     private String getEstadoCivil(PessoaFisica pessoaFisica) {

@@ -2,6 +2,7 @@ package br.com.infox.core.report;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.BitSet;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.ws.http.HTTPException;
 
+import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpException;
@@ -22,6 +24,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EncodingUtils;
 
 import br.com.infox.core.exception.FailResponseAction;
 import br.com.infox.core.server.ApplicationServerService;
@@ -111,4 +114,12 @@ public class RequestInternalPageService implements Serializable {
 		this.contextPath = contextPath;
 	}
 
+    public static String encodeQuery(String unescaped, String charset) {
+        return encode(unescaped, new BitSet(256), charset);
+    }
+
+    public static String encode(String unescaped, BitSet allowed, String charset) {
+        byte[] rawdata = URLCodec.encodeUrl(allowed, EncodingUtils.getBytes(unescaped, charset));
+        return EncodingUtils.getAsciiString(rawdata);
+    }
 }

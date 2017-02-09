@@ -99,7 +99,7 @@
                         </h:outputScript>
                         <rich:autocomplete value="#{var.name}"
                             rendered="#{empty var.name and !empty t.previousVariables}" selectFirst="false"
-                            autocompleteList="#{t.previousVariables}" mode="client" minChars="2"
+                            autocompleteList="#{t.previousVariables}" mode="client" minChars="2" styleClass="infox-rf-au"
                             clientFilterFunction="customFilter">
                             <a:ajax status=":status" listener="#{var.copyVariable()}" event="blur"
                                 render="varDiv,writable,varLabelForm,formVariableType,resetVariableForm" limitRender="true" />

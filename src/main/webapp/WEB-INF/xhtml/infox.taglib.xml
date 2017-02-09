@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <facelet-taglib xmlns="http://java.sun.com/xml/ns/javaee"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibary_2_0.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
 version="2.0">
 
     <namespace>http://www.itx.com.br/jsf</namespace>
@@ -268,6 +268,11 @@ version="2.0">
         <function-name>splitLength</function-name>
         <function-class>br.com.infox.jsf.function.JsfFunctions</function-class>
         <function-signature>java.lang.Integer splitLength(java.lang.String, java.lang.String)</function-signature>
+    </function>
+    <function>
+        <function-name>truncateList</function-name>
+        <function-class>br.com.infox.jsf.function.JsfFunctions</function-class>
+        <function-signature>java.util.List truncateList(java.util.List, int, int)</function-signature>
     </function>
     <function>
         <function-name>clientId</function-name>
@@ -560,6 +565,73 @@ version="2.0">
         <attribute>
             <description><![CDATA[Style class of the button element.]]></description>
             <name>styleClass</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    <tag>
+        <tag-name>icon</tag-name>
+        <component>
+            <component-type>br.com.infox.epp.jsf.Icon</component-type>
+            <renderer-type>br.com.infox.epp.jsf.IconRenderer</renderer-type>
+        </component>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>id</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>rendered</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>value</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>materialDesignIcon</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>text</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>showText</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>style</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>styleClass</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>textStyleClass</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[]]></description>
+            <name>onclick</name>
             <required>false</required>
             <type>java.lang.String</type>
         </attribute>

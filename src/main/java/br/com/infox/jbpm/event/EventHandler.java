@@ -89,10 +89,26 @@ public class EventHandler implements Serializable {
     public static boolean isIgnoreEvent(Event event) {
         return event.isListener() || Event.EVENTTYPE_DISPATCHER.equals(event.getEventType()) 
                 || MultiInstanceActivityBehavior.NONE_EVENT_BEHAVIOR.equals(event.getEventType()) 
-                || MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR.equals(event.getEventType());
+                || MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR.equals(event.getEventType())
+                || hasOnlyTimers(event);
     }
+    
+    public static boolean hasOnlyTimers(Event event) {
+    	if (event.getActions() == null) {
+    		return false;
+    	}
+    	
+    	boolean hasRealAction = false;
+    	for (Action action : event.getActions()) {
+    		if (!(action instanceof CreateTimerAction) && !(action instanceof CancelTimerAction)) {
+    			hasRealAction = true;
+    			break;
+    		}
+    	}
+		return !hasRealAction;
+	}
 
-    @Override
+	@Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

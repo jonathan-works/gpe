@@ -58,13 +58,13 @@ public class ConsultaController extends AbstractController {
     @In
     private DocumentoList documentoList;
     @In
-    private DocumentoProcessoAction documentoProcessoAction;
-    @In
     private PastaRestricaoAction pastaRestricaoAction;
     @In
     private PastaList pastaList;
     @In
     private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
+    @Inject
+    private DocumentoProcessoAction documentoProcessoAction;
     @Inject
     private PastaAction pastaAction;
     @Inject

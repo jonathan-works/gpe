@@ -1,5 +1,6 @@
 package br.com.infox.epp.documento.publicacao;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -22,9 +23,13 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 
 @Entity
 @Table(name="tb_publicacao_documento")
-public class PublicacaoDocumento {
+public class PublicacaoDocumento implements Serializable,Cloneable {
 	
-    private static final String GENERATOR_NAME = "PublicacaoDocumentoGenerator";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final String GENERATOR_NAME = "PublicacaoDocumentoGenerator";
     private static final String SEQUENCE_NAME = "sq_publicacao_documento";
     
     @Id
@@ -145,6 +150,10 @@ public class PublicacaoDocumento {
 	}
     
     
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public LocalPublicacao getLocalPublicacao() {
 		return localPublicacao;
 	}
@@ -199,6 +208,13 @@ public class PublicacaoDocumento {
 
 	public void setDocumento(Documento documento) {
 		this.documento = documento;
+	}
+	
+	public PublicacaoDocumento makeCopy() throws CloneNotSupportedException {
+		PublicacaoDocumento clone = (PublicacaoDocumento) clone();
+		clone.setId(null);
+		clone.setDocumento(null);
+		return clone;
 	}
     
 }

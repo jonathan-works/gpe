@@ -38,7 +38,6 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.TermoAdesaoService;
-import br.com.infox.epp.access.crud.TermoAdesaoAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -168,9 +167,6 @@ public class Authenticator implements Serializable {
             
             hasToSign = !termoAdesaoService.isTermoAdesaoAssinado(pessoaFisica.getCpf());
         }
-        
-        
-        Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, hasToSign);
         return hasToSign;
     }
 

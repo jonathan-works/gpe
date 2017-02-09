@@ -67,6 +67,8 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.menu.MenuMovimentar;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -151,6 +153,8 @@ public class TaskInstanceHome implements Serializable {
 	private InfoxMessages infoxMessages;
 	@Inject
 	private AssinadorService assinadorService;
+	@Inject
+	private FluxoManager fluxoManager;
 	@In
 	private PathResolver pathResolver;
 	@In
@@ -250,6 +254,17 @@ public class TaskInstanceHome implements Serializable {
 				variaveisDocumento.put(variableRetriever.getName(), documento);
 		}
 	}
+	
+	public Integer getIdfluxo(TaskInstance taskInstance){
+		Integer idFluxo = null;
+		String nomeFluxo = taskInstance.getProcessInstance().getProcessDefinition().getName();
+		Fluxo fluxoByDescricao = fluxoManager.getFluxoByDescricao(nomeFluxo);
+		if(fluxoByDescricao != null)
+			idFluxo = fluxoByDescricao.getIdFluxo();
+		else
+			idFluxo = processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
+		return idFluxo;
+	}
 
 	private void loadClassificacaoDocumentoDefault(String variableName, Documento documento) {
 		List<ClassificacaoDocumento> classificacoes = getUseableClassificacaoDocumento(variableName);
@@ -288,14 +303,15 @@ public class TaskInstanceHome implements Serializable {
 	private boolean update(boolean validateForm) {
 	    prepareForUpdate();
         if (possuiTask()) {
-            if (validateForm && !validateRequiredVariables()) {
-                return false;
-            }
+        	variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
             TaskController taskController = taskInstance.getTask().getTaskController();
             TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
             if (taskController != null) {
                 if (!taskPageAction.getHasTaskPage(getCurrentTaskInstance())) {
                     try {
+                    	if (validateForm && !validateRequiredVariables()) {
+                    		return false;
+                    	}
                         updateVariables(taskController);
                     } catch (BusinessException e) {
                         LOG.error("", e);
@@ -340,7 +356,7 @@ public class TaskInstanceHome implements Serializable {
                     }
                 } else if (variableInfo.getVariableType() == VariableType.ENUMERATION_MULTIPLE && ((String[]) value).length == 0) {
                     failedInputIds.add(String.format("%s:%s:%sInput", TASK_INSTANCE_FORM_ID, fieldName, fieldName));
-                } else if (variableInfo.getVariableType() == VariableType.FRAME){
+                } else if (variableInfo.getVariableType() == VariableType.FRAME || variableInfo.getVariableType() == VariableType.TASK_PAGE){
                 	continue;
                 } else if (value == null || (value instanceof String && ((String) value).isEmpty())) {
                 	if(variableInfo.getVariableType() == VariableType.MONETARY) {
@@ -570,11 +586,12 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	public boolean podeAssinarDocumento(String variableName) {
-		VariableInfo variableInfo = variableTypeResolver.getVariableInfoMap().get(variableName);
 		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 		if (taskInstance == null){
 			return false;
 		}
+		variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
+		VariableInfo variableInfo = variableTypeResolver.getVariableInfoMap().get(variableName);
 		if (variableInfo == null){
 			return false;
 		}

@@ -88,10 +88,10 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@In
 	private DocumentoList documentoList;
 	@In
-    private DocumentoProcessoAction documentoProcessoAction;
-	@In
 	private PastaList pastaList;
 	
+	@Inject
+	private DocumentoProcessoAction documentoProcessoAction;
 	@Inject
 	private PastaAction pastaAction;
 	@Inject

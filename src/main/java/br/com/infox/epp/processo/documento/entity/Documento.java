@@ -62,7 +62,6 @@ import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
-import edu.emory.mathcs.backport.java.util.Collections;
 
 @Entity
 @Table(name = Documento.TABLE_NAME)
@@ -509,11 +508,25 @@ public class Documento implements Serializable, Cloneable {
 			cList.add(cHistorico);
 		}
 		cDocumento.setHistoricoStatusDocumentoList(cList);
+		
+		List<PublicacaoDocumento> listPub = new ArrayList<>();
+		for (PublicacaoDocumento pd : cDocumento.getPublicacoes()) {
+			PublicacaoDocumento cPub = pd.makeCopy();
+			cPub.setDocumento(cDocumento);
+			listPub.add(cPub);
+		}
+		cDocumento.setPublicacoes(listPub);
 		return cDocumento;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<PublicacaoDocumento> getPublicacoes() {
-		return Collections.unmodifiableList(publicacoes);
+		return publicacoes;
 	}
+
+	public void setPublicacoes(List<PublicacaoDocumento> publicacoes) {
+		this.publicacoes = publicacoes;
+	}
+
+	
+
 }

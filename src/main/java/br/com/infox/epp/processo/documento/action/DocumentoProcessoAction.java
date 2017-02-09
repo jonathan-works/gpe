@@ -7,13 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.security.Identity;
 
@@ -21,7 +16,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.list.DataList;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.manager.PapelManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -38,15 +33,11 @@ import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
-@AutoCreate
-@Name(DocumentoProcessoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
-@Transactional
-@ContextDependency
+@Named
+@ViewScoped
 public class DocumentoProcessoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "documentoProcessoAction";
 	
 	private String motivoExclusaoRestauracao;
 	private Documento processoDocumentoSelected;
@@ -72,8 +63,8 @@ public class DocumentoProcessoAction implements Serializable {
 	protected MarcadorSearch marcadorSearch;
 	@Inject
 	private DocumentoCompartilhamentoList documentoCompartilhamentoList;
-	@In
-	private DocumentoList documentoList;
+	
+	private DocumentoList documentoList = ComponentUtil.getComponent(DocumentoList.NAME);
 		
 	public void exclusaoRestauracaoDocumento(){
 		if (idDocumentoAlter == null){

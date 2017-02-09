@@ -1,9 +1,5 @@
 package br.com.infox.epp.calendario;
 
-import static br.com.infox.epp.calendario.CalendarioEventosModification.Type.CREATE;
-import static br.com.infox.epp.calendario.CalendarioEventosModification.Type.DELETE;
-import static br.com.infox.epp.calendario.CalendarioEventosModification.Type.UPDATE;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,13 +13,13 @@ import br.com.infox.epp.cliente.entity.CalendarioEventos;
 
 public class CalendarioEventosModification {
 
-    private CalendarioEventos before;
-    private CalendarioEventos after;
+    private CalendarioEventos evento;
     private List<Issue> problems;
+    // Para verificar se não surgiu nenhum problema possível novo nas suspensões de prazo
+    private long countPossiveisProblemas = 0;
 
-    public CalendarioEventosModification(CalendarioEventos before, CalendarioEventos after) {
-        setBefore(before);
-        setAfter(after);
+    public CalendarioEventosModification(CalendarioEventos evento) {
+        setEvento(evento);
         problems = new ArrayList<>();
     }
 
@@ -40,63 +36,23 @@ public class CalendarioEventosModification {
         }
     }
 
-    public CalendarioEventos getBefore() {
-        return before;
+    public CalendarioEventos getEvento() {
+        return evento;
     }
 
-    public void setBefore(CalendarioEventos before) {
-        this.before = copyEvent(before);
-    }
-
-    public CalendarioEventos getAfter() {
-        return after;
-    }
-
-    public void setAfter(CalendarioEventos after) {
-        this.after = copyEvent(after);
+    public void setEvento(CalendarioEventos evento) {
+        this.evento = copyEvent(evento);
     }
 
     public List<Issue> getIssues() {
         return problems;
     }
 
-    public Type getType() {
-        boolean beforeIsNull = getBefore() == null;
-        boolean afterIsNull = getAfter() == null;
-        if (beforeIsNull && afterIsNull){
-            throw new IllegalStateException("Can't modify from null to null");
-        }
-        if (beforeIsNull && !afterIsNull) {
-            return CREATE;
-        }
-        if (!beforeIsNull && afterIsNull) {
-            return DELETE;
-        }
-        return UPDATE;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        switch (getType()) {
-        case CREATE:
-            sb.append("Criar ").append(getAfter());
-            break;
-        case DELETE:
-            sb.append("Remover ").append(getBefore());
-            break;
-        case UPDATE:
-            sb.append("Atualizar de: ").append(getBefore()).append(" para ").append(getAfter());
-            break;
-        default:
-            sb.append("Estado desconhecido");
-            break;
-        }
+        sb.append("Criar ").append(getEvento());
         return sb.toString();
-    }
-
-    public static enum Type {
-        CREATE, UPDATE, DELETE
     }
 
     public static boolean hasIssues(List<CalendarioEventosModification> modifications) {
@@ -116,6 +72,18 @@ public class CalendarioEventosModification {
     public CalendarioEventosModification addIssue(Issue issue) {
         getIssues().add(issue);
         return this;
+    }
+
+    public long getCountPossiveisProblemas() {
+        return countPossiveisProblemas;
+    }
+
+    public void setCountPossiveisProblemas(long countPossiveisProblemas) {
+        this.countPossiveisProblemas = countPossiveisProblemas;
+    }
+
+    public void addCountPossiveisProblemas(long countPossiveisProblemas) {
+        this.countPossiveisProblemas += countPossiveisProblemas;
     }
 
 }

@@ -87,6 +87,7 @@ public class MigraTaskExpirationToTimer implements Serializable {
         	controle.setNomeClasse(NAME);
         	controle.setExecutar(true);
             getEntityManager().persist(controle);
+            getEntityManager().flush();
             return true;
         }
     }

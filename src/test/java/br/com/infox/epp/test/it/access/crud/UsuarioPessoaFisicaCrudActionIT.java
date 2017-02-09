@@ -44,7 +44,7 @@ import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaDAO;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.seam.exception.BusinessException;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 //@RunWith(Arquillian.class)
 public class UsuarioPessoaFisicaCrudActionIT extends

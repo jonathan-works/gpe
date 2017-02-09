@@ -18,10 +18,22 @@ import br.com.infox.seam.exception.BusinessRollbackException;
 public class InfoxPdfReader {
     
     private static final LogProvider LOG = Logging.getLogProvider(InfoxPdfReader.class);
-    
-    private InfoxPdfReader(){
-    }
 
+    public static boolean isCriptografado(byte[] pdf) {
+    	try {
+    		new PdfReader(pdf);    	
+    	}
+        catch(NoClassDefFoundError e) {
+        	if(e.getMessage().equals("org/bouncycastle/asn1/DEREncodable")) {
+        		return true;
+        	}
+        }
+    	catch(Exception e) {
+        	return false;    		
+    	}
+    	return false;
+    }
+    
     public static String readPdfFromInputStream(InputStream inputStream) {
         try {
             return readPdf(new PdfReader(inputStream));
@@ -32,9 +44,13 @@ public class InfoxPdfReader {
     }
 
     public static String readPdfFromByteArray(byte[] pdf) {
+    	if(isCriptografado(pdf)) {
+    		throw new BusinessRollbackException("Documento somente leitura, não é possível gravar");
+    	}
         try {
             return readPdf(new PdfReader(pdf));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOG.error("Não foi possível recuperar o conteúdo do pdf", e);
             return null;
         }

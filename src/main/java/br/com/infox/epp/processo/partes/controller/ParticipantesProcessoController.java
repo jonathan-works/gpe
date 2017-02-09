@@ -3,16 +3,13 @@ package br.com.infox.epp.processo.partes.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
-
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
 
 import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
@@ -22,11 +19,9 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.seam.security.SecurityUtil;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(ParticipantesProcessoController.NAME)
-@ConversationScoped
-@ContextDependency
+@Named(ParticipantesProcessoController.NAME)
+@ViewScoped
 public class ParticipantesProcessoController extends AbstractParticipantesController {
 
 	private static final long serialVersionUID = 1L;
@@ -34,19 +29,20 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     private static final int QUANTIDADE_MINIMA_PARTES = 1;
     public static final String NAME = "participantesProcessoController";
 
-    @In
-    private TipoParteManager tipoParteManager;
     @Inject
-    private SecurityUtil securityUtil;
+    protected TipoParteManager tipoParteManager;
+    @Inject
+    protected SecurityUtil securityUtil;
+    @Inject
+    protected UsuarioLoginManager usuarioLoginManager;
+    @Inject
+    protected ParticipanteProcessoTreeHandler participanteProcessoTree;
     
-    private List<TipoParte> tipoPartes;
-    @In
-    private ParticipanteProcessoTreeHandler participanteProcessoTree;
-    private UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
+    protected List<TipoParte> tipoPartes;
         
     @Override
     protected void clearParticipanteProcesso() {
-    	super.clearParticipanteProcesso();
+    	super.clearParticipanteProcesso(); 
     	participanteProcessoTree.clearTree();
     }
     
@@ -69,7 +65,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
 		}
     }
     
-    private Natureza getNatureza() {
+    protected Natureza getNatureza() {
         return getProcesso().getNaturezaCategoriaFluxo().getNatureza();
     }
     
@@ -84,7 +80,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     	return getPartesAtivas(getProcesso().getParticipantes());
     }
 
-    private List<ParticipanteProcesso> filtrar(List<ParticipanteProcesso> participantes, 
+    protected List<ParticipanteProcesso> filtrar(List<ParticipanteProcesso> participantes, 
     		TipoPessoaEnum tipoPessoa) {
         List<ParticipanteProcesso> filtrado = new ArrayList<>();
         for (ParticipanteProcesso participante : participantes) {
@@ -95,7 +91,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
         return filtrado;
     }
     
-    private List<ParticipanteProcesso> getPartesAtivas(List<ParticipanteProcesso> participantes) {
+    protected List<ParticipanteProcesso> getPartesAtivas(List<ParticipanteProcesso> participantes) {
         List<ParticipanteProcesso> participantesAtivas = new ArrayList<>();
         for (ParticipanteProcesso participante : participantes) {
             if (participante.getAtivo()) {

@@ -56,8 +56,8 @@ public class SigiloProcessoPermissaoManager extends Manager<SigiloProcessoPermis
         StringBuilder sb = new StringBuilder("(not exists (select 1 from SigiloProcesso sp where sp.processo.idProcesso = o.idProcesso and sp.ativo = true and sp.sigiloso = true) ");
         UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
         if (usuarioLogado != null) {
-            sb.append("or exists (select 1 from SigiloProcessoPermissao spp where spp.usuario.idUsuarioLogin = " + usuarioLogado.getIdUsuarioLogin());
-            sb.append(" and spp.ativo = true and spp.sigiloProcesso = (select sp from SigiloProcesso sp where sp.processo.idProcesso = o.idProcesso and sp.ativo = true)))");
+            sb.append("or exists (select 1 from SigiloProcessoPermissao spp inner join spp.sigiloProcesso sp where spp.usuario.idUsuarioLogin = " + usuarioLogado.getIdUsuarioLogin());
+            sb.append(" and spp.ativo = true and sp.processo = o and sp.ativo = true and sp.sigiloso = true))");
         } else {
             sb.append("or 1 = 0)");
         }

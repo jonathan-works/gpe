@@ -123,6 +123,8 @@ public class TermoAdesaoService {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     private DocumentoBin createTermoAdesao(PessoaFisica pessoaFisica, String tituloTermoAdesao, byte[] termoAdesao) {
+        pessoaFisica.setTermoAdesao(null);
+        pessoaFisica = pessoaFisicaManager.update(pessoaFisica);
         removeIfExists(pessoaFisica.getTermoAdesao());
         DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, termoAdesao, "pdf");
         bin = documentoBinManager.createProcessoDocumentoBin(bin);

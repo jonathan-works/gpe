@@ -50,7 +50,7 @@ import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaDAO;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 //@RunWith(Arquillian.class)
 public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
