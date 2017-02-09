@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.primefaces.model.chart.MeterGaugeChartModel;
 
 import br.com.infox.core.list.EntityList;
@@ -15,6 +17,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
+@Scope(ScopeType.CONVERSATION)
 @Name(ProcessoTarefaList.NAME)
 public class ProcessoTarefaList extends EntityList<ProcessoTarefa> {
 
