@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.linkExterno;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -8,6 +9,8 @@ import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.primefaces.context.RequestContext;
 
 import com.google.gson.Gson;
 
@@ -88,6 +91,12 @@ public class LinkAplicacaoExternaViewController implements Serializable{
     
     public boolean isPodeCadastrar(){
         return security.checkPage(RECURSO_EDICAO);
+    }
+    
+    @ExceptionHandled
+    public void executar(LinkAplicacaoExterna link){
+    	String callbackScript = MessageFormat.format("infox.openPopUp(''{0}'',''{1}'')", link.getDescricao(), retrieveUrlWithToken(link));
+		RequestContext.getCurrentInstance().execute(callbackScript);
     }
     
     @ExceptionHandled

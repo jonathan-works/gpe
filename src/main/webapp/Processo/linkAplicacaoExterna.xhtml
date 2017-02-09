@@ -50,7 +50,9 @@
                     <div style="display: inline-block;">
                         <div style="display: inline-block; vertical-align: middle;">
                             <h:commandButton type="button" styleClass="buttons" value="#{link.descricao}"
-                                onclick="infox.openPopUp('#{link.descricao}','#{linkAplicacaoExternaViewController.retrieveUrlWithToken(link)}')" />
+                                action="#{linkAplicacaoExternaViewController.executar(link)}">
+                                <p:ajax update="@form:@parent :pageBodyDialogMessage" process="@this" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+                            </h:commandButton>
                         </div>
                         <div style="display: inline-block; vertical-align: middle;">
                             <div style="height: 0.85em;">
