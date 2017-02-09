@@ -20,6 +20,7 @@ import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
+import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
@@ -28,6 +29,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -63,12 +65,13 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
 		PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
-		Processo processo = processoManager.getProcessoByIdJbpm(executionContext.getProcessInstance().getId());
+		Processo processo = processoManager.find(executionContext.getVariable(VariaveisJbpmProcessosGerais.PROCESSO));
 		Processo processoRaiz = processo.getProcessoRoot();
 		ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.findByCodigo(configuration.codigoClassificacaoDocumento);
 		try {
 			ModeloDocumento modeloDocumento = modeloDocumentoSearch.getModeloDocumentoByCodigo(configuration.codigoModeloDocumento);
-			ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processo.getIdProcesso(), executionContext);
+			
+			ExpressionResolverChain chain = new ExpressionResolverChain(new SeamExpressionResolver(executionContext));
 			String texto = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin(modeloDocumento.getTituloModeloDocumento(), texto);
 			Documento documento = documentoManager.createDocumento(processoRaiz, modeloDocumento.getTituloModeloDocumento(), documentoBin, classificacaoDocumento);

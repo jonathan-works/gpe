@@ -64,7 +64,7 @@ public class LinkAplicacaoExternaService {
 
     private byte[] getPrivateKey(){
         String base64RsaKey = Parametros.EPP_API_RSA_PRIVATE_KEY.getValue();
-        if (base64RsaKey == null || base64RsaKey.isEmpty()){
+        if (base64RsaKey == null || base64RsaKey.isEmpty() || base64RsaKey.equalsIgnoreCase("-1")){
             throw SystemExceptionFactory.create(RSAErrorCodes.INVALID_PRIVATE_KEY_STRUCTURE)
             .set(Parametros.EPP_API_RSA_PRIVATE_KEY.getLabel(), base64RsaKey);
         }
