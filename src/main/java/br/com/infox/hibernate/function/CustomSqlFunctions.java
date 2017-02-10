@@ -10,5 +10,6 @@ public final class CustomSqlFunctions {
     public static final String DATE_DIFF_DAY = "DateDiffDay";
     public static final String TO_DATE = "to_date";
     public static final String MD5_BINARY = "md5_binary";
+    public static final String STRING_AGG = "string_agg";
 
 }
