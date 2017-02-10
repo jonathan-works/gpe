@@ -38,11 +38,14 @@ public class StringAgg implements SQLFunction {
             throw new QueryException("É necessário valor a ser convertido");
         }
         Dialect dialect = factory.getDialect();    
-        if (dialect instanceof InfoxSQLServer2012Dialect || dialect instanceof InfoxPostgreSQLDialect) {
+        if (dialect instanceof InfoxPostgreSQLDialect) {
             return " string_agg(" + arguments.get(0) + ", " + arguments.get(1) + " ) ";
         } else if (dialect instanceof InfoxOracleDialect) {
             return " LISTAGG(" + arguments.get(0) + ", " + arguments.get(1) + ") WITHIN GROUP (ORDER BY 1) ";
-        } else {
+        } else if (dialect instanceof InfoxSQLServer2012Dialect) {
+            return " dbo.string_agg(" + arguments.get(0) + ", " + arguments.get(1) + " ) ";
+        }
+        else {
             throw new QueryException("Database type not supported");
         }
     }
