@@ -34,5 +34,14 @@ public enum TipoAssinaturaEnum implements Displayable {
         tipos.add(TipoAssinaturaEnum.S);
         return tipos;
     }
+    
+    public static TipoAssinaturaEnum fromName(String name) {
+    	for(TipoAssinaturaEnum value : values()) {
+    		if(value.name().equals(name)) {
+    			return value;
+    		}
+    	}
+    	return null;
+    }
 
 }
