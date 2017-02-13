@@ -124,6 +124,10 @@ public class ProcessoSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
+    public Processo find(Integer id) {
+        return getEntityManager().find(Processo.class, id);
+    }
+    
     protected Predicate createPredicateUsuarioPossuiPermissaoSigilo(AbstractQuery<?> query, From<?, Processo> processo, UsuarioLogin usuario){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> cq = query.subquery(Integer.class);
