@@ -18,6 +18,7 @@ import javax.faces.context.FacesContext;
 import org.hibernate.AnnotationException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Name;
 import org.jboss.seam.util.Reflections;
 
 import br.com.infox.hibernate.util.HibernateUtil;
@@ -114,6 +115,10 @@ public final class ComponentUtil {
     @SuppressWarnings(UNCHECKED)
     public static <C> C getComponent(String componentName) {
         return (C) Component.getInstance(componentName);
+    }
+    @SuppressWarnings(UNCHECKED)
+    public static <C> C getComponent(Class<C> type){
+        return (C)Component.getInstance(type.getAnnotation(Name.class).value());
     }
 
     /**
