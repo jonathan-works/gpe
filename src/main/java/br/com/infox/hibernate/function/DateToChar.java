@@ -14,8 +14,8 @@ import br.com.infox.hibernate.oracle.dialect.InfoxOracleDialect;
 import br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect;
 import br.com.infox.hibernate.sqlserver.dialect.InfoxSQLServer2012Dialect;
 
-public class StringAgg implements SQLFunction {
-
+public class DateToChar implements SQLFunction {
+    
     @Override
     public boolean hasArguments() {
         return true;
@@ -34,19 +34,19 @@ public class StringAgg implements SQLFunction {
     @SuppressWarnings("rawtypes")
     @Override
     public String render(Type firstArgumentType, List arguments, SessionFactoryImplementor factory) throws QueryException {
-        if (arguments.size() < 3) {
-            throw new QueryException("São necessários 3 argumentos, (valor, delimitador, possuiRepeticao)");
+        if (arguments.size() != 1) {
+            throw new QueryException("É necessário um argumento, (data)");
         }
         Dialect dialect = factory.getDialect();    
-        if (dialect instanceof InfoxPostgreSQLDialect) {
-            return " string_agg_ext(" + arguments.get(0) + ", " + arguments.get(1) + ", " + arguments.get(2) + " ) ";
+        if (dialect instanceof InfoxSQLServer2012Dialect) {
+            return " dbo.convert(VARCHAR, " + arguments.get(0) + ", 126) ";
         } else if (dialect instanceof InfoxOracleDialect) {
-            return " LISTAGG(" + arguments.get(0) + ", " + arguments.get(1) + ") WITHIN GROUP (ORDER BY 1) ";
-        } else if (dialect instanceof InfoxSQLServer2012Dialect) {
-            return " dbo.string_agg(" + arguments.get(0) + ", " + arguments.get(1) + ", " + arguments.get(2) + " ) ";
+            return " to_char( " + arguments.get(0) + " , 'YYYY-MM-DD\"T\"HH24:MI:SS.ff3' ) ";
+        } else if (dialect instanceof InfoxPostgreSQLDialect) {
+            return " to_char( " + arguments.get(0) + " , 'YYYY-MM-DD\"T\"HH24:MI:SS.MS' ) ";
         } else {
             throw new QueryException("Database type not supported");
         }
     }
-
+    
 }

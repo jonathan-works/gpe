@@ -9,6 +9,7 @@ import br.com.infox.hibernate.function.CustomSqlFunctions;
 import br.com.infox.hibernate.function.DataAdd;
 import br.com.infox.hibernate.function.DataUtilAdd;
 import br.com.infox.hibernate.function.DateDiffDayOracle;
+import br.com.infox.hibernate.function.DateToChar;
 import br.com.infox.hibernate.function.NumeroProcessoRoot;
 import br.com.infox.hibernate.function.StringAgg;
 import br.com.infox.hibernate.function.ToDateJpql;
@@ -24,6 +25,7 @@ public class InfoxOracleDialect extends Oracle10gDialect {
         registerFunction(CustomSqlFunctions.TO_DATE, new ToDateJpql());
         registerFunction(CustomSqlFunctions.MD5_BINARY, new ToMD5Binary());
         registerFunction(CustomSqlFunctions.STRING_AGG, new StringAgg());
+        registerFunction(CustomSqlFunctions.DATE_TO_CHAR, new DateToChar());
         registerHibernateType(Types.NVARCHAR, StandardBasicTypes.STRING.getName());
     }
 }

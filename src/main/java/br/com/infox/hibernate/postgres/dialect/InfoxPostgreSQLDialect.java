@@ -6,6 +6,7 @@ import br.com.infox.hibernate.function.CustomSqlFunctions;
 import br.com.infox.hibernate.function.DataAdd;
 import br.com.infox.hibernate.function.DataUtilAdd;
 import br.com.infox.hibernate.function.DateDiffDayPostgresSQL;
+import br.com.infox.hibernate.function.DateToChar;
 import br.com.infox.hibernate.function.DocumentoSuficientementeAssinado;
 import br.com.infox.hibernate.function.NumeroProcessoRoot;
 import br.com.infox.hibernate.function.StringAgg;
@@ -25,6 +26,7 @@ public class InfoxPostgreSQLDialect extends PostgreSQL82Dialect {
         registerFunction(CustomSqlFunctions.TO_DATE, new ToDateJpql());
         registerFunction(CustomSqlFunctions.MD5_BINARY, new ToMD5Binary());
         registerFunction(CustomSqlFunctions.STRING_AGG, new StringAgg());
+        registerFunction(CustomSqlFunctions.DATE_TO_CHAR, new DateToChar());
     }
 
 }
