@@ -39,7 +39,7 @@ public class DateToChar implements SQLFunction {
         }
         Dialect dialect = factory.getDialect();    
         if (dialect instanceof InfoxSQLServer2012Dialect) {
-            return " dbo.convert(VARCHAR, " + arguments.get(0) + ", 126) ";
+            return " convert(VARCHAR, " + arguments.get(0) + ", 126) ";
         } else if (dialect instanceof InfoxOracleDialect) {
             return " to_char( " + arguments.get(0) + " , 'YYYY-MM-DD\"T\"HH24:MI:SS.ff3' ) ";
         } else if (dialect instanceof InfoxPostgreSQLDialect) {
