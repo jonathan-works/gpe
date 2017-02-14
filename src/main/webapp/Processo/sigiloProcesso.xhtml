@@ -5,6 +5,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:a="http://richfaces.org/a4j"
+    xmlns:p="http://primefaces.org/ui"
     xmlns:rich="http://richfaces.org/rich">
     
     <s:div id="sigiloProcessoDiv">
@@ -24,7 +25,9 @@
 	                
 	            <s:div style="clear: both">
 	                <a:commandButton value="#{infoxMessages['sigiloProcesso.gravar']}" action="#{sigiloProcessoAction.gravarSigiloProcesso}" render="sigiloProcessoDiv, pageBodyDialogMessage"
-	                    limitRender="true" rendered="#{sigiloProcessoAction.modoInclusao}" styleClass="buttons"/>
+	                    limitRender="true" rendered="#{sigiloProcessoAction.modoInclusao}" styleClass="buttons">
+                        <p:resetInput target="#{wi:clientId(motivo)}" />
+                    </a:commandButton>
 	                <a:commandButton value="#{infoxMessages['sigiloProcesso.cancelar']}" action="#{sigiloProcessoAction.resetSigiloProcesso}" limitRender="true" 
 	                    render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" rendered="#{sigiloProcessoAction.modoInclusao}"
 	                    styleClass="buttons"/>

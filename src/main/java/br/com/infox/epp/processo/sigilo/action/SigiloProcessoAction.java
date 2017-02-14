@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.component.UIInput;
-import javax.faces.context.FacesContext;
-
 import org.jboss.logging.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -36,7 +33,6 @@ import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 @Transactional
 public class SigiloProcessoAction implements Serializable {
 
-    private static final String MOTIVO_COMPONENT_ID = ":visualizarProcessoTabPanel:sigiloProcessoForm:motivoDecoration:motivo";
     private static final long serialVersionUID = 1L;
     public static final String NAME = "sigiloProcessoAction";
     private static final Logger LOG = Logger.getLogger(SigiloProcessoAction.class);
@@ -109,9 +105,6 @@ public class SigiloProcessoAction implements Serializable {
         this.sigiloProcesso = novoSigiloProcesso;
 
         this.modoInclusao = false;
-
-        UIInput motivo = (UIInput) FacesContext.getCurrentInstance().getViewRoot().findComponent(MOTIVO_COMPONENT_ID);
-        motivo.resetValue();
     }
 
     public boolean isSigiloso() {

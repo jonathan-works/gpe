@@ -6,6 +6,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:a="http://richfaces.org/a4j"
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:rich="http://richfaces.org/rich"
                 xmlns:c="http://java.sun.com/jstl/core"
                 xmlns:wi="http://www.itx.com.br/jsf">
@@ -114,7 +115,9 @@
            <wi:inputTextarea label="#{infoxMessages['sigiloDocumento.motivo']}" required="true" showCounter="false" value="#{sigiloDocumentoAction.motivo}" id="motivo"/>
            <ui:define name="buttons">
                <a:commandButton value="Gravar" action="#{sigiloDocumentoAction.gravarSigiloDocumento}" styleClass="buttons"
-                   render="informacoesAdicionais, documentosTable, pageBodyDialogMessage" limitRender="true"/>
+                   render="informacoesAdicionais, documentosTable, pageBodyDialogMessage" limitRender="true">
+                   <p:resetInput target="#{wi:clientId(motivo)}" />
+               </a:commandButton>
                <a:commandButton value="Cancelar" action="#{sigiloDocumentoAction.resetarSigiloDocumento}" execute="@this"
                    limitRender="true" render="documentosTable, informacoesAdicionais" styleClass="buttons"/>
            </ui:define>           

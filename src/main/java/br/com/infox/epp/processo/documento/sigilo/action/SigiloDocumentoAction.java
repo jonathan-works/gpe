@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-import javax.faces.component.UIInput;
-import javax.faces.context.FacesContext;
-
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -39,7 +36,6 @@ public class SigiloDocumentoAction implements Serializable {
 
     public static final String NAME = "sigiloDocumentoAction";
     private static final long serialVersionUID = 1L;
-    private static final String MOTIVO_COMPONENT_ID = ":visualizarProcessoTabPanel:sigiloDocumentoForm:motivoDecoration:motivo";
     private static final LogProvider LOG = Logging.getLogProvider(SigiloDocumentoAction.class);
 
     @In
@@ -120,8 +116,6 @@ public class SigiloDocumentoAction implements Serializable {
     private void resetarDados() {
         this.motivo = null;
         sigiloDocumentoController.setFragmentoARenderizar(null);
-        UIInput motivoInput = (UIInput) FacesContext.getCurrentInstance().getViewRoot().findComponent(MOTIVO_COMPONENT_ID);
-        motivoInput.resetValue();
     }
 
     private void resetarMarcacaoSigilo() {
