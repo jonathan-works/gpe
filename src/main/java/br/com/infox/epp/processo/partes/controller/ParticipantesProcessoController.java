@@ -14,6 +14,7 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoService;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
@@ -25,7 +26,6 @@ import br.com.infox.seam.security.SecurityUtil;
 public class ParticipantesProcessoController extends AbstractParticipantesController {
 
 	private static final long serialVersionUID = 1L;
-	private static final int QUANTIDADE_INFINITA_PARTES = 0;
     private static final int QUANTIDADE_MINIMA_PARTES = 1;
     public static final String NAME = "participantesProcessoController";
 
@@ -37,6 +37,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     protected UsuarioLoginManager usuarioLoginManager;
     @Inject
     protected ParticipanteProcessoTreeHandler participanteProcessoTree;
+    @Inject
+    private ParticipanteProcessoService participanteProcessoService;
     
     protected List<TipoParte> tipoPartes;
         
@@ -144,20 +146,12 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     
     @Override
     public boolean podeAdicionarPartesFisicas() {
-        return getNatureza() != null
-                && getNatureza().getHasPartes()
-                && !apenasPessoaJuridica()
-                && securityUtil.checkPage(RECURSO_ADICIONAR)
-                && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
+        return securityUtil.checkPage(RECURSO_ADICIONAR) && participanteProcessoService.podeAdicionarPartesFisicas(getProcesso());
     }
 
     @Override
     public boolean podeAdicionarPartesJuridicas() {
-        return getNatureza() != null &&
-                getNatureza().getHasPartes()
-                && !apenasPessoaFisica()
-                && securityUtil.checkPage(RECURSO_ADICIONAR)
-                && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
+        return securityUtil.checkPage(RECURSO_ADICIONAR) && participanteProcessoService.podeAdicionarPartesJuridicas(getProcesso());
     }
 
     @Override
