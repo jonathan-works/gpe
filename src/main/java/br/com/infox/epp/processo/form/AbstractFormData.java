@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.jbpm.context.def.VariableAccess;
-import org.jbpm.graph.def.ProcessDefinition;
 
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.type.FormTypes;
-import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.seam.exception.BusinessException;
 
 public abstract class AbstractFormData implements FormData {
@@ -26,21 +24,10 @@ public abstract class AbstractFormData implements FormData {
         this.processo = processo;
     }
     
-    protected void createFormFields(List<VariableAccess> variableAccesses, ProcessDefinition processDefinition) {
-        VariableAccess variableTaskPage = getTaskPage(variableAccesses);
-        if (variableTaskPage != null) {
-            createFormField(processDefinition, variableTaskPage);
-        } else {
-            for (VariableAccess variableAccess : variableAccesses) {
-                String type = variableAccess.getMappedName().split(":")[0];
-                if (!VariableType.PARAMETER.name().equals(type)) {
-                    createFormField(processDefinition, variableAccess);
-                }
-            }
-        }
-    }
+    protected abstract void createFormFields(List<VariableAccess> variableAccesses);
+    
 
-    private void createFormField(ProcessDefinition processDefinition, VariableAccess variableAccess) {
+    protected void createFormField(VariableAccess variableAccess) {
         String variableName = variableAccess.getVariableName();
         FormField formField = new FormField();
         FormType formType = createFormType(variableAccess.getType());

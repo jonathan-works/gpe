@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.form;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.faces.component.UIComponent;
+
 import br.com.infox.epp.processo.form.type.FormType;
 
 public class FormField {
@@ -13,6 +15,7 @@ public class FormField {
     protected Object defaultValue;
     protected Object value;
     protected Map<String, Object> properties = new HashMap<>();
+    protected UIComponent uiComponent;
 
     public String getId() {
         return id;
@@ -81,4 +84,12 @@ public class FormField {
     public void addProperty(String key, Object value) {
         properties.put(key, value);
     }
+
+	public UIComponent getUiComponent() {
+		return uiComponent;
+	}
+
+	public void setUiComponent(UIComponent uiComponent) {
+		this.uiComponent = uiComponent;
+	}
 }

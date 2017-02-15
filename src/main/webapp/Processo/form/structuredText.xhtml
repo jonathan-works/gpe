@@ -11,7 +11,7 @@
     <ui:param name="varId" value="#{formField.id}"/>
     <ui:param name="readonly" value="#{formField.properties.readonly}" />
     
-    <wi:editor id="#{varId}" value="#{formField.value}" label="#{formField.label}"
-        disabled="#{disabled}" required="#{formField.properties.required}" readonly="#{readonly}" />
+    <wi:editor id="#{varId}" value="#{formField.value}" label="#{formField.label}" binding="#{formField.uiComponent}"
+        disabled="#{disabled}" required="false" showRequired="#{formField.properties.required}" readonly="#{readonly}" />
     
 </ui:composition>

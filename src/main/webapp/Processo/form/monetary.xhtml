@@ -14,7 +14,11 @@
     <wi:inputMoney id="#{id}" value="#{formField.value}"
     	 label="#{formField.label}"
 		 readonly="#{formField.properties.readonly}"
-		 required="#{formField.properties.required}"
+		 required="false"
+		 showRequired="#{formField.properties.required}"
+		 valorMinimo="#{formField.properties.valorMinimo}" 
+		 valorMaximo="#{formField.properties.valorMaximo}"
+		 binding="#{formField.uiComponent}"
 		 styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
 		 maxlength="20" />
     

@@ -19,7 +19,7 @@
   	</style>
   	
   	<i:selectManyMenu id="#{varId}" value="#{formField.value}" required="#{formField.properties.required}"
-        disabled="#{disabled or readonly}" readonly="#{readonly}" 
+        disabled="#{disabled or readonly}" readonly="#{readonly}" binding="#{formField.uiComponent}"
         items="#{formField.properties.selectItems}" label="#{formField.label}"
         styleClass="selectManyMenu"/>
     

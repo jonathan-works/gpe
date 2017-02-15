@@ -24,6 +24,7 @@
     	<composite:attribute name="validatorId" />
     	<composite:attribute name="converterId"/>
     	<composite:attribute name="enumClassName"/>
+    	<composite:attribute name="showRequired" default="false"/>
     	
     	<composite:attribute name="ajax" default="false" />
     	<composite:attribute name="render" default="@this" />
@@ -60,13 +61,13 @@
         				</c:if>
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
-	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
+	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required or cc.attrs.showRequired}" value="*" />
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
         			<h:selectOneMenu id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" styleClass="input select #{cc.attrs.styleClass}" 
         				required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.disabled}"
-        				style="#{cc.attrs.selectStyle}">
+        				style="#{cc.attrs.selectStyle}" binding="#{cc.attrs.binding}">
         				<c:if test="#{not cc.attrs.hideNoSelectionLabel}">
 				        	<f:selectItem noSelectionOption="true" itemValue="" itemLabel="#{cc.attrs.noSelectionLabel}" />
 				        </c:if>

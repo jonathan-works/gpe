@@ -13,8 +13,8 @@
     <ui:param name="validatorId" value="#{formField.properties.validatorId}"/>
     
     <wi:inputDate id="#{varId}" label="#{formField.label}" value="#{formField.value}" 
-    	required="#{formField.properties.required}" readonly="#{formField.properties.readonly}" 
-    	disabled="#{formField.properties.disabled}">
+    	required="false" readonly="#{formField.properties.readonly}" 
+    	disabled="#{formField.properties.disabled}" binding="#{formField.uiComponent}">
     	
     	<c:if test="#{not empty validatorId}">
             <f:validator validatorId="#{validatorId}" />

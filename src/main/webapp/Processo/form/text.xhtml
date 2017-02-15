@@ -10,8 +10,12 @@
     
     <ui:param name="id" value="#{formField.id}"/>
     
-    <i:inputTextarea label="#{formField.label}" value="#{formField.value}" 
-    	required="#{formField.properties.required}" readonly="#{formField.properties.readonly}"
+    <i:inputTextarea label="#{formField.label}" 
+    	value="#{formField.value}"  
+    	binding="#{formField.uiComponent}" 
+    	required="false" 
+    	readonly="#{formField.properties.readonly}" 
+    	showRequired="#{formField.properties.required}"
     	maxlength="4000"/>
     
 </ui:composition>

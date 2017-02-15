@@ -30,7 +30,7 @@
 	        <h:inputText id="#{id}Input" value="#{value}" readonly="#{readonly}"
 	            disabled="#{disabled}" required="#{required}" size="#{size}"
 	            styleClass="#{readonly ? 'readOnly' : styleClass } input text crud"
-	            onblur="#{onblur}" onchange="#{onchange}"
+	            onblur="#{onblur}" onchange="#{onchange}" binding="#{binding}"
 	            onkeypress="#{onkeypress}" onkeyup="#{onkeyup}"
 	            maxlength="#{wi:get(maxlength, 255)}"
 	            immediate="#{immediate}">

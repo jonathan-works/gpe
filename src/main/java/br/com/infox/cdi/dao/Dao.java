@@ -1,5 +1,6 @@
 package br.com.infox.cdi.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.ejb.TransactionAttribute;
@@ -13,8 +14,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PersistenceController;
 
-public class Dao<T, I> extends PersistenceController {
+public class Dao<T, I> extends PersistenceController implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private Class<T> entityClass;
 
 	public Dao(Class<T> entityClass) {

@@ -17,67 +17,93 @@
   	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
   	<ui:param name="modelosDocumento" value="#{formField.properties.modelosDocumento}"/>
   	
-    <fieldset>
-        <legend>
-            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
-        </legend>
-    	<wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
-    		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-    		items="#{classificacoesDocumento}"
-    		required="#{wi:get(required, false)}"
-    		showLabelSelecione="true"
-    		value="#{formField.properties.classificacaoDocumento}"
-    		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
-    		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
-    		<f:validator validatorId="classificacaoEditorValidator" for="@this"/>
-    		<f:attribute name="editorId" value="#{rich:clientId(varId)}"/>
-            <a:ajax render="#{varId}EditorDiv #{varId}AssinaturaDocumento" event="change" execute="@this #{varId}EditorDiv" limitRender="true" />
-    	</wi:selectOneMenuEntity>
-        <wi:selectOneMenuEntity id="#{varId}ModeloDocumento"
-    		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
-    		items="#{formField.properties.modelosDocumento}"
-    		noSelectionLabel="[Selecione o modelo]"
-    		required="false"
-    		value="#{formField.properties.modeloDocumento}"
-    		rendered="#{not readonly and not formField.value.hasAssinatura()}">
-    		<a:ajax event="change" render="#{varId}EditorDiv" execute="@this" limitRender="true" 
-    			listener="#{controller.performModeloDocumento(formField, formData)}"/>
-    	</wi:selectOneMenuEntity>
-    	   
-    	<p:outputPanel id="#{varId}EditorDiv">
-    	   	<s:div id="#{varId}ToolTipDivExterna">
-    		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-    			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
-    			  	<h:graphicImage id="#{varId}helpEditTipImg" 
-    			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
-    				<div class="epp-tooltip">
-    					<div class="tooltip-panel">
-    						<div><h:outputText value="Observação:"/></div>
-    						<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}"/>
-    					</div>
-    				</div>
-    		    </s:div>
-    	    </s:div>
-    	    
-    	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
-    	    	required="#{wi:get(required, false)}"
-    	        readonly="#{readonly or formField.value.hasAssinatura()}"/>
-    	        
-    	</p:outputPanel>
-    	   
-    	<p:outputPanel id="#{varId}AssinaturaDocumento" >
-    	   
-    	    <p:outputPanel rendered="#{controller.podeAssinar(formField)}">
-    		   <wi:assinador 
-                   id="#{varId}CertificadoDigital"
-                   execute="#{varId}EditorDiv"
-                   render="#{varId}Div :pageBodyDialogMessage"
-                   onbegin="infox.showLoading();"
-                   oncomplete="infox.hideLoading();"
-                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
-                   value="#{infoxMessages['assinaturas.assinar']}" />
-    		</p:outputPanel>
-    	
-    	</p:outputPanel>
-    </fieldset>
+  	
+  	<h:message for="panelEditor#{varId}" styleClass="property-error property-msg #{varId}ErrorClass" />
+  	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.uiComponent}" styleClass="#{varId}DivClass">
+	    <fieldset>
+	        <legend>
+	            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
+	            <h:outputText styleClass="required" rendered="#{required}" value="*" />
+	        </legend>
+	    	<wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
+	    		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+	    		items="#{classificacoesDocumento}"
+	    		required="false"
+	    		showLabelSelecione="true"
+	    		value="#{formField.properties.classificacaoDocumento}"
+	    		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
+	    		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
+	            <a:ajax render="#{varId}EditorDiv #{varId}AssinaturaDocumento" event="change" execute="@this #{varId}EditorDiv" limitRender="true" />
+	            <f:validateBean disabled="true" />
+	    	</wi:selectOneMenuEntity>
+	        <wi:selectOneMenuEntity id="#{varId}ModeloDocumento"
+	    		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+	    		items="#{formField.properties.modelosDocumento}"
+	    		noSelectionLabel="[Selecione o modelo]"
+	    		required="false"
+	    		value="#{formField.properties.modeloDocumento}"
+	    		rendered="#{not readonly and not formField.value.hasAssinatura()}">
+	    		<a:ajax event="change" render="#{varId}EditorDiv" execute="@this" limitRender="true" 
+	    			listener="#{controller.performModeloDocumento(formField, formData)}"/>
+	    	</wi:selectOneMenuEntity>
+            <wi:selectOneMenuEntity id="#{varId}PastaDocumentoMenu"
+                label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+                value="#{formField.properties.pasta}"
+                items="#{formField.properties.pastas}"
+                readonly="#{readonly or formField.value.hasAssinatura() or not empty formField.properties.pasta}"
+                disabled="#{readonly or formField.value.hasAssinatura() or not empty formField.properties.pasta}"
+                showLabelSelecione="true" noSelectionLabel="[Padrão]">
+                <a:ajax render="@this" event="change" execute="@this" limitRender="true" />
+                <f:validateBean disabled="true" />
+            </wi:selectOneMenuEntity>
+	    	   
+	    	<p:outputPanel id="#{varId}EditorDiv">
+	    	   	<s:div id="#{varId}ToolTipDivExterna">
+	    		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+	    			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
+	    			  	<h:graphicImage id="#{varId}helpEditTipImg" 
+	    			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+	    				<div class="epp-tooltip">
+	    					<div class="tooltip-panel">
+	    						<div><h:outputText value="Observação:"/></div>
+	    						<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}"/>
+	    					</div>
+	    				</div>
+	    		    </s:div>
+	    	    </s:div>
+	    	    
+	    	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
+	    	    	required="false"
+	    	        readonly="#{readonly or formField.value.hasAssinatura()}"/>
+	    	        
+	    	</p:outputPanel>
+	    	   
+	    	<p:outputPanel id="#{varId}AssinaturaDocumento" >
+	    	   
+	    	    <p:outputPanel rendered="#{controller.podeAssinar(formField)}">
+	    		   <wi:assinador 
+	                   id="#{varId}CertificadoDigital"
+	                   execute="#{varId}EditorDiv"
+	                   render="#{varId}Div :pageBodyDialogMessage"
+	                   onbegin="infox.showLoading();"
+	                   oncomplete="infox.hideLoading();"
+	                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
+	                   value="#{infoxMessages['assinaturas.assinar']}" />
+	    		</p:outputPanel>
+	    	
+	    	</p:outputPanel>
+	    </fieldset>
+    </p:outputPanel>
+	<script type="text/javascript">
+         (function(){
+             var id = "#{varId}";
+             var errorClass = $('.' + id + 'ErrorClass');
+             var div = $('.' + id + 'DivClass');
+             if (errorClass.length !== 0) {
+                 div.addClass('property-error');
+             } else {
+                 div.removeClass('property-error');
+             }
+         })();
+     </script>
 </ui:composition>

@@ -1,13 +1,17 @@
 package br.com.infox.epp.processo.form;
 
+import java.util.List;
 import java.util.Map;
 
+import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.form.type.FormType;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 
 public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     
@@ -18,32 +22,60 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
         super("taskForm", processo);
         this.taskInstance = taskInstance;
         expressionResolver = ExpressionResolverChainBuilder.defaultExpressionResolverChain(getProcesso().getIdProcesso(), getTaskInstance());
+        
+        List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();        
+        createFormFields(variableAccesses);
     }
 
+    @Override
+    protected void createFormFields(List<VariableAccess> variableAccesses) {
+    	VariableAccess variableTaskPage = getTaskPage(variableAccesses);
+		if (variableTaskPage != null) {
+			createFormField(variableTaskPage);
+		} else {
+			for (VariableAccess variableAccess : variableAccesses) {
+				String type = variableAccess.getType();
+				if (!VariableType.PARAMETER.name().equals(type)) {
+					createFormField(variableAccess);
+				}
+			}
+		}
+    }
+    
     @Override
     public TaskInstance getTaskInstance() {
         return taskInstance;
     }
+    
+    @Override
+	public void setTaskInstance(TaskInstance taskInstance) {
+    	this.taskInstance = taskInstance;
+	}
 
     @Override
     public Object getVariable(String name) {
-        return taskInstance.getVariable(name);
+        return getTaskInstance().getVariable(name);
     }
 
     @Override
     public void setVariable(String name, Object value) {
-        taskInstance.setVariable(name, value);
+    	getTaskInstance().setVariable(name, value);
     }
 
     @Override
     public void update() {
-        // TODO Auto-generated method stub
+    	for (FormField formField : getFormFields()) {
+            if (formField.getType().isPersistable() && formField.getValue() != null) {
+            	FormType type = formField.getType();
+            	type.performUpdate(formField, this);
+                setVariable(formField.getId(), type.getValueType().convertToModelValue(formField.getValue()));
+            }
+        }
     }
 
     @Override
     public Map<String, Object> getVariables() {
-        // TODO Auto-generated method stub
-        return null;
+        return getTaskInstance().getVariables();
     }
 
     @Override
