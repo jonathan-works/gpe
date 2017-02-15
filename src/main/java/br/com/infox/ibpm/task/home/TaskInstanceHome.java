@@ -76,7 +76,6 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.handler.ProcessoHandler;
@@ -123,8 +122,6 @@ public class TaskInstanceHome implements Serializable {
 	private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "taskInstanceHome";
-	private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
-	private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
 	private static final String TASK_INSTANCE_FORM_ID = "movimentarTabPanel:taskInstanceForm";
 
 	@Inject
@@ -147,8 +144,6 @@ public class TaskInstanceHome implements Serializable {
 	private PastaManager pastaManager; 
 	@Inject
 	private DocumentoBinManager documentoBinManager;
-	@Inject
-	private DocumentoBinarioManager documentoBinarioManager;
 	@Inject
 	private InfoxMessages infoxMessages;
 	@Inject
