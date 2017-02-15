@@ -12,5 +12,5 @@ public final class CustomSqlFunctions {
     public static final String MD5_BINARY = "md5_binary";
     public static final String STRING_AGG = "string_agg";
     public static final String DATE_TO_CHAR = "date_to_char";
-
+    public static final String REGEXP_REPLACE = "regexp_replace";
 }

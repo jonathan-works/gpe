@@ -12,6 +12,7 @@ import br.com.infox.hibernate.function.DateDiffDaySQLServer;
 import br.com.infox.hibernate.function.DateToChar;
 import br.com.infox.hibernate.function.DocumentoSuficientementeAssinado;
 import br.com.infox.hibernate.function.NumeroProcessoRoot;
+import br.com.infox.hibernate.function.RegexpReplace;
 import br.com.infox.hibernate.function.StringAgg;
 import br.com.infox.hibernate.function.ToDateJpql;
 import br.com.infox.hibernate.function.ToMD5Binary;
@@ -31,5 +32,6 @@ public class InfoxSQLServer2012Dialect extends SQLServer2012Dialect {
         registerFunction(CustomSqlFunctions.MD5_BINARY, new ToMD5Binary());
         registerFunction(CustomSqlFunctions.STRING_AGG, new StringAgg());
         registerFunction(CustomSqlFunctions.DATE_TO_CHAR, new DateToChar());
+        registerFunction(CustomSqlFunctions.REGEXP_REPLACE, new RegexpReplace());
     }
 }
