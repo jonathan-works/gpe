@@ -98,7 +98,7 @@ public abstract class FileFormType implements FormType {
         if (pastas.size() == 1) {
         	pasta = pastas.get(0);
         }
-        
+        formField.addProperty("podeSelecionarPasta", pasta == null);
         formField.addProperty("pasta", pasta);
         formField.addProperty("pastas", pastas);
     }

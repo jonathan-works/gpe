@@ -2,17 +2,14 @@
 
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:i="http://java.sun.com/jsf/composite/infox">
     
-    <ui:param name="id" value="#{formField.id}"/>
-    
-    <i:inputTextarea label="#{formField.label}" 
+    <i:inputTextarea id="#{formField.id}" 
+        label="#{formField.label}" 
     	value="#{formField.value}"  
-    	binding="#{formField.uiComponent}" 
+    	bindingComponent="#{formField.component}" 
     	required="false" 
     	readonly="#{formField.properties.readonly}" 
     	showRequired="#{formField.properties.required}"

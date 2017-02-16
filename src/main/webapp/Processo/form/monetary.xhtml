@@ -2,23 +2,17 @@
 
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:i="http://java.sun.com/jsf/composite/infox">
     
-    <ui:param name="id" value="#{formField.id}"/>
-    
-    <wi:inputMoney id="#{id}" value="#{formField.value}"
+    <i:inputMoney id="#{formField.id}" 
+         value="#{formField.value}"
     	 label="#{formField.label}"
 		 readonly="#{formField.properties.readonly}"
 		 required="false"
 		 showRequired="#{formField.properties.required}"
-		 valorMinimo="#{formField.properties.valorMinimo}" 
-		 valorMaximo="#{formField.properties.valorMaximo}"
-		 binding="#{formField.uiComponent}"
+		 bindingComponent="#{formField.component}"
 		 styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
 		 maxlength="20" />
     

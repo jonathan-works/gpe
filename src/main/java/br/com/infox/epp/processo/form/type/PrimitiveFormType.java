@@ -16,17 +16,17 @@ import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 import br.com.infox.seam.exception.BusinessException;
 
 public abstract class PrimitiveFormType implements FormType {
-    
+
     protected String name;
     protected String path;
     protected ValueType valueType;
-    
+
     public PrimitiveFormType(String name, String path, ValueType valueType) {
         this.name = name;
         this.path = path;
         this.valueType = valueType;
     }
-    
+
     @Override
     public ValueType getValueType() {
         return valueType;
@@ -36,114 +36,138 @@ public abstract class PrimitiveFormType implements FormType {
     public String getName() {
         return name;
     }
-    
+
     @Override
     public boolean isPersistable() {
         return true;
     }
-    
+
     @Override
     public String getPath() {
         return path;
     }
-    
+
     @Override
     public Object convertToFormValue(Object value) {
         return value;
     }
-    
+
     @Override
     public void performValue(FormField formField, FormData formData) {
         // do nothing
     }
-    
+
     @Override
     public void performUpdate(FormField formField, FormData formData) {
-       // do nothing
+        // do nothing
     }
-    
+
     @Override
     public void validate(FormField formField, FormData formData) throws BusinessException {
-       String required = formField.getProperty("required", String.class);
-       if("true".equalsIgnoreCase(required) && formField.getValue() == null){
-    	   FacesContext.getCurrentInstance().addMessage(formField.getUiComponent().getClientId(), new FacesMessage(FacesMessage.SEVERITY_ERROR, "", InfoxMessages.getInstance().get("beanValidation.notNull")));
-       }
+        String required = formField.getProperty("required", String.class);
+        if ("true".equalsIgnoreCase(required) && formField.getValue() == null) {
+            FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(), new FacesMessage(
+                    FacesMessage.SEVERITY_ERROR, "", InfoxMessages.getInstance().get("beanValidation.notNull")));
+        }
     }
     
+    public MaxMinConfig getConfigurator(FormField formField) {
+        String configuration = (String) formField.getProperties().get("configuration");
+        MaxMinConfig maxMinConfig = VariableMaxMinHandler.fromJson(configuration);
+        return maxMinConfig;
+    }
+    
+    public void validateMaxMin(FormField formField) {
+        MaxMinConfig maxMinConfig = getConfigurator(formField);
+        if (formField.getValue() != null) {
+            double valor = Double.parseDouble(formField.getValue().toString());
+            if (maxMinConfig.getMinimo() != null && maxMinConfig.getMaximo() != null && 
+                    (valor < maxMinConfig.getMinimo().longValue() || valor > maxMinConfig.getMaximo().longValue()))
+                FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "O valor deve estar entre x e y"));
+            else if (maxMinConfig.getMaximo() != null && valor > maxMinConfig.getMaximo().longValue())
+                FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "O valor deve ser menor ou igual a y"));
+            else if (maxMinConfig.getMinimo() != null && valor < maxMinConfig.getMinimo().longValue())
+                FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "O valor deve ser maior ou igual a x"));
+        }
+    }
+
     public static class StringFormType extends PrimitiveFormType {
-        
+
         public StringFormType() {
             super("string", "/Processo/form/string.xhtml", ValueType.STRING);
         }
-        
+
         public StringFormType(String name, String path) {
             super(name, path, ValueType.STRING);
         }
-        
+
         @Override
         public void performValue(FormField formField, FormData formData) {
-        	super.performValue(formField, formData);
-        	String configuration = (String) formField.getProperties().get("configuration");
-        	if(configuration != null) {
-        		StringConfig config = VariableStringHandler.fromJson(configuration);
-        		formField.addProperty("mascara", config.getMascara());
-        	}
+            super.performValue(formField, formData);
+            String configuration = (String) formField.getProperties().get("configuration");
+            if (configuration != null) {
+                StringConfig config = VariableStringHandler.fromJson(configuration);
+                formField.addProperty("mascara", config.getMascara());
+            }
         }
     }
-    
+
     public static class TextFormType extends StringFormType {
-        
+
         public TextFormType() {
             super("text", "/Processo/form/text.xhtml");
         }
     }
-    
+
     public static class StructuredTextFormType extends StringFormType {
-        
+
         public StructuredTextFormType() {
             super("structuredText", "/Processo/form/structuredText.xhtml");
         }
     }
-    
+
     public static class BooleanFormType extends PrimitiveFormType {
-        
+
         public BooleanFormType() {
             super("boolean", "/Processo/form/boolean.xhtml", ValueType.BOOLEAN);
         }
-        
+
         @Override
         public Object convertToFormValue(Object value) {
             if (value == null) {
-                value = Boolean.FALSE;
+                //value = Boolean.FALSE;
             }
             return value;
         }
     }
-    
+
     public static class IntegerFormType extends PrimitiveFormType {
-        
+
         public IntegerFormType() {
             super("integer", "/Processo/form/integer.xhtml", ValueType.INTEGER);
         }
-        
+
         @Override
         public void performValue(FormField formField, FormData formData) {
-        	super.performValue(formField, formData);
-        	String configuration = (String) formField.getProperties().get("configuration");
-            if (configuration == null) {
-            	MaxMinConfig maxMinConfig = VariableMaxMinHandler.fromJson(configuration);
-            	formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
-            	formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
-            }
+            super.performValue(formField, formData);
+            MaxMinConfig maxMinConfig = getConfigurator(formField);
+            formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
+            formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
+        }
+
+        @Override
+        public void validate(FormField formField, FormData formData) throws BusinessException {
+            super.validate(formField, formData);
+            validateMaxMin(formField);
         }
     }
-    
+
     public static class DateFormType extends PrimitiveFormType {
-        
+
         public DateFormType() {
             super("date", "/Processo/form/date.xhtml", ValueType.DATE);
         }
-        
+
         @Override
         public void performValue(FormField formField, FormData formData) {
             super.performValue(formField, formData);
@@ -156,33 +180,36 @@ public abstract class PrimitiveFormType implements FormType {
             }
             formField.getProperties().put("validatorId", validacaoData.getValidatorId());
         }
-        
+
     }
-    
+
     public static class MonetaryFormType extends PrimitiveFormType {
-        
+
         public MonetaryFormType() {
             super("monetary", "/Processo/form/monetary.xhtml", ValueType.DOUBLE);
         }
-        
+
         @Override
         public void performValue(FormField formField, FormData formData) {
-        	super.performValue(formField, formData);
-        	String configuration = (String) formField.getProperties().get("configuration");
-            if (configuration == null) {
-            	MaxMinConfig maxMinConfig = VariableMaxMinHandler.fromJson(configuration);
-            	formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
-            	formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
-            }
+            super.performValue(formField, formData);
+            MaxMinConfig maxMinConfig = getConfigurator(formField);
+            formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
+            formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
+        }
+
+        @Override
+        public void validate(FormField formField, FormData formData) throws BusinessException {
+            super.validate(formField, formData);
+            validateMaxMin(formField);
         }
     }
-    
+
     public static class FrameFormType extends PrimitiveFormType {
-        
+
         public FrameFormType() {
             super("frame", "/Processo/form/frame.xhtml", ValueType.NULL);
         }
-        
+
         @Override
         public void performValue(FormField formField, FormData formData) {
             super.performValue(formField, formData);
@@ -197,13 +224,13 @@ public abstract class PrimitiveFormType implements FormType {
             return false;
         }
     }
-    
+
     public static class PageFormType extends PrimitiveFormType {
-        
+
         public PageFormType() {
             super("page", "/Processo/form/page.xhtml", ValueType.NULL);
         }
-        
+
         @Override
         public void performValue(FormField formField, FormData formData) {
             super.performValue(formField, formData);
@@ -216,13 +243,13 @@ public abstract class PrimitiveFormType implements FormType {
             return false;
         }
     }
-    
+
     public static class TaskPageFormType extends PrimitiveFormType {
-        
+
         public TaskPageFormType() {
             super("taskPage", "", ValueType.NULL);
         }
-        
+
         @Override
         public void performValue(FormField formField, FormData formData) {
             this.path = "/WEB-INF/taskpages/" + formField.getId() + ".xhtml";
@@ -233,5 +260,7 @@ public abstract class PrimitiveFormType implements FormType {
             return false;
         }
     }
+
+    //criar classe de validacao de numeros numberFormType
     
 }

@@ -25,6 +25,7 @@
     	<composite:attribute name="converterId"/>
     	<composite:attribute name="enumClassName"/>
     	<composite:attribute name="showRequired" default="false"/>
+    	<composite:attribute name="bindingComponent"/>
     	
     	<composite:attribute name="ajax" default="false" />
     	<composite:attribute name="render" default="@this" />
@@ -67,7 +68,7 @@
         		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
         			<h:selectOneMenu id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" styleClass="input select #{cc.attrs.styleClass}" 
         				required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.disabled}"
-        				style="#{cc.attrs.selectStyle}" binding="#{cc.attrs.binding}">
+        				style="#{cc.attrs.selectStyle}" binding="#{cc.attrs.bindingComponent}">
         				<c:if test="#{not cc.attrs.hideNoSelectionLabel}">
 				        	<f:selectItem noSelectionOption="true" itemValue="" itemLabel="#{cc.attrs.noSelectionLabel}" />
 				        </c:if>

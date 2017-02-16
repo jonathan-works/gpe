@@ -19,7 +19,7 @@
   	
   	
   	<h:message for="panelEditor#{varId}" styleClass="property-error property-msg #{varId}ErrorClass" />
-  	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.uiComponent}" styleClass="#{varId}DivClass">
+  	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.component}" styleClass="#{varId}DivClass">
 	    <fieldset>
 	        <legend>
 	            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
@@ -48,10 +48,11 @@
 	    	</wi:selectOneMenuEntity>
             <wi:selectOneMenuEntity id="#{varId}PastaDocumentoMenu"
                 label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+                required="false"
                 value="#{formField.properties.pasta}"
                 items="#{formField.properties.pastas}"
-                readonly="#{readonly or formField.value.hasAssinatura() or not empty formField.properties.pasta}"
-                disabled="#{readonly or formField.value.hasAssinatura() or not empty formField.properties.pasta}"
+                readonly="#{readonly or formField.value.hasAssinatura() or not formField.properties.podeSelectionarPasta}"
+                disabled="#{readonly or formField.value.hasAssinatura() or not formField.properties.podeSelectionarPasta}"
                 showLabelSelecione="true" noSelectionLabel="[Padrão]">
                 <a:ajax render="@this" event="change" execute="@this" limitRender="true" />
                 <f:validateBean disabled="true" />

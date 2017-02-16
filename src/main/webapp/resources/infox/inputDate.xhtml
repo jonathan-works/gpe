@@ -4,7 +4,6 @@
 
 <composite:interface>
 
-    <composite:attribute name="id" />
     <composite:attribute name="label" />
     <composite:attribute name="help" />
     <composite:attribute name="value" type="java.util.Date" />
@@ -26,6 +25,8 @@
     <composite:attribute name="maskDate" type="java.lang.String"
         default="#{cc.attrs.pattern.replaceAll('[a-zA-Z]', '9')}" />
     <composite:attribute name="showRequired" default="false"/>
+    <composite:attribute name="bindingComponent"/>
+    
 
     <!-- Ajax Attributes -->
     <composite:attribute name="ajax" default="false" />
@@ -72,12 +73,15 @@
                     readonly="#{cc.attrs.readonly}" pattern="#{cc.attrs.pattern}" onblur="#{cc.attrs.oninputblur}"
                     onchange="#{cc.attrs.onchanged}" update="#{cc.attrs.render}" placeholder="__/__/____"
                     mask="#{cc.attrs.maskDate}" mindate="#{cc.attrs.mindate}" required="#{cc.attrs.required}"
-                    binding="#{cc.attrs.binding}">
+                    binding="#{cc.attrs.bindingComponent}">
                     <c:if test="#{cc.attrs.future}">
                         <f:validator validatorId="futureDateOnlyValidator" />
                     </c:if>
                     <c:if test="#{cc.attrs.past}">
                         <f:validator validatorId="pastDateValidator" />
+                    </c:if>
+                    <c:if test="#{not empty cc.attrs.validatorId}">
+                        <f:validator validatorId="#{cc.attrs.validatorId}"/>
                     </c:if>
                     <composite:insertChildren />
                 </p:calendar>

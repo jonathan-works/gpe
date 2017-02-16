@@ -18,7 +18,7 @@
 	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
     
     <h:message for="panelEditor#{varId}" styleClass="property-error property-msg #{varId}ErrorClass" />
-  	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.uiComponent}" styleClass="#{varId}DivClass">
+  	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.component}" styleClass="#{varId}DivClass">
 	    <fieldset>
 	        <legend>
 	            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
@@ -37,6 +37,7 @@
             <wi:selectOneMenuEntity id="#{varId}PastaDocumentoMenu"
                 label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
                 value="#{formField.properties.pasta}"
+                required="false"
                 items="#{formField.properties.pastas}"
                 readonly="#{readonly or formField.value.hasAssinatura() or not empty formField.properties.pasta}"
                 disabled="#{readonly or formField.value.hasAssinatura() or not empty formField.properties.pasta}"

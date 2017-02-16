@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:i="http://java.sun.com/jsf/composite/infox"
+    xmlns:p="http://primefaces.org/ui"
     xmlns:wi="http://www.itx.com.br/jsf">
     
-    <ui:param name="varId" value="#{formField.id}"/>
     <ui:param name="readonly" value="#{formField.properties.readonly}" />
     
-    <wi:editor id="#{varId}" value="#{formField.value}" label="#{formField.label}" binding="#{formField.uiComponent}"
-        disabled="#{disabled}" required="false" showRequired="#{formField.properties.required}" readonly="#{readonly}" />
+    <p:outputPanel binding="#{formField.component}">
+        <wi:editor id="#{formField.id}" 
+        	value="#{formField.value}" 
+        	label="#{formField.label}" 
+            disabled="#{disabled}" 
+            required="false" 
+            showRequired="#{formField.properties.required}" 
+            readonly="#{readonly}" />
+    </p:outputPanel>
     
 </ui:composition>

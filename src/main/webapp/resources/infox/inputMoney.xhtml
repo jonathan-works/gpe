@@ -1,9 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml"   
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:rich="http://richfaces.org/rich"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:wi="http://www.itx.com.br/jsf"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:composite="http://java.sun.com/jsf/composite" >
@@ -11,23 +10,17 @@
     <composite:interface>
     	
     	<composite:attribute name="label" />
-    	<composite:attribute name="help" />
-    	<composite:attribute name="value" />
+    	<composite:attribute name="value" type="java.lang.Number"/>
     	<composite:attribute name="disabled" default="false"/>
     	<composite:attribute name="styleClass"/>
-    	<composite:attribute name="style"/>
     	<composite:attribute name="onblur" />
-    	<composite:attribute name="placeholder" type="java.lang.String" />
     	<composite:attribute name="required" default="false" />
-    	<composite:attribute name="onkeypress" />
-    	<composite:attribute name="oninput" />
-    	<composite:attribute name="onchange" />
-    	<composite:attribute name="onkeyup" />
     	<composite:attribute name="validatorId" />
-    	<composite:attribute name="converterId" default="stringConverter"/>
-    	<composite:attribute name="maxlength" default="4000"/>
+    	<composite:attribute name="onkeypress" />
+    	<composite:attribute name="onkeyup" />
     	<composite:attribute name="showRequired" default="false"/>
-    	<composite:attribute name="mascara"/>
+    	<composite:attribute name="valorMaximo" />
+    	<composite:attribute name="valorMinimo" />
     	<composite:attribute name="bindingComponent" />
     	
     	<!-- Ajax Attributes -->
@@ -39,15 +32,26 @@
     	<composite:attribute name="onstart" />
     	<composite:attribute name="oncomplete" />
     	
+    	
     	<composite:facet name="label"/>
     </composite:interface>
 	
     <composite:implementation>
-        <h:outputScript library="js" name="jquery.maskedinput.js" />
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div">
+    	<h:outputScript library="js" name="infox.maskmoney.js" />
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}">
+			<script type="text/javascript">
+				var id = "#{cc.attrs.id}";
+				var errorClass = $('.' + id + 'ErrorClass');
+				var div = $('.' + id + 'DivClass');
+				if (errorClass.length !== 0) {
+					div.addClass('property-error');
+				} else {
+					div.removeClass('property-error');
+				}
+	    	</script>
         	<div class="property-field-edit">
-        		<div class="property-field-edit-name">
-	        		<h:outputLabel id="#{cc.attrs.id}Label" for="Input">
+        		<div id="#{cc.attrs.id}LabelDiv" class="property-field-edit-name">
+	        		<h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
 	        			<h:outputText value="#{cc.attrs.label} " rendered="#{not empty cc.attrs.label}"/>
 	        			<c:if test="#{not empty cc.attrs.help}">
 		        			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
@@ -56,13 +60,13 @@
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
 	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required or cc.attrs.showRequired}" value="*" />
-	        		<h:message for="Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
+	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
-        		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
-        			<h:inputText id="Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
+        		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
+        			<h:inputText id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
         				disabled="#{cc.attrs.disabled}" onblur="#{cc.attrs.onblur}" required="#{cc.attrs.required}"
-        				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}" onkeyup="#{cc.attrs.onkeyup}"
-        				readonly="#{cc.attrs.readonly}" maxlength="#{cc.attrs.maxlength}" style="#{cc.attrs.style}" binding="#{cc.attrs.bindingComponent}">
+        				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}" 
+        				onkeyup="onlyNumber(this); #{cc.attrs.onkeyup}" binding="#{cc.attrs.bindingComponent}" >
 		   				<c:if test="#{cc.attrs.ajax}">
 					    	<c:if test="#{empty cc.getValueExpression('listener')}">
 						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
@@ -73,35 +77,28 @@
 						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}" listener="#{cc.attrs.listener}"/>
 					    	</c:if>
 				        </c:if>
-		   				<c:if test="#{not empty cc.attrs.validatorId}">
-		   					<f:validator validatorId="#{cc.attrs.validatorId}" />
-		   				</c:if>
-		   				<f:converter converterId="#{cc.attrs.converterId}" for="@this" />
-		   				<composite:insertChildren />
-		   			</h:inputText>	
+	   					<f:converter converterId="monetarioConverter" for="@this"/>
+	   					<c:if test="#{not empty cc.attrs.valorMaximo and not empty cc.attrs.valorMinimo}">
+	                    	<f:validateDoubleRange maximum="#{cc.attrs.valorMaximo}" minimum="#{cc.attrs.valorMinimo}" for="@this" />
+		                </c:if>
+		                <c:if test="#{not empty cc.attrs.valorMaximo and empty cc.attrs.valorMinimo}">
+		                    <f:validateDoubleRange maximum="#{cc.attrs.valorMaximo}" for="@this" />
+		                </c:if>
+		                <c:if test="#{empty cc.attrs.valorMaximo and not empty cc.attrs.valorMinimo}">
+		                    <f:validateDoubleRange minimum="#{cc.attrs.valorMinimo}" for="@this" />
+		                </c:if>
+		                <composite:insertChildren />
+		   			</h:inputText>
+		   			
+		   			<p:outputPanel rendered="#{not readonly}" >
+					    <script>
+					  		maskMoney(document.getElementById("#{cc.clientId}:#{cc.attrs.id}Input"), {nullable: #{nullable ? "true" : "false"}});
+					   	</script>
+				   	</p:outputPanel>
         		</div>
         	</div>
         </p:outputPanel>
-        	<c:if test="#{not empty cc.attrs.mascara}">
-                <script type="text/javascript">
-                    $(document).ready(function(){
-                        $(document.getElementById("#{cc.clientId}:#{cc.attrs.id}Input")).mask('#{cc.attrs.mascara}',{fixed:true});
-                    });
-                </script>
-		    </c:if>
-        <script type="text/javascript">
-            (function(){
-                var id = "#{cc.attrs.id}";
-                var errorClass = $('.' + id + 'ErrorClass');
-                var div = $('.' + id + 'DivClass');
-                if (errorClass.length !== 0) {
-                    div.addClass('property-error');
-                } else {
-                    div.removeClass('property-error');
-                }
-                document.getElementById("#{cc.clientId}:Input").placeholder="#{cc.attrs.placeholder}";
-            })();
-        </script>
     </composite:implementation>
-	taskForm:j_idt51:j_idt51Input
+	
 </html>
+
