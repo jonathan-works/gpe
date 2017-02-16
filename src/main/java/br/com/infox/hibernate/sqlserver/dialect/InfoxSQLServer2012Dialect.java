@@ -3,6 +3,7 @@ package br.com.infox.hibernate.sqlserver.dialect;
 import java.sql.Types;
 
 import org.hibernate.dialect.SQLServer2012Dialect;
+import org.hibernate.dialect.function.StandardSQLFunction;
 import org.hibernate.type.StandardBasicTypes;
 
 import br.com.infox.hibernate.function.CustomSqlFunctions;
@@ -33,5 +34,6 @@ public class InfoxSQLServer2012Dialect extends SQLServer2012Dialect {
         registerFunction(CustomSqlFunctions.STRING_AGG, new StringAgg());
         registerFunction(CustomSqlFunctions.DATE_TO_CHAR, new DateToChar());
         registerFunction(CustomSqlFunctions.REGEXP_REPLACE, new RegexpReplace());
+        registerFunction( "concat", new StandardSQLFunction("concat", StandardBasicTypes.STRING));
     }
 }
