@@ -1,6 +1,8 @@
 package br.com.infox.hibernate.postgres.dialect;
 
 import org.hibernate.dialect.PostgreSQL82Dialect;
+import org.hibernate.dialect.function.StandardSQLFunction;
+import org.hibernate.type.StandardBasicTypes;
 
 import br.com.infox.hibernate.function.CustomSqlFunctions;
 import br.com.infox.hibernate.function.DataAdd;
@@ -27,6 +29,7 @@ public class InfoxPostgreSQLDialect extends PostgreSQL82Dialect {
         registerFunction(CustomSqlFunctions.MD5_BINARY, new ToMD5Binary());
         registerFunction(CustomSqlFunctions.STRING_AGG, new StringAgg());
         registerFunction(CustomSqlFunctions.DATE_TO_CHAR, new DateToChar());
+        registerFunction( "concat", new StandardSQLFunction("concat", StandardBasicTypes.STRING));
     }
 
 }
