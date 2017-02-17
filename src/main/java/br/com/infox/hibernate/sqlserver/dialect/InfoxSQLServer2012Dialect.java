@@ -23,6 +23,7 @@ public class InfoxSQLServer2012Dialect extends SQLServer2012Dialect {
     
     public InfoxSQLServer2012Dialect() {
         registerHibernateType(Types.NCHAR, StandardBasicTypes.STRING.getName());
+        registerHibernateType(Types.NVARCHAR, StandardBasicTypes.STRING.getName());
         registerFunction(CustomSqlFunctions.DOCUMENTO_SUFICIENTEMENTE_ASSINADO, new DocumentoSuficientementeAssinado());
         registerFunction(CustomSqlFunctions.NUMERO_PROCESSO_ROOT, new NumeroProcessoRoot());
         registerFunction(CustomSqlFunctions.TO_DATE, new ToDateJpql());
