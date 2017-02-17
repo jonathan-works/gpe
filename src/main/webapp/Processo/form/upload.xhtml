@@ -17,39 +17,50 @@
 	<ui:param name="readonly" value="#{formField.properties.readonly}" />
 	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
     
-    <h:message for="panelEditor#{varId}" styleClass="property-error property-msg #{varId}ErrorClass" />
+    <h:message for="panelEditor#{varId}" style="font-weight: bold;" styleClass="property-error property-msg #{varId}ErrorClass" />
   	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.component}" styleClass="#{varId}DivClass">
 	    <fieldset>
 	        <legend>
-	            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
-	            <h:outputText styleClass="required" rendered="#{required}" value="*" />
+                <div class="property-field-edit-name" style="display: flex;">
+    	            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
+    	            <h:outputText styleClass="required" rendered="#{required}" value="*" />
+                </div>
 	        </legend>
 	    
-	        <wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
+	        <i:selectOneMenu id="#{varId}ClassificacaoDocumento"
 	    	     label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	    	     value="#{formField.properties.classificacaoDocumento}"
 	    	     items="#{classificacoesDocumento}"
-	    	     showLabelSelecione="true" required="false"
-	    	     rendered="#{not readonly and not formField.value.hasAssinatura() and not formField.value.documentoBin.suficientementeAssinado}"
-	    	     disabled="#{classificacoesDocumento.size eq 1}">
-	    	     <a:ajax render="#{varId}UploadDiv #{varId}assinaturaDocumentoDiv" event="change" execute="@this" limitRender="true" />
-	        </wi:selectOneMenuEntity>
-            <wi:selectOneMenuEntity id="#{varId}PastaDocumentoMenu"
+                 required="false"
+                 ajax="true"
+                 render="@this @(.#{varId}UploadDiv) @(.#{varId}assinaturaDocumentoDiv)"
+                 execute="@this"
+                 hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
+	    	     value="#{formField.properties.classificacaoDocumento}"
+                 converterId="org.jboss.seam.ui.EntityConverter"
+	    	     readonly="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}"
+	    	     disabled="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}">
+	        </i:selectOneMenu>
+            <i:selectOneMenu id="#{varId}PastaDocumentoUpload"
                 label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
-                value="#{formField.properties.pasta}"
                 required="false"
+                render="@this"
+                execute="@this"
+                ajax="true"
+                converterId="org.jboss.seam.ui.EntityConverter"
+                value="#{formField.properties.pasta}"
                 items="#{formField.properties.pastas}"
-                readonly="#{readonly or formField.value.hasAssinatura() or not empty formField.properties.pasta}"
-                disabled="#{readonly or formField.value.hasAssinatura() or not empty formField.properties.pasta}"
-                showLabelSelecione="true" noSelectionLabel="[Padrão]">
-                <a:ajax render="@this" event="change" execute="@this" limitRender="true" />
-                <f:validateBean disabled="true" />
-            </wi:selectOneMenuEntity>
+                readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+                disabled="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+                noSelectionLabel="[Padrão]">
+            </i:selectOneMenu>
 	     
-	    	 <p:outputPanel id="#{varId}UploadDiv">
+             <p:blockUI block="#{varId}UploadDiv" blocked="#{empty formField.properties.classificacaoDocumento}">
+                 <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}"  />
+             </p:blockUI>
+	    	 <p:outputPanel id="#{varId}UploadDiv" styleClass="#{varId}UploadDiv">
 	    	 
 	    	     <i:input id="#{varId}" required="false" 
-	    	 		rendered="#{not empty formField.properties.classificacaoDocumento and not readonly and not formField.value.hasAssinatura() 
+	    	 		rendered="#{not readonly and not formField.value.hasAssinatura() 
 	    	 					and not formField.value.documentoBin.suficientementeAssinado}">
 	    	 		<f:facet name="label">
 	    				<p:outputPanel id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width:10px; display:inline-block; margin-left:10px;">

@@ -19,7 +19,7 @@ public interface FormType {
     
     void performUpdate(FormField formField, FormData formData);
     
-    void validate(FormField formField, FormData formData) throws BusinessException;
+    boolean validate(FormField formField, FormData formData);
     
     boolean isPersistable();
     

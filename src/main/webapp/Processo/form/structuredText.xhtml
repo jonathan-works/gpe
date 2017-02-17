@@ -8,14 +8,26 @@
     
     <ui:param name="readonly" value="#{formField.properties.readonly}" />
     
-    <p:outputPanel binding="#{formField.component}">
+    <h:message for="#{formField.id}PanelEstruturado" style="font-weight: bold;" styleClass="property-error property-msg #{varId}ErrorClass" />
+    <p:outputPanel id="#{formField.id}PanelEstruturado" binding="#{formField.component}" styleClass="#{varId}DivClass">
         <wi:editor id="#{formField.id}" 
         	value="#{formField.value}" 
         	label="#{formField.label}" 
-            disabled="#{disabled}" 
+            disabled="#{readonly}" 
             required="false" 
             showRequired="#{formField.properties.required}" 
             readonly="#{readonly}" />
     </p:outputPanel>
-    
+    <script type="text/javascript">
+         (function(){
+             var id = "#{varId}";
+             var errorClass = $('.' + id + 'ErrorClass');
+             var div = $('.' + id + 'DivClass');
+             if (errorClass.length !== 0) {
+                 div.addClass('property-error');
+             } else {
+                 div.removeClass('property-error');
+             }
+         })();
+     </script>
 </ui:composition>

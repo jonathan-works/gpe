@@ -3,11 +3,14 @@ package br.com.infox.epp.processo.form.type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
@@ -16,7 +19,6 @@ import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
-import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class EnumFormType extends PrimitiveFormType {
@@ -25,11 +27,6 @@ public abstract class EnumFormType extends PrimitiveFormType {
         super(name, path, valueType);
     }
     
-    @Override
-    public void validate(FormField formField, FormData formData) throws BusinessException {
-        // do nothing
-    }
-
     @Override
     public boolean isPersistable() {
         return true;
@@ -89,6 +86,18 @@ public abstract class EnumFormType extends PrimitiveFormType {
                 return value;
             }
             throw new IllegalArgumentException("Cannot convert '" + value + "' to String[]");
+        }
+        
+        @Override
+        public boolean validate(FormField formField, FormData formData) {
+            String required = formField.getProperty("required", String.class);
+            if ("true".equalsIgnoreCase(required) && 
+                    (formField.getValue() == null  || ((String[])formField.getValue()).length == 0 )) {
+                FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(), new FacesMessage(
+                        FacesMessage.SEVERITY_ERROR, "", InfoxMessages.getInstance().get("beanValidation.notNull")));
+                return true;
+            }
+            return false;
         }
     }
 }

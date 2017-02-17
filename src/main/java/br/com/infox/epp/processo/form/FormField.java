@@ -1,11 +1,9 @@
 package br.com.infox.epp.processo.form;
 
-import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
 
 import br.com.infox.epp.processo.form.type.FormType;
 
@@ -93,6 +91,10 @@ public class FormField {
 
 	public void setComponent(UIComponent component) {
 		this.component = component;
+	}
+	
+	public boolean isRequired() {
+	    return "true".equalsIgnoreCase(this.getProperty("required", String.class));
 	}
 
 }

@@ -3,12 +3,15 @@ package br.com.infox.epp.processo.form.type;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -18,6 +21,7 @@ import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.ibpm.variable.file.FileVariableHandler;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
 public class UploadFormType extends FileFormType {
@@ -41,6 +45,16 @@ public class UploadFormType extends FileFormType {
             return documento;
         }
         return null;
+    }
+    
+    @Override
+    public boolean validate(FormField formField, FormData formData) throws BusinessException {
+        if(formField.isRequired() && formField.getValue() == null){
+            FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(), new FacesMessage(
+                    FacesMessage.SEVERITY_ERROR, "", InfoxMessages.getInstance().get("beanValidation.notNull")));
+            return true;
+        }
+        return super.validate(formField, formData);
     }
     
     public void processFileUpload(FileUploadEvent fileUploadEvent) {

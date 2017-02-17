@@ -3,6 +3,11 @@ package br.com.infox.epp.processo.form.type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
+import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -10,12 +15,12 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
-import br.com.infox.epp.processo.form.variable.value.TypedValue;
-import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler.FileConfig;
+import br.com.infox.seam.exception.BusinessException;
 
 public class EditorFormType extends FileFormType {
 
@@ -32,6 +37,7 @@ public class EditorFormType extends FileFormType {
         Documento documento = formField.getTypedValue(Documento.class);
         if (documento != null && documento.getId() != null) {
             formField.addProperty("classificacaoDocumento", documento.getClassificacaoDocumento());
+            formField.addProperty("conteudo", documento.getDocumentoBin().getModeloDocumento());
         }
     }
     
@@ -50,34 +56,26 @@ public class EditorFormType extends FileFormType {
         super.performUpdate(formField, formData);
         Documento documento = formField.getTypedValue(Documento.class);
         ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
-        if (classificacaoDocumento == null) {
-            if (documento.getId() != null) {
-                formData.setVariable(formField.getId(), new TypedValue(null, ValueType.FILE));
-                formField.addProperty("modeloDocumento", null);
-                getDocumentoManager().remove(documento);
-                getDocumentoBinManager().remove(documento.getDocumentoBin());
-                documento = createNewDocumento();
-                formField.setValue(documento);
-            } else {
-                formField.addProperty("modeloDocumento", null);
-                documento.getDocumentoBin().setModeloDocumento("");
-            }
+        String conteudo = formField.getProperty("conteudo", String.class);
+        Pasta pasta = formField.getProperty("pasta", Pasta.class);
+        if ( documento.getId() != null ) {
+            documento.getDocumentoBin().setModeloDocumento(conteudo == null ? "" : conteudo);
+            documento.setClassificacaoDocumento(classificacaoDocumento);
+            documento.setPasta(pasta);
+            documento = getDocumentoManager().update(documento);
+            formField.setValue(documento);
         } else {
-            if (documento.getId() != null) {
-                if (!classificacaoDocumento.equals(documento.getClassificacaoDocumento())) {
-                    documento = getDocumentoManager().update(documento);
-                }
-                DocumentoBin documentoBin = getDocumentoBinManager().update(documento.getDocumentoBin());
-                documento.setDocumentoBin(documentoBin);
-                formField.setValue(documento);
-            } else {
+            if ( classificacaoDocumento != null ) {
                 documento.setDescricao(formField.getLabel());
+                documento.getDocumentoBin().setModeloDocumento(conteudo == null ? "" : conteudo);
                 documento.setClassificacaoDocumento(classificacaoDocumento);
-                if (documento.getDocumentoBin().getModeloDocumento() == null) documento.getDocumentoBin().setModeloDocumento("");
+                documento.setPasta(pasta);
                 getDocumentoBinManager().createProcessoDocumentoBin(documento);
-                getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
+                documento = getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
+                formField.setValue(documento);
             }
         }
+        formField.addProperty("modeloDocumento", null);
     }
     
     @Override
@@ -95,6 +93,29 @@ public class EditorFormType extends FileFormType {
             }
         }
         throw new IllegalArgumentException("Cannot convert " + value + " to Documento");
+    }
+    
+    @Override
+    public boolean validate(FormField formField, FormData formData) throws BusinessException {
+        if (formField.isRequired()) {
+            ClassificacaoDocumento classificacao = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
+            if (classificacao == null) {
+                FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
+                                InfoxMessages.getInstance().get("beanValidation.classificacaoNaoInformada")));
+                return true;
+            }
+
+            String conteudo = formField.getProperty("conteudo", String.class);
+
+            if (StringUtil.isEmpty(conteudo)) {
+                FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
+                                InfoxMessages.getInstance().get("beanValidation.documentoSemConteudo")));
+                return true;
+            }
+        }
+        return super.validate(formField, formData);
     }
 
     private Documento createNewDocumento() {

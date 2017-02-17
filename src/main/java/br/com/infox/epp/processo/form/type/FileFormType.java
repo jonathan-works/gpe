@@ -3,6 +3,9 @@ package br.com.infox.epp.processo.form.type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
@@ -104,30 +107,25 @@ public abstract class FileFormType implements FormType {
     }
     
     @Override
-    public void validate(FormField formField, FormData formData) throws BusinessException {
-        String required = formField.getProperty("required", String.class);
-        Documento documento = formField.getTypedValue(Documento.class);
-        if ("true".equals(required) && (documento == null || documento.getId() == null)) {
-            throw new BusinessException("O arquivo do campo " + formField.getLabel() + " é obrigatório");
-        }
-        if (documento != null && documento.getId() != null) {
-            boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
-            if (!assinaturaVariavelOk) {
-                throw new BusinessException(String.format(InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"), formField.getLabel()));
+    public boolean validate(FormField formField, FormData formData) throws BusinessException {
+        if (formField.isRequired()) {
+
+            Documento documento = formField.getTypedValue(Documento.class);
+            if (documento != null && documento.getId() != null) {
+                boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
+                if (!assinaturaVariavelOk) {
+                    FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
+                                    String.format(
+                                            InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"),
+                                            formField.getLabel())));
+                    return true;
+                }
             }
         }
+        return false;
     }
-
-//    @ExceptionHandled(value = MethodType.UNSPECIFIED)
-//    public void assinar() throws DAOException, AssinaturaException {
-//        try {
-//    		getAssinadorService().assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
-//    		FacesMessages.instance().add(InfoxMessages.getInstance().get("assinatura.assinadoSucesso"));
-//        } finally {
-//            setTokenToSign(null);
-//        }
-//    }
-    
+   
     protected boolean validarAssinaturaDocumento(Documento documento) {
         Papel papel = Authenticator.getPapelAtual();
         boolean isValid = getAssinaturaDocumentoService().isDocumentoTotalmenteAssinado(documento)

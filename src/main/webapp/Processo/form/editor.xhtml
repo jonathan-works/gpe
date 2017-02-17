@@ -7,6 +7,7 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:i="http://java.sun.com/jsf/composite/infox"
   xmlns:p="http://primefaces.org/ui"
   xmlns:wi="http://www.itx.com.br/jsf">
   
@@ -18,47 +19,56 @@
   	<ui:param name="modelosDocumento" value="#{formField.properties.modelosDocumento}"/>
   	
   	
-  	<h:message for="panelEditor#{varId}" styleClass="property-error property-msg #{varId}ErrorClass" />
+  	<h:message for="panelEditor#{varId}" style="font-weight: bold;" styleClass="property-error property-msg #{varId}ErrorClass" />
   	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.component}" styleClass="#{varId}DivClass">
 	    <fieldset>
 	        <legend>
-	            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
-	            <h:outputText styleClass="required" rendered="#{required}" value="*" />
+                <div class="property-field-edit-name" style="display: flex;">
+    	            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
+    	            <h:outputText styleClass="required" rendered="#{required}" value="*" />
+                </div>
 	        </legend>
-	    	<wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
+	    	<i:selectOneMenu id="#{varId}ClassificacaoDocumento"
 	    		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 	    		items="#{classificacoesDocumento}"
 	    		required="false"
-	    		showLabelSelecione="true"
+                ajax="true"
+                render="@this @(.#{varId}EditorDiv) @(.#{varId}AssinaturaDocumento)"
+                execute="@this"
+                hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
 	    		value="#{formField.properties.classificacaoDocumento}"
+                converterId="org.jboss.seam.ui.EntityConverter"
 	    		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
 	    		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
-	            <a:ajax render="#{varId}EditorDiv #{varId}AssinaturaDocumento" event="change" execute="@this #{varId}EditorDiv" limitRender="true" />
-	            <f:validateBean disabled="true" />
-	    	</wi:selectOneMenuEntity>
-	        <wi:selectOneMenuEntity id="#{varId}ModeloDocumento"
+	    	</i:selectOneMenu>
+	        <i:selectOneMenu id="#{varId}ModeloDocumento"
 	    		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
 	    		items="#{formField.properties.modelosDocumento}"
 	    		noSelectionLabel="[Selecione o modelo]"
 	    		required="false"
+                ajax="true"
+                render="@(.#{varId}EditorDiv)" 
+                execute="@this"
+                converterId="org.jboss.seam.ui.EntityConverter"
+                listener="#{controller.performModeloDocumento(formField, formData)}"
 	    		value="#{formField.properties.modeloDocumento}"
 	    		rendered="#{not readonly and not formField.value.hasAssinatura()}">
-	    		<a:ajax event="change" render="#{varId}EditorDiv" execute="@this" limitRender="true" 
-	    			listener="#{controller.performModeloDocumento(formField, formData)}"/>
-	    	</wi:selectOneMenuEntity>
-            <wi:selectOneMenuEntity id="#{varId}PastaDocumentoMenu"
+	    	</i:selectOneMenu>
+            <i:selectOneMenu id="#{varId}PastaDocumentoMenu"
                 label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
                 required="false"
+                render="@this"
+                execute="@this"
+                ajax="true"
+                converterId="org.jboss.seam.ui.EntityConverter"
                 value="#{formField.properties.pasta}"
                 items="#{formField.properties.pastas}"
-                readonly="#{readonly or formField.value.hasAssinatura() or not formField.properties.podeSelectionarPasta}"
-                disabled="#{readonly or formField.value.hasAssinatura() or not formField.properties.podeSelectionarPasta}"
-                showLabelSelecione="true" noSelectionLabel="[Padrão]">
-                <a:ajax render="@this" event="change" execute="@this" limitRender="true" />
-                <f:validateBean disabled="true" />
-            </wi:selectOneMenuEntity>
+                readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+                disabled="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+                noSelectionLabel="[Padrão]">
+            </i:selectOneMenu>
 	    	   
-	    	<p:outputPanel id="#{varId}EditorDiv">
+	    	<p:outputPanel id="#{varId}EditorDiv" styleClass="#{varId}EditorDiv">
 	    	   	<s:div id="#{varId}ToolTipDivExterna">
 	    		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
 	    			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
@@ -73,13 +83,18 @@
 	    		    </s:div>
 	    	    </s:div>
 	    	    
-	    	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
-	    	    	required="false"
-	    	        readonly="#{readonly or formField.value.hasAssinatura()}"/>
+                <p:blockUI block="#{varId}BlockPanel" blocked="#{empty formField.properties.classificacaoDocumento}">
+                    <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}"  />
+                </p:blockUI>
+                <p:outputPanel  id="#{varId}BlockPanel">
+    	    	    <wi:editor id="#{varId}Decoration" value="#{formField.properties.conteudo}"
+    	    	    	required="false"
+    	    	        readonly="#{readonly or formField.value.hasAssinatura()}"/>
+                </p:outputPanel>
 	    	        
 	    	</p:outputPanel>
 	    	   
-	    	<p:outputPanel id="#{varId}AssinaturaDocumento" >
+	    	<p:outputPanel id="#{varId}AssinaturaDocumento" styleClass="#{varId}AssinaturaDocumento" >
 	    	   
 	    	    <p:outputPanel rendered="#{controller.podeAssinar(formField)}">
 	    		   <wi:assinador 

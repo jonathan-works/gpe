@@ -13,7 +13,6 @@ import br.com.infox.ibpm.variable.VariableMaxMinHandler.MaxMinConfig;
 import br.com.infox.ibpm.variable.VariableStringHandler;
 import br.com.infox.ibpm.variable.VariableStringHandler.StringConfig;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
-import br.com.infox.seam.exception.BusinessException;
 
 public abstract class PrimitiveFormType implements FormType {
 
@@ -63,34 +62,15 @@ public abstract class PrimitiveFormType implements FormType {
     }
 
     @Override
-    public void validate(FormField formField, FormData formData) throws BusinessException {
-        String required = formField.getProperty("required", String.class);
-        if ("true".equalsIgnoreCase(required) && formField.getValue() == null) {
+    public boolean validate(FormField formField, FormData formData) {
+        if (formField.isRequired() && formField.getValue() == null) {
             FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(), new FacesMessage(
                     FacesMessage.SEVERITY_ERROR, "", InfoxMessages.getInstance().get("beanValidation.notNull")));
+            return true;
         }
+        return false;
     }
     
-    public MaxMinConfig getConfigurator(FormField formField) {
-        String configuration = (String) formField.getProperties().get("configuration");
-        MaxMinConfig maxMinConfig = VariableMaxMinHandler.fromJson(configuration);
-        return maxMinConfig;
-    }
-    
-    public void validateMaxMin(FormField formField) {
-        MaxMinConfig maxMinConfig = getConfigurator(formField);
-        if (formField.getValue() != null) {
-            double valor = Double.parseDouble(formField.getValue().toString());
-            if (maxMinConfig.getMinimo() != null && maxMinConfig.getMaximo() != null && 
-                    (valor < maxMinConfig.getMinimo().longValue() || valor > maxMinConfig.getMaximo().longValue()))
-                FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "O valor deve estar entre x e y"));
-            else if (maxMinConfig.getMaximo() != null && valor > maxMinConfig.getMaximo().longValue())
-                FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "O valor deve ser menor ou igual a y"));
-            else if (maxMinConfig.getMinimo() != null && valor < maxMinConfig.getMinimo().longValue())
-                FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "O valor deve ser maior ou igual a x"));
-        }
-    }
-
     public static class StringFormType extends PrimitiveFormType {
 
         public StringFormType() {
@@ -141,7 +121,7 @@ public abstract class PrimitiveFormType implements FormType {
         }
     }
 
-    public static class IntegerFormType extends PrimitiveFormType {
+    public static class IntegerFormType extends NumberFormType {
 
         public IntegerFormType() {
             super("integer", "/Processo/form/integer.xhtml", ValueType.INTEGER);
@@ -155,11 +135,7 @@ public abstract class PrimitiveFormType implements FormType {
             formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
         }
 
-        @Override
-        public void validate(FormField formField, FormData formData) throws BusinessException {
-            super.validate(formField, formData);
-            validateMaxMin(formField);
-        }
+        
     }
 
     public static class DateFormType extends PrimitiveFormType {
@@ -183,7 +159,7 @@ public abstract class PrimitiveFormType implements FormType {
 
     }
 
-    public static class MonetaryFormType extends PrimitiveFormType {
+    public static class MonetaryFormType extends NumberFormType {
 
         public MonetaryFormType() {
             super("monetary", "/Processo/form/monetary.xhtml", ValueType.DOUBLE);
@@ -195,12 +171,6 @@ public abstract class PrimitiveFormType implements FormType {
             MaxMinConfig maxMinConfig = getConfigurator(formField);
             formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
             formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
-        }
-
-        @Override
-        public void validate(FormField formField, FormData formData) throws BusinessException {
-            super.validate(formField, formData);
-            validateMaxMin(formField);
         }
     }
 
@@ -261,6 +231,50 @@ public abstract class PrimitiveFormType implements FormType {
         }
     }
 
-    //criar classe de validacao de numeros numberFormType
+    public static class NumberFormType extends PrimitiveFormType {
+
+        public NumberFormType(String name, String path, ValueType valueType) {
+            super(name, path, valueType);
+        }
+        
+        public MaxMinConfig getConfigurator(FormField formField) {
+            String configuration = (String) formField.getProperties().get("configuration");
+            MaxMinConfig maxMinConfig = VariableMaxMinHandler.fromJson(configuration);
+            return maxMinConfig;
+        }
+        
+        @Override
+        public boolean validate(FormField formField, FormData formData) {
+            return super.validate(formField, formData) || validateMaxMin(formField);
+        }
+
+        private boolean validateMaxMin(FormField formField) {
+            MaxMinConfig maxMinConfig = getConfigurator(formField);
+            String msg = null;
+            if (formField.getValue() != null) {
+                double valor = Double.parseDouble(formField.getValue().toString());
+                if (maxMinConfig.getMinimo() != null && maxMinConfig.getMaximo() != null
+                        && (valor < maxMinConfig.getMinimo().longValue()
+                                || valor > maxMinConfig.getMaximo().longValue())) {
+                    msg = InfoxMessages.getInstance().getFormated("beanValidation.sizeValue", maxMinConfig.getMinimo(), maxMinConfig.getMaximo());
+
+                    FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "", msg));
+                } else if (maxMinConfig.getMaximo() != null && valor > maxMinConfig.getMaximo().longValue()) {
+                    msg = InfoxMessages.getInstance().getFormated("beanValidation.menorOuIgual", maxMinConfig.getMaximo());
+
+                    FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "", msg));
+                } else if (maxMinConfig.getMinimo() != null && valor < maxMinConfig.getMinimo().longValue()) {
+                    msg = InfoxMessages.getInstance().getFormated("beanValidation.maiorOuIgual", maxMinConfig.getMinimo());
+
+                    FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "", msg));
+                }
+            }
+            return msg != null;
+        }
+        
+    }
     
 }
