@@ -87,6 +87,34 @@
                 <version>${version.liquibase-epp}</version>
             </dependency>
             <dependency>
+                <groupId>br.com.infox.epp</groupId>
+				<artifactId>liquibase-epp</artifactId>
+				<version>${version.liquibase-epp}</version>
+				<type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>br.com.infox.epp</groupId>
+                <artifactId>epp</artifactId>
+                <version>${version.epp}</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.infox.epp</groupId>
+                <artifactId>epp</artifactId>
+                <version>${version.epp}</version>
+                <classifier>classes</classifier>
+            </dependency>
+            <dependency>
+                <groupId>br.com.infox.epp</groupId>
+                <artifactId>epp</artifactId>
+                <version>${version.epp}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>br.com.infox.epp</groupId>
+                <artifactId>liquibase-epp</artifactId>
+                <version>${version.liquibase-epp}</version>
+            </dependency>
+            <dependency>
                 <groupId>br.com.infox</groupId>
                 <artifactId>liquibase-ext</artifactId>
                 <version>${version.liquibase-ext}</version>
