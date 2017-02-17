@@ -110,8 +110,13 @@
 	    	             <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{formField.value.classificacaoDocumento.descricao}"/>
 	    	             <br />
 	    	             <h:outputText id="file#{varId}" value="Documento: #{formField.value.documentoBin.nomeArquivo}"/>
-	    	            	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" 
-	    	            		style="cursor: pointer" onclick="#{fileDownloader.getWindowOpen(formField.value.documentoBin)}" />
+                            <p:commandLink process="@this" update="@this" onstart="infox.showLoading();" action="#{jsfUtil.applyLastPhaseFlashAction()}"
+                                oncomplete="infox.hideLoading();#{fileDownloader.getWindowOpen(formField.value.documentoBin)}">
+                                <f:setPropertyActionListener value="#{formField.value.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+                                <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
+    	    	            	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" 
+    	    	            		style="cursor: pointer" onclick="" />
+                            </p:commandLink>
 	    	          </fieldset>
 	    	      </ui:fragment>
 	    	    

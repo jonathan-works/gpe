@@ -76,7 +76,8 @@ public class FileVariableHandler {
             try {
                 removeDocumento(documento);
             } catch (DAOException e) {
-                throw new BusinessRollbackException(e);
+                //throw new BusinessRollbackException(e);
+                e.printStackTrace();
             }
         } else {
             documento = new Documento();
@@ -88,6 +89,7 @@ public class FileVariableHandler {
             documentoManager.gravarDocumentoNoProcesso(processo, documento);
             formField.setValue(documento);
         } catch (DAOException | BusinessException e) {
+            e.printStackTrace();
             throw new BusinessRollbackException(e);
         }
     }
