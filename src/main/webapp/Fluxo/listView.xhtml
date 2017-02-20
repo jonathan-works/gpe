@@ -176,10 +176,12 @@
                 value="#{fluxoCrudAction.instance.dataFimPublicacao}" />
             <wi:outputText id="statusPublicacao" rendered="#{fluxoCrudAction.managed}" label="#{infoxMessages['fluxo.publicado']}"
                 value="#{fluxoCrudAction.instance.publicado ? 'Sim' : 'Não'}" />
+            <ui:include src="atributos.xhtml" />
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{fluxoCrudAction.instance.ativo}" />
+
             <ui:define name="buttons">
                 <a:commandButton value="#{infoxMessages['crud.persist']}" action="#{fluxoCrudAction.persist}" execute="@form"
 					limitRender="true" render=":pageBodyDialogMessage :defaultTabPanel" rendered="#{not fluxoCrudAction.managed}"
