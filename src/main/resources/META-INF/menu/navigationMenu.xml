@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<menu xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<menu xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
     <item xsi:type="Submenu" label="menu.documentacao">
         <item xsi:type="MenuItem" label="documentacao.menuText" url="/Documentacao/documentacao.xhtml"/>
     </item>
@@ -7,6 +7,7 @@
         <item xsi:type="MenuItem" label="redistribuicao.menu.crud" url="/Redistribuicao/listView.xhtml"/>
         <item xsi:type="MenuItem" label="processo.iniciarMenuText" url="/Processo/listView.xhtml"/>
         <item xsi:type="MenuItem" label="processo.consultarMenuText" url="/Processo/Consulta/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="redistribuicao.menu.crud" url="/Redistribuicao/listView.xhtml"/>
     </item>
     <item xsi:type="Submenu" label="menu.administracao">
         <item xsi:type="Submenu" label="menu.contAcesso">
