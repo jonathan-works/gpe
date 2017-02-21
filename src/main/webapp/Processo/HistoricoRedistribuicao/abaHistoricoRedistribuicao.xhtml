@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:i="http://java.sun.com/jsf/composite/infox">
+
+	<infox:tab id="historicoRedistribuicaoTab" name="historicoRedistribuicaoTab"
+		rendered="#{showAbaHistoricoRedistribuicao}"
+		action="#{historicoRedistribuicaoView.setProcesso(processo)}"
+		title="#{infoxMessages['redistribuicaoAba.titleTab']}">
+		
+		<rich:panel rendered="#{empty historicoRedistribuicaoView.redistribuicoes}">
+			<h:outputText value="#{historicoRedistribuicaoView.getRelatorAtualProcesso()}"/>
+		</rich:panel>
+
+		<p:dataTable id="historicoRedistribuicaoDataTable"
+			value="#{historicoRedistribuicaoView.redistribuicoes}" var="row"
+			rendered="#{not empty historicoRedistribuicaoView.redistribuicoes}">
+			<f:facet name="header">
+				<h:outputText value="#{infoxMessages['redistribuicaoAba.tableTab']}" />
+			</f:facet>
+
+			<p:column headerText="#{infoxMessages['redistribuicaoAba.relatorAnterior']}">
+				<h:outputText value="#{row.relatorAnterior.nome} - #{row.udmAnterior.nome}" />
+			</p:column>
+			<p:column headerText="#{infoxMessages['redistribuicaoAba.novoRelator']}">
+				<h:outputText value="#{row.relator.nome} - #{row.udm.nome}" />
+			</p:column>
+			<p:column headerText="#{infoxMessages['redistribuicaoAba.tipoRedistribuicao']}">
+				<h:outputText value="#{row.tipo.descricao}" />
+			</p:column>
+			<p:column headerText="#{infoxMessages['redistribuicaoAba.motivo']}">
+				<h:outputText value="#{row.motivo}" />
+			</p:column>
+			<p:column
+				headerText="#{infoxMessages['redistribuicaoAba.data']}">
+				<h:outputText value="#{row.data}">
+					<f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+		
+	</infox:tab>
+
+</ui:composition>

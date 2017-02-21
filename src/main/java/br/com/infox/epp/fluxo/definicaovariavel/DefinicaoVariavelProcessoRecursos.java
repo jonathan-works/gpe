@@ -32,7 +32,7 @@ public class DefinicaoVariavelProcessoRecursos {
 		recursos.add(MOVIMENTAR);
 		recursos.add(PAINEL_INTERNO);
 		recursos.add(CONSULTA_EXTERNA);
-		
+		recursos.add(REDISTRIBUICAO);
 		Collections.sort(recursos, new ComparatorRecursoVariavel());
 		
 		return recursos;
@@ -43,6 +43,7 @@ public class DefinicaoVariavelProcessoRecursos {
 	public static final RecursoVariavel MOVIMENTAR = new RecursoVariavel("movimentar", "Aba de Variáveis da tela de Movimentação de Processos");
 	public static final RecursoVariavel DETALHE_PROCESSO = new RecursoVariavel("detalheProcesso", "Detalhe do Processo");
 	public static final RecursoVariavel CONSULTA_EXTERNA = new RecursoVariavel("consultaExterna", "Consulta Externa");
+	public static final RecursoVariavel REDISTRIBUICAO = new RecursoVariavel("redistribuicao", "Redistribuição");
 	
 	public static class RecursoVariavel {
 		private String identificador;

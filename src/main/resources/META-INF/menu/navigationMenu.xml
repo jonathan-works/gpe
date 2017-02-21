@@ -3,6 +3,7 @@
     <value>menu.documentacao/documentacao.menuText:/Documentacao/documentacao.seam</value>
     <value>menu.processo/processo.iniciarMenuText:/Processo/listView.seam</value>
     <value>menu.processo/processo.consultarMenuText:/Processo/Consulta/listView.seam</value>
+    <value>menu.processo/redistribuicao.menu.crud:/Redistribuicao/listView.seam</value>
     <value>menu.administracao/menu.contAcesso/papel.menuText:/useradmin/papelListView.seam</value>
     <value>entregas.menu/menu.categoriaEntrega:/CategoriaEntregaItem/listView.seam</value>
     <value>menu.administracao/menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
@@ -41,6 +42,7 @@
     <value>menu.administracao/quartzJobsInfo.menuText:/quartzJobsInfo.seam</value>
     <value>menu.administracao/layout.menuText:/layout.seam</value>
     <value>menu.administracao/meioExpedicao.menuText:/MeioExpedicao/listView.seam</value>
+    <value>menu.administracao/tipoRedistribuicao.menu:/TipoRedistribuicao/listView.seam</value>
     <value>menu.controle/bam.menuText:/BAM/listView.seam</value>
     <value>menu.controle/produtividade.menuText:/BAM/Produtividade/listView.seam</value>
     <value>menu.controle/relatorios.menuText/temposMedios.menuText:/Estatistica/listView.seam</value>

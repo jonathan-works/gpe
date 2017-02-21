@@ -42,6 +42,8 @@ import br.com.infox.epp.entrega.EntregaResponsavelService;
 import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
 import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
 import br.com.infox.epp.entrega.documentos.Entrega;
+import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
@@ -61,12 +63,17 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
+import br.com.infox.epp.redistribuicao.RedistribuicaoService;
+import br.com.infox.epp.redistribuicao.TipoRedistribuicao;
+import br.com.infox.epp.redistribuicao.TipoRedistribuicaoSearch;
 import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.custom.variables.CustomVariableSearch;
+import br.com.infox.epp.unidadedecisora.dao.UnidadeDecisoraMonocraticaDAO;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
+import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 import br.com.infox.seam.exception.BusinessException;
@@ -126,7 +133,72 @@ public class BpmExpressionService {
     @Inject
     protected DocumentoCompartilhamentoService documentoCompartilhamentoService;
     @Inject
-    private DistribuicaoRelatoriaService distribuicaoRelatoriaService;
+    protected DistribuicaoRelatoriaService distribuicaoRelatoriaService;
+    @Inject
+    protected RedistribuicaoService redistribuicaoService;
+    @Inject
+    protected TipoRedistribuicaoSearch tipoRedistribuicaoSearch;
+    @Inject
+    protected UnidadeDecisoraMonocraticaDAO unidadeDecisoraMonocraticaDAO;
+    @Inject
+    protected UnidadeDecisoraColegiadaManager unidadeDecisoraColegiadaManager;
+    @Inject
+    protected PessoaFisicaDAO pessoaFisicaDAO;
+    
+    @External(tooltip = "Redistribui o processo de acordo os dados informados", expressionType = ExpressionType.GERAL,
+        value = {
+            @Parameter(defaultValue = "codigoUDM", label = "process.events.expression.param.redistribuicao.codigoUDM.label", tooltip = "process.events.expression.param.redistribuicao.codigoUDM.tooltip"),
+                        @Parameter(defaultValue = "codigoRelator",label = "process.events.expression.param.redistribuicao.codigoRelator.label", tooltip = "process.events.expression.param.redistribuicao.codigoRelator.tooltip"),
+            @Parameter(defaultValue = "codigoTipoRedistribuicao",label = "process.events.expression.param.redistribuicao.codigoTipoRedistribuicao.label", tooltip = "process.events.expression.param.redistribuicao.codigoTipoRedistribuicao.tooltip"),
+            @Parameter(defaultValue = "dsMotivo",label = "process.events.expression.param.redistribuicao.dsMotivo.label", tooltip = "process.events.expression.param.redistribuicao.dsMotivo.tooltip")
+    })
+    public void redistribuirRelatoria(Integer idUDm, Integer idRelator, Long idTipoRedistribuicao, String motivo) {
+        Processo processo = getProcessoAtual();
+        if (processo == null) throw new BusinessException("Falha ao tentar redistribuir Relatoria. Processo não encontrado.");
+        
+        UnidadeDecisoraMonocratica udm = unidadeDecisoraMonocraticaDAO.find(idUDm);
+        if (udm == null) throw new BusinessException("Falha ao tentar redistribuir Relatoria. UDM não encontrada.");
+        
+        PessoaFisica relator = pessoaFisicaDAO.find(idRelator);
+        if (relator == null) throw new BusinessException("Falha ao tentar redistribuir Relatoria. Relator não encontrado.");
+        
+        TipoRedistribuicao tipoRedistribuicao = tipoRedistribuicaoSearch.getById(idTipoRedistribuicao);
+        if (tipoRedistribuicao == null) throw new BusinessException("Falha ao tentar redistribuir Relatoria. Tipo de Redistribuição não encontrada.");
+        
+        redistribuicaoService.redistribuir(processo, udm, relator, tipoRedistribuicao, motivo);
+    }
+
+    @External(tooltip = "Realiza distribuição do processo no código da Unidade Decisora Monocrática", expressionType = ExpressionType.GERAL,
+        value = {
+            @Parameter(defaultValue = "codigoDaUDM", label = "process.events.expression.param.codigoUdm.label", tooltip = "process.events.expression.param.codigoUdm.tooltip")            
+    })
+    public void distribuirRelatoria(Integer idUdm) {
+        Processo processo = getProcessoAtual();
+        if (processo == null) throw new BusinessException("Falha ao tentar Distribuir Relatoria pelo código. Processo não encontrado.");
+        
+        distribuicaoRelatoriaService.distribuirRelatoria(idUdm, processo);
+    }
+    
+@External(expressionType = ExpressionType.EVENTOS,
+        tooltip = "bpmExpression.setUDC.tooltip", value = {
+            @Parameter(selectable = true, defaultValue = "'1CAM'", label = "bpmExpression.setUDC.cdLoc.label", tooltip = "bpmExpression.setUDC.cdLoc.tooltip")
+        })
+public void distribuirParaUDC(String codigoLocUDC) {
+    ExecutionContext executionContext = getExecutionContext();
+    Processo processo = processoManager.getProcessoByIdJbpm(executionContext.getProcessInstance().getId());
+    UnidadeDecisoraColegiada udc = unidadeDecisoraColegiadaManager.findByCodigoLocalizacao(codigoLocUDC);
+    if (udc == null) {
+        throw new BusinessException("Não foi encontrada UDC com código de Localizaca '" + codigoLocUDC + "'.");
+    }
+    String idUDC = udc.getIdUnidadeDecisoraColegiada().toString();
+    MetadadoProcesso metadadoProcesso = metadadoProcessoManager.getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo);
+    if (metadadoProcesso == null) {
+        metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, idUDC);
+    } else {
+        metadadoProcesso.setValor(idUDC);
+        metadadoProcessoManager.update(metadadoProcesso);
+    }
+}
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip", expressionType = ExpressionType.EVENTOS)
     public void atribuirCiencia() {
@@ -660,4 +732,12 @@ public class BpmExpressionService {
 	public List<ExternalMethod> getExternalGatewayMethods() {
 	    return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.GATEWAY);
 	}
+
+        protected ExecutionContext getExecutionContext() {
+                ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        if (executionContext == null) {
+            throw new BusinessRollbackException("O contexto de execução BPM não está disponível");
+        }
+                return executionContext;
+        }
 }
