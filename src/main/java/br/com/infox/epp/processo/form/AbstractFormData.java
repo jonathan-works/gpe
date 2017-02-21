@@ -64,10 +64,12 @@ public abstract class AbstractFormData implements FormData {
     }
     
     @Override
-    public void validate() throws BusinessException {
+    public boolean validate() {
+        boolean validacao = false;
         for (FormField formField : getFormFields()) {
-            formField.getType().validate(formField, this);
+            validacao = validacao | formField.getType().validate(formField, this);
         }
+        return validacao;
     }
     
     protected VariableAccess getTaskPage(List<VariableAccess> variableAccesses) {

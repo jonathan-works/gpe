@@ -7,10 +7,13 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
+import br.com.infox.epp.executarTarefa.ExecutarTarefaService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
+import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 
 public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
@@ -58,6 +61,11 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     }
 
     @Override
+    public void setSingleVariable(String name, Object value) {
+        getExecutarTarefaService().gravarUpload(name, (TypedValue) value, this);
+    }
+    
+    @Override
     public void setVariable(String name, Object value) {
     	getTaskInstance().setVariable(name, value);
     }
@@ -86,6 +94,10 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     @Override
     public Node getNode() {
         return getTaskInstance().getTask().getTaskNode();
+    }
+    
+    private ExecutarTarefaService getExecutarTarefaService(){
+        return BeanManager.INSTANCE.getReference(ExecutarTarefaService.class);
     }
 
 }

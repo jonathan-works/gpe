@@ -8,7 +8,6 @@ import org.jbpm.graph.def.Node;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
-import br.com.infox.seam.exception.BusinessException;
 
 public interface FormData {
     
@@ -24,13 +23,15 @@ public interface FormData {
     
     void setVariable(String name, Object value);
     
+    void setSingleVariable(String name, Object value);
+    
     void update();
     
     Map<String, Object> getVariables();
     
     ExpressionResolverChain getExpressionResolver();
     
-    void validate() throws BusinessException;
+    boolean validate();
     
     Node getNode();
     

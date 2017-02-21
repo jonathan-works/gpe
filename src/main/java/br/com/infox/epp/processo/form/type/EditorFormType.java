@@ -42,40 +42,48 @@ public class EditorFormType extends FileFormType {
     }
     
     public void performModeloDocumento(FormField formField, FormData formFata) {
-        Documento documento = formField.getTypedValue(Documento.class);
         ModeloDocumento modeloDocumento = formField.getProperty("modeloDocumento", ModeloDocumento.class);
         String evaluatedModelo = "";
         if (modeloDocumento != null) {
             evaluatedModelo = getModeloDocumentoManager().evaluateModeloDocumento(modeloDocumento, formFata.getExpressionResolver());
         }
-        documento.getDocumentoBin().setModeloDocumento(evaluatedModelo);
+        formField.addProperty("conteudo", evaluatedModelo);
     }
     
     @Override
     public void performUpdate(FormField formField, FormData formData) {
-        super.performUpdate(formField, formData);
-        Documento documento = formField.getTypedValue(Documento.class);
-        ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
-        String conteudo = formField.getProperty("conteudo", String.class);
-        Pasta pasta = formField.getProperty("pasta", Pasta.class);
-        if ( documento.getId() != null ) {
-            documento.getDocumentoBin().setModeloDocumento(conteudo == null ? "" : conteudo);
-            documento.setClassificacaoDocumento(classificacaoDocumento);
-            documento.setPasta(pasta);
-            documento = getDocumentoManager().update(documento);
-            formField.setValue(documento);
-        } else {
-            if ( classificacaoDocumento != null ) {
-                documento.setDescricao(formField.getLabel());
+        try{
+            super.performUpdate(formField, formData);
+            Documento documento = formField.getTypedValue(Documento.class);
+            ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
+            String conteudo = formField.getProperty("conteudo", String.class);
+            Pasta pasta = formField.getProperty("pasta", Pasta.class);
+            
+            if(pasta == null){ //nao informou pasta pega a padrao
+                pasta = getPastaManager().getDefault(formData.getProcesso());
+            }
+            
+            if ( documento.getId() != null ) {
                 documento.getDocumentoBin().setModeloDocumento(conteudo == null ? "" : conteudo);
                 documento.setClassificacaoDocumento(classificacaoDocumento);
                 documento.setPasta(pasta);
-                getDocumentoBinManager().createProcessoDocumentoBin(documento);
-                documento = getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
+                documento = getDocumentoManager().update(documento);
                 formField.setValue(documento);
+            } else {
+                if ( classificacaoDocumento != null ) {
+                    documento.setDescricao(formField.getLabel());
+                    documento.getDocumentoBin().setModeloDocumento(conteudo == null ? "" : conteudo);
+                    documento.setClassificacaoDocumento(classificacaoDocumento);
+                    documento.setPasta(pasta);
+                    getDocumentoBinManager().createProcessoDocumentoBin(documento);
+                    documento = getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
+                    formField.setValue(documento);
+                }
             }
+            formField.addProperty("modeloDocumento", null);
+        }catch(Exception e){
+            e.printStackTrace();
         }
-        formField.addProperty("modeloDocumento", null);
     }
     
     @Override

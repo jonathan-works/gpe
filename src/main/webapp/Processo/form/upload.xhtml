@@ -54,12 +54,12 @@
                 noSelectionLabel="[Padrão]">
             </i:selectOneMenu>
 	     
-             <p:blockUI block="#{varId}UploadDiv" blocked="#{empty formField.properties.classificacaoDocumento}">
-                 <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}"  />
-             </p:blockUI>
 	    	 <p:outputPanel id="#{varId}UploadDiv" styleClass="#{varId}UploadDiv">
+                 <p:blockUI block="@(.#{varId}BlockInputDiv)" blocked="#{empty formField.properties.classificacaoDocumento}">
+                     <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}" />
+                 </p:blockUI>
 	    	 
-	    	     <i:input id="#{varId}" required="false" 
+	    	     <i:input id="#{varId}" required="false" styleClass="#{varId}BlockInputDiv"
 	    	 		rendered="#{not readonly and not formField.value.hasAssinatura() 
 	    	 					and not formField.value.documentoBin.suficientementeAssinado}">
 	    	 		<f:facet name="label">

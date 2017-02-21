@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -20,6 +21,7 @@ import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
+import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.file.FileVariableHandler;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
@@ -66,8 +68,7 @@ public class UploadFormType extends FileFormType {
         try {
             getDocumentoUploadService().validaDocumento(file, classificacao, file.getData());
             getFileVariableHandler().gravarDocumento(file, uploadFile.getId(), formField, formData.getProcesso());
-            TypedValue typedValue = new TypedValue(formField.getValue(), formField.getType().getValueType());
-            formData.setVariable(formField.getId(), typedValue);
+            formData.setSingleVariable(formField.getId(), new TypedValue(formField.getValue(), ValueType.FILE));
         } catch (BusinessRollbackException e) {
              LOG.log(Level.SEVERE, "Erro ao remover o documento existente", e);
              if (e.getCause() instanceof DAOException) {

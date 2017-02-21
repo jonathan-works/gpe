@@ -14,6 +14,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -83,8 +84,12 @@ public class FileVariableHandler {
             documento = new Documento();
         }
         ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
+        Pasta pasta = formField.getProperty("pasta", Pasta.class);
         documento.setClassificacaoDocumento(classificacaoDocumento);
         documento = createDocumento(file, documento);
+        if ( pasta != null ) {
+            documento.setPasta(pasta);
+        }
         try {
             documentoManager.gravarDocumentoNoProcesso(processo, documento);
             formField.setValue(documento);
