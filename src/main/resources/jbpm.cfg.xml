@@ -28,17 +28,35 @@
 	<string name="resource.varmapping" value="jbpm.varmapping.xml" />
 	<string name="resource.converter" value="jbpm.converter.properties" />
     
-   <bean name='jbpm.job.executor' class='org.jbpm.job.executor.JobExecutor'>
-    <field name='jbpmConfiguration'><ref bean='jbpmConfiguration' /></field>
-    <field name='name'><string value='JbpmJobExecutor' /></field>
-    <field name='nbrOfThreads'><int value='1' /></field>
-    <field name='idleInterval'><int value='600000' /></field> <!-- 10 minutes --><!-- 60000 é 1 minuto -->
-    <field name='maxIdleInterval'><int value='3600000' /></field> <!-- 1 hour -->
-    <field name='historyMaxSize'><int value='20' /></field>
-    <field name='maxLockTime'><int value='600000' /></field> <!-- 10 minutes -->
-    <field name='lockMonitorInterval'><int value='600000' /></field> <!-- 10 minutes -->
-    <field name='lockBufferTime'><int value='5000' /></field> <!-- 5 seconds -->
-  </bean>
+	<bean name='jbpm.job.executor' class='org.jbpm.job.executor.JobExecutor'>
+		<field name='jbpmConfiguration'>
+			<ref bean='jbpmConfiguration' />
+		</field>
+		<field name='name'>
+			<string value='JbpmJobExecutor' />
+		</field>
+		<field name='nbrOfThreads'>
+			<int value='1' />
+		</field>
+		<field name='idleInterval'>
+			<int value='600000' /> <!-- 10 minutes --><!-- 60000 é 1 minuto -->
+		</field>
+		<field name='maxIdleInterval'>
+			<int value='3600000' />
+		</field> <!-- 1 hour -->
+		<field name='historyMaxSize'>
+			<int value='20' />
+		</field>
+		<field name='maxLockTime'>
+			<int value='600000' />
+		</field> <!-- 10 minutes -->
+		<field name='lockMonitorInterval'>
+			<int value='600000' />  <!-- 10 minutes -->
+		</field>
+		<field name='lockBufferTime'>
+			<int value='5000' />  <!-- 5 seconds -->
+		</field>
+	</bean>
     
-	
+	<int name="jbpm.job.retries" value="10000" />
 </jbpm-configuration>
