@@ -50,8 +50,11 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,10 +62,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -73,6 +79,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
@@ -142,6 +149,14 @@ public class Fluxo implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "fluxo")
     private List<DefinicaoProcesso> definicaoProcesso = new ArrayList<>();
 
+    
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "tb_fluxo_status_processo", 
+            joinColumns=@JoinColumn(name="id_fluxo", referencedColumnName="id_fluxo"),
+            inverseJoinColumns=@JoinColumn(name="id_status_processo", referencedColumnName="id_status_processo"))
+    @OrderBy(value = "nm_status_processo")
+	private Set<StatusProcesso> statusProcessos = new HashSet<>(1);
+    
     public Fluxo() {
     }
 

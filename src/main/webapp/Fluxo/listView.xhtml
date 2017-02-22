@@ -471,6 +471,79 @@
         </c:forEach>
         
         
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+      	<infox:tab
+            id="statusProcessoFluxo"
+            name="statusProcessoFluxo"
+            rendered="#{home.managed and not fluxoCrudAction.replica}"
+            title="#{infoxMessages['statusProcesso.titleView']}">
+            <s:div id="statusProcessoFluxoDiv">
+                <div>
+                    <wi:dataForm
+                        formId="statusProcessoFluxoForm"
+                        formTitle="#{infoxMessages['form.title']}">
+                        <i:selectOneMenu
+                            id="statusProcessoFluxo"
+                            value="#{fluxoStatusProcessoView.statusProcesso}"
+                            required="true"
+                            converterId="br.com.infox.jsf.converter.EntityConverter"
+                            label="#{infoxMessages['statusProcesso.statusFluxo']}"
+                            showLabelSelecione="true"
+                            items="#{fluxoStatusProcessoView.statusProcessosNaoRelacionados(fluxoCrudAction.instance)}" />
+                        <ui:define name="buttons">
+                            <wi:commandButton
+                                id="saveButton"
+                                action="#{fluxoStatusProcessoView.incluir(fluxoCrudAction.instance)}"
+                                reRender="statusProcessoFluxoDiv, pageBodyDialogMessage"
+                                value="#{infoxMessages['crud.persist']}" />
+                        </ui:define>
+                    </wi:dataForm>
+                </div>
+                <s:div id="statusProcessoDiv">
+                    <wi:dataTable
+                        values="#{fluxoStatusProcessoView.statusProcessosRelacionados(fluxoCrudAction.instance)}"
+                        bean="#{statusProcessoList}"
+                        tableTitle="#{infoxMessages['statusProcesso.tableTitle']}"
+                        id="statusProcessoList"
+                        rowId="#{row.idStatusProcesso}"
+                        actionInactive="fluxoStatusProcessoView.inactive"
+                        hideOrder="true"
+                        showSearchForm="false" panelStyle="margin-top: 1em;">
+                        <ui:define name="searchForm" />
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <wi:toolBarRemove
+                                actionRemove="fluxoStatusProcessoView.remover(fluxoCrudAction.instance, row)"
+                                reRender="statusProcessoFluxoDiv pageBodyDialogMessage" />
+                        </ui:define>
+                        <wi:columnOutputText
+                            columnId="fluxoStatusProcesso.nome"
+                            columnHeader="#{infoxMessages['statusProcesso.nome']}"
+                            columnWidth="25%"
+                            value="#{row.nome}" />
+                        <wi:columnOutputText
+                            columnId="fluxoStatusProcesso.descricao"
+                            columnHeader="#{infoxMessages['statusProcesso.descricao']}"
+                            columnWidth="20%"
+                            value="#{row.descricao}" />
+                    </wi:dataTable>
+                </s:div>
+            </s:div>
+        </infox:tab>
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+      	
     </ui:define>
     
     <ui:define name="extraContent">
