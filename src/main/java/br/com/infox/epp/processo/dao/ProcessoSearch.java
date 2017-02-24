@@ -1,14 +1,17 @@
 package br.com.infox.epp.processo.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
@@ -28,6 +31,10 @@ import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
+import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
+import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao_;
+import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso_;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso_;
 
@@ -116,6 +123,56 @@ public class ProcessoSearch extends PersistenceController {
         );
         return getEntityManager().createQuery(cq).getResultList();
     }
+
+    protected Predicate createPredicateUsuarioPossuiPermissaoSigilo(AbstractQuery<?> query, From<?, Processo> processo, UsuarioLogin usuario){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Subquery<Integer> cq = query.subquery(Integer.class);
+        Root<SigiloProcessoPermissao> permissao = cq.from(SigiloProcessoPermissao.class);
+        Join<SigiloProcessoPermissao, SigiloProcesso> sigilo = permissao.join(SigiloProcessoPermissao_.sigiloProcesso, JoinType.INNER);
+        
+        Predicate[] restrictions = {
+            cb.equal(permissao.get(SigiloProcessoPermissao_.usuario), usuario),
+            cb.isTrue(permissao.get(SigiloProcessoPermissao_.ativo)),
+            cb.equal(sigilo.get(SigiloProcesso_.processo), processo),
+            cb.isTrue(sigilo.get(SigiloProcesso_.ativo)),
+            cb.isTrue(sigilo.get(SigiloProcesso_.sigiloso))
+        };
+        
+        cq = cq.select(cb.literal(1)).where(restrictions);
+        
+        return cb.exists(cq);
+    }
     
+    protected Predicate createPredicateIsProcessoSigiloso(AbstractQuery<?> query, From<?, Processo> processo){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        
+        Subquery<Integer> cq = query.subquery(Integer.class);
+        Root<SigiloProcesso> sigilo = cq.from(SigiloProcesso.class);
+        Predicate[] restrictions = {
+            cb.equal(sigilo.get(SigiloProcesso_.processo), processo),
+            cb.isTrue(sigilo.get(SigiloProcesso_.ativo)),
+            cb.isTrue(sigilo.get(SigiloProcesso_.sigiloso))
+        };
+        cq = cq.select(cb.literal(1)).where(restrictions);
+        
+        return cb.exists(cq);
+    }
+    
+    protected Predicate createPredicateUsuarioPodeVerProcesso(AbstractQuery<?> query, From<?, Processo> processo,
+            UsuarioLogin usuario) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Predicate processoNaoSigiloso = createPredicateIsProcessoSigiloso(query, processo).not();
+        
+        if (usuario == null)
+            return processoNaoSigiloso;
+        else
+            return cb.or(processoNaoSigiloso,
+                    createPredicateUsuarioPossuiPermissaoSigilo(query, processo, usuario));
+    }
+    
+    protected <T> void addIfNotNull(Collection<T> list, T obj){
+        if (obj != null)
+            list.add(obj);
+    }
 
 }
