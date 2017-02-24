@@ -16,7 +16,7 @@
 
     <c:if test="#{not empty flash.documentoBin}">
         <f:event type="preRenderView"
-            listener="#{documentoHtmlView.setViewInstance(flash.documentoBin)}" />
+            listener="#{documentoHtmlView.setViewInstanceBin(flash.documentoBin)}" />
     </c:if>
 
     <h:outputText
