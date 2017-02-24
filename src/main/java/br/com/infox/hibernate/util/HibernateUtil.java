@@ -25,6 +25,8 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.hibernate.oracle.dialect.InfoxOracleDialect;
 
 public final class HibernateUtil {
+    
+    public static final String CACHE_HINT = "org.hibernate.cacheable";
 
 	private HibernateUtil() {
 	}
@@ -53,7 +55,7 @@ public final class HibernateUtil {
 	}
 
 	public static void enableCache(Query query) {
-		query.setHint("org.hibernate.cacheable", true);
+		query.setHint(CACHE_HINT, true);
 	}
 
 	public static String getQueryString(Query query) {

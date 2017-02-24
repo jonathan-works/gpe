@@ -17,7 +17,6 @@ import org.jbpm.persistence.db.DbPersistenceService;
 import org.jbpm.persistence.db.StaleObjectLogConfigurer;
 import org.joda.time.DateTime;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.server.ApplicationServerService;
 
