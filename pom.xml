@@ -487,14 +487,34 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.4.0</version>
-                <configuration>
-                    <executable>../gerar-tag.sh</executable>
-                    <arguments>
-                        <argument>${project.groupId}</argument>
-                        <argument>${project.artifactId}</argument>
-                    </arguments>
-                </configuration>
+                <version>1.5.0</version>
+                <executions>
+                    <execution>
+                        <id>migrador-menu</id>
+                        <phase />
+                        <configuration>
+                            <classpathScope>test</classpathScope>
+                            <mainClass>br.com.infox.epp.menu.MigradorMenu</mainClass>
+                            <arguments>
+                                <argument>${in}</argument>
+                                <argument>${out}</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>gerar-tag</id>
+                        <configuration>
+                            <executable>../gerar-tag.sh</executable>
+                            <arguments>
+                                <argument>${project.groupId}</argument>
+                                <argument>${project.artifactId}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
