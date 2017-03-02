@@ -439,6 +439,7 @@
               onclick="openPopUp('PopUpDocumentoBin', '')"
               rendered="#{isModelo}"
               target="PopUpDocumentoBin">
+              <f:setPropertyActionListener value="#{row.documentoBin}" target="#{flash.documentoBin}" />
               <h:graphicImage
                 title="#{infoxMessages['processoDocumento.visualizar']}"
                 url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />

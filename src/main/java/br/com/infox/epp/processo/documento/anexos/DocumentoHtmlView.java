@@ -14,6 +14,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @ViewScoped
 @Stateful
@@ -53,7 +54,7 @@ public class DocumentoHtmlView implements Serializable {
     }
 
     public String setViewInstanceBin(DocumentoBin documentoBin) {
-        this.documentoBin = documentoBin;
+        this.documentoBin = (DocumentoBin) HibernateUtil.removeProxy(documentoBin);
         return PAGINA_VISUALIZACAO;
     }
     
