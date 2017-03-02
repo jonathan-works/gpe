@@ -17,28 +17,6 @@ import br.com.infox.seam.security.SecurityUtil;
 public class MenuServiceTest {
     
     @Test
-    public void testLoadingSeamComponent() {
-        List<String> items = getMenuService().getItemsFromMainMenuComponentXml();
-        Assert.assertNotNull("Resulted in null array of items", items);
-        for (String string : items) {
-            Assert.assertNotNull("Null string", string);
-            Assert.assertFalse("Empty string", string.isEmpty());
-            Assert.assertTrue(string + " didn't match pattern", string.matches("(?:.+\\/)*[^/]+:[^:]+$"));
-        }
-    }
-    
-    @Test
-    public void testLoadingDefaultComponent() {
-        List<String> items = getMenuService().getItemsFromNavigationMenuXml();
-        Assert.assertNotNull("Resulted in null array of items", items);
-        for (String string : items) {
-            Assert.assertNotNull("Null string", string);
-            Assert.assertFalse("Empty string", string.isEmpty());
-            Assert.assertTrue(string + " didn't match pattern", string.matches("(?:.+\\/)*[^/]+:[^:]+$"));
-        }
-    }
-
-    @Test
     public void testMenuItemConversion() {
         List<MenuItemDTO> menuItemList = getMenuService().getMenuItemList();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
