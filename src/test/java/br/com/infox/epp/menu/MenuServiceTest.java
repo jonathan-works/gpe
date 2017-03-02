@@ -1,7 +1,6 @@
 package br.com.infox.epp.menu;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -64,12 +63,7 @@ public class MenuServiceTest {
     }
 
     private PropertiesLoader createMockPropertiesLoader() {
-        return new PropertiesLoader() {
-            @Override
-            public List<String> getMenuItems() {
-                return new ArrayList<>();
-            }
-        };
+        return new PropertiesLoader();
     }
 
 }
