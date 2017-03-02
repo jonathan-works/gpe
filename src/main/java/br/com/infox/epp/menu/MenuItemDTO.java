@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 
+import br.com.infox.epp.menu.api.IconAlignment;
 public class MenuItemDTO {
     private String label;
     private boolean hideLabel;
@@ -22,6 +23,7 @@ public class MenuItemDTO {
         this.icon = icon;
         this.iconAlign = iconAlign;
         this.showFilter = showFilter;
+        this.items = new ArrayList<>();
     }
 
     public MenuItemDTO(String label, String url) {
@@ -124,13 +126,4 @@ public class MenuItemDTO {
             return false;
         return true;
     }
-
-}
-
-enum IconAlignment {
-    RIGHT, LEFT;
-
-    public String toString() {
-        return name().toLowerCase();
-    };
 }
