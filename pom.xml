@@ -505,17 +505,32 @@
                         </goals>
                     </execution>
                     <execution>
-                <id>download-certificados</id>
-                <phase>prepare-package</phase>
-                <configuration>
-                    <classpathScope>test</classpathScope>
-                    <mainClass>br.com.infox.epp.assinador.CertificadosDownloaderMain</mainClass>
-                    <commandlineArgs>-o '${project.build.outputDirectory}/certificados'</commandlineArgs>
-                </configuration>
-                <goals>
-                    <goal>java</goal>
-                </goals>
-            </execution>
+                        <id>download-certificados</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <classpathScope>test</classpathScope>
+                            <mainClass>br.com.infox.epp.assinador.CertificadosDownloaderMain</mainClass>
+                            <commandlineArgs>-o '${project.build.outputDirectory}/certificados'</commandlineArgs>
+                        </configuration>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>migrador-menu</id>
+                        <phase />
+                        <configuration>
+                            <classpathScope>test</classpathScope>
+                            <mainClass>br.com.infox.epp.menu.MigradorMenu</mainClass>
+                            <arguments>
+                                <argument>${in}</argument>
+                                <argument>${out}</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>gerar-tag</id>
                         <configuration>
