@@ -49,6 +49,32 @@ public class RequestInternalPageService implements Serializable {
 	
 	private String contextPath;
 	private UUID key;
+    
+	private final static BitSet bitSet = new BitSet(256);
+	
+	static{
+        for (int i = 'a'; i <= 'z'; i++) {
+            bitSet.set(i);
+        }
+        for (int i = 'A'; i <= 'Z'; i++) {
+            bitSet.set(i);
+        }
+        // numeric characters
+        for (int i = '0'; i <= '9'; i++) {
+            bitSet.set(i);
+        }
+        // special chars
+        bitSet.set('&');
+        bitSet.set('=');
+        bitSet.set('/');
+        bitSet.set('?');
+        bitSet.set('-');
+        bitSet.set('_');
+        bitSet.set('.');
+        bitSet.set('*');
+        // blank to be replaced with +
+        bitSet.set(' ');
+    }
 
 	@PostConstruct
 	private void init() {
@@ -115,11 +141,12 @@ public class RequestInternalPageService implements Serializable {
 	}
 
     public static String encodeQuery(String unescaped, String charset) {
-        return encode(unescaped, new BitSet(256), charset);
+        return encode(unescaped, bitSet, charset);
     }
 
     public static String encode(String unescaped, BitSet allowed, String charset) {
         byte[] rawdata = URLCodec.encodeUrl(allowed, EncodingUtils.getBytes(unescaped, charset));
         return EncodingUtils.getAsciiString(rawdata);
     }
+  
 }
