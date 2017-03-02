@@ -37,9 +37,7 @@ public class MenuService {
         } else if (is(menuItemDTO.getItems()).notEmpty()){
             result = resolveVisibility(menuItemDTO.getItems());
         } else if (is(menuItemDTO.getUrl()).notEmpty()) {
-            String resource = SecurityUtil.PAGES_PREFIX + menuItemDTO.getUrl().replaceFirst("xhtml$", "seam");
-            result = securityUtil.checkPage(resource);
-            System.out.println(String.format("allowed to see '%s' ? %s", resource, new Boolean(result).toString()));
+            result = securityUtil.checkPage(SecurityUtil.PAGES_PREFIX + menuItemDTO.getUrl().replaceFirst("xhtml$", "seam"));
         }
         return result;
     }
