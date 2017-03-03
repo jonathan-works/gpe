@@ -134,16 +134,15 @@ public abstract class FileFormType implements FormType {
     }
     
     public boolean podeAssinar(FormField formField) {
-        return false;
-//        Documento documento = formField.getTypedValue(Documento.class);
-//        if (documento == null){
-//            return false;
-//        }
-//        Papel papelAtual = Authenticator.getPapelAtual();
-//        boolean papelPermiteAssinaturaMultipla = documento.papelPermiteAssinaturaMultipla(papelAtual);
-//        return documento != null && documento.getId() != null 
-//                && (papelPermiteAssinaturaMultipla && !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado())) ||
-//                    (!papelPermiteAssinaturaMultipla && documento.isDocumentoAssinavel(papelAtual) && !documento.isDocumentoAssinado(papelAtual)); 
+        Documento documento = formField.getTypedValue(Documento.class);
+        if (documento == null){
+            return false;
+        }
+        Papel papelAtual = Authenticator.getPapelAtual();
+        boolean papelPermiteAssinaturaMultipla = documento.papelPermiteAssinaturaMultipla(papelAtual);
+        return documento != null && documento.getId() != null 
+                && (papelPermiteAssinaturaMultipla && !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado())) ||
+                    (!papelPermiteAssinaturaMultipla && documento.isDocumentoAssinavel(papelAtual) && !documento.isDocumentoAssinado(papelAtual)); 
     }
     
     @Override

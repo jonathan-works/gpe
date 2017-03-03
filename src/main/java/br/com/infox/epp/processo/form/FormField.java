@@ -5,7 +5,10 @@ import java.util.Map;
 
 import javax.faces.component.UIComponent;
 
+import org.jboss.seam.contexts.Contexts;
+
 import br.com.infox.epp.processo.form.type.FormType;
+import br.com.infox.jsf.util.RequestScopeContext;
 
 public class FormField {
     
@@ -86,11 +89,11 @@ public class FormField {
     }
 
 	public UIComponent getComponent() {
-		return component;
+		return RequestScopeContext.get(getId() + "_component");
 	}
 
 	public void setComponent(UIComponent component) {
-		this.component = component;
+	    RequestScopeContext.put(getId() + "_component", component);;
 	}
 	
 	public boolean isRequired() {

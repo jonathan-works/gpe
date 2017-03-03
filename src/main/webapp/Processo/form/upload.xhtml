@@ -127,12 +127,13 @@
 	    	    <p:outputPanel id="#{varId}conteudoAssinatura" rendered="#{controller.podeAssinar(formField)}">
 	    		   <wi:assinador 
 	                   id="#{varId}CertificadoDigital"
-	                   execute="#{varId}EditorDiv"
-	                   render="#{varId}Div :pageBodyDialogMessage"
+	                   execute="@this"
+	                   render="@(.#{varId}DivClass) :pageBodyDialogMessage"
 	                   onbegin="infox.showLoading();"
 	                   oncomplete="infox.hideLoading();"
+                       callbackHandler="#{assinadorController}"
 	                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
-	                   value="#{infoxMessages['assinaturas.assinar']}" />
+	                   value="#{infoxMessages['assinaturas.assinar']} - #{varId}CertificadoDigital" />
 	    		</p:outputPanel>
     		
 	    	</p:outputPanel>

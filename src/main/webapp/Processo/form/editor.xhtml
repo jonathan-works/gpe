@@ -99,8 +99,9 @@
 	    	    <p:outputPanel rendered="#{controller.podeAssinar(formField)}">
 	    		   <wi:assinador 
 	                   id="#{varId}CertificadoDigital"
-	                   execute="#{varId}EditorDiv"
-	                   render="#{varId}Div :pageBodyDialogMessage"
+	                   execute="@this"
+	                   render="@(.#{varId}DivClass) :pageBodyDialogMessage"
+                       callbackHandler="#{assinadorController}"
 	                   onbegin="infox.showLoading();"
 	                   oncomplete="infox.hideLoading();"
 	                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
