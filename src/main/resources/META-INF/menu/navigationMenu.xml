@@ -4,6 +4,7 @@
         <item xsi:type="MenuItem" label="documentacao.menuText" url="/Documentacao/documentacao.xhtml"/>
     </item>
     <item xsi:type="Submenu" label="menu.processo">
+        <item xsi:type="MenuItem" label="redistribuicao.menu.crud" url="/Redistribuicao/listView.xhtml"/>
         <item xsi:type="MenuItem" label="processo.iniciarMenuText" url="/Processo/listView.xhtml"/>
         <item xsi:type="MenuItem" label="processo.consultarMenuText" url="/Processo/Consulta/listView.xhtml"/>
     </item>
@@ -61,6 +62,7 @@
         <item xsi:type="MenuItem" label="quartzJobsInfo.menuText" url="/quartzJobsInfo.xhtml"/>
         <item xsi:type="MenuItem" label="layout.menuText" url="/layout.xhtml"/>
         <item xsi:type="MenuItem" label="meioExpedicao.menuText" url="/MeioExpedicao/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="tipoRedistribuicao.menu" url="/TipoRedistribuicao/listView.xhtml"/>
     </item>
     <item xsi:type="Submenu" label="entregas.menu">
         <item xsi:type="MenuItem" label="menu.categoriaEntrega" url="/CategoriaEntregaItem/listView.xhtml"/>

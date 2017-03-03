@@ -48,7 +48,8 @@ public class MenuNavigation implements Serializable {
     }
 
     public String getActionMenuJson() {
-        return new Gson().toJson(getActionMenu());
+        //FIXME: SOLUÇÃO PALEATIVA. RESOLVER EM REFATORAÇÃO DO MENU
+        return new Gson().toJson(getActionMenu()).replaceAll("\\.xhtml", ".seam");
     }
 
     @ExceptionHandled

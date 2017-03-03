@@ -191,6 +191,7 @@ public class Authenticator implements Serializable {
             passwordService.changePassword(usuario, newPassword1);
             usuarioLoginManager.update(usuario);
             getMessagesHandler().add(infoxMessages.get("login.error.senhaAlteradaSucesso"));
+            Identity.instance().unAuthenticate();
         } else {
             throw new LoginException(infoxMessages.get("login.error.novaSenhaNaoConfere"));
         }
@@ -275,7 +276,8 @@ public class Authenticator implements Serializable {
         if (usuario != null && !usuario.getAtivo()) {
             FacesMessages.instance().add(infoxMessages.get("login.error.inativo"));
         }
-        FacesMessages.instance().add(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
+        if(!isTrocarSenha())
+        	FacesMessages.instance().add(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
     }
 
     @Observer(Identity.EVENT_LOGGED_OUT)

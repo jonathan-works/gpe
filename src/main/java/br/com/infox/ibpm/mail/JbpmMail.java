@@ -11,16 +11,12 @@ import java.util.Map;
 
 import org.jbpm.graph.exe.ExecutionContext;
 
-import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
-import br.com.infox.epp.documento.type.ExpressionResolverChain;
-import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
+import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.manager.ListaEmailManager;
-import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
-import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
 import br.com.infox.epp.twitter.util.TwitterUtil;
@@ -34,6 +30,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
     private Map<String, String> parameters = new HashMap<String, String>();
     private static final LogProvider LOG = Logging.getLogProvider(JbpmMail.class);
     private List<String> mailListDest = new ArrayList<String>();
+	private ExecutionContext execucionContext;
 
     /**
      * Método separa conteúdo de saída de um Map e interpreta seus atributos com
@@ -45,7 +42,15 @@ public class JbpmMail extends org.jbpm.mail.Mail {
 
     }
 
-    private Map<String, String> getStringToMap(String string) {
+    
+    @Override
+	public void execute(ExecutionContext executionContext) {
+		this.execucionContext = executionContext;
+		super.execute(executionContext);
+	}
+
+
+	private Map<String, String> getStringToMap(String string) {
         String result = string.substring(1, string.length() - 1);
         HashMap<String, String> map = new HashMap<String, String>();
 
@@ -75,13 +80,10 @@ public class JbpmMail extends org.jbpm.mail.Mail {
     }
 
     private void sendMail() {
-        ExecutionContext executionContext = (ExecutionContext) ReflectionsUtil.getValue(this, "executionContext");
         EMailData data = ComponentUtil.getComponent(EMailData.NAME);
         data.setUseHtmlBody(true);
         ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
-        Processo processo = ComponentUtil.<ProcessoManager>getComponent(ProcessoManager.NAME).getProcessoByIdJbpm(executionContext.getProcessInstance().getId());
-        ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processo.getIdProcesso(), executionContext);
-        data.setBody(modeloDocumentoManager.getConteudo(parameters.get("codigoModeloDocumento"), chain));
+        data.setBody(modeloDocumentoManager.getConteudo(parameters.get("codigoModeloDocumento"), new SeamExpressionResolver(execucionContext)));
         String idGrupo = parameters.get("idGrupo");
         List<String> recipList = null;
         if (idGrupo != null) {
