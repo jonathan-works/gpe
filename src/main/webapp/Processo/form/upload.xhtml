@@ -128,12 +128,12 @@
 	    		   <wi:assinador 
 	                   id="#{varId}CertificadoDigital"
 	                   execute="@this"
-	                   render="@(.#{varId}DivClass) :pageBodyDialogMessage"
+	                   render="panelEditor#{varId} @(.#{varId}DivClass) :pageBodyDialogMessage"
 	                   onbegin="infox.showLoading();"
 	                   oncomplete="infox.hideLoading();"
                        callbackHandler="#{assinadorController}"
 	                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
-	                   value="#{infoxMessages['assinaturas.assinar']} - #{varId}CertificadoDigital" />
+	                   value="#{infoxMessages['assinaturas.assinar']}" />
 	    		</p:outputPanel>
     		
 	    	</p:outputPanel>

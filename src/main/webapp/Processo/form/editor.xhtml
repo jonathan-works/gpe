@@ -100,7 +100,7 @@
 	    		   <wi:assinador 
 	                   id="#{varId}CertificadoDigital"
 	                   execute="@this"
-	                   render="@(.#{varId}DivClass) :pageBodyDialogMessage"
+	                   render="panelEditor#{varId} pageBodyDialogMessage"
                        callbackHandler="#{assinadorController}"
 	                   onbegin="infox.showLoading();"
 	                   oncomplete="infox.hideLoading();"
