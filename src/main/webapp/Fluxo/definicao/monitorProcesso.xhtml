@@ -15,8 +15,12 @@
     <h:form>
         <p:remoteCommand name="filterElement" action="#{monitorProcessoView.filterElement}"
             onstart="infox.showLoading()" oncomplete="infox.hideLoading()" update=":pageBody" />
+        <p:remoteCommand name="resetFilter" action="#{monitorProcessoView.resetFilter}"
+            onstart="infox.showLoading()" oncomplete="infox.hideLoading()" update=":pageBody" />
     </h:form>
-
+	<h:outputScript library="js" name="svg-pan-zoom.min.js"></h:outputScript>
+	<h:outputScript library="js" name="thumbnailViewer.js"></h:outputScript>
+	
     <h:panelGroup rendered="#{monitorProcessoView.success}">
         <fieldset id="fluxoDadosFieldset">
             <legend>#{infoxMessages['monitorProcesso.fluxo.dados']}</legend>
@@ -30,28 +34,44 @@
         </fieldset>
 
         <h:panelGroup rendered="#{not monitorProcessoView.executionGraphic}">
-            <h:panelGroup rendered="#{monitorProcessoView.filter}">
-                <h:form>
-                    <p:commandButton id="resetFilter"
-                        value="#{infoxMessages['monitorProcesso.filter.reset']}"
-                        action="#{monitorProcessoView.resetFilter}"
-                        update=":pageBody" />
-                </h:form>
-            </h:panelGroup>
+   
 
-            <div style="margin-top: 2em; overflow: auto;">
-                <h:outputText value="#{monitorProcessoView.svg}" escape="false" />
-            </div>
+			<p:outputPanel id="svgOutput">
+	            <div style="margin-top: 2em; height: 600px; overflow: hidden; border: 1px solid black; ">
+	                <h:outputText value="#{monitorProcessoView.svg}" escape="false" />
+	            </div>
+	            <button onclick="svgFluxo.zoomIn();" type="button" class="buttons">
+	            	<wi:icon value="plus"/>
+	            </button>
+	            <button onclick="svgFluxo.reset();" type="button" class="buttons">
+	            	Reset
+	            </button>
+	            <button onclick="svgFluxo.zoomOut();" type="button" class="buttons">
+	            	<wi:icon value="minus"/>
+	            </button>
+	            <button onclick="resetFilter();" type="button" class="buttons" style="#{not monitorProcessoView.filter? 'display:none;' : '' }">
+	            	Voltar
+	            </button>
+			</p:outputPanel>
+			<script>
+			 var svgFluxo = svgPanZoom('##{wi:clientId('svgOutput').replace(':','\\\\:')} &gt; div &gt; svg', {
+          zoomEnabled: true,
+          controlIconsEnabled: true,
+          fit: true,
+        })
+			</script>
         </h:panelGroup>
-
+        
         <h:panelGroup rendered="#{monitorProcessoView.executionGraphic}">
-            <h:form>
-                <p:commandButton id="closeGraphicexecution"
-                    value="#{infoxMessages['monitorProcesso.graphic.close']}"
-                    action="#{monitorProcessoView.closeGraph}"
-                    update=":pageBody" />
-            </h:form>
             <ui:include src="/Processo/executionGraphic.xhtml" />
+            <h:form>
+             <p:remoteCommand name="closeGraphicexecution" action="#{monitorProcessoView.closeGraph}"
+            onstart="infox.showLoading()" oncomplete="infox.hideLoading()" update=":pageBody" />
+             
+				 <button onclick="closeGraphicexecution();" type="button" class="buttons" >
+	            	#{infoxMessages['monitorProcesso.graphic.close']}
+	            </button>                    
+            </h:form>
         </h:panelGroup>
     </h:panelGroup>
 

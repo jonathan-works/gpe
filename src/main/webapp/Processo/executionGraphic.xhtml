@@ -6,11 +6,21 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui">
     
+    
+    <h:outputScript library="js" name="svg-pan-zoom.min.js"></h:outputScript>
+	<h:outputScript library="js" name="thumbnailViewer.js"></h:outputScript>
+	
     <wi:panel id="panelGraphicExecution" styleClass="content-block">
-		<div style="overflow: auto;">
-	    	<h:outputText value="#{graphicExecutionView.svg}" escape="false"/>
-		</div>    
-    	
+		<div style="margin-top: 2em; height: 600px; overflow: hidden; border: 1px solid black; ">
+	                <h:outputText value="#{graphicExecutionView.svg}" escape="false"/>
+	     </div>
+	     <script>
+			 var svgFluxo = svgPanZoom('##{wi:clientId('panelGraphicExecution').replace(':','\\\\:')}_body &gt; div &gt; svg', {
+          zoomEnabled: true,
+          controlIconsEnabled: true,
+          fit: true,
+        })
+			</script>
     	<h:form id="formRemoteGraphElement">
     		<p:remoteCommand name="onSelectNodeElement" update="@parent:@parent:dialogInformacoes" 
     			actionListener="#{graphicExecutionView.onSelectNodeElement}" oncomplete="infox.hideLoading(); PF('dialogInformacoes').show();" 
