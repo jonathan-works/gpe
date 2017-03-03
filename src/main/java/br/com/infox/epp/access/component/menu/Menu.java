@@ -12,7 +12,6 @@ import org.jboss.seam.core.Expressions;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -45,7 +44,7 @@ public class Menu implements Serializable {
      * @param items
      */
     public void setItems(List<String> items) {
-        SecurityUtil securityUtil = BeanManager.INSTANCE.getReference(SecurityUtil.class);
+        SecurityUtil securityUtil = SecurityUtil.instance();
         try {
             InitialContext ic = new InitialContext();
             PropertiesLoader propertiesLoader = (PropertiesLoader) ic.lookup(PropertiesLoader.JNDI_PORTABLE_NAME);

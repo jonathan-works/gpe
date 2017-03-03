@@ -10,11 +10,12 @@ import javax.inject.Named;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.web.ServletContexts;
 
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -30,10 +31,11 @@ public class SecurityUtil implements Serializable {
     private Map<String, Boolean> permissions = new HashMap<>();
 
     public boolean checkPage(String page) {
+        if ( !isSessionContextActive() ) {
+            return false;
+        }
         if (!permissions.containsKey(page)) {
             try {
-                if (!Contexts.isSessionContextActive())
-                    return false;
                 permissions.put(page, Identity.instance().hasPermission(page, "access") && !Authenticator.instance().hasToSignTermoAdesao());
             } catch (LoginException e) {
                 throw new RuntimeException(e);
@@ -41,15 +43,13 @@ public class SecurityUtil implements Serializable {
         }
         boolean hasPermission = permissions.get(page);
         if (!hasPermission) {
-            LOG.info(MessageFormat.format("Bloqueado o acesso do perfil ''{0}'' para o recurso ''{1}''.", Contexts.getSessionContext().get("identificadorPapelAtual"), page));
+            LOG.info(MessageFormat.format("Bloqueado o acesso do perfil ''{0}'' para o recurso ''{1}''.", getIdentificadorPapelAtual(), page));
         }
         return hasPermission;
     }
     
     public boolean isPermitted(String resource) {
-        if (!Contexts.isSessionContextActive())
-            return false;
-        return Identity.instance().hasPermission(resource, "access");
+        return checkPage(resource);
     }
     
     public boolean checkPage() {
@@ -59,9 +59,7 @@ public class SecurityUtil implements Serializable {
     }
     
     public boolean hasRole(String roleName) {
-        if (!Contexts.isSessionContextActive())
-            return false;
-    	return Identity.instance().hasRole(roleName);
+    	return isSessionContextActive() && Identity.instance().hasRole(roleName);
     }
     
     public void clearPermissionCache() {
@@ -69,8 +67,19 @@ public class SecurityUtil implements Serializable {
     }
 
     public boolean isLoggedIn() {
-        if (!Contexts.isSessionContextActive())
-            return false;
-        return Identity.instance().isLoggedIn();
+        return isSessionContextActive() && Identity.instance().isLoggedIn();
+    }
+    
+    protected String getIdentificadorPapelAtual() {
+        Papel papelAtual = Authenticator.getPapelAtual();
+        return papelAtual != null ? papelAtual.getIdentificador() : "";
+    }
+    
+    public boolean isSessionContextActive() {
+        return BeanManager.INSTANCE.isSessionContextActive();
+    }
+    
+    public static SecurityUtil instance() {
+        return BeanManager.INSTANCE.getReference(SecurityUtil.class);
     }
 }
