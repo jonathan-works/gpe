@@ -11,10 +11,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
 import javax.faces.component.UIForm;
 import javax.faces.component.html.HtmlInputHidden;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 
 import org.primefaces.context.RequestContext;
 import org.richfaces.component.UIDataTable;
@@ -28,6 +30,8 @@ import br.com.infox.seam.exception.ApplicationException;
 @RequestScoped
 public class JsfUtil {
     
+    private static final String AJAX_REDIRECT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><partial-response><redirect url=\"%s\"></redirect></partial-response>";
+
     private transient FacesContext context;
     
     @PostConstruct
@@ -122,9 +126,22 @@ public class JsfUtil {
     public void redirect(String path) {
         ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
         try {
-            context.getExternalContext().redirect(servletContext.getContextPath() + path);
+            if (isAjaxRequest(context.getExternalContext())) {
+                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                response.reset();
+                response.getWriter().printf(AJAX_REDIRECT, servletContext.getContextPath() + (path.startsWith("/") ? path : "/".concat(path)));
+                response.getWriter().flush();
+                context.responseComplete();
+            } else {
+                context.getExternalContext().redirect(servletContext.getContextPath() + path);
+            }
         } catch (IOException e) {
             throw new ApplicationException("Path does not exists '" + path + "' ", e);
         }
     }
+    
+    public boolean isAjaxRequest(ExternalContext externalContext) {
+        return "partial/ajax".equals(externalContext.getRequestHeaderMap().get("faces-request"));
+    }
+    
 }
