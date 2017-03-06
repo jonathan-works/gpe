@@ -37,7 +37,7 @@
                 execute="@this"
                 hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
 	    		value="#{formField.properties.classificacaoDocumento}"
-                converterId="org.jboss.seam.ui.EntityConverter"
+                converterId="br.com.infox.jsf.converter.SelectItemConverter"
 	    		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
 	    		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
 	    	</i:selectOneMenu>
@@ -49,7 +49,7 @@
                 ajax="true"
                 render="@(.#{varId}EditorDiv)" 
                 execute="@this"
-                converterId="org.jboss.seam.ui.EntityConverter"
+                converterId="br.com.infox.jsf.converter.SelectItemConverter"
                 listener="#{controller.performModeloDocumento(formField, formData)}"
 	    		value="#{formField.properties.modeloDocumento}"
 	    		rendered="#{not readonly and not formField.value.hasAssinatura()}">
@@ -60,7 +60,7 @@
                 render="@this"
                 execute="@this"
                 ajax="true"
-                converterId="org.jboss.seam.ui.EntityConverter"
+                converterId="br.com.infox.jsf.converter.SelectItemConverter"
                 value="#{formField.properties.pasta}"
                 items="#{formField.properties.pastas}"
                 readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"

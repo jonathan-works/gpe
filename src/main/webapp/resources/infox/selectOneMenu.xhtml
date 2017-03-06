@@ -24,7 +24,7 @@
     	<composite:attribute name="validatorId" />
     	<composite:attribute name="converterId"/>
     	<composite:attribute name="enumClassName"/>
-    	<composite:attribute name="showRequired" default="false"/>
+    	<composite:attribute name="showRequired"/>
     	<composite:attribute name="bindingComponent"/>
     	
     	<composite:attribute name="ajax" default="false" />
@@ -62,7 +62,7 @@
         				</c:if>
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
-	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required or cc.attrs.showRequired}" value="*" />
+	        		<h:outputText styleClass="required" rendered="#{empty cc.attrs.showRequired ? cc.attrs.required : cc.attrs.showRequired}" value="*" />
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value #{cc.attrs.id}DivClass">

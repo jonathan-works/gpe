@@ -17,6 +17,8 @@ public interface FormData {
 
     List<FormField> getFormFields();
     
+    List<FormField> getFormFieldsReadOnly();
+    
     Map<String, FormType> getFormTypes();
     
     Object getVariable(String name);

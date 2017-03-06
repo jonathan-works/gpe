@@ -18,6 +18,7 @@ public abstract class AbstractFormData implements FormData {
     protected Processo processo;
     protected Map<String, FormType> formTypes = new HashMap<>();
     protected List<FormField> formFields = new ArrayList<FormField>();
+    protected List<FormField> formFieldsReadOnly = new ArrayList<FormField>();
     
     public AbstractFormData(String formKey, Processo processo) {
         this.formKey = formKey;
@@ -37,7 +38,12 @@ public abstract class AbstractFormData implements FormData {
         formField.setValue(formType.convertToFormValue(getVariable(variableName)));
         formField.setProperties(createProperties(variableAccess));
         formType.performValue(formField, this);
-        getFormFields().add(formField);
+        if (variableAccess.isWritable()) {
+            getFormFields().add(formField);
+        } else {
+            getFormFieldsReadOnly().add(formField);
+        }
+            
     }
     
     protected FormType createFormType(String type) {
@@ -93,6 +99,10 @@ public abstract class AbstractFormData implements FormData {
     public List<FormField> getFormFields() {
       return formFields;
     }
+    
+    public List<FormField> getFormFieldsReadOnly() {
+        return formFieldsReadOnly;
+      }
     
     public void setFormFields(List<FormField> formFields) {
       this.formFields = formFields;

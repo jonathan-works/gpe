@@ -36,7 +36,7 @@
                  execute="@this"
                  hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
 	    	     value="#{formField.properties.classificacaoDocumento}"
-                 converterId="org.jboss.seam.ui.EntityConverter"
+                 converterId="br.com.infox.jsf.converter.SelectItemConverter"
 	    	     readonly="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}"
 	    	     disabled="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}">
 	        </i:selectOneMenu>
@@ -46,7 +46,7 @@
                 render="@this"
                 execute="@this"
                 ajax="true"
-                converterId="org.jboss.seam.ui.EntityConverter"
+                converterId="br.com.infox.jsf.converter.SelectItemConverter"
                 value="#{formField.properties.pasta}"
                 items="#{formField.properties.pastas}"
                 readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
@@ -55,7 +55,7 @@
             </i:selectOneMenu>
 	     
 	    	 <p:outputPanel id="#{varId}UploadDiv" styleClass="#{varId}UploadDiv">
-                 <p:blockUI block="@(.#{varId}BlockInputDiv)" blocked="#{empty formField.properties.classificacaoDocumento}">
+                 <p:blockUI block="@(.#{varId}BlockInputDiv)" blocked="#{empty formField.properties.classificacaoDocumento and not formField.value.hasAssinatura()}">
                      <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}" />
                  </p:blockUI>
 	    	 
