@@ -79,7 +79,7 @@
 			<ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
 				<ui:include src="timers.xhtml" />
 			</ui:fragment>
-			<s:div rendered="#{! empty nodeFitter.nodeForm}">
+			<s:div rendered="#{not empty nodeFitter.nodeForm}">
 				<h:form>
 					<ui:include src="forms/#{nodeFitter.nodeForm}.xhtml" />
 				</h:form>
