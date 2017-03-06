@@ -23,6 +23,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
+import org.primefaces.context.RequestContext;
 
 import com.lowagie.text.DocumentException;
 
@@ -137,8 +138,11 @@ public class FileDownloader implements Serializable {
         uriBuilder = uriBuilder.path(DocumentoServlet.BASE_SERVLET_PATH);
         if (documentoBin != null){
             uriBuilder = uriBuilder.path(documentoBin.getUuid().toString());
+            uriBuilder = uriBuilder.path(DocumentoServletOperation.DOWNLOAD.getPath());
+            uriBuilder = uriBuilder.path(extractNomeArquivo(documentoBin));
+        } else {
+            uriBuilder = uriBuilder.path(DocumentoServletOperation.DOWNLOAD.getPath());
         }
-        uriBuilder = uriBuilder.path(DocumentoServletOperation.DOWNLOAD.getPath());
         return uriBuilder.build().toString();
     }
     
@@ -182,7 +186,20 @@ public class FileDownloader implements Serializable {
         DownloadResource downloadResource = downloadResourceFactory.create(fileName, contentType, data);
         HttpSession session = getRequest().getSession();
         session.setAttribute("documentoDownload", downloadResource);
-        getResponse().sendRedirect(getDownloadUrl((DocumentoBin)null));
+        StringBuilder sb = new StringBuilder();
+        sb.append("window.open('").append(getDownloadUrl((DocumentoBin)null)).append("'").append(", ");
+        sb.append("'").append(fileName).append("'").append(", ");
+        sb.append("[");
+        sb.append("'width=',outerWidth,");
+        sb.append("',height=',outerHeight,");
+        sb.append("',top=',screen.top || window['screenY'] || window['screenTop'] || 0,");
+        sb.append("',left=',screen.left || window['screenX'] || window['screenLeft'] || 0,");
+        sb.append("',resizable=YES',");
+        sb.append("',scrollbars=YES',");
+        sb.append("',status=NO',");
+        sb.append("',location=NO'");
+        sb.append("].join(''));");
+        RequestContext.getCurrentInstance().execute(sb.toString());
     }
 
     public String getMensagemDocumentoNulo() {
