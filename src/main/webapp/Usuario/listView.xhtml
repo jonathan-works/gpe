@@ -3,6 +3,7 @@
   xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:a="http://richfaces.org/a4j"
+  xmlns:p="http://primefaces.org/ui"
   xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:f="http://java.sun.com/jsf/core"
   xmlns:h="http://java.sun.com/jsf/html"
@@ -460,20 +461,14 @@
         panelStyleClass="full-sized short-margin-top">
         <ui:define name="headerToolBar"></ui:define>
         <ui:define name="toolBar">
-          <ui:param
-            name="isModelo"
-            value="#{empty row.documentoBin.extensao}" />
           <h:form>
-            <h:commandLink
-              action="#{documentoHtmlView.setViewInstanceBin(row.documentoBin)}"
-              onclick="openPopUp('PopUpDocumentoBin', '')"
-              rendered="#{isModelo}"
-              target="PopUpDocumentoBin">
-              <f:setPropertyActionListener value="#{row.documentoBin}" target="#{flash.documentoBin}" />
+            <p:commandLink
+              action="#{fileDownloader.downloadDocumentoViaServlet(row.documentoBin)}"
+              rendered="#{not row.documentoBin.binario}">
               <h:graphicImage
                 title="#{infoxMessages['processoDocumento.visualizar']}"
-                url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-            </h:commandLink>
+                url="#{layoutController.getResourceUrlByPath('/imagens/download.gif')}" />
+            </p:commandLink>
           </h:form>
         </ui:define>
         <wi:columnDateTime
@@ -481,7 +476,7 @@
           columnHeader="#{infoxMessages['assinaturadocumento.dtAssinatura']}"
           value="#{row.dataAssinatura}" />
         <wi:columnOutputText
-          columnId="processoDocumentoBin.nomeArquivo"
+          columnId="nomeArquivo"
           columnHeader="#{infoxMessages['processoDocumentoBin.nomeArquivo']}"
           value="#{row.documentoBin.nomeArquivo}" />
       </wi:dataTable>
