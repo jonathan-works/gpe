@@ -573,16 +573,19 @@ public class Authenticator implements Serializable {
     }
     
     private String setColegiadaParaMonocraticaLogada(UnidadeDecisoraColegiada decisoraColegiada, boolean doRedirect) throws LoginException {
-        if (!getColegiadasParaMonocraticaLogada().contains(decisoraColegiada)) {
+        if (decisoraColegiada != null && !getColegiadasParaMonocraticaLogada().contains(decisoraColegiada)) {
             throw new LoginException("Unidade decisora colegiada não permitida: " + decisoraColegiada.getNome());
         }
-        Contexts.getSessionContext().set(COLEGIADA_DA_MONOCRATICA_LOGADA, decisoraColegiada);
+        if (decisoraColegiada == null){
+            Contexts.getSessionContext().remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
+        } else {
+            Contexts.getSessionContext().set(COLEGIADA_DA_MONOCRATICA_LOGADA, decisoraColegiada);
+        }
         if (doRedirect) {
             redirectToPainelDoUsuario();
         } else {
             return getCaminhoPainel();
         }
-        
         return null;
     }
     
