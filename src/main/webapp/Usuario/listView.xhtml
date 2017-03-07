@@ -463,11 +463,15 @@
         <ui:define name="toolBar">
           <h:form>
             <p:commandLink
-              action="#{fileDownloader.downloadDocumentoViaServlet(row.documentoBin)}"
-              rendered="#{not row.documentoBin.binario}">
+              action="#{jsfUtil.applyLastPhaseFlashAction}"
+              rendered="#{not row.documentoBin.binario}"
+              onclick="infox.showLoading();"
+              oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(row.documentoBin)}"
+            >
               <h:graphicImage
                 title="#{infoxMessages['processoDocumento.visualizar']}"
                 url="#{layoutController.getResourceUrlByPath('/imagens/download.gif')}" />
+              <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
             </p:commandLink>
           </h:form>
         </ui:define>
