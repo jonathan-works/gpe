@@ -181,14 +181,36 @@ public class FileDownloader implements Serializable {
             return;
         downloadDocumentoViaServlet(documento.getDocumentoBin());
     }
+    public void downloadDocumentoViaServlet(DocumentoBin documentoBin, boolean redirect) throws IOException {
+        if (documentoBin == null)
+            return;
+        
+        downloadDocumentoViaServlet(getData(documentoBin), getContentType(documentoBin), extractNomeArquivo(documentoBin), redirect);
+    }
+    public void downloadDocumentoViaServlet(Documento documento, boolean redirect) throws IOException {
+        if (documento == null)
+            return;
+        downloadDocumentoViaServlet(documento.getDocumentoBin(), redirect);
+    }
     
     public void downloadDocumentoViaServlet(byte[] data, String contentType, String fileName) throws IOException{
+        downloadDocumentoViaServlet(data, contentType, fileName, true);
+    }
+    public void downloadDocumentoViaServlet(byte[] data, String contentType, String fileName, boolean redirect) throws IOException{
         DownloadResource downloadResource = downloadResourceFactory.create(fileName, contentType, data);
         HttpSession session = getRequest().getSession();
         session.setAttribute("documentoDownload", downloadResource);
+        if (redirect){
+            redirect(downloadResource);
+        } else {
+            openPopUp(downloadResource);
+        }
+    }
+    
+    private void openPopUp(DownloadResource downloadResource) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append("window.open('").append(getDownloadUrl((DocumentoBin)null)).append("'").append(", ");
-        sb.append("'").append(fileName).append("'").append(", ");
+        sb.append("'").append(downloadResource.getFileName()).append("'").append(", ");
         sb.append("[");
         sb.append("'width=',outerWidth,");
         sb.append("',height=',outerHeight,");
@@ -200,6 +222,10 @@ public class FileDownloader implements Serializable {
         sb.append("',location=NO'");
         sb.append("].join(''));");
         RequestContext.getCurrentInstance().execute(sb.toString());
+    }
+    
+    private void redirect(DownloadResource downloadResource) throws IOException{
+        getResponse().sendRedirect(getDownloadUrl((DocumentoBin)null));
     }
 
     public String getMensagemDocumentoNulo() {

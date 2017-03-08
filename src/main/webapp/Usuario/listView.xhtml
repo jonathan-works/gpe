@@ -433,7 +433,7 @@
         <ui:define name="toolBar">
           <h:form>
             <p:commandLink
-              action="#{fileDownloader.downloadDocumentoViaServlet(row.documentoBin)}"
+              action="#{fileDownloader.downloadDocumentoViaServlet(row.documentoBin, false)}"
               rendered="#{not row.documentoBin.binario}">
               <h:graphicImage
                 title="#{infoxMessages['processoDocumento.visualizar']}"
