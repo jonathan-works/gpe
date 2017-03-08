@@ -10,7 +10,6 @@ import javax.faces.context.FacesContext;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -68,7 +67,7 @@ public class UploadFormType extends FileFormType {
         try {
             getDocumentoUploadService().validaDocumento(file, classificacao, file.getData());
             getFileVariableHandler().gravarDocumento(file, uploadFile.getId(), formField, formData.getProcesso());
-            formData.setSingleVariable(formField.getId(), new TypedValue(formField.getValue(), ValueType.FILE));
+            formData.setSingleVariable(formField, new TypedValue(formField.getValue(), ValueType.FILE));
         } catch (BusinessRollbackException e) {
              LOG.log(Level.SEVERE, "Erro ao remover o documento existente", e);
              if (e.getCause() instanceof DAOException) {

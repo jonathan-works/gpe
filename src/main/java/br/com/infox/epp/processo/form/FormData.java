@@ -25,7 +25,7 @@ public interface FormData {
     
     void setVariable(String name, Object value);
     
-    void setSingleVariable(String name, Object value);
+    void setSingleVariable(FormField formField, Object value);
     
     void update();
     

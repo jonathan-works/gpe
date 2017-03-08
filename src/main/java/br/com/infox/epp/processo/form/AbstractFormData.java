@@ -10,7 +10,6 @@ import org.jbpm.context.def.VariableAccess;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.type.FormTypes;
-import br.com.infox.seam.exception.BusinessException;
 
 public abstract class AbstractFormData implements FormData {
     
@@ -30,12 +29,13 @@ public abstract class AbstractFormData implements FormData {
 
     protected void createFormField(VariableAccess variableAccess) {
         String variableName = variableAccess.getVariableName();
+        String mappedName = variableAccess.getMappedName();
         FormField formField = new FormField();
         FormType formType = createFormType(variableAccess.getType());
         formField.setType(formType);
         formField.setId(variableName);
         formField.setLabel(variableAccess.getLabel());
-        formField.setValue(formType.convertToFormValue(getVariable(variableName)));
+        formField.setValue(formType.convertToFormValue(getVariable(mappedName)));
         formField.setProperties(createProperties(variableAccess));
         formType.performValue(formField, this);
         if (variableAccess.isWritable()) {

@@ -110,8 +110,8 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
     }
 
     @Override
-    public void setSingleVariable(String name, Object value) {
-        setVariable(name, value);
+    public void setSingleVariable(FormField formField, Object value) {
+        setVariable(formField.getId(), value);
     }
     
     @Override

@@ -18,6 +18,8 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 
 public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     
+    protected static final String MAPPED_NAME_PROPERTY = "mapped-name";
+    
     protected ExpressionResolverChain expressionResolver;
     protected TaskInstance taskInstance;
     
@@ -61,22 +63,31 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     }
 
     @Override
-    public void setSingleVariable(String name, Object value) {
-        getExecutarTarefaService().gravarUpload(name, (TypedValue) value, this);
+    public void setSingleVariable(FormField formField, Object value) {
+        String mappedName = formField.getProperty(MAPPED_NAME_PROPERTY, String.class);
+        getExecutarTarefaService().gravarUpload(mappedName, (TypedValue) value, this);
     }
     
     @Override
     public void setVariable(String name, Object value) {
     	getTaskInstance().setVariable(name, value);
     }
+    
+    @Override
+    protected Map<String, Object> createProperties(VariableAccess variableAccess) {
+        Map<String, Object> properties = super.createProperties(variableAccess);
+        properties.put(MAPPED_NAME_PROPERTY, variableAccess.getMappedName());
+        return properties;
+    }
 
     @Override
     public void update() {
     	for (FormField formField : getFormFields()) {
             if (formField.getType().isPersistable() && formField.getValue() != null) {
+                String mappedName = formField.getProperty(MAPPED_NAME_PROPERTY, String.class);
             	FormType type = formField.getType();
             	type.performUpdate(formField, this);
-                setVariable(formField.getId(), type.getValueType().convertToModelValue(formField.getValue()));
+                setVariable(mappedName, type.getValueType().convertToModelValue(formField.getValue()));
             }
         }
     }

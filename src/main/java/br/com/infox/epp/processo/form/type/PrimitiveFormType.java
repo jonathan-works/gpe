@@ -131,8 +131,10 @@ public abstract class PrimitiveFormType implements FormType {
         public void performValue(FormField formField, FormData formData) {
             super.performValue(formField, formData);
             MaxMinConfig maxMinConfig = getConfigurator(formField);
-            formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
-            formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
+            if(maxMinConfig != null){
+                formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
+                formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
+            }
         }
 
         
@@ -169,8 +171,10 @@ public abstract class PrimitiveFormType implements FormType {
         public void performValue(FormField formField, FormData formData) {
             super.performValue(formField, formData);
             MaxMinConfig maxMinConfig = getConfigurator(formField);
-            formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
-            formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
+            if(maxMinConfig != null){
+                formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
+                formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
+            }
         }
     }
 
@@ -251,7 +255,7 @@ public abstract class PrimitiveFormType implements FormType {
         private boolean validateMaxMin(FormField formField) {
             MaxMinConfig maxMinConfig = getConfigurator(formField);
             String msg = null;
-            if (formField.getValue() != null) {
+            if (formField.getValue() != null && maxMinConfig != null) {
                 double valor = Double.parseDouble(formField.getValue().toString());
                 if (maxMinConfig.getMinimo() != null && maxMinConfig.getMaximo() != null
                         && (valor < maxMinConfig.getMinimo().longValue()

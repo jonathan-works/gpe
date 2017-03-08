@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.faces.component.UIComponent;
 
-import org.jboss.seam.contexts.Contexts;
-
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.jsf.util.RequestScopeContext;
 
@@ -18,7 +16,6 @@ public class FormField {
     protected Object defaultValue;
     protected Object value;
     protected Map<String, Object> properties = new HashMap<>();
-    protected UIComponent component;
 
     public String getId() {
         return id;

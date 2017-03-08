@@ -68,22 +68,30 @@ public class ExecutarTarefaService extends PersistenceController {
 
     private TaskInstance findNextTaskInstance(Token token) {
         Node node = token.getNode();
-		if(node.getNodeType() == NodeType.Task){
-		    TypedQuery<TaskInstance> query = getEntityManager().createNamedQuery("TaskMgmtSession.findTaskInstancesByTokenId", TaskInstance.class);
-		    query.setParameter("tokenId", token.getId());
-		    List<TaskInstance> list =  query.getResultList();
-		    return list.isEmpty() ? null : list.get(0);
-		}else if(node.getNodeType() == NodeType.Fork){
-		    Map<String, Token> children = token.getChildren();
-		    for (Token child : children.values()) {
+        if (node.getNodeType() == NodeType.Task) {
+            TypedQuery<TaskInstance> query = getEntityManager().createNamedQuery("TaskMgmtSession.findTaskInstancesByTokenId", TaskInstance.class);
+            query.setParameter("tokenId", token.getId());
+            List<TaskInstance> list = query.getResultList();
+            return list.isEmpty() ? null : list.get(0);
+        } else if (node.getNodeType() == NodeType.Fork) {
+            Map<String, Token> children = token.getChildren();
+            for (Token child : children.values()) {
                 return findNextTaskInstance(child);
             }
-		}else if(node.getNodeType() == NodeType.ProcessState){
-		    return findNextTaskInstance(token.getSubProcessInstance().getRootToken());
-		}else if(node.getNodeType() == NodeType.Join){
-		    return findNextTaskInstance(token.getParent());
-		}
-		return null;
+        } else if (node.getNodeType() == NodeType.ProcessState) {
+            return findNextTaskInstance(token.getSubProcessInstance().getRootToken());
+        } else if (node.getNodeType() == NodeType.Join) {
+            Token parent = token.getParent();
+            if (parent.getNode().getNodeType() != NodeType.Fork) {
+                return findNextTaskInstance(parent);
+            }
+        } else if ( node.getNodeType() == NodeType.EndState ) {
+            Token parentToken = token.getProcessInstance().getSuperProcessToken();
+            if (parentToken != null && parentToken.getNode().getNodeType() != NodeType.ProcessState) {
+                return findNextTaskInstance(parentToken);
+            }
+        }
+        return null;
     }
     
 	private void atualizarBam(TaskInstance taskInstance) {
