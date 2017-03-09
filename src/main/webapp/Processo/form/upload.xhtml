@@ -55,7 +55,7 @@
             </i:selectOneMenu>
 	     
 	    	 <p:outputPanel id="#{varId}UploadDiv" styleClass="#{varId}UploadDiv">
-                 <p:blockUI block="@(.#{varId}BlockInputDiv)" blocked="#{empty formField.properties.classificacaoDocumento and not formField.value.hasAssinatura()}">
+                 <p:blockUI block="@(.#{varId}BlockInputDiv)" blocked="#{empty formField.properties.classificacaoDocumento and not formField.value.hasAssinatura() and not readonly}">
                      <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}" />
                  </p:blockUI>
 	    	 
