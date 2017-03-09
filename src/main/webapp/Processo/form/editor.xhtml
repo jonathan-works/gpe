@@ -83,7 +83,7 @@
 	    		    </s:div>
 	    	    </s:div>
 	    	    
-                <p:blockUI block="#{varId}BlockPanel" blocked="#{empty formField.properties.classificacaoDocumento}">
+                <p:blockUI block="#{varId}BlockPanel" blocked="#{empty formField.properties.classificacaoDocumento and not readonly}">
                     <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}"  />
                 </p:blockUI>
                 <p:outputPanel  id="#{varId}BlockPanel">
