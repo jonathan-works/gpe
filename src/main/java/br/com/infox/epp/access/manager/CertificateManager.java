@@ -91,11 +91,7 @@ public class CertificateManager {
             try {
                 is = fileCert.openStream();
                 X509Certificate x509Cert = (X509Certificate) certFactory.generateCertificate(is);
-                listCertificadosCA.add(x509Cert);
-                String cnName = CertificadoECPF.getCNValue(x509Cert.getSubjectDN().getName());
-                acceptedCaNameList.add(cnName);
-                acceptedCaNameSb.append(cnName);
-                acceptedCaNameSb.append(BR);
+                register(x509Cert);
                 is.close();
             } catch (IOException | CertificateException e) {
                 LOG.error("Erro ao gerar certificado para " + fileCert, e);
@@ -104,6 +100,12 @@ public class CertificateManager {
             }
         }
 
+    private void register(X509Certificate x509Cert) {
+        listCertificadosCA.add(x509Cert);
+        String cnName = CertificadoECPF.getCNValue(x509Cert.getSubjectDN().getName());
+        acceptedCaNameList.add(cnName);
+        acceptedCaNameSb.append(cnName);
+        acceptedCaNameSb.append(BR);
     }
 
     public void verificaCertificado(String certChain) throws CertificadoException, CertificateException {
