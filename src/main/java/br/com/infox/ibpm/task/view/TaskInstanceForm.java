@@ -2,15 +2,12 @@ package br.com.infox.ibpm.task.view;
 
 import static java.text.MessageFormat.format;
 
-import java.io.File;
 import java.io.Serializable;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.ScopeType;
@@ -22,7 +19,6 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -37,6 +33,8 @@ import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
 import br.com.infox.ibpm.variable.VariableMaxMinHandler;
 import br.com.infox.ibpm.variable.VariableStringHandler;
+import br.com.infox.ibpm.variable.components.FrameDefinition;
+import br.com.infox.ibpm.variable.components.VariableDefinitionService;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
@@ -71,6 +69,8 @@ public class TaskInstanceForm implements Serializable {
     private Form form;
 
     private TaskInstance taskInstance;
+    
+    private VariableDefinitionService variableDefinitionService = BeanManager.INSTANCE.getReference(VariableDefinitionService.class);
     
     @Unwrap
     public Form getTaskForm() {
@@ -123,16 +123,8 @@ public class TaskInstanceForm implements Serializable {
                         setPageProperties(name, ff, "seam", "url");
                         break;
                     case FRAME:
-                        String url = format("/{0}.{1}", name.replaceAll("_", "/"), "xhtml");
-                        String framePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(url);
-                        File file = new File(framePath);
-                        if (!file.exists()) {
-                            String containerPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
-                            Path findFirst = FileUtil.findFirst(containerPath + "/WEB-INF", "**" + url);
-                            if (findFirst != null) {
-                                url = findFirst.toString().replace(containerPath.toString(), "");
-                            }
-                        }
+                    	FrameDefinition frame = variableDefinitionService.getFrame(name);
+                        String url = frame.getXhtmlPath();
                         ff.getProperties().put("urlFrame", url);
                         break; 
                     case MONETARY:

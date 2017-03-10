@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import br.com.infox.ibpm.variable.components.Taskpage;
+
 /**
  * Anotação para identificar um parâmetro esperado por uma {@link Taskpage}.
  * Deve definir o nome do parâmetro no atributo 'name'.

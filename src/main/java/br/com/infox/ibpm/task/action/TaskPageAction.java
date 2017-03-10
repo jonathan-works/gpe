@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.action;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +12,10 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.variable.components.TaskpageDefinition;
+import br.com.infox.ibpm.variable.components.VariableDefinitionService;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.path.PathResolver;
 
@@ -31,12 +33,11 @@ public class TaskPageAction implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskPageAction";
     private String taskPagePath;
-    public static final String TASK_PAGE_COMPONENT_PATH = "/WEB-INF/taskpages/";
-    private static final String TASK_PAGE_SUFFIX = ".xhtml";
     private boolean hasTaskPage = false;
     
     @In
     private PathResolver pathResolver;
+    private VariableDefinitionService variableDefinitionService = BeanManager.INSTANCE.getReference(VariableDefinitionService.class);
 
     /**
      * Verifica se a tarefa atual está utilizando uma variável taskPage. Se
@@ -51,11 +52,12 @@ public class TaskPageAction implements Serializable {
             if (type == VariableType.TASK_PAGE) {
                 hasTaskPage = va.isWritable();
                 taskPageName = tokens[1];
-                String taskPagePath = TASK_PAGE_COMPONENT_PATH + taskPageName + TASK_PAGE_SUFFIX;
-                String taskPageUrl = pathResolver.getRealPath(taskPagePath);
-                if (taskPageUrl != null && new File(taskPageUrl).exists()) {
-            		setTaskPagePath(taskPagePath);
+                TaskpageDefinition taskPage = variableDefinitionService.getTaskPage(taskPageName);
+                if(hasTaskPage && taskPage == null) {
+                	throw new ApplicationException("Página de tarefa não encontrada: " + taskPageName);
                 }
+                String taskPagePath = taskPage.getXhtmlPath();
+        		setTaskPagePath(taskPagePath);
                 break;
             }
         }
