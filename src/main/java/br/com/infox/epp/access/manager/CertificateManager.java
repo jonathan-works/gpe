@@ -14,6 +14,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -39,6 +40,8 @@ import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.util.FileUtil;
+import br.com.infox.epp.assinador.CertificadosDownloader;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -91,11 +94,7 @@ public class CertificateManager {
             try {
                 is = fileCert.openStream();
                 X509Certificate x509Cert = (X509Certificate) certFactory.generateCertificate(is);
-                listCertificadosCA.add(x509Cert);
-                String cnName = CertificadoECPF.getCNValue(x509Cert.getSubjectDN().getName());
-                acceptedCaNameList.add(cnName);
-                acceptedCaNameSb.append(cnName);
-                acceptedCaNameSb.append(BR);
+                register(x509Cert);
                 is.close();
             } catch (IOException | CertificateException e) {
                 LOG.error("Erro ao gerar certificado para " + fileCert, e);
@@ -103,7 +102,18 @@ public class CertificateManager {
                 FileUtil.close(is);
             }
         }
+        
+        for (Iterator<X509Certificate> iterator = BeanManager.INSTANCE.getReference(CertificadosDownloader.class).download().iterator(); iterator.hasNext();) {
+            register(iterator.next());
+        }
+    }
 
+    private void register(X509Certificate x509Cert) {
+        listCertificadosCA.add(x509Cert);
+        String cnName = CertificadoECPF.getCNValue(x509Cert.getSubjectDN().getName());
+        acceptedCaNameList.add(cnName);
+        acceptedCaNameSb.append(cnName);
+        acceptedCaNameSb.append(BR);
     }
 
     public void verificaCertificado(String certChain) throws CertificadoException, CertificateException {
