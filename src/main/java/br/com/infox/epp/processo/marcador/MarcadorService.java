@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
-import br.com.infox.core.util.ArrayUtil.ListConversor;
+import br.com.infox.core.util.CollectionUtil.ListConversor;
 import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;

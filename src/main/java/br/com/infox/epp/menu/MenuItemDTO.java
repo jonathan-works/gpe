@@ -36,10 +36,11 @@ public class MenuItemDTO {
     }
     
     public MenuItemDTO(MenuItem item){
-        this(item.getLabel(), item.isHideLabel(), item.getUrl(), item.getIcon(), item.getIconAlignment(), false);
+        this(item.getLabel(), item.isHideLabel(), item.getUrl(), item.getIcon(), item.getIconAlignment(), false, item.getPermission());
     }
+    
     public MenuItemDTO(Submenu item){
-        this(item.getLabel(), item.isHideLabel(), null, item.getIcon(), item.getIconAlignment(), false);
+        this(item.getLabel(), item.isHideLabel(), null, item.getIcon(), item.getIconAlignment(), false, item.getPermission());
         for (Iterator<? extends MenuElement> iterator = item.getItems().iterator(); iterator.hasNext();) {
             MenuElement menuElement = iterator.next();
             if (menuElement instanceof MenuItem){
@@ -51,22 +52,23 @@ public class MenuItemDTO {
     }
     
     public MenuItemDTO(String label, boolean hideLabel, String url, String icon, IconAlignment iconAlign,
-            Boolean showFilter) {
+            Boolean showFilter, String permission) {
         this.label = label;
         this.hideLabel = hideLabel;
         this.url = url;
         this.icon = icon;
         this.iconAlign = iconAlign;
         this.showFilter = showFilter;
+        this.permission = permission;
         this.items = new ArrayList<>();
     }
 
     public MenuItemDTO(String label, String url) {
-        this(label, false, url, null, null, null);
+        this(label, false, url, null, null, null, null);
     }
 
     public MenuItemDTO(String label) {
-        this(label, false, null, null, null, null);
+        this(label, false, null, null, null, null, null);
     }
 
     public String getLabel() {
