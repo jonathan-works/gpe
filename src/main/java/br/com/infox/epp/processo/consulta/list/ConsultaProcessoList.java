@@ -187,7 +187,7 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
             List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxoManager.find(idFluxo),
             		DefinicaoVariavelProcessoRecursos.PAINEL_INTERNO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
             for (DefinicaoVariavelProcesso definicao : definicoes) {
-                DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION, definicao.getNome()));
+                DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION, definicao.getValorPadrao()));
                 dynamicColumns.add(columnModel);
             }
         }
