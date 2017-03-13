@@ -5,7 +5,7 @@
     <parent>
         <groupId>br.com.infox.epp</groupId>
         <artifactId>bom</artifactId>
-        <version>3.0.5</version>
+        <version>3.0.6-SNAPSHOT</version>
         <relativePath>bom</relativePath>
     </parent>
 
@@ -488,13 +488,30 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.4.0</version>
+        <executions>
+            <execution>
+                <id>download-certificados</id>
+                <phase>prepare-package</phase>
+                <configuration>
+                    <classpathScope>test</classpathScope>
+                    <mainClass>br.com.infox.epp.assinador.CertificadosDownloaderMain</mainClass>
+                    <commandlineArgs>-o '${project.build.outputDirectory}/certificados'</commandlineArgs>
+                </configuration>
+                <goals>
+                    <goal>java</goal>
+                </goals>
+            </execution>
+            <execution>
+                <id>gerar-tag</id>
                 <configuration>
                     <executable>../gerar-tag.sh</executable>
-                    <arguments>
-                        <argument>${project.groupId}</argument>
-                        <argument>${project.artifactId}</argument>
-                    </arguments>
+                        <arguments>
+                            <argument>${project.groupId}</argument>
+                            <argument>${project.artifactId}</argument>
+                        </arguments>
                 </configuration>
+            </execution>
+        </executions>
             </plugin>
         </plugins>
     </build>
