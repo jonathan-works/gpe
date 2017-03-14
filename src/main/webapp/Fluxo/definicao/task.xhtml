@@ -112,7 +112,7 @@
                                     return false;
                             };
                         </h:outputScript>
-                        <rich:autocomplete value="#{var.name}"
+                        <rich:autocomplete value="#{var.name}" style="font-size:inherit;"
                             rendered="#{empty var.name and !empty t.previousVariables}" selectFirst="false"
                             autocompleteList="#{t.previousVariables}" mode="client" minChars="2"
                             clientFilterFunction="customFilter">
