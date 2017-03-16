@@ -46,11 +46,33 @@ public class UsuarioPerfil implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
+    @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_usuario_perfil")
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = "id_usuario_perfil", unique = true, nullable = false)
     private Integer idUsuarioPerfil;
+    
+    @NotNull
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "id_usuario_login", nullable = false)
     private UsuarioLogin usuarioLogin;
+    
+    @NotNull
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id_perfil_template", nullable=false)
     private PerfilTemplate perfilTemplate;
+    
+    @NotNull
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id_localizacao", nullable=false)
     private Localizacao localizacao;
+    
+    @NotNull
+    @Column(name="in_responsavel", nullable=false)
     private Boolean responsavelLocalizacao;
+    
+    @NotNull
+    @Column(name="in_ativo", nullable=false)
     private Boolean ativo = Boolean.TRUE;
     
     public UsuarioPerfil() {
@@ -67,10 +89,6 @@ public class UsuarioPerfil implements Serializable {
         setResponsavelLocalizacao(responsavelLocalizacao);
     }
     
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_usuario_perfil")
-    @Id
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_usuario_perfil", unique = true, nullable = false)
     public Integer getIdUsuarioPerfil() {
         return idUsuarioPerfil;
     }
@@ -79,9 +97,6 @@ public class UsuarioPerfil implements Serializable {
         this.idUsuarioPerfil = idUsuarioPerfil;
     }
     
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "id_usuario_login", nullable = false)
-    @NotNull
     public UsuarioLogin getUsuarioLogin() {
         return usuarioLogin;
     }
@@ -90,9 +105,6 @@ public class UsuarioPerfil implements Serializable {
         this.usuarioLogin = usuarioLogin;
     }
     
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="id_perfil_template", nullable=false)
-    @NotNull
     public PerfilTemplate getPerfilTemplate() {
         return perfilTemplate;
     }
@@ -101,9 +113,6 @@ public class UsuarioPerfil implements Serializable {
         this.perfilTemplate = perfilTemplate;
     }
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="id_localizacao", nullable=false)
-    @NotNull
     public Localizacao getLocalizacao() {
         return localizacao;
     }
@@ -112,8 +121,6 @@ public class UsuarioPerfil implements Serializable {
         this.localizacao = localizacao;
     }
 
-    @Column(name="in_responsavel", nullable=false)
-    @NotNull
     public Boolean getResponsavelLocalizacao() {
         return this.responsavelLocalizacao;
     }
@@ -122,8 +129,6 @@ public class UsuarioPerfil implements Serializable {
         this.responsavelLocalizacao = responsavelLocalizacao;
     }
     
-    @Column(name="in_ativo", nullable=false)
-    @NotNull
     public Boolean getAtivo() {
 		return ativo;
 	}

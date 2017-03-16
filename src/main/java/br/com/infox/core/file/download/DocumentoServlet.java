@@ -40,19 +40,17 @@ public class DocumentoServlet extends HttpServlet {
         DocumentoInfo downloadDocumentoInfo = extractFromRequest(req, DocumentoServletOperation.DOWNLOAD);
         DocumentoBin documento=null;
         DownloadResource downloadResource = null;
-        if (downloadDocumentoInfo == null) {
-            Object documentoDownload = req.getSession().getAttribute("documentoDownload");
-            if (documentoDownload == null){
-                writeNotFoundResponse(resp);
-                return;
-            }
-            if (documentoDownload instanceof Documento){
-                documento = ((Documento) documentoDownload).getDocumentoBin();
-            } else if (documentoDownload instanceof DocumentoBin){
-                documento = (DocumentoBin) documentoDownload;
-            } else if (documentoDownload instanceof DownloadResource){
-                downloadResource = (DownloadResource) documentoDownload;
-            }
+        Object documentoDownload = req.getSession().getAttribute("documentoDownload");
+        if (documentoDownload == null){
+            writeNotFoundResponse(resp);
+            return;
+        }
+        if (documentoDownload instanceof Documento){
+            documento = ((Documento) documentoDownload).getDocumentoBin();
+        } else if (documentoDownload instanceof DocumentoBin){
+            documento = (DocumentoBin) documentoDownload;
+        } else if (documentoDownload instanceof DownloadResource){
+            downloadResource = (DownloadResource) documentoDownload;
         }
         if (documento == null && downloadResource == null) {
             documento = firstNonNull(

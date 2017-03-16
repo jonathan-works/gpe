@@ -94,8 +94,9 @@ public class EntityManagerProducer {
 
 	private EntityManagerSerializable getOrCreateThreadLocalEntityManager() {
 	    EntityManagerSerializable entityManager = ENTITY_MANAGER_LOCAL.get();
-		if (entityManager == null) {
+		if (entityManager == null || !entityManager.isOpen()) {
             entityManager = new EntityManagerImpl(entityManagerFactory);
+            EntityManagerReaper.getInstance().register(entityManager, Thread.currentThread());
             ENTITY_MANAGER_LOCAL.set(entityManager);
         }
 		return entityManager;

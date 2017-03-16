@@ -179,12 +179,10 @@ public class NodeFitter extends Fitter implements Serializable {
     public String getNodeForm() {
         String type = "empty";
         if (currentNode != null) {
-            if (NodeType.Node.equals(currentNode.getNodeType())) {
-                if (currentNode instanceof ProcessState) {
-                    type = "processState";
-                } else if (currentNode instanceof InfoxMailNode) {
-                    type = "mail";
-                }
+            if (NodeType.ProcessState.equals(currentNode.getNodeType())) {
+                type = "processState";
+            } else if (NodeType.Node.equals(currentNode.getNodeType()) && (currentNode instanceof InfoxMailNode)) {
+                type = "mail";
             }
         }
         return type;
@@ -244,9 +242,6 @@ public class NodeFitter extends Fitter implements Serializable {
         String icon = node.getNodeType().toString();
         if (node instanceof InfoxMailNode) {
             icon = NodeTypeConstants.MAIL_NODE;
-        }
-        if (node instanceof ProcessState) {
-            icon = NodeTypeConstants.PROCESS_STATE;
         }
         return icon;
     }

@@ -18,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.system.annotation.Ignore;
 import br.com.infox.epp.webservice.log.query.LogWebserviceClientQuery;
 
 @Table(name = "tb_log_ws_client")
@@ -27,6 +28,7 @@ import br.com.infox.epp.webservice.log.query.LogWebserviceClientQuery;
 	@NamedQuery(name = LogWebserviceClientQuery.GET_INFORMACOES_ADICIONAIS_FROM_LOG, query = LogWebserviceClientQuery.GET_INFORMACOES_ADICIONAIS_FROM_LOG_QUERY),
 	@NamedQuery(name = LogWebserviceClientQuery.GET_RESPOSTA_FROM_LOG, query = LogWebserviceClientQuery.GET_RESPOSTA_FROM_LOG_QUERY)
 })
+@Ignore
 public class LogWebserviceClient implements Serializable {
 	private static final long serialVersionUID = 1L;
 

@@ -1,7 +1,13 @@
 package br.com.infox.epp.localizacao;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -26,6 +32,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.entity.UsuarioPerfil_;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -139,6 +146,54 @@ public class LocalizacaoSearch {
         cq.select(loc);
         cq.where(restrictions);
         return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    public List<Localizacao> getLocalizacaoSuggestTree(Localizacao localizacaoRaiz, String descricao) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Localizacao> cq = cb.createQuery(Localizacao.class);
+        Root<Localizacao> localizacao = cq.from(Localizacao.class);
+        cq.where(
+            cb.like(localizacao.get(Localizacao_.localizacao), cb.literal("%" + descricao + "%")),
+            cb.like(localizacao.get(Localizacao_.caminhoCompleto), cb.literal(localizacaoRaiz.getCaminhoCompleto() + "%")),
+            cb.isNull(localizacao.get(Localizacao_.estruturaPai))
+        );
+        List<Localizacao> resultList = getEntityManager().createQuery(cq).setHint(HibernateUtil.CACHE_HINT, true).getResultList();
+        Set<String> localizacoesPaiSet = new HashSet<>(); 
+        for (Localizacao localizacaoResult : resultList) {
+            String[] localizacoesPaiString = localizacaoResult.getCaminhoCompleto()
+                                                    .replace(localizacaoRaiz.getCaminhoCompleto(), "")
+                                                    .replace(localizacaoResult.getLocalizacao() + "|", "")
+                                                    .split(Pattern.quote("|"));
+            localizacoesPaiSet.addAll(Arrays.asList(localizacoesPaiString));
+        }
+        
+        if (!localizacoesPaiSet.isEmpty()) {
+            CriteriaQuery<Localizacao> cqPai = cb.createQuery(Localizacao.class);
+            Root<Localizacao> localizacaoPai = cqPai.from(Localizacao.class);
+            cqPai.where(
+                localizacaoPai.get(Localizacao_.localizacao).in(localizacoesPaiSet),
+                cb.isNull(localizacao.get(Localizacao_.estruturaPai))
+            );
+            List<Localizacao> localizacoesPai = getEntityManager().createQuery(cqPai).setHint(HibernateUtil.CACHE_HINT, true).getResultList();
+            for (Localizacao localizacaoPaiLocalizacao : localizacoesPai) {
+                if ( !resultList.contains(localizacaoPaiLocalizacao) ) {
+                    resultList.add(localizacaoPaiLocalizacao);
+                }
+            }
+        }
+        
+        if (!resultList.isEmpty()) {
+            if (!resultList.contains(localizacaoRaiz)) {
+                resultList.add(localizacaoRaiz);
+            }
+            Collections.sort(resultList, new Comparator<Localizacao>() {
+                @Override
+                public int compare(Localizacao o1, Localizacao o2) {
+                    return o1.getCaminhoCompleto().compareTo(o2.getCaminhoCompleto());
+                }
+            });
+        }
+        return resultList;
     }
     
 	private EntityManager getEntityManager() {

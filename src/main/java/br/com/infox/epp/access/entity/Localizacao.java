@@ -86,24 +86,58 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = ID_LOCALIZACAO, unique = true, nullable = false)
     private Integer idLocalizacao;
+    
+    @NotNull
+    @Column(name = "cd_localizacao", nullable=false, length=LengthConstants.DESCRICAO_ENTIDADE)
+    @Size(max=LengthConstants.DESCRICAO_ENTIDADE)
     private String codigo;
+    
+    @NotNull
+    @Column(name = DESCRICAO_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO_DOBRO)
+    @Size(min = LengthConstants.FLAG, max = DESCRICAO_PADRAO_DOBRO)
     private String localizacao;
+    
+    @NotNull
+    @Column(name = ATIVO, nullable = false)
     private Boolean ativo;
+    
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = LOCALIZACAO_PAI)
     private Localizacao localizacaoPai;
+    
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = ESTRUTURA_FILHO)
     private Estrutura estruturaFilho;
+    
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = ESTRUTURA_PAI)
     private Estrutura estruturaPai;
-
+    
+    @OneToMany(fetch = LAZY, mappedBy = LOCALIZACAO_ATTRIBUTE)
     private List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<>(0);
+    
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = LOCALIZACAO_PAI_ATTRIBUTE)
+    @OrderBy(LOCALIZACAO_ATTRIBUTE)
     private List<Localizacao> localizacaoList = new ArrayList<>(0);
 
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
     private List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocratica = new ArrayList<>(1);
 
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
     private List<UnidadeDecisoraColegiada> unidadeDecisoraColegiada = new ArrayList<>(1);
 
+    @Column(name = CAMINHO_COMPLETO)
     private String caminhoCompleto;
+    
+    @Column(name = TWITTER, nullable = false)
     private Boolean temContaTwitter;
 
+    @Transient
     private String caminhoCompletoFormatado;
 
     public Localizacao() {
@@ -125,10 +159,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.localizacaoPai = localizacaoPai;
     }
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO)
-    @Id
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = ID_LOCALIZACAO, unique = true, nullable = false)
     public Integer getIdLocalizacao() {
         return this.idLocalizacao;
     }
@@ -137,9 +167,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.idLocalizacao = idLocalizacao;
     }
 
-    @Column(name = "cd_localizacao", nullable=false, length=LengthConstants.DESCRICAO_ENTIDADE)
-    @Size(max=LengthConstants.DESCRICAO_ENTIDADE)
-    @NotNull
     public String getCodigo() {
         return codigo;
     }
@@ -148,9 +175,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.codigo = codigo;
     }
 
-    @Column(name = DESCRICAO_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO_DOBRO)
-    @Size(min = LengthConstants.FLAG, max = DESCRICAO_PADRAO_DOBRO)
-    @NotNull
     public String getLocalizacao() {
         return this.localizacao;
     }
@@ -159,8 +183,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.localizacao = localizacao;
     }
 
-    @Column(name = ATIVO, nullable = false)
-    @NotNull
     public Boolean getAtivo() {
         return this.ativo;
     }
@@ -169,8 +191,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.ativo = ativo;
     }
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = LOCALIZACAO_PAI)
     public Localizacao getLocalizacaoPai() {
         return this.localizacaoPai;
     }
@@ -179,8 +199,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.localizacaoPai = localizacaoPai;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = LOCALIZACAO_PAI_ATTRIBUTE)
-    @OrderBy(LOCALIZACAO_ATTRIBUTE)
     public List<Localizacao> getLocalizacaoList() {
         return this.localizacaoList;
     }
@@ -189,8 +207,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.localizacaoList = localizacaoList;
     }
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = ESTRUTURA_FILHO)
     public Estrutura getEstruturaFilho() {
         return estruturaFilho;
     }
@@ -200,8 +216,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.caminhoCompletoFormatado = null;
     }
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = ESTRUTURA_PAI)
     public Estrutura getEstruturaPai() {
         return estruturaPai;
     }
@@ -210,7 +224,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.estruturaPai = estruturaPai;
     }
 
-    @Column(name = TWITTER, nullable = false)
     public Boolean getTemContaTwitter() {
         return temContaTwitter;
     }
@@ -219,7 +232,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.temContaTwitter = temContaTwitter;
     }
 
-    @Column(name = CAMINHO_COMPLETO)
     public String getCaminhoCompleto() {
         return caminhoCompleto;
     }
@@ -239,12 +251,10 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.localizacaoTurnoList = localizacaoTurnoList;
     }
 
-    @OneToMany(fetch = LAZY, mappedBy = LOCALIZACAO_ATTRIBUTE)
     public List<LocalizacaoTurno> getLocalizacaoTurnoList() {
         return localizacaoTurnoList;
     }
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
     public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocratica() {
         return unidadeDecisoraMonocratica;
     }
@@ -253,7 +263,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.unidadeDecisoraMonocratica = unidadeDecisoraMonocratica;
     }
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
     public List<UnidadeDecisoraColegiada> getUnidadeDecisoraColegiada() {
         return unidadeDecisoraColegiada;
     }

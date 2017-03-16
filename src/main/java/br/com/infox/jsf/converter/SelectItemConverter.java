@@ -10,8 +10,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import br.com.infox.core.util.StringUtil;
-
 @FacesConverter("br.com.infox.jsf.converter.SelectItemConverter")
 public class SelectItemConverter implements Converter {
     
@@ -20,10 +18,11 @@ public class SelectItemConverter implements Converter {
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         carregarSelectItemList(component);
-        if ( StringUtil.isEmpty(value) ) {
+        try {
+            Integer valueOf = Integer.valueOf(value);
+            return selectItems.get(valueOf);
+        } catch ( NumberFormatException e) {
             return null;
-        } else {
-            return selectItems.get(Integer.valueOf(value));
         }
     }
 

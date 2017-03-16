@@ -2,8 +2,6 @@ package org.jbpm.job.executor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Date;
-import java.util.Random;
 
 import javax.transaction.TransactionManager;
 
@@ -17,8 +15,8 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.job.Job;
 import org.jbpm.persistence.db.DbPersistenceService;
 import org.jbpm.persistence.db.StaleObjectLogConfigurer;
+import org.joda.time.DateTime;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.server.ApplicationServerService;
 
@@ -26,7 +24,6 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
 
     private final JobExecutor jobExecutor;
     private volatile boolean active = true;
-    private Random random = new Random();
 
     public EppJobExecutorThread(String name, JobExecutor jobExecutor) {
         super(jobExecutor.getThreadGroup(), name);
@@ -40,73 +37,72 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
             // if an exception occurs, acquireJob() returns null
             if (job != null) {
                 try {
-                    executeJob(job);
-                } catch (Exception e) {
-                    // save exception stack trace
-                    // if another exception occurs, it is not rethrown
-                    saveJobException(job, e);
-                } catch (Error e) {
-                    // unlock job so it can be dispatched again
-                    // if another exception occurs, it is not rethrown
-                    unlockJob(job);
-                    throw e;
+                    executeJobAction(job);
+                } catch (Exception | Error e) {
+                    log.error("Erro ao executar job " + job.getId(),  e);
                 }
             }
-            EntityManagerProducer.getEntityManager().clear();
         }
         log.info(getName() + " leaves cyberspace");
     }
 
-    protected void executeJob(Job job) throws Exception {
+    private void executeJobAction(Job job) throws Exception, Error {
         Lifecycle.beginCall();
-        TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
-        if (transactionManager.getTransaction() == null) {
-            transactionManager.begin();
-        }
-        JbpmContext jbpmContext = JbpmContextProducer.getJbpmContext();
         try {
-            // reattach job to persistence context
-            JobSession jobSession = jbpmContext.getJobSession();
-            job = (Job) jbpmContext.getSession().merge(job);
-
-            // register process instance for automatic save
-            // https://jira.jboss.org/browse/JBPM-1015
-            ProcessInstance processInstance = job.getProcessInstance();
-            jbpmContext.addAutoSaveProcessInstance(processInstance);
-
-            // if job is exclusive, lock process instance
-            if (job.isExclusive()) {
-                jbpmContext.getGraphSession().lockProcessInstance(processInstance);
-            }
-
-            if (log.isDebugEnabled())
-                log.debug("executing " + job);
-            if (job.execute(jbpmContext))
-                jobSession.deleteJob(job);
-            transactionManager.commit();
+            executeJob(job);
         } catch (Exception e) {
-            jbpmContext.setRollbackOnly();
-            transactionManager.rollback();
+            // save exception stack trace
+            // if another exception occurs, it is not rethrown
+            saveJobException(job, e);
             throw e;
         } catch (Error e) {
-            jbpmContext.setRollbackOnly();
-            transactionManager.rollback();
+            // unlock job so it can be dispatched again
+            // if another exception occurs, it is not rethrown
+            unlockJob(job);
             throw e;
         } finally {
             Lifecycle.endCall();
         }
     }
 
-    private void saveJobException(Job job, Exception exception) {
+    protected void executeJob(Job job) throws Exception {
+        TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
+        transactionManager.begin();
+        JbpmContext jbpmContext = JbpmContextProducer.getJbpmContext();
+        try {
+            JobSession jobSession = jbpmContext.getJobSession();
+            
+            job = (Job) jbpmContext.getSession().merge(job);
+            job.setException(null);
+            // register process instance for automatic save
+            // https://jira.jboss.org/browse/JBPM-1015
+            ProcessInstance processInstance = job.getProcessInstance();
+            jbpmContext.addAutoSaveProcessInstance(processInstance);
+            
+            // if job is exclusive, lock process instance
+            if (job.isExclusive()) {
+                jbpmContext.getGraphSession().lockProcessInstance(processInstance);
+            } 
+            
+            if (log.isDebugEnabled()) log.debug("executing " + job);
+            if (job.execute(jbpmContext)) {
+                jobSession.deleteJob(job);
+            }
+            transactionManager.commit();
+        } catch (Exception  | Error e) {
+            transactionManager.rollback();
+            throw e;
+        }
+    }
+
+    private void saveJobException(Job job, Exception exception) throws Exception {
+        TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
+        transactionManager.begin();
+        JbpmContext jbpmContext = JbpmContextProducer.getJbpmContext();
         // if this is a locking exception, keep it quiet
         if (DbPersistenceService.isLockingException(exception)) {
-            StaleObjectLogConfigurer.getStaleObjectExceptionsLog().error(
-                    "failed to execute " + job, exception);
-        } else {
-            log.error("failed to execute " + job, exception);
+            StaleObjectLogConfigurer.getStaleObjectExceptionsLog().error("failed to execute " + job, exception);
         }
-
-        JbpmContext jbpmContext = jobExecutor.getJbpmConfiguration().createJbpmContext();
         try {
             // do not reattach existing job as it contains undesired updates
             jbpmContext.getSession().refresh(job);
@@ -119,21 +115,14 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
             // unlock job so it can be dispatched again
             job.setLockOwner(null);
             job.setLockTime(null);
-            int waitPeriod = jobExecutor.getRetryInterval() / 2;
-            waitPeriod += random.nextInt(waitPeriod == 0 ? 1 : waitPeriod);
-            job.setDueDate(new Date(System.currentTimeMillis() + waitPeriod));
+            job.setDueDate(DateTime.now().plusMinutes(1).toDate());
+            transactionManager.commit();
         } catch (RuntimeException e) {
-            jbpmContext.setRollbackOnly();
             log.warn("failed to save exception for " + job, e);
+            transactionManager.rollback();
         } catch (Error e) {
-            jbpmContext.setRollbackOnly();
+            transactionManager.rollback();
             throw e;
-        } finally {
-            try {
-                jbpmContext.close();
-            } catch (RuntimeException e) {
-                log.warn("failed to save exception for " + job, e);
-            }
         }
         // notify job executor
         synchronized (jobExecutor) {
@@ -142,8 +131,7 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
     }
 
     private void unlockJob(Job job) {
-        JbpmContext jbpmContext = jobExecutor.getJbpmConfiguration()
-                .createJbpmContext();
+        JbpmContext jbpmContext = jobExecutor.getJbpmConfiguration().createJbpmContext();
         try {
             // do not reattach existing job as it contains undesired updates
             jbpmContext.getSession().refresh(job);

@@ -70,9 +70,10 @@ public class ValidadorAssinaturaPadrao implements ValidadorAssinatura, Validador
                 if (!pessoaFisica.equals(pessoaFisicaCertificado)) {
                     throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
                 }
-            }
-            if (!pessoaFisicaCertificado.checkCertChain(certChainBase64Encoded)) {
-                throw new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
+                
+                if (pessoaFisicaCertificado == null || !pessoaFisicaCertificado.checkCertChain(certChainBase64Encoded)) {
+                	throw new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
+                }
             }
 		}
 		catch(CertificadoException e) {
