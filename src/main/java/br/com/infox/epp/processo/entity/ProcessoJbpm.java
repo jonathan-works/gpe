@@ -26,7 +26,7 @@ public class ProcessoJbpm implements Serializable {
     
     @Id
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_process_instance", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "id_process_instance", nullable = false, insertable = false, updatable = false, unique = true)
     private ProcessInstance processInstance;
 
     public Processo getProcesso() {
