@@ -86,6 +86,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.core.persistence.Recursive;
+import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.core.persistence.generator.CustomIdGenerator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -133,7 +135,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     @NamedQuery(name = LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, query = LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO_QUERY)
 })
 @Cacheable
-public class Processo implements Serializable {
+public class Processo implements Serializable, Recursive<Processo> {
 
     private static final long serialVersionUID = 1L;
 
@@ -216,6 +218,9 @@ public class Processo implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo")
     private List<ProcessoJbpm> processInstances = new ArrayList<>();
     
+    @Column(name = "ds_caminho_completo", nullable = false, unique = true)
+    private String caminhoCompleto;
+    
     @PrePersist
     private void prePersist() {
     	if (idProcesso == null) {
@@ -224,6 +229,7 @@ public class Processo implements Serializable {
     		setNumeroProcesso(getIdProcesso().toString());
     	}
     	preencherProcessoRoot();
+    	RecursiveManager.refactor(this);
     }
     
     @PreUpdate
@@ -408,6 +414,15 @@ public class Processo implements Serializable {
 		this.pastaList = pastaList;
 	}
 	
+	
+	public String getCaminhoCompleto() {
+        return caminhoCompleto;
+    }
+	
+	public void setCaminhoCompleto(String caminhoCompleto) {
+        this.caminhoCompleto = caminhoCompleto;
+    }
+	
     public boolean hasPartes(){
     	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
@@ -496,5 +511,51 @@ public class Processo implements Serializable {
 			return false;
 		return true;
 	}
+
+    @Override
+    @Transient
+    public Processo getParent() {
+        return getProcessoPai();
+    }
+
+    @Override
+    @Transient
+    public void setParent(Processo parent) {
+        setProcessoPai(parent);
+    }
+
+    @Override
+    @Transient
+    public String getHierarchicalPath() {
+        return getCaminhoCompleto();
+    }
+
+    @Override
+    public void setHierarchicalPath(String path) {
+        setCaminhoCompleto(path);
+    }
+
+    @Override
+    @Transient
+    public String getPathDescriptor() {
+        return getIdProcesso().toString();
+    }
+
+    @Override
+    @Transient
+    public void setPathDescriptor(String pathDescriptor) {
+        setIdProcesso(Integer.valueOf(pathDescriptor));
+    }
+
+    @Override
+    @Transient
+    public List<Processo> getChildList() {
+        return getFilhos();
+    }
+
+    @Override
+    public void setChildList(List<Processo> childList) {
+        setFilhos(new ArrayList<>(childList));
+    }
 
 }
