@@ -144,4 +144,13 @@ public class JsfUtil {
         return "partial/ajax".equals(externalContext.getRequestHeaderMap().get("faces-request"));
     }
     
+    public void setRequestValue(String key, Object value) {
+        context.getExternalContext().getRequestMap().put(key, value);
+    }
+    
+    public <T> T getRequestValue(String key, Class<T> clazz) {
+        Object object = context.getExternalContext().getRequestMap().get(key);
+        return clazz.cast(object);
+    }
+    
 }
