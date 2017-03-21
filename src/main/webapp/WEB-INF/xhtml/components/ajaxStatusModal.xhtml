@@ -15,8 +15,8 @@
             	<script>
 	            	function showMessageModalStatus(){
 	            		headerContent = document.querySelector('#modalStatus_header_content');
-	            		if(infox.messageModalStatus)
-	            			headerContent.textContent = infox.messageModalStatus;
+	            		if(window.infox &amp;&amp; window.infox.messageModalStatus)
+	            			headerContent.textContent = window.infox.messageModalStatus;
 	            		else
 	            			headerContent.textContent = "Por favor, aguarde...";
         	    	}
