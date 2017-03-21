@@ -13,6 +13,7 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -213,6 +214,8 @@ public class CertificateManager {
     public static List<URL> getResourceListing(Class<? extends Object> clazz,
             String path, String pattern) throws URISyntaxException, IOException {
         URL dirURL = clazz.getClassLoader().getResource(path);
+        if(dirURL == null)
+        	return Collections.emptyList();
         if (dirURL.getProtocol().equals("vfsfile")
                 || dirURL.getProtocol().equals("vfs")) {
             dirURL = new URL("file", dirURL.getHost(), dirURL.getFile());
