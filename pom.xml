@@ -505,6 +505,18 @@
                         </goals>
                     </execution>
                     <execution>
+                <id>download-certificados</id>
+                <phase>prepare-package</phase>
+                <configuration>
+                    <classpathScope>test</classpathScope>
+                    <mainClass>br.com.infox.epp.assinador.CertificadosDownloaderMain</mainClass>
+                    <commandlineArgs>-o '${project.build.outputDirectory}/certificados'</commandlineArgs>
+                </configuration>
+                <goals>
+                    <goal>java</goal>
+                </goals>
+            </execution>
+                    <execution>
                         <id>gerar-tag</id>
                         <configuration>
                             <executable>../gerar-tag.sh</executable>

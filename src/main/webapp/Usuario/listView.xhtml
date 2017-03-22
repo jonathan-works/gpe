@@ -461,18 +461,20 @@
         panelStyleClass="full-sized short-margin-top">
         <ui:define name="headerToolBar"></ui:define>
         <ui:define name="toolBar">
-          <h:form>
-            <p:commandLink
+          <ui:param
+            name="isModelo"
+            value="#{empty row.documentoBin.extensao}" />
+           <h:form>
+            <h:commandLink
               action="#{jsfUtil.applyLastPhaseFlashAction}"
               rendered="#{not row.documentoBin.binario}"
               onclick="infox.showLoading();"
               oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(row.documentoBin)}"
             >
-              <h:graphicImage
-                title="#{infoxMessages['processoDocumento.visualizar']}"
+               <h:graphicImage
+                 title="#{infoxMessages['processoDocumento.visualizar']}"
                 url="#{layoutController.getResourceUrlByPath('/imagens/download.gif')}" />
               <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
-            </p:commandLink>
           </h:form>
         </ui:define>
         <wi:columnDateTime
