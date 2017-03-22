@@ -15,14 +15,14 @@
             	<script>
 	            	function showMessageModalStatus(){
 	            		headerContent = document.querySelector('#modalStatus_header_content');
-	            		if(infox.messageModalStatus)
-	            			headerContent.textContent = infox.messageModalStatus;
+	            		if(window.infox &amp;&amp; window.infox.messageModalStatus)
+	            			headerContent.textContent = window.infox.messageModalStatus;
 	            		else
 	            			headerContent.textContent = "Por favor, aguarde...";
         	    	}
             	</script>
-        <rich:popupPanel id="modalStatus" width="200" height="55" header="Content" 
-            shadowOpacity="0" onshow="showMessageModalStatus();">
+        <rich:popupPanel id="modalStatus" width="200" height="55" header="Content"
+            shadowOpacity="0" onshow="showMessageModalStatus();" zindex="99999">
             <div>
             	<h:outputText id="messageModalStatusSpan" styleClass="messageModalStatus"/> 
                 <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/status/ajax-loader-retangular.gif')}" />

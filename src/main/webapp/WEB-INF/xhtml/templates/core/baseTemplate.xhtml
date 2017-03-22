@@ -21,13 +21,13 @@
 
 <h:body id="body" onbeforeunload="#{onbeforeunload}" onload="#{onload}"
   onunload="#{onunload}">
+  <ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
   <ui:insert name="baseBody" />
   <ui:include src="/WEB-INF/xhtml/components/fragments/font-icon-showcase.xhtml" />
   <s:div id="script">
   	<ui:insert name="scripts" />
   </s:div>
   <ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
-  <ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 </h:body>
 
 </html>

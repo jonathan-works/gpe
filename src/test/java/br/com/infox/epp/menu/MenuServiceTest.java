@@ -1,7 +1,6 @@
 package br.com.infox.epp.menu;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -16,28 +15,6 @@ import br.com.infox.seam.security.SecurityUtil;
 
 public class MenuServiceTest {
     
-    @Test
-    public void testLoadingSeamComponent() {
-        List<String> items = getMenuService().getItemsFromMainMenuComponentXml();
-        Assert.assertNotNull("Resulted in null array of items", items);
-        for (String string : items) {
-            Assert.assertNotNull("Null string", string);
-            Assert.assertFalse("Empty string", string.isEmpty());
-            Assert.assertTrue(string + " didn't match pattern", string.matches("(?:.+\\/)*[^/]+:[^:]+$"));
-        }
-    }
-    
-    @Test
-    public void testLoadingDefaultComponent() {
-        List<String> items = getMenuService().getItemsFromNavigationMenuXml();
-        Assert.assertNotNull("Resulted in null array of items", items);
-        for (String string : items) {
-            Assert.assertNotNull("Null string", string);
-            Assert.assertFalse("Empty string", string.isEmpty());
-            Assert.assertTrue(string + " didn't match pattern", string.matches("(?:.+\\/)*[^/]+:[^:]+$"));
-        }
-    }
-
     @Test
     public void testMenuItemConversion() {
         List<MenuItemDTO> menuItemList = getMenuService().getMenuItemList();
@@ -86,12 +63,7 @@ public class MenuServiceTest {
     }
 
     private PropertiesLoader createMockPropertiesLoader() {
-        return new PropertiesLoader() {
-            @Override
-            public List<String> getMenuItems() {
-                return new ArrayList<>();
-            }
-        };
+        return new PropertiesLoader();
     }
 
 }

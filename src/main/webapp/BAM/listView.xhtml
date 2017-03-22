@@ -9,9 +9,10 @@
   xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:p="http://primefaces.org/ui"
+  xmlns:i="http://java.sun.com/jsf/composite/infox"
   xmlns:a="http://richfaces.org/a4j"
-  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
->
+  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+  
   <ui:define name="title">#{infoxMessages['bam.pageTitle']}</ui:define>
   <ui:param
     name="home"
@@ -21,6 +22,10 @@
     name="showFormTab"
     value="#{not empty processoTarefaList.entity.processo}"
   />
+  <ui:param
+    name="titleFormTab"
+    value="#{infoxMessages['process.def.var.enum']}"
+  />
   <ui:define name="head">
   </ui:define>
   <ui:define name="searchGrid">
@@ -29,71 +34,74 @@
       bean="#{processoEpaNaoFinalizadoList}"
       tableTitle="#{infoxMessages['bam.tableTitle']}"
       id="processoEpaNaoFinalizadoList"
-      rowId="#{row.idProcessoTarefa}"
+      rowId="#{row.idProcesso}"
       toolBarColumnWidth="69px"
       hideOrder="true"
+      showGrid="#{not empty processoEpaNaoFinalizadoList.fluxo}"
     >
       <ui:define name="searchForm">
         <wi:searchForm
           formId="pesquisaFluxoForm"
           formTitle="#{infoxMessages['searchForm.title']}"
         >
-          <wi:selectOneMenuEntity
-            id="comboFluxo"
+          <i:selectOneMenu
+            id="comboFluxo" required="false" converterId="org.jboss.seam.ui.EntityConverter"
             value="#{processoEpaNaoFinalizadoList.fluxo}"
             label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
+            hideNoSelectionLabel="true"
             items="#{processoEpaNaoFinalizadoList.fluxoList}"
           />
-          <wi:selectOneMenuEnum
-            id="tipoDeprocesso"
+          <i:selectOneMenu
+            id="tipoDeprocesso" required="false" itemLabel="#{item.label}"
             label="#{infoxMessages['bam.tipoAtraso']}"
             items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
-            value="#{processoEpaNaoFinalizadoList.entity.processo.situacaoPrazo}"
+            value="#{processoEpaNaoFinalizadoList.situacaoPrazo}"
           />
         </wi:searchForm>
         <p:chart type="metergauge" model="#{processoEpaNaoFinalizadoList.meterMediaTempoGastoDesdeInicioProcesso}"
-             style="width:250px;height:200px" />
+             rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}" style="height:175px; width:250px;" />
       </ui:define>
       <ui:define name="headerToolBar" />
       <ui:define name="toolBar">
         <div class="tbar-div">
           <h:graphicImage
             value="#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}"
-            rendered="#{row.processo.situacaoPrazo ne 'SAT'}"
+            rendered="#{row.situacaoPrazo ne 'SAT'}"
           />
           <wi:toolBarEdit
-            action="#{processoTarefaList.entity.setProcesso(row.processo)}"
+            action="#{processoTarefaList.entity.setProcesso(row)}"
           />
         </div>
       </ui:define>
       <wi:columnOutputText
         columnId="numeroProcesso"
         columnHeader="#{infoxMessages['processo.menuText']}"
-        value="#{row.processo.numeroProcessoRoot}"
+        value="#{row.numeroProcessoRoot}"
         hideOrder="true"
       />
       <wi:columnOutputText
         columnId="fluxo"
         columnHeader="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
-        value="#{row.processo.naturezaCategoriaFluxo.fluxo}"
+        value="#{row.naturezaCategoriaFluxo.fluxo}"
         hideOrder="true"
       />
       <wi:columnDateTime
         columnId="dataInicio"
         columnHeader="#{infoxMessages['processo.dataInicio']}"
-        value="#{row.processo.dataInicio}"
+        value="#{row.dataInicio}"
       />
       <wi:columnOutputText
         columnId="naturezaCategoriaItem"
         columnHeader="#{infoxMessages['processoEpa.naturezaCategoriaItem']}"
-        value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processo)}"
+        value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row)}"
         hideOrder="true"
       />
       <wi:columnOutputText
         columnId="prioridadeProcesso"
         columnHeader="#{infoxMessages['bam.prioridade']}"
-        value="#{row.processo.prioridadeProcesso}"
+        value="#{row.prioridadeProcesso}"
       />
+      <ui:remove>
       <wi:columnDateTime
         columnId="dataChegadaTarefa"
         columnHeader="#{infoxMessages['processoEpa.dataChegadaTarefa']}"
@@ -124,26 +132,28 @@
         columnHeader="#{infoxMessages['processoEpa.tempoGastoTarefa']}"
         value="#{row.tempoGastoFormatado}"
       />
+      </ui:remove>
       <wi:columnOutputText
         columnId="tempoDesdeInicio"
         columnHeader="#{infoxMessages['processoEpa.tempoDesdeInicioDias']}"
-        value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processo)}"
+        value="#{row.tempoGasto}"
         hideOrder="true"
       />
     </wi:dataTable>
   </ui:define>
   <ui:define name="form">
-    <p:chart type="metergauge" styleClass="organized" model="#{processoTarefaList.meterTempoGastoDesdeInicioProcesso}" style="width:210px;height:200px" />
     <wi:dataTable
       values="#{processoTarefaList.list(15)}"
       bean="#{processoTarefaList}"
       tableTitle="Processo #{processoTarefaList.entity.processo.numeroProcessoRoot} - Tarefas"
       showToolbarColumn="false"
-      showSearchForm="false"
-      panelStyleClass="bam-table"
+      showSearchForm="#{not empty processoTarefaList.entity.processo}"
       showGrid="#{not empty processoTarefaList.entity.processo}"
       id="processoTarefaDataTable"
     >
+      <ui:define name="searchForm">
+        <p:chart type="metergauge" model="#{processoTarefaList.meterTempoGastoDesdeInicioProcesso}" style="height:175px; width:250px;" />
+      </ui:define>
       <ui:define name="toolBar"></ui:define>
       <ui:define name="headerToolBar"></ui:define>
           <wi:columnOutputText

@@ -5,10 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -16,6 +13,9 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
+import br.com.infox.core.util.XmlUtil;
+import br.com.infox.epp.menu.MenuImpl;
+import br.com.infox.epp.menu.api.Menu;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -34,11 +34,9 @@ public class PropertiesLoader {
     private static final LogProvider LOG = Logging.getLogProvider(PropertiesLoader.class);
 
     private static final String PAGE_PROPERTIES = "/custom_pages.properties";
-    private static final String MENU_PROPERTIES = "menu.properties";
+    private static final String MENU_PROPERTIES = "menu.properties.xml";
 
     private Properties pageProperties;
-    private Properties menuProperties;
-    private List<String> menuItems;
     private Map<String, String> messages;
 
     @PostConstruct
@@ -105,26 +103,19 @@ public class PropertiesLoader {
         return file.getParent(); // o WAR
     }
 
-    public List<String> getMenuItems() {
-        if (menuProperties == null) {
-            menuProperties = new Properties();
-            menuItems = new ArrayList<>();
-            try {
-                Enumeration<URL> menuUrls = getClass().getClassLoader().getResources(MENU_PROPERTIES);
-                while (menuUrls.hasMoreElements()) {
-                    InputStream is = menuUrls.nextElement().openStream();
-                    menuProperties.load(is);
-                    for (String key : menuProperties.stringPropertyNames()) {
-                        menuItems.add(menuProperties.getProperty(key));
-                    }
-                    menuProperties.clear();
-                    is.close();
-                }
-            } catch (IOException e) {
-                LOG.error("Falha ao recuperar arquivos especificados no Properties Loader.", e);
+    public Menu getMenu(){
+        Menu result = new MenuImpl();
+        try {
+            Enumeration<URL> menuUrls = getClass().getClassLoader().getResources(MENU_PROPERTIES);
+            while (menuUrls.hasMoreElements()) {
+                InputStream is = menuUrls.nextElement().openStream();
+                Menu menu = XmlUtil.loadFromXml(MenuImpl.class, is);
+                result.addAll(menu.getItems());
             }
+        } catch (IOException e) {
+            LOG.error("Falha ao recuperar arquivos especificados no Properties Loader.", e);
         }
-        return Collections.unmodifiableList(menuItems);
+        return result;
     }
 
     public Map<String, String> getMessages() {

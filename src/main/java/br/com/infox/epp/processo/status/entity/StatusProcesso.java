@@ -1,18 +1,28 @@
 package br.com.infox.epp.processo.status.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.processo.marcador.Marcador;
 
 @Entity
 @Table(name = StatusProcesso.TABLE_NAME)
@@ -38,7 +48,17 @@ public class StatusProcesso implements Serializable {
 	@Size(max = LengthConstants.NOME_PADRAO)
 	@Column(name = "ds_status_processo", nullable = false, length = LengthConstants.NOME_PADRAO)
 	private String descricao;
+	
+	@NotNull
+    @Column(name = "in_ativo", nullable = false)
+    private Boolean ativo;
 
+	@ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "tb_fluxo_status_processo", 
+            joinColumns=@JoinColumn(name="id_status_processo", referencedColumnName="id_status_processo"),
+            inverseJoinColumns=@JoinColumn(name="id_fluxo", referencedColumnName="id_fluxo"))
+	private Set<Fluxo> fluxos = new HashSet<>(1);
+	
 	public Integer getIdStatusProcesso() {
 		return idStatusProcesso;
 	}
@@ -92,6 +112,22 @@ public class StatusProcesso implements Serializable {
 		} else if (!getIdStatusProcesso().equals(other.getIdStatusProcesso()))
 			return false;
 		return true;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	public Set<Fluxo> getFluxos() {
+		return fluxos;
+	}
+
+	public void setFluxos(Set<Fluxo> fluxos) {
+		this.fluxos = fluxos;
 	}
 	
 }

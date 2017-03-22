@@ -1,9 +1,16 @@
 package br.com.infox.epp.menu;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+
+import br.com.infox.epp.menu.api.IconAlignment;
+import br.com.infox.epp.menu.api.Menu;
+import br.com.infox.epp.menu.api.MenuElement;
+import br.com.infox.epp.menu.api.MenuItem;
+import br.com.infox.epp.menu.api.Submenu;
 
 public class MenuItemDTO {
     private String label;
@@ -13,23 +20,55 @@ public class MenuItemDTO {
     private IconAlignment iconAlign;
     private Boolean showFilter;
     private List<MenuItemDTO> items;
+    private String permission;
 
+    public static List<MenuItemDTO> convert(Menu menu) {
+        List<MenuItemDTO> items = new ArrayList<>();
+        for (Iterator<? extends MenuElement> iterator = menu.getItems().iterator(); iterator.hasNext();) {
+            MenuElement menuElement = iterator.next();
+            if (menuElement instanceof MenuItem){
+                items.add(new MenuItemDTO((MenuItem)menuElement));
+            } else if (menuElement instanceof Submenu){
+                items.add(new MenuItemDTO((Submenu)menuElement));
+            }
+        }
+        return items;
+    }
+    
+    public MenuItemDTO(MenuItem item){
+        this(item.getLabel(), item.isHideLabel(), item.getUrl(), item.getIcon(), item.getIconAlignment(), false, item.getPermission());
+    }
+    
+    public MenuItemDTO(Submenu item){
+        this(item.getLabel(), item.isHideLabel(), null, item.getIcon(), item.getIconAlignment(), false, item.getPermission());
+        for (Iterator<? extends MenuElement> iterator = item.getItems().iterator(); iterator.hasNext();) {
+            MenuElement menuElement = iterator.next();
+            if (menuElement instanceof MenuItem){
+                items.add(new MenuItemDTO((MenuItem)menuElement));
+            } else if (menuElement instanceof Submenu){
+                items.add(new MenuItemDTO((Submenu)menuElement));
+            }
+        }
+    }
+    
     public MenuItemDTO(String label, boolean hideLabel, String url, String icon, IconAlignment iconAlign,
-            Boolean showFilter) {
+            Boolean showFilter, String permission) {
         this.label = label;
         this.hideLabel = hideLabel;
         this.url = url;
         this.icon = icon;
         this.iconAlign = iconAlign;
         this.showFilter = showFilter;
+        this.permission = permission;
+        this.items = new ArrayList<>();
     }
 
     public MenuItemDTO(String label, String url) {
-        this(label, false, url, null, null, null);
+        this(label, false, url, null, null, null, null);
     }
 
     public MenuItemDTO(String label) {
-        this(label, false, null, null, null, null);
+        this(label, false, null, null, null, null, null);
     }
 
     public String getLabel() {
@@ -100,6 +139,13 @@ public class MenuItemDTO {
         return auxiliarItem;
     }
 
+    public void setPermission(String permission) {
+        this.permission=permission;
+    }
+    public String getPermission() {
+        return permission;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -124,13 +170,4 @@ public class MenuItemDTO {
             return false;
         return true;
     }
-
-}
-
-enum IconAlignment {
-    RIGHT, LEFT;
-
-    public String toString() {
-        return name().toLowerCase();
-    };
 }

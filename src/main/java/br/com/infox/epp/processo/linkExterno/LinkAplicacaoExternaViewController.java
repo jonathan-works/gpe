@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.linkExterno;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -17,6 +18,7 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.jwt.JWT;
 import br.com.infox.jwt.claims.InfoxPrivateClaims;
 import br.com.infox.jwt.claims.JWTClaim;
@@ -88,6 +90,12 @@ public class LinkAplicacaoExternaViewController implements Serializable{
     
     public boolean isPodeCadastrar(){
         return security.checkPage(RECURSO_EDICAO);
+    }
+    
+    @ExceptionHandled
+    public void executar(LinkAplicacaoExterna link){
+    	String callbackScript = MessageFormat.format("infox.openPopUp(''{0}'',''{1}'')", link.getDescricao(), retrieveUrlWithToken(link));
+    	JsfUtil.instance().execute(callbackScript);
     }
     
     @ExceptionHandled

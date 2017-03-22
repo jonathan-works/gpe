@@ -26,13 +26,12 @@ import org.richfaces.model.UploadedFile;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.util.ArrayUtil;
+import br.com.infox.core.util.CollectionUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.DadosAssinatura;
-import br.com.infox.epp.assinador.DocumentoBinAssinavelService;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -168,7 +167,7 @@ public class AnexarDocumentosView implements Serializable {
 
     private List<Marcador> autoCompleteMarcadores(String query, List<Marcador> marcadoresSelectionados) {
         Marcador marcadorTemp = new Marcador(query.toUpperCase());
-        List<String> codigosMarcadores = ArrayUtil.convertToList(marcadoresSelectionados, MarcadorService.CONVERT_MARCADOR_CODIGO);
+        List<String> codigosMarcadores = CollectionUtil.convertToList(marcadoresSelectionados, MarcadorService.CONVERT_MARCADOR_CODIGO);
         List<Marcador> marcadores = marcadorSearch.listMarcadorByProcessoAndCodigo(getProcesso().getIdProcesso(), query, codigosMarcadores);
         if (!marcadores.contains(marcadorTemp) 
                 && (marcadoresSelectionados == null || !marcadoresSelectionados.contains(marcadorTemp))) {

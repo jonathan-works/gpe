@@ -466,15 +466,15 @@
             value="#{empty row.documentoBin.extensao}" />
            <h:form>
             <h:commandLink
-              action="#{documentoHtmlView.setViewInstanceBin(row.documentoBin)}"
-              onclick="openPopUp('PopUpDocumentoBin', '')"
-              rendered="#{isModelo}"
-              target="PopUpDocumentoBin">
-              <f:setPropertyActionListener value="#{row.documentoBin}" target="#{flash.documentoBin}" />
+              action="#{jsfUtil.applyLastPhaseFlashAction}"
+              rendered="#{not row.documentoBin.binario}"
+              onclick="infox.showLoading();"
+              oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(row.documentoBin)}">
                <h:graphicImage
                  title="#{infoxMessages['processoDocumento.visualizar']}"
                 url="#{layoutController.getResourceUrlByPath('/imagens/download.gif')}" />
-            </h:commandLink>
+              <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+              </h:commandLink>
           </h:form>
         </ui:define>
         <wi:columnDateTime

@@ -38,7 +38,7 @@ public class FluxoCrudAction implements Controller {
     
     private Fluxo replica;
     private String tab = TAB_SEARCH;
-    private boolean hasProcessoRunning = false;
+    protected boolean hasProcessoRunning = false;
     
     @ExceptionHandled(MethodType.INACTIVE)
     public void inactive(final Fluxo fluxo) {

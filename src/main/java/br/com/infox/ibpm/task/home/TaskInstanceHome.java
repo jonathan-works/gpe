@@ -69,7 +69,6 @@ import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
-import br.com.infox.epp.menu.MenuMovimentar;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -157,8 +156,6 @@ public class TaskInstanceHome implements Serializable {
 	@In
 	private ProcessoHandler processoHandler;
 	
-	@Inject
-	private MenuMovimentar menuMovimentar;
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
 	@Inject
@@ -281,11 +278,6 @@ public class TaskInstanceHome implements Serializable {
 		}
 	}
 
-	@Factory("menuMovimentar")
-	public MenuMovimentar getMenuMovimentar() {
-		return menuMovimentar;
-	}
-	
 	public Map<String, Object> getInstance() {
 		createInstance();
 		return mapaDeVariaveis;

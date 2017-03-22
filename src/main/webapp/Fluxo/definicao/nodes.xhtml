@@ -91,7 +91,7 @@
 					<wi:selectOneMenuEntity id="statusProcesso"
 						label="#{infoxMessages['process.status.nome']}"
 						value="#{nodeFitter.nodeHandler.statusProcesso}"
-						items="#{nodeFitter.statusProcessoList}" showLabelSelecione="true">
+									items="#{nodeFitter.getStatusProcessoList(processBuilder.definicaoProcesso.fluxo)}">
 						<a:ajax event="change" execute="@this" limitRender="true"
 							render="@this" />
 					</wi:selectOneMenuEntity>

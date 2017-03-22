@@ -191,6 +191,7 @@ public class Authenticator implements Serializable {
             passwordService.changePassword(usuario, newPassword1);
             usuarioLoginManager.update(usuario);
             getMessagesHandler().add(infoxMessages.get("login.error.senhaAlteradaSucesso"));
+            Identity.instance().unAuthenticate();
         } else {
             throw new LoginException(infoxMessages.get("login.error.novaSenhaNaoConfere"));
         }
@@ -275,7 +276,8 @@ public class Authenticator implements Serializable {
         if (usuario != null && !usuario.getAtivo()) {
             FacesMessages.instance().add(infoxMessages.get("login.error.inativo"));
         }
-        FacesMessages.instance().add(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
+        if(!isTrocarSenha())
+        	FacesMessages.instance().add(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
     }
 
     @Observer(Identity.EVENT_LOGGED_OUT)
@@ -571,16 +573,19 @@ public class Authenticator implements Serializable {
     }
     
     private String setColegiadaParaMonocraticaLogada(UnidadeDecisoraColegiada decisoraColegiada, boolean doRedirect) throws LoginException {
-        if (!getColegiadasParaMonocraticaLogada().contains(decisoraColegiada)) {
+        if (decisoraColegiada != null && !getColegiadasParaMonocraticaLogada().contains(decisoraColegiada)) {
             throw new LoginException("Unidade decisora colegiada não permitida: " + decisoraColegiada.getNome());
         }
-        Contexts.getSessionContext().set(COLEGIADA_DA_MONOCRATICA_LOGADA, decisoraColegiada);
+        if (decisoraColegiada == null){
+            Contexts.getSessionContext().remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
+        } else {
+            Contexts.getSessionContext().set(COLEGIADA_DA_MONOCRATICA_LOGADA, decisoraColegiada);
+        }
         if (doRedirect) {
             redirectToPainelDoUsuario();
         } else {
             return getCaminhoPainel();
         }
-        
         return null;
     }
     

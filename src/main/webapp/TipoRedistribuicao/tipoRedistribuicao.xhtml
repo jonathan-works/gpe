@@ -1,0 +1,45 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf" xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:i="http://java.sun.com/jsf/composite/infox">
+	<h:form id="tipoRedistribuicaoForm">
+		<rich:panel header="#{infoxMessages['form.title']}"
+			styleClass="dt-form-p" bodyClass="dt-form-p-b"
+			headerClass="dt-form-p-h">
+			<infox:div>
+				<i:inputText id="codigo"
+					label="#{infoxMessages['tipoRedistribuicao.codigo']}"
+					value="#{tipoRedistribuicaoView.codigo}"
+					required="true"
+				/>
+				<i:inputText id="descricao"
+					label="#{infoxMessages['tipoRedistribuicao.descricao']}"
+					value="#{tipoRedistribuicaoView.descricao}"
+					required="true"
+				/>
+				<wi:selectSituacaoRadio id="ativo"
+					value="#{tipoRedistribuicaoView.ativo}"
+					label="#{infoxMessages['field.situacao']}" />
+			</infox:div>
+		</rich:panel>
+
+		<infox:div id="buttons">
+			<a:commandButton styleClass="buttons" id="saveButton"
+				action="#{tipoRedistribuicaoView.save()}"
+				render="tipoRedistribuicaoList pageBody pageBodyDialogMessage"
+				value="#{tipoRedistribuicaoView.managed ? messages['crud.update'] : messages['crud.persist']}"
+				execute="@form" />
+
+			<a:commandButton styleClass="buttons" id="newInstanceButton"
+				rendered="#{tipoRedistribuicaoView.managed}"
+				action="#{tipoRedistribuicaoView.newInstance()}"
+				render="@form pageBodyDialogMessage"
+				value="#{infoxMessages['crud.new']}" execute="@this" />
+		</infox:div>
+	</h:form>
+</ui:composition>
