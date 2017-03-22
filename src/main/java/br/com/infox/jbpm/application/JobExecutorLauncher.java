@@ -31,7 +31,7 @@ import br.com.infox.log.Logging;
 @Startup(depends = "org.jboss.seam.bpm.jbpm")
 public class JobExecutorLauncher {
 
-    static final String NAME = "JobExecutorLauncher";
+    public static final String NAME = "JobExecutorLauncher";
     private static final LogProvider LOG = Logging.getLogProvider(JobExecutorLauncher.class);
 
     @Create
