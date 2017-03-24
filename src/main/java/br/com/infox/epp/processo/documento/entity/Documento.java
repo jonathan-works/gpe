@@ -439,7 +439,14 @@ public class Documento implements Serializable, Cloneable {
         boolean papelAssinouDocumento = isDocumentoAssinado(papel);
         boolean permiteAssinaturaMultipla = papelPermiteAssinaturaMultipla(papel);
         
-        return !pessoaAssinouDocumento && (permiteAssinaturaMultipla || !papelAssinouDocumento);
+        if (pessoaAssinouDocumento && papelAssinouDocumento)
+            return false;
+        
+        if (!pessoaAssinouDocumento && papelAssinouDocumento)
+            return permiteAssinaturaMultipla;
+        
+        
+        return true;
     }
     
     public boolean papelPermiteAssinaturaMultipla(Papel papel) {
