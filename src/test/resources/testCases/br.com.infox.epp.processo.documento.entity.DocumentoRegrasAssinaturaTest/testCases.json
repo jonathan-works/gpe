@@ -1,0 +1,380 @@
+[
+	{
+		"testCase": "Pessoa e papel já assinaram e permite assinaturas múltiplas",
+		"documento": {
+			"pasta":{
+				"processo":{
+					
+				}
+			},
+			"documentoBin": {
+				"assinaturas": [
+					{
+						"pessoaFisica": {
+							"cpf":"1"
+						},
+						"papel": {
+							"idPapel": 1
+						}
+					}
+				]
+			},
+			"classificacaoDocumento": {
+				"classificacaoDocumentoPapelList": [
+					{
+						"papel": {
+							"idPapel": 1
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": true
+					},
+					{
+						"papel": {
+							"idPapel": 2
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					}
+				]
+			}
+		},
+		"pessoaFisicaAssinando": {
+			"cpf":"1"
+		},
+		"papelAssinando": {
+			"idPapel": 1
+		},
+		"podeAssinar":false
+	},
+	{
+		"testCase": "Pessoa e papel já assinaram e não permite assinaturas múltiplas para papel",
+		"documento": {
+			"pasta":{
+				"processo":{}
+			},
+			"documentoBin": {
+				"assinaturas": [
+					{
+						"pessoaFisica": {
+							"cpf":"1"
+						},
+						"papel": {
+							"idPapel": 1
+						}
+					}
+				]
+			},
+			"classificacaoDocumento": {
+				"classificacaoDocumentoPapelList": [
+					{
+						"papel": {
+							"idPapel": 1
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					},
+					{
+						"papel": {
+							"idPapel": 2
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					}
+				]
+			}
+		},
+		"pessoaFisicaAssinando": {
+			"cpf":"1"
+		},
+		"papelAssinando": {
+			"idPapel": 1
+		},
+		"podeAssinar":false
+	},
+	{
+		"testCase": "Pessoa já assinou, papel não assinou e permite assinaturas múltiplas por papel",
+		"documento": {
+			"pasta":{
+				"processo":{}
+			},
+			"documentoBin": {
+				"assinaturas": [
+					{
+						"pessoaFisica": {
+							"cpf":"1"
+						},
+						"papel": {
+							"idPapel": 2
+						}
+					}
+				]
+			},
+			"classificacaoDocumento": {
+				"classificacaoDocumentoPapelList": [
+					{
+						"papel": {
+							"idPapel": 1
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": true
+					},
+					{
+						"papel": {
+							"idPapel": 2
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					}
+				]
+			}
+		},
+		"pessoaFisicaAssinando": {
+			"cpf":"1"
+		},
+		"papelAssinando": {
+			"idPapel": 1
+		},
+		"podeAssinar":true
+	},
+	{
+		"testCase": "Pessoa já assinou, papel não assinou e não permite assinaturas múltiplas por papel",
+		"documento": {
+			"pasta":{
+				"processo":{}
+			},
+			"documentoBin": {
+				"assinaturas": [
+					{
+						"pessoaFisica": {
+							"cpf":"1"
+						},
+						"papel": {
+							"idPapel": 2
+						}
+					}
+				]
+			},
+			"classificacaoDocumento": {
+				"classificacaoDocumentoPapelList": [
+					{
+						"papel": {
+							"idPapel": 1
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					},
+					{
+						"papel": {
+							"idPapel": 2
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					}
+				]
+			}
+		},
+		"pessoaFisicaAssinando": {
+			"cpf":"1"
+		},
+		"papelAssinando": {
+			"idPapel": 1
+		},
+		"podeAssinar":true
+	},
+	{
+		"testCase": "Pessoa não assinou, papel já assinou e permite assinaturas múltiplas",
+		"documento": {
+			"pasta":{
+				"processo":{}
+			},
+			"documentoBin": {
+				"assinaturas": [
+					{
+						"pessoaFisica": {
+							"cpf":"2"
+						},
+						"papel": {
+							"idPapel": 1
+						}
+					}
+				]
+			},
+			"classificacaoDocumento": {
+				"classificacaoDocumentoPapelList": [
+					{
+						"papel": {
+							"idPapel": 1
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": true
+					},
+					{
+						"papel": {
+							"idPapel": 2
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					}
+				]
+			}
+		},
+		"pessoaFisicaAssinando": {
+			"cpf":"1"
+		},
+		"papelAssinando": {
+			"idPapel": 1
+		},
+		"podeAssinar":true
+	},
+	{
+		"testCase": "Pessoa não assinou, papel já assinou e não permite assinaturas múltiplas",
+		"documento": {
+			"pasta":{
+				"processo":{}
+			},
+			"documentoBin": {
+				"assinaturas": [
+					{
+						"pessoaFisica": {
+							"cpf":"2"
+						},
+						"papel": {
+							"idPapel": 1
+						}
+					}
+				]
+			},
+			"classificacaoDocumento": {
+				"classificacaoDocumentoPapelList": [
+					{
+						"papel": {
+							"idPapel": 1
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					},
+					{
+						"papel": {
+							"idPapel": 2
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					}
+				]
+			}
+		},
+		"pessoaFisicaAssinando": {
+			"cpf":"1"
+		},
+		"papelAssinando": {
+			"idPapel": 1
+		},
+		"podeAssinar":false
+	},
+	{
+		"testCase": "Pessoa não assinou, papel não assinou e permite assinaturas múltiplas",
+		"documento": {
+			"pasta":{
+				"processo":{}
+			},
+			"documentoBin": {
+				"assinaturas": [
+					{
+						"pessoaFisica": {
+							"cpf":"2"
+						},
+						"papel": {
+							"idPapel": 2
+						}
+					}
+				]
+			},
+			"classificacaoDocumento": {
+				"classificacaoDocumentoPapelList": [
+					{
+						"papel": {
+							"idPapel": 1
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": true
+					},
+					{
+						"papel": {
+							"idPapel": 2
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					}
+				]
+			}
+		},
+		"pessoaFisicaAssinando": {
+			"cpf":"1"
+		},
+		"papelAssinando": {
+			"idPapel": 1
+		},
+		"podeAssinar":true
+	},
+	{
+		"testCase": "Pessoa não assinou, papel não assinou e não permite assinaturas múltiplas",
+		"documento": {
+			"pasta":{
+				"processo":{}
+			},
+			"documentoBin": {
+				"assinaturas": [
+					{
+						"pessoaFisica": {
+							"cpf":"2"
+						},
+						"papel": {
+							"idPapel": 2
+						}
+					}
+				]
+			},
+			"classificacaoDocumento": {
+				"classificacaoDocumentoPapelList": [
+					{
+						"papel": {
+							"idPapel": 1
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					},
+					{
+						"papel": {
+							"idPapel": 2
+						},
+						"tipoAssinatura": "O",
+						"podeRedigir": false,
+						"assinaturasMultiplas": false
+					}
+				]
+			}
+		},
+		"pessoaFisicaAssinando": {
+			"cpf":"1"
+		},
+		"papelAssinando": {
+			"idPapel": 1
+		},
+		"podeAssinar":true
+	}
+]
