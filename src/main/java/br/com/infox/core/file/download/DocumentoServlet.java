@@ -41,7 +41,7 @@ public class DocumentoServlet extends HttpServlet {
         DocumentoBin documento=null;
         DownloadResource downloadResource = null;
         Object documentoDownload = req.getSession().getAttribute("documentoDownload");
-        if (documentoDownload == null){
+        if (documentoDownload == null && downloadDocumentoInfo==null){
             writeNotFoundResponse(resp);
             return;
         }
