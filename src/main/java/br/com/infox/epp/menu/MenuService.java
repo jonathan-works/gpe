@@ -79,7 +79,6 @@ public class MenuService {
     }
     void transform(MenuItemDTO menuItemDTO){
         resolveLabel(menuItemDTO);
-        resolveURL(menuItemDTO);
         if (is(menuItemDTO.getItems()).notEmpty()){
             transform(menuItemDTO.getItems());
         }

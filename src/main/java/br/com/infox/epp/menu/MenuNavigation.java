@@ -12,7 +12,9 @@ import com.google.gson.Gson;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.security.SecurityUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @SessionScoped
@@ -49,7 +51,7 @@ public class MenuNavigation implements Serializable {
 
     public String getActionMenuJson() {
         //FIXME: SOLUÇÃO PALEATIVA. RESOLVER EM REFATORAÇÃO DO MENU
-        return new Gson().toJson(getActionMenu()).replaceAll("\\.xhtml", ".seam");
+        return new Gson().toJson(getActionMenu()).replaceAll("\"/([^\"]+)\\.xhtml\"", String.format("%s/$1.seam", ComponentUtil.<PathResolver>getComponent(PathResolver.NAME).getContextPath()));
     }
 
     @ExceptionHandled
