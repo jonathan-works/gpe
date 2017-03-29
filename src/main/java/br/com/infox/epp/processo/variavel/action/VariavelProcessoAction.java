@@ -44,13 +44,18 @@ public class VariavelProcessoAction implements Serializable {
 
     public List<VariavelProcesso> getVariaveis() {
         if (this.variaveis == null) {
-            this.variaveis = variavelProcessoService.getVariaveis(processo, 
+            this.variaveis = variavelProcessoService.getVariaveis(getProcesso(), 
             		DefinicaoVariavelProcessoRecursos.MOVIMENTAR.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
         }
         return this.variaveis;
     }
 
+    public Processo getProcesso() {
+        return processo;
+    }
+
     public void setProcesso(Processo processo) {
         this.processo = processo;
     }
+
 }

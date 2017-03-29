@@ -145,9 +145,13 @@ public class ComunicacaoAction implements Serializable {
 	    clear();
 	}
 	
-	public List<ModeloComunicacao> getComunicacoesDoProcesso() {
+	public Processo getProcesso() {
+        return processo;
+    }
+
+    public List<ModeloComunicacao> getComunicacoesDoProcesso() {
 		if (comunicacoes == null) {
-			comunicacoes = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(processo.getNumeroProcessoRoot());
+			comunicacoes = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(getProcesso().getNumeroProcessoRoot());
 		}
 		return comunicacoes;
 	}
@@ -168,7 +172,7 @@ public class ComunicacaoAction implements Serializable {
 	}
 
 	protected List<DestinatarioBean> initDestinatarios() {
-		List<DestinatarioBean> destinatarios = modeloComunicacaoManager.listDestinatarios(processo.getNumeroProcessoRoot());
+		List<DestinatarioBean> destinatarios = modeloComunicacaoManager.listDestinatarios(getProcesso().getNumeroProcessoRoot());
 		for (DestinatarioBean destinatario : destinatarios) {
 			dadosCiencia.put(destinatario.getIdDestinatario(), !destinatario.getDataConfirmacao().equals("-"));
 		}
