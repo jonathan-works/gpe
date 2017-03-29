@@ -13,11 +13,11 @@ import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import ComunicacaoInternaView.ComunicacaoInternaSearch;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.service.ComunicacaoInternaSearch;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoInternaService;
 import br.com.infox.epp.processo.entity.Processo;
 

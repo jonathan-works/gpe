@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jsoup.Jsoup;
+import org.jsoup.helper.W3CDom;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Entities.EscapeMode;
@@ -17,8 +18,6 @@ import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.github.neoflyingsaucer.defaultuseragent.DefaultUserAgent;
-import com.github.neoflyingsaucer.jsouptodom.DOMBuilder;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BadPdfFormatException;
 import com.lowagie.text.pdf.PdfCopy;
@@ -33,6 +32,7 @@ public class PdfManager {
     public static final String NAME = "pdfManager";
 	
 	public void convertHtmlToPdf(String html, OutputStream out) throws DocumentException {
+	    W3CDom w3cDom = new W3CDom();
 		Document doc = Jsoup.parse(html);
 		doc.outputSettings().escapeMode(EscapeMode.xhtml);
 		moveStylesToHead(doc);
@@ -40,9 +40,8 @@ public class PdfManager {
 		Element style = new Element(Tag.valueOf("style"), doc.baseUri());
 		style.text("img { -fs-fit-images-to-width: 100% }");
 		head.appendChild(style);
-		DefaultUserAgent userAgent = new DefaultUserAgent();
-		ITextRenderer renderer = new ITextRenderer(userAgent);
-		renderer.setDocument(DOMBuilder.jsoup2DOM(doc), doc.baseUri());
+		ITextRenderer renderer = new ITextRenderer();
+		renderer.setDocument(w3cDom.fromJsoup(doc), doc.baseUri());
 		renderer.layout();
 		renderer.createPDF(out);
 	}

@@ -1,4 +1,4 @@
-package ComunicacaoInternaView;
+package br.com.infox.epp.processo.comunicacao.service;
 
 import java.util.List;
 

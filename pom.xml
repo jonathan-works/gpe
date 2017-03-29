@@ -173,10 +173,10 @@
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.xhtmlrenderer</groupId>
-            <artifactId>flying-saucer-default-user-agent</artifactId>
-        </dependency>
+         <dependency>
+		    <groupId>org.xhtmlrenderer</groupId>
+		    <artifactId>flying-saucer-core</artifactId>
+		</dependency>
         <dependency>
             <groupId>com.sun.faces</groupId>
             <artifactId>jsf-impl</artifactId>
@@ -310,8 +310,14 @@
 			<groupId>br.com.infox.certificadoDigital</groupId>
 			<artifactId>certificado-digital</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
     </dependencies>
     <build>
+    	<sourceDirectory>target/generated-sources/.delombok</sourceDirectory><!-- for lombok -->
+    	<testSourceDirectory>target/generated-test-sources/.delombok</testSourceDirectory><!-- for lombok -->
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
@@ -364,6 +370,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${version.maven-compiler-plugin}</version>
                 <configuration>
+                	<compilerVersion>${version.maven-compiler-java}</compilerVersion>
                     <source>${version.maven-compiler-java}</source>
                     <target>${version.maven-compiler-java}</target>
                     <compilerArguments>
@@ -547,6 +554,35 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+			    <groupId>org.projectlombok</groupId>
+			    <artifactId>lombok-maven-plugin</artifactId>
+			    <version>${version.lombok-maven-plugin}</version>
+			    <executions>
+			    	<execution>
+			    		<id>delombok</id>
+			    		<phase>generate-sources</phase>
+		    			<goals>
+		    				<goal>delombok</goal>
+			    		</goals>
+			    		<configuration>
+			    			<addOutputDirectory>false</addOutputDirectory>
+			    			<sourceDirectory>src/main/java</sourceDirectory>
+			    		</configuration>
+			    	</execution>
+			    	<execution>
+			    		<id>test-delombok</id>
+			    		<phase>generate-test-sources</phase>
+		    			<goals>
+		    				<goal>testDelombok</goal>
+			    		</goals>
+			    		<configuration>
+			    			<addOutputDirectory>false</addOutputDirectory>
+			    			<sourceDirectory>src/test/java</sourceDirectory>
+			    		</configuration>
+			    	</execution>
+			    </executions>
             </plugin>
         </plugins>
     </build>
