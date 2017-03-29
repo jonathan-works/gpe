@@ -17,9 +17,15 @@
 			<system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>
 		</system-event-listener>
 	</application>
+	
 	<component>
 		<component-type>org.richfaces.DataTable</component-type>
 		<component-class>br.com.infox.jsf.workaround.UIDataTableWorkaround</component-class>
+	</component>
+	
+	<component>
+		<component-type>org.primefaces.component.AutoComplete</component-type>
+		<component-class>br.com.infox.jsf.component.AutoComplete</component-class>
 	</component>
 
 </faces-config>

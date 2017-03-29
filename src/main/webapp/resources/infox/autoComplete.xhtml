@@ -36,7 +36,7 @@
     <composite:attribute name="maxlength" />
     <composite:attribute name="inputStyle" />
     <composite:attribute name="inputStyleClass" />
-    <composite:attribute name="widgetVar" default="#{null}" />
+    <composite:attribute name="widgetVar" />
 
     <composite:attribute name="onselect" />
     <composite:attribute name="onblur" />
@@ -91,7 +91,7 @@
                     queryDelay="#{cc.attrs.queryDelay}" emptyMessage="#{cc.attrs.emptyMessage}"
                     forceSelection="#{cc.attrs.forceSelection}" dropdown="#{cc.attrs.dropdown}"
                     dropdownMode="#{cc.attrs.dropdownMode}" multiple="#{cc.attrs.multiple}" style="#{cc.attrs.style}"
-                    widgetVar="#{wi:get(cc.attrs.widgetVar, 'widget_'.concat(cc.getClientId(facesContext).replaceAll('-|'.concat( cc.namingContainer.getSeparatorChar(facesContext)), '_')))}" 
+                    widgetVar="#{cc.attrs.widgetVar}" 
                     cache="#{cc.attrs.cache}">
                     <c:if test="#{not empty cc.attrs.validator}">
                         <f:validator validatorId="#{cc.attrs.validator}" for="@this" />
