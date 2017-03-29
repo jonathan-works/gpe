@@ -13,6 +13,8 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -59,24 +61,17 @@ public class CertificateManager {
     private List<String> acceptedCaNameList;
     private StringBuilder acceptedCaNameSb;
     private List<X509Certificate> listCertificadosCA;
+    private Date lastUpdated=new Date(0);
 
     @Observer({ "org.jboss.seam.postInitialization",
         "org.jboss.seam.postReInitialization" })
     public synchronized void init() {
-        listCertificadosCA = new ArrayList<X509Certificate>();
-        acceptedCaNameList = new ArrayList<String>();
-        acceptedCaNameSb = new StringBuilder();
-        try {
-            populateListMap();
-        } catch (CertificateException e) {
-            LOG.error("CertificadosCaCheckManager.init()", e);
-            throw new RuntimeException("Erro ao iniciar " + NAME + ": "
-                    + e.getMessage(), e);
-        }
+        updateIfModified();
         LOG.info("Inicializado");
     }
 
     public List<X509Certificate> getListCertificadosCA() {
+        updateIfModified();
         return listCertificadosCA;
     }
 
@@ -103,12 +98,29 @@ public class CertificateManager {
                 FileUtil.close(is);
             }
         }
-        
+        Date lastModified=BeanManager.INSTANCE.getReference(CertificadosDownloader.class).getLastModified();
         for (Iterator<X509Certificate> iterator = BeanManager.INSTANCE.getReference(CertificadosDownloader.class).download().iterator(); iterator.hasNext();) {
             register(iterator.next());
         }
+        lastUpdated=lastModified;
     }
 
+
+    private void updateIfModified() {
+        if (!BeanManager.INSTANCE.getReference(CertificadosDownloader.class).isUpToDate(lastUpdated)){
+            listCertificadosCA = new ArrayList<X509Certificate>();
+            acceptedCaNameList = new ArrayList<String>();
+            acceptedCaNameSb = new StringBuilder();
+            try {
+                populateListMap();
+            } catch (CertificateException e) {
+                LOG.error("CertificadosCaCheckManager.init()", e);
+                throw new RuntimeException("Erro ao iniciar " + NAME + ": "
+                        + e.getMessage(), e);
+            }
+        }
+    }
+    
     private void register(X509Certificate x509Cert) {
         listCertificadosCA.add(x509Cert);
         String cnName = CertificadoECPF.getCNValue(x509Cert.getSubjectDN().getName());
@@ -123,6 +135,7 @@ public class CertificateManager {
     }
 
     public void verificaCertificado(X509Certificate[] certChain) throws CertificateException {
+        updateIfModified();
         X509Certificate certificate = certChain[0];
 
         // primeiro valida se cada elemento da cadeia está validado pelo proximo
@@ -165,10 +178,12 @@ public class CertificateManager {
     }
 
     public List<String> getAcceptedCaNameList() {
+        updateIfModified();
         return acceptedCaNameList;
     }
 
     public String getAcceptedCa() {
+        updateIfModified();
         return acceptedCaNameSb.toString();
     }
 
@@ -213,6 +228,9 @@ public class CertificateManager {
     public static List<URL> getResourceListing(Class<? extends Object> clazz,
             String path, String pattern) throws URISyntaxException, IOException {
         URL dirURL = clazz.getClassLoader().getResource(path);
+        if (dirURL == null)
+            return Collections.emptyList();
+        
         if (dirURL.getProtocol().equals("vfsfile")
                 || dirURL.getProtocol().equals("vfs")) {
             dirURL = new URL("file", dirURL.getHost(), dirURL.getFile());
