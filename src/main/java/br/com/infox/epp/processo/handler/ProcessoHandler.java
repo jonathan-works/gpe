@@ -114,11 +114,11 @@ public class ProcessoHandler implements Serializable {
     @SuppressWarnings(UNCHECKED)
     public List<TaskInstance> getTaskInstanceList() {
         if (taskInstanceList == null) {
-            Collection<TaskInstance> taskInstances = ProcessInstance.instance().getTaskMgmtInstance().getTaskInstances();
+            Collection<TaskInstance> taskInstances = getCurrentProcessInstance().getTaskMgmtInstance().getTaskInstances();
             taskInstanceList = new ArrayList<TaskInstance>(taskInstances);
 
             Session session = ManagedJbpmContext.instance().getSession();
-            List<org.jbpm.graph.exe.ProcessInstance> l = session.getNamedQuery("GraphSession.findSubProcessInstances").setParameter("processInstance", ProcessInstance.instance()).list();
+            List<org.jbpm.graph.exe.ProcessInstance> l = session.getNamedQuery("GraphSession.findSubProcessInstances").setParameter("processInstance", getCurrentProcessInstance()).list();
 
             for (org.jbpm.graph.exe.ProcessInstance p : l) {
                 Collection<TaskInstance> tis = p.getTaskMgmtInstance().getTaskInstances();
@@ -220,7 +220,7 @@ public class ProcessoHandler implements Serializable {
     }
 
     public boolean hasPartes() {
-        Long idJbpm = ProcessInstance.instance().getId();
+        Long idJbpm = getCurrentProcessInstance().getId();
         return processoManager.hasPartes(idJbpm);
     }
 
@@ -233,8 +233,7 @@ public class ProcessoHandler implements Serializable {
     }
 
     public Collection<MovimentacoesBean> getMovimentacoes(){
-    	org.jbpm.graph.exe.ProcessInstance processoJbpm = ProcessInstance.instance().getRoot();
-    	Processo processo = processoManager.getProcessoByIdJbpm(processoJbpm.getId());
+    	Processo processo = getProcesso();
     	
         List<TaskInstance> list = getTaskInstanceListMovimentacoes(processo);
         
@@ -258,6 +257,15 @@ public class ProcessoHandler implements Serializable {
                 beans.add(new MovimentacoesBean(processoTarefaManager.getByTaskInstance(taskInstance.getId()), usuarioTaskInstanceManager.find(taskInstance.getId()), taskInstance));
         }
         return beans;
+    }
+
+    public Processo getProcesso() {
+        org.jbpm.graph.exe.ProcessInstance processoJbpm = getCurrentProcessInstance().getRoot();
+    	return processoManager.getProcessoByIdJbpm(processoJbpm.getId());
+    }
+
+    public org.jbpm.graph.exe.ProcessInstance getCurrentProcessInstance() {
+        return ProcessInstance.instance();
     }
 
 }
