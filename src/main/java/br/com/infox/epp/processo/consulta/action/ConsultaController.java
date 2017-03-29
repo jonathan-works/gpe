@@ -20,7 +20,6 @@ import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.PapelManager;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
@@ -120,8 +119,8 @@ public class ConsultaController extends AbstractController {
 		this.processo = processo;
 	}
 
-	public List<Documento> getProcessoDocumentoList(Long idTask) {
-        List<Documento> list = sigiloDocumentoPermissaoManager.getDocumentosPermitidos(processo, Authenticator.getUsuarioLogado());
+    public List<Documento> getProcessoDocumentoList(Long idTask) {
+        List<Documento> list = sigiloDocumentoPermissaoManager.getDocumentosPermitidos(getProcesso(), Authenticator.getUsuarioLogado());
         list = filtrarPorTarefa(list, idTask);
         return filtrarAnexos(list);
     }
@@ -150,7 +149,7 @@ public class ConsultaController extends AbstractController {
     }
     
     public void checarVisibilidade() {
-        if (!sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processo)) {
+        if (!sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), getProcesso())) {
             FacesMessages.instance().add("Usuário sem permissão");
             Redirect.instance().setViewId("/error.seam");
             Redirect.instance().setConversationPropagationEnabled(false);
@@ -200,7 +199,7 @@ public class ConsultaController extends AbstractController {
     
 	public List<VariavelProcesso> getVariaveisDetalhe() {
 		if (variaveisDetalhe == null) {
-			variaveisDetalhe = variavelProcessoService.getVariaveis(processo, 
+			variaveisDetalhe = variavelProcessoService.getVariaveis(getProcesso(), 
 				DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
 		}
 		return variaveisDetalhe;
@@ -222,7 +221,7 @@ public class ConsultaController extends AbstractController {
 			String redirectUrl = path.substring(path.indexOf(contextPath) + contextPath.length()).replace(".seam", ".xhtml");
 			if (redirectUrl.equals("/Processo/Consulta/listView.xhtml")) {
 				Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-				flash.put("idFluxo", processo.getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
+				flash.put("idFluxo", getProcesso().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
 				flash.put("recurso", DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
 				
 				flash.put("filtros", getFiltros());
