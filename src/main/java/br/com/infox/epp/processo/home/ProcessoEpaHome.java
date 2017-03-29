@@ -111,7 +111,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
 	public void iniciarTarefaProcesso() {
 		try {
-			processoManager.iniciarTask(instance, getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
+			processoManager.iniciarTask(getInstance(), getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
 			documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 			carregarVariaveisDetalhe();
 		} catch (java.lang.NullPointerException e) {
@@ -130,7 +130,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	}
 	
 	private void carregarVariaveisDetalhe() {
-	    variaveisDetalhe = variavelProcessoService.getVariaveis(instance, 
+	    variaveisDetalhe = variavelProcessoService.getVariaveis(getInstance(), 
                 DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
 	}
 
@@ -139,7 +139,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     }
 	
 	public void visualizarTarefaProcesso() {
-		processoManager.visualizarTask(instance, getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
+		processoManager.visualizarTask(getInstance(), getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
 	}
 
 	public static ProcessoEpaHome instance() {
