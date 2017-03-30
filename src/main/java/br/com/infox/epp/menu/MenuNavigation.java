@@ -51,7 +51,7 @@ public class MenuNavigation implements Serializable {
 
     public String getActionMenuJson() {
         //FIXME: SOLUÇÃO PALEATIVA. RESOLVER EM REFATORAÇÃO DO MENU
-        return new Gson().toJson(getActionMenu()).replaceAll("\"/([^\"]+)\\.xhtml\"", String.format("%s/$1.seam", ComponentUtil.<PathResolver>getComponent(PathResolver.NAME).getContextPath()));
+        return new Gson().toJson(getActionMenu()).replaceAll("\"/([^\"]+)\\.xhtml\"", String.format("\"%s/$1.seam\"", ComponentUtil.<PathResolver>getComponent(PathResolver.NAME).getContextPath()));
     }
 
     @ExceptionHandled
