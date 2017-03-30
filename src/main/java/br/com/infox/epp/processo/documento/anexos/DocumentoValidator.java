@@ -53,7 +53,9 @@ public class DocumentoValidator implements Serializable{
         } catch (IllegalArgumentException e) {
             FacesMessages.instance().add("Código inválido");
             return;
-        }
+        }finally {
+        	uuid = null;
+		}
         if (pdBin == null) {
             FacesMessages.instance().add("Código inválido");
             return;
