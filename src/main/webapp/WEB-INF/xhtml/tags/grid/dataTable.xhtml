@@ -93,7 +93,8 @@
         visitNodeList(table.querySelectorAll('.rf-dt-thd .rf-dt-shdr-c'), visitHeaderCell);
         visitNodeList(table.querySelectorAll('.rf-dt-b .rf-dt-r .rf-dt-c'), visitBodyCell);
     }
-    visitTable(document.getElementById(tableId));
+    var table = document.getElementById(tableId);
+    if (table) visitTable(table);
 })("#{rich:clientId(id)}");
     </h:outputScript>
   </a:region>
