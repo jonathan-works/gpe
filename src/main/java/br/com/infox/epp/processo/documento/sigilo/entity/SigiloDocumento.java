@@ -23,7 +23,9 @@ import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQu
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.TABLE_NAME;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,6 +37,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -42,6 +45,9 @@ import javax.persistence.TemporalType;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = TABLE_NAME)
@@ -53,6 +59,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
     @NamedQuery(name = NAMED_QUERY_INATIVAR_SIGILOS, query = QUERY_INATIVAR_SIGILOS), 
     @NamedQuery(name = NAMED_QUERY_DOCUMENTOS_ATIVO_PESSOA, query = QUERY_DOCUMENTOS_ATIVO_PESSOA) 
 })
+@EqualsAndHashCode(of = "id")
 public class SigiloDocumento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,97 +68,35 @@ public class SigiloDocumento implements Serializable {
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_NAME)
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = COLUMN_ID)
+    @Getter @Setter
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = COLUMN_ID_DOCUMENTO, nullable = false)
+    @Getter @Setter
     private Documento documento;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = COLUMN_ID_USUARIO_LOGIN, nullable = false)
+    @Getter @Setter
     private UsuarioLogin usuario;
 
     @Column(name = COLUMN_MOTIVO, nullable = false, columnDefinition = "TEXT")
+    @Getter @Setter
     private String motivo;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = COLUMN_DATA_INCLUSAO, nullable = false)
+    @Getter @Setter
     private Date dataInclusao;
 
     @Column(name = COLUMN_ATIVO, nullable = false)
+    @Getter @Setter
     private Boolean ativo;
     
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Documento getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(Documento documento) {
-        this.documento = documento;
-    }
-
-    public UsuarioLogin getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioLogin usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getMotivo() {
-        return motivo;
-    }
-
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
-    }
-
-    public Date getDataInclusao() {
-        return dataInclusao;
-    }
-
-    public void setDataInclusao(Date dataInclusao) {
-        this.dataInclusao = dataInclusao;
-    }
-
-    public Boolean getAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sigiloDocumento")
+    @Getter @Setter
+    private List<SigiloDocumentoPermissao> sigiloDocumentoPermissao = new ArrayList<>();
     
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof SigiloDocumento))
-			return false;
-		SigiloDocumento other = (SigiloDocumento) obj;
-		if (getId() == null) {
-			if (other.getId() != null)
-				return false;
-		} else if (!getId().equals(other.getId()))
-			return false;
-		return true;
-	}
     
 }

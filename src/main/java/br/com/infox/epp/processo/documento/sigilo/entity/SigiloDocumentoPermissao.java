@@ -34,6 +34,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = TABLE_NAME)
@@ -42,7 +45,9 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
     @NamedQuery(name = NAMED_QUERY_INATIVAR_PERMISSOES, query = QUERY_INATIVAR_PERMISSOES),
     @NamedQuery(name = NAMED_QUERY_PERMISSOES_DO_SIGILO, query = QUERY_PERMISSOES_DO_SIGILO),
     @NamedQuery(name = NAMED_QUERY_USUARIO_POSSUI_PERMISSAO_DOCUMENTOS, query = QUERY_USUARIO_POSSUI_PERMISSAO_DOCUMENTOS),
-    @NamedQuery(name = NAMED_QUERY_DOCUMENTOS_PERMITIDOS, query = QUERY_DOCUMENTOS_PERMITIDOS) })
+    @NamedQuery(name = NAMED_QUERY_DOCUMENTOS_PERMITIDOS, query = QUERY_DOCUMENTOS_PERMITIDOS) 
+})
+@EqualsAndHashCode(of = "id")
 public class SigiloDocumentoPermissao implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,48 +56,21 @@ public class SigiloDocumentoPermissao implements Serializable {
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_NAME)
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = COLUMN_ID)
+    @Getter @Setter
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = COLUMN_ID_SIGILO_DOCUMENTO, nullable = false)
+    @Getter @Setter
     private SigiloDocumento sigiloDocumento;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = COLUMN_ID_USUARIO_LOGIN, nullable = false)
+    @Getter @Setter
     private UsuarioLogin usuario;
 
     @Column(name = COLUMN_ATIVO, nullable = false)
+    @Getter @Setter
     private Boolean ativo;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public SigiloDocumento getSigiloDocumento() {
-        return sigiloDocumento;
-    }
-
-    public void setSigiloDocumento(SigiloDocumento sigiloDocumento) {
-        this.sigiloDocumento = sigiloDocumento;
-    }
-
-    public UsuarioLogin getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioLogin usuario) {
-        this.usuario = usuario;
-    }
-
-    public Boolean getAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
 }

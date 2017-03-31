@@ -30,6 +30,9 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = HistoricoStatusDocumento.TABLE_NAME)
@@ -37,6 +40,7 @@ import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 		@NamedQuery(name = EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO, query = EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO_QUERY),
 		@NamedQuery(name = LIST_HISTORICO_BY_DOCUMENTO, query = LIST_HISTORICO_BY_DOCUMENTO_QUERY)
 })
+@EqualsAndHashCode(of = "id")
 public class HistoricoStatusDocumento implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
@@ -46,30 +50,36 @@ public class HistoricoStatusDocumento implements Serializable, Cloneable {
 	@SequenceGenerator(initialValue=1, allocationSize=1, name="HistoricoStatusDocumentoGen", sequenceName="sq_historico_status_documento")
 	@GeneratedValue(generator="HistoricoStatusDocumentoGen", strategy=GenerationType.SEQUENCE)
 	@Column(name="id_historico_status_documento", nullable=false, unique=true)
+	@Getter @Setter
 	private Long id;
 	
 	@NotNull
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_documento", nullable=false)
+	@Getter @Setter
 	private Documento documento;
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(name="tp_alteracao_documento", nullable=false)
+	@Getter @Setter
 	private TipoAlteracaoDocumento tipoAlteracaoDocumento;
 	
 	@NotNull
 	@Column(name="ds_motivo", nullable=false)
+	@Getter @Setter
 	private String motivo;
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="dt_alteracao", nullable=false)
+	@Getter @Setter
 	private Date dataAlteracao;
 	
 	@NotNull
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_usuario_alteracao", nullable=false)
+	@Getter @Setter
 	private UsuarioLogin usuarioAlteracao;
 	
 	@PrePersist
@@ -78,80 +88,6 @@ public class HistoricoStatusDocumento implements Serializable, Cloneable {
 		setDataAlteracao(new Date());
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Documento getDocumento() {
-		return documento;
-	}
-
-	public void setDocumento(Documento documento) {
-		this.documento = documento;
-	}
-
-	public Date getDataAlteracao() {
-		return dataAlteracao;
-	}
-
-	public void setDataAlteracao(Date dataAlteracao) {
-		this.dataAlteracao = dataAlteracao;
-	}
-
-	public TipoAlteracaoDocumento getTipoAlteracaoDocumento() {
-		return tipoAlteracaoDocumento;
-	}
-
-	public void setTipoAlteracaoDocumento(
-			TipoAlteracaoDocumento tipoAlteracaoDocumento) {
-		this.tipoAlteracaoDocumento = tipoAlteracaoDocumento;
-	}
-
-	public UsuarioLogin getUsuarioAlteracao() {
-		return usuarioAlteracao;
-	}
-
-	public void setUsuarioAlteracao(UsuarioLogin usuarioAlteracao) {
-		this.usuarioAlteracao = usuarioAlteracao;
-	}
-
-	public String getMotivo() {
-		return motivo;
-	}
-
-	public void setMotivo(String motivo) {
-		this.motivo = motivo;
-	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof HistoricoStatusDocumento))
-			return false;
-		HistoricoStatusDocumento other = (HistoricoStatusDocumento) obj;
-		if (getId() == null) {
-			if (other.getId() != null)
-				return false;
-		} else if (!getId().equals(other.getId()))
-			return false;
-		return true;
-	}
-	
 	public HistoricoStatusDocumento makeCopy() throws CloneNotSupportedException {
 		HistoricoStatusDocumento clone = (HistoricoStatusDocumento) clone();
 		clone.setId(null);

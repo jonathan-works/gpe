@@ -23,6 +23,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,8 +34,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -48,20 +47,25 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
-import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.core.manager.AbstractEntityListener;
+import br.com.infox.core.manager.EntityListener;
+import br.com.infox.core.manager.EntityListenerService;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import br.com.infox.epp.processo.documento.manager.DocumentoEntityListener;
+import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = Documento.TABLE_NAME)
@@ -75,7 +79,10 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
     @NamedQuery(name = DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO, query = DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO_QUERY)
 })
 @Indexed(index="IndexProcessoDocumento")
-public class Documento implements Serializable, Cloneable {
+@EqualsAndHashCode(of = "id")
+@ToString(of = "descricao")
+@EntityListeners(value = EntityListenerService.class)
+public class Documento implements Serializable, Cloneable, EntityListener<Documento> {
 
     private static final long serialVersionUID = 1L;
     public static final int TAMANHO_MAX_DESCRICAO_DOCUMENTO = 260;
@@ -85,260 +92,101 @@ public class Documento implements Serializable, Cloneable {
     @SequenceGenerator(allocationSize=1, initialValue=1, name = "DocumentoGenerator", sequenceName = "sq_documento")
     @GeneratedValue(generator = "DocumentoGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_documento", unique = true, nullable = false)
+    @Getter @Setter
     private Integer id;
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_classificacao_documento", nullable = false)
+    @Getter @Setter
     private ClassificacaoDocumento classificacaoDocumento;
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_documento_bin", nullable = false)
+    @Getter @Setter
     private DocumentoBin documentoBin;
     
     @NotNull
     @Size(max = TAMANHO_MAX_DESCRICAO_DOCUMENTO)
     @Column(name = "ds_documento", nullable = false, length = TAMANHO_MAX_DESCRICAO_DOCUMENTO)
+    @Getter @Setter
     private String descricao;
     
     @Column(name = "nr_documento", nullable = true)
+    @Getter @Setter
     private Integer numeroDocumento;
     
     @NotNull
     @Column(name = "in_documento_sigiloso", nullable = false)
+    @Getter @Setter
     private Boolean documentoSigiloso = Boolean.FALSE;
     
     @NotNull
     @Column(name = "in_anexo", nullable = false)
+    @Getter @Setter
     private Boolean anexo = Boolean.FALSE;
     
     @Column(name = "id_jbpm_task")
+    @Getter @Setter
     private Long idJbpmTask;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_perfil_template", nullable = true)
+    @Getter @Setter
     private PerfilTemplate perfilTemplate;
     
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_inclusao", nullable = false)
+    @Getter @Setter
     private Date dataInclusao;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario_inclusao")
+    @Getter @Setter
     private UsuarioLogin usuarioInclusao;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_alteracao", nullable = false)
+    @Getter @Setter
     private Date dataAlteracao;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario_alteracao")
+    @Getter @Setter
     private UsuarioLogin usuarioAlteracao;
     
     @NotNull
     @Column(name="in_excluido", nullable = false)
+    @Getter @Setter
     private Boolean excluido;
     
     @NotNull
     @ManyToOne
     @JoinColumn(name="id_pasta", nullable = false)
+    @Getter @Setter
     private Pasta pasta;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_localizacao")
+    @Getter @Setter
     private Localizacao localizacao;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento", cascade = CascadeType.REMOVE)
     @OrderBy(value="dataAlteracao DESC")
+    @Getter @Setter
     private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento")
     @OrderBy(value="dataPublicacao DESC")
+    @Getter @Setter
     private List<PublicacaoDocumento> publicacoes = new ArrayList<>();
     
-    @PrePersist
-    private void prePersist(){
-    	UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-		if (usuarioPerfil == null) {
-			UsuarioLogin usuario = getUsuarioSistema();
-			// Assumindo que o usuário do sistema só possui um perfil associado a ele, o perfil Sistema
-			// com papel sistema e localização raiz
-			usuarioPerfil = usuario.getUsuarioPerfilList().get(0);
-		}
-		
-    	if (getPerfilTemplate() == null){
-    		setPerfilTemplate(usuarioPerfil.getPerfilTemplate());
-    	}
-    	if (getLocalizacao() == null) {
-    		setLocalizacao(usuarioPerfil.getLocalizacao());
-    	}
-    	if (getDataInclusao() == null) {
-    		setDataInclusao(new Date());
-    	}
-    	if (getUsuarioInclusao() == null) {
-    		setUsuarioInclusao(getUsuarioLogadoOuSistema());
-    	}
-    	setExcluido(Boolean.FALSE);
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento")
+    @Getter @Setter
+    private List<SigiloDocumento> sigiloDocumento = new ArrayList<>();
     
-    @PreUpdate
-    private void preUpdate(){
-    	setDataAlteracao(new Date());
-    	setUsuarioAlteracao(getUsuarioLogadoOuSistema());
-    }
-    
-    private UsuarioLogin getUsuarioLogadoOuSistema() {
-    	UsuarioLogin usuario = Authenticator.getUsuarioLogado();
-    	if (usuario == null) {
-    		usuario = getUsuarioSistema();
-    	}
-    	return usuario;
-    }
-
-	private UsuarioLogin getUsuarioSistema() {
-		UsuarioLoginManager usuarioLoginManager = BeanManager.INSTANCE.getReference(UsuarioLoginManager.class);
-		return usuarioLoginManager.getUsuarioSistema();
-	}
-    
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public ClassificacaoDocumento getClassificacaoDocumento() {
-		return classificacaoDocumento;
-	}
-
-	public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
-		this.classificacaoDocumento = classificacaoDocumento;
-	}
-
-	public DocumentoBin getDocumentoBin() {
-		return documentoBin;
-	}
-
-	public void setDocumentoBin(DocumentoBin documentoBin) {
-		this.documentoBin = documentoBin;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-	public Integer getNumeroDocumento() {
-		return numeroDocumento;
-	}
-
-	public void setNumeroDocumento(Integer numeroDocumento) {
-		this.numeroDocumento = numeroDocumento;
-	}
-
-	public Boolean getDocumentoSigiloso() {
-		return documentoSigiloso;
-	}
-
-	public void setDocumentoSigiloso(Boolean documentoSigiloso) {
-		this.documentoSigiloso = documentoSigiloso;
-	}
-
-	public Boolean getAnexo() {
-		return anexo;
-	}
-
-	public void setAnexo(Boolean anexo) {
-		this.anexo = anexo;
-	}
-
-	public Long getIdJbpmTask() {
-		return idJbpmTask;
-	}
-
-	public void setIdJbpmTask(Long idJbpmTask) {
-		this.idJbpmTask = idJbpmTask;
-	}
-
-	public PerfilTemplate getPerfilTemplate() {
-		return perfilTemplate;
-	}
-
-	public void setPerfilTemplate(PerfilTemplate perfilTemplate) {
-		this.perfilTemplate = perfilTemplate;
-	}
-
-	public Date getDataInclusao() {
-		return dataInclusao;
-	}
-
-	public void setDataInclusao(Date dataInclusao) {
-		this.dataInclusao = dataInclusao;
-	}
-
-	public UsuarioLogin getUsuarioInclusao() {
-		return usuarioInclusao;
-	}
-
-	public void setUsuarioInclusao(UsuarioLogin usuarioInclusao) {
-		this.usuarioInclusao = usuarioInclusao;
-	}
-	
-	public Date getDataAlteracao() {
-		return dataAlteracao;
-	}
-
-	public void setDataAlteracao(Date dataAlteracao) {
-		this.dataAlteracao = dataAlteracao;
-	}
-
-	public UsuarioLogin getUsuarioAlteracao() {
-		return usuarioAlteracao;
-	}
-
-	public void setUsuarioAlteracao(UsuarioLogin usuarioAlteracao) {
-		this.usuarioAlteracao = usuarioAlteracao;
-	}
-
-	public Boolean getExcluido() {
-		return excluido;
-	}
-
-	public void setExcluido(Boolean excluido) {
-		this.excluido = excluido;
-	}
-
-	public List<HistoricoStatusDocumento> getHistoricoStatusDocumentoList() {
-		return historicoStatusDocumentoList;
-	}
-
-	public void setHistoricoStatusDocumentoList(
-			List<HistoricoStatusDocumento> historicoStatusDocumentoList) {
-		this.historicoStatusDocumentoList = historicoStatusDocumentoList;
-	}
-
-	public Pasta getPasta() {
-	    return pasta;
-	}
-	
-	public void setPasta(Pasta pasta) {
-	    this.pasta = pasta;
-	}
-	
-	public Localizacao getLocalizacao() {
-		return localizacao;
-	}
-	
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
-
     public boolean isDocumentoAssinavel(Papel papel){
 		if (getDocumentoBin() == null || getClassificacaoDocumento() == null) {
 			return false;
@@ -467,36 +315,6 @@ public class Documento implements Serializable, Cloneable {
     public String getNomeIndexavel() {
         return getDescricao();
     }
-    
-    @Override
-    public String toString() {
-        return descricao;
-    }
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof Documento))
-			return false;
-		Documento other = (Documento) obj;
-		if (getId() == null) {
-			if (other.getId() != null)
-				return false;
-		} else if (!getId().equals(other.getId()))
-			return false;
-		return true;
-	}
 	
 	public Documento makeCopy() throws CloneNotSupportedException {
 		Documento cDocumento = (Documento) clone();
@@ -519,14 +337,9 @@ public class Documento implements Serializable, Cloneable {
 		return cDocumento;
 	}
 
-	public List<PublicacaoDocumento> getPublicacoes() {
-		return publicacoes;
-	}
-
-	public void setPublicacoes(List<PublicacaoDocumento> publicacoes) {
-		this.publicacoes = publicacoes;
-	}
-
-	
+    @Override
+    public Class<? extends AbstractEntityListener<Documento>> getServiceClass() {
+        return DocumentoEntityListener.class;
+    }
 
 }

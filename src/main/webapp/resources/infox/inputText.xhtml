@@ -51,7 +51,7 @@
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
-        			<h:inputText id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
+        			<h:inputText id="Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
         				disabled="#{cc.attrs.disabled}" onblur="#{cc.attrs.onblur}" required="#{cc.attrs.required}"
         				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}" onkeyup="#{cc.attrs.onkeyup}"
         				readonly="#{cc.attrs.readonly}">
@@ -83,7 +83,7 @@
                 } else {
                     div.removeClass('property-error');
                 }
-                document.getElementById("#{cc.clientId}:#{cc.attrs.id}Input").placeholder="#{cc.attrs.placeholder}";
+                document.getElementById("#{cc.clientId}:Input").placeholder="#{cc.attrs.placeholder}";
             })();
         </script>
     </composite:implementation>

@@ -310,6 +310,6 @@ public class FileDownloader implements Serializable {
 
     public String getWindowOpenByIdDocumentoBin(Integer idDocumentoBin) {
         DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
-        return getWindowOpen(documentoBin);
+        return documentoBin == null ? "" : getWindowOpen(documentoBin);
     }
 }
