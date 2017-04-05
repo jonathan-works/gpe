@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich">
+
+    <script type="text/javascript">
+        function onshowMascaraAjuda() {
+            var value = $('.mascaraAjudaPopup');
+            var width = $(window).width() * 0.85;
+            var height = $(window).height() * 0.85;
+            var top = (($(window).height() - height) / 3);
+            var left = (($(window).width() - width) / 2);
+            value.css('width', width + 'px');
+            value.css('height', height + 'px');
+            value.css('top', top + 'px');
+            value.css('left', left + 'px');
+            $('.rf-pp-cnt-scrlr').css('width', '100%');
+            $('.rf-pp-cnt-scrlr').css('height', '100%');
+        }
+    </script>
+
+    <rich:popupPanel id="mascaraAjudaPopup"
+        modal="true" header="#{infoxMessages['process.mascaraHeper.titulo']}" resizeable="true"
+        styleClass="mascaraAjudaPopup" onshow="onshowMascaraAjuda();" >
+        <f:facet name="controls">
+            <h:graphicImage styleClass="mp-close"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+                onclick="#{rich:component('mascaraAjudaPopup')}.hide();" />
+        </f:facet>
+
+        <rich:panel styleClass="content-block" style="margin: 1.5em 0 0">
+            <div class="property-field-edit">
+                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.mascaraHeper.titulo']}" /> <br />
+                <h:outputText value="Utilize os seguintes elementos para criar máscaras: " /> <br />
+                <h:outputText value="a - Representa um caractere" /> <br />
+                <h:outputText value="9 - Representa um caractere numérico" /> <br />
+                <h:outputText value="* - Representa um caractere alfanumérico" /> <br /><br />
+                <h:outputText value="Exemplos: " /> <br />
+                <h:outputText value="Criar uma máscara para CPF: 999.999.999-99" /> <br />
+                <h:outputText value="Criar uma máscara para CEP: 99999-999" /> <br />
+                <h:outputText value="Para colocar o último caractere como opcional, use o '?'. Exemplo:" /> <br />
+                <h:outputText value="Criar uma máscara para telefone com 1 dígito opcional: (99) 9999-9999?9" /> <br />
+            </div>
+        </rich:panel>
+    </rich:popupPanel>
+</ui:composition>
