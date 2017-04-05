@@ -1,10 +1,13 @@
 package br.com.infox.core.util;
 
 import java.io.Closeable;
+import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -121,19 +124,17 @@ public final class FileUtil {
             if (file != null && matcher.matches(file)) {
                 fileMatches.add(file);
             } else if (file != null && file.toString().endsWith(".jar")) {
-            	try {
-            		Map<String, String> jarProperties = new HashMap<>();
-            		URI jarFile = URI.create("jar:file:" + file.toUri().getPath());
-            		jarProperties.put("create", "false");
-            		jarProperties.put("encoding", "UTF-8");
-            		ResourceFrameFinder finder = new ResourceFrameFinder(matcher);
-            		FileSystem jarFileS = FileSystems.newFileSystem(jarFile, jarProperties);
-            		Path rootPath = jarFileS.getPath("/fragmentos");
-            		Files.walkFileTree(rootPath, finder);
-            		fileMatches.addAll(finder.getPathsMatched());
-            	} catch (Exception e) {
-            		LOG.error(e);
-            	}
+				URI jarFile = URI.create("jar:file:" + file.toUri().getPath());
+				FileSystem jarFileS;
+				try {
+					jarFileS = getFileSystemFromJar(jarFile);
+					ResourceFrameFinder finder = new ResourceFrameFinder(matcher);
+					Path rootPath = jarFileS.getPath("/fragmentos");
+					Files.walkFileTree(rootPath, finder);
+					fileMatches.addAll(finder.getPathsMatched());
+				} catch (IOException e) {
+					LOG.info(e);
+				}
             }
             if (!fileMatches.isEmpty() && findFirst) {
                 return FileVisitResult.TERMINATE;
@@ -141,6 +142,19 @@ public final class FileUtil {
             return FileVisitResult.CONTINUE;
         }
 
+        private FileSystem getFileSystemFromJar(URI jarFile) throws IOException{
+        	Map<String, String> jarProperties = new HashMap<>();
+        	jarProperties.put("create", "false");
+        	jarProperties.put("encoding", "UTF-8");
+        	FileSystem jarFileS;
+        	try {
+        		jarFileS = FileSystems.getFileSystem(jarFile);
+        	} catch (FileSystemNotFoundException e) {
+        		jarFileS = FileSystems.newFileSystem(jarFile, jarProperties);
+        	}
+        	return jarFileS;
+        }
     }
+    
 
 }
