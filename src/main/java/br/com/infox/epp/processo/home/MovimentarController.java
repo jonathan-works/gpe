@@ -25,11 +25,11 @@ public class MovimentarController implements Serializable{
 	
 	
 	public boolean isTipoProcessoAnaliseDocumento() {
-		return processoService.isTipoProcessoDocumento(processo);
+		return processoService.isTipoProcessoDocumento(getProcesso());
 	}
 	
 	public boolean isTipoProcessoComunicacao() {
-		return processoService.isTipoProcessoComunicacao(processo);
+		return processoService.isTipoProcessoComunicacao(getProcesso());
 	}
 	
 	public ProcessoService getProcessoService() {
