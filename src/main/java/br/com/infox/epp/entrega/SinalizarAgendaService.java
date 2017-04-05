@@ -24,7 +24,7 @@ public class SinalizarAgendaService {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void sinalizarAgendaVencida(ModeloEntrega modeloEntrega) {
-    	modeloEntregaDao.lock(modeloEntrega, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
+        modeloEntrega = modeloEntregaDao.lock(modeloEntrega, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
     	FimPrazoModeloEntregaEvent modeloEntregaEvent = new FimPrazoModeloEntregaEvent();
     	modeloEntrega.setSinalDisparado(Boolean.TRUE);
     	modeloEntregaEvent.setModeloEntrega(modeloEntregaDao.update(modeloEntrega));

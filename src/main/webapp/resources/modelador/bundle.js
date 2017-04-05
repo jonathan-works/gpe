@@ -25682,7 +25682,8 @@ InfoxBpmnModeler.prototype.initRenderer = function () {
             'labelEditingProvider': ['type', InfoxLabelEditingProvider],
             'infoxModeler': ['value', this]
         }],
-        moddleExtensions: { camunda: camundaModdle }
+        moddleExtensions: { camunda: camundaModdle },
+        keyboard: { bindTo: document }
     });
 
     this._bpmnModdle.fromXML(bpmn, function (err, result, parseContext) {
