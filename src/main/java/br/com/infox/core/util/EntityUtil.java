@@ -221,6 +221,8 @@ public final class EntityUtil implements Serializable {
     }
 
     public static Object cloneObject(Object origem, boolean copyLists) throws InstantiationException, IllegalAccessException {
+        if (origem == null)
+            return null;
         Class<?> cl = getEntityClass(origem);
         Object destino = cl.newInstance();
         PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(cl);
