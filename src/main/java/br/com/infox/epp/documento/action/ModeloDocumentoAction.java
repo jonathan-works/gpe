@@ -4,6 +4,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
+import org.jbpm.context.exe.ContextInstance;
+import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
@@ -68,12 +70,14 @@ public class ModeloDocumentoAction extends ActionTemplate {
             }
             s.append(i);
         }
-        Object valor = JbpmUtil.getProcessVariable(variavelModelo);
+        ContextInstance contextInstance = ExecutionContext.currentExecutionContext().getProcessInstance().getContextInstance();
+        Object valor = contextInstance.getVariable(variavelModelo);
         if (valor == null) {
-            JbpmUtil.createProcessVariable(variavelModelo, s.toString());
+            //JbpmUtil.createProcessVariable(variavelModelo, s.toString());
+            contextInstance.createVariable(variavelModelo, s.toString());
         } else {
-            JbpmUtil.setProcessVariable(variavelModelo, valor + ","
-                    + s.toString());
+            //JbpmUtil.setProcessVariable(variavelModelo, valor + "," + s.toString());
+            contextInstance.setVariable(variavelModelo, valor + "," + s.toString());
         }
     }
 
