@@ -41,4 +41,24 @@
   <h:outputScript name="react.js" library="js/components" />
   <h:outputScript name="react-dom.js" library="js/components" />
   <h:outputScript name="react-components.js" library="js/components" />
+  
+  <h:outputScript>
+    //<![CDATA[
+    
+    jQuery(document).ready(function(){
+        var dialogResizePostShowMixin={
+            postShow: function(){
+                this.___ancestor.postShow.apply(this,[]);
+                this.initSize();
+                this.initPosition();
+            }
+        };
+        
+        PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend(Object.assign({___ancestor:PrimeFaces.widget.Dialog.prototype}, dialogResizePostShowMixin));
+        PrimeFaces.widget.DynamicDialog = PrimeFaces.widget.DynamicDialog.extend(Object.assign({___ancestor:PrimeFaces.widget.DynamicDialog.prototype}, dialogResizePostShowMixin));
+        PrimeFaces.widget.ConfirmDialog = PrimeFaces.widget.ConfirmDialog.extend(Object.assign({___ancestor:PrimeFaces.widget.ConfirmDialog.prototype}, dialogResizePostShowMixin));
+    });
+    
+    //]]>
+  </h:outputScript>
 </ui:composition>
