@@ -25672,7 +25672,6 @@ InfoxBpmnModeler.prototype.initRenderer = function () {
     var self = this;
     this._bpmnModdle = new BpmnModdle({ camunda: camundaModdle });
     this._renderer = new BpmnModeler({
-        container: container,
         additionalModules: [brazilianPortugueseTranslation, {
             'paletteProvider': ['type', InfoxPaletteProvider],
             'replaceMenuProvider': ['type', InfoxReplaceMenuProvider],
@@ -25690,6 +25689,10 @@ InfoxBpmnModeler.prototype.initRenderer = function () {
         self._originalBpmn = result;
     });
     this._renderer.importXML(bpmn);
+
+    if (container) {
+        this._renderer.attachTo(container);
+    }
 };
 
 InfoxBpmnModeler.prototype.getRenderer = function () {
