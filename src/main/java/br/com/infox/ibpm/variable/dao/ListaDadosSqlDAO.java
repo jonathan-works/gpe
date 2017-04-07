@@ -2,11 +2,19 @@ package br.com.infox.ibpm.variable.dao;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.model.SelectItem;
 import javax.sql.DataSource;
@@ -34,6 +42,7 @@ public class ListaDadosSqlDAO implements Serializable {
 	public static final String NAME = "listaDadosSqlDAO";
 	
 	private final LogProvider logger = Logging.getLogProvider(ListaDadosSqlDAO.class);
+	private static final Pattern reEL = Pattern.compile("#\\{[^}]*\\}");
     
     private DataSource dataSource;
     
@@ -45,31 +54,50 @@ public class ListaDadosSqlDAO implements Serializable {
     }
     
 	public List<SelectItem> getListSelectItem(String nativeQuery) {
-    	return getListSelectItem(nativeQuery, null);
+		return getListSelectItem(nativeQuery, (TaskInstance)null);
     }
 	
 	public List<SelectItem> getListSelectItem(String nativeQuery, TaskInstance taskInstance) {
+		Map<String, Object> parametersMap = getParametersMap(nativeQuery, taskInstance);
+		return getListSelectItem(nativeQuery, parametersMap);
+	}
+	
+	public List<SelectItem> getListSelectItem(String nativeQuery, Map<String, Object> parametersMap) {
 		List<SelectItem> lista = new ArrayList<>();
+		
     	try (Connection connection = getDataSource().getConnection()) {
-			Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
-			nativeQuery = addParameters(nativeQuery, taskInstance);
-			ResultSet resultSet = statement.executeQuery(nativeQuery);
-			int numColumns = resultSet.getMetaData().getColumnCount();
-			while (resultSet.next()) {
-				if (numColumns == 1){
-					lista.add(new SelectItem(resultSet.getString(1)));
-				} else {
-					lista.add(new SelectItem(resultSet.getString(2), resultSet.getString(1)));
-				}
-			}
-			resultSet.close();
-			statement.close();
+    		try(PreparedStatement statement = getPreparedStatement(connection, nativeQuery, parametersMap)) {
+    			try(ResultSet resultSet = statement.executeQuery()) {
+    				int numColumns = resultSet.getMetaData().getColumnCount();
+    				while (resultSet.next()) {
+    					if (numColumns == 1){
+    						lista.add(new SelectItem(resultSet.getString(1)));
+    					} else {
+    						lista.add(new SelectItem(resultSet.getString(2), resultSet.getString(1)));
+    					}
+    				}
+    			}
+    		}
 		} catch (SQLException e) {
 			logger.error("DominioVariavelTarefaDAO:getListSelectItem - Erro ao executar a query " + nativeQuery, e);
         }
-    	return lista;
+    	return lista;		
 	}
-	private String addParameters(String nativeQuery, TaskInstance taskInstance){
+	
+	public Collection<String> getParameters(String nativeQuery) {
+		Matcher matcher = reEL.matcher(nativeQuery);
+
+		Collection<String> retorno = new LinkedHashSet<>();
+		
+		while(matcher.find()) {
+			String el = matcher.group();
+			retorno.add(el);
+		}
+		
+		return retorno;		
+	}
+	
+	private Map<String, Object> getParametersMap(String nativeQuery, TaskInstance taskInstance) {
 		ExpressionResolver expressionResolver;
 		if (taskInstance != null) {
 			Integer idProcesso = (Integer) taskInstance.getContextInstance().getVariable("processo");
@@ -77,23 +105,41 @@ public class ListaDadosSqlDAO implements Serializable {
 		} else {
 			expressionResolver = new SeamExpressionResolver();
 		}
-		StringBuilder sb = new StringBuilder(nativeQuery);
-		int start = 0, end = 0;
-		while ((start = sb.indexOf("#", start)) != -1){
-			end = sb.indexOf("}", start);
-			String expression = sb.substring(start, end + 1);
-			Expression resolvedExpression = expressionResolver.resolve(new Expression(expression));
-			Object value = resolvedExpression.getOriginalValue();
-			if (value == null) {
-				value = "";
-			}
-			if (value instanceof String) {
-				sb.replace(start, end + 1, "'".concat(value.toString()).concat("'"));
-			} else {
-				sb.replace(start, end + 1, value.toString());
-			}
-		}
-		return sb.toString();
-	}
 
+		Collection<String> parameters = getParameters(nativeQuery);
+		
+		Map<String, Object> retorno = new HashMap<>();
+		
+		for(String parameter : parameters) {
+			Expression resolvedExpression = expressionResolver.resolve(new Expression(parameter));
+			Object value = resolvedExpression.getOriginalValue();
+			retorno.put(parameter, value);
+		}
+		
+		return retorno;
+	}
+	
+	private PreparedStatement getPreparedStatement(Connection connection, String nativeQuery, Map<String, Object> parameters) throws SQLException {
+		Matcher matcher = reEL.matcher(nativeQuery);
+		String queryStatement = matcher.replaceAll("\\?");
+		
+		
+		PreparedStatement statement = connection.prepareStatement(queryStatement);
+		matcher = reEL.matcher(nativeQuery);
+
+		int idx = 1;
+
+		while(matcher.find()) {
+			String parameter = matcher.group();
+			Object value = parameters.get(parameter);
+			
+			if(value instanceof Date) {
+				value = new java.sql.Timestamp(((Date)value).getTime());				
+			}
+			
+			statement.setObject(idx++, value);
+		}
+
+		return statement;
+	}
 }

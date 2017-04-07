@@ -33,6 +33,8 @@
     	<composite:attribute name="onstart" />
     	<composite:attribute name="oncomplete" />
     	
+        <composite:clientBehavior name="change" event="change" targets="#{cc.attrs.id}Input" />
+        
     	<composite:facet name="label"/>
     </composite:interface>
 	
