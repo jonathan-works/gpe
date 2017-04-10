@@ -33,6 +33,7 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.distribuicao.DistribuicaoRelatoriaService;
+import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.documento.publicacao.LocalPublicacao;
 import br.com.infox.epp.documento.publicacao.LocalPublicacaoSearch;
@@ -62,7 +63,9 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoService;
+import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
+import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.redistribuicao.RedistribuicaoService;
 import br.com.infox.epp.redistribuicao.TipoRedistribuicao;
 import br.com.infox.epp.redistribuicao.TipoRedistribuicaoSearch;
@@ -144,6 +147,15 @@ public class BpmExpressionService {
     protected UnidadeDecisoraColegiadaManager unidadeDecisoraColegiadaManager;
     @Inject
     protected PessoaFisicaDAO pessoaFisicaDAO;
+    @Inject
+    protected VariavelProcessoService  variavelProcessoService;
+    
+    @External(tooltip = "Retorna a prioridade do processo atual", expressionType = ExpressionType.GERAL)
+    public String getPrioridadeProcessoAtual(){
+    	Processo processoAtual = getProcessoAtual();
+    	PrioridadeProcesso prioridadeProcesso = variavelProcessoService.getPrioridadeProcesso(processoAtual);
+    	return prioridadeProcesso != null ? prioridadeProcesso.getDescricaoPrioridade() : "";
+    }
     
     @External(tooltip = "Redistribui o processo de acordo os dados informados", expressionType = ExpressionType.GERAL,
         value = {
