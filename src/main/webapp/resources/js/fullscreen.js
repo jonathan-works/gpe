@@ -13,7 +13,7 @@
 		},
 		webkit: {
 			fullscreenEnabled: "webkitFullscreenEnabled",
-			fullscreenElement: "webkitFullscreenEnabled",
+			fullscreenElement: "webkitFullscreenElement",
 			onfullscreenchange: "onwebkitfullscreenchange",
 			onfullscreenerror: "onwebkitfullscreenerror",
 			exitFullscreen: "webkitExitFullscreen",
