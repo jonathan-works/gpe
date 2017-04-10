@@ -104,7 +104,7 @@ public class DocumentoTemporario implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
-    
+
     @PrePersist
     private void prePersist() {
         setDataInclusao(new Date());

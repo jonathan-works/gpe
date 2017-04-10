@@ -14,7 +14,6 @@ import javax.inject.Named;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
-import org.joda.time.DateTimeConstants;
 
 @Named
 @RequestScoped

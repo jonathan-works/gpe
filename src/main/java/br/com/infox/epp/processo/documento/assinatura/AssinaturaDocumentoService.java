@@ -113,11 +113,8 @@ public class AssinaturaDocumentoService {
         if (!EntityManagerProducer.getEntityManager().contains(documento.getClassificacaoDocumento())){
             documento.setClassificacaoDocumento(EntityManagerProducer.getEntityManager().find(ClassificacaoDocumento.class, documento.getClassificacaoDocumento().getId()));
         }
+        Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas = createMapAssinaturas();
         List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
-        Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas = new HashMap<>();
-        for (TipoAssinaturaEnum tipoAssinatura : TipoAssinaturaEnum.values()) {
-            mapAssinaturas.put(tipoAssinatura, new ArrayList<Boolean>());
-        }
         for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
             TipoAssinaturaEnum tipoAssinatura = tipoProcessoDocumentoPapel.getTipoAssinatura();
             Papel papel = tipoProcessoDocumentoPapel.getPapel();
@@ -126,13 +123,43 @@ public class AssinaturaDocumentoService {
         }
         return isDocumentoTotalmenteAssinado(mapAssinaturas);
     }
-    
-    public boolean isDocumentoTotalmenteAssinado(DocumentoBin documentoBin, ClassificacaoDocumento classificacaoDocumento) {
-        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = classificacaoDocumento.getClassificacaoDocumentoPapelList();
+
+    public List<Papel> getPapeisAssinaturasNecessariasSuficiencia(ClassificacaoDocumento classificacao, DocumentoBin bin, Papel papel) {
+        List<Papel> papeis = new ArrayList<>();
+        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = classificacaoDocumentoPapelManager.getByClassificacaoDocumento(classificacao);
+
+        for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
+            TipoAssinaturaEnum tipoAssinatura = tipoProcessoDocumentoPapel.getTipoAssinatura();
+            if ((tipoAssinatura.equals(TipoAssinaturaEnum.O) || tipoAssinatura.equals(TipoAssinaturaEnum.S)) &&
+                    !tipoProcessoDocumentoPapel.getPapel().equals(papel) && !isDocumentoAssinado(bin, tipoProcessoDocumentoPapel.getPapel())) {
+                papeis.add(tipoProcessoDocumentoPapel.getPapel());
+            }
+        }
+        return papeis;
+    }
+
+    public boolean canAssinaturaPapelTornarDocumentoSuficiente(ClassificacaoDocumento classificacao, DocumentoBin bin, Papel papel) {
+        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = classificacaoDocumentoPapelManager
+                .getByClassificacaoDocumento(classificacao);
+        Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas = createMapAssinaturas();
+        for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
+            List<Boolean> assinaturas = mapAssinaturas.get(tipoProcessoDocumentoPapel.getTipoAssinatura());
+                assinaturas.add(tipoProcessoDocumentoPapel.getPapel().equals(papel) || isDocumentoAssinado(bin, tipoProcessoDocumentoPapel.getPapel()));
+        }
+        return isDocumentoTotalmenteAssinado(mapAssinaturas);
+    }
+
+    private Map<TipoAssinaturaEnum, List<Boolean>> createMapAssinaturas() {
         Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas = new HashMap<>();
         for (TipoAssinaturaEnum tipoAssinatura : TipoAssinaturaEnum.values()) {
             mapAssinaturas.put(tipoAssinatura, new ArrayList<Boolean>());
         }
+        return mapAssinaturas;
+    }
+
+    public boolean isDocumentoTotalmenteAssinado(DocumentoBin documentoBin, ClassificacaoDocumento classificacaoDocumento) {
+        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = classificacaoDocumento.getClassificacaoDocumentoPapelList();
+        Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas = createMapAssinaturas();
         for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
             TipoAssinaturaEnum tipoAssinatura = tipoProcessoDocumentoPapel.getTipoAssinatura();
             Papel papel = tipoProcessoDocumentoPapel.getPapel();
