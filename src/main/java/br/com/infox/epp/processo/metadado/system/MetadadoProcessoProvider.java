@@ -32,7 +32,7 @@ public class MetadadoProcessoProvider {
 			if (field.getType().equals(MetadadoProcessoDefinition.class)) {
 				try {
 					MetadadoProcessoDefinition definition = (MetadadoProcessoDefinition) field.get(this);
-					if (definition.getLabel() != null) {
+					if (definition.getMetadadoType() != null) {
 						metadados.put(definition.getMetadadoType(), definition);
 					}
 				} catch (IllegalArgumentException | IllegalAccessException e) {

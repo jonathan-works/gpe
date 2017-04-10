@@ -149,18 +149,21 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     public void visualizarTask(Processo processo, Long idTaskInstance, UsuarioPerfil usuarioPerfil) {
         final BusinessProcess bp = BusinessProcess.instance();
-        if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            bp.setProcessId(processo.getIdJbpm());
-            bp.setTaskId(idTaskInstance);
+        TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        if (taskInstance == null || bp.getProcessId() == null || taskInstance.getProcessInstance().getId() != bp.getProcessId()) {
+        	bp.setTaskId(idTaskInstance);
+        	taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+            bp.setProcessId(taskInstance.getProcessInstance().getId());
         }
     }
 
     private void iniciaTask(Processo processo, Long taskInstanceId) {
-        BusinessProcess bp = BusinessProcess.instance();
-        bp.setProcessId(processo.getIdJbpm());
-        bp.setTaskId(taskInstanceId);
-        if (bp.getProcessId() != null && bp.getTaskId() != null && bp.getProcessId().equals(processo.getIdJbpm())) {
+        if (taskInstanceId != null) {
+        	BusinessProcess bp = BusinessProcess.instance();
+        	bp.setTaskId(taskInstanceId);
         	TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        	bp.setProcessId(taskInstance.getProcessInstance().getId());
+        	
         	ManagedJbpmContext.instance().getSession().buildLockRequest(LockOptions.READ).setLockMode(LockMode.PESSIMISTIC_FORCE_INCREMENT).lock(taskInstance);
         	String currentActorId = Actor.instance().getId();
 			if (taskInstance.getStart() == null) {
