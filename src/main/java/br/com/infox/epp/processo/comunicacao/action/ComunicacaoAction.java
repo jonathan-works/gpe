@@ -198,7 +198,7 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public Long getJbpmProcessId() {
-		return JbpmUtil.getProcesso().getIdJbpm();
+		return getProcesso().getIdJbpm();
 	}
 	
 	public List<Documento> getDocumentosDestinatario() {
