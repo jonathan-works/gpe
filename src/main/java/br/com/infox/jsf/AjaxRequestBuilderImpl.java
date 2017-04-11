@@ -99,7 +99,14 @@ class AjaxRequestBuilderImpl implements AjaxRequestPreBuilder, AjaxRequestBuilde
 				sb.append(",");
 			JSFunctionBuilder jsFunctionBuilder = AjaxRequestBuilderFactory.jsFunction();
 			jsFunctionBuilder.arg("event");
-			jsFunctionBuilder.statement(oncomplete);
+			StringBuilder sbStatement = new StringBuilder();
+			sbStatement.append("if (event.type === 'event') {");
+			sbStatement.append("switch(event.status) {");
+			sbStatement.append("case 'success': ");
+			sbStatement.append(oncomplete);
+			sbStatement.append("break;");
+			sbStatement.append("}}");
+			jsFunctionBuilder.statement(sbStatement.toString());
 			sb.append("\"onevent\":").append(jsFunctionBuilder.build());
 		}
 
