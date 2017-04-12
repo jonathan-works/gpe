@@ -452,11 +452,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
                 <executions>
                     <execution>
-                        <id>copy</id>
-                        <phase>prepare-package</phase>
+                        <id>copy-assinador</id>
+                        <phase>${epp.generatedArtifacts.generationPhase}</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
@@ -564,6 +563,7 @@
         <log.hibernate.sql>ERROR</log.hibernate.sql>
         <project.stage>Production</project.stage>
         <desenvolvimento>false</desenvolvimento>
+        <epp.generatedArtifacts.generationPhase>prepare-package</epp.generatedArtifacts.generationPhase>
     </properties>
     <profiles>
         <profile>
@@ -577,6 +577,7 @@
                 <producao>false</producao>
                 <log.jbpm>INFO</log.jbpm>
                 <log.hibernate.sql>INFO</log.hibernate.sql>
+                <epp.generatedArtifacts.generationPhase>compile</epp.generatedArtifacts.generationPhase>
             </properties>
         </profile>
         <profile>
