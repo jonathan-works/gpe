@@ -49,7 +49,9 @@
         var dialogResizePostShowMixin={
             postShow: function(){
                 this.___ancestor.postShow.apply(this,[]);
-                this.initSize();
+                this.jq.height(Math.min(this.jq.height(), innerHeight));
+                this.jq.width(Math.min(this.jq.width(), innerWidth));
+                this.content.innerHeight(this.jq.height()-this.titlebar.innerHeight()-this.footer.innerHeight())
                 this.initPosition();
             }
         };
