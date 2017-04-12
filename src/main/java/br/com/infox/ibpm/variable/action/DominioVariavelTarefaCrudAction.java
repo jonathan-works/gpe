@@ -223,7 +223,7 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
         		List<SelectItem> items = listaDadosSqlDAO.getListSelectItem(dominio, mapaParametros);
         		selectItems.addAll(items);
         	}
-        	catch(SQLException e) {
+        	catch(Exception e) {
         		mensagemErro = "Erro ao executar SQL: " + e.getMessage();
         		selectItems = null;
         		return;
@@ -253,5 +253,9 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
 
 	public String getMensagemErro() {
 		return mensagemErro;
+	}
+	
+	public void tipoAlterado(DefinicaoParametro parametro) {
+		parametro.setValor(null);
 	}
 }

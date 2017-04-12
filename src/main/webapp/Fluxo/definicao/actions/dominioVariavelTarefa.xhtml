@@ -97,32 +97,33 @@
                                 execute="@this"
                                 render="tabelaParametros pageBodyDialogMessage @this" />
                         </i:inputTextarea>
-                        <div>
+                        <p:outputPanel id="panelPreview">
                             <fieldset style="display:inline-block">
-                                <legend>Preview</legend>
+                                <legend>Pré-visualizar</legend>
                                 <h:dataTable id="tabelaParametros" value="#{dominioVariavelTarefaCrudAction.parametros.entrySet().toArray()}" var="item">
                                     <h:column>
                                         <i:outputText label="Parâmetro" value="#{item.key}"/>
                                         <i:selectOneMenu id="tipoParametro"  items="#{dominioVariavelTarefaCrudAction.tiposParametros}"
                                             label="Tipo"
-                                            value="#{dominioVariavelTarefaCrudAction.parametros[item.key].tipo}">
+                                            value="#{item.value.tipo}">
                                             <a:ajax
                                                 event="change"
                                                 onbegin="infox.showLoading();"
                                                 oncomplete="infox.hideLoading();"
                                                 execute="@this"
+                                                listener="#{dominioVariavelTarefaCrudAction.tipoAlterado(item.value)}"
                                                 render="panelValor pageBodyDialogMessage" />
                                         </i:selectOneMenu>
                                         <p:outputPanel id="panelValor" style="display: inline">
-                                            <i:inputText label="Valor" rendered="#{dominioVariavelTarefaCrudAction.parametros[item.key].tipo == 'TEXTO'}" value="#{dominioVariavelTarefaCrudAction.parametros[item.key].valor}"/>
-                                            <i:inputDate label="Valor" rendered="#{dominioVariavelTarefaCrudAction.parametros[item.key].tipo == 'DATA'}" value="#{dominioVariavelTarefaCrudAction.parametros[item.key].valor}"/>
-                                            <i:selectBooleanCheckbox label="Valor" rendered="#{dominioVariavelTarefaCrudAction.parametros[item.key].tipo == 'BOOLEAN'}" value="#{dominioVariavelTarefaCrudAction.parametros[item.key].valor}" />
-                                            <i:inputText label="Valor" rendered="#{dominioVariavelTarefaCrudAction.parametros[item.key].tipo == 'INTEIRO'}" value="#{dominioVariavelTarefaCrudAction.parametros[item.key].valor}" converterId="integerConverter"/>
+                                            <i:inputText label="Valor" rendered="#{item.value.tipo == 'TEXTO'}" value="#{item.value.valor}"/>
+                                            <i:inputDate label="Valor" rendered="#{item.value.tipo == 'DATA'}" value="#{item.value.valor}"/>
+                                            <i:selectBooleanCheckbox label="Valor" rendered="#{item.value.tipo == 'BOOLEAN'}" value="#{item.value.valor}" />
+                                            <i:inputText label="Valor" rendered="#{item.value.tipo == 'INTEIRO'}" value="#{item.value.valor}" converterId="integerConverter"/>
                                         </p:outputPanel>
                                     </h:column>
                                 </h:dataTable>
                                 <div style="display: inline-block; text-align: center; width:100%">
-                                    <a:commandButton value="Preview"
+                                    <a:commandButton value="Consultar"
                                         action="#{dominioVariavelTarefaCrudAction.atualizarItens}"
                                         onbegin="infox.showLoading();"
                                         oncomplete="infox.hideLoading();"
@@ -143,7 +144,7 @@
                                     <i:outputText rendered="#{dominioVariavelTarefaCrudAction.mensagemErro ne null}" value="#{dominioVariavelTarefaCrudAction.mensagemErro}" styleClass="property-error"/>
                                 </p:outputPanel>
                             </fieldset>
-                        </div>
+                        </p:outputPanel>
                             
                         <ui:define name="buttons">
                             <a:commandButton render="defaultTabPanel pageBodyDialogMessage" styleClass="buttons"
