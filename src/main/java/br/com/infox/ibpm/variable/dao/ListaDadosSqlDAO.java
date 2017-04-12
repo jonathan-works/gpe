@@ -59,10 +59,16 @@ public class ListaDadosSqlDAO implements Serializable {
 	
 	public List<SelectItem> getListSelectItem(String nativeQuery, TaskInstance taskInstance) {
 		Map<String, Object> parametersMap = getParametersMap(nativeQuery, taskInstance);
-		return getListSelectItem(nativeQuery, parametersMap);
+		try {
+			return getListSelectItem(nativeQuery, parametersMap);
+		}
+		catch (SQLException e) {
+			logger.error("DominioVariavelTarefaDAO:getListSelectItem - Erro ao executar a query " + nativeQuery, e);
+			return Collections.<SelectItem>emptyList();
+		}    
 	}
 	
-	public List<SelectItem> getListSelectItem(String nativeQuery, Map<String, Object> parametersMap) {
+	public List<SelectItem> getListSelectItem(String nativeQuery, Map<String, Object> parametersMap) throws SQLException {
 		List<SelectItem> lista = new ArrayList<>();
 		
     	try (Connection connection = getDataSource().getConnection()) {
@@ -78,9 +84,7 @@ public class ListaDadosSqlDAO implements Serializable {
     				}
     			}
     		}
-		} catch (SQLException e) {
-			logger.error("DominioVariavelTarefaDAO:getListSelectItem - Erro ao executar a query " + nativeQuery, e);
-        }
+		}
     	return lista;		
 	}
 	

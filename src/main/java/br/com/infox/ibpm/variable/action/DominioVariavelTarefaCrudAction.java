@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.variable.action;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,6 +43,7 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
 	private String dominio;
 	private List<SelectItem> selectItems;
 	private Map<String, DefinicaoParametro> parametros = new LinkedHashMap<>();
+	private String mensagemErro;
 	
 	private String tab = TAB_SEARCH;
 	
@@ -169,6 +171,7 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
 		this.dominio = dominio;
 		
 		selectItems = null;
+		mensagemErro = null;
 		atualizarParametros();
 	}
 	
@@ -202,6 +205,7 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
 	
 	public void atualizarItens() {
         selectItems = new ArrayList<>();
+        mensagemErro = null;
         
         if(dominio == null) {
         	return;
@@ -215,7 +219,15 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
         		mapaParametros.put(chave, this.parametros.get(chave).valor);
         	}
         	
-            selectItems.addAll(listaDadosSqlDAO.getListSelectItem(dominio, mapaParametros));
+        	try {
+        		List<SelectItem> items = listaDadosSqlDAO.getListSelectItem(dominio, mapaParametros);
+        		selectItems.addAll(items);
+        	}
+        	catch(SQLException e) {
+        		mensagemErro = "Erro ao executar SQL: " + e.getMessage();
+        		selectItems = null;
+        		return;
+        	}
         } else {
             String[] itens = dominio.split(";");
             for (String item : itens) {
@@ -237,5 +249,9 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
 	
 	public List<TipoParametro> getTiposParametros() {
 		return Arrays.asList(TipoParametro.values());
+	}
+
+	public String getMensagemErro() {
+		return mensagemErro;
 	}
 }
