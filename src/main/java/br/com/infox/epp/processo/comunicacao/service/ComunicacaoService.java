@@ -378,6 +378,7 @@ public class ComunicacaoService {
 		variaveis.put(VariaveisJbpmComunicacao.PRAZO_DESTINATARIO, destinatario.getPrazo());
 		variaveis.put(VariaveisJbpmComunicacao.TIPO_COMUNICACAO, destinatario.getModeloComunicacao().getTipoComunicacao().getDescricao());
 		variaveis.put(VariaveisJbpmComunicacao.CIENCIA_AUTOMATICA, destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0);
+		variaveis.put(VariaveisJbpmComunicacao.DOCUMENTO_COMUNICACAO, destinatario.getDocumentoComunicacao().getId());
 		return variaveis;
 	}
 	
