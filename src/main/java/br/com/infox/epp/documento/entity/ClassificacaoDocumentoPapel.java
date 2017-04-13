@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.documento.domain.RegraAssinatura;
 import br.com.infox.epp.documento.query.ClassificacaoDocumentoPapelQuery;
 import br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
@@ -33,7 +34,7 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 	@NamedQuery(name = ClassificacaoDocumentoPapelQuery.CLASSIFICACAO_EXIGE_ASSINATURA, query = ClassificacaoDocumentoPapelQuery.CLASSIFICACAO_EXIGE_ASSINATURA_QUERY)
 })
 @Cacheable
-public class ClassificacaoDocumentoPapel implements Serializable {
+public class ClassificacaoDocumentoPapel implements Serializable, RegraAssinatura {
     
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_classificacao_doc_papel";
@@ -82,6 +83,7 @@ public class ClassificacaoDocumentoPapel implements Serializable {
 		this.classificacaoDocumento = classificacaoDocumento;
 	}
 
+	@Override
 	public Papel getPapel() {
 		return papel;
 	}
@@ -90,6 +92,7 @@ public class ClassificacaoDocumentoPapel implements Serializable {
 		this.papel = papel;
 	}
 
+	@Override
 	public TipoAssinaturaEnum getTipoAssinatura() {
 		return tipoAssinatura;
 	}
@@ -106,6 +109,7 @@ public class ClassificacaoDocumentoPapel implements Serializable {
 		this.podeRedigir = podeRedigir;
 	}
 	
+	@Override
 	public Boolean getAssinaturasMultiplas() {
         return assinaturasMultiplas;
     }

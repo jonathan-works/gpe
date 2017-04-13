@@ -54,6 +54,9 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.documento.domain.Assinatura;
+import br.com.infox.epp.documento.domain.Assinavel;
+import br.com.infox.epp.documento.domain.RegraAssinatura;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
@@ -82,7 +85,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "descricao")
 @EntityListeners(value = EntityListenerService.class)
-public class Documento implements Serializable, Cloneable, EntityListener<Documento> {
+public class Documento implements Serializable, Cloneable, EntityListener<Documento>, Assinavel {
 
     private static final long serialVersionUID = 1L;
     public static final int TAMANHO_MAX_DESCRICAO_DOCUMENTO = 260;
@@ -340,6 +343,16 @@ public class Documento implements Serializable, Cloneable, EntityListener<Docume
     @Override
     public Class<? extends AbstractEntityListener<Documento>> getServiceClass() {
         return DocumentoEntityListener.class;
+    }
+
+    @Override
+    public List<? extends RegraAssinatura> getRegrasAssinatura() {
+        return getClassificacaoDocumento()==null ? Collections.<RegraAssinatura>emptyList() : getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
+    }
+
+    @Override
+    public List<? extends Assinatura> getAssinaturas() {
+        return getDocumentoBin()==null? Collections.<Assinatura>emptyList() : getDocumentoBin().getAssinaturas();
     }
 
 }
