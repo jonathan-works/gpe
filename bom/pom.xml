@@ -37,7 +37,7 @@
         <version.primefaces>6.0</version.primefaces>
         <version.richfaces>4.5.15.Final</version.richfaces>
         <version.cssparser>0.9.18</version.cssparser>
-        <version.jboss-seam>2.3.9-6-2</version.jboss-seam>
+        <version.jboss-seam>2.3.10</version.jboss-seam>
         <version.hibernate-core>4.2.14.Final</version.hibernate-core>
         <version.hibernate-entitymanager>4.2.14.Final</version.hibernate-entitymanager>
         <version.junit>4.11</version.junit>
@@ -410,24 +410,20 @@
                 <version>3.6.2</version>
             </dependency>
             <dependency>
-                <groupId>com.lowagie</groupId>
-                <artifactId>itext</artifactId>
-                <version>2.1.7</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.bouncycastle</groupId>
-                        <artifactId>bctsp-jdk14</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>bouncycastle</groupId>
-                        <artifactId>bcprov-jdk14</artifactId>
-                    </exclusion>
-                    <exclusion>
-                    	<groupId>bouncycastle</groupId>
-                    	<artifactId>bcmail-jdk14</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+			    <groupId>com.github.librepdf</groupId>
+			    <artifactId>openpdf</artifactId>
+			    <version>1.0.1</version>
+	        </dependency>
+	        <dependency>
+			    <groupId>com.github.librepdf</groupId>
+			    <artifactId>pdf-html</artifactId>
+			    <version>1.0.1</version>
+			</dependency>
+			<dependency>
+			    <groupId>com.github.librepdf</groupId>
+			    <artifactId>pdf-rtf</artifactId>
+			    <version>1.0.1</version>
+			</dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-analyzers</artifactId>
@@ -468,10 +464,14 @@
 	            		<artifactId>bctsp-jdk14</artifactId>
 	            	</exclusion>
 	            	<exclusion>
-				    	<groupId>bouncycastle</groupId>
+				    	<groupId>org.bouncycastle</groupId>
 				    	<artifactId>bcmail-jdk14</artifactId>
 				    </exclusion>
-	            </exclusions>
+	            	<exclusion>
+	            		<groupId>com.lowagie</groupId>
+	            		<artifactId>itext</artifactId>
+	            	</exclusion>
+            	</exclusions>
             </dependency>
             <dependency>
 			    <groupId>org.xhtmlrenderer</groupId>

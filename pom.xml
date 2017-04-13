@@ -58,7 +58,7 @@
 		<dependency>
             <groupId>org.jboss.seam</groupId>
             <artifactId>jboss-seam-pdf</artifactId>
-        </dependency>
+		</dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -132,16 +132,8 @@
             <artifactId>quartz</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-highlighter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.lowagie</groupId>
-            <artifactId>itext</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>

@@ -65,7 +65,7 @@ public class InfoxPdfReader {
                 try {
                     String textFromPage = extractor.getTextFromPage(i);
                     sb.append(textFromPage == null ? null : textFromPage.replace("\u0000", ""));
-                } catch (ExceptionConverter e) {
+                } catch (ExceptionConverter | Error e) {
                     LOG.error("Erro ao extrair texto da página " + i, e);
                 }
             }
