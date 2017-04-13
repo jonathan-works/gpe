@@ -1,7 +1,6 @@
 package br.com.infox.ibpm.variable.action;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +9,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
@@ -35,6 +36,8 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
 	
 	@Inject
     private DominioVariavelTarefaDAO dominioVariavelTarefaDAO;
+	@Inject
+	private Logger logger;
 
 	private VariableAccessHandler currentVariable;
 	private Integer id;
@@ -224,7 +227,8 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
         		selectItems.addAll(items);
         	}
         	catch(Exception e) {
-        		mensagemErro = "Erro ao executar SQL: " + e.getMessage();
+        		mensagemErro = "Erro ao executar consulta: " + e.getMessage();
+        		logger.log(Level.SEVERE, mensagemErro, e);
         		selectItems = null;
         		return;
         	}

@@ -89,17 +89,18 @@
                             required="true" value="#{dominioVariavelTarefaCrudAction.dominio}"
                             showCounter="false"
                             validatorId="dominioVariavelTarefaValidator">
-                            <a:ajax
-                                event="change"
-                                listener="#{dominioVariavelTarefaCrudAction.atualizarParametros}"
-                                onbegin="infox.showLoading();"
-                                oncomplete="infox.hideLoading();"
-                                execute="@this"
-                                render="tabelaParametros pageBodyDialogMessage @this" />
                         </i:inputTextarea>
                         <p:outputPanel id="panelPreview">
                             <fieldset style="display:inline-block">
                                 <legend>Pré-visualizar</legend>
+                                <div style="display: inline-block; text-align: center; width:100%; margin-bottom : 1em;">
+                                    <a:commandButton value="Atualizar Parâmetros" styleClass="buttons"
+                                        action="#{dominioVariavelTarefaCrudAction.atualizarParametros}"
+                                        onbegin="infox.showLoading();"
+                                        oncomplete="infox.hideLoading();"
+                                        execute="dominio"
+                                        render="tabelaParametros panelComponente"/>
+                                </div>
                                 <h:dataTable id="tabelaParametros" value="#{dominioVariavelTarefaCrudAction.parametros.entrySet().toArray()}" var="item">
                                     <h:column>
                                         <i:outputText label="Parâmetro" value="#{item.key}"/>
@@ -123,11 +124,12 @@
                                     </h:column>
                                 </h:dataTable>
                                 <div style="display: inline-block; text-align: center; width:100%">
-                                    <a:commandButton value="Consultar"
+                                    <a:commandButton value="Consultar" styleClass="buttons"
                                         action="#{dominioVariavelTarefaCrudAction.atualizarItens}"
                                         onbegin="infox.showLoading();"
                                         oncomplete="infox.hideLoading();"
-                                        render="panelComponente" execute="dominio tabelaParametros @this" />
+                                        execute="dominio tabelaParametros"
+                                        render="panelComponente"/>
                                 </div>
                                 <p:outputPanel id="panelComponente" style="margin-left: 1rem; margin-top: 1em">
                                     <p:outputPanel rendered="#{dominioVariavelTarefaCrudAction.itens ne null}">
