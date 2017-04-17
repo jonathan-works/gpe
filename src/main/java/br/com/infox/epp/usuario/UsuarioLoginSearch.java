@@ -21,6 +21,7 @@ import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.Papel_;
 import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.access.entity.PerfilTemplate_;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -166,20 +167,22 @@ public class UsuarioLoginSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getSingleResult() > 0L;
     }
     
-    public List<UsuarioLogin> getUsuariosByNome(String nome, int maxResult) {
+    public List<UsuarioLogin> getUsuariosByNomeAndPrecisaAssinarTermoAdesao(String nome, int maxResult) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<UsuarioLogin> cq = cb.createQuery(UsuarioLogin.class);
 		
 		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
 		Join<UsuarioLogin, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica);
-		Join<UsuarioLogin, Papel> papel = usuario.join(UsuarioLogin_.papelSet);
+		Join<UsuarioLogin, UsuarioPerfil> usuarioPerfil = usuario.join(UsuarioLogin_.usuarioPerfilList);
+		Join<UsuarioPerfil, PerfilTemplate> perfilTemplate = usuarioPerfil.join(UsuarioPerfil_.perfilTemplate);
+		Join<PerfilTemplate, Papel> papel = perfilTemplate.join(PerfilTemplate_.papel);
 		
 		Predicate assina = cb.equal(papel.get(Papel_.termoAdesao), true);
 		Predicate ativo = usuarioAtivoPredicate(usuario);
 		Predicate podeFazerLogin = podeFazerLoginPredicate(usuario);
 		Predicate nomePred = cb.like(cb.lower(usuario.get(UsuarioLogin_.nomeUsuario)), cb.lower(cb.literal("%" + nome + "%"))); 
 		
-		cq = cq.select(usuario).where(cb.and(ativo, podeFazerLogin, nomePred, assina));
+		cq = cq.select(usuario).where(cb.and(ativo, podeFazerLogin, nomePred, assina)).distinct(true);
 		//query.orderBy(cb.asc(from.get(Localizacao_.caminhoCompleto)));
 		cq.orderBy(cb.asc(usuario.get(UsuarioLogin_.nomeUsuario)));
 		
