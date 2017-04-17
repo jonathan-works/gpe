@@ -64,6 +64,7 @@ public class ComunicacaoService {
 	
 	public static final String NAME = "comunicacaoService";
 	public static final String COMUNICACAO_EM_ELABORACAO = "comunicacaoEmElaboracao";
+	public static final String SINAL_COMUNICACAO_EXPEDIDA = "comunicacaoExpedida";
 	
 	@Inject
 	private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
