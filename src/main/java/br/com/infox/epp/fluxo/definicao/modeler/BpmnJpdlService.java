@@ -173,7 +173,7 @@ public class BpmnJpdlService {
 		// Validar consistência do JPDL
 		InfoxJpdlXmlReader.readProcessDefinition(newProcessDefinitionXml);
 		
-//		historicoProcessDefinitionService.registrarHistorico(fluxo);
+		historicoProcessDefinitionService.registrarHistorico(definicaoProcesso);
 		definicaoProcesso.setXml(newProcessDefinitionXml);
 		definicaoProcesso.setBpmn(Bpmn.convertToString(bpmnModel));
 		definicaoProcesso.setSvg(null);
