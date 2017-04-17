@@ -13,4 +13,5 @@ public final class VariaveisJbpmComunicacao {
 	public static final String POSSUI_PRAZO_CUMPRIMENTO = "possuiPrazoParaCumprimento";
 	
 	public static final String RESPOSTA_TEMPESTIVA = "respostaTempestiva";
+	public static final String DOCUMENTO_COMUNICACAO = "documentoComunicacao";
 }
