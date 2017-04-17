@@ -410,7 +410,7 @@
                         <id>css</id>
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
+                            <outputDirectory>${epp.generatedArtifacts.css.sourceFolder}/styleSkinInfox</outputDirectory>
                             <watch>false</watch>
                             <compress>${producao}</compress>
                             <force>${producao}</force>
@@ -419,7 +419,7 @@
                                 <exclude>**/*.import.less</exclude>
                             </excludes>
                         </configuration>
-                        <phase>generate-sources</phase>
+                        <phase>${epp.generatedArtifacts.generationPhase}</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
@@ -499,6 +499,13 @@
                             </includes>
                         </resource>
                         <resource>
+                            <directory>${epp.generatedArtifacts.css.sourceFolder}</directory>
+                            <includes>
+                                <include>**/*.css</include>
+                            </includes>
+                            <targetPath>resources</targetPath>
+                        </resource>
+                        <resource>
                             <directory>${project.build.directory}/assinador-auto-assinado</directory>
                             <includes>
                                 <include>certificado_digital.jar</include>
@@ -564,6 +571,8 @@
         <project.stage>Production</project.stage>
         <desenvolvimento>false</desenvolvimento>
         <epp.generatedArtifacts.generationPhase>prepare-package</epp.generatedArtifacts.generationPhase>
+        <epp.generatedArtifacts.sourceFolder>${project.build.directory}/generated-sources</epp.generatedArtifacts.sourceFolder>
+        <epp.generatedArtifacts.css.sourceFolder>${epp.generatedArtifacts.sourceFolder}/css</epp.generatedArtifacts.css.sourceFolder>
     </properties>
     <profiles>
         <profile>
@@ -578,6 +587,7 @@
                 <log.jbpm>INFO</log.jbpm>
                 <log.hibernate.sql>INFO</log.hibernate.sql>
                 <epp.generatedArtifacts.generationPhase>compile</epp.generatedArtifacts.generationPhase>
+                <epp.generatedArtifacts.css.sourceFolder>${project.build.directory}/m2e-wtp/web-resources/resources</epp.generatedArtifacts.css.sourceFolder>
             </properties>
         </profile>
         <profile>
