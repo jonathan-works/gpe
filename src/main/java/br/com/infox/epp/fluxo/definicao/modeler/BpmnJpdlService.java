@@ -149,6 +149,9 @@ public class BpmnJpdlService {
     
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public DefinicaoProcesso importarBpmn(DefinicaoProcesso definicaoProcesso, String bpmn) {
+	    BpmnCleaner cleaner = new BpmnCleaner();
+	    bpmn = cleaner.cleanBpmn(bpmn);
+	    
 		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmn.getBytes(StandardCharsets.UTF_8)));
 		BpmnAdapter[] adapters = getAdapters();
 		for (BpmnAdapter adapter : adapters) {
