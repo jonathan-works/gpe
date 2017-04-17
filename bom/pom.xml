@@ -55,7 +55,7 @@
         <pdfbox.version>2.0.5</pdfbox.version>
         <quartz.version>2.2.1</quartz.version>
         <mojarra.jsf.version>2.1.28</mojarra.jsf.version>
-        <infox.componentes.version>1.4.0</infox.componentes.version>
+        <infox.componentes.version>1.4.2</infox.componentes.version>
         <version.cdi-unit>3.0.0</version.cdi-unit>
         <version.weld-se-core>1.1.16.Final</version.weld-se-core>
         <version.mockito-all>1.9.5</version.mockito-all>
