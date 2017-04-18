@@ -30,6 +30,8 @@ import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -56,6 +58,7 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.hibernate.util.HibernateUtil;
+import br.com.infox.ibpm.sinal.SignalService;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 
 @Stateless
@@ -94,6 +97,10 @@ public class ComunicacaoService {
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
+	@Inject
+    private SignalService signalService;
+	@Inject
+    private AssinadorService assinadorService;
 	
 	private String codigoFluxoComunicacao = Parametros.CODIGO_FLUXO_COMUNICACAO_ELETRONICA.getValue();
 	private String codigoFluxoComunicacaoNaoEletronico = Parametros.CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA.getValue();
@@ -473,5 +480,25 @@ public class ComunicacaoService {
             return true;
         }
         return false;
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void assinarExpedirComunicacao(List<DadosAssinatura> dadosAssinatura, ModeloComunicacao modelo, Map<Long, List<Long>> documentosEnviadosAssinador) throws Exception  {
+        if (dadosAssinatura != null && documentosEnviadosAssinador.containsKey(modelo.getId())) { // dos selecionados esse modelo foi enviado?
+            List<Long> list = documentosEnviadosAssinador.get(modelo.getId());
+            for (DestinatarioModeloComunicacao destinatario : modelo.getDestinatarios()) { //desse modelo, este destinatario foi enviado?
+                if (list.contains(destinatario.getId())) {
+                    for(DadosAssinatura dadoAssinatura : dadosAssinatura){
+                        if(dadoAssinatura.getUuidDocumentoBin().equals(destinatario.getDocumentoComunicacao().getDocumentoBin().getUuid())){
+                            assinadorService.assinar(dadoAssinatura, Authenticator.getUsuarioPerfilAtual());
+                            expedirComunicacao(destinatario);
+                        }
+                    }
+                }
+            }
+        }
+        if(modelo.isModeloTotalmenteExpedido()) { //se todos foram expedidos, dispara o sinal
+            signalService.dispatch(modelo.getProcesso().getIdProcesso(), ComunicacaoService.SINAL_COMUNICACAO_EXPEDIDA);
+        }
     }
 }

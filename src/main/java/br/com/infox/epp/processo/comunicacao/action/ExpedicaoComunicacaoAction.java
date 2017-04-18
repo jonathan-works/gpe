@@ -1,8 +1,11 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,7 +29,6 @@ import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.view.AssinaturaCallback;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.ConsultaComunicacaoLazyData;
 import br.com.infox.epp.processo.comunicacao.list.DestinatarioModeloComunicacaoList;
@@ -77,6 +79,10 @@ public class ExpedicaoComunicacaoAction implements Serializable, AssinaturaCallb
 	private String token;
 	private List<TipoComunicacao> tiposComunicacao;
 	private List<ModeloComunicacao> selecionados;
+	private Map<Long, List<Long>> documentosEnviadosAssinador;
+	private List<DestinatarioModeloComunicacao> documentosPodeAssinar;
+	private List<DestinatarioModeloComunicacao> documentosNaoPodeAssinar;
+	
 	
 	public String getTab() {
 		return tab;
@@ -172,12 +178,8 @@ public class ExpedicaoComunicacaoAction implements Serializable, AssinaturaCallb
 				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.assinatura"));
 			}
 			
-            boolean ultimaComunicacao = true;
-            for (DestinatarioModeloComunicacao destino : modeloComunicacao.getDestinatarios()) {
-                if (!destino.getExpedido().booleanValue())
-                    ultimaComunicacao = false;
-            }
-            if (ultimaComunicacao) {
+            
+            if (modeloComunicacao.isModeloTotalmenteExpedido()) {
                 signalService.dispatch(modeloComunicacao.getProcesso().getIdProcesso(), ComunicacaoService.SINAL_COMUNICACAO_EXPEDIDA);
             }
 			
@@ -246,33 +248,107 @@ public class ExpedicaoComunicacaoAction implements Serializable, AssinaturaCallb
         this.selecionados = selecionados;
     }
     
-    public AssinavelProvider getAssinavelProvider(){
-        List<DocumentoBin> datalist = new ArrayList<>();
+    public void verificaDocumentosAssinarLote() {
+        documentosEnviadosAssinador = null;
+        documentosPodeAssinar = null;
+        documentosNaoPodeAssinar = null;
+        
+        UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+        UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
+        Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
+        
+        documentosEnviadosAssinador = new TreeMap<Long, List<Long>>();
+        
         for(ModeloComunicacao modelo : getSelecionados()){
-            for(DocumentoModeloComunicacao documentos : modelo.getDocumentos()){
-                datalist.add(documentos.getDocumento().getDocumentoBin());
+            for(DestinatarioModeloComunicacao destinatario : modelo.getDestinatarios()){
+                
+                DocumentoBin documentoBin = destinatario.getDocumentoComunicacao().getDocumentoBin();
+                
+                boolean podeAssinar = 
+                    !assinaturaDocumentoService.isDocumentoTotalmenteAssinado(destinatario.getDocumentoComunicacao()) &&
+                    assinaturaDocumentoService.podeRenderizarApplet(papel, modelo.getClassificacaoComunicacao(), documentoBin, usuario);
+                
+                if(podeAssinar){
+                    getDocumentosPodeAssinar().add(destinatario);
+                    
+                    if(!documentosEnviadosAssinador.containsKey(modelo.getId())){ //guarda a referencia do que mandou para verificar no onSuccess
+                        List<Long> list = new ArrayList<Long>();
+                        list.add(destinatario.getId());
+                        documentosEnviadosAssinador.put(modelo.getId(), list);
+                    }else{
+                        List<Long> list = documentosEnviadosAssinador.get(modelo.getId());
+                        list.add(destinatario.getId());
+                    }
+                    
+                }else{
+                    getDocumentosNaoPodeAssinar().add(destinatario);
+                }
             }
+        }
+    }
+    
+    public AssinavelProvider getAssinavelProvider() {
+        List<DocumentoBin> datalist = new ArrayList<>();
+        for (DestinatarioModeloComunicacao destinatario : documentosPodeAssinar) {
+            datalist.add(destinatario.getDocumentoComunicacao().getDocumentoBin());
         }
         return new AssinavelDocumentoBinProvider(datalist);
     }
-
+    
     public void onSuccess(List<DadosAssinatura> dadosAssinatura) {
+        int qtdAssinados = 0;
+        int qtdErros = 0;
         try {
             for (ModeloComunicacao modelo : getSelecionados()) {
-                comunicacaoService.expedirComunicacao(modelo);
-                signalService.dispatch(modelo.getProcesso().getIdProcesso(), ComunicacaoService.SINAL_COMUNICACAO_EXPEDIDA);
+                try {
+                    comunicacaoService.assinarExpedirComunicacao(dadosAssinatura, modelo, documentosEnviadosAssinador);
+                    qtdAssinados++;
+                } catch (Exception ex) {
+                    qtdErros++;
+                }
             }
-            FacesMessages.instance().add(InfoxMessages.getInstance().get("anexarDocumentos.sucessoAssinatura"));
+            MessageFormat format = new MessageFormat(InfoxMessages.getInstance().get("comunicacao.msg.assinarQuantitativa"));
+            Object[] objs = { qtdAssinados, qtdErros };
+            FacesMessages.instance().add(format.format(objs));
             setSelecionados(null);
-        }catch (Exception e) {
+            lazyData.clear();
+        } catch (Exception e) {
             FacesMessages.instance().add(Severity.ERROR, InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));
         }
     }
+    
     public void onFail(StatusToken statusToken, List<DadosAssinatura> dadosAssinatura) {
         FacesMessages.instance().add(Severity.ERROR, InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));
     }
 
     public ConsultaComunicacaoLazyData getLazyData() {
         return lazyData;
+    }
+    
+    public void limpaSelecionados() {
+        selecionados = null;
+        documentosEnviadosAssinador = null;
+        documentosPodeAssinar = null;
+        documentosNaoPodeAssinar = null;
+    }
+
+    public List<DestinatarioModeloComunicacao> getDocumentosNaoPodeAssinar() {
+        if(documentosNaoPodeAssinar == null)
+            documentosNaoPodeAssinar = new ArrayList<DestinatarioModeloComunicacao>();
+        return documentosNaoPodeAssinar;
+    }
+
+    public void setDocumentosNaoPodeAssinar(List<DestinatarioModeloComunicacao> documentosNaoPodeAssinar) {
+        this.documentosNaoPodeAssinar = documentosNaoPodeAssinar;
+    }
+
+    public List<DestinatarioModeloComunicacao> getDocumentosPodeAssinar() {
+        if(documentosPodeAssinar == null)
+            documentosPodeAssinar = new ArrayList<DestinatarioModeloComunicacao>();
+        return documentosPodeAssinar;
+    }
+
+    public void setDocumentosPodeAssinar(List<DestinatarioModeloComunicacao> documentosPodeAssinar) {
+        this.documentosPodeAssinar = documentosPodeAssinar;
     }
 }
