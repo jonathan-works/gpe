@@ -14,13 +14,14 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.crud.FluxoController;
 import br.com.infox.epp.processo.node.AutomaticNodeService;
 import br.com.infox.jbpm.graphic.GraphicExecutionView;
+import br.com.infox.jsf.function.JsfFunctions;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 @Named
 @ViewScoped
 public class MonitorProcessoView implements Serializable {
-    private static final String DATATABLE_ID = ":defaultTabPanel:instanciaDataTable";
+    private static final String DATATABLE_ID = "instanciaDataTable";
 
     private static final long serialVersionUID = 1L;
 
@@ -76,7 +77,7 @@ public class MonitorProcessoView implements Serializable {
     }
 
     private void resetPaginator() {
-        DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent(DATATABLE_ID);
+        DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent(JsfFunctions.clientId(DATATABLE_ID));
         dataTable.setFirst(0);
     }
 

@@ -55,55 +55,56 @@
         </h:panelGroup>
     </h:panelGroup>
 
-    <p:dataTable id="instanciaDataTable" lazy="true" rows="10" paginator="true"
-        rendered="#{not monitorProcessoView.executionGraphic}" paginatorAlwaysVisible="false"
-        value="#{monitorProcessoView.monitorProcessoDataModel}" var="row">
-
-        <p:column id="state" styleClass="dt-toolbar-col" style="width: 60px">
-            <h:panelGroup rendered="#{row.state eq 'ERROR'}">
-                <div class="circle" style="background-color: red; border-color: #a00; display: inline-block;" />
-                <h:form style="display: inline-block">
-                    <p:commandLink action="#{monitorProcessoView.executeNode(row)}" update=":pageBody">
-                        <h:graphicImage title="#{infoxMessages['monitorProcesso.icon.retry']}"
-                            url="#{layoutController.getMaterialDesignIcon('1x','black','18dp','replay')}" />
+    <h:form>
+        <p:dataTable id="instanciaDataTable" lazy="true" rows="10" paginator="true" widgetVar="instaciaProcesso"
+            rendered="#{not monitorProcessoView.executionGraphic}" paginatorAlwaysVisible="false"
+            value="#{monitorProcessoView.monitorProcessoDataModel}" var="row">
+    
+            <p:ajax event="filter" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+            
+            <p:column id="state" styleClass="dt-toolbar-col" style="width: 60px">
+                <h:panelGroup rendered="#{row.state eq 'ERROR'}">
+                    <div class="circle" style="background-color: red; border-color: #a00; display: inline-block;" />
+                        <p:commandLink action="#{monitorProcessoView.executeNode(row)}" update=":pageBody">
+                            <h:graphicImage title="#{infoxMessages['monitorProcesso.icon.retry']}"
+                                url="#{layoutController.getMaterialDesignIcon('1x','black','18dp','replay')}" />
+                        </p:commandLink>
+                </h:panelGroup>
+    
+                <h:panelGroup rendered="#{row.state eq 'OK'}">
+                    <div class="circle" style="background-color: green; border-color: #060; display: inline-block;" />
+                </h:panelGroup>
+    
+                    <p:commandLink action="#{monitorProcessoView.viewGraph(row)}" update=":pageBody"
+                        onstart="infox.showLoading();" oncomplete="infox.hideLoading();">
+                        <h:graphicImage title="#{infoxMessages['monitorProcesso.icon.showGraph']}"
+                            url="#{layoutController.getMaterialDesignIcon('1x','black','18dp','call_made')}" />
                     </p:commandLink>
-                </h:form>
-            </h:panelGroup>
-
-            <h:panelGroup rendered="#{row.state eq 'OK'}">
-                <div class="circle" style="background-color: green; border-color: #060; display: inline-block;" />
-            </h:panelGroup>
-
-            <h:form style="display: inline-block;">
-                <p:commandLink action="#{monitorProcessoView.viewGraph(row)}" update=":pageBody"
-                    onstart="infox.showLoading();" oncomplete="infox.hideLoading();">
-                    <h:graphicImage title="#{infoxMessages['monitorProcesso.icon.showGraph']}"
-                        url="#{layoutController.getMaterialDesignIcon('1x','black','18dp','call_made')}" />
-                </p:commandLink>
-            </h:form>
-        </p:column>
-
-        <p:column id="numero" headerText="#{infoxMessages['monitorProcesso.instance.numeroProcesso']}">
-            <h:outputText value="#{row.numero}" />
-        </p:column>
-
-        <p:column id="nodeName" headerText="#{infoxMessages['monitorProcesso.instance.nodeName']}">
-            <h:outputText value="#{row.nodeName}" />
-        </p:column>
-
-        <p:column id="dataInicio" headerText="#{infoxMessages['monitorProcesso.instance.dataInicio']}">
-            <h:outputText value="#{row.dataInicio}">
-                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-            </h:outputText>
-        </p:column>
-
-		<f:facet name="footer">
-			<div class="ui-datatable-footer-paginator">
-				<div class="ui-datatable-footer-paginator-right">
-					#{infoxMessages['list.resultPrefix']}
-					#{monitorProcessoView.monitorProcessoDataModel.rowCount}
-					#{infoxMessages['list.resultSufix']}</div>
-			</div>
-		</f:facet>
-	</p:dataTable>
+            </p:column>
+    
+            <p:column id="numero" filterBy="#{row.numero}" filterMatchMode="contains"
+             headerText="#{infoxMessages['monitorProcesso.instance.numeroProcesso']}">
+                <h:outputText value="#{row.numero}" />
+            </p:column>
+    
+            <p:column id="nodeName" headerText="#{infoxMessages['monitorProcesso.instance.nodeName']}">
+                <h:outputText value="#{row.nodeName}" />
+            </p:column>
+    
+            <p:column id="dataInicio" headerText="#{infoxMessages['monitorProcesso.instance.dataInicio']}">
+                <h:outputText value="#{row.dataInicio}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                </h:outputText>
+            </p:column>
+    
+    		<f:facet name="footer">
+    			<div class="ui-datatable-footer-paginator">
+    				<div class="ui-datatable-footer-paginator-right">
+    					#{infoxMessages['list.resultPrefix']}
+    					#{monitorProcessoView.monitorProcessoDataModel.rowCount}
+    					#{infoxMessages['list.resultSufix']}</div>
+    			</div>
+    		</f:facet>
+    	</p:dataTable>
+    </h:form>
 </ui:composition>
