@@ -45,7 +45,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(of={"id"})
-public class Pasta implements Serializable, Cloneable {
+public class Pasta implements Serializable, Cloneable, br.com.infox.epp.documento.domain.Pasta {
 
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_pasta";

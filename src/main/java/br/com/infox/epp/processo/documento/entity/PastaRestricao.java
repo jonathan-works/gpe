@@ -38,7 +38,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(of="id")
-public class PastaRestricao {
+public class PastaRestricao implements br.com.infox.epp.documento.domain.Pasta.Permissao {
     protected static final String TABLE_NAME = "tb_pasta_restricao";
     private static final String GENERATOR_NAME = "PastaRestricaoGenerator";
     private static final String SEQUENCE_NAME = "sq_pasta_restricao";

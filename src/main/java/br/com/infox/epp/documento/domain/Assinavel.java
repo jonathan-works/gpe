@@ -9,4 +9,6 @@ public interface Assinavel {
     List<? extends RegraAssinatura> getRegrasAssinatura();
     
     List<? extends Assinatura> getAssinaturas();
+    
+    boolean isSuficientementeAssinado();
 }

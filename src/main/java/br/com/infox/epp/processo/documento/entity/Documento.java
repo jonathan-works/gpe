@@ -56,6 +56,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.documento.domain.Arquivavel;
 import br.com.infox.epp.documento.domain.Assinatura;
 import br.com.infox.epp.documento.domain.Assinavel;
 import br.com.infox.epp.documento.domain.RegraAssinatura;
@@ -85,7 +86,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "descricao")
 @EntityListeners(value = EntityListenerService.class)
-public class Documento implements Serializable, Cloneable, EntityListener<Documento>, Assinavel {
+public class Documento implements Serializable, Cloneable, EntityListener<Documento>, Assinavel, Arquivavel {
 
     private static final long serialVersionUID = 1L;
     public static final int TAMANHO_MAX_DESCRICAO_DOCUMENTO = 260;
@@ -319,6 +320,11 @@ public class Documento implements Serializable, Cloneable, EntityListener<Docume
 
     public RegraAssinaturaService getRegraAssinaturaService() {
         return BeanManager.INSTANCE.getReference(RegraAssinaturaService.class);
+    }
+
+    @Override
+    public boolean isSuficientementeAssinado() {
+        return Boolean.TRUE.equals(getDocumentoBin().getSuficientementeAssinado());
     }
 
 }
