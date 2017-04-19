@@ -69,6 +69,7 @@
 						filters="#{expedicaoComunicacaoAction.lazyData.filters}"
 						disabledSelection="#{expedicaoComunicacaoAction.lazyData.expedida}">
 						
+						<p:ajax event="toggleSelect" process="@this" update="@(.btnVerificaAssinar)" partialSubmit="true" />
 						<p:ajax event="rowSelectCheckbox" process="@this" update="@(.btnVerificaAssinar)" partialSubmit="true" />
 						<p:ajax event="rowUnselectCheckbox" process="@this" update="@(.btnVerificaAssinar)" partialSubmit="true" />
 						

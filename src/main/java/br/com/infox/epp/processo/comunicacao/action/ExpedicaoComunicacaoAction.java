@@ -304,6 +304,7 @@ public class ExpedicaoComunicacaoAction implements Serializable, AssinaturaCallb
                     comunicacaoService.assinarExpedirComunicacao(dadosAssinatura, modelo, documentosEnviadosAssinador);
                     qtdAssinados++;
                 } catch (Exception ex) {
+                    LOG.error("Ocorreu um erro ao assinar o modelo " + modelo.getId() + ". Mensagem de erro: " + ex.getMessage(), ex);
                     qtdErros++;
                 }
             }
