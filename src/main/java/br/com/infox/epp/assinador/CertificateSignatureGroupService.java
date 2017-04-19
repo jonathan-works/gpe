@@ -80,7 +80,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider) {
 		CertificateSignatureGroup certificateSignatureGroup = createNewGroup();
 		
-		Iterator<AssinavelSource> it = assinavelProvider.getAssinaveis().iterator();
+		Iterator<? extends AssinavelSource> it = assinavelProvider.getAssinaveis().iterator();
 		while(it.hasNext()) {
 			AssinavelSource source = it.next();
 			newCertificateSignature(certificateSignatureGroup, source);
