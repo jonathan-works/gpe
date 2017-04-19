@@ -17,7 +17,9 @@ import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.SendTask;
 import org.camunda.bpm.model.bpmn.instance.ServiceTask;
 import org.camunda.bpm.model.bpmn.instance.SubProcess;
+import org.camunda.bpm.model.bpmn.instance.Task;
 import org.camunda.bpm.model.bpmn.instance.ThrowEvent;
+import org.camunda.bpm.model.bpmn.instance.UserTask;
 
 import com.google.common.base.Strings;
 
@@ -27,11 +29,20 @@ class BpmnNodesAdapter implements BpmnAdapter {
 	public BpmnModelInstance checkAndConvert(BpmnModelInstance bpmnModel) {
 		convertSubprocess(bpmnModel);
 		convertEvents(bpmnModel);
+		convertTasks(bpmnModel);
 		checkNodeNames(bpmnModel);
 		return bpmnModel;
 	}
 	
-	private void checkNodeNames(BpmnModelInstance bpmnModel) {
+	private void convertTasks(BpmnModelInstance bpmnModel) {
+	    for (Task task : bpmnModel.getModelElementsByType(Task.class)) {
+	        if (task.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_TASK)) {
+	            replaceElement(task, UserTask.class);
+	        }
+	    }
+    }
+
+    private void checkNodeNames(BpmnModelInstance bpmnModel) {
 	    Map<String, List<FlowNode>> nodesByName = new HashMap<>();
 	    
 	    for (FlowNode node : bpmnModel.getModelElementsByType(FlowNode.class)) {
