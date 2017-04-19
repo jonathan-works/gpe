@@ -1,5 +1,7 @@
 package br.com.infox.epp.documento;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import javax.ejb.Stateless;
@@ -43,6 +45,21 @@ import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 @Stateless
 public class DocumentoBinSearch extends PersistenceController {
 
+    public DocumentoBin find(Integer id){
+        return getEntityManager().find(DocumentoBin.class, id);
+    }
+    public List<DocumentoBin> findAll(Collection<Integer> ids){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+
+        CriteriaQuery<DocumentoBin> cq = cb.createQuery(DocumentoBin.class);
+
+        Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
+        
+        Predicate idInCollection = documentoBin.get(DocumentoBin_.id).in(ids);
+        cq=cq.where(idInCollection);
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
     public DocumentoBin getDocumentoPublicoByUUID(UUID uuid) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 
