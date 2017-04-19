@@ -101,21 +101,11 @@ public class AssinadorRenderer extends Renderer {
             }
         }
     }
-    //                List<ClientBehavior> behaviorsForEvent = behaviors.get(behaviorEvent);
-    //                if (!behaviorsForEvent.isEmpty()) {
-    //                        String behaviorSource = context.getExternalContext().getRequestParameterMap().get("javax.faces.source");
-    //                        String clientId = component.getClientId(context);
-    //                        if (behaviorSource != null && clientId.equals(behaviorSource)) {
-    //                                for (ClientBehavior behavior : behaviorsForEvent) {
-    //                                        behavior.decode(context, component);
-    //                                }
-    //                        }
-    //                }
 
     @Override
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
         Assinador button = (Assinador) component;
-        button.addAssinadorListener(new AssinadorListenerImpl());
+        
         encodeMarkup(context, button);
         encodeScript(context, button);
     }

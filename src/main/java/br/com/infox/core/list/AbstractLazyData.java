@@ -34,7 +34,7 @@ public abstract class AbstractLazyData<T> extends LazyDataModel<T> {
     }
     
     public int searchCount() {
-        TypedQuery<Long> countQuery = createQueryCount(getDataTable().getFilters());
+        TypedQuery<Long> countQuery = createQueryCount();
         Long rowCount = countQuery.getSingleResult();
         return rowCount.intValue();
     }
@@ -58,16 +58,16 @@ public abstract class AbstractLazyData<T> extends LazyDataModel<T> {
         return this;
     }
     
-    public abstract TypedQuery<Long> createQueryCount(Map<String, Object> filters);
+    public abstract TypedQuery<Long> createQueryCount();
     
-    public abstract TypedQuery<T> createQuery(String sortField, SortOrder sortOrder, Map<String, Object> filters);
+    public abstract TypedQuery<T> createQuery(String sortField, SortOrder sortOrder);
     
     @Override
     public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
         if (getWrappedData() == null || isPagination()) {
             int rowCount = searchCount();
             setRowCount(rowCount);
-            TypedQuery<T> query = createQuery(sortField, sortOrder, filters);
+            TypedQuery<T> query = createQuery(sortField, sortOrder);
             List<T> resultList = null;
             resultList = query.setMaxResults(pageSize).setFirstResult(first).getResultList();
             return resultList;
@@ -107,6 +107,10 @@ public abstract class AbstractLazyData<T> extends LazyDataModel<T> {
     public <C> C getFilter(String name, Class<C> clazz) {
         Object object = filters.get(name);
         return clazz.cast(object);
+    }
+    
+    public Map<String, Object> getFilters() {
+        return filters;
     }
     
     public void removeFilter(String name) {
