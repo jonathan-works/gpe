@@ -236,4 +236,8 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         cDoc.setUsuarioInclusao(null);
         return persist(cDoc);
 	}
+
+    public boolean documentoInclusoPorHierarquia(Integer idDocumento, String identificadorPapelBase) {
+        return isDocumentoInclusoPorHierarquia(find(idDocumento), identificadorPapelBase);
+    }
 }
