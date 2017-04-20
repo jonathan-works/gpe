@@ -1,9 +1,12 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -70,7 +73,16 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public String valorDocumento(Integer idDocumento) {
         return find(idDocumento).getDocumentoBin().getModeloDocumento();
     }
-
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void exclusaoRestauracaoLogicaDocumentos(Collection<Documento> documentos, String motivo,
+            TipoAlteracaoDocumento tipoAlteracaoDocumento) {
+        for (Documento documento : documentos) {
+            exclusaoRestauracaoLogicaDocumento(documento, motivo, tipoAlteracaoDocumento);
+        }
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void exclusaoRestauracaoLogicaDocumento(Documento documento, String motivo, TipoAlteracaoDocumento tipoAlteracaoDocumento)
             throws DAOException {
         this.historicoStatusDocumentoManager.gravarHistoricoDocumento(motivo,
