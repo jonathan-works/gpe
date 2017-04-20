@@ -152,5 +152,9 @@ public class JsfUtil {
         Object object = context.getExternalContext().getRequestMap().get(key);
         return clazz.cast(object);
     }
+
+    public String[] getRequestParameterValues(String key) {
+        return context.getExternalContext().getRequestParameterValuesMap().get(key);
+    }
     
 }
