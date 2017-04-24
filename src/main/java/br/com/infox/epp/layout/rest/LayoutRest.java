@@ -1,5 +1,6 @@
 package br.com.infox.epp.layout.rest;
 
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
@@ -7,6 +8,7 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
@@ -23,6 +25,8 @@ import br.com.infox.epp.layout.rest.entity.MetadadosResource;
 @Stateless
 public class LayoutRest {
 
+	private static final int TEMPO_MAXIMO_CACHE_MINUTOS = 30;
+	
 	@Inject
 	LayoutManager servico;
 	
@@ -45,6 +49,8 @@ public class LayoutRest {
 		MetadadosResource metadados = servico.getMetadados(codigoSkin, codigoResource);
 		EntityTag etag = metadados.getEtag();
 		ResponseBuilder builder = request.evaluatePreconditions(etag);
+		final CacheControl cacheControl = new CacheControl();
+		cacheControl.setMaxAge((int)TimeUnit.MINUTES.toSeconds(TEMPO_MAXIMO_CACHE_MINUTOS));
 
 		if (builder == null) {
 			logger.info("Resource de código: "+ codigoResource+ " não encontrado na base binaria");
@@ -60,7 +66,7 @@ public class LayoutRest {
 			}
 		}
 
-		return builder.build();
+		return builder.cacheControl(cacheControl).build();
 	}
 	
 
