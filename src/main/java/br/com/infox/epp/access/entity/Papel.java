@@ -170,7 +170,8 @@ public class Papel implements java.io.Serializable {
             return false;
         }
         Papel other = (Papel) obj;
-        if (getIdPapel() != other.getIdPapel()) {
+        
+        if (!getIdPapel().equals(other.getIdPapel())) {
             return false;
         }
         return true;
@@ -180,7 +181,7 @@ public class Papel implements java.io.Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = (prime * result) + getIdPapel();
+        result = (prime * result) + (getIdPapel()==null ? 0 : getIdPapel());
         return result;
     }
 

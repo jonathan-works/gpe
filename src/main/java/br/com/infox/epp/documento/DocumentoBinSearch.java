@@ -1,6 +1,8 @@
 package br.com.infox.epp.documento;
 
+import static br.com.infox.core.util.ObjectUtil.is;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,6 +51,9 @@ public class DocumentoBinSearch extends PersistenceController {
         return getEntityManager().find(DocumentoBin.class, id);
     }
     public List<DocumentoBin> findAll(Collection<Integer> ids){
+        if (is (ids).empty())
+            return Collections.emptyList();
+        
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 
         CriteriaQuery<DocumentoBin> cq = cb.createQuery(DocumentoBin.class);
