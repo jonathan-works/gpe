@@ -10,7 +10,7 @@ public interface Pasta {
         PastaRestricaoEnum getTipoPastaRestricao();
         Boolean getRead();
         Boolean getWrite();
-        Boolean getDelete();
+        Boolean getRemove();
         Boolean getLogicDelete();
     }
 

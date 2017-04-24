@@ -229,7 +229,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
             pastaRestricao.setAlvo(alvo);
             pastaRestricao.setTipoPastaRestricao(tipoRestricao);
             pastaRestricao.setWrite(false);
-            pastaRestricao.setDelete(false);
+            pastaRestricao.setRemove(false);
             pastaRestricao.setRead(true);
             pastaRestricao.setPasta(pasta);
             pastaRestricao.setLogicDelete(false);

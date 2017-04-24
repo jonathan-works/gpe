@@ -72,7 +72,7 @@ public class PastaRestricao implements br.com.infox.epp.documento.domain.Pasta.P
     
     @NotNull
     @Column(name = "in_delete", nullable = false)
-    private Boolean delete;
+    private Boolean remove;
     
     @NotNull
     @Column(name = "in_logic_delete", nullable = false)
@@ -86,9 +86,20 @@ public class PastaRestricao implements br.com.infox.epp.documento.domain.Pasta.P
         nova.setAlvo(this.getAlvo());
         nova.setRead(this.getRead());
         nova.setWrite(this.getWrite());
-        nova.setDelete(this.getDelete());
+        nova.setRemove(this.getRemove());
         nova.setLogicDelete(this.getLogicDelete());
         return nova;
+    }
+
+    /** @deprecated utilizar {@link PastaRestricao#getRemove()} */
+    @Deprecated
+    public Boolean getDelete(){
+        return getRemove();
+    }
+    /** @deprecated utilizar {@link PastaRestricao#setRemove(Boolean)} */
+    @Deprecated
+    public void setDelete(Boolean delete){
+        setRemove(delete);
     }
     
 }
