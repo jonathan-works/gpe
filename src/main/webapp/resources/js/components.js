@@ -354,5 +354,25 @@ function counterTextarea(obj, max) {
 	}
 	typed.innerHTML = "( " + obj.value.length + " / " + maxlength +" )";
 }
+var registerCounterTextArea=(function(){
+    'use strict';
+    var counterTextArea=function(config){
+        var maxLength = Number.parseInt(config.maxLength)||Number.MAX_SAFE_INTEGER;
+        
+        if(config.input.value.length > maxLength) {
+            config.input.value = config.input.value.substring(0, maxLength);
+        }
+        config.output.innerHTML = "( " + config.input.value.length + " / " + maxLength +" )";  
+    };
+    
+    return function(config){
+        if (!config.input || !config.output)
+            return;
+        config.input.addEventListener('input',function(evt) {
+            counterTextArea(config);
+        });
+        counterTextArea(config);
+    };
+})();
 
 PrimeFaces.locales['pt_BR'] = { closeText: 'Fechar', prevText: 'Anterior', nextText: 'Próximo', currentText: 'Começo', monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'], monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun', 'Jul','Ago','Set','Out','Nov','Dez'], dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'], dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'], dayNamesMin: ['D','S','T','Q','Q','S','S'], weekHeader: 'Semana', firstDay: 0, isRTL: false, showMonthAfterYear: false, yearSuffix: '', timeOnlyTitle: 'Só Horas', timeText: 'Tempo', hourText: 'Hora', minuteText: 'Minuto', secondText: 'Segundo', ampm: false, month: 'Mês', week: 'Semana', day: 'Dia', allDayText : 'Todo o Dia' }; 
