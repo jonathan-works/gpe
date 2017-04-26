@@ -24,6 +24,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = PastaRestricao.TABLE_NAME)
@@ -32,7 +35,10 @@ import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
     @NamedQuery(name = DELETE_BY_PASTA, query = DELETE_BY_PASTA_QUERY),
     @NamedQuery(name = GET_BY_PASTA_ALVO_TIPO_RESTRICAO, query = GET_BY_PASTA_ALVO_TIPO_RESTRICAO_QUERY)
 })
-public class PastaRestricao {
+@Getter
+@Setter
+@EqualsAndHashCode(of="id")
+public class PastaRestricao implements br.com.infox.epp.documento.domain.Pasta.Permissao {
     protected static final String TABLE_NAME = "tb_pasta_restricao";
     private static final String GENERATOR_NAME = "PastaRestricaoGenerator";
     private static final String SEQUENCE_NAME = "sq_pasta_restricao";
@@ -66,68 +72,12 @@ public class PastaRestricao {
     
     @NotNull
     @Column(name = "in_delete", nullable = false)
-    private Boolean delete;
+    private Boolean remove;
     
     @NotNull
     @Column(name = "in_logic_delete", nullable = false)
     private Boolean logicDelete;
     
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Pasta getPasta() {
-        return pasta;
-    }
-
-    public void setPasta(Pasta pasta) {
-        this.pasta = pasta;
-    }
-
-    public Integer getAlvo() {
-        return alvo;
-    }
-
-    public void setAlvo(Integer alvo) {
-        this.alvo = alvo;
-    }
-
-    public Boolean getRead() {
-        return read;
-    }
-
-    public void setRead(Boolean read) {
-        this.read = read;
-    }
-
-    public Boolean getWrite() {
-        return write;
-    }
-
-    public void setWrite(Boolean write) {
-        this.write = write;
-    }
-
-    public Boolean getDelete() {
-        return delete;
-    }
-
-    public void setDelete(Boolean delete) {
-        this.delete = delete;
-    }
-
-    public PastaRestricaoEnum getTipoPastaRestricao() {
-        return tipoPastaRestricao;
-    }
-
-    public void setTipoPastaRestricao(PastaRestricaoEnum tipoPastaRestricao) {
-        this.tipoPastaRestricao = tipoPastaRestricao;
-    }
-
     public PastaRestricao makeCopy() throws CloneNotSupportedException {
         PastaRestricao nova = new PastaRestricao();
         nova.setId(null);
@@ -136,42 +86,20 @@ public class PastaRestricao {
         nova.setAlvo(this.getAlvo());
         nova.setRead(this.getRead());
         nova.setWrite(this.getWrite());
-        nova.setDelete(this.getDelete());
+        nova.setRemove(this.getRemove());
         nova.setLogicDelete(this.getLogicDelete());
         return nova;
     }
 
-    public Boolean getLogicDelete() {
-        return logicDelete;
+    /** @deprecated utilizar {@link PastaRestricao#getRemove()} */
+    @Deprecated
+    public Boolean getDelete(){
+        return getRemove();
     }
-
-    public void setLogicDelete(Boolean logicDelete) {
-        this.logicDelete = logicDelete;
+    /** @deprecated utilizar {@link PastaRestricao#setRemove(Boolean)} */
+    @Deprecated
+    public void setDelete(Boolean delete){
+        setRemove(delete);
     }
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof PastaRestricao))
-			return false;
-		PastaRestricao other = (PastaRestricao) obj;
-		if (getId() == null) {
-			if (other.getId() != null)
-				return false;
-		} else if (!getId().equals(other.getId()))
-			return false;
-		return true;
-	}
     
 }

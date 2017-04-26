@@ -1,9 +1,11 @@
 package br.com.infox.core.util;
 
+import static br.com.infox.core.util.ObjectUtil.is;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 public final class CollectionUtil {
@@ -15,10 +17,16 @@ public final class CollectionUtil {
     }
 
     public static <T> T firstOrNull(Collection<T> collection) {
-        return isEmpty(collection) ? null : collection.iterator().next();
+        return is(collection).empty() ? null : collection.iterator().next();
+    }
+    public static <T> T firstOrNull(Map<?,T> map) {
+        return is(map).empty() ? null : map.values().iterator().next();
+    }
+    public static <T> T firstOrNull(T[] array) {
+        return is(array).empty() ? null : array[0];
     }
     public static <T> T lastOrNull(Collection<T> collection) {
-        return isEmpty(collection) ? null : lastOfCollection(collection);
+        return is(collection).empty() ? null : lastOfCollection(collection);
     }
     private static <T> T lastOfCollection(Collection<T> collection){
         T result = null;

@@ -17,6 +17,7 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.lIST_DOCU
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -54,12 +55,15 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.documento.domain.Arquivavel;
+import br.com.infox.epp.documento.domain.Assinatura;
+import br.com.infox.epp.documento.domain.Assinavel;
+import br.com.infox.epp.documento.domain.RegraAssinatura;
+import br.com.infox.epp.documento.domain.RegraAssinaturaService;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
-import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
-import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.manager.DocumentoEntityListener;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import lombok.EqualsAndHashCode;
@@ -82,7 +86,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "descricao")
 @EntityListeners(value = EntityListenerService.class)
-public class Documento implements Serializable, Cloneable, EntityListener<Documento> {
+public class Documento implements Serializable, Cloneable, EntityListener<Documento>, Assinavel, Arquivavel {
 
     private static final long serialVersionUID = 1L;
     public static final int TAMANHO_MAX_DESCRICAO_DOCUMENTO = 260;
@@ -188,69 +192,51 @@ public class Documento implements Serializable, Cloneable, EntityListener<Docume
     private List<SigiloDocumento> sigiloDocumento = new ArrayList<>();
     
     public boolean isDocumentoAssinavel(Papel papel){
-		if (getDocumentoBin() == null || getClassificacaoDocumento() == null) {
-			return false;
-		}
-		if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {
-    		return false;
-    	}
-    	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
-		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
-			if (tipoProcessoDocumentoPapel.getPapel().equals(papel) 
-					&& tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
-				return true;
-			}
-		}
-		return false;
+        if (getDocumentoBin() == null || getClassificacaoDocumento() == null) {
+            return false;
+        }
+        if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {
+            return false;
+        }
+        return getRegraAssinaturaService().permiteAssinaturaPor(this, papel);
     }
     
     public boolean isDocumentoAssinavel(){
-    	if (getDocumentoBin() == null || getDocumentoBin().isMinuta()) {
-			return false;
-		}
-    	if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {
-    		return false;
-    	}
-    	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
-		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
-			if (tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
-				return true;
-			}
-		}
-		return false;
+        if (getDocumentoBin() == null || getDocumentoBin().isMinuta()) {
+            return false;
+        }
+        if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {
+            return false;
+        }
+        return getRegraAssinaturaService().permiteAssinatura(this);
     }
     
+    /**
+     * @deprecated Use {@link br.com.infox.epp.documento.domain.RegraAssinaturaService#assinadoPor(br.com.infox.epp.processo.documento.entity.Documento,Papel)} instead
+     */
     public boolean isDocumentoAssinado(Papel papel){
-    	for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
-    		if (assinaturaDocumento.getPapel().equals(papel)){
-    			return true;
-    		}
-    	}
-    	return false;
+        return getRegraAssinaturaService().assinadoPor(this, papel);
     }
     
+    /**
+     * @deprecated Use {@link br.com.infox.epp.documento.domain.RegraAssinaturaService#assinadoPor(br.com.infox.epp.processo.documento.entity.Documento,PessoaFisica)} instead
+     */
     public boolean isDocumentoAssinado(UsuarioLogin usuarioLogin){
     	return isDocumentoAssinado(usuarioLogin.getPessoaFisica());
     }
     
+    /**
+     * @deprecated Use {@link br.com.infox.epp.documento.domain.RegraAssinaturaService#assinadoPor(br.com.infox.epp.processo.documento.entity.Documento,PessoaFisica)} instead
+     */
     public boolean isDocumentoAssinado(PessoaFisica pessoa){
-        for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
-            if (assinaturaDocumento.getPessoaFisica().equals(pessoa)){
-                return true;
-            }
-        }
-        return false;
+        return getRegraAssinaturaService().assinadoPor(this, pessoa);
     }
     
+    /**
+     * @deprecated Use {@link br.com.infox.epp.documento.domain.RegraAssinaturaService#possuiAssinaturaSuficiente(br.com.infox.epp.processo.documento.entity.Documento)} instead
+     */
     public boolean hasAssinaturaSuficiente() {
-    	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
-    	for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : papeis) {
-    		if (classificacaoDocumentoPapel.getTipoAssinatura() == TipoAssinaturaEnum.S
-    				&& isDocumentoAssinado(classificacaoDocumentoPapel.getPapel())) {
-    			return true;
-    		}
-    	}
-    	return false;
+        return getRegraAssinaturaService().possuiAssinaturaSuficiente(this);
     }
     
     public boolean hasAssinatura(){
@@ -259,49 +245,29 @@ public class Documento implements Serializable, Cloneable, EntityListener<Docume
     				&& getDocumentoBin().getAssinaturas().size() > 0;
     }
     
+    /**
+     * @deprecated Use {@link br.com.infox.epp.documento.domain.RegraAssinaturaService#assinaturaObrigatoria(br.com.infox.epp.processo.documento.entity.Documento,Papel)} instead
+     */
     public boolean isAssinaturaObrigatoria(Papel papel) {
-    	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
-    	boolean existeObrigatoria=false;
-    	TipoAssinaturaEnum tipoAssinaturaEncontrado=null;
-        for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : papeis) {
-            switch (classificacaoDocumentoPapel.getTipoAssinatura()) {
-            case O:
-                existeObrigatoria |= true;
-                break;
-            default:
-                break;
-            }
-            if (classificacaoDocumentoPapel.getPapel().equals(papel)) {
-                tipoAssinaturaEncontrado = classificacaoDocumentoPapel.getTipoAssinatura();
-            }
-        }
-    	return TipoAssinaturaEnum.O.equals(tipoAssinaturaEncontrado) || (TipoAssinaturaEnum.S.equals(tipoAssinaturaEncontrado) && !existeObrigatoria);
+        return getRegraAssinaturaService().assinaturaObrigatoria(this, papel);
     }
     
+    /**
+     * @deprecated Use {@link br.com.infox.epp.documento.domain.RegraAssinaturaService#documentoAssinavel(br.com.infox.epp.processo.documento.entity.Documento,PessoaFisica,Papel)} instead
+     */
     public boolean isDocumentoAssinavel(PessoaFisica pessoaFisica, Papel papel) {
-        if (getClassificacaoDocumento() == null || !isDocumentoAssinavel(papel)) {
+        if (getClassificacaoDocumento() != null && getRegraAssinaturaService().permiteAssinaturaPor(this, papel)) {
+        } else {
             return false;
         }
-
-        boolean pessoaAssinouDocumento = isDocumentoAssinado(pessoaFisica);
-        boolean papelAssinouDocumento = isDocumentoAssinado(papel);
-        boolean permiteAssinaturaMultipla = papelPermiteAssinaturaMultipla(papel);
-        
-        return !pessoaAssinouDocumento && (permiteAssinaturaMultipla || !papelAssinouDocumento);
+        return getRegraAssinaturaService().permiteAssinaturaPor(this, pessoaFisica, papel);
     }
     
+    /**
+     * @deprecated Use {@link br.com.infox.epp.documento.domain.RegraAssinaturaService#permiteAssinaturaMultipla(br.com.infox.epp.processo.documento.entity.Documento,Papel)} instead
+     */
     public boolean papelPermiteAssinaturaMultipla(Papel papel) {
-        if (getClassificacaoDocumento() == null) {
-            return false;
-        }
-        
-        for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
-            if (classificacaoDocumentoPapel.getPapel().equals(papel)) {
-                return classificacaoDocumentoPapel.getAssinaturasMultiplas();
-            }
-        }
-        
-        return false;
+        return getRegraAssinaturaService().permiteAssinaturaMultipla(this, papel);
     }
     
     @Transient
@@ -340,6 +306,25 @@ public class Documento implements Serializable, Cloneable, EntityListener<Docume
     @Override
     public Class<? extends AbstractEntityListener<Documento>> getServiceClass() {
         return DocumentoEntityListener.class;
+    }
+
+    @Override
+    public List<? extends RegraAssinatura> getRegrasAssinatura() {
+        return getClassificacaoDocumento()==null ? Collections.<RegraAssinatura>emptyList() : getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
+    }
+
+    @Override
+    public List<? extends Assinatura> getAssinaturas() {
+        return getDocumentoBin()==null? Collections.<Assinatura>emptyList() : getDocumentoBin().getAssinaturas();
+    }
+
+    public RegraAssinaturaService getRegraAssinaturaService() {
+        return BeanManager.INSTANCE.getReference(RegraAssinaturaService.class);
+    }
+
+    @Override
+    public boolean isSuficientementeAssinado() {
+        return Boolean.TRUE.equals(getDocumentoBin().getSuficientementeAssinado());
     }
 
 }

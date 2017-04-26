@@ -31,6 +31,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.processo.entity.Processo;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = Pasta.TABLE_NAME)
@@ -39,7 +42,10 @@ import br.com.infox.epp.processo.entity.Processo;
     @NamedQuery(name = GET_BY_PROCESSO_AND_DESCRICAO, query = GET_BY_PROCESSO_AND_DESCRICAO_QUERY),
     @NamedQuery(name = GET_BY_NOME, query = GET_BY_NOME_QUERY)
 })
-public class Pasta implements Serializable, Cloneable {
+@Getter
+@Setter
+@EqualsAndHashCode(of={"id"})
+public class Pasta implements Serializable, Cloneable, br.com.infox.epp.documento.domain.Pasta {
 
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_pasta";
@@ -100,70 +106,6 @@ public class Pasta implements Serializable, Cloneable {
             processo.getPastaList().add(this);
         }
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Processo getProcesso() {
-        return processo;
-    }
-
-    public void setProcesso(Processo processo) {
-        this.processo = processo;
-    }
-
-    public String getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-
-	public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Boolean getRemovivel() {
-        return removivel;
-    }
-
-    public void setRemovivel(Boolean removivel) {
-        this.removivel = removivel;
-    }
-
-    public List<Documento> getDocumentosList() {
-        return documentosList;
-    }
-
-    public void setDocumentosList(List<Documento> documentosList) {
-        this.documentosList = documentosList;
-    }
-    
-    public List<PastaRestricao> getPastaRestricaoList() {
-        return pastaRestricaoList;
-    }
-
-    public void setPastaRestricaoList(List<PastaRestricao> pastaRestricaoList) {
-        this.pastaRestricaoList = pastaRestricaoList;
-    }
-
-    public Boolean getSistema() {
-        return sistema;
-    }
-
-    public void setSistema(Boolean sistema) {
-        this.sistema = sistema;
-    }
     
     public String toString() {
     	return nome;
@@ -188,53 +130,5 @@ public class Pasta implements Serializable, Cloneable {
     public String getTemplateNomePasta() {
     	return getNome() + " ({0})";
     }
-
-    public Boolean getEditavel() {
-        return editavel;
-    }
-
-    public void setEditavel(Boolean editavel) {
-        this.editavel = editavel;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Integer getOrdem() {
-        return ordem;
-    }
-
-    public void setOrdem(Integer ordem) {
-        this.ordem = ordem;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof Pasta))
-            return false;
-        Pasta other = (Pasta) obj;
-        if (getId() == null) {
-            if (other.getId() != null)
-                return false;
-        } else if (!getId().equals(other.getId()))
-            return false;
-        return true;
-    }
+    
 }

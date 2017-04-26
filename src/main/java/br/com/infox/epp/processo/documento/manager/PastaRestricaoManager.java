@@ -103,7 +103,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
         if (papelUsuario.equals(papelAlvo) || papelManager.isPapelHerdeiro(papelUsuario.getIdentificador(), papelAlvo.getIdentificador())) {
             restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
             restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
-            restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());
+            restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getRemove());
             restricaoBean.setLogicDelete(restricaoBean.getLogicDelete() || restricao.getLogicDelete());
             return true;
         }
@@ -129,13 +129,13 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
             if (1 == restricao.getAlvo() && ppAtivo) {
                 restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
                 restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
-                restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());
+                restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getRemove());
                 restricaoBean.setLogicDelete(restricaoBean.getLogicDelete() || restricao.getLogicDelete());
                 return true;
             } else if (0 == restricao.getAlvo() && !ppAtivo) {
                 restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
                 restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
-                restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());
+                restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getRemove());
                 restricaoBean.setLogicDelete(restricaoBean.getLogicDelete() || restricao.getLogicDelete());
                 return true;
             }
@@ -160,7 +160,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
         if (localizacao.equals(localizacaoAlvo)) {
             restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
             restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
-            restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());
+            restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getRemove());
             restricaoBean.setLogicDelete(restricaoBean.getLogicDelete() || restricao.getLogicDelete());
             return true;
         }
@@ -176,7 +176,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
     private void populateBeanDefault(PastaRestricaoBean restricaoBean, PastaRestricao restricaoDefault) {
         restricaoBean.setRead(restricaoDefault.getRead());
         restricaoBean.setWrite(restricaoDefault.getWrite());
-        restricaoBean.setDelete(restricaoDefault.getDelete());
+        restricaoBean.setDelete(restricaoDefault.getRemove());
         restricaoBean.setLogicDelete(restricaoDefault.getLogicDelete());
     }
 
@@ -195,7 +195,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
         restricao.setAlvo(null);
         restricao.setRead(Boolean.TRUE);
         restricao.setWrite(Boolean.TRUE);
-        restricao.setDelete(Boolean.TRUE);
+        restricao.setRemove(Boolean.TRUE);
         restricao.setLogicDelete(Boolean.FALSE);
         return persist(restricao);
     }
@@ -209,7 +209,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
             restricao.setAlvo(modeloRestricao.getAlvo());
             restricao.setRead(modeloRestricao.getRead());
             restricao.setWrite(modeloRestricao.getWrite());
-            restricao.setDelete(modeloRestricao.getDelete());
+            restricao.setRemove(modeloRestricao.getDelete());
             restricao.setLogicDelete(modeloRestricao.getLogicDelete());
             persist(restricao);
         }

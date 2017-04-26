@@ -2,6 +2,7 @@ package br.com.infox.epp.assinador;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -209,12 +210,12 @@ public class AssinadorService implements Serializable {
 	 * assinavelProvider
 	 */
 	public boolean validarDadosAssinados(List<DadosAssinatura> dadosAssinatura, AssinavelProvider assinavelProvider) {
-		List<AssinavelSource> assinaveis = assinavelProvider.getAssinaveis();
+		Collection<? extends AssinavelSource> assinaveis = assinavelProvider.getAssinaveis();
 		if (dadosAssinatura.size() != assinaveis.size()) {
 			return false;
 		}
 		Iterator<DadosAssinatura> itDadosAssinatura = dadosAssinatura.iterator();
-		Iterator<AssinavelSource> itAssinaveis = assinaveis.iterator();
+		Iterator<? extends AssinavelSource> itAssinaveis = assinaveis.iterator();
 
 		while (itDadosAssinatura.hasNext()) {
 			DadosAssinatura signed = itDadosAssinatura.next();

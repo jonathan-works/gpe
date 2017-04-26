@@ -40,6 +40,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
+import br.com.infox.epp.documento.domain.Assinatura;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -53,7 +54,7 @@ import br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery;
 @NamedQueries({ 
 	@NamedQuery(name = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO, query = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO_QUERY) 
 })
-public class AssinaturaDocumento implements Serializable {
+public class AssinaturaDocumento implements Serializable, Assinatura {
     
 	private static final long serialVersionUID = 1L;
 
@@ -142,6 +143,7 @@ public class AssinaturaDocumento implements Serializable {
         this.idAssinatura = idAssinatura;
     }
 
+    @Override
     public PessoaFisica getPessoaFisica() {
         return pessoaFisica;
     }
@@ -150,6 +152,7 @@ public class AssinaturaDocumento implements Serializable {
         this.pessoaFisica = pessoaFisica;
     }
 
+    @Override
     public Papel getPapel() {
         return papel;
     }

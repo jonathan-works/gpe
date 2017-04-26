@@ -12,6 +12,8 @@
     	<composite:attribute name="help" />
     	<composite:attribute name="value" type="java.lang.String"/>
     	<composite:attribute name="disabled" default="false"/>
+    	<composite:attribute name="style"/>
+    	<composite:attribute name="inputStyle" default="" />
     	<composite:attribute name="styleClass"/>
     	<composite:attribute name="onblur" />
     	<composite:attribute name="maxlength" default="0"/>
@@ -37,7 +39,7 @@
 	
     <composite:implementation>
     	<ui:param name="maxlength" value="#{cc.attrs.maxlength}"/>
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}" >
+		<p:outputPanel id="#{cc.attrs.id}" style="#{cc.attrs.style}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}" >
 			<h:outputScript library="js" name="components.js" />
 			<script type="text/javascript">
 				var id = "#{cc.attrs.id}";
@@ -64,10 +66,11 @@
         		</div>
         		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
         			<h:inputTextarea id="#{cc.attrs.id}Input" styleClass="#{styleClass} input #{readonly ? 'readOnly' : ''} ifx-textarea"
-				      readonly="#{cc.attrs.readonly}" cols="#{cc.attrs.cols}"
+				      style="#{cc.attrs.inputStyle}"
+                      readonly="#{cc.attrs.readonly}" cols="#{cc.attrs.cols}"
 				      rows="#{cc.attrs.rows}" onblur="#{cc.attrs.onblur}"
 				      disabled="#{cc.attrs.disabled}" required="#{cc.attrs.required}"
-				      value="#{cc.attrs.value}" onkeyup="counterTextarea(this,#{maxlength});">
+				      value="#{cc.attrs.value}">
 				      <c:if test="#{cc.attrs.ajax}">
 					      <c:if test="#{empty cc.getValueExpression('listener')}">
 					    	  <p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
@@ -84,9 +87,14 @@
 		   			<f:converter converterId="stringConverter" />
 				    </h:inputTextarea>
 				    <c:if test="#{cc.attrs.showCounter}">
-					    <div id="#{id}counterDiv">
-					      ( #{empty cc.attrs.value ? 0 : cc.attrs.value.length()} / #{maxlength} )
-					    </div>
+					    <div id="#{cc.clientId}:counterDiv" />
+                        <script>
+                        registerCounterTextArea({
+            		        input:document.getElementById("#{cc.clientId}:#{cc.attrs.id}Input"),
+            		        output:document.getElementById("#{cc.clientId}:counterDiv"),
+            		        maxLength:#{cc.attrs.maxlength}
+            		    });
+                        </script>
 				    </c:if>
         		</div>
         	</div>

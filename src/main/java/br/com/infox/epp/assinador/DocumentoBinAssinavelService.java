@@ -2,17 +2,16 @@ package br.com.infox.epp.assinador;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.epp.documento.DocumentoBinDataProvider;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 
 /**
  * Serviço utilizado para carregar os dados assinaveis de um {@link DocumentoBin}
@@ -26,15 +25,10 @@ public class DocumentoBinAssinavelService implements DocumentoBinDataProvider {
 	@Inject
 	private DocumentoBinManager documentoBinManager;
 	@Inject
-	private DocumentoBinarioManager documentoBinarioManager;
+	private FileDownloader fileDownloader;
 	
 	private byte[] getDadosAssinaveis(DocumentoBin documentoBin) {
-		if(documentoBin.isBinario()) {
-			return documentoBinarioManager.getData(documentoBin.getId());
-		}
-		else {
-			return documentoBin.getModeloDocumento().getBytes(StandardCharsets.UTF_8);			
-		}
+	    return fileDownloader.getData(documentoBin, false);
 	}
 
 	@Override

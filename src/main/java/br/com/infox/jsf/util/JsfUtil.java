@@ -3,6 +3,7 @@ package br.com.infox.jsf.util;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -151,6 +152,27 @@ public class JsfUtil {
     public <T> T getRequestValue(String key, Class<T> clazz) {
         Object object = context.getExternalContext().getRequestMap().get(key);
         return clazz.cast(object);
+    }
+
+    public String[] getRequestParameterValues(String key) {
+        return context.getExternalContext().getRequestParameterValuesMap().get(key);
+    }
+
+    public void openPopUp(String name, String url) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("window.open('").append(url).append("', ");
+        sb.append("'").append(name.replaceAll(Pattern.quote("'"), "\\'")).append("'").append(", ");
+        sb.append("[");
+        sb.append("'width=',outerWidth,");
+        sb.append("',height=',outerHeight,");
+        sb.append("',top=',screen.top || window['screenY'] || window['screenTop'] || 0,");
+        sb.append("',left=',screen.left || window['screenX'] || window['screenLeft'] || 0,");
+        sb.append("',resizable=YES',");
+        sb.append("',scrollbars=YES',");
+        sb.append("',status=NO',");
+        sb.append("',location=NO'");
+        sb.append("].join(''));");
+        execute(sb.toString());
     }
     
 }
