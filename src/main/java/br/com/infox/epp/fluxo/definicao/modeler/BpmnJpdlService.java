@@ -134,7 +134,7 @@ public class BpmnJpdlService {
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(newProcessDefinitionXml);
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
     	atualizarNomeFluxo(definicaoProcesso.getFluxo().getFluxo(), bpmnModel, processDefinition);
-    	ConfiguracoesTarefa.resolverMarcadoresBpmn(processDefinition, bpmnModel);
+    	ConfiguracoesNos.resolverMarcadoresBpmn(processDefinition, bpmnModel);
     	
     	newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
     	// Validar consistência do JPDL

@@ -72,7 +72,7 @@ public class JpdlBpmnConverter {
 		
 		startEvent = bpmnModel.getModelElementById(processDefinition.getStartState().getKey());
 		createDiagram(bpmnModel);
-		ConfiguracoesTarefa.resolverMarcadoresBpmn(processDefinition, bpmnModel);
+		ConfiguracoesNos.resolverMarcadoresBpmn(processDefinition, bpmnModel);
 		
 		String bpmn = Bpmn.convertToString(bpmnModel);
 		return bpmn;

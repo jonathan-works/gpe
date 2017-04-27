@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
+import org.camunda.bpm.model.bpmn.instance.Activity;
 import org.camunda.bpm.model.bpmn.instance.BoundaryEvent;
 import org.camunda.bpm.model.bpmn.instance.DataObject;
 import org.camunda.bpm.model.bpmn.instance.DataObjectReference;
 import org.camunda.bpm.model.bpmn.instance.DataOutputAssociation;
 import org.camunda.bpm.model.bpmn.instance.EventDefinition;
 import org.camunda.bpm.model.bpmn.instance.SignalEventDefinition;
+import org.camunda.bpm.model.bpmn.instance.StartEvent;
 import org.camunda.bpm.model.bpmn.instance.TimerEventDefinition;
 import org.camunda.bpm.model.bpmn.instance.UserTask;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
@@ -23,6 +26,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.scheduler.def.CreateTimerAction;
 
@@ -30,7 +34,7 @@ import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.jbpm.event.EventHandler;
 
-public class ConfiguracoesTarefa {
+public class ConfiguracoesNos {
 	
 	private static enum Position {
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
@@ -41,8 +45,13 @@ public class ConfiguracoesTarefa {
 			if (node.getNodeType().equals(NodeType.Task)) {
 				resolverTimer((TaskNode) node, bpmnModel);
 				resolverEvento((TaskNode) node, bpmnModel);
-				resolverSinal((TaskNode) node, bpmnModel);
 				resolverDocumento((TaskNode) node, bpmnModel);
+			}
+			
+			if (node.getNodeType().equals(NodeType.Task) || node.getNodeType().equals(NodeType.ProcessState)) {
+				resolverSinalBoundary(node, bpmnModel);
+			} else if (node.getNodeType().equals(NodeType.StartState)) {
+				resolverSinalStart((StartState) node, bpmnModel);
 			}
 		}
 	}
@@ -137,9 +146,9 @@ public class ConfiguracoesTarefa {
 		}
 	}
 
-	private static BoundaryEvent getBoundaryEvent(UserTask userTask, Class<? extends EventDefinition> eventDefinitionClass) {
-		for (BoundaryEvent boundaryEvent : userTask.getParentElement().getChildElementsByType(BoundaryEvent.class)) {
-			if (boundaryEvent.getAttachedTo().equals(userTask)) {
+	private static BoundaryEvent getBoundaryEvent(Activity activity, Class<? extends EventDefinition> eventDefinitionClass) {
+		for (BoundaryEvent boundaryEvent : activity.getParentElement().getChildElementsByType(BoundaryEvent.class)) {
+			if (boundaryEvent.getAttachedTo().equals(activity)) {
 				if (eventDefinitionClass == null && boundaryEvent.getEventDefinitions().isEmpty()) {
 					return boundaryEvent;
 				} else if (eventDefinitionClass != null) {
@@ -166,9 +175,9 @@ public class ConfiguracoesTarefa {
 		}
 	}
 
-	private static void resolverSinal(TaskNode node, BpmnModelInstance bpmnModel) {
-		UserTask userTask = bpmnModel.getModelElementById(node.getKey());
-		BoundaryEvent boundaryEvent = getBoundaryEvent(userTask, SignalEventDefinition.class);
+	private static void resolverSinalBoundary(Node node, BpmnModelInstance bpmnModel) {
+		Activity activity = bpmnModel.getModelElementById(node.getKey());
+		BoundaryEvent boundaryEvent = getBoundaryEvent(activity, SignalEventDefinition.class);
 		Map<String, Event> events = node.getEvents();
 		boolean removerBoundaryEvent = boundaryEvent != null;
 		
@@ -177,7 +186,7 @@ public class ConfiguracoesTarefa {
 				if (event.isListener()) {
 					removerBoundaryEvent = false;
 					if (boundaryEvent == null) {
-						boundaryEvent = createBoundaryEvent(userTask, Position.TOP_RIGHT);
+						boundaryEvent = createBoundaryEvent(activity, Position.TOP_RIGHT);
 						boundaryEvent.getEventDefinitions().add(bpmnModel.newInstance(SignalEventDefinition.class));
 					}
 					break;
@@ -187,6 +196,36 @@ public class ConfiguracoesTarefa {
 		
 		if (removerBoundaryEvent) {
 			boundaryEvent.getParentElement().removeChildElement(boundaryEvent);
+		}
+	}
+	
+	private static void resolverSinalStart(StartState startState, BpmnModelInstance bpmnModel) {
+		StartEvent startEvent = bpmnModel.getModelElementById(startState.getKey());
+		SignalEventDefinition signalEventDefinition = null;
+		for (EventDefinition eventDefinition : startEvent.getEventDefinitions()) {
+			if (eventDefinition.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_SIGNAL_EVENT_DEFINITION)) {
+				signalEventDefinition = (SignalEventDefinition) eventDefinition;
+				break;
+			}
+		}
+		
+		Map<String, Event> events = startState.getEvents();
+		boolean removerSignalDefinition = signalEventDefinition != null;
+		
+		if (events != null) {
+			for (Event event : events.values()) {
+				if (event.isListener()) {
+					removerSignalDefinition = false;
+					if (signalEventDefinition == null) {
+						startEvent.getEventDefinitions().add(bpmnModel.newInstance(SignalEventDefinition.class));
+					}
+					break;
+				}
+			}
+		}
+		
+		if (removerSignalDefinition) {
+			startEvent.getEventDefinitions().remove(signalEventDefinition);
 		}
 	}
 	
@@ -217,12 +256,12 @@ public class ConfiguracoesTarefa {
 		return false;
 	}
 	
-	private static BoundaryEvent createBoundaryEvent(UserTask userTask, Position position) {
-		BpmnModelInstance bpmnModel = (BpmnModelInstance) userTask.getModelInstance();
+	private static BoundaryEvent createBoundaryEvent(Activity activity, Position position) {
+		BpmnModelInstance bpmnModel = (BpmnModelInstance) activity.getModelInstance();
 		
 		BoundaryEvent boundaryEvent = bpmnModel.newInstance(BoundaryEvent.class);
-		boundaryEvent.setAttachedTo(userTask);
-		userTask.getParentElement().addChildElement(boundaryEvent);
+		boundaryEvent.setAttachedTo(activity);
+		activity.getParentElement().addChildElement(boundaryEvent);
 		
 		BpmnDiagram diagram = DiagramUtil.getDefaultDiagram(bpmnModel);
 		BpmnShape shape = bpmnModel.newInstance(BpmnShape.class);
@@ -231,7 +270,7 @@ public class ConfiguracoesTarefa {
 		Bounds bounds = bpmnModel.newInstance(Bounds.class);
 		shape.setBounds(bounds);
 		
-		Bounds activityBounds = userTask.getDiagramElement().getBounds();
+		Bounds activityBounds = ((BpmnShape) activity.getDiagramElement()).getBounds();
 		bounds.setWidth(36);
 		bounds.setHeight(36);
 		
