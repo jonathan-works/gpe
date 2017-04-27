@@ -3,59 +3,52 @@ package br.com.infox.epp.processo.variavel.action;
 import java.io.Serializable;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import com.google.common.base.Optional;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 
-@Name(VariavelProcessoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
-@Transactional
+@Named
+@ViewScoped
 public class VariavelProcessoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "variavelProcessoAction";
 
-    private Boolean possuiVariaveis;
-    private List<VariavelProcesso> variaveis;
+    private Optional<List<VariavelProcesso>> variaveis;
     private Processo processo;
 
-    @In
+    @Inject
     private VariavelProcessoService variavelProcessoService;
-    @In
+    @Inject
     private PapelManager papelManager;
-
+    
+    public void init(Processo processo) {
+        this.processo = processo;
+    }
+    
     public Boolean possuiVariaveis() {
-        if (this.possuiVariaveis == null) {
-            this.possuiVariaveis = !getVariaveis().isEmpty();
-        }
-        return this.possuiVariaveis;
+        return getVariaveis() != null && !getVariaveis().isEmpty();
     }
 
     public List<VariavelProcesso> getVariaveis() {
-        if (this.variaveis == null) {
-            this.variaveis = variavelProcessoService.getVariaveis(getProcesso(), 
-            		DefinicaoVariavelProcessoRecursos.MOVIMENTAR.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
+        if ( variaveis == null && getProcesso() != null ) {
+            List<VariavelProcesso> variavelList = variavelProcessoService.getVariaveis(getProcesso(), 
+                    DefinicaoVariavelProcessoRecursos.MOVIMENTAR.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
+            this.variaveis = Optional.<List<VariavelProcesso>>of(variavelList);
         }
-        return this.variaveis;
+        return variaveis.get();
     }
-
-    public Processo getProcesso() {
+    
+    private Processo getProcesso() {
         return processo;
-    }
-
-    public void setProcesso(Processo processo) {
-        this.processo = processo;
     }
 
 }

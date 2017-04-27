@@ -34,7 +34,6 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.hibernate.util.HibernateUtil;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named(DestinatarioComunicacaoAction.NAME)
 @ViewScoped
@@ -44,8 +43,8 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	public static final String NAME = "destinatarioComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(DestinatarioComunicacaoAction.class);
 
-	private ParticipanteProcessoComunicacaoList participanteProcessoComunicacaoList = ComponentUtil.getComponent(ParticipanteProcessoComunicacaoList.NAME);
-	
+	@Inject
+	private ParticipanteProcessoComunicacaoList participanteProcessoComunicacaoList;
 	@Inject
 	private PessoaFisicaManager pessoaFisicaManager;
 	@Inject

@@ -65,8 +65,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoEpaHome";
 
-	@In
-	private ProcessoManager processoManager;
+	
 	@In
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@In
@@ -80,8 +79,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@In
 	private InfoxMessages infoxMessages;
 	@In
-	private VariavelProcessoAction variavelProcessoAction;
-	@In
 	private ConsultaController consultaController;
 	@In
 	private PastaRestricaoAction pastaRestricaoAction;
@@ -90,6 +87,10 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@In
 	private PastaList pastaList;
 	
+	@Inject
+    private ProcessoManager processoManager;
+	@Inject
+    private VariavelProcessoAction variavelProcessoAction;
 	@Inject
 	private DocumentoProcessoAction documentoProcessoAction;
 	@Inject
@@ -214,7 +215,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	public void setId(Object id) {
 		super.setId(id);
 		// Colocado para poder ser chamado antes do iniciarTask
-		variavelProcessoAction.setProcesso(getInstance());
+		variavelProcessoAction.init(getInstance());
 	}
 
 	public String getObservacaoMovimentacao() {
@@ -261,7 +262,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     public void setTab(String tab) {
 		if((tab == null && getTab() != null) || (tab != null && getTab() == null) || !tab.equals(getTab())){
 			super.setTab(tab);
-			variavelProcessoAction.setProcesso(getInstance());
+			variavelProcessoAction.init(getInstance());
 	        if (tab.equals("tabMovimentacoes")){
 	        	consultaController.setProcesso(this.getInstance());
 	        }

@@ -14,5 +14,5 @@ login-required="true"
     <param name="idProcesso" value="#{processoEpaHome.processoIdProcesso}" />
     <param name="idTaskInstance" value="#{processoEpaHome.idTaskInstance}" />
     <action execute="#{processoEpaHome.iniciarTarefaProcesso()}" on-postback="false"/>
-    <action execute="#{movimentarController.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
+    <action execute="#{movimentarController.init(processoEpaHome.instance)}" on-postback="false"/>
 </page>

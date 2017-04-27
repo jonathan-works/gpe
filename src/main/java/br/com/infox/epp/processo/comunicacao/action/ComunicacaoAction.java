@@ -58,11 +58,11 @@ public class ComunicacaoAction implements Serializable {
 	@Inject
 	private DocumentoDownloader documentoDownloader;
 	@Inject
-	private ComunicacaoService comunicacaoService; 
+	protected ComunicacaoService comunicacaoService; 
 	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@Inject	
-	private ModeloComunicacaoRascunhoList modeloComunicacaoRascunhoList;
+	protected ModeloComunicacaoRascunhoList modeloComunicacaoRascunhoList;
 	@Inject
 	protected InfoxMessages infoxMessages;
 	@Inject

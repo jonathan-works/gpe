@@ -14,11 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -28,6 +29,7 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.context.exe.variableinstance.LongInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.consulta.bean.MovimentacoesBean;
@@ -45,33 +47,39 @@ import br.com.infox.ibpm.variable.VariableHandler;
 @Transactional
 @Scope(ScopeType.CONVERSATION)
 @Name(ProcessoHandler.NAME)
+@ContextDependency
 public class ProcessoHandler implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoHandler";
 
-    @In
+    @Inject
     private ProcessoManager processoManager;
-    @In
+    @Inject
     private DocumentoManager documentoManager;
-    @In
+    @Inject
     private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
-    @In
+    @Inject
     private ProcessoTarefaManager processoTarefaManager;
-    
-    private Comparator<TaskBean> comparator = new Comparator<TaskBean>() {
-		@Override
-		public int compare(TaskBean o1, TaskBean o2) {
-			Long startTask1 = o1.getTaskInstance().getStart() == null ? Long.MAX_VALUE : o1.getTaskInstance().getStart().getTime();
-			Long startTask2 = o2.getTaskInstance().getStart() == null ? Long.MAX_VALUE : o2.getTaskInstance().getStart().getTime();
- 			return startTask1.compareTo(startTask2);
-		}
-	}; 
     
     private List<TaskInstance> taskInstanceList;
     private List<TaskInstance> taskDocumentList;
     private Map<TaskInstance, List<Documento>> anexoMap = new HashMap<TaskInstance, List<Documento>>();
     private int inicio;
+    private Processo processo;
+    
+    public void init(Processo processo) {
+        this.processo = processo;
+    }
+    
+    private Comparator<TaskBean> comparator = new Comparator<TaskBean>() {
+        @Override
+        public int compare(TaskBean o1, TaskBean o2) {
+            Long startTask1 = o1.getTaskInstance().getStart() == null ? Long.MAX_VALUE : o1.getTaskInstance().getStart().getTime();
+            Long startTask2 = o2.getTaskInstance().getStart() == null ? Long.MAX_VALUE : o2.getTaskInstance().getStart().getTime();
+            return startTask1.compareTo(startTask2);
+        }
+    }; 
     
     public void clear() {
     	taskInstanceList = null;
@@ -80,9 +88,6 @@ public class ProcessoHandler implements Serializable {
     	inicio = 0;
     }
 
-    /**
-     * Retorna todos os {@link org.jbpm.graph.exe.ProcessInstance} (incluindo de sub-processos) associados a um {@link Processo} 
-     */
     private List<org.jbpm.graph.exe.ProcessInstance> getProcessosJbpm(Processo processo) {
         Session jbpmSession = ManagedJbpmContext.instance().getSession();
         String hql = "from org.jbpm.context.exe.variableinstance.LongInstance v where v.name = :nomeVariavel and value = :idProcesso";
@@ -260,8 +265,12 @@ public class ProcessoHandler implements Serializable {
     }
 
     public Processo getProcesso() {
-        org.jbpm.graph.exe.ProcessInstance processoJbpm = getCurrentProcessInstance().getRoot();
-    	return processoManager.getProcessoByIdJbpm(processoJbpm.getId());
+        if ( getCurrentProcessInstance() == null ) {
+            return processo;
+        } else {
+            org.jbpm.graph.exe.ProcessInstance processoJbpm = getCurrentProcessInstance().getRoot();
+            return processoManager.getProcessoByIdJbpm(processoJbpm.getId());
+        }
     }
 
     public org.jbpm.graph.exe.ProcessInstance getCurrentProcessInstance() {

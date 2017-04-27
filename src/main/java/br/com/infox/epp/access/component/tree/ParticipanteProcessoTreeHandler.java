@@ -1,22 +1,20 @@
 package br.com.infox.epp.access.component.tree;
 
-import org.jboss.seam.Component;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.partes.controller.AbstractParticipantesController;
 import br.com.infox.epp.processo.partes.controller.ParticipantesProcessoController;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 
-@AutoCreate
-@Name(ParticipanteProcessoTreeHandler.NAME)
+@ViewScoped
+@Named("participanteProcessoTree")
 public class ParticipanteProcessoTreeHandler extends AbstractTreeHandler<ParticipanteProcesso> {
 	
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "participanteProcessoTree";
     public static final String EVENT_SELECTED = "evtSelectParticipante";
     
 	@Override

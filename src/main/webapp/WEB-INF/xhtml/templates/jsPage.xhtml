@@ -7,7 +7,8 @@
     Put your default scripts here
   <h:outputScript name="namespace.js" library="js" />
   -->
-    <h:outputScript>
+    <script type="text/javascript">
+   	//<![CDATA[
         PrimeFaces.locales['pt_BR'] = {
             closeText: 'Fechar',  
             prevText: 'Anterior',  
@@ -34,33 +35,46 @@
             week: 'Semana',  
             day: 'Dia',  
             allDayText : 'Todo o Dia'  
-        };  
-    </h:outputScript>
-  <h:outputScript name="namespace.js" library="js" />
-  <h:outputScript name="util.js" library="js" />
-  <h:outputScript name="react.js" library="js/components" />
-  <h:outputScript name="react-dom.js" library="js/components" />
-  <h:outputScript name="react-components.js" library="js/components" />
-  
-  <h:outputScript>
-    //<![CDATA[
-    
-    jQuery(document).ready(function(){
-        var dialogResizePostShowMixin={
-            postShow: function(){
-                this.___ancestor.postShow.apply(this,[]);
-                this.jq.height(Math.min(this.jq.height(), innerHeight));
-                this.jq.width(Math.min(this.jq.width(), innerWidth));
-                this.content.innerHeight(this.jq.height()-this.titlebar.innerHeight()-this.footer.innerHeight())
-                this.initPosition();
-            }
         };
         
-        PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend(Object.assign({___ancestor:PrimeFaces.widget.Dialog.prototype}, dialogResizePostShowMixin));
-        PrimeFaces.widget.DynamicDialog = PrimeFaces.widget.DynamicDialog.extend(Object.assign({___ancestor:PrimeFaces.widget.DynamicDialog.prototype}, dialogResizePostShowMixin));
-        PrimeFaces.widget.ConfirmDialog = PrimeFaces.widget.ConfirmDialog.extend(Object.assign({___ancestor:PrimeFaces.widget.ConfirmDialog.prototype}, dialogResizePostShowMixin));
-    });
-    
+		PrimeFaces.widget.DynamicDialog = PrimeFaces.widget.DynamicDialog.extend ({
+        	
+        	initSize: function() {
+    	        this.jq.css({
+    	            width: this.cfg.width,
+    	            height: this.cfg.height
+    	        });
+    	        this.content.height("100%");
+    	        if (this.cfg.fitViewport) {
+    	            this.fitViewport()
+    	        }
+    	        if (this.cfg.width === "auto" && PrimeFaces.isIE(7)) {
+    	            this.jq.width(this.content.outerWidth()) 
+    	        }
+    	    }
+        
+        });
+        
+        jQuery(document).ready(function(){
+	        var dialogResizePostShowMixin={
+	            postShow: function(){
+	                this.___ancestor.postShow.apply(this,[]);
+	                this.jq.height(Math.min(this.jq.height(), innerHeight));
+	                this.jq.width(Math.min(this.jq.width(), innerWidth));
+	                this.content.innerHeight(this.jq.height()-this.titlebar.innerHeight()-this.footer.innerHeight())
+	                this.initPosition();
+	            }
+	        };
+	        
+	        PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend(Object.assign({___ancestor:PrimeFaces.widget.Dialog.prototype}, dialogResizePostShowMixin));
+	        PrimeFaces.widget.ConfirmDialog = PrimeFaces.widget.ConfirmDialog.extend(Object.assign({___ancestor:PrimeFaces.widget.ConfirmDialog.prototype}, dialogResizePostShowMixin));
+	    });
     //]]>
-  </h:outputScript>
+    </script>
+	<h:outputScript name="namespace.js" library="js" />
+	<h:outputScript name="util.js" library="js" />
+	<h:outputScript name="react.js" library="js/components" />
+	<h:outputScript name="react-dom.js" library="js/components" />
+	<h:outputScript name="react-components.js" library="js/components" />
+	
 </ui:composition>

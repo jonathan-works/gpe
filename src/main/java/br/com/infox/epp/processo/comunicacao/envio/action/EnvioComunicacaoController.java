@@ -58,14 +58,12 @@ import br.com.infox.ibpm.variable.TaskpageParameter;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Named(EnvioComunicacaoController.NAME)
+@Named
 @ViewScoped
 @Taskpage(name = "enviarComunicacao", description = "enviarComunicacao.description")
 public class EnvioComunicacaoController implements Serializable {
 	
-	public static final String NAME = "envioComunicacaoController";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
 	public static final int MAX_RESULTS = 10;
@@ -79,10 +77,10 @@ public class EnvioComunicacaoController implements Serializable {
 	private static final String EXIBIR_TRANSICOES = "exibirTransicoes";
 	private static final String EXIBIR_RESPONSAVEIS_ASSINATURA = "exibirResponsavelAssinatura";
 	
-	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
+	@Inject
+	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@Inject
 	private AssinadorService assinadorService;
-	
 	@Inject
 	private DocumentoComunicacaoAction documentoComunicacaoAction;
 	@Inject
@@ -111,7 +109,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	private Localizacao localizacaoRaizComunicacao;
 	private Localizacao localizacaoRaizAssinaturaComunicacao;
-	private Long processInstanceId;
+	protected Long processInstanceId;
 	@TaskpageParameter(name = PRAZO_PADRAO_RESPOSTA, type="Integer", description = "enviarComunicacao.parameter.prazo")
 	private Integer prazoDefaultComunicacao = null;
 	@TaskpageParameter(name = CODIGO_LOCALIZACAO_ASSINATURA, type="String", description = "enviarComunicacao.parameter.codLocalizacaoAssinatura")

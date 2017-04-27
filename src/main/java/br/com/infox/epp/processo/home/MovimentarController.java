@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.xml.ws.Holder;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.documento.action.AnaliseDocumentoAction;
@@ -12,7 +13,7 @@ import br.com.infox.epp.processo.service.ProcessoService;
 
 @Named
 @ViewScoped
-public class MovimentarController implements Serializable{
+public class MovimentarController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -21,8 +22,19 @@ public class MovimentarController implements Serializable{
 	@Inject
 	private AnaliseDocumentoAction analiseDocumentoAction;
 	
-	private Processo processo;
+	private Holder<Processo> processoHolder;
 	
+	@Deprecated
+    public void init(Processo processo) {
+        init(new Holder<Processo>(processo));
+    }
+	
+	public void init(Holder<Processo> processoHolder) {
+	    this.processoHolder = processoHolder;
+	    if(isTipoProcessoAnaliseDocumento()){
+            analiseDocumentoAction.setProcesso(getProcesso());
+        }
+	}
 	
 	public boolean isTipoProcessoAnaliseDocumento() {
 		return processoService.isTipoProcessoDocumento(getProcesso());
@@ -41,14 +53,7 @@ public class MovimentarController implements Serializable{
 	}
 
 	public Processo getProcesso() {
-		return processo;
+		return processoHolder != null ? processoHolder.value : null;
 	}
 
-	public void setProcesso(Processo processo) {
-		this.processo = processo;
-		if(isTipoProcessoAnaliseDocumento()){
-			analiseDocumentoAction.setProcesso(getProcesso());
-		}
-	}
-	
 }

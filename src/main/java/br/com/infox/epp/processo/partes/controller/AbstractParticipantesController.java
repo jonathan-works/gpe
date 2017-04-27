@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.partes.controller;
 import java.io.Serializable;
 
 import javax.inject.Inject;
+import javax.xml.ws.Holder;
 
 import org.jboss.seam.faces.FacesMessages;
 
@@ -49,10 +50,19 @@ public abstract class AbstractParticipantesController implements Serializable {
     protected ActionMessagesService actionMessagesService;
     
     private ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
-    private Processo processo;
+    private Holder<Processo> processoHolder;
     private TipoPessoaEnum tipoPessoa = TipoPessoaEnum.F;
     protected String email;
     protected MeioContato meioContato;
+    
+    @Deprecated
+    public void init(Processo processo) {
+        init(new Holder<Processo>(processo));
+    }
+    
+    public void init(Holder<Processo> processoHolder) {
+        this.processoHolder = processoHolder;
+    }
     
     protected void clearParticipanteProcesso() {
     	participanteProcesso = new ParticipanteProcesso();
@@ -132,7 +142,7 @@ public abstract class AbstractParticipantesController implements Serializable {
 	    		includeMeioContato(getParticipanteProcesso().getPessoa());
 	    	}
 		    ParticipanteProcesso participantePersist = participanteProcessoManager.persist(getParticipanteProcesso());
-		    setProcesso(processoManager.merge(getProcesso()));
+		    processoHolder.value = processoManager.merge(getProcesso());
 		    processoManager.refresh(getProcesso());
 		    participanteProcessoManager.flush();
 		    afterSaveParticipante(participantePersist);
@@ -201,11 +211,7 @@ public abstract class AbstractParticipantesController implements Serializable {
 	}
 
 	public Processo getProcesso() {
-		return processo;
-	}
-
-	public void setProcesso(Processo processo) {
-		this.processo = processo;
+		return processoHolder != null ? processoHolder.value : null;
 	}
 
 	public TipoPessoaEnum getTipoPessoa() {

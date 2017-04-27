@@ -4,7 +4,6 @@ import javax.ejb.Stateless;
 
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
-import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.ManagedJbpmContext;
@@ -17,16 +16,12 @@ import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.ibpm.task.dao.TaskInstanceDAO;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 
-@Name(TaskInstanceManager.NAME)
 @Stateless
-@AutoCreate
+@Name(TaskInstanceManager.NAME)
 public class TaskInstanceManager extends Manager<TaskInstanceDAO, UsuarioTaskInstance> {
     
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceManager";
-
-    public TaskInstanceManager() {
-    }
 
     public void removeUsuario(final Long idTaskInstance) throws DAOException {
         getDao().removeUsuario(idTaskInstance);

@@ -9,10 +9,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.MethodExpression;
@@ -44,8 +42,6 @@ import br.com.infox.seam.exception.BusinessException;
 @Stateless
 @Name(VariavelProcessoService.NAME)
 @Scope(ScopeType.STATELESS)
-@AutoCreate
-@Transactional
 public class VariavelProcessoService {
 
     public static final String NAME = "variavelProcessoService";

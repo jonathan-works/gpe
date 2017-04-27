@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.xml.ws.Holder;
 
 import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -21,27 +22,35 @@ import br.com.infox.epp.processo.partes.manager.TipoParteManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.seam.security.SecurityUtil;
 
-@Named(ParticipantesProcessoController.NAME)
+@Named
 @ViewScoped
 public class ParticipantesProcessoController extends AbstractParticipantesController {
 
 	private static final long serialVersionUID = 1L;
     private static final int QUANTIDADE_MINIMA_PARTES = 1;
-    public static final String NAME = "participantesProcessoController";
 
     @Inject
-    protected TipoParteManager tipoParteManager;
+    private TipoParteManager tipoParteManager;
     @Inject
-    protected SecurityUtil securityUtil;
+    private SecurityUtil securityUtil;
     @Inject
-    protected UsuarioLoginManager usuarioLoginManager;
+    private UsuarioLoginManager usuarioLoginManager;
     @Inject
-    protected ParticipanteProcessoTreeHandler participanteProcessoTree;
+    private ParticipanteProcessoTreeHandler participanteProcessoTree;
     @Inject
     private ParticipanteProcessoService participanteProcessoService;
     
     protected List<TipoParte> tipoPartes;
-        
+    
+    @Override
+    public void init(Holder<Processo> processoHolder) {
+        super.init(processoHolder);
+        clearParticipanteProcesso();
+        if (!podeAdicionarPartesFisicas() && podeAdicionarPartesJuridicas()) {
+            setTipoPessoa(TipoPessoaEnum.J);
+        }
+    }
+    
     @Override
     protected void clearParticipanteProcesso() {
     	super.clearParticipanteProcesso(); 
@@ -55,15 +64,6 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
 			email = usuario.getEmail();
 		} else {
 			super.initEmailParticipante();
-		}
-    }
-    
-    @Override
-    public void setProcesso(Processo processo) {
-    	super.setProcesso(processo.getProcessoRoot());
-    	clearParticipanteProcesso();
-    	if (!podeAdicionarPartesFisicas() && podeAdicionarPartesJuridicas()) {
-			setTipoPessoa(TipoPessoaEnum.J);
 		}
     }
     
@@ -82,8 +82,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     	return getPartesAtivas(getProcesso().getParticipantes());
     }
 
-    protected List<ParticipanteProcesso> filtrar(List<ParticipanteProcesso> participantes, 
-    		TipoPessoaEnum tipoPessoa) {
+    protected List<ParticipanteProcesso> filtrar(List<ParticipanteProcesso> participantes, TipoPessoaEnum tipoPessoa) {
         List<ParticipanteProcesso> filtrado = new ArrayList<>();
         for (ParticipanteProcesso participante : participantes) {
             if (tipoPessoa.equals(participante.getPessoa().getTipoPessoa())) {

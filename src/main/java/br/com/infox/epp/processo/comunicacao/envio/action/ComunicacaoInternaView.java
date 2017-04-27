@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.xml.ws.Holder;
 
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
@@ -32,12 +33,17 @@ public class ComunicacaoInternaView implements Serializable {
     @Inject
     private ComunicacaoInternaService comunicacaoInternaService;
     
-    private Processo processo;
+    private Holder<Processo> processoHolder;
     private List<Processo> comunicacoesInternas;
     private List<ModeloComunicacao> comunicacoesInternasNaoFinalizadas;
     
+    @Deprecated
     public void onSelectTab(Processo processo) {
-        this.processo = processo;
+        onSelectTab(new Holder<Processo>(processo));
+    }
+    
+    public void onSelectTab(Holder<Processo> processoHolder) {
+        this.processoHolder = processoHolder;
         comunicacoesInternas = comunicacaoInternaSearch.getComunicacoesInternas(getProcesso().getIdProcesso());
         comunicacoesInternasNaoFinalizadas = comunicacaoInternaSearch.getComunicacoesInternasNaoFinalizadas(getProcesso().getIdProcesso());
     }
@@ -79,7 +85,7 @@ public class ComunicacaoInternaView implements Serializable {
     }
 
     private Processo getProcesso() {
-        return processo;
+        return processoHolder.value;
     }
     
 }

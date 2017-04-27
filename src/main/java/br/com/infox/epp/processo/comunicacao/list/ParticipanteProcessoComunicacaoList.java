@@ -5,20 +5,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 
-@Name(ParticipanteProcessoComunicacaoList.NAME)
-@Scope(ScopeType.PAGE)
-@AutoCreate
+@Named
+@ViewScoped
 public class ParticipanteProcessoComunicacaoList extends EntityList<ParticipanteProcesso> {
+    
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "participanteProcessoComunicacaoList";
 
 	private static final String DEFAULT_EJBQL = "select o from ParticipanteProcesso o "
 			+ "where exists (select 1 from PessoaFisica pf where pf = o.pessoa) and "
