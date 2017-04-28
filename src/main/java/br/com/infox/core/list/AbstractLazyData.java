@@ -66,7 +66,7 @@ public abstract class AbstractLazyData<T> extends LazyDataModel<T> {
     
     @Override
     public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-        if (getWrappedData() == null || isPagination()) {
+        if (getWrappedData() == null || isPaginationOrSorting()) {
             int rowCount = searchCount();
             setRowCount(rowCount);
             TypedQuery<T> query = createQuery(sortField, sortOrder);
@@ -99,11 +99,12 @@ public abstract class AbstractLazyData<T> extends LazyDataModel<T> {
         return false;
     }
     
-    protected boolean isPagination() {
+    protected boolean isPaginationOrSorting() {
         String componentClientId = getDataTable().getClientId();
         JsfUtil jsfUtil = JsfUtil.instance();
         return jsfUtil.getRequestParameter(componentClientId + "_first") != null 
-                    || jsfUtil.getRequestParameter(componentClientId + "_rows") != null;
+                    || jsfUtil.getRequestParameter(componentClientId + "_rows") != null
+                    || jsfUtil.getRequestParameter(componentClientId + "_sorting") != null;
     }
     
     public <C> C getFilter(String name, Class<C> clazz) {
