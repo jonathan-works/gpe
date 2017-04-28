@@ -29,6 +29,7 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.context.exe.variableinstance.LongInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
@@ -265,16 +266,16 @@ public class ProcessoHandler implements Serializable {
     }
 
     public Processo getProcesso() {
-        if ( getCurrentProcessInstance() == null ) {
-            return processo;
-        } else {
-            org.jbpm.graph.exe.ProcessInstance processoJbpm = getCurrentProcessInstance().getRoot();
-            return processoManager.getProcessoByIdJbpm(processoJbpm.getId());
-        }
+        org.jbpm.graph.exe.ProcessInstance processoJbpm = getCurrentProcessInstance().getRoot();
+        return processoManager.getProcessoByIdJbpm(processoJbpm.getId());
     }
 
     public org.jbpm.graph.exe.ProcessInstance getCurrentProcessInstance() {
-        return ProcessInstance.instance();
+        org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
+        if ( processInstance == null && processo != null) {
+            processInstance = JbpmContextProducer.getJbpmContext().getProcessInstance(processo.getIdJbpm());
+        }
+        return processInstance;
     }
 
 }
