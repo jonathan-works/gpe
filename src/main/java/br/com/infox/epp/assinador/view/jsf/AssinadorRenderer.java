@@ -150,8 +150,7 @@ public class AssinadorRenderer extends Renderer {
         }
         return AjaxRequestBuilderFactory.create(context).from(button).execute(execute).render(render)
                 .oncomplete(button.getOncomplete())
-                .behavior("sign")
-                .preventDefault().build();
+                .behavior("sign").build();
     }
     
     private String createCompletedBehavior(final FacesContext context, final Assinador button) {
@@ -163,8 +162,7 @@ public class AssinadorRenderer extends Renderer {
 
     private String createUpdateStatusBehavior(FacesContext context, final Assinador button) {
         return AjaxRequestBuilderFactory.create(context).from(button).execute("@this").render("@this")
-        .behavior("updatestatus")
-        .preventDefault().build();
+        .behavior("updatestatus").build();
     }
 
     private <T> T jndi(Class<T> type, Annotation... annotations){

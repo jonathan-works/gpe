@@ -16,7 +16,7 @@
 			<h:inputHidden id="#{id}Token" value="#{tokenField}" />
 			<a:commandButton type="button" styleClass="buttons"
 				disabled="#{disableb}" onbegin="infox.showLoading();"
-				style="#{signButtonStyle}"
+				style="#{signButtonStyle}" status="none"
 				action="#{assinadorController.criarListaDocumentos(documentList)}"
 				execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
 				oncomplete="infox.hideLoading(); if (#{!facesContext.validationFailed}) {infox.CertDig.#{id}.init();}"
