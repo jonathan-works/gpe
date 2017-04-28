@@ -2,18 +2,17 @@ package br.com.infox.epp.processo.documento.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Configuration;
 import br.com.infox.epp.system.Database.DatabaseType;
 
-@Name(DocumentoAnexoList.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class DocumentoAnexoList extends EntityList<Documento> {
 	
     private static final long serialVersionUID = 1L;
@@ -28,8 +27,6 @@ public class DocumentoAnexoList extends EntityList<Documento> {
             + "v.taskinstance_ in (select t.id_ from jbpm_taskinstance t where t.procinst_ = p.id_jbpm)"
             + ") "; 
     private static final String DEFAULT_ORDER = "pd.dt_inclusao";
-
-    public static final String NAME = "documentoAnexoList";
 
     private Processo processo;
     
