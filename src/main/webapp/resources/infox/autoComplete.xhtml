@@ -3,6 +3,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui" 
     xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:c="http://java.sun.com/jsp/jstl/core" 
     xmlns:composite="http://java.sun.com/jsf/composite">
 
@@ -90,7 +91,8 @@
                     queryDelay="#{cc.attrs.queryDelay}" emptyMessage="#{cc.attrs.emptyMessage}"
                     forceSelection="#{cc.attrs.forceSelection}" dropdown="#{cc.attrs.dropdown}"
                     dropdownMode="#{cc.attrs.dropdownMode}" multiple="#{cc.attrs.multiple}" style="#{cc.attrs.style}"
-                    widgetVar="#{cc.attrs.widgetVar}" cache="#{cc.attrs.cache}">
+                    widgetVar="#{cc.attrs.widgetVar}" 
+                    cache="#{cc.attrs.cache}">
                     <c:if test="#{not empty cc.attrs.validator}">
                         <f:validator validatorId="#{cc.attrs.validator}" for="@this" />
                     </c:if>

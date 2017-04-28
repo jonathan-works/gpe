@@ -18,8 +18,8 @@
     <properties>
         <version.epp>3.2.0-SNAPSHOT</version.epp>
         <version.liquibase-epp>3.2.0-SNAPSHOT</version.liquibase-epp>
-        <version.liquibase-ext>1.1.1</version.liquibase-ext>
-        <version.certificado-digital>1.0.10</version.certificado-digital>
+        <version.liquibase-ext>1.1.2</version.liquibase-ext>
+        <version.certificado-digital>1.0.11</version.certificado-digital>
         <version.git-commit-id-plugin>2.2.1</version.git-commit-id-plugin>
         <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
         <version.maven-source-plugin>2.4</version.maven-source-plugin>

@@ -32,9 +32,9 @@ public class MonitorProcessoDataModel extends LazyDataModel<MonitorProcessoInsta
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         CriteriaQuery<MonitorProcessoInstanceDTO> query = cb.createQuery(MonitorProcessoInstanceDTO.class);
-        
-        configureQuery(query);
-        configureQuery(countQuery);
+       
+        configureQuery(query, filters);
+        configureQuery(countQuery, filters);
         countQuery.select(cb.count(countQuery.getRoots().iterator().next()));
         
         setRowCount(entityManager.createQuery(countQuery).getSingleResult().intValue());
@@ -43,12 +43,18 @@ public class MonitorProcessoDataModel extends LazyDataModel<MonitorProcessoInsta
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private void configureQuery(CriteriaQuery query) {
+    private void configureQuery(CriteriaQuery query, Map<String, Object> filters) {
         EntityManager entityManager = EntityManagerProducer.getEntityManager();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         
         Root<MonitorInstanciasProcesso> root = query.from(MonitorInstanciasProcesso.class);
         query.where(cb.equal(root.get(MonitorInstanciasProcesso_.idProcessDefinition), processDefinitionId));
+        
+        String numeroProcesso = (String)filters.get("numero"); 
+        if(!Strings.isNullOrEmpty(numeroProcesso)) {
+            query.where(query.getRestriction(), cb.like(root.get(MonitorInstanciasProcesso_.numeroProcesso), cb.literal("%" + numeroProcesso + "%")));
+        	
+        }
         
         if (!Strings.isNullOrEmpty(nodeKey)) {
             query.where(query.getRestriction(), cb.equal(root.get(MonitorInstanciasProcesso_.nodeKey), nodeKey));

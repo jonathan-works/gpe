@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -58,8 +60,9 @@ public class LogErrorService extends PersistenceController {
     
     private void saveLog(LogErro logErro) {
         try {
-            getEntityManager().persist(logErro);
-            getEntityManager().flush();
+        	EntityManager entityManager = getEntityManager();
+        	entityManager.persist(logErro);
+        	entityManager.flush();
         } catch (Exception e) {
             logErro.setId(null);
             String logPath = applicationServerService.getLogDir();
@@ -73,7 +76,7 @@ public class LogErrorService extends PersistenceController {
                 } catch (Exception e1) { // do nothing
                 }
             }
-            throw e;
+            Logger.getLogger(LogErrorService.class.getName()).log(Level.SEVERE, "", e);
         }
     }
     
@@ -125,6 +128,7 @@ public class LogErrorService extends PersistenceController {
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void atualizarRegistroLogErro() throws IOException {
+    	EntityManager entityManager = getEntityManager();
         File fileLogErro = new File(applicationServerService.getLogDir(), LOG_ERRO_FILE_NAME);
         File fileLogErroTemp = new File(applicationServerService.getLogDir(), LOG_ERRO_TEMP_FILE_NAME);
         BufferedReader bufferedReader = null;
@@ -136,8 +140,8 @@ public class LogErrorService extends PersistenceController {
             while ((currentLine = bufferedReader.readLine()) != null) {
                 LogErro logErro = new GsonBuilder().create().fromJson(currentLine.trim(), LogErro.class);
                 try {
-                    getEntityManager().persist(logErro);
-                    getEntityManager().flush();
+                	entityManager.persist(logErro);
+                	entityManager.flush();
                 } catch (Exception e) {
                     bufferedWriter.write(currentLine, 0, currentLine.getBytes().length);
                     bufferedWriter.flush();
@@ -153,12 +157,13 @@ public class LogErrorService extends PersistenceController {
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void atualizarLogErro(LogErro logErro) {
-        getEntityManager().merge(logErro);
-        getEntityManager().flush();
+    	EntityManager entityManager = getEntityManager();
+    	entityManager.merge(logErro);
+    	entityManager.flush();
     }
     
     public EntityManager getEntityManager() {
-        return EntityManagerProducer.getEntityManager();
+        return EntityManagerProducer.instance().getEntityManagerTransactional();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)

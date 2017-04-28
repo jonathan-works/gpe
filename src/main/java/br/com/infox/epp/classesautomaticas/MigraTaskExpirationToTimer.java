@@ -53,8 +53,8 @@ public class MigraTaskExpirationToTimer implements Serializable {
 	
 	public void init() throws Exception {
 		TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
-		transactionManager.begin();
 		transactionManager.setTransactionTimeout(3600);
+		transactionManager.begin();
 		Lifecycle.beginCall();
 		entityManager = EntityManagerProducer.instance().getEntityManagerTransactional();
 		try {

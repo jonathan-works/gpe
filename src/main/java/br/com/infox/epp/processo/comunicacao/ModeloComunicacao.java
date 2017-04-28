@@ -319,6 +319,15 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 		return novoModelo;
 	}
 	
+	public boolean isModeloTotalmenteExpedido() {
+	    boolean totalmenteExpedido = true;
+        for (DestinatarioModeloComunicacao destino : getDestinatarios()) {
+            if (!destino.getExpedido().booleanValue())
+                totalmenteExpedido = false;
+        }
+        return totalmenteExpedido;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

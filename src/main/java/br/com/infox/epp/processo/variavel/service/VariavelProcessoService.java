@@ -17,6 +17,7 @@ import org.jboss.seam.core.Expressions.MethodExpression;
 import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.graph.exe.Token;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -142,14 +143,24 @@ public class VariavelProcessoService {
 	                    final String valorPadrao = definicao.getValorPadrao();
 	                    if (valorPadrao != null) {
 	                    	Object valorJbpmExpressionEvaluator = null;
-                            try {
-                                if ((valorPadrao.startsWith("#") || valorPadrao.startsWith("$")) && taskInstance != null) {
-                                    valorJbpmExpressionEvaluator = JbpmExpressionEvaluator.evaluate(valorPadrao, new ExecutionContext(taskInstance.getToken()));
-                                    if (valorJbpmExpressionEvaluator != null) {
-                                        variavelProcesso.setValor(formatarValor(valorJbpmExpressionEvaluator));
-                                    }
-                                }
-                            } catch (Exception e) {}
+							try {
+								if ((valorPadrao.startsWith("#") || valorPadrao.startsWith("$"))) {
+									ExecutionContext executionContext = null;
+									if (taskInstance != null) {
+										executionContext = new ExecutionContext(taskInstance.getToken());
+										executionContext.setTaskInstance(taskInstance);
+									} else if (processInstance != null) {
+										executionContext = new ExecutionContext(processInstance.getRootToken());
+									}
+									if (executionContext != null) {
+										valorJbpmExpressionEvaluator = JbpmExpressionEvaluator.evaluate(valorPadrao, executionContext);
+										if (valorJbpmExpressionEvaluator != null) {
+											variavelProcesso.setValor(formatarValor(valorJbpmExpressionEvaluator));
+										}
+									}
+								}
+							} catch (Exception e) {
+							}
 	                    	
 	                    	if(valorJbpmExpressionEvaluator == null){
 	                    		setValor(valorPadrao, processo, variavelProcesso);

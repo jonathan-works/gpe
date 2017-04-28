@@ -149,6 +149,9 @@ public class BpmnJpdlService {
     
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public DefinicaoProcesso importarBpmn(DefinicaoProcesso definicaoProcesso, String bpmn) {
+	    BpmnCleaner cleaner = new BpmnCleaner();
+	    bpmn = cleaner.cleanBpmn(bpmn);
+	    
 		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmn.getBytes(StandardCharsets.UTF_8)));
 		BpmnAdapter[] adapters = getAdapters();
 		for (BpmnAdapter adapter : adapters) {
@@ -173,7 +176,7 @@ public class BpmnJpdlService {
 		// Validar consistência do JPDL
 		InfoxJpdlXmlReader.readProcessDefinition(newProcessDefinitionXml);
 		
-//		historicoProcessDefinitionService.registrarHistorico(fluxo);
+		historicoProcessDefinitionService.registrarHistorico(definicaoProcesso);
 		definicaoProcesso.setXml(newProcessDefinitionXml);
 		definicaoProcesso.setBpmn(Bpmn.convertToString(bpmnModel));
 		definicaoProcesso.setSvg(null);
