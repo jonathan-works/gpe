@@ -3,23 +3,19 @@ package br.com.infox.epp.processo.documento.list;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(PastaList.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
+@Named
+@ViewScoped
 public class PastaList extends EntityList<Pasta> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "pastaList";
     private final String DEFAULT_EJBQL = "select o from Pasta o where o.processo = #{pastaList.processo}";
     private final String DEFAULT_ORDER = "ordem, o.nome"; 
     

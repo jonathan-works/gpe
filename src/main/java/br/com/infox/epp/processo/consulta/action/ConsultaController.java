@@ -56,9 +56,9 @@ public class ConsultaController extends AbstractController {
     private MetadadoProcessoManager metadadoProcessoManager;
     @In
     private DocumentoList documentoList;
-    @In
+    @Inject
     private PastaRestricaoAction pastaRestricaoAction;
-    @In
+    @Inject
     private PastaList pastaList;
     @In
     private UsuarioTaskInstanceManager usuarioTaskInstanceManager;

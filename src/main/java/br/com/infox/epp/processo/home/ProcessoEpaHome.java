@@ -81,12 +81,12 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@In
 	private ConsultaController consultaController;
 	@In
-	private PastaRestricaoAction pastaRestricaoAction;
-	@In
 	private DocumentoList documentoList;
-	@In
-	private PastaList pastaList;
 	
+	@Inject
+    private PastaRestricaoAction pastaRestricaoAction;
+	@Inject
+	private PastaList pastaList;
 	@Inject
     private ProcessoManager processoManager;
 	@Inject

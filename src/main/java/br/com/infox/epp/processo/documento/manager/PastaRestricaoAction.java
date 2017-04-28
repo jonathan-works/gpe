@@ -8,20 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -36,14 +31,13 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
@@ -51,38 +45,30 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name(PastaRestricaoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
-@Transactional
-@ContextDependency
+@Named
+@ViewScoped
 public class PastaRestricaoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "pastaRestricaoAction";
+	private static final LogProvider LOG = Logging.getLogProvider(PastaRestricaoAction.class);
 
-	@In
-	private ProcessoManager processoManager;
-	@In
+	@Inject
 	private PastaManager pastaManager;
-	@In
+	@Inject
 	private ActionMessagesService actionMessagesService;
-	@In
-	private DocumentoList documentoList;
-	@In
+	@Inject
 	private PastaRestricaoManager pastaRestricaoManager;
-	@In
+	@Inject
 	private PapelManager papelManager;
-	@In
+	@Inject
 	private LocalizacaoManager localizacaoManager;
-	@In(StatusMessages.COMPONENT_NAME)
-    private StatusMessages statusMessage;
-	@In
+	@Inject
 	private InfoxMessages infoxMessages;
 	@Inject
 	private MetadadoProcessoManager metadadoProcessoManager;
 	
-	private static final LogProvider LOG = Logging.getLogProvider(PastaRestricaoAction.class);
+    private DocumentoList documentoList = ComponentUtil.getComponent(DocumentoList.NAME);
+    private StatusMessages statusMessage = ComponentUtil.getComponent(StatusMessages.COMPONENT_NAME);
 	
 	private Boolean adicionarPastaPadrao = false;
 	private Boolean alvoRestricaoParticipante;
@@ -101,7 +87,7 @@ public class PastaRestricaoAction implements Serializable {
 	private Processo processoReal;
 	private Map<Integer, Boolean> canRemoveMap = new HashMap<>();
 	
-	@Create
+	@PostConstruct
 	public void create() {
 	    clearInstances();
 	    // Isto está aqui para evitar erro ao editar uma restrição do tipo localização na primeira vez que entra na tela,
