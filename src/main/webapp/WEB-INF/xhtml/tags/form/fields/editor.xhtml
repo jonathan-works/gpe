@@ -81,7 +81,7 @@
         	id="#{id}"
         	value="#{value}"
             toolbar="#{readonly ? 'empty':wi:get(toolbar, 'InfoxToolbar')}"
-            readonly="#{readonly}" oninit="#{oninit}"
+            readonly="#{readonly}"
             required="#{required}" width="#{width}" height="#{height}"
             onchange="#{wi:get(onchange, 'void(0);')}"
             >
@@ -118,6 +118,9 @@
                 ],
                 tabSpaces:4,
                 on:{
+                    instanceReady: function() {
+                        #{wi:get(oninit, '')};
+                    },
                     configLoaded:function(evt) {
                         var editor = evt.editor;
                         var config = editor.config;
