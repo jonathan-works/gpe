@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.entity;
 
+import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -9,12 +10,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 
+import javax.inject.Inject;
+
+import org.jglue.cdiunit.ParameterizedCdiRunner;
+import org.jglue.cdiunit.ejb.SupportEjb;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.Mock;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -22,22 +28,33 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.documento.domain.Assinavel;
+import br.com.infox.epp.documento.domain.RegraAssinaturaService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import lombok.Setter;
 
-@RunWith(Parameterized.class)
+@RunWith(ParameterizedCdiRunner.class)
+@SupportEjb
 public class DocumentoRegrasAssinaturaTest {
 
+    @Setter
     @Parameter(value=0)
-    public String testCase;
+    private String testCase;
+    @Setter
     @Parameter(value=1)
-    public Documento documento;
+    private Documento documento;
+    @Setter
     @Parameter(value=2)
-    public PessoaFisica pessoaFisicaAssinando;
+    private PessoaFisica pessoaFisicaAssinando;
+    @Setter
     @Parameter(value=3)
-    public Papel papelAssinando;
+    private Papel papelAssinando;
+    @Setter
     @Parameter(value=4)
-    public boolean podeAssinar;
+    private boolean podeAssinar;
     
+    @Inject
+    private RegraAssinaturaService regraAssinaturaService;
     
     private static Object[] fromJsonObject(JsonObject testCase){
         Gson gson = new Gson();
@@ -76,7 +93,7 @@ public class DocumentoRegrasAssinaturaTest {
     
     @Test
     public void testeAssinatura(){
-        Assert.assertEquals(String.format("Falha em '%s'", testCase),podeAssinar, documento.isDocumentoAssinavel(pessoaFisicaAssinando, papelAssinando));
+        Assert.assertEquals(String.format("Falha em '%s'", testCase),podeAssinar, regraAssinaturaService.permiteAssinaturaPor(documento, pessoaFisicaAssinando, papelAssinando));
     }
     
 }
