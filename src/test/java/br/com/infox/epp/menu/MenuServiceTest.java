@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.security.SecurityUtil;
@@ -39,6 +40,7 @@ public class MenuServiceTest {
         injectField(menuService, "propertiesLoader", createMockPropertiesLoader());
         injectField(menuService, "securityUtil", createSecurityUtil());
         injectField(menuService, "pathResolver", getPathResolver());
+        injectField(menuService, "infoxMessages", new InfoxMessages());
         return menuService;
     }
 

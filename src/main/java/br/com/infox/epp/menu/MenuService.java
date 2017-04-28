@@ -23,6 +23,7 @@ public class MenuService {
     @Inject private PathResolver pathResolver;
     @Inject private PropertiesLoader propertiesLoader;
     @Inject private SecurityUtil securityUtil;
+    @Inject private InfoxMessages infoxMessages;
 
     private Menu join(Menu primary, Menu extension){
         if (primary != null && extension != null)
@@ -60,7 +61,7 @@ public class MenuService {
         if (result.startsWith("#{") && result.endsWith("}")) {
             result = ElFunctions.evaluateExpression(result, String.class);
         } else {
-            result = InfoxMessages.getInstance().get(result);
+            result = infoxMessages.get(result);
         }
         return result;
     }
