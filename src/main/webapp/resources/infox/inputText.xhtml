@@ -40,7 +40,7 @@
 		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div">
         	<div class="property-field-edit">
         		<div class="property-field-edit-name">
-	        		<h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
+	        		<h:outputLabel id="#{cc.attrs.id}Label" for="Input">
 	        			<h:outputText value="#{cc.attrs.label} " rendered="#{not empty cc.attrs.label}"/>
 	        			<c:if test="#{not empty cc.attrs.help}">
 		        			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
@@ -49,7 +49,7 @@
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
 	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
-	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
+	        		<h:message for="Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
         			<h:inputText id="Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
