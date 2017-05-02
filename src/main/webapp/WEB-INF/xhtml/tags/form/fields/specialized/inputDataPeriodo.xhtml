@@ -47,6 +47,7 @@
                 inputClass="#{id}maskDate input date"
                 styleClass="date"
                 datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"
+                oninputfocus="#{wi:get(oninputfocusFrom, '')}"
                 oninputblur="validarData(this);validarPeriodo('##{rich:clientId(idFromForm)}InputDate'.split(':').join('\\\\:'), '##{rich:clientId(idToForm)}InputDate'.split(':').join('\\\\:'), false, true);#{validatePastDateFrom ? 'validarDataPassada(this)' : ''}" />
         </div>
         <h:outputLabel
@@ -66,6 +67,7 @@
             inputClass="#{id}maskDate date"
             styleClass="date"
             datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"
+            oninputfocus="#{wi:get(oninputfocusTo, '')}"
             oninputblur="validarData(this);validarPeriodo('##{rich:clientId(idFromForm)}InputDate'.split(':').join('\\\\:'), '##{rich:clientId(idToForm)}InputDate'.split(':').join('\\\\:'), false, false);                          #{validatePastDateTo ? 'validarDataPassada(this)' : ''}" />
         <ui:insert />
     </s:decorate>
