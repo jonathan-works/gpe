@@ -73,6 +73,11 @@ public class DialogFrameworkBuilder {
         return this;
     }
     
+    public DialogFrameworkBuilder setHeaderElement(String idHtmlElement) {
+    	options.put("headerElement", idHtmlElement);
+    	return this;
+    }
+    
     public DialogFrameworkBuilder setOnShow(String onShow) {
         options.put("onShow", onShow);
         return this;
