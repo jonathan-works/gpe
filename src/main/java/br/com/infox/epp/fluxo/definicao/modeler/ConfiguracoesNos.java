@@ -32,7 +32,6 @@ import org.jbpm.scheduler.def.CreateTimerAction;
 
 import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.jbpm.event.EventHandler;
 
 public class ConfiguracoesNos {
 	
@@ -44,7 +43,6 @@ public class ConfiguracoesNos {
 		for (Node node : processDefinition.getNodes()) {
 			if (node.getNodeType().equals(NodeType.Task)) {
 				resolverTimer((TaskNode) node, bpmnModel);
-				resolverEvento((TaskNode) node, bpmnModel);
 				resolverDocumento((TaskNode) node, bpmnModel);
 			}
 			
@@ -164,17 +162,6 @@ public class ConfiguracoesNos {
 		return null;
 	}
 
-	private static void resolverEvento(TaskNode node, BpmnModelInstance bpmnModel) {
-		UserTask userTask = bpmnModel.getModelElementById(node.getKey());
-		BoundaryEvent boundaryEvent = getBoundaryEvent(userTask, null);
-		boolean hasShowableEvents = hasShowableEvents(node);
-		if (hasShowableEvents && boundaryEvent == null) {
-			createBoundaryEvent(userTask, Position.BOTTOM_LEFT);
-		} else if (!hasShowableEvents && boundaryEvent != null) {
-			boundaryEvent.getParentElement().removeChildElement(boundaryEvent);
-		}
-	}
-
 	private static void resolverSinalBoundary(Node node, BpmnModelInstance bpmnModel) {
 		Activity activity = bpmnModel.getModelElementById(node.getKey());
 		BoundaryEvent boundaryEvent = getBoundaryEvent(activity, SignalEventDefinition.class);
@@ -237,19 +224,6 @@ public class ConfiguracoesNos {
 					if (action instanceof CreateTimerAction) {
 						return true;
 					}
-				}
-			}
-		}
-		return false;
-	}
-	
-	private static boolean hasShowableEvents(TaskNode node) {
-		Map<String, Event> events = node.getEvents();
-		if (events != null) {
-			for (Event event : events.values()) {
-				EventHandler handler = new EventHandler(event);
-				if (!EventHandler.isIgnoreEvent(event) && handler.getActions() != null && !handler.getActions().isEmpty()) {
-					return true;
 				}
 			}
 		}
