@@ -68,6 +68,16 @@ public class DialogFrameworkBuilder {
         return this;
     }
     
+    public DialogFrameworkBuilder setHeaderText(String headerText) {
+        options.put("headerText", headerText);
+        return this;
+    }
+    
+    public DialogFrameworkBuilder setOnShow(String onShow) {
+        options.put("onShow", onShow);
+        return this;
+    }
+    
     public DialogFrameworkBuilder setFlashParam(String nome, Object value) {
         flashParams.put(nome, value);
         return this;
