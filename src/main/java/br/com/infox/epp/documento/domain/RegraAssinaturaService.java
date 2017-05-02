@@ -51,7 +51,9 @@ public class RegraAssinaturaService {
         boolean papelAssinouDocumento = assinadoPor(assinavel, papel);
         boolean permiteAssinaturaMultipla = permiteAssinaturaMultipla(assinavel, papel);
         
-        return permiteAssinaturaPor(assinavel, papel) && !pessoaAssinouDocumento && (permiteAssinaturaMultipla || !papelAssinouDocumento);
+        return permiteAssinaturaPor(assinavel, papel) 
+                && (!pessoaAssinouDocumento || !papelAssinouDocumento) 
+                && !(papelAssinouDocumento && !pessoaAssinouDocumento && !permiteAssinaturaMultipla);
     }
 
     public boolean possuiAssinaturaSuficiente(Assinavel assinavel) {
