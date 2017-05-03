@@ -10,13 +10,11 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
-import org.jboss.seam.bpm.Actor;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.Token;
-import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.JbpmContextProducer;
