@@ -1,9 +1,12 @@
 package br.com.infox.epp.processo.form.type;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.VariableDataHandler;
+import br.com.infox.ibpm.variable.components.FrameDefinition;
+import br.com.infox.ibpm.variable.components.VariableDefinitionService;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -143,7 +146,9 @@ public abstract class PrimitiveFormType implements FormType {
         @Override
         public void performValue(FormField formField, FormData formData) {
             super.performValue(formField, formData);
-            String framePath = String.format("/%s.%s", formField.getId().replaceAll("_", "/"), "xhtml");
+            VariableDefinitionService variableDefinitionService = BeanManager.INSTANCE.getReference(VariableDefinitionService.class);
+            FrameDefinition frame = variableDefinitionService.getFrame(formField.getId());
+            String framePath = frame.getXhtmlPath();
             formField.getProperties().put("framePath", framePath);
         }
 

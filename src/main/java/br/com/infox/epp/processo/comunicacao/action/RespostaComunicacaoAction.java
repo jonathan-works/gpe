@@ -48,15 +48,18 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.components.Taskpage;
+import br.com.infox.ibpm.variable.components.TaskpageController;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
+@Taskpage(id="responderComunicacao", xhtmlPath="/WEB-INF/taskpages/responderComunicacao.xhtml", name="Responder Comunicação")
 @Named
 @Stateful
 @ViewScoped
-public class RespostaComunicacaoAction implements Serializable {
+public class RespostaComunicacaoAction implements Serializable, TaskpageController {
 	
 	public static final String NAME = "respostaComunicacaoAction";
 	private static final long serialVersionUID = 1L;
