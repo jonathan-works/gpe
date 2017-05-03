@@ -174,5 +174,10 @@ public class JsfUtil {
         sb.append("].join(''));");
         execute(sb.toString());
     }
-    
+    public void closeDialog(){
+        RequestContext.getCurrentInstance().closeDialog(null);
+    }
+    public void closeDialog(Object data){
+        RequestContext.getCurrentInstance().closeDialog(data);
+    }
 }
