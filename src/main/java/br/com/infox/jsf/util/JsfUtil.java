@@ -63,6 +63,14 @@ public class JsfUtil {
 		}
 	}
 	
+	public void clear(String componentId){
+		if (componentId == null || componentId.isEmpty()) return;
+			UIComponent component = context.getViewRoot().findComponent(componentId);
+			if(component != null)
+				clear(component);
+	}
+	
+	
 	public static void clear(String... componentIds){
 	    if (componentIds == null) return;
 	    FacesContext facesContext = FacesContext.getCurrentInstance();
