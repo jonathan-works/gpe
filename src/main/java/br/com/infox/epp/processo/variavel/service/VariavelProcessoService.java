@@ -75,7 +75,7 @@ public class VariavelProcessoService {
     public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome) {
     	Processo processo =  processoManager.find(idProcesso);
     	ProcessoTarefa processoTarefa = processoTarefaManager.getUltimoProcessoTarefa(processo);
-    	return getVariavelProcesso(processo, nome, processoTarefa.getTaskInstance());
+    	return getVariavelProcesso(processo, nome, processoTarefa == null? null : processoTarefa.getTaskInstance());
     }
     
     public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome, Long idTaskInstance) {
