@@ -1,16 +1,24 @@
 package br.com.infox.epp.fluxo.definicao.modeler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.Activity;
 import org.camunda.bpm.model.bpmn.instance.BoundaryEvent;
+import org.camunda.bpm.model.bpmn.instance.DataAssociation;
+import org.camunda.bpm.model.bpmn.instance.DataInputAssociation;
 import org.camunda.bpm.model.bpmn.instance.DataObject;
 import org.camunda.bpm.model.bpmn.instance.DataObjectReference;
 import org.camunda.bpm.model.bpmn.instance.DataOutputAssociation;
 import org.camunda.bpm.model.bpmn.instance.EventDefinition;
+import org.camunda.bpm.model.bpmn.instance.Process;
+import org.camunda.bpm.model.bpmn.instance.Property;
 import org.camunda.bpm.model.bpmn.instance.SignalEventDefinition;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
 import org.camunda.bpm.model.bpmn.instance.TimerEventDefinition;
@@ -30,109 +38,210 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.scheduler.def.CreateTimerAction;
 
-import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 
 public class ConfiguracoesNos {
+	
+	private Map<String, List<ConfiguracaoVariavelDocumento>> variaveisDocumento;
+	private BpmnModelInstance bpmnModel;
 	
 	private static enum Position {
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
 	}
 	
-	public static void resolverMarcadoresBpmn(ProcessDefinition processDefinition, BpmnModelInstance bpmnModel) {
+	public void resolverMarcadoresBpmn(ProcessDefinition processDefinition, BpmnModelInstance bpmnModel) {
+		variaveisDocumento = new HashMap<>();
+		this.bpmnModel = bpmnModel;
+		
 		for (Node node : processDefinition.getNodes()) {
 			if (node.getNodeType().equals(NodeType.Task)) {
-				resolverTimer((TaskNode) node, bpmnModel);
-				resolverDocumento((TaskNode) node, bpmnModel);
+				resolverTimer((TaskNode) node);
+				resolverVariaveisDocumento((TaskNode) node);
 			}
 			
 			if (node.getNodeType().equals(NodeType.Task) || node.getNodeType().equals(NodeType.ProcessState)) {
-				resolverSinalBoundary(node, bpmnModel);
+				resolverSinalBoundary(node);
 			} else if (node.getNodeType().equals(NodeType.StartState)) {
-				resolverSinalStart((StartState) node, bpmnModel);
+				resolverSinalStart((StartState) node);
 			}
+		}
+		
+		resolverDocumentos();
+	}
+	
+	private void resolverDocumentos() {
+		removerDataObjectsNaoExistentes();
+		Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
+		
+		for (String variavel : variaveisDocumento.keySet()) {
+			List<ConfiguracaoVariavelDocumento> configs = variaveisDocumento.get(variavel);
+			for (ConfiguracaoVariavelDocumento config : configs) {
+				
+				DataObjectReference dataObjectReference = bpmnModel.getModelElementById(variavel);
+				UserTask userTask = bpmnModel.getModelElementById(config.nodeId);
+				
+				if (dataObjectReference == null) {
+					dataObjectReference = criarDataObjectReference(variavel, process, userTask.getDiagramElement().getBounds(), config.entrada);
+				}
+				dataObjectReference.setName(config.label);
+				
+				if (config.entrada) {
+					if (!hasDataInputAssociation(userTask, dataObjectReference)) {
+						criarDataInputAssociation(userTask, dataObjectReference);
+					}
+				} else {
+					if (!hasDataOutputAssociation(userTask, dataObjectReference)) {
+						criarDataOutputAssociation(userTask, dataObjectReference);
+					}
+				}
+			}
+		}
+	}
+
+	private void criarDataOutputAssociation(UserTask userTask, DataObjectReference dataObjectReference) {
+		DataOutputAssociation dataOutputAssociation = bpmnModel.newInstance(DataOutputAssociation.class);
+		dataOutputAssociation.setTarget(dataObjectReference);
+		userTask.getDataOutputAssociations().add(dataOutputAssociation);
+		
+		criarEdgeAssociation(dataOutputAssociation, userTask.getDiagramElement().getBounds(), ((BpmnShape) dataObjectReference.getDiagramElement()).getBounds());
+	}
+
+	private void criarDataInputAssociation(UserTask userTask, DataObjectReference dataObjectReference) {
+		Property targetPlaceholder = bpmnModel.newInstance(Property.class);
+		userTask.getProperties().add(targetPlaceholder);
+		DataInputAssociation dataInputAssociation = bpmnModel.newInstance(DataInputAssociation.class);
+		dataInputAssociation.getSources().add(dataObjectReference);
+		dataInputAssociation.setTarget(targetPlaceholder);
+		userTask.getDataInputAssociations().add(dataInputAssociation);
+		
+		criarEdgeAssociation(dataInputAssociation, userTask.getDiagramElement().getBounds(), ((BpmnShape) dataObjectReference.getDiagramElement()).getBounds());
+	}
+	
+	private DataObjectReference criarDataObjectReference(String id, Process process, Bounds taskBounds, boolean left) {
+		DataObject dataObject = bpmnModel.newInstance(DataObject.class);
+		dataObject.setId("DataObject_" + id);
+		process.addChildElement(dataObject);
+		DataObjectReference dataObjectReference = bpmnModel.newInstance(DataObjectReference.class);
+		dataObjectReference.setId(id);
+		process.addChildElement(dataObjectReference);
+		dataObjectReference.setDataObject(dataObject);
+		
+		BpmnDiagram diagram = DiagramUtil.getDefaultDiagram(bpmnModel);
+		BpmnShape shape = bpmnModel.newInstance(BpmnShape.class);
+		shape.setBpmnElement(dataObjectReference);
+		diagram.getBpmnPlane().addChildElement(shape);
+		
+		Bounds bounds = bpmnModel.newInstance(Bounds.class);
+		shape.setBounds(bounds);
+		bounds.setWidth(36);
+		bounds.setHeight(50);
+		
+		bounds.setY(taskBounds.getY() + taskBounds.getHeight() + bounds.getHeight());
+		if (left) {
+			bounds.setX(taskBounds.getX() - bounds.getWidth() / 2 + taskBounds.getWidth() / 2 - 20);
+		} else {
+			bounds.setX(taskBounds.getX() - bounds.getWidth() / 2 + taskBounds.getWidth() / 2 + 20);
+		}
+		
+		return dataObjectReference;
+	}
+	
+	private void criarEdgeAssociation(DataAssociation association, Bounds taskBounds, Bounds dataObjectReferenceBounds) {
+		BpmnDiagram diagram = DiagramUtil.getDefaultDiagram(bpmnModel);
+		
+		BpmnEdge edge = bpmnModel.newInstance(BpmnEdge.class);
+		edge.setBpmnElement(association);
+		diagram.getBpmnPlane().addChildElement(edge);
+		
+		Waypoint waypoint1 = bpmnModel.newInstance(Waypoint.class);
+		waypoint1.setX(taskBounds.getX() + taskBounds.getWidth() / 2);
+		waypoint1.setY(taskBounds.getY() + taskBounds.getHeight());
+		
+		Waypoint waypoint2 = bpmnModel.newInstance(Waypoint.class);
+		waypoint2.setX(dataObjectReferenceBounds.getX() + dataObjectReferenceBounds.getWidth() / 2);
+		waypoint2.setY(dataObjectReferenceBounds.getY());
+		
+		if (association.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_DATA_OUTPUT_ASSOCIATION)) {
+			edge.getWaypoints().add(waypoint1);
+			edge.getWaypoints().add(waypoint2);
+		} else {
+			edge.getWaypoints().add(waypoint2);
+			edge.getWaypoints().add(waypoint1);
 		}
 	}
 	
-	private static void resolverDocumento(TaskNode node, BpmnModelInstance bpmnModel) {
-		boolean createDataObject = false;
+	private boolean hasDataOutputAssociation(UserTask userTask, DataObjectReference dataObjectReference) {
+		for (DataOutputAssociation dataOutputAssociation : userTask.getDataOutputAssociations()) {
+			if (dataObjectReference.equals(dataOutputAssociation.getTarget())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean hasDataInputAssociation(UserTask userTask, DataObjectReference dataObjectReference) {
+		for (DataInputAssociation dataInputAssociation : userTask.getDataInputAssociations()) {
+			if (dataObjectReference.equals(dataInputAssociation.getSources().iterator().next())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private void removerDataObjectsNaoExistentes() {
+		Set<DataObjectReference> dataObjectReferencesToRemove = new HashSet<>();
+
+		for (UserTask userTask : bpmnModel.getModelElementsByType(UserTask.class)) {
+			for (DataInputAssociation dataInputAssociation : userTask.getDataInputAssociations()) {
+				DataObjectReference dataObjectReference = (DataObjectReference) dataInputAssociation.getSources().iterator().next();
+				if (!variaveisDocumento.containsKey(dataObjectReference.getId())) {
+					userTask.getDataInputAssociations().remove(dataInputAssociation);
+					dataObjectReferencesToRemove.add(dataObjectReference);
+				}
+			}
+			
+			for (DataOutputAssociation dataOutputAssociation : userTask.getDataOutputAssociations()) {
+				DataObjectReference dataObjectReference = (DataObjectReference) dataOutputAssociation.getTarget();
+				if (!variaveisDocumento.containsKey(dataObjectReference.getId())) {
+					userTask.getDataOutputAssociations().remove(dataOutputAssociation);
+					dataObjectReferencesToRemove.add(dataObjectReference);
+				}
+			}
+		}
+		
+		for (DataObjectReference dataObjectReference : dataObjectReferencesToRemove) {
+			DataObject dataObject = dataObjectReference.getDataObject();
+			dataObjectReference.getParentElement().removeChildElement(dataObjectReference);
+			dataObject.getParentElement().removeChildElement(dataObject);
+		}
+	}
+
+	private void resolverVariaveisDocumento(TaskNode node) {
 		if (node.getTasks() != null) {
 			for (org.jbpm.taskmgmt.def.Task task : node.getTasks()) {
 				List<VariableAccess> variables = task.getTaskController() == null ? null : task.getTaskController().getVariableAccesses();
-				if (containsVariavelDocumento(variables)) {
-					createDataObject = true;
-					break;
+				if (variables != null) {
+					for (VariableAccess var : variables) {
+						VariableType variableType = VariableType.valueOf(var.getType());
+						if (variableType == VariableType.EDITOR || variableType == VariableType.FILE) {
+							if (!variaveisDocumento.containsKey(var.getVariableName())) {
+								variaveisDocumento.put(var.getVariableName(), new ArrayList<ConfiguracaoVariavelDocumento>());
+							}
+							ConfiguracaoVariavelDocumento config = new ConfiguracaoVariavelDocumento();
+							config.nodeId = node.getKey();
+							config.entrada = !var.isWritable();
+							config.label = var.getLabel();
+							variaveisDocumento.get(var.getVariableName()).add(config);
+						}
+					}
 				}
 			}
 		}
-		
-		if (!createDataObject) {
-			Event event = node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
-			createDataObject = event != null && event.getAction(NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME) != null;
-		}
-
-		UserTask task = bpmnModel.getModelElementById(node.getKey());
-		DataOutputAssociation dataOutputAssociation = task.getDataOutputAssociations().isEmpty() ? null : task.getDataOutputAssociations().iterator().next();
-		
-		if (createDataObject && dataOutputAssociation == null) {
-			DataObject dataObject = bpmnModel.newInstance(DataObject.class);
-			DataObjectReference dataObjectReference = bpmnModel.newInstance(DataObjectReference.class);
-			dataOutputAssociation = bpmnModel.newInstance(DataOutputAssociation.class);
-			task.getParentElement().addChildElement(dataObjectReference);
-			task.getParentElement().addChildElement(dataObject);
-			task.getDataOutputAssociations().add(dataOutputAssociation);
-			dataOutputAssociation.setTarget(dataObjectReference);
-			dataObjectReference.setDataObject(dataObject);
-			
-			BpmnDiagram diagram = DiagramUtil.getDefaultDiagram(bpmnModel);
-			BpmnShape shape = bpmnModel.newInstance(BpmnShape.class);
-			shape.setBpmnElement(dataObjectReference);
-			diagram.getBpmnPlane().addChildElement(shape);
-			
-			Bounds bounds = bpmnModel.newInstance(Bounds.class);
-			shape.setBounds(bounds);
-			bounds.setWidth(36);
-			bounds.setHeight(50);
-			Bounds taskBounds = task.getDiagramElement().getBounds();
-			bounds.setX(taskBounds.getX() - bounds.getWidth() / 2 + taskBounds.getWidth() / 2);
-			bounds.setY(taskBounds.getY() + taskBounds.getHeight() + bounds.getHeight());
-			
-			BpmnEdge edge = bpmnModel.newInstance(BpmnEdge.class);
-			edge.setBpmnElement(dataOutputAssociation);
-			diagram.getBpmnPlane().addChildElement(edge);
-			
-			Waypoint waypoint1 = bpmnModel.newInstance(Waypoint.class);
-			waypoint1.setX(taskBounds.getX() + taskBounds.getWidth() / 2);
-			waypoint1.setY(taskBounds.getY() + taskBounds.getHeight());
-			
-			Waypoint waypoint2 = bpmnModel.newInstance(Waypoint.class);
-			waypoint2.setX(bounds.getX() + bounds.getWidth() / 2);
-			waypoint2.setY(bounds.getY());
-			
-			edge.getWaypoints().add(waypoint1);
-			edge.getWaypoints().add(waypoint2);
-		} else if (!createDataObject && dataOutputAssociation != null) {
-			DataObjectReference reference = (DataObjectReference) dataOutputAssociation.getTarget();
-			DataObject object = reference.getDataObject();
-			task.removeChildElement(dataOutputAssociation);
-			reference.getParentElement().removeChildElement(reference);
-			object.getParentElement().removeChildElement(object);
-		}
 	}
 
-	private static boolean containsVariavelDocumento(List<VariableAccess> variables) {
-		if (variables != null) {
-			for (VariableAccess variable : variables) {
-				VariableType variableType = VariableType.valueOf(variable.getMappedName().split(":")[0]);
-				if (variableType == VariableType.EDITOR || variableType == VariableType.FILE) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private static void resolverTimer(TaskNode node, BpmnModelInstance bpmnModel) {
+	private void resolverTimer(TaskNode node) {
 		UserTask userTask = bpmnModel.getModelElementById(node.getKey());
 		BoundaryEvent boundaryEvent = getBoundaryEvent(userTask, TimerEventDefinition.class);
 		boolean hasTimers = hasTimers(node);
@@ -144,7 +253,7 @@ public class ConfiguracoesNos {
 		}
 	}
 
-	private static BoundaryEvent getBoundaryEvent(Activity activity, Class<? extends EventDefinition> eventDefinitionClass) {
+	private BoundaryEvent getBoundaryEvent(Activity activity, Class<? extends EventDefinition> eventDefinitionClass) {
 		for (BoundaryEvent boundaryEvent : activity.getParentElement().getChildElementsByType(BoundaryEvent.class)) {
 			if (boundaryEvent.getAttachedTo().equals(activity)) {
 				if (eventDefinitionClass == null && boundaryEvent.getEventDefinitions().isEmpty()) {
@@ -162,7 +271,7 @@ public class ConfiguracoesNos {
 		return null;
 	}
 
-	private static void resolverSinalBoundary(Node node, BpmnModelInstance bpmnModel) {
+	private void resolverSinalBoundary(Node node) {
 		Activity activity = bpmnModel.getModelElementById(node.getKey());
 		BoundaryEvent boundaryEvent = getBoundaryEvent(activity, SignalEventDefinition.class);
 		Map<String, Event> events = node.getEvents();
@@ -186,7 +295,7 @@ public class ConfiguracoesNos {
 		}
 	}
 	
-	private static void resolverSinalStart(StartState startState, BpmnModelInstance bpmnModel) {
+	private void resolverSinalStart(StartState startState) {
 		StartEvent startEvent = bpmnModel.getModelElementById(startState.getKey());
 		SignalEventDefinition signalEventDefinition = null;
 		for (EventDefinition eventDefinition : startEvent.getEventDefinitions()) {
@@ -216,7 +325,7 @@ public class ConfiguracoesNos {
 		}
 	}
 	
-	private static boolean hasTimers(TaskNode node) {
+	private boolean hasTimers(TaskNode node) {
 		if (node.hasEvent(Event.EVENTTYPE_NODE_ENTER)) {
 			Event event = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
 			if (event.getActions() != null) {
@@ -230,7 +339,7 @@ public class ConfiguracoesNos {
 		return false;
 	}
 	
-	private static BoundaryEvent createBoundaryEvent(Activity activity, Position position) {
+	private BoundaryEvent createBoundaryEvent(Activity activity, Position position) {
 		BpmnModelInstance bpmnModel = (BpmnModelInstance) activity.getModelInstance();
 		
 		BoundaryEvent boundaryEvent = bpmnModel.newInstance(BoundaryEvent.class);
@@ -270,5 +379,11 @@ public class ConfiguracoesNos {
 		}
 		
 		return boundaryEvent;
+	}
+	
+	private static class ConfiguracaoVariavelDocumento {
+		private String nodeId;
+		private boolean entrada;
+		private String label;
 	}
 }

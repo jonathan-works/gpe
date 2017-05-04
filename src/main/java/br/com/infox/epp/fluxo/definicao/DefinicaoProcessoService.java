@@ -55,7 +55,7 @@ public class DefinicaoProcessoService {
         
         ProcessDefinition newProcessDefinition = new InfoxJpdlXmlReader(new StringReader(newProcessDefinitionXml)).readProcessDefinition();
         BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(definicaoProcesso.getBpmn().getBytes(StandardCharsets.UTF_8)));
-        ConfiguracoesNos.resolverMarcadoresBpmn(newProcessDefinition, bpmnModel);
+        new ConfiguracoesNos().resolverMarcadoresBpmn(newProcessDefinition, bpmnModel);
         definicaoProcesso.setBpmn(Bpmn.convertToString(bpmnModel));
         definicaoProcesso.setXml(newProcessDefinitionXml);
         definicaoProcesso = definicaoProcessoDao.update(definicaoProcesso);
