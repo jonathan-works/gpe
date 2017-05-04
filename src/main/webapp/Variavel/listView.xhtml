@@ -9,6 +9,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
     <ui:define name="title"> #{infoxMessages['variavel.titlePage']} </ui:define>
     <ui:param
@@ -63,19 +64,37 @@
                 id="variavel"
                 value="#{home.instance.variavel}"
                 label="#{infoxMessages['variavel.variavel']}"
-                maxlength="100"
+                size="35"
                 required="true" />
-            <wi:inputText
-                id="valorVariavel"
-                label="#{infoxMessages['variavel.valorVariavel']}"
-                value="#{home.instance.valorVariavel}"
-                maxlength="200"
-                required="true" />
+            <div style="display: inline-block; margin-right: 1.5em">
+                <wi:inputTextarea id="valorVariavel"
+                    label="#{infoxMessages['variavel.valorVariavel']}"
+                    value="#{home.instance.valorVariavel}"
+                    maxlength="200"
+                    styleClass="textAreaExpressionAction"
+                    style="margin-right: 0em"
+                    required="true">
+                    <f:validator validatorId="jbpmExpressionValidator" />
+                    <a:ajax event="change" limitRender="true"
+                        execute="@this"
+                        render="pageBodyDialogMessage :processDefinition:eventsForm:nodeEventActionExpressionDecoration" />
+                </wi:inputTextarea>
+                <div style="display: inline-block">
+                    <h:graphicImage id="#{id}helpEditTipImg"
+                        url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                        onclick="#{rich:component('expressoesAjudaGeralPopUpPanel')}.show();" />
+                </div>
+            </div>
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{home.instance.ativo}" />
         </wi:dataForm>
+        <ui:include src="/Fluxo/definicao/helpers/expressoesAjuda.xhtml">
+            <ui:param name="id" value="expressoesAjudaGeralPopUpPanel" />
+            <ui:param name="methods" value="#{bpmExpressionService.externalEventosMethods}" />
+            <ui:param name="targetExpressionFieldClass" value="textAreaExpressionAction" />
+        </ui:include>        
     </ui:define>
     <ui:define name="tabs">
         <infox:tab
@@ -188,4 +207,5 @@
             </wi:ajaxDiv>
         </infox:tab>
     </ui:define>
+        
 </ui:composition>
