@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.Activity;
@@ -38,11 +39,19 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.scheduler.def.CreateTimerAction;
 
+import com.google.gson.Gson;
+
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
+import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
+import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
 
 public class ConfiguracoesNos {
 	
 	private Map<String, List<ConfiguracaoVariavelDocumento>> variaveisDocumento;
+	private List<ConfiguracaoDocumentoGerado> documentosGerados;
 	private BpmnModelInstance bpmnModel;
 	
 	private static enum Position {
@@ -51,6 +60,7 @@ public class ConfiguracoesNos {
 	
 	public void resolverMarcadoresBpmn(ProcessDefinition processDefinition, BpmnModelInstance bpmnModel) {
 		variaveisDocumento = new HashMap<>();
+		documentosGerados = new ArrayList<>();
 		this.bpmnModel = bpmnModel;
 		
 		for (Node node : processDefinition.getNodes()) {
@@ -64,11 +74,28 @@ public class ConfiguracoesNos {
 			} else if (node.getNodeType().equals(NodeType.StartState)) {
 				resolverSinalStart((StartState) node);
 			}
+			
+			if (node.getNodeType().equals(NodeType.Task) || node.getNodeType().equals(NodeType.Node)) {
+				resolverDocumentosGerados(node);
+			}
 		}
 		
 		resolverDocumentos();
 	}
 	
+	private void resolverDocumentosGerados(Node node) {
+		Event exitEvent = node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
+		if (exitEvent != null && exitEvent.getAction(NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME) != null) {
+			Action generateDocumentoAction = exitEvent.getAction(NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME);
+			String jsonConfiguration = new GenerateDocumentoHandler().parseJbpmConfiguration(generateDocumentoAction.getActionDelegation().getConfiguration());
+			GenerateDocumentoConfiguration config = new Gson().fromJson(jsonConfiguration, GenerateDocumentoConfiguration.class);
+			ClassificacaoDocumentoManager classificacaoDocumentoManager = BeanManager.INSTANCE.getReference(ClassificacaoDocumentoManager.class);
+			String codigoClassificacao = config.getCodigoClassificacaoDocumento();
+			String classificacao = classificacaoDocumentoManager.getNomeClassificacaoByCodigo(codigoClassificacao);
+			documentosGerados.add(new ConfiguracaoDocumentoGerado(codigoClassificacao, classificacao, node.getKey()));
+		}
+	}
+
 	private void resolverDocumentos() {
 		removerDataObjectsNaoExistentes();
 		Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
@@ -96,14 +123,27 @@ public class ConfiguracoesNos {
 				}
 			}
 		}
+		
+		for (ConfiguracaoDocumentoGerado config : documentosGerados) {
+			Activity activity = bpmnModel.getModelElementById(config.nodeId);
+			DataObjectReference dataObjectReference = bpmnModel.getModelElementById(config.id);
+			if (dataObjectReference == null) {
+				dataObjectReference = criarDataObjectReference(config.id, process, ((BpmnShape) activity.getDiagramElement()).getBounds(), false);
+			}
+			dataObjectReference.setName(config.nome);
+			
+			if (!hasDataOutputAssociation(activity, dataObjectReference)) {
+				criarDataOutputAssociation(activity, dataObjectReference);
+			}
+		}
 	}
 
-	private void criarDataOutputAssociation(UserTask userTask, DataObjectReference dataObjectReference) {
+	private void criarDataOutputAssociation(Activity activity, DataObjectReference dataObjectReference) {
 		DataOutputAssociation dataOutputAssociation = bpmnModel.newInstance(DataOutputAssociation.class);
 		dataOutputAssociation.setTarget(dataObjectReference);
-		userTask.getDataOutputAssociations().add(dataOutputAssociation);
+		activity.getDataOutputAssociations().add(dataOutputAssociation);
 		
-		criarEdgeAssociation(dataOutputAssociation, userTask.getDiagramElement().getBounds(), ((BpmnShape) dataObjectReference.getDiagramElement()).getBounds());
+		criarEdgeAssociation(dataOutputAssociation, ((BpmnShape) activity.getDiagramElement()).getBounds(), ((BpmnShape) dataObjectReference.getDiagramElement()).getBounds());
 	}
 
 	private void criarDataInputAssociation(UserTask userTask, DataObjectReference dataObjectReference) {
@@ -172,8 +212,8 @@ public class ConfiguracoesNos {
 		}
 	}
 	
-	private boolean hasDataOutputAssociation(UserTask userTask, DataObjectReference dataObjectReference) {
-		for (DataOutputAssociation dataOutputAssociation : userTask.getDataOutputAssociations()) {
+	private boolean hasDataOutputAssociation(Activity activity, DataObjectReference dataObjectReference) {
+		for (DataOutputAssociation dataOutputAssociation : activity.getDataOutputAssociations()) {
 			if (dataObjectReference.equals(dataOutputAssociation.getTarget())) {
 				return true;
 			}
@@ -195,19 +235,25 @@ public class ConfiguracoesNos {
 	private void removerDataObjectsNaoExistentes() {
 		Set<DataObjectReference> dataObjectReferencesToRemove = new HashSet<>();
 
-		for (UserTask userTask : bpmnModel.getModelElementsByType(UserTask.class)) {
-			for (DataInputAssociation dataInputAssociation : userTask.getDataInputAssociations()) {
-				DataObjectReference dataObjectReference = (DataObjectReference) dataInputAssociation.getSources().iterator().next();
-				if (!variaveisDocumento.containsKey(dataObjectReference.getId())) {
-					userTask.getDataInputAssociations().remove(dataInputAssociation);
-					dataObjectReferencesToRemove.add(dataObjectReference);
+		for (Activity activity : bpmnModel.getModelElementsByType(Activity.class)) {
+			if (activity.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_USER_TASK)) {
+				for (DataInputAssociation dataInputAssociation : activity.getDataInputAssociations()) {
+					DataObjectReference dataObjectReference = (DataObjectReference) dataInputAssociation.getSources().iterator().next();
+					if (!variaveisDocumento.containsKey(dataObjectReference.getId())) {
+						activity.getDataInputAssociations().remove(dataInputAssociation);
+						dataObjectReferencesToRemove.add(dataObjectReference);
+					}
 				}
 			}
 			
-			for (DataOutputAssociation dataOutputAssociation : userTask.getDataOutputAssociations()) {
+			for (DataOutputAssociation dataOutputAssociation : activity.getDataOutputAssociations()) {
 				DataObjectReference dataObjectReference = (DataObjectReference) dataOutputAssociation.getTarget();
 				if (!variaveisDocumento.containsKey(dataObjectReference.getId())) {
-					userTask.getDataOutputAssociations().remove(dataOutputAssociation);
+					activity.getDataOutputAssociations().remove(dataOutputAssociation);
+					dataObjectReferencesToRemove.add(dataObjectReference);
+				}
+				if (!ConfiguracaoDocumentoGerado.contains(documentosGerados, dataObjectReference.getId())) {
+					activity.getDataOutputAssociations().remove(dataOutputAssociation);
 					dataObjectReferencesToRemove.add(dataObjectReference);
 				}
 			}
@@ -387,5 +433,30 @@ public class ConfiguracoesNos {
 		private String nodeId;
 		private boolean entrada;
 		private String label;
+	}
+	
+	private static class ConfiguracaoDocumentoGerado {
+		private String id;
+		private String nome;
+		private String nodeId;
+		
+		private ConfiguracaoDocumentoGerado(String codigoClassificacao, String nome, String nodeId) {
+			this.nome = nome;
+			this.nodeId = nodeId;
+			this.id = generateId(nodeId, codigoClassificacao);
+		}
+		
+		private static String generateId(String nodeId, String codigoClassificacao) {
+			return nodeId + "_" + DigestUtils.sha1Hex(codigoClassificacao);
+		}
+		
+		private static boolean contains(List<ConfiguracaoDocumentoGerado> list, String id) {
+			for (ConfiguracaoDocumentoGerado config : list) {
+				if (config.id.equals(id)) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }

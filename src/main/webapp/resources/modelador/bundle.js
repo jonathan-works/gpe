@@ -25305,16 +25305,16 @@ ToolbarProvider.prototype.getToolbarEntries = function () {
             title: translate('Full screen'),
             action: {
                 click: function (event) {
-                    if (domClasses(event.srcElement).has('fa-arrows-alt')) {
+                    if (domClasses(event.target).has('fa-arrows-alt')) {
                         self._infoxModeler.enterFullscreen();
-                        event.srcElement.classList.remove('fa-arrows-alt');
-                        event.srcElement.classList.add('fa-compress');
-                        event.srcElement.title = translate('Exit full screen');
+                        event.target.classList.remove('fa-arrows-alt');
+                        event.target.classList.add('fa-compress');
+                        event.target.title = translate('Exit full screen');
                     } else {
                         self._infoxModeler.exitFullscreen();
-                        event.srcElement.classList.remove('fa-compress');
-                        event.srcElement.classList.add('fa-arrows-alt');
-                        event.srcElement.title = translate('Full screen');
+                        event.target.classList.remove('fa-compress');
+                        event.target.classList.add('fa-arrows-alt');
+                        event.target.title = translate('Full screen');
                     }
                 }
             }

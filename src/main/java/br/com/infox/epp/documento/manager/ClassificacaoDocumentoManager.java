@@ -79,4 +79,7 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
 		return getDao().getEntityManager().createQuery(query).getResultList();
 	}
 
+    public String getNomeClassificacaoByCodigo(String codigoClassificacao) {
+    	return getDao().getNomeClassificacaoByCodigo(codigoClassificacao);
+    }
 }
