@@ -73,6 +73,7 @@ public class BpmnJpdlService {
     		.endEvent(BpmUtil.generateKey()).name(infoxMessages.get("process.node.last"));
     	
     	BpmnModelInstance bpmn = builder.done();
+    	bpmn.getDocument().registerNamespace(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE_ALIAS, ModeladorConstants.BPMN_IO_COLOR_NAMESPACE);
     	
     	((SequenceFlow) bpmn.getModelElementById(sequenceFlowKey)).removeConditionExpression();
     	
@@ -165,12 +166,15 @@ public class BpmnJpdlService {
 			throw new BusinessRollbackException("O BPMN deve conter apenas 1 participante");
 		}
 		
+		bpmnModel.getDocument().registerNamespace(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE_ALIAS, ModeladorConstants.BPMN_IO_COLOR_NAMESPACE);
+		
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(definicaoProcesso.getXml());
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
 
     	Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
     	processDefinition.setKey(process.getId());
 		atualizarNomeFluxo(definicaoProcesso.getFluxo().getFluxo(), bpmnModel, processDefinition);
+		new ConfiguracoesNos().resolverMarcadoresBpmn(processDefinition, bpmnModel);
 		
 		String newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
 		// Validar consistência do JPDL

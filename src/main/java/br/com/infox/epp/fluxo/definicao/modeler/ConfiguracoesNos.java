@@ -152,6 +152,8 @@ public class ConfiguracoesNos {
 		BpmnEdge edge = bpmnModel.newInstance(BpmnEdge.class);
 		edge.setBpmnElement(association);
 		diagram.getBpmnPlane().addChildElement(edge);
+		edge.getDomElement().setAttribute(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE, "stroke", "#969696");
+		edge.getDomElement().setAttribute(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE, "fill", "#969696");
 		
 		Waypoint waypoint1 = bpmnModel.newInstance(Waypoint.class);
 		waypoint1.setX(taskBounds.getX() + taskBounds.getWidth() / 2);

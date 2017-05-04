@@ -63,6 +63,7 @@ public class JpdlBpmnConverter {
 	public String convert(String processDefinitionXml) {
 		processDefinition = new InfoxJpdlXmlReader(new StringReader(processDefinitionXml)).readProcessDefinition();
 		BpmnModelInstance bpmnModel = Bpmn.createProcess(processDefinition.getKey()).name(processDefinition.getName()).done();
+		bpmnModel.getDocument().registerNamespace(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE_ALIAS, ModeladorConstants.BPMN_IO_COLOR_NAMESPACE);
 
 		resolveLanes(bpmnModel, processDefinition.getKey());
 		jpdlTransitions = new ArrayList<>();
