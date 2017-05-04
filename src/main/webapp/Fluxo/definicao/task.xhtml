@@ -97,7 +97,7 @@
                                     return false;
                             };
                         </h:outputScript>
-                        <rich:autocomplete value="#{var.name}" style="font-size:1em;"
+                        <rich:autocomplete value="#{var.name}"
                             rendered="#{empty var.name and !empty t.previousVariables}" selectFirst="false"
                             autocompleteList="#{t.previousVariables}" mode="client" minChars="2" styleClass="infox-rf-au"
                             clientFilterFunction="customFilter">
@@ -264,6 +264,11 @@
                                 <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
                                 render="addVarDiv, @this, :pageBodyDialogMessage, varDiv" limitRender="true" />
                             </wi:inputText>
+                            <div style="display: inline-block">
+				                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+				                    onclick="#{rich:component('mascaraAjudaPopup')}.show();" />
+				            </div>
+				            <ui:include src="helpers/mascaraAjuda.xhtml" />
                         </div>
                     </rich:panel>
                     <h:form rendered="#{var.type eq 'PARAMETER'}">
