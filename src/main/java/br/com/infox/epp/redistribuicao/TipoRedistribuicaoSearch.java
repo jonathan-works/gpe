@@ -9,7 +9,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import br.com.infox.epp.redistribuicao.TipoRedistribuicao_;
 
 public class TipoRedistribuicaoSearch {
 

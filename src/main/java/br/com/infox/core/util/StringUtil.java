@@ -1,11 +1,11 @@
 package br.com.infox.core.util;
 
-import java.util.Collection;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.jboss.seam.util.Strings;

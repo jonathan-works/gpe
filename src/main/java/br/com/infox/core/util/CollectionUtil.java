@@ -1,6 +1,7 @@
 package br.com.infox.core.util;
 
 import static br.com.infox.core.util.ObjectUtil.is;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;

@@ -34,7 +34,6 @@ import br.com.infox.epp.assinador.view.AssinaturaCallback;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
-import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;

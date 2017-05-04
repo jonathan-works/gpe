@@ -2,20 +2,13 @@ package br.com.infox.epp.processo.form.type;
 
 import java.util.List;
 
-import org.jboss.seam.faces.FacesMessages;
-
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.cdi.exception.ExceptionHandled;
-import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;

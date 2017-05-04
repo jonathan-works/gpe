@@ -33,7 +33,6 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.distribuicao.DistribuicaoRelatoriaService;
-import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.documento.publicacao.LocalPublicacao;
 import br.com.infox.epp.documento.publicacao.LocalPublicacaoSearch;

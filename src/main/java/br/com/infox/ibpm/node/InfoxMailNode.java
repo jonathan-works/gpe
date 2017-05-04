@@ -13,14 +13,11 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
-import org.jbpm.JbpmContext;
 import org.jbpm.graph.action.ActionTypes;
 import org.jbpm.graph.def.Action;
-import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.node.MailNode;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
-import org.jbpm.persistence.db.DbPersistenceService;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.config.BeanManager;

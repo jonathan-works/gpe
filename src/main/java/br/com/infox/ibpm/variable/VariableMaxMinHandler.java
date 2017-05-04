@@ -5,7 +5,6 @@ import org.jbpm.context.def.VariableAccess;
 import com.google.gson.Gson;
 
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.ibpm.variable.VariableDataHandler.DataConfig;
 
 public class VariableMaxMinHandler {
 

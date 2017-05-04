@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.list;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.lang3.ObjectUtils;

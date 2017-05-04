@@ -1,6 +1,7 @@
 package br.com.infox.epp.system.parametro;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -11,8 +12,6 @@ import javax.persistence.criteria.Root;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.entity.Parametro_;
-
-import javax.ejb.TransactionAttribute;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)

@@ -21,7 +21,6 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;

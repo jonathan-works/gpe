@@ -20,6 +20,7 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import com.google.common.base.Strings;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -86,6 +87,7 @@ public class SwimlaneHandler implements Serializable {
         perfisPermitidosGrupo = null;
         swimlane.setPooledActorsExpression(configuration.toPooledActorsExpression());
         reloadTableConfiguracoes();
+    }
     
     public void adicionarExpressao() {
         configuration.getExpressoes().add(expression);

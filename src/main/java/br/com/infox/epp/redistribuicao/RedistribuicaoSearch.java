@@ -13,7 +13,6 @@ import javax.persistence.criteria.Root;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
-import br.com.infox.epp.redistribuicao.Redistribuicao_;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
