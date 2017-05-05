@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
@@ -36,8 +36,8 @@ public abstract class AbstractLazyData<T> extends LazyDataModel<T> {
     }
     
     public int searchCount() {
-        TypedQuery<Long> countQuery = createQueryCount();
-        Long rowCount = countQuery.getSingleResult();
+        Query countQuery = createQueryCount();
+        Long rowCount = (Long) countQuery.getSingleResult();
         return rowCount.intValue();
     }
     
@@ -60,16 +60,17 @@ public abstract class AbstractLazyData<T> extends LazyDataModel<T> {
         return this;
     }
     
-    public abstract TypedQuery<Long> createQueryCount();
+    public abstract Query createQueryCount();
     
-    public abstract TypedQuery<T> createQuery(String sortField, SortOrder sortOrder);
+    public abstract Query createQuery(String sortField, SortOrder sortOrder);
     
+    @SuppressWarnings("unchecked")
     @Override
     public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
         if (getWrappedData() == null || isPaginationOrSorting()) {
             int rowCount = searchCount();
             setRowCount(rowCount);
-            TypedQuery<T> query = createQuery(sortField, sortOrder);
+            Query query = createQuery(sortField, sortOrder);
             List<T> resultList = null;
             resultList = query.setMaxResults(pageSize).setFirstResult(first).getResultList();
             return resultList;
