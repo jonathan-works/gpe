@@ -149,44 +149,54 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	}
 	
     public byte[] writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode) {
+        try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
+            writeMargemDocumento(pdf, textoAssinatura, textoCodigo, qrcode, outStream);
+            return outStream.toByteArray();
+        } catch (IOException e) {
+        	throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
+        }        
+    }
+
+	public void writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode,
+			OutputStream outStream) {
     	if(InfoxPdfReader.isCriptografado(pdf)) {
             throw new MargemPdfException("Documento somente leitura, não é possível gravar");    		
     	}
-        try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
-            final PdfReader pdfReader = new PdfReader(pdf);
-            final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
-            final Font font = new Font(Font.TIMES_ROMAN, 8);
+        try {
+        	final PdfReader pdfReader = new PdfReader(pdf);
+        	final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
+        	final Font font = new Font(Font.TIMES_ROMAN, 8);
 
-            final Phrase phrase = new Phrase(textoAssinatura, font);
-            final Phrase codPhrase = new Phrase(textoCodigo, font);
+        	final Phrase phrase = new Phrase(textoAssinatura, font);
+        	final Phrase codPhrase = new Phrase(textoCodigo, font);
 
-            for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
-                int rotation = pdfReader.getPageRotation(page);
-                final PdfContentByte content = stamper.getOverContent(page);
-                final Image image = Image.getInstance(qrcode);
-                float right = pdfReader.getCropBox(page).getRight();
-                float top = pdfReader.getCropBox(page).getTop();
-                if (rotation == 90 || rotation == 270) {
-                    // Invertendo posições quando o PDF estiver em modo Paisagem
-                    float tempRight = right;
-                    right = top;
-                    top = tempRight;
-                }
-                image.setAbsolutePosition(right - 65, top - 70);
-                content.addImage(image);
-                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
-                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 35, top - 70, -90);
-            }
+        	for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
+        		int rotation = pdfReader.getPageRotation(page);
+        		final PdfContentByte content = stamper.getOverContent(page);
+        		final Image image = Image.getInstance(qrcode);
+        		float right = pdfReader.getCropBox(page).getRight();
+        		float top = pdfReader.getCropBox(page).getTop();
+        		if (rotation == 90 || rotation == 270) {
+        			// Invertendo posições quando o PDF estiver em modo Paisagem
+        			float tempRight = right;
+        			right = top;
+        			top = tempRight;
+        		}
+        		image.setAbsolutePosition(right - 65, top - 70);
+        		content.addImage(image);
+        		ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
+        		ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 35, top - 70, -90);
+        	}
 
-            stamper.close();
-            outStream.flush();
-            return outStream.toByteArray();
+        	stamper.close();
+        	outStream.flush();
         } catch (BadPasswordException e) {
             throw new MargemPdfException("Documento somente leitura, não é possível gravar", e);
         } catch (IOException | DocumentException e) {
             throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
         }
-    }
+
+	}
 
     public void writeMargemDocumento(final DocumentoBin documento, final byte[] pdf, final OutputStream outStream) {
         try {
