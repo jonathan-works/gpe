@@ -13,6 +13,10 @@ public interface ProcessoTarefaQuery {
 
     String TAREFA_NOT_ENDED_BY_TIPO_PRAZO = "listAllProcessoTarefaNotEnded";
     String TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY = "select o from ProcessoTarefa o "
+    		+ "inner join fetch o.processo p "
+    		+ "inner join fetch p.naturezaCategoriaFluxo natCatFluxo "
+    		+ "inner join fetch natCatFluxo.fluxo fluxo "
+    		+ "inner join fetch o.tarefa tar "
             + "where o.dataFim is null and o.tarefa.tipoPrazo = :"
             + QUERY_PARAM_TIPO_PRAZO;
 
