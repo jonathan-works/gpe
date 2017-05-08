@@ -3,19 +3,15 @@ package br.com.infox.epp.fluxo.list;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(FluxoList.NAME)
-@BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class FluxoList extends EntityList<Fluxo> {
     private static final long serialVersionUID = 1L;
     
@@ -24,8 +20,6 @@ public class FluxoList extends EntityList<Fluxo> {
     
     private static final String TEMPLATE = "/Fluxo/fluxoTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "Fluxos.xls";
-
-    public static final String NAME = "fluxoList";
 
     @Override
     protected void addSearchFields() {
@@ -54,10 +48,6 @@ public class FluxoList extends EntityList<Fluxo> {
     public List<Fluxo> getResultList() {
         setEjbql(getEjbqlRestrictedWithDataPublicacao());
         return super.getResultList();
-    }
-
-    public static final FluxoList instance() {
-        return ComponentUtil.getComponent(FluxoList.NAME);
     }
 
     private String getEjbqlRestrictedWithDataPublicacao() {
