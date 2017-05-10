@@ -55,6 +55,7 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
     	return (T) dao.removeWithoutFlush(o);
     }
     
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public T find(Object id) {
         return dao.find(id);
     }

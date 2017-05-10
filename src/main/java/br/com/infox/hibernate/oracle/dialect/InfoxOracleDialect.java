@@ -3,6 +3,7 @@ package br.com.infox.hibernate.oracle.dialect;
 import java.sql.Types;
 
 import org.hibernate.dialect.Oracle10gDialect;
+import org.hibernate.dialect.function.StandardSQLFunction;
 import org.hibernate.type.StandardBasicTypes;
 
 import br.com.infox.hibernate.function.CustomSqlFunctions;
@@ -27,5 +28,6 @@ public class InfoxOracleDialect extends Oracle10gDialect {
         registerFunction(CustomSqlFunctions.STRING_AGG, new StringAgg());
         registerFunction(CustomSqlFunctions.DATE_TO_CHAR, new DateToChar());
         registerHibernateType(Types.NVARCHAR, StandardBasicTypes.STRING.getName());
+        registerFunction("coalesce", new StandardSQLFunction("coalesce"));
     }
 }

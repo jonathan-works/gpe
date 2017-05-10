@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.dao;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,10 +8,10 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.Query;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
@@ -26,58 +27,58 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao_;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao_;
-import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.Processo_;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.type.TipoProcesso;
-import br.com.infox.util.time.Date;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ComunicacaoSearch extends PersistenceController {
 
+    @SuppressWarnings("unchecked")
     public Map<String, Object> getMaximoDiasCienciaMaisPrazo(Integer idProcesso, String taskName) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
-        Root<DestinatarioModeloComunicacao> destinatarioComunicacao = cq.from(DestinatarioModeloComunicacao.class);
-        Join<DestinatarioModeloComunicacao, Processo> processo = destinatarioComunicacao.join(DestinatarioModeloComunicacao_.processo, JoinType.INNER);
-        Join<Processo, MetadadoProcesso> tipoProcesso = processo.join(Processo_.metadadoProcessoList, JoinType.INNER);
-        Join<Processo, MetadadoProcesso> limiteCiencia = processo.join(Processo_.metadadoProcessoList, JoinType.INNER);
-        
-        Expression<Date> dataCiencia = cb.function("to_date", Date.class, limiteCiencia.get(MetadadoProcesso_.valor));
-        Expression<Object> maiorPrazo = cb.selectCase().when(
-                                                cb.max(destinatarioComunicacao.get(DestinatarioModeloComunicacao_.prazo)).isNull(), cb.literal(0))
-                                        .otherwise(
-                                                cb.max(destinatarioComunicacao.get(DestinatarioModeloComunicacao_.prazo))
-                                         );
-        Expression<Date> maiorPrazoComCiencia = cb.function("DataUtilAdd", Date.class, cb.literal("day"), maiorPrazo, dataCiencia);
-        
-        cq.select(cb.tuple(dataCiencia.alias("dataLimiteCiencia"), maiorPrazo.alias("maiorPrazo")));
-        
-        Predicate predicate = cb.and(
-            cb.isTrue(destinatarioComunicacao.get(DestinatarioModeloComunicacao_.expedido)),
-            cb.isNotNull(processo.get(Processo_.idJbpm)),
-            cb.isNull(processo.get(Processo_.dataFim)),
-            cb.equal(processo.get(Processo_.processoPai).get(Processo_.idProcesso), cb.literal(idProcesso)),
-            cb.equal(tipoProcesso.get(MetadadoProcesso_.metadadoType), cb.literal(EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType())),
-            cb.equal(tipoProcesso.get(MetadadoProcesso_.valor), cb.literal(TipoProcesso.COMUNICACAO.value())),
-            cb.equal(limiteCiencia.get(MetadadoProcesso_.metadadoType), cb.literal(ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA.getMetadadoType()))
-        );
+        String jpql = "select coalesce(to_date(mpCiencia.valor), to_date(mpLimiteCiencia.valor)), "
+                + "coalesce(max(d.prazo), 0) "
+                
+                + "from DestinatarioModeloComunicacao d "
+                + "inner join d.processo p "
+                + "inner join p.metadadoProcessoList mpTipoProcesso "
+                + "inner join p.metadadoProcessoList mpLimiteCiencia "
+                + "left join p.metadadoProcessoList mpCiencia with mpCiencia.metadadoType = :tipoMetadadoCiencia ";
         
         if (!StringUtil.isEmpty(taskName)) {
-            predicate = appendTaskNameFilter(predicate, cq, taskName, destinatarioComunicacao);
+            jpql += "inner join d.modeloComunicacao mc ";
         }
-        cq.groupBy(limiteCiencia.get(MetadadoProcesso_.valor));
-        cq.where(predicate);
-        cq.orderBy(cb.desc(maiorPrazoComCiencia));
-        List<Tuple> resultList = getEntityManager().createQuery(cq).setMaxResults(1).getResultList();
-        Tuple tuple = resultList.isEmpty() ? null : resultList.get(0);
+                
+        jpql += "where d.expedido = true and p.idJbpm is not null and p.dataFim is null "
+            + "and p.processoPai.idProcesso = :idProcesso and mpTipoProcesso.valor in (:tiposComunicacao) "
+            + "and mpLimiteCiencia.metadadoType = :tipoMetadadoLimiteCiencia and mpTipoProcesso.metadadoType = :tipoMetadadoTipoProcesso ";
+        
+        if (!StringUtil.isEmpty(taskName)) {
+            jpql += " and exists(select 1 from Task t where t.name like :taskName and t.key = mc.taskKey) ";
+        }
+        
+        jpql += " group by coalesce(to_date(mpCiencia.valor), to_date(mpLimiteCiencia.valor)) "
+            + "order by DataUtilAdd('day', coalesce(max(d.prazo), 0), coalesce(to_date(mpCiencia.valor), to_date(mpLimiteCiencia.valor))) desc";
+        
+        Query query = getEntityManager().createQuery(jpql)
+                .setParameter("tipoMetadadoCiencia", ComunicacaoMetadadoProvider.DATA_CIENCIA.getMetadadoType())
+                .setParameter("idProcesso", idProcesso)
+                .setParameter("tiposComunicacao", Arrays.asList(TipoProcesso.COMUNICACAO.value(), TipoProcesso.COMUNICACAO_NAO_ELETRONICA.value()))
+                .setParameter("tipoMetadadoLimiteCiencia", ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA.getMetadadoType())
+                .setParameter("tipoMetadadoTipoProcesso", EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType())
+                .setParameter("taskName", taskName)
+               .setMaxResults(1);
+        
+        if (!StringUtil.isEmpty(taskName)) {
+            query.setParameter("taskName", taskName);
+        }
+        
+        List<Object[]> resultList = query.getResultList();
+        Object[] result = resultList.isEmpty() ? null : resultList.get(0);
         Map<String, Object> map = new HashMap<>(2);
-        if (tuple != null) {
-            map.put("dataLimiteCiencia", tuple.get("dataLimiteCiencia", Date.class));
-            map.put("maiorPrazo", tuple.get("maiorPrazo", Integer.class));
+        if (result != null) {
+            map.put("dataCienciaOuLimite", result[0]);
+            map.put("maiorPrazo", result[1]);
         }
         return map;
     }

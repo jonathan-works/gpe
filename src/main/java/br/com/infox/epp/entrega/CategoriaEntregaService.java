@@ -6,14 +6,15 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import com.google.common.base.Strings;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.exception.EppConfigurationException;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.system.entity.Parametro;
@@ -21,7 +22,8 @@ import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
-public class CategoriaEntregaService {
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class CategoriaEntregaService extends PersistenceController {
 
 	@Inject
 	private CategoriaEntregaSearch categoriaEntregaSearch;
@@ -29,10 +31,6 @@ public class CategoriaEntregaService {
 	private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
 	@Inject
 	private ParametroManager parametroManager;
-
-	private EntityManager getEntityManager() {
-		return EntityManagerProducer.getEntityManager();
-	}
 
 	private CategoriaEntregaItem getItem(String codigo) {
 		try {
@@ -50,12 +48,14 @@ public class CategoriaEntregaService {
 		}
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void atualizar(String codigoCategoria, String novaDescricao) {
 		CategoriaEntrega categoria = getCategoria(codigoCategoria);
 		categoria.setDescricao(novaDescricao);
 		getEntityManager().flush();
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void novaCategoria(CategoriaEntrega categoria, String codigoItemPai) {
 		if (codigoItemPai != null) {
 			CategoriaEntregaItem itemPai = getItem(codigoItemPai);
@@ -73,6 +73,7 @@ public class CategoriaEntregaService {
 		return categoriaEntregaSearch.getCategoriaEntregaRoot();
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void remover(String codigoCategoria) {
 		CategoriaEntrega categoria = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigoCategoria);
 		getEntityManager().remove(categoria);
