@@ -8,10 +8,10 @@ import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
@@ -74,7 +74,7 @@ public class BamAction extends AbstractController {
     }
 
     public TaskInstance getTaskInstance(Long idTaskInstance) {
-        return ManagedJbpmContext.instance().getTaskInstance(idTaskInstance);
+    	return EntityManagerProducer.getEntityManager().find(TaskInstance.class, idTaskInstance);
     }
 
     public void forceUpdateTarefasFinalizadas() {
