@@ -1,8 +1,6 @@
 package br.com.infox.epp.processo.documento.entity;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -40,6 +38,7 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
+import br.com.infox.core.util.SizeConverter;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
@@ -59,8 +58,6 @@ public class DocumentoBin implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    private static final float BYTES_IN_A_KILOBYTE = 1024f;
-
     public static final String TABLE_NAME = "tb_documento_bin";
     
     @Id
@@ -374,12 +371,10 @@ public class DocumentoBin implements Serializable {
     @Transient
     public String getSizeFormatado() {
     	Integer size = getSize();
-        if (size != null && size > 0) {
-            NumberFormat formatter = new DecimalFormat("###,##0.00");
-            float sizeF = size / BYTES_IN_A_KILOBYTE;
-            return formatter.format(sizeF) + " Kb";
-        }
-        return "-";
+    	if(size == null || size <= 0) {
+    		return "-";
+    	}
+    	return SizeConverter.fromBytes(size).toString();
     }
 
 	@Override
