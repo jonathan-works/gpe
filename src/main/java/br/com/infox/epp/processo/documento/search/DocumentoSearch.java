@@ -4,19 +4,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanQuery.TooManyClauses;
-import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
@@ -76,11 +76,9 @@ public class DocumentoSearch implements Serializable {
         }
     }
 
-    @Transactional
-    public String getNameTarefa(Long idTask) {
-        if (idTask != null && idTask != 0) {
-            Session session = ManagedJbpmContext.instance().getSession();
-            TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, idTask);
+    public String getNameTarefa(Long idTaskInstance) {
+        if (idTaskInstance != null && idTaskInstance != 0) {
+            TaskInstance ti = getEntityManager().find(TaskInstance.class, idTaskInstance);
             return " - " + ti.getTask().getName();
         } else {
             return "(Anexo do Processo)";
@@ -100,5 +98,9 @@ public class DocumentoSearch implements Serializable {
             Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
             Redirect.instance().execute();
         }
+    }
+    
+    private EntityManager getEntityManager() {
+    	return EntityManagerProducer.getEntityManager();
     }
 }
