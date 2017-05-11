@@ -3,20 +3,17 @@ package br.com.infox.epp.access.manager;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
+import javax.ejb.Stateless;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.dao.RecursoDAO;
 import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Recurso;
 
-@Name(RecursoManager.NAME)
-@AutoCreate
+@Stateless
 public class RecursoManager extends Manager<RecursoDAO, Recurso> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "recursoManager";
 
     public boolean existsRecurso(String identificador) {
         return getDao().existsRecurso(identificador);

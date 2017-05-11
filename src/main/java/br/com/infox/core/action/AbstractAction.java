@@ -79,6 +79,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * @return
      */
     @Transactional
+    @br.com.infox.epp.cdi.transaction.Transactional
     private String flushObject(T t, boolean isPersist) {
         String ret = null;
         try {
@@ -106,6 +107,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * 
      * @return "persisted" se inserido com sucesso.
      */
+    @br.com.infox.epp.cdi.transaction.Transactional
     protected String persist(T t) {
         return flushObject(t, true);
     }
@@ -115,6 +117,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * 
      * @return "updated" se alterado com sucesso.
      */
+    @br.com.infox.epp.cdi.transaction.Transactional
     protected String update(T t) {
         return flushObject(t, false);
     }
@@ -128,6 +131,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * @return "removed" se removido com sucesso.
      */
     @Transactional
+    @br.com.infox.epp.cdi.transaction.Transactional
     public String remove(T t) {
         String ret = null;
         try {
@@ -147,6 +151,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * @return "updated" se inativado com sucesso.
      */
     @Transactional
+    @br.com.infox.epp.cdi.transaction.Transactional
     public String inactive(T t) {
         if (t == null) {
             return null;
@@ -191,6 +196,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * @return
      */
     @Transactional
+    @br.com.infox.epp.cdi.transaction.Transactional
     protected <R extends Recursive<R>> void inactiveRecursive(Recursive<R> o) {
         ComponentUtil.setValue(o, "ativo", false);
         List<R> childList = o.getChildList();

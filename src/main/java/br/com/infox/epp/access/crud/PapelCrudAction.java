@@ -31,6 +31,7 @@ import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.seam.security.operation.PopulateRoleMembersListOperation;
 import br.com.infox.seam.security.operation.UpdateRolesOperation;
 import br.com.infox.seam.util.ComponentUtil;
@@ -61,8 +62,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     private String activeInnerTab;
     private boolean acceptChange = Boolean.FALSE;
 
-    @In
-    private RecursoManager recursoManager;
+    private RecursoManager recursoManager = BeanManager.INSTANCE.getReference(RecursoManager.class);
     
     @In IdentityManager identityManager;
 

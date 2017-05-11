@@ -174,36 +174,36 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel> {
         }
     };
 
-    private final RunnableTest<Recurso> createRoles = new RunnableTest<Recurso>(
-            RecursoManager.NAME) {
-        @Override
-        protected void testComponent() throws Exception {
-            for (int i = 0; i < 25; i++) {
-                createRole(MessageFormat.format(
-                        "/pages/RecursoTeste/recurso{0}.seam", i));
-            }
-        }
-
-        private void createRole(final String pageRole) {
-            if (invokeMethod("existsRecurso", Boolean.TYPE, pageRole)) {
-                return;
-            }
-            final Recurso recurso = new Recurso(pageRole, pageRole);
-            try {
-                final Class<?>[] types = { Object.class };
-                invokeMethod("persist", Recurso.class, types, recurso);
-            } catch (final Exception e) {
-                if (e instanceof DAOException) {
-                } else {
-                    throw e;
-                }
-            }
-            final Permission permission = new Permission(pageRole, "access",
-                    new Role("admin"));
-            PermissionManager.instance().getPermissionStore()
-                    .grantPermission(permission);
-        }
-    };
+//    private final RunnableTest<Recurso> createRoles = new RunnableTest<Recurso>(
+//            RecursoManager.NAME) {
+//        @Override
+//        protected void testComponent() throws Exception {
+//            for (int i = 0; i < 25; i++) {
+//                createRole(MessageFormat.format(
+//                        "/pages/RecursoTeste/recurso{0}.seam", i));
+//            }
+//        }
+//
+//        private void createRole(final String pageRole) {
+//            if (invokeMethod("existsRecurso", Boolean.TYPE, pageRole)) {
+//                return;
+//            }
+//            final Recurso recurso = new Recurso(pageRole, pageRole);
+//            try {
+//                final Class<?>[] types = { Object.class };
+//                invokeMethod("persist", Recurso.class, types, recurso);
+//            } catch (final Exception e) {
+//                if (e instanceof DAOException) {
+//                } else {
+//                    throw e;
+//                }
+//            }
+//            final Permission permission = new Permission(pageRole, "access",
+//                    new Role("admin"));
+//            PermissionManager.instance().getPermissionStore()
+//                    .grantPermission(permission);
+//        }
+//    };
 
     private final RunnableTest<Papel> removeSuccess = new RunnableTest<Papel>(
             PapelCrudAction.NAME) {
@@ -482,7 +482,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel> {
                 new Papel("Vendedor.upd.suc", "vendedor.upd.suc"),
                 this.servletContext, this.session);
 
-        this.createRoles.runTest(this.servletContext, this.session);
+//        this.createRoles.runTest(this.servletContext, this.session);
         this.updateSuccess.runTest(admin, this.servletContext, this.session);
         this.updateSuccess.runTest(gestor, this.servletContext, this.session);
         this.updateSuccess

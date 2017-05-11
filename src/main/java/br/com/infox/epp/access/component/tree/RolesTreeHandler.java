@@ -16,7 +16,7 @@ import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.crud.RecursoCrudAction;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 
 @Name(RolesTreeHandler.ROLES_TREE)
 @Scope(ScopeType.PAGE)
@@ -103,7 +103,7 @@ public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
             closeParentPanel(tree);
             raiseEvents(en);
         } else if (node instanceof String) {
-            RecursoCrudAction rca = ComponentUtil.getComponent(RecursoCrudAction.NAME);
+            RecursoCrudAction rca = BeanManager.INSTANCE.getReference(RecursoCrudAction.class);
             rca.setRecurso((String) node);
             final Redirect redirect = Redirect.instance();
             redirect.setViewId("/useradmin/recursoListView.xhtml");
