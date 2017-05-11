@@ -1,21 +1,22 @@
 package br.com.infox.epp.access.component.tree;
 
+import javax.inject.Named;
+
 import org.jboss.seam.Component;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.crud.LocalizacaoCrudAction;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cdi.ViewScoped;
 
-@Name(LocalizacaoTreeHandler.NAME)
-@AutoCreate
+@Named(LocalizacaoTreeHandler.NAME)
+@ViewScoped
 public class LocalizacaoTreeHandler extends AbstractTreeHandler<Localizacao> {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "localizacaoTree";
+    protected static final String NAME = "localizacaoTree";
     public static final String EVENT_SELECTED = "evtSelectLocalizacao";
 
     @Override

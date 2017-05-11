@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -19,6 +21,8 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumentoPermissao;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
@@ -32,6 +36,7 @@ import br.com.infox.util.collection.LazyMap;
 @Scope(ScopeType.CONVERSATION)
 @Name(SigiloDocumentoPermissaoAction.NAME)
 @Transactional
+@ContextDependency
 public class SigiloDocumentoPermissaoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,7 +49,7 @@ public class SigiloDocumentoPermissaoAction implements Serializable {
     private SigiloDocumentoManager sigiloDocumentoManager;
     @In
     private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
-    @In
+    @Inject
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private ActionMessagesService actionMessagesService;
@@ -67,7 +72,7 @@ public class SigiloDocumentoPermissaoAction implements Serializable {
             public Boolean create(Integer key) {
                 inicializarDocumentosSelecionados();
                 SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager = (SigiloDocumentoPermissaoManager) Component.getInstance(SigiloDocumentoPermissaoManager.NAME);
-                UsuarioLoginManager usuarioLoginManager = (UsuarioLoginManager) Component.getInstance(UsuarioLoginManager.NAME);
+                UsuarioLoginManager usuarioLoginManager = BeanManager.INSTANCE.getReference(UsuarioLoginManager.class);
                 return sigiloDocumentoPermissaoManager.possuiPermissao(idsDocumentosSelecionados, usuarioLoginManager.find(key));
             }
 

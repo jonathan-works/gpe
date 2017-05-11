@@ -1,15 +1,11 @@
 package br.com.infox.epp.access.crud;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.util.Collections;
 import java.util.List;
 
-import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
@@ -20,15 +16,18 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
 
-@Name(UsuarioPerfilCrudAction.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
+@Named
+@ViewScoped
 public class UsuarioPerfilCrudAction extends AbstractCrudAction<UsuarioPerfil, UsuarioPerfilManager> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "usuarioPerfilCrudAction";
-    
+
+    @Inject
+    private UsuarioPerfilManager usuarioPerfilManager;
+
     private UsuarioLogin usuarioLogin;
 
     public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
@@ -60,9 +59,8 @@ public class UsuarioPerfilCrudAction extends AbstractCrudAction<UsuarioPerfil, U
         clearTrees();
     }
     
-    @SuppressWarnings(UNCHECKED)
     private void clearTrees() {
-        ((TreeHandler<Localizacao>) Component.getInstance(LocalizacaoTreeHandler.NAME)).clearTree();
+        ((TreeHandler<Localizacao>) BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class)).clearTree();
     }
     
     @Override
@@ -76,4 +74,8 @@ public class UsuarioPerfilCrudAction extends AbstractCrudAction<UsuarioPerfil, U
 		return result; 
 	}
 
+    @Override
+    protected UsuarioPerfilManager getManager() {
+        return usuarioPerfilManager;
+    }
 }

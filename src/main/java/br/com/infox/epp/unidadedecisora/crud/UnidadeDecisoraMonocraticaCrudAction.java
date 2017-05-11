@@ -2,7 +2,8 @@ package br.com.infox.epp.unidadedecisora.crud;
 
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
+import javax.inject.Inject;
+
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 
@@ -11,21 +12,23 @@ import br.com.infox.core.util.ObjectUtil;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(UnidadeDecisoraMonocraticaCrudAction.NAME)
+@ContextDependency
 public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<UnidadeDecisoraMonocratica, UnidadeDecisoraMonocraticaManager>{
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraMonocraticaCrudAction";
 	
-	@In
+	@Inject
 	private UnidadeDecisoraColegiadaManager unidadeDecisoraColegiadaManager;
-	@In
+	@Inject
 	private UsuarioPerfilManager usuarioPerfilManager;
 	
 	private List<PessoaFisica> possiveisChefesGabinete;
@@ -33,7 +36,7 @@ public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<Uni
     @Override
 	public void newInstance() {
 		super.newInstance();
-		LocalizacaoTreeHandler tree = ComponentUtil.getComponent(LocalizacaoTreeHandler.NAME);
+		LocalizacaoTreeHandler tree = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
 		tree.clearTree();
 		possiveisChefesGabinete = null;
 	}

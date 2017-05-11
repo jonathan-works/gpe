@@ -32,6 +32,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
@@ -166,7 +167,7 @@ public class PastaRestricaoAction implements Serializable {
 	}
 	
 	public void newRestricaoInstance() {
-		LocalizacaoTreeHandler localizacaoTreeHandler = ComponentUtil.<LocalizacaoTreeHandler>getComponent(LocalizacaoTreeHandler.NAME);
+		LocalizacaoTreeHandler localizacaoTreeHandler = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
 		if(localizacaoTreeHandler != null) {
 			localizacaoTreeHandler.clearTree(); 
 		}

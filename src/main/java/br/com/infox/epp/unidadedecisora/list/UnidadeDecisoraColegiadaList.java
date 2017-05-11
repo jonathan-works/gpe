@@ -3,8 +3,9 @@ package br.com.infox.epp.unidadedecisora.list;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -12,13 +13,15 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(UnidadeDecisoraColegiadaList.NAME)
 @Scope(ScopeType.CONVERSATION)
+@ContextDependency
 public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraColegiada>{
 
 	private static final long serialVersionUID = 1L;
@@ -34,7 +37,7 @@ public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraCole
     														 "where udcm.unidadeDecisoraMonocratica = #{unidadeDecisoraColegiadaList.unidadeDecisoraMonocratica} " +
     														 "and udcm.unidadeDecisoraColegiada = o) ";
     
-    @In
+    @Inject
     private UnidadeDecisoraMonocraticaManager unidadeDecisoraMonocraticaManager;
     
     private UnidadeDecisoraMonocratica unidadeDecisoraMonocratica;
@@ -52,7 +55,7 @@ public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraCole
     @Override
     public void newInstance() {
     	super.newInstance();
-    	LocalizacaoTreeHandler ut = ComponentUtil.getComponent(LocalizacaoTreeHandler.NAME);
+        LocalizacaoTreeHandler ut = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
     	ut.clearTree();
     	setUnidadeDecisoraMonocratica(null);
     }

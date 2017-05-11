@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.sigilo.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
@@ -25,6 +26,7 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso_;
 
 @AutoCreate
 @Name(SigiloProcessoPermissaoManager.NAME)
+@Stateless
 public class SigiloProcessoPermissaoManager extends Manager<SigiloProcessoPermissaoDAO, SigiloProcessoPermissao> {
 
     private static final long serialVersionUID = 1L;

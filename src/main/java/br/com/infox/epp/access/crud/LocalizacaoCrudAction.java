@@ -2,7 +2,6 @@ package br.com.infox.epp.access.crud;
 
 import java.util.List;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
@@ -16,6 +15,7 @@ import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.EstruturaManager;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -51,7 +51,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     }
 
     protected void limparTrees() {
-        final LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
+        final LocalizacaoTreeHandler ret = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
         if (ret != null) {
             ret.clearTree();
         }

@@ -7,10 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.jboss.logging.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -20,6 +21,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
@@ -31,6 +33,7 @@ import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 @Transactional
+@ContextDependency
 public class SigiloProcessoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,19 +43,15 @@ public class SigiloProcessoAction implements Serializable {
     public static final String DETALHES_DO_SIGILO = "D";
     private static final String MSG_REGISTRO_ALTERADO = "#{infoxMessages['sigiloProcesso.registroAlterado']}";
 
-    @In
+    @Inject
     private ActionMessagesService actionMessagesService;
-
-    @In
+    @Inject
     private SigiloProcessoService sigiloProcessoService;
-
-    @In
+    @Inject
     private SigiloProcessoManager sigiloProcessoManager;
-
-    @In
+    @Inject
     private SigiloProcessoPermissaoManager sigiloProcessoPermissaoManager;
-
-    @In
+    @Inject
     private UsuarioLoginManager usuarioLoginManager;
 
     private SigiloProcesso sigiloProcesso = new SigiloProcesso();

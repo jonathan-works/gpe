@@ -18,6 +18,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
 
 @Named
 @ViewScoped
@@ -73,7 +74,7 @@ public class PerfilTemplateList extends EntityList<PerfilTemplate> {
     
     @SuppressWarnings(UNCHECKED)
     private void clearTrees() {
-        ((TreeHandler<Papel>) Component.getInstance(PapelTreeHandler.NAME)).clearTree();
+        ((TreeHandler<Papel>) BeanManager.INSTANCE.getReference(PapelTreeHandler.class)).clearTree();
         ((TreeHandler<Localizacao>) Component.getInstance(EstruturaLocalizacoesPerfilTreeHandler.NAME)).clearTree();
     }
 

@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
@@ -23,6 +22,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -51,10 +51,8 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
 
     private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
 
-    @In
-    private ActionMessagesService actionMessagesService;
-    @In
-    protected InfoxMessages infoxMessages;
+    private ActionMessagesService actionMessagesService = BeanManager.INSTANCE.getReference(ActionMessagesService.class);
+    protected InfoxMessages infoxMessages = BeanManager.INSTANCE.getReference(InfoxMessages.class);
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
     @Create
