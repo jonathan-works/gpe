@@ -14,7 +14,6 @@ import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.seam.security.operation.UpdateResourcesOperation;
 
 @Named
@@ -31,7 +30,8 @@ public class RecursoPapelController implements Serializable {
     private RecursoManager recursoManager;
     @Inject
     private InfoxMessages infoxMessages;
-    private PapelManager papelManager = BeanManager.INSTANCE.getReference(PapelManager.class);
+    @Inject
+    private PapelManager papelManager;
 
     public Recurso getRecurso() {
         return recurso;

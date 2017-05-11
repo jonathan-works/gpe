@@ -14,14 +14,12 @@ import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.crud.PapelCrudAction;
 import br.com.infox.epp.access.dao.PapelDAO;
 import br.com.infox.epp.access.dao.RecursoDAO;
-import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.fluxo.crud.FluxoCrudAction;
 import br.com.infox.epp.fluxo.crud.FluxoPapelAction;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.dao.FluxoPapelDAO;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
@@ -30,7 +28,6 @@ import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
-import br.com.infox.epp.test.it.access.crud.PapelCrudActionIT;
 
 //@RunWith(Arquillian.class)
 public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
@@ -43,8 +40,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
                 FluxoPapelDAO.class, PapelCrudAction.class, RolesMap.class,
                 PapelManager.class, RecursoManager.class, PapelDAO.class,
                 RecursoDAO.class, FluxoCrudAction.class, FluxoManager.class,
-                FluxoDAO.class, PapelCrudActionIT.class,
-                FluxoCrudActionIT.class).createDeployment();
+                FluxoDAO.class, FluxoCrudActionIT.class).createDeployment();
     }
 
     @Override
@@ -80,79 +76,6 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
             Assert.assertNull("id not null", id);
         }
     };
-
-    //@Test
-    public void persistSuccessTest() throws Exception {
-        final String suffix = "perSuccess";
-        final List<Papel> papeis = PapelCrudActionIT.getSuccessFullyPersisted(
-                null, suffix, this.servletContext, this.session);
-        final List<Fluxo> fluxos = FluxoCrudActionIT.getSuccessfullyPersisted(
-                null, suffix, this.servletContext, this.session);
-
-        for (final Fluxo fluxo : fluxos) {
-            for (final Papel papel : papeis) {
-                FluxoPapelActionIT.persistSuccess.runTest(new FluxoPapel(fluxo,
-                        papel), this.servletContext, this.session);
-            }
-        }
-    }
-
-    //@Test
-    public void persistFailTest() throws Exception {
-        final String suffix = "perFail";
-        final List<Papel> papeis = PapelCrudActionIT.getSuccessFullyPersisted(
-                null, suffix, this.servletContext, this.session);
-        final List<Fluxo> fluxos = FluxoCrudActionIT.getSuccessfullyPersisted(
-                null, suffix, this.servletContext, this.session);
-
-        for (final Fluxo fluxo : fluxos) {
-            for (final Papel papel : papeis) {
-                FluxoPapelActionIT.persistSuccess.runTest(new FluxoPapel(fluxo,
-                        papel), this.servletContext, this.session);
-                this.persistFail.runTest(new FluxoPapel(fluxo, papel),
-                        this.servletContext, this.session);
-            }
-        }
-    }
-
-    //@Test
-    public void removeSuccessTest() throws Exception {
-        final String suffix = "removeSucc";
-        final List<Papel> papeis = PapelCrudActionIT.getSuccessFullyPersisted(
-                null, suffix, this.servletContext, this.session);
-        final List<Fluxo> fluxos = FluxoCrudActionIT.getSuccessfullyPersisted(
-                null, suffix, this.servletContext, this.session);
-
-        for (final Fluxo fluxo : fluxos) {
-            for (final Papel papel : papeis) {
-                FluxoPapelActionIT.persistSuccess.runTest(new FluxoPapel(fluxo,
-                        papel), this.servletContext, this.session);
-            }
-            this.removeSuccess.runTest(new FluxoPapel(fluxo, null),
-                    this.servletContext, this.session);
-        }
-    }
-
-    //@Test
-    public void removeFailTest() throws Exception {
-        final String suffix = "removeFail";
-
-        final List<Papel> papeis = PapelCrudActionIT.getSuccessFullyPersisted(
-                null, suffix, this.servletContext, this.session);
-        final List<Fluxo> fluxos = FluxoCrudActionIT.getSuccessfullyPersisted(
-                null, suffix, this.servletContext, this.session);
-
-        for (final Fluxo fluxo : fluxos) {
-            for (final Papel papel : papeis) {
-                FluxoPapelActionIT.persistSuccess.runTest(new FluxoPapel(fluxo,
-                        papel), this.servletContext, this.session);
-            }
-            final FluxoPapel entity = new FluxoPapel(fluxo, null);
-            this.removeSuccess.runTest(entity, this.servletContext,
-                    this.session);
-            this.removeFail.runTest(entity, this.servletContext, this.session);
-        }
-    }
 
     private final RunnableTest<FluxoPapel> removeSuccess = new RunnableTest<FluxoPapel>(
             FluxoPapelAction.NAME) {

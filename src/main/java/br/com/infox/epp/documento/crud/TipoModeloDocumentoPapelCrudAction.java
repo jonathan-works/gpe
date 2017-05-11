@@ -2,12 +2,12 @@ package br.com.infox.epp.documento.crud;
 
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoPapelManager;
@@ -22,8 +22,7 @@ public class TipoModeloDocumentoPapelCrudAction extends AbstractCrudAction<TipoM
 
     public static final String NAME = "tipoModeloDocumentoPapelCrudAction";
 
-    @In
-    private PapelManager papelManager;
+    private PapelManager papelManager = BeanManager.INSTANCE.getReference(PapelManager.class);
 
     private TipoModeloDocumento tipoModeloDocumentoAtual;
 

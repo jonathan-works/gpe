@@ -63,6 +63,8 @@ public class DocumentoProcessoAction implements Serializable {
 	protected MarcadorSearch marcadorSearch;
 	@Inject
 	private DocumentoCompartilhamentoList documentoCompartilhamentoList;
+	@Inject
+	private PapelManager papelManager;
 	
 	private DocumentoList documentoList = ComponentUtil.getComponent(DocumentoList.NAME);
 		
@@ -204,7 +206,7 @@ public class DocumentoProcessoAction implements Serializable {
 
 	public boolean isDocumentoInclusoPorUsuarioExterno(Documento documento) {
         if (identificadoresPapeisHerdeirosUsuarioExterno == null) {
-            identificadoresPapeisHerdeirosUsuarioExterno = ComponentUtil.<PapelManager>getComponent(PapelManager.NAME).getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_EXTERNO.getValue());
+            identificadoresPapeisHerdeirosUsuarioExterno = papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_EXTERNO.getValue());
         }
         return ComponentUtil.<DocumentoManager>getComponent(DocumentoManager.NAME).isDocumentoInclusoPorPapeis(documento, identificadoresPapeisHerdeirosUsuarioExterno);
     }

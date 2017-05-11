@@ -61,7 +61,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
     private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
     @In(create = true)
     private ModeloPastaList modeloPastaList;
-    @In
+    @Inject
     private PapelManager papelManager;
     @In
     private LocalizacaoManager localizacaoManager;

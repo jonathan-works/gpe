@@ -4,12 +4,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
@@ -21,8 +21,7 @@ public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<Cl
 
     public static final String NAME = "classificacaoDocumentoPapelCrudAction";
 
-    @In
-    private PapelManager papelManager;
+    private PapelManager papelManager = BeanManager.INSTANCE.getReference(PapelManager.class);
 
     public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         newInstance();
