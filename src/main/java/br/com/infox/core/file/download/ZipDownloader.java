@@ -108,7 +108,7 @@ public class ZipDownloader {
 	
 	protected void exportDocumento(Integer idDocumentoBin, OutputStream outputStream, ZipOutputStream zos) throws IOException {
 		DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
-		zos.putNextEntry(new ZipEntry(documentoBin.getNomeArquivo()));
+		zos.putNextEntry(new ZipEntry(getNomeArquivo(documentoBin.getId())));
 		fileDownloader.export(documentoBin, outputStream);
 		outputStream.flush();
 		zos.closeEntry();
