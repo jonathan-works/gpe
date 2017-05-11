@@ -3,6 +3,7 @@ package br.com.infox.core.file.download;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.zip.ZipOutputStream;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import com.google.common.base.Charsets;
 import com.google.common.net.MediaType;
 
 import br.com.infox.core.file.download.FileDownloader.Exporter;
@@ -28,6 +30,8 @@ import lombok.Setter;
 public class ZipDownloader {
 	
 	private static final SimpleDateFormat formatoSufixoData = new SimpleDateFormat("yyyyMMdd_HHmm");
+	
+	public static final String ENCODING = Charsets.UTF_8.toString();
 	
 	@Inject
 	protected ParametroManager parametroManager;
@@ -117,7 +121,7 @@ public class ZipDownloader {
 	}
 	
 	public void exportZipDocumentos(List<Integer> idsDocumentoBin, OutputStream outputStream) throws IOException {
-		try(ZipOutputStream zos = new ZipOutputStream(outputStream)) {
+		try(ZipOutputStream zos = new ZipOutputStream(outputStream, Charset.forName(ENCODING))) {
 			zos.setLevel(compressionLevel);
 			BufferedOutputStream bos = new BufferedOutputStream(zos);
 			ProgressOutputStream pos = new ProgressOutputStream(bos, null);
