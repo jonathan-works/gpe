@@ -94,7 +94,7 @@ public class PastaRestricaoAction implements Serializable {
 	    // Isto está aqui para evitar erro ao editar uma restrição do tipo localização na primeira vez que entra na tela,
         // causado pela injeção a este componente que
         // está presente em LocalizaccaoTreehandler.getEntityToIgnore
-        ComponentUtil.<LocalizacaoCrudAction>getComponent(LocalizacaoCrudAction.NAME).newInstance();
+	    BeanManager.INSTANCE.getReference(LocalizacaoCrudAction.class).newInstance();
 	}
 	
 	protected void clearInstances() {

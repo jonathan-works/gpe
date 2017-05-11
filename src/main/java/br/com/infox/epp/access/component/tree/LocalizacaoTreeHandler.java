@@ -2,13 +2,12 @@ package br.com.infox.epp.access.component.tree;
 
 import javax.inject.Named;
 
-import org.jboss.seam.Component;
-
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.crud.LocalizacaoCrudAction;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
 
 @Named(LocalizacaoTreeHandler.NAME)
 @ViewScoped
@@ -37,6 +36,6 @@ public class LocalizacaoTreeHandler extends AbstractTreeHandler<Localizacao> {
 
     @Override
     protected Localizacao getEntityToIgnore() {
-        return ((LocalizacaoCrudAction) Component.getInstance(LocalizacaoCrudAction.NAME)).getInstance();
+        return BeanManager.INSTANCE.getReference(LocalizacaoCrudAction.class).getInstance();
     }
 }
