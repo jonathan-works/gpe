@@ -1,14 +1,14 @@
 package br.com.infox.epp.access.component.tree;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.crud.EstruturaCrudAction;
 import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cdi.ViewScoped;
 
 /**
  * Localizações dentro de uma estrutura. Utilizada pelo {@link EstruturaCrudAction}
@@ -16,16 +16,16 @@ import br.com.infox.epp.access.entity.Localizacao;
  *
  */
 
-@Name(LocalizacoesDaEstruturaTreeHandler.NAME)
-@AutoCreate
+@Named(LocalizacoesDaEstruturaTreeHandler.NAME)
+@ViewScoped
 public class LocalizacoesDaEstruturaTreeHandler extends AbstractTreeHandler<Localizacao> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "localizacoesDaEstruturaTree";
+    protected static final String NAME = "localizacoesDaEstruturaTree";
 
     private Estrutura estruturaPai = new Estrutura();
     
-    @In
+    @Inject
     private EstruturaCrudAction estruturaCrudAction;
     
     @Override

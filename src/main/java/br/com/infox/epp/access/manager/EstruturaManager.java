@@ -3,10 +3,10 @@ package br.com.infox.epp.access.manager;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.transaction.SystemException;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.transaction.Transaction;
 
@@ -25,7 +25,8 @@ public class EstruturaManager extends Manager<EstruturaDAO, Estrutura> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "estruturaManager";
     
-    @In private LocalizacaoManager localizacaoManager;
+    @Inject
+    private LocalizacaoManager localizacaoManager;
     
     public List<Estrutura> getEstruturasDisponiveis() {
         return getDao().getEstruturasDisponiveis();

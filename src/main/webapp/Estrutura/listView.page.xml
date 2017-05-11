@@ -6,9 +6,7 @@
     <restrict>#{security.checkPage()}</restrict>
     <description>Estrutura: #{estruturaCrudAction.instance}</description>
 
-    <begin-conversation join="true" />
     <param name="id" value="#{estruturaCrudAction.id}" converterId="integerConverter" />
-
     <param name="tab" value="#{estruturaCrudAction.tab}" />
 
 </page>
