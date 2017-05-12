@@ -40,8 +40,7 @@ public class UnidadeDecisoraMonocraticaList extends EntityList<UnidadeDecisoraMo
     public void newInstance() {
     	super.newInstance();
     	getEntity().setRecebeDistribuicao(null);
-        LocalizacaoTreeHandler ut = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
-    	ut.clearTree();
+        BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
     }
     
 	@Override

@@ -55,8 +55,7 @@ public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraCole
     @Override
     public void newInstance() {
     	super.newInstance();
-        LocalizacaoTreeHandler ut = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
-    	ut.clearTree();
+        BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
     	setUnidadeDecisoraMonocratica(null);
     }
 

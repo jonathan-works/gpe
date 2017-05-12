@@ -39,8 +39,7 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 	@Override
 	public void newInstance() {
 		super.newInstance();
-		LocalizacaoTreeHandler tree = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
-		tree.clearTree();
+		BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
 	}
 	
 	public Localizacao getLocalizacao() {

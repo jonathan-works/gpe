@@ -1,24 +1,23 @@
 package br.com.infox.epp.documento.crud;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.component.tree.LocalizacaoFisicaTreeHandler;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.infox.epp.documento.manager.LocalizacaoFisicaManager;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(LocalizacaoFisicaCrudAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<LocalizacaoFisica, LocalizacaoFisicaManager> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "localizacaoFisicaCrudAction";
+
+    @Inject
+    private LocalizacaoFisicaManager localizacaoFisicaManager;
 
     public String inactive(LocalizacaoFisica localizacaoFisica) {
         inactiveRecursive(localizacaoFisica);
@@ -49,8 +48,11 @@ public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<Loc
     }
 
     protected void limparTrees() {
-        LocalizacaoFisicaTreeHandler lfth = ComponentUtil.getComponent(LocalizacaoFisicaTreeHandler.NAME);
-        lfth.clearTree();
+        BeanManager.INSTANCE.getReference(LocalizacaoFisicaTreeHandler.class).clearTree();
     }
 
+    @Override
+    protected LocalizacaoFisicaManager getManager() {
+        return localizacaoFisicaManager;
+    }
 }

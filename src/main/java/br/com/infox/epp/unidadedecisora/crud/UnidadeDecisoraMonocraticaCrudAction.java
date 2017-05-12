@@ -36,8 +36,7 @@ public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<Uni
     @Override
 	public void newInstance() {
 		super.newInstance();
-		LocalizacaoTreeHandler tree = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
-		tree.clearTree();
+		BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
 		possiveisChefesGabinete = null;
 	}
     

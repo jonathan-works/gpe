@@ -6,10 +6,8 @@
 	  login-required="true">
 	
 	<restrict>#{security.checkPage()}</restrict>
-	<begin-conversation join="true" />
 
-	<param name="id" value="#{localizacaoFisicaCrudAction.id}"
-		   converterId="integerConverter" />
+	<param name="id" value="#{localizacaoFisicaCrudAction.id}" converterId="integerConverter" />
 	<param name="tab" value="#{localizacaoFisicaCrudAction.tab}" />
 		   
 </page>
