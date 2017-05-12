@@ -27,6 +27,7 @@ import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.tarefa.component.tree.PainelEntityNode;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
@@ -64,9 +65,11 @@ public class PainelUsuarioController implements Serializable {
 	private Boolean expedida;
 	private String numeroProcesso;
 	private String idProcessDefinition;
+	private Integer pollInterval;
 
 	@PostConstruct
 	protected void init() {
+		this.pollInterval = Parametros.INTERVALO_ATUALIZACAO_PAINEL.getValueOrDefault(Integer.class, 10);
 		setNumeroProcesso(getNumeroProcessoFromSession());
 		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
@@ -344,6 +347,10 @@ public class PainelUsuarioController implements Serializable {
 
 	public void setNumeroProcesso(String numeroProcesso) {
 		this.numeroProcesso = numeroProcesso;
+	}
+	
+	public Integer getPollInterval() {
+		return pollInterval;
 	}
 
 }
