@@ -60,7 +60,7 @@ import lombok.Setter;
     @NamedQuery(name = NAMED_QUERY_DOCUMENTOS_ATIVO_PESSOA, query = QUERY_DOCUMENTOS_ATIVO_PESSOA) 
 })
 @EqualsAndHashCode(of = "id")
-public class SigiloDocumento implements Serializable {
+public class SigiloDocumento implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -98,5 +98,19 @@ public class SigiloDocumento implements Serializable {
     @Getter @Setter
     private List<SigiloDocumentoPermissao> sigiloDocumentoPermissao = new ArrayList<>();
     
+    public SigiloDocumento makeCopy() throws CloneNotSupportedException {
+    	SigiloDocumento cSigiloDocumento = (SigiloDocumento) clone();
+    	cSigiloDocumento.setId(null);
+    	
+    	List<SigiloDocumentoPermissao> cSigiloDocumentoPermissaoList = new ArrayList<>();
+		for (SigiloDocumentoPermissao sigiloDocumentoPermissao : cSigiloDocumento.getSigiloDocumentoPermissao()) {
+			SigiloDocumentoPermissao cSigiloDocumentoPermissao = sigiloDocumentoPermissao.makeCopy();
+			cSigiloDocumentoPermissao.setSigiloDocumento(cSigiloDocumento);
+			cSigiloDocumentoPermissaoList.add(cSigiloDocumentoPermissao);
+		}
+		cSigiloDocumento.setSigiloDocumentoPermissao(cSigiloDocumentoPermissaoList);
+		
+		return cSigiloDocumento;
+    }
     
 }
