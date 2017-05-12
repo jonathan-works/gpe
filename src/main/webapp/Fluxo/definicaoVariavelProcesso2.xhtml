@@ -15,7 +15,7 @@
     </style>
     
 <h:form id="meuform">
-    <fieldset style="margin-top: 20px;">
+    <fieldset style="margin-top: 20px;border-color: rgba(200,200,200,0.2);background: rgba(200,200,200,0.2);">
         <legend>
             <h:outputText value="Variáveis disponíveis" styleClass="titulo--def--variavel" />
 		    <a:commandLink id="newButton" styleClass="var--proc--item" style="font-size: 1.3em;"
@@ -26,7 +26,7 @@
             </a:commandLink>
         </legend>
         
-	        <p:dataList id="meuDataSource" var="itemLista" type="none" value="#{definicaoVariavelProcessoAction2.variaveis}" styleClass="ifx-data-list ifx-data-list--flexbox">
+	        <p:dataList id="meuDataSource" var="itemLista" type="none" value="#{definicaoVariavelProcessoAction2.variaveis}" styleClass="ifx-data-list ifx-data-list--flexbox" >
 	            <p:outputPanel id="painelDrag">
 	                <div class="item-variavel--flex">
 	                     <wi:icon value="open_with" materialDesignIcon="true" text="Arraste para adicionar a uma funcionalidade" styleClass="var--proc--item"/>
