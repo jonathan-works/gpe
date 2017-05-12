@@ -15,7 +15,7 @@ import br.com.infox.epp.cdi.ViewScoped;
 @ViewScoped
 public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
     protected static final String NAME = "papelTree";
-    public static final String PAPEL_TREE_EVENT = "papelTreeHandlerSelected";
+    protected static final String PAPEL_TREE_EVENT = "papelTreeHandlerSelected";
 
     private static final long serialVersionUID = 1L;
 

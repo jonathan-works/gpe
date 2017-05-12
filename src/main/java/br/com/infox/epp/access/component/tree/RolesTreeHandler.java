@@ -23,7 +23,7 @@ import br.com.infox.epp.cdi.config.BeanManager;
 @BypassInterceptors
 public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 
-    public static final String ROLES_TREE = "rolesTree";
+    protected static final String ROLES_TREE = "rolesTree";
 
     public static final String ROLE_TREE_EVENT = "roleTreeHandlerSelected";
 

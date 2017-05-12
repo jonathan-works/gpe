@@ -46,10 +46,8 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
     	setLocalizacao(null);
     	setPapel(null);
     	setCpf(null);
-        LocalizacaoTreeHandler localizacaoTreeHandler = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
-    	localizacaoTreeHandler.clearTree();
-        PapelTreeHandler papelTreeHandler = BeanManager.INSTANCE.getReference(PapelTreeHandler.class);
-    	papelTreeHandler.clearTree();
+        BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
+        BeanManager.INSTANCE.getReference(PapelTreeHandler.class).clearTree();
     }
     
     @Override

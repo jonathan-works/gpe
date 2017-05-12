@@ -34,8 +34,7 @@ public class LocalizacaoList extends EntityList<Localizacao> {
     @Override
     public void newInstance() {
     	super.newInstance();
-        LocalizacaoTreeHandler ret = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
-    	ret.clearTree();
+        BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
     }
 
     @Override

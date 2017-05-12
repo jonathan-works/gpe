@@ -9,9 +9,7 @@ import javax.inject.Named;
 import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.tree.TreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
-import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -60,7 +58,7 @@ public class UsuarioPerfilCrudAction extends AbstractCrudAction<UsuarioPerfil, U
     }
     
     private void clearTrees() {
-        ((TreeHandler<Localizacao>) BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class)).clearTree();
+        BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
     }
     
     @Override
