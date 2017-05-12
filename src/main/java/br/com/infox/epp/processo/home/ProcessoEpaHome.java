@@ -141,6 +141,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	
 	public void visualizarTarefaProcesso() {
 		processoManager.visualizarTask(getInstance(), getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
+		carregarVariaveisDetalhe();
 	}
 
 	public static ProcessoEpaHome instance() {
