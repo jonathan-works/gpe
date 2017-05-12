@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -58,6 +59,7 @@ import br.com.infox.seam.exception.BusinessException;
 @Taskpage(id="responderComunicacao", xhtmlPath="/WEB-INF/taskpages/responderComunicacao.xhtml", name="Responder Comunicação")
 @Named
 @Stateful
+@LocalBean
 @ViewScoped
 public class RespostaComunicacaoAction implements Serializable, TaskpageController {
 	
