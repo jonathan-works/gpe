@@ -2,21 +2,18 @@ package br.com.infox.epp.documento.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.epp.documento.manager.GrupoModeloDocumentoManager;
 
-@Name(TipoModeloDocumentoList.NAME)
-@BypassInterceptors
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
-    public static final String NAME = "tipoModeloDocumentoList";
     private static final long serialVersionUID = 1L;
 
     private static final String TEMPLATE = "/TipoModeloDocumento/tipoModeloDocumentoTemplate.xls";
@@ -25,9 +22,8 @@ public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
     private static final String DEFAULT_EJBQL = "select o from TipoModeloDocumento o";
     private static final String DEFAULT_ORDER = "grupoModeloDocumento";
 
-    public static final TipoModeloDocumentoList instance() {
-        return ComponentUtil.getComponent(NAME);
-    }
+    @Inject
+    private GrupoModeloDocumentoManager grupoModeloDocumentoManager;
 
     @Override
     protected void addSearchFields() {
@@ -35,6 +31,14 @@ public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
         addSearchField("tipoModeloDocumento", SearchCriteria.CONTENDO);
         addSearchField("abreviacao", SearchCriteria.CONTENDO);
         addSearchField("ativo", SearchCriteria.IGUAL);
+    }
+
+    public Integer getIdGrupoModeloDocumento() {
+        return getEntity().getGrupoModeloDocumento() == null ? null : getEntity().getGrupoModeloDocumento().getIdGrupoModeloDocumento();
+    }
+
+    public void setIdGrupoModeloDocumento(Integer idGrupoModeloDocumento) {
+        getEntity().setGrupoModeloDocumento(grupoModeloDocumentoManager.find(idGrupoModeloDocumento));
     }
 
     @Override

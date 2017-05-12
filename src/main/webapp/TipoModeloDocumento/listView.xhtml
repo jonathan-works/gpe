@@ -103,7 +103,7 @@
             rendered="#{home.managed}"
             title="#{infoxMessages['tipoModeloDocumento.variaveis']}"
             name="variaveis"
-            action="#{associativeVariavelList.onClickVariaveisTab(home.instance)}">
+            action="#{home.onClickVariaveisTab}">
             <wi:ajaxDiv id="divM2MVar">
                 <s:div styleClass="Associated">
                     <wi:dataTable
@@ -189,7 +189,8 @@
         <infox:tab id="papeis" status=":status"
             rendered="#{home.managed}"
             title="#{infoxMessages['tipoModeloDocumento.papeis']}"
-            name="papeis">
+            name="papeis"
+            action="#{home.onClickPapeisTab}">
             <s:div id="divAssociarPapel">
                 <wi:dataForm formId="tipoModeloDocumentoPapelForm"
                     formTitle="#{infoxMessages['form.title']}">

@@ -105,9 +105,7 @@ public class TipoModeloDocumentoCrudActionIT extends
         }
     };
 
-    private static final PersistSuccessTest<TipoModeloDocumento> PERSIST_SUCCESS = new PersistSuccessTest<>(
-            TipoModeloDocumentoCrudAction.NAME,
-            TipoModeloDocumentoCrudActionIT.initEntityAction);
+    
 
     public static final List<TipoModeloDocumento> getSuccessfullyPersisted(
             final ActionContainer<TipoModeloDocumento> action,
@@ -139,8 +137,6 @@ public class TipoModeloDocumentoCrudActionIT extends
                         abreviacao.substring(abrevBeginIndex < 0 ? 0
                                 : abrevBeginIndex), ativo);
 
-                list.add(TipoModeloDocumentoCrudActionIT.PERSIST_SUCCESS
-                        .runTest(action, entity, servletContext, session));
             }
         }
 
@@ -162,7 +158,8 @@ public class TipoModeloDocumentoCrudActionIT extends
 
     @Override
     protected String getComponentName() {
-        return TipoModeloDocumentoCrudAction.NAME;
+//        return TipoModeloDocumentoCrudAction.NAME;
+        return null;
     }
 
     //@Test
@@ -208,10 +205,10 @@ public class TipoModeloDocumentoCrudActionIT extends
 //                .getSuccessfullyPersisted(null, new StringBuilder("tpMd")
 //                        .append("suffix").toString(), this.servletContext,
 //                        this.session);
-        TipoModeloDocumentoCrudActionIT.PERSIST_SUCCESS.runTest(
-                new TipoModeloDocumento(gruposModeloDocumento.get(0),
-                        tipoModeloDocumentoSuc, abreviacaoSuc, Boolean.TRUE),
-                this.servletContext, this.session);
+//        TipoModeloDocumentoCrudActionIT.PERSIST_SUCCESS.runTest(
+//                new TipoModeloDocumento(gruposModeloDocumento.get(0),
+//                        tipoModeloDocumentoSuc, abreviacaoSuc, Boolean.TRUE),
+//                this.servletContext, this.session);
 
         this.persistFail.runTest(
                 new TipoModeloDocumento(null, createValidDesc(
@@ -245,46 +242,6 @@ public class TipoModeloDocumentoCrudActionIT extends
                                 TipoModeloDocumentoCrudActionIT.i, suffix),
                         null), this.servletContext, this.session);
     }
-
-    private final RunnableTest<TipoModeloDocumento> updateSuccess = new RunnableTest<TipoModeloDocumento>(
-            TipoModeloDocumentoCrudAction.NAME) {
-        @Override
-        protected void testComponent() throws Exception {
-            final TipoModeloDocumento entity = getEntity();
-            Assert.assertNotNull("null entity", entity);
-            Assert.assertNotNull("null id", entity.getIdTipoModeloDocumento());
-
-            resetInstance(entity.getIdTipoModeloDocumento());
-
-            setEntityValue(
-                    "tipoModeloDocumento",
-                    getValidString(entity.getTipoModeloDocumento() + "changed",
-                            LengthConstants.DESCRICAO_PEQUENA));
-
-            Assert.assertEquals("failed to update: tipoModeloDocumento",
-                    AbstractAction.UPDATED, save());
-
-            resetInstance(entity.getIdTipoModeloDocumento());
-
-            setEntityValue(
-                    "abreviacao",
-                    getValidString(TipoModeloDocumentoCrudActionIT
-                            .getHashedString(entity.getAbreviacao() + "cd"),
-                            LengthConstants.DESCRICAO_ABREVIADA));
-
-            Assert.assertEquals("failed to update: abreviacao",
-                    AbstractAction.UPDATED, save());
-
-            resetInstance(entity.getIdTipoModeloDocumento());
-
-            setEntityValue("ativo", !entity.getAtivo());
-
-            Assert.assertEquals("failed to update: ativo",
-                    AbstractAction.UPDATED, save());
-
-            setEntity(resetInstance(entity.getIdTipoModeloDocumento()));
-        }
-    };
 
     //@Test
     public void updateSuccessTest() throws Exception {
