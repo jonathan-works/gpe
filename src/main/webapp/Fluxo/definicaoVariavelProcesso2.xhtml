@@ -63,11 +63,11 @@
                 <p:outputPanel id="dropLabel">
                   <p:droppable for="dropLabel" tolerance="touch" datasource="#{wi:clientId('meuDataSource')}" scope="arrastarNovaVariavel" >
                        <f:param name="recurso" value="#{recursoItem.recurso.identificador}" />
-                       <p:ajax listener="#{definicaoVariavelProcessoAction2.onDropRecurso}" update="@form pageBodyDialogMessage" />
+                       <p:ajax listener="#{definicaoVariavelProcessoAction2.onDropRecurso}" update="@form pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
                    </p:droppable>
                        <div class="header-title"><h:outputText value="#{recursoItem.recurso.nome}" /></div>
 	                   <p:orderList styleClass="ifx-order-list--flexbox ifx-order-list" id="orderlist" value="#{recursoItem.variaveis}" var="varItem" itemValue="#{varItem.id}" controlsLocation="none">
-				        <p:ajax event="reorder" listener="#{definicaoVariavelProcessoAction2.onReorder}" update="recursosTable pageBodyDialogMessage" />
+				        <p:ajax event="reorder" listener="#{definicaoVariavelProcessoAction2.onReorder}" update="recursosTable pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
 	                       <p:column>
 	                           <div class="item-variavel--flex">
 		                           <wi:icon value="open_with" materialDesignIcon="true" text="Arraste para reordenar" styleClass="var--proc--item"/>
