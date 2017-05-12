@@ -13,6 +13,7 @@
     	<composite:attribute name="value" />
     	<composite:attribute name="disabled" default="false"/>
     	<composite:attribute name="styleClass"/>
+    	<composite:attribute name="style"/>
     	<composite:attribute name="onblur" />
     	<composite:attribute name="placeholder" type="java.lang.String" />
     	<composite:attribute name="required" default="false" />
@@ -55,7 +56,7 @@
         			<h:inputText id="Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
         				disabled="#{cc.attrs.disabled}" onblur="#{cc.attrs.onblur}" required="#{cc.attrs.required}"
         				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}" onkeyup="#{cc.attrs.onkeyup}"
-        				readonly="#{cc.attrs.readonly}" maxlength="#{cc.attrs.maxlength}">
+        				readonly="#{cc.attrs.readonly}" maxlength="#{cc.attrs.maxlength}" style="#{cc.attrs.style}">
 		   				<c:if test="#{cc.attrs.ajax}">
 					    	<c:if test="#{empty cc.getValueExpression('listener')}">
 						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 

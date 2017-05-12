@@ -250,6 +250,8 @@ public interface ProcessoQuery {
 			+ "DELETE FROM jbpm_token WHERE processinstance_ = :"
 			+ PARAM_ID_JBPM
 			+ " ;\n"
+			+ "DELETE FROM tb_processo_jbpm WHERE id_process_instance = :" + PARAM_ID_JBPM
+			+" ;\n"
 			+ "DELETE FROM jbpm_processinstance WHERE id_ = :" + PARAM_ID_JBPM + " ;";
 
 	String REMOVER_JBPM_LOG = "removerJbpmLog";

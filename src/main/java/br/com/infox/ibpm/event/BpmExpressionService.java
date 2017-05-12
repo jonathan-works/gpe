@@ -44,6 +44,7 @@ import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
 import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
@@ -64,6 +65,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoService;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.redistribuicao.RedistribuicaoService;
 import br.com.infox.epp.redistribuicao.TipoRedistribuicao;
@@ -726,6 +728,25 @@ public void distribuirParaUDC(String codigoLocUDC) {
     	metadadoProcessoManager.removerMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA, processo);
     	metadadoProcessoManager.removerMetadado(EppMetadadoProvider.RELATOR, processo);
     	metadadoProcessoManager.removerMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo);
+    }
+    
+    @External(expressionType = ExpressionType.EVENTOS, tooltip = "process.events.expression.atribuirCiencia.tooltip",
+        value = {
+            @Parameter(selectable = true, 
+                defaultValue = "dataCiencia",
+                label = "process.events.expression.atribuirCiencia.dataCiencia.label")
+    })
+    public void atribuirCiencia(Date dataCiencia) {
+        Processo processo = getProcessoAtual();
+        MetadadoProcesso metadadoTipoProcesso = processo.getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
+        TipoProcesso tipoProcesso = (TipoProcesso) (metadadoTipoProcesso != null ? metadadoTipoProcesso.getValue() : null);
+        if (!TipoProcesso.COMUNICACAO.equals(tipoProcesso) && !TipoProcesso.COMUNICACAO_NAO_ELETRONICA.equals(tipoProcesso)) {
+            throw new BusinessRollbackException("Esta EL somente pode ser utilizada em processos de Comunicação Eletrônica e Não-Eletrônica");
+        }
+        if (processo.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
+            throw new BusinessRollbackException("Este processo já possui data de ciência");
+        }
+        contabilizadorPrazo.atribuirCiencia(processo, dataCiencia);
     }
 
     public List<ExternalMethod> getExternalMethods() {

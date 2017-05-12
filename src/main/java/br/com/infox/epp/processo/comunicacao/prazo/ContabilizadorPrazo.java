@@ -37,21 +37,25 @@ public class ContabilizadorPrazo {
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void atribuirCiencia(Processo comunicacao) {
-    	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-    	Date dataCiencia = DateTime.now().toDate();
-    	if (usuarioLogado == null) {
-    		Integer idUsuarioSistema = Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue());
-    		usuarioLogado = usuarioLoginManager.find(idUsuarioSistema);
-    		MetadadoProcesso metadadoCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA);
-    		if (metadadoCiencia != null){
-    			dataCiencia = metadadoCiencia.getValue();
-    		}
-    	} 
-    	try {
-			darCiencia(comunicacao, usuarioLogado, dataCiencia);
-		} catch (DAOException e) {
-			LOG.error("atribuirCiencia", e);
-		}
+        atribuirCiencia(comunicacao, DateTime.now().toDate());
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void atribuirCiencia(Processo comunicacao, Date dataCiencia) {
+        UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+        if (usuarioLogado == null) {
+            Integer idUsuarioSistema = Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue());
+            usuarioLogado = usuarioLoginManager.find(idUsuarioSistema);
+            MetadadoProcesso metadadoCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA);
+            if (metadadoCiencia != null){
+                dataCiencia = metadadoCiencia.getValue();
+            }
+        } 
+        try {
+            darCiencia(comunicacao, usuarioLogado, dataCiencia);
+        } catch (DAOException e) {
+            LOG.error("atribuirCiencia", e);
+        }
     }
 
 	protected void darCiencia(Processo comunicacao, UsuarioLogin usuarioLogado, Date dataCiencia) {

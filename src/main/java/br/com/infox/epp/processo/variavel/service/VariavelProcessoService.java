@@ -6,12 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.MethodExpression;
 import org.jboss.seam.core.Expressions.ValueExpression;
@@ -22,6 +21,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import com.google.common.base.Strings;
 
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
@@ -39,12 +39,10 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
+@Named
 @Stateless
-@Name(VariavelProcessoService.NAME)
-@Scope(ScopeType.STATELESS)
-public class VariavelProcessoService {
-
-    public static final String NAME = "variavelProcessoService";
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class VariavelProcessoService extends PersistenceController {
 
     private MetadadoProcessoManager metadadoProcessoManager;
     @Inject
@@ -73,7 +71,7 @@ public class VariavelProcessoService {
     public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome) {
     	Processo processo =  processoManager.find(idProcesso);
     	ProcessoTarefa processoTarefa = processoTarefaManager.getUltimoProcessoTarefa(processo);
-    	return getVariavelProcesso(processo, nome, processoTarefa.getTaskInstance());
+    	return getVariavelProcesso(processo, nome, processoTarefa == null? null : processoTarefa.getTaskInstance());
     }
     
     public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome, Long idTaskInstance) {
@@ -94,12 +92,12 @@ public class VariavelProcessoService {
     	if(definicao == null)
     		throw new BusinessException("Não foi possível encontrar a definição da variável " + nome);
     	
-        TaskInstance taskInstance = idTaskInstance != null ? ManagedJbpmContext.instance().getTaskInstance(idTaskInstance) : null;
+        TaskInstance taskInstance = idTaskInstance != null ? getEntityManager().find(TaskInstance.class, idTaskInstance) : null;
         return getPrimeiraVariavelProcessoAncestral(processo, definicao, taskInstance);
     }
 
     public String getValorVariavelSemDefinicao(Processo processo, String nome) {
-        ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processo.getIdJbpm());
+    	ProcessInstance processInstance = getEntityManager().find(ProcessInstance.class, processo.getIdJbpm());
         Object variable = processInstance.getContextInstance().getVariable(nome);
         return variable != null ? formatarValor(variable) : null;
     }
@@ -120,7 +118,7 @@ public class VariavelProcessoService {
         Long idJbpm = processo.getIdJbpm();
         VariavelProcesso variavelProcesso = inicializaVariavelProcesso(definicao);
         if (idJbpm != null) {
-            ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(idJbpm);
+            ProcessInstance processInstance = getEntityManager().find(ProcessInstance.class, idJbpm);
             Object variable;
             if (taskInstance != null) {
                 // Aqui já pega do processInstance caso não tenha na taskInstance por causa da hierarquia de VariableContainer do jBPM

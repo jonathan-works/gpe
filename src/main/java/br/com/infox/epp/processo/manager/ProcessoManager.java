@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
@@ -24,6 +27,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.file.encode.MD5Encoder;
@@ -355,8 +359,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 	
-	public ProcessInstance findProcessByTaskInstance(Long idProcessInstance){
-		TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(idProcessInstance);
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ProcessInstance findProcessByTaskInstance(Long idTaskInstance){
+		TaskInstance taskInstance = getEntityManager().find(TaskInstance.class, idTaskInstance);
 		return taskInstance.getProcessInstance();
 	}
 	
@@ -423,6 +428,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 			processoTarefa.setDataFim(taskInstance.getEnd());
 			processoTarefaManager.update(processoTarefa);
 		}
+	}
+	
+	private EntityManager getEntityManager() {
+		return EntityManagerProducer.getEntityManager();
 	}
 	
 }

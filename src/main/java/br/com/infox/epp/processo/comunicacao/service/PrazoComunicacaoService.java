@@ -310,9 +310,9 @@ public class PrazoComunicacaoService {
     public Date getDataMaximaRespostaComunicacao(Integer idProcesso, String taskName) {
         Map<String, Object> mapCienciaPrazo = comunicacaoSearch.getMaximoDiasCienciaMaisPrazo(idProcesso, taskName);
         if (!mapCienciaPrazo.isEmpty()) {
-            Date dataLimiteCiencia = (Date) mapCienciaPrazo.get("dataLimiteCiencia");
+            Date dataCienciaOuLimite = (Date) mapCienciaPrazo.get("dataCienciaOuLimite");
             Integer maiorPrazo = (Integer) mapCienciaPrazo.get("maiorPrazo");
-            return calcularPrazoDeCumprimento(dataLimiteCiencia, maiorPrazo);
+            return calcularPrazoDeCumprimento(dataCienciaOuLimite, maiorPrazo);
         } else {
             return DateTime.now().plusDays(1).toDate();
         }

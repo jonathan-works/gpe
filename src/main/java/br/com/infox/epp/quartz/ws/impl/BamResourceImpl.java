@@ -1,5 +1,6 @@
 package br.com.infox.epp.quartz.ws.impl;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -9,6 +10,7 @@ import org.jboss.seam.contexts.Lifecycle;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.estatistica.manager.BamTimerManager;
 import br.com.infox.epp.quartz.ws.BamResource;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -57,12 +59,16 @@ public class BamResourceImpl implements BamResource {
         }
         if (trigger != null) {
             List<ProcessoTarefa> processoTarefaNotEndedList = processoTarefaManager.getTarefaNotEnded(tipoPrazo);
-            for (ProcessoTarefa processoTarefaNotEnded : processoTarefaNotEndedList) {
+            for (Iterator<ProcessoTarefa> ite = processoTarefaNotEndedList.iterator(); ite.hasNext() ; ) {
+            	ProcessoTarefa processoTarefa = ite.next();
                 try {
-                    processoTarefaManager.updateTempoGasto(trigger.getPreviousFireTime(), processoTarefaNotEnded);
+                	EntityManagerProducer.getEntityManager().clear();
+                    processoTarefaManager.updateTempoGasto(trigger.getPreviousFireTime(), processoTarefa);
                 } catch (Exception exception) {
                     LOG.error(".updateTarefasNaoFinalizadas(d)", exception);
-                }
+                } finally {
+                	ite.remove();
+				}
             }
         }
     }
