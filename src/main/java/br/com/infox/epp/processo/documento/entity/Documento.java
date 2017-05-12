@@ -293,6 +293,14 @@ public class Documento implements Serializable, Cloneable, EntityListener<Docume
 		}
 		cDocumento.setHistoricoStatusDocumentoList(cList);
 		
+		List<SigiloDocumento> cSigiloDocumentoList = new ArrayList<>();
+		for (SigiloDocumento sigiloDocumento : cDocumento.getSigiloDocumento()) {
+			SigiloDocumento cSigiloDocumento = sigiloDocumento.makeCopy();
+			cSigiloDocumento.setDocumento(cDocumento);
+			cSigiloDocumentoList.add(cSigiloDocumento);
+		}
+		cDocumento.setSigiloDocumento(cSigiloDocumentoList);
+		
 		List<PublicacaoDocumento> listPub = new ArrayList<>();
 		for (PublicacaoDocumento pd : cDocumento.getPublicacoes()) {
 			PublicacaoDocumento cPub = pd.makeCopy();
