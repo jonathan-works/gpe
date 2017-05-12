@@ -30,8 +30,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
 
     public void setProcesso(Processo processo) {
         this.processo = processo;
-        LocalizacaoFisicaList localizacaoFisicaList = BeanManager.INSTANCE.getReference(LocalizacaoFisicaList.class);
-        this.localizacaoFisicaList = localizacaoFisicaList.getResultList();
+        this.localizacaoFisicaList = BeanManager.INSTANCE.getReference(LocalizacaoFisicaList.class).getResultList();
         listByProcesso();
     }
 

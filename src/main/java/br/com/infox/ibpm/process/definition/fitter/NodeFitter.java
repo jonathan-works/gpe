@@ -31,6 +31,7 @@ import org.jbpm.graph.node.TaskNode;
 import com.google.common.base.Strings;
 
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -49,7 +50,6 @@ import br.com.infox.ibpm.sinal.SignalParam;
 import br.com.infox.ibpm.sinal.SignalParam.Type;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.jsf.util.JsfUtil;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @ViewScoped
@@ -85,7 +85,7 @@ public class NodeFitter extends Fitter implements Serializable {
     }
 
     public List<ModeloDocumento> getModeloDocumentoList() {
-        return ((ModeloDocumentoManager) ComponentUtil.getComponent(ModeloDocumentoManager.NAME)).getModeloDocumentoList();
+        return BeanManager.INSTANCE.getReference(ModeloDocumentoManager.class).getModeloDocumentoList();
     }
 
     public void moveUp(Node node) {

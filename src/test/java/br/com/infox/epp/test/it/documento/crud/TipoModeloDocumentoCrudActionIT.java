@@ -62,7 +62,6 @@ public class TipoModeloDocumentoCrudActionIT extends
                 TipoModeloDocumentoCrudAction.class,
                 ModeloDocumentoManager.class, VariavelDAO.class,
                 ModeloDocumentoDAO.class,
-                GrupoModeloDocumentoCrudActionIT.class,
                 GrupoModeloDocumentoCrudAtion.class,
                 GrupoModeloDocumentoManager.class,
                 GrupoModeloDocumentoDAO.class,
@@ -116,9 +115,10 @@ public class TipoModeloDocumentoCrudActionIT extends
             final HttpSession session) throws Exception {
         final ArrayList<TipoModeloDocumento> list = new ArrayList<>();
 
-        final List<GrupoModeloDocumento> gruposModeloDocumento = GrupoModeloDocumentoCrudActionIT
-                .getSuccessfullyPersisted(null, new StringBuilder("tpMd")
-                        .append(suffix).toString(), servletContext, session);
+        final List<GrupoModeloDocumento> gruposModeloDocumento = new ArrayList<>(); 
+//                GrupoModeloDocumentoCrudActionIT
+//                .getSuccessfullyPersisted(null, new StringBuilder("tpMd")
+//                        .append(suffix).toString(), servletContext, session);
         for (final GrupoModeloDocumento grupoModeloDocumento : gruposModeloDocumento) {
             for (final Boolean ativo : TipoModeloDocumentoCrudActionIT.BOOLEANS) {
                 final String tipoModeloDocumento = MessageFormat.format(
@@ -203,10 +203,11 @@ public class TipoModeloDocumentoCrudActionIT extends
         final String abreviacaoSuc = createValidAbrev(
                 TipoModeloDocumentoCrudActionIT.i, suffix);
 
-        final List<GrupoModeloDocumento> gruposModeloDocumento = GrupoModeloDocumentoCrudActionIT
-                .getSuccessfullyPersisted(null, new StringBuilder("tpMd")
-                        .append("suffix").toString(), this.servletContext,
-                        this.session);
+        final List<GrupoModeloDocumento> gruposModeloDocumento = new ArrayList<>(); 
+//                GrupoModeloDocumentoCrudActionIT
+//                .getSuccessfullyPersisted(null, new StringBuilder("tpMd")
+//                        .append("suffix").toString(), this.servletContext,
+//                        this.session);
         TipoModeloDocumentoCrudActionIT.PERSIST_SUCCESS.runTest(
                 new TipoModeloDocumento(gruposModeloDocumento.get(0),
                         tipoModeloDocumentoSuc, abreviacaoSuc, Boolean.TRUE),

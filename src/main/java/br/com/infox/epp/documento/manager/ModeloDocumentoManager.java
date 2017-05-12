@@ -44,7 +44,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     
     private static final long serialVersionUID = 4455754174682600299L;
     private static final LogProvider LOG = Logging.getLogProvider(ModeloDocumentoManager.class);
-    public static final String NAME = "modeloDocumentoManager";
+    protected static final String NAME = "modeloDocumentoManager";
     
     @Inject
     private VariavelDAO variavelDAO;
