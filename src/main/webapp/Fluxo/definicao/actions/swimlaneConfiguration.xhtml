@@ -8,8 +8,8 @@
     xmlns:p="http://primefaces.org/ui">
 
 	<h:form id="swimlanesForm" rendered="#{not empty swimlaneFitter.currentSwimlane}">
-		<p:panel style="float: left" header="#{infoxMessages['processdef.swimlane.perfil']}" styleClass="perfilPanel">
-			<i:autoComplete id="perfil"
+		<p:panel style="float: left;height: 155px" header="#{infoxMessages['processdef.swimlane.perfil']}" styleClass="perfilPanel">
+			<i:autoComplete id="perfil" dropdown="true"
 				value="#{swimlaneFitter.currentSwimlane.perfil}"
 				label="#{infoxMessages['processdef.swimlane.perfil']}"
 				converter="br.com.infox.jsf.converter.EntityConverter" var="perfil"
@@ -24,8 +24,8 @@
 			</h:commandButton>
 		</p:panel>
 
-		<p:panel style="float: left; margin-left: 10px;" header="#{infoxMessages['processdef.swimlane.usuario']}" styleClass="usuarioPanel">
-			<i:autoComplete id="usuario"
+		<p:panel style="float: left; margin-left: 10px;height: 155px" header="#{infoxMessages['processdef.swimlane.usuario']}" styleClass="usuarioPanel">
+			<i:autoComplete id="usuario" dropdown="true"
 				label="#{infoxMessages['processdef.swimlane.usuario']}"
 				value="#{swimlaneFitter.currentSwimlane.usuario}"
 				converter="br.com.infox.jsf.converter.EntityConverter"
@@ -40,35 +40,32 @@
 			</h:commandButton>
 		</p:panel>
 
-		<p:panel style="float: left; margin-left: 10px;" header="#{infoxMessages['processdef.swimlane.grupo']}" styleClass="grupoPanel">
-			<i:autoComplete id="localizacao"
-				value="#{swimlaneFitter.currentSwimlane.grupo.localizacao}"
-				label="#{infoxMessages['processdef.swimlane.localizacao']}"
-				converter="br.com.infox.jsf.converter.EntityConverter"
-				var="localizacao" itemLabel="#{localizacao.localizacao}"
-				itemValue="#{localizacao}" forceSelection="true" required="true"
-				ajax="true" render="@(.grupoPanel)" event="itemSelect"
-				completeMethod="#{swimlaneFitter.currentSwimlane.getLocalizacoes}">
-				<f:facet name="itemtip">
-					<h:outputText value="#{localizacao.caminhoCompletoFormatado}" />
-				</f:facet>
-			</i:autoComplete>
-			
-			<i:selectOneMenu id="perfilGrupo" value="#{swimlaneFitter.currentSwimlane.grupo.perfil}"
-				label="#{infoxMessages['processdef.swimlane.perfil']}"
-				converterId="org.jboss.seam.ui.EntityConverter" var="item"
-				itemLabel="#{item.descricao}" required="true"
-				items="#{swimlaneFitter.currentSwimlane.perfisPermitidosGrupo}" />
-				
-			<h:commandButton id="addGrupoBtn" style="display: block" value="#{infoxMessages['processdef.swimlane.add']}" 
-				action="#{swimlaneFitter.currentSwimlane.adicionarGrupo}" styleClass="buttons">
-				<p:ajax event="action" process="@(.grupoPanel)" update="@(.grupoPanel) @(.swimlaneConfigurationTable)"
-					 onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
-			</h:commandButton>
+		<p:panel id="panelGrupo" style="float: left; margin-left: 10px;height: 155px" header="#{infoxMessages['processdef.swimlane.grupo']}" styleClass="grupoPanel">
+			<i:autoCompleteTree id="localizacao" value="#{swimlaneFitter.currentSwimlane.grupo.localizacao}" label="Localização"
+	            completeMethod="#{swimlaneFitter.currentSwimlane.getLocalizacoes}" minQueryLength="3" partialSubmit="true"
+	            placeholder="Escolha a localização..." ajax="true" execute="@this" dropdown="true" inputStyle="width: 228px;"
+	            immediate="false" render="@(.grupoPanel)"  listener="#{swimlaneFitter.currentSwimlane.updatePerfisGrupo}" 
+	            caminhoAbsoluto="#{item.caminhoCompleto}" itemLabel="#{item.localizacao}" itemDisabled="#{not item.ativo}"
+	            onstart="PF('blockUiPanelGrupo').show();" oncomplete="PF('blockUiPanelGrupo').hide();"
+	            />
+            <p:blockUI block="panelGrupo" widgetVar="blockUiPanelGrupo"></p:blockUI>
+			<h:panelGroup rendered="#{not empty swimlaneFitter.currentSwimlane.perfisPermitidosGrupo}">
+				<i:selectOneMenu id="perfilGrupo" value="#{swimlaneFitter.currentSwimlane.grupo.perfil}"
+					label="#{infoxMessages['processdef.swimlane.perfil']}"
+					converterId="org.jboss.seam.ui.EntityConverter" var="item"
+					itemLabel="#{item.descricao}" required="true" selectStyle="width:200px"
+					items="#{swimlaneFitter.currentSwimlane.perfisPermitidosGrupo}" />
+					
+				<h:commandButton id="addGrupoBtn" style="margin-top: 14px;" value="#{infoxMessages['processdef.swimlane.add']}" 
+					action="#{swimlaneFitter.currentSwimlane.adicionarGrupo}" styleClass="buttons">
+					<p:ajax event="action" process="@(.grupoPanel)" update="@(.grupoPanel) @(.swimlaneConfigurationTable)"
+						 onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+				</h:commandButton>
+			</h:panelGroup>
 		</p:panel>
 		
-		<p:panel style="float: left; margin-left: 10px;" header="#{infoxMessages['processdef.swimlane.el']}" styleClass="elPanel">
-			<i:inputTextarea id="el" value="#{swimlaneFitter.currentSwimlane.expression}" required="true" 
+		<p:panel style="float: left; margin-left: 10px;height: 155px;width: 380px;" header="#{infoxMessages['processdef.swimlane.el']}" styleClass="elPanel">
+			<i:inputTextarea id="el" value="#{swimlaneFitter.currentSwimlane.expression}" required="true" inputStyle="width: 340px;height: 40px;"
 				label="#{infoxMessages['processdef.swimlane.el']}" cols="35" showCounter="false"/>
 			
 			<h:commandButton id="addElBtn" style="display: block" value="#{infoxMessages['processdef.swimlane.add']}" 
@@ -80,7 +77,6 @@
 	</h:form>
 	
 	<div style="clear: both;" />
-	
 	<p:dataTable id="swimlaneConfigurationTable" var="row" value="#{swimlaneFitter.currentSwimlane.configuracoes}"
 		rendered="#{not empty swimlaneFitter.currentSwimlane}" style="margin-top: 10px;" 
 		styleClass="swimlaneConfigurationTable dtable rf-dt-crud" rows="5" paginator="true" paginatorAlwaysVisible="false"

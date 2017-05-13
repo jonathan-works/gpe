@@ -22,13 +22,13 @@ import com.google.common.base.Strings;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.PerfilTemplate_;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.ibpm.swimlane.SwimlaneConfiguration.Grupo;
 
 public class SwimlaneHandler implements Serializable {
@@ -44,6 +44,8 @@ public class SwimlaneHandler implements Serializable {
     private List<PerfilTemplate> perfisPermitidosGrupo;
     private SwimlaneConfiguration configuration;
     private List<Pair<String, ?>> configuracoes;
+    private Localizacao localizacaoRaiz;
+    private LocalizacaoSearch localizacaoSearch = BeanManager.INSTANCE.getReference(LocalizacaoSearch.class);
 
     public SwimlaneHandler(Swimlane swimlane) {
         this.swimlane = swimlane;
@@ -133,20 +135,17 @@ public class SwimlaneHandler implements Serializable {
     }
     
     public List<Localizacao> getLocalizacoes(String nomeLocalizacao) {
-        EntityManager entityManager = getEntityManager();
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Localizacao> query = cb.createQuery(Localizacao.class);
-        Root<Localizacao> localizacao = query.from(Localizacao.class);
-        query.where(cb.isTrue(localizacao.get(Localizacao_.ativo)), cb.isNull(localizacao.get(Localizacao_.estruturaPai)));
-        
-        if (!Strings.isNullOrEmpty(nomeLocalizacao)) {
-            query.where(query.getRestriction(), cb.like(cb.lower(localizacao.get(Localizacao_.localizacao)), "%" + nomeLocalizacao.toLowerCase() + "%"));
-        }
-        
-        query.orderBy(cb.asc(localizacao.get(Localizacao_.localizacao)));
-        return entityManager.createQuery(query).getResultList();
+    	if(localizacaoRaiz == null){
+    		localizacaoRaiz = localizacaoSearch.getLocalizacaoRaizSistema();
+    	}
+    	
+    	return localizacaoSearch.getLocalizacaoSuggestTree(localizacaoRaiz, nomeLocalizacao);
     }
     
+    public void updatePerfisGrupo(){
+    	perfisPermitidosGrupo = null; 
+    	getPerfisPermitidosGrupo();
+    }
     public List<PerfilTemplate> getPerfisPermitidosGrupo() {
         if (perfisPermitidosGrupo == null && this.grupo.getLocalizacao() != null) {
             perfisPermitidosGrupo = BeanManager.INSTANCE.getReference(UsuarioPerfilManager.class).getPerfisPermitidos(this.grupo.getLocalizacao());
@@ -196,8 +195,8 @@ public class SwimlaneHandler implements Serializable {
             Object obj = it.next();
             if (item.equals(obj)) {
                 it.remove();
+                break;
             }
-            break;
         }
     }
 
@@ -318,5 +317,6 @@ public class SwimlaneHandler implements Serializable {
     
     private void reloadTableConfiguracoes() {
         configuracoes = null;
+        getConfiguracoes();
     }
 }

@@ -15,18 +15,25 @@
     	<composite:attribute name="itemLabel" default="#{item}"/>
     	<composite:attribute name="itemDisabled" default="false"/>
     	<composite:attribute name="columnHeaderText"/>
+    	<composite:attribute name="queryDelay" default="300" />
+    	<composite:attribute name="forceSelection" default="true" />
+    	<composite:attribute name="dropdown" default="false" />
+    	<composite:attribute name="widgetVar" default="" />
+    	<composite:attribute name="emptyMessage" type="java.lang.String" default="#{infoxMessages['list.defaultNoDataLabel']}"/>
     	
-    	<composite:attribute name="listener" method-signature="void action" />
+    	
+    	<composite:attribute name="listener" method-signature="void action"/>
     	
     </composite:interface>
 
 	<composite:implementation>
 	
-		<i:autoComplete id="#{cc.attrs.id}" value="#{cc.attrs.value}"
+		<i:autoComplete id="#{cc.attrs.id}" value="#{cc.attrs.value}" widgetVar="#{cc.attrs.widgetVar}"
    			completeMethod="#{cc.attrs.completeMethod}" minQueryLength="#{cc.attrs.minQueryLength}" partialSubmit="#{cc.attrs.partialSubmit}"
    			placeholder="#{cc.attrs.placeholder}" ajax="#{cc.attrs.ajax}" render="#{cc.attrs.render}" 
    			execute="#{cc.attrs.execute}" inputStyle="#{cc.attrs.inputStyle}" event="itemSelect"
-   			rendered="#{cc.attrs.rendered}" label="#{cc.attrs.label}"
+   			rendered="#{cc.attrs.rendered}" label="#{cc.attrs.label}" queryDelay="#{cc.attrs.queryDelay}" emptyMessage="#{cc.attrs.emptyMessage}"
+                    forceSelection="#{cc.attrs.forceSelection}" dropdown="#{cc.attrs.dropdown}"
    			listener="#{cc.attrs.listener}" onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}">
    			
    			<p:ajax event="query" update="@(.#{cc.attrs.id}ScriptDisabled)" process="@this" partialSubmit="true"/>
@@ -44,7 +51,6 @@
    		<p:outputPanel styleClass="#{cc.attrs.id}ScriptDisabled">
 	   		<script type="text/javascript">
 			    (function () {
-			    	console.log('executed');
 			        var id = "#{cc.attrs.id}";
 			        var disabledComponents = $('.' + id + '-item-disabled');
 			        disabledComponents.each(function( index, value ) {

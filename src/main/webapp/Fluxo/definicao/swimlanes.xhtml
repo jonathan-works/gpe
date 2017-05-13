@@ -10,15 +10,6 @@
 
 	<rich:dataTable var="row" value="#{swimlaneFitter.swimlanes}" id="swimlanesTable" style="display: inline-block">
 		<rich:column styleClass="dr-dt-sh">
-            <f:facet name="header">
-            	<h:form>
-					<a:commandLink action="#{swimlaneFitter.addSwimlane}"
-						execute="@this" render="swimlanesTable" limitRender="true">
-						<h:graphicImage	title="#{infoxMessages['processBuilder.addSwimlane']}"
-							url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
-					</a:commandLink>
-				</h:form>
-            </f:facet>
 			<h:form>
 				<a:commandLink action="#{swimlaneFitter.removeSwimlane(row)}"
 					execute="@this"	onclick="return confirm('#{infoxMessages['processBuilder.confirm']}')"
@@ -34,9 +25,9 @@
 			<rich:column>
 				<f:facet name="header">#{infoxMessages['processBuilder.swimlanes']}</f:facet>
 				<h:form>
-					<a:commandLink action="#{swimlaneFitter.setCurrentSwimlane(row)}"
+					<a:commandLink action="#{swimlaneFitter.setCurrentSwimlane(row)}" onbegin="infox.showLoading();"
 						execute="@this" render="configuracaoSwimlanePanel" styleClass="link" limitRender="true"
-						oncomplete="PF('configuracaoSwimlanePanel').show()">
+						oncomplete="PF('configuracaoSwimlanePanel').show(); infox.hideLoading();">
 						<h:outputText value="#{row.swimlane.name}"/>
 					</a:commandLink>
 				</h:form>
