@@ -31,6 +31,7 @@ import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 import br.com.infox.epp.cliente.list.CalendarioEventosList;
 import br.com.infox.epp.cliente.manager.CalendarioEventosSearch;
+import br.com.infox.epp.localizacao.LocalizacaoSearch;
 
 @Named(CalendarioEventosCrudAction.NAME)
 @ViewScoped
@@ -48,7 +49,7 @@ public class CalendarioEventosCrudAction implements Serializable {
     @Inject
     private CalendarioEventosSearch calendarioEventosSearch;
     @Inject
-    private LocalizacaoManager localizacaoManager;
+    private LocalizacaoSearch localizacaoSearch;
 
     private Integer id;
     private String descricao;
@@ -109,7 +110,7 @@ public class CalendarioEventosCrudAction implements Serializable {
                     "Não é possível cadastrar uma suspensão de prazo num dia ou período onde já existe uma suspensão cadastrada.");
         } else {
             CalendarioEventos eventoCriar = new CalendarioEventos();
-            eventoCriar.setLocalizacao(localizacaoManager.getLocalizacaoByCodigo("LOC1"));
+            eventoCriar.setLocalizacao(localizacaoSearch.getLocalizacaoRaizSistema());
             eventoCriar.setDescricaoEvento(getDescricao());
             eventoCriar.setDataInicio(getDataInicio());
             eventoCriar.setDataFim(getDataFim());

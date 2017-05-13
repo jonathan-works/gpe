@@ -41,6 +41,10 @@ public class LocalizacaoSearch {
     public Localizacao find(Integer idLocalizacao) {
         return getEntityManager().find(Localizacao.class, idLocalizacao);
     }
+    
+    public Localizacao getLocalizacaoRaizSistema(){
+    	return this.getLocalizacaoByCodigo("LOC1");
+    }
 
 	public Localizacao getLocalizacaoByCodigo(String codigoLocalizacao) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
