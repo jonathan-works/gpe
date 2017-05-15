@@ -2,38 +2,40 @@ package br.com.infox.epp.documento.crud;
 
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.HistoricoModeloDocumentoManager;
+import lombok.Getter;
+import lombok.Setter;
 
-@Name(HistoricoModeloDocumentoCrudAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<HistoricoModeloDocumento, HistoricoModeloDocumentoManager> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "historicoModeloDocumentoCrudAction";
+    @Inject
+    private HistoricoModeloDocumentoManager historicoModeloDocumentoManager;
 
+    @Getter
     private HistoricoModeloDocumento selecionado;
-
+    @Getter @Setter
     private List<ModeloDocumento> modeloDocumentoList;
+    @Getter @Setter
     private List<UsuarioLogin> usuarioAlteracaoList;
 
-    public HistoricoModeloDocumento getSelecionado() {
-        return selecionado;
+    public void restaurar() {
+        historicoModeloDocumentoManager.restaurar(selecionado.getModeloDocumento().getIdModeloDocumento(), selecionado);
     }
 
-    public void setSelecionado(HistoricoModeloDocumento selecionado) {
-        this.selecionado = selecionado;
+    public void setIdSelecionado(Integer idSelecionado) {
+        this.selecionado = historicoModeloDocumentoManager.find(idSelecionado);
     }
 
     public void setModeloDocumento(ModeloDocumento modeloDocumento) {
@@ -41,21 +43,8 @@ public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<Histo
         setUsuarioAlteracaoList(getManager().listUsuariosQueAlteraramModelo(modeloDocumento));
     }
 
-    public List<UsuarioLogin> getUsuarioAlteracaoList() {
-        return usuarioAlteracaoList;
+    @Override
+    protected HistoricoModeloDocumentoManager getManager() {
+        return historicoModeloDocumentoManager;
     }
-
-    public void setUsuarioAlteracaoList(List<UsuarioLogin> usuarioAlteracaoList) {
-        this.usuarioAlteracaoList = usuarioAlteracaoList;
-    }
-
-    public List<ModeloDocumento> getModeloDocumentoList() {
-        return modeloDocumentoList;
-    }
-
-    public void setModeloDocumentoList(
-            List<ModeloDocumento> historicoModeloDocumentoList) {
-        this.modeloDocumentoList = historicoModeloDocumentoList;
-    }
-
 }
