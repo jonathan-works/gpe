@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
@@ -28,7 +29,7 @@ public class SecurityUtil implements Serializable {
     public static final String PAGES_PREFIX = "/pages";
     private static final LogProvider LOG = Logging.getLogProvider(SecurityUtil.class);
     
-    private Map<String, Boolean> permissions = new HashMap<>();
+    private Map<String, Boolean> permissions = new ConcurrentHashMap<>();
 
     public boolean checkPage(String page) {
         if ( !isSessionContextActive() ) {
