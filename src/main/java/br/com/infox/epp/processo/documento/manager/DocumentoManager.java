@@ -240,4 +240,12 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public boolean documentoInclusoPorHierarquia(Integer idDocumento, String identificadorPapelBase) {
         return isDocumentoInclusoPorHierarquia(find(idDocumento), identificadorPapelBase);
     }
+    
+    public Processo getProcessoByDocumento(Documento documento) {
+    	Pasta pasta = documento.getPasta();
+    	if(pasta == null) {
+    		return null;
+    	}
+    	return pasta.getProcesso();
+    }
 }
