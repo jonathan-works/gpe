@@ -143,6 +143,12 @@
 									</div>
 								</fieldset>
 								<div>
+									<a:commandButton id="botaoRedistribuirTodosFiltrados" styleClass="buttons"
+										action="#{redistribuicaoList.redistribuirTodos}"
+										value="#{infoxMessages['redistribuicao.redistribuirTodos']}"
+										onclick="return confirm('#{infoxMessages['redistribuicao.confirmRedistribuir']}');"
+										onbegin="showLoading();" oncomplete="hideLoading();"
+										execute="formulario" render="formulario pageBodyDialogMessage" />
 									<a:commandButton action="#{redistribuicaoList.redistribuir}"
 										styleClass="buttons"
 										onclick="showLoading();"
