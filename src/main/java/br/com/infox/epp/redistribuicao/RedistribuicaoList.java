@@ -277,6 +277,30 @@ public class RedistribuicaoList extends DataList<Processo> {
         refresh();
     }
 
+
+    @ExceptionHandled(successMessage = "Processos redistribuídos com sucesso")
+    public void redistribuirTodos() {
+        int firstResult = getFirstResult();
+        int maxResult = getMaxResults();
+        setFirstResult(null);
+        setMaxResults(null);
+        this.resultList = null;
+        List<Processo> processosSelecionadosList = getResultList();
+        setFirstResult(firstResult);
+        setMaxResults(maxResult);
+
+        if (processosSelecionadosList.isEmpty()) {
+            throw new ValidationException("Não foram encontrados processos para redistribuir");
+        }
+
+        redistribuicaoService.redistribuir(processosSelecionadosList, novaUdm, novoRelator, tipoRedistribuicao,
+                motivoRedistribuicao);
+
+        limparSelecionados();
+        limparCamposRedistribuir();
+        refresh();
+    }
+
     public TipoRedistribuicao getTipoRedistribuicao() {
         return tipoRedistribuicao;
     }
