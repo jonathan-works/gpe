@@ -3,6 +3,9 @@ package br.com.infox.epp.tipoParticipante.rest;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
+import br.com.infox.epp.ws.interceptors.Log;
+
+@Log
 public class TipoParticipanteResourceImpl implements TipoParticipanteResource{
 
 	@Inject
