@@ -25,4 +25,10 @@ public class ErroServicoImpl implements ErroServico {
 	public String getMessage() {
 		return this.message;
 	}
+
+
+	@Override
+	public String toString() {
+		return "ErroServicoImpl [code=" + code + ", message=" + message + "]";
+	}
 }

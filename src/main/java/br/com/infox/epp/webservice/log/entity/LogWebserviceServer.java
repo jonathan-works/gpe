@@ -42,11 +42,10 @@ public class LogWebserviceServer implements Serializable {
 	private Date dataFim;
 	
 	@Column(name="cd_mensagem_retorno")
-	@Size(max=50)
 	private String mensagemRetorno;
 	
 	@Column(name="cd_webservice", nullable=true)
-	@Size(max=10)
+	@Size(max=2000)
 	private String webService;
 	
 	@Column(name="vl_token", nullable=true)

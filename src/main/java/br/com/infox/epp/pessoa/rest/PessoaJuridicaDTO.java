@@ -66,4 +66,10 @@ public class PessoaJuridicaDTO implements Serializable {
         return pj;
     }
 
+	@Override
+	public String toString() {
+		return "PessoaJuridicaDTO [nomeFantasia=" + nomeFantasia + ", cnpj=" + cnpj + ", razaoSocial=" + razaoSocial
+				+ "]";
+	}
+
 }

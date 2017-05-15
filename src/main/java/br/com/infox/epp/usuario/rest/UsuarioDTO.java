@@ -189,5 +189,12 @@ public class UsuarioDTO implements Serializable{
                     return "SENHA_E_CERTIFICADO";
             }
         }
+
+		@Override
+		public String toString() {
+			return "UsuarioDTO [nome=" + nome + ", cpf=" + cpf + ", email=" + email + ", dataNascimento="
+					+ dataNascimento + ", estadoCivil=" + estadoCivil + ", metodoLogin=" + metodoLogin + ", documentos="
+					+ documentos + ", meiosContato=" + meiosContato + "]";
+		}
 	
 }

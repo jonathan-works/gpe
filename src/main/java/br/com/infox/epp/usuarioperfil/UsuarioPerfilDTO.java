@@ -59,5 +59,11 @@ public class UsuarioPerfilDTO {
 	public void setResponsavel(boolean responsavel) {
 		this.responsavel = responsavel;
 	}
+
+	@Override
+	public String toString() {
+		return "UsuarioPerfilDTO [usuario=" + usuario + ", localizacao=" + localizacao + ", perfil=" + perfil
+				+ ", responsavel=" + responsavel + "]";
+	}
 	
 }

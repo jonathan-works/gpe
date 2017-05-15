@@ -30,4 +30,9 @@ public class TipoParticipanteDTO {
 		this.codigo = codigo;
 	}
 
+	@Override
+	public String toString() {
+		return "TipoParticipanteDTO [nome=" + nome + ", codigo=" + codigo + "]";
+	}
+
 }
