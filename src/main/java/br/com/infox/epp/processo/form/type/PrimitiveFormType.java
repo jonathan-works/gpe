@@ -4,6 +4,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
@@ -12,6 +13,8 @@ import br.com.infox.ibpm.variable.VariableMaxMinHandler;
 import br.com.infox.ibpm.variable.VariableMaxMinHandler.MaxMinConfig;
 import br.com.infox.ibpm.variable.VariableStringHandler;
 import br.com.infox.ibpm.variable.VariableStringHandler.StringConfig;
+import br.com.infox.ibpm.variable.components.FrameDefinition;
+import br.com.infox.ibpm.variable.components.VariableDefinitionService;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 
 public abstract class PrimitiveFormType implements FormType {
