@@ -6,7 +6,11 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -89,34 +93,56 @@ public class ZipDownloader {
 		}
 	}
 	
-	protected String getNomeArquivo(Integer numeroDocumento, String descricao, String extensao) {
-		String nomeArquivo = String.format("%s.%s", descricao, extensao);
+	protected String getNomeArquivo(Integer numeroDocumento, String nomeArquivoOriginal) {
+		String nomeArquivo = nomeArquivoOriginal;
 		if(numeroDocumento != null) {
 			nomeArquivo = String.format("%04d-%s", numeroDocumento, nomeArquivo);
 		}		
 		return nomeArquivo;
 	}
 	
-	protected String getNomeArquivo(Integer idDocumentoBin) {
+	protected String getNomeArquivo(Integer idDocumentoBin, Set<String> nomesUtilizados) {
+		final Pattern pattern = Pattern.compile("^(.+)\\.([^\\.]+)$");
+		
 		DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
 		Documento documento = documentoBin.getDocumentoList().iterator().next();
 		Integer numero = documento.getNumeroDocumento();
-		String descricao = documento.getDescricao();
+		String nomeArquivoOriginal = documentoBin.getNomeArquivo();
 
-		return getNomeArquivo(numero, descricao, documentoBin.getExtensao());
+		String nomeArquivo = getNomeArquivo(numero, nomeArquivoOriginal);
+		
+		String retorno = nomeArquivo;
+		int cont = 1;
+		
+		while(nomesUtilizados.contains(retorno)) {
+			Matcher matcher = pattern.matcher(nomeArquivo);
+			if(matcher.find()) {
+				String basename = matcher.group(1);
+				String extension = matcher.group(2);
+				retorno = String.format("%s_%d.%s", basename, cont++, extension);
+			}
+			else {
+				retorno = nomeArquivo + "_" + cont++;
+			}
+		}
+		
+		return retorno;
 	}
 	
-	protected void exportDocumento(Integer idDocumentoBin, OutputStream outputStream, ZipOutputStream zos) throws IOException {
+	protected void exportDocumento(Integer idDocumentoBin, OutputStream outputStream, ZipOutputStream zos, String zipEntryName) throws IOException {
 		DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
-		zos.putNextEntry(new ZipEntry(getNomeArquivo(documentoBin.getId())));
+		zos.putNextEntry(new ZipEntry(zipEntryName));
 		fileDownloader.export(documentoBin, outputStream);
 		outputStream.flush();
 		zos.closeEntry();
 	}
 	
 	protected void exportDocumentos(List<Integer> idsDocumentoBin, OutputStream outputStream, ZipOutputStream zos) throws IOException {
+		Set<String> nomesUtilizados = new HashSet<>();
 		for(Integer idDocumentoBin : idsDocumentoBin) {
-			exportDocumento(idDocumentoBin, outputStream, zos);
+			String nomeArquivo = getNomeArquivo(idDocumentoBin, nomesUtilizados);
+			exportDocumento(idDocumentoBin, outputStream, zos, nomeArquivo);
+			nomesUtilizados.add(nomeArquivo);
 		}		
 	}
 	
