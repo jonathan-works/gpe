@@ -2,25 +2,37 @@ package br.com.infox.epp.documento.crud;
 
 import java.util.Collection;
 
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Transactional;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.list.ClassificacaoDocumentoPapelList;
+import br.com.infox.epp.documento.list.ExtensaoArquivoList;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoManager;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 
-@Name(ClassificacaoDocumentoCrudAction.NAME)
-public class ClassificacaoDocumentoCrudAction extends
-        AbstractCrudAction<ClassificacaoDocumento, ClassificacaoDocumentoManager> {
+@Named
+@ViewScoped
+public class ClassificacaoDocumentoCrudAction extends AbstractCrudAction<ClassificacaoDocumento, ClassificacaoDocumentoManager> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "classificacaoDocumentoCrudAction";
 
-    @In private TipoModeloDocumentoManager tipoModeloDocumentoManager;
+    @Inject
+    private ClassificacaoDocumentoManager classificacaoDocumentoManager;
+    @Inject
+    private TipoModeloDocumentoManager tipoModeloDocumentoManager;
+    @Inject
+    private ClassificacaoDocumentoPapelCrudAction classificacaoDocumentoPapelCrudAction;
+    @Inject
+    private ClassificacaoDocumentoPapelList classificacaoDocumentoPapelList;
+    @Inject
+    private ExtensaoArquivoCrudAction extensaoArquivoCrudAction;
+    @Inject
+    private ExtensaoArquivoList extensaoArquivoList;
 
     private Collection<TipoModeloDocumento> tiposModeloDocumento;
 
@@ -46,31 +58,30 @@ public class ClassificacaoDocumentoCrudAction extends
     }
 
     @Override
-    public void setId(Object id) {
-        super.setId(id);
-    }
-
-    @Override
     public void newInstance() {
         setId(null);
         setInstance(new ClassificacaoDocumento());
         setTiposModeloDocumento(null);
     }
 
-    @Override
-    @Transactional
-    public String save() {
-        String save = super.save();
-        return save;
-    }
-
-    @Override
-    protected String getManagerName() {
-        return ClassificacaoDocumentoManager.NAME;
-    }
-
     public boolean canShowSelectTipoDocumento() {
         TipoDocumentoEnum tipoDocumento = getInstance().getInTipoDocumento();
         return TipoDocumentoEnum.T.equals(tipoDocumento) || TipoDocumentoEnum.P.equals(tipoDocumento);
     }
+
+    @Override
+    protected ClassificacaoDocumentoManager getManager() {
+        return classificacaoDocumentoManager;
+    }
+
+    public void onClickClassificacaoPapel() {
+        classificacaoDocumentoPapelCrudAction.setClassificacaoDocumento(getInstance());
+        classificacaoDocumentoPapelList.getEntity().setClassificacaoDocumento(getInstance());
+    }
+
+    public void onClickExtensoes() {
+        extensaoArquivoCrudAction.setClassificacaoDocumento(getInstance());
+        extensaoArquivoList.getEntity().setClassificacaoDocumento(getInstance());
+    }
+
 }
