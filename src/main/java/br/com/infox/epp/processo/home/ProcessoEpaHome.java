@@ -6,6 +6,7 @@ import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
 
+import org.hibernate.StaleObjectStateException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -122,7 +123,10 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		} catch (BusinessRollbackException e) {
 		    FacesMessages.instance().add(e.getMessage());
 		    throw new OptimisticLockException();
-		} catch (EJBException e) {
+		}catch (StaleObjectStateException e) {
+			 FacesMessages.instance().add("Tarefa já atribuída a outro usuário.");
+			 LOG.info("Tarefa já atribuída a outro usuário", e);
+		}catch (EJBException e) {
 			if (e.getCause() instanceof BusinessRollbackException) {
 			    FacesMessages.instance().add(e.getMessage());
 			    throw new OptimisticLockException();
