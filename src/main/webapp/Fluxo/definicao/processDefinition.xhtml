@@ -145,10 +145,11 @@
    	 <h:form id="modeladorForm">
 		<a:jsFunction name="doUpdate" execute="@this" render=":processDefinition @form :pageBodyDialogMessage" action="#{bpmnView.update}"
 			actionListener="#{processBuilder.prepareUpdate}" onbeforedomupdate="moveContainerModeladorToBody()"
-			oncomplete="moveContainerModeladorToTabIfInTab(); infox.hideLoading();">
+			oncomplete="reinitModelador(); infox.hideLoading();">
 			<a:param name="bpmnInformation" assignTo="#{bpmnView.bpmnInformation}"/>
 		</a:jsFunction>
-		<a:jsFunction name="configureElement" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configureElement}">
+		<a:jsFunction name="configureElement" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configureElement}"
+			onbeforedomupdate="moveContainerModeladorToBody()">
 			<a:param name="elementKey" assignTo="#{bpmnView.elementKey}" />
 		</a:jsFunction>
      	
@@ -225,14 +226,13 @@
               infox.editor[key].instance.fire("blur");
             }
           }
-          updateBpmn();
         }
       </h:outputScript>
       <a:commandButton
         id="gravar"
         value="#{infoxMessages['processBuilder.saveBtn']}"
         styleClass="buttons #{wi:get(styleClass, '')}"
-        onclick="infox.showLoading(); checkIfEditorExists();" />
+        onclick="infox.showLoading(); checkIfEditorExists(); updateBpmn(); return false;" />
       <a:commandButton
         id="new"
         action="#{processBuilder.clearDefinition}"
