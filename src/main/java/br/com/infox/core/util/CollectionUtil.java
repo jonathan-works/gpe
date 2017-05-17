@@ -3,6 +3,7 @@ package br.com.infox.core.util;
 import static br.com.infox.core.util.ObjectUtil.is;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -60,6 +61,24 @@ public final class CollectionUtil {
         for (T objectT : listSource) {
             destination.add(conversor.convert(objectT));
         }
+    }
+    
+    public static <T, E> List<E> castToList(List<T> listSource, final Class<E> clazz) {
+        return convertToList(listSource, new ListConversor<T, E>() {
+            @Override
+            public E convert(T t) {
+                return clazz.cast(t);
+            }
+        });
+    }
+    
+    public static <T, E> List<E> castToList(T[] listSource, final Class<E> clazz) {
+        return convertToList(Arrays.asList(listSource), new ListConversor<T, E>() {
+            @Override
+            public E convert(T t) {
+                return clazz.cast(t);
+            }
+        });
     }
     
     public static interface ListConversor<T, E> {

@@ -6,6 +6,12 @@
 			<module name="org.hibernate" export="true" />
 			<module name="oracle.ojdbc" export="true" optional="true"/>
             <module name="org.infinispan" export="true" />
+            <module name="com.sun.xml.bind" export="true" />
+            <system export="true"> 
+	            <paths>
+		            <path name="com/sun/xml/internal/bind/marshaller"/>
+		        </paths>
+            </system>
 		</dependencies>
 	</deployment>
 </jboss-deployment-structure>

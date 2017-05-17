@@ -1,5 +1,6 @@
 package br.com.infox.epp.layout.entity;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
@@ -22,8 +23,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 @Entity
 @Table(name = ResourceBin.TABLE_NAME)
@@ -82,11 +81,9 @@ public class ResourceBin {
 		skins.remove(skin);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Set<Skin> getResourcesSkins() {
 		return Collections.unmodifiableSet(skins);
 	}
-	
 	
 	public Date getDataModificacao() {
 		return dataModificacao;

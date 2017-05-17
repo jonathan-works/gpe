@@ -18,6 +18,7 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_FETCH_PF_B
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_LOCALIZACAO_PAPEL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,6 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 @Stateless
 @AutoCreate
