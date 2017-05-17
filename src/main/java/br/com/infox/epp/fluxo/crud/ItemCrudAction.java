@@ -7,10 +7,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ItemCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -50,7 +50,7 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item, ItemManage
     }
 
     protected void limparTrees() {
-        final ItemTreeHandler ith = ComponentUtil.getComponent(ItemTreeHandler.NAME);
+        final ItemTreeHandler ith = BeanManager.INSTANCE.getReference(ItemTreeHandler.class);
         if (ith != null) {
             ith.clearTree();
         }

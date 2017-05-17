@@ -70,7 +70,8 @@
         <infox:tab id="categoriaItemTab"
             rendered="#{crudAction.isManaged()}"
             title="#{infoxMessages['categoriaItem.titleTab']}"
-            name="categoriaItemTab">
+            name="categoriaItemTab"
+            action="#{crudAction.onClickCategoriaItemTab}">
             <s:div id="categoriaItemFormDiv">
                 <wi:dataForm formId="categoriaItemForm"
                     formTitle="#{infoxMessages['form.title']} #{crudAction.instance.categoria}">
