@@ -18,7 +18,7 @@
 
 	<ui:define name="body">
 		<a:region>
-			<infox:div id="formulario">
+			<infox:div id="formulario" styleClass=".formulario">
 				<h:form id="redistribuicaoListForm">
 					<wi:dataTable id="redistribuicaoList"
 						values="#{redistribuicaoList.list(10)}"
@@ -147,18 +147,20 @@
 										action="#{redistribuicaoList.redistribuirTodos}"
 										value="#{infoxMessages['redistribuicao.redistribuirTodos']}"
 										onclick="return confirm('#{infoxMessages['redistribuicao.confirmRedistribuir']}');"
-										onbegin="showLoading();" oncomplete="hideLoading();"
+										onbegin="PF('dialogRedistribuirTodos').show();PF('pbAjax').cancel();PF('pbAjax').start();"
+										oncomplete="PF('dialogRedistribuirTodos').hide();PF('pbAjax').cancel();updateCheckAllChildrenBoxes();"
 										execute="formulario" render="formulario pageBodyDialogMessage" />
 									<a:commandButton action="#{redistribuicaoList.redistribuir}"
 										styleClass="buttons"
-										onclick="showLoading();"
-										oncomplete="hideLoading();"										
+										onclick="return confirm('#{infoxMessages['redistribuicao.confirmRedistribuir']}');"
+										onbegin="PF('dialogRedistribuirTodos').show();PF('pbAjax').cancel();PF('pbAjax').start();"
+										oncomplete="PF('dialogRedistribuirTodos').hide();PF('pbAjax').cancel();updateCheckAllChildrenBoxes();"								
 										value="#{infoxMessages['redistribuicao.redistribuirSelecionados']}"
 										execute="formulario" render="formulario pageBodyDialogMessage"
 										id="botaoRedistribuir" />
 									<a:commandButton id="clearButtonRedistribuir"
-										onclick="showLoading();"
-										oncomplete="hideLoading();"
+										onclick="infox.showLoading();"
+										oncomplete="infox.hideLoading();"
 										action="#{redistribuicaoList.limparCamposRedistribuir()}"
 										value="#{infoxMessages['button.limpar']}" execute="conteudoAdicionalDiv"
 										render="conteudoAdicionalDiv"
@@ -166,6 +168,11 @@
 
 								</div>
 							</infox:div>
+							
+							<p:dialog id="dialogProgress" header="Progresso da Redistribuição" widgetVar="dialogRedistribuirTodos" modal="true" closable="false" >
+								    <p:progressBar widgetVar="pbAjax" ajax="true" value="#{redistribuicaoList.progress}" labelTemplate="{value}%"  global="false" >
+								    </p:progressBar>
+							</p:dialog>
 						</ui:define>
 					</wi:dataTable>
 
@@ -175,6 +182,9 @@
 
 		</a:region>
 		<script>
+			function updateCheckAllChildrenBoxes(){
+				$('.checkButtonMarcarTodos').prop('checked',isTodosCheckBoxesMarcados());
+		    }
 		    function checkAllChildrenBoxes(){
 		        $('.checkButtonProcesso').prop('checked',$('.checkButtonMarcarTodos').prop('checked'));
 		    }
