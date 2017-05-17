@@ -2,7 +2,9 @@ package br.com.infox.epp.estatistica.list;
 
 import static java.text.MessageFormat.format;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.AbstractPageableList;
 import br.com.infox.epp.estatistica.entity.TempoMedioTarefa;
@@ -15,6 +17,7 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
  * 
  */
 @Name(TempoMedioTarefaList.NAME)
+@Scope(ScopeType.CONVERSATION)
 public class TempoMedioTarefaList extends AbstractPageableList<TempoMedioTarefa> {
     
 	private static final String GROUP_BY = "group by t, ncf";

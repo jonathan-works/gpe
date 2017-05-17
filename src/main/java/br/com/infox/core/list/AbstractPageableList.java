@@ -12,8 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
@@ -28,7 +26,6 @@ import br.com.infox.seam.exception.ApplicationException;
  * @author Erik Liberal
  * 
  */
-@Scope(ScopeType.CONVERSATION)
 public abstract class AbstractPageableList<E> implements PageableList<E>, Serializable {
 
 	private static final long serialVersionUID = 1L;

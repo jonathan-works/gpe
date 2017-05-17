@@ -20,6 +20,7 @@ import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.fluxo.entity.ExtensaoFluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.list.NatCatFluxoLocalizacaoList;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 
 @Named
@@ -31,6 +32,8 @@ public class FluxoCrudAction implements Controller {
     private FluxoController fluxoController;
     @Inject
     private FluxoManager fluxoManager;
+    @Inject
+    private NatCatFluxoLocalizacaoList natCatFluxoLocalizacaoList;
     
     @Any
     @Inject
@@ -105,6 +108,10 @@ public class FluxoCrudAction implements Controller {
     
     @Override
     public void onClickFormTab() {
+    }
+
+    public void onClicknatCatFluxoLocTab() {
+        natCatFluxoLocalizacaoList.setFluxo(getInstance());
     }
 
 	@Override

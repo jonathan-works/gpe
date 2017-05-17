@@ -2,32 +2,30 @@ package br.com.infox.epp.fluxo.crud;
 
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.tree.TreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoFullTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(FluxoLocalizacaoCrudAction.NAME)
+@Named
+@ViewScoped
 public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLocalizacao, NatCatFluxoLocalizacaoManager> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "fluxoLocalizacaoCrudAction";
-
-    @In
+    @Inject
     private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
+    @Inject
+    private NatCatFluxoLocalizacaoManager natCatFluxoLocalizacaoManager;
 
     public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
         return getInstance().getNaturezaCategoriaFluxo();
@@ -50,8 +48,7 @@ public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLo
     }
 
     private void clearTree() {
-        TreeHandler<?> treeHandler = ComponentUtil.getComponent(LocalizacaoFullTreeHandler.NAME);
-        treeHandler.clearTree();
+        BeanManager.INSTANCE.getReference(LocalizacaoFullTreeHandler.class).clearTree();
     }
 
     public void setLocalizacao(Localizacao localizacao) {
@@ -62,5 +59,10 @@ public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLo
     
     public Localizacao getLocalizacao() {
         return getInstance().getLocalizacao();
+    }
+
+    @Override
+    protected NatCatFluxoLocalizacaoManager getManager() {
+        return natCatFluxoLocalizacaoManager;
     }
 }

@@ -2,17 +2,18 @@ package br.com.infox.epp.fluxo.list;
 
 import java.util.Map;
 
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 
-@Name(ModeloPastaList.NAME)
+@Named
+@ViewScoped
 public class ModeloPastaList extends EntityList<ModeloPasta>{
 
 	private static final long serialVersionUID = 1L;
-	static final String NAME = "modeloPastaList";
 	
 	private final String DEFAULT_EJBQL = "select o from ModeloPasta o";
 	private final String DEFAULT_ORDER = "ordem";
