@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.action.AbstractAction;
@@ -20,10 +21,8 @@ import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
-import br.com.infox.epp.test.crud.PersistSuccessTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
-import org.junit.Assert;
 
 //@RunWith(Arquillian.class)
 public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza> {
@@ -61,8 +60,8 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza> {
             final ActionContainer<Natureza> action, final String suffix,
             final ServletContext servletContext, final HttpSession session)
             throws Exception {
-        final PersistSuccessTest<Natureza> persistSuccessTest = new PersistSuccessTest<>(
-                NaturezaCrudAction.NAME, NaturezaCrudActionIT.initEntityAction);
+//        final PersistSuccessTest<Natureza> persistSuccessTest = new PersistSuccessTest<>(
+//                NaturezaCrudAction.NAME, NaturezaCrudActionIT.initEntityAction);
         final ArrayList<Natureza> naturezas = new ArrayList<>();
         int i = 0;
         for (final Boolean hasParte : NaturezaCrudActionIT.booleans) {
@@ -70,21 +69,21 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza> {
                 if (hasParte) {
                     for (final ParteProcessoEnum tipo : ParteProcessoEnum
                             .values()) {
-                        final Natureza natureza = persistSuccessTest.runTest(
-                                action,
-                                new Natureza(MessageFormat.format(
-                                        "Natureza{0}{1}", suffix, ++i),
-                                        hasParte, tipo, 2, ativo),
-                                servletContext, session);
-                        naturezas.add(natureza);
+//                        final Natureza natureza = persistSuccessTest.runTest(
+//                                action,
+//                                new Natureza(MessageFormat.format(
+//                                        "Natureza{0}{1}", suffix, ++i),
+//                                        hasParte, tipo, 2, ativo),
+//                                servletContext, session);
+//                        naturezas.add(natureza);
                     }
                 } else {
-                    final Natureza natureza = persistSuccessTest.runTest(
-                            action,
-                            new Natureza(MessageFormat.format("Natureza{0}{1}",
-                                    suffix, ++i), hasParte, null, null, ativo),
-                            servletContext, session);
-                    naturezas.add(natureza);
+//                    final Natureza natureza = persistSuccessTest.runTest(
+//                            action,
+//                            new Natureza(MessageFormat.format("Natureza{0}{1}",
+//                                    suffix, ++i), hasParte, null, null, ativo),
+//                            servletContext, session);
+//                    naturezas.add(natureza);
                 }
             }
         }
@@ -108,7 +107,7 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza> {
 
     @Override
     protected String getComponentName() {
-        return NaturezaCrudAction.NAME;
+        return null;
     }
 
     private String getDescription(final String defaultValue) {
