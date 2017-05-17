@@ -24839,7 +24839,7 @@ InfoxContextPadProvider.prototype.getContextPadEntries = function (element) {
         });
     }
 
-    if (isAny(bo, ['bpmn:BoundaryEvent', 'bpmn:DataObjectReference', 'bpmn:DataOutputAssociation'])) {
+    if (isAny(bo, ['bpmn:BoundaryEvent', 'bpmn:DataObjectReference', 'bpmn:DataOutputAssociation', 'bpmn:DataInputAssociation'])) {
         entries = {};
     }
 
