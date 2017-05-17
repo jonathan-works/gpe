@@ -16,13 +16,19 @@ import java.util.zip.ZipOutputStream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import com.google.common.base.Charsets;
 import com.google.common.net.MediaType;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.file.download.FileDownloader.Exporter;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.Parametro;
@@ -139,6 +145,14 @@ public class ZipDownloader {
 	
 	protected void exportDocumentos(List<Integer> idsDocumentoBin, OutputStream outputStream, ZipOutputStream zos) throws IOException {
 		Set<String> nomesUtilizados = new HashSet<>();
+		
+		EntityManager em = EntityManagerProducer.getEntityManager();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<DocumentoBin> cq = cb.createQuery(DocumentoBin.class);
+		Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
+		documentoBin.fetch(DocumentoBin_.documentoList);
+		cq.where(documentoBin.get(DocumentoBin_.id).in(idsDocumentoBin));
+		
 		for(Integer idDocumentoBin : idsDocumentoBin) {
 			String nomeArquivo = getNomeArquivo(idDocumentoBin, nomesUtilizados);
 			exportDocumento(idDocumentoBin, outputStream, zos, nomeArquivo);
