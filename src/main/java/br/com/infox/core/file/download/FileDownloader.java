@@ -42,10 +42,10 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
 
-@Name(FileDownloader.NAME)
-@Scope(ScopeType.EVENT)
 @Stateless
 @BypassInterceptors
+@Name(FileDownloader.NAME)
+@Scope(ScopeType.STATELESS)
 public class FileDownloader implements Serializable {
 
 	private static final String EXTENSAO_PADRAO = "pdf";

@@ -4,10 +4,8 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -18,10 +16,9 @@ import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(SigiloDocumentoManager.NAME)
-@AutoCreate
 @Stateless
-@Scope(ScopeType.EVENT)
+@AutoCreate
+@Name(SigiloDocumentoManager.NAME)
 public class SigiloDocumentoManager extends Manager<SigiloDocumentoDAO, SigiloDocumento> {
 
     private static final long serialVersionUID = 1L;
