@@ -2,13 +2,20 @@ package br.com.infox.epp.redistribuicao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.validation.ValidationException;
 
+import org.jboss.seam.contexts.Lifecycle;
 import org.joda.time.DateTime;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.fluxo.definicaosinais.DefinicaoSinais;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -27,17 +34,15 @@ public class RedistribuicaoService extends PersistenceController {
     @Inject
     EppMetadadoProcessoService eppMetadadoProcessoService;
 
-    public void redistribuir(Processo processo, UnidadeDecisoraMonocratica udm, PessoaFisica relator,
-            TipoRedistribuicao tipoRedistribuicao, String motivo) {
-        List<Processo> lista = new ArrayList<Processo>();
-        lista.add(processo);
-        redistribuir(lista, udm, relator, tipoRedistribuicao, motivo);
-    }
+    
 
-    public void redistribuir(List<Processo> processos, UnidadeDecisoraMonocratica udm, PessoaFisica relator,
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Asynchronous
+    public Future<Void> redistribuir(Processo processo, UnidadeDecisoraMonocratica udm, PessoaFisica relator,
             TipoRedistribuicao tipoRedistribuicao, String motivo) {
-
-        for (Processo processo : processos) {
+    	try {
+    		Lifecycle.beginCall();
+			
             MetadadoProcesso metadadoRelator = processo.getMetadado(EppMetadadoProvider.RELATOR);
             MetadadoProcesso metadadoUdm = processo.getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA);
             if (metadadoRelator == null) {
@@ -65,9 +70,14 @@ public class RedistribuicaoService extends PersistenceController {
             eppMetadadoProcessoService.setUnidadeDecisoraMonocratica(processo, udm);
 
             signalService.dispatch(processo.getIdProcesso(), DefinicaoSinais.REDISTRIBUICAO.getCodigo());
-        }
 
-        getEntityManager().flush();
+            getEntityManager().flush();
+		} finally {
+			Lifecycle.endCall();
+		}
+
+		return null;
     }
 
+ 
 }

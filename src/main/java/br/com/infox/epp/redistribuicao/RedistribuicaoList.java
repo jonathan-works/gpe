@@ -6,10 +6,16 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.ValidationException;
+
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.list.DataList;
 import br.com.infox.core.list.RestrictionType;
@@ -31,9 +37,14 @@ import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.unidadedecisora.dao.UnidadeDecisoraMonocraticaDAO;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
+import br.com.infox.epp.ws.interceptors.Log;
+import br.com.infox.seam.exception.BusinessException;
+import lombok.Getter;
+import lombok.Setter;
 
 @Named
 @ViewScoped
+@lombok.extern.java.Log
 public class RedistribuicaoList extends DataList<Processo> {
     private static final long serialVersionUID = 1L;
 
@@ -46,6 +57,7 @@ public class RedistribuicaoList extends DataList<Processo> {
             + "\nand relator is not null" + "\nand cast(pf.idPessoa as string) = relator.valor";
 
     private static final String DEFAULT_ORDER = "o.dataInicio";
+    
 
     // Filters controll
     private Natureza natureza;
@@ -86,6 +98,12 @@ public class RedistribuicaoList extends DataList<Processo> {
     private RedistribuicaoService redistribuicaoService;
 
     private Map<Processo, Boolean> processosSelecionados = new LinkedHashMap<>();
+    
+    @Setter
+    private Integer progress;
+
+    @Getter@Setter
+    private boolean isRedistribuindo = false;
 
     @Override
     protected String getDefaultEjbql() {
@@ -269,9 +287,7 @@ public class RedistribuicaoList extends DataList<Processo> {
         if (processosSelecionadosList.isEmpty()) {
             throw new ValidationException("Selecione processos para redistribuir");
         }
-
-        redistribuicaoService.redistribuir(processosSelecionadosList, novaUdm, novoRelator, tipoRedistribuicao,
-                motivoRedistribuicao);
+        startRedistriuicao(processosSelecionadosList);
         limparSelecionados();
         limparCamposRedistribuir();
         refresh();
@@ -289,16 +305,56 @@ public class RedistribuicaoList extends DataList<Processo> {
         setFirstResult(firstResult);
         setMaxResults(maxResult);
 
-        if (processosSelecionadosList.isEmpty()) {
-            throw new ValidationException("Não foram encontrados processos para redistribuir");
-        }
-
-        redistribuicaoService.redistribuir(processosSelecionadosList, novaUdm, novoRelator, tipoRedistribuicao,
-                motivoRedistribuicao);
-
+        startRedistriuicao(processosSelecionadosList);
+        
         limparSelecionados();
         limparCamposRedistribuir();
         refresh();
+    }
+
+	private void startRedistriuicao(List<Processo> processosSelecionadosList) {
+		 if (processosSelecionadosList.isEmpty()) {
+	            throw new ValidationException("Não foram encontrados processos para redistribuir");
+	        }
+		Integer maxProgress = processosSelecionadosList.size() -1;
+        progress = 1;
+        int count = 1;
+        List<Processo> processoSemRedistribuir = new ArrayList<>();
+        for (Processo processo : processosSelecionadosList) {
+        	try {
+        		redistribuicaoService.redistribuir( processo, novaUdm, novoRelator, tipoRedistribuicao,
+        				motivoRedistribuicao).get();
+        		count++;
+            	progress = Math.round((count * 100) / maxProgress);
+			} catch (Exception e) {
+				processoSemRedistribuir.add(processo);
+				log.log(Level.SEVERE,"Não foi possível redistribuir o processo " + processo.getNumeroProcesso(), e);
+			}
+		}
+        if(!processoSemRedistribuir.isEmpty()){
+        	String processosComproblema = "";
+        	for (Processo processo : processoSemRedistribuir) {
+				processosComproblema.concat(" " + processo.getNumeroProcesso());
+			}
+        	FacesMessages.instance().add("Não foi possível redistribuir o(s) seguinte(s) processo(s): " + processosComproblema);
+        }
+	}
+    
+    public void clearProgress(){
+    	progress = 0;
+    }
+    
+    public Integer getProgress() {
+        if(progress == null) {
+            progress = 0;
+        }
+        else {
+            if(progress > 100){
+                progress = 100;
+            }
+        }
+         
+        return progress;
     }
 
     public TipoRedistribuicao getTipoRedistribuicao() {
