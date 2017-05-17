@@ -61,7 +61,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem> {
     }
 
     private final RunnableTest<Item> persistItem = new RunnableTest<Item>(
-            ItemCrudAction.NAME) {
+            null) {
         @Override
         protected void testComponent() throws Exception {
             final Item entity = getEntity();
