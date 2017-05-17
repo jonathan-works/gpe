@@ -25301,25 +25301,37 @@ ToolbarProvider.prototype.getToolbarEntries = function () {
 
     assign(entries, {
         'fullscreen': {
-            className: 'fa fa-arrows-alt',
+            className: 'fa fa-arrows-alt ifx-tool-fullscreen',
             title: translate('Full screen'),
             action: {
                 click: function (event) {
                     if (domClasses(event.target).has('fa-arrows-alt')) {
                         self._infoxModeler.enterFullscreen();
-                        event.target.classList.remove('fa-arrows-alt');
-                        event.target.classList.add('fa-compress');
-                        event.target.title = translate('Exit full screen');
                     } else {
                         self._infoxModeler.exitFullscreen();
-                        event.target.classList.remove('fa-compress');
-                        event.target.classList.add('fa-arrows-alt');
-                        event.target.title = translate('Full screen');
                     }
                 }
             }
         }
     });
+
+    function handleFullscreenChange(event) {
+        if (document.fullscreenElement) {
+            var tool = document.getElementsByClassName('ifx-tool-fullscreen')[0];
+            tool.classList.remove('fa-arrows-alt');
+            tool.classList.add('fa-compress');
+            tool.title = translate('Exit full screen');
+        } else {
+            var tool = document.getElementsByClassName('ifx-tool-fullscreen')[0];
+            tool.classList.remove('fa-compress');
+            tool.classList.add('fa-arrows-alt');
+            tool.title = translate('Full screen');
+        }
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange, false);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange, false);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange, false);
 
     return entries;
 };
