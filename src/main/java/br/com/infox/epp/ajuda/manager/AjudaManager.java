@@ -4,9 +4,11 @@ import static br.com.infox.constants.WarningConstants.RAWTYPES;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import org.apache.lucene.queryParser.ParseException;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.GenericManager;
@@ -18,12 +20,13 @@ import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 
 @Name(AjudaManager.NAME)
 @AutoCreate
+@Stateless
 public class AjudaManager extends Manager<AjudaDAO, Ajuda> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "ajudaManager";
 
-    @In
+    @Inject
     private GenericManager genericManager;
 
     public Ajuda getAjudaByPaginaUrl(String url) {
