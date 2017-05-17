@@ -1,7 +1,6 @@
 package br.com.infox.epp.fluxo.definicao.modeler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +49,7 @@ import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumento
 
 public class ConfiguracoesNos {
 	
-	private Map<String, List<ConfiguracaoVariavelDocumento>> variaveisDocumento;
+	private List<ConfiguracaoVariavelDocumento> variaveisDocumento;
 	private List<ConfiguracaoDocumentoGerado> documentosGerados;
 	private BpmnModelInstance bpmnModel;
 	
@@ -59,7 +58,7 @@ public class ConfiguracoesNos {
 	}
 	
 	public void resolverMarcadoresBpmn(ProcessDefinition processDefinition, BpmnModelInstance bpmnModel) {
-		variaveisDocumento = new HashMap<>();
+		variaveisDocumento = new ArrayList<>();
 		documentosGerados = new ArrayList<>();
 		this.bpmnModel = bpmnModel;
 		
@@ -100,37 +99,33 @@ public class ConfiguracoesNos {
 		removerDataObjectsNaoExistentes();
 		Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
 		
-		for (String variavel : variaveisDocumento.keySet()) {
-			List<ConfiguracaoVariavelDocumento> configs = variaveisDocumento.get(variavel);
-			for (ConfiguracaoVariavelDocumento config : configs) {
-				
-				DataObjectReference dataObjectReference = bpmnModel.getModelElementById(variavel);
-				UserTask userTask = bpmnModel.getModelElementById(config.nodeId);
-				
-				if (dataObjectReference == null) {
-					dataObjectReference = criarDataObjectReference(variavel, process, userTask.getDiagramElement().getBounds(), config.entrada);
+		for (ConfiguracaoVariavelDocumento config : variaveisDocumento) {
+			DataObjectReference dataObjectReference = bpmnModel.getModelElementById(config.dataObjectReferenceId);
+			UserTask userTask = bpmnModel.getModelElementById(config.nodeId);
+			
+			if (dataObjectReference == null) {
+				dataObjectReference = criarDataObjectReference(config, process, userTask.getDiagramElement().getBounds(), config.entrada);
+			}
+			dataObjectReference.setName(config.label);
+			
+			if (config.entrada) {
+				if (!hasDataInputAssociation(userTask, dataObjectReference)) {
+					criarDataInputAssociation(userTask, dataObjectReference);
 				}
-				dataObjectReference.setName(config.label);
-				
-				if (config.entrada) {
-					if (!hasDataInputAssociation(userTask, dataObjectReference)) {
-						criarDataInputAssociation(userTask, dataObjectReference);
-					}
-				} else {
-					if (!hasDataOutputAssociation(userTask, dataObjectReference)) {
-						criarDataOutputAssociation(userTask, dataObjectReference);
-					}
+			} else {
+				if (!hasDataOutputAssociation(userTask, dataObjectReference)) {
+					criarDataOutputAssociation(userTask, dataObjectReference);
 				}
 			}
 		}
 		
 		for (ConfiguracaoDocumentoGerado config : documentosGerados) {
 			Activity activity = bpmnModel.getModelElementById(config.nodeId);
-			DataObjectReference dataObjectReference = bpmnModel.getModelElementById(config.id);
+			DataObjectReference dataObjectReference = bpmnModel.getModelElementById(config.dataObjectReferenceId);
 			if (dataObjectReference == null) {
-				dataObjectReference = criarDataObjectReference(config.id, process, ((BpmnShape) activity.getDiagramElement()).getBounds(), false);
+				dataObjectReference = criarDataObjectReference(config, process, ((BpmnShape) activity.getDiagramElement()).getBounds(), false);
 			}
-			dataObjectReference.setName(config.nome);
+			dataObjectReference.setName(config.label);
 			
 			if (!hasDataOutputAssociation(activity, dataObjectReference)) {
 				criarDataOutputAssociation(activity, dataObjectReference);
@@ -157,12 +152,12 @@ public class ConfiguracoesNos {
 		criarEdgeAssociation(dataInputAssociation, userTask.getDiagramElement().getBounds(), ((BpmnShape) dataObjectReference.getDiagramElement()).getBounds());
 	}
 	
-	private DataObjectReference criarDataObjectReference(String id, Process process, Bounds taskBounds, boolean left) {
+	private DataObjectReference criarDataObjectReference(ConfiguracaoDocumento configuracaoDocumento, Process process, Bounds taskBounds, boolean left) {
 		DataObject dataObject = bpmnModel.newInstance(DataObject.class);
-		dataObject.setId("DataObject_" + id);
+		dataObject.setId(configuracaoDocumento.dataObjectId);
 		process.addChildElement(dataObject);
 		DataObjectReference dataObjectReference = bpmnModel.newInstance(DataObjectReference.class);
-		dataObjectReference.setId(id);
+		dataObjectReference.setId(configuracaoDocumento.dataObjectReferenceId);
 		process.addChildElement(dataObjectReference);
 		dataObjectReference.setDataObject(dataObject);
 		
@@ -239,7 +234,7 @@ public class ConfiguracoesNos {
 			if (activity.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_USER_TASK)) {
 				for (DataInputAssociation dataInputAssociation : activity.getDataInputAssociations()) {
 					DataObjectReference dataObjectReference = (DataObjectReference) dataInputAssociation.getSources().iterator().next();
-					if (!variaveisDocumento.containsKey(dataObjectReference.getId())) {
+					if (!ConfiguracaoDocumento.contains(variaveisDocumento, dataObjectReference.getId())) {
 						activity.getDataInputAssociations().remove(dataInputAssociation);
 						dataObjectReferencesToRemove.add(dataObjectReference);
 					}
@@ -248,13 +243,16 @@ public class ConfiguracoesNos {
 			
 			for (DataOutputAssociation dataOutputAssociation : activity.getDataOutputAssociations()) {
 				DataObjectReference dataObjectReference = (DataObjectReference) dataOutputAssociation.getTarget();
-				if (!variaveisDocumento.containsKey(dataObjectReference.getId())) {
-					activity.getDataOutputAssociations().remove(dataOutputAssociation);
-					dataObjectReferencesToRemove.add(dataObjectReference);
-				}
-				if (!ConfiguracaoDocumentoGerado.contains(documentosGerados, dataObjectReference.getId())) {
-					activity.getDataOutputAssociations().remove(dataOutputAssociation);
-					dataObjectReferencesToRemove.add(dataObjectReference);
+				if (ConfiguracaoDocumentoGerado.isGeneratedDocument(dataObjectReference.getId())) {
+				    if (!ConfiguracaoDocumento.contains(documentosGerados, dataObjectReference.getId())) {
+	                    activity.getDataOutputAssociations().remove(dataOutputAssociation);
+	                    dataObjectReferencesToRemove.add(dataObjectReference);
+				    }
+				} else  {
+				    if (!ConfiguracaoDocumento.contains(variaveisDocumento, dataObjectReference.getId())) {
+	                    activity.getDataOutputAssociations().remove(dataOutputAssociation);
+	                    dataObjectReferencesToRemove.add(dataObjectReference);
+				    }
 				}
 			}
 		}
@@ -274,14 +272,7 @@ public class ConfiguracoesNos {
 					for (VariableAccess var : variables) {
 						VariableType variableType = VariableType.valueOf(var.getType());
 						if (variableType == VariableType.EDITOR || variableType == VariableType.FILE) {
-							if (!variaveisDocumento.containsKey(var.getVariableName())) {
-								variaveisDocumento.put(var.getVariableName(), new ArrayList<ConfiguracaoVariavelDocumento>());
-							}
-							ConfiguracaoVariavelDocumento config = new ConfiguracaoVariavelDocumento();
-							config.nodeId = node.getKey();
-							config.entrada = !var.isWritable();
-							config.label = var.getLabel();
-							variaveisDocumento.get(var.getVariableName()).add(config);
+						    variaveisDocumento.add(new ConfiguracaoVariavelDocumento(node.getKey(), var.getLabel(), var.getVariableName(), !var.isWritable()));
 						}
 					}
 				}
@@ -429,34 +420,67 @@ public class ConfiguracoesNos {
 		return boundaryEvent;
 	}
 	
-	private static class ConfiguracaoVariavelDocumento {
-		private String nodeId;
-		private boolean entrada;
-		private String label;
+	private static abstract class ConfiguracaoDocumento {
+	    protected String nodeId;
+	    protected String label;
+	    protected String dataObjectId;
+	    protected String dataObjectReferenceId;
+        
+        public ConfiguracaoDocumento(String nodeId, String label, String baseId) {
+            this.nodeId = nodeId;
+            this.label = label;
+            this.dataObjectId = generateDataObjectId(baseId);
+            this.dataObjectReferenceId = generateDataObjectReferenceId(baseId);
+        }
+        
+        private String generateDataObjectReferenceId(String baseId) {
+            return getPrefix() + "_" + DigestUtils.sha1Hex(baseId);
+        }
+        
+        private String generateDataObjectId(String baseId) {
+            return getPrefix() + "_DataObject_" + DigestUtils.sha1Hex(baseId);
+        }
+        
+        private static <T extends ConfiguracaoDocumento> boolean contains(List<T> list, String dataObjectReferenceId) {
+            for (ConfiguracaoDocumento config : list) {
+                if (config.dataObjectReferenceId.equals(dataObjectReferenceId)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        protected abstract String getPrefix();
 	}
 	
-	private static class ConfiguracaoDocumentoGerado {
-		private String id;
-		private String nome;
-		private String nodeId;
-		
-		private ConfiguracaoDocumentoGerado(String codigoClassificacao, String nome, String nodeId) {
-			this.nome = nome;
-			this.nodeId = nodeId;
-			this.id = generateId(nodeId, codigoClassificacao);
+	private static final class ConfiguracaoVariavelDocumento extends ConfiguracaoDocumento {
+		private boolean entrada;
+
+		public ConfiguracaoVariavelDocumento(String nodeId, String label, String variavel, boolean entrada) {
+		    super(nodeId, label, variavel);
+		    this.entrada = entrada;
 		}
 		
-		private static String generateId(String nodeId, String codigoClassificacao) {
-			return nodeId + "_" + DigestUtils.sha1Hex(codigoClassificacao);
+        @Override
+        protected String getPrefix() {
+            return "Variable";
+        }
+	}
+	
+	private static final class ConfiguracaoDocumentoGerado extends ConfiguracaoDocumento {
+	    private static final String PREFIX = "GeneratedDocument";
+	    
+		public ConfiguracaoDocumentoGerado(String nodeId, String label, String codigoClassificacao) {
+		    super(nodeId, label, nodeId + codigoClassificacao);
 		}
 		
-		private static boolean contains(List<ConfiguracaoDocumentoGerado> list, String id) {
-			for (ConfiguracaoDocumentoGerado config : list) {
-				if (config.id.equals(id)) {
-					return true;
-				}
-			}
-			return false;
+		private static boolean isGeneratedDocument(String id) {
+		    return id.startsWith(PREFIX);
 		}
+
+        @Override
+        protected String getPrefix() {
+            return PREFIX;
+        }
 	}
 }

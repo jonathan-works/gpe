@@ -132,6 +132,7 @@ public class BpmnJpdlService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public DefinicaoProcesso atualizarDefinicao(DefinicaoProcesso definicaoProcesso, String newProcessDefinitionXml, String newBpmnXml, String newSvg) {
     	BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8)));
+    	bpmnModel.getDocument().registerNamespace(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE_ALIAS, ModeladorConstants.BPMN_IO_COLOR_NAMESPACE);
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(newProcessDefinitionXml);
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
     	atualizarNomeFluxo(definicaoProcesso.getFluxo().getFluxo(), bpmnModel, processDefinition);
