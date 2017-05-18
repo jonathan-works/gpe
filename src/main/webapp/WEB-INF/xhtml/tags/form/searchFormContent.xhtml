@@ -35,7 +35,7 @@
                                 value="#{infoxMessages['button.pesquisar']}"
                                 action="#{searchAction}"
                                 styleClass="buttons"
-                                execute="#{formId}"
+                                execute="#{formId}" oncomplete="#{wi:get(searchOnComplete, '')}"
                                 reRender="#{wi:get(searchReRender, 'pageBody')}">
                                 <a:param assignTo="#{bean.page}"
                                     value="1" />

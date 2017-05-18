@@ -1,5 +1,6 @@
 package br.com.infox.epp.redistribuicao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.list.DataList;
 import br.com.infox.core.list.RestrictionType;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -257,9 +259,13 @@ public class RedistribuicaoList extends DataList<Processo> {
 
     @Override
     public List<Processo> getResultList() {
-        List<Processo> retorno = super.getResultList();
+    	try {
+    		return super.getResultList();
+		} catch (Exception e) {
+			log.info("Erro ao fazer consulta da redistribuição. Tentando novamente.");
+			return super.getResultList();
+		}
 
-        return retorno;
     }
 
     @Override
@@ -287,10 +293,14 @@ public class RedistribuicaoList extends DataList<Processo> {
         if (processosSelecionadosList.isEmpty()) {
             throw new ValidationException("Selecione processos para redistribuir");
         }
-        startRedistriuicao(processosSelecionadosList);
-        limparSelecionados();
-        limparCamposRedistribuir();
-        refresh();
+        
+        try{
+        	startRedistriuicao(processosSelecionadosList);
+        }finally {
+        	limparSelecionados();
+        	limparCamposRedistribuir();
+        	refresh();
+		}
     }
 
 
@@ -304,40 +314,39 @@ public class RedistribuicaoList extends DataList<Processo> {
         List<Processo> processosSelecionadosList = getResultList();
         setFirstResult(firstResult);
         setMaxResults(maxResult);
-
-        startRedistriuicao(processosSelecionadosList);
+		try{	
+			startRedistriuicao(processosSelecionadosList);
+		}finally {
+			limparSelecionados();
+			limparCamposRedistribuir();
+			refresh();
+		}
         
-        limparSelecionados();
-        limparCamposRedistribuir();
-        refresh();
     }
 
 	private void startRedistriuicao(List<Processo> processosSelecionadosList) {
 		 if (processosSelecionadosList.isEmpty()) {
 	            throw new ValidationException("Não foram encontrados processos para redistribuir");
 	        }
-		Integer maxProgress = processosSelecionadosList.size() -1;
-        progress = 1;
-        int count = 1;
-        List<Processo> processoSemRedistribuir = new ArrayList<>();
+		Integer maxProgress = processosSelecionadosList.size();
+        int count = 0;
+        List<String> processoSemRedistribuir = new ArrayList<>();
         for (Processo processo : processosSelecionadosList) {
         	try {
+        		count++;
         		redistribuicaoService.redistribuir( processo, novaUdm, novoRelator, tipoRedistribuicao,
         				motivoRedistribuicao).get();
-        		count++;
             	progress = Math.round((count * 100) / maxProgress);
 			} catch (Exception e) {
-				processoSemRedistribuir.add(processo);
+				processoSemRedistribuir.add(processo.getNumeroProcesso());
 				log.log(Level.SEVERE,"Não foi possível redistribuir o processo " + processo.getNumeroProcesso(), e);
 			}
 		}
         if(!processoSemRedistribuir.isEmpty()){
-        	String processosComproblema = "";
-        	for (Processo processo : processoSemRedistribuir) {
-				processosComproblema.concat(" " + processo.getNumeroProcesso());
-			}
-        	FacesMessages.instance().add("Não foi possível redistribuir o(s) seguinte(s) processo(s): " + processosComproblema);
+        	String processosComproblema = StringUtil.concatList(processoSemRedistribuir, ", ");
+        	throw new BusinessException("Não foi possível redistribuir o(s) seguinte(s) processo(s): " + processosComproblema);
         }
+        
 	}
     
     public void clearProgress(){

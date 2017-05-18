@@ -29,7 +29,7 @@
 
 						<ui:define name="searchForm">
 							<wi:searchForm formId="redistribuicaoSearchForm"
-								formTitle="#{infoxMessages['searchForm.title']}"
+								formTitle="#{infoxMessages['searchForm.title']}" searchOnComplete="updateCheckAllChildrenBoxes();"
 								searchAction="#{redistribuicaoList.limparSelecionados()}">
 								<i:selectOneMenu
 									label="#{infoxMessages['redistribuicao.natureza']}"
@@ -114,8 +114,8 @@
                                     <i:selectOneMenu
                                         label="#{infoxMessages['redistribuicao.udm']}"
                                         value="#{redistribuicaoList.novaUdm}"
-                                        items="#{redistribuicaoList.udms}"
-										converterId="org.jboss.seam.ui.EntityConverter"
+                                        items="#{redistribuicaoList.udms}" oncomplete="infox.hideLoading();"
+										converterId="br.com.infox.jsf.converter.EntityConverter" onstart="infox.showLoading();"
                                         ajax="true" execute="@this" render="@form:panelRelator" immediate="true"
                                         required="true" />
 
@@ -147,7 +147,8 @@
 										action="#{redistribuicaoList.redistribuirTodos}"
 										value="#{infoxMessages['redistribuicao.redistribuirTodos']}"
 										onclick="return confirm('#{infoxMessages['redistribuicao.confirmRedistribuir']}');"
-										onbegin="PF('dialogRedistribuirTodos').show();PF('pbAjax').cancel();PF('pbAjax').start();"
+										onbegin="PF('dialogRedistribuirTodos').show();PF('pbAjax').cancel();PF('pbAjax').start();" 
+										onerror="PF('dialogRedistribuirTodos').hide();PF('pbAjax').cancel();updateCheckAllChildrenBoxes();"
 										oncomplete="PF('dialogRedistribuirTodos').hide();PF('pbAjax').cancel();updateCheckAllChildrenBoxes();"
 										execute="formulario" render="formulario pageBodyDialogMessage" />
 									<a:commandButton action="#{redistribuicaoList.redistribuir}"
@@ -156,6 +157,7 @@
 										onbegin="PF('dialogRedistribuirTodos').show();PF('pbAjax').cancel();PF('pbAjax').start();"
 										oncomplete="PF('dialogRedistribuirTodos').hide();PF('pbAjax').cancel();updateCheckAllChildrenBoxes();"								
 										value="#{infoxMessages['redistribuicao.redistribuirSelecionados']}"
+										onerror="PF('dialogRedistribuirTodos').hide();PF('pbAjax').cancel();updateCheckAllChildrenBoxes();"
 										execute="formulario" render="formulario pageBodyDialogMessage"
 										id="botaoRedistribuir" />
 									<a:commandButton id="clearButtonRedistribuir"
@@ -170,7 +172,7 @@
 							</infox:div>
 							
 							<p:dialog id="dialogProgress" header="Progresso da Redistribuição" widgetVar="dialogRedistribuirTodos" modal="true" closable="false" >
-								    <p:progressBar widgetVar="pbAjax" ajax="true" value="#{redistribuicaoList.progress}" labelTemplate="{value}%"  global="false" >
+								    <p:progressBar widgetVar="pbAjax" ajax="true" value="#{redistribuicaoList.progress}"  labelTemplate="{value}%"  global="false" >
 								    </p:progressBar>
 							</p:dialog>
 						</ui:define>
@@ -202,7 +204,7 @@
 		    }
 		    function isTodosCheckBoxesMarcados(){
 		        checkButtonsArray = $('.checkButtonProcesso');
-		        if(!checkButtonsArray)
+		        if(!checkButtonsArray || checkButtonsArray.size() == 0)
 		            return false;
 		
 		        for (var i = 0; i &lt; checkButtonsArray.size(); i++) {
