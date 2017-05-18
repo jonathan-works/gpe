@@ -24912,12 +24912,13 @@ var forEach = __webpack_require__(873);
 var find = __webpack_require__(871);
 var domClasses = __webpack_require__(50);
 
-function InfoxPaletteProvider(palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate) {
+function InfoxPaletteProvider(palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate, infoxModeler) {
     PaletteProvider.call(this, palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate);
+    this._infoxModeler = infoxModeler;
 }
 
 inherits(InfoxPaletteProvider, PaletteProvider);
-InfoxPaletteProvider.$inject = ['palette', 'create', 'elementFactory', 'spaceTool', 'lassoTool', 'handTool', 'globalConnect', 'translate'];
+InfoxPaletteProvider.$inject = ['palette', 'create', 'elementFactory', 'spaceTool', 'lassoTool', 'handTool', 'globalConnect', 'translate', 'infoxModeler'];
 module.exports = InfoxPaletteProvider;
 
 InfoxPaletteProvider.prototype.getPaletteEntries = function (element) {
@@ -24934,6 +24935,7 @@ InfoxPaletteProvider.prototype.getPaletteEntries = function (element) {
     var create = this._create;
     var elementFactory = this._elementFactory;
     var translate = this._translate;
+    var self = this;
 
     function createAction(type, group, className, title, options) {
         function createListener(event) {
