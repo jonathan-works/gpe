@@ -66,7 +66,7 @@
 		
 		<p:panel style="float: left; margin-left: 10px;height: 155px;width: 380px;" header="#{infoxMessages['processdef.swimlane.el']}" styleClass="elPanel">
 			<i:inputTextarea id="el" value="#{swimlaneFitter.currentSwimlane.expression}" required="true" inputStyle="width: 340px;height: 40px;"
-				label="#{infoxMessages['processdef.swimlane.el']}" cols="35" showCounter="false"/>
+				label="#{infoxMessages['processdef.swimlane.el']}" cols="35" showCounter="false" validatorId="javax.faces.elValidator"/>
 			
 			<h:commandButton id="addElBtn" style="display: block" value="#{infoxMessages['processdef.swimlane.add']}" 
 				action="#{swimlaneFitter.currentSwimlane.adicionarExpressao}" styleClass="buttons">
