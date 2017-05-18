@@ -191,4 +191,8 @@ public class DocumentoDownloader implements Serializable {
         return BeanManager.INSTANCE.getReference(ActionMessagesService.class);
     }
     
+    public void limparFlash() {
+        System.out.println("limpa");
+    }
+    
 }
