@@ -16,7 +16,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.OptimisticLockException;
-import javax.xml.ws.Holder;
 
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.TaskInstance;
@@ -187,7 +186,7 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
 
     protected void initParametros() {
         if (inTask) {
-            String tipoComunicacaoCodigo = (String) TaskInstance.instance().getVariable(CODIGO_TIPO_COMUNICACAO);
+            String tipoComunicacaoCodigo = (String) getTaskInstance().getVariable(CODIGO_TIPO_COMUNICACAO);
             if (!Strings.isNullOrEmpty(tipoComunicacaoCodigo)) {
                 TipoComunicacao tipoComunicacao = tipoComunicacaoSearch.getTiposComunicacaoAtivosByCodigo(tipoComunicacaoCodigo, TIPO);
                 if (tipoComunicacao == null) {
@@ -200,7 +199,7 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
                 }
             }
 
-            String prazo = (String) TaskInstance.instance().getVariable(PRAZO_PADRAO_RESPOSTA);
+            String prazo = (String) getTaskInstance().getVariable(PRAZO_PADRAO_RESPOSTA);
             if (!Strings.isNullOrEmpty(prazo)) {
                 try {
                     prazoDefaultComunicacao = new Integer(prazo);
@@ -209,7 +208,7 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
                 }
             }
 
-            String codigoLocalizacaoAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_LOCALIZACAO_ASSINATURA);
+            String codigoLocalizacaoAssinatura = (String) getTaskInstance().getVariable(CODIGO_LOCALIZACAO_ASSINATURA);
             if (!Strings.isNullOrEmpty(codigoLocalizacaoAssinatura)) {
                 localizacaoAssinatura = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoAssinatura);
                 if (localizacaoAssinatura == null) {
@@ -218,7 +217,7 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
                 getModeloComunicacao().setLocalizacaoResponsavelAssinatura(localizacaoAssinatura);
             }
 
-            String codigoPerfilTemplateAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_PERFIL_ASSINATURA);
+            String codigoPerfilTemplateAssinatura = (String) getTaskInstance().getVariable(CODIGO_PERFIL_ASSINATURA);
             if (!Strings.isNullOrEmpty(codigoPerfilTemplateAssinatura)) {
                 perfilAssinatura = perfilTemplateManager.getPerfilTemplateByCodigo(codigoPerfilTemplateAssinatura);
                 if (perfilAssinatura == null) {
@@ -227,12 +226,12 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
                 getModeloComunicacao().setPerfilResponsavelAssinatura(perfilAssinatura);
             }
             
-            Boolean exibirTransicoes = (Boolean) TaskInstance.instance().getVariable(EXIBIR_TRANSICOES);
+            Boolean exibirTransicoes = (Boolean) getTaskInstance().getVariable(EXIBIR_TRANSICOES);
             if (exibirTransicoes != null && exibirTransicoes) {
                 this.exibirTransicoes = true;
             }
             
-            Boolean exibirResponsavelAssinatura = (Boolean) TaskInstance.instance().getVariable(EXIBIR_RESPONSAVEIS_ASSINATURA);
+            Boolean exibirResponsavelAssinatura = (Boolean) getTaskInstance().getVariable(EXIBIR_RESPONSAVEIS_ASSINATURA);
             if (exibirResponsavelAssinatura != null && !exibirResponsavelAssinatura) {
                 this.exibirResponsaveisAssinatura = false;
             }
@@ -281,7 +280,7 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
 			Token taskToken = taskInstance.getToken();
 			idModelo = (Long) context.getVariable(idModeloComunicacaoVariableName, taskToken);
 			if (idModelo == null) {
-	            Boolean emElaboracao = (Boolean) TaskInstance.instance().getVariable(EM_ELABORACAO);
+	            Boolean emElaboracao = (Boolean) getTaskInstance().getVariable(EM_ELABORACAO);
 	            if (emElaboracao != null && emElaboracao.equals(Boolean.TRUE)) {
 	                ModeloComunicacao modeloComunicacaoEmElaboracao = getModeloEmElaboracao();
 	                if (modeloComunicacaoEmElaboracao != null) {
