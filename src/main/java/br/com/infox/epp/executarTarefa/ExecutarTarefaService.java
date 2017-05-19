@@ -11,6 +11,7 @@ import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.jbpm.JbpmContext;
 import org.jbpm.activity.exe.ParallelMultiInstanceActivityBehavior;
+import org.jbpm.activity.exe.SequentialMultiInstanceActivityBehavior;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
@@ -75,7 +76,8 @@ public class ExecutarTarefaService extends PersistenceController {
             TaskInstance newTaskInstance = taskInstanceSearch.findTaskInstanceByTokenId(token.getId());
             if ( newTaskInstance == null ) {
                 TaskNode taskNode = (TaskNode) node;
-                if ( ParallelMultiInstanceActivityBehavior.class.equals(taskNode.getActivityBehaviorClass()) ) {
+                if ( ParallelMultiInstanceActivityBehavior.class.equals(taskNode.getActivityBehaviorClass()) 
+                        || SequentialMultiInstanceActivityBehavior.class.equals(taskNode.getActivityBehaviorClass()) ) {
                     if ( token.hasActiveChildren() ) {
                         for (Token child : token.getActiveChildren().values()) {
                             return findNextTaskInstance(child);

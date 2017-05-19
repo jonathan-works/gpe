@@ -13,6 +13,8 @@ public interface FormData {
     
     String getFormKey();
     
+    boolean isTaskPage();
+    
     Processo getProcesso();
 
     List<FormField> getFormFields();

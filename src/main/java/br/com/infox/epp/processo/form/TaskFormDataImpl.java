@@ -16,7 +16,6 @@ import br.com.infox.epp.executarTarefa.ExecutarTarefaService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
-import br.com.infox.ibpm.process.definition.variable.VariableType;
 
 public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     
@@ -30,25 +29,10 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
         this.taskInstanceHolder = taskInstanceHolder;
         expressionResolver = ExpressionResolverChainBuilder.defaultExpressionResolverChain(getProcesso().getIdProcesso(), getTaskInstance());
         
-        List<VariableAccess> variableAccesses = getTaskInstance().getTask().getTaskController().getVariableAccesses();        
+        List<VariableAccess> variableAccesses = getTaskInstance().getTask().getTaskController().getVariableAccesses();
         createFormFields(variableAccesses);
     }
 
-    @Override
-    protected void createFormFields(List<VariableAccess> variableAccesses) {
-    	VariableAccess variableTaskPage = getTaskPage(variableAccesses);
-		if (variableTaskPage != null) {
-			createFormField(variableTaskPage);
-		} else {
-			for (VariableAccess variableAccess : variableAccesses) {
-				String type = variableAccess.getType();
-				if (!VariableType.PARAMETER.name().equals(type)) {
-					createFormField(variableAccess);
-				}
-			}
-		}
-    }
-    
     @Override
     public TaskInstance getTaskInstance() {
         return taskInstanceHolder.value;

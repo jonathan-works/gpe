@@ -12,11 +12,13 @@ import org.jbpm.context.def.VariableAccess;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.type.FormTypes;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import lombok.Getter;
 
 public abstract class AbstractFormData implements FormData {
     
     protected Holder<Processo> processo;
+    protected boolean isTaskPage;
     @Getter
     protected String formKey;
     @Getter
@@ -31,7 +33,20 @@ public abstract class AbstractFormData implements FormData {
         this.processo = processo;
     }
     
-    protected abstract void createFormFields(List<VariableAccess> variableAccesses);
+    protected void createFormFields(List<VariableAccess> variableAccesses) {
+        VariableAccess variableTaskPage = getTaskPage(variableAccesses);
+        if (variableTaskPage != null) {
+            createFormField(variableTaskPage);
+            isTaskPage = true;
+        } else {
+            for (VariableAccess variableAccess : variableAccesses) {
+                String type = variableAccess.getMappedName().split(":")[0];
+                if (!VariableType.PARAMETER.name().equals(type)) {
+                    createFormField(variableAccess);
+                }
+            }
+        }
+    }
 
     protected void createFormField(VariableAccess variableAccess) {
         String variableName = variableAccess.getVariableName();
@@ -91,6 +106,15 @@ public abstract class AbstractFormData implements FormData {
             }
         }
         return null;
+    }
+    
+    public FormField getTaskPage() {
+        return isTaskPage ? getFormFields().get(0) : null;
+    }
+    
+    @Override
+    public boolean isTaskPage() {
+        return isTaskPage;
     }
     
     @Override

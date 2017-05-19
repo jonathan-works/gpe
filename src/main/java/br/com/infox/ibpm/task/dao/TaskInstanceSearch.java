@@ -1,16 +1,15 @@
 package br.com.infox.ibpm.task.dao;
 
-import java.util.List;
-
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.annotations.QueryHints;
+import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.dao.Dao;
@@ -35,11 +34,17 @@ public class TaskInstanceSearch extends PersistenceController {
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TaskInstance findTaskInstanceByTokenId(Long tokenId) {
-        TypedQuery<TaskInstance> query = getEntityManager().createNamedQuery("TaskMgmtSession.findTaskInstancesByTokenId", TaskInstance.class);
-        query.setParameter("tokenId", tokenId);
-        List<TaskInstance> list = query.getResultList();
-        return list.isEmpty() ? null : list.get(0);
-
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<TaskInstance> cq = cb.createQuery(TaskInstance.class);
+        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
+        cq.select(taskInstance);
+        cq.where(
+           cb.equal(taskInstance.<Token>get("token").get("id"), cb.literal(tokenId)),
+           cb.isFalse(taskInstance.<Boolean>get("isSuspended")),
+           cb.isTrue(taskInstance.<Boolean>get("isOpen")),
+           cb.isNull(taskInstance.<String>get("assignee"))
+        );
+        return dao.getSingleResult(getEntityManager().createQuery(cq).setHint(QueryHints.CACHEABLE, false));
     }
     
 }

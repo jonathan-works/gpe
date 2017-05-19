@@ -34,20 +34,6 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
         createFormFields();
     }
     
-	protected void createFormFields(List<VariableAccess> variableAccesses) {
-		VariableAccess variableTaskPage = getTaskPage(variableAccesses);
-		if (variableTaskPage != null) {
-			createFormField(variableTaskPage);
-		} else {
-			for (VariableAccess variableAccess : variableAccesses) {
-				String type = variableAccess.getMappedName().split(":")[0];
-				if (!VariableType.PARAMETER.name().equals(type)) {
-					createFormField(variableAccess);
-				}
-			}
-		}
-	}
-    
     private void createFormFields() {
         List<VariableAccess> variableAccesses = getProcessDefinition().getTaskMgmtDefinition().getStartTask().getTaskController().getVariableAccesses();
         createFormFields(variableAccesses);
