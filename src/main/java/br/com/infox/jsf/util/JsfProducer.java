@@ -16,7 +16,9 @@ import javax.faces.convert.Converter;
 import javax.inject.Inject;
 import javax.inject.Qualifier;
 
+import br.com.infox.core.util.ObjectUtil;
 import br.com.infox.core.util.StringUtil;
+import lombok.NoArgsConstructor;
 
 
 public class JsfProducer {
@@ -43,6 +45,7 @@ public class JsfProducer {
         @Nonbinding String name() default "";
         
     }
+    
 
     @Produces 
     @RequestParam
@@ -117,11 +120,19 @@ public class JsfProducer {
         }
     }
     
-    public interface ParamValue<V> extends Serializable {
-        V getValue();
+    @NoArgsConstructor
+    public static abstract class ParamValue<V> implements Serializable {
+        
+        private static final long serialVersionUID = 1L;
+
+        public abstract V getValue();
+        
+        public boolean isNull() {
+            return ObjectUtil.isEmpty(getValue());
+        }
     }
     
-    public static class RequestParamValue<V> implements ParamValue<V> {
+    public static class RequestParamValue<V> extends ParamValue<V> {
         
         private static final long serialVersionUID = 1L;
         
@@ -162,14 +173,16 @@ public class JsfProducer {
             }
             return value;
         }
+
         
     }
     
-    public static class FlashParamValue<V> implements ParamValue<V> {
+    public static class FlashParamValue<V> extends ParamValue<V> {
         
         private static final long serialVersionUID = 1L;
         
         private final V value;
+        
         
         public FlashParamValue(V value) {
             this.value = value;

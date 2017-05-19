@@ -22,7 +22,7 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Name(DistribuicaoProcessoService.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.STATELESS)
 @Stateless
 @AutoCreate
 @Transactional

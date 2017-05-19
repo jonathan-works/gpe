@@ -16,7 +16,7 @@
     </composite:interface>
 	
     <composite:implementation>
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div">
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div #{cc.attrs.styleClass}">
 			<script type="text/javascript">
 				var id = "#{cc.attrs.id}";
 				var errorClass = $('.' + id + 'ErrorClass');

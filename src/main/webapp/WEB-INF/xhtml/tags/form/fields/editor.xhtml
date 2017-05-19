@@ -83,8 +83,7 @@
             toolbar="#{readonly ? 'empty':wi:get(toolbar, 'InfoxToolbar')}"
             readonly="#{readonly}"
             required="#{required}" width="#{width}" height="#{height}"
-            onchange="#{wi:get(onchange, 'void(0);')}"
-            >
+            onchange="#{wi:get(onchange, 'void(0);')}" >
 			<ui:param name="editorHeight" value="#{wi:get(height, 390)}" />
 			<ui:param name="editorWidth" value="#{wi:get(width, 625)}" />
 			<ui:param name="canCollapse" value="#{wi:get(canCollapse, false)}" />

@@ -14,11 +14,9 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
-import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableEditorModeloHandler {
 
@@ -77,21 +75,19 @@ public class VariableEditorModeloHandler {
             modeloDocumentoList = new ArrayList<>();
         }
         modeloDocumentoList.add(modelo);
-        EntityList modeloDocumentoList = ComponentUtil.getComponent(AssociatedTipoModeloVariavelList.NAME);
-        modeloDocumentoList.getResultList().add(modelo);
+        EntityList entityList = getAssociatedTipoModeloVariavelList();
+        entityList.getResultList().add(modelo);
         refreshModelosAssociados();
         updateModelo();
     }
 
     private void refreshModelosAssociados() {
-        AssociativeModeloDocumentoList associativeModeloDocumentoList = ComponentUtil.getComponent(AssociativeModeloDocumentoList.NAME);
-        associativeModeloDocumentoList.refreshModelosAssociados();
+        getAssociativeModeloDocumentoList().refreshModelosAssociados();
     }
 
     public void removeModelo(ModeloDocumento modelo) {
         modeloDocumentoList.remove(modelo);
-        EntityList<VariavelTipoModelo> modeloDocumentoList = ComponentUtil.getComponent(AssociatedTipoModeloVariavelList.NAME);
-        modeloDocumentoList.getResultList().remove(modelo);
+        getAssociatedTipoModeloVariavelList().getResultList().remove(modelo);
         refreshModelosAssociados();
         updateModelo();
     }
@@ -156,5 +152,13 @@ public class VariableEditorModeloHandler {
 		public void setPasta(String pasta) {
 			this.pasta = pasta;
 		}
+	}
+	
+	private AssociatedTipoModeloVariavelList getAssociatedTipoModeloVariavelList() {
+	    return BeanManager.INSTANCE.getReference(AssociatedTipoModeloVariavelList.class);
+	}
+	
+	private AssociativeModeloDocumentoList getAssociativeModeloDocumentoList() {
+	    return BeanManager.INSTANCE.getReference(AssociativeModeloDocumentoList.class);
 	}
 }

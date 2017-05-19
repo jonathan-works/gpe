@@ -43,7 +43,10 @@ public class SelectItemConverter implements Converter {
             List<UIComponent> children = component.getChildren();
             for (UIComponent child : children) {
                 if ( child instanceof UISelectItem ) {
-                    selectItems.add(((UISelectItem) child).getValue());
+                    UISelectItem selectItem = (UISelectItem) child;
+                    if (!selectItem.isNoSelectionOption()) {
+                        selectItems.add(selectItem.getValue());
+                    }
                 } else if ( child instanceof UISelectItems ) {
                     selectItems.addAll((List<?>) ((UISelectItems) child).getValue());
                 }

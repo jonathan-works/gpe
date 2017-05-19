@@ -14,11 +14,11 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import com.google.common.base.Strings;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
-import br.com.infox.seam.util.ComponentUtil;
 
 public class TaskHandler implements Serializable {
 
@@ -82,8 +82,7 @@ public class TaskHandler implements Serializable {
     }
 
     public void setCurrentVariable(String name) {
-        AssociativeModeloDocumentoList associativeModeloDocumentoList = ComponentUtil.getComponent(AssociativeModeloDocumentoList.NAME);
-        associativeModeloDocumentoList.refreshModelosAssociados();
+        getAssociativeModeloDocumentoList().refreshModelosAssociados();
         if (variables == null) {
             return;
         }
@@ -96,8 +95,7 @@ public class TaskHandler implements Serializable {
 
     public void setCurrentVariable(VariableAccessHandler var) {
         currentVariable = var;
-        AssociativeModeloDocumentoList associativeModeloDocumentoList = ComponentUtil.getComponent(AssociativeModeloDocumentoList.NAME);
-        associativeModeloDocumentoList.refreshModelosAssociados();
+        getAssociativeModeloDocumentoList().refreshModelosAssociados();
     }
 
     public VariableAccessHandler getCurrentVariable() {
@@ -234,4 +232,8 @@ public class TaskHandler implements Serializable {
 	    }
 	    return transitions;
 	}
+    
+    private AssociativeModeloDocumentoList getAssociativeModeloDocumentoList() {
+        return BeanManager.INSTANCE.getReference(AssociativeModeloDocumentoList.class);
+    }
 }

@@ -1,6 +1,7 @@
 package br.com.infox.core.messages;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -66,6 +67,11 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 		}
 		return (String) (map != null && map.containsKey(key) ? map.get(key) : key);
 	}
+	
+	public String getFormated(Object key, Object... values) {
+	    String msg = get(key);
+	    return MessageFormat.format(msg, values);
+	}	
 	
 	public String get(Object key, Locale locale) {
 		Map<String, String> map = locales.get(locale);
