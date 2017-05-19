@@ -61,29 +61,6 @@
 	        });
 		}
 		
-        function printSVG() {
-        	function popupAndPrint() {
-        		var svg = modeler.getBpmnInformation()['svg'];
-        		var printWindow = window.open('');
-        		printWindow.document.writeln(svg);
-        		printWindow.document.close();
-        		printWindow.print();
-        		printWindow.close();
-        	}
-        	setTimeout(popupAndPrint, 500);
-        }
-        
-        function exportarBpmn() {
-        	var bpmn = modeler.getBpmnInformation()['bpmn'];
-        	var element = document.createElement('a');
-        	element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(bpmn));
-        	element.setAttribute('download', '#{bpmnView.definicaoProcesso.fluxo.fluxo}.bpmn');
-        	element.style.display = 'none';
-        	document.body.appendChild(element);
-        	element.click();
-        	document.body.removeChild(element);
-        }
-        
         function updateBpmn() {
 			doUpdate(JSON.stringify(window.modeler.getBpmnInformation()));
 		}
