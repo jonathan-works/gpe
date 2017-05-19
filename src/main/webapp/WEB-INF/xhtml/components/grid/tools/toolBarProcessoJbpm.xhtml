@@ -32,7 +32,7 @@
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
     </a:commandLink>
 
-    <a:commandLink execute="@this" rendered="#{empty owner and showMovimentarToolBar}"
+    <a:commandLink execute="@this" rendered="#{empty owner and showMovimentarToolBar and authenticator.perfilTemplateAtualPossuiLocalizacao()}"
       target="#{idProcesso}popUpFluxo"
       render="@form"
       onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
@@ -43,8 +43,10 @@
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" />
     </a:commandLink>
 
+		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" title="#{infoxMessages['painel.movimentar.tooltipProblemaLocalizacao']}" 
+		rendered="#{empty owner and showMovimentarToolBar and not authenticator.perfilTemplateAtualPossuiLocalizacao()}" style="opacity: 0.4;"/>
     <a:commandLink execute="@this"
-      rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar}"
+      rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar and authenticator.perfilTemplateAtualPossuiLocalizacao()}"
       target="#{idProcesso}popUpFluxo"
       onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
       title="#{infoxMessages['painel.movimentarUnassigned.tooltip']}"
@@ -54,6 +56,9 @@
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/processAssigned.png')}" />
     </a:commandLink>
 
+	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/processAssigned.png')}" title="#{infoxMessages['painel.movimentar.tooltipProblemaLocalizacao']}" 
+	rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar and not authenticator.perfilTemplateAtualPossuiLocalizacao()}" style="opacity: 0.4;"/>
+	
     <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/role.gif')}"
       rendered="#{(owner ne authenticator.getUsuarioLogado().login and not empty owner and not authenticator.isUsuarioAtualResponsavel()) and showMovimentarToolBar}"
       title="Processo bloqueado pelo servidor #{row.nomeUsuarioTarefa}" />

@@ -26,7 +26,7 @@
         <s:div id="pageBody" styleClass="loginPageBody">
             <div class="corpoSuperior" />
             <div class="corpoInferior">
-                <h:outputText styleClass="versao" value="VERSÃO: #{gitRepository.describe} / #{gitRepository.buildTime}" />
+                <h:outputText styleClass="versao" value="VERSÃO:  #{gitRepository.describe} / #{gitRepository.buildTime} - #{gitRepository.branch}" />
             </div>
             <div id="seletorSkinLogin" class="seletorSkinsLogin">
                 <h:form style="display: inline-block;">
@@ -71,7 +71,7 @@
                             <div class="field-block">
                                 <div>
                                     <h:inputText id="username" value="#{credentials.username}" class="input-text-login">
-                                        <p:ajax event="blur" update="divCaptcha"/>
+                                        <p:ajax event="blur" update="divCaptcha" />
                                     </h:inputText>
                                 </div>
                                 <div>
@@ -81,7 +81,7 @@
                             <p:outputPanel id="divCaptcha">
 	                            <p:outputPanel rendered="#{loginView.mostrarCaptcha}" styleClass="field-block">
 	                                <div class="field">
-	                                    <p:captcha id="captcha" label="Captcha" language="pt_BR"
+	                                    <p:captcha id="captcha" label="Captcha" language="pt_BR" 
 	                                        validatorMessage="#{infoxMessages['captcha.incorreto']}"
 	                                        requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
 	                                    <p:messages for="captcha" severity="error" />
@@ -90,7 +90,7 @@
                             </p:outputPanel>
                         </div>
                         <p:outputPanel>
-                            <h:commandButton id="btnEntrar" value="#{infoxMessages['login.entrarBtn']}"
+                            <h:commandButton id="btnEntrar" value="#{infoxMessages['login.entrarBtn']}"  onclick="infox.showLoading();"
                                 styleClass="input-button-login input_button" action="#{loginView.login()}" />
                             <h:button id="btnTrocar" styleClass="input-button-login input_button"
                                 outcome="/alteracaoSenha.seam" value="#{infoxMessages['login.trocarSenhaBtn']}" />

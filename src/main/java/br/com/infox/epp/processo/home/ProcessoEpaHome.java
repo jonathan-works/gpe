@@ -19,6 +19,7 @@ import org.jboss.seam.faces.FacesMessages;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
@@ -46,6 +47,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.exception.ApplicationException;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
@@ -113,7 +115,13 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
 	public void iniciarTarefaProcesso() {
 		try {
-			processoManager.iniciarTask(getInstance(), getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
+			UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
+			if(usuarioPerfilAtual == null || usuarioPerfilAtual.getPerfilTemplate() == null || usuarioPerfilAtual.getPerfilTemplate().getLocalizacao() == null){
+				String errorLocalizacao = "Esse perfil não pode executar tarefas pois não possui localização dentro de uma estrutura.";
+				FacesMessages.instance().add(errorLocalizacao);
+				throw new BusinessException(errorLocalizacao);
+			}
+			processoManager.iniciarTask(getInstance(), getIdTaskInstance(), usuarioPerfilAtual);
 			documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 			carregarVariaveisDetalhe();
 		} catch (java.lang.NullPointerException e) {
