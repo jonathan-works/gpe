@@ -16,6 +16,7 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.Token;
+import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -94,7 +95,19 @@ public class ExecutarTarefaService extends PersistenceController {
                 return findNextTaskInstance(child);
             }
         } else if (node.getNodeType() == NodeType.ProcessState) {
-            return findNextTaskInstance(token.getSubProcessInstance().getRootToken());
+            ProcessState processState = (ProcessState) node;
+            if ( ParallelMultiInstanceActivityBehavior.class.equals(processState.getActivityBehaviorClass()) 
+                    || SequentialMultiInstanceActivityBehavior.class.equals(processState.getActivityBehaviorClass()) ) {
+                if ( token.hasActiveChildren() ) {
+                    for (Token child : token.getActiveChildren().values()) {
+                        return findNextTaskInstance(child.getSubProcessInstance().getRootToken());
+                    }
+                } else {
+                    return findNextTaskInstance(token.getParent());
+                }
+            } else {
+                return findNextTaskInstance(token.getSubProcessInstance().getRootToken());
+            }
         } else if (node.getNodeType() == NodeType.Join) {
             Token parent = token.getParent();
             if (parent.getNode().getNodeType() != NodeType.Fork) {
@@ -102,7 +115,7 @@ public class ExecutarTarefaService extends PersistenceController {
             }
         } else if ( node.getNodeType() == NodeType.EndState ) {
             Token parentToken = token.getProcessInstance().getSuperProcessToken();
-            if (parentToken != null && parentToken.getNode().getNodeType() != NodeType.ProcessState) {
+            if (parentToken != null) {
                 return findNextTaskInstance(parentToken);
             }
         }
