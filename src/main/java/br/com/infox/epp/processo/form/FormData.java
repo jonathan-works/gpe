@@ -33,7 +33,7 @@ public interface FormData {
     
     ExpressionResolverChain getExpressionResolver();
     
-    boolean validate();
+    boolean isInvalid();
     
     Node getNode();
     

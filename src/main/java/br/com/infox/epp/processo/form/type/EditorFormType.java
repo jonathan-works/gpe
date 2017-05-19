@@ -104,7 +104,7 @@ public class EditorFormType extends FileFormType {
     }
     
     @Override
-    public boolean validate(FormField formField, FormData formData) throws BusinessException {
+    public boolean isInvalid(FormField formField, FormData formData) throws BusinessException {
         if (formField.isRequired()) {
             ClassificacaoDocumento classificacao = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
             if (classificacao == null) {
@@ -123,7 +123,7 @@ public class EditorFormType extends FileFormType {
                 return true;
             }
         }
-        return super.validate(formField, formData);
+        return super.isInvalid(formField, formData);
     }
 
     private Documento createNewDocumento() {

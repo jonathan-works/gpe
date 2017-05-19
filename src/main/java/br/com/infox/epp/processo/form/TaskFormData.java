@@ -6,6 +6,4 @@ public interface TaskFormData extends FormData {
 
     TaskInstance getTaskInstance();
     
-    void setTaskInstance(TaskInstance taskInstance);
-
 }

@@ -5,31 +5,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.ws.Holder;
+
 import org.jbpm.context.def.VariableAccess;
 
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.type.FormTypes;
+import lombok.Getter;
 
 public abstract class AbstractFormData implements FormData {
     
+    protected Holder<Processo> processo;
+    @Getter
     protected String formKey;
-    protected Processo processo;
+    @Getter
     protected Map<String, FormType> formTypes = new HashMap<>();
+    @Getter
     protected List<FormField> formFields = new ArrayList<FormField>();
+    @Getter
     protected List<FormField> formFieldsReadOnly = new ArrayList<FormField>();
     
-    public AbstractFormData(String formKey, Processo processo) {
+    public AbstractFormData(String formKey, Holder<Processo> processo) {
         this.formKey = formKey;
         this.processo = processo;
     }
     
     protected abstract void createFormFields(List<VariableAccess> variableAccesses);
-    
 
     protected void createFormField(VariableAccess variableAccess) {
         String variableName = variableAccess.getVariableName();
-        String mappedName = variableAccess.getMappedName();
+        String mappedName = variableAccess.isWritable() ? variableAccess.getMappedName() : variableAccess.getVariableName();
         FormField formField = new FormField();
         FormType formType = createFormType(variableAccess.getType());
         formField.setType(formType);
@@ -43,7 +49,6 @@ public abstract class AbstractFormData implements FormData {
         } else {
             getFormFieldsReadOnly().add(formField);
         }
-            
     }
     
     protected FormType createFormType(String type) {
@@ -70,12 +75,12 @@ public abstract class AbstractFormData implements FormData {
     }
     
     @Override
-    public boolean validate() {
-        boolean validacao = false;
+    public boolean isInvalid() {
+        boolean valid = false;
         for (FormField formField : getFormFields()) {
-            validacao = validacao | formField.getType().validate(formField, this);
+            valid = valid | formField.getType().isInvalid(formField, this);
         }
-        return validacao;
+        return valid;
     }
     
     protected VariableAccess getTaskPage(List<VariableAccess> variableAccesses) {
@@ -87,38 +92,10 @@ public abstract class AbstractFormData implements FormData {
         }
         return null;
     }
-
-    public String getFormKey() {
-      return formKey;
-    }
-
-    public void setFormKey(String formKey) {
-      this.formKey = formKey;
-    }
-
-    public List<FormField> getFormFields() {
-      return formFields;
-    }
     
-    public List<FormField> getFormFieldsReadOnly() {
-        return formFieldsReadOnly;
-      }
-    
-    public void setFormFields(List<FormField> formFields) {
-      this.formFields = formFields;
-    }
-    
-    public Map<String, FormType> getFormTypes() {
-        return formTypes;
-    }
-
-    public void setFormTypes(Map<String, FormType> formTypes) {
-        this.formTypes = formTypes;
-    }
-
     @Override
     public Processo getProcesso() {
-        return processo;
+        return processo.value;
     }
-    
+
 }

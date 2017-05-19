@@ -49,13 +49,13 @@ public class UploadFormType extends FileFormType {
     }
     
     @Override
-    public boolean validate(FormField formField, FormData formData) throws BusinessException {
+    public boolean isInvalid(FormField formField, FormData formData) throws BusinessException {
         if(formField.isRequired() && formField.getValue() == null){
             FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(), new FacesMessage(
                     FacesMessage.SEVERITY_ERROR, "", InfoxMessages.getInstance().get("beanValidation.notNull")));
             return true;
         }
-        return super.validate(formField, formData);
+        return super.isInvalid(formField, formData);
     }
     
     public void processFileUpload(FileUploadEvent fileUploadEvent) {

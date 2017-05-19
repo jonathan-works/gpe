@@ -217,12 +217,14 @@ public class ProcessoAnaliseDocumentoService {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean isRespostaComunicacao(Processo processoAnalise){
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoAnalise.getIdJbpm());
-		return (Boolean)processInstance.getContextInstance().getVariable(VariaveisJbpmAnaliseDocumento.RESPOSTA_COMUNICACAO);
+		Boolean isRespostaComunicacao = (Boolean) processInstance.getContextInstance().getVariable(VariaveisJbpmAnaliseDocumento.RESPOSTA_COMUNICACAO);
+		return isRespostaComunicacao == null ? Boolean.FALSE : isRespostaComunicacao;
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean isPedidoProrrogacaoPrazo(Processo processoAnalise){
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoAnalise.getIdJbpm());
-		return (Boolean)processInstance.getContextInstance().getVariable(VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO);
+		Boolean isPedidoProrrogacaoPrazo = (Boolean) processInstance.getContextInstance().getVariable(VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO);
+		return isPedidoProrrogacaoPrazo == null ? Boolean.FALSE : isPedidoProrrogacaoPrazo;
 	}
 }

@@ -10,9 +10,14 @@ import javax.persistence.LockModeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.Type;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.epp.cdi.transaction.Transactional;
 
 public class Dao<T, I> extends PersistenceController implements Serializable {
 
@@ -27,6 +32,19 @@ public class Dao<T, I> extends PersistenceController implements Serializable {
 	public T findById(I id) {
 		return getEntityManager().find(entityClass, id);
 	}
+	
+	@Transactional
+	public T selectById(I id) {
+	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+	    CriteriaQuery<T> cq = cb.createQuery(entityClass);
+	    Root<T> from = cq.from(entityClass);
+	    cq.select(from);
+	    EntityType<T> entity = getEntityManager().getMetamodel().entity(entityClass);
+	    Type<?> idType = entity.getIdType();
+	    SingularAttribute<? super T, ?> idSingularAttribute = entity.getId(idType.getJavaType());
+	    cq.where(cb.equal(from.get(idSingularAttribute), cb.literal(id)));
+        return getSingleResult(getEntityManager().createQuery(cq));
+    }
 
 	public List<T> findAll() {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();

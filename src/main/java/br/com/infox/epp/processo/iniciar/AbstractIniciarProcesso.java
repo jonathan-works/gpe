@@ -21,7 +21,7 @@ public abstract class AbstractIniciarProcesso implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    protected static final String SCRIPT = "open('{contextPath}/Processo/movimentar.seam?idProcesso={idProcesso}&idTaskInstance={idTaskInstance}', '{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');";
+    protected static final String SCRIPT = "infox.openPopUp('executar{idTaskInstance}', '{contextPath}/Processo/Execucao/execucaoTarefa.seam?idTaskInstance={idTaskInstance}')";
     
     @Inject
     protected JsfUtil jsfUtil;
@@ -51,8 +51,7 @@ public abstract class AbstractIniciarProcesso implements Serializable {
                 if (canOpenTask) {
                     PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
                     String script = SCRIPT.replace("{contextPath}", pathResolver.getContextPath())
-                            .replace("{idTaskInstance}", String.valueOf(taskInstance.getId()))
-                            .replace("{idProcesso}", processo.getIdProcesso().toString());
+                            .replace("{idTaskInstance}", String.valueOf(taskInstance.getId()));
                     jsfUtil.execute(script);
                     taskInstanceManager.atribuirTarefa(taskInstance.getId());
                     break;

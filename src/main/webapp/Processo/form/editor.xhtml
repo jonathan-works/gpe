@@ -18,7 +18,6 @@
   	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
   	<ui:param name="modelosDocumento" value="#{formField.properties.modelosDocumento}"/>
   	
-  	
   	<h:message for="panelEditor#{varId}" style="font-weight: bold;" styleClass="property-error property-msg #{varId}ErrorClass" />
   	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.component}" styleClass="#{varId}DivClass">
 	    <fieldset>
@@ -50,7 +49,7 @@
                 render="@(.#{varId}EditorDiv)" 
                 execute="@this"
                 converterId="br.com.infox.jsf.converter.SelectItemConverter"
-                listener="#{controller.performModeloDocumento(formField, formData)}"
+                listener="#{formField.type.performModeloDocumento(formField, formData)}"
 	    		value="#{formField.properties.modeloDocumento}"
 	    		rendered="#{not readonly and not formField.value.hasAssinatura()}">
 	    	</i:selectOneMenu>
@@ -86,10 +85,9 @@
                 <p:blockUI block="#{varId}BlockPanel" blocked="#{empty formField.properties.classificacaoDocumento and not readonly}">
                     <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}"  />
                 </p:blockUI>
-                <p:outputPanel  id="#{varId}BlockPanel">
+                <p:outputPanel id="#{varId}BlockPanel" style="width: auto; heigth: auto;">
     	    	    <wi:editor id="#{varId}Decoration" value="#{formField.properties.conteudo}"
-    	    	    	required="false"
-    	    	        readonly="#{readonly or formField.value.hasAssinatura()}"/>
+    	    	    	required="false" readonly="#{readonly or formField.value.hasAssinatura()}"/>
                 </p:outputPanel>
 	    	        
 	    	</p:outputPanel>

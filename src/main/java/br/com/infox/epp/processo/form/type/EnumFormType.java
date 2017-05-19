@@ -89,7 +89,7 @@ public abstract class EnumFormType extends PrimitiveFormType {
         }
         
         @Override
-        public boolean validate(FormField formField, FormData formData) {
+        public boolean isInvalid(FormField formField, FormData formData) {
             String required = formField.getProperty("required", String.class);
             if ("true".equalsIgnoreCase(required) && 
                     (formField.getValue() == null  || ((String[])formField.getValue()).length == 0 )) {

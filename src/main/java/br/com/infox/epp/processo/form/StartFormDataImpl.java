@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.ws.Holder;
+
 import org.jboss.seam.core.Expressions;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
@@ -25,7 +27,7 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
     protected ProcessDefinition processDefinition;
     protected ExpressionResolverChain expressionResolver;
     
-    public StartFormDataImpl(Processo processo, ProcessDefinition processDefinition) {
+    public StartFormDataImpl(Holder<Processo> processo, ProcessDefinition processDefinition) {
         super("startForm", processo);
         this.processDefinition = processDefinition;
         this.expressionResolver = new ExpressionResolverChain(new SeamExpressionResolver());
@@ -95,7 +97,7 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
 
     @Override
     public Object getVariable(String name) {
-        VariavelInicioProcesso variavel = getVariavelService().getVariavel(processo, name);
+        VariavelInicioProcesso variavel = getVariavelService().getVariavel(getProcesso(), name);
         if (variavel != null) {
             if (ValueType.PARAMETER.getName().equals(variavel.getType())) {
                 String value = variavel.getValue();
@@ -116,7 +118,7 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
     
     @Override
     public void setVariable(String name, Object value) {
-        getVariavelService().setVariavel(processo, name, (TypedValue) value);
+        getVariavelService().setVariavel(getProcesso(), name, (TypedValue) value);
     }
     
     @Override
@@ -132,5 +134,5 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
     public Node getNode() {
         return getProcessDefinition().getStartState();
     }
-
+    
 }

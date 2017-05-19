@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.form;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.ws.Holder;
+
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -21,14 +23,14 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     protected static final String MAPPED_NAME_PROPERTY = "mapped-name";
     
     protected ExpressionResolverChain expressionResolver;
-    protected TaskInstance taskInstance;
+    protected Holder<TaskInstance> taskInstanceHolder;
     
-    public TaskFormDataImpl(Processo processo, TaskInstance taskInstance) {
+    public TaskFormDataImpl(Holder<Processo> processo, Holder<TaskInstance> taskInstanceHolder) {
         super("taskForm", processo);
-        this.taskInstance = taskInstance;
+        this.taskInstanceHolder = taskInstanceHolder;
         expressionResolver = ExpressionResolverChainBuilder.defaultExpressionResolverChain(getProcesso().getIdProcesso(), getTaskInstance());
         
-        List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();        
+        List<VariableAccess> variableAccesses = getTaskInstance().getTask().getTaskController().getVariableAccesses();        
         createFormFields(variableAccesses);
     }
 
@@ -49,14 +51,9 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     
     @Override
     public TaskInstance getTaskInstance() {
-        return taskInstance;
+        return taskInstanceHolder.value;
     }
     
-    @Override
-	public void setTaskInstance(TaskInstance taskInstance) {
-    	this.taskInstance = taskInstance;
-	}
-
     @Override
     public Object getVariable(String name) {
         return getTaskInstance().getVariable(name);
@@ -70,7 +67,7 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     
     @Override
     public void setVariable(String name, Object value) {
-    	getTaskInstance().setVariable(name, value);
+    	getTaskInstance().setVariableLocally(name, value);
     }
     
     @Override

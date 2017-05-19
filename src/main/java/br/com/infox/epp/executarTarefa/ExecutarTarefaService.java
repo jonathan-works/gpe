@@ -1,20 +1,21 @@
 package br.com.infox.epp.executarTarefa;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.TypedQuery;
+import javax.xml.ws.Holder;
 
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.jbpm.JbpmContext;
+import org.jbpm.activity.exe.ParallelMultiInstanceActivityBehavior;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.Token;
+import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.JbpmContextProducer;
@@ -23,13 +24,18 @@ import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.TaskFormData;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.hibernate.util.HibernateUtil;
+import br.com.infox.ibpm.task.dao.TaskInstanceSearch;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
@@ -42,35 +48,44 @@ public class ExecutarTarefaService extends PersistenceController {
     private SituacaoProcessoDAO situacaoProcessoDAO;
 	@Inject
     private UsuarioLoginManager usuarioLoginManager;
+	@Inject
+	private TaskInstanceSearch taskInstanceSearch;
 	
-	public TaskInstance salvarTarefa(TaskFormData formData, TaskInstance taskInstance) {
+	public void salvarTarefa(TaskFormData formData, Holder<TaskInstance> taskInstance) {
 		JbpmContext jbpmContext = JbpmContextProducer.getJbpmContext();
-		taskInstance = jbpmContext.getTaskInstanceForUpdate(taskInstance.getId());
-		formData.setTaskInstance(taskInstance);
+		taskInstance.value = jbpmContext.getTaskInstanceForUpdate(taskInstance.value.getId());
 		formData.update();
-		return taskInstance;
 	}
 	
-	public TaskInstance finalizarTarefa(Transition transition, TaskInstance taskInstance, TaskFormData formData){
-		taskInstance = getJbpmContext().getTaskInstanceForUpdate(taskInstance.getId());
-		formData.setTaskInstance(taskInstance);
+	public TaskInstance finalizarTarefa(Transition transition, Holder<TaskInstance> taskInstanceHolder, TaskFormData formData){
+	    taskInstanceHolder.value = getJbpmContext().getTaskInstanceForUpdate(taskInstanceHolder.value.getId());
 		formData.update();
-		if(transition.isConditionEnforced() && formData.validate()){
-	        return taskInstance;		        
+		if(transition.isConditionEnforced() && formData.isInvalid()) {
+	        return taskInstanceHolder.value;
 		}
-		taskInstance.end(transition);
-		atualizarBam(taskInstance);
-		
-		return findNextTaskInstance(taskInstance.getToken());
+		taskInstanceHolder.value.end(transition);
+		atualizarBam(taskInstanceHolder.value);
+		return findNextTaskInstance(taskInstanceHolder.value.getToken());
 	}
 
     private TaskInstance findNextTaskInstance(Token token) {
         Node node = token.getNode();
+        node = HibernateUtil.removeProxy(node);
         if (node.getNodeType() == NodeType.Task) {
-            TypedQuery<TaskInstance> query = getEntityManager().createNamedQuery("TaskMgmtSession.findTaskInstancesByTokenId", TaskInstance.class);
-            query.setParameter("tokenId", token.getId());
-            List<TaskInstance> list = query.getResultList();
-            return list.isEmpty() ? null : list.get(0);
+            TaskInstance newTaskInstance = taskInstanceSearch.findTaskInstanceByTokenId(token.getId());
+            if ( newTaskInstance == null ) {
+                TaskNode taskNode = (TaskNode) node;
+                if ( ParallelMultiInstanceActivityBehavior.class.equals(taskNode.getActivityBehaviorClass()) ) {
+                    if ( token.hasActiveChildren() ) {
+                        for (Token child : token.getActiveChildren().values()) {
+                            return findNextTaskInstance(child);
+                        }
+                    } else {
+                        return findNextTaskInstance(token.getParent());
+                    }
+                }
+            }
+            return newTaskInstance;
         } else if (node.getNodeType() == NodeType.Fork) {
             Map<String, Token> children = token.getChildren();
             for (Token child : children.values()) {
@@ -102,17 +117,18 @@ public class ExecutarTarefaService extends PersistenceController {
 	
 	public void gravarUpload(String name, TypedValue typedValue, TaskFormData formData){
         TaskInstance taskInstance = getJbpmContext().getTaskInstanceForUpdate(formData.getTaskInstance().getId());
-        formData.setTaskInstance(taskInstance);
         taskInstance.setVariable(name, typedValue.getType().convertToModelValue(typedValue.getValue()));
 	}
 
-	public boolean verificaPermissaoTarefa(TaskInstance taskInstance, TipoProcesso tipoProcesso){
-	    return situacaoProcessoDAO.canOpenTask(taskInstance.getId(), tipoProcesso, false);
+	public boolean verificaPermissaoTarefa(TaskInstance taskInstance, Processo processo){
+	    MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
+	    return situacaoProcessoDAO.canOpenTask(taskInstance.getId(), metadado == null ? null : metadado.<TipoProcesso>getValue(), false);
 	}
 	
-	public TaskInstance atribuirTarefa(TaskInstance taskInstance) {
-	    taskInstance = getJbpmContext().getTaskInstanceForUpdate(taskInstance.getId());
-	    getJbpmContext().getSession().buildLockRequest(LockOptions.READ).setLockMode(LockMode.PESSIMISTIC_FORCE_INCREMENT).lock(taskInstance);
+	public void atribuirTarefa(Holder<TaskInstance> taskInstanceHolder) {
+	    taskInstanceHolder.value = getJbpmContext().getTaskInstanceForUpdate(taskInstanceHolder.value.getId());
+	    getJbpmContext().getSession().buildLockRequest(LockOptions.READ).setLockMode(LockMode.PESSIMISTIC_FORCE_INCREMENT).lock(taskInstanceHolder.value);
+	    TaskInstance taskInstance = taskInstanceHolder.value;
 	    String currentActorId = Authenticator.getUsuarioLogado().getLogin();
         if (taskInstance.getStart() == null) {
             taskInstance.start(currentActorId);
@@ -127,7 +143,6 @@ public class ExecutarTarefaService extends PersistenceController {
         if (getEntityManager().find(UsuarioTaskInstance.class, taskInstance.getId()) == null) {
             getEntityManager().persist(new UsuarioTaskInstance(taskInstance.getId(), Authenticator.getUsuarioPerfilAtual()));
         }
-        return taskInstance;
 	}
 	
 	private JbpmContext getJbpmContext() {

@@ -18,7 +18,7 @@ public interface FormType {
     
     void performUpdate(FormField formField, FormData formData);
     
-    boolean validate(FormField formField, FormData formData);
+    boolean isInvalid(FormField formField, FormData formData);
     
     boolean isPersistable();
     

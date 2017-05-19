@@ -107,7 +107,7 @@ public abstract class FileFormType implements FormType {
     }
     
     @Override
-    public boolean validate(FormField formField, FormData formData) throws BusinessException {
+    public boolean isInvalid(FormField formField, FormData formData) throws BusinessException {
         if (formField.isRequired()) {
 
             Documento documento = formField.getTypedValue(Documento.class);

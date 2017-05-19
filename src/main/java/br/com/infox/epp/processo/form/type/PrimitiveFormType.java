@@ -65,7 +65,7 @@ public abstract class PrimitiveFormType implements FormType {
     }
 
     @Override
-    public boolean validate(FormField formField, FormData formData) {
+    public boolean isInvalid(FormField formField, FormData formData) {
         if (formField.isRequired() && formField.getValue() == null) {
             FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(), new FacesMessage(
                     FacesMessage.SEVERITY_ERROR, "", InfoxMessages.getInstance().get("beanValidation.notNull")));
@@ -251,8 +251,8 @@ public abstract class PrimitiveFormType implements FormType {
         }
         
         @Override
-        public boolean validate(FormField formField, FormData formData) {
-            return super.validate(formField, formData) || validateMaxMin(formField);
+        public boolean isInvalid(FormField formField, FormData formData) {
+            return super.isInvalid(formField, formData) || validateMaxMin(formField);
         }
 
         private boolean validateMaxMin(FormField formField) {

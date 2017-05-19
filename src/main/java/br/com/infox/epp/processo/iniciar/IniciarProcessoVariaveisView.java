@@ -3,7 +3,9 @@ package br.com.infox.epp.processo.iniciar;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.xml.ws.Holder;
 
 import org.jbpm.graph.def.ProcessDefinition;
 
@@ -14,6 +16,8 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.StartFormData;
 import br.com.infox.epp.processo.form.StartFormDataImpl;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.jsf.util.JsfProducer.FlashParam;
+import br.com.infox.jsf.util.JsfProducer.ParamValue;
 
 @Named
 @ViewScoped
@@ -21,17 +25,20 @@ public class IniciarProcessoVariaveisView extends AbstractIniciarProcesso {
 
     private static final long serialVersionUID = 1L;
 
-    private Processo processo;
+    private Holder<Processo> processo;
     private ProcessDefinition processDefinition;
     private StartFormData formData;
     
+    @Inject @FlashParam 
+    private ParamValue<Processo> paramProcesso;
+    
     @PostConstruct
     private void init() {
-        processo = jsfUtil.getFlashParam("processo", Processo.class);
-        if (processo == null) {
+        if (paramProcesso.isNull()) {
             jsfUtil.redirect("/Processo/listView.seam");
         } else {
-            processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
+            processo = new Holder<>(paramProcesso.getValue());
+            processDefinition = JbpmUtil.instance().findLatestProcessDefinition(getProcesso().getNaturezaCategoriaFluxo().getFluxo().getFluxo());
             formData = new StartFormDataImpl(processo, processDefinition);
         }
     }
@@ -44,10 +51,12 @@ public class IniciarProcessoVariaveisView extends AbstractIniciarProcesso {
     @ExceptionHandled(createLogErro = true)
     public String iniciar() {
         formData.update();
-        formData.validate();
-        Map<String, Object> variables = formData.getVariables();
-        iniciarProcesso(processo, variables);
-        return "/Painel/list.seam?faces-redirect=true";
+        if ( !formData.isInvalid() ) {
+            Map<String, Object> variables = formData.getVariables();
+            iniciarProcesso(getProcesso(), variables);
+            return "/Painel/list.seam";
+        }
+        return null;
     }
     
     public StartFormData getFormData() {
@@ -55,11 +64,7 @@ public class IniciarProcessoVariaveisView extends AbstractIniciarProcesso {
     }
 
     public Processo getProcesso() {
-        return processo;
-    }
-
-    public void setProcesso(Processo processo) {
-        this.processo = processo;
+        return processo.value;
     }
 
     public ProcessDefinition getProcessDefinition() {

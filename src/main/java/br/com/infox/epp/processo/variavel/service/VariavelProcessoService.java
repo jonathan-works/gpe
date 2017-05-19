@@ -44,6 +44,7 @@ import br.com.infox.seam.exception.BusinessException;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class VariavelProcessoService extends PersistenceController {
 
+    @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
     @Inject
     private ProcessoManager processoManager;
