@@ -28,5 +28,11 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     protected Processo getProcesso() {
         return processoHolder.value;
     }
+    
+    public Object getVariable(String variableName){
+    	if(variableName != null && !variableName.trim().isEmpty())
+    		getTaskInstance().getContextInstance().getVariable(variableName);
+    	return null;
+    }
 
 }
