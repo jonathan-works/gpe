@@ -21,11 +21,17 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     }
     
     protected void initialize() {
+    
+    }
+    
+    @Override
+    public void preFinalizarTarefa(Transition transition, TaskFormData formData) {
+    
     }
     
     @Override
     public void finalizarTarefa(Transition transition, TaskFormData formData) {
-        // TODO Auto-generated method stub
+        
     }
     
     protected TaskInstance getTaskInstance() {
@@ -40,6 +46,11 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     	if(variableName != null && !variableName.trim().isEmpty())
     		getTaskInstance().getContextInstance().getVariable(variableName);
     	return null;
+    }
+    
+    @Override
+    public boolean canCompleteTask() {
+        return true;
     }
 
 }

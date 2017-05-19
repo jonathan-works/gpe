@@ -12,6 +12,10 @@ interface TaskpageController {
     
     public void initialize(Holder<TaskInstance> taskInstanceHolder, Holder<Processo> processo);
     
+    public void preFinalizarTarefa(Transition transition, TaskFormData formData);
+    
     public void finalizarTarefa(Transition transition, TaskFormData formData);
+    
+    public boolean canCompleteTask();
 
 }
