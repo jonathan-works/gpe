@@ -110,7 +110,7 @@ public class SizeConverter {
 		
 		private String getSufixo(int potencia) {
 			switch(potencia) {
-				case 0: return "BT";
+				case 0: return "B";
 				case 1: return "KB";
 				case 2: return "MB";
 				case 3: return "GB";
