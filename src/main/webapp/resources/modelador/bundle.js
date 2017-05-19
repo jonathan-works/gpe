@@ -24823,11 +24823,6 @@ InfoxContextPadProvider.prototype.getContextPadEntries = function (element) {
         if (bo.$parent.lanes.length == 1) {
             delete entries['delete'];
         }
-        Object.keys(entries).forEach(function (entryKey) {
-            if (entryKey !== 'delete') {
-                delete entries[entryKey];
-            }
-        });
     } else if (is(bo, 'bpmn:EndEvent')) {
         delete entries.connect;
     }
