@@ -50,7 +50,7 @@
 	            />
             <p:blockUI block="panelGrupo" widgetVar="blockUiPanelGrupo"></p:blockUI>
 			<h:panelGroup rendered="#{not empty swimlaneFitter.currentSwimlane.perfisPermitidosGrupo}">
-				<i:selectOneMenu id="perfilGrupo" value="#{swimlaneFitter.currentSwimlane.grupo.perfil}"
+				<wi:selectOneMenu id="perfilGrupo" value="#{swimlaneFitter.currentSwimlane.grupo.perfil}"
 					label="#{infoxMessages['processdef.swimlane.perfil']}"
 					converterId="org.jboss.seam.ui.EntityConverter" var="item"
 					itemLabel="#{item.descricao}" required="true" selectStyle="width:200px"
