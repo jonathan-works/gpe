@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -49,8 +48,8 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.components.AbstractTaskPageController;
 import br.com.infox.ibpm.variable.components.Taskpage;
-import br.com.infox.ibpm.variable.components.TaskpageController;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -59,9 +58,8 @@ import br.com.infox.seam.exception.BusinessException;
 @Taskpage(id="responderComunicacao", xhtmlPath="/WEB-INF/taskpages/responderComunicacao.xhtml", name="Responder Comunicação")
 @Named
 @Stateful
-@LocalBean
 @ViewScoped
-public class RespostaComunicacaoAction implements Serializable, TaskpageController {
+public class RespostaComunicacaoAction extends AbstractTaskPageController implements Serializable {
 	
 	public static final String NAME = "respostaComunicacaoAction";
 	private static final long serialVersionUID = 1L;
@@ -121,7 +119,6 @@ public class RespostaComunicacaoAction implements Serializable, TaskpageControll
 	private boolean possivelMostrarBotaoEnvio;
 	private boolean possivelLiberarResponder;
 	
-	
 	@PostConstruct
 	public void init() {
 		Processo processoComunicacao = JbpmUtil.getProcesso();
@@ -129,7 +126,7 @@ public class RespostaComunicacaoAction implements Serializable, TaskpageControll
 		    init(processoComunicacao);
 		}
 	}
-
+	
     public void init(Processo processoComunicacao) {
         this.processoComunicacao = processoComunicacao;
         respostaComunicacaoList.setProcesso(processoComunicacao);

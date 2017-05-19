@@ -15,6 +15,8 @@ public interface FormData {
     
     boolean isTaskPage();
     
+    FormField getTaskPage();
+    
     Processo getProcesso();
 
     List<FormField> getFormFields();

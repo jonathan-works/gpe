@@ -71,8 +71,7 @@ public class ExecutarTarefaService extends PersistenceController {
 	}
 
     private TaskInstance findNextTaskInstance(Token token) {
-        Node node = token.getNode();
-        node = HibernateUtil.removeProxy(node);
+        Node node = HibernateUtil.removeProxy(token.getNode());
         if (node.getNodeType() == NodeType.Task) {
             TaskInstance newTaskInstance = taskInstanceSearch.findTaskInstanceByTokenId(token.getId());
             if ( newTaskInstance == null ) {
@@ -89,7 +88,7 @@ public class ExecutarTarefaService extends PersistenceController {
                 }
             }
             return newTaskInstance;
-        } else if (node.getNodeType() == NodeType.Fork) {
+        } else if ( node.getNodeType() == NodeType.Fork ) {
             Map<String, Token> children = token.getChildren();
             for (Token child : children.values()) {
                 return findNextTaskInstance(child);
@@ -108,7 +107,7 @@ public class ExecutarTarefaService extends PersistenceController {
             } else {
                 return findNextTaskInstance(token.getSubProcessInstance().getRootToken());
             }
-        } else if (node.getNodeType() == NodeType.Join) {
+        } else if ( node.getNodeType() == NodeType.Join ) {
             Token parent = token.getParent();
             if (parent.getNode().getNodeType() != NodeType.Fork) {
                 return findNextTaskInstance(parent);

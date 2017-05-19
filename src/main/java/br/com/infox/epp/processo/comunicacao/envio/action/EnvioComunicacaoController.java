@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.OptimisticLockException;
+import javax.xml.ws.Holder;
 
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.TaskInstance;
@@ -55,14 +55,18 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.components.AbstractTaskPageController;
 import br.com.infox.ibpm.variable.components.ParameterDefinition.ParameterType;
 import br.com.infox.ibpm.variable.components.ParameterVariable;
 import br.com.infox.ibpm.variable.components.Taskpage;
+import br.com.infox.jsf.util.JsfProducer.ParamValue;
+import br.com.infox.jsf.util.JsfProducer.RequestParam;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -83,7 +87,7 @@ import br.com.infox.seam.exception.BusinessException;
 		}
 )
 @ViewScoped
-public class EnvioComunicacaoController implements Serializable {
+public class EnvioComunicacaoController  extends AbstractTaskPageController implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
@@ -127,6 +131,11 @@ public class EnvioComunicacaoController implements Serializable {
 	@Inject
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 	
+	@Inject @RequestParam
+	protected ParamValue<Long> jbpmProcessId;
+	@Inject @RequestParam
+	protected ParamValue<Long> idModeloComunicacao;
+	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	private Localizacao localizacaoRaizComunicacao;
 	private Localizacao localizacaoRaizAssinaturaComunicacao;
@@ -144,33 +153,39 @@ public class EnvioComunicacaoController implements Serializable {
 	private Boolean expedida;
 	private Boolean comunicacaoSuficientementeAssinada;
 	private DestinatarioModeloComunicacao destinatario;
-	private boolean inTask = false;
+	protected boolean inTask = false;
 	private boolean minuta;
-	private String idModeloComunicacaoVariableName;
+	protected String idModeloComunicacaoVariableName;
 	private boolean isNew = true;
 	private boolean existeUsuarioLocalizacaoAssinatura = true;
 	private boolean existeParametroTipoComunicacao = false;
 	
 	@PostConstruct
 	public void init() {
-		String idJbpm = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("jbpmProcessId");
-		String idModelo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idModeloComunicacao");
-		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
-		if (idJbpm != null) { // Nova comunicação fora da aba de saída
-			processInstanceId = Long.valueOf(idJbpm);
-		} else if (idModelo == null) { // Nova comunicação dentro da aba de saída
-			processInstanceId = Long.valueOf(JbpmUtil.getProcesso().getIdJbpm());
-			inTask = taskInstance != null;
-		}
-		if (taskInstance != null) {
-		    idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
-		}
-		initModelo(idModelo == null ? null : Long.valueOf(idModelo));
-		initParametros();
-		clear();
+        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = getTaskInstance();
+        if ( !jbpmProcessId.isNull() ) { // Nova comunicação fora da aba de saída
+            processInstanceId = jbpmProcessId.getValue();
+        } else if ( idModeloComunicacao.isNull() ) { // Nova comunicação dentro da aba de saída
+            processInstanceId = Long.valueOf(getProcesso().getIdJbpm());
+            inTask = taskInstance != null;
+        }
+        if (taskInstance != null) {
+            idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
+        }
+        initModelo(idModeloComunicacao.getValue());
+        initParametros();
+        clear();
 	}
+	
+	protected org.jbpm.taskmgmt.exe.TaskInstance getTaskInstance() {
+	    return super.getTaskInstance() == null ? TaskInstance.instance() : super.getTaskInstance();
+	}
+	
+	protected Processo getProcesso() {
+        return super.getProcesso() == null ? JbpmUtil.getProcesso() : super.getProcesso();
+    }
 
-    private void initParametros() {
+    protected void initParametros() {
         if (inTask) {
             String tipoComunicacaoCodigo = (String) TaskInstance.instance().getVariable(CODIGO_TIPO_COMUNICACAO);
             if (!Strings.isNullOrEmpty(tipoComunicacaoCodigo)) {
@@ -259,8 +274,8 @@ public class EnvioComunicacaoController implements Serializable {
         }
 	}
 
-	private void initModelo(Long idModelo) {
-	    org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
+	protected void initModelo(Long idModelo) {
+	    org.jbpm.taskmgmt.exe.TaskInstance taskInstance = getTaskInstance();
 		if (idModelo == null && taskInstance != null) { //Comunicação na aba de saída 
 			ContextInstance context = taskInstance.getContextInstance();
 			Token taskToken = taskInstance.getToken();
@@ -331,7 +346,7 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 
-	private void clear() {
+	protected void clear() {
 		destinatario = null;
 		initLocalizacaoRaiz();
 		initDestinatarioComunicacaoAction();
@@ -339,7 +354,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 
 	private void setIdModeloVariable(Long id) {
-		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
+		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = getTaskInstance();
 		if (taskInstance != null) {
 			ContextInstance context = taskInstance.getContextInstance();
 			Token taskToken = taskInstance.getToken();
@@ -468,7 +483,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 	
     private ModeloComunicacao getModeloEmElaboracao() {
-        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
+        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = getTaskInstance();
         if (taskInstance != null) {
             ContextInstance context = taskInstance.getContextInstance();
             return (ModeloComunicacao) context.getVariable(ComunicacaoService.COMUNICACAO_EM_ELABORACAO);
@@ -649,4 +664,5 @@ public class EnvioComunicacaoController implements Serializable {
             FacesMessages.instance().add("É necessário assinar a comunicação para continuar");
         }
     }
+
 }

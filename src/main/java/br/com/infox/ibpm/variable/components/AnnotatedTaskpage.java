@@ -8,6 +8,7 @@ import br.com.infox.core.util.StringUtil;
 public class AnnotatedTaskpage implements TaskpageDefinition {
 	
 	private Taskpage taskpage;
+	private Class<? extends AbstractTaskPageController> controllerClass;
 	
 	public AnnotatedTaskpage(Taskpage taskpage) {
 		this.taskpage = taskpage;
@@ -46,5 +47,15 @@ public class AnnotatedTaskpage implements TaskpageDefinition {
 	public boolean isDisabled() {
 		return taskpage.disabled();
 	}
+	
+	@Override
+	public void setController(Class<? extends AbstractTaskPageController> controllerClass) {
+	    this.controllerClass = controllerClass;
+	}
+
+	@Override
+    public Class<? extends AbstractTaskPageController> getControllerClass() {
+        return controllerClass;
+    }
 
 }

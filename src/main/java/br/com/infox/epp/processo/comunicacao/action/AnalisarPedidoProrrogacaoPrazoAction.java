@@ -25,15 +25,16 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.components.AbstractTaskPageController;
 import br.com.infox.ibpm.variable.components.Taskpage;
-import br.com.infox.ibpm.variable.components.TaskpageController;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 @Taskpage(id="analisarPedidoProrrogacaoPrazo", xhtmlPath="/WEB-INF/taskpages/analisarPedidoProrrogacaoPrazo.xhtml", name="Analisar pedido de prorrogação de Prazo")
 @Named(AnalisarPedidoProrrogacaoPrazoAction.NAME)
 @ViewScoped
-public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable, TaskpageController {
+public class AnalisarPedidoProrrogacaoPrazoAction extends AbstractTaskPageController implements Serializable {
+    
 	public static final String NAME = "analisarPedidoProrrogacaoPrazoAction";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(AnalisarPedidoProrrogacaoPrazoAction.class);
