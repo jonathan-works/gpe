@@ -48,6 +48,13 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     	return null;
     }
     
+    public Object setVariable(String variableName, Object value){
+    	if(variableName != null && !variableName.trim().isEmpty())
+    		getTaskInstance().getContextInstance().setVariable(variableName,value);
+    	return null;
+    }
+    
+    
     @Override
     public boolean canCompleteTask() {
         return true;
