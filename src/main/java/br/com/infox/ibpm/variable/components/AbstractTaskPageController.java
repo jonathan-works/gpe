@@ -3,6 +3,7 @@ package br.com.infox.ibpm.variable.components;
 import javax.xml.ws.Holder;
 
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.util.StringUtil;
@@ -34,11 +35,11 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     }
     
     protected TaskInstance getTaskInstance() {
-        return taskInstanceHolder.value;
+        return taskInstanceHolder == null ? null : taskInstanceHolder.value;
     }
     
     protected Processo getProcesso() {
-        return processoHolder.value;
+        return processoHolder == null ? null : processoHolder.value;
     }
     
     public Object getVariable(String variableName){
@@ -59,9 +60,20 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     	}
     }
     
+    public void setVariable(String variableName, Object value, Token token){
+        if( !StringUtil.isEmpty(variableName) ) {
+            getTaskInstance().getContextInstance().setVariable(variableName, value, token);
+        }
+    }
+    
     @Override
     public boolean canCompleteTask() {
         return true;
+    }
+    
+    @Override
+    public String getIdFormButtons() {
+        return "idFormButtons";
     }
 
 }

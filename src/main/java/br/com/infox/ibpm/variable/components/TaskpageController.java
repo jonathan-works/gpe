@@ -8,14 +8,16 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.TaskFormData;
 
-interface TaskpageController {
+public interface TaskpageController {
     
-    public void initialize(Holder<TaskInstance> taskInstanceHolder, Holder<Processo> processo);
+    void initialize(Holder<TaskInstance> taskInstanceHolder, Holder<Processo> processo);
     
-    public void preFinalizarTarefa(Transition transition, TaskFormData formData);
+    void preFinalizarTarefa(Transition transition, TaskFormData formData);
     
-    public void finalizarTarefa(Transition transition, TaskFormData formData);
+    void finalizarTarefa(Transition transition, TaskFormData formData);
     
-    public boolean canCompleteTask();
+    boolean canCompleteTask();
+    
+    String getIdFormButtons();
 
 }

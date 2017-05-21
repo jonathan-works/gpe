@@ -39,7 +39,7 @@ import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.task.dao.TaskInstanceSearch;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
-import br.com.infox.ibpm.variable.components.AbstractTaskPageController;
+import br.com.infox.ibpm.variable.components.TaskpageController;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Stateless
@@ -60,7 +60,7 @@ public class ExecutarTarefaService extends PersistenceController {
 		formData.update();
 	}
 	
-	public TaskInstance finalizarTarefa(AbstractTaskPageController taskpageController, Transition transition, Holder<TaskInstance> taskInstanceHolder, TaskFormData formData){
+	public TaskInstance finalizarTarefa(TaskpageController taskpageController, Transition transition, Holder<TaskInstance> taskInstanceHolder, TaskFormData formData){
 	    taskInstanceHolder.value = getJbpmContext().getTaskInstanceForUpdate(taskInstanceHolder.value.getId());
 		if ( taskpageController == null ) {
 		    formData.update();

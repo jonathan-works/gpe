@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.OptimisticLockException;
 
@@ -70,6 +71,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
+@Named
 @Taskpage(
 		id="enviarComunicacao",
 		xhtmlPath="/WEB-INF/taskpages/enviarComunicacao.xhtml",
@@ -186,7 +188,7 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
 
     protected void initParametros() {
         if (inTask) {
-            String tipoComunicacaoCodigo = (String) getTaskInstance().getVariable(CODIGO_TIPO_COMUNICACAO);
+            String tipoComunicacaoCodigo = getVariable(CODIGO_TIPO_COMUNICACAO, String.class);
             if (!Strings.isNullOrEmpty(tipoComunicacaoCodigo)) {
                 TipoComunicacao tipoComunicacao = tipoComunicacaoSearch.getTiposComunicacaoAtivosByCodigo(tipoComunicacaoCodigo, TIPO);
                 if (tipoComunicacao == null) {
@@ -353,13 +355,10 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
 	}
 
 	private void setIdModeloVariable(Long id) {
-		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = getTaskInstance();
-		if (taskInstance != null) {
-			ContextInstance context = taskInstance.getContextInstance();
-			Token taskToken = taskInstance.getToken();
-			context.setVariable(idModeloComunicacaoVariableName, id, taskToken);
+		if (getTaskInstance() != null) {
+			setVariable(idModeloComunicacaoVariableName, id, getTaskInstance().getToken());
 			if (id != null) {
-			    context.setVariable(ComunicacaoService.COMUNICACAO_EM_ELABORACAO, getModeloComunicacao());
+			    setVariable(ComunicacaoService.COMUNICACAO_EM_ELABORACAO, getModeloComunicacao());
 			}
 		}
 	}
@@ -663,5 +662,8 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
             FacesMessages.instance().add("É necessário assinar a comunicação para continuar");
         }
     }
-
+    
+    public boolean isShowFormButtonsEnd() {
+        return true;
+    }
 }
