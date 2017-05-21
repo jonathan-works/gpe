@@ -5,6 +5,7 @@ import javax.xml.ws.Holder;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.TaskFormData;
 
@@ -21,12 +22,10 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     }
     
     protected void initialize() {
-    
     }
     
     @Override
     public void preFinalizarTarefa(Transition transition, TaskFormData formData) {
-    
     }
     
     @Override
@@ -43,17 +42,22 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     }
     
     public Object getVariable(String variableName){
-    	if(variableName != null && !variableName.trim().isEmpty())
-    		getTaskInstance().getContextInstance().getVariable(variableName);
+    	if( !StringUtil.isEmpty(variableName) ) {
+    	    return getTaskInstance().getContextInstance().getVariable(variableName);
+    	}
     	return null;
     }
     
-    public Object setVariable(String variableName, Object value){
-    	if(variableName != null && !variableName.trim().isEmpty())
-    		getTaskInstance().getContextInstance().setVariable(variableName,value);
-    	return null;
+    public <T> T getVariable(String variableName, Class<T> returnType){
+        Object variable = getTaskInstance().getContextInstance().getVariable(variableName);
+        return returnType.cast(variable);
     }
     
+    public void setVariable(String variableName, Object value){
+    	if( !StringUtil.isEmpty(variableName) ) {
+    	    getTaskInstance().getContextInstance().setVariable(variableName,value);
+    	}
+    }
     
     @Override
     public boolean canCompleteTask() {

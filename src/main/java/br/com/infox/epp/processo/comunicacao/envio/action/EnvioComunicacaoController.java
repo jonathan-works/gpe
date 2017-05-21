@@ -637,12 +637,12 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
         return exibirTransicoes && getModeloComunicacao().getFinalizada();
     }
 
-    private boolean podeAssinar() {
+    protected boolean podeAssinar() {
         return !getModeloComunicacao().isDocumentoBinario() && isUsuarioLogadoNaLocalizacaoPerfilResponsavel() && 
                 classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(Authenticator.getPapelAtual(), modeloComunicacao.getClassificacaoComunicacao());
     }
     
-    private boolean assinouComunicacao() {
+    protected boolean assinouComunicacao() {
         for (DestinatarioModeloComunicacao destinatario : getModeloComunicacao().getDestinatarios()) {
             if (!assinaturaDocumentoService.isDocumentoAssinado(destinatario.getDocumentoComunicacao().getDocumentoBin(),Authenticator.getPapelAtual(), 
                     Authenticator.getUsuarioLogado())) {
