@@ -14,11 +14,13 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     
     private Holder<TaskInstance> taskInstanceHolder;
     private Holder<Processo> processoHolder;
+    private TaskpageDefinition taskpageDefinition;
     
     @Override
-    public void initialize(Holder<TaskInstance> taskInstanceHolder, Holder<Processo> processo) {
+    public void initialize(Holder<TaskInstance> taskInstanceHolder, Holder<Processo> processo, TaskpageDefinition taskpageDefinition) {
        this.taskInstanceHolder = taskInstanceHolder;
        this.processoHolder = processo;
+       this.taskpageDefinition = taskpageDefinition;
        initialize();
     }
     
@@ -40,6 +42,10 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     
     protected Processo getProcesso() {
         return processoHolder == null ? null : processoHolder.value;
+    }
+    
+    public TaskpageDefinition getTaskpageDefinition() {
+        return taskpageDefinition;
     }
     
     public Object getVariable(String variableName){
@@ -75,5 +81,6 @@ public abstract class AbstractTaskPageController implements TaskpageController {
     public String getIdFormButtons() {
         return "idFormButtons";
     }
-
+    
+    
 }

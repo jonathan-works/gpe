@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -23,6 +22,7 @@ import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -57,11 +57,9 @@ import br.com.infox.seam.exception.BusinessException;
 
 @Taskpage(id="responderComunicacao", xhtmlPath="/WEB-INF/taskpages/responderComunicacao.xhtml", name="Responder Comunicação")
 @Named
-@Stateful
 @ViewScoped
 public class RespostaComunicacaoAction extends AbstractTaskPageController implements Serializable {
 	
-	public static final String NAME = "respostaComunicacaoAction";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(RespostaComunicacaoAction.class);
 	
@@ -120,11 +118,16 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
 	private boolean possivelLiberarResponder;
 	
 	@PostConstruct
-	public void init() {
-		Processo processoComunicacao = JbpmUtil.getProcesso();
+	protected void init() {
+		Processo processoComunicacao = getProcesso();
 		if (processoComunicacao != null) {
 		    init(processoComunicacao);
 		}
+	}
+	
+	@Override
+	protected Processo getProcesso() {
+	    return super.getProcesso() == null ? JbpmUtil.getProcesso() : super.getProcesso();
 	}
 	
     public void init(Processo processoComunicacao) {
@@ -246,6 +249,7 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
         return possivelLiberarResponder;
     } 
 	
+	@Transactional
 	public void gravarResposta() {
 		if (Strings.isNullOrEmpty(documentoEditor.getDocumento().getDocumentoBin().getModeloDocumento())) {
 			FacesMessages.instance().add("Insira texto no editor");
@@ -283,6 +287,7 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
 	}
 	
 	//TODO ver como colocar esse método no service
+	@Transactional
 	public void gravarAnexoResposta() {
 		try {
 			documentoUploader.persist();
@@ -309,6 +314,7 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
 	}
 	
 	//TODO ver como colocar esse método no service
+	@Transactional
 	public void enviarRespostaComunicacao(){
 		List<Documento> documentosRespostaComunicacao = getDocumentoRespostaList();
 		try {
@@ -331,6 +337,7 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
 	}
 	
 	//TODO ver como colocar esse método no service
+	@Transactional
 	public void removerDocumento(Documento documento) {
 		boolean isDocumentoEdicao = documentoEditor.getDocumento() != null && documentoEditor.getDocumento().equals(documento);
 		try {
@@ -501,5 +508,5 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
     public void setPessoaResponder(PessoaFisica pessoaResponder) {
         this.pessoaResponder = pessoaResponder;
     }
-	
+    
 }

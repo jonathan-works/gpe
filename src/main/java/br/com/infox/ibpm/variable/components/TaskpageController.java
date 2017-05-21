@@ -10,7 +10,7 @@ import br.com.infox.epp.processo.form.TaskFormData;
 
 public interface TaskpageController {
     
-    void initialize(Holder<TaskInstance> taskInstanceHolder, Holder<Processo> processo);
+    void initialize(Holder<TaskInstance> taskInstanceHolder, Holder<Processo> processo, TaskpageDefinition taskpageDefinition);
     
     void preFinalizarTarefa(Transition transition, TaskFormData formData);
     
@@ -19,5 +19,5 @@ public interface TaskpageController {
     boolean canCompleteTask();
     
     String getIdFormButtons();
-
+    
 }
