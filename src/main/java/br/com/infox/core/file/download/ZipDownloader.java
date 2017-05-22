@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -143,6 +145,54 @@ public class ZipDownloader {
 		zos.closeEntry();
 	}
 	
+	protected static class DocumentosComparator implements Comparator<Documento> {
+
+		private String numero;
+		
+		private Integer nullFirstCompare(Object o1, Object o2) {
+			if(o1 == null && o2 == null) {
+				return 0;
+			}
+			if(o1 == null) {
+				return -1;
+			}
+			if(o2 == null) {
+				return 1;
+			}
+			return null;
+		}
+		
+		private <T extends Comparable<T>> int nullFirstSafeCompare(T o1, T o2) {
+			Integer result = nullFirstCompare(o1, o2);
+			if(result != null) {
+				return result;
+			}
+			return o1.compareTo(o2);
+		}
+		
+		@Override
+		public int compare(Documento o1, Documento o2) {
+			Integer result = nullFirstCompare(o1, o2);
+			if(result != null) {
+				return result;
+			}
+			
+			result = nullFirstSafeCompare(o1.getNumeroDocumento(), o2.getNumeroDocumento());
+			if(result != 0) {
+				return result;
+			}
+			return nullFirstSafeCompare(o1.getDescricao(), o2.getDescricao());
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((numero == null) ? 0 : numero.hashCode());
+			return result;
+		}
+	}
+	
 	protected void exportDocumentos(List<Integer> idsDocumentos, OutputStream outputStream, ZipOutputStream zos) throws IOException {
 		Set<String> nomesUtilizados = new HashSet<>();
 		
@@ -153,7 +203,15 @@ public class ZipDownloader {
 		doc.fetch(Documento_.documentoBin);
 		cq.where(doc.get(Documento_.id).in(idsDocumentos));
 		
+		List<Documento> documentos = new ArrayList<>();
 		for(Integer idDocumento : idsDocumentos) {
+			Documento documento = documentoManager.find(idDocumento);
+			documentos.add(documento);
+		}
+		documentos.sort(new DocumentosComparator());
+		
+		for(Documento documento: documentos) {
+			Integer idDocumento = documento.getId();
 			String nomeArquivo = getNomeArquivo(idDocumento, nomesUtilizados);
 			exportDocumento(idDocumento, outputStream, zos, nomeArquivo);
 			nomesUtilizados.add(nomeArquivo);
