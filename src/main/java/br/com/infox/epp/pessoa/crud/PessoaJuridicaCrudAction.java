@@ -1,14 +1,23 @@
 package br.com.infox.epp.pessoa.crud;
 
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 
-@Name(PessoaJuridicaCrudAction.NAME)
+@Named
+@ViewScoped
 public class PessoaJuridicaCrudAction extends AbstractCrudAction<PessoaJuridica, PessoaJuridicaManager> {
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "pessoaJuridicaCrudAction";
 
+    @Inject
+    private PessoaJuridicaManager pessoaJuridicaManager;
+
+    @Override
+    protected PessoaJuridicaManager getManager() {
+        return pessoaJuridicaManager;
+    }
 }
