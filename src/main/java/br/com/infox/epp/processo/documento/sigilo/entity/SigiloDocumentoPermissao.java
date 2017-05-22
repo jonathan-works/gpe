@@ -48,7 +48,7 @@ import lombok.Setter;
     @NamedQuery(name = NAMED_QUERY_DOCUMENTOS_PERMITIDOS, query = QUERY_DOCUMENTOS_PERMITIDOS) 
 })
 @EqualsAndHashCode(of = "id")
-public class SigiloDocumentoPermissao implements Serializable {
+public class SigiloDocumentoPermissao implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -72,5 +72,11 @@ public class SigiloDocumentoPermissao implements Serializable {
     @Column(name = COLUMN_ATIVO, nullable = false)
     @Getter @Setter
     private Boolean ativo;
+    
+    public SigiloDocumentoPermissao makeCopy() throws CloneNotSupportedException {
+    	SigiloDocumentoPermissao cSigiloDocumentoPermissao = (SigiloDocumentoPermissao) clone();
+    	cSigiloDocumentoPermissao.setId(null);
+    	return cSigiloDocumentoPermissao;
+    }
 
 }

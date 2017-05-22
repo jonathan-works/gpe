@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -207,4 +208,17 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         cq.distinct(true);
         return getEntityManager().createQuery(cq).getResultList();
     }
+
+	public String getNomeClassificacaoByCodigo(String codigoClassificacao) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<String> query = cb.createQuery(String.class);
+		Root<ClassificacaoDocumento> root = query.from(ClassificacaoDocumento.class);
+		query.select(root.get(ClassificacaoDocumento_.descricao));
+		query.where(cb.equal(root.get(ClassificacaoDocumento_.codigoDocumento), codigoClassificacao));
+		try {
+			return getEntityManager().createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 }

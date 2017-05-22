@@ -3,6 +3,9 @@ package br.com.infox.epp.usuarioperfil;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
+import br.com.infox.epp.ws.interceptors.Log;
+
+@Log
 public class UsuarioPerfilResourceImpl implements UsuarioPerfilResource {
 
 	private String cpfUsuario;

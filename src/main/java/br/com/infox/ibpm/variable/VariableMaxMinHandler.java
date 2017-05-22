@@ -9,8 +9,8 @@ import br.com.infox.core.util.StringUtil;
 public class VariableMaxMinHandler {
 
 	private VariableAccess variableAccess;
-	private Double maximo = 0D;
-	private Double minimo = 0D;
+	private Double maximo;
+	private Double minimo;
 
 	public void init(VariableAccess variableAccess) {
 		this.variableAccess = variableAccess;

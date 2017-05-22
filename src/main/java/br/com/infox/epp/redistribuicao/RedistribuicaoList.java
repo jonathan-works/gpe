@@ -1,18 +1,26 @@
 package br.com.infox.epp.redistribuicao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.ValidationException;
 
+import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.core.list.DataList;
 import br.com.infox.core.list.RestrictionType;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -31,9 +39,14 @@ import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.unidadedecisora.dao.UnidadeDecisoraMonocraticaDAO;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
+import br.com.infox.epp.ws.interceptors.Log;
+import br.com.infox.seam.exception.BusinessException;
+import lombok.Getter;
+import lombok.Setter;
 
 @Named
 @ViewScoped
+@lombok.extern.java.Log
 public class RedistribuicaoList extends DataList<Processo> {
     private static final long serialVersionUID = 1L;
 
@@ -46,6 +59,7 @@ public class RedistribuicaoList extends DataList<Processo> {
             + "\nand relator is not null" + "\nand cast(pf.idPessoa as string) = relator.valor";
 
     private static final String DEFAULT_ORDER = "o.dataInicio";
+    
 
     // Filters controll
     private Natureza natureza;
@@ -86,6 +100,12 @@ public class RedistribuicaoList extends DataList<Processo> {
     private RedistribuicaoService redistribuicaoService;
 
     private Map<Processo, Boolean> processosSelecionados = new LinkedHashMap<>();
+    
+    @Setter
+    private Integer progress;
+
+    @Getter@Setter
+    private boolean isRedistribuindo = false;
 
     @Override
     protected String getDefaultEjbql() {
@@ -239,9 +259,13 @@ public class RedistribuicaoList extends DataList<Processo> {
 
     @Override
     public List<Processo> getResultList() {
-        List<Processo> retorno = super.getResultList();
+    	try {
+    		return super.getResultList();
+		} catch (Exception e) {
+			log.info("Erro ao fazer consulta da redistribuição. Tentando novamente.");
+			return super.getResultList();
+		}
 
-        return retorno;
     }
 
     @Override
@@ -269,12 +293,77 @@ public class RedistribuicaoList extends DataList<Processo> {
         if (processosSelecionadosList.isEmpty()) {
             throw new ValidationException("Selecione processos para redistribuir");
         }
+        
+        try{
+        	startRedistriuicao(processosSelecionadosList);
+        }finally {
+        	limparSelecionados();
+        	limparCamposRedistribuir();
+        	refresh();
+		}
+    }
 
-        redistribuicaoService.redistribuir(processosSelecionadosList, novaUdm, novoRelator, tipoRedistribuicao,
-                motivoRedistribuicao);
-        limparSelecionados();
-        limparCamposRedistribuir();
-        refresh();
+
+    @ExceptionHandled(successMessage = "Processos redistribuídos com sucesso")
+    public void redistribuirTodos() {
+        int firstResult = getFirstResult();
+        int maxResult = getMaxResults();
+        setFirstResult(null);
+        setMaxResults(null);
+        this.resultList = null;
+        List<Processo> processosSelecionadosList = getResultList();
+        setFirstResult(firstResult);
+        setMaxResults(maxResult);
+		try{	
+			startRedistriuicao(processosSelecionadosList);
+		}finally {
+			limparSelecionados();
+			limparCamposRedistribuir();
+			refresh();
+		}
+        
+    }
+
+	private void startRedistriuicao(List<Processo> processosSelecionadosList) {
+		 if (processosSelecionadosList.isEmpty()) {
+	            throw new ValidationException("Não foram encontrados processos para redistribuir");
+	        }
+		Integer maxProgress = processosSelecionadosList.size();
+        int count = 0;
+        List<String> processoSemRedistribuir = new ArrayList<>();
+        for (Processo processo : processosSelecionadosList) {
+        	try {
+        		count++;
+        		redistribuicaoService.redistribuir( processo, novaUdm, novoRelator, tipoRedistribuicao,
+        				motivoRedistribuicao).get();
+            	progress = Math.round((count * 100) / maxProgress);
+			} catch (Exception e) {
+				processoSemRedistribuir.add(processo.getNumeroProcesso());
+				log.log(Level.SEVERE,"Não foi possível redistribuir o processo " + processo.getNumeroProcesso(), e);
+			}
+		}
+        if(!processoSemRedistribuir.isEmpty()){
+        	String processosComproblema = StringUtil.concatList(processoSemRedistribuir, ", ");
+        	throw new BusinessException("Não foi possível redistribuir o(s) seguinte(s) processo(s): " + processosComproblema);
+        }
+        
+	}
+    
+    public void clearProgress(){
+    	progress = 0;
+    }
+    
+    public Integer getProgress() {
+        if(progress == null) {
+            progress = 0;
+        }
+        else {
+            if(progress > 100){
+                progress = 100;
+            }
+        }
+         
+        return progress;
     }
 
     public TipoRedistribuicao getTipoRedistribuicao() {

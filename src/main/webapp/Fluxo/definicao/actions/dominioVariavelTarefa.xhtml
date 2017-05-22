@@ -103,8 +103,8 @@
                                 </div>
                                 <h:dataTable id="tabelaParametros" value="#{dominioVariavelTarefaCrudAction.parametros.entrySet().toArray()}" var="item">
                                     <h:column>
-                                        <i:outputText label="Parâmetro" value="#{item.key}"/>
-                                        <i:selectOneMenu id="tipoParametro"  items="#{dominioVariavelTarefaCrudAction.tiposParametros}"
+                                        <wi:outputText id="parametroOut" label="Parâmetro" value="#{item.key}"/>
+                                        <wi:selectOneMenu id="tipoParametro"  items="#{dominioVariavelTarefaCrudAction.tiposParametros}"
                                             label="Tipo"
                                             value="#{item.value.tipo}">
                                             <a:ajax
@@ -114,12 +114,12 @@
                                                 execute="@this"
                                                 listener="#{dominioVariavelTarefaCrudAction.tipoAlterado(item.value)}"
                                                 render="panelValor pageBodyDialogMessage" />
-                                        </i:selectOneMenu>
+                                        </wi:selectOneMenu>
                                         <p:outputPanel id="panelValor" style="display: inline">
-                                            <i:inputText label="Valor" rendered="#{item.value.tipo == 'TEXTO'}" value="#{item.value.valor}"/>
-                                            <i:inputDate label="Valor" rendered="#{item.value.tipo == 'DATA'}" value="#{item.value.valor}"/>
-                                            <i:selectBooleanCheckbox label="Valor" rendered="#{item.value.tipo == 'BOOLEAN'}" value="#{item.value.valor}" />
-                                            <i:inputText label="Valor" rendered="#{item.value.tipo == 'INTEIRO'}" value="#{item.value.valor}" converterId="integerConverter"/>
+                                            <wi:inputText id="inputValorTexto" label="Valor" rendered="#{item.value.tipo == 'TEXTO'}" value="#{item.value.valor}"/>
+                                            <wi:inputDate id="inputValorData" label="Valor" rendered="#{item.value.tipo == 'DATA'}" value="#{item.value.valor}"/>
+                                            <wi:selectBooleanCheckbox id="inputValorBoolean" label="Valor" rendered="#{item.value.tipo == 'BOOLEAN'}" value="#{item.value.valor}" />
+                                            <wi:inputText id="inputValorInteiro" label="Valor" rendered="#{item.value.tipo == 'INTEIRO'}" value="#{item.value.valor}" converterId="integerConverter"/>
                                         </p:outputPanel>
                                     </h:column>
                                 </h:dataTable>
@@ -133,17 +133,17 @@
                                 </div>
                                 <p:outputPanel id="panelComponente" style="margin-left: 1rem; margin-top: 1em">
                                     <p:outputPanel rendered="#{dominioVariavelTarefaCrudAction.itens ne null}">
-                                        <i:selectOneMenu
+                                        <wi:selectOneMenu id="comboEnumSimple"
                                             rendered="#{dominioVariavelTarefaCrudAction.currentVariable.type == 'ENUMERATION'}"
                                             selectStyle="max-width: 350px"
                                             items="#{dominioVariavelTarefaCrudAction.itens}" />
-                                        <i:selectManyMenu
+                                        <i:selectManyMenu id="comboEnumMultiple"
                                             rendered="#{dominioVariavelTarefaCrudAction.currentVariable.type == 'ENUMERATION_MULTIPLE'}"
                                             items="#{dominioVariavelTarefaCrudAction.itens}"
                                             selectStyle="width: 300px"
                                         />
                                     </p:outputPanel>
-                                    <i:outputText rendered="#{dominioVariavelTarefaCrudAction.mensagemErro ne null}" value="#{dominioVariavelTarefaCrudAction.mensagemErro}" styleClass="property-error"/>
+                                    <wi:outputText id="mensagemOut" rendered="#{dominioVariavelTarefaCrudAction.mensagemErro ne null}" value="#{dominioVariavelTarefaCrudAction.mensagemErro}" styleClass="property-error"/>
                                 </p:outputPanel>
                             </fieldset>
                         </p:outputPanel>

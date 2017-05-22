@@ -1,17 +1,28 @@
 package br.com.infox.epp.processo.form.type;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
+import br.com.infox.epp.processo.documento.dao.PastaDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.documento.manager.PastaRestricaoManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
@@ -59,33 +70,62 @@ public abstract class FileFormType implements FormType {
         if (classificacoes.size() == 1) {
             formField.addProperty("classificacaoDocumento", classificacoes.get(0));
         }
+        
+        if(configuration != null) {
+        	formField.addProperty("pastaPadrao", VariableEditorModeloHandler.fromJson(configuration).getPasta());
+        }
+        carregarPastas(formField, formData.getProcesso());
+    }
+    
+    private void carregarPastas(FormField formField, Processo processo) {
+        List<Pasta> pastas = new ArrayList<Pasta>();
+        Pasta pasta = null;
+        String pastaPadraoFluxo = (String) formField.getProperties().get("pastaPadrao");
+        if (pastaPadraoFluxo != null) {
+            pasta = getPastaManager().getByCodigoAndProcesso(pastaPadraoFluxo, processo);
+        }
+        if (pasta != null) {
+            // se existe pasta especifica na configuracao da variavel atribui ao documento
+            pastas.add(pasta);
+        } else {
+            UsuarioPerfil usuario = Authenticator.getUsuarioPerfilAtual();
+            Map<Integer, PastaRestricaoBean> restricoes = getPastaRestricaoManager().loadRestricoes(processo, usuario.getUsuarioLogin(),
+                    usuario.getLocalizacao(), usuario.getPerfilTemplate().getPapel());
+            for (Integer id : restricoes.keySet()) {
+                if (Boolean.TRUE.equals(restricoes.get(id).getWrite())) {
+                    Pasta pastaComPermissao = getPastaDao().find(id);
+                    pastas.add(pastaComPermissao);
+                }
+            }
+        }
+        if (pastas.size() == 1) {
+        	pasta = pastas.get(0);
+        }
+        formField.addProperty("podeSelecionarPasta", pasta == null);
+        formField.addProperty("pasta", pasta);
+        formField.addProperty("pastas", pastas);
     }
     
     @Override
-    public void validate(FormField formField, FormData formData) throws BusinessException {
-        String required = formField.getProperty("required", String.class);
-        Documento documento = formField.getTypedValue(Documento.class);
-        if ("true".equals(required) && (documento == null || documento.getId() == null)) {
-            throw new BusinessException("O arquivo do campo " + formField.getLabel() + " é obrigatório");
-        }
-        if (documento != null && documento.getId() != null) {
-            boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
-            if (!assinaturaVariavelOk) {
-                throw new BusinessException(String.format(InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"), formField.getLabel()));
+    public boolean isInvalid(FormField formField, FormData formData) throws BusinessException {
+        if (formField.isRequired()) {
+
+            Documento documento = formField.getTypedValue(Documento.class);
+            if (documento != null && documento.getId() != null) {
+                boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
+                if (!assinaturaVariavelOk) {
+                    FacesContext.getCurrentInstance().addMessage(formField.getComponent().getClientId(),
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
+                                    String.format(
+                                            InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"),
+                                            formField.getLabel())));
+                    return true;
+                }
             }
         }
+        return false;
     }
-
-//    @ExceptionHandled(value = MethodType.UNSPECIFIED)
-//    public void assinar() throws DAOException, AssinaturaException {
-//        try {
-//    		getAssinadorService().assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
-//    		FacesMessages.instance().add(InfoxMessages.getInstance().get("assinatura.assinadoSucesso"));
-//        } finally {
-//            setTokenToSign(null);
-//        }
-//    }
-    
+   
     protected boolean validarAssinaturaDocumento(Documento documento) {
         Papel papel = Authenticator.getPapelAtual();
         boolean isValid = getAssinaturaDocumentoService().isDocumentoTotalmenteAssinado(documento)
@@ -124,6 +164,18 @@ public abstract class FileFormType implements FormType {
     
     protected ClassificacaoDocumentoFacade getClassificacaoDocumentoFacade() {
         return BeanManager.INSTANCE.getReference(ClassificacaoDocumentoFacade.class);
+    }
+    
+    protected PastaManager getPastaManager() {
+    	return BeanManager.INSTANCE.getReference(PastaManager.class);
+    }
+    
+    protected PastaRestricaoManager getPastaRestricaoManager() {
+    	return BeanManager.INSTANCE.getReference(PastaRestricaoManager.class);
+    }
+    
+    protected PastaDAO getPastaDao() {
+    	return BeanManager.INSTANCE.getReference(PastaDAO.class);
     }
     
 }

@@ -486,6 +486,13 @@ public class Authenticator implements Serializable {
         return null;
     }
 
+    public boolean perfilTemplateAtualPossuiLocalizacao(){
+    	UsuarioPerfil usuarioPerfilAtual = getUsuarioPerfilAtual();
+		if(usuarioPerfilAtual == null || usuarioPerfilAtual.getPerfilTemplate() == null || usuarioPerfilAtual.getPerfilTemplate().getLocalizacao() == null){
+			return false;
+		}
+		return true;
+    }
     /**
      * Atalho para o usuario logado
      * 

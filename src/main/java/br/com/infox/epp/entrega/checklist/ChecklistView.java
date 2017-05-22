@@ -36,10 +36,10 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.MovimentarController;
 import br.com.infox.epp.processo.marcador.MarcadorSearch;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.ibpm.variable.components.AbstractTaskPageController;
 import br.com.infox.ibpm.variable.components.ParameterDefinition.ParameterType;
 import br.com.infox.ibpm.variable.components.ParameterVariable;
 import br.com.infox.ibpm.variable.components.Taskpage;
-import br.com.infox.ibpm.variable.components.TaskpageController;
 
 @Taskpage(id="checklist", xhtmlPath="/WEB-INF/taskpages/checklist.xhtml", name="Checklist",	description="checklist.description",
 		parameters={
@@ -49,7 +49,8 @@ import br.com.infox.ibpm.variable.components.TaskpageController;
 )
 @Named
 @ViewScoped
-public class ChecklistView implements Serializable, TaskpageController {
+public class ChecklistView extends AbstractTaskPageController implements Serializable {
+    
     private static final long serialVersionUID = 1L;
 
     public static final String PARAMETER_PASTA = "pastaChecklist";

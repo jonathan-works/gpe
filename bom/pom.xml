@@ -10,14 +10,14 @@
 
     <groupId>br.com.infox.epp</groupId>
     <artifactId>bom</artifactId>
-    <version>3.1.15</version>
+    <version>3.2.0</version>
     <packaging>pom</packaging>
     <name>epp-bom</name>
     <description>E-PP Bill of material</description>
 
     <properties>
-        <version.epp>3.1.15</version.epp>
-        <version.liquibase-epp>3.1.15</version.liquibase-epp>
+        <version.epp>3.2.0</version.epp>
+        <version.liquibase-epp>3.2.0</version.liquibase-epp>
         <version.liquibase-ext>1.1.2</version.liquibase-ext>
         <version.certificado-digital>1.0.12</version.certificado-digital>
         <version.git-commit-id-plugin>2.2.1</version.git-commit-id-plugin>
@@ -47,7 +47,7 @@
         <hibernate.search.version>4.4.3.Final</hibernate.search.version>
         <infinispan.version>5.2.7.Final</infinispan.version>
         <primefaces.extensions.version>6.0.0</primefaces.extensions.version>
-        <jbpm.version>3.5.0-SNAPSHOT</jbpm.version>
+        <jbpm.version>3.5.0</jbpm.version>
         <dom4j.version>1.6</dom4j.version>
         <guava.version>18.0</guava.version>
         <jsoup.version>1.10.2</jsoup.version>
@@ -647,11 +647,6 @@
 	        	<groupId>org.bouncycastle</groupId>
 			  	<artifactId>bcprov-jdk15on</artifactId>
 			  	<version>1.56</version>
-			</dependency>
-			<dependency>
-				<groupId>com.thetransactioncompany</groupId>
-				<artifactId>cors-filter</artifactId>
-				<version>2.5</version>
 			</dependency>
 			<dependency>
 				<groupId>org.camunda.bpm.model</groupId>

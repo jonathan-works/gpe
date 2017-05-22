@@ -8,10 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -34,7 +35,7 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
 
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractPageableList.class);
     
-    @In
+    @EJB
     private InfoxMessages infoxMessages;
     
     private final class HashMapExtension<K, V> extends HashMap<K, V> {
@@ -246,7 +247,7 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
         return this.parameters.isDirty;
     }
 
-    @Create
+    @PostConstruct
     public void init() {
         this.genericManager = (GenericManager) Component.getInstance(GenericManager.NAME);
         this.parameters = new HashMapExtension<>();

@@ -5,6 +5,8 @@ import static br.com.infox.epp.Filter.isTrue;
 
 import org.jboss.seam.contexts.Contexts;
 
+import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.FieldType;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.system.parametro.ParametroDefinition;
@@ -34,6 +36,7 @@ public enum Parametros {
     URL_SERVICO_ENVIO_LOG_ERRO("urlServicoEnvioLogErro"),
     HAS_CONSULTA_EXTERNA_PADRAO("ativaConsultaExternaPadrao"),
     CODIGO_UF_SISTEMA("codigoUnidadeFederativaSistema"),
+    INTERVALO_ATUALIZACAO_PAINEL("sistema", "intervaloAtualizacaoPainel", false),
     EPP_API_RSA_PRIVATE_KEY("controleAcesso","eppApiPrivateKey"),
     EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey"),
     ATIVAR_MASSIVE_REINDEX("ativarMassiveReindex"),
@@ -77,6 +80,21 @@ public enum Parametros {
 
     public String getValue() {
         return (String) Contexts.getApplicationContext().get(this.label);
+    }
+    
+    public <T> T getValue(Class<T> clazz) {
+    	String valueString = (String) Contexts.getApplicationContext().get(this.label);
+    	if ( !StringUtil.isEmpty(valueString) ) {
+    		Object newInstance = ReflectionsUtil.newInstance(clazz, String.class, valueString.trim());
+    		return clazz.cast(newInstance);
+    	} else {
+    		return null;
+    	}
+    }
+    
+    public <T> T getValueOrDefault(Class<T> clazz, T defaultValue) {
+    	T objectT = getValue(clazz);
+        return null == objectT ? defaultValue : objectT ;
     }
 
     public ParametroDefinition<?> getParametroDefinition() {

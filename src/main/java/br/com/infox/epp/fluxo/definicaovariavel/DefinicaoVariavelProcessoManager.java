@@ -66,6 +66,7 @@ public class DefinicaoVariavelProcessoManager {
     private DefinicaoVariavelProcesso createDefaultDefinicaoVariavelProcesso(Fluxo fluxo, String nome, String label, String valorPadrao, Integer ordem) {
         DefinicaoVariavelProcesso dvp = new DefinicaoVariavelProcesso();
         dvp.setLabel(label);
+        dvp.setNome(nome);
         dvp.setFluxo(fluxo);
         dvp.setValorPadrao(valorPadrao);
         dvp.setVersion(0L);

@@ -8,7 +8,6 @@
     
     <composite:interface>
     	
-    	<composite:attribute name="id"/>
     	<composite:attribute name="label" />
     	<composite:attribute name="value" type="java.lang.Number"/>
     	<composite:attribute name="disabled" default="false"/>
@@ -19,6 +18,10 @@
     	<composite:attribute name="onkeypress" />
     	<composite:attribute name="onkeyup" />
     	<composite:attribute name="converterId" default="integerConverter"/>
+    	<composite:attribute name="showRequired" default="false"/>
+    	<composite:attribute name="valorMaximo" />
+    	<composite:attribute name="valorMinimo" />
+    	<composite:attribute name="bindingComponent" />
     	
     	<!-- Ajax Attributes -->
     	<composite:attribute name="ajax" default="false" />
@@ -35,7 +38,7 @@
 	
     <composite:implementation>
     	<h:outputScript library="js" name="components.js" />
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}">
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="true">
 			<script type="text/javascript">
 				var id = "#{cc.attrs.id}";
 				var errorClass = $('.' + id + 'ErrorClass');
@@ -56,14 +59,14 @@
         				</c:if>
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
-	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
+	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required or cc.attrs.showRequired}" value="*" />
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
         			<h:inputText id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
         				disabled="#{cc.attrs.disabled}" onblur="#{cc.attrs.onblur}" required="#{cc.attrs.required}"
-        				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}" 
-        				onkeyup="onlyNumber(this); #{cc.attrs.onkeyup}" >
+        				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}"
+        				onkeyup="onlyNumber(this); #{cc.attrs.onkeyup}" binding="#{cc.attrs.bindingComponent}" >
 		   				<c:if test="#{cc.attrs.ajax}">
 					    	<c:if test="#{empty cc.getValueExpression('listener')}">
 						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
@@ -77,8 +80,18 @@
 		   				<c:if test="#{not empty cc.attrs.validatorId}">
 		   					<f:validator validatorId="#{cc.attrs.validatorId}" />
 		   				</c:if>
-	   					<f:converter converterId="#{cc.attrs.converterId}" />
-		   			</h:inputText>	
+	   					<f:converter converterId="#{cc.attrs.converterId}" for="@this" />
+	   					<c:if test="#{not empty cc.attrs.valorMaximo and not empty cc.attrs.valorMinimo}">
+	                    	<f:validateLongRange  maximum="#{cc.attrs.valorMaximo}" minimum="#{cc.attrs.valorMinimo}" for="@this" />
+		                </c:if>
+		                <c:if test="#{not empty cc.attrs.valorMaximo and empty cc.attrs.valorMinimo}">
+		                    <f:validateLongRange maximum="#{cc.attrs.valorMaximo}" for="@this" />
+		                </c:if>
+		                <c:if test="#{empty cc.attrs.valorMaximo and not empty cc.attrs.valorMinimo}">
+		                    <f:validateLongRange minimum="#{cc.attrs.valorMinimo}" for="@this" />
+		                </c:if>
+				        <composite:insertChildren />
+		   			</h:inputText>
         		</div>
         	</div>
         </p:outputPanel>

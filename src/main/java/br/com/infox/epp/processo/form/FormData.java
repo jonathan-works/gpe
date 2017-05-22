@@ -8,15 +8,20 @@ import org.jbpm.graph.def.Node;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
-import br.com.infox.seam.exception.BusinessException;
 
 public interface FormData {
     
     String getFormKey();
     
+    boolean isTaskPage();
+    
+    FormField getTaskPage();
+    
     Processo getProcesso();
 
     List<FormField> getFormFields();
+    
+    List<FormField> getFormFieldsReadOnly();
     
     Map<String, FormType> getFormTypes();
     
@@ -24,13 +29,15 @@ public interface FormData {
     
     void setVariable(String name, Object value);
     
+    void setSingleVariable(FormField formField, Object value);
+    
     void update();
     
     Map<String, Object> getVariables();
     
     ExpressionResolverChain getExpressionResolver();
     
-    void validate() throws BusinessException;
+    boolean isInvalid();
     
     Node getNode();
     

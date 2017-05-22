@@ -33,8 +33,8 @@ import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
 
 @AutoCreate
-@Scope(ScopeType.EVENT)
 @Name(DocumentoDownloader.NAME)
+@Scope(ScopeType.STATELESS)
 @Stateless
 @Transactional
 public class DocumentoDownloader implements Serializable {

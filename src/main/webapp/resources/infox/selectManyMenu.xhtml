@@ -20,6 +20,7 @@
     <composite:attribute name="validatorId" />
     <composite:attribute name="converterId" />
     <composite:attribute name="enumClassName"/>
+    <composite:attribute name="bindingComponent"/>
 
     <composite:attribute name="ajax" default="false" />
     <composite:attribute name="render" default="@this" />
@@ -52,6 +53,7 @@
                     styleClass="input select #{cc.attrs.styleClass}#{cc.attrs.readonly ? 'readonly':''}" required="#{cc.attrs.required}"
                     onchange="#{cc.attrs.onchange}" disabled="#{cc.attrs.disabled or cc.attrs.readonly}"
                     filterMatchMode="contains" showCheckbox="true" filter="true" scrollHeight="120" style="#{cc.attrs.selectStyle}">
+                    binding="#{cc.attrs.bindingComponent}">
                     <f:selectItems value="#{cc.attrs.items}" />
                     <c:if test="#{cc.attrs.ajax}">
                         <c:if test="#{cc.getValueExpression('listener') eq null}">

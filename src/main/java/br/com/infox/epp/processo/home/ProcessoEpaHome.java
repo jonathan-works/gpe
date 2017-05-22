@@ -6,6 +6,7 @@ import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
 
+import org.hibernate.StaleObjectStateException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -18,6 +19,7 @@ import org.jboss.seam.faces.FacesMessages;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
@@ -45,6 +47,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.exception.ApplicationException;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
@@ -112,7 +115,13 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
 	public void iniciarTarefaProcesso() {
 		try {
-			processoManager.iniciarTask(getInstance(), getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
+			UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
+			if(usuarioPerfilAtual == null || usuarioPerfilAtual.getPerfilTemplate() == null || usuarioPerfilAtual.getPerfilTemplate().getLocalizacao() == null){
+				String errorLocalizacao = "Esse perfil não pode executar tarefas pois não possui localização dentro de uma estrutura.";
+				FacesMessages.instance().add(errorLocalizacao);
+				throw new BusinessException(errorLocalizacao);
+			}
+			processoManager.iniciarTask(getInstance(), getIdTaskInstance(), usuarioPerfilAtual);
 			documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 			carregarVariaveisDetalhe();
 		} catch (java.lang.NullPointerException e) {
@@ -122,7 +131,10 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		} catch (BusinessRollbackException e) {
 		    FacesMessages.instance().add(e.getMessage());
 		    throw new OptimisticLockException();
-		} catch (EJBException e) {
+		}catch (StaleObjectStateException e) {
+			 FacesMessages.instance().add("Tarefa já atribuída a outro usuário.");
+			 LOG.info("Tarefa já atribuída a outro usuário", e);
+		}catch (EJBException e) {
 			if (e.getCause() instanceof BusinessRollbackException) {
 			    FacesMessages.instance().add(e.getMessage());
 			    throw new OptimisticLockException();
@@ -141,6 +153,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	
 	public void visualizarTarefaProcesso() {
 		processoManager.visualizarTask(getInstance(), getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
+		carregarVariaveisDetalhe();
 	}
 
 	public static ProcessoEpaHome instance() {
@@ -156,9 +169,12 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	}
 
 	public boolean checarVisibilidadeSemException() {
-		MetadadoProcesso metadadoProcesso = getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
-		TipoProcesso tipoProcesso = metadadoProcesso != null ? metadadoProcesso.<TipoProcesso> getValue() : null;
-        boolean visivel = situacaoProcessoDAO.canAccessProcesso(getInstance().getIdProcesso(), tipoProcesso, getInTabExpedidas());
+		boolean visivel = false;
+		if(getInstance().getIdProcesso() != null){
+			MetadadoProcesso metadadoProcesso = getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
+			TipoProcesso tipoProcesso = metadadoProcesso != null ? metadadoProcesso.<TipoProcesso> getValue() : null;
+	        visivel = situacaoProcessoDAO.canAccessProcesso(getInstance().getIdProcesso(), tipoProcesso, getInTabExpedidas());
+		}
 		if (!visivel) {
 			ContextFacade.setToEventContext("canClosePanel", true);
 			FacesMessages.instance().clear();

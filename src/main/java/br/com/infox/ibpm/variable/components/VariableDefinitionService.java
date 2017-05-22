@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.variable.components;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,14 +12,19 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 import org.reflections.Reflections;
 
-@Singleton
 @Startup
-public class VariableDefinitionService {
+@Singleton
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class VariableDefinitionService implements Serializable {
 
-	private Map<String, FrameDefinition> framesMap;
+    private static final long serialVersionUID = 1L;
+    
+    private Map<String, FrameDefinition> framesMap;
 	private Map<String, TaskpageDefinition> taskPagesMap;
 	
 	private static interface AnnotationConverter<A extends Annotation, T extends ComponentDefinition> {
@@ -113,7 +119,8 @@ public class VariableDefinitionService {
     	return null;
     }
     
-	private <A extends Annotation, T extends ComponentDefinition> Map<String, T> getMapaAnotacoes(Class<A> classeAnotacao, AnnotationConverter<A, T> converter) {
+	@SuppressWarnings("unchecked")
+    private <A extends Annotation, T extends ComponentDefinition> Map<String, T> getMapaAnotacoes(Class<A> classeAnotacao, AnnotationConverter<A, T> converter) {
         Reflections r = new Reflections("br.com.infox");
         
         Map<String, T> retorno = new HashMap<>();
@@ -146,6 +153,10 @@ public class VariableDefinitionService {
         			Class<?> classeSelecionada = selector.select(classesComponente);
                 	A anotacao = classeSelecionada.getAnnotation(classeAnotacao);
                 	T componentDefinition = converter.getComponentDefinition(anotacao);
+                	if ((componentDefinition instanceof TaskpageDefinition) 
+                	        && TaskpageController.class.isAssignableFrom(classeSelecionada)) {
+                	    ((TaskpageDefinition) componentDefinition).setController((Class<? extends AbstractTaskPageController>) classeSelecionada);
+                	}
                 	if(!componentDefinition.isDisabled()) {
                 		retorno.put(id, componentDefinition);
                 	}
