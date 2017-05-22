@@ -77,13 +77,6 @@ public class ProrrogacaoComunicacaoService {
 		}
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void finalizarAnaliseProrrogacaoSemMovimentar(Processo comunicacao) throws DAOException {
-        if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_ANALISE_PRORROGACAO) == null) {
-            criaMetadadoAnalisePedidoProrrogacao(comunicacao);
-        }
-    }
-	
 	//TODO ver porque recebe processo se não usa, usa apenas o taskInstanceHome
 	private void finalizarAnalisePedido(Processo comunicacao) throws DAOException{
 		TaskInstanceHome.instance().end(TaskInstanceHome.instance().getName());

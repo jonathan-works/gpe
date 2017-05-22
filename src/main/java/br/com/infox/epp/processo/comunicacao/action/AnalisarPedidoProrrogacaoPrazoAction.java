@@ -35,6 +35,7 @@ import br.com.infox.log.Logging;
 @ViewScoped
 public class AnalisarPedidoProrrogacaoPrazoAction extends AbstractTaskPageController implements Serializable {
     
+    public static final String NAME = "analisarPedidoProrrogacaoPrazoAction";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(AnalisarPedidoProrrogacaoPrazoAction.class);
 	
@@ -45,11 +46,11 @@ public class AnalisarPedidoProrrogacaoPrazoAction extends AbstractTaskPageContro
 	@Inject
 	private DocumentoComunicacaoList documentoComunicacaoList;
 	@Inject
-	protected ProrrogacaoComunicacaoService prorrogacaoComunicacaoService;
+	private ProrrogacaoComunicacaoService prorrogacaoComunicacaoService;
 	
 	private Processo processoDocumento;
 	private List<Documento> documentosAnalise;
-	protected Processo comunicacao;
+	private Processo comunicacao;
 	private DestinatarioModeloComunicacao destinatarioComunicacao;
 	private Date dataFimPrazoCumprimento;
 	
@@ -58,18 +59,13 @@ public class AnalisarPedidoProrrogacaoPrazoAction extends AbstractTaskPageContro
 
 	@PostConstruct
 	protected void init() {
-		processoDocumento = getProcesso();
+		processoDocumento = JbpmUtil.getProcesso();
 		initDadosAnalise();
 		comunicacao = processoDocumento.getProcessoPai();
 		initDadosComunicacao();
 		clear();
 	}
 	
-	@Override
-	protected Processo getProcesso() {
-	    return super.getProcesso() == null ? JbpmUtil.getProcesso() : super.getProcesso();
-	}
-
 	private void clear() {
 		diasProrrogacao = null;
 		novoPrazoCumprimento = null;
