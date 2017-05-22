@@ -1,11 +1,9 @@
 package br.com.infox.core.util;
 
 import java.io.Closeable;
-import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;

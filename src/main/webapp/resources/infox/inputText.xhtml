@@ -1,7 +1,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"   
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:rich="http://richfaces.org/rich"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:wi="http://www.itx.com.br/jsf"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:composite="http://java.sun.com/jsf/composite" >
@@ -24,6 +26,9 @@
     	<composite:attribute name="validatorId" />
     	<composite:attribute name="converterId" default="stringConverter"/>
     	<composite:attribute name="maxlength" default="4000"/>
+    	<composite:attribute name="showRequired" default="false"/>
+    	<composite:attribute name="mascara"/>
+    	<composite:attribute name="bindingComponent" />
     	
     	<!-- Ajax Attributes -->
     	<composite:attribute name="ajax" default="false" />
@@ -38,6 +43,7 @@
     </composite:interface>
 	
     <composite:implementation>
+        <h:outputScript library="js" name="jquery.maskedinput.js" />
 		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div">
         	<div class="property-field-edit">
         		<div class="property-field-edit-name">
@@ -49,14 +55,14 @@
         				</c:if>
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
-	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
+	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required or cc.attrs.showRequired}" value="*" />
 	        		<h:message for="Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
         			<h:inputText id="Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
         				disabled="#{cc.attrs.disabled}" onblur="#{cc.attrs.onblur}" required="#{cc.attrs.required}"
         				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}" onkeyup="#{cc.attrs.onkeyup}"
-        				readonly="#{cc.attrs.readonly}" maxlength="#{cc.attrs.maxlength}" style="#{cc.attrs.style}">
+        				readonly="#{cc.attrs.readonly}" maxlength="#{cc.attrs.maxlength}" style="#{cc.attrs.style}" binding="#{cc.attrs.bindingComponent}">
 		   				<c:if test="#{cc.attrs.ajax}">
 					    	<c:if test="#{empty cc.getValueExpression('listener')}">
 						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
@@ -70,11 +76,19 @@
 		   				<c:if test="#{not empty cc.attrs.validatorId}">
 		   					<f:validator validatorId="#{cc.attrs.validatorId}" />
 		   				</c:if>
-		   				<f:converter converterId="#{cc.attrs.converterId}" />
+		   				<f:converter converterId="#{cc.attrs.converterId}" for="@this" />
+		   				<composite:insertChildren />
 		   			</h:inputText>	
         		</div>
         	</div>
         </p:outputPanel>
+        	<c:if test="#{not empty cc.attrs.mascara}">
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        $(document.getElementById("#{cc.clientId}:#{cc.attrs.id}Input")).mask('#{cc.attrs.mascara}',{fixed:true});
+                    });
+                </script>
+		    </c:if>
         <script type="text/javascript">
             (function(){
                 var id = "#{cc.attrs.id}";
@@ -89,5 +103,5 @@
             })();
         </script>
     </composite:implementation>
-	
+	taskForm:j_idt51:j_idt51Input
 </html>

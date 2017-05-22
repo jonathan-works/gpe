@@ -122,58 +122,56 @@ public class VariavelProcessoService extends PersistenceController {
             ProcessInstance processInstance = getEntityManager().find(ProcessInstance.class, idJbpm);
             Object variable;
             if (taskInstance != null) {
-            	// Aqui já pega do processInstance caso não tenha na taskInstance por causa da hierarquia de VariableContainer do jBPM
-            		variable = taskInstance.getVariable(definicao.getNome());
+                // Aqui já pega do processInstance caso não tenha na taskInstance por causa da hierarquia de VariableContainer do jBPM
+                        variable = taskInstance.getVariable(definicao.getNome());
             } else {
-            	variable = processInstance.getContextInstance().getVariable(definicao.getNome());
+                variable = processInstance.getContextInstance().getVariable(definicao.getNome());
             }
             if (variable != null) {
-            	 variavelProcesso.setValor(formatarValor(variable));
+                 variavelProcesso.setValor(formatarValor(variable));
             } else {
-            	try{
-	                List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo,
-	                        definicao.getNome());
-	                
-	                if (metadados != null && metadados.size() > 0) {
-	                    setValor(processo, metadados, variavelProcesso);
-	                } else {
-	                    final String valorPadrao = definicao.getValorPadrao();
-	                    if (valorPadrao != null) {
-	                    	Object valorJbpmExpressionEvaluator = null;
-							try {
-								if ((valorPadrao.startsWith("#") || valorPadrao.startsWith("$"))) {
-									ExecutionContext executionContext = null;
-									if (taskInstance != null) {
-										executionContext = new ExecutionContext(taskInstance.getToken());
-										executionContext.setTaskInstance(taskInstance);
-									} else if (processInstance != null) {
-										executionContext = new ExecutionContext(processInstance.getRootToken());
-									}
-									if (executionContext != null) {
-										valorJbpmExpressionEvaluator = JbpmExpressionEvaluator.evaluate(valorPadrao, executionContext);
-										if (valorJbpmExpressionEvaluator != null) {
-											variavelProcesso.setValor(formatarValor(valorJbpmExpressionEvaluator));
-										}
-									}
-								}
-							} catch (Exception e) {
-							}
-	                    	
-	                    	if(valorJbpmExpressionEvaluator == null){
-	                    		setValor(valorPadrao, processo, variavelProcesso);
-	                    	}
-	                    } else {
-	                        variavelProcesso.setValor(null);
-	                    }
-	                }
-            	}catch(Exception e){
-            		variavelProcesso.setValor(null);
-            		LOG.error("Não foi possível recuperar o metadado "+ definicao.getNome() + " do processo id="+ processo.getIdProcesso().toString(), e);
-            	}
+                try{
+                    List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo, definicao.getNome());
+                    if (metadados != null && metadados.size() > 0) {
+                        setValor(processo, metadados, variavelProcesso);
+                    } else {
+                        final String valorPadrao = definicao.getValorPadrao();
+                        if (valorPadrao != null) {
+                            Object valorJbpmExpressionEvaluator = null;
+                            try {
+                                if ((valorPadrao.startsWith("#") || valorPadrao.startsWith("$"))) {
+                                    ExecutionContext executionContext = null;
+                                    if (taskInstance != null) {
+                                        executionContext = new ExecutionContext(taskInstance.getToken());
+                                        executionContext.setTaskInstance(taskInstance);
+                                    } else if (processInstance != null) {
+                                        executionContext = new ExecutionContext(processInstance.getRootToken());
+                                    }
+                                    if (executionContext != null) {
+                                        valorJbpmExpressionEvaluator = JbpmExpressionEvaluator.evaluate(valorPadrao, executionContext);
+                                        if (valorJbpmExpressionEvaluator != null) {
+                                            variavelProcesso.setValor(formatarValor(valorJbpmExpressionEvaluator));
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                            }
+                            if(valorJbpmExpressionEvaluator == null){
+                                setValor(valorPadrao, processo, variavelProcesso);
+                            }
+                        } else {
+                            variavelProcesso.setValor(null);
+                        }
+                    }
+                }catch(Exception e){
+                        variavelProcesso.setValor(null);
+                        LOG.error("Não foi possível recuperar o metadado "+ definicao.getNome() + " do processo id="+ processo.getIdProcesso().toString(), e);
+                }
             }
         }
         return variavelProcesso;
     }
+
 
     private String formatarValor(Object variable) {
     	if(variable == null)
@@ -247,7 +245,7 @@ public class VariavelProcessoService extends PersistenceController {
     private VariavelProcesso inicializaVariavelProcesso(DefinicaoVariavelProcesso definicao) {
         VariavelProcesso variavelProcesso = new VariavelProcesso();
         variavelProcesso.setLabel(definicao.getLabel());
-        variavelProcesso.setNome(definicao.getNome());
+        variavelProcesso.setValor(definicao.getValorPadrao());
         return variavelProcesso;
     }
 

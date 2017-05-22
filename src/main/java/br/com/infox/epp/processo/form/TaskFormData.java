@@ -5,5 +5,5 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 public interface TaskFormData extends FormData {
 
     TaskInstance getTaskInstance();
-
+    
 }

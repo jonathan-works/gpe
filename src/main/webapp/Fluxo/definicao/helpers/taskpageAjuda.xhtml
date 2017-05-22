@@ -50,11 +50,11 @@
                     <rich:panel styleClass="content-block" style="margin: 1.5em 0 0">
                         <wi:outputText id="paramterName"
                             label="#{infoxMessages['process.taskpage.parameter.name']}"
-                            value="#{infoxMessages[parameter.name]}" />
+                            value="#{infoxMessages[parameter.id]}" />
 
                         <wi:outputText id="paramterType"
                             label="#{infoxMessages['process.taskpage.parameter.type']}"
-                            value="#{infoxMessages[parameter.type]}" />
+                            value="#{infoxMessages[parameter.type.name]}" />
 
                         <h:panelGroup rendered="#{not empty parameter.description}">
                             <wi:outputText id="parameterDescription"

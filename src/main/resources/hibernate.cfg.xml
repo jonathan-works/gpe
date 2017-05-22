@@ -92,6 +92,7 @@
     <mapping resource="org/jbpm/graph/action/MailAction.hbm.xml"/>
 
     <!-- graph.def mapping files -->
+    <mapping resource="org/jbpm/graph/def/GraphElementClob.hbm.xml"/>
     <mapping resource="org/jbpm/graph/def/ProcessDefinition.hbm.xml"/>
     <mapping resource="org/jbpm/graph/def/Node.hbm.xml"/>
     <mapping resource="org/jbpm/graph/def/Transition.hbm.xml"/>

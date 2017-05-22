@@ -192,26 +192,26 @@ public class BpmExpressionService {
         distribuicaoRelatoriaService.distribuirRelatoria(idUdm, processo);
     }
     
-@External(expressionType = ExpressionType.EVENTOS,
-        tooltip = "bpmExpression.setUDC.tooltip", value = {
-            @Parameter(selectable = true, defaultValue = "'1CAM'", label = "bpmExpression.setUDC.cdLoc.label", tooltip = "bpmExpression.setUDC.cdLoc.tooltip")
-        })
-public void distribuirParaUDC(String codigoLocUDC) {
-    ExecutionContext executionContext = getExecutionContext();
-    Processo processo = processoManager.getProcessoByIdJbpm(executionContext.getProcessInstance().getId());
-    UnidadeDecisoraColegiada udc = unidadeDecisoraColegiadaManager.findByCodigoLocalizacao(codigoLocUDC);
-    if (udc == null) {
-        throw new BusinessException("Não foi encontrada UDC com código de Localizaca '" + codigoLocUDC + "'.");
+    @External(expressionType = ExpressionType.EVENTOS,
+            tooltip = "bpmExpression.setUDC.tooltip", value = {
+                @Parameter(selectable = true, defaultValue = "'1CAM'", label = "bpmExpression.setUDC.cdLoc.label", tooltip = "bpmExpression.setUDC.cdLoc.tooltip")
+            })
+    public void distribuirParaUDC(String codigoLocUDC) {
+        ExecutionContext executionContext = getExecutionContext();
+        Processo processo = processoManager.getProcessoByIdJbpm(executionContext.getProcessInstance().getId());
+        UnidadeDecisoraColegiada udc = unidadeDecisoraColegiadaManager.findByCodigoLocalizacao(codigoLocUDC);
+        if (udc == null) {
+            throw new BusinessException("Não foi encontrada UDC com código de Localizaca '" + codigoLocUDC + "'.");
+        }
+        String idUDC = udc.getIdUnidadeDecisoraColegiada().toString();
+        MetadadoProcesso metadadoProcesso = metadadoProcessoManager.getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo);
+        if (metadadoProcesso == null) {
+            metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, idUDC);
+        } else {
+            metadadoProcesso.setValor(idUDC);
+            metadadoProcessoManager.update(metadadoProcesso);
+        }
     }
-    String idUDC = udc.getIdUnidadeDecisoraColegiada().toString();
-    MetadadoProcesso metadadoProcesso = metadadoProcessoManager.getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo);
-    if (metadadoProcesso == null) {
-        metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, idUDC);
-    } else {
-        metadadoProcesso.setValor(idUDC);
-        metadadoProcessoManager.update(metadadoProcesso);
-    }
-}
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip", expressionType = ExpressionType.EVENTOS)
     public void atribuirCiencia() {

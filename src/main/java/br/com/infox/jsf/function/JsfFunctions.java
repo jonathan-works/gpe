@@ -1,9 +1,8 @@
 package br.com.infox.jsf.function;
 
 import java.util.Collections;
-import java.util.List;
-
 import java.util.Iterator;
+import java.util.List;
 
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;

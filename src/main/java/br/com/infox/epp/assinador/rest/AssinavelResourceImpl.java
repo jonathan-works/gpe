@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
 
 import br.com.infox.assinador.rest.api.AssinaturaResource;
 import br.com.infox.assinador.rest.api.Assinavel;

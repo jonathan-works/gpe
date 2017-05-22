@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <style>
+		
+    </style>
+    
+<h:form id="meuform">
+    <fieldset style="margin-top: 20px;border-color: rgba(200,200,200,0.2);background: rgba(200,200,200,0.2);">
+        <legend>
+            <h:outputText value="Variáveis disponíveis" styleClass="titulo--def--variavel" />
+		    <a:commandLink id="newButton" styleClass="var--proc--item" style="font-size: 1.3em;"
+	            action="#{definicaoVariavelProcessoAction2.novaVariavel}"
+	            oncomplete="#{rich:component('formDefinicaoVariavelModal')}.show();"
+	            execute="@this" render="formDefinicaoVariavel" limitRender="true">
+	           <wi:icon value="add_box" text="Adicionar variável"  materialDesignIcon="true" />    
+            </a:commandLink>
+        </legend>
+        
+	        <p:dataList id="meuDataSource" var="itemLista" type="none" value="#{definicaoVariavelProcessoAction2.variaveis}" styleClass="ifx-data-list ifx-data-list--flexbox" >
+	            <p:outputPanel id="painelDrag">
+	                <div class="item-variavel--flex">
+	                     <wi:icon value="open_with" materialDesignIcon="true" text="Arraste para adicionar a uma funcionalidade" styleClass="var--proc--item"/>
+	                     <div>
+		                     <span style="display: block;"><h:outputText value="#{itemLista.label}" /></span>
+		                     <span style="font-size: 0.7em;"><h:outputText value="#{itemLista.nome}" /></span>
+	                     </div>
+	                     <span>
+	                         <a:commandLink id="newButton" styleClass="var--proc--item"
+	                             action="#{definicaoVariavelProcessoAction2.setVariavel(itemLista)}"
+	                             oncomplete="#{rich:component('formDefinicaoVariavelModal')}.show();"
+	                             execute="@this" render="formDefinicaoVariavel" limitRender="true">
+	                            <wi:icon value="edit" text="Alterar variável"  materialDesignIcon="true" />    
+	                         </a:commandLink>
+	                         <a:commandLink id="deleteButton" styleClass="var--proc--item"
+	                             action="#{definicaoVariavelProcessoAction2.remove(itemLista)}" onclick="return confirm('Confirma a exclusão desta variável?')"
+	                             execute="@this" render="meuDataSource recursosTable" limitRender="true">
+	                            <wi:icon value="close" materialDesignIcon="true" text="Excluir variável" />    
+	                         </a:commandLink>
+	                     </span>
+	                 </div>
+	             </p:outputPanel>
+	             <p:draggable for="painelDrag" revert="true" cursor="grab" scope="arrastarNovaVariavel" />
+	        </p:dataList>
+	</fieldset>
+
+	<fieldset style="margin-top: 20px;">
+        <legend>
+            <h:outputText value="Variáveis das funcionalidades" styleClass="titulo--def--variavel" />
+        </legend>
+            
+		<h:dataTable id="recursosTable" rowKey="#{recursoItem.recurso}" var="recursoItem" value="#{definicaoVariavelProcessoAction2.funcionalidades}">
+			<h:column>
+                <p:outputPanel id="dropLabel">
+                  <p:droppable for="dropLabel" tolerance="touch" datasource="#{wi:clientId('meuDataSource')}" scope="arrastarNovaVariavel" activeStyleClass="ativarNovaVariavel">
+                       <f:param name="recurso" value="#{recursoItem.recurso.identificador}" />
+                       <p:ajax listener="#{definicaoVariavelProcessoAction2.onDropRecurso}" update="@form pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+                   </p:droppable>
+                       <div class="header-title"><h:outputText value="#{recursoItem.recurso.nome}" /></div>
+                       <p:outputLabel rendered="#{empty recursoItem.variaveis}">
+                       		<div>
+	                       		"Não existem variáveis configuradas para a funcionalidade."
+                       		</div>
+                       </p:outputLabel>
+	                   <p:orderList styleClass="ifx-order-list--flexbox ifx-order-list" id="orderlist" value="#{recursoItem.variaveis}" var="varItem" itemValue="#{varItem.id}" controlsLocation="none" >
+				        <p:ajax event="reorder" listener="#{definicaoVariavelProcessoAction2.onReorder}" update="recursosTable pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+	                       <p:column>
+	                           <div class="item-variavel--flex">
+		                           <wi:icon value="open_with" materialDesignIcon="true" text="Arraste para reordenar" styleClass="var--proc--item"/>
+		                           <div>
+			                           <span style="display: block;"><h:outputText value="#{varItem.definicao.label}" /></span>
+			                           <span style="font-size: 0.7em;"><h:outputText value="#{varItem.definicao.nome}" /></span>
+			                       </div>
+		                           <span>
+			                           <h:commandLink action="#{definicaoVariavelProcessoAction2.alteraVisivel}" styleClass="var--proc--item">
+			                               <wi:icon value="#{varItem.visivelUsuarioExterno ? 'person' : 'person_outline' }" text="Visível ao usuário externo?" materialDesignIcon="true" />
+			                               <f:param name="idDvpr" value="#{varItem.id}" />
+			                               <p:ajax  update="@form recursosTable pageBodyDialogMessage" process="@this" partialSubmit="true" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+			                           </h:commandLink>
+			                           
+			                           <h:commandLink action="#{definicaoVariavelProcessoAction2.remover(varItem.id)}" styleClass="var--proc--item"
+			                                 onclick="return confirm('Confirma a exclusão desta variável?')" >
+			                               <wi:icon value="close" materialDesignIcon="true"  text="Remover" />
+			                               <f:param name="idDvpr" value="#{varItem.id}" />
+			                               <p:ajax  update="@form recursosTable pageBodyDialogMessage" process="@this" onstart="infox.showLoading();" partialSubmit="true" oncomplete="infox.hideLoading();" />
+			                           </h:commandLink>
+		                           </span>
+	                           </div>
+	                       </p:column>
+	                   </p:orderList>
+                </p:outputPanel>
+			</h:column>
+		</h:dataTable>
+	</fieldset>
+</h:form>
+
+<rich:popupPanel id="formDefinicaoVariavelModal" width="650" height="250" maxHeight="600" modal="true"
+	header="#{infoxMessages['definicaoVariavelProcesso.novaVariavel']}">
+	<f:facet name="controls">
+		<h:graphicImage styleClass="mp-close" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+			onclick="#{rich:component('formDefinicaoVariavelModal')}.hide();" />
+	</f:facet>
+
+	<h:form id="formDefinicaoVariavel">
+		<wi:inputText id="nome" value="#{definicaoVariavelProcessoAction2.variavel.nome}"
+			label="Código" required="true" />
+		<wi:inputText id="label" value="#{definicaoVariavelProcessoAction2.variavel.label}"
+			label="#{infoxMessages['definicaoVariavelProcesso.label']}" required="true" />
+		<wi:inputTextarea id="valorPadrao" value="#{definicaoVariavelProcessoAction2.variavel.valorPadrao}"
+			label="Valor" />
+
+		<div />
+		<a:commandButton value="#{infoxMessages['crud.persist']}" action="#{definicaoVariavelProcessoAction2.persist}"
+			render="pageBodyDialogMessage meuDataSource @form" limitRender="true" styleClass="buttons"
+			oncomplete="closeIfPersistOk()" rendered="#{empty definicaoVariavelProcessoAction2.variavel.id}" />
+			
+		<a:commandButton value="#{infoxMessages['crud.update']}" action="#{definicaoVariavelProcessoAction2.update}"
+            render="pageBodyDialogMessage meuDataSource"
+            limitRender="true" styleClass="buttons" oncomplete="closeIfPersistOk()" rendered="#{not empty definicaoVariavelProcessoAction2.variavel.id}" />
+		<script>
+           function closeIfPersistOk() {
+               if (!#{facesContext.validationFailed}) {
+                   #{rich:component('formDefinicaoVariavelModal')}.hide();
+               }
+           }
+       </script>
+	</h:form>
+</rich:popupPanel>
+
+</ui:composition>

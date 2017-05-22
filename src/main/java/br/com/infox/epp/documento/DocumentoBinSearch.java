@@ -1,6 +1,7 @@
 package br.com.infox.epp.documento;
 
 import static br.com.infox.core.util.ObjectUtil.is;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

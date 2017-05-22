@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.validation.ValidationException;
 
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.certificado.CertificadoGenerico;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.InfoxMessages;
@@ -22,7 +23,6 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
-import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;

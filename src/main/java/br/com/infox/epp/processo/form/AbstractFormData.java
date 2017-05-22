@@ -5,52 +5,65 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.ws.Holder;
+
 import org.jbpm.context.def.VariableAccess;
-import org.jbpm.graph.def.ProcessDefinition;
 
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.type.FormTypes;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.seam.exception.BusinessException;
+import lombok.Getter;
 
 public abstract class AbstractFormData implements FormData {
     
+    protected Holder<Processo> processo;
+    protected boolean isTaskPage;
+    @Getter
     protected String formKey;
-    protected Processo processo;
+    @Getter
     protected Map<String, FormType> formTypes = new HashMap<>();
+    @Getter
     protected List<FormField> formFields = new ArrayList<FormField>();
+    @Getter
+    protected List<FormField> formFieldsReadOnly = new ArrayList<FormField>();
     
-    public AbstractFormData(String formKey, Processo processo) {
+    public AbstractFormData(String formKey, Holder<Processo> processo) {
         this.formKey = formKey;
         this.processo = processo;
     }
     
-    protected void createFormFields(List<VariableAccess> variableAccesses, ProcessDefinition processDefinition) {
+    protected void createFormFields(List<VariableAccess> variableAccesses) {
         VariableAccess variableTaskPage = getTaskPage(variableAccesses);
         if (variableTaskPage != null) {
-            createFormField(processDefinition, variableTaskPage);
+            createFormField(variableTaskPage);
+            isTaskPage = true;
         } else {
             for (VariableAccess variableAccess : variableAccesses) {
                 String type = variableAccess.getMappedName().split(":")[0];
                 if (!VariableType.PARAMETER.name().equals(type)) {
-                    createFormField(processDefinition, variableAccess);
+                    createFormField(variableAccess);
                 }
             }
         }
     }
 
-    private void createFormField(ProcessDefinition processDefinition, VariableAccess variableAccess) {
+    protected void createFormField(VariableAccess variableAccess) {
         String variableName = variableAccess.getVariableName();
+        String mappedName = variableAccess.isWritable() ? variableAccess.getMappedName() : variableAccess.getVariableName();
         FormField formField = new FormField();
         FormType formType = createFormType(variableAccess.getType());
         formField.setType(formType);
         formField.setId(variableName);
         formField.setLabel(variableAccess.getLabel());
-        formField.setValue(formType.convertToFormValue(getVariable(variableName)));
+        formField.setValue(formType.convertToFormValue(getVariable(mappedName)));
         formField.setProperties(createProperties(variableAccess));
         formType.performValue(formField, this);
-        getFormFields().add(formField);
+        if (variableAccess.isWritable()) {
+            getFormFields().add(formField);
+        } else {
+            getFormFieldsReadOnly().add(formField);
+        }
     }
     
     protected FormType createFormType(String type) {
@@ -77,10 +90,12 @@ public abstract class AbstractFormData implements FormData {
     }
     
     @Override
-    public void validate() throws BusinessException {
+    public boolean isInvalid() {
+        boolean valid = false;
         for (FormField formField : getFormFields()) {
-            formField.getType().validate(formField, this);
+            valid = valid | formField.getType().isInvalid(formField, this);
         }
+        return valid;
     }
     
     protected VariableAccess getTaskPage(List<VariableAccess> variableAccesses) {
@@ -92,34 +107,19 @@ public abstract class AbstractFormData implements FormData {
         }
         return null;
     }
-
-    public String getFormKey() {
-      return formKey;
-    }
-
-    public void setFormKey(String formKey) {
-      this.formKey = formKey;
-    }
-
-    public List<FormField> getFormFields() {
-      return formFields;
+    
+    public FormField getTaskPage() {
+        return isTaskPage ? getFormFields().get(0) : null;
     }
     
-    public void setFormFields(List<FormField> formFields) {
-      this.formFields = formFields;
+    @Override
+    public boolean isTaskPage() {
+        return isTaskPage;
     }
     
-    public Map<String, FormType> getFormTypes() {
-        return formTypes;
-    }
-
-    public void setFormTypes(Map<String, FormType> formTypes) {
-        this.formTypes = formTypes;
-    }
-
     @Override
     public Processo getProcesso() {
-        return processo;
+        return processo.value;
     }
-    
+
 }

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:p="http://primefaces.org/ui"
+>
+
+	<script type="text/javascript">
+        function onShowComponentAjudaPopup() {
+            var value = $('.componentAjudaPopup');
+            var width = $(window).width() * 0.9;
+            var height = $(window).height() * 0.9;
+            var top = (($(window).height() - height) / 2);
+            var left = (($(window).width() - width) / 2);
+            value.css('width', width + 'px');
+            value.css('height', height + 'px');
+            value.css('top', top + 'px');
+            value.css('left', left + 'px');
+            $('.componentAjudaPopup .filtered-fieldset--content').css('height', $(window).height() * 0.8);
+            $('.rf-pp-cnt-scrlr').css('width', '100%');
+            $('.rf-pp-cnt-scrlr').css('height', '100%');
+        }
+    </script>
+
+	<rich:popupPanel id="componentAjudaPopup" modal="true"
+		resizeable="true" styleClass="componentAjudaPopup"
+		onshow="onShowComponentAjudaPopup();">
+        <f:facet name="controls">
+			<h:graphicImage styleClass="mp-close"
+				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+				onclick="#{rich:component('componentAjudaPopup')}.hide();" />
+		</f:facet>
+		
+		
+		<p:outputPanel rendered="#{empty componentes}">
+				<div class="decoration-div">
+					<div class="property-field-edit-name">Nenhum componente definido para esse tipo</div>
+				</div>
+		</p:outputPanel>
+		<style>
+            .content-block.hidden {
+                display:none;
+            }
+        </style>
+		<p:outputPanel rendered="#{not empty componentes}">
+			<fieldset class="filtered-fieldset" style="position:relative">
+                <legend>
+                    <input oninput="infox.filter({input:this, filtered:'##{component.clientId} .filtered-fieldset--content> .content-block'.replace(/:/g,'\\:')})" />
+                    <wi:icon value="search" />
+                </legend>
+                <div class="filtered-fieldset--content" style="overflow:auto;">
+                    <ui:repeat value="#{componentes}" var="componente">
+        				<rich:panel styleClass="content-block" style="margin: 1.5em 0 0">
+        					<div class="decoration-div">
+        						<div class="property-field-edit-name">#{infoxMessages[componente.id]}</div>
+        						<div class="property-field-edit-value">#{infoxMessages[componente.name]}</div>
+        						<div class="property-field-edit-value">#{infoxMessages[componente.description]}</div>
+        					</div>
+        					<div />
+        	
+        					<p:outputPanel style="margin: 1em 0 0;"
+        						rendered="#{componentAjudaController.hasParameter(componente) and not empty componente.parameters}">
+        						<h:outputText styleClass="property-field-edit-name"
+        							value="#{infoxMessages['process.events.expression.parameters']}" />
+        						<div style="padding: 0 0 0 1.5em;">
+        							<ui:repeat var="p" value="#{componente.parameters}">
+        								<div class="decoration-div">
+        									<div class="property-field-edit-name">#{p.id}</div>
+        									<div class="property-field-edit-value">#{infoxMessages[p.description]}</div>
+        								</div>
+        								<div />
+        							</ui:repeat>
+        						</div>
+        					</p:outputPanel>
+        				</rich:panel>
+        			</ui:repeat>
+                </div>
+            </fieldset>
+		</p:outputPanel>
+	</rich:popupPanel>
+
+
+</ui:composition>

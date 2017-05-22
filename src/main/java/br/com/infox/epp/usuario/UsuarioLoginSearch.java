@@ -17,7 +17,6 @@ import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.Papel_;
 import br.com.infox.epp.access.entity.PerfilTemplate;

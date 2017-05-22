@@ -26,7 +26,6 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
-import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.xml.sax.InputSource;
 
@@ -53,7 +52,6 @@ import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.ibpm.swimlane.SwimlaneInstanceSearch;
 import br.com.infox.ibpm.task.dao.TaskInstanceDAO;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
@@ -68,8 +66,6 @@ public class FluxoMergeService {
     private FluxoManager fluxoManager;
     @Inject
     private RaiaPerfilManager raiaPerfilManager;
-    @Inject
-    private SwimlaneInstanceSearch swimlaneInstanceSearch;
     @Inject
     private TaskInstanceDAO taskInstanceDAO;
     @Inject
@@ -185,12 +181,6 @@ public class FluxoMergeService {
     private void atualizarRaiaPooledActors(Long idProcessDefinition) {
        EntityManager entityManager = EntityManagerProducer.instance().getEntityManagerNotManaged();
        try {
-           List<SwimlaneInstance> swimlaneInstances = swimlaneInstanceSearch.getSwimlaneInstancesByProcessDefinition(idProcessDefinition, entityManager);
-           for (SwimlaneInstance swimlaneInstance : swimlaneInstances) {
-               String[] pooledActorIds = swimlaneInstance.getSwimlane().getPooledActorsExpression().split(",");
-               swimlaneInstance.setPooledActors(pooledActorIds);
-           }
-           entityManager.flush();
            List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManager);
            for (TaskInstance taskInstance : taskInstances) {
                ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());

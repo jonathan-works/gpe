@@ -1,11 +1,18 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
+import static br.com.infox.epp.processo.comunicacao.envio.action.EnvioComunicacaoController.CODIGO_LOCALIZACAO_ASSINATURA;
+import static br.com.infox.epp.processo.comunicacao.envio.action.EnvioComunicacaoController.CODIGO_PERFIL_ASSINATURA;
+import static br.com.infox.epp.processo.comunicacao.envio.action.EnvioComunicacaoController.CODIGO_TIPO_COMUNICACAO;
+import static br.com.infox.epp.processo.comunicacao.envio.action.EnvioComunicacaoController.EM_ELABORACAO;
+import static br.com.infox.epp.processo.comunicacao.envio.action.EnvioComunicacaoController.EXIBIR_RESPONSAVEIS_ASSINATURA;
+import static br.com.infox.epp.processo.comunicacao.envio.action.EnvioComunicacaoController.EXIBIR_TRANSICOES;
+import static br.com.infox.epp.processo.comunicacao.envio.action.EnvioComunicacaoController.PRAZO_PADRAO_RESPOSTA;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.NonUniqueResultException;
@@ -48,34 +55,53 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.infox.ibpm.variable.Taskpage;
-import br.com.infox.ibpm.variable.TaskpageParameter;
+import br.com.infox.ibpm.variable.components.AbstractTaskPageController;
+import br.com.infox.ibpm.variable.components.ParameterDefinition.ParameterType;
+import br.com.infox.ibpm.variable.components.ParameterVariable;
+import br.com.infox.ibpm.variable.components.Taskpage;
+import br.com.infox.jsf.util.JsfProducer.ParamValue;
+import br.com.infox.jsf.util.JsfProducer.RequestParam;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @Named
+@Taskpage(
+		id="enviarComunicacao",
+		xhtmlPath="/WEB-INF/taskpages/enviarComunicacao.xhtml",
+		name="Enviar Comunicação",
+		description="enviarComunicacao.description",
+		parameters={
+				@ParameterVariable(id=PRAZO_PADRAO_RESPOSTA, type=ParameterType.INTEGER, description="enviarComunicacao.parameter.prazo"),
+				@ParameterVariable(id=CODIGO_LOCALIZACAO_ASSINATURA, type=ParameterType.STRING, description="enviarComunicacao.parameter.codLocalizacaoAssinatura"),
+				@ParameterVariable(id=CODIGO_PERFIL_ASSINATURA, type=ParameterType.STRING, description="enviarComunicacao.parameter.codPerfilAssinatura"),
+				@ParameterVariable(id=CODIGO_TIPO_COMUNICACAO, type=ParameterType.STRING, description="enviarComunicacao.parameter.tipoComunicacao"),
+				@ParameterVariable(id=EM_ELABORACAO, type=ParameterType.BOOLEAN, description="enviarComunicacao.parameter.emElaboracao"),
+				@ParameterVariable(id=EXIBIR_TRANSICOES, type=ParameterType.BOOLEAN, description="enviarComunicacao.parameter.exibirTransicoes"),
+				@ParameterVariable(id=EXIBIR_RESPONSAVEIS_ASSINATURA, type=ParameterType.BOOLEAN, description="enviarComunicacao.parameter.exibirResponsavelAssinatura")
+		}
+)
 @ViewScoped
-@Taskpage(name = "enviarComunicacao", description = "enviarComunicacao.description")
-public class EnvioComunicacaoController implements Serializable {
+public class EnvioComunicacaoController  extends AbstractTaskPageController implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
 	public static final int MAX_RESULTS = 10;
 	private static final TipoUsoComunicacaoEnum TIPO = TipoUsoComunicacaoEnum.E;
 	//Parametros disponíveis para configuração da página de tarefa
-	private static final String CODIGO_TIPO_COMUNICACAO = "tipoComunicacao";
-	private static final String PRAZO_PADRAO_RESPOSTA = "prazoPadraoResposta";
-	private static final String CODIGO_LOCALIZACAO_ASSINATURA = "localizacaoAssinaturaComunicacao";
-	private static final String CODIGO_PERFIL_ASSINATURA = "perfilAssinatura";
-	private static final String EM_ELABORACAO = "emElaboracao";
-	private static final String EXIBIR_TRANSICOES = "exibirTransicoes";
-	private static final String EXIBIR_RESPONSAVEIS_ASSINATURA = "exibirResponsavelAssinatura";
+	public static final String CODIGO_TIPO_COMUNICACAO = "tipoComunicacao";
+	public static final String PRAZO_PADRAO_RESPOSTA = "prazoPadraoResposta";
+	public static final String CODIGO_LOCALIZACAO_ASSINATURA = "localizacaoAssinaturaComunicacao";
+	public static final String CODIGO_PERFIL_ASSINATURA = "perfilAssinatura";
+	public static final String EM_ELABORACAO = "emElaboracao";
+	public static final String EXIBIR_TRANSICOES = "exibirTransicoes";
+	public static final String EXIBIR_RESPONSAVEIS_ASSINATURA = "exibirResponsavelAssinatura";
 	
 	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
@@ -106,23 +132,21 @@ public class EnvioComunicacaoController implements Serializable {
 	@Inject
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 	
+	@Inject @RequestParam
+	protected ParamValue<Long> jbpmProcessId;
+	@Inject @RequestParam
+	protected ParamValue<Long> idModeloComunicacao;
+	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	private Localizacao localizacaoRaizComunicacao;
 	private Localizacao localizacaoRaizAssinaturaComunicacao;
 	protected Long processInstanceId;
-	@TaskpageParameter(name = PRAZO_PADRAO_RESPOSTA, type="Integer", description = "enviarComunicacao.parameter.prazo")
 	private Integer prazoDefaultComunicacao = null;
-	@TaskpageParameter(name = CODIGO_LOCALIZACAO_ASSINATURA, type="String", description = "enviarComunicacao.parameter.codLocalizacaoAssinatura")
     private Localizacao localizacaoAssinatura;
-	@TaskpageParameter(name = CODIGO_PERFIL_ASSINATURA, type="String", description = "enviarComunicacao.parameter.codPerfilAssinatura")
     private PerfilTemplate perfilAssinatura;
-	@TaskpageParameter(name = CODIGO_TIPO_COMUNICACAO, description = "enviarComunicacao.parameter.tipoComunicacao")
 	private List<TipoComunicacao> tiposComunicacao;
-	@TaskpageParameter(name = EM_ELABORACAO, type="Boolean", description = "enviarComunicacao.parameter.emElaboracao")
 	private ModeloComunicacao modeloComunicacao;
-	@TaskpageParameter(name = EXIBIR_TRANSICOES, type="Boolean", description = "enviarComunicacao.parameter.exibirTransicoes")
 	private boolean exibirTransicoes = false;
-	@TaskpageParameter(name = EXIBIR_RESPONSAVEIS_ASSINATURA, type = "Boolean", description = "enviarComunicacao.parameter.exibirResponsavelAssinatura")
 	private boolean exibirResponsaveisAssinatura = true;
 	
 	private boolean finalizada;
@@ -130,35 +154,41 @@ public class EnvioComunicacaoController implements Serializable {
 	private Boolean expedida;
 	private Boolean comunicacaoSuficientementeAssinada;
 	private DestinatarioModeloComunicacao destinatario;
-	private boolean inTask = false;
+	protected boolean inTask = false;
 	private boolean minuta;
-	private String idModeloComunicacaoVariableName;
+	protected String idModeloComunicacaoVariableName;
 	private boolean isNew = true;
 	private boolean existeUsuarioLocalizacaoAssinatura = true;
 	private boolean existeParametroTipoComunicacao = false;
 	
 	@PostConstruct
 	public void init() {
-		String idJbpm = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("jbpmProcessId");
-		String idModelo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idModeloComunicacao");
-		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
-		if (idJbpm != null) { // Nova comunicação fora da aba de saída
-			processInstanceId = Long.valueOf(idJbpm);
-		} else if (idModelo == null) { // Nova comunicação dentro da aba de saída
-			processInstanceId = Long.valueOf(JbpmUtil.getProcesso().getIdJbpm());
-			inTask = taskInstance != null;
-		}
-		if (taskInstance != null) {
-		    idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
-		}
-		initModelo(idModelo == null ? null : Long.valueOf(idModelo));
-		initParametros();
-		clear();
+        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = getTaskInstance();
+        if ( !jbpmProcessId.isNull() ) { // Nova comunicação fora da aba de saída
+            processInstanceId = jbpmProcessId.getValue();
+        } else if ( idModeloComunicacao.isNull() ) { // Nova comunicação dentro da aba de saída
+            processInstanceId = Long.valueOf(getProcesso().getIdJbpm());
+            inTask = taskInstance != null;
+        }
+        if (taskInstance != null) {
+            idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
+        }
+        initModelo(idModeloComunicacao.getValue());
+        initParametros();
+        clear();
 	}
+	
+	protected org.jbpm.taskmgmt.exe.TaskInstance getTaskInstance() {
+	    return super.getTaskInstance() == null ? TaskInstance.instance() : super.getTaskInstance();
+	}
+	
+	protected Processo getProcesso() {
+        return super.getProcesso() == null ? JbpmUtil.getProcesso() : super.getProcesso();
+    }
 
-    private void initParametros() {
+    protected void initParametros() {
         if (inTask) {
-            String tipoComunicacaoCodigo = (String) TaskInstance.instance().getVariable(CODIGO_TIPO_COMUNICACAO);
+            String tipoComunicacaoCodigo = getVariable(CODIGO_TIPO_COMUNICACAO, String.class);
             if (!Strings.isNullOrEmpty(tipoComunicacaoCodigo)) {
                 TipoComunicacao tipoComunicacao = tipoComunicacaoSearch.getTiposComunicacaoAtivosByCodigo(tipoComunicacaoCodigo, TIPO);
                 if (tipoComunicacao == null) {
@@ -171,7 +201,7 @@ public class EnvioComunicacaoController implements Serializable {
                 }
             }
 
-            String prazo = (String) TaskInstance.instance().getVariable(PRAZO_PADRAO_RESPOSTA);
+            String prazo = (String) getTaskInstance().getVariable(PRAZO_PADRAO_RESPOSTA);
             if (!Strings.isNullOrEmpty(prazo)) {
                 try {
                     prazoDefaultComunicacao = new Integer(prazo);
@@ -180,7 +210,7 @@ public class EnvioComunicacaoController implements Serializable {
                 }
             }
 
-            String codigoLocalizacaoAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_LOCALIZACAO_ASSINATURA);
+            String codigoLocalizacaoAssinatura = (String) getTaskInstance().getVariable(CODIGO_LOCALIZACAO_ASSINATURA);
             if (!Strings.isNullOrEmpty(codigoLocalizacaoAssinatura)) {
                 localizacaoAssinatura = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoAssinatura);
                 if (localizacaoAssinatura == null) {
@@ -189,7 +219,7 @@ public class EnvioComunicacaoController implements Serializable {
                 getModeloComunicacao().setLocalizacaoResponsavelAssinatura(localizacaoAssinatura);
             }
 
-            String codigoPerfilTemplateAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_PERFIL_ASSINATURA);
+            String codigoPerfilTemplateAssinatura = (String) getTaskInstance().getVariable(CODIGO_PERFIL_ASSINATURA);
             if (!Strings.isNullOrEmpty(codigoPerfilTemplateAssinatura)) {
                 perfilAssinatura = perfilTemplateManager.getPerfilTemplateByCodigo(codigoPerfilTemplateAssinatura);
                 if (perfilAssinatura == null) {
@@ -198,12 +228,12 @@ public class EnvioComunicacaoController implements Serializable {
                 getModeloComunicacao().setPerfilResponsavelAssinatura(perfilAssinatura);
             }
             
-            Boolean exibirTransicoes = (Boolean) TaskInstance.instance().getVariable(EXIBIR_TRANSICOES);
+            Boolean exibirTransicoes = (Boolean) getTaskInstance().getVariable(EXIBIR_TRANSICOES);
             if (exibirTransicoes != null && exibirTransicoes) {
                 this.exibirTransicoes = true;
             }
             
-            Boolean exibirResponsavelAssinatura = (Boolean) TaskInstance.instance().getVariable(EXIBIR_RESPONSAVEIS_ASSINATURA);
+            Boolean exibirResponsavelAssinatura = (Boolean) getTaskInstance().getVariable(EXIBIR_RESPONSAVEIS_ASSINATURA);
             if (exibirResponsavelAssinatura != null && !exibirResponsavelAssinatura) {
                 this.exibirResponsaveisAssinatura = false;
             }
@@ -245,14 +275,14 @@ public class EnvioComunicacaoController implements Serializable {
         }
 	}
 
-	private void initModelo(Long idModelo) {
-	    org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
+	protected void initModelo(Long idModelo) {
+	    org.jbpm.taskmgmt.exe.TaskInstance taskInstance = getTaskInstance();
 		if (idModelo == null && taskInstance != null) { //Comunicação na aba de saída 
 			ContextInstance context = taskInstance.getContextInstance();
 			Token taskToken = taskInstance.getToken();
 			idModelo = (Long) context.getVariable(idModeloComunicacaoVariableName, taskToken);
 			if (idModelo == null) {
-	            Boolean emElaboracao = (Boolean) TaskInstance.instance().getVariable(EM_ELABORACAO);
+	            Boolean emElaboracao = (Boolean) getTaskInstance().getVariable(EM_ELABORACAO);
 	            if (emElaboracao != null && emElaboracao.equals(Boolean.TRUE)) {
 	                ModeloComunicacao modeloComunicacaoEmElaboracao = getModeloEmElaboracao();
 	                if (modeloComunicacaoEmElaboracao != null) {
@@ -317,7 +347,7 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 
-	private void clear() {
+	protected void clear() {
 		destinatario = null;
 		initLocalizacaoRaiz();
 		initDestinatarioComunicacaoAction();
@@ -325,13 +355,10 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 
 	private void setIdModeloVariable(Long id) {
-		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
-		if (taskInstance != null) {
-			ContextInstance context = taskInstance.getContextInstance();
-			Token taskToken = taskInstance.getToken();
-			context.setVariable(idModeloComunicacaoVariableName, id, taskToken);
+		if (getTaskInstance() != null) {
+			setVariable(idModeloComunicacaoVariableName, id, getTaskInstance().getToken());
 			if (id != null) {
-			    context.setVariable(ComunicacaoService.COMUNICACAO_EM_ELABORACAO, getModeloComunicacao());
+			    setVariable(ComunicacaoService.COMUNICACAO_EM_ELABORACAO, getModeloComunicacao());
 			}
 		}
 	}
@@ -454,7 +481,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 	
     private ModeloComunicacao getModeloEmElaboracao() {
-        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
+        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = getTaskInstance();
         if (taskInstance != null) {
             ContextInstance context = taskInstance.getContextInstance();
             return (ModeloComunicacao) context.getVariable(ComunicacaoService.COMUNICACAO_EM_ELABORACAO);
@@ -609,12 +636,12 @@ public class EnvioComunicacaoController implements Serializable {
         return exibirTransicoes && getModeloComunicacao().getFinalizada();
     }
 
-    private boolean podeAssinar() {
+    protected boolean podeAssinar() {
         return !getModeloComunicacao().isDocumentoBinario() && isUsuarioLogadoNaLocalizacaoPerfilResponsavel() && 
                 classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(Authenticator.getPapelAtual(), modeloComunicacao.getClassificacaoComunicacao());
     }
     
-    private boolean assinouComunicacao() {
+    protected boolean assinouComunicacao() {
         for (DestinatarioModeloComunicacao destinatario : getModeloComunicacao().getDestinatarios()) {
             if (!assinaturaDocumentoService.isDocumentoAssinado(destinatario.getDocumentoComunicacao().getDocumentoBin(),Authenticator.getPapelAtual(), 
                     Authenticator.getUsuarioLogado())) {
@@ -634,5 +661,9 @@ public class EnvioComunicacaoController implements Serializable {
         } else {
             FacesMessages.instance().add("É necessário assinar a comunicação para continuar");
         }
+    }
+    
+    public boolean isShowFormButtonsEnd() {
+        return true;
     }
 }

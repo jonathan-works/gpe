@@ -9,7 +9,6 @@ import org.jbpm.JbpmException;
 
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.exception.BusinessException;
 
 public class SendmailCommand {
 

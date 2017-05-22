@@ -20,6 +20,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.fluxo.dao.RaiaPerfilDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
+import br.com.infox.ibpm.swimlane.SwimlaneConfiguration;
 
 @Stateless
 @AutoCreate
@@ -50,12 +51,12 @@ public class RaiaPerfilManager extends Manager<RaiaPerfilDAO, RaiaPerfil> {
             if (swimlane.getPooledActorsExpression() == null || swimlane.getPooledActorsExpression().isEmpty()) {
                 throw new DAOException("A raia " + swimlane.getName() + " não possui perfil associado");
             }
-            String[] perfis = swimlane.getPooledActorsExpression().split(",");
-            for (String perfil : perfis) {
+            SwimlaneConfiguration configuration = SwimlaneConfiguration.fromPooledActorsExpression(swimlane.getPooledActorsExpression());
+            for (PerfilTemplate perfil : configuration.getPerfis()) {
                 RaiaPerfil raiaPerfil = new RaiaPerfil();
                 raiaPerfil.setFluxo(fluxo);
                 raiaPerfil.setNomeRaia(swimlane.getName());
-                raiaPerfil.setPerfilTemplate(perfilTemplateDAO.getPerfilTemplateByCodigo(perfil));
+                raiaPerfil.setPerfilTemplate(perfil);
                 persist(raiaPerfil);
             }
         }

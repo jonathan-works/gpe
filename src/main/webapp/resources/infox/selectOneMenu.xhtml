@@ -24,6 +24,8 @@
     	<composite:attribute name="validatorId" />
     	<composite:attribute name="converterId"/>
     	<composite:attribute name="enumClassName"/>
+    	<composite:attribute name="showRequired"/>
+    	<composite:attribute name="bindingComponent"/>
     	
     	<composite:attribute name="ajax" default="false" />
     	<composite:attribute name="render" default="@this" />
@@ -33,6 +35,8 @@
     	<composite:attribute name="onstart" />
     	<composite:attribute name="oncomplete" />
     	
+        <composite:clientBehavior name="change" event="change" targets="#{cc.attrs.id}Input" />
+        
     	<composite:facet name="label"/>
     </composite:interface>
 	
@@ -50,7 +54,7 @@
 	    	</script>
         	<div class="property-field-edit">
         		<div id="#{cc.attrs.id}LabelDiv" class="property-field-edit-name">
-	        		<h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
+	        		<h:outputLabel id="#{cc.attrs.id}Label" for="Input">
 	        			<h:outputText value="#{cc.attrs.label}" rendered="#{not empty cc.attrs.label}"/>
 	        			<c:if test="#{not empty cc.attrs.help}">
 		        			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
@@ -58,13 +62,13 @@
         				</c:if>
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
-	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
-	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
+	        		<h:outputText styleClass="required" rendered="#{empty cc.attrs.showRequired ? cc.attrs.required : cc.attrs.showRequired}" value="*" />
+	        		<h:message for="Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
-        			<h:selectOneMenu id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" styleClass="input select #{cc.attrs.styleClass}" 
+        			<h:selectOneMenu id="Input" value="#{cc.attrs.value}" styleClass="input select #{cc.attrs.styleClass}" 
         				required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.disabled}"
-        				style="#{cc.attrs.selectStyle}">
+        				style="#{cc.attrs.selectStyle}" binding="#{cc.attrs.bindingComponent}">
         				<c:if test="#{not cc.attrs.hideNoSelectionLabel}">
 				        	<f:selectItem noSelectionOption="true" itemValue="" itemLabel="#{cc.attrs.noSelectionLabel}" />
 				        </c:if>

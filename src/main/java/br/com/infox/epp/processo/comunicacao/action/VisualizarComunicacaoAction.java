@@ -14,10 +14,13 @@ import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.components.AbstractTaskPageController;
+import br.com.infox.ibpm.variable.components.Taskpage;
 
+@Taskpage(id="visualizarComunicacao", xhtmlPath="/WEB-INF/taskpages/visualizarComunicacao.xhtml", name="Visualizar comunicação")
 @Named
 @ViewScoped
-public class VisualizarComunicacaoAction implements Serializable{
+public class VisualizarComunicacaoAction extends AbstractTaskPageController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

@@ -3,7 +3,10 @@ package br.com.infox.epp.processo.form;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.faces.component.UIComponent;
+
 import br.com.infox.epp.processo.form.type.FormType;
+import br.com.infox.jsf.util.RequestScopeContext;
 
 public class FormField {
     
@@ -81,4 +84,17 @@ public class FormField {
     public void addProperty(String key, Object value) {
         properties.put(key, value);
     }
+
+	public UIComponent getComponent() {
+		return RequestScopeContext.get(getId() + "_component");
+	}
+
+	public void setComponent(UIComponent component) {
+	    RequestScopeContext.put(getId() + "_component", component);;
+	}
+	
+	public boolean isRequired() {
+	    return "true".equalsIgnoreCase(this.getProperty("required", String.class));
+	}
+
 }

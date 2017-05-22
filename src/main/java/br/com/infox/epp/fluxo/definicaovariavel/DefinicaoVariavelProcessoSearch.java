@@ -26,6 +26,7 @@ public class DefinicaoVariavelProcessoSearch {
 		CriteriaQuery<DefinicaoVariavelProcesso> query = cb.createQuery(DefinicaoVariavelProcesso.class);
 		Root<DefinicaoVariavelProcesso> root = query.from(DefinicaoVariavelProcesso.class);
 		query.where(cb.equal(root.get(DefinicaoVariavelProcesso_.fluxo), fluxo));
+		query.orderBy(cb.asc(root.get(DefinicaoVariavelProcesso_.label)));
 		return entityManager.createQuery(query).getResultList();
 	}
 	
@@ -76,6 +77,17 @@ public class DefinicaoVariavelProcessoSearch {
     	CriteriaQuery<DefinicaoVariavelProcessoRecurso> query = cb.createQuery(DefinicaoVariavelProcessoRecurso.class);
     	Root<DefinicaoVariavelProcessoRecurso> root = query.from(DefinicaoVariavelProcessoRecurso.class);
     	query.where(cb.equal(root.get(DefinicaoVariavelProcessoRecurso_.definicaoVariavelProcesso), definicaoVariavelProcesso));
+    	return EntityManagerProducer.getEntityManager().createQuery(query).getResultList();
+    }
+    
+	public List<DefinicaoVariavelProcessoRecurso> getDefinicoesVariaveis(Fluxo fluxo, String recursoVariavel) {
+		CriteriaBuilder cb = EntityManagerProducer.getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<DefinicaoVariavelProcessoRecurso> query = cb.createQuery(DefinicaoVariavelProcessoRecurso.class);
+    	Root<DefinicaoVariavelProcessoRecurso> root = query.from(DefinicaoVariavelProcessoRecurso.class);
+    	Join<DefinicaoVariavelProcessoRecurso, DefinicaoVariavelProcesso> definicao = root.join(DefinicaoVariavelProcessoRecurso_.definicaoVariavelProcesso, JoinType.INNER);
+    	//query.select(definicao);
+    	query.orderBy(cb.asc(root.get(DefinicaoVariavelProcessoRecurso_.ordem)));
+    	query.where(cb.equal(definicao.get(DefinicaoVariavelProcesso_.fluxo), fluxo), cb.equal(root.get(DefinicaoVariavelProcessoRecurso_.recurso), recursoVariavel));
     	return EntityManagerProducer.getEntityManager().createQuery(query).getResultList();
     }
 }

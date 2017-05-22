@@ -9,7 +9,9 @@
 	 xmlns:infox="http://www.infox.com.br/jsf"
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf" 
-	 xmlns:a="http://richfaces.org/a4j">
+	 xmlns:a="http://richfaces.org/a4j"
+                   xmlns:i="http://java.sun.com/jsf/composite/infox"
+                         xmlns:p="http://primefaces.org/ui">
 
 	<ui:param
 		 name="home"
@@ -83,11 +85,68 @@
                                     value="#{dominioVariavelTarefaCrudAction.codigo}" required="true"/>
                         <wi:inputText id="nome" label="#{infoxMessages['dominioVariavelTarefa.nome']}"
                                     value="#{dominioVariavelTarefaCrudAction.nome}" required="true"/>
-                        <wi:inputTextarea id="dominio" label="#{infoxMessages['dominioVariavelTarefa.dominio']}"
-                            required="true" value="#{dominioVariavelTarefaCrudAction.dominio}" 
-                            showCounter="false">
-                            <f:validator validatorId="dominioVariavelTarefaValidator" />
-                        </wi:inputTextarea>
+                        <i:inputTextarea id="dominio" label="#{infoxMessages['dominioVariavelTarefa.dominio']}"
+                            required="true" value="#{dominioVariavelTarefaCrudAction.dominio}"
+                            showCounter="false"
+                            validatorId="dominioVariavelTarefaValidator">
+                        </i:inputTextarea>
+                        <p:outputPanel id="panelPreview">
+                            <fieldset style="display:inline-block">
+                                <legend>Pré-visualizar</legend>
+                                <div style="display: inline-block; text-align: center; width:100%; margin-bottom : 1em;">
+                                    <a:commandButton value="Atualizar Parâmetros" styleClass="buttons"
+                                        action="#{dominioVariavelTarefaCrudAction.atualizarParametros}"
+                                        onbegin="infox.showLoading();"
+                                        oncomplete="infox.hideLoading();"
+                                        execute="dominio"
+                                        render="tabelaParametros panelComponente"/>
+                                </div>
+                                <h:dataTable id="tabelaParametros" value="#{dominioVariavelTarefaCrudAction.parametros.entrySet().toArray()}" var="item">
+                                    <h:column>
+                                        <wi:outputText id="parametroOut" label="Parâmetro" value="#{item.key}"/>
+                                        <wi:selectOneMenu id="tipoParametro"  items="#{dominioVariavelTarefaCrudAction.tiposParametros}"
+                                            label="Tipo"
+                                            value="#{item.value.tipo}">
+                                            <a:ajax
+                                                event="change"
+                                                onbegin="infox.showLoading();"
+                                                oncomplete="infox.hideLoading();"
+                                                execute="@this"
+                                                listener="#{dominioVariavelTarefaCrudAction.tipoAlterado(item.value)}"
+                                                render="panelValor pageBodyDialogMessage" />
+                                        </wi:selectOneMenu>
+                                        <p:outputPanel id="panelValor" style="display: inline">
+                                            <wi:inputText id="inputValorTexto" label="Valor" rendered="#{item.value.tipo == 'TEXTO'}" value="#{item.value.valor}"/>
+                                            <wi:inputDate id="inputValorData" label="Valor" rendered="#{item.value.tipo == 'DATA'}" value="#{item.value.valor}"/>
+                                            <wi:selectBooleanCheckbox id="inputValorBoolean" label="Valor" rendered="#{item.value.tipo == 'BOOLEAN'}" value="#{item.value.valor}" />
+                                            <wi:inputText id="inputValorInteiro" label="Valor" rendered="#{item.value.tipo == 'INTEIRO'}" value="#{item.value.valor}" converterId="integerConverter"/>
+                                        </p:outputPanel>
+                                    </h:column>
+                                </h:dataTable>
+                                <div style="display: inline-block; text-align: center; width:100%">
+                                    <a:commandButton value="Consultar" styleClass="buttons"
+                                        action="#{dominioVariavelTarefaCrudAction.atualizarItens}"
+                                        onbegin="infox.showLoading();"
+                                        oncomplete="infox.hideLoading();"
+                                        execute="dominio tabelaParametros"
+                                        render="panelComponente"/>
+                                </div>
+                                <p:outputPanel id="panelComponente" style="margin-left: 1rem; margin-top: 1em">
+                                    <p:outputPanel rendered="#{dominioVariavelTarefaCrudAction.itens ne null}">
+                                        <wi:selectOneMenu id="comboEnumSimple"
+                                            rendered="#{dominioVariavelTarefaCrudAction.currentVariable.type == 'ENUMERATION'}"
+                                            selectStyle="max-width: 350px"
+                                            items="#{dominioVariavelTarefaCrudAction.itens}" />
+                                        <i:selectManyMenu id="comboEnumMultiple"
+                                            rendered="#{dominioVariavelTarefaCrudAction.currentVariable.type == 'ENUMERATION_MULTIPLE'}"
+                                            items="#{dominioVariavelTarefaCrudAction.itens}"
+                                            selectStyle="width: 300px"
+                                        />
+                                    </p:outputPanel>
+                                    <wi:outputText id="mensagemOut" rendered="#{dominioVariavelTarefaCrudAction.mensagemErro ne null}" value="#{dominioVariavelTarefaCrudAction.mensagemErro}" styleClass="property-error"/>
+                                </p:outputPanel>
+                            </fieldset>
+                        </p:outputPanel>
                             
                         <ui:define name="buttons">
                             <a:commandButton render="defaultTabPanel pageBodyDialogMessage" styleClass="buttons"

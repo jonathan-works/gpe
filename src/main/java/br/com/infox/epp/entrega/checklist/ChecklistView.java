@@ -1,5 +1,8 @@
 package br.com.infox.epp.entrega.checklist;
 
+import static br.com.infox.epp.entrega.checklist.ChecklistView.PARAMETER_EXIBIR_NAO_VERIFICADO;
+import static br.com.infox.epp.entrega.checklist.ChecklistView.PARAMETER_PASTA;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,17 +36,25 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.MovimentarController;
 import br.com.infox.epp.processo.marcador.MarcadorSearch;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
-import br.com.infox.ibpm.variable.Taskpage;
-import br.com.infox.ibpm.variable.TaskpageParameter;
+import br.com.infox.ibpm.variable.components.AbstractTaskPageController;
+import br.com.infox.ibpm.variable.components.ParameterDefinition.ParameterType;
+import br.com.infox.ibpm.variable.components.ParameterVariable;
+import br.com.infox.ibpm.variable.components.Taskpage;
 
+@Taskpage(id="checklist", xhtmlPath="/WEB-INF/taskpages/checklist.xhtml", name="Checklist",	description="checklist.description",
+		parameters={
+				@ParameterVariable(id=PARAMETER_PASTA, description="Pasta a ser considerada no checklist"),
+				@ParameterVariable(id=PARAMETER_EXIBIR_NAO_VERIFICADO, type=ParameterType.BOOLEAN, description="Deve exibir opção 'Não verificado'?")				
+		}
+)
 @Named
 @ViewScoped
-@Taskpage(name = "checklist", description = "checklist.description")
-public class ChecklistView implements Serializable {
+public class ChecklistView extends AbstractTaskPageController implements Serializable {
+    
     private static final long serialVersionUID = 1L;
 
-    private static final String PARAMETER_PASTA = "pastaChecklist";
-    private static final String PARAMETER_EXIBIR_NAO_VERIFICADO = "exibirNaoVerificado";
+    public static final String PARAMETER_PASTA = "pastaChecklist";
+    public static final String PARAMETER_EXIBIR_NAO_VERIFICADO = "exibirNaoVerificado";
 
     @Inject
     private ChecklistService checklistService;
@@ -60,9 +71,7 @@ public class ChecklistView implements Serializable {
     @Inject
     private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
 
-    @TaskpageParameter(name = PARAMETER_PASTA, description = "Pasta a ser considerada no checklist")
     private Pasta pasta;
-    @TaskpageParameter(name = PARAMETER_EXIBIR_NAO_VERIFICADO, type = "Boolean", description = "Deve exibir opção 'Não verificado'?")
     private Boolean exibirNaoVerificado;
 
     // Controle geral
@@ -299,4 +308,5 @@ public class ChecklistView implements Serializable {
     	String texto = String.format("Excluído por %s. Motivo: %s", historico.getUsuarioAlteracao(), historico.getMotivo());
     	return texto;
     }
+
 }

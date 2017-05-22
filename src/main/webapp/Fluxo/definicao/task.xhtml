@@ -97,7 +97,7 @@
                                     return false;
                             };
                         </h:outputScript>
-                        <rich:autocomplete value="#{var.name}" style="font-size:1em;"
+                        <rich:autocomplete value="#{var.name}"
                             rendered="#{empty var.name and !empty t.previousVariables}" selectFirst="false"
                             autocompleteList="#{t.previousVariables}" mode="client" minChars="2" styleClass="infox-rf-au"
                             clientFilterFunction="customFilter">
@@ -106,9 +106,9 @@
                             <a:ajax status=":status" listener="#{var.copyVariable()}" event="selectitem"
                                 render="varDiv,writable,varLabelForm,formVariableType,resetVariableForm" limitRender="true" />
                         </rich:autocomplete>
-                        <s:div rendered="#{(var.type eq 'TASK_PAGE' or var.type eq 'FRAME') and taskpageMapLoader.getTaskpage(var.name) ne null}" style="display: inline-block">
+                        <s:div rendered="#{(var.type eq 'TASK_PAGE' and taskpageMapLoader.getTaskpage(var.name) ne null) or (var.type eq 'FRAME' and taskpageMapLoader.getFrame(var.name) ne null)}" style="display: inline-block">
                             <ui:include src="helpers/taskpageAjuda.xhtml">
-                                <ui:param name="taskpage" value="#{taskpageMapLoader.getTaskpage(var.name)}" />
+                                <ui:param name="taskpage" value="#{var.type eq 'TASK_PAGE' ? taskpageMapLoader.getTaskpage(var.name) : taskpageMapLoader.getFrame(var.name)}" />
                             </ui:include>
                             <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
                                 onclick="#{rich:component('taskpageAjudaPopup')}.show();" />
@@ -171,6 +171,15 @@
                             render="varTable, addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
                             limitRender="true" />
                     </wi:selectOneMenu>
+                    <s:div rendered="#{not empty var and not empty var.type and (var.type eq 'TASK_PAGE' or var.type eq 'FRAME')}" style="display: inline-block">
+						<ui:include src="helpers/componentAjuda.xhtml">
+							<ui:param name="componentes"
+								value="#{var.type eq 'TASK_PAGE' ? taskpageMapLoader.taskpages : taskpageMapLoader.frames}" />
+						</ui:include>
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                                onclick="#{rich:component('componentAjudaPopup')}.show();" />
+					</s:div>
+                    
                     <a:jsFunction name="renderDominio" execute="@this" render="varTable" limitRender="true"
                         oncomplete="hideLoading();" onbegin="showLoading();" />
                     <a:jsFunction name="renderData" execute="@this" render="definicaoTipoData" limitRender="true"
@@ -255,6 +264,11 @@
                                 <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
                                 render="addVarDiv, @this, :pageBodyDialogMessage, varDiv" limitRender="true" />
                             </wi:inputText>
+                            <div style="display: inline-block">
+				                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+				                    onclick="#{rich:component('mascaraAjudaPopup')}.show();" />
+				            </div>
+				            <ui:include src="helpers/mascaraAjuda.xhtml" />
                         </div>
                     </rich:panel>
                     <h:form rendered="#{var.type eq 'PARAMETER'}">

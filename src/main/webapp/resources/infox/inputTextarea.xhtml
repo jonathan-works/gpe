@@ -24,6 +24,8 @@
     	<composite:attribute name="onkeyup" />
     	<composite:attribute name="validatorId" />
     	<composite:attribute name="showCounter" default="true"/>
+    	<composite:attribute name="showRequired" default="false"/>
+    	<composite:attribute name="bindingComponent" />
     	
     	<!-- Ajax Attributes -->
     	<composite:attribute name="ajax" default="false" />
@@ -33,7 +35,9 @@
     	<composite:attribute name="immediate" default="false" />
     	<composite:attribute name="onstart" />
     	<composite:attribute name="oncomplete" />
-    	
+        
+        <composite:clientBehavior name="change" event="change" targets="input" />
+        
     	<composite:facet name="label"/>
     </composite:interface>
 	
@@ -53,7 +57,7 @@
 	    	</script>
         	<div class="property-field-edit">
         		<div class="property-field-edit-name">
-	        		<h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
+	        		<h:outputLabel id="#{cc.attrs.id}Label" for="input">
 	        			<h:outputText value="#{cc.attrs.label} " rendered="#{not empty cc.attrs.label}"/>
 	        			<c:if test="#{not empty cc.attrs.help}">
 		        			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
@@ -61,30 +65,32 @@
         				</c:if>
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
-	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
-	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
+	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required or cc.attrs.showRequired}" value="*" />
+	        		<h:message for="input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
-        			<h:inputTextarea id="#{cc.attrs.id}Input" styleClass="#{styleClass} input #{readonly ? 'readOnly' : ''} ifx-textarea"
+        			<h:inputTextarea id="input" styleClass="#{styleClass} input #{readonly ? 'readOnly' : ''} ifx-textarea"
 				      style="#{cc.attrs.inputStyle}"
-                      readonly="#{cc.attrs.readonly}" cols="#{cc.attrs.cols}"
-				      rows="#{cc.attrs.rows}" onblur="#{cc.attrs.onblur}"
-				      disabled="#{cc.attrs.disabled}" required="#{cc.attrs.required}"
-				      value="#{cc.attrs.value}">
-				      <c:if test="#{cc.attrs.ajax}">
-					      <c:if test="#{empty cc.getValueExpression('listener')}">
-					    	  <p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
-						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}"/>
-					      </c:if>
-					      <c:if test="#{not empty cc.getValueExpression('listener')}">
-						      <p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
-						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}" listener="#{cc.attrs.listener}"/>
-					      </c:if>
-				      </c:if>
-	   				  <c:if test="#{not empty cc.attrs.validatorId}">
-   					  	  <f:validator validatorId="#{cc.attrs.validatorId}" />
-	   				  </c:if>
-		   			<f:converter converterId="stringConverter" />
+                            readonly="#{cc.attrs.readonly}" cols="#{cc.attrs.cols}"
+                            rows="#{cc.attrs.rows}" onblur="#{cc.attrs.onblur}"
+                            disabled="#{cc.attrs.disabled}" required="#{cc.attrs.required}"
+                            value="#{cc.attrs.value}" onkeyup="counterTextarea(this,#{maxlength});"
+                            binding="#{cc.attrs.bindingComponent}">
+                        <c:if test="#{cc.attrs.ajax}">
+                            <c:if test="#{empty cc.getValueExpression('listener')}">
+                                <p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
+                                    onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}"/>
+                            </c:if>
+                            <c:if test="#{not empty cc.getValueExpression('listener')}">
+                            <p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
+                                onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}" listener="#{cc.attrs.listener}"/>
+                            </c:if>
+                        </c:if>
+                        <c:if test="#{not empty cc.attrs.validatorId}">
+                        <f:validator validatorId="#{cc.attrs.validatorId}" />
+                        </c:if>
+		   			  <f:converter converterId="stringConverter" />
+                      <composite:insertChildren />
 				    </h:inputTextarea>
 				    <c:if test="#{cc.attrs.showCounter}">
 					    <div id="#{cc.clientId}:counterDiv" />

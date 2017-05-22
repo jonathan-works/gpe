@@ -3,14 +3,11 @@ package br.com.infox.ibpm.task.view;
 import static br.com.infox.ibpm.process.definition.variable.constants.VariableConstants.DEFAULT_PATH;
 import static java.text.MessageFormat.format;
 
-import java.io.File;
 import java.io.Serializable;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.ScopeType;
@@ -22,7 +19,6 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -31,6 +27,8 @@ import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
+import br.com.infox.ibpm.variable.components.FrameDefinition;
+import br.com.infox.ibpm.variable.components.VariableDefinitionService;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
@@ -67,6 +65,8 @@ public class TaskInstanceView implements Serializable {
     private Form form;
 
     private TaskInstance taskInstance;
+    
+    private VariableDefinitionService variableDefinitionService = BeanManager.INSTANCE.getReference(VariableDefinitionService.class);
 
     @Unwrap
     public Form getTaskForm() {
@@ -94,16 +94,8 @@ public class TaskInstanceView implements Serializable {
                     VariableType type = VariableType.valueOf(var.getType());//FIXME ver aqui se esse type estpa certo
                     if (variable.type == VariableType.FRAME) {
                         FormField formField = createFormField(variable);
-                        String url = format("/{0}.{1}", variable.name.replaceAll("_", "/"), "xhtml");
-                        String framePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(url);
-                        File file = new File(framePath);
-                        if (!file.exists()) {
-                            String containerPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
-                            Path findFirst = FileUtil.findFirst(containerPath + "/WEB-INF", "**" + url);
-                            if (findFirst != null) {
-                                url = findFirst.toString().replace(containerPath.toString(), "");
-                            }
-                        }
+                        FrameDefinition frame = variableDefinitionService.getFrame(variable.name);
+                        String url = frame.getXhtmlPath();
                         formField.getProperties().put("urlFrame", url);
                         formField.getProperties().put("readonly", true);
                         formField.getProperties().put("pagePath", variable.type.getPath());

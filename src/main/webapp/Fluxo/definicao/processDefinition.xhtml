@@ -9,8 +9,9 @@
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
-  xmlns:p="http://primefaces.org/ui"
+  xmlns:i="http://java.sun.com/jsf/composite/infox"
   xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:p="http://primefaces.org/ui"
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
  
   <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{empty processBuilder.instance ? '' : processBuilder.instance.name}</ui:define>
@@ -24,9 +25,96 @@
     <h:outputScript
       name="underscore.js"
       library="js" />
+    <h:outputScript name="fullscreen.js" library="js" />  
     <h:outputStylesheet name="diagram-js.css" library="modelador/css" />
+    <h:outputStylesheet name="modelador.css" library="modelador/css" />
 	<link type="text/css" href="#{pathResolver.contextPath}/resources/modelador/vendor/bpmn-font/css/bpmn.css" rel="stylesheet"></link>
 	<h:outputScript name="bundle.js" library="modelador" />
+	
+	<style>
+		.modeladorExibido {
+			background-color: white;
+			height: 600px;
+			width: 95%;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		
+		.modeladorEscondido {
+			width: 0;
+			height: 0;
+			visibility: hidden;
+		}
+		
+		.modeladorExibido.modeladorFullscreen {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+	
+	<script>
+		function initModelador() {
+	        window.modeler = new InfoxBpmnModeler({
+				'container': '#modelador',	        	
+	        	'bpmn': document.getElementById("#{rich:clientId('bpmnOriginal')}").value,
+	        	'configureElement': configureElement
+	        });
+		}
+		
+        function updateBpmn() {
+			doUpdate(JSON.stringify(window.modeler.getBpmnInformation()));
+		}
+        
+        function moveContainerModeladorToBody() {
+        	var containerModelador = $("#modelador");
+        	if (containerModelador.parent()[0] !== document.body) {
+	        	containerModelador.removeClass('modeladorExibido');
+	        	containerModelador.addClass('modeladorEscondido');
+	        	containerModelador.appendTo('body');
+        	}
+        }
+        
+        function moveContainerModeladorToTab() {
+        	var containerModelador = $("#modelador");
+        	if (containerModelador.parent()[0].id !== 'parentModelador') {
+	        	containerModelador.removeClass('modeladorEscondido');
+	        	containerModelador.addClass('modeladorExibido');
+	        	containerModelador.appendTo('#parentModelador');
+        	}
+        }
+        
+        function reinitModelador() {
+        	window.modeler.getRenderer().destroy();
+        	initModelador();
+        	moveContainerModeladorToTabIfInTab();
+        }
+        
+        function moveContainerModeladorToTabIfInTab() {
+        	if ($('#parentModelador').length === 1) {
+        		moveContainerModeladorToTab();
+        	}
+        }
+        
+        $(document).ready(function() {
+        	function handler(event) {
+        		if (event.srcElement.id === 'modelador') {
+        			var containerModelador = $("#modelador");
+        			if (document.fullscreenElement) {
+        				containerModelador.addClass('modeladorFullscreen');
+        			} else {
+        				containerModelador.removeClass('modeladorFullscreen');
+        			}
+        		}
+    		}
+        	
+        	document.addEventListener('fullscreenchange', handler, false);
+        	document.addEventListener('webkitfullscreenchange', handler, false);
+        	document.addEventListener('mozfullscreenchange', handler, false);
+        	
+        	initModelador();
+        });
+   </script>
+	
   </ui:define>
   <ui:define name="body">
     <!-- rich:tree para carregar javascript da tree para o nó de email. Não retirar, ver ticket #70361  -->
@@ -37,39 +125,16 @@
       
    	 <h:form id="modeladorForm">
 		<a:jsFunction name="doUpdate" execute="@this" render=":processDefinition @form :pageBodyDialogMessage" action="#{bpmnView.update}"
-			oncomplete="infox.hideLoading()" actionListener="#{processBuilder.prepareUpdate}">
+			actionListener="#{processBuilder.prepareUpdate}" onbeforedomupdate="moveContainerModeladorToBody()"
+			oncomplete="reinitModelador(); infox.hideLoading();">
 			<a:param name="bpmnInformation" assignTo="#{bpmnView.bpmnInformation}"/>
 		</a:jsFunction>
-		<a:jsFunction name="configureElement" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configureElement}">
+		<a:jsFunction name="configureElement" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configureElement}"
+			onbeforedomupdate="moveContainerModeladorToBody()">
 			<a:param name="elementKey" assignTo="#{bpmnView.elementKey}" />
 		</a:jsFunction>
      	
      	<h:inputHidden id="bpmnOriginal" value="#{bpmnView.definicaoProcesso.bpmn}" />
-		
-		<script>
-			function updateBpmn() {
-				doUpdate(JSON.stringify(modeler.getBpmnInformation()));
-				window.modeler = null;
-			}
-			
-			function updateTransientBpmn() {
-				if (window.modeler.getRenderer().container.parentNode.id === 'processDefinition:modelador') {
-					window.bpmn = window.modeler.getBpmnInformation().bpmn;
-				}
-			}
-			
-			function initModelador(container) {
-				if (!window.modeler) {
-					window.bpmn = document.getElementById("#{rich:clientId('bpmnOriginal')}").value;
-				}
-				
-		        window.modeler = new InfoxBpmnModeler({
-		        	'container': document.getElementById(container),
-		        	'bpmn': window.bpmn,
-		        	'configureElement': configureElement
-		        });
-			}
-		</script>
 	</h:form>
 	
     <infox:tabPanel
@@ -84,7 +149,7 @@
         id="propriedadesTab"
         title="#{infoxMessages['processBuilder.properties']}"
         render="processDefinitionButtonsForm"
-        onclick="updateTransientBpmn()">
+        onbeforedomupdate="moveContainerModeladorToBody()">
         <rich:panel header="#{infoxMessages['processBuilder.info']}">
           <h:form>
             <wi:inputText
@@ -116,28 +181,21 @@
           header="#{infoxMessages['processBuilder.swimlanes']}">
           <ui:include src="swimlanes.xhtml" />
         </rich:panel>
-        <p:outputPanel layout="block" id="modeladorAbaPropriedades" style="visibility: hidden; width: 0px; height: 0px;" />
-        <script>
-	        initModelador("#{rich:clientId('modeladorAbaPropriedades')}");
-        </script>
       </infox:tab>
       <infox:tab
         name="nodesTab"
         id="nodesTab"
         title="#{infoxMessages['processBuilder.nodes']}"
         render="processDefinitionButtonsForm"
-        onclick="updateTransientBpmn()">
+        onbeforedomupdate="moveContainerModeladorToBody()">
         <ui:include src="nodes.xhtml" />
-        <p:outputPanel layout="block" id="modeladorAbaNos" style="visibility: hidden; width: 0px; height: 0px;" />
-        <script>
-        	initModelador("#{rich:clientId('modeladorAbaNos')}");
-        </script>
       </infox:tab>
       <infox:tab
         name="modeladorTab"
         id="modeladorTab"
         title="#{infoxMessages['processBuilder.modelador']}"
-        render="processDefinitionButtonsForm">
+        render="processDefinitionButtonsForm"
+        oncomplete="moveContainerModeladorToTab()">
         <ui:include src="modelador.xhtml" />
       </infox:tab>
     </infox:tabPanel>
@@ -149,22 +207,21 @@
               infox.editor[key].instance.fire("blur");
             }
           }
-          updateBpmn();
         }
       </h:outputScript>
       <a:commandButton
         id="gravar"
         value="#{infoxMessages['processBuilder.saveBtn']}"
         styleClass="buttons #{wi:get(styleClass, '')}"
-        onclick="infox.showLoading(); checkIfEditorExists();" />
+        onclick="infox.showLoading(); checkIfEditorExists(); updateBpmn(); return false;" />
       <a:commandButton
         id="new"
         action="#{processBuilder.clearDefinition}"
         value="#{infoxMessages['processBuilder.newBtn']}"
         render=":processDefinition @form :modeladorForm :pageBodyDialogMessage"
         onclick="if (!confirm('#{infoxMessages['processBuilder.confirmNew']}')) return false; infox.showLoading();"
-        onbeforedomupdate="delete window.modeler;"
-        oncomplete="infox.hideLoading();"
+        onbeforedomupdate="moveContainerModeladorToBody();"
+        oncomplete="reinitModelador(); infox.hideLoading();"
         styleClass="buttons #{wi:get(styleClass, '')}" />
     </h:form>
     <s:div id="actionTemplate">
@@ -197,7 +254,11 @@
       width="920">
       <ui:include src="actions/addClassificacaoDocumento.xhtml" />
     </wi:modalPanel>
-    
+
+	<p:dialog id="configuracaoSwimlanePanel" appendTo="body" modal="true" closable="true" dynamic="true" widgetVar="configuracaoSwimlanePanel"
+		header="#{swimlaneFitter.currentSwimlane.name}" style="margin-left: 10px; margin-right: 10px">
+		<ui:include src="actions/swimlaneConfiguration.xhtml" />
+	</p:dialog>
     <rich:popupPanel id="modalVisualizarHistorico" width="950" height="650" maxHeight="600" modal="true" header="Histórico">
 		<f:facet name="controls">
 		    <h:graphicImage styleClass="mp-close"
@@ -206,5 +267,8 @@
 		</f:facet>
 		<ui:include src="visualizarHistorico.xhtml" />
 	</rich:popupPanel>
-  </ui:define>
+	
+	<div id="modelador" class="modeladorEscondido" />
+	
+	</ui:define>
 </ui:composition>

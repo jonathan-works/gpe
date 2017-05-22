@@ -9,7 +9,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import com.google.common.base.Charsets;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import br.com.infox.core.export.CsvWriter;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.list.CriteriaLazyDataModel.LoadListener;
 import br.com.infox.core.list.CriteriaQuerySource;

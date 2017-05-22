@@ -5,13 +5,12 @@ import org.jbpm.context.def.VariableAccess;
 import com.google.gson.Gson;
 
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.ibpm.variable.VariableDataHandler.DataConfig;
 
 public class VariableMaxMinHandler {
 
 	private VariableAccess variableAccess;
-	private Double maximo = 0D;
-	private Double minimo = 0D;
+	private Double maximo;
+	private Double minimo;
 
 	public void init(VariableAccess variableAccess) {
 		this.variableAccess = variableAccess;

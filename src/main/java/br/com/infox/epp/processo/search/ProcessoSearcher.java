@@ -11,7 +11,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;

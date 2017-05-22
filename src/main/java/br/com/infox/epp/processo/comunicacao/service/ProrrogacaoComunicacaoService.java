@@ -76,6 +76,7 @@ public class ProrrogacaoComunicacaoService {
 			criaMetadadoAnalisePedidoProrrogacao(comunicacao);
 		}
 	}
+	
 	//TODO ver porque recebe processo se não usa, usa apenas o taskInstanceHome
 	private void finalizarAnalisePedido(Processo comunicacao) throws DAOException{
 		TaskInstanceHome.instance().end(TaskInstanceHome.instance().getName());

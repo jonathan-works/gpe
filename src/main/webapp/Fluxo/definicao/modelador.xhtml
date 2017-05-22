@@ -7,35 +7,5 @@
 	xmlns:infox="http://www.infox.com.br/jsf"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<p:outputPanel layout="block" id="modelador" style="background-color: white; height: 600px; width: 95%; margin-left: auto; margin-right: auto;" />
-	
-	<script>
-		initModelador("#{rich:clientId('modelador')}");	
-	
-        function printSVG() {
-        	function popupAndPrint() {
-        		var svg = modeler.getBpmnInformation()['svg'];
-        		var printWindow = window.open('');
-        		printWindow.document.writeln(svg);
-        		printWindow.document.close();
-        		printWindow.print();
-        		printWindow.close();
-        	}
-        	setTimeout(popupAndPrint, 500);
-        }
-        
-        function exportarBpmn() {
-        	var bpmn = modeler.getBpmnInformation()['bpmn'];
-        	var element = document.createElement('a');
-        	element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(bpmn));
-        	element.setAttribute('download', '#{bpmnView.definicaoProcesso.fluxo.fluxo}.bpmn');
-        	element.style.display = 'none';
-        	document.body.appendChild(element);
-        	element.click();
-        	document.body.removeChild(element);
-        }
-    </script>
-    
-    <button onclick="printSVG()" class="buttons">Imprimir</button>
-    <button onclick="exportarBpmn()" class="buttons">Exportar</button>
+	<div id="parentModelador" />
 </ui:composition>

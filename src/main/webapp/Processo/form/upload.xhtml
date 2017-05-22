@@ -17,96 +17,138 @@
 	<ui:param name="readonly" value="#{formField.properties.readonly}" />
 	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
     
-    
-    <fieldset>
-        <legend>
-            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
-        </legend>
-    
-        <wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
-    	     label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-    	     value="#{formField.properties.classificacaoDocumento}"
-    	     items="#{classificacoesDocumento}"
-    	     showLabelSelecione="true" required="#{formField.properties.required}"
-    	     rendered="#{not readonly and not formField.value.hasAssinatura() and not formField.value.documentoBin.suficientementeAssinado}"
-    	     disabled="#{classificacoesDocumento.size eq 1}">
-    	     <a:ajax render="#{varId}UploadDiv #{varId}assinaturaDocumentoDiv" event="change" execute="@this" limitRender="true" />
-        </wi:selectOneMenuEntity>
-     
-    	 <p:outputPanel id="#{varId}UploadDiv">
-    	 
-    	     <i:input id="#{varId}" required="#{formField.properties.required}" 
-    	 		rendered="#{not empty formField.properties.classificacaoDocumento and not readonly and not formField.value.hasAssinatura() 
-    	 					and not formField.value.documentoBin.suficientementeAssinado}">
-    	 		<f:facet name="label">
-    				<p:outputPanel id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width:10px; display:inline-block; margin-left:10px;">
-    					<h:graphicImage id="#{varId}HelpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
-    					<div class="epp-tooltip">
-    						<div class="tooltip-panel">
-    							<s:div rendered="#{empty formField.properties.classificacaoDocumento}">
-    								<h:outputText value="Selecione uma classificação de documento" />
-    							</s:div>
-    							<s:div rendered="#{not empty formField.properties.classificacaoDocumento}">
-    								<div><h:outputText value="Extensões Aceitas:"/></div>
-    								<ui:repeat var="documento" value="#{formField.properties.classificacaoDocumento.acceptedTypesList}">
-    									<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
-    								</ui:repeat>
-    								<s:div styleClass="tooltip-panel-top" rendered="#{not empty formField.properties.classificacaoDocumento.observacao}">
-    									<div>
-    										<h:outputText value="Observação:"/>
-    									</div>
-    									<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}" />
-    								</s:div>
-    							</s:div>
-    						</div>
-    					</div>
-    				</p:outputPanel>
-    	 		</f:facet>
-    	 		<rich:fileUpload id="#{varId}Input" execute="@this" status=":status" limitRender="true"
-    		       required="#{wi:get(required, false)}" fileUploadListener="#{controller.processFileUpload}"
-    		       addLabel="#{infoxMessages['processoDocumento.addLabel']}" clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
-    		       clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
-    		       doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
-    		       uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
-    		       sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
-    		       maxFilesQuantity="10" listHeight="50px" immediateUpload="true" noDuplicate="true"
-    		       render="pageBodyDialogMessage, #{varId}UploadDiv, #{varId}assinaturaDocumentoDiv"
-    		       acceptedTypes="#{formField.properties.classificacaoDocumento.acceptedTypes}"
-    		       ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
-    		       <f:attribute name="formField" value="#{formField}" />
-    		       <f:attribute name="formData" value="#{formData}" />
-    		    </rich:fileUpload>
-    	 	  </i:input>
-    	
-    		  <ui:fragment rendered="#{not empty formField.value}">
-    		      <h:outputLabel for="#{varId}fieldSet" value="#{formField.label}" styleClass="name"
-    		  	      rendered="#{readonly or formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}"/>
-    		      <fieldset id="#{varId}fieldSet">
-    	             <legend>Documento Anexado #{formField.value.hasAssinatura() ? '(já assinado, não pode ser substituído)' : ''}</legend>
-    	             <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{formField.value.classificacaoDocumento.descricao}"/>
-    	             <br />
-    	             <h:outputText id="file#{varId}" value="Documento: #{formField.value.documentoBin.nomeArquivo}"/>
-    	            	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" 
-    	            		style="cursor: pointer" onclick="#{fileDownloader.getWindowOpen(formField.value.documentoBin)}" />
-    	          </fieldset>
-    	      </ui:fragment>
-    	    
-    	</p:outputPanel>
-    
-        <p:outputPanel id="#{varId}assinaturaDocumentoDiv" >
-    	   
-    	    <p:outputPanel id="#{varId}conteudoAssinatura" rendered="#{controller.podeAssinar(formField)}">
-    		   <wi:assinador 
-                   id="#{varId}CertificadoDigital"
-                   execute="#{varId}EditorDiv"
-                   render="#{varId}Div :pageBodyDialogMessage"
-                   onbegin="infox.showLoading();"
-                   oncomplete="infox.hideLoading();"
-                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
-                   value="#{infoxMessages['assinaturas.assinar']}" />
-    		</p:outputPanel>
+    <h:message for="panelEditor#{varId}" style="font-weight: bold;" styleClass="property-error property-msg #{varId}ErrorClass" />
+  	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.component}" styleClass="#{varId}DivClass">
+	    <fieldset>
+	        <legend>
+                <div class="property-field-edit-name" style="display: flex;">
+    	            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
+    	            <h:outputText styleClass="required" rendered="#{required}" value="*" />
+                </div>
+	        </legend>
+	    
+	        <i:selectOneMenu id="#{varId}ClassificacaoDocumento"
+	    	     label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+	    	     items="#{classificacoesDocumento}"
+                 required="false"
+                 ajax="true"
+                 render="@this @(.#{varId}UploadDiv) @(.#{varId}assinaturaDocumentoDiv)"
+                 execute="@this"
+                 hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
+	    	     value="#{formField.properties.classificacaoDocumento}"
+                 converterId="br.com.infox.jsf.converter.SelectItemConverter"
+	    	     readonly="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}"
+	    	     disabled="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}">
+	        </i:selectOneMenu>
+            <i:selectOneMenu id="#{varId}PastaDocumentoUpload"
+                label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+                required="false"
+                render="@this"
+                execute="@this"
+                ajax="true"
+                converterId="br.com.infox.jsf.converter.SelectItemConverter"
+                value="#{formField.properties.pasta}"
+                items="#{formField.properties.pastas}"
+                readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+                disabled="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+                noSelectionLabel="[Padrão]">
+            </i:selectOneMenu>
+	     
+	    	 <p:outputPanel id="#{varId}UploadDiv" styleClass="#{varId}UploadDiv">
+                 <p:blockUI block="@(.#{varId}BlockInputDiv)" blocked="#{empty formField.properties.classificacaoDocumento and not formField.value.hasAssinatura() and not readonly}">
+                     <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}" />
+                 </p:blockUI>
+	    	 
+	    	     <i:input id="#{varId}" required="false" styleClass="#{varId}BlockInputDiv"
+	    	 		rendered="#{not readonly and not formField.value.hasAssinatura() 
+	    	 					and not formField.value.documentoBin.suficientementeAssinado}">
+	    	 		<f:facet name="label">
+	    				<p:outputPanel id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width:10px; display:inline-block; margin-left:10px;">
+	    					<h:graphicImage id="#{varId}HelpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+	    					<div class="epp-tooltip">
+	    						<div class="tooltip-panel">
+	    							<s:div rendered="#{empty formField.properties.classificacaoDocumento}">
+	    								<h:outputText value="Selecione uma classificação de documento" />
+	    							</s:div>
+	    							<s:div rendered="#{not empty formField.properties.classificacaoDocumento}">
+	    								<div><h:outputText value="Extensões Aceitas:"/></div>
+	    								<ui:repeat var="documento" value="#{formField.properties.classificacaoDocumento.acceptedTypesList}">
+	    									<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
+	    								</ui:repeat>
+	    								<s:div styleClass="tooltip-panel-top" rendered="#{not empty formField.properties.classificacaoDocumento.observacao}">
+	    									<div>
+	    										<h:outputText value="Observação:"/>
+	    									</div>
+	    									<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}" />
+	    								</s:div>
+	    							</s:div>
+	    						</div>
+	    					</div>
+	    				</p:outputPanel>
+	    	 		</f:facet>
+	    	 		<rich:fileUpload id="#{varId}Input" execute="@this" status=":status" limitRender="true"
+	    		       required="false" fileUploadListener="#{controller.processFileUpload}"
+	    		       addLabel="#{infoxMessages['processoDocumento.addLabel']}" clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+	    		       clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+	    		       doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
+	    		       uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+	    		       sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+	    		       maxFilesQuantity="10" listHeight="50px" immediateUpload="true" noDuplicate="true"
+	    		       render="pageBodyDialogMessage, #{varId}UploadDiv, #{varId}assinaturaDocumentoDiv"
+	    		       acceptedTypes="#{formField.properties.classificacaoDocumento.acceptedTypes}"
+	    		       ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
+	    		       <f:attribute name="formField" value="#{formField}" />
+	    		       <f:attribute name="formData" value="#{formData}" />
+	    		    </rich:fileUpload>
+	    	 	  </i:input>
+	    	
+	    		  <ui:fragment rendered="#{not empty formField.value}">
+	    		      <h:outputLabel for="#{varId}fieldSet" value="#{formField.label}" styleClass="name"
+	    		  	      rendered="#{readonly or formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}"/>
+	    		      <fieldset id="#{varId}fieldSet">
+	    	             <legend>Documento Anexado #{formField.value.hasAssinatura() ? '(já assinado, não pode ser substituído)' : ''}</legend>
+	    	             <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{formField.value.classificacaoDocumento.descricao}"/>
+	    	             <br />
+	    	             <h:outputText id="file#{varId}" value="Documento: #{formField.value.documentoBin.nomeArquivo}"/>
+                            <p:commandLink process="@this" update="@this" onstart="infox.showLoading();" action="#{jsfUtil.applyLastPhaseFlashAction()}"
+                                oncomplete="infox.hideLoading();#{fileDownloader.getWindowOpen(formField.value.documentoBin)}">
+                                <f:setPropertyActionListener value="#{formField.value.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+                                <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
+    	    	            	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" 
+    	    	            		style="cursor: pointer" onclick="" />
+                            </p:commandLink>
+	    	          </fieldset>
+	    	      </ui:fragment>
+	    	    
+		    	</p:outputPanel>
+		    
+		        <p:outputPanel id="#{varId}assinaturaDocumentoDiv" >
+		    	       
+	    	    <p:outputPanel id="#{varId}conteudoAssinatura" rendered="#{controller.podeAssinar(formField)}">
+	    		   <wi:assinador 
+	                   id="#{varId}CertificadoDigital"
+	                   execute="@this"
+	                   render="panelEditor#{varId} @(.#{varId}DivClass) :pageBodyDialogMessage"
+	                   onbegin="infox.showLoading();"
+	                   oncomplete="infox.hideLoading();"
+                       callbackHandler="#{assinadorController}"
+	                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
+	                   value="#{infoxMessages['assinaturas.assinar']}" />
+	    		</p:outputPanel>
     		
-    	</p:outputPanel>
-    </fieldset>
-  
+	    	</p:outputPanel>
+	    </fieldset>
+    </p:outputPanel>
+	<script type="text/javascript">
+         (function(){
+             var id = "#{varId}";
+             var errorClass = $('.' + id + 'ErrorClass');
+             var div = $('.' + id + 'DivClass');
+             if (errorClass.length !== 0) {
+                 div.addClass('property-error');
+             } else {
+                 div.removeClass('property-error');
+             }
+         })();
+     </script>
  </ui:composition>
