@@ -82,5 +82,9 @@ public abstract class AbstractTaskPageController implements TaskpageController {
         return "idFormButtons";
     }
     
+    @Override
+    public String onClick() {
+        return "";
+    }
     
 }

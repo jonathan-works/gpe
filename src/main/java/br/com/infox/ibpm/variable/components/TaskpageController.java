@@ -20,4 +20,6 @@ public interface TaskpageController {
     
     String getIdFormButtons();
     
+    String onClick();
+    
 }

@@ -31,11 +31,10 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 @Taskpage(id="analisarPedidoProrrogacaoPrazo", xhtmlPath="/WEB-INF/taskpages/analisarPedidoProrrogacaoPrazo.xhtml", name="Analisar pedido de prorrogação de Prazo")
-@Named(AnalisarPedidoProrrogacaoPrazoAction.NAME)
+@Named
 @ViewScoped
 public class AnalisarPedidoProrrogacaoPrazoAction extends AbstractTaskPageController implements Serializable {
     
-	public static final String NAME = "analisarPedidoProrrogacaoPrazoAction";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(AnalisarPedidoProrrogacaoPrazoAction.class);
 	
@@ -46,11 +45,11 @@ public class AnalisarPedidoProrrogacaoPrazoAction extends AbstractTaskPageContro
 	@Inject
 	private DocumentoComunicacaoList documentoComunicacaoList;
 	@Inject
-	private ProrrogacaoComunicacaoService prorrogacaoComunicacaoService;
+	protected ProrrogacaoComunicacaoService prorrogacaoComunicacaoService;
 	
 	private Processo processoDocumento;
 	private List<Documento> documentosAnalise;
-	private Processo comunicacao;
+	protected Processo comunicacao;
 	private DestinatarioModeloComunicacao destinatarioComunicacao;
 	private Date dataFimPrazoCumprimento;
 	
@@ -58,12 +57,17 @@ public class AnalisarPedidoProrrogacaoPrazoAction extends AbstractTaskPageContro
 	private Date novoPrazoCumprimento;
 
 	@PostConstruct
-	public void init() {
-		processoDocumento = JbpmUtil.getProcesso();
+	protected void init() {
+		processoDocumento = getProcesso();
 		initDadosAnalise();
 		comunicacao = processoDocumento.getProcessoPai();
 		initDadosComunicacao();
 		clear();
+	}
+	
+	@Override
+	protected Processo getProcesso() {
+	    return super.getProcesso() == null ? JbpmUtil.getProcesso() : super.getProcesso();
 	}
 
 	private void clear() {
