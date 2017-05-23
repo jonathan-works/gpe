@@ -5,24 +5,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumentoPermissao;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
@@ -32,33 +28,29 @@ import br.com.infox.log.Logging;
 import br.com.infox.util.collection.Factory;
 import br.com.infox.util.collection.LazyMap;
 
-@AutoCreate
-@Scope(ScopeType.CONVERSATION)
-@Name(SigiloDocumentoPermissaoAction.NAME)
-@Transactional
-@ContextDependency
+@Named
+@ViewScoped
 public class SigiloDocumentoPermissaoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "sigiloDocumentoPermissaoAction";
     private static final LogProvider LOG = Logging.getLogProvider(SigiloDocumentoPermissaoAction.class);
 
-    @In
+    @Inject
     private SigiloDocumentoController sigiloDocumentoController;
-    @In
+    @Inject
     private SigiloDocumentoManager sigiloDocumentoManager;
-    @In
+    @Inject
     private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
     @Inject
     private UsuarioLoginManager usuarioLoginManager;
-    @In
+    @Inject
     private ActionMessagesService actionMessagesService;
 
     private Map<Integer, Boolean> permissoesMap;
     private Map<Integer, Boolean> usuariosMap;
     private Set<Integer> idsDocumentosSelecionados;
 
-    @Create
+    @PostConstruct
     public void init() {
         this.permissoesMap = new LazyMap<>(new Factory<Integer, Boolean>() {
             @Override
@@ -97,6 +89,7 @@ public class SigiloDocumentoPermissaoAction implements Serializable {
         return usuariosMap;
     }
 
+    @Transactional
     public void gravarPermissoes() {
         try {
             if (idsDocumentosSelecionados != null) {

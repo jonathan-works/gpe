@@ -2,33 +2,27 @@ package br.com.infox.epp.processo.documento.sigilo.service;
 
 import java.io.Serializable;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 
-@Name(SigiloDocumentoService.NAME)
-@AutoCreate
-@Scope(ScopeType.CONVERSATION)
-@Transactional
+@Named
+@ViewScoped
 public class SigiloDocumentoService implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "sigiloDocumentoService";
 
-    @In
+    @Inject
     private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
-
-    @In
+    @Inject
     private SigiloDocumentoManager sigiloDocumentoManager;
 
     public boolean possuiPermissao(Documento documento,
@@ -40,6 +34,7 @@ public class SigiloDocumentoService implements Serializable {
         return true;
     }
 
+    @Transactional
     public void gravarSigiloDocumento(SigiloDocumento sigiloDocumento) throws DAOException {
         SigiloDocumento sigiloDocumentoAtivo = sigiloDocumentoManager.getSigiloDocumentoAtivo(sigiloDocumento.getDocumento());
         if (sigiloDocumentoAtivo != null) {

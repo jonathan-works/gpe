@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.documento.sigilo.manager;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -20,6 +22,7 @@ import br.com.infox.epp.processo.entity.Processo;
 @Name(SigiloDocumentoPermissaoManager.NAME)
 @AutoCreate
 @Scope(ScopeType.EVENT)
+@Stateless
 public class SigiloDocumentoPermissaoManager extends Manager<SigiloDocumentoPermissaoDAO, SigiloDocumentoPermissao> {
 
     private static final long serialVersionUID = 1L;

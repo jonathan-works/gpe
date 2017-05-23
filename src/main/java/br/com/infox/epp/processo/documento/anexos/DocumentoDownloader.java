@@ -7,6 +7,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -53,7 +54,7 @@ public class DocumentoDownloader implements Serializable {
     private DocumentoManager documentoManager;
     @In
     private SigiloDocumentoManager sigiloDocumentoManager;
-    @In
+    @Inject
     private SigiloDocumentoService sigiloDocumentoService;
     @In
     private DocumentoBinManager documentoBinManager;

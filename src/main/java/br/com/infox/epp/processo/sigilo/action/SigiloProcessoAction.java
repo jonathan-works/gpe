@@ -8,20 +8,17 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.jboss.logging.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
@@ -29,15 +26,11 @@ import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoManager;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
-@Name(SigiloProcessoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
-@Transactional
-@ContextDependency
+@Named
+@ViewScoped
 public class SigiloProcessoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "sigiloProcessoAction";
     private static final Logger LOG = Logger.getLogger(SigiloProcessoAction.class);
     public static final String GERENCIAR_PERMISSOES = "P";
     public static final String DETALHES_DO_SIGILO = "D";
@@ -81,6 +74,7 @@ public class SigiloProcessoAction implements Serializable {
         this.informacaoTelaSigilo = informacaoTelaSigilo;
     }
 
+    @Transactional
     public void gravarSigiloProcesso() {
         this.sigiloProcesso.setUsuario(Authenticator.getUsuarioLogado());
         this.sigiloProcesso.setDataInclusao(new Date());
@@ -110,6 +104,7 @@ public class SigiloProcessoAction implements Serializable {
         return this.sigiloso;
     }
 
+    @Transactional
     public void gravarPermissoes() {
         List<SigiloProcessoPermissao> permissoes = new ArrayList<>();
         for (Integer idUsuario : this.usuariosPermissao.keySet()) {
