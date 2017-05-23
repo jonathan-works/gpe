@@ -67,11 +67,12 @@
                    </p:droppable>
                        <div class="header-title"><h:outputText value="#{recursoItem.recurso.nome}" /></div>
                        <p:outputLabel rendered="#{empty recursoItem.variaveis}">
-                       		<div>
-	                       		"Não existem variáveis configuradas para a funcionalidade."
+                       		<div align="center" style="border: 1px solid;width: 98%;margin-left: 4px;background-color: white;margin-top: 12px;margin-bottom: 12px;padding: 6px;">
+		                       		Não existem variáveis configuradas para a funcionalidade.
                        		</div>
                        </p:outputLabel>
-	                   <p:orderList styleClass="ifx-order-list--flexbox ifx-order-list" id="orderlist" value="#{recursoItem.variaveis}" var="varItem" itemValue="#{varItem.id}" controlsLocation="none" >
+	                   <p:orderList styleClass="ifx-order-list--flexbox ifx-order-list" id="orderlist" value="#{recursoItem.variaveis}" var="varItem" 
+	                   itemValue="#{varItem.id}" controlsLocation="none" rendered="#{not empty recursoItem.variaveis}">
 				        <p:ajax event="reorder" listener="#{definicaoVariavelProcessoAction2.onReorder}" update="recursosTable pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
 	                       <p:column>
 	                           <div class="item-variavel--flex">
