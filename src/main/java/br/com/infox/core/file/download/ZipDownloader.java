@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -116,6 +117,10 @@ public class ZipDownloader {
 		DocumentoBin documentoBin = documento.getDocumentoBin();
 		Integer numero = documento.getNumeroDocumento();
 		String nomeArquivoOriginal = documentoBin.getNomeArquivo();
+		if(!documentoBin.isBinario()) {
+			nomeArquivoOriginal = documento.getClassificacaoDocumento().getDescricao() + ".pdf";
+		}
+		nomeArquivoOriginal = Normalizer.normalize(nomeArquivoOriginal, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
 
 		String nomeArquivo = getNomeArquivo(numero, nomeArquivoOriginal);
 		
@@ -148,6 +153,9 @@ public class ZipDownloader {
 	protected static class DocumentosComparator implements Comparator<Documento> {
 
 		private String numero;
+		
+		public DocumentosComparator() {
+		}
 		
 		private Integer nullFirstCompare(Object o1, Object o2) {
 			if(o1 == null && o2 == null) {
