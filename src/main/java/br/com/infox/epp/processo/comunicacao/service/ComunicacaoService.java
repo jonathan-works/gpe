@@ -292,6 +292,9 @@ public class ComunicacaoService {
 		return pdfComunicacao;
 	}
 
+	public boolean hasDocumentoComunicacaoInclusoUsuarioInterno(List<Documento> documentos){
+		return documentoComunicacaoService.hasDocumentoInclusoPorUsuarioInterno(documentos);
+	}
 	private Documento getDocumentoComunicacao(ModeloComunicacao modeloComunicacao){
 		if (!modeloComunicacao.getFinalizada()) {
 			return documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento();

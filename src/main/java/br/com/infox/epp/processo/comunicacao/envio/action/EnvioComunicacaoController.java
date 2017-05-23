@@ -45,6 +45,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
@@ -372,6 +373,7 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
 
 	protected StringBuilder criarMensagensValidacao() {
 		StringBuilder msg = new StringBuilder();
+		
 		if (modeloComunicacao.getTipoComunicacao() == null) {
 			msg.append("Escolha o tipo de comunicação.\n");
 		}
@@ -383,6 +385,13 @@ public class EnvioComunicacaoController  extends AbstractTaskPageController impl
 		}
 		if (!modeloComunicacao.isMinuta() && modeloComunicacao.getClassificacaoComunicacao() == null){
 			msg.append("Escolha a classificação de documento.\n");
+		}
+		List<Documento> docs = new ArrayList<Documento>();
+		for (DocumentoModeloComunicacao documentoModeloComunicacao : modeloComunicacao.getDocumentos()) {
+			docs.add(documentoModeloComunicacao.getDocumento());
+		}
+		if(finalizada && modeloComunicacao.isDocumentoBinario() && !comunicacaoService.hasDocumentoComunicacaoInclusoUsuarioInterno(docs)){
+			msg.append("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno");
 		}
 		if (!modeloComunicacao.isMinuta() && Strings.isNullOrEmpty(modeloComunicacao.getTextoComunicacao())){
 			msg.append("O documento do editor não é minuta mas não existe texto no editor.\n");
