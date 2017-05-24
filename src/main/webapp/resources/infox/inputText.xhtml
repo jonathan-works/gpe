@@ -85,7 +85,7 @@
         	<c:if test="#{not empty cc.attrs.mascara}">
                 <script type="text/javascript">
                     $(document).ready(function(){
-                        $(document.getElementById("#{cc.clientId}:#{cc.attrs.id}Input")).mask('#{cc.attrs.mascara}',{fixed:true});
+                        $(document.getElementById("#{cc.clientId}:Input")).mask('#{cc.attrs.mascara}',{fixed:true});
                     });
                 </script>
 		    </c:if>
@@ -103,5 +103,4 @@
             })();
         </script>
     </composite:implementation>
-	taskForm:j_idt51:j_idt51Input
 </html>

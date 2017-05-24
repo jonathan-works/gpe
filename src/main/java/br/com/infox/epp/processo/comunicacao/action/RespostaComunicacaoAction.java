@@ -95,6 +95,8 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
 	private UsuarioPerfilDAO usuarioPerfilDAO;
 	@Inject
 	private PessoaRespostaComunicacaoSearch pessoaRespostaComunicacaoSearch; 
+	@Inject
+	private JsfUtil jsfUtil;
 	
 	private DestinatarioModeloComunicacao destinatario;
 
@@ -268,7 +270,7 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
 			}
 			newDocumentoEdicao();
 			respostaComunicacaoList.refresh();
-			JsfUtil.instance().execute("PF('panelPessoaResponderEditor').toggle();");
+			executeJavaScriptFunction("PF('panelPessoaResponderEditor').toggle()");
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -304,7 +306,7 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
 			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(resposta, processoComunicacao);
 			respostaComunicacaoList.refresh();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
-			JsfUtil.instance().execute("PF('panelPessoaResponderUpload').toggle();");
+			executeJavaScriptFunction("PF('panelPessoaResponderUpload').toggle();");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
@@ -313,7 +315,11 @@ public class RespostaComunicacaoAction extends AbstractTaskPageController implem
 		verificarPossibilidadeEnvioResposta();
 	}
 	
-	//TODO ver como colocar esse método no service
+	protected void executeJavaScriptFunction(String function) {
+       jsfUtil.execute(function);
+    }
+
+    //TODO ver como colocar esse método no service
 	@Transactional
 	public void enviarRespostaComunicacao(){
 		List<Documento> documentosRespostaComunicacao = getDocumentoRespostaList();

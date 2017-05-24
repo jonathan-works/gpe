@@ -17,8 +17,8 @@ public class DocumentoComunicacaoList extends DataList<Documento> {
 	public static final String NAME = "documentoComunicacaoList";
 	private static final long serialVersionUID = 1L;
 	
-	private static final String DEFAULT_EJBQL = "select o.documento from DocumentoModeloComunicacao o "
-			+ " where o.modeloComunicacao = #{documentoComunicacaoList.modeloComunicacao}";
+	private static final String DEFAULT_EJBQL = "select o.documento from DocumentoModeloComunicacao o ";
+	private static final String DEFAULT_WHERE = "where o.modeloComunicacao = #{documentoComunicacaoList.modeloComunicacao}";
 	
 	private static final String DEFAULT_ORDER = "o.documento.dataInclusao desc";
 	
@@ -27,6 +27,11 @@ public class DocumentoComunicacaoList extends DataList<Documento> {
 	@Override
 	protected String getDefaultEjbql() {
 		return DEFAULT_EJBQL;
+	}
+
+	@Override
+	protected String getDefaultWhere() {
+	    return DEFAULT_WHERE;
 	}
 
 	@Override

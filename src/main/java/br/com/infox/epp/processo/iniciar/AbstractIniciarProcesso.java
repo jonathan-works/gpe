@@ -21,8 +21,6 @@ public abstract class AbstractIniciarProcesso implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    protected static final String SCRIPT = "infox.openPopUp('executar{idTaskInstance}', '{contextPath}/Processo/Execucao/execucaoTarefa.seam?idTaskInstance={idTaskInstance}')";
-    
     @Inject
     protected JsfUtil jsfUtil;
     @Inject
@@ -49,15 +47,20 @@ public abstract class AbstractIniciarProcesso implements Serializable {
             for (TaskInstance taskInstance : taskInstances) {
                 boolean canOpenTask = situacaoProcessoDAO.canOpenTask(taskInstance.getId(), null, false);
                 if (canOpenTask) {
-                    PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
-                    String script = SCRIPT.replace("{contextPath}", pathResolver.getContextPath())
-                            .replace("{idTaskInstance}", String.valueOf(taskInstance.getId()));
-                    jsfUtil.execute(script);
-                    taskInstanceManager.atribuirTarefa(taskInstance.getId());
+                    abrirExecucaoTarefa(processo, taskInstance);
                     break;
                 }
             }
         }
+    }
+    
+    protected void abrirExecucaoTarefa(Processo processo, TaskInstance taskInstance) {
+        String url_path = "infox.openPopUp('executar{idProcesso}', '{contextPath}/Processo/movimentar.seam?idProcesso={idProcesso}&amp;idTaskInstance={idTaskInstance}')";
+        PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
+        String script = url_path.replace("{contextPath}", pathResolver.getContextPath())
+                .replace("{idTaskInstance}", String.valueOf(taskInstance.getId()))
+                .replace("{idProcesso}", String.valueOf(processo.getIdProcesso()));
+        jsfUtil.execute(script);
     }
 
 }

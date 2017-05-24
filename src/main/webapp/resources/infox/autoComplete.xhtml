@@ -80,18 +80,18 @@
             <div class="property-field-edit-value  #{cc.attrs.id}DivClass">
 
                 <p:autoComplete id="#{cc.attrs.id}Input" value="#{cc.attrs.value}"
-                    styleClass="input text crud #{cc.attrs.styleClass}" disabled="#{cc.attrs.disabled}"
+                    styleClass="input text #{cc.attrs.styleClass}" disabled="#{cc.attrs.disabled}"
                     readonly="#{cc.attrs.readonly}" onblur="#{cc.attrs.onblur}" onselect="#{cc.attrs.onselect}"
                     required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}"
                     onkeyup="#{cc.attrs.onkeyup}" placeholder="#{cc.attrs.placeholder}" onclick="#{cc.attrs.onclick}"
                     scrollHeight="#{cc.attrs.scrollHeight}"
-                    var="#{cc.attrs.var}" itemLabel="#{cc.attrs.itemLabel}" itemValue="#{cc.attrs.itemValue}"
+                    var="#{cc.attrs.var}" itemLabel="#{cc.attrs.itemLabel}" itemValue="#{cc.attrs.itemValue}" 
                     completeMethod="#{cc.attrs.completeMethod}" inputStyle="color: #333333; #{cc.attrs.inputStyle}" inputStyleClass="#{cc.attrs.inputStyleClass}"
                     maxResults="#{cc.attrs.maxResults}" minQueryLength="#{cc.attrs.minQueryLength}" 
                     queryDelay="#{cc.attrs.queryDelay}" emptyMessage="#{cc.attrs.emptyMessage}"
                     forceSelection="#{cc.attrs.forceSelection}" dropdown="#{cc.attrs.dropdown}"
                     dropdownMode="#{cc.attrs.dropdownMode}" multiple="#{cc.attrs.multiple}" style="#{cc.attrs.style}"
-                    widgetVar="#{cc.attrs.widgetVar}" 
+                    widgetVar="#{cc.attrs.widgetVar}"
                     cache="#{cc.attrs.cache}">
                     <c:if test="#{not empty cc.attrs.validator}">
                         <f:validator validatorId="#{cc.attrs.validator}" for="@this" />

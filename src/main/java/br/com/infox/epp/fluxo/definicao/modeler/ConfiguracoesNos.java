@@ -91,7 +91,7 @@ public class ConfiguracoesNos {
 			ClassificacaoDocumentoManager classificacaoDocumentoManager = BeanManager.INSTANCE.getReference(ClassificacaoDocumentoManager.class);
 			String codigoClassificacao = config.getCodigoClassificacaoDocumento();
 			String classificacao = classificacaoDocumentoManager.getNomeClassificacaoByCodigo(codigoClassificacao);
-			documentosGerados.add(new ConfiguracaoDocumentoGerado(codigoClassificacao, classificacao, node.getKey()));
+			documentosGerados.add(new ConfiguracaoDocumentoGerado(node.getKey(), classificacao, codigoClassificacao));
 		}
 	}
 

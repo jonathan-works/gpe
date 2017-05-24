@@ -10,13 +10,24 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 
+import org.jboss.com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.access.entity.PerfilTemplate_;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -35,6 +46,7 @@ import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -162,6 +174,17 @@ public class DocumentoComunicacaoService {
 		}
 	}
 
+	public boolean hasDocumentoInclusoPorUsuarioInterno(List<Documento> documentos) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<Documento> from = cq.from(Documento.class);
+		cq.select(cb.count(from.get(Documento_.id)));
+		Join<Documento, PerfilTemplate> perfil = from.join(Documento_.perfilTemplate,JoinType.INNER);
+		cq.where(perfil.get(PerfilTemplate_.codigo).in(papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_INTERNO.getValue())),
+				from.in(documentos));
+		return getEntityManager().createQuery(cq).getSingleResult() > 0L;
+		
+	}
 	public DocumentoModeloComunicacao getDocumentoInclusoPorUsuarioInterno(ModeloComunicacao modeloComunicacao) {
 		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_INTERNO.getValue()), modeloComunicacao);
 	}
@@ -173,6 +196,10 @@ public class DocumentoComunicacaoService {
 				genericManager.persist(documento);
 			}
 		}
+	}
+	
+	public EntityManager getEntityManager(){
+		return EntityManagerProducer.getEntityManager();
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
