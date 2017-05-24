@@ -150,7 +150,7 @@ public class ZipDownloader {
 		zos.closeEntry();
 	}
 	
-	protected static class DocumentosComparator implements Comparator<Documento> {
+	public static class DocumentosComparator implements Comparator<Documento> {
 
 		private String numero;
 		

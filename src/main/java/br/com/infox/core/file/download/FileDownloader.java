@@ -277,7 +277,7 @@ public class FileDownloader implements Serializable {
 		}
     }
 
-	private byte[] getOriginalData(DocumentoBin documento) {
+	public byte[] getOriginalData(DocumentoBin documento) {
         if (documentoBinarioManager.existeBinario(documento.getId())) {
         	byte[] data = documentoBinarioManager.getData(documento.getId());
         	documentoBinarioManager.detach(documento.getId());
