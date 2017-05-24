@@ -42,6 +42,7 @@ import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.epp.fluxo.definicao.modeler.configuracoes.ConfiguracoesNos;
 import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.service.HistoricoProcessDefinitionService;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
@@ -136,7 +137,7 @@ public class BpmnJpdlService {
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(newProcessDefinitionXml);
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
     	atualizarNomeFluxo(definicaoProcesso.getFluxo().getFluxo(), bpmnModel, processDefinition);
-    	new ConfiguracoesNos().resolverMarcadoresBpmn(processDefinition, bpmnModel);
+    	ConfiguracoesNos.resolverMarcadoresBpmn(processDefinition, bpmnModel);
     	
     	newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
     	// Validar consistência do JPDL
@@ -175,7 +176,7 @@ public class BpmnJpdlService {
     	Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
     	processDefinition.setKey(process.getId());
 		atualizarNomeFluxo(definicaoProcesso.getFluxo().getFluxo(), bpmnModel, processDefinition);
-		new ConfiguracoesNos().resolverMarcadoresBpmn(processDefinition, bpmnModel);
+		ConfiguracoesNos.resolverMarcadoresBpmn(processDefinition, bpmnModel);
 		
 		String newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
 		// Validar consistência do JPDL

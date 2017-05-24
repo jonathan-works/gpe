@@ -17,8 +17,8 @@ import org.jbpm.graph.def.ProcessDefinition;
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.epp.fluxo.definicao.modeler.BpmnJpdlService;
-import br.com.infox.epp.fluxo.definicao.modeler.ConfiguracoesNos;
 import br.com.infox.epp.fluxo.definicao.modeler.JpdlBpmnConverter;
+import br.com.infox.epp.fluxo.definicao.modeler.configuracoes.ConfiguracoesNos;
 import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.service.HistoricoProcessDefinitionService;
@@ -55,7 +55,7 @@ public class DefinicaoProcessoService {
         
         ProcessDefinition newProcessDefinition = new InfoxJpdlXmlReader(new StringReader(newProcessDefinitionXml)).readProcessDefinition();
         BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(definicaoProcesso.getBpmn().getBytes(StandardCharsets.UTF_8)));
-        new ConfiguracoesNos().resolverMarcadoresBpmn(newProcessDefinition, bpmnModel);
+        ConfiguracoesNos.resolverMarcadoresBpmn(newProcessDefinition, bpmnModel);
         definicaoProcesso.setBpmn(Bpmn.convertToString(bpmnModel));
         definicaoProcesso.setXml(newProcessDefinitionXml);
         definicaoProcesso = definicaoProcessoDao.update(definicaoProcesso);

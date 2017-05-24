@@ -40,6 +40,7 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 
+import br.com.infox.epp.fluxo.definicao.modeler.configuracoes.ConfiguracoesNos;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.util.BpmUtil;
@@ -73,7 +74,7 @@ public class JpdlBpmnConverter {
 		
 		startEvent = bpmnModel.getModelElementById(processDefinition.getStartState().getKey());
 		createDiagram(bpmnModel);
-		new ConfiguracoesNos().resolverMarcadoresBpmn(processDefinition, bpmnModel);
+		ConfiguracoesNos.resolverMarcadoresBpmn(processDefinition, bpmnModel);
 		
 		String bpmn = Bpmn.convertToString(bpmnModel);
 		return bpmn;
