@@ -91,7 +91,7 @@
                 protectedSource: [/#\{[^{}]+\}/g],
                 extraPlugins: 'showprotected',
                 removePlugins: 'elementspath',
-                allowedContent: true,
+                extraAllowedContent: 'img[!src, *]{*}(*)',
                 resize_enable:true,
                 resize_dir:'both',
                 toolbar_empty:[],
