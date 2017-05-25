@@ -26974,6 +26974,12 @@ module.exports = InfoxRenderer;
 
 InfoxRenderer.prototype.loadHandlers = function () {
     this.handlers['bpmn:UserTask'] = getHandlerEvents(this.handlers['bpmn:UserTask']);
+    this.handlers['bpmn:StartEvent'] = getHandlerEvents(this.handlers['bpmn:StartEvent']);
+    this.handlers['bpmn:EndEvent'] = getHandlerEvents(this.handlers['bpmn:EndEvent']);
+    this.handlers['bpmn:ParallelGateway'] = getHandlerEvents(this.handlers['bpmn:ParallelGateway']);
+    this.handlers['bpmn:ServiceTask'] = getHandlerEvents(this.handlers['bpmn:ServiceTask']);
+    this.handlers['bpmn:SubProcess'] = getHandlerEvents(this.handlers['bpmn:SubProcess']);
+    this.handlers['bpmn:SendTask'] = getHandlerEvents(this.handlers['bpmn:SendTask']);
     this.handlers['bpmn:ExclusiveGateway'] = getHandlerEvents(this.handlers['bpmn:ExclusiveGateway']);
 };
 

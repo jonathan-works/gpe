@@ -13,12 +13,24 @@ import br.com.infox.jbpm.event.EventHandler;
 
 class EventResolver {
     private BpmnModelInstance bpmnModel;
-    private static String[] ENTER_EVENTS = {
-        Event.EVENTTYPE_NODE_ENTER
+    private static final String[] ENTER_EVENTS = {
+        Event.EVENTTYPE_NODE_ENTER,
+        Event.EVENTTYPE_SUBPROCESS_CREATED,
+        Event.EVENTTYPE_SUPERSTATE_ENTER,
+        Event.EVENTTYPE_TASK_CREATE,
+        Event.EVENTTYPE_TASK_ASSIGN,
+        Event.EVENTTYPE_PROCESS_START,
     };
     
-    private static String[] EXIT_EVENTS = {
-            Event.EVENTTYPE_NODE_LEAVE
+    private static final String[] EXIT_EVENTS = {
+            Event.EVENTTYPE_NODE_LEAVE,
+            Event.EVENTTYPE_BEFORE_SIGNAL,
+            Event.EVENTTYPE_AFTER_SIGNAL,
+            Event.EVENTTYPE_PROCESS_END,
+            Event.EVENTTYPE_SUBPROCESS_END,
+            Event.EVENTTYPE_SUPERSTATE_LEAVE,
+            Event.EVENTTYPE_TASK_END,
+            Event.EVENTTYPE_TRANSITION
         };
     
     EventResolver(BpmnModelInstance bpmnModel) {
