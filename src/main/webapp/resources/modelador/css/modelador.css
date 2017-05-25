@@ -117,3 +117,7 @@
 .model-toolbar-export:not(.open) .model-toolbar-export-entries {
     display: none;
 }
+
+.djs-pallete-toggle {
+    
+}
