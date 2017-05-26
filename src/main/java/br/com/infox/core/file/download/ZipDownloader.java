@@ -31,6 +31,7 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.file.download.FileDownloader.Exporter;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoCompartilhamento;
 import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -152,10 +153,7 @@ public class ZipDownloader {
 	
 	public static class DocumentosComparator implements Comparator<Documento> {
 
-		private String numero;
-		
-		public DocumentosComparator() {
-		}
+		public static final DocumentosComparator INSTANCE = new DocumentosComparator();
 		
 		private Integer nullFirstCompare(Object o1, Object o2) {
 			if(o1 == null && o2 == null) {
@@ -190,14 +188,6 @@ public class ZipDownloader {
 				return result;
 			}
 			return nullFirstSafeCompare(o1.getDescricao(), o2.getDescricao());
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((numero == null) ? 0 : numero.hashCode());
-			return result;
 		}
 	}
 	
