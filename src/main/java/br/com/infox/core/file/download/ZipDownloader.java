@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -206,7 +207,9 @@ public class ZipDownloader {
 			Documento documento = documentoManager.find(idDocumento);
 			documentos.add(documento);
 		}
-		documentos.sort(new DocumentosComparator());
+
+		Collections.sort(documentos, DocumentosComparator.INSTANCE);
+		
 		
 		for(Documento documento: documentos) {
 			Integer idDocumento = documento.getId();
