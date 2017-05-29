@@ -2,23 +2,21 @@ package br.com.infox.epp.unidadedecisora.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
-@Name(UnidadeDecisoraMonocraticaList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class UnidadeDecisoraMonocraticaList extends EntityList<UnidadeDecisoraMonocratica> {
 	
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "unidadeDecisoraMonocraticaList";
 	
 	private static final String TEMPLATE = "/UnidadeDecisoraMonocratica/unidadeDecisoraMonocraticaTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "UnidadeDecisoraMonocratica.xls";
