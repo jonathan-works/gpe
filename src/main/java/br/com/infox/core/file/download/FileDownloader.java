@@ -175,7 +175,35 @@ public class FileDownloader implements Serializable {
             return;
         downloadDocumento(documento.getDocumentoBin());
     }
+    
+    public static interface Exporter {
+    	public void export(OutputStream outputStream) throws IOException;
+    }
+    
+    public static class ByteArrayExporter implements Exporter {
+    	
+    	private byte[] data;
 
+    	public ByteArrayExporter(byte[] data) {
+    		this.data = data;
+		}
+    	
+		@Override
+		public void export(OutputStream outputStream) throws IOException {
+			outputStream.write(data);
+		}
+    	
+    }
+
+    public void downloadDocumento(Exporter exporter, String contentType, String fileName) throws IOException{
+        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        response.setContentType(contentType);
+        response.addHeader("Content-disposition", "filename=\"" + MimeUtility.encodeWord(fileName ) + "\"");
+        exporter.export(response.getOutputStream());
+        response.getOutputStream().flush();
+        FacesContext.getCurrentInstance().responseComplete();
+    }
+    
     public void downloadDocumento(byte[] data, String contentType, String fileName) throws IOException{
 //    	Descomentar código que inserir o Title do documento, possibilitando que o nome do arquivo apareça no cabeçalho do pdfViewer.
     	if(contentType.contains("pdf")){
@@ -184,12 +212,8 @@ public class FileDownloader implements Serializable {
     			data = outputStream.toByteArray();
     	}
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-        response.setContentType(contentType);
-        response.addHeader("Content-disposition", "filename=\"" + MimeUtility.encodeWord(fileName ) + "\"");
         response.setContentLength(data.length);
-        response.getOutputStream().write(data, 0, data.length);
-        response.getOutputStream().flush();
-        FacesContext.getCurrentInstance().responseComplete();
+        downloadDocumento(new ByteArrayExporter(data), contentType, fileName);
     }
 
     /**
@@ -239,15 +263,25 @@ public class FileDownloader implements Serializable {
             nomeArquivo = nomeArquivo+"."+documento.getExtensao();
         return nomeArquivo;
     }
-
+    
     public byte[] getData(DocumentoBin documento) {
     	return getData(documento, true);
     }
-    
+        
     public byte[] getData(DocumentoBin documento, boolean gerarMargens) {
-        byte[] data = new byte[0];
+    	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+    		export(documento, stream);
+    		return stream.toByteArray();
+    	} catch (IOException e) {
+			throw new RuntimeException("Erro ao exportar", e);
+		}
+    }
+
+	public byte[] getOriginalData(DocumentoBin documento) {
         if (documentoBinarioManager.existeBinario(documento.getId())) {
-            data = documentoBinarioManager.getData(documento.getId());
+        	byte[] data = documentoBinarioManager.getData(documento.getId());
+        	documentoBinarioManager.detach(documento.getId());
+            return data; 
         } else {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try {
@@ -257,13 +291,27 @@ public class FileDownloader implements Serializable {
                 documento.setExtensao("pdf");
             } catch (DocumentException e) {
             }
-            data = outputStream.toByteArray();
+            return outputStream.toByteArray();
         }
-         
-        if (gerarMargens && podeExibirMargem(documento)) {
-            data = documentoBinManager.writeMargemDocumento(data, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento));
-        }
-        return data;
+	}
+    
+    public void export(DocumentoBin documento, OutputStream outputStream) {
+    	export(documento, outputStream, true);
+    }
+    
+    public void export(DocumentoBin documento, OutputStream outputStream, boolean gerarMargens) {
+    	byte[] originalData = getOriginalData(documento);
+    	
+    	if (gerarMargens && podeExibirMargem(documento)) {
+    		documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento), outputStream);
+    	}
+    	else {
+    		try {
+    			outputStream.write(originalData);
+    		} catch(IOException e) {
+    			throw new RuntimeException("Erro ao gravar no stream", e);
+    		}
+    	}
     }
     
     private boolean podeExibirMargem(DocumentoBin documento) {

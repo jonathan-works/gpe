@@ -82,8 +82,7 @@ public class ExpressionResolverChain implements ExpressionResolver {
 
 		@Override
 		public BuilderOpcionais with(ExpressionResolver resolver) {
-			// TODO Auto-generated method stub
-			return null;
+			return ExpressionResolverChainBuilder.with(resolver);
 		}
 		
 	}

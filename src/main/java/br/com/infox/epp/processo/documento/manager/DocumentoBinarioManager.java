@@ -39,4 +39,9 @@ public class DocumentoBinarioManager extends Manager<DocumentoBinarioDAO, Docume
     public DocumentoBinWrapper getDocumentoWrapper(Integer idDocumentoBin) {
         return DocumentoBinWrapperFactory.getInstance().createWrapperInstance(idDocumentoBin);
     }
+    
+    public void detach(int idDocumentoBinario) {
+    	DocumentoBinario bin = getReference(idDocumentoBinario);
+    	detach(bin);
+    }
 }

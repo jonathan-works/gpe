@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.iniciar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,7 +48,6 @@ import br.com.infox.epp.tipoParte.TipoParteSearch;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
-import edu.emory.mathcs.backport.java.util.Collections;
 
 @Named
 @ViewScoped

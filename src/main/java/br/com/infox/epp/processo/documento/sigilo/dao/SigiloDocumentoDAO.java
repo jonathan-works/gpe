@@ -1,10 +1,15 @@
 package br.com.infox.epp.processo.documento.sigilo.dao;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -14,7 +19,9 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
+import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento_;
 import br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery;
 import br.com.infox.epp.processo.entity.Processo;
 
@@ -58,6 +65,22 @@ public class SigiloDocumentoDAO extends DAO<SigiloDocumento> {
         params.put(SigiloDocumentoQuery.QUERY_PARAM_ID_DOCUMENTO, idDocumento);
         return getNamedSingleResult(SigiloDocumentoQuery.NAMED_QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO, params) != null;
     }
+    
+    public List<Integer> getSigilosos(List<Integer> idsDocumentos) {
+    	if(idsDocumentos.isEmpty()) {
+    		return Collections.emptyList();
+    	}
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+    	Root<SigiloDocumento> sigilo = cq.from(SigiloDocumento.class);
+    	Path<Documento> documento = sigilo.join(SigiloDocumento_.documento);
+    	cq.select(documento.get(Documento_.id));
+    	cq.distinct(true);
+    	cq.where(documento.get(Documento_.id).in(idsDocumentos), cb.isTrue(sigilo.get(SigiloDocumento_.ativo)));
+    	
+    	return getEntityManager().createQuery(cq).getResultList();
+    }
+    
 
     public void inativarSigilos(Documento documento) throws DAOException {
         Map<String, Object> params = new HashMap<>();

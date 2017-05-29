@@ -39,6 +39,10 @@ public class SigiloDocumentoManager extends Manager<SigiloDocumentoDAO, SigiloDo
     public boolean isSigiloso(Integer idDocumento) {
         return getDao().isSigiloso(idDocumento);
     }
+    
+    public List<Integer> getSigilosos(List<Integer> idsDocumentos) {
+        return getDao().getSigilosos(idsDocumentos);
+    }
 
     @Override
     public SigiloDocumento persist(SigiloDocumento o) throws DAOException {

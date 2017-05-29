@@ -94,6 +94,25 @@ public final class FileUtil {
         return findMatchedFiles.isEmpty() ? null : findMatchedFiles.get(0);
     }
     
+    public static boolean isImagem(String extensao) {
+        return "jpg".equalsIgnoreCase(extensao) || "jpeg".equalsIgnoreCase(extensao) || "png".equalsIgnoreCase(extensao) ||
+                "gif".equalsIgnoreCase(extensao) || "bmp".equalsIgnoreCase(extensao); 
+    }
+    
+    public static boolean isDocumento(String extensao){
+        return "doc".equalsIgnoreCase(extensao) || "docx".equalsIgnoreCase(extensao) || "odt".equalsIgnoreCase(extensao);
+    }
+    
+    public static boolean isPlanilha(String extensao){
+        return "xls".equalsIgnoreCase(extensao) || "xlsx".equalsIgnoreCase(extensao) || "ods".equalsIgnoreCase(extensao);
+    }
+    
+    public static boolean isVideo(String extensao) {
+        return "avi".equalsIgnoreCase(extensao) || "mpeg".equalsIgnoreCase(extensao) || "mov".equalsIgnoreCase(extensao) ||
+               "webm".equalsIgnoreCase(extensao) || "mkv".equalsIgnoreCase(extensao) || "mp4".equalsIgnoreCase(extensao)
+               || "swf".equalsIgnoreCase(extensao);
+    }
+    
     public static class ResourceFrameFinder extends SimpleFileVisitor<Path> {
 
         private PathMatcher matcher;

@@ -417,4 +417,9 @@ public class AssinaturaDocumentoService {
             }
         }
     }
+    
+    public boolean isAssinavelPorUsuarioAtual(Papel papel, ClassificacaoDocumento classificacao, DocumentoBin documentoBin, UsuarioLogin usuario) {
+        return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) && 
+                !isDocumentoAssinado(documentoBin, papel, usuario);
+    }
 }

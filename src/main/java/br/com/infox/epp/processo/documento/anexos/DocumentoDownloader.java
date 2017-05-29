@@ -104,6 +104,14 @@ public class DocumentoDownloader implements Serializable {
     	DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
     	downloadDocumento(documentoBin);
     }
+    
+    public void previewDocumento(byte[] data, String fileName) {
+        try {
+            getFileDownloader().downloadDocumento(data, "application/pdf", fileName);
+        } catch (IOException e) {
+            getActionMessagesService().handleException(null, e);
+        }
+    }
 
 	public void downloadPdf(Documento documento, byte[] pdf, String nome) {
     	if (validarSigilo(documento)) {
@@ -181,6 +189,10 @@ public class DocumentoDownloader implements Serializable {
     
     private ActionMessagesService getActionMessagesService(){
         return BeanManager.INSTANCE.getReference(ActionMessagesService.class);
+    }
+    
+    public void limparFlash() {
+        System.out.println("limpa");
     }
     
 }

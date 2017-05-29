@@ -1,6 +1,7 @@
 package br.com.infox.epp.login;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -15,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 @Stateless
 public class CaptchaService {
@@ -101,7 +101,6 @@ public class CaptchaService {
 		return bin2hex(bytes);
 	}
 	
-	@SuppressWarnings("unchecked")
 	private CookieCaptcha persistCookie(String clientId, String username) {
 		CookieCaptcha cookieCaptcha = new CookieCaptcha();
 		cookieCaptcha.setClientId(clientId);

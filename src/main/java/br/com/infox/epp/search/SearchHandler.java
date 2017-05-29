@@ -2,6 +2,7 @@ package br.com.infox.epp.search;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,6 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.Variavel;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 @Name("search")
 @Scope(ScopeType.CONVERSATION)
