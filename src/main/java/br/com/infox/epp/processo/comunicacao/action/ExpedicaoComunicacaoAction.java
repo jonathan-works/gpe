@@ -51,7 +51,6 @@ public class ExpedicaoComunicacaoAction implements Serializable, AssinaturaCallb
 	
 	private static final String TAB_SEARCH = "list";
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "expedicaoComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ExpedicaoComunicacaoAction.class);
 	
 	@Inject
