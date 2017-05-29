@@ -1,18 +1,24 @@
 package br.com.infox.epp.processo.prioridade.action;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.prioridade.manager.PrioridadeProcessoManager;
 
-@Name(PrioridadeProcessoCrudAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class PrioridadeProcessoCrudAction extends AbstractCrudAction<PrioridadeProcesso, PrioridadeProcessoManager> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "prioridadeProcessoCrudAction";
 
+    @Inject
+    private PrioridadeProcessoManager prioridadeProcessoManager;
+
+    @Override
+    protected PrioridadeProcessoManager getManager() {
+        return prioridadeProcessoManager;
+    }
 }
