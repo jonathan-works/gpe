@@ -42,7 +42,7 @@ class EventResolver {
         boolean hasExitEvent = hasEvent(node, EXIT_EVENTS);
         String attributeValue;
         if (hasEnterEvent && hasExitEvent) {
-            attributeValue = "enter,exit";
+            attributeValue = "both";
         } else if (hasEnterEvent) {
             attributeValue = "enter";
         } else if (hasExitEvent) {

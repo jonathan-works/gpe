@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.GatewayDirection;
 import org.camunda.bpm.model.bpmn.instance.Activity;
@@ -63,7 +62,7 @@ public class JpdlBpmnConverter {
 	
 	public String convert(String processDefinitionXml) {
 		processDefinition = new InfoxJpdlXmlReader(new StringReader(processDefinitionXml)).readProcessDefinition();
-		BpmnModelInstance bpmnModel = Bpmn.createProcess(processDefinition.getKey()).name(processDefinition.getName()).done();
+		BpmnModelInstance bpmnModel = EppBpmn.createProcess(processDefinition.getKey()).name(processDefinition.getName()).done();
 		bpmnModel.getDocument().registerNamespace(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE_ALIAS, ModeladorConstants.BPMN_IO_COLOR_NAMESPACE);
 		bpmnModel.getDocument().registerNamespace(ModeladorConstants.INFOX_BPMN_NAMESPACE, ModeladorConstants.INFOX_BPMN_NAMESPACE_ALIAS);
 
@@ -77,7 +76,7 @@ public class JpdlBpmnConverter {
 		createDiagram(bpmnModel);
 		ConfiguracoesNos.resolverMarcadoresBpmn(processDefinition, bpmnModel);
 		
-		String bpmn = Bpmn.convertToString(bpmnModel);
+		String bpmn = EppBpmn.convertToString(bpmnModel);
 		return bpmn;
 	}
 	

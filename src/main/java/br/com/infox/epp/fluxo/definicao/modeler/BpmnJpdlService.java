@@ -12,7 +12,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.GatewayDirection;
 import org.camunda.bpm.model.bpmn.builder.ProcessBuilder;
@@ -65,7 +64,7 @@ public class BpmnJpdlService {
 
 	public BpmnModelInstance createInitialBpmn(String processName) {
     	String processKey = BpmUtil.generateKey();
-    	ProcessBuilder builder = Bpmn.createProcess(processKey);
+    	ProcessBuilder builder = EppBpmn.createProcess(processKey);
     	String sequenceFlowKey = BpmUtil.generateKey();
     	builder
     		.name(processName)
@@ -133,7 +132,7 @@ public class BpmnJpdlService {
 	
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public DefinicaoProcesso atualizarDefinicao(DefinicaoProcesso definicaoProcesso, String newProcessDefinitionXml, String newBpmnXml, String newSvg) {
-    	BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8)));
+    	BpmnModelInstance bpmnModel = EppBpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8)));
     	bpmnModel.getDocument().registerNamespace(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE_ALIAS, ModeladorConstants.BPMN_IO_COLOR_NAMESPACE);
     	bpmnModel.getDocument().registerNamespace(ModeladorConstants.INFOX_BPMN_NAMESPACE_ALIAS, ModeladorConstants.INFOX_BPMN_NAMESPACE);
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(newProcessDefinitionXml);
@@ -147,7 +146,7 @@ public class BpmnJpdlService {
 
 		historicoProcessDefinitionService.registrarHistorico(definicaoProcesso);
 		definicaoProcesso.setXml(newProcessDefinitionXml);
-		definicaoProcesso.setBpmn(Bpmn.convertToString(bpmnModel));
+		definicaoProcesso.setBpmn(EppBpmn.convertToString(bpmnModel));
 		definicaoProcesso.setSvg(newSvg);
 		return definicaoProcessoDao.update(definicaoProcesso);
 	}
@@ -157,7 +156,7 @@ public class BpmnJpdlService {
 	    BpmnCleaner cleaner = new BpmnCleaner();
 	    bpmn = cleaner.cleanBpmn(bpmn);
 	    
-		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmn.getBytes(StandardCharsets.UTF_8)));
+		BpmnModelInstance bpmnModel = EppBpmn.readModelFromStream(new ByteArrayInputStream(bpmn.getBytes(StandardCharsets.UTF_8)));
 		BpmnAdapter[] adapters = getAdapters();
 		for (BpmnAdapter adapter : adapters) {
 			bpmnModel = adapter.checkAndConvert(bpmnModel);
@@ -187,7 +186,7 @@ public class BpmnJpdlService {
 		
 		historicoProcessDefinitionService.registrarHistorico(definicaoProcesso);
 		definicaoProcesso.setXml(newProcessDefinitionXml);
-		definicaoProcesso.setBpmn(Bpmn.convertToString(bpmnModel));
+		definicaoProcesso.setBpmn(EppBpmn.convertToString(bpmnModel));
 		definicaoProcesso.setSvg(null);
 		return definicaoProcessoDao.update(definicaoProcesso);
 	}

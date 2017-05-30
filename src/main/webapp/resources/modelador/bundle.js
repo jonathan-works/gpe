@@ -26980,10 +26980,6 @@ function getHandlerEvents(defaultHandler) {
     return function (parentGfx, element) {
         var svgElement = defaultHandler(parentGfx, element);
         var nodeEvents = getBusinessObject(element).$attrs['infox:events'];
-        nodeEvents = nodeEvents ? nodeEvents.split(',') : [];
-        if (nodeEvents.length === 0 || nodeEvents[0] === 'none') {
-            return svgElement;
-        }
 
         var arrowWidth = 5;
         var baseX = element.width - 7;
@@ -26999,7 +26995,7 @@ function getHandlerEvents(defaultHandler) {
             y5: baseY + arrowWidth
         };
 
-        if (nodeEvents[0] === 'enter' || nodeEvents[1] === 'enter') {
+        if (nodeEvents === 'enter' || nodeEvents === 'both') {
             var arrow = svgCreate('polyline');
             svgAttr(arrow, {
                 class: 'ifx-marker',
@@ -27011,7 +27007,7 @@ function getHandlerEvents(defaultHandler) {
             svgAppend(parentGfx, arrow);
         }
 
-        if (nodeEvents[0] === 'exit' || nodeEvents[1] === 'exit') {
+        if (nodeEvents === 'exit' || nodeEvents === 'both') {
             var arrow = svgCreate('polyline');
             svgAttr(arrow, {
                 class: 'ifx-marker',
