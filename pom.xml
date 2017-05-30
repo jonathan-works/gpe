@@ -474,22 +474,22 @@
                         </configuration>
                     </execution>
                     <execution>
-				    	<id>unpack</id>
-				        <phase>${epp.generatedArtifacts.generationPhase}</phase>
-				        <goals>
-				            <goal>unpack</goal>
-				        </goals>
-				        <configuration>
-				            <artifactItems>
-				                <artifactItem>
-				                    <groupId>org.camunda.bpm.model</groupId>
-									<artifactId>camunda-bpmn-model</artifactId>
-				                    <outputDirectory>${project.build.directory}/xsd</outputDirectory>
+                        <id>unpack</id>
+                        <phase>${epp.generatedArtifacts.generationPhase}</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.camunda.bpm.model</groupId>
+                                    <artifactId>camunda-bpmn-model</artifactId>
+                                    <outputDirectory>${project.build.directory}/xsd</outputDirectory>
                                     <includes>BPMN20.xsd,Semantic.xsd,BPMNDI.xsd,DC.xsd,DI.xsd</includes>
-				                </artifactItem>
-				            </artifactItems>
-				        </configuration>
-				    </execution>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
