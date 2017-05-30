@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
@@ -22,6 +24,7 @@ import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaMonocrat
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
 
 @Name(UnidadeDecisoraColegiadaCrudAction.NAME)
+@Scope(ScopeType.CONVERSATION)
 @ContextDependency
 public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<UnidadeDecisoraColegiada, UnidadeDecisoraColegiadaManager>{
 
