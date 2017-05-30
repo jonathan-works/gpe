@@ -10,7 +10,7 @@ import javax.ws.rs.core.UriInfo;
 
 import br.com.infox.core.token.AccessTokenAuthentication;
 import br.com.infox.core.token.TokenRequester;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 
 @AccessTokenAuthentication(TokenRequester.UNSPECIFIED)
@@ -49,14 +49,14 @@ public class CategoriaEntregaItemResourceImpl implements CategoriaEntregaItemRes
 
 	@Override
 	public CategoriaEntregaResource getCategoria(String codigoItemPai) {
-		CategoriaEntregaResourceImpl categoriaEntregaResourceImpl = BeanManager.INSTANCE.getReference(CategoriaEntregaResourceImpl.class);
+		CategoriaEntregaResourceImpl categoriaEntregaResourceImpl = Beans.getReference(CategoriaEntregaResourceImpl.class);
 		categoriaEntregaResourceImpl.setCodigoItemPai(codigoItemPai);
 		return categoriaEntregaResourceImpl;
 	}
 
 	@Override
 	public CategoriaEntregaItemResource getItem(String codigoItemPai) {
-		CategoriaEntregaItemResourceImpl itemResource = BeanManager.INSTANCE.getReference(CategoriaEntregaItemResourceImpl.class);
+		CategoriaEntregaItemResourceImpl itemResource = Beans.getReference(CategoriaEntregaItemResourceImpl.class);
 		itemResource.setCodigoItemPai(codigoItemPai);
 		itemResource.setCodigoCategoria(null);
 		return itemResource;

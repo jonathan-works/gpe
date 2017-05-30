@@ -29,7 +29,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.EntityUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
@@ -65,7 +65,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
     
     @PostConstruct
     public void initialize() {
-    	setEntityManager(BeanManager.INSTANCE.getReference(EntityManager.class));
+    	setEntityManager(Beans.getReference(EntityManager.class));
     }
 
     public T getOldEntity() {

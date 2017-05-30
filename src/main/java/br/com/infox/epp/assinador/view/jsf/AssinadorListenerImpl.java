@@ -12,7 +12,7 @@ import javax.ws.rs.core.UriBuilder;
 import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.assinador.rest.api.TokenAssinaturaResource;
 import br.com.infox.epp.assinador.view.AssinadorController;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.ws.factory.RestClientFactory;
 
@@ -80,7 +80,7 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
     }
 
     private <T> T jndi(Class<T> type, Annotation... annotations) {
-        return BeanManager.INSTANCE.getReference(type, annotations);
+        return Beans.getReference(type, annotations);
     }
 
 }

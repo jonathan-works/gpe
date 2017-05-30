@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
@@ -51,7 +51,7 @@ public abstract class EnumFormType extends PrimitiveFormType {
     }
         
     protected DominioVariavelTarefaSearch getDominioVariavelTarefaSearch() {
-    	return BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);
+    	return Beans.getReference(DominioVariavelTarefaSearch.class);
     }
     
     public static class EnumerationFormType extends EnumFormType {

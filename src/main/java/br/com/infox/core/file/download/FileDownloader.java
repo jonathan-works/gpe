@@ -31,7 +31,7 @@ import com.lowagie.text.pdf.PdfReader;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
@@ -72,7 +72,7 @@ public class FileDownloader implements Serializable {
             return;
         HttpServletResponse response;
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        response = facesContext != null ? (HttpServletResponse) facesContext.getExternalContext().getResponse() : BeanManager.INSTANCE.getReference(HttpServletResponse.class);
+        response = facesContext != null ? (HttpServletResponse) facesContext.getExternalContext().getResponse() : Beans.getReference(HttpServletResponse.class);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentLength((int) downloadResource.getDataLength());
         response.setContentType(downloadResource.getContentType());
@@ -325,7 +325,7 @@ public class FileDownloader implements Serializable {
         if (facesContext != null){
             return (HttpServletResponse) facesContext.getExternalContext().getResponse();
         }
-        return BeanManager.INSTANCE.getReference(HttpServletResponse.class);
+        return Beans.getReference(HttpServletResponse.class);
     }
 
     public HttpServletRequest getRequest() {
@@ -333,7 +333,7 @@ public class FileDownloader implements Serializable {
         if (facesContext != null){
             return (HttpServletRequest) facesContext.getExternalContext().getRequest();
         }
-        return BeanManager.INSTANCE.getReference(HttpServletRequest.class);
+        return Beans.getReference(HttpServletRequest.class);
     }
 
     public void download(DocumentoBin documentoBin) {

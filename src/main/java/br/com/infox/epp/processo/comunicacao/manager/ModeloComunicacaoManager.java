@@ -16,7 +16,7 @@ import javax.persistence.criteria.Root;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao_;
@@ -64,7 +64,7 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 	
 	public List<DestinatarioBean> listDestinatarios(String numeroProcessoRoot) {
 		List<DestinatarioBean> destinatarios = getDao().listDestinatarios(numeroProcessoRoot);
-		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+		EntityManager entityManager = Beans.getReference(EntityManager.class);
 		for (DestinatarioBean destinatario : destinatarios) {
 			DestinatarioModeloComunicacao destinatarioModeloComunicacao = entityManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
 			entityManager.refresh(destinatarioModeloComunicacao);

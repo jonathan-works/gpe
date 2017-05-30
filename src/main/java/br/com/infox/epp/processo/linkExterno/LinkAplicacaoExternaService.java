@@ -16,7 +16,7 @@ import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.exception.SystemException;
 import br.com.infox.core.exception.SystemExceptionFactory;
 import br.com.infox.core.net.UrlBuilder;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.jwt.JWT;
 import br.com.infox.jwt.JWTBuilder;
@@ -88,7 +88,7 @@ public class LinkAplicacaoExternaService {
         JWTBuilder jwtBuilder = JWT.builder();
         DateTime issuedDate = new DateTime();
         
-        jwtBuilder.addClaim(JWTRegisteredClaims.ISSUER, BeanManager.INSTANCE.getReference(PathResolver.class).getUrlProject());
+        jwtBuilder.addClaim(JWTRegisteredClaims.ISSUER, Beans.getReference(PathResolver.class).getUrlProject());
         String string = "uid";
         jwtBuilder.addClaim(JWTRegisteredClaims.JWT_ID, string);
         jwtBuilder.addClaim(JWTRegisteredClaims.ISSUED_AT, issuedDate.toDate().getTime() / 1000);

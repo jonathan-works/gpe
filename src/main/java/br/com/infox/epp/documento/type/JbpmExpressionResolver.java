@@ -14,7 +14,7 @@ import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
@@ -47,7 +47,7 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 	@Override
 	public Expression resolve(Expression expression) {
 		String realVariableName = expression.getExpression().substring(2, expression.getExpression().length() - 1);
-		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+		EntityManager entityManager = Beans.getReference(EntityManager.class);
 		Object value = null;
 		
 		if(idProcesso == null && processInstance != null)
@@ -100,7 +100,7 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 
 	private VariableInfo getVariableInfo(String variableName, Long processDefinitionId) {
 		if (!variableInfoMap.containsKey(processDefinitionId)) {
-			VariableTypeResolverService variableTypeResolverService = BeanManager.INSTANCE.getReference(VariableTypeResolverService.class);
+			VariableTypeResolverService variableTypeResolverService = Beans.getReference(VariableTypeResolverService.class);
 			variableInfoMap.put(processDefinitionId, variableTypeResolverService.buildVariableInfoMap(processDefinitionId));
 		}
 		return variableInfoMap.get(processDefinitionId).get(variableName);

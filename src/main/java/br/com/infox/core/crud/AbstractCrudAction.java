@@ -16,7 +16,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.EntityUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -146,7 +146,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
             try {
                 setInstance(getManager().merge(activeEntity));
             } catch (final DAOException e) {
-                BeanManager.INSTANCE.getReference(ActionMessagesService.class).handleGenericException(e);
+                Beans.getReference(ActionMessagesService.class).handleGenericException(e);
             }
         }
     }

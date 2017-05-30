@@ -38,7 +38,7 @@ import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.documento.domain.Assinatura;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
@@ -120,7 +120,7 @@ public class AssinaturaDocumento implements Serializable, Assinatura {
         this.certChain = certChain;
         this.signatureType = signatureType;
         this.dataAssinatura = new Date();
-        List<Documento> documentos = BeanManager.INSTANCE.getReference(DocumentoManager.class).getDocumentosFromDocumentoBin(documentoBin);
+        List<Documento> documentos = Beans.getReference(DocumentoManager.class).getDocumentosFromDocumentoBin(documentoBin);
         if(documentos != null && !documentos.isEmpty()){
         	List<ClassificacaoDocumentoPapel> cdps = documentos.get(0).getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
             Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();

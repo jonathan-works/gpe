@@ -44,7 +44,7 @@ import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.assinador.CertificadosDownloader;
 import br.com.infox.epp.assinador.DadosAssinatura;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -98,8 +98,8 @@ public class CertificateManager {
                 FileUtil.close(is);
             }
         }
-        Date lastModified=BeanManager.INSTANCE.getReference(CertificadosDownloader.class).getLastModified();
-        for (Iterator<X509Certificate> iterator = BeanManager.INSTANCE.getReference(CertificadosDownloader.class).download().iterator(); iterator.hasNext();) {
+        Date lastModified=Beans.getReference(CertificadosDownloader.class).getLastModified();
+        for (Iterator<X509Certificate> iterator = Beans.getReference(CertificadosDownloader.class).download().iterator(); iterator.hasNext();) {
             register(iterator.next());
         }
         lastUpdated=lastModified;
@@ -107,7 +107,7 @@ public class CertificateManager {
 
 
     private void updateIfModified() {
-        if (!BeanManager.INSTANCE.getReference(CertificadosDownloader.class).isUpToDate(lastUpdated)){
+        if (!Beans.getReference(CertificadosDownloader.class).isUpToDate(lastUpdated)){
             listCertificadosCA = new ArrayList<X509Certificate>();
             acceptedCaNameList = new ArrayList<String>();
             acceptedCaNameSb = new StringBuilder();

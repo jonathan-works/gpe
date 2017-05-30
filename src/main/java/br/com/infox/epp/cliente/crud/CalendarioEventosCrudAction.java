@@ -18,7 +18,6 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.componentes.tabs.TabPanel;
-import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.calendario.CalendarioEventosModification;
 import br.com.infox.epp.calendario.CalendarioEventosService;
 import br.com.infox.epp.calendario.TipoEvento;

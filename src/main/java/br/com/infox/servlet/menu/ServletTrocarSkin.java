@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.layout.manager.SkinSessaoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -22,7 +22,7 @@ public class ServletTrocarSkin extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         try {
-            SkinSessaoManager skinSessaoManager = BeanManager.INSTANCE.getReference(SkinSessaoManager.class);
+            SkinSessaoManager skinSessaoManager = Beans.getReference(SkinSessaoManager.class);
             String idSkin = req.getParameter("idSkin");
             skinSessaoManager.setSkin(idSkin);
             skinSessaoManager.setSkinCookie(idSkin, req.getContextPath(), resp);

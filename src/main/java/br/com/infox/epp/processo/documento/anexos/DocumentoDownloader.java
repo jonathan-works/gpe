@@ -20,7 +20,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -184,11 +184,11 @@ public class DocumentoDownloader implements Serializable {
 	}
     
     private FileDownloader getFileDownloader(){
-        return BeanManager.INSTANCE.getReference(FileDownloader.class);
+        return Beans.getReference(FileDownloader.class);
     }
     
     private ActionMessagesService getActionMessagesService(){
-        return BeanManager.INSTANCE.getReference(ActionMessagesService.class);
+        return Beans.getReference(ActionMessagesService.class);
     }
     
     public void limparFlash() {

@@ -12,7 +12,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.components.TaskpageDefinition;
 import br.com.infox.ibpm.variable.components.VariableDefinitionService;
@@ -37,7 +37,7 @@ public class TaskPageAction implements Serializable {
     
     @In
     private PathResolver pathResolver;
-    private VariableDefinitionService variableDefinitionService = BeanManager.INSTANCE.getReference(VariableDefinitionService.class);
+    private VariableDefinitionService variableDefinitionService = Beans.getReference(VariableDefinitionService.class);
 
     /**
      * Verifica se a tarefa atual está utilizando uma variável taskPage. Se

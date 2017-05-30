@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import javax.enterprise.inject.Alternative;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
@@ -18,8 +18,8 @@ public class DocumentoBinDataProviderPadrao implements DocumentoBinDataProvider 
 	private DocumentoBinarioManager documentoBinarioManager;
 	
 	public DocumentoBinDataProviderPadrao() {
-		documentoBinManager = BeanManager.INSTANCE.getReference(DocumentoBinManager.class);
-		documentoBinarioManager = BeanManager.INSTANCE.getReference(DocumentoBinarioManager.class);
+		documentoBinManager = Beans.getReference(DocumentoBinManager.class);
+		documentoBinarioManager = Beans.getReference(DocumentoBinarioManager.class);
 	}
 
 	@Override

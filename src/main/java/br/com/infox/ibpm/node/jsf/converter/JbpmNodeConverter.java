@@ -7,7 +7,7 @@ import javax.faces.convert.FacesConverter;
 
 import org.jbpm.graph.def.Node;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
 @FacesConverter("jbpmNodeConverter")
@@ -30,6 +30,6 @@ public class JbpmNodeConverter implements Converter {
 	}
 	
 	private NodeFitter getNodeFitter() {
-	    return BeanManager.INSTANCE.getReference(NodeFitter.class);
+	    return Beans.getReference(NodeFitter.class);
 	}
 }

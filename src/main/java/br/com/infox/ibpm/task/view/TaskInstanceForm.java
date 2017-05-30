@@ -19,7 +19,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
@@ -70,7 +70,7 @@ public class TaskInstanceForm implements Serializable {
 
     private TaskInstance taskInstance;
     
-    private VariableDefinitionService variableDefinitionService = BeanManager.INSTANCE.getReference(VariableDefinitionService.class);
+    private VariableDefinitionService variableDefinitionService = Beans.getReference(VariableDefinitionService.class);
     
     @Unwrap
     public Form getTaskForm() {
@@ -141,7 +141,7 @@ public class TaskInstanceForm implements Serializable {
                     	break;
                     case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {
-                        DominioVariavelTarefaSearch dominioVariavelTarefaSearch = BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);;
+                        DominioVariavelTarefaSearch dominioVariavelTarefaSearch = Beans.getReference(DominioVariavelTarefaSearch.class);;
                         DominioVariavelTarefa dominio = dominioVariavelTarefaSearch.findByCodigo(
                         		VariableDominioEnumerationHandler.fromJson(var.getConfiguration()).getCodigoDominio());
                         List<SelectItem> selectItens = new ArrayList<>();
@@ -164,7 +164,7 @@ public class TaskInstanceForm implements Serializable {
                         break;
                     case FRAGMENT: {
                         if (tokens.length >= 3) {
-                            FragmentConfiguration fragmentConfiguration = BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class)
+                            FragmentConfiguration fragmentConfiguration = Beans.getReference(FragmentConfigurationCollector.class)
                                     .getByCode(tokens[2]);
                             ff.getProperties().put("fragmentPath", fragmentConfiguration.getPath());
                             ff.getProperties().put("config", fragmentConfiguration);
@@ -173,14 +173,14 @@ public class TaskInstanceForm implements Serializable {
                         break;
                     case FILE:
                         ff.getProperties().put("pastaPadrao", var.getConfiguration() == null ? null : VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
-                        DocumentoVariavelController documentoVariavelController = BeanManager.INSTANCE.getReference(DocumentoVariavelController.class);
+                        DocumentoVariavelController documentoVariavelController = Beans.getReference(DocumentoVariavelController.class);
                         documentoVariavelController.init(processo, ff);
                         ff.getProperties().put("documentoVariavelController", documentoVariavelController);
                     	break;
                     case EDITOR: {
                         ff.getProperties().put("pastaPadrao", var.getConfiguration() == null ? null : VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
                         ff.getProperties().put("editorId", var.getVariableName() + "-" + taskInstance.getId());
-                        DocumentoVariavelController documentoVariavelController2 = BeanManager.INSTANCE.getReference(DocumentoVariavelController.class);
+                        DocumentoVariavelController documentoVariavelController2 = Beans.getReference(DocumentoVariavelController.class);
                         documentoVariavelController2.init(processo, ff);
                         ff.getProperties().put("documentoVariavelController", documentoVariavelController2);
                     }
@@ -219,6 +219,6 @@ public class TaskInstanceForm implements Serializable {
     }
     
     private ProcessoManager getProcessoManager() {
-        return BeanManager.INSTANCE.getReference(ProcessoManager.class);
+        return Beans.getReference(ProcessoManager.class);
     }
 }

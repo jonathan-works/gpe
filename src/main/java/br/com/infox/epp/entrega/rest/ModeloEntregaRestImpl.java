@@ -15,7 +15,7 @@ import com.google.gson.JsonObject;
 
 import br.com.infox.core.token.AccessTokenAuthentication;
 import br.com.infox.core.token.TokenRequester;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 @AccessTokenAuthentication(TokenRequester.UNSPECIFIED)
 public class ModeloEntregaRestImpl implements ModeloEntregaRest {
@@ -37,7 +37,7 @@ public class ModeloEntregaRestImpl implements ModeloEntregaRest {
 
     @Override
     public ModeloEntregaRest getCategoria(String codigoItemPai) {
-        ModeloEntregaRestImpl modeloEntregaRestImpl = BeanManager.INSTANCE.getReference(ModeloEntregaRestImpl.class);
+        ModeloEntregaRestImpl modeloEntregaRestImpl = Beans.getReference(ModeloEntregaRestImpl.class);
         modeloEntregaRestImpl.setCodigoItemPai(codigoItemPai);
         return modeloEntregaRestImpl;
     }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.infox.core.tree.EntityNode;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.painel.CaixaDefinitionBean;
 import br.com.infox.epp.painel.PanelDefinition;
 import br.com.infox.epp.painel.TaskDefinitionBean;
@@ -57,7 +57,7 @@ public class PainelEntityNode extends EntityNode<PanelDefinition> {
 	}
 	
 	private CaixaDAO getCaixaDAO() {
-	    return BeanManager.INSTANCE.getReference(CaixaDAO.class);
+	    return Beans.getReference(CaixaDAO.class);
 	}
 	
 }

@@ -24,7 +24,7 @@ import org.richfaces.component.UIDataTable;
 
 import com.sun.faces.context.flash.ELFlash;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.seam.exception.ApplicationException;
 
 @Named
@@ -44,7 +44,7 @@ public class JsfUtil {
     }
     
     public static JsfUtil instance() {
-        return BeanManager.INSTANCE.getReference(JsfUtil.class);
+        return Beans.getReference(JsfUtil.class);
     }
     
 	public static void clear(UIComponent uiComponent){
