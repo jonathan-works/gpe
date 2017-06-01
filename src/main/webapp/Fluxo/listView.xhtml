@@ -205,12 +205,14 @@
                 	<f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
                 </a:commandButton>
                 
-                <wi:commandButton
+                <a:commandButton
                     id="definicao"
                     value="#{infoxMessages['fluxo.definicao']}"
                     rendered="#{fluxoCrudAction.managed}"
-                    onclick="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?cdFluxo=#{fluxoController.fluxo.codFluxo}',1300,850); return false;">
-                </wi:commandButton>
+                    action="#{jsfUtil.applyLastPhaseFlashAction()}"
+                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam',1300,850); return false;">
+                    <f:setPropertyActionListener value="citacao" target="#{flash.fluxo}" />
+                </a:commandButton>
                 <wi:commandButton id="importarFluxo" value="#{infoxMessages['fluxo.importar']}" onclick="#{rich:component('modalImportFluxo')}.show(); return false;"
                 	rendered="#{fluxoCrudAction.managed}"/>
             </ui:define>
