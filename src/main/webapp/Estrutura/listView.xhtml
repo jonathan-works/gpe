@@ -27,6 +27,10 @@
           formId="pesquisarEstruturaForm"
           formTitle="#{infoxMessages['searchForm.title']}">
           <wi:inputText
+            id="codigo"
+            value="#{estruturaList.entity.codigo}"
+            label="#{infoxMessages['estrutura.codigo']}" />
+          <wi:inputText
             id="nome"
             value="#{estruturaList.entity.nome}"
             label="#{infoxMessages['estrutura.nome']}" />
@@ -36,6 +40,10 @@
             value="#{estruturaList.entity.ativo}" />
         </wi:searchForm>
       </ui:define>
+      <wi:columnOutputText
+        columnId="codigo"
+        columnHeader="#{infoxMessages['estrutura.codigo']}"
+        value="#{row.codigo}" />
       <wi:columnOutputText
         columnId="nome"
         columnHeader="#{infoxMessages['estrutura.nome']}"
@@ -50,6 +58,12 @@
     <wi:dataForm
       formId="estruturaForm"
       formTitle="#{infoxMessages['form.title']}">
+      <wi:inputText
+        id="codigo"
+        required="true"
+        label="#{infoxMessages['estrutura.codigo']}"
+        value="#{estruturaCrudAction.instance.codigo}" 
+        maxlength="30" />
       <wi:inputText
         id="nome"
         required="true"

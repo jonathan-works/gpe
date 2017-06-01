@@ -16,11 +16,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.persistence.ORConstants;
 import br.com.infox.epp.access.query.EstruturaQuery;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = EstruturaQuery.TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = EstruturaQuery.COLUMN_NOME))
@@ -38,6 +41,12 @@ public class Estrutura implements Serializable {
     @Column(name = EstruturaQuery.COLUMN_ID)
     private Integer id;
 
+    @NotNull
+    @Size(max = LengthConstants.DESCRICAO_ENTIDADE)
+    @Column(name = "cd_estrutura", length = LengthConstants.CODIGO_DOCUMENTO, unique = true)
+    @Getter @Setter
+    private String codigo;
+    
     @Size(min = LengthConstants.FLAG, max = LengthConstants.DESCRICAO_ENTIDADE)
     @Column(name = EstruturaQuery.COLUMN_NOME, length = LengthConstants.DESCRICAO_ENTIDADE, nullable = false, unique = true)
     private String nome;
