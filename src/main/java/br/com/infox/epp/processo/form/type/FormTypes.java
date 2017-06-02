@@ -27,6 +27,7 @@ public enum FormTypes {
     PAGE(PageFormType.class),
     EDITOR(EditorFormType.class),
     FILE(UploadFormType.class),
+    FRAGMENT(FragmentFormType.class),
     TASK_PAGE(TaskPageFormType.class),
     ENUMERATION_MULTIPLE(EnumerationMultipleFormType.class);
     
