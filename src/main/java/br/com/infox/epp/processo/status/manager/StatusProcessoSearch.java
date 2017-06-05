@@ -7,6 +7,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -66,11 +68,12 @@ public class StatusProcessoSearch extends PersistenceController {
 		return getEntityManager().createQuery(cq).getResultList();
 	}
     
-	public Boolean existeStatusProcessoByNome(String nome) {
+	public Boolean existeStatusProcessoFluxoByNome(String nome, Integer idFluxo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<StatusProcesso> statusProcesso = cq.from(StatusProcesso.class);
-		cq.where(cb.equal(statusProcesso.get(StatusProcesso_.nome), cb.literal(nome)));
+		Join<StatusProcesso, Fluxo> fluxo = statusProcesso.join(StatusProcesso_.fluxos, JoinType.INNER);
+		cq.where(cb.equal(fluxo.get(Fluxo_.idFluxo), idFluxo), cb.equal(statusProcesso.get(StatusProcesso_.nome), cb.literal(nome)));
 		cq.select(cb.count(statusProcesso));
 		return getEntityManager().createQuery(cq).getSingleResult() > 0;
 	}
