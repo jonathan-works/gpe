@@ -63,7 +63,7 @@ public class ParametroService extends PersistenceController implements Serializa
 
         Class<?> rootClass = key.getDeclaringType().getJavaType();
         Root<?> from = cq.from(rootClass);
-        cq = cq.select(cb.construct(AnySelectItem.class, from.get(label.getName()), from.get(key.getName())));
+        cq = cq.select(cb.construct(AnySelectItem.class, from.get(key.getName()), from.get(label.getName())));
         List<Filter<?, ?>> filters = parametroDefinition.getFilters();
         if (filters != null && !filters.isEmpty()) {
             Predicate predicate = cb.and();
@@ -103,8 +103,8 @@ public class ParametroService extends PersistenceController implements Serializa
 
     static class AnySelectItem extends SelectItem {
 
-        public AnySelectItem(Object label, Object value) {
-            super(String.valueOf(label), String.valueOf(value));
+        public AnySelectItem(Object value, Object label) {
+            super(String.valueOf(value), String.valueOf(label));
         }
 
         private static final long serialVersionUID = 1L;
