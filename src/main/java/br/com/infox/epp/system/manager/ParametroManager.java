@@ -50,4 +50,8 @@ public class ParametroManager extends Manager<ParametroDAO, Parametro> {
 		}
 		return result;
 	}
+	
+	public boolean isNaoExecutarQuartz() {
+	    return !"true".equalsIgnoreCase(getValorParametro("naoExecutarQuartz"));
+	}
 }
