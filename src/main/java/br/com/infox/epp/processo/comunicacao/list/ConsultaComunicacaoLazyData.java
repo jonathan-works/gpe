@@ -45,7 +45,6 @@ public class ConsultaComunicacaoLazyData extends AbstractLazyData<ModeloComunica
             )
         );
         appendDynamicFilter(cb, cq, from);
-        cq.orderBy(cb.asc(from.get(ModeloComunicacao_.id)));
         return getEntityManager().createQuery(cq);
     }
 
