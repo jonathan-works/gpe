@@ -6,7 +6,8 @@ import javax.faces.component.FacesComponent;
 
 @ResourceDependencies({
     @ResourceDependency(name="fonts/material-design-icons/material-icons.css"),
-    @ResourceDependency(library="primefaces", name="fa/font-awesome.css")
+    @ResourceDependency(library="primefaces", name="fa/font-awesome.css"),
+    @ResourceDependency(library="simple-line-icons", name="css/simple-line-icons.css")
 })
 @FacesComponent(Icon.COMPONENT_TYPE)
 public class Icon extends javax.faces.component.UIOutput {
@@ -26,7 +27,7 @@ public class Icon extends javax.faces.component.UIOutput {
     }
     
     protected enum PropertyKeys {
-        style, styleClass, text, showText, textStyleClass, onclick, materialDesignIcon, ;
+        style, styleClass, text, showText, textStyleClass, onclick, materialDesignIcon, type;
         String toString;
 
         PropertyKeys(String toString) {
@@ -72,13 +73,21 @@ public class Icon extends javax.faces.component.UIOutput {
     public void setOnclick(String onclick) {
         getStateHelper().put(PropertyKeys.onclick, onclick);
     }
-
-    public Boolean getMaterialDesignIcon() {
-        return (Boolean) getStateHelper().eval(PropertyKeys.materialDesignIcon, Boolean.FALSE);
+    
+    public String getType(){
+        return (String) getStateHelper().eval(PropertyKeys.type, "fa");
     }
-
+    public void setType(String type){
+        getStateHelper().put(PropertyKeys.type, type);
+    }
+    
+    @Deprecated
+    public Boolean getMaterialDesignIcon() {
+        return "mdl".equalsIgnoreCase(getType());
+    }
+    @Deprecated
     public void setMaterialDesignIcon(Boolean materialDesignIcon) {
-        getStateHelper().put(PropertyKeys.materialDesignIcon, materialDesignIcon);
+        setType(Boolean.TRUE.equals(materialDesignIcon)?"mdl":"fa");
     }
 
     public java.lang.String getStyle() {
