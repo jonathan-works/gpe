@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.form.variable.value;
 
 import br.com.infox.epp.processo.form.variable.value.ObjectValueType.JPAValueType;
+import br.com.infox.epp.processo.form.variable.value.ObjectValueType.SerializableObjectValueType;
 import br.com.infox.epp.processo.form.variable.value.ObjectValueType.JSONValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.BooleanValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.DateValueType;
@@ -29,7 +30,9 @@ public interface ValueType {
     public static ObjectValueType JPA = new JPAValueType();
     public static ObjectValueType JSON = new JSONValueType();
     
-    public static ValueType[] TYPES = {NULL, STRING, PARAMETER, INTEGER, LONG, DOUBLE, BOOLEAN, DATE, FILE, STRING_ARRAY, JPA, JSON};
+    public static ObjectValueType SERIALIZABLE = new SerializableObjectValueType(); 
+    
+    public static ValueType[] TYPES = {NULL, STRING, PARAMETER, INTEGER, LONG, DOUBLE, BOOLEAN, DATE, FILE, STRING_ARRAY, JPA, JSON, SERIALIZABLE};
     
     String getName();
     
