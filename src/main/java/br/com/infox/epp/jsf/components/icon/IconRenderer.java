@@ -40,10 +40,16 @@ public class IconRenderer extends Renderer {
         writer.writeAttribute("style", icon.getStyle(), "style");
         writer.writeAttribute("onclick", icon.getOnclick(), "onclick");
         writer.writeAttribute("title", icon.getText(), "text");
-        if (icon.getMaterialDesignIcon()) {
+        switch (icon.getType().toLowerCase()) {
+        case "simple-line":
+            writeSimpleLineIcon(context, icon);
+            break;
+        case "mdl":
             writeMdlIcon(context, icon);
-        } else {
+            break;
+        default:
             writeFaIcon(context, icon);
+            break;
         }
         if (icon.getShowText()) {
             writer.startElement("label", null);
@@ -57,7 +63,14 @@ public class IconRenderer extends Renderer {
     private String join(String separator, Object... objects) {
         return StringUtils.join(objects, separator);
     }
-
+    
+    private void writeSimpleLineIcon(FacesContext context, Icon icon) throws IOException {
+        ResponseWriter writer = context.getResponseWriter();
+        writer.startElement("i", null);
+        writer.writeAttribute("class", StringUtils.join(new Object[] { "icon", icon.getValue() }, "-"), "value");
+        writer.endElement("i");
+    }
+    
     private void writeFaIcon(FacesContext context, Icon icon) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("i", null);
