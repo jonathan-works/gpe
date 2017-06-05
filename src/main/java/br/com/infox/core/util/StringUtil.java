@@ -40,6 +40,9 @@ public final class StringUtil {
     public static <E> String concatList(Collection<E> list, String delimitador) {
         StringBuilder sb = new StringBuilder();
         for (E object : list) {
+            if (ObjectUtil.isEmpty(object)) 
+                continue;
+            
             if (sb.length() > 0) {
                 sb.append(delimitador);
             }
