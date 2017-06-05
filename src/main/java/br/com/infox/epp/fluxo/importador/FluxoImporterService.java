@@ -75,7 +75,7 @@ public class FluxoImporterService extends PersistenceController {
 	public Fluxo importarFluxo(HashMap<String, String> xmls, Fluxo fluxo) {
 		String xpdl = xmls.get(FluxoExporterService.FLUXO_XML);
 		Document doc = readDocument(xpdl);
-		validarExistenciaCodigos(doc);
+		validarExistenciaCodigos(doc, fluxo.getIdFluxo());
 		atualizaNameProcessDefinition(doc, fluxo);
 
         String bpmn = xmls.get(FluxoExporterService.FLUXO_BPMN);
@@ -102,10 +102,10 @@ public class FluxoImporterService extends PersistenceController {
 	    }
 	}
 	
-	private void validarExistenciaCodigos(Document doc) {
+	private void validarExistenciaCodigos(Document doc, Integer idFluxo) {
 		List<String> erros = new ArrayList<String>();
 		validaConfiguracaoAssigments(doc, erros);
-		validaActions(doc, erros);
+		validaActions(doc, erros, idFluxo);
 		validaEvents(doc, erros);
 		validaMailNode(doc, erros);
 		validaVariaveis(doc, erros);
@@ -211,11 +211,11 @@ public class FluxoImporterService extends PersistenceController {
         }
 	}
 
-	private void validaActions(Document doc, List<String> erros) {
+	private void validaActions(Document doc, List<String> erros, Integer idFluxo) {
 		for (Element action : doc.getDescendants(new ElementFilter("action"))) {
 			String actionName = action.getAttributeValue("name");
 			if (actionName != null && !actionName.isEmpty()) {
-				validaConfiguracaoStatusProcesso(action, erros);
+				validaConfiguracaoStatusProcesso(action, erros, idFluxo);
 				validaConfiguracaoGeracaoDocumento(action, erros);
 			}
 		}
@@ -237,10 +237,10 @@ public class FluxoImporterService extends PersistenceController {
 		}
 	}
 
-	private void validaConfiguracaoStatusProcesso(Element action, List<String> erros) {
+	private void validaConfiguracaoStatusProcesso(Element action, List<String> erros, Integer idFluxo) {
 		if (StatusProcesso.STATUS_PROCESSO_ACTION_NAME.equals(action.getAttributeValue("name"))) {
 		    String codigo = new StatusHandler(action.getText()).getCodigoStatusProcesso();
-			if (!statusProcessoSearch.existeStatusProcessoByNome(codigo)) {
+			if (!statusProcessoSearch.existeStatusProcessoFluxoByNome(codigo, idFluxo)) {
                 erros.add(MessageFormat.format(InfoxMessages.getInstance().get("importador.erro.statusCodigo"), codigo));
 			}
 		}
