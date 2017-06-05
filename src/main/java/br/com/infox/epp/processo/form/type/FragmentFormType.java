@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.form.type;
 
 import org.richfaces.renderkit.html.images.GradientAlignment;
 
+import com.google.common.base.Optional;
+
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
@@ -47,7 +49,8 @@ public class FragmentFormType implements FormType{
 				.getReference(FragmentConfigurationCollector.class).getByCode(codigoFragment);
 		formField.getProperties().put("fragmentPath", fragmentConfiguration.getPath());
 		formField.getProperties().put("config", fragmentConfiguration);
-		formField.setValue(fragmentConfiguration.init(((TaskFormData)formData).getTaskInstance()));
+		formField.setValue(Optional.fromNullable(formField.getValue())
+		        .or(fragmentConfiguration.init(((TaskFormData)formData).getTaskInstance())));
 	}
 
 	@Override
