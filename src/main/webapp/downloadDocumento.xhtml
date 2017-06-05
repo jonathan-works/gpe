@@ -24,6 +24,10 @@
         <img src="data:image/#{flash.extensao};base64, #{flash.base64}" />
     </c:if>
     
+    <c:if test="#{not empty flash.html}">
+    	<h:outputText value="#{flash.html}" escape="false"/>  
+    </c:if>
+    
     <c:if test="#{not empty flash.video}">
         <video controls="controls" autoplay="autoplay" width="100%">
             <source src="data:video/#{flash.extensao};base64,#{flash.base64}" type="video/#{flash.extensao}"></source>
