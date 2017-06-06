@@ -12,9 +12,10 @@
   xmlns:cc="http://java.sun.com/jsf/composite">
 
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
+    <a:jsFunction name="apagarGrupo" action="#{assinadorController.apagarGrupo()}" execute="@none" render="@none" />
+
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-      <a:jsFunction name="apagarGrupo" action="#{assinadorController.apagarGrupo()}" execute="@none" render="@none" />
       <ui:param name="objetoAssinatura" value="#{empty documentoBin ? (empty textoAssinavelList ? (empty documentoBinList ? assinadorController.criarGrupoAssinatura(assinavelProvider) : assinadorController.criarGrupoAssinaturaWithDocumentoBin(documentoBinList)) : assinadorController.criarGrupoAssinatura(textoAssinavelList)) : assinadorController.criarGrupoAssinaturaWithDocumentoBin(documentoBin)}" />
       <a:commandButton type="button" styleClass="buttons #{styleClass}" disabled="#{disabled}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
       		action="#{elFunctions.invokeMethod(preSignAction)}" execute="@this #{execute}" rendered="#{empty rendered ? true : rendered}"
