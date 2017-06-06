@@ -39,6 +39,10 @@
   <param-name>javax.faces.PROJECT_STAGE</param-name>
   <param-value>${project.stage}</param-value>
  </context-param>
+ <context-param>
+   <param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>
+   <param-value>524288</param-value> <!-- 512 KB -->
+ </context-param>
  <!-- Seam -->
  <context-param>
   <param-name>org.jboss.seam.core.init.jndiPattern</param-name>
