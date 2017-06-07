@@ -10,14 +10,14 @@
 
     <groupId>br.com.infox.epp</groupId>
     <artifactId>bom</artifactId>
-    <version>3.2.7</version>
+    <version>3.2.8</version>
     <packaging>pom</packaging>
     <name>epp-bom</name>
     <description>E-PP Bill of material</description>
 
     <properties>
-        <version.epp>3.2.7</version.epp>
-        <version.liquibase-epp>3.2.7</version.liquibase-epp>
+        <version.epp>3.2.8</version.epp>
+        <version.liquibase-epp>3.2.8</version.liquibase-epp>
         <version.liquibase-ext>1.1.2</version.liquibase-ext>
         <version.certificado-digital>1.0.12</version.certificado-digital>
         <version.git-commit-id-plugin>2.2.1</version.git-commit-id-plugin>
