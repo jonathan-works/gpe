@@ -4,12 +4,13 @@ if ( !Infox.ajax ) {
 	
 	Infox.ajax = {
 			
-			RICHFACES_AJAX : RichFaces.ajax,
 			PRIMEFACES_AJAX :  PrimeFaces.ajax.Request.send,
+			PRIMEFACES_POLL : PrimeFaces.ajax.Queue.poll,
+			JSF_AJAX : jsf.ajax.request,
 			
 			Queue : {
 
-				requests : new Array(),
+				requests : [],
 
 				push : function(request) {
 					
@@ -17,7 +18,6 @@ if ( !Infox.ajax ) {
 						Infox.ajax.Request.send(request);
 					} else {
 						this.requests.push(request);
-
 						if (this.requests.length === 1) {
 							Infox.ajax.Request.send(request);
 						}
@@ -32,7 +32,6 @@ if ( !Infox.ajax ) {
 					var processed = this.requests.shift(), next = this.peek();
 
 					if (next) {
-						console.log('Next ajax called');
 						Infox.ajax.Request.send(next);
 					}
 
@@ -52,30 +51,15 @@ if ( !Infox.ajax ) {
 				},
 
 				abortAll : function() {
-
-					this.requests = new Array();
+					this.requests = [];
 				}
 			},
 
 			Request : {
 
 				send : function(cfg) {
-					
-					console.log('Initiating ajax request.');
-					
 					if (cfg.ajaxOwner === 'PrimeFaces') {
 						delete cfg['ajaxOwner'];
-						if (cfg.oncomplete) {
-							var oncomplete = cfg.oncomplete;
-							cfg.oncomplete = function(xhr,status,args) {
-								oncomplete(xhr,status,args);
-								Infox.ajax.Queue.poll();
-							}
-						} else {
-							cfg.oncomplete = function(xhr,status,args) {
-								Infox.ajax.Queue.poll();
-							}
-						}
 						Infox.ajax.PRIMEFACES_AJAX(cfg);
 					} else {
 						delete cfg['ajaxOwner'];
@@ -83,9 +67,8 @@ if ( !Infox.ajax ) {
 						var sourceEvent = cfg.sourceEvent;
 						delete cfg['sourceElement'];
 						delete cfg['sourceEvent'];
-						Infox.ajax.RICHFACES_AJAX(sourceElement, sourceEvent, cfg);
+						Infox.ajax.JSF_AJAX(sourceElement, sourceEvent, cfg);
 					}
-					
 				}
 			
 			}
@@ -101,22 +84,50 @@ Object.assign(
 		{
 			send: function(cfg) {
 				cfg.ajaxOwner = 'PrimeFaces';
-				console.log("add to Infox Queue");
 				Infox.ajax.Queue.push(cfg);
+			},
+			
+			// Função chamada pela função PrimeFaces.ab (requisição ajax dos componentes)
+			// Necessário sobrescrever para chamar diretamente a função send, ao invés de tentar colocar na queue do Prime (Queue.offer)
+			handle: function(a, b) {
+				a.ext = b;
+                if (PrimeFaces.settings.earlyPostParamEvaluation) {
+                    a.earlyPostParams = PrimeFaces.ajax.Request.collectEarlyPostParams(a);
+                }
+                PrimeFaces.ajax.Request.send(a);
 			}
 			
 		}
 );
 
 Object.assign(
-		RichFaces,
+		PrimeFaces.ajax.Queue,
 		{
-			ajax: function(source, event, options) {
-				options.ajaxOwner = 'RichFaces';
+			// Sobrescreve o poll ao invés de adicionar oncomplete para também funcionar com
+			// cancelamento da requisição ao retornar false no onstart
+			poll: function() {
+				Infox.ajax.PRIMEFACES_POLL.call(PrimeFaces.ajax.Queue);
+				Infox.ajax.Queue.poll();
+			}
+		}
+);
+
+Object.assign(
+		jsf.ajax,
+		{
+			// É necessário apenas sobrescrever esta função para o JSF e o RichFaces
+			// pois o RichFaces se integra com o JSF
+			request: function(source, event, options) {
 				options.sourceElement = source;
 				options.sourceEvent = event;
-				console.log("add to Infox Queue");
 				Infox.ajax.Queue.push(options);
 			}
 		}
 );
+
+// Para JSF e RichFaces
+jsf.ajax.addOnEvent(function(data) {
+	if (data.type === 'event' && data.status === 'success') {
+		Infox.ajax.Queue.poll();
+	}
+})
