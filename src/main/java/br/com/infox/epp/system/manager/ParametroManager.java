@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.entity.Parametro;
 
@@ -52,6 +53,6 @@ public class ParametroManager extends Manager<ParametroDAO, Parametro> {
 	}
 	
 	public boolean isNaoExecutarQuartz() {
-	    return "true".equalsIgnoreCase(getValorParametro("naoExecutarQuartz"));
+	    return "true".equalsIgnoreCase(getValorParametro(Parametros.NAO_EXECUTAR_QUARTZ.getLabel()));
 	}
 }

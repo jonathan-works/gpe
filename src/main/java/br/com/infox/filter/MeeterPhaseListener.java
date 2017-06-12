@@ -36,7 +36,7 @@ public class MeeterPhaseListener {
 
     @Observer("org.jboss.seam.beforePhase")
     public void beforePhase(PhaseEvent event) {
-        if (!producao) {
+        if (true) {
             time = new Date().getTime();
             LOG.info("Entrou: " + event.getPhaseId());
         }
@@ -44,7 +44,7 @@ public class MeeterPhaseListener {
 
     @Observer("org.jboss.seam.afterPhase")
     public void afterPhase(PhaseEvent event) {
-        if (!producao) {
+        if (true) {
             LOG.info("Saiu: " + event.getPhaseId() + " - "
                     + (new Date().getTime() - time)+ " [ " + event.getFacesContext().getExternalContext().getRequestServletPath() + " ]");
             time = 0;

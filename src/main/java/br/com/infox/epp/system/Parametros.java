@@ -46,6 +46,7 @@ public enum Parametros {
     REST_THREAD_POOL_EXECUTOR_CORE_POOL_SIZE("restPublicApi", "restThreadPoolExecutorCorePoolSize", true),
     REST_THREAD_POOL_EXECUTOR_KEEP_ALIVE_TIME("restPublicApi", "restThreadPoolExecutorKeepAliveTime", true),
     PRODUCAO("producao"),
+    NAO_EXECUTAR_QUARTZ("naoExecutarQuartz"),
     VALIDA_CPF_ASSINATURA("digital-signature","validaCpfAssinatura", FieldType.BOOLEAN),
     VALIDA_ASSINATURA("digital-signature","validacaoAssinatura", FieldType.BOOLEAN),
     ;
