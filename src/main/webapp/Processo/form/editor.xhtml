@@ -27,49 +27,24 @@
     	            <h:outputText styleClass="required" rendered="#{required}" value="*" />
                 </div>
 	        </legend>
-	    	<i:selectOneMenu id="#{varId}ClassificacaoDocumento"
-	    		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	    		items="#{classificacoesDocumento}"
-	    		required="false"
-                ajax="true"
-                render="@this @(.#{varId}EditorDiv) @(.#{varId}AssinaturaDocumento)"
-                execute="@this"
-                hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
-	    		value="#{formField.properties.classificacaoDocumento}"
-                converterId="br.com.infox.jsf.converter.SelectItemConverter"
-	    		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
-	    		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
-	    	</i:selectOneMenu>
-	        <i:selectOneMenu id="#{varId}ModeloDocumento"
-	    		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
-	    		items="#{formField.properties.modelosDocumento}"
-	    		noSelectionLabel="[Selecione o modelo]"
-	    		required="false"
-                ajax="true"
-                render="@(.#{varId}EditorDiv)" 
-                execute="@this"
-                converterId="br.com.infox.jsf.converter.SelectItemConverter"
-                listener="#{formField.type.performModeloDocumento(formField, formData)}"
-	    		value="#{formField.properties.modeloDocumento}"
-	    		rendered="#{not readonly and not formField.value.hasAssinatura()}">
-	    	</i:selectOneMenu>
-            <i:selectOneMenu id="#{varId}PastaDocumentoMenu"
-                label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
-                required="false"
-                render="@this"
-                execute="@this"
-                ajax="true"
-                converterId="br.com.infox.jsf.converter.SelectItemConverter"
-                value="#{formField.properties.pasta}"
-                items="#{formField.properties.pastas}"
-                readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
-                disabled="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
-                noSelectionLabel="[Padrão]">
-            </i:selectOneMenu>
-	    	   
-	    	<p:outputPanel id="#{varId}EditorDiv" styleClass="#{varId}EditorDiv">
-	    	   	<s:div id="#{varId}ToolTipDivExterna">
-	    		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+	        <p:outputPanel id="#{varId}CombosEditorDiv" styleClass="#{varId}CombosEditorDiv">
+		    	<i:selectOneMenu id="#{varId}ClassificacaoDocumento"
+		    		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+		    		items="#{classificacoesDocumento}"
+		    		required="false"
+	                ajax="true"
+	                onstart="infox.showLoading();"
+	                oncomplete="infox.hideLoading();"
+	                render="@this @(.#{varId}EditorDiv) @(.#{varId}CombosEditorDiv) @(.#{varId}AssinaturaDocumento)"
+	                execute="@this"
+	                hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
+		    		value="#{formField.properties.classificacaoDocumento}"
+	                converterId="br.com.infox.jsf.converter.SelectItemConverter"
+		    		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
+		    		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
+		    	</i:selectOneMenu>
+		    	<s:div id="#{varId}ToolTipDivExterna" styleClass="tooltip-editor">
+	    		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent"  
 	    			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
 	    			  	<h:graphicImage id="#{varId}helpEditTipImg" 
 	    			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
@@ -81,9 +56,34 @@
 	    				</div>
 	    		    </s:div>
 	    	    </s:div>
-	    	    
-                <p:blockUI block="#{varId}BlockPanel" blocked="#{empty formField.properties.classificacaoDocumento and not readonly}">
-                    <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}"  />
+		    	<wi:selectOneMenu id="#{varId}ModeloDocumento" styleClass=".#{varId}ModeloDocumento"
+		    		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+		    		valueItems="#{modelosDocumento}"
+		    		noSelectionLabel="[Selecione o modelo]"
+		    		required="false"
+		    		value="#{formField.properties.modeloDocumento}"
+		    		rendered="#{ not empty formField.properties.classificacaoDocumento and not readonly and not formField.value.hasAssinatura()}">
+		    			<p:ajax event="change" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" process="@this"
+		    			 listener="#{controller.performModeloDocumento(formField, formData)}" update="@(.#{varId}EditorDiv)"></p:ajax>
+		    			<f:converter converterId="br.com.infox.jsf.converter.SelectItemConverter"/> 
+		    	</wi:selectOneMenu>
+	            <i:selectOneMenu id="#{varId}PastaDocumentoMenu"
+	                label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+	                required="false"
+	                render="@this"
+	                execute="@this"
+	                ajax="true"
+	                converterId="br.com.infox.jsf.converter.SelectItemConverter"
+	                value="#{formField.properties.pasta}"
+	                items="#{formField.properties.pastas}"
+	                readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+	                disabled="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+	                noSelectionLabel="[Padrão]">
+	            </i:selectOneMenu>
+	    	</p:outputPanel>   
+	    	<p:outputPanel id="#{varId}EditorDiv" styleClass="#{varId}EditorDiv">
+                <p:blockUI block="#{varId}BlockPanel" blocked="#{empty formField.properties.classificacaoDocumento and not readonly}" styleClass="blockui-editor" >
+                    <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}" />
                 </p:blockUI>
                 <p:outputPanel id="#{varId}BlockPanel" style="width: auto; heigth: auto;">
     	    	    <wi:editor id="#{varId}Decoration" value="#{formField.properties.conteudo}"
