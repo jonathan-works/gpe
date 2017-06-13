@@ -56,18 +56,38 @@
 	    				</div>
 	    		    </s:div>
 	    	    </s:div>
-		    	<wi:selectOneMenu id="#{varId}ModeloDocumento" styleClass=".#{varId}ModeloDocumento"
+		    	<wi:selectOneMenu id="#{varId}ModeloDocumento" decorationClass="#{varId}ModeloDocumento"
 		    		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
 		    		valueItems="#{modelosDocumento}"
-		    		noSelectionLabel="[Selecione o modelo]"
+		    		noSelectionLabel="[Selecione o modelo]" 
 		    		required="false" selectStyle="width: 156px;"
 		    		value="#{formField.properties.modeloDocumento}"
 		    		rendered="#{ not empty formField.properties.classificacaoDocumento and not readonly and not formField.value.hasAssinatura()}">
-		    			<p:ajax event="change" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" process="@this"
-		    			 listener="#{controller.performModeloDocumento(formField, formData)}" update="@(.#{varId}EditorDiv)"></p:ajax>
+		    			<p:ajax event="change" process="@this"  
+		    			onstart="if (infox.editor['#{varId}Decoration'].instance.getData()) {PF('#{varId}confirmEditorSelecaoModelo').show();}else { #{varId}loadModeloDocumentoEditor();}"></p:ajax>
 		    			<f:converter converterId="br.com.infox.jsf.converter.SelectItemConverter"/> 
+		    			<f:valueChangeListener type="br.com.infox.epp.processo.form.type.ModeloDocumentoValueChange" binding="#{controller.modeloDocumentoValueChange}"/>
 		    	</wi:selectOneMenu>
-	            <i:selectOneMenu id="#{varId}PastaDocumentoMenu"
+		    	<p:remoteCommand name="#{varId}loadModeloDocumentoEditor" action="#{controller.performModeloDocumento(formField, formData)}"
+            	update="@(.#{varId}EditorDiv)" process="@this" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+				<p:confirmDialog widgetVar="#{varId}confirmEditorSelecaoModelo"
+					closable="false" header="Confirmação" 
+					message="#{infoxMessages['processo.detalhes.inclusao.confirmMsgModelo']}"
+					severity="alert">
+					<div style="text-align: right;">
+						<p:commandButton value="#{infoxMessages['button.ok']}"
+							action="#{controller.performModeloDocumento(formField, formData)}"
+							update="@(.#{varId}EditorDiv)" process="@this" onstart="infox.showLoading();"
+							oncomplete="PF('#{varId}confirmEditorSelecaoModelo').hide();infox.hideLoading();" />
+							
+						<p:commandButton value="#{infoxMessages['button.cancelar']}" action="#{controller.clearModeloDocumentoSelecionado(formField)}"
+							update="@(.#{varId}ModeloDocumento)" process="@this" onstart="infox.showLoading();"
+							oncomplete="PF('#{varId}confirmEditorSelecaoModelo').hide(); infox.hideLoading();">
+						</p:commandButton>	
+
+					</div>
+				</p:confirmDialog>
+				<i:selectOneMenu id="#{varId}PastaDocumentoMenu"
 	                label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
 	                required="false"
 	                render="@this"
@@ -86,7 +106,7 @@
                     <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}" />
                 </p:blockUI>
                 <p:outputPanel id="#{varId}BlockPanel" style="width: auto; heigth: auto;">
-    	    	    <wi:editor id="#{varId}Decoration" value="#{formField.properties.conteudo}"
+    	    	    <wi:editor id="#{varId}Decoration" value="#{formField.properties.conteudo}" decoreationClass="#{varId}EditorDecorationClass"
     	    	    	required="false" readonly="#{readonly or formField.value.hasAssinatura()}"/>
                 </p:outputPanel>
 	    	        
