@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.StringUtil;
@@ -21,9 +22,14 @@ import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler.FileConfig;
 import br.com.infox.seam.exception.BusinessException;
+import lombok.Getter;
+import lombok.Setter;
 
 public class EditorFormType extends FileFormType {
 
+	@Getter@Setter
+	private ModeloDocumentoValueChange modeloDocumentoValueChange;
+	
     public EditorFormType() {
         super("editor", "/Processo/form/editor.xhtml");
     }
@@ -48,6 +54,10 @@ public class EditorFormType extends FileFormType {
             evaluatedModelo = getModeloDocumentoManager().evaluateModeloDocumento(modeloDocumento, formFata.getExpressionResolver());
         }
         formField.addProperty("conteudo", evaluatedModelo);
+    }
+    
+    public void clearModeloDocumentoSelecionado(FormField formField) {
+    	formField.addProperty("modeloDocumento",modeloDocumentoValueChange.getOldValue());
     }
     
     @Override
@@ -155,4 +165,5 @@ public class EditorFormType extends FileFormType {
     protected ModeloDocumentoSearch getModeloDocumentoSearch() {
     	return BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
     }
+
 }
