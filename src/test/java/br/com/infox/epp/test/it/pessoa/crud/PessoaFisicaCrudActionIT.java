@@ -59,7 +59,7 @@ public class PessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisica> {
 
     @Override
     protected String getComponentName() {
-        return PessoaFisicaCrudAction.NAME;
+        return null;
     }
 
     protected boolean compareEntityValues(final PessoaFisica entity) {

@@ -11,12 +11,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
@@ -29,12 +26,13 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.entity.ModeloPastaRestricao;
 import br.com.infox.epp.fluxo.list.ModeloPastaList;
-import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.ModeloPastaManager;
 import br.com.infox.epp.fluxo.manager.ModeloPastaRestricaoManager;
 import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
@@ -42,35 +40,30 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name(ModeloPastaRestricaoAction.NAME)
-@Scope(ScopeType.PAGE)
-@ContextDependency
+@Named
+@ViewScoped
 public class ModeloPastaRestricaoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "modeloPastaRestricaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ModeloPastaRestricaoAction.class);
 	
-    @In
-    private FluxoManager fluxoManager;
     @Inject
     private ModeloPastaManager modeloPastaManager;
-    @In
+    @Inject
     private ActionMessagesService actionMessagesService;
-    @In
+    @Inject
     private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
-    @In(create = true)
+    @Inject
     private ModeloPastaList modeloPastaList;
-    @In
+    @Inject
     private PapelManager papelManager;
-    @In
+    @Inject
     private LocalizacaoManager localizacaoManager;
-    @In
+    @Inject
     private InfoxMessages infoxMessages;
-    @In(StatusMessages.COMPONENT_NAME)
-    private StatusMessages statusMessage;
     @Inject
     private FluxoController fluxoController;
+    private StatusMessages statusMessage = ComponentUtil.getComponent(StatusMessages.COMPONENT_NAME);
 
 	private ModeloPasta instance;
 	private List<ModeloPasta> listModeloPastas;
@@ -91,7 +84,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		// Isto está aqui para evitar erro ao editar uma restrição do tipo localização na primeira vez que entra na tela,
 		// causado pela injeção a este componente que
 		// está presente em LocalizaccaoTreehandler.getEntityToIgnore
-		ComponentUtil.<LocalizacaoCrudAction>getComponent(LocalizacaoCrudAction.NAME).newInstance();
+		BeanManager.INSTANCE.getReference(LocalizacaoCrudAction.class).newInstance();
 	}
 
 	public void newInstance() {
@@ -115,7 +108,8 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		getInstance().setSistema(false);		
 		return true;
 	}
-	
+
+	@Transactional
 	public void persist() {
 		try {
 			if (prePersist()) {
@@ -142,7 +136,8 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	protected void persistNovoModeloPasta() throws DAOException {
 		modeloPastaManager.persistWithDefault(getInstance());
 	}
-	
+
+	@Transactional
 	public void update() {
 		try {
 			updateModeloPasta();

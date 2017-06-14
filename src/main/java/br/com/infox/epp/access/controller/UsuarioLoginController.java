@@ -1,9 +1,7 @@
 package br.com.infox.epp.access.controller;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.crud.BloqueioUsuarioCrudAction;
@@ -14,36 +12,37 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.list.BloqueioUsuarioList;
 import br.com.infox.epp.access.list.UsuarioPerfilEntityList;
 import br.com.infox.epp.access.list.UsuarioPessoaFisicaList;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.meiocontato.list.MeioContatoList;
 import br.com.infox.epp.pessoa.documento.list.PessoaDocumentoList;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoList;
 
-@Name(UsuarioLoginController.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class UsuarioLoginController extends AbstractController {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "usuarioLoginController";
 	
-	@In
+	@Inject
 	private UsuarioLoginCrudAction usuarioLoginCrudAction;
-	@In
+	@Inject
 	private UsuarioPessoaFisicaCrudAction usuarioPessoaFisicaCrudAction;
-	@In
+	@Inject
 	private UsuarioPessoaFisicaList usuarioPessoaFisicaList;
-	@In
+	@Inject
 	private MeioContatoList meioContatoList;
-	@In
+	@Inject
 	private PessoaDocumentoList pessoaDocumentoList;
-	@In
+	@Inject
 	private UsuarioPerfilCrudAction usuarioPerfilCrudAction;
-	@In
+	@Inject
 	private UsuarioPerfilEntityList usuarioPerfilEntityList;
-	@In
+	@Inject
 	private BloqueioUsuarioCrudAction bloqueioUsuarioCrudAction;
-	@In
+	@Inject
 	private BloqueioUsuarioList bloqueioUsuarioList;
-	@In
+	@Inject
 	private AssinaturaDocumentoList assinaturaDocumentoList;
 	
 	@Override

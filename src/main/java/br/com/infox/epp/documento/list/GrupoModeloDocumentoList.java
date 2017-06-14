@@ -2,20 +2,17 @@ package br.com.infox.epp.documento.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(GrupoModeloDocumentoList.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class GrupoModeloDocumentoList extends EntityList<GrupoModeloDocumento> {
 
-    public static final String NAME = "grupoModeloDocumentoList";
     private static final long serialVersionUID = 1L;
 
     private static final String TEMPLATE = "/GrupoModeloDocumento/grupoModeloDocumentoTemplate.xls";
@@ -23,10 +20,6 @@ public class GrupoModeloDocumentoList extends EntityList<GrupoModeloDocumento> {
 
     private static final String DEFAULT_EJBQL = "select o from GrupoModeloDocumento o";
     private static final String DEFAULT_ORDER = "grupoModeloDocumento";
-
-    public static final GrupoModeloDocumentoList instance() {
-        return ComponentUtil.getComponent(NAME);
-    }
 
     protected void addSearchFields() {
         addSearchField("grupoModeloDocumento", SearchCriteria.CONTENDO);

@@ -101,7 +101,8 @@
             rendered="#{home.managed and not empty associativeTipoModeloDocumentoList.variavelToIgnore}"
             title="Tipos de Modelo de Documento"
             id="tipoModelo"
-            name="tipoModelo">
+            name="tipoModelo"
+            action="#{home.onClickTipoModeloTab}">
             <wi:ajaxDiv id="divM2MVar">
                 <s:div styleClass="Associated">
                     <wi:dataTable

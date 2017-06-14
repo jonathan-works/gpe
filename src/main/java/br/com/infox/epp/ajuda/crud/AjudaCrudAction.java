@@ -2,8 +2,11 @@ package br.com.infox.epp.ajuda.crud;
 
 import java.util.Date;
 
-import org.jboss.seam.annotations.In;
+import javax.inject.Inject;
+
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
@@ -14,16 +17,15 @@ import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.epp.ajuda.list.HistoricoAjudaList;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(AjudaCrudAction.NAME)
+@Scope(ScopeType.CONVERSATION)
+@ContextDependency
 public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     public static final String NAME = "ajudaCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(AjudaCrudAction.class);
@@ -32,10 +34,12 @@ public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
     private Pagina pagina;
     private Ajuda oldInstance;
 
-    @In
+    @Inject
     private AjudaManager ajudaManager;
-    @In
+    @Inject
     private PaginaManager paginaManager;
+    @Inject
+    private HistoricoAjudaList historicoAjudaList;
 
     public String getViewId() {
         return viewId;
@@ -86,7 +90,6 @@ public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
                 } catch (DAOException e) {
                     LOG.error("Erro ao gravar o histórico de ajuda", e);
                 }
-                HistoricoAjudaList historicoAjudaList = ComponentUtil.getComponent(HistoricoAjudaList.NAME);
                 historicoAjudaList.refresh();
             }
             newInstance();

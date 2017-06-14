@@ -3,9 +3,9 @@ package br.com.infox.epp.access.manager;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
@@ -20,7 +20,7 @@ public class PermissaoService extends Manager<PermissaoDAO, Permissao> {
     public static final String NAME = "permissaoService";
     private static final long serialVersionUID = 1L;
     
-    @In
+    @Inject
     private PapelManager papelManager;
     
     public Boolean papelPossuiPermissaoParaRecurso(Papel papel, String identificadorRecurso) {

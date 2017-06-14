@@ -3,20 +3,16 @@ package br.com.infox.epp.fluxo.list;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Item;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(ItemList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class ItemList extends EntityList<Item> {
-
-    public static final String NAME = "itemList";
 
     private static final long serialVersionUID = 1L;
 
@@ -31,10 +27,6 @@ public class ItemList extends EntityList<Item> {
      */
     private static final String R1 = "o.caminhoCompleto like concat("
             + "#{itemList.entity.itemPai.caminhoCompleto}, '%')";
-
-    public static final ItemList instance() {
-        return ComponentUtil.getComponent(ItemList.NAME);
-    }
 
     protected void addSearchFields() {
         addSearchField("descricaoItem", SearchCriteria.CONTENDO);

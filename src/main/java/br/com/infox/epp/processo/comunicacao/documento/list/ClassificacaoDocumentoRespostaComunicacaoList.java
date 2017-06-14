@@ -2,21 +2,17 @@ package br.com.infox.epp.processo.comunicacao.documento.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 
-@Name(ClassificacaoDocumentoRespostaComunicacaoList.NAME)
-@AutoCreate
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class ClassificacaoDocumentoRespostaComunicacaoList extends EntityList<ClassificacaoDocumento> {
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "classificacaoDocumentoRespostaComunicacaoList";
 	
 	protected static final String DEFAULT_EJBQL = "select o from ClassificacaoDocumento o "
 			+ "where not exists (select 1 from TipoComunicacaoClassificacaoDocumento t where t.classificacaoDocumento = o "

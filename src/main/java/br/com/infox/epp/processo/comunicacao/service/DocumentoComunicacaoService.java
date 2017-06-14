@@ -73,8 +73,9 @@ public class DocumentoComunicacaoService {
 	private GenericManager genericManager;
 	@Inject
 	private MarcadorService marcadorService;
+	@Inject
+	private PapelManager papelManager;
 	
-	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
 	private VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO = ComponentUtil.getComponent(DocumentoRespostaComunicacaoDAO.NAME);

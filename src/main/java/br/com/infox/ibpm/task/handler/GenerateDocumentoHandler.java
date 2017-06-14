@@ -59,7 +59,7 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 	public void execute(ExecutionContext executionContext) throws Exception {
 		DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
 		DocumentoBinManager documentoBinManager = ComponentUtil.getComponent(DocumentoBinManager.NAME);
-		ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+		ModeloDocumentoManager modeloDocumentoManager = BeanManager.INSTANCE.getReference(ModeloDocumentoManager.class);
 		ModeloDocumentoSearch modeloDocumentoSearch = BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
 		ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
 		PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);

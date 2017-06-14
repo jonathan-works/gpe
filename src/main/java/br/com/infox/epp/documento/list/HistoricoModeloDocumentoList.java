@@ -2,20 +2,16 @@ package br.com.infox.epp.documento.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(HistoricoModeloDocumentoList.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class HistoricoModeloDocumentoList extends EntityList<HistoricoModeloDocumento> {
-
-    public static final String NAME = "historicoModeloDocumentoList";
 
     private static final long serialVersionUID = 1L;
 
@@ -47,10 +43,6 @@ public class HistoricoModeloDocumentoList extends EntityList<HistoricoModeloDocu
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
-    }
-
-    public static HistoricoModeloDocumentoList instance() {
-        return ComponentUtil.getComponent(HistoricoModeloDocumentoList.NAME);
     }
 
     @Override

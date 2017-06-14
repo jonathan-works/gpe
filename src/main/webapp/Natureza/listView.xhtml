@@ -125,7 +125,7 @@
             rendered="#{naturezaCrudAction.isManaged()}"
             title="#{infoxMessages['naturezaCategoriaFluxo.titleTab']}"
             name="naturezaCategoriaFluxoTab"
-            action="#{naturezaCategoriaFluxoCrudAction.instance.setNatureza(naturezaCrudAction.instance)}">
+            action="#{naturezaCrudAction.onClickNaturezaCategoriaFluxoTab}">
             <s:div id="naturezaCategoriaFluxoFormDiv">
                 <wi:dataForm formId="naturezaCategoriaFluxoForm"
                     formTitle="#{infoxMessages['form.title']} - #{naturezaCrudAction.instance.natureza}">

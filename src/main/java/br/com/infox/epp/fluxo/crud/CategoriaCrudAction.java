@@ -1,19 +1,34 @@
 package br.com.infox.epp.fluxo.crud;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.list.CategoriaItemList;
 import br.com.infox.epp.fluxo.manager.CategoriaManager;
 
-@Name(CategoriaCrudAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class CategoriaCrudAction extends AbstractCrudAction<Categoria, CategoriaManager> {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "categoriaCrudAction";
+    @Inject
+    private CategoriaManager categoriaManager;
+    @Inject
+    private CategoriaItemCrudAction categoriaItemCrudAction;
+    @Inject
+    private CategoriaItemList categoriaItemList;
 
+    public void onClickCategoriaItemTab() {
+        categoriaItemCrudAction.setCategoria(getInstance());
+        categoriaItemList.getEntity().setCategoria(getInstance());
+    }
+
+    @Override
+    protected CategoriaManager getManager() {
+        return categoriaManager;
+    }
 }

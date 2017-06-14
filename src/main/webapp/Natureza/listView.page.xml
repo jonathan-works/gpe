@@ -5,14 +5,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
 login-required="true">
 
-    <begin-conversation join="true" />
     <restrict>#{security.checkPage()}</restrict>
-    <param name="id" value="#{naturezaCrudAction.id}"
-    converterId="integerConverter" />
+    <param name="id" value="#{naturezaCrudAction.id}" converterId="integerConverter" />
     <param name="tab" value="#{naturezaCrudAction.tab}" />
-    <action execute="#{naturezaCategoriaFluxoCrudAction.instance.setNatureza(naturezaCrudAction.instance)}"
-    if="#{naturezaCrudAction.tab eq 'naturezaCategoriaFluxoTab'}"/>
-    <action execute="#{naturezaCategoriaFluxoList.entity.setNatureza(naturezaCrudAction.instance)}"
-    if="#{naturezaCrudAction.tab eq 'naturezaCategoriaFluxoTab'}"/>
 
 </page>

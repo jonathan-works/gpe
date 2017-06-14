@@ -2,20 +2,16 @@ package br.com.infox.epp.pessoa.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(PessoaJuridicaList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class PessoaJuridicaList extends EntityList<PessoaJuridica> {
-
-    public static final String NAME = "pessoaJuridicaList";
 
     private static final long serialVersionUID = 1L;
 
@@ -46,10 +42,6 @@ public class PessoaJuridicaList extends EntityList<PessoaJuridica> {
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
-    }
-
-    public static PessoaJuridicaList instance() {
-        return ComponentUtil.getComponent(PessoaJuridicaList.NAME);
     }
 
     @Override

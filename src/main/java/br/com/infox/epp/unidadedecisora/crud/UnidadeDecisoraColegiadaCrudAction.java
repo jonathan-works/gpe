@@ -2,8 +2,11 @@ package br.com.infox.epp.unidadedecisora.crud;
 
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
+import javax.inject.Inject;
+
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
@@ -11,23 +14,26 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiadaMonocratica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaMonocraticaManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(UnidadeDecisoraColegiadaCrudAction.NAME)
+@Scope(ScopeType.CONVERSATION)
+@ContextDependency
 public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<UnidadeDecisoraColegiada, UnidadeDecisoraColegiadaManager>{
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraColegiadaCrudAction";
 	
-	@In
+	@Inject
 	private UnidadeDecisoraMonocraticaManager unidadeDecisoraMonocraticaManager;
-	@In
+	@Inject
 	private UnidadeDecisoraColegiadaMonocraticaManager unidadeDecisoraColegiadaMonocraticaManager; 
 	
 	private UnidadeDecisoraColegiadaMonocratica unidadeDecisoraColegiadaMonocratica;
@@ -36,8 +42,7 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 	@Override
 	public void newInstance() {
 		super.newInstance();
-		LocalizacaoTreeHandler tree = ComponentUtil.getComponent(LocalizacaoTreeHandler.NAME);
-		tree.clearTree();
+		BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
 	}
 	
 	public Localizacao getLocalizacao() {

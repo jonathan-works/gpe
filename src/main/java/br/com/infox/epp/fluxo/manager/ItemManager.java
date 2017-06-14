@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -15,6 +17,7 @@ import br.com.infox.epp.fluxo.query.ItemQuery;
 
 @Name(ItemManager.NAME)
 @AutoCreate
+@Stateless
 public class ItemManager extends Manager<ItemDAO, Item> {
 
     private static final long serialVersionUID = 1L;

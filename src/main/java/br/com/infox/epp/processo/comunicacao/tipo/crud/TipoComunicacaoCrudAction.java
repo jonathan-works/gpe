@@ -3,15 +3,15 @@ package br.com.infox.epp.processo.comunicacao.tipo.crud;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
@@ -20,24 +20,25 @@ import br.com.infox.epp.documento.manager.TipoModeloDocumentoManager;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(TipoComunicacaoCrudAction.NAME)
-@ContextDependency
+@Named
+@ViewScoped
 public class TipoComunicacaoCrudAction extends AbstractCrudAction<TipoComunicacao, TipoComunicacaoManager> {
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "tipoComunicacaoCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(TipoComunicacaoCrudAction.class);
     
+    @Inject
+    private TipoComunicacaoManager tipoComunicacaoManager;
     @Inject
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
     @Inject
     private GenericManager genericManager;
     @Inject
     private ActionMessagesService actionMessagesService;
-    
-    private TipoModeloDocumentoManager tipoModeloDocumentoManager = ComponentUtil.getComponent(TipoModeloDocumentoManager.NAME);
-    private ClassificacaoDocumentoDAO classificacaoDocumentoDao = ComponentUtil.getComponent(ClassificacaoDocumentoDAO.NAME);
+    @Inject
+    private TipoModeloDocumentoManager tipoModeloDocumentoManager;
+    @Inject
+    private ClassificacaoDocumentoDAO classificacaoDocumentoDao;
     
     private List<TipoModeloDocumento> tiposModeloDocumento;
     private List<ClassificacaoDocumento> classificacoesDocumento;
@@ -123,5 +124,10 @@ public class TipoComunicacaoCrudAction extends AbstractCrudAction<TipoComunicaca
 
 	public void setClassificacoesDisponiveis(List<ClassificacaoDocumento> classificacoesDisponiveis) {
 		this.classificacoesDisponiveis = classificacoesDisponiveis;
+	}
+
+	@Override
+	protected TipoComunicacaoManager getManager() {
+	    return tipoComunicacaoManager;
 	}
 }

@@ -1,9 +1,9 @@
 package br.com.infox.epp.twitter.home;
 
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
@@ -17,6 +17,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
 import br.com.infox.epp.twitter.manager.ContaTwitterManager;
@@ -31,6 +32,7 @@ import twitter4j.auth.RequestToken;
 
 @Name(ContaTwitterCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@ContextDependency
 public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, ContaTwitterManager> {
 
     private static final String ASSOCIATION_TO_USER = " ao usuário ";
@@ -49,11 +51,11 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
     private String pin;
     private boolean requesting = false;
 
-    @In
+    @Inject
     private UsuarioLoginManager usuarioLoginManager;
-    @In
+    @Inject
     private LocalizacaoManager localizacaoManager;
-    @In
+    @Inject
     private InfoxMessages infoxMessages;
 
     public boolean usuarioLogadoHasTwitter() {

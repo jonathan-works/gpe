@@ -3,18 +3,12 @@
 <page xmlns="http://jboss.org/schema/seam/pages"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
-	  login-required="true"
->
+	  login-required="true">
+
 	<restrict>#{security.checkPage()}</restrict>
 	<description>ModeloDocumento: #{modeloDocumentoCrudAction.instance}</description>
-	
-	<begin-conversation join="true"/>
-	
+
 	<param name="id" value="#{modeloDocumentoCrudAction.id}" converterId="integerConverter"/>
 	<param name="tab" value="#{modeloDocumentoCrudAction.tab}"/>
-    <action execute="#{historicoModeloDocumentoCrudAction.setModeloDocumento(modeloDocumentoCrudAction.instance)}" 
-            if="#{modeloDocumentoCrudAction.tab eq 'historicoModeloDocumento'}"/>
-    <action execute="#{historicoModeloDocumentoList.entity.setModeloDocumento(modeloDocumentoCrudAction.instance)}" 
-            if="#{modeloDocumentoCrudAction.tab eq 'historicoModeloDocumento'}"/>
- 
+
 </page>

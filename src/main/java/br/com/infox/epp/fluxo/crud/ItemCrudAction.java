@@ -2,22 +2,24 @@ package br.com.infox.epp.fluxo.crud;
 
 import java.io.Serializable;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(ItemCrudAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class ItemCrudAction extends AbstractRecursiveCrudAction<Item, ItemManager> implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "itemCrudAction";
+
+    @Inject
+    private ItemManager itemManager;
 
     @Override
     public String save() {
@@ -50,9 +52,14 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item, ItemManage
     }
 
     protected void limparTrees() {
-        final ItemTreeHandler ith = ComponentUtil.getComponent(ItemTreeHandler.NAME);
+        final ItemTreeHandler ith = BeanManager.INSTANCE.getReference(ItemTreeHandler.class);
         if (ith != null) {
             ith.clearTree();
         }
+    }
+
+    @Override
+    protected ItemManager getManager() {
+        return itemManager;
     }
 }

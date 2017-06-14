@@ -2,23 +2,25 @@ package br.com.infox.epp.fluxo.crud;
 
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.dao.CategoriaDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 
-@Name(NaturezaCategoriaFluxoCrudAction.NAME)
+@Named
+@ViewScoped
 public class NaturezaCategoriaFluxoCrudAction extends AbstractCrudAction<NaturezaCategoriaFluxo, NaturezaCategoriaFluxoManager> {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "naturezaCategoriaFluxoCrudAction";
-    
-    @In
+    @Inject
+    private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
+    @Inject
     private CategoriaDAO categoriaDAO; 
     
     @Override
@@ -31,4 +33,8 @@ public class NaturezaCategoriaFluxoCrudAction extends AbstractCrudAction<Naturez
         return categoriaDAO.findAll();
     }
 
+    @Override
+    protected NaturezaCategoriaFluxoManager getManager() {
+        return naturezaCategoriaFluxoManager;
+    }
 }

@@ -1,15 +1,17 @@
 package br.com.infox.epp.documento.component.tree;
 
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 
-@Name(LocalizacaoFisicaTreeHandler.NAME)
+@Named(LocalizacaoFisicaTreeHandler.NAME)
+@ViewScoped
 public class LocalizacaoFisicaTreeHandler extends AbstractTreeHandler<LocalizacaoFisica> {
 
-    public static final String NAME = "localizacaoFisicaTree";
+    protected static final String NAME = "localizacaoFisicaTree";
     private static final long serialVersionUID = 1L;
 
     @Override

@@ -5,9 +5,6 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
 import org.jboss.seam.security.management.IdentityStore;
 
 import com.google.common.base.Strings;
@@ -26,16 +23,12 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name(PapelManager.NAME)
-@AutoCreate
 @Stateless
 public class PapelManager extends Manager<PapelDAO, Papel> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "papelManager";
     
-    @In
-    private RolesMap rolesMap;
+    private RolesMap rolesMap = ComponentUtil.getComponent(RolesMap.NAME);
 
     public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(
             TipoModeloDocumento tipoModeloDocumento) {

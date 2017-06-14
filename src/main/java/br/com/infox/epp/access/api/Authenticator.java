@@ -633,7 +633,7 @@ public class Authenticator implements Serializable {
         credentials.setPassword("usuarioexterno");
         identity.quietLogin();
         identity.login();
-        UsuarioLoginManager usuarioLoginManager = (UsuarioLoginManager) Component.getInstance(UsuarioLoginManager.NAME);
+        UsuarioLoginManager usuarioLoginManager = BeanManager.INSTANCE.getReference(UsuarioLoginManager.class);
         Contexts.getSessionContext().set(USUARIO_LOGADO, usuarioLoginManager.getUsuarioLoginByLogin(credentials.getUsername()));
     }
 

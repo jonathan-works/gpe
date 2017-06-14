@@ -5,7 +5,9 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 
@@ -18,6 +20,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 @Name(CaixaCrudAction.NAME)
+@Scope(ScopeType.CONVERSATION)
 @ContextDependency
 public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
 	
