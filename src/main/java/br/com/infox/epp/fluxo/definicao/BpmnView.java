@@ -8,7 +8,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.camunda.bpm.model.bpmn.Bpmn;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.jpdl.JpdlException;
@@ -20,6 +19,7 @@ import com.google.gson.JsonObject;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.fluxo.definicao.modeler.BpmnJpdlService;
+import br.com.infox.epp.fluxo.definicao.modeler.EppBpmn;
 import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.log.LogProvider;
@@ -50,7 +50,7 @@ public class BpmnView implements Serializable {
 		
 		String newProcessDefinitionXml = JpdlXmlWriter.toString(ProcessBuilder.instance().getInstance());
 		String newBpmnXml = bpmnInfo.get("bpmn").getAsString();
-		newBpmnXml = Bpmn.convertToString(Bpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8))));
+		newBpmnXml = EppBpmn.convertToString(EppBpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8))));
 		
 		if (!newProcessDefinitionXml.equals(definicaoProcesso.getXml()) || !newBpmnXml.equals(definicaoProcesso.getBpmn())) {
 			try {
