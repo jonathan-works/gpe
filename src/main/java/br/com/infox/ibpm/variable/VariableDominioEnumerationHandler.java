@@ -5,7 +5,7 @@ import org.jbpm.context.def.VariableAccess;
 import com.google.gson.Gson;
 
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 
@@ -17,7 +17,7 @@ public class VariableDominioEnumerationHandler {
 	public void init(VariableAccess variableAccess) {
 		this.variableAccess = variableAccess;
 		if (!StringUtil.isEmpty(this.variableAccess.getConfiguration())) {
-			DominioVariavelTarefaSearch dominioVariavelTarefaSearch = BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);
+			DominioVariavelTarefaSearch dominioVariavelTarefaSearch = Beans.getReference(DominioVariavelTarefaSearch.class);
             this.dominioVariavelTarefa = dominioVariavelTarefaSearch.findByCodigo(fromJson(this.variableAccess.getConfiguration()).getCodigoDominio());
 		}
 	}

@@ -10,7 +10,7 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -43,10 +43,10 @@ public class NomePastaValidator implements Validator {
     }
     
     protected ProcessoManager getProcessoManager() {
-        return BeanManager.INSTANCE.getReference(ProcessoManager.class);
+        return Beans.getReference(ProcessoManager.class);
     }
 
     protected PastaManager getPastaManager() {
-        return BeanManager.INSTANCE.getReference(PastaManager.class);
+        return Beans.getReference(PastaManager.class);
     }
 }

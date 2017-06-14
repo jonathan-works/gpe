@@ -5,7 +5,7 @@ import javax.inject.Named;
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.partes.controller.AbstractParticipantesController;
 import br.com.infox.epp.processo.partes.controller.ParticipantesProcessoController;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
@@ -36,7 +36,7 @@ public class ParticipanteProcessoTreeHandler extends AbstractTreeHandler<Partici
     }
     
     public int getIdProcesso(){
-	    AbstractParticipantesController controller = BeanManager.INSTANCE.getReference(ParticipantesProcessoController.class);
+	    AbstractParticipantesController controller = Beans.getReference(ParticipantesProcessoController.class);
     	return controller.getProcesso().getIdProcesso();
     }
 

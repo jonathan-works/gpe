@@ -11,7 +11,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.processo.entity.Processo;
@@ -113,7 +113,7 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
     }
 
     public VariavelInicioProcessoService getVariavelService() {
-        return BeanManager.INSTANCE.getReference(VariavelInicioProcessoService.class);
+        return Beans.getReference(VariavelInicioProcessoService.class);
     }
 
     @Override

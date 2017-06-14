@@ -18,7 +18,7 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.system.Configuration;
 
 @Singleton
@@ -98,7 +98,7 @@ public class ApplicationServerService implements Serializable {
     }
     
     public static ApplicationServerService instance() {
-        return BeanManager.INSTANCE.getReference(ApplicationServerService.class);
+        return Beans.getReference(ApplicationServerService.class);
     }
            
 }

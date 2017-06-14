@@ -1,7 +1,5 @@
 package br.com.infox.epp.redistribuicao;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Future;
 
 import javax.ejb.Asynchronous;
@@ -9,13 +7,11 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.validation.ValidationException;
 
 import org.jboss.seam.contexts.Lifecycle;
 import org.joda.time.DateTime;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.fluxo.definicaosinais.DefinicaoSinais;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;

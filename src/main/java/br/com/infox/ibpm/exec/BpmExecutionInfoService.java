@@ -26,7 +26,7 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.entity.DefinicaoProcesso_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -38,7 +38,7 @@ public class BpmExecutionInfoService implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+	private EntityManager entityManager = Beans.getReference(EntityManager.class);
 
 	public Map<String,Long> getTokensCount(String processDefinitionName){
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();

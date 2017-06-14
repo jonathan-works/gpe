@@ -20,7 +20,7 @@ import org.jbpm.graph.def.GraphElement;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.crud.VariavelClassificacaoDocumentoAction;
 import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -77,7 +77,7 @@ public class VariableAccessHandler implements Serializable {
                     break;
                 case FRAGMENT:
                     if (tokens.length >= 3) {
-                        setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
+                        setFragmentConfiguration(Beans.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
                     }
                     break;
                 case FILE:
@@ -348,7 +348,7 @@ public class VariableAccessHandler implements Serializable {
                 switch (type) {
                 case FRAGMENT:
                     if (tokens.length >= 3) {
-                        setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
+                        setFragmentConfiguration(Beans.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
                     }
                     break;
                 case DATE:
@@ -432,7 +432,7 @@ public class VariableAccessHandler implements Serializable {
     public void limparConfiguracoes() {
     	getVariableAccess().setConfiguration(null);
         getModeloEditorHandler().init(getVariableAccess());
-        VariavelClassificacaoDocumentoAction v = BeanManager.INSTANCE.getReference(VariavelClassificacaoDocumentoAction.class);
+        VariavelClassificacaoDocumentoAction v = Beans.getReference(VariavelClassificacaoDocumentoAction.class);
         v.setCurrentVariable(getVariableAccess());
         getDataHandler().init(getVariableAccess());
         getMaxMinHandler().init(getVariableAccess());

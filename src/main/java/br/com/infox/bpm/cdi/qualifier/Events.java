@@ -13,7 +13,7 @@ import javax.inject.Qualifier;
 
 import org.jbpm.graph.def.Event;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 public final class Events {
 
@@ -176,7 +176,7 @@ public final class Events {
     }
     
     public static void fireEvent(Object object, String eventType) {
-        BeanManager.INSTANCE.fireEvent(object, fromEventType(eventType));
+        Beans.fireEvent(object, fromEventType(eventType));
     }
 
 }

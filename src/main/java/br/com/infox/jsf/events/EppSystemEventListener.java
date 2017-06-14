@@ -6,7 +6,7 @@ import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
 
 import br.com.infox.core.messages.InfoxMessagesLoader;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.classesautomaticas.CriacaoHistoricoMetadado;
 import br.com.infox.epp.classesautomaticas.EppSystemEventListenerExtended;
 import br.com.infox.epp.classesautomaticas.MigraTaskExpirationToTimer;
@@ -16,9 +16,9 @@ public class EppSystemEventListener implements SystemEventListener {
 	
     @Override
 	public void processEvent(SystemEvent event) throws AbortProcessingException {
-	    InfoxMessagesLoader infoxMessagesLoader = BeanManager.INSTANCE.getReference(InfoxMessagesLoader.class);
-	    MetadadoLabelLoader metadadoLabelLoader = BeanManager.INSTANCE.getReference(MetadadoLabelLoader.class);
-	    EppSystemEventListenerExtended startupExtender = BeanManager.INSTANCE.getReference(EppSystemEventListenerExtended.class);
+	    InfoxMessagesLoader infoxMessagesLoader = Beans.getReference(InfoxMessagesLoader.class);
+	    MetadadoLabelLoader metadadoLabelLoader = Beans.getReference(MetadadoLabelLoader.class);
+	    EppSystemEventListenerExtended startupExtender = Beans.getReference(EppSystemEventListenerExtended.class);
 	    try {
 	        infoxMessagesLoader.loadMessagesProperties();
 	        metadadoLabelLoader.loadMetadadosMessagesProperties();

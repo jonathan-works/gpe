@@ -27,7 +27,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate_;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.ibpm.swimlane.SwimlaneConfiguration.Grupo;
 
@@ -45,7 +45,7 @@ public class SwimlaneHandler implements Serializable {
     private SwimlaneConfiguration configuration;
     private List<Pair<String, ?>> configuracoes;
     private Localizacao localizacaoRaiz;
-    private LocalizacaoSearch localizacaoSearch = BeanManager.INSTANCE.getReference(LocalizacaoSearch.class);
+    private LocalizacaoSearch localizacaoSearch = Beans.getReference(LocalizacaoSearch.class);
 
     public SwimlaneHandler(Swimlane swimlane) {
         this.swimlane = swimlane;
@@ -148,7 +148,7 @@ public class SwimlaneHandler implements Serializable {
     }
     public List<PerfilTemplate> getPerfisPermitidosGrupo() {
         if (perfisPermitidosGrupo == null && this.grupo.getLocalizacao() != null) {
-            perfisPermitidosGrupo = BeanManager.INSTANCE.getReference(UsuarioPerfilManager.class).getPerfisPermitidos(this.grupo.getLocalizacao());
+            perfisPermitidosGrupo = Beans.getReference(UsuarioPerfilManager.class).getPerfisPermitidos(this.grupo.getLocalizacao());
             for (Grupo grupo : configuration.getGrupos()) {
                 perfisPermitidosGrupo.remove(grupo.getPerfil());
             }

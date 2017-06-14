@@ -16,7 +16,7 @@ import org.jboss.seam.web.ServletContexts;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -77,10 +77,10 @@ public class SecurityUtil implements Serializable {
     }
     
     public boolean isSessionContextActive() {
-        return BeanManager.INSTANCE.isSessionContextActive();
+        return Beans.isActive(SessionScoped.class);
     }
     
     public static SecurityUtil instance() {
-        return BeanManager.INSTANCE.getReference(SecurityUtil.class);
+        return Beans.getReference(SecurityUtil.class);
     }
 }

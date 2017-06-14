@@ -30,7 +30,7 @@ import br.com.infox.core.util.DateUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.distribuicao.DistribuicaoRelatoriaService;
 import br.com.infox.epp.documento.pasta.PastaSearch;
@@ -91,7 +91,7 @@ public class BpmExpressionService {
 
     public static String NAME = "bpmExpressionService";
 
-    protected ContabilizadorPrazo contabilizadorPrazo = BeanManager.INSTANCE.getReference(ContabilizadorPrazo.class);
+    protected ContabilizadorPrazo contabilizadorPrazo = Beans.getReference(ContabilizadorPrazo.class);
     @Inject
     protected PastaManager pastaManager;
     @Inject

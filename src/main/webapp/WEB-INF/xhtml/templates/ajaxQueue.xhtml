@@ -20,12 +20,13 @@
 	<script>
 		function executePoll() {
 		  var xhttp;
+		  var viewStateId = $("form:first > input[name='javax.faces.ViewState']").attr("value");
 		  if (window.XMLHttpRequest) {
 		    xhttp = new XMLHttpRequest();
 		    } else {
 		    xhttp = new ActiveXObject("Microsoft.XMLHTTP");
 		  }
-		  xhttp.open('HEAD', '#{pathResolver.contextPath}/sessionPoll?conversationId=#{org.jboss.seam.core.conversation.id}');
+		  xhttp.open('HEAD', "#{pathResolver.contextPath}/sessionPoll?conversationId=#{org.jboss.seam.core.conversation.id}&amp;viewId=#{facesContext.viewRoot.viewId}&amp;javax.faces.ViewState=" + viewStateId);
 		  xhttp.onload = function() {
 	          setTimeout(executePoll, #{intervalPush});
 		  }

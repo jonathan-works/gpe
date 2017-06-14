@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.infox.epp.assinador.DocumentoBinAssinavelService;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.DocumentoBinDataProvider;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
@@ -23,7 +23,7 @@ public class AssinavelDocumentoBinProvider implements AssinavelProvider {
 	}
 	
 	public AssinavelDocumentoBinProvider(List<DocumentoBin> documentos) {
-		this(documentos, BeanManager.INSTANCE.getReference(DocumentoBinAssinavelService.class));
+		this(documentos, Beans.getReference(DocumentoBinAssinavelService.class));
 		this.documentos = documentos;
 	}
 

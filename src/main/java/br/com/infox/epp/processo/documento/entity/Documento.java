@@ -55,7 +55,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.domain.Arquivavel;
 import br.com.infox.epp.documento.domain.Assinatura;
 import br.com.infox.epp.documento.domain.Assinavel;
@@ -327,7 +327,7 @@ public class Documento implements Serializable, Cloneable, EntityListener<Docume
     }
 
     public RegraAssinaturaService getRegraAssinaturaService() {
-        return BeanManager.INSTANCE.getReference(RegraAssinaturaService.class);
+        return Beans.getReference(RegraAssinaturaService.class);
     }
 
     @Override

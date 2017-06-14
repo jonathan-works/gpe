@@ -9,7 +9,7 @@ import javax.faces.validator.ValidatorException;
 
 import org.jbpm.graph.def.Node;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
 @FacesValidator(value = NodeNameValidator.VALIDATOR_ID)
@@ -19,7 +19,7 @@ public class NodeNameValidator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) {
-        NodeFitter nodeFitter = BeanManager.INSTANCE.getReference(NodeFitter.class);
+        NodeFitter nodeFitter = Beans.getReference(NodeFitter.class);
         for (Node node : nodeFitter.getNodes()) {
             if (node.getName().equals(value)) {
                 throw new ValidatorException(new FacesMessage("Já existe um nó com o nome informado"));

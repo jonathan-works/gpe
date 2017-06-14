@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.util.AnnotationLiteral;
@@ -23,7 +24,7 @@ import org.hibernate.Session;
 
 import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.jpa.EntityManagerImpl;
 import br.com.infox.jpa.EntityManagerSerializable;
 
@@ -46,9 +47,9 @@ public class EntityManagerProducer {
 	@Named("entityManager")
 	private EntityManager createEntityManager() {
 	    EntityManagerSerializable entityManager = null;
-	    if (BeanManager.INSTANCE.isSessionContextActive()) {
+	    if (Beans.isActive(SessionScoped.class)) {
 	        try {
-	            entityManager = BeanManager.INSTANCE.getReference(EntityManagerSerializable.class, VIEW_ENTITY_MANAGER);
+	            entityManager = Beans.getReference(EntityManagerSerializable.class, VIEW_ENTITY_MANAGER);
 	            entityManager.isOpen();
 	        } catch (Exception e) {
 	        	entityManager = null;
@@ -162,19 +163,19 @@ public class EntityManagerProducer {
 	}
 	
 	public static EntityManager getEntityManager() {
-	    return BeanManager.INSTANCE.getReference(EntityManager.class);
+	    return Beans.getReference(EntityManager.class);
 	}
 	
 	public static EntityManager getEntityManagerBin() {
-        return BeanManager.INSTANCE.getReference(EntityManager.class, BINARY_DATABASE);
+        return Beans.getReference(EntityManager.class, BINARY_DATABASE);
     }
 	
 	public static EntityManager getEntityManagerLog() {
-        return BeanManager.INSTANCE.getReference(EntityManager.class, LOG_ENTITY_MANAGER);
+        return Beans.getReference(EntityManager.class, LOG_ENTITY_MANAGER);
     }
 	
 	public static EntityManagerProducer instance() {
-	    return BeanManager.INSTANCE.getReference(EntityManagerProducer.class);
+	    return Beans.getReference(EntityManagerProducer.class);
 	}
 	
 	@Qualifier

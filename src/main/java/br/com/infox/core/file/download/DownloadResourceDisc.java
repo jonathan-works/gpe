@@ -10,7 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 class DownloadResourceDisc implements DownloadResource {
 
@@ -63,7 +63,7 @@ class DownloadResourceDisc implements DownloadResource {
             if (facesContext != null){
                 request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
             } else {
-                request = BeanManager.INSTANCE.getReference(HttpServletRequest.class);
+                request = Beans.getReference(HttpServletRequest.class);
             }
             tempFolder = (File)request.getServletContext().getAttribute(ServletContext.TEMPDIR);
         }

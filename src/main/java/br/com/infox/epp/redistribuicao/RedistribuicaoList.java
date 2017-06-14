@@ -1,22 +1,16 @@
 package br.com.infox.epp.redistribuicao;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.ValidationException;
-
-import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.list.DataList;
 import br.com.infox.core.list.RestrictionType;
@@ -39,7 +33,6 @@ import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.unidadedecisora.dao.UnidadeDecisoraMonocraticaDAO;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
-import br.com.infox.epp.ws.interceptors.Log;
 import br.com.infox.seam.exception.BusinessException;
 import lombok.Getter;
 import lombok.Setter;

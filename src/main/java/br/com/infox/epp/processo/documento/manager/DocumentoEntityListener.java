@@ -11,7 +11,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.entity.Documento;
 
 @Stateless
@@ -58,7 +58,7 @@ public class DocumentoEntityListener extends AbstractEntityListener<Documento> {
     }
     
     private UsuarioLogin getUsuarioSistema() {
-        UsuarioLoginManager usuarioLoginManager = BeanManager.INSTANCE.getReference(UsuarioLoginManager.class);
+        UsuarioLoginManager usuarioLoginManager = Beans.getReference(UsuarioLoginManager.class);
         return usuarioLoginManager.getUsuarioSistema();
     }
 

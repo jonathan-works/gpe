@@ -11,7 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.ws.autenticacao.AutenticadorToken;
 import br.com.infox.epp.ws.exception.UnauthorizedException;
 import br.com.infox.epp.ws.interceptors.TokenAuthentication.TipoExcecao;
@@ -46,7 +46,7 @@ public class TokenAuthenticationInterceptor {
 	private Object atenticarPorToken(InvocationContext ctx) throws Exception {
 		TokenAuthentication anotacao = getAnotacao(ctx);
 		
-		AutenticadorToken autenticadorToken = BeanManager.INSTANCE.getReference(anotacao.autenticador());
+		AutenticadorToken autenticadorToken = Beans.getReference(anotacao.autenticador());
 		
 		HttpServletRequest req =  ((HttpServletRequest) request);
 		String token = autenticadorToken.getValorToken(req);

@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 public abstract class JpaQuery<E> implements Serializable {
 	
@@ -188,7 +188,7 @@ public abstract class JpaQuery<E> implements Serializable {
 	
 	protected EntityManager getEntityManager(){
 		if (entityManager == null) {
-			entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+			entityManager = Beans.getReference(EntityManager.class);
 		}
 		return entityManager;
 	}

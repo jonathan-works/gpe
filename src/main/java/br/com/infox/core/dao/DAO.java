@@ -25,8 +25,8 @@ import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.util.Beans;
 
 @AutoCreate
 @Transactional
@@ -196,7 +196,7 @@ public abstract class DAO<T> implements Serializable {
     }
 
     public EntityManager getEntityManager() {
-    	return BeanManager.INSTANCE.getReference(EntityManager.class);
+    	return Beans.getReference(EntityManager.class);
     }
 
     // TODO: Ajeitar trees que chamam isso

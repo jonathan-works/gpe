@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.form.type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -10,7 +11,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -151,31 +152,31 @@ public abstract class FileFormType implements FormType {
     }
 
     protected AssinaturaDocumentoService getAssinaturaDocumentoService() {
-        return BeanManager.INSTANCE.getReference(AssinaturaDocumentoService.class);
+        return Beans.getReference(AssinaturaDocumentoService.class);
     }
     
     protected DocumentoManager getDocumentoManager() {
-        return BeanManager.INSTANCE.getReference(DocumentoManager.class);
+        return Beans.getReference(DocumentoManager.class);
     }
     
     protected DocumentoBinManager getDocumentoBinManager() {
-        return BeanManager.INSTANCE.getReference(DocumentoBinManager.class);
+        return Beans.getReference(DocumentoBinManager.class);
     }
     
     protected ClassificacaoDocumentoFacade getClassificacaoDocumentoFacade() {
-        return BeanManager.INSTANCE.getReference(ClassificacaoDocumentoFacade.class);
+        return Beans.getReference(ClassificacaoDocumentoFacade.class);
     }
     
     protected PastaManager getPastaManager() {
-    	return BeanManager.INSTANCE.getReference(PastaManager.class);
+    	return Beans.getReference(PastaManager.class);
     }
     
     protected PastaRestricaoManager getPastaRestricaoManager() {
-    	return BeanManager.INSTANCE.getReference(PastaRestricaoManager.class);
+    	return Beans.getReference(PastaRestricaoManager.class);
     }
     
     protected PastaDAO getPastaDao() {
-    	return BeanManager.INSTANCE.getReference(PastaDAO.class);
+    	return Beans.getReference(PastaDAO.class);
     }
     
 }
