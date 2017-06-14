@@ -86,6 +86,11 @@ public abstract class AbstractFormData implements FormData {
         if (variableAccess.getConfiguration() != null && !variableAccess.getConfiguration().isEmpty()) {
         	properties.put("configuration", variableAccess.getConfiguration());
         }
+        //TODO: remover depois de colocar configuration para o tipo Fragment
+        String[] split = variableAccess.getMappedName().split(":");
+        if("FRAGMENT".equals(split[0])  && split.length >= 3){
+        	properties.put("fragmentDefiniton", split[2]);
+        }
         return properties;
     }
     

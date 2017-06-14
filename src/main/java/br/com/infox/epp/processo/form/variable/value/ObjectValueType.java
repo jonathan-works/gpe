@@ -20,6 +20,24 @@ public abstract class ObjectValueType implements ValueType {
         return name;
     }
     
+    public static class SerializableObjectValueType extends ObjectValueType{
+
+		public SerializableObjectValueType() {
+			super("serializable");
+		}
+
+		@Override
+		public Object convertToModelValue(Object propertyValue) {
+			return propertyValue;
+		}
+
+		@Override
+		public String convertToStringValue(Object propertyValue) {
+			//TODO: utilizado no StartFormData, verificar funiconamento.
+			return propertyValue.toString();
+		}
+    	
+    }
     public static class JPAValueType extends ObjectValueType {
 
         public JPAValueType() {

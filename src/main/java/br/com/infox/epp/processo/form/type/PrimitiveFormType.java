@@ -201,6 +201,7 @@ public abstract class PrimitiveFormType implements FormType {
             return false;
         }
     }
+    
 
     public static class PageFormType extends PrimitiveFormType {
 

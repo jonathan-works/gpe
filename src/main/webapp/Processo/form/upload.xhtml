@@ -26,66 +26,66 @@
     	            <h:outputText styleClass="required" rendered="#{required}" value="*" />
                 </div>
 	        </legend>
-	    
-	        <i:selectOneMenu id="#{varId}ClassificacaoDocumento"
-	    	     label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	    	     items="#{classificacoesDocumento}"
-                 required="false"
-                 ajax="true"
-                 render="@this @(.#{varId}UploadDiv) @(.#{varId}assinaturaDocumentoDiv)"
-                 execute="@this"
-                 hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
-	    	     value="#{formField.properties.classificacaoDocumento}"
-                 converterId="br.com.infox.jsf.converter.SelectItemConverter"
-	    	     readonly="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}"
-	    	     disabled="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}">
-	        </i:selectOneMenu>
-            <i:selectOneMenu id="#{varId}PastaDocumentoUpload"
-                label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
-                required="false"
-                render="@this"
-                execute="@this"
-                ajax="true"
-                converterId="br.com.infox.jsf.converter.SelectItemConverter"
-                value="#{formField.properties.pasta}"
-                items="#{formField.properties.pastas}"
-                readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
-                disabled="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
-                noSelectionLabel="[Padrão]">
-            </i:selectOneMenu>
-	     
+	        <p:outputPanel id="#{varId}CombosUploadDiv" styleClass="#{varId}CombosUploadDiv">
+		        <i:selectOneMenu id="#{varId}ClassificacaoDocumento"
+		    	     label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+		    	     items="#{classificacoesDocumento}"
+	                 required="false"
+	                 ajax="true"
+	                 render="@this @(.#{varId}UploadDiv) @(.#{varId}CombosUploadDiv) @(.#{varId}assinaturaDocumentoDiv)"
+	                 execute="@this" selectStyle="width: 400px;"
+	                 hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
+		    	     value="#{formField.properties.classificacaoDocumento}"
+	                 converterId="br.com.infox.jsf.converter.SelectItemConverter"
+		    	     readonly="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}"
+		    	     disabled="#{formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}">
+		        </i:selectOneMenu>
+		        
+		        <s:div id="#{varId}ToolTipDivExterna" styleClass="tooltip-editor" style="right: 15em;">
+	    		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent"  
+	    			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
+	    			  	<h:graphicImage id="#{varId}helpEditTipImg" 
+	    			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+	    				<div class="epp-tooltip">
+	    					<div class="tooltip-panel">
+	    						<div><h:outputText value="Extensões Aceitas:"/></div>
+    								<ui:repeat var="documento" value="#{formField.properties.classificacaoDocumento.acceptedTypesList}">
+    									<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
+    								</ui:repeat>
+									<s:div styleClass="tooltip-panel-top">
+    									<div>
+    										<h:outputText value="Observação:"/>
+    									</div>
+    									<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}" />
+    								</s:div>
+	    					</div>
+	    				</div>
+	    		    </s:div>
+	    	    </s:div>
+		        
+	            <i:selectOneMenu id="#{varId}PastaDocumentoUpload"
+	                label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+	                required="false"
+	                render="@this"
+	                execute="@this"
+	                ajax="true" selectStyle="width: 210px;"
+	                converterId="br.com.infox.jsf.converter.SelectItemConverter"
+	                value="#{formField.properties.pasta}"
+	                items="#{formField.properties.pastas}"
+	                readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+	                disabled="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+	                noSelectionLabel="[Padrão]">
+	            </i:selectOneMenu>
+	     	</p:outputPanel>
 	    	 <p:outputPanel id="#{varId}UploadDiv" styleClass="#{varId}UploadDiv">
-                 <p:blockUI block="@(.#{varId}BlockInputDiv)" blocked="#{empty formField.properties.classificacaoDocumento and not formField.value.hasAssinatura() and not readonly}">
+                 <p:blockUI block="@(.#{varId}BlockInputDiv)" styleClass="blockui-editor" 
+                 blocked="#{empty formField.properties.classificacaoDocumento and not formField.value.hasAssinatura() and not readonly}">
                      <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}" />
                  </p:blockUI>
 	    	 
 	    	     <i:input id="#{varId}" required="false" styleClass="#{varId}BlockInputDiv"
 	    	 		rendered="#{not readonly and not formField.value.hasAssinatura() 
 	    	 					and not formField.value.documentoBin.suficientementeAssinado}">
-	    	 		<f:facet name="label">
-	    				<p:outputPanel id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width:10px; display:inline-block; margin-left:10px;">
-	    					<h:graphicImage id="#{varId}HelpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
-	    					<div class="epp-tooltip">
-	    						<div class="tooltip-panel">
-	    							<s:div rendered="#{empty formField.properties.classificacaoDocumento}">
-	    								<h:outputText value="Selecione uma classificação de documento" />
-	    							</s:div>
-	    							<s:div rendered="#{not empty formField.properties.classificacaoDocumento}">
-	    								<div><h:outputText value="Extensões Aceitas:"/></div>
-	    								<ui:repeat var="documento" value="#{formField.properties.classificacaoDocumento.acceptedTypesList}">
-	    									<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
-	    								</ui:repeat>
-	    								<s:div styleClass="tooltip-panel-top" rendered="#{not empty formField.properties.classificacaoDocumento.observacao}">
-	    									<div>
-	    										<h:outputText value="Observação:"/>
-	    									</div>
-	    									<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}" />
-	    								</s:div>
-	    							</s:div>
-	    						</div>
-	    					</div>
-	    				</p:outputPanel>
-	    	 		</f:facet>
 	    	 		<rich:fileUpload id="#{varId}Input" execute="@this" status=":status" limitRender="true"
 	    		       required="false" fileUploadListener="#{controller.processFileUpload}"
 	    		       addLabel="#{infoxMessages['processoDocumento.addLabel']}" clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
