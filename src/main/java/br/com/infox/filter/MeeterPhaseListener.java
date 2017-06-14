@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.system.Configuration;
 import br.com.infox.epp.system.util.ParametroUtil;
 
 /**
@@ -31,12 +32,12 @@ public class MeeterPhaseListener {
     
     @PostConstruct
     public void init() {
-        producao = !ParametroUtil.isDebug();
+        producao = !Configuration.getInstance().isDesenvolvimento();
     }
 
     @Observer("org.jboss.seam.beforePhase")
     public void beforePhase(PhaseEvent event) {
-        if (true) {
+        if (!producao) {
             time = new Date().getTime();
             LOG.info("Entrou: " + event.getPhaseId());
         }
@@ -44,7 +45,7 @@ public class MeeterPhaseListener {
 
     @Observer("org.jboss.seam.afterPhase")
     public void afterPhase(PhaseEvent event) {
-        if (true) {
+        if (!producao) {
             LOG.info("Saiu: " + event.getPhaseId() + " - "
                     + (new Date().getTime() - time)+ " [ " + event.getFacesContext().getExternalContext().getRequestServletPath() + " ]");
             time = 0;
