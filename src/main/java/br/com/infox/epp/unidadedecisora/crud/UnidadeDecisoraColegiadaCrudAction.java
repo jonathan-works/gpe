@@ -14,8 +14,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiadaMonocratica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
@@ -42,7 +42,7 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 	@Override
 	public void newInstance() {
 		super.newInstance();
-		BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
+		Beans.getReference(LocalizacaoTreeHandler.class).clearTree();
 	}
 	
 	public Localizacao getLocalizacao() {

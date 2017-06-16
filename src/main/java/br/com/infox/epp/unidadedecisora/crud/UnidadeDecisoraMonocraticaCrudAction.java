@@ -13,7 +13,7 @@ import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
@@ -37,7 +37,7 @@ public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<Uni
     @Override
 	public void newInstance() {
 		super.newInstance();
-		BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
+		Beans.getReference(LocalizacaoTreeHandler.class).clearTree();
 		possiveisChefesGabinete = null;
 	}
     

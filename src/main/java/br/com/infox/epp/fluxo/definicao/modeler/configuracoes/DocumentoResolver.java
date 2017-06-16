@@ -31,7 +31,7 @@ import org.jbpm.graph.node.TaskNode;
 
 import com.google.gson.Gson;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.definicao.modeler.DiagramUtil;
 import br.com.infox.epp.fluxo.definicao.modeler.ModeladorConstants;
@@ -74,7 +74,7 @@ class DocumentoResolver {
             Action generateDocumentoAction = exitEvent.getAction(NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME);
             String jsonConfiguration = new GenerateDocumentoHandler().parseJbpmConfiguration(generateDocumentoAction.getActionDelegation().getConfiguration());
             GenerateDocumentoConfiguration config = new Gson().fromJson(jsonConfiguration, GenerateDocumentoConfiguration.class);
-            ClassificacaoDocumentoManager classificacaoDocumentoManager = BeanManager.INSTANCE.getReference(ClassificacaoDocumentoManager.class);
+            ClassificacaoDocumentoManager classificacaoDocumentoManager = Beans.getReference(ClassificacaoDocumentoManager.class);
             String codigoClassificacao = config.getCodigoClassificacaoDocumento();
             String classificacao = classificacaoDocumentoManager.getNomeClassificacaoByCodigo(codigoClassificacao);
             documentosGerados.add(new ConfiguracaoDocumentoGerado(node.getKey(), classificacao, codigoClassificacao));

@@ -12,7 +12,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 @Named
 @ViewScoped
@@ -46,8 +46,8 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
     	setLocalizacao(null);
     	setPapel(null);
     	setCpf(null);
-        BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
-        BeanManager.INSTANCE.getReference(PapelTreeHandler.class).clearTree();
+    	Beans.getReference(LocalizacaoTreeHandler.class).clearTree();
+        Beans.getReference(PapelTreeHandler.class).clearTree();
     }
     
     @Override

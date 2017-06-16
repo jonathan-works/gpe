@@ -54,8 +54,8 @@ import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.assinador.AssinadorService;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -292,7 +292,7 @@ public class TaskInstanceHome implements Serializable {
         if (possuiTask()) {
         	variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
             TaskController taskController = taskInstance.getTask().getTaskController();
-            TaskPageAction taskPageAction = BeanManager.INSTANCE.getReference(TaskPageAction.class);
+            TaskPageAction taskPageAction = Beans.getReference(TaskPageAction.class);
             if (taskController != null) {
                 if (!taskPageAction.getHasTaskPage(getCurrentTaskInstance())) {
                     try {

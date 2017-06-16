@@ -15,7 +15,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 @Named
 @ViewScoped
@@ -58,7 +58,7 @@ public class UsuarioPerfilCrudAction extends AbstractCrudAction<UsuarioPerfil, U
     }
     
     private void clearTrees() {
-        BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
+        Beans.getReference(LocalizacaoTreeHandler.class).clearTree();
     }
     
     @Override

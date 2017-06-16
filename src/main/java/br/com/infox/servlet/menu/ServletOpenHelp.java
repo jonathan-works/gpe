@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jboss.seam.servlet.ContextualHttpServletRequest;
 
 import br.com.infox.epp.ajuda.view.AjudaView;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 @WebServlet(urlPatterns = "/openHelp")
 public class ServletOpenHelp extends HttpServlet {
@@ -23,7 +23,7 @@ public class ServletOpenHelp extends HttpServlet {
         new ContextualHttpServletRequest(req) {
             @Override
             public void process() throws Exception {
-                AjudaView ajudaView = BeanManager.INSTANCE.getReference(AjudaView.class);
+                AjudaView ajudaView = Beans.getReference(AjudaView.class);
                 ajudaView.setViewId(req.getParameter("viewId"), true);
                 resp.sendRedirect(resp.encodeRedirectURL(req.getContextPath() + "/help/show.seam?scid=" + req.getParameter("scid")));
             }

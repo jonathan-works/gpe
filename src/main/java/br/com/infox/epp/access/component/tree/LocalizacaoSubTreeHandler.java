@@ -15,7 +15,7 @@ import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.crud.LocalizacaoCrudAction;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 @Named(LocalizacaoSubTreeHandler.NAME)
 @ViewScoped
@@ -53,7 +53,7 @@ public class LocalizacaoSubTreeHandler extends AbstractTreeHandler<Localizacao> 
 
     @Override
     protected Localizacao getEntityToIgnore() {
-        return BeanManager.INSTANCE.getReference(LocalizacaoCrudAction.class).getInstance();
+        return Beans.getReference(LocalizacaoCrudAction.class).getInstance();
     }
     
     public Integer getIdLocalizacaoPai() {

@@ -5,7 +5,7 @@ import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.component.tree.LocalizacaoFisicaTreeHandler;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.infox.epp.documento.manager.LocalizacaoFisicaManager;
@@ -48,7 +48,7 @@ public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<Loc
     }
 
     protected void limparTrees() {
-        BeanManager.INSTANCE.getReference(LocalizacaoFisicaTreeHandler.class).clearTree();
+        Beans.getReference(LocalizacaoFisicaTreeHandler.class).clearTree();
     }
 
     @Override

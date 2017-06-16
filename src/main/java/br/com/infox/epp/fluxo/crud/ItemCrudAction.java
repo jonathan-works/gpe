@@ -7,7 +7,7 @@ import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
@@ -52,7 +52,7 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item, ItemManage
     }
 
     protected void limparTrees() {
-        final ItemTreeHandler ith = BeanManager.INSTANCE.getReference(ItemTreeHandler.class);
+        final ItemTreeHandler ith = Beans.getReference(ItemTreeHandler.class);
         if (ith != null) {
             ith.clearTree();
         }

@@ -7,7 +7,7 @@ import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
@@ -75,7 +75,7 @@ public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem, C
     }
 
     private void limparTreeDeItem() {
-        final ItemTreeHandler ite = BeanManager.INSTANCE.getReference(ItemTreeHandler.class);
+        final ItemTreeHandler ite = Beans.getReference(ItemTreeHandler.class);
         if (ite != null) {
             ite.clearTree();
         }

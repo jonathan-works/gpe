@@ -9,7 +9,7 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.component.tree.LocalizacaoFullTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -48,7 +48,7 @@ public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLo
     }
 
     private void clearTree() {
-        BeanManager.INSTANCE.getReference(LocalizacaoFullTreeHandler.class).clearTree();
+        Beans.getReference(LocalizacaoFullTreeHandler.class).clearTree();
     }
 
     public void setLocalizacao(Localizacao localizacao) {

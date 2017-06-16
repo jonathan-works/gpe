@@ -27,8 +27,8 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.transaction.Transactional;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.entity.ModeloPastaRestricao;
@@ -84,7 +84,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		// Isto está aqui para evitar erro ao editar uma restrição do tipo localização na primeira vez que entra na tela,
 		// causado pela injeção a este componente que
 		// está presente em LocalizaccaoTreehandler.getEntityToIgnore
-		BeanManager.INSTANCE.getReference(LocalizacaoCrudAction.class).newInstance();
+		Beans.getReference(LocalizacaoCrudAction.class).newInstance();
 	}
 
 	public void newInstance() {

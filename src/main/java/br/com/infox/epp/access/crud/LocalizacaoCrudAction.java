@@ -16,7 +16,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.EstruturaManager;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -57,7 +57,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     }
 
     protected void limparTrees() {
-        final LocalizacaoTreeHandler ret = BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class);
+        final LocalizacaoTreeHandler ret = Beans.getReference(LocalizacaoTreeHandler.class);
         if (ret != null) {
             ret.clearTree();
         }

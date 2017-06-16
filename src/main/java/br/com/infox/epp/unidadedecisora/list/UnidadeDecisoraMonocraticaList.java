@@ -9,7 +9,7 @@ import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Named
@@ -38,7 +38,7 @@ public class UnidadeDecisoraMonocraticaList extends EntityList<UnidadeDecisoraMo
     public void newInstance() {
     	super.newInstance();
     	getEntity().setRecebeDistribuicao(null);
-        BeanManager.INSTANCE.getReference(LocalizacaoTreeHandler.class).clearTree();
+    	Beans.getReference(LocalizacaoTreeHandler.class).clearTree();
     }
     
 	@Override

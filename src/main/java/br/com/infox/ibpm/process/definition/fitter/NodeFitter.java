@@ -31,7 +31,7 @@ import org.jbpm.graph.node.TaskNode;
 import com.google.common.base.Strings;
 
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -85,7 +85,7 @@ public class NodeFitter extends Fitter implements Serializable {
     }
 
     public List<ModeloDocumento> getModeloDocumentoList() {
-        return BeanManager.INSTANCE.getReference(ModeloDocumentoManager.class).getModeloDocumentoList();
+        return Beans.getReference(ModeloDocumentoManager.class).getModeloDocumentoList();
     }
 
     public void moveUp(Node node) {

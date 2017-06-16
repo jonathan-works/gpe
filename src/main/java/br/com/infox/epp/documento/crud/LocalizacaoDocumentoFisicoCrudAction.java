@@ -7,7 +7,7 @@ import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.component.tree.LocalizacaoFisicaTreeHandler;
 import br.com.infox.epp.documento.entity.DocumentoFisico;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
@@ -30,7 +30,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
 
     public void setProcesso(Processo processo) {
         this.processo = processo;
-        this.localizacaoFisicaList = BeanManager.INSTANCE.getReference(LocalizacaoFisicaList.class).getResultList();
+        this.localizacaoFisicaList = Beans.getReference(LocalizacaoFisicaList.class).getResultList();
         listByProcesso();
     }
 
@@ -44,7 +44,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
     protected void afterSave() {
         newInstance();
         listByProcesso();
-        BeanManager.INSTANCE.getReference(LocalizacaoFisicaTreeHandler.class).clearTree();
+        Beans.getReference(LocalizacaoFisicaTreeHandler.class).clearTree();
     }
     
     @Override

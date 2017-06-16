@@ -17,8 +17,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.transaction.Transactional;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumentoPermissao;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
@@ -64,7 +64,7 @@ public class SigiloDocumentoPermissaoAction implements Serializable {
             public Boolean create(Integer key) {
                 inicializarDocumentosSelecionados();
                 SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager = (SigiloDocumentoPermissaoManager) Component.getInstance(SigiloDocumentoPermissaoManager.NAME);
-                UsuarioLoginManager usuarioLoginManager = BeanManager.INSTANCE.getReference(UsuarioLoginManager.class);
+                UsuarioLoginManager usuarioLoginManager = Beans.getReference(UsuarioLoginManager.class);
                 return sigiloDocumentoPermissaoManager.possuiPermissao(idsDocumentosSelecionados, usuarioLoginManager.find(key));
             }
 

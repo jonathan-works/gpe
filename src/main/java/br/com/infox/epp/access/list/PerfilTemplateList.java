@@ -12,7 +12,7 @@ import br.com.infox.epp.access.component.tree.EstruturaLocalizacoesPerfilTreeHan
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 @Named
 @ViewScoped
@@ -67,8 +67,8 @@ public class PerfilTemplateList extends EntityList<PerfilTemplate> {
     }
     
     private void clearTrees() {
-        BeanManager.INSTANCE.getReference(PapelTreeHandler.class).clearTree();
-        BeanManager.INSTANCE.getReference(EstruturaLocalizacoesPerfilTreeHandler.class).clearTree();
+        Beans.getReference(PapelTreeHandler.class).clearTree();
+        Beans.getReference(EstruturaLocalizacoesPerfilTreeHandler.class).clearTree();
     }
 
 }
