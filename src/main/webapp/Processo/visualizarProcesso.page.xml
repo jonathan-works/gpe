@@ -7,7 +7,7 @@
 >
     
     <description>Processo: #{processoEpaHome.instance}</description>
-    
+    <begin-conversation join="true"/>
     <restrict>#{security.checkPage()}</restrict>
 
 
