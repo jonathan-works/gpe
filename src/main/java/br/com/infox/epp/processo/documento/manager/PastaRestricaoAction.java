@@ -32,6 +32,8 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.util.Beans;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
@@ -93,7 +95,7 @@ public class PastaRestricaoAction implements Serializable {
 	    // Isto está aqui para evitar erro ao editar uma restrição do tipo localização na primeira vez que entra na tela,
         // causado pela injeção a este componente que
         // está presente em LocalizaccaoTreehandler.getEntityToIgnore
-        ComponentUtil.<LocalizacaoCrudAction>getComponent(LocalizacaoCrudAction.NAME).newInstance();
+	    Beans.getReference(LocalizacaoCrudAction.class).newInstance();
 	}
 	
 	protected void clearInstances() {
@@ -166,7 +168,7 @@ public class PastaRestricaoAction implements Serializable {
 	}
 	
 	public void newRestricaoInstance() {
-		LocalizacaoTreeHandler localizacaoTreeHandler = ComponentUtil.<LocalizacaoTreeHandler>getComponent(LocalizacaoTreeHandler.NAME);
+		LocalizacaoTreeHandler localizacaoTreeHandler = Beans.getReference(LocalizacaoTreeHandler.class);
 		if(localizacaoTreeHandler != null) {
 			localizacaoTreeHandler.clearTree(); 
 		}

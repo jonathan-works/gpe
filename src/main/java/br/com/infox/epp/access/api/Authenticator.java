@@ -50,8 +50,8 @@ import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.access.type.UsuarioEnum;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.menu.MenuNavigation;
 import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -160,7 +160,7 @@ public class Authenticator implements Serializable {
     private boolean hasToSignTermoAdesao(UsuarioLogin usuario) throws LoginException {
         
         PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-        boolean hasToSign = BeanManager.INSTANCE.getReference(PapelManager.class).hasToSignTermoAdesao(usuario);
+        boolean hasToSign = Beans.getReference(PapelManager.class).hasToSignTermoAdesao(usuario);
         if (hasToSign){
             if (pessoaFisica == null)
                throw new LoginException(String.format(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA), usuario));
@@ -249,7 +249,7 @@ public class Authenticator implements Serializable {
             if (StringUtils.isEmpty(providerUrl) || "-1".equals(providerUrl)){
                 return false;
             }
-            LDAPManager ldapManager = BeanManager.INSTANCE.getReference(LDAPManager.class);
+            LDAPManager ldapManager = Beans.getReference(LDAPManager.class);
             UsuarioLogin user = ldapManager.autenticarLDAP(credentials.getUsername(), credentials.getPassword(), providerUrl, getDomainName());
             if (user != null)
                 usuarioLoginManager.persist(user);
@@ -364,7 +364,7 @@ public class Authenticator implements Serializable {
         getAuthenticatorService().addRolesAtuais(roleSet);
         setVariaveisDoContexto(usuarioPerfil, roleSet);
         securityUtil.clearPermissionCache();
-        BeanManager.INSTANCE.getReference(MenuNavigation.class).refresh();
+        Beans.getReference(MenuNavigation.class).refresh();
         
         if (!isUsuarioExterno()) {
             if (!hasToSignTermoAdesao()) {
@@ -633,7 +633,7 @@ public class Authenticator implements Serializable {
         credentials.setPassword("usuarioexterno");
         identity.quietLogin();
         identity.login();
-        UsuarioLoginManager usuarioLoginManager = (UsuarioLoginManager) Component.getInstance(UsuarioLoginManager.NAME);
+        UsuarioLoginManager usuarioLoginManager = Beans.getReference(UsuarioLoginManager.class);
         Contexts.getSessionContext().set(USUARIO_LOGADO, usuarioLoginManager.getUsuarioLoginByLogin(credentials.getUsername()));
     }
 

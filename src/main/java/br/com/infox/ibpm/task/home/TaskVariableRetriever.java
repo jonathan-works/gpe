@@ -3,7 +3,7 @@ package br.com.infox.ibpm.task.home;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -62,7 +62,7 @@ final class TaskVariableRetriever extends TaskVariable {
 	private Object getConteudoFragment(Object variable) {
         Object result = variable;
         if (result == null) {
-            FragmentConfigurationCollector collector = BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class);
+            FragmentConfigurationCollector collector = Beans.getReference(FragmentConfigurationCollector.class);
             String code = variableAccess.getMappedName().split(":")[2];
             FragmentConfiguration fragmentConfiguration = collector.getByCode(code);
             result = fragmentConfiguration.init(taskInstance);

@@ -19,7 +19,7 @@ import org.richfaces.context.ExtendedPartialViewContext;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.epp.fluxo.list.HistoricoProcessDefinitionList;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
@@ -187,7 +187,7 @@ public class ProcessBuilder implements Serializable {
     }
 
     public static ProcessBuilder instance() {
-        return BeanManager.INSTANCE.getReference(ProcessBuilder.class);
+        return Beans.getReference(ProcessBuilder.class);
     }
 
     public void setTab(String tab) {

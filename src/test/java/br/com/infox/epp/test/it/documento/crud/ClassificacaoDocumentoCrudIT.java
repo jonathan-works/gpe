@@ -34,7 +34,7 @@ public class ClassificacaoDocumentoCrudIT extends
 
     @Override
     protected String getComponentName() {
-        return ClassificacaoDocumentoCrudAction.NAME;
+        return null;
     }
 
     private ClassificacaoDocumento createInstance(final String codigoDocumento,

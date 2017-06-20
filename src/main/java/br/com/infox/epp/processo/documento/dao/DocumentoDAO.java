@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -39,7 +40,6 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -73,7 +73,7 @@ public class DocumentoDAO extends DAO<Documento> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoDAO";
 
-    @In(value="sigiloDocumentoService")
+    @Inject
     private SigiloDocumentoService sigiloDocumentoService;
 
     public Integer getNextSequencial(Processo processo) {

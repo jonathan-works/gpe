@@ -7,16 +7,8 @@
 	  
 	<description>Variavel: #{variavelCrudAction.instance}</description>
 	<restrict>#{security.checkPage()}</restrict>
-	<begin-conversation join="true"/>
-
 
 	<param name="id" value="#{variavelCrudAction.id}" converterId="integerConverter"/>
 	<param name="tab" value="#{variavelCrudAction.tab}"/>
 	
-	<action execute="#{associatedTipoModeloVariavelList.entity.setVariavel(variavelCrudAction.instance)}" 
-            if="#{variavelCrudAction.tab eq 'tipoModelo'}"/>
-    <action execute="#{associativeTipoModeloDocumentoList.setVariavelToIgnore(variavelCrudAction.instance.variavel)}" 
-            if="#{variavelCrudAction.tab eq 'tipoModelo'}"/>
-    <action execute="#{variavelTipoModeloDocumentoCrudAction.setVariavelAtual(variavelCrudAction.instance)}" 
-            if="#{variavelCrudAction.tab eq 'tipoModelo'}"/>
 </page>

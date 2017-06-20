@@ -7,6 +7,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -59,7 +60,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
-    @In
+    @Inject
     private PapelManager papelManager;
 
     public String getModeloDocumentoByIdDocumento(Integer idDocumento) {

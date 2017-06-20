@@ -8,7 +8,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 public class EntityListenerService<D extends EntityListener<D>> {
     
@@ -49,7 +49,7 @@ public class EntityListenerService<D extends EntityListener<D>> {
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private AbstractEntityListener<D> getReference(Class<? extends AbstractEntityListener> serviceClass) {
-        return BeanManager.INSTANCE.getReference(serviceClass);
+        return Beans.getReference(serviceClass);
     }
 
 }

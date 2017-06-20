@@ -3,7 +3,6 @@ package br.com.infox.epp.fluxo.definicao.modeler;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.Association;
@@ -51,7 +50,7 @@ class BizagiBpmnAdapter implements BpmnAdapter {
 	
 	private void normalizeBpmnModel() {
 		Process bizagiProcess = bizagiBpmnModel.getModelElementsByType(Process.class).iterator().next();
-		normalizedModel = Bpmn.createProcess(bizagiProcess.getId()).name(bizagiProcess.getName()).done();
+		normalizedModel = EppBpmn.createProcess(bizagiProcess.getId()).name(bizagiProcess.getName()).done();
 		normalizedProcess = normalizedModel.getModelElementById(bizagiProcess.getId());
 		removeUnnecessaryProcessesAndParticipants();
 		putNodesInLanes();

@@ -2,19 +2,15 @@ package br.com.infox.epp.processo.documento.sigilo.action;
 
 import java.io.Serializable;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.documento.entity.Documento;
 
-@Name(SigiloDocumentoController.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
+@Named
+@ViewScoped
 public class SigiloDocumentoController implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "sigiloDocumentoController";
     public static final String MSG_REGISTRO_ALTERADO = "#{infoxMessages['sigiloDocumento.registroAlterado']}";
 
     public static enum FragmentoSigilo {

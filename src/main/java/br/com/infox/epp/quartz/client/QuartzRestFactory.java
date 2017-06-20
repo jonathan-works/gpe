@@ -1,7 +1,7 @@
 package br.com.infox.epp.quartz.client;
 
 import br.com.infox.core.report.RequestInternalPageService;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.quartz.ws.QuartzResource;
 import br.com.infox.epp.quartz.ws.QuartzRest;
 import br.com.infox.ws.factory.RestClientFactory;
@@ -21,7 +21,7 @@ public class QuartzRestFactory {
     }
     
     private static RequestInternalPageService getRequestInternalPageService() {
-        return BeanManager.INSTANCE.getReference(RequestInternalPageService.class);
+        return Beans.getReference(RequestInternalPageService.class);
     }
 
 }

@@ -132,10 +132,10 @@ public class ModeloDocumento implements java.io.Serializable {
         if (modelo == null) {
             return true;
         }
-        return !modelo.modeloDocumento.equals(this.modeloDocumento)
-                || !modelo.tipoModeloDocumento.equals(this.tipoModeloDocumento)
-                || !modelo.tituloModeloDocumento.equals(this.tituloModeloDocumento)
-                || !modelo.ativo.equals(this.ativo);
+        return !modelo.getModeloDocumento().equals(getModeloDocumento())
+                || !modelo.getTipoModeloDocumento().equals(getTipoModeloDocumento())
+                || !modelo.getTituloModeloDocumento().equals(getTituloModeloDocumento())
+                || !modelo.getAtivo().equals(getAtivo());
     }
 
     @Override

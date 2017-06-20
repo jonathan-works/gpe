@@ -9,7 +9,7 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
 public class TransitionHandler implements Serializable {
@@ -93,7 +93,7 @@ public class TransitionHandler implements Serializable {
     }
 
     public boolean isInDecisionNode() {
-        NodeFitter nodeFitter = BeanManager.INSTANCE.getReference(NodeFitter.class);
+        NodeFitter nodeFitter = Beans.getReference(NodeFitter.class);
         Node currentNode = nodeFitter.getCurrentNode();
         if (currentNode != null
                 && currentNode.getNodeType().equals(NodeType.Decision)) {
@@ -103,7 +103,7 @@ public class TransitionHandler implements Serializable {
     }
 
     public boolean isInForkNode() {
-        NodeFitter nodeFitter = BeanManager.INSTANCE.getReference(NodeFitter.class);
+        NodeFitter nodeFitter = Beans.getReference(NodeFitter.class);
         Node currentNode = nodeFitter.getCurrentNode();
         if (currentNode != null
                 && currentNode.getNodeType().equals(NodeType.Fork)) {
@@ -113,7 +113,7 @@ public class TransitionHandler implements Serializable {
     }
 
     public boolean isInJoinNode() {
-        NodeFitter nodeFitter = BeanManager.INSTANCE.getReference(NodeFitter.class);
+        NodeFitter nodeFitter = Beans.getReference(NodeFitter.class);
         Node currentNode = nodeFitter.getCurrentNode();
         if (currentNode != null
                 && currentNode.getNodeType().equals(NodeType.Join)) {

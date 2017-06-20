@@ -7,6 +7,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
@@ -99,11 +100,18 @@
     </ui:define>
 
     <ui:define name="tabs">
+        <h:form>
+            <a:jsFunction name="reloadModeloDocumento"
+                action="#{modeloDocumentoCrudAction.reloadAfterRestaurar}"
+                onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+                limitRender="true" execute="@this" render=":pageBody" />
+        </h:form>
 
         <infox:tab id="historicoModeloDocumento"
             rendered="#{modeloDocumentoCrudAction.isManaged()}"
             title="#{infoxMessages['historicoModeloDocumento.titleTab']}"
-            name="historicoModeloDocumento">
+            name="historicoModeloDocumento"
+            action="#{modeloDocumentoCrudAction.onClickHistoricoTab}">
 
             <wi:dataTable
                 values="#{historicoModeloDocumentoList.list(10)}"
@@ -161,9 +169,13 @@
                 </wi:columnOutputText>
                 <ui:define name="toolBar">
 
-                    <wi:toolBarPopUp
-                        target="restaurar.seam?scid=#{conversation.id}"
-                        action="#{historicoModeloDocumentoCrudAction.setSelecionado(row)}" />
+                    <a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction}"
+                        oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/ModeloDocumento/restaurar.seam','1024');"
+                        render="@this" execute="@this">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                            title="#{infoxMessages['button.selecionar']}" />
+                        <f:setPropertyActionListener value="#{row.idHistoricoModeloDocumento}" target="#{flash.idHistoricoModeloDocumento}" />
+                    </a:commandLink>
 
                 </ui:define>
 

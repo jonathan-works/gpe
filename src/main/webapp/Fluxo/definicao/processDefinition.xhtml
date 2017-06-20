@@ -84,8 +84,16 @@
         }
         
         function reinitModelador() {
-        	window.modeler.getRenderer().destroy();
+			var renderer = window.modeler.getRenderer();
+        	var transformTooltipContainer = $('.djs-tooltip-container', renderer.container).css('transform');
+        	var transformOverlayContainer = $('.djs-overlay-container', renderer.container).css('transform');
+        	var transformViewport = $('.viewport', renderer.container).attr('transform');
+        	renderer.destroy();
         	initModelador();
+        	renderer = window.modeler.getRenderer();
+        	$('.djs-tooltip-container', renderer.container).css('transform', transformTooltipContainer);
+        	$('.djs-overlay-container', renderer.container).css('transform', transformOverlayContainer);
+        	$('.viewport', renderer.container).attr('transform', transformViewport);
         	moveContainerModeladorToTabIfInTab();
         }
         

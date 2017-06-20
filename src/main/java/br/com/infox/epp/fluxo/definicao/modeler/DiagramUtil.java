@@ -18,7 +18,7 @@ import org.camunda.bpm.model.bpmn.instance.di.DiagramElement;
 
 import br.com.infox.seam.exception.BusinessException;
 
-class DiagramUtil {
+public class DiagramUtil {
 	
 	static final int ACTIVITY_WIDTH = 100;
 	static final int ACTIVITY_HEIGHT = 80;
@@ -61,7 +61,7 @@ class DiagramUtil {
 		return flowNodes;
 	}
 	
-	static BpmnDiagram getDefaultDiagram(BpmnModelInstance model) {
+	public static BpmnDiagram getDefaultDiagram(BpmnModelInstance model) {
 		return model.getDefinitions().getBpmDiagrams().iterator().next();
 	}
 	

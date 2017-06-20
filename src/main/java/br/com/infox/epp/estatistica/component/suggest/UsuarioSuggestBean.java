@@ -1,18 +1,16 @@
 package br.com.infox.epp.estatistica.component.suggest;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.suggest.AbstractSuggestBean;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.ViewScoped;
 
-@Name(UsuarioSuggestBean.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class UsuarioSuggestBean extends AbstractSuggestBean<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "usuarioSuggestBean";
 
     @Override
     public UsuarioLogin load(Object id) {

@@ -1,17 +1,17 @@
 package br.com.infox.epp.access.component.tree;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.cdi.ViewScoped;
 
-@Name(EstruturaLocalizacoesPerfilTreeHandler.NAME)
-@AutoCreate
+@Named(EstruturaLocalizacoesPerfilTreeHandler.NAME)
+@ViewScoped
 public class EstruturaLocalizacoesPerfilTreeHandler extends AbstractTreeHandler<Object> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "estruturaLocalizacoesPerfilTree";
+    protected static final String NAME = "estruturaLocalizacoesPerfilTree";
     
     @Override
     protected String getQueryRoots() {

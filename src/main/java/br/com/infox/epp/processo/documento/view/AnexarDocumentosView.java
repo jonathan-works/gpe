@@ -35,7 +35,7 @@ import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.certificado.DefaultSignableDocumentImpl;
 import br.com.infox.epp.certificado.SignDocuments;
 import br.com.infox.epp.certificado.SignableDocument;
@@ -761,7 +761,7 @@ public class AnexarDocumentosView implements Serializable {
     private void createExpressionResolver() {
 		if (processoReal != null) {
 			VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
-			EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+			EntityManager entityManager = Beans.getReference(EntityManager.class);
 			ProcessInstance processInstance = entityManager.find(ProcessInstance.class, processoReal.getIdJbpm());
 			if (variableTypeResolver.getProcessInstance() == null) {
 			    variableTypeResolver.setProcessInstance(processInstance);

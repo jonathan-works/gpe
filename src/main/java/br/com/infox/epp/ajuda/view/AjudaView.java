@@ -6,9 +6,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.lucene.queryParser.ParseException;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -39,11 +40,11 @@ public class AjudaView implements Serializable {
     @SuppressWarnings(RAWTYPES)
     private List resultado;
 
-    @In
+    @Inject
     private AjudaManager ajudaManager;
-    @In
+    @Inject
     private PaginaManager paginaManager;
-    @In
+    @Inject
     private SearchService searchService;
 
     public Ajuda getInstance() {

@@ -12,15 +12,12 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@SuppressWarnings(UNCHECKED)
 public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>, M extends Manager<? extends DAO<E>, E>> extends AbstractCrudAction<E, M> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     private static final LogProvider LOG = Logging.getLogProvider(AbstractRecursiveCrudAction.class);
@@ -33,6 +30,7 @@ public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>, M exte
         updateOldInstance(getInstance());
     }
 
+    @SuppressWarnings(UNCHECKED)
     private void updateOldInstance(E recursive) {
         try {
             oldInstance = (E) EntityUtil.cloneObject(recursive, false);
@@ -61,6 +59,7 @@ public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>, M exte
     }
 
     @Override
+    @Transactional
     protected boolean isInstanceValid() {
         try {
             updateRecursivePath();

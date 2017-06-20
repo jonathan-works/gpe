@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.auditoria.MetadadoProcessoListener;
 import br.com.infox.epp.processo.metadado.query.MetadadoProcessoQuery;
@@ -128,7 +128,7 @@ public class MetadadoProcesso implements Serializable {
 	public <E> E getValue() {
 		if (value == null) {
 			if (EntityUtil.isEntity(getClassType())) {
-				EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+				EntityManager entityManager = Beans.getReference(EntityManager.class);
 				Class<?> idClass = EntityUtil.getId(getClassType()).getPropertyType();
 				Object id = ReflectionsUtil.newInstance(idClass, String.class, getValor());
 				value = (E) entityManager.find(getClassType(), id);

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.mail.command.SendmailCommand;
@@ -82,7 +83,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
     private void sendMail() {
         EMailData data = ComponentUtil.getComponent(EMailData.NAME);
         data.setUseHtmlBody(true);
-        ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+        ModeloDocumentoManager modeloDocumentoManager = Beans.getReference(ModeloDocumentoManager.class);
         data.setBody(modeloDocumentoManager.getConteudo(parameters.get("codigoModeloDocumento"), new SeamExpressionResolver(execucionContext)));
         String idGrupo = parameters.get("idGrupo");
         List<String> recipList = null;

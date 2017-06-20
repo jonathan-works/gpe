@@ -20,7 +20,7 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.mail.entity.ListaEmail;
@@ -103,7 +103,7 @@ public class InfoxMailNode extends MailNode {
     }
 
     private ModeloDocumentoSearch getModeloDocumentoSearch() {
-    	return BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
+    	return Beans.getReference(ModeloDocumentoSearch.class);
     }
 
     private TwitterTemplateManager twitterTemplateManager() {

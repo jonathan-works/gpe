@@ -122,7 +122,8 @@
     <ui:define name="tabs">
         <infox:tab status=":status" id="associarPapelTab"
             rendered="#{home.managed}" name="associarPapelTab"
-            title="#{infoxMessages['tipoProcessoDocumento.papel']}">
+            title="#{infoxMessages['tipoProcessoDocumento.papel']}"
+            action="#{home.onClickClassificacaoPapel}">
             <s:div id="divAssociarPapel">
                 <wi:dataForm formId="classificacaoDocumentoPapelForm"
                     formTitle="#{infoxMessages['form.title']}">
@@ -194,7 +195,8 @@
         
         <infox:tab status=":status" id="extensoesTab"
             rendered="#{home.managed and home.instance.canDoUpload()}" name="extensoesTab"
-            title="#{infoxMessages['tipoProcessoDocumento.extensoesTab']}">
+            title="#{infoxMessages['tipoProcessoDocumento.extensoesTab']}"
+            action="#{home.onClickExtensoes}">
             <wi:dataForm formId="extensoesForm"
                 formTitle="#{infoxMessages['form.title']}">
                 <wi:inputText id="nomeExtensao"

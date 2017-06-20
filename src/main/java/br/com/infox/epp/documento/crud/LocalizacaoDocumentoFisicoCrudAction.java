@@ -2,27 +2,27 @@ package br.com.infox.epp.documento.crud;
 
 import java.util.List;
 
-import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.component.tree.LocalizacaoFisicaTreeHandler;
 import br.com.infox.epp.documento.entity.DocumentoFisico;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.infox.epp.documento.list.LocalizacaoFisicaList;
 import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Scope(ScopeType.CONVERSATION)
-@Name(LocalizacaoDocumentoFisicoCrudAction.NAME)
+@Named
+@ViewScoped
 public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<DocumentoFisico, DocumentoFisicoManager> {
 	
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "localizacaoDocumentoFisicoCrudAction";
+    @Inject
+    private DocumentoFisicoManager documentoFisicoManager;
 
     private List<LocalizacaoFisica> localizacaoFisicaList;
     private List<DocumentoFisico> documentoFisicoList;
@@ -30,8 +30,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
 
     public void setProcesso(Processo processo) {
         this.processo = processo;
-        LocalizacaoFisicaList localizacaoFisicaList = ComponentUtil.getComponent(LocalizacaoFisicaList.NAME, ScopeType.PAGE);
-        this.localizacaoFisicaList = localizacaoFisicaList.getResultList();
+        this.localizacaoFisicaList = Beans.getReference(LocalizacaoFisicaList.class).getResultList();
         listByProcesso();
     }
 
@@ -45,8 +44,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
     protected void afterSave() {
         newInstance();
         listByProcesso();
-        LocalizacaoFisicaTreeHandler tree = (LocalizacaoFisicaTreeHandler) Component.getInstance(LocalizacaoFisicaTreeHandler.NAME);
-        tree.clearTree();
+        Beans.getReference(LocalizacaoFisicaTreeHandler.class).clearTree();
     }
     
     @Override
@@ -85,4 +83,8 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
         return documentoFisicoList;
     }
 
+    @Override
+    protected DocumentoFisicoManager getManager() {
+        return documentoFisicoManager;
+    }
 }

@@ -1,15 +1,15 @@
 package br.com.infox.epp.documento.component.suggest;
 
-import org.jboss.seam.annotations.Install;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
 
 import br.com.infox.core.suggest.AbstractSuggestBean;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 
-@Name(GrupoModeloDocumentoSuggestBean.NAME)
-@Install(precedence = Install.FRAMEWORK)
+@Named(GrupoModeloDocumentoSuggestBean.NAME)
+@ViewScoped
 public class GrupoModeloDocumentoSuggestBean extends AbstractSuggestBean<GrupoModeloDocumento> {
-    public static final String NAME = "grupoModeloDocumentoSuggest";
+    protected static final String NAME = "grupoModeloDocumentoSuggest";
 
     private static final long serialVersionUID = 1L;
 

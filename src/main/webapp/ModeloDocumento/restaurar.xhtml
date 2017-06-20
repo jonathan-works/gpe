@@ -6,12 +6,18 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
     template="/WEB-INF/xhtml/templates/minimal.xhtml"
     xmlns:h="http://java.sun.com/jsf/html">
 
     <ui:define name="title">#{infoxMessages['historicoModeloDocumento.titlePage']}</ui:define>
 
     <ui:define name="body">
+
+        <c:if test="#{not empty flash.idHistoricoModeloDocumento}" >
+            <c:set value="#{flash.idHistoricoModeloDocumento}" target="#{historicoModeloDocumentoCrudAction}" property="idSelecionado"/>
+        </c:if>
+
         <rich:panel bodyClass="panel"
             rendered="#{historicoModeloDocumentoCrudAction.selecionado != null}">
             <h:form>
@@ -30,10 +36,9 @@
                         label="#{infoxMessages['historicoModeloDocumento.modeloDocumento']}"
                         readonly="true" />
                 </s:div>
-                <wi:commandButton
-                    action="modeloDocumentoCrudAction.restaurar(historicoModeloDocumentoCrudAction.selecionado)"
-                    value="Restaurar" id="restaurarHistoricoSelecionado"
-                    oncomplete="window.close()" />
+                <wi:commandButton value="Restaurar" id="restaurarHistoricoSelecionado"
+                    action="historicoModeloDocumentoCrudAction.restaurar"
+                    oncomplete="window.close(); opener['reloadModeloDocumento']();" />
             </h:form>
         </rich:panel>
     </ui:define>

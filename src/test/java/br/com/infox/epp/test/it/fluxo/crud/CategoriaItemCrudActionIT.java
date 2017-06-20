@@ -1,15 +1,12 @@
 package br.com.infox.epp.test.it.fluxo.crud;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 
-import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.epp.fluxo.crud.CategoriaCrudAction;
 import br.com.infox.epp.fluxo.crud.CategoriaItemCrudAction;
@@ -17,7 +14,6 @@ import br.com.infox.epp.fluxo.crud.ItemCrudAction;
 import br.com.infox.epp.fluxo.dao.CategoriaDAO;
 import br.com.infox.epp.fluxo.dao.CategoriaItemDAO;
 import br.com.infox.epp.fluxo.dao.ItemDAO;
-import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.manager.CategoriaItemManager;
@@ -47,7 +43,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem> {
 
     @Override
     protected String getComponentName() {
-        return CategoriaItemCrudAction.NAME;
+        return null;
     }
 
     public static final ActionContainer<CategoriaItem> initEntityAction = new ActionContainer<CategoriaItem>() {
@@ -65,7 +61,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem> {
     }
 
     private final RunnableTest<Item> persistItem = new RunnableTest<Item>(
-            ItemCrudAction.NAME) {
+            null) {
         @Override
         protected void testComponent() throws Exception {
             final Item entity = getEntity();
@@ -147,136 +143,6 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem> {
                 this.persistItem.runTest(new Item("inspiron14" + suffix,
                         "Inspiron 14" + suffix, dell, Boolean.TRUE),
                         this.servletContext, this.session));
-    }
-
-    private final RunnableTest<CategoriaItem> addCategoriaItemSuccess = new RunnableTest<CategoriaItem>(
-            CategoriaItemCrudAction.NAME) {
-        @Override
-        @SuppressWarnings(WarningConstants.UNCHECKED)
-        protected void testComponent() throws Exception {
-            final CategoriaItem entity = getEntity();
-            final Categoria categoria = entity.getCategoria();
-            Assert.assertNotNull("categoria not null", categoria);
-            final int idCategoria = categoria.getIdCategoria();
-            Assert.assertNotNull("id categoria not null", idCategoria);
-            final Item item = entity.getItem();
-            Assert.assertNotNull("item not null", item);
-            Assert.assertNotNull("id item not null", item.getIdItem());
-            CategoriaItemCrudActionIT.initEntityAction.execute(entity, this);
-
-            Assert.assertEquals("categoriaItem persisted",
-                    AbstractAction.PERSISTED, save());
-
-            final Set<Item> itemArray = invokeMethod("itemManager",
-                    "getFolhas", Set.class, new Class[] { Item.class }, item);
-
-            final List<CategoriaItem> categoriaItemList = invokeMethod(
-                    "categoriaItemManager", "listByCategoria", List.class,
-                    new Class[] { Categoria.class }, categoria);
-            for (final Item it : itemArray) {
-                Boolean itemExists = Boolean.FALSE;
-
-                final Boolean ativo = it.getAtivo();
-                if (!ativo) {
-                    continue;
-                }
-                for (final CategoriaItem categoriaItem : categoriaItemList) {
-                    Assert.assertEquals("categoria", Boolean.TRUE,
-                            categoria.equals(categoriaItem.getCategoria()));
-                    final Item categoriaItem_Item = categoriaItem.getItem();
-                    Assert.assertNotNull("item not null", categoriaItem_Item);
-
-                    if (it.getCodigoItem().equals(
-                            categoriaItem_Item.getCodigoItem())
-                            && it.getDescricaoItem().equals(
-                                    categoriaItem_Item.getDescricaoItem())
-                            && ativo.equals(categoriaItem_Item.getAtivo())) {
-                        itemExists = Boolean.TRUE;
-                        break;
-                    }
-                }
-                Assert.assertEquals("item exists", Boolean.TRUE, itemExists);
-            }
-        }
-    };
-
-    private final RunnableTest<CategoriaItem> removeCategoriaItemSuccess = new RunnableTest<CategoriaItem>(
-            CategoriaItemCrudAction.NAME) {
-        @Override
-        @SuppressWarnings(WarningConstants.UNCHECKED)
-        protected void testComponent() throws Exception {
-            final CategoriaItem entity = getEntity();
-            Assert.assertNotNull("categoriaItem not null", entity);
-            final Categoria categoria = entity.getCategoria();
-
-            Assert.assertNotNull("categoria not null", categoria);
-            Assert.assertNotNull("id categoria not null",
-                    categoria.getIdCategoria());
-            CategoriaItemCrudActionIT.initEntityAction.execute(entity, this);
-            for (final CategoriaItem categoriaItem : (List<CategoriaItem>) invokeMethod(
-                    "categoriaItemManager", "listByCategoria", List.class,
-                    new Class[] { Categoria.class }, categoria)) {
-                Assert.assertEquals(AbstractAction.REMOVED,
-                        AbstractAction.REMOVED, remove(categoriaItem));
-            }
-            Assert.assertEquals(
-                    "list empty",
-                    0,
-                    invokeMethod("categoriaItemManager", "listByCategoria",
-                            List.class, new Class[] { Categoria.class },
-                            categoria).size());
-        }
-    };
-
-    private final RunnableTest<Categoria> persistCategoria = new RunnableTest<Categoria>(
-            CategoriaCrudAction.NAME) {
-        @Override
-        protected void testComponent() throws Exception {
-            final Categoria entity = getEntity();
-            newInstance();
-            final String categoria = entity.getCategoria();
-            setEntityValue("categoria", categoria);
-            final Boolean ativo = entity.getAtivo();
-            setEntityValue("ativo", ativo);
-            Assert.assertEquals("persisted", AbstractAction.PERSISTED, save());
-
-            final Integer id = getId();
-            Assert.assertNotNull("id", id);
-            newInstance();
-            Assert.assertNull("nullId", getId());
-            setId(id);
-            final Categoria instance = getInstance();
-            Assert.assertEquals("Compare", true, instance.getCategoria()
-                    .equals(categoria) && instance.getAtivo().equals(ativo));
-            setEntity(getInstance());
-        }
-    };
-
-    //@Test
-    public void removeCategoriaItemSuccessTest() throws Exception {
-        inicializaItens("removeSuccess");
-        final Categoria categoria = this.persistCategoria.runTest(
-                new Categoria("categoriaRemItemSucc1Test", Boolean.TRUE),
-                this.servletContext, this.session);
-        final Item item = this.itens.get("perifCompremoveSuccess");
-        final CategoriaItem entity = new CategoriaItem(categoria, item);
-
-        this.addCategoriaItemSuccess.runTest(entity, this.servletContext,
-                this.session);
-        this.removeCategoriaItemSuccess.runTest(entity, this.servletContext,
-                this.session);
-    }
-
-    //@Test
-    public void addCategoriaItemSuccessTest() throws Exception {
-        inicializaItens("addSuccess");
-        final Categoria categoria = this.persistCategoria.runTest(
-                new Categoria("categoriaAddItemSucc1Test", Boolean.TRUE),
-                this.servletContext, this.session);
-        final Item item = this.itens.get("perifCompaddSuccess");
-        final CategoriaItem entity = new CategoriaItem(categoria, item);
-        this.addCategoriaItemSuccess.runTest(entity, this.servletContext,
-                this.session);
     }
 
 }

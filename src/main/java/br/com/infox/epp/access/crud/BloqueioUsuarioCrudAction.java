@@ -2,9 +2,8 @@ package br.com.infox.epp.access.crud;
 
 import java.util.Date;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
@@ -12,11 +11,12 @@ import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@Name(BloqueioUsuarioCrudAction.NAME)
-@AutoCreate
+@Named
+@ViewScoped
 public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuario, BloqueioUsuarioManager> {
 
     private static final long serialVersionUID = 1L;
@@ -24,7 +24,9 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     public static final String NAME = "bloqueioUsuarioCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(BloqueioUsuarioCrudAction.class);
 
-    @In
+    @Inject
+    private BloqueioUsuarioManager bloqueioUsuarioManager;
+    @Inject
     private UsuarioLoginManager usuarioLoginManager;
 
     private UsuarioLogin usuarioAtual;
@@ -85,4 +87,8 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
         }
     }
 
+    @Override
+    protected BloqueioUsuarioManager getManager() {
+        return bloqueioUsuarioManager;
+    }
 }

@@ -1,9 +1,7 @@
 package br.com.infox.epp.access.component.tree;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
+
 import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
@@ -11,13 +9,13 @@ import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.cdi.ViewScoped;
 
-@Name(PapelTreeHandler.NAME)
-@Scope(ScopeType.PAGE)
-@AutoCreate
+@Named(PapelTreeHandler.NAME)
+@ViewScoped
 public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
-    public static final String NAME = "papelTree";
-    public static final String PAPEL_TREE_EVENT = "papelTreeHandlerSelected";
+    protected static final String NAME = "papelTree";
+    protected static final String PAPEL_TREE_EVENT = "papelTreeHandlerSelected";
 
     private static final long serialVersionUID = 1L;
 

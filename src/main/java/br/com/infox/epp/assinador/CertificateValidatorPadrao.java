@@ -13,7 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 public class CertificateValidatorPadrao implements CertificateValidator {
 
@@ -31,7 +31,7 @@ public class CertificateValidatorPadrao implements CertificateValidator {
 	
 	@Override
 	public boolean validarCertificado(List<X509Certificate> certChain) throws CertPathValidatorException {
-		PKIXParameters params = BeanManager.INSTANCE.getReference(PKIXParameters.class);
+		PKIXParameters params = Beans.getReference(PKIXParameters.class);
 		CertPath certPath;
 		try {
 			certPath = certificateFactory.generateCertPath(certChain);

@@ -19,7 +19,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -66,7 +66,7 @@ public class TaskInstanceView implements Serializable {
 
     private TaskInstance taskInstance;
     
-    private VariableDefinitionService variableDefinitionService = BeanManager.INSTANCE.getReference(VariableDefinitionService.class);
+    private VariableDefinitionService variableDefinitionService = Beans.getReference(VariableDefinitionService.class);
 
     @Unwrap
     public Form getTaskForm() {
@@ -128,7 +128,7 @@ public class TaskInstanceView implements Serializable {
                         case ENUMERATION_MULTIPLE:
                         {
                             ff.setValue(variable.value);
-                            DominioVariavelTarefaSearch dominioVariavelTarefaSearch = BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);
+                            DominioVariavelTarefaSearch dominioVariavelTarefaSearch = Beans.getReference(DominioVariavelTarefaSearch.class);
                             DominioVariavelTarefa dominio = dominioVariavelTarefaSearch.findByCodigo(VariableDominioEnumerationHandler.fromJson(var.getConfiguration()).getCodigoDominio());
 
                             List<SelectItem> selectItens = new ArrayList<>();
@@ -155,7 +155,7 @@ public class TaskInstanceView implements Serializable {
                         case FRAGMENT:{
                             ff.setValue(variable.value);
                             if (variable.configuration != null) {
-                                FragmentConfiguration fragmentConfiguration = BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(variable.configuration);
+                                FragmentConfiguration fragmentConfiguration = Beans.getReference(FragmentConfigurationCollector.class).getByCode(variable.configuration);
                                 Map<String, Object> map = ff.getProperties();
                                 map.put("fragmentConfig", fragmentConfiguration);
                                 map.put("fragmentPath", fragmentConfiguration.getPath());

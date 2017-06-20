@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
 
 import br.com.infox.core.report.RequestInternalPageService;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.entrega.modelo.rest.AgendaEntregaRest;
 import br.com.infox.ws.factory.RestClientFactory;
 
@@ -32,7 +32,7 @@ public class AgendaEntregaTimerProcessor {
     }
 
     private static RequestInternalPageService getRequestInternalPageService() {
-        return BeanManager.INSTANCE.getReference(RequestInternalPageService.class);
+        return Beans.getReference(RequestInternalPageService.class);
     }
 
 }

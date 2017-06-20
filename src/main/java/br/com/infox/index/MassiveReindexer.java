@@ -15,7 +15,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 
 import br.com.infox.core.server.ApplicationServerService;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.system.Configuration;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
@@ -71,7 +71,7 @@ public class MassiveReindexer {
 	}
 	
 	private ParametroManager getParametroManager() {
-		return BeanManager.INSTANCE.getReference(ParametroManager.class);
+		return Beans.getReference(ParametroManager.class);
 	}
 
 }

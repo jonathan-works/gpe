@@ -6,7 +6,7 @@ import br.com.infox.assinador.rest.api.AssinavelResource;
 import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.assinador.rest.api.TokenAssinaturaResource;
 import br.com.infox.epp.assinador.AssinadorService;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
 
@@ -30,7 +30,7 @@ public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
     @Override
     public AssinavelResource getAssinavelResource() {
         assinadorService.validarNovoToken(token);
-        AssinavelResourceImpl assinavelResourceImpl = BeanManager.INSTANCE.getReference(AssinavelResourceImpl.class);
+        AssinavelResourceImpl assinavelResourceImpl = Beans.getReference(AssinavelResourceImpl.class);
         assinavelResourceImpl.setTokenGrupo(token);
         return assinavelResourceImpl;
     }

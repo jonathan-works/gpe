@@ -28,7 +28,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
@@ -57,7 +57,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     
     @PostConstruct
     public void init() {
-    	setPersistenceContext(BeanManager.INSTANCE.getReference(EntityManager.class));
+    	setPersistenceContext(Beans.getReference(EntityManager.class));
     	setCustomFilters();
     	addSearchFields();
     	Map<String, String> map = getCustomColumnsOrder();

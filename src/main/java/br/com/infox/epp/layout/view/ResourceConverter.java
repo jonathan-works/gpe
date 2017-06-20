@@ -5,7 +5,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.layout.dao.ResourceDao;
 import br.com.infox.epp.layout.entity.Resource;
 
@@ -15,7 +15,7 @@ public class ResourceConverter implements Converter {
 	
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
-		return BeanManager.INSTANCE.getReference(ResourceDao.class).findByCodigo(value);
+		return Beans.getReference(ResourceDao.class).findByCodigo(value);
 	}
 
 	@Override

@@ -2,16 +2,16 @@ package br.com.infox.epp.turno.crud;
 
 import java.io.Serializable;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.turno.component.TurnoBean;
 import br.com.infox.epp.turno.component.TurnoHandler;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
@@ -20,24 +20,21 @@ import br.com.infox.log.Log;
 import br.com.infox.log.Logging;
 import br.com.infox.util.time.DateRange;
 
-@Scope(ScopeType.CONVERSATION)
-@Name(LocalizacaoTurnoAction.NAME)
-@Transactional
+@Named
+@ViewScoped
 public class LocalizacaoTurnoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "localizacaoTurnoAction";
     private static final Log LOG = Logging.getLog(LocalizacaoTurnoAction.class);
 
     private static final int UMA_HORA_EM_MINUTOS = 60;
 
-    @In
+    @Inject
     private LocalizacaoTurnoManager localizacaoTurnoManager;
-    @In
+    @Inject
     private ActionMessagesService actionMessagesService;
 
     private Localizacao localizacao;
-
     private TurnoHandler turnoHandler;
 
     private void createTurnoHandler() {
@@ -55,6 +52,7 @@ public class LocalizacaoTurnoAction implements Serializable {
         return this.turnoHandler;
     }
 
+    @Transactional
     public void gravarTurnos() {
         try {
             this.localizacaoTurnoManager

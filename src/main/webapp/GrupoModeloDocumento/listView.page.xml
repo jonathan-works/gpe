@@ -3,12 +3,10 @@
 <page xmlns="http://jboss.org/schema/seam/pages"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
-	  login-required="true"
->
+	  login-required="true">
+
 	<restrict>#{security.checkPage()}</restrict>
 	<description>GrupoModeloDocumento: #{grupoModeloDocumentoCrudAtion.instance}</description>
-	
-	<begin-conversation join="true"/>
 	
 	<param name="id" value="#{grupoModeloDocumentoCrudAtion.id}" converterId="integerConverter"/>
 	<param name="tab" value="#{grupoModeloDocumentoCrudAtion.tab}"/>

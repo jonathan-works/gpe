@@ -1,7 +1,7 @@
 package br.com.infox.epp.access.component.tree;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
+
 import org.jboss.seam.core.Events;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
@@ -9,6 +9,7 @@ import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.cdi.ViewScoped;
 
 /**
  * Tree que traz as localizações fora de estruturas e as localizações dentro das estruturas filhas das 
@@ -17,12 +18,12 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
  *
  */
 
-@Name(LocalizacaoFullTreeHandler.NAME)
-@AutoCreate
+@Named(LocalizacaoFullTreeHandler.NAME)
+@ViewScoped
 public class LocalizacaoFullTreeHandler extends AbstractTreeHandler<Localizacao> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "localizacaoFullTree";
+    protected static final String NAME = "localizacaoFullTree";
     public static final String SELECTED_LOCALIZACAO_ESTRUTURA = "selectedLocalizacaoEstrutura";
 
     @Override

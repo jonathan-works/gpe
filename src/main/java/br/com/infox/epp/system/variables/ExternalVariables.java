@@ -15,7 +15,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.meiocontato.dao.MeioContatoDAO;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
@@ -169,7 +169,7 @@ public class ExternalVariables implements Serializable {
     }
     
     private MeioContatoDAO getMeioContatoDAO() {
-    	return BeanManager.INSTANCE.getReference(MeioContatoDAO.class);
+    	return Beans.getReference(MeioContatoDAO.class);
     }
 
 }

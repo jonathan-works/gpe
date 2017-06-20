@@ -9,7 +9,7 @@ import org.quartz.JobExecutionException;
 import org.quartz.plugins.history.LoggingJobHistoryPlugin;
 
 import br.com.infox.core.server.ApplicationServerService;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.quartz.QuartzJobsInfo;
@@ -84,6 +84,6 @@ public class EppLoggingJobHistoryPlugin extends LoggingJobHistoryPlugin {
 	}
 	
 	private LogQuartzDao getLogQuartzDao() {
-		return BeanManager.INSTANCE.getReference(LogQuartzDao.class);
+		return Beans.getReference(LogQuartzDao.class);
 	}
 }

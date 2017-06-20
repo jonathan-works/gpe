@@ -2,9 +2,7 @@ package br.com.infox.epp.access.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
@@ -13,14 +11,14 @@ import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.util.Beans;
 
-@Name(UsuarioLoginList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class UsuarioLoginList extends EntityList<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "usuarioLoginList";
     
     private static final String TEMPLATE = "/Usuario/usuarioTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "Usuarios.xls";
@@ -48,10 +46,8 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
     	setLocalizacao(null);
     	setPapel(null);
     	setCpf(null);
-    	LocalizacaoTreeHandler localizacaoTreeHandler = ComponentUtil.getComponent(LocalizacaoTreeHandler.NAME);
-    	localizacaoTreeHandler.clearTree();
-    	PapelTreeHandler papelTreeHandler = ComponentUtil.getComponent(PapelTreeHandler.NAME);
-    	papelTreeHandler.clearTree();
+    	Beans.getReference(LocalizacaoTreeHandler.class).clearTree();
+        Beans.getReference(PapelTreeHandler.class).clearTree();
     }
     
     @Override

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -43,7 +44,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
     private ParticipanteProcessoManager participanteProcessoManager;
     @In
     private PastaManager pastaManager;
-    @In
+    @Inject
     private PapelManager papelManager;
     @In
     private LocalizacaoManager localizacaoManager;

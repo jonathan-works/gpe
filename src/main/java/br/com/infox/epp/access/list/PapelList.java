@@ -2,19 +2,17 @@ package br.com.infox.epp.access.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.cdi.ViewScoped;
 
-@Name(PapelList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class PapelList extends EntityList<Papel> {
 
-    public static final String NAME = "papelList";
     private static final long serialVersionUID = 1L;
 
     /*

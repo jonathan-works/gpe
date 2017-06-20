@@ -21,7 +21,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.hibernate.oracle.dialect.InfoxOracleDialect;
 
 public final class HibernateUtil {
@@ -79,7 +79,7 @@ public final class HibernateUtil {
 	}
 
 	public static SessionFactoryImpl getSessionFactoryImpl() {
-		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+		EntityManager entityManager = Beans.getReference(EntityManager.class);
 		EntityManagerFactoryImpl entityManagerFactoryImpl = (EntityManagerFactoryImpl) entityManager
 				.getEntityManagerFactory();
 		return entityManagerFactoryImpl.getSessionFactory();

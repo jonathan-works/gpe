@@ -3,28 +3,25 @@ package br.com.infox.epp.processo.prioridade.list;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.prioridade.manager.PrioridadeProcessoManager;
 
-@Name(PrioridadeProcessoList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso> {
-
-    public static final String NAME = "prioridadeProcessoList";
 
     private static final long serialVersionUID = 1L;
 
     private static final String DEFAULT_EJBQL = "select o from PrioridadeProcesso o";
     private static final String DEFAULT_ORDER = "o.peso desc";
     
-    @In
+    @Inject
     private PrioridadeProcessoManager prioridadeProcessoManager;
 
     @Override

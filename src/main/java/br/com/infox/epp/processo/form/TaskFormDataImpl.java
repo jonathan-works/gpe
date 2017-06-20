@@ -9,7 +9,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.executarTarefa.ExecutarTarefaService;
@@ -89,7 +89,7 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     }
     
     private ExecutarTarefaService getExecutarTarefaService(){
-        return BeanManager.INSTANCE.getReference(ExecutarTarefaService.class);
+        return Beans.getReference(ExecutarTarefaService.class);
     }
 
 }

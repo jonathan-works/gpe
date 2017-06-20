@@ -1,23 +1,25 @@
 package br.com.infox.epp.documento.crud;
 
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.manager.VariavelTipoModeloManager;
 
-@Name(VariavelTipoModeloDocumentoCrudAction.NAME)
+@Named
+@ViewScoped
 public class VariavelTipoModeloDocumentoCrudAction extends AbstractCrudAction<VariavelTipoModelo, VariavelTipoModeloManager> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "variavelTipoModeloDocumentoCrudAction";
+    @Inject
+    private VariavelTipoModeloManager variavelTipoModeloManager;
 
     private Variavel variavelAtual;
 
@@ -47,5 +49,10 @@ public class VariavelTipoModeloDocumentoCrudAction extends AbstractCrudAction<Va
 
     public void removeTipoModeloVariavel(VariavelTipoModelo obj) {
         remove(obj);
+    }
+
+    @Override
+    protected VariavelTipoModeloManager getManager() {
+        return variavelTipoModeloManager;
     }
 }

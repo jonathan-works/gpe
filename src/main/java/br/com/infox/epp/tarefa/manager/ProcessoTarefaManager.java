@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -41,9 +41,9 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     private static final long serialVersionUID = 7702766272346991620L;
     public static final String NAME = "processoTarefaManager";
 
-    @In
+    @Inject
     private LocalizacaoTurnoDAO localizacaoTurnoDAO;
-    @In
+    @Inject
     private ProcessoDAO processoDAO;
 
     public ProcessoTarefa getByTaskInstance(final Long taskInstance) {
