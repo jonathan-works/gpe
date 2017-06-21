@@ -41,9 +41,11 @@ public class ServletSessionPoll extends HttpServlet {
             if ( !StringUtil.isEmpty(getConversationId(req)) ) {
                 revalidateSeamConversation(session, req);
             }
-            if ( !StringUtil.isEmpty(getViewStateId(req)) ) {
-                revalidateViewState(session, req, resp);
-            }
+            //TODO:Reavalidação do View State retirada visto que quando o usuário está algumas páginas do sistema, 
+            //por exemplo Fluxo/listView.xhtml, não está sendo possível revalidar o viewState
+//            if ( !StringUtil.isEmpty(getViewStateId(req)) ) {
+//                revalidateViewState(session, req, resp);
+//            }
         }
     }
     
