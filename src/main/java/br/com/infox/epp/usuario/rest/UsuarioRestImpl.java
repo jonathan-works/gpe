@@ -17,7 +17,6 @@ import com.google.gson.JsonObject;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ws.bean.UsuarioBean;
 import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
-import br.com.infox.epp.ws.interceptors.Log;
 import br.com.infox.epp.ws.services.UsuarioRestService;
 
 public class UsuarioRestImpl implements UsuarioRest {

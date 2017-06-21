@@ -8,7 +8,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 public class UsuarioPerfilRestImpl implements UsuarioPerfilRest {
 
@@ -31,7 +31,7 @@ public class UsuarioPerfilRestImpl implements UsuarioPerfilRest {
 
 	@Override
 	public UsuarioPerfilResource getUsuarioPerfilResource(String usuario, String perfil, String localizacao) {
-		UsuarioPerfilResourceImpl usuarioPerfilResourceImpl = BeanManager.INSTANCE.getReference(UsuarioPerfilResourceImpl.class);
+		UsuarioPerfilResourceImpl usuarioPerfilResourceImpl = Beans.getReference(UsuarioPerfilResourceImpl.class);
 		usuarioPerfilResourceImpl.setCpfUsuario(usuario);
 		usuarioPerfilResourceImpl.setCodigoPerfil(perfil);
 		usuarioPerfilResourceImpl.setCodigoLocalizacao(localizacao);

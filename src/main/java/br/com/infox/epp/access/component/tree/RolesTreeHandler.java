@@ -4,9 +4,8 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
+
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.component.UITree;
@@ -16,14 +15,15 @@ import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.crud.RecursoCrudAction;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.util.Beans;
 
-@Name(RolesTreeHandler.ROLES_TREE)
-@Scope(ScopeType.PAGE)
+@Named(RolesTreeHandler.ROLES_TREE)
+@ViewScoped
 @BypassInterceptors
 public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 
-    public static final String ROLES_TREE = "rolesTree";
+    protected static final String ROLES_TREE = "rolesTree";
 
     public static final String ROLE_TREE_EVENT = "roleTreeHandlerSelected";
 
@@ -103,7 +103,7 @@ public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
             closeParentPanel(tree);
             raiseEvents(en);
         } else if (node instanceof String) {
-            RecursoCrudAction rca = ComponentUtil.getComponent(RecursoCrudAction.NAME);
+            RecursoCrudAction rca = Beans.getReference(RecursoCrudAction.class);
             rca.setRecurso((String) node);
             final Redirect redirect = Redirect.instance();
             redirect.setViewId("/useradmin/recursoListView.xhtml");

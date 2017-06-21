@@ -91,7 +91,7 @@ import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.core.persistence.generator.CustomIdGenerator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
@@ -240,7 +240,7 @@ public class Processo implements Serializable, Recursive<Processo> {
 	private void preencherProcessoRoot() {
 		Processo processoRoot = getProcessoRoot();
 		if ((processoRoot == null || this.equals(processoRoot)) && getProcessoPai() != null) {
-			this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());
+			this.processoPai = Beans.getReference(EntityManager.class).merge(getProcessoPai());
 			Processo processo = this;
 			while (processo.getProcessoPai() != null) {
 				processo = processo.getProcessoPai();

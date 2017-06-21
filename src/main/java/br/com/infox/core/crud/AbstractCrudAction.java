@@ -4,9 +4,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.Component;
 import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.action.AbstractAction;
@@ -16,7 +14,9 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.EntityUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
+import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -37,7 +37,7 @@ import br.com.infox.log.Logging;
  * @param <T>
  * @param <M>
  */
-@Scope(ScopeType.CONVERSATION)
+
 public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, T>> extends AbstractAction<T, M> implements Crudable<T> {
 
     private static final long serialVersionUID = 1L;
@@ -146,7 +146,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
             try {
                 setInstance(getManager().merge(activeEntity));
             } catch (final DAOException e) {
-                BeanManager.INSTANCE.getReference(ActionMessagesService.class).handleGenericException(e);
+                Beans.getReference(ActionMessagesService.class).handleGenericException(e);
             }
         }
     }
@@ -163,6 +163,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
      *         alguma falha na execução ou na validação.
      */
     @Override
+    @Transactional
     public String save() {
         String ret = null;
         final boolean wasManaged = isManaged();
@@ -226,10 +227,12 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
      * 
      * @return "persisted" se obtiver sucesso na inserção.
      */
+    @Transactional
     protected String persist() {
         return super.persist(instance);
     }
 
+    @Transactional
     protected String update() {
         return super.update(instance);
     }
@@ -250,11 +253,13 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
      * 
      * @return "removed" se removido com sucesso.
      */
+    @Transactional
     public String remove() {
         return super.remove(instance);
     }
 
     @Override
+    @Transactional
     public String remove(final T obj) {
         final String ret = super.remove(obj);
         resolveStatusMessage(ret);
@@ -275,12 +280,11 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
     }
 
     public String getHomeName() {
-        String name = null;
-        final Name nameAnnotation = this.getClass().getAnnotation(Name.class);
-        if (nameAnnotation != null) {
-            name = nameAnnotation.value();
+        String componentName = ReflectionsUtil.getCdiComponentName(getClass());
+        if (componentName == null) {
+            return Component.getComponentName(this.getClass());
         }
-        return name;
+        return componentName;
     }
 
     protected void onDAOExcecption(final DAOException daoException) {

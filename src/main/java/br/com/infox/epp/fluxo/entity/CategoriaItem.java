@@ -46,11 +46,11 @@ public class CategoriaItem implements Serializable {
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_ITEM, nullable = false)
+    @JoinColumn(name = ID_CATEGORIA, nullable = false)
     private Categoria categoria;
    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_CATEGORIA, nullable = false)
+    @JoinColumn(name = ID_ITEM, nullable = false)
     private Item item;
 
     public CategoriaItem() {

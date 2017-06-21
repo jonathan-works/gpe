@@ -10,7 +10,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 @Startup
 @Singleton
@@ -32,7 +32,7 @@ public class LogErroThreadExecutor implements Serializable {
             sleep(60);
             while (true) {
                 EntityManagerProducer.clear();
-                LogErrorService logErrorService = BeanManager.INSTANCE.getReference(LogErrorService.class);
+                LogErrorService logErrorService = Beans.getReference(LogErrorService.class);
                 try {
                     logErrorService.atualizarRegistroLogErro();
                 } catch (IOException e) {

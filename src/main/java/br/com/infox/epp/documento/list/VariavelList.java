@@ -2,20 +2,17 @@ package br.com.infox.epp.documento.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.Variavel;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(VariavelList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class VariavelList extends EntityList<Variavel> {
 
-    public static final String NAME = "variavelList";
     private static final long serialVersionUID = 1L;
     
     private static final String TEMPLATE = "/Variavel/variavelTemplate.xls";
@@ -44,10 +41,6 @@ public class VariavelList extends EntityList<Variavel> {
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
-    }
-
-    public static VariavelList instance() {
-        return ComponentUtil.getComponent(VariavelList.NAME);
     }
     
     @Override

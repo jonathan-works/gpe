@@ -13,8 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.core.Expressions;
 import org.richfaces.component.UICollapsiblePanel;
@@ -22,12 +20,11 @@ import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Scope(ScopeType.PAGE)
 public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializable {
 
     private static final int LIMITE_VISUALIZACAO = 25;
@@ -144,7 +141,7 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
     protected void raiseEvents(EntityNode<E> en) {
         Events.instance().raiseEvent(getEventSelected(), getSelected());
         if (getTreeItemSelect() != null) {
-            BeanManager.INSTANCE.fireEvent(getSelected(), getTreeItemSelect());
+            Beans.fireEvent(getSelected(), getTreeItemSelect());
         }
     }
 

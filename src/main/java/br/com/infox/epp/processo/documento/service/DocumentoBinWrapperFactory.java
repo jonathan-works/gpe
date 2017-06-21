@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 
@@ -41,7 +41,7 @@ public class DocumentoBinWrapperFactory implements Serializable {
     }
 
     public final DocumentoBinWrapper createWrapperInstance(DocumentoBin documentoBin) {
-        DocumentoBinWrapper documentoBinWrapper = BeanManager.INSTANCE.getReference(getWrapperClass(documentoBin));
+        DocumentoBinWrapper documentoBinWrapper = Beans.getReference(getWrapperClass(documentoBin));
         return documentoBinWrapper.setDocumentoBin(documentoBin);
     }
     
@@ -58,7 +58,7 @@ public class DocumentoBinWrapperFactory implements Serializable {
     }
     
     public static DocumentoBinWrapperFactory getInstance() {
-        return BeanManager.INSTANCE.getReference(DocumentoBinWrapperFactory.class);
+        return Beans.getReference(DocumentoBinWrapperFactory.class);
     }
     
 }

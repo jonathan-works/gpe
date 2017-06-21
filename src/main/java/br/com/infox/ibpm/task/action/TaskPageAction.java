@@ -4,20 +4,19 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.components.TaskpageDefinition;
 import br.com.infox.ibpm.variable.components.VariableDefinitionService;
 import br.com.infox.seam.exception.ApplicationException;
-import br.com.infox.seam.path.PathResolver;
 
 /**
  * Classe responsável por incluir a página referente a variavel taskPage
@@ -26,18 +25,16 @@ import br.com.infox.seam.path.PathResolver;
  * @author Daniel
  * 
  */
-@Name(value = TaskPageAction.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class TaskPageAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "taskPageAction";
     private String taskPagePath;
     private boolean hasTaskPage = false;
-    
-    @In
-    private PathResolver pathResolver;
-    private VariableDefinitionService variableDefinitionService = BeanManager.INSTANCE.getReference(VariableDefinitionService.class);
+
+    @Inject
+    private VariableDefinitionService variableDefinitionService = Beans.getReference(VariableDefinitionService.class);
 
     /**
      * Verifica se a tarefa atual está utilizando uma variável taskPage. Se

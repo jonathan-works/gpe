@@ -14,7 +14,7 @@ import com.google.common.base.Strings;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.log.LogErrorService;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.log.LogErro;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -62,7 +62,7 @@ public class ExceptionInterceptor implements Serializable {
 		        createLogErro(e);
 		    } else {
 		        LOG.error("", e);
-		        ActionMessagesService actionMessagesService = BeanManager.INSTANCE.getReference(ActionMessagesService.class);
+		        ActionMessagesService actionMessagesService = Beans.getReference(ActionMessagesService.class);
 		        if (actionMessagesService != null) {
 		            if (!Strings.isNullOrEmpty(annotation.lockExceptionMessage())) {
 		            	actionMessagesService.handleGenericException(e, annotation.lockExceptionMessage());
@@ -85,6 +85,6 @@ public class ExceptionInterceptor implements Serializable {
     }
 	
 	private LogErrorService getLogErroService() {
-	    return BeanManager.INSTANCE.getReference(LogErrorService.class);
+	    return Beans.getReference(LogErrorService.class);
 	}
 }

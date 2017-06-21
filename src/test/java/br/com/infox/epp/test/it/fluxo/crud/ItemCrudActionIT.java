@@ -57,7 +57,7 @@ public class ItemCrudActionIT extends AbstractCrudTest<Item> {
 
     @Override
     protected String getComponentName() {
-        return ItemCrudAction.NAME;
+        return null;
     }
 
     //@Test

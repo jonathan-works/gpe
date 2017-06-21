@@ -4,7 +4,7 @@ import java.util.Date;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.painel.caixa.Caixa;
 
 public class TaskBean {
@@ -157,7 +157,7 @@ public class TaskBean {
     
     public String getNomeUsuarioTarefa() {
         if (nomeUsuarioTarefa == null && assignee != null && !Authenticator.getUsuarioLogado().getLogin().equals(assignee)) {
-            nomeUsuarioTarefa = BeanManager.INSTANCE.getReference(UsuarioLoginDAO.class).getUsuarioLoginByLogin(assignee).getNomeUsuario();
+            nomeUsuarioTarefa = Beans.getReference(UsuarioLoginDAO.class).getUsuarioLoginByLogin(assignee).getNomeUsuario();
         }
         return nomeUsuarioTarefa;
     }

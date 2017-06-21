@@ -2,20 +2,18 @@ package br.com.infox.epp.documento.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 
-@Name(TipoModeloDocumentoPapelList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class TipoModeloDocumentoPapelList extends EntityList<TipoModeloDocumentoPapel> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "tipoModeloDocumentoPapelList";
 
     public static final String DEFAULT_EJBQL = "select o from TipoModeloDocumentoPapel o";
     public static final String DEFAULT_ORDER = "o.papel.nome";
@@ -23,7 +21,6 @@ public class TipoModeloDocumentoPapelList extends EntityList<TipoModeloDocumento
     @Override
     protected void addSearchFields() {
         addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
-
     }
 
     @Override

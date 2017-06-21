@@ -1,5 +1,7 @@
 package br.com.infox.epp.ajuda.manager;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -10,6 +12,7 @@ import br.com.infox.epp.ajuda.entity.Pagina;
 
 @Name(PaginaManager.NAME)
 @AutoCreate
+@Stateless
 public class PaginaManager extends Manager<PaginaDAO, Pagina> {
 
     private static final long serialVersionUID = 1L;

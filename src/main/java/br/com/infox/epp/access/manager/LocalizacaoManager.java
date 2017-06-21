@@ -10,7 +10,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.exception.RecursiveException;
@@ -22,8 +21,6 @@ import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.type.TipoUsoLocalizacaoEnum;
-import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
-import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
 
 @Name(LocalizacaoManager.NAME)
 @AutoCreate
@@ -33,9 +30,6 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "localizacaoManager";
     
-    @In private RaiaPerfilManager raiaPerfilManager;
-    @In private UnidadeDecisoraMonocraticaManager unidadeDecisoraMonocraticaManager;
-
     public List<Localizacao> getLocalizacoes(final Collection<Integer> ids) {
         if (ids.isEmpty()) {
             ids.add(-1);

@@ -6,12 +6,8 @@ login-required="true">
 	<restrict>
 		#{security.checkPage()}
 	</restrict>
-	<begin-conversation join="true" />
-	<param name="id" value="#{categoriaCrudAction.id}"
-	converterId="integerConverter" />
+
+	<param name="id" value="#{categoriaCrudAction.id}" converterId="integerConverter" />
 	<param name="tab" value="#{categoriaCrudAction.tab}" />
-	<action execute="#{categoriaItemCrudAction.setCategoria(categoriaCrudAction.instance)}"
-	if="#{categoriaCrudAction.isManaged()}"/>
-	<action execute="#{categoriaItemList.entity.setCategoria(categoriaCrudAction.instance)}"
-	if="#{categoriaCrudAction.isManaged()}"/>
+
 </page>

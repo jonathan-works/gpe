@@ -2,21 +2,18 @@ package br.com.infox.epp.documento.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Scope(ScopeType.PAGE)
-@Name(ClassificacaoDocumentoList.NAME)
+@Named
+@ViewScoped
 public class ClassificacaoDocumentoList extends EntityList<ClassificacaoDocumento> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "classificacaoDocumentoList";
 
     private static final String TEMPLATE = "/ClassificacaoDocumento/tipoProcessoDocumentoTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "ClassificacaoDocumento.xls";
@@ -45,10 +42,6 @@ public class ClassificacaoDocumentoList extends EntityList<ClassificacaoDocument
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
-    }
-
-    public static ClassificacaoDocumentoList instance() {
-        return ComponentUtil.getComponent(ClassificacaoDocumentoList.NAME);
     }
 
     @Override

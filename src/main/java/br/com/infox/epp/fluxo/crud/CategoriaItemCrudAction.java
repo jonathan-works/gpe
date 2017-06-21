@@ -2,13 +2,12 @@ package br.com.infox.epp.fluxo.crud;
 
 import java.util.Set;
 
-import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
@@ -16,17 +15,18 @@ import br.com.infox.epp.fluxo.manager.CategoriaItemManager;
 import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 
-@Name(CategoriaItemCrudAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem, CategoriaItemManager> {
     
 	private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "categoriaItemCrudAction";
     public static final String REG_INATIVO_MSG = "Registro inativo não pôde ser inserido.";
     
-    @In
+    @Inject
     private ItemManager itemManager;
+    @Inject
+    private CategoriaItemManager categoriaItemManager;
 
     private Item item;
     private Categoria categoria;
@@ -75,7 +75,7 @@ public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem, C
     }
 
     private void limparTreeDeItem() {
-        final ItemTreeHandler ite = (ItemTreeHandler) Component.getInstance(ItemTreeHandler.NAME);
+        final ItemTreeHandler ite = Beans.getReference(ItemTreeHandler.class);
         if (ite != null) {
             ite.clearTree();
         }
@@ -93,5 +93,10 @@ public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem, C
 
     public void setCategoria(final Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    @Override
+    protected CategoriaItemManager getManager() {
+        return categoriaItemManager;
     }
 }

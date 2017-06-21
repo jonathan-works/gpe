@@ -24,7 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -72,7 +72,7 @@ public final class FileUtil {
         if (facesContext != null){
             request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
         } else {
-            request = BeanManager.INSTANCE.getReference(HttpServletRequest.class);
+            request = Beans.getReference(HttpServletRequest.class);
         }
         tempFolder = (File)request.getServletContext().getAttribute(ServletContext.TEMPDIR);
         return tempFolder;

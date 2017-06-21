@@ -12,7 +12,7 @@ import org.jbpm.jpdl.el.ELException;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.el.impl.JbpmVariableResolver;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -33,7 +33,7 @@ public class EppJbpmVariableResolver extends JbpmVariableResolver {
         if (object != null) return object;
         
         Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
-        Processo processo = BeanManager.INSTANCE.getReference(ProcessoManager.class).find(idProcesso);
+        Processo processo = Beans.getReference(ProcessoManager.class).find(idProcesso);
         object = resolveMetadadoProcesso(name, processo);
         
         while (processo.getProcessoPai() != null && object == null) {
@@ -53,13 +53,13 @@ public class EppJbpmVariableResolver extends JbpmVariableResolver {
     
     public Object resolveVariable(String name, Processo processo) {
         String jpql = "select pi from org.jbpm.graph.exe.ProcessInstance pi where pi.id = :idJbpm";
-        TypedQuery<ProcessInstance> typedQuery = BeanManager.INSTANCE.getReference(EntityManager.class).createQuery(jpql, ProcessInstance.class);
+        TypedQuery<ProcessInstance> typedQuery = Beans.getReference(EntityManager.class).createQuery(jpql, ProcessInstance.class);
         ProcessInstance processInstance = typedQuery.setParameter("idJbpm", processo.getIdJbpm()).getSingleResult();
         return processInstance.getContextInstance().getVariable(name);
     }
     
     public Object resolveMetadadoProcesso(String name, Processo processo) {
-        List<MetadadoProcesso> metadados = BeanManager.INSTANCE.getReference(MetadadoProcessoManager.class).getMetadadoProcessoByType(processo, name);
+        List<MetadadoProcesso> metadados = Beans.getReference(MetadadoProcessoManager.class).getMetadadoProcessoByType(processo, name);
         return getMetadadoValue(metadados);
     }
     
@@ -78,7 +78,7 @@ public class EppJbpmVariableResolver extends JbpmVariableResolver {
     
     private Object resolveCustomVariable(String name) {
     	ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
-    	CustomVariableSearch customVariableSearch = BeanManager.INSTANCE.getReference(CustomVariableSearch.class);
+    	CustomVariableSearch customVariableSearch = Beans.getReference(CustomVariableSearch.class);
     	Object result = null;
 		CustomVariable customVariable = customVariableSearch.getCustomVariable(name);
 		if (customVariable != null) {

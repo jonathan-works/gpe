@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.joda.time.DateTime;
@@ -17,6 +19,7 @@ import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 
 @Name(LocalizacaoTurnoManager.NAME)
 @AutoCreate
+@Stateless
 public class LocalizacaoTurnoManager extends Manager<LocalizacaoTurnoDAO, LocalizacaoTurno> {
 
     private static final int MINUTES_OF_HOUR = 60;

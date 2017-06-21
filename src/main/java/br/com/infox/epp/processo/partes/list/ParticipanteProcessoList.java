@@ -2,19 +2,17 @@ package br.com.infox.epp.processo.partes.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 
-@Scope(ScopeType.PAGE)
-@Name(ParticipanteProcessoList.NAME)
+@Named
+@ViewScoped
 public class ParticipanteProcessoList extends EntityList<ParticipanteProcesso> {
 
-    public static final String NAME = "participanteProcessoList";
     private static final long serialVersionUID = 1L;
 
     private static final String DEFAULT_EJBQL = "select o from ParticipanteProcesso o";

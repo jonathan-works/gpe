@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
@@ -35,7 +35,7 @@ public class VariableEditorModeloHandler {
     		FileConfig configuracoes = fromJson(this.variableAccess.getConfiguration());
     		pasta = configuracoes.pasta;
     		if (configuracoes.getCodigosModeloDocumento() != null && !configuracoes.getCodigosModeloDocumento().isEmpty()) {
-	    		ModeloDocumentoSearch modeloDocumentoSearch = BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
+	    		ModeloDocumentoSearch modeloDocumentoSearch = Beans.getReference(ModeloDocumentoSearch.class);
 	    		modeloDocumentoList.addAll(modeloDocumentoSearch.getModeloDocumentoListByListCodigos(configuracoes.getCodigosModeloDocumento()));
     		}
     	}
@@ -155,10 +155,10 @@ public class VariableEditorModeloHandler {
 	}
 	
 	private AssociatedTipoModeloVariavelList getAssociatedTipoModeloVariavelList() {
-	    return BeanManager.INSTANCE.getReference(AssociatedTipoModeloVariavelList.class);
+	    return Beans.getReference(AssociatedTipoModeloVariavelList.class);
 	}
 	
 	private AssociativeModeloDocumentoList getAssociativeModeloDocumentoList() {
-	    return BeanManager.INSTANCE.getReference(AssociativeModeloDocumentoList.class);
+	    return Beans.getReference(AssociativeModeloDocumentoList.class);
 	}
 }

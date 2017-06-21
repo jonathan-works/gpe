@@ -1,10 +1,8 @@
 package br.com.infox.epp.access.crud;
 
-import javax.enterprise.context.ConversationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
@@ -17,25 +15,30 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.list.LocalizacaoComEstruturaList;
 import br.com.infox.epp.access.manager.EstruturaManager;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
-import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@Name(EstruturaCrudAction.NAME)
-@ConversationScoped
-@AutoCreate
+@Named
+@ViewScoped
 public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, EstruturaManager> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "estruturaCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(EstruturaCrudAction.class);
     
-    @In private LocalizacaoComEstruturaList localizacaoComEstruturaList;
-    @In private LocalizacaoManager localizacaoManager;
-    @In private ActionMessagesService actionMessagesService;
-    @In private LocalizacoesDaEstruturaTreeHandler localizacoesDaEstruturaTree;
-    @In private EstruturaLocalizacaoTreeHandler estruturaLocalizacaoTree;
-    @In private RaiaPerfilManager raiaPerfilManager;
+    @Inject
+    private EstruturaManager estruturaManager;
+    @Inject
+    private LocalizacaoComEstruturaList localizacaoComEstruturaList;
+    @Inject
+    private LocalizacaoManager localizacaoManager;
+    @Inject
+    private ActionMessagesService actionMessagesService;
+    @Inject
+    private LocalizacoesDaEstruturaTreeHandler localizacoesDaEstruturaTree;
+    @Inject
+    private EstruturaLocalizacaoTreeHandler estruturaLocalizacaoTree;
+
     private Localizacao localizacaoFilho;
     
     @Override
@@ -126,5 +129,10 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
     @Override
     public void onClickFormTab() {
         novaLocalizacao();
+    }
+
+    @Override
+    protected EstruturaManager getManager() {
+        return estruturaManager;
     }
 }

@@ -1,18 +1,28 @@
 package br.com.infox.epp.fluxo.crud;
 
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.fluxo.list.NaturezaCategoriaFluxoList;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 
-@Name(NaturezaCrudAction.NAME)
+@Named
+@ViewScoped
 public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaManager> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "naturezaCrudAction";
-    
+
+    @Inject
+    private NaturezaManager naturezaManager;
+    @Inject
+    private NaturezaCategoriaFluxoCrudAction naturezaCategoriaFluxoCrudAction;
+    @Inject
+    private NaturezaCategoriaFluxoList naturezaCategoriaFluxoList;
+
     @Override
     public void newInstance() {
         super.newInstance();
@@ -59,7 +69,17 @@ public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaMan
         }
     }
 
+    public void onClickNaturezaCategoriaFluxoTab() {
+        naturezaCategoriaFluxoCrudAction.getInstance().setNatureza(getInstance());
+        naturezaCategoriaFluxoList.getEntity().setNatureza(getInstance());
+    }
+
     public ParteProcessoEnum[] getTiposDePartes() {
         return ParteProcessoEnum.values();
+    }
+
+    @Override
+    protected NaturezaManager getManager() {
+        return naturezaManager;
     }
 }

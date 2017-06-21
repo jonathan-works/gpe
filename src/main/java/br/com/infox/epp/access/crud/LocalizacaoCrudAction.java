@@ -2,9 +2,8 @@ package br.com.infox.epp.access.crud;
 
 import java.util.List;
 
-import org.jboss.seam.Component;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.action.ActionMessagesService;
@@ -16,18 +15,25 @@ import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.EstruturaManager;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@Name(LocalizacaoCrudAction.NAME)
+@Named
+@ViewScoped
 public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizacao, LocalizacaoManager> {
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoCrudAction.class);
-    public static final String NAME = "localizacaoCrudAction";
     
-    @In private EstruturaManager estruturaManager;
-    @In private ActionMessagesService actionMessagesService;
+    @Inject
+    private EstruturaManager estruturaManager;
+    @Inject
+    private ActionMessagesService actionMessagesService;
+    @Inject
+    private LocalizacaoManager localizacaoManager;
+
     private List<Estrutura> estruturasDisponiveis;
 
     @Override
@@ -51,7 +57,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     }
 
     protected void limparTrees() {
-        final LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
+        final LocalizacaoTreeHandler ret = Beans.getReference(LocalizacaoTreeHandler.class);
         if (ret != null) {
             ret.clearTree();
         }
@@ -112,5 +118,10 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     
     public void clear() {
         limparTrees();
+    }
+
+    @Override
+    protected LocalizacaoManager getManager() {
+        return localizacaoManager;
     }
 }

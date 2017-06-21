@@ -20,7 +20,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -71,7 +71,7 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 	public List<DestinatarioBean> listDestinatarios(String numeroProcessoRoot) {
 	    String codigoComunicacaoEletronica = Parametros.CODIGO_FLUXO_COMUNICACAO_ELETRONICA.getValue();
 	    String codigoComunicacaoNaoEletronica = Parametros.CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA.getValue();
-		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+		EntityManager entityManager = Beans.getReference(EntityManager.class);
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DestinatarioBean> query = cb.createQuery(DestinatarioBean.class);
 		Root<DestinatarioModeloComunicacao> destinatario = query.from(DestinatarioModeloComunicacao.class);

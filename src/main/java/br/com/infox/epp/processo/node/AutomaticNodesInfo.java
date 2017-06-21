@@ -4,38 +4,28 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.inject.Named;
+
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
 import br.com.infox.cdi.producer.JbpmContextProducer;
-import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@Name(AutomaticNodesInfo.NAME)
-@AutoCreate
-@Scope(ScopeType.PAGE)
-@Transactional
+@Named
+@ViewScoped
 public class AutomaticNodesInfo implements Serializable {
 	
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(AutomaticNodesInfo.class);
 
-    public static final String NAME = "automaticNodesInfo";
-    
-    @In
-    private ProcessoManager processoManager;
-    
     private List<NodeBean> nodes;
     
     public List<NodeBean> getNodesNotEnded() {

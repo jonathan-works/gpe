@@ -6,7 +6,6 @@
 	  login-required="true">
 	  
 	<restrict>#{security.checkPage()}</restrict>
-	<begin-conversation join="true"/>
 
 	<param name="id" value="#{pessoaFisicaCrudAction.id}"
 		   converterId="integerConverter" />

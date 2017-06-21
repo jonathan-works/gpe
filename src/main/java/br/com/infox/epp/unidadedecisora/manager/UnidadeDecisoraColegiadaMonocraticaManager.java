@@ -1,5 +1,7 @@
 package br.com.infox.epp.unidadedecisora.manager;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -12,6 +14,7 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiadaMonocrati
 @AutoCreate
 @Scope(ScopeType.EVENT)
 @Name(UnidadeDecisoraColegiadaMonocraticaManager.NAME)
+@Stateless
 public class UnidadeDecisoraColegiadaMonocraticaManager extends Manager<UnidadeDecisoraColegiadaMonocraticaDAO, UnidadeDecisoraColegiadaMonocratica>{
 
 	private static final long serialVersionUID = 1L;

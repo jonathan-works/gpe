@@ -13,7 +13,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.ibpm.type.PooledActorType;
 
 public class SwimlaneConfiguration {
@@ -58,18 +58,18 @@ public class SwimlaneConfiguration {
     private static void addItemFromPooledActor(String pooledActor, SwimlaneConfiguration configuration) {
         String[] tokens = pooledActor.split(":");
         if (tokens.length == 1) {
-            PerfilTemplateManager perfilTemplateManager = BeanManager.INSTANCE.getReference(PerfilTemplateManager.class);
+            PerfilTemplateManager perfilTemplateManager = Beans.getReference(PerfilTemplateManager.class);
             if (StringUtils.isNumeric(tokens[0])) {
                 configuration.getPerfis().add(perfilTemplateManager.find(Integer.valueOf(tokens[0])));
             } else {
                 configuration.getPerfis().add(perfilTemplateManager.getPerfilTemplateByCodigo(tokens[0]));
             }
         } else if (tokens[0].startsWith(PooledActorType.USER.getValue())) {
-            UsuarioLoginManager usuarioLoginManager = BeanManager.INSTANCE.getReference(UsuarioLoginManager.class);
+            UsuarioLoginManager usuarioLoginManager = Beans.getReference(UsuarioLoginManager.class);
             configuration.getUsuarios().add(usuarioLoginManager.getUsuarioLoginByLogin(tokens[1]));
         } else if (tokens[0].startsWith(PooledActorType.GROUP.getValue())) {
-            PerfilTemplateManager perfilTemplateManager = BeanManager.INSTANCE.getReference(PerfilTemplateManager.class);
-            LocalizacaoManager localizacaoManager = BeanManager.INSTANCE.getReference(LocalizacaoManager.class);
+            PerfilTemplateManager perfilTemplateManager = Beans.getReference(PerfilTemplateManager.class);
+            LocalizacaoManager localizacaoManager = Beans.getReference(LocalizacaoManager.class);
             
             String[] groupConfig = tokens[1].split("&");
             Grupo grupo = new Grupo(localizacaoManager.getLocalizacaoByCodigo(groupConfig[0]), perfilTemplateManager.getPerfilTemplateByCodigo(groupConfig[1]));

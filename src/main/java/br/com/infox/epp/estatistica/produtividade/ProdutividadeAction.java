@@ -20,6 +20,7 @@ import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.log.Log;
@@ -28,6 +29,7 @@ import br.com.infox.seam.path.PathResolver;
 
 @Name(ProdutividadeAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@ContextDependency
 public class ProdutividadeAction implements Serializable {
 
     private static final long serialVersionUID = 1L;

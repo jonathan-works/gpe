@@ -37,9 +37,10 @@ public class DestinatarioComunicacaoService implements Serializable{
 	private LocalizacaoManager localizacaoManager;
 	@Inject
 	private MeioExpedicaoSearch meioExpedicaoSearch;
+	@Inject
+	private PapelManager papelManager;
 	
 	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
-	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
 	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	

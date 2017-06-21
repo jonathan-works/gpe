@@ -7,7 +7,7 @@ import org.jbpm.graph.def.ActionHandler;
 import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -39,7 +39,7 @@ public class StatusHandler implements ActionHandler, CustomAction {
 	@Override
 	public void execute(ExecutionContext executionContext) throws Exception {
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
-		StatusProcessoSearch statusProcessoSearch = BeanManager.INSTANCE.getReference(StatusProcessoSearch.class);
+		StatusProcessoSearch statusProcessoSearch = Beans.getReference(StatusProcessoSearch.class);
 		try {
 			StatusProcesso status = statusProcessoSearch.getStatusByName(codigoStatusProcesso);
 			Processo processo = processoManager.find(Integer.parseInt(executionContext.getContextInstance().getVariable("processo").toString(), 10));

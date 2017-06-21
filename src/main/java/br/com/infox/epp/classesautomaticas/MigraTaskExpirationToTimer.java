@@ -26,7 +26,7 @@ import org.jdom2.util.IteratorIterable;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.server.ApplicationServerService;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.log.Logging;
@@ -196,7 +196,7 @@ public class MigraTaskExpirationToTimer implements Serializable {
 	}
 	
 	private FluxoMergeService getFluxoMergeService() {
-		return BeanManager.INSTANCE.getReference(FluxoMergeService.class);
+		return Beans.getReference(FluxoMergeService.class);
 	}
 
 }

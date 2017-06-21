@@ -12,8 +12,6 @@ import javax.persistence.criteria.Root;
 import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
 import org.jboss.seam.util.RandomStringUtils;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -37,13 +35,10 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
-@Name(UsuarioLoginManager.NAME)
 @Stateless
-@AutoCreate
 public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "usuarioLoginManager";
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginManager.class);
     public static final String USER_ADMIN = "admin";
 

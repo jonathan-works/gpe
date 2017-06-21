@@ -2,21 +2,19 @@ package br.com.infox.epp.access.list;
 
 import java.util.Map;
 
-import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.util.Beans;
 
-@Name(LocalizacaoList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class LocalizacaoList extends EntityList<Localizacao> {
 
-    public static final String NAME = "localizacaoList";
     private static final long serialVersionUID = 1L;
 
     private static final String TEMPLATE = "/Localizacao/localizacaoTemplate.xls";
@@ -36,8 +34,7 @@ public class LocalizacaoList extends EntityList<Localizacao> {
     @Override
     public void newInstance() {
     	super.newInstance();
-    	LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
-    	ret.clearTree();
+    	Beans.getReference(LocalizacaoTreeHandler.class).clearTree();
     }
 
     @Override

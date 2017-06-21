@@ -2,23 +2,19 @@ package br.com.infox.epp.access.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cdi.ViewScoped;
 
-@Name(LocalizacaoComEstruturaList.NAME)
-@AutoCreate
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class LocalizacaoComEstruturaList extends EntityList<Localizacao> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "localizacaoComEstruturaList";
     public static final String DEFAULT_EJBQL = "select o from Localizacao o";
     public static final String DEFAULT_ORDER = "caminhoCompleto";
     

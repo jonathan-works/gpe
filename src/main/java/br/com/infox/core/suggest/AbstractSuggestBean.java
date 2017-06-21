@@ -13,7 +13,7 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import br.com.infox.componentes.suggest.SuggestItem;
 import br.com.infox.componentes.suggest.SuggestProvider;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -27,7 +27,7 @@ public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Seri
 
     protected static final String INPUT_PARAMETER = "input";
 
-    protected transient EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+    protected transient EntityManager entityManager = Beans.getReference(EntityManager.class);
 
     @SuppressWarnings(UNCHECKED)
     @Override

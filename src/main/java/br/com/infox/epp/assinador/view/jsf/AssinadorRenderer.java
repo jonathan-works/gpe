@@ -23,7 +23,7 @@ import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.componentes.util.ComponentUtil;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.assinador.view.AssinadorController;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.jsf.AjaxRequestBuilderFactory;
 
 @FacesRenderer(componentFamily = Assinador.COMPONENT_FAMILY, rendererType = Assinador.RENDERER_TYPE)
@@ -165,7 +165,7 @@ public class AssinadorRenderer extends Renderer {
     }
 
     private <T> T jndi(Class<T> type, Annotation... annotations){
-        return BeanManager.INSTANCE.getReference(type, annotations);
+        return Beans.getReference(type, annotations);
     }
     
     protected void encodeScript(FacesContext context, Assinador button) throws IOException {

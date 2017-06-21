@@ -3,6 +3,8 @@ package br.com.infox.epp.search;
 import java.io.IOException;
 import java.io.StringReader;
 
+import javax.ejb.Stateless;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -34,6 +36,7 @@ import br.com.infox.log.Logging;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 @Transactional
+@Stateless
 public class SearchService {
 
     public static final String NAME = "searchService";

@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
@@ -23,6 +22,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -51,10 +51,8 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
 
     private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
 
-    @In
-    private ActionMessagesService actionMessagesService;
-    @In
-    protected InfoxMessages infoxMessages;
+    private ActionMessagesService actionMessagesService = Beans.getReference(ActionMessagesService.class);
+    protected InfoxMessages infoxMessages = Beans.getReference(InfoxMessages.class);
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
     @Create
@@ -79,6 +77,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * @return
      */
     @Transactional
+    @br.com.infox.epp.cdi.transaction.Transactional
     private String flushObject(T t, boolean isPersist) {
         String ret = null;
         try {
@@ -106,6 +105,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * 
      * @return "persisted" se inserido com sucesso.
      */
+    @br.com.infox.epp.cdi.transaction.Transactional
     protected String persist(T t) {
         return flushObject(t, true);
     }
@@ -115,6 +115,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * 
      * @return "updated" se alterado com sucesso.
      */
+    @br.com.infox.epp.cdi.transaction.Transactional
     protected String update(T t) {
         return flushObject(t, false);
     }
@@ -128,6 +129,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * @return "removed" se removido com sucesso.
      */
     @Transactional
+    @br.com.infox.epp.cdi.transaction.Transactional
     public String remove(T t) {
         String ret = null;
         try {
@@ -147,6 +149,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * @return "updated" se inativado com sucesso.
      */
     @Transactional
+    @br.com.infox.epp.cdi.transaction.Transactional
     public String inactive(T t) {
         if (t == null) {
             return null;
@@ -191,6 +194,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
      * @return
      */
     @Transactional
+    @br.com.infox.epp.cdi.transaction.Transactional
     protected <R extends Recursive<R>> void inactiveRecursive(Recursive<R> o) {
         ComponentUtil.setValue(o, "ativo", false);
         List<R> childList = o.getChildList();

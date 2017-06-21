@@ -13,7 +13,7 @@ import org.richfaces.model.UploadedFile;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
@@ -82,14 +82,14 @@ public class UploadFormType extends FileFormType {
     }
     
     protected DocumentoUploaderService getDocumentoUploadService() {
-        return BeanManager.INSTANCE.getReference(DocumentoUploaderService.class);
+        return Beans.getReference(DocumentoUploaderService.class);
     }
     
     protected ActionMessagesService getActionMessagesService() {
-        return BeanManager.INSTANCE.getReference(ActionMessagesService.class);
+        return Beans.getReference(ActionMessagesService.class);
     }
     
     protected FileVariableHandler getFileVariableHandler() {
-        return BeanManager.INSTANCE.getReference(FileVariableHandler.class);
+        return Beans.getReference(FileVariableHandler.class);
     }
 }

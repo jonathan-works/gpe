@@ -1,15 +1,17 @@
 package br.com.infox.epp.fluxo.tree;
 
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Item;
 
-@Name(ItemTreeHandler.NAME)
+@Named(ItemTreeHandler.NAME)
+@ViewScoped
 public class ItemTreeHandler extends AbstractTreeHandler<Item> {
 
-    public static final String NAME = "itemTree";
+    protected static final String NAME = "itemTree";
     private static final long serialVersionUID = 1L;
 
     @Override

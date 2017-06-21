@@ -1,26 +1,26 @@
 package br.com.infox.epp.processo.partes.crud;
 
 import javax.inject.Inject;
-
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoDAO;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 
-@Name(ParticipanteProcessoCrudAction.NAME)
-@ContextDependency
+@Named
+@ViewScoped
 public class ParticipanteProcessoCrudAction extends AbstractCrudAction<ParticipanteProcesso, ParticipanteProcessoManager> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "participanteProcessoCrudAction";
     
     @Inject
     private ParticipanteProcessoDAO participanteProcessoDAO;
+    @Inject
+    private ParticipanteProcessoManager participanteProcessoManager;
 
     private String motivoModificacao;
     private Boolean showHistory;
@@ -64,5 +64,10 @@ public class ParticipanteProcessoCrudAction extends AbstractCrudAction<Participa
     public void setInstance(ParticipanteProcesso instance) {
         super.setInstance(instance);
         setShowHistory(false);
+    }
+
+    @Override
+    protected ParticipanteProcessoManager getManager() {
+        return participanteProcessoManager;
     }
 }

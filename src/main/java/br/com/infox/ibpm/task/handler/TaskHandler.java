@@ -14,7 +14,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import com.google.common.base.Strings;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -234,6 +234,6 @@ public class TaskHandler implements Serializable {
 	}
     
     private AssociativeModeloDocumentoList getAssociativeModeloDocumentoList() {
-        return BeanManager.INSTANCE.getReference(AssociativeModeloDocumentoList.class);
+        return Beans.getReference(AssociativeModeloDocumentoList.class);
     }
 }

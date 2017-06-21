@@ -11,7 +11,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 
 import com.google.gson.Gson;
 
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -59,8 +59,8 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 	public void execute(ExecutionContext executionContext) throws Exception {
 		DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
 		DocumentoBinManager documentoBinManager = ComponentUtil.getComponent(DocumentoBinManager.NAME);
-		ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
-		ModeloDocumentoSearch modeloDocumentoSearch = BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
+		ModeloDocumentoManager modeloDocumentoManager = Beans.getReference(ModeloDocumentoManager.class);
+		ModeloDocumentoSearch modeloDocumentoSearch = Beans.getReference(ModeloDocumentoSearch.class);
 		ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
 		PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
@@ -77,7 +77,7 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 			
 			Pasta pasta = null;
 			if (configuration.getCodigoPasta() != null && !configuration.getCodigoPasta().isEmpty()){
-				PastaSearch pastaSearch = BeanManager.INSTANCE.getReference(PastaSearch.class);
+				PastaSearch pastaSearch = Beans.getReference(PastaSearch.class);
 				pasta = pastaSearch.getPastaByCodigoIdProcesso(configuration.getCodigoPasta(), processo.getIdProcesso());
 				if (pasta == null) {
 					pasta = pastaSearch.getPastaByCodigoIdProcesso(configuration.getCodigoPasta(), processoRaiz.getIdProcesso());

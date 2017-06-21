@@ -46,7 +46,7 @@ import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -175,14 +175,14 @@ public class NodeHandler implements Serializable {
                         Matcher matcher = pattern.matcher(configuration);
                         if (matcher.find()) {
                             String status = matcher.group(1);
-                            StatusProcessoSearch search = BeanManager.INSTANCE.getReference(StatusProcessoSearch.class);
+                            StatusProcessoSearch search = Beans.getReference(StatusProcessoSearch.class);
                             this.statusProcesso = search.getStatusByName(status);
                         }
                     } else if (GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
                     	String configuration = new GenerateDocumentoHandler().parseJbpmConfiguration(actionDelegation.getConfiguration());
                     	try {
                     		GenerateDocumentoConfiguration generateDocumentoConfiguration = new Gson().fromJson(configuration, GenerateDocumentoConfiguration.class);
-                    		ModeloDocumentoSearch modeloDocumentoSearch = BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
+                    		ModeloDocumentoSearch modeloDocumentoSearch = Beans.getReference(ModeloDocumentoSearch.class);
                             ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
                             this.modeloDocumento = modeloDocumentoSearch.getModeloDocumentoByCodigo(generateDocumentoConfiguration.getCodigoModeloDocumento());
                             this.classificacaoDocumento = classificacaoDocumentoManager.findByCodigo(generateDocumentoConfiguration.getCodigoClassificacaoDocumento());

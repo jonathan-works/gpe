@@ -14,7 +14,7 @@ import br.com.infox.assinador.rest.api.Assinavel;
 import br.com.infox.assinador.rest.api.AssinavelResource;
 import br.com.infox.connection.RestException;
 import br.com.infox.epp.assinador.AssinadorService;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 
 public class AssinavelResourceImpl implements AssinavelResource {
 
@@ -50,7 +50,7 @@ public class AssinavelResourceImpl implements AssinavelResource {
 
 	@Override
 	public AssinaturaResource getAssinaturaResource(UUID uuid) {
-		AssinaturaResourceImpl assinaturaResourceImpl = BeanManager.INSTANCE.getReference(AssinaturaResourceImpl.class);
+		AssinaturaResourceImpl assinaturaResourceImpl = Beans.getReference(AssinaturaResourceImpl.class);
 		assinaturaResourceImpl.setTokenGrupo(tokenGrupo);
 		assinaturaResourceImpl.setUuidAssinavel(uuid);
 		return assinaturaResourceImpl;

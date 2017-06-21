@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
@@ -23,7 +23,7 @@ public class BloqueioUsuarioManager extends Manager<BloqueioUsuarioDAO, Bloqueio
     private static final long serialVersionUID = 1L;
     public static final String NAME = "bloqueioUsuarioManager";
 
-    @In
+    @Inject
     private BloqueioUsuarioDAO bloqueioUsuarioDAO;
 
     public Date getDataParaDesbloqueio(UsuarioLogin usuarioLogin) {

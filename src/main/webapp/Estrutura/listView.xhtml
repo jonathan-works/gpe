@@ -123,7 +123,7 @@
           <wi:commandButton
             rendered="#{not empty estruturaCrudAction.localizacaoFilho.idLocalizacao}"
             execute="@this"
-            reRender="localizacoesTab, pageBodyDialogMessage"
+            reRender="localizacoesTab, pageBodyDialogMessage, defaultTabPanel"
             action="estruturaCrudAction.novaLocalizacao"
             value="#{infoxMessages['crud.new']}"
             id="newLocalizacaoButton" />

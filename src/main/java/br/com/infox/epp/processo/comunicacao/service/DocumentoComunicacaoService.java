@@ -11,14 +11,12 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
-import org.jboss.com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
@@ -73,8 +71,9 @@ public class DocumentoComunicacaoService {
 	private GenericManager genericManager;
 	@Inject
 	private MarcadorService marcadorService;
+	@Inject
+	private PapelManager papelManager;
 	
-	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
 	private VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO = ComponentUtil.getComponent(DocumentoRespostaComunicacaoDAO.NAME);

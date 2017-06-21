@@ -2,23 +2,18 @@ package br.com.infox.epp.pessoa.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 
-@Name(PessoaList.NAME)
-@BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class PessoaList extends EntityList<Pessoa> {
 
     private static final long serialVersionUID = 1L;
-
-    public static final String NAME = "pessoaList";
 
     private static final String DEFAULT_EJBQL = "select o from Pessoa o";
     private static final String DEFAULT_ORDER = "nome";

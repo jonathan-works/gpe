@@ -1,11 +1,11 @@
 package br.com.infox.epp.access.component.tree;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Named;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Estrutura;
+import br.com.infox.epp.cdi.ViewScoped;
 
 /**
  * Árvore cuja raiz é uma estrutura e o restante dos nós são as localizações dentro dessa estrutura.
@@ -14,11 +14,11 @@ import br.com.infox.epp.access.entity.Estrutura;
  *
  */
 
-@Name(EstruturaLocalizacaoTreeHandler.NAME)
-@AutoCreate
+@Named(EstruturaLocalizacaoTreeHandler.NAME)
+@ViewScoped
 public class EstruturaLocalizacaoTreeHandler extends AbstractTreeHandler<Object> {
 
-    public static final String NAME = "estruturaLocalizacaoTree";
+    protected static final String NAME = "estruturaLocalizacaoTree";
     private static final long serialVersionUID = 1L;
 
     private Estrutura estrutura;

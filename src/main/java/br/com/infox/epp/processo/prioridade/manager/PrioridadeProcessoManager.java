@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.prioridade.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -14,6 +16,7 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 @Name(PrioridadeProcessoManager.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Stateless
 public class PrioridadeProcessoManager extends Manager<PrioridadeProcessoDAO, PrioridadeProcesso> {
 
     private static final long serialVersionUID = 1L;

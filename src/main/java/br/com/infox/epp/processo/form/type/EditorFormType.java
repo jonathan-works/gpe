@@ -9,7 +9,7 @@ import javax.faces.event.ValueChangeEvent;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -159,11 +159,11 @@ public class EditorFormType extends FileFormType {
     }
     
     protected ModeloDocumentoManager getModeloDocumentoManager() {
-        return BeanManager.INSTANCE.getReference(ModeloDocumentoManager.class);
+        return Beans.getReference(ModeloDocumentoManager.class);
     }
     
     protected ModeloDocumentoSearch getModeloDocumentoSearch() {
-    	return BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
+    	return Beans.getReference(ModeloDocumentoSearch.class);
     }
 
 }

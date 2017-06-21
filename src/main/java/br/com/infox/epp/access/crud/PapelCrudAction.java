@@ -10,11 +10,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.security.Role;
@@ -31,12 +30,13 @@ import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.seam.security.operation.PopulateRoleMembersListOperation;
 import br.com.infox.seam.security.operation.UpdateRolesOperation;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name(PapelCrudAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     private static final long serialVersionUID = 1L;
     private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
@@ -44,8 +44,6 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     private static final String RECURSOS_TAB_ID = "recursosTab";
     private static final String PAPEIS_TAB_ID = "papeisTab";
     private static final String MEMBROS_TAB_ID = "herdeirosTab";
-
-    public static final String NAME = "papelCrudAction";
 
     private Map<Boolean, List<String>> papeisDisponiveis;
     private Map<String, Papel> papelMap;
@@ -61,10 +59,12 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     private String activeInnerTab;
     private boolean acceptChange = Boolean.FALSE;
 
-    @In
+    @Inject
     private RecursoManager recursoManager;
+    @Inject
+    private PapelManager papelManager;
     
-    @In IdentityManager identityManager;
+    IdentityManager identityManager = ComponentUtil.getComponent("org.jboss.seam.security.identityManager");
 
     private final Comparator<String> papelComparator = new Comparator<String>() {
         @Override
@@ -377,8 +377,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
         setTab("form");
     }
 
-    public static PapelCrudAction instance() {
-        return ComponentUtil.getComponent(NAME);
+    @Override
+    protected PapelManager getManager() {
+        return papelManager;
     }
-
 }

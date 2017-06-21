@@ -2,21 +2,19 @@ package br.com.infox.epp.documento.list.associative;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 
-@Name(AssociativeVariavelList.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Named
+@ViewScoped
 public class AssociativeVariavelList extends EntityList<Variavel> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "associativeVariavelList";
 
     private static final String DEFAULT_EJBQL = "select o from Variavel o where not exists "
             + "(select 1 from VariavelTipoModelo v where " + "v.variavel = o";

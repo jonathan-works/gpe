@@ -3,17 +3,12 @@
 <page xmlns="http://jboss.org/schema/seam/pages"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
-	  login-required="true"
->
+	  login-required="true">
+
 	<restrict>#{security.checkPage()}</restrict>
 	<description>Fluxo: #{fluxoCrudAction.instance}</description>
 	 
-	<begin-conversation join="true" flush-mode="manual"/>
-	<param name="id" value="#{fluxoCrudAction.id}"
-           converterId="integerConverter" />
+	<param name="id" value="#{fluxoCrudAction.id}" converterId="integerConverter" />
 	<param name="tab" value="#{fluxoCrudAction.tab}"/>
-    
-    <action execute="#{natCatFluxoLocalizacaoList.setFluxo(fluxoCrudAction.instance)}" 
-            if="#{fluxoCrudAction.tab eq 'natCatFluxoLoc'}"/>
-	
+
 </page>

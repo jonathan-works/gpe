@@ -20,7 +20,6 @@ import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.manager.CategoriaManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
-import br.com.infox.epp.test.crud.PersistSuccessTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
@@ -51,7 +50,7 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
 
     @Override
     protected String getComponentName() {
-        return CategoriaCrudAction.NAME;
+        return null;
     }
 
     public static final List<Categoria> getSuccessfullyPersisted(
@@ -59,15 +58,15 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
             final ServletContext servletContext, final HttpSession session)
             throws Exception {
         final ArrayList<Categoria> categorias = new ArrayList<>();
-        final PersistSuccessTest<Categoria> persistSuccessTest = new PersistSuccessTest<>(
-                CategoriaCrudAction.NAME,
-                CategoriaCrudActionIT.initEntityAction);
-        int i = 0;
-        for (final Boolean ativo : new Boolean[] { Boolean.TRUE, Boolean.FALSE }) {
-            categorias.add(persistSuccessTest.runTest(action, new Categoria(
-                    MessageFormat.format("Categoria {0} {1}", ++i, suffix),
-                    ativo), servletContext, session));
-        }
+//        final PersistSuccessTest<Categoria> persistSuccessTest = new PersistSuccessTest<>(
+//                CategoriaCrudAction.NAME,
+//                CategoriaCrudActionIT.initEntityAction);
+//        int i = 0;
+//        for (final Boolean ativo : new Boolean[] { Boolean.TRUE, Boolean.FALSE }) {
+//            categorias.add(persistSuccessTest.runTest(action, new Categoria(
+//                    MessageFormat.format("Categoria {0} {1}", ++i, suffix),
+//                    ativo), servletContext, session));
+//        }
         return categorias;
     }
 

@@ -4,24 +4,26 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 
-@Name(ClassificacaoDocumentoPapelCrudAction.NAME)
+@Named
+@ViewScoped
 public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<ClassificacaoDocumentoPapel, ClassificacaoDocumentoPapelManager> {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "classificacaoDocumentoPapelCrudAction";
-
-    @In
+    @Inject
+    private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
+    @Inject
     private PapelManager papelManager;
 
     public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
@@ -40,4 +42,8 @@ public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<Cl
         return papeis;
     }
 
+    @Override
+    protected ClassificacaoDocumentoPapelManager getManager() {
+        return classificacaoDocumentoPapelManager;
+    }
 }
