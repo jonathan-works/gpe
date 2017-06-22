@@ -22,6 +22,7 @@ public class EstruturaList extends EntityList<Estrutura> {
 
     @Override
     protected void addSearchFields() {
+        addSearchField("codigo", SearchCriteria.CONTENDO);
         addSearchField("nome", SearchCriteria.CONTENDO);
         addSearchField("ativo", SearchCriteria.IGUAL);
     }

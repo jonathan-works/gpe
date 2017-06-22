@@ -93,6 +93,7 @@ public class EppParametroProvider implements ParametroProvider {
         create(NOME_GRUPO_SISTEMA, "exportarXLS", FieldType.BOOLEAN);
         create(NOME_GRUPO_SISTEMA, "exportarPDF", FieldType.BOOLEAN);
         create(NOME_GRUPO_SISTEMA, Parametros.PRODUCAO.getLabel(), FieldType.BOOLEAN);
+        create(NOME_GRUPO_SISTEMA, Parametros.NAO_EXECUTAR_QUARTZ.getLabel(), FieldType.STRING);
 
         create(NOME_GRUPO_SISTEMA, "idUsuarioSistema", UsuarioLogin_.nomeUsuario, UsuarioLogin_.idUsuarioLogin).addFilter(isTrue(UsuarioLogin_.ativo))
                 .addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S)).addFilter(isFalse(UsuarioLogin_.bloqueio));

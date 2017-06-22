@@ -17,6 +17,14 @@ import br.com.infox.epp.access.entity.Estrutura_;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class EstruturaSearch extends PersistenceController {
 
+	public Estrutura getEstruturaByCodigo(String codigoEstrutura) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Estrutura> cq = cb.createQuery(Estrutura.class);
+		Root<Estrutura> estrutura = cq.from(Estrutura.class);
+		cq = cq.select(estrutura).where(cb.equal(estrutura.get(Estrutura_.codigo), codigoEstrutura));
+		return getEntityManager().createQuery(cq).getSingleResult();		
+	}
+	
 	public Estrutura getEstruturaByNome(String codigoEstrutura) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Estrutura> cq = cb.createQuery(Estrutura.class);

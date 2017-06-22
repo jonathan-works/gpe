@@ -24,4 +24,12 @@ public class PerfilTemplateSearch extends PersistenceController {
         cq.where(cb.like(cb.lower(perfil.get(PerfilTemplate_.descricao)), cb.lower(cb.literal("%" + descricao + "%"))));
         return getEntityManager().createQuery(cq).setMaxResults(maxResult).getResultList();
     }
+    
+    public List<PerfilTemplate> getPerfisTemplateByLocalizacao(Integer idLocalizacao) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<PerfilTemplate> cq = cb.createQuery(PerfilTemplate.class);
+        Root<PerfilTemplate> perfil = cq.from(PerfilTemplate.class);
+        cq.where(cb.equal(perfil.get(PerfilTemplate_.localizacao), idLocalizacao));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 }

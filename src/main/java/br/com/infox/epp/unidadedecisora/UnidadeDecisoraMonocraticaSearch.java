@@ -17,6 +17,7 @@ import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.CollectionUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.Localizacao_;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaFisica_;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiadaMonocratica;
@@ -194,5 +195,21 @@ public class UnidadeDecisoraMonocraticaSearch extends PersistenceController {
 
     public UnidadeDecisoraMonocratica find(Integer idUdm) {
         return getEntityManager().find(UnidadeDecisoraMonocratica.class, idUdm);
+    }
+    
+    public UnidadeDecisoraMonocratica findByChefeGabinete(PessoaFisica chefeGabinete) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
+        Root<UnidadeDecisoraMonocratica> udm = cq.from(UnidadeDecisoraMonocratica.class);
+        Predicate ativo = cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo));
+        Predicate chefeGabineteIgual = cb.equal(udm.get(UnidadeDecisoraMonocratica_.chefeGabinete), chefeGabinete);
+        
+        cq.where(ativo, chefeGabineteIgual);
+        
+        try {
+        	return getEntityManager().createQuery(cq).getSingleResult();
+        } catch (NoResultException e){
+        	return null;
+        }
     }
 }

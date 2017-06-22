@@ -81,6 +81,16 @@ public class ModeloEntregaSearch extends PersistenceController {
         return getAgendasvencidas(DateTime.now().toDate());
     }
 
+    /**
+     * ATENÇÃO: quando alguém chamar este método passando uma data que nao seja a data atual deve alterar os dois 
+     * medotos do link para receberem esta data e usar na query, isso devido a tarefa de redenciamento de UJ
+     * refs #95504 > #95545 
+     * @param data
+     * @author fabiopaes
+     * @return lista de modelos vencidas
+     * @link UnidadeJurisdicionadaSearch.criarProcessamentos(ModeloEntrega modeloEntrega)
+     * @link UnidadeJurisdicionadaSearch.getJurisdicionadasByModeloEntrega(Long idModeloEntrega)
+     */
     public List<ModeloEntrega> getAgendasvencidas(Date data) {
         EntityManager entityManager = getEntityManager();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();

@@ -29,7 +29,7 @@ import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento_;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class CategoriaEntregaItemSearch extends PersistenceController {
 
-	protected List<CategoriaEntregaItem> findWithFilters(String codigoItemPai, String codigoCategoria) {
+	protected List<CategoriaEntregaItem> findWithFilters(String codigoItemPai, String codigoCategoria, boolean orderBy) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
 		Root<CategoriaEntregaItem> categoriaEntregaItem = cq.from(CategoriaEntregaItem.class);
@@ -50,20 +50,29 @@ public class CategoriaEntregaItemSearch extends PersistenceController {
 		}
 		
 		cq = cq.select(categoriaEntregaItem).where(where.toArray(new Predicate[0]));
+		
+		if(orderBy) {
+		    cq = cq.orderBy(cb.asc(categoriaEntregaItem.get(CategoriaEntregaItem_.codigo)));
+		}
+		
 		return getEntityManager().createQuery(cq).getResultList();
 		
 	}
 	
 	public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoCategoria(String codigoCategoria) {
-		return findWithFilters(null, codigoCategoria);		
+		return findWithFilters(null, codigoCategoria, false);		
+	}
+	
+	public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoCategoria(String codigoCategoria, boolean orderBy) {
+	    return findWithFilters(null, codigoCategoria, orderBy);		
 	}
 	
 	public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoPai(String codigoItemPai) {
-		return findWithFilters(codigoItemPai, null);		
+		return findWithFilters(codigoItemPai, null, false);		
 	}
 	
 	public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoPaiAndCodigoCategoria(String codigoItemPai, String codigoCategoria) {
-		return findWithFilters(codigoItemPai, codigoCategoria);
+		return findWithFilters(codigoItemPai, codigoCategoria, false);
 	}
 	
 	public CategoriaEntregaItem getCategoriaEntregaItemByCodigo(String codigo) {
