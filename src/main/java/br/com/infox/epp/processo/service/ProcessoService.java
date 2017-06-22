@@ -46,6 +46,7 @@ public class ProcessoService extends PersistenceController {
 	}
 	
 	public boolean isTipoProcesso(String tipoProcesso, Processo processo){
+		getEntityManager().refresh(processo);
 		TipoProcesso byName = TipoProcesso.getByName(tipoProcesso);
 		MetadadoProcesso metadadoTipoProcesso = processo.getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
 		if(metadadoTipoProcesso != null){

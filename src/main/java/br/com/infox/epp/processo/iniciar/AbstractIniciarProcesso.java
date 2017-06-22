@@ -55,7 +55,7 @@ public abstract class AbstractIniciarProcesso implements Serializable {
     }
     
     protected void abrirExecucaoTarefa(Processo processo, TaskInstance taskInstance) {
-        String url_path = "infox.openPopUp('executar{idProcesso}', '{contextPath}/Processo/movimentar.seam?idProcesso={idProcesso}&amp;idTaskInstance={idTaskInstance}')";
+        String url_path = "infox.openPopUp('executar{idProcesso}', '{contextPath}/Processo/movimentar.seam?idProcesso={idProcesso}&idTaskInstance={idTaskInstance}')";
         PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
         String script = url_path.replace("{contextPath}", pathResolver.getContextPath())
                 .replace("{idTaskInstance}", String.valueOf(taskInstance.getId()))
