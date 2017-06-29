@@ -10,6 +10,9 @@ import java.util.Set;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.util.EntityUtil;
+import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -75,6 +78,11 @@ final class TaskVariableResolver extends TaskVariable {
 			case FILE:
 				if (!(this.value instanceof Integer)) {
 					this.value = getIdDocumento();
+				}
+				break;
+			case FRAGMENT:
+				if (EntityUtil.isEntity(HibernateUtil.removeProxy(this.value).getClass()) && EntityUtil.getIdentifier(this.value) == null) {
+					EntityManagerProducer.getEntityManager().persist(this.value);
 				}
 				break;
 			default:
