@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -318,7 +319,7 @@ public class FluxoImporterService extends PersistenceController {
 	}
 	
 	private Document readDocument(String xml) {
-		InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
+		InputStream inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
 		SAXBuilder builder = new SAXBuilder();
 		try {
 			Document doc = builder.build(inputStream);

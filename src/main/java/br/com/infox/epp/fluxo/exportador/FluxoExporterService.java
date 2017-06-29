@@ -2,6 +2,7 @@ package br.com.infox.epp.fluxo.exportador;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -22,13 +23,13 @@ public class FluxoExporterService {
 
         ZipEntry ze = new ZipEntry(FLUXO_XML);
         zos.putNextEntry(ze);
-        zos.write(fluxo.getDefinicaoProcesso().getXml().getBytes());
+        zos.write(fluxo.getDefinicaoProcesso().getXml().getBytes(StandardCharsets.UTF_8));
         zos.closeEntry();
 
         if (fluxo.getDefinicaoProcesso().getBpmn() != null && !fluxo.getDefinicaoProcesso().getBpmn().isEmpty()) {
             ze = new ZipEntry(FLUXO_BPMN);
             zos.putNextEntry(ze);
-            zos.write(fluxo.getDefinicaoProcesso().getBpmn().getBytes());
+            zos.write(fluxo.getDefinicaoProcesso().getBpmn().getBytes(StandardCharsets.UTF_8));
             zos.closeEntry();
         }
 
