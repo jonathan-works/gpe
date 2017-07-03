@@ -17,6 +17,7 @@ import javax.faces.component.UISelectItem;
 import javax.faces.component.UISelectItems;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.component.html.HtmlInputText;
+import javax.faces.component.html.HtmlInputTextarea;
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.component.html.HtmlSelectManyCheckbox;
@@ -128,6 +129,8 @@ public class DynamicFieldSet extends UIComponentBase {
             return createDateInput(formField);
         case SELECT_ONE:
             return createSelectOneInput(formField);
+        case TEXT:
+            return createTextInput(formField);
         case STRING:
             return createStringInput(formField);
         case CHECKBOX_ENUM:
@@ -177,6 +180,14 @@ public class DynamicFieldSet extends UIComponentBase {
         return menu;
     }
 
+    private UIInput createTextInput(DynamicField formField) {
+        HtmlInputTextarea input = new HtmlInputTextarea();
+        input.setStyleClass(resolveInputStyleClass());
+        input.setTitle(formField.getTooltip());
+        input.setReadonly(Boolean.TRUE.equals(formField.get("readonly")));
+        return input;
+    }
+    
     private UIInput createStringInput(DynamicField formField) {
         HtmlInputText input = new HtmlInputText();
         input.setStyleClass(resolveInputStyleClass());

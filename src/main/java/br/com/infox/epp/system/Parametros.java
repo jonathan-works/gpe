@@ -37,8 +37,8 @@ public enum Parametros {
     HAS_CONSULTA_EXTERNA_PADRAO("ativaConsultaExternaPadrao"),
     CODIGO_UF_SISTEMA("codigoUnidadeFederativaSistema"),
     INTERVALO_ATUALIZACAO_PAINEL("sistema", "intervaloAtualizacaoPainel", false),
-    EPP_API_RSA_PRIVATE_KEY("controleAcesso","eppApiPrivateKey"),
-    EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey"),
+    EPP_API_RSA_PRIVATE_KEY("controleAcesso","eppApiPrivateKey", FieldType.TEXT),
+    EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey", FieldType.TEXT),
     ATIVAR_MASSIVE_REINDEX("ativarMassiveReindex"),
     TERMO_ADESAO(new ParametroDefinition<>("controleAcesso", "termoAdesao", SELECT_ONE, ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.tituloModeloDocumento)
             .addFilter(isTrue(ModeloDocumento_.ativo))),
