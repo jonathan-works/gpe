@@ -13,6 +13,8 @@ import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.builder.ProcessBuilder;
 import org.camunda.bpm.model.bpmn.instance.Definitions;
 import org.camunda.bpm.model.bpmn.instance.Process;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnPlane;
 import org.camunda.bpm.model.xml.ModelException;
 import org.camunda.bpm.model.xml.ModelParseException;
 import org.camunda.bpm.model.xml.ModelValidationException;
@@ -118,6 +120,15 @@ public class EppBpmn extends Bpmn {
         modelInstance.setDefinitions(definitions);
         Process process = modelInstance.newInstance(Process.class);
         definitions.addChildElement(process);
+        
+        BpmnDiagram bpmnDiagram = modelInstance.newInstance(BpmnDiagram.class);
+
+        BpmnPlane bpmnPlane = modelInstance.newInstance(BpmnPlane.class);
+        bpmnPlane.setBpmnElement(process);
+
+        bpmnDiagram.addChildElement(bpmnPlane);
+        definitions.addChildElement(bpmnDiagram);
+
         return process.builder();
     }
 
