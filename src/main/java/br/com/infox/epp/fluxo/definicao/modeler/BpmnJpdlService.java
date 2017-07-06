@@ -74,7 +74,6 @@ public class BpmnJpdlService {
     	
     	BpmnModelInstance bpmn = builder.done();
     	bpmn.getDocument().registerNamespace(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE_ALIAS, ModeladorConstants.BPMN_IO_COLOR_NAMESPACE);
-    	bpmn.getDocument().registerNamespace(ModeladorConstants.INFOX_BPMN_NAMESPACE, ModeladorConstants.INFOX_BPMN_NAMESPACE_ALIAS);
     	
     	((SequenceFlow) bpmn.getModelElementById(sequenceFlowKey)).removeConditionExpression();
     	
@@ -134,7 +133,6 @@ public class BpmnJpdlService {
 	public DefinicaoProcesso atualizarDefinicao(DefinicaoProcesso definicaoProcesso, String newProcessDefinitionXml, String newBpmnXml, String newSvg) {
     	BpmnModelInstance bpmnModel = EppBpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8)));
     	bpmnModel.getDocument().registerNamespace(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE_ALIAS, ModeladorConstants.BPMN_IO_COLOR_NAMESPACE);
-    	bpmnModel.getDocument().registerNamespace(ModeladorConstants.INFOX_BPMN_NAMESPACE_ALIAS, ModeladorConstants.INFOX_BPMN_NAMESPACE);
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(newProcessDefinitionXml);
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
     	atualizarNomeFluxo(definicaoProcesso.getFluxo().getFluxo(), bpmnModel, processDefinition);
@@ -170,7 +168,7 @@ public class BpmnJpdlService {
 		}
 		
 		bpmnModel.getDocument().registerNamespace(ModeladorConstants.BPMN_IO_COLOR_NAMESPACE_ALIAS, ModeladorConstants.BPMN_IO_COLOR_NAMESPACE);
-		bpmnModel.getDocument().registerNamespace(ModeladorConstants.INFOX_BPMN_NAMESPACE, ModeladorConstants.INFOX_BPMN_NAMESPACE_ALIAS);
+		bpmnModel.getDocument().registerNamespace(ModeladorConstants.INFOX_BPMN_NAMESPACE_ALIAS, ModeladorConstants.INFOX_BPMN_NAMESPACE);
 		
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(definicaoProcesso.getXml());
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
