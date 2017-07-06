@@ -59,6 +59,7 @@ public class JpdlBpmnConverter {
 	private BpmnShape lastLaneShape;
 	private Map<String, BpmnShape> laneShapes = new HashMap<>();
 	private double maxXFromPreviousLane = 0d;
+    private boolean createDiagram;
 	
 	public String convert(String processDefinitionXml) {
 		processDefinition = new InfoxJpdlXmlReader(new StringReader(processDefinitionXml)).readProcessDefinition();
@@ -228,6 +229,9 @@ public class JpdlBpmnConverter {
 	}
 	
 	private void createDiagram(BpmnModelInstance modelInstance) {
+	    if (createDiagram)
+	        modelInstance.getDefinitions().getBpmDiagrams().clear();
+	    
 		if (!modelInstance.getDefinitions().getBpmDiagrams().isEmpty()) {
 			return;
 		}
@@ -362,4 +366,9 @@ public class JpdlBpmnConverter {
 		private int distance = 0;
 		private Lane lane;
 	}
+
+    public JpdlBpmnConverter createDiagram(boolean createDiagram) {
+        this.createDiagram=createDiagram;
+        return this;
+    }
 }

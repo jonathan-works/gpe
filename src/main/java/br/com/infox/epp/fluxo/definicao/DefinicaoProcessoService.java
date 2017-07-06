@@ -73,12 +73,12 @@ public class DefinicaoProcessoService {
     public DefinicaoProcesso loadDefinicoes(DefinicaoProcesso definicaoProcesso) {
         if (definicaoProcesso.getXml() == null) {
             definicaoProcesso.setXml(JpdlXmlWriter.toString(bpmnJpdlService.createInitialProcessDefinition(definicaoProcesso.getFluxo().getFluxo())));
-            definicaoProcesso.setBpmn(new JpdlBpmnConverter().convert(definicaoProcesso.getXml()));
+            definicaoProcesso.setBpmn(new JpdlBpmnConverter().createDiagram(true).convert(definicaoProcesso.getXml()));
             return definicaoProcessoDao.update(definicaoProcesso);
         }
         
         if (definicaoProcesso.getBpmn() == null) {
-            definicaoProcesso.setBpmn(new JpdlBpmnConverter().convert(definicaoProcesso.getXml()));
+            definicaoProcesso.setBpmn(new JpdlBpmnConverter().createDiagram(true).convert(definicaoProcesso.getXml()));
             definicaoProcesso = definicaoProcessoDao.update(definicaoProcesso);
         }
         

@@ -154,7 +154,9 @@ class BizagiBpmnAdapter implements BpmnAdapter {
 		collaboration.getParticipants().add(participant);
 		
 		bizagiDiagram = bizagiBpmnModel.getDefinitions().getBpmDiagrams().iterator().next();
-		BpmnDiagram diagram = normalizedModel.newInstance(BpmnDiagram.class);
+		BpmnDiagram diagram = DiagramUtil.getDefaultDiagram(normalizedModel);
+		if (diagram==null) diagram = normalizedModel.newInstance(BpmnDiagram.class);
+		
 		normalizedModel.getDefinitions().getBpmDiagrams().add(diagram);
 		normalizedPlane = normalizedModel.newInstance(BpmnPlane.class);
 		diagram.setBpmnPlane(normalizedPlane);
