@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
@@ -53,6 +54,21 @@ public class LocalizacaoSearch {
 		Predicate codigoIgual = cb.equal(estrutura.get(Localizacao_.codigo), codigoLocalizacao);
 		Predicate ativo = cb.isTrue(estrutura.get(Localizacao_.ativo));
 		cq = cq.select(estrutura).where(cb.and(codigoIgual, ativo));
+        try {
+            return getEntityManager().createQuery(cq).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+	}
+	
+	public Localizacao getLocalizacaoByLocalizacaoPaiAndDescricao(Localizacao localizacaoPai, String descricao) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Localizacao> cq = cb.createQuery(Localizacao.class);
+		Root<Localizacao> localizacao = cq.from(Localizacao.class);
+		
+		Predicate localizacaoPaiIgual = localizacaoPai == null ? cb.isNull(localizacao.get(Localizacao_.localizacaoPai)) : cb.equal(localizacao.get(Localizacao_.localizacaoPai), localizacaoPai);
+		Predicate descricaoIgual = cb.equal(localizacao.get(Localizacao_.localizacao), descricao);
+		cq = cq.select(localizacao).where(cb.and(localizacaoPaiIgual, descricaoIgual));
         try {
             return getEntityManager().createQuery(cq).getSingleResult();
         } catch (NoResultException e) {
