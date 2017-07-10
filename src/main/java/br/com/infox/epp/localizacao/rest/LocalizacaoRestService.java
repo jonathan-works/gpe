@@ -32,13 +32,18 @@ public class LocalizacaoRestService {
 	public LocalizacaoDTO adicionarLocalizacao(LocalizacaoDTO localizacaoDTO) {
         Localizacao locExistente = localizacaoSearch.getLocalizacaoByCodigo(localizacaoDTO.getCodigo());
         if (locExistente != null) {
-            throw new ConflictWSException("Já existe uma localização castrada com o código " + localizacaoDTO.getCodigo());
+            throw new ConflictWSException("Já existe uma localização cadastrada com o código " + localizacaoDTO.getCodigo());
+        }
+        Localizacao localizacaoPai = localizacaoSearch.getLocalizacaoByCodigo(localizacaoDTO.getCodigoLocalizacaoSuperior());
+        locExistente = localizacaoSearch.getLocalizacaoByLocalizacaoPaiAndDescricao(localizacaoPai, localizacaoDTO.getNome());
+        if (locExistente != null) {
+            throw new ConflictWSException(String.format("Já existe uma localização cadastrada com código de localização superior '%s' e descrição '%s'", localizacaoDTO.getCodigoLocalizacaoSuperior(), localizacaoDTO.getNome()));
         }
 
 	    Localizacao localizacao = new Localizacao();
 		localizacao.setCodigo(localizacaoDTO.getCodigo());
 		localizacao.setLocalizacao(localizacaoDTO.getNome());
-		localizacao.setLocalizacaoPai(localizacaoSearch.getLocalizacaoByCodigo(localizacaoDTO.getCodigoLocalizacaoSuperior()));
+		localizacao.setLocalizacaoPai(localizacaoPai);
 		if (localizacaoDTO.getCodigoEstrutura() != null){
 			localizacao.setEstruturaFilho(estruturaSearch.getEstruturaByNome(localizacaoDTO.getCodigoEstrutura()));
 		}
