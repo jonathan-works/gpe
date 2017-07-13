@@ -2,19 +2,13 @@ package br.com.infox.epp.assinador.view.jsf;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.net.MalformedURLException;
-import java.net.URI;
 
 import javax.faces.context.FacesContext;
-import javax.validation.ValidationException;
-import javax.ws.rs.core.UriBuilder;
 
 import br.com.infox.assinador.rest.api.StatusToken;
-import br.com.infox.assinador.rest.api.TokenAssinaturaResource;
+import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.view.AssinadorController;
 import br.com.infox.epp.cdi.util.Beans;
-import br.com.infox.seam.path.PathResolver;
-import br.com.infox.ws.factory.RestClientFactory;
 
 public class AssinadorListenerImpl implements AssinadorListener, Serializable {
 
@@ -40,17 +34,9 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
 
     private void updateStatusEvent(AssinadorUpdateEvent evt) {
         Assinador button = (Assinador) evt.getComponent();
-        String baseUrl = jndi(PathResolver.class).getRestBaseUrl();
-        URI uri = UriBuilder.fromPath(baseUrl).path("tokenAssinatura").path(button.getToken()).build();
-        //FIXME Corrigir problema que ocorre com o {@link br.com.infox.ws.factory.RestClientFactory} ao utilizar o código abaixo. Não está inserindo '/' entre cada path
-        // StatusToken status = RestClientFactory.create(baseUrl, TokenAssinaturaRest.class).getBaseResource().getTokenAssinaturaResource(button.getToken()).getStatus(); 
-        try {
-            StatusToken status = RestClientFactory.create(uri.toURL().toString() + "/", TokenAssinaturaResource.class)
-                    .getStatus();
-            button.setStatus(status);
-        } catch (MalformedURLException e) {
-            throw new ValidationException("invalid url");
-        }
+        StatusToken status = Beans.getReference(AssinadorService.class).getStatus(button.getToken());
+        button.setStatus(status);
+        
         if (SignPhase.AFTER_CLICK.equals(button.getCurrentPhase()))
             button.setCurrentPhase(SignPhase.WAITING_SIGNATURE);
     }
