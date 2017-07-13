@@ -62,14 +62,17 @@ public class CertificadosDownloader {
         try {
             URLConnection urlConnection = certificatePath.toURL().openConnection();
             long lastModified = urlConnection.getLastModified();
-            return new Date(lastModified);
+            if (lastModified != 0)
+                return new Date(lastModified);
         } catch (Exception e) {
-            return new Date(0);
+            LOG.warn("Falha ao tentar baixar certificados de '"+certificatePath+"'",e);
         }
+        return null;
     }
     
     public boolean isUpToDate(Date lastUpdated){
-        return getLastModified().getTime() <= lastUpdated.getTime();
+        Date lastModified = getLastModified();
+        return lastModified == null || lastModified.before(lastUpdated);
     }
 
     private Path createTempFile() throws MalformedURLException, FileNotFoundException, IOException {
