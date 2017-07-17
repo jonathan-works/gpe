@@ -76,7 +76,6 @@
 
         <ui:define name="label">#{label}</ui:define>
         <span id="#{id}Locator" />
-        
         <rich:editor
         	id="#{id}"
         	value="#{value}"
@@ -91,7 +90,15 @@
                 protectedSource: [/#\{[^{}]+\}/g],
                 extraPlugins: 'showprotected',
                 removePlugins: 'elementspath',
-                extraAllowedContent: 'img[!src, *]{*}(*)',
+                allowedContent: {
+                    '$1': {
+                        elements: CKEDITOR.dtd,
+                        attributes: true,
+                        styles: true,
+                        classes: true
+                    }
+                },
+                disallowedContent: 'script; *[on*]',
                 resize_enable:true,
                 resize_dir:'both',
                 toolbar_empty:[],
