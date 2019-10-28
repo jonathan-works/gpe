@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
@@ -8,10 +8,17 @@
     xmlns:infox="http://www.infox.com.br/jsf" xmlns:i="http://java.sun.com/jsf/composite/infox" template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
     <ui:define name="baseHead">
         <style>
-.recaptchatable {
-    display: inline-block;
-}
-</style>
+			.recaptchatable {
+			    display: inline-block;
+			}
+			body {
+			    background-image: url("#{request.contextPath}#{layoutController.getResourceUrlByPath('/imagens/fundo_loglab_login.jpg')}");
+				background-repeat: no-repeat;
+			}
+			div.blocoCentralLogin {
+				background-color: white;
+			}
+		</style>
     </ui:define>
     <ui:define name="scripts">
         <h:outputScript library="js/components" name="Modal.js" />
@@ -22,7 +29,7 @@
         });
     </script>
     </ui:define>
-    <ui:define name="baseBody">
+    <ui:define name="baseBody" >
         <s:div id="pageBody" styleClass="loginPageBody">
             <div class="corpoSuperior" />
             <div class="corpoInferior">
@@ -81,7 +88,7 @@
                             <p:outputPanel id="divCaptcha">
 	                            <p:outputPanel rendered="#{loginView.mostrarCaptcha}" styleClass="field-block">
 	                                <div class="field">
-	                                    <p:captcha id="captcha" label="Captcha" language="pt_BR" 
+	                                    <p:captcha id="captcha" label="Captcha" language="pt_BR"
 	                                        validatorMessage="#{infoxMessages['captcha.incorreto']}"
 	                                        requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
 	                                    <p:messages for="captcha" severity="error" />

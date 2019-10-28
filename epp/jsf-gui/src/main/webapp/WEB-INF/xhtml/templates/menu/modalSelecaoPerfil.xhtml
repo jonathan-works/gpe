@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <rich:popupPanel id="selecionarPerfil" autosized="true" modal="true" styleClass="modalSelecaoPerfil"
+        onbeforeshow="document.querySelector('.modalSelecaoPerfil--filter .input-filter').value='';infox.filter({input:document.querySelector('.modalSelecaoPerfil--filter .input-filter'), filtered:'.modalSelecaoPerfil--fieldset .modalSelecaoPerfil--content form'});"
+        onshow="document.querySelector('.modalSelecaoPerfil--filter .input-filter').focus();"
+        >
+        
+        <p:outputPanel layout="block" styleClass="modalSelecaoPerfilPanel">
+                <div class="modalSelecaoPerfil--filter">
+                    <input id="inputBuscaNomeParticipante" class="input-filter" placeholder="Filtro"
+                        oninput="infox.filter({input:event.target, filtered:'.modalSelecaoPerfil--fieldset .modalSelecaoPerfil--content form'});"
+                        style="padding-right: calc(1em + 2px + 4px);"></input> <label for="inputBuscaNomeParticipante"
+                        style="width: calc(1em + 2px); height: calc(1em + 2px); font-size: 1em; margin-left: calc(-1em + -2px + -4px);">
+                        <wi:icon value="search" styleClass="action-icon" />
+                    </label>
+                </div>
+                <fieldset class="modalSelecaoPerfil--fieldset">
+                    <legend>
+                        <h:outputText value="Selecione o Perfil" />
+                    </legend>
+                    <infox:div id="modalSelecaoPerfil--content" styleClass="modalSelecaoPerfil--content">
+                        <ui:repeat var="perfil" value="#{authenticator.usuarioPerfilListItems}">
+                            <h:form styleClass="epp-new-menu-itm-action-form">
+                                <a:commandLink disabled="#{authenticator.usuarioPerfilAtualCombo eq perfil.value}"
+                                    execute="@this" status="dummy" styleClass="modalSelecaoPerfil--perfil"
+                                    value="#{perfil.label}"
+                                    onclick="#{rich:component('selecionarPerfil')}.hide();infox.showLoading();">
+                                    <f:setPropertyActionListener target="#{authenticator.usuarioPerfilAtualCombo}"
+                                        value="#{perfil.value}" />
+                                </a:commandLink>
+                            </h:form>
+                        </ui:repeat>
+                    </infox:div>
+                </fieldset>
+                <div style="text-align: right;" class="modalSelecaoPerfil--button-area">
+                    <div style="display: inline-block;" class="">
+                        <button class="buttons" onclick="#{rich:component('selecionarPerfil')}.hide();">Cancelar</button>
+                    </div>
+                </div>
+        </p:outputPanel>
+        
+    </rich:popupPanel>
+
+
+</ui:composition>
