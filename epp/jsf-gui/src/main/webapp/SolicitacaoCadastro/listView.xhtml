@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/xhtml/templates/minimal.xhtml">
+
+    <ui:define name="title">#{infoxMessages['solicitacaoCadastro.titlePage']}</ui:define>
+    
+    <ui:define name="body">
+        <h:messages globalOnly="true" styleClass="message"
+            id="globalMessages" />
+
+        <h:form id="solicitacaoCadastroForm">
+            <fieldset>
+                <LEGEND>#{infoxMessages['solicitacaoCadastro.titulo']}</LEGEND>
+                
+                <wi:field
+                    id="nomeCompletoSolicitante"
+                    required="true"
+                    label="#{infoxMessages['solicitacaoCadastro.nomeCompleto']}">
+                    <p:inputText
+                        id="nomeCompletoSolicitanteInput"
+                        required="true"
+                        size="50"
+                        maxlength="256" 
+                        value="#{solicitacaoCadastroView.instance.nomeCompleto}" />
+                </wi:field>
+                
+                <wi:field
+                    id="cpfSolicitante"
+                    required="true"
+                    label="#{infoxMessages['solicitacaoCadastro.cpf']}">
+                    <p:inputMask
+                        id="cpfSolicitanteInput"
+                        required="true"
+                        mask="999.999.999-99"
+                        size="20"
+                        value="#{solicitacaoCadastroView.instance.cpf}">
+                        <f:validator validatorId="cpfValidator" />
+                        <f:converter converterId="cpfConverter" />
+                    </p:inputMask>
+                </wi:field>
+                
+                <fieldset>
+                    <LEGEND>#{infoxMessages['solicitacaoCadastro.rg']}</LEGEND>
+    
+                    <wi:field
+                        id="numeroRgSolicitante"
+                        required="true"
+                        label="#{infoxMessages['solicitacaoCadastro.numeroRg']}">
+                        <p:inputNumber
+                            id="numeroRgSolicitanteInput"
+                            required="true"
+                            size="20"
+                            maxlength="20" 
+                            decimalPlaces="0"
+                            thousandSeparator=""
+                            requiredMessage="Campo Obrigatório"
+                            value="#{solicitacaoCadastroView.instance.numeroRg}" />
+                    </wi:field>
+    
+                    <wi:field
+                        id="emissorRgSolicitante"
+                        required="true"
+                        label="#{infoxMessages['solicitacaoCadastro.emissorRg']}">
+                        <p:inputText
+                            id="emissorRgSolicitanteInput"
+                            required="true"
+                            size="50"
+                            maxlength="256"
+                            value="#{solicitacaoCadastroView.instance.emissorRg}" />
+                    </wi:field>
+    
+                    <wi:field
+                        id="ufRgSolicitante"
+                        required="true"
+                        label="#{infoxMessages['solicitacaoCadastro.ufRg']}">
+                        <h:selectOneMenu id="ufRgSolicitanteInput"
+                            required="true"
+                            value="#{solicitacaoCadastroView.estado}">
+                            <f:selectItem
+                                noSelectionOption="true"
+                                itemValue="#{null}"
+                                itemLabel="#{messages['crud.select.select']}" />
+                            <f:selectItems value="#{solicitacaoCadastroView.estadosList}"
+                                var="itemUf" />
+                            <f:converter
+                                converterId="br.com.infox.jsf.converter.SelectItemConverter" />
+                        </h:selectOneMenu>
+                    </wi:field>
+                </fieldset>
+                
+                <wi:field
+                    id="telefoneSolicitante"
+                    required="true"
+                    label="#{infoxMessages['solicitacaoCadastro.telefone']}">
+                    <p:inputMask
+                        id="telefoneSolicitanteInput"
+                        required="true"
+                        mask="+999 (99) 9 9999 9999"
+                        size="22"
+                        value="#{solicitacaoCadastroView.instance.telefone}"/>
+                </wi:field>
+                
+                <wi:field
+                    id="cargoSolicitante"
+                    required="true"
+                    label="#{infoxMessages['solicitacaoCadastro.cargo']}">
+                    <p:inputText
+                        id="cargoSolicitanteInput"
+                        required="true"
+                        size="50"
+                        maxlength="256" 
+                        value="#{solicitacaoCadastroView.instance.cargo}" />
+                </wi:field>
+                
+                <wi:field
+                    id="departamentoSolicitante"
+                    required="true"
+                    label="#{infoxMessages['solicitacaoCadastro.departamento']}">
+                    <p:inputText
+                        id="departamentoSolicitanteInput"
+                        required="true"
+                        size="50"
+                        maxlength="256" 
+                        value="#{solicitacaoCadastroView.instance.departamento}" />
+                </wi:field>
+            </fieldset>
+            <p:outputPanel>
+                <a:commandButton id="solicitarCadastro" 
+                    render="solicitacaoCadastroForm, pageBodyDialogMessage"
+                    execute="@form"
+                    styleClass="buttons"
+                    action="#{solicitacaoCadastroView.criarSolicitacaoCadastro()}" 
+                    onclick="infox.showLoading();"
+                    oncomplete="infox.hideLoading();"
+                    value="#{infoxMessages['solicitacaoCadastro.solicitarCadastro']}" />
+            </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>
