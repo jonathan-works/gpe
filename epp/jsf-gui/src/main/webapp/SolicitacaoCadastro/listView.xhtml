@@ -12,9 +12,6 @@
     <ui:define name="title">#{infoxMessages['solicitacaoCadastro.titlePage']}</ui:define>
     
     <ui:define name="body">
-        <h:messages globalOnly="true" styleClass="message"
-            id="globalMessages" />
-
         <h:form id="solicitacaoCadastroForm">
             <fieldset>
                 <LEGEND>#{infoxMessages['solicitacaoCadastro.titulo']}</LEGEND>
@@ -132,10 +129,9 @@
                 </wi:field>
             </fieldset>
             <p:outputPanel>
-                <a:commandButton id="solicitarCadastro" 
-                    render="solicitacaoCadastroForm, pageBodyDialogMessage"
-                    execute="@form"
-                    styleClass="buttons"
+                <p:commandButton id="solicitarCadastro" 
+                    update="solicitacaoCadastroForm, pageBodyDialogMessage"
+                    process="@form"
                     action="#{solicitacaoCadastroView.criarSolicitacaoCadastro()}" 
                     onclick="infox.showLoading();"
                     oncomplete="infox.hideLoading();"
