@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: listView.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="title">#{infoxMessages['processo.titlePage']}</ui:define>
+    <ui:define name="body">
+        <c:if test="#{not empty flash.filtros}">
+            <c:set value="#{flash.filtros}" target="#{processoEpaList}" property="filtros" />
+        </c:if>
+        <h:form>
+            <wi:panel
+                id="processoEpaContentPanel"
+                styleClass="content-block">
+                <wi:dataTable
+                    values="#{processoEpaList.list(15)}"
+                    bean="#{processoEpaList}"
+                    tableTitle="#{infoxMessages['processo.tableTitle']}"
+                    id="processoEpaList"
+                    rowId="#{row.idProcesso}"
+                    hideOrder="true"
+                    showGrid="#{not empty processoEpaList.filtros.fluxo or not empty processoEpaList.filtros.numeroProcesso}"
+                    inForm="true">
+                    <ui:define name="searchForm">
+                        <wi:searchForm
+                            formId="pesquisarProcessoEpaForm"
+                            formTitle="#{infoxMessages['searchForm.title']}"
+                            searchAction="processoEpaList.search">
+							<p:outputPanel rendered="#{consultaProcessoDynamicColumnsController.showComboFluxo()}">
+								<div class="property-field-edit-name">
+									<h:outputLabel id="fluxoLabel" for="fluxo">
+										<h:outputText value="#{infoxMessages['processo.fluxo']}" />
+									</h:outputLabel>
+								</div>
+								<p:autoComplete id="fluxo" value="#{processoEpaList.filtros.fluxo}" scrollHeight="300"
+									completeMethod="#{consultaProcessoDynamicColumnsController.getFluxos}"
+									forceSelection="true" var="item" itemLabel="#{item.fluxo}" itemValue="#{item}"
+									converter="br.com.infox.jsf.converter.EntityConverter" minQueryLength="3" dropdown="true">
+									<p:ajax event="itemSelect" process="@this" update="processoEpaContentPanel"
+										listener="#{processoEpaList.onSelectFluxo()}"
+										onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+								</p:autoComplete>
+							</p:outputPanel>
+							<div />
+                            <wi:inputText
+                                id="numeroProcesso"
+                                label="#{infoxMessages['processoEpa.numeroProcesso']}"
+                                value="#{processoEpaList.filtros.numeroProcesso}"
+                                minlength="1"/>
+                            <div />
+							<i:autoComplete	id="natureza" value="#{processoEpaList.filtros.natureza}" scrollHeight="300"
+								completeMethod="#{processoEpaList.getNaturezas}" forceSelection="true" label="#{infoxMessages['consultaProcesso.natureza']}"
+								var="item" itemLabel="#{item.natureza}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
+                            <div />
+                            <i:autoComplete	id="categoria" value="#{processoEpaList.filtros.categoria}" scrollHeight="300"
+								completeMethod="#{processoEpaList.getCategorias}" forceSelection="true" label="#{infoxMessages['consultaProcesso.categoria']}"
+								var="item" itemLabel="#{item.categoria}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
+                            <div />
+							<i:autoComplete	id="statusProcesso" value="#{processoEpaList.filtros.statusProcesso}" scrollHeight="300"
+								completeMethod="#{processoEpaList.getStatusProcessos}" forceSelection="true" label="#{infoxMessages['processo.statusProcesso']}"
+								var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
+                            <div />
+                            <i:autoComplete	id="usuarioCadastro" value="#{processoEpaList.filtros.usuarioLogin}" 
+                            	scrollHeight="300" completeMethod="#{processoEpaList.getUsuarios}" forceSelection="true" 
+								label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
+								var="item" itemLabel="#{item.nomeUsuario}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
+                            <div />
+                            <wi:inputDataPeriodo
+                            	label="#{infoxMessages['processo.dataInicio']}"
+                                id="periodoInicio"
+                                valueDateFrom="#{processoEpaList.filtros.dataInicio.from}"
+                                valueDateTo="#{processoEpaList.filtros.dataInicio.to}"
+                                validatePastDateFrom="true"
+                                validatePastDateTo="true"
+                                rendered="#{not empty processoEpaList.filtros.fluxo}" />
+                            <div />
+                            <wi:inputDataPeriodo
+                            	label="#{infoxMessages['processo.dataFim']}"
+                                id="periodoFim"
+                                valueDateFrom="#{processoEpaList.filtros.dataFim.from}"
+                                valueDateTo="#{processoEpaList.filtros.dataFim.to}"
+                                validatePastDateFrom="true"
+                                validatePastDateTo="true"
+                                rendered="#{not empty processoEpaList.filtros.fluxo}" />
+                             <div />
+                             <ui:include src="/Processo/Consulta/filtroExtraConsulta.xhtml" />
+                        </wi:searchForm>
+                    </ui:define>
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                          <h:commandLink
+	                    	id="visualizaProcessoLink"
+	                        action="/Processo/Consulta/list.seam">
+	                        <f:setPropertyActionListener value="#{row.idProcesso}" target="#{consultaController.id}" />
+	                        <f:setPropertyActionListener value="#{row.idJbpm}" target="#{org.jboss.seam.bpm.businessProcess.processId}" />
+	                        <f:setPropertyActionListener value="#{processoEpaList.filtros}" target="#{consultaController.filtros}" />
+	                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
+	                        <f:ajax execute="@this" render="@this"/>
+	                    </h:commandLink>
+                        <a:commandLink
+                            id="setPrioridadeLink"
+                            rendered="#{security.checkPage('/pages/Processo/Consulta/setPrioridadeProcesso')}"
+                            execute="@this"
+                            render="prioridadeProcessoPanel"
+                            limitRender="true"
+                            status=":status"
+                            styleClass="opacityHover"
+                            action="#{prioridadeProcessoChanger.setProcesso(row)}"
+                            oncomplete="#{rich:component('prioridadeProcessoPanel')}.show()">
+                            <h:graphicImage
+                                title="#{infoxMessages['prioridadeProcesso.select']}"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/priority.gif')}" />
+                        </a:commandLink>
+                    </ui:define>
+					<infox:dynamicColumns columns="#{consultaProcessoDynamicColumnsController.dynamicColumns}" />
+                </wi:dataTable>
+                #{consultaProcessoDynamicColumnsController.clearMensagensValidacao()}
+            </wi:panel>
+        </h:form>
+        <rich:popupPanel
+            id="prioridadeProcessoPanel"
+            height="170">
+            <f:facet name="header">#{infoxMessages['prioridadeProcesso.title']}</f:facet>
+            <f:facet name="controls">
+                <h:panelGroup>
+                    <h:graphicImage
+                        value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+                        onclick="#{rich:component('prioridadeProcessoPanel')}.hide()" />
+                </h:panelGroup>
+            </f:facet>
+            <s:decorate template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+                <ui:define name="label">
+                    <h:outputText
+                        value="#{infoxMessages['prioridadeProcesso.choice']}"
+                        styleClass="label" />
+                </ui:define>
+                <h:form>
+                    <wi:selectOneMenuEntity
+                        id="selectPrioridade"
+                        value="#{prioridadeProcessoChanger.prioridadeProcesso}"
+                        hideNoSelectionLabel="false"
+                        styleClass="PaletteMenu">
+                        <f:selectItems value="#{prioridadeProcessoList.listAtivos()}" />
+                    </wi:selectOneMenuEntity>
+                    <div />
+                    <wi:commandButton
+                        id="saveButton"
+                        action="prioridadeProcessoChanger.atualizarPrioridade()"
+                        value="#{infoxMessages['crud.update']}"
+                        oncomplete="#{rich:component('prioridadeProcessoPanel')}.hide();"
+                        reRender="processoEpaListPanel" />
+                </h:form>
+            </s:decorate>
+        </rich:popupPanel>
+    </ui:define>
+</ui:composition>

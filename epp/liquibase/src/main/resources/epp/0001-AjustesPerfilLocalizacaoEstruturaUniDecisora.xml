@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="jonasbezerra" id="1" dbms="mssql, postgresql" >
+        <modifyDataType columnName="ds_tipo_processo_documento_observacao"
+                        newDataType="VARCHAR(4000)"
+                        tableName="tb_tipo_processo_documento"/>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1-1" dbms="oracle" >
+        <modifyDataType columnName="ds_tipo_proc_doc_observacao"
+                        newDataType="VARCHAR(4000)"
+                        tableName="tb_tipo_processo_documento"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="2" dbms="mssql, postgresql">
+        <addColumn tableName="tb_tipo_processo_documento_papel">
+            <column name="tp_assinatura" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2" dbms="oracle">
+        <addColumn tableName="tb_tipo_processo_doc_papel">
+            <column name="tp_assinatura" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="3" dbms="mssql, postgresql, oracle">
+       <createSequence incrementBy="1"
+                       minValue="1"
+                       sequenceName="sq_tb_extensao_arquivo"
+                       startValue="1"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="4" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_extensao_arquivo">
+            <column name="id_extensao_arquivo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_extensao_arquivo_pk" nullable="false"/>
+            </column>
+            <column name="id_tipo_processo_documento" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="tb_tipo_processo_documento_fk" references="tb_tipo_processo_documento(id_tipo_processo_documento)"/>
+            </column>
+            <column name="nm_extensao" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_extensao" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_tamanho" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_paginavel" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_tamanho_pagina" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="5" dbms="mssql" >
+        <sql endDelimiter="\nGO">
+        CREATE UNIQUE NONCLUSTERED INDEX [extensao_ak] ON [dbo].[tb_extensao_arquivo] (  [ds_extensao] ASC ,  [id_tipo_processo_documento] ASC ) WHERE (  [ds_extensao] IS NOT NULL  AND  [id_tipo_processo_documento] IS NOT NULL ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+        </sql>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="5-1" dbms="postgresql, oracle" >
+        <addUniqueConstraint tableName="tb_extensao_arquivo" constraintName="extensao_ak" columnNames="id_tipo_processo_documento, ds_extensao"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="6" dbms="mssql, postgresql, oracle" >
+        <createSequence incrementBy="1"
+                        minValue="1"
+                        sequenceName="sq_tb_perfil"
+                        startValue="1"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="7" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_perfil">
+            <column name="id_perfil" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_perfil_pk" nullable="false"/>
+            </column>
+            <column name="id_localizacao" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="localizacao_perfil_fk" references="tb_localizacao(id_localizacao)"/>
+            </column>
+            <column name="id_localizacao_pai_estrutura" type="BIGINT">
+                <constraints nullable="true" foreignKeyName="pai_da_estrutura_fk" references="tb_localizacao(id_localizacao)"/>
+            </column>
+            <column name="id_papel" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="papel_perfil_fk" references="tb_papel(id_papel)"/>
+            </column>
+            <column name="ds_perfil" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_ativo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="8" dbms="mssql, postgresql, oracle" >
+        <addUniqueConstraint columnNames="id_localizacao, id_papel"
+                             constraintName="localizacao_papel_ak"
+                             tableName="tb_perfil"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="9" dbms="mssql, postgresql, oracle">
+        <createSequence incrementBy="1" maxValue="9223372036854775807" minValue="1" sequenceName="sq_tb_usuario_perfil" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="10" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_usuario_perfil">
+            <column name="id_usuario_perfil" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tb_usuario_perfil_pk" nullable="false"/>
+            </column>
+            <column name="id_usuario_login" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="usuario_login_fk" references="tb_usuario_login(id_usuario_login)"/>
+            </column>
+            <column name="id_perfil" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="perfil_fk" references="tb_perfil(id_perfil)"/>
+            </column>
+            <column name="in_responsavel" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="11" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_perfil" dbms="mssql" >
+            <column name="id_perfil" valueComputed="NEXT VALUE FOR sq_tb_perfil" />
+            <column name="id_localizacao" value="1" />
+            <column name="id_papel" value="1" />
+            <column name="ds_perfil" value="Administrador do Sistema" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+
+        <insert tableName="tb_usuario_perfil" dbms="mssql" >
+            <column name="id_usuario_perfil" valueComputed="NEXT VALUE FOR sq_tb_usuario_perfil" />
+            <column name="id_usuario_login" value="1" />
+            <column name="id_perfil" value="1" />
+            <column name="in_responsavel" valueBoolean="false" />
+        </insert>
+
+        <insert tableName="tb_perfil" dbms="postgresql" >
+            <column name="id_perfil" valueComputed="NEXTVAL('sq_tb_perfil')" />
+            <column name="id_localizacao" value="1" />
+            <column name="id_papel" value="1" />
+            <column name="ds_perfil" value="Administrador do Sistema" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+
+        <insert tableName="tb_usuario_perfil" dbms="postgresql" >
+            <column name="id_usuario_perfil" valueComputed="NEXTVAL('sq_tb_usuario_perfil')" />
+            <column name="id_usuario_login" value="1" />
+            <column name="id_perfil" value="1" />
+            <column name="in_responsavel" valueBoolean="false" />
+        </insert>
+
+        <insert tableName="tb_perfil" dbms="oracle" >
+            <column name="id_perfil" valueComputed="sq_tb_perfil.nextval" />
+            <column name="id_localizacao" value="1" />
+            <column name="id_papel" value="1" />
+            <column name="ds_perfil" value="Administrador do Sistema" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+
+        <insert tableName="tb_usuario_perfil" dbms="oracle" >
+            <column name="id_usuario_perfil" valueComputed="sq_tb_usuario_perfil.nextval" />
+            <column name="id_usuario_login" value="1" />
+            <column name="id_perfil" valueComputed="sq_tb_perfil.currval" />
+            <column name="in_responsavel" valueBoolean="false" />
+        </insert>
+
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="12" dbms="mssql, postgresql, oracle">
+        <createSequence minValue="1" sequenceName="sq_tb_estrutura" incrementBy="1" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="13" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_estrutura">
+            <column name="id_estrutura" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tb_estrutura_pk"/>
+            </column>
+            <column name="nm_estrutura" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="14" dbms="mssql, postgresql, oracle">
+        <dropColumn tableName="tb_localizacao" columnName="in_estrutura"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="15" dbms="mssql, postgresql">
+        <dropForeignKeyConstraint baseTableName="tb_localizacao" constraintName="tb_localizacao_id_estrutura_fkey"/>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="15" dbms="oracle">
+        <dropForeignKeyConstraint baseTableName="tb_localizacao" constraintName="fk_localizacao_02"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="17" dbms="mssql, postgresql, oracle">
+        <renameColumn tableName="tb_localizacao" oldColumnName="id_estrutura" newColumnName="id_estrutura_filho"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="18" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_localizacao">
+            <column name="id_estrutura_pai" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="19" dbms="mssql, postgresql, oracle">
+        <addForeignKeyConstraint baseTableName="tb_localizacao" constraintName="estrutura_filho_fk" baseColumnNames="id_estrutura_filho" referencedColumnNames="id_estrutura" referencedTableName="tb_estrutura"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="20" dbms="mssql, postgresql, oracle">
+        <addForeignKeyConstraint baseTableName="tb_localizacao" constraintName="estrutura_pai_fk" baseColumnNames="id_estrutura_pai" referencedColumnNames="id_estrutura" referencedTableName="tb_estrutura"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="21" dbms="mssql, postgresql, oracle">
+        <createSequence sequenceName="sq_tb_localizacao_estrutura" minValue="1" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="22" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_localizacao_estrutura">
+            <column name="id_localizacao_estrutura" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="localizacao_estrutura_pk"/>
+            </column>
+            <column name="id_estrutura" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="estrutura_fk" references="tb_estrutura(id_estrutura)"/>
+            </column>
+            <column name="id_localizacao" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="localizacao_fk" references="tb_localizacao(id_localizacao)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="23" dbms="mssql">
+        <addUniqueConstraint tableName="tb_localizacao_estrutura" constraintName="localizacao_estrutura_ak" columnNames="id_estrutura, id_localizacao"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="24" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_papel">
+            <column name="in_termo_adesao" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="25" dbms="mssql, postgresql">
+        <dropColumn tableName="tb_tipo_processo_documento_papel" columnName="in_obrigatorio"/>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="25" dbms="oracle">
+        <dropColumn tableName="tb_tipo_processo_doc_papel" columnName="in_obrigatorio"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="26" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_raia_perfil">
+            <column name="id_raia_perfil" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="raia_perfil_pk"/>
+            </column>
+            <column name="nm_raia" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_fluxo" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fluxo_fk" references="tb_fluxo(id_fluxo)"/>
+            </column>
+            <column name="id_perfil" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="raia_perfil_fk" references="tb_perfil(id_perfil)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="27" dbms="mssql, postgresql, oracle">
+        <addUniqueConstraint tableName="tb_raia_perfil" constraintName="raia_perfil_ak" columnNames="nm_raia, id_fluxo, id_perfil"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="34" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_pessoa_fisica">
+            <column name="ds_signature_text" type="VARCHAR(4000)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="35" dbms="mssql, postgresql, oracle">
+        <createSequence sequenceName="sq_tb_assinatura_documento" minValue="1" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="36" dbms="mssql, postgresql">
+        <createTable tableName="tb_assinatura_documento">
+            <column name="id_assinatura" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_assinatura_documento"/>
+            </column>
+            <column name="id_usuario_login" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="tb_assinatura_documento_id_usuario_login_fk" references="tb_usuario_login (id_usuario_login)"/>
+            </column>
+            <column name="id_processo_documento_bin" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="tb_assinatura_documento_id_processo_documento_bin_fk" references="tb_processo_documento_bin (id_processo_documento_bin)"/>
+            </column>
+            <column name="id_perfil" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="tb_assinatura_documento_id_perfil_fk" references="tb_perfil (id_perfil)"/>
+            </column>
+            <column name="dt_assinatura" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_usuario" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_perfil" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_signature" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_cert_chain" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="36" dbms="oracle">
+        <createTable tableName="tb_assinatura_documento">
+            <column name="id_assinatura" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_assinatura_documento"/>
+            </column>
+            <column name="id_usuario_login" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_assinatura_documento_02" references="tb_usuario_login (id_usuario_login)"/>
+            </column>
+            <column name="id_processo_documento_bin" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_assinatura_documento_01" references="tb_processo_documento_bin (id_processo_documento_bin)"/>
+            </column>
+            <column name="id_perfil" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_assinatura_documento_03" references="tb_perfil (id_perfil)"/>
+            </column>
+            <column name="dt_assinatura" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_usuario" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_perfil" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_signature" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_cert_chain" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="37" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_pessoa_fisica">
+            <column name="ds_signature" type="VARCHAR(4000)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="38" dbms="mssql, postgresql, oracle">
+        <dropColumn tableName="tb_pessoa_fisica" columnName="ds_signature"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="39" dbms="mssql, postgresql, oracle">
+        <createSequence sequenceName="sq_tb_raia_perfil" minValue="1" startValue="1" incrementBy="1"/>
+    </changeSet>
+    
+    <changeSet id="1" author="erikliberal" dbms="mssql, postgresql">
+      <addColumn tableName="tb_pessoa_fisica">
+          <column name="id_processo_documento_bin" type="BIGINT">
+              <constraints nullable="true" foreignKeyName="tb_assinatura_documento_termo_adesao_fk" references="tb_processo_documento_bin(id_processo_documento_bin)"/>
+          </column>
+      </addColumn>
+    </changeSet>
+
+    <changeSet id="1" author="victorpasqualino" dbms="oracle">
+      <addColumn tableName="tb_pessoa_fisica">
+          <column name="id_processo_documento_bin" type="BIGINT">
+              <constraints nullable="true" foreignKeyName="fk_pessoa_fisica_02" references="tb_processo_documento_bin(id_processo_documento_bin)"/>
+          </column>
+      </addColumn>
+    </changeSet>
+    
+</databaseChangeLog>

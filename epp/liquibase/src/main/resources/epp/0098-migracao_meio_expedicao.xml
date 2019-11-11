@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="gabriel" id="1">
+        <createTable tableName="tb_meio_expedicao">
+            <column name="id_meio_expedicao" type="bigint">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="cd_meio_expedicao" type="varchar(50)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_meio_expedicao_001" />
+            </column>
+            <column name="ds_meio_expedicao" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_eletronico" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <createSequence sequenceName="sq_meio_expedicao" startValue="1" minValue="1" incrementBy="1" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+        <insert tableName="tb_meio_expedicao">
+            <column name="id_meio_expedicao" valueSequenceNext="sq_meio_expedicao" />
+            <column name="cd_meio_expedicao" value="EM" />
+            <column name="ds_meio_expedicao" value="Email" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_eletronico" valueBoolean="false" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+        <insert tableName="tb_meio_expedicao">
+            <column name="id_meio_expedicao" valueSequenceNext="sq_meio_expedicao" />
+            <column name="cd_meio_expedicao" value="IM" />
+            <column name="ds_meio_expedicao" value="Impressão" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_eletronico" valueBoolean="false" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="5">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+        <insert tableName="tb_meio_expedicao">
+            <column name="id_meio_expedicao" valueSequenceNext="sq_meio_expedicao" />
+            <column name="cd_meio_expedicao" value="DO" />
+            <column name="ds_meio_expedicao" value="Diário Oficial" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_eletronico" valueBoolean="false" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="6">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+        <insert tableName="tb_meio_expedicao">
+            <column name="id_meio_expedicao" valueSequenceNext="sq_meio_expedicao" />
+            <column name="cd_meio_expedicao" value="SI" />
+            <column name="ds_meio_expedicao" value="Via Sistema (eletrônica)" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_eletronico" valueBoolean="true" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="7">
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso"/>
+            <column name="ds_nome" value="Cadastro de Meio de Expedição" />
+            <column name="ds_identificador" value="/pages/MeioExpedicao/listView.seam" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="8">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+        <addColumn tableName="tb_destinatario_modelo_comunic">
+            <column name="id_meio_expedicao" type="bigint">
+                <constraints nullable="true" references="tb_meio_expedicao(id_meio_expedicao)" foreignKeyName="fk_dest_modelo_comunic_001" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="9">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="8" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+
+        <sql>
+            UPDATE tb_destinatario_modelo_comunic SET id_meio_expedicao = (SELECT id_meio_expedicao FROM tb_meio_expedicao WHERE cd_meio_expedicao = 'EM')
+            WHERE tp_meio_expedicao = 'EM';
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="10">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="8" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+
+        <sql>
+            UPDATE tb_destinatario_modelo_comunic SET id_meio_expedicao = (SELECT id_meio_expedicao FROM tb_meio_expedicao WHERE cd_meio_expedicao = 'IM')
+            WHERE tp_meio_expedicao = 'IM';
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="11">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="5" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="8" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+
+        <sql>
+            UPDATE tb_destinatario_modelo_comunic SET id_meio_expedicao = (SELECT id_meio_expedicao FROM tb_meio_expedicao WHERE cd_meio_expedicao = 'DO')
+            WHERE tp_meio_expedicao = 'DO';
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="12">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="6" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="8" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+
+        <sql>
+            UPDATE tb_destinatario_modelo_comunic SET id_meio_expedicao = (SELECT id_meio_expedicao FROM tb_meio_expedicao WHERE cd_meio_expedicao = 'SI')
+            WHERE tp_meio_expedicao = 'SI';
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="13">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="9" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="10" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="11" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+            <changeSetExecuted author="gabriel" id="12" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+
+        <sql dbms="mssql">
+            ALTER TABLE tb_destinatario_modelo_comunic DROP CONSTRAINT cc_dest_modelo_comunic_meio_expedicao;
+        </sql>
+
+        <dropColumn tableName="tb_destinatario_modelo_comunic" columnName="tp_meio_expedicao" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="14">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="13" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+
+        <sql>
+            UPDATE tb_metadado_processo SET ds_tipo = 'br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao' WHERE ds_tipo = 'br.com.infox.epp.processo.comunicacao.MeioExpedicao';
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="15">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="14" changeLogFile="epp/0098-migracao_meio_expedicao.xml" />
+        </preConditions>
+
+        <sql dbms="oracle">
+            UPDATE tb_metadado_processo SET vl_metadado_processo = (SELECT TO_CHAR(id_meio_expedicao) FROM tb_meio_expedicao WHERE cd_meio_expedicao = vl_metadado_processo) WHERE ds_tipo = 'br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao';
+        </sql>
+
+        <sql dbms="postgresql">
+            UPDATE tb_metadado_processo SET vl_metadado_processo = (SELECT CAST(id_meio_expedicao AS VARCHAR) FROM tb_meio_expedicao WHERE cd_meio_expedicao = vl_metadado_processo) WHERE ds_tipo = 'br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao';
+        </sql>
+        
+        <sql dbms="mssql">
+            UPDATE tb_metadado_processo SET vl_metadado_processo = (SELECT CAST(id_meio_expedicao AS VARCHAR) FROM tb_meio_expedicao WHERE cd_meio_expedicao = vl_metadado_processo) WHERE ds_tipo = 'br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

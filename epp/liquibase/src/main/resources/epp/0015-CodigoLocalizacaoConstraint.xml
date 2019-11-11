@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+ 
+    <changeSet author="jonas" id="1" dbms="mssql" >
+        <dropNotNullConstraint columnName="cd_localizacao" tableName="tb_localizacao" columnDataType="NVARCHAR(50)"/>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="2" dbms="mssql" >
+        <dropUniqueConstraint constraintName="tb_localizacao_uq" tableName="tb_localizacao" uniqueColumns="cd_localizacao"/>
+        <sql endDelimiter="\nGO">
+            CREATE UNIQUE NONCLUSTERED INDEX [tb_prioridade_processo_uq] ON [dbo].[tb_localizacao] (  [cd_localizacao] ASC ) WHERE (  [cd_localizacao] IS NOT NULL ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="gabriel" id="1">
+        <addColumn tableName="tb_classificacao_doc_papel">
+            <column name="in_assinatura_multipla" type="boolean" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0113-AssinaturasMultiplas.xml" />
+        </preConditions>
+
+        <update tableName="tb_classificacao_doc_papel">
+            <column name="in_assinatura_multipla" valueBoolean="false" />
+        </update>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0113-AssinaturasMultiplas.xml" />
+        </preConditions>
+
+        <addNotNullConstraint tableName="tb_classificacao_doc_papel" columnName="in_assinatura_multipla" columnDataType="boolean" />
+    </changeSet>
+
+</databaseChangeLog>

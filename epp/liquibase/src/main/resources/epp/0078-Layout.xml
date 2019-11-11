@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="paulofilho" id="1" dbms="mssql, postgresql, oracle" >
+        <insert tableName="tb_permissao" dbms="mssql" >
+            <column name="id_permissao" valueComputed="NEXT VALUE FOR sq_tb_permissao"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/layout.seam"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+        <!-- PostgreSQL -->
+        <insert tableName="tb_permissao" dbms="postgresql" >
+            <column name="id_permissao" valueComputed="nextval('sq_tb_permissao')"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/layout.seam"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+
+        <!-- Oracle -->
+        <insert tableName="tb_permissao" dbms="oracle">
+            <column name="id_permissao" valueComputed="sq_tb_permissao.nextval"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/layout.seam"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="2" dbms="mssql, postgresql, oracle" >
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_skin" />
+        <createTable tableName="tb_skin">
+            <column name="id_skin" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_skin" />
+            </column>
+            <column name="cd_skin" type="NVARCHAR(30)" remarks="Código utilizado como identificador da skin internamente">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_skin" type="NVARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_padrao" type="BOOLEAN" defaultValueBoolean="false" remarks="Define a skin padrão utilizada no sistema">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex
+            indexName="idx_tb_skin_cd_skin"
+            tableName="tb_skin"
+            unique="false">
+            <column name="cd_skin" type="NVARCHAR(30)"/>
+        </createIndex>
+
+        <createIndex
+            indexName="idx_tb_skin_in_padrao"
+            tableName="tb_skin"
+            unique="false">
+            <column name="in_padrao" type="BOOLEAN"/>
+        </createIndex>    
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="3" dbms="mssql, postgresql, oracle" >
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_resource" />
+        <createTable tableName="tb_resource">
+            <column name="id_resource" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_resource" />
+            </column>
+            <column name="cd_resource" type="NVARCHAR(100)" remarks="Código identificador do recurso">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="nm_resource" type="NVARCHAR(255)" remarks="Nome do recurso apresentado ao usuário">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_path" type="NVARCHAR(255)" remarks="Path do recurso relativo ao diretório de skin">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="tp_resource" type="NCHAR(3)" remarks="Tipo do recurso">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createIndex
+            indexName="idx_tb_resource_tp_resource"
+            tableName="tb_resource"
+            unique="false">
+            <column name="tp_resource" type="NCHAR(3)"/>
+        </createIndex>    
+    </changeSet>
+    
+  
+    <changeSet author="paulofilho" id="4" dbms="mssql, postgresql, oracle" >
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_resource_bin" />
+        <createTable tableName="tb_resource_bin">
+            <column name="id_resource_bin" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_resource_bin" />
+            </column>
+            <column name="id_resource" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tb_resource_bin_01" references="tb_resource(id_resource)"/>
+            </column>
+            <column name="dt_modificacao" type="timestamp">
+                <constraints nullable="false"/>
+            </column>            
+            <column name="id_binario" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>            
+            <column name="tp_resource_bin" type="NVARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>            
+        </createTable>
+        <createIndex
+            indexName="idx_resource_bin_01"
+            tableName="tb_resource_bin"
+            unique="false">
+            <column name="id_resource" type="BIGINT"/>
+        </createIndex>    
+    </changeSet>
+              
+    <changeSet author="paulofilho" id="5" dbms="mssql, postgresql, oracle" >
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_resource_bin_skin" />
+        <createTable tableName="tb_resource_bin_skin">
+            <column name="id_skin" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tb_resource_bin_skin_01" references="tb_skin(id_skin)"/>
+            </column>
+            <column name="id_resource_bin" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tb_resource_bin_skin_02" references="tb_resource_bin(id_resource_bin)"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint
+            columnNames="id_skin, id_resource_bin"
+            constraintName="unique_resource_bin_skin"
+            tableName="tb_resource_bin_skin"
+            />
+        <createIndex
+            indexName="idx_resource_bin_skin_01"
+            tableName="tb_resource_bin_skin"
+            unique="false">
+            <column name="id_skin" type="BIGINT"/>
+        </createIndex>    
+        <createIndex
+            indexName="idx_tb_resource_bin_skin_02"
+            tableName="tb_resource_bin_skin"
+            unique="false">
+            <column name="id_resource_bin" type="BIGINT"/>
+        </createIndex>        
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="6" dbms="mssql" >
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="NEXT VALUE FOR sq_skin" />
+            <column name="cd_skin" value="verde" />
+            <column name="nm_skin" value="Verde" />
+            <column name="in_padrao" value="1" />
+        </insert>
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="NEXT VALUE FOR sq_skin" />
+            <column name="cd_skin" value="azul" />
+            <column name="nm_skin" value="Azul" />
+        </insert>
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="NEXT VALUE FOR sq_skin" />
+            <column name="cd_skin" value="cinza" />
+            <column name="nm_skin" value="Cinza" />
+        </insert>
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="NEXT VALUE FOR sq_skin" />
+            <column name="cd_skin" value="altoContraste" />
+            <column name="nm_skin" value="Alto Contraste" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="6" dbms="postgresql" >
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="nextval('sq_skin')" />
+            <column name="cd_skin" value="verde" />
+            <column name="nm_skin" value="Verde" />
+            <column name="in_padrao" value="true" />
+        </insert>
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="nextval('sq_skin')" />
+            <column name="cd_skin" value="azul" />
+            <column name="nm_skin" value="Azul" />
+        </insert>
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="nextval('sq_skin')" />
+            <column name="cd_skin" value="cinza" />
+            <column name="nm_skin" value="Cinza" />
+        </insert>
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="nextval('sq_skin')" />
+            <column name="cd_skin" value="altoContraste" />
+            <column name="nm_skin" value="Alto Contraste" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="6" dbms="oracle" >
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="sq_skin.nextval" />
+            <column name="cd_skin" value="verde" />
+            <column name="nm_skin" value="Verde" />
+            <column name="in_padrao" valueBoolean="true" />
+        </insert>
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="sq_skin.nextval" />
+            <column name="cd_skin" value="azul" />
+            <column name="nm_skin" value="Azul" />
+        </insert>
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="sq_skin.nextval" />
+            <column name="cd_skin" value="cinza" />
+            <column name="nm_skin" value="Cinza" />
+        </insert>
+        <insert tableName="tb_skin">
+            <column name="id_skin" valueComputed="sq_skin.nextval" />
+            <column name="cd_skin" value="altoContraste" />
+            <column name="nm_skin" value="Alto Contraste" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="7" dbms="mssql" >
+        <insert tableName="tb_resource">
+            <column name="id_resource" valueComputed="NEXT VALUE FOR sq_resource" />
+            <column name="cd_resource" value="LOGO_TOPO" />
+            <column name="ds_path" value="/imagens/logo_epp_topo.png" />
+            <column name="nm_resource" value="Logotipo do topo das páginas" />
+            <column name="tp_resource" value="IMG" />
+        </insert>
+        <insert tableName="tb_resource">
+            <column name="id_resource" valueComputed="NEXT VALUE FOR sq_resource" />
+            <column name="cd_resource" value="LOGO_LOGIN" />
+            <column name="ds_path" value="/imagens/logo_epp_login.png" />
+            <column name="nm_resource" value="Logotipo da tela de login" />
+            <column name="tp_resource" value="IMG" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="7" dbms="postgresql" >
+        <insert tableName="tb_resource">
+            <column name="id_resource" valueComputed="nextval('sq_resource')" />
+            <column name="cd_resource" value="LOGO_TOPO" />
+            <column name="ds_path" value="/imagens/logo_epp_topo.png" />
+            <column name="nm_resource" value="Logotipo do topo das páginas" />
+            <column name="tp_resource" value="IMG" />
+        </insert>
+        <insert tableName="tb_resource">
+            <column name="id_resource" valueComputed="nextval('sq_resource')" />
+            <column name="cd_resource" value="LOGO_LOGIN" />
+            <column name="ds_path" value="/imagens/logo_epp_login.png" />
+            <column name="nm_resource" value="Logotipo da tela de login" />
+            <column name="tp_resource" value="IMG" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="7" dbms="oracle" >
+        <insert tableName="tb_resource">
+            <column name="id_resource" valueComputed="sq_resource.nextval" />
+            <column name="cd_resource" value="LOGO_TOPO" />
+            <column name="ds_path" value="/imagens/logo_epp_topo.png" />
+            <column name="nm_resource" value="Logotipo do topo das páginas" />
+            <column name="tp_resource" value="IMG" />
+        </insert>
+        <insert tableName="tb_resource">
+            <column name="id_resource" valueComputed="sq_resource.nextval" />
+            <column name="cd_resource" value="LOGO_LOGIN" />
+            <column name="ds_path" value="/imagens/logo_epp_login.png" />
+            <column name="nm_resource" value="Logotipo da tela de login" />
+            <column name="tp_resource" value="IMG" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="victorpasqualino" id="1" dbms="mssql, postgresql, oracle" >
+        <createTable tableName="tb_meio_contato">
+            <column name="id_meio_contato" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_meio_contato" nullable="false"/>
+            </column>
+            <column name="id_pessoa" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_id_pessoa" references="tb_pessoa(id_pessoa)"/>
+            </column>
+            <column name="vl_meio_contato" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tp_meio_contato" type="CHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+		<sql>
+			ALTER TABLE tb_meio_contato ADD CONSTRAINT cc_tp_meio_contato CHECK (tp_meio_contato in ('FA', 'TF', 'TM', 'EM'))
+		</sql>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_meio_contato"/>
+        <createIndex indexName="idx_tb_meio_contato_id_pessoa" tableName="tb_meio_contato" unique="false">
+            <column name="id_pessoa"/>
+        </createIndex>
+	</changeSet>
+
+    <changeSet author="victorpasqualino" id="2" dbms="mssql, postgresql" >
+        <createTable tableName="tb_pessoa_documento">
+            <column name="id_pessoa_documento" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_pessoa_documento" nullable="false"/>
+            </column>
+            <column name="id_pessoa" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_id_pessoa_pessoa_documento" references="tb_pessoa(id_pessoa)"/>
+            </column>
+            <column name="vl_documento" type="NVARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+            <column name="ds_orgao_emissor" type="NVARCHAR(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="dt_emissao" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="tp_documento" type="CHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+		<sql>
+			ALTER TABLE tb_pessoa_documento ADD CONSTRAINT cc_tp_documento CHECK (tp_documento in ('CI', 'CT', 'CM', 'CN', 'CC', 'AM', 'CP', 'TE', 'OD'));
+		</sql>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_pessoa_documento"/>
+        <createIndex indexName="idx_tb_pessoa_documento_id_pessoa" tableName="tb_pessoa_documento" unique="false">
+            <column name="id_pessoa"/>
+        </createIndex>
+	</changeSet>
+
+    <changeSet author="victorpasqualino" id="2-1" dbms="oracle" >
+        <createTable tableName="tb_pessoa_documento">
+            <column name="id_pessoa_documento" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_pessoa_documento" nullable="false"/>
+            </column>
+            <column name="id_pessoa" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_id_pessoa_pessoa_documento" references="tb_pessoa(id_pessoa)"/>
+            </column>
+            <column name="vl_documento" type="NVARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+            <column name="ds_orgao_emissor" type="NVARCHAR(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="dt_emissao" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="tp_documento" type="CHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>
+            ALTER TABLE tb_pessoa_documento ADD CONSTRAINT cc_tp_documento CHECK (tp_documento in ('CI', 'CT', 'CM', 'CN', 'CC', 'AM', 'CP', 'TE', 'OD'))
+        </sql>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_pessoa_documento"/>
+        <createIndex indexName="idx_pessoa_documento_01" tableName="tb_pessoa_documento" unique="false">
+            <column name="id_pessoa"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3" dbms="mssql, postgresql, oracle" >
+       <addColumn tableName="tb_pessoa_fisica">
+	        <column name="st_estado_civil" type="CHAR(1)" defaultValue="N">
+	        	<constraints nullable="false"/>
+	        </column>
+	    </addColumn>
+		<sql>
+			ALTER TABLE tb_pessoa_fisica ADD CONSTRAINT cc_st_estado_civil CHECK (st_estado_civil in ('S', 'C', 'V', 'D', 'J', 'U', 'N'))
+		</sql>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="4">
+        <createTable tableName="tb_log_ws_server">
+            <column name="id_log_ws_server" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_log_ws_server" nullable="false"/>
+            </column>
+            <column name="dt_inicio_requisicao" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="cd_mensagem_retorno" type="NVARCHAR(50)"/>
+			<column name="dt_fim_requisicao" type="timestamp"/>
+			<column name="cd_webservice" type="NVARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>                  
+            <column name="vl_token" type="NVARCHAR(30)" >
+            	<constraints nullable="false" />
+            </column>
+            <column name="ds_requisicao" type="NCLOB">
+            	<constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_log_ws_server"/>
+    </changeSet>
+
+    <changeSet author="jonasbezerra" id="1" dbms="mssql, postgresql" >	
+        <createTable tableName="tb_perfil_template">
+            <column name="id_perfil_template" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_perfil_template"/>
+            </column>
+            <column name="ds_perfil_template" type="NVARCHAR(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="perfil_temp_nome_ak"/>
+            </column>
+            <column name="id_localizacao" type="BIGINT">
+                <constraints nullable="true" foreignKeyName="perfil_temp_loc_fk" references="tb_localizacao(id_localizacao)"/>
+            </column>
+            <column name="id_papel" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="perfil_temp_pap_fk" references="tb_papel(id_papel)"/>
+            </column>
+            <column name="in_ativo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="tb_perfil_template" columnNames="id_localizacao, id_papel" constraintName="perf_temp_uk" />
+
+		<createIndex indexName="idx_tb_perfil_template_id_localizacao" tableName="tb_perfil_template" unique="false">
+            <column name="id_localizacao"/>
+        </createIndex>
+
+		<createIndex indexName="idx_tb_perfil_template_id_papel" tableName="tb_perfil_template" unique="false">
+            <column name="id_papel"/>
+        </createIndex>
+
+        <createSequence sequenceName="sq_perfil_template" minValue="1" startValue="2" incrementBy="1"/>
+		
+        <insert tableName="tb_perfil_template">
+            <column name="id_perfil_template" value="1"/>
+            <column name="ds_perfil_template" value="Administrador do Sistema"/>
+            <column name="id_papel" value="1"/>
+            <column name="in_ativo" valueBoolean="true"/>
+        </insert>
+		
+        <addColumn tableName="tb_perfil">
+            <column name="id_perfil_template" type="BIGINT">
+                <constraints foreignKeyName="perfil_perf_temp_fk" references="tb_perfil_template(id_perfil_template)"/>
+            </column>
+        </addColumn>
+		
+        <update tableName="tb_perfil">
+            <column name="id_perfil_template" type="BIGINT" value="1"/>
+            <where>id_perfil = 1</where>
+        </update>
+		
+        <addNotNullConstraint tableName="tb_perfil" columnName="id_perfil_template" columnDataType="BIGINT"/>
+        <dropUniqueConstraint constraintName="localizacao_papel_ak" tableName="tb_perfil"/>
+        <dropForeignKeyConstraint baseTableName="tb_perfil" constraintName="localizacao_perfil_fk"/>
+        <dropForeignKeyConstraint baseTableName="tb_perfil" constraintName="papel_perfil_fk"/>
+        <dropColumn tableName="tb_perfil" columnName="id_localizacao"/>
+        <dropColumn tableName="tb_perfil" columnName="id_papel" />
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1-1" dbms="oracle" >  
+        <createTable tableName="tb_perfil_template">
+            <column name="id_perfil_template" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_perfil_template"/>
+            </column>
+            <column name="ds_perfil_template" type="NVARCHAR(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="perfil_temp_nome_ak"/>
+            </column>
+            <column name="id_localizacao" type="BIGINT">
+                <constraints nullable="true" foreignKeyName="perfil_temp_loc_fk" references="tb_localizacao(id_localizacao)"/>
+            </column>
+            <column name="id_papel" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="perfil_temp_pap_fk" references="tb_papel(id_papel)"/>
+            </column>
+            <column name="in_ativo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="tb_perfil_template" columnNames="id_localizacao, id_papel" constraintName="perf_temp_uk" />
+
+        <createIndex indexName="idx_perfil_template_01" tableName="tb_perfil_template" unique="false">
+            <column name="id_localizacao"/>
+        </createIndex>
+
+        <createIndex indexName="idx_perfil_template_02" tableName="tb_perfil_template" unique="false">
+            <column name="id_papel"/>
+        </createIndex>
+
+        <createSequence sequenceName="sq_perfil_template" minValue="1" startValue="2" incrementBy="1"/>
+        
+        <insert tableName="tb_perfil_template">
+            <column name="id_perfil_template" value="1"/>
+            <column name="ds_perfil_template" value="Administrador do Sistema"/>
+            <column name="id_papel" value="1"/>
+            <column name="in_ativo" valueBoolean="true"/>
+        </insert>
+        
+        <addColumn tableName="tb_perfil">
+            <column name="id_perfil_template" type="BIGINT">
+                <constraints foreignKeyName="perfil_perf_temp_fk" references="tb_perfil_template(id_perfil_template)"/>
+            </column>
+        </addColumn>
+        
+        <update tableName="tb_perfil">
+            <column name="id_perfil_template" type="BIGINT" value="1"/>
+            <where>ds_perfil = 'Administrador do Sistema'</where>
+        </update>
+        
+        <addNotNullConstraint tableName="tb_perfil" columnName="id_perfil_template" columnDataType="BIGINT"/>
+        <dropUniqueConstraint constraintName="localizacao_papel_ak" tableName="tb_perfil"/>
+        <dropForeignKeyConstraint baseTableName="tb_perfil" constraintName="localizacao_perfil_fk"/>
+        <dropForeignKeyConstraint baseTableName="tb_perfil" constraintName="papel_perfil_fk"/>
+        <dropColumn tableName="tb_perfil" columnName="id_localizacao"/>
+        <dropColumn tableName="tb_perfil" columnName="id_papel" />
+    </changeSet>
+		
+    <changeSet author="jonasbezerra" id="2" dbms="mssql, postgresql" >
+	
+        <dropForeignKeyConstraint baseTableName="tb_usuario_perfil" constraintName="perfil_fk"/>
+        <dropColumn tableName="tb_usuario_perfil" columnName="id_perfil"/>
+        <addColumn tableName="tb_usuario_perfil">
+            <column name="id_perfil_template" type="BIGINT">
+                <constraints foreignKeyName="usuario_perfil_temp_fk" references="tb_perfil_template(id_perfil_template)"/>
+            </column>
+            <column name="id_localizacao" type="BIGINT">
+                <constraints foreignKeyName="usuario_perfil_loc_fk" references="tb_localizacao(id_localizacao)"/>
+            </column>
+        </addColumn>
+		
+        <update tableName="tb_usuario_perfil">
+            <column name="id_perfil_template" type="BIGINT" value="1" />
+            <column name="id_localizacao" type="BIGINT" value="1" />
+            <where>id_usuario_perfil = 1</where>
+        </update>
+
+        <addNotNullConstraint tableName="tb_usuario_perfil" columnName="id_perfil_template" columnDataType="BIGINT"/>
+        <addNotNullConstraint tableName="tb_usuario_perfil" columnName="id_localizacao" columnDataType="BIGINT"/>
+        <addUniqueConstraint tableName="tb_usuario_perfil" columnNames="id_usuario_login, id_perfil_template, id_localizacao" constraintName="uc_usu_perf_loc"/>
+       
+	   <dropForeignKeyConstraint baseTableName="tb_assinatura_documento" constraintName="tb_assinatura_documento_id_perfil_fk"/>
+
+        <dropColumn tableName="tb_assinatura_documento" columnName="id_perfil"/>
+        <addColumn tableName="tb_assinatura_documento">
+            <column name="id_usuario_perfil" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="assinatura_usu_perf_fk" references="tb_usuario_perfil(id_usuario_perfil)"/>
+            </column>
+        </addColumn>
+
+       <createIndex indexName="idx_tb_assinatura_documento_id_usuario_perfil" tableName="tb_assinatura_documento" unique="false">
+          <column name="id_usuario_perfil"/>
+       </createIndex>
+		
+        <dropColumn tableName="tb_assinatura_documento" columnName="nm_perfil"/>
+        <addColumn tableName="tb_assinatura_documento">
+            <column name="nm_usuario_perfil" type="NVARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+		
+        <dropUniqueConstraint tableName="tb_raia_perfil" constraintName="raia_perfil_ak"/>
+        <dropForeignKeyConstraint baseTableName="tb_raia_perfil" constraintName="raia_perfil_fk"/>
+        <dropColumn tableName="tb_raia_perfil" columnName="id_perfil"/>
+        <addColumn tableName="tb_raia_perfil">
+            <column name="id_perfil_template" type="BIGINT">
+                <constraints foreignKeyName="raia_perfil_fk" references="tb_perfil_template(id_perfil_template)" />
+            </column>
+        </addColumn>
+
+        <addUniqueConstraint tableName="tb_raia_perfil" columnNames="nm_raia, id_fluxo, id_perfil_template" constraintName="uc_raia_perfil_fluxo"/>
+        <addForeignKeyConstraint baseTableName="tb_raia_perfil" baseColumnNames="id_perfil_template" constraintName="raia_perfil_template_fk" referencedTableName="tb_perfil_template" referencedColumnNames="id_perfil_template"/>
+    </changeSet> 
+
+    <changeSet author="victorpasqualino" id="2" dbms="oracle" >
+    
+        <dropForeignKeyConstraint baseTableName="tb_usuario_perfil" constraintName="perfil_fk"/>
+        <dropColumn tableName="tb_usuario_perfil" columnName="id_perfil"/>
+        <addColumn tableName="tb_usuario_perfil">
+            <column name="id_perfil_template" type="BIGINT">
+                <constraints foreignKeyName="usuario_perfil_temp_fk" references="tb_perfil_template(id_perfil_template)"/>
+            </column>
+            <column name="id_localizacao" type="BIGINT">
+                <constraints foreignKeyName="usuario_perfil_loc_fk" references="tb_localizacao(id_localizacao)"/>
+            </column>
+        </addColumn>
+        
+        <update tableName="tb_usuario_perfil">
+            <column name="id_perfil_template" type="BIGINT" value="1" />
+            <column name="id_localizacao" type="BIGINT" value="1" />
+            <where>id_usuario_login = 1 AND id_perfil_template IS NULL</where>
+        </update>
+
+        <addNotNullConstraint tableName="tb_usuario_perfil" columnName="id_perfil_template" columnDataType="BIGINT"/>
+        <addNotNullConstraint tableName="tb_usuario_perfil" columnName="id_localizacao" columnDataType="BIGINT"/>
+        <addUniqueConstraint tableName="tb_usuario_perfil" columnNames="id_usuario_login, id_perfil_template, id_localizacao" constraintName="uc_usu_perf_loc"/>
+       
+       <dropForeignKeyConstraint baseTableName="tb_assinatura_documento" constraintName="fk_assinatura_documento_03"/>
+
+        <dropColumn tableName="tb_assinatura_documento" columnName="id_perfil"/>
+        <addColumn tableName="tb_assinatura_documento">
+            <column name="id_usuario_perfil" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="assinatura_usu_perf_fk" references="tb_usuario_perfil(id_usuario_perfil)"/>
+            </column>
+        </addColumn>
+
+       <createIndex indexName="idx_assinatura_documento_01" tableName="tb_assinatura_documento" unique="false">
+          <column name="id_usuario_perfil"/>
+       </createIndex>
+        
+        <dropColumn tableName="tb_assinatura_documento" columnName="nm_perfil"/>
+        <addColumn tableName="tb_assinatura_documento">
+            <column name="nm_usuario_perfil" type="NVARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        
+        <dropUniqueConstraint tableName="tb_raia_perfil" constraintName="raia_perfil_ak"/>
+        <dropForeignKeyConstraint baseTableName="tb_raia_perfil" constraintName="raia_perfil_fk"/>
+        <dropColumn tableName="tb_raia_perfil" columnName="id_perfil"/>
+        <addColumn tableName="tb_raia_perfil">
+            <column name="id_perfil_template" type="BIGINT">
+                <constraints foreignKeyName="raia_perfil_fk" references="tb_perfil_template(id_perfil_template)" />
+            </column>
+        </addColumn>
+
+        <addUniqueConstraint tableName="tb_raia_perfil" columnNames="nm_raia, id_fluxo, id_perfil_template" constraintName="uc_raia_perfil_fluxo"/>
+    </changeSet> 
+
+    <changeSet author="jonasbezerra" id="3" dbms="mssql, postgresql, oracle" >
+        <dropTable tableName="tb_perfil"/>
+    </changeSet>
+
+</databaseChangeLog>

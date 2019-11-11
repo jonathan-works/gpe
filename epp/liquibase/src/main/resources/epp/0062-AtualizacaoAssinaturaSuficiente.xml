@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="erikliberal" id="1" dbms="mssql, postgresql, oracle" >
+        <addColumn tableName="tb_documento_bin" >
+            <column name="in_assin_sufic" type="BOOLEAN" defaultValueBoolean="false">
+              <constraints nullable="false" />
+            </column>
+            <column name="dt_assin_sufic" type="timestamp" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="erikliberal" id="2" dbms="mssql, postgresql, oracle">
+      <createSequence incrementBy="1"
+                      minValue="1"
+                      sequenceName="sq_reg_assin_suf"
+                      startValue="1"/>
+    </changeSet>
+
+    <changeSet author="erikliberal" id="3" dbms="mssql, postgresql, oracle">
+      <createTable tableName="tb_reg_assin_suf">
+        <column name="id_reg_assin_suf" type="bigint">
+          <constraints primaryKey="true" nullable="false" />
+        </column>
+        <column name="ds_papel" type="NVARCHAR(100)">
+          <constraints nullable="false" />
+        </column>
+        <column name="tp_assinatura" type="NCHAR(1)">
+          <constraints nullable="false" />
+        </column>
+        <column name="id_documento_bin" type="BIGINT">
+          <constraints nullable="false" foreignKeyName="tb_reg_assin_suf_fk_001" references="tb_documento_bin(id_documento_bin)"/>
+        </column>
+      </createTable>
+    </changeSet>
+   
+    <changeSet author="erikliberal" id="4" dbms="mssql">
+        <sql>
+          INSERT INTO dbo.tb_reg_assin_suf (ds_papel, tp_assinatura, id_documento_bin)
+          SELECT p.ds_nome, cdp.tp_assinatura, bin.id_documento_bin
+            FROM dbo.tb_classificacao_documento_papel cdp
+              INNER JOIN dbo.tb_documento d ON (d.id_classificacao_documento=cdp.id_classificacao_documento)
+              INNER JOIN dbo.tb_documento_bin bin ON (bin.id_documento_bin=d.id_documento_bin)
+              INNER JOIN dbo.tb_papel p ON (p.id_papel=cdp.id_papel)
+            WHERE
+              d.id_documento IN ( SELECT MIN(id_documento)
+                                       FROM dbo.tb_documento
+                                       GROUP BY id_documento_bin )
+              AND 1=dbo.DocumentoSuficientementeAssinado(d.id_documento)
+
+          UPDATE dbo.tb_documento_bin
+            SET in_assin_sufic=1,
+            dt_assin_sufic=CURRENT_TIMESTAMP
+            WHERE id_documento_bin IN (select id_documento_bin FROM dbo.tb_reg_assin_suf)
+        </sql>
+    </changeSet>
+    <changeSet author="gabriel" id="4" dbms="postgresql">
+        <sql>
+          INSERT INTO tb_reg_assin_suf (ds_papel, tp_assinatura, id_documento_bin)
+          SELECT p.ds_nome, cdp.tp_assinatura, bin.id_documento_bin
+            FROM tb_classificacao_documento_papel cdp
+              INNER JOIN tb_documento d ON (d.id_classificacao_documento=cdp.id_classificacao_documento)
+              INNER JOIN tb_documento_bin bin ON (bin.id_documento_bin=d.id_documento_bin)
+              INNER JOIN tb_papel p ON (p.id_papel=cdp.id_papel)
+            WHERE
+              d.id_documento IN ( SELECT MIN(id_documento)
+                                       FROM tb_documento
+                                       GROUP BY id_documento_bin )
+              AND DocumentoSuficientementeAssinado(d.id_documento) = true;
+
+          UPDATE tb_documento_bin
+            SET in_assin_sufic = true,
+            dt_assin_sufic=CURRENT_TIMESTAMP
+            WHERE id_documento_bin IN (select id_documento_bin FROM tb_reg_assin_suf);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

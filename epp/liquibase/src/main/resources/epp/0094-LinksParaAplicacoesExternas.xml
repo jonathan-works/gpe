@@ -1,0 +1,142 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="erikliberal" id="1" dbms="mssql, postgresql, oracle">
+        <createSequence sequenceName="sq_link_aplicacao"/>
+    </changeSet>
+    <changeSet author="erikliberal" id="2" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_link_aplicacao">
+            <column name="id_link_aplicacao" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_link_aplicacao" type="NVARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_url" type="NVARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cd_link_aplicacao" type="NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_processo" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="erikliberal" id="3" dbms="mssql, postgresql, oracle">
+        <addPrimaryKey columnNames="id_link_aplicacao" constraintName="pk_link_aplicacao" tableName="tb_link_aplicacao"/>
+    </changeSet>
+    <changeSet author="erikliberal" id="4" dbms="mssql, postgresql, oracle">
+        <createIndex indexName="idx_link_aplicacao_0001" tableName="tb_link_aplicacao" unique="true">
+            <column name="cd_link_aplicacao"/>
+            <column name="id_processo"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="erikliberal" id="5" dbms="mssql, postgresql, oracle">
+        <addForeignKeyConstraint baseColumnNames="id_processo" baseTableName="tb_link_aplicacao" constraintName="fk_link_aplicacao_0001" referencedColumnNames="id_processo" referencedTableName="tb_processo"/>
+    </changeSet>
+    <changeSet author="erikliberal" id="6" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(1) FROM tb_recurso WHERE ds_identificador='/pages/Processo/linkAplicacaoExternaView'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_recurso" dbms="mssql" >
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/linkAplicacaoExternaView" />
+            <column name="ds_nome" value="Permissão para visualizar links de aplicações externas em detalhes do Processo" />
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="postgresql" >
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Processo/linkAplicacaoExternaView" />
+            <column name="ds_nome" value="Permissão para visualizar links de aplicações externas em detalhes do Processo" />
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="oracle" >
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Processo/linkAplicacaoExternaView" />
+            <column name="ds_nome" value="Permissão para visualizar links de aplicações externas em detalhes do Processo" />
+        </insert>
+    </changeSet>
+    <changeSet author="erikliberal" id="7" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(1) FROM tb_recurso WHERE ds_identificador='/pages/Processo/linkAplicacaoExternaEdit'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_recurso" dbms="mssql" >
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/linkAplicacaoExternaEdit" />
+            <column name="ds_nome" value="Permissão para criar, editar e excluir links de aplicações externas em detalhes do Processo" />
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="postgresql" >
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Processo/linkAplicacaoExternaEdit" />
+            <column name="ds_nome" value="Permissão para criar, editar e excluir links de aplicações externas em detalhes do Processo" />
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="oracle" >
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Processo/linkAplicacaoExternaEdit" />
+            <column name="ds_nome" value="Permissão para criar, editar e excluir links de aplicações externas em detalhes do Processo" />
+        </insert>
+    </changeSet>
+    <changeSet author="erikliberal" id="8" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(1) FROM tb_parametro WHERE nm_variavel='eppApiPrivateKey'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_parametro" dbms="mssql" >
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="eppApiPrivateKey" />
+            <column name="ds_variavel" value="Base64 de chave privada RSA a ser utilizada para assinatura de mensagens entre serviços" />
+            <column name="vl_variavel" value="-1" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="postgresql">
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="eppApiPrivateKey" />
+            <column name="ds_variavel" value="Base64 de chave privada RSA a ser utilizada para assinatura de mensagens entre serviços" />
+            <column name="vl_variavel" value="-1" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="oracle">
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="eppApiPrivateKey" />
+            <column name="ds_variavel" value="Base64 de chave privada RSA a ser utilizada para assinatura de mensagens entre serviços" />
+            <column name="vl_variavel" value="-1" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+    </changeSet>
+    <changeSet author="erikliberal" id="9" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(1) FROM tb_parametro WHERE nm_variavel='eppApiPublicKey'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_parametro" dbms="mssql" >
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="eppApiPublicKey" />
+            <column name="ds_variavel" value="Base64 de chave pública RSA a ser utilizada para validação de mensagens entre serviços" />
+            <column name="vl_variavel" value="-1" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="postgresql">
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="eppApiPublicKey" />
+            <column name="ds_variavel" value="Base64 de chave pública RSA a ser utilizada para validação de mensagens entre serviços" />
+            <column name="vl_variavel" value="-1" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="oracle">
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="eppApiPublicKey" />
+            <column name="ds_variavel" value="Base64 de chave pública RSA a ser utilizada para validação de mensagens entre serviços" />
+            <column name="vl_variavel" value="-1" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>

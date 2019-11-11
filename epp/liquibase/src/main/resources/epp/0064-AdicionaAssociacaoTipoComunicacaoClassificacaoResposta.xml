@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="marialuisa" id="1" dbms="mssql, postgresql, oracle" >
+        <createTable tableName="tb_tipo_comunic_classif_doc">
+            <column name="id_tipo_comunic_classif_doc" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="id_tipo_comunicacao" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_classificacao_documento" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="sq_tipo_comunic_classif_doc" minValue="1" incrementBy="1" startValue="1" />
+    </changeSet>
+</databaseChangeLog>

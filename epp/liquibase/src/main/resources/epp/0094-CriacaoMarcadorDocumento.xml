@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="victorpasqualino" id="1">
+        
+        <createSequence sequenceName="sq_marcador" incrementBy="1" minValue="1" startValue="1" />
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2">
+        
+        <createTable tableName="tb_marcador" >
+            <column name="id_marcador" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_marcador"/>
+            </column>
+            <column name="cd_marcador" type="NVARCHAR(255)"/>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3">
+        
+        <createTable tableName="tb_marcador_documento_bin">
+            <column name="id_documento_bin" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_marcador" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="id_documento_bin, id_marcador" constraintName="pk_marcador_documento_bin" tableName="tb_marcador_documento_bin"/>
+
+        <addForeignKeyConstraint baseColumnNames="id_documento_bin" baseTableName="tb_marcador_documento_bin"
+            constraintName="fk_marcador_doc_bin_doc_bin" referencedColumnNames="id_documento_bin" referencedTableName="tb_documento_bin"/>
+
+        <addForeignKeyConstraint baseColumnNames="id_marcador" baseTableName="tb_marcador_documento_bin"
+            constraintName="fk_marcador_doc_bin_marcador" referencedColumnNames="id_marcador" referencedTableName="tb_marcador"/>
+
+    </changeSet>
+
+    <!-- Recurso para adicionar Marcador a documento -->
+    <changeSet author="victorpasqualino" id="4">
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso"/>
+            <column name="ds_identificador" value="MarcadorDocumento/adicionar"/>
+            <column name="ds_nome" value="Recurso para poder adicionar marcadores aos documentos"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Adiciona campo em Modelo Comunicação para para guardar os marcadores -->
+    <changeSet author="victorpasqualino" id="5">
+         <addColumn tableName="tb_modelo_comunicacao">
+            <column name="cd_marcadores" type="NVARCHAR(2000)"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

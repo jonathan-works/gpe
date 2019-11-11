@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="marialuisa" id="1">
+		<createSequence sequenceName="sq_log_quartz" incrementBy="1" minValue="1" startValue="1" />
+	</changeSet>
+
+	<changeSet author="marialuisa" id="2">
+        <createTable tableName="tb_log_quartz">
+            <column name="id_log_quartz" type="bigint" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_log_quartz" />
+            </column>
+            <column name="nm_trigger_name" type="NVARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_job_name" type="NVARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_inicio_processamento" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_fim_processamento" type="TIMESTAMP"/>
+            <column name="ds_expressao" type="NCLOB"/>
+            <column name="nm_instancia" type="NVARCHAR(200)"/>
+            <column name="ds_excecao_stacktrace" type="NCLOB"/>
+        </createTable>
+	</changeSet>
+
+</databaseChangeLog>

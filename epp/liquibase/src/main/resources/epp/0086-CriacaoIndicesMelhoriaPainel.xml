@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="victorpasqualino" id="1">
+        <validCheckSum>7:07af699562c14090f4d59e7dc35b4341</validCheckSum>
+        <!-- VariableInstance  -->
+        <createIndex indexName="idx_class_longvalue_name_proc" tableName="JBPM_VARIABLEINSTANCE">
+            <column name="CLASS_" type="NCHAR(1)"/>
+            <column name="LONGVALUE_" type="BIGINT"/>
+            <column name="NAME_" type="NVARCHAR(255)"/>
+            <column name="PROCESSINSTANCE_" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_class_longvalue_name" tableName="JBPM_VARIABLEINSTANCE">
+            <column name="CLASS_" type="NCHAR(1)"/>
+            <column name="LONGVALUE_" type="BIGINT"/>
+            <column name="NAME_" type="NVARCHAR(255)"/>
+        </createIndex>
+
+        <createIndex indexName="idx_class_longvalue_procinst" tableName="JBPM_VARIABLEINSTANCE">
+            <column name="CLASS_" type="NCHAR(1)"/>
+            <column name="NAME_" type="NVARCHAR(255)"/>
+            <column name="PROCESSINSTANCE_" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_taskinstance" tableName="JBPM_VARIABLEINSTANCE">
+            <column name="TASKINSTANCE_" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_class_longvalue" tableName="JBPM_VARIABLEINSTANCE">
+            <column name="CLASS_" type="NCHAR(1)"/>
+            <column name="LONGVALUE_" type="BIGINT"/>
+        </createIndex>
+
+        <!-- ProcessInstance -->
+        <createIndex indexName="idx_pinst_end" tableName="JBPM_PROCESSINSTANCE">
+            <column name="END_" type="TIMESTAMP"/>
+        </createIndex>
+
+        <!-- TaskInstance -->
+        <createIndex indexName="idx_suspended_open" tableName="JBPM_TASKINSTANCE">
+            <column name="ISSUSPENDED_" type="BOOLEAN"/>
+            <column name="ISOPEN_" type="BOOLEAN"/>
+        </createIndex>
+
+        <createIndex indexName="idx_suspended_open_procinst" tableName="JBPM_TASKINSTANCE">
+            <column name="ISSUSPENDED_" type="BOOLEAN"/>
+            <column name="ISOPEN_" type="BOOLEAN"/>
+            <column name="PROCINST_" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_suspended_open_proc_task" tableName="JBPM_TASKINSTANCE">
+            <column name="ISSUSPENDED_" type="BOOLEAN"/>
+            <column name="ISOPEN_" type="BOOLEAN"/>
+            <column name="PROCINST_" type="BIGINT"/>
+            <column name="TASK_" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_suspended_open_proc_assign" tableName="JBPM_TASKINSTANCE">
+            <column name="ISSUSPENDED_" type="BOOLEAN"/>
+            <column name="ISOPEN_" type="BOOLEAN"/>
+            <column name="PROCINST_" type="BIGINT"/>
+            <column name="ASSIGNEE_" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_susp_open_proc_assign_task" tableName="JBPM_TASKINSTANCE">
+            <column name="ISSUSPENDED_" type="BOOLEAN"/>
+            <column name="ISOPEN_" type="BOOLEAN"/>
+            <column name="PROCINST_" type="BIGINT"/>
+            <column name="TASK_" type="BIGINT"/>
+            <column name="ASSIGNEE_" type="NVARCHAR(255)"/>
+        </createIndex>
+
+        <!-- VariableAccess -->
+        <createIndex indexName="idx_taskcontroller" tableName="JBPM_VARIABLEACCESS">
+            <column name="TASKCONTROLLER_" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_taskcontroller_mappedname" tableName="JBPM_VARIABLEACCESS">
+            <column name="TASKCONTROLLER_" type="BIGINT"/>
+            <column name="MAPPEDNAME_" type="NVARCHAR(255)"/>
+        </createIndex>
+    </changeSet>
+
+
+
+    <changeSet author="victorpasqualino" id="2">
+        <validCheckSum>7:fe9e117aca2db227e38e00b942e7ed81</validCheckSum>
+
+        <!-- Processo -->
+        <createIndex indexName="idx_processo_idjbpm" tableName="tb_processo">
+            <column name="id_jbpm" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_processo_root_idjbpm" tableName="tb_processo">
+            <column name="dt_fim" type="TIMESTAMP"/>
+            <column name="id_processo_root" type="BIGINT"/>
+        </createIndex>
+
+        <!-- Sigilo Processo -->
+        <createIndex indexName="idx_sp_ativo_sigiloso" tableName="tb_sigilo_processo">
+            <column name="in_ativo" type="BOOLEAN"/>
+            <column name="in_sigiloso" type="BOOLEAN"/>
+        </createIndex>
+
+         <!-- Sigilo Processo Permissao-->
+        <createIndex indexName="idx_spp_ativo_usuario" tableName="tb_sigilo_processo_permissao">
+            <column name="in_ativo" type="BOOLEAN"/>
+            <column name="id_usuario_login" type="BIGINT"/>
+        </createIndex>
+
+        <!-- Participante -->
+        <createIndex indexName="idx_tipoparte_processo" tableName="tb_participante_processo">
+            <column name="id_tipo_parte" type="BIGINT"/>
+            <column name="id_processo" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tipoparte_pessoa_processo" tableName="tb_participante_processo">
+            <column name="id_tipo_parte" type="BIGINT"/>
+            <column name="id_processo" type="BIGINT"/>
+            <column name="id_pessoa" type="BIGINT"/>
+        </createIndex>
+
+        <!-- Documento -->
+        <createIndex indexName="idx_documento_01" tableName="tb_documento">
+            <column name="id_processo" type="BIGINT"/>
+            <column name="id_classificacao_documento" type="BIGINT"/>
+        </createIndex>
+
+        <createIndex indexName="idx_documento_02" tableName="tb_documento">
+            <column name="id_processo" type="BIGINT"/>
+            <column name="id_classificacao_documento" type="BIGINT"/>
+            <column name="in_excluido" type="BOOLEAN"/>
+        </createIndex>
+
+        <!-- Cert Sign -->
+        <createIndex indexName="idx_cert_sign_grp" tableName="tb_cert_sign">
+            <column name="id_sign_grp" type="BIGINT"/>
+        </createIndex>
+
+    </changeSet>
+
+    
+</databaseChangeLog>

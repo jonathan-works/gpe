@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle">
+    
+        <createProcedure>
+            create or replace trigger after_logon
+            after logon on schema
+            BEGIN
+              execute immediate 'alter session set nls_sort = BINARY_AI';
+              execute immediate 'alter session set nls_comp = LINGUISTIC';
+            END;
+        </createProcedure>
+        
+    </changeSet>
+    
+    <!-- Correção para o tipode comparação de string -->
+    <changeSet author="victorpasqualino" id="2" dbms="oracle">
+    
+        <createProcedure>
+            create or replace trigger after_logon
+            after logon on schema
+            BEGIN
+              execute immediate 'alter session set nls_sort = LATIN_AI';
+              execute immediate 'alter session set nls_comp = LINGUISTIC';
+            END;
+        </createProcedure>
+        
+    </changeSet>
+
+    <!-- Correção para o tipo de comparação de string -->
+    <changeSet author="gabriel" id="3" dbms="oracle">
+    
+        <createProcedure>
+            create or replace trigger after_logon
+            after logon on schema
+            BEGIN
+              execute immediate 'alter session set nls_sort = XWEST_EUROPEAN_AI';
+              execute immediate 'alter session set nls_comp = LINGUISTIC';
+            END;
+        </createProcedure>
+        
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="avner" id="1" dbms="mssql, postgresql, oracle" >
+        <createSequence sequenceName="sq_pasta_restricao" minValue="1" startValue="1"/>
+        <createTable tableName="tb_pasta_restricao">
+            <column name="id_pasta_restricao" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_pasta_restricao"/>
+            </column>
+            <column name="id_pasta" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tb_pasta_restricao_001" references="tb_pasta(id_pasta)" />
+            </column>
+            <column name="tp_restricao" type="NCHAR(1)">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_alvo" type="BIGINT" />
+            <column name="in_read" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_write" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_delete" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createIndex indexName="idx_tb_pasta_restr_id_pasta" tableName="tb_pasta_restricao" unique="false">
+            <column name="id_pasta"/>
+        </createIndex>  
+    </changeSet>
+
+    <changeSet author="avner" id="2" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_pasta">
+            <column name="in_editavel" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+
+        <sql dbms="mssql">
+            update tb_pasta set in_editavel = 1 - in_sistema;
+        </sql>
+        <sql dbms="postgresql">
+            update tb_pasta set in_editavel = not in_sistema;
+        </sql>
+        
+        <dropNotNullConstraint columnDataType="BOOLEAN" tableName="tb_pasta" columnName="in_visivel_externo" />
+        <dropNotNullConstraint columnDataType="BOOLEAN" tableName="tb_pasta" columnName="in_visivel_nao_participante" />
+    </changeSet>
+    
+    <changeSet author="avner" id="3" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_pasta">
+            <column name="ds_pasta" type="NVARCHAR(250)" />
+            <column name="nr_ordem" type="BIGINT" />
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="marialuisa" id="1" dbms="mssql, postgresql, oracle">
+         <createSequence sequenceName="sq_modelo_pasta" minValue="1" startValue="1"/>
+         <createTable tableName="tb_modelo_pasta">
+            <column name="id_modelo_pasta" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_modelo_pasta"/>
+            </column>
+            <column name="nm_modelo_pasta" type="NVARCHAR(250)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ds_modelo_pasta" type="NVARCHAR(250)"/>
+            <column name="id_fluxo" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tb_modelo_pasta_001" references="tb_fluxo(id_fluxo)" />
+            </column>
+            <column name="in_removivel" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_sistema" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_editavel" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="nr_ordem" type="BIGINT" />
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="marialuisa" id="2" dbms="mssql, postgresql, oracle">
+         <createSequence sequenceName="sq_modelo_pasta_restricao" minValue="1" startValue="1"/>
+         <createTable tableName="tb_modelo_pasta_restricao">
+            <column name="id_modelo_pasta_restricao" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_modelo_pasta_restricao"/>
+            </column>
+            <column name="id_modelo_pasta" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tb_model_pasta_restric_001" references="tb_modelo_pasta(id_modelo_pasta)" />
+            </column>
+            <column name="tp_pasta_restricao" type="NCHAR(1)">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_alvo" type="BIGINT" />
+            <column name="in_read" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_write" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_delete" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="avner" id="4" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_pasta">
+            <column name="id_modelo_pasta" type="bigint" >
+                <constraints nullable="true" foreignKeyName="fk_tb_pasta_002" references="tb_modelo_pasta(id_modelo_pasta)" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="avner" id="5" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_recurso" dbms="mssql" >
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/abaPastaRestricao" />
+            <column name="ds_nome" value="Aba de Configuração das Pastas" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="postgresql" >
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Processo/abaPastaRestricao" />
+            <column name="ds_nome" value="Aba de Configuração das Pastas" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="oracle" >
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Processo/abaPastaRestricao" />
+            <column name="ds_nome" value="Aba de Configuração das Pastas" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="avner" id="6" dbms="mssql, postrgesql, oracle">
+        <dropDefaultValue tableName="tb_pasta" columnName="in_visivel_nao_participante" />
+        <dropColumn tableName="tb_pasta" columnName="in_visivel_externo" />
+        <dropColumn tableName="tb_pasta" columnName="in_visivel_nao_participante" />
+    </changeSet>
+
+    <changeSet author="avner" id="7" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_modelo_pasta">
+            <column name="in_padrao" type="boolean" />
+        </addColumn>
+    </changeSet>
+
+    <!-- Define o Modelo de Pasta de menor nr_ordem como o padrão para aquele fluxo. Os demais ficam como false -->
+    <changeSet author="avner" id="8" dbms="postgresql">
+        <sql>
+            update tb_modelo_pasta set in_padrao = true where id_modelo_pasta in (
+                select mp.id_modelo_pasta from  tb_modelo_pasta mp, (
+                    select mp2.id_fluxo as idFluxo, min(mp2.nr_ordem) as ordem
+                    from tb_modelo_pasta mp2
+                    group by mp2.id_fluxo) menorOrdem
+                where menorOrdem.idFluxo = mp.id_fluxo and mp.nr_ordem = menorOrdem.ordem
+            );
+
+            update tb_modelo_pasta set in_padrao = false where id_modelo_pasta not in (
+                select mp.id_modelo_pasta from  tb_modelo_pasta mp, (
+                    select mp2.id_fluxo as idFluxo, min(mp2.nr_ordem) as ordem
+                    from tb_modelo_pasta mp2
+                    group by mp2.id_fluxo) menorOrdem
+                where menorOrdem.idFluxo = mp.id_fluxo and mp.nr_ordem = menorOrdem.ordem
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet author="avner" id="8" dbms="mssql">
+        <sql dbms="mssql">
+            update tb_modelo_pasta set in_padrao = 'true' where id_modelo_pasta in (
+                select mp.id_modelo_pasta from  tb_modelo_pasta mp, (
+                    select mp2.id_fluxo as idFluxo, min(mp2.nr_ordem) as ordem
+                    from tb_modelo_pasta mp2
+                    group by mp2.id_fluxo) menorOrdem
+                where menorOrdem.idFluxo = mp.id_fluxo and mp.nr_ordem = menorOrdem.ordem
+            );
+
+            update tb_modelo_pasta set in_padrao = 'false' where id_modelo_pasta not in (
+                select mp.id_modelo_pasta from  tb_modelo_pasta mp, (
+                    select mp2.id_fluxo as idFluxo, min(mp2.nr_ordem) as ordem
+                    from tb_modelo_pasta mp2
+                    group by mp2.id_fluxo) menorOrdem
+                where menorOrdem.idFluxo = mp.id_fluxo and mp.nr_ordem = menorOrdem.ordem
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet author="avner" id="8" dbms="oracle">
+        <sql dbms="oracle">
+            update tb_modelo_pasta set in_padrao = 1 where id_modelo_pasta in (
+                select mp.id_modelo_pasta from  tb_modelo_pasta mp, (
+                    select mp2.id_fluxo as idFluxo, min(mp2.nr_ordem) as ordem
+                    from tb_modelo_pasta mp2
+                    group by mp2.id_fluxo) menorOrdem
+                where menorOrdem.idFluxo = mp.id_fluxo and mp.nr_ordem = menorOrdem.ordem
+            );
+
+            update tb_modelo_pasta set in_padrao = 0 where id_modelo_pasta not in (
+                select mp.id_modelo_pasta from  tb_modelo_pasta mp, (
+                    select mp2.id_fluxo as idFluxo, min(mp2.nr_ordem) as ordem
+                    from tb_modelo_pasta mp2
+                    group by mp2.id_fluxo) menorOrdem
+                where menorOrdem.idFluxo = mp.id_fluxo and mp.nr_ordem = menorOrdem.ordem
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet author="avner" id="9" dbms="postgresql, mssql, oracle">
+        <addNotNullConstraint tableName="tb_modelo_pasta"
+            columnName="in_padrao"
+            columnDataType="boolean" />
+    </changeSet>
+
+    <changeSet author="avner" id="10">
+        <delete tableName="tb_recurso">
+            <where>ds_identificador = '/pages/Pasta/moverDocumento'</where>
+        </delete>
+    </changeSet>
+</databaseChangeLog>

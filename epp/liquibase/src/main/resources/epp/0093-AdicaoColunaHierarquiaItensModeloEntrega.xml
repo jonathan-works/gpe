@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1">
+        <createSequence sequenceName="sq_modelo_entrega_item" incrementBy="1" minValue="1" startValue="1" />
+    </changeSet>
+
+	<changeSet author="gabriel" id="2">
+		<addColumn tableName="tb_modelo_entrega_item">
+            <column name="id_modelo_entrega_item" type="bigint" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <preConditions>
+            <changeSetExecuted author="gabriel" changeLogFile="epp/0093-AdicaoColunaHierarquiaItensModeloEntrega.xml" id="1" />
+            <changeSetExecuted author="gabriel" changeLogFile="epp/0093-AdicaoColunaHierarquiaItensModeloEntrega.xml" id="2" />
+        </preConditions>
+
+        <sql dbms="postgresql">
+            UPDATE tb_modelo_entrega_item SET id_modelo_entrega_item = nextval('sq_modelo_entrega_item');
+        </sql>
+        <sql dbms="mssql">
+            UPDATE tb_modelo_entrega_item SET id_modelo_entrega_item = NEXT VALUE FOR sq_modelo_entrega_item;
+        </sql>
+        <sql dbms="oracle">
+            UPDATE tb_modelo_entrega_item SET id_modelo_entrega_item = sq_modelo_entrega_item.nextval;
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <preConditions>
+            <changeSetExecuted author="gabriel" changeLogFile="epp/0093-AdicaoColunaHierarquiaItensModeloEntrega.xml" id="3" />
+        </preConditions>
+
+        <addNotNullConstraint tableName="tb_modelo_entrega_item" columnName="id_modelo_entrega_item" columnDataType="bigint" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="5">
+        <preConditions>
+            <changeSetExecuted author="gabriel" changeLogFile="epp/0093-AdicaoColunaHierarquiaItensModeloEntrega.xml" id="4" />
+        </preConditions>
+
+        <dropPrimaryKey tableName="tb_modelo_entrega_item" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="6">
+        <preConditions>
+            <changeSetExecuted author="gabriel" changeLogFile="epp/0093-AdicaoColunaHierarquiaItensModeloEntrega.xml" id="5" />
+        </preConditions>
+
+        <addPrimaryKey tableName="tb_modelo_entrega_item" columnNames="id_modelo_entrega_item" constraintName="tb_modelo_entrega_item_pkey" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="7">
+		<addColumn tableName="tb_modelo_entrega_item">
+            <column name="id_categoria_entrega_item_pai" type="bigint">
+                <constraints references="tb_categoria_entrega_item(id_categoria_entrega_item)" foreignKeyName="fk_modelo_entrega_item_003" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

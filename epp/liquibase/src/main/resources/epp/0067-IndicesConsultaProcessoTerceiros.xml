@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="jovan" id="1" dbms="mssql, postgresql">
+      <validCheckSum>7:52c50554d5b24ec8177909c47c4ae852</validCheckSum>
+      <validCheckSum>7:ab3d30757f82fb359d12d02d76ca65cf</validCheckSum>
+      <createIndex
+            indexName="idx_tb_part_processo_id_pessoa"
+            tableName="tb_participante_processo"
+            unique="false">
+        <column name="id_pessoa" type="bigint"/>
+      </createIndex>
+
+      <createIndex
+            indexName="idx_tb_processo_pai_jbpm"
+            tableName="tb_processo"
+            unique="false">
+        <column name="id_processo_pai" type="bigint"/>
+        <column name="id_jbpm" type="bigint"/>
+      </createIndex>
+
+      <createIndex
+            indexName="idx_tb_proc_natureza_cat_fluxo"
+            tableName="tb_processo"
+            unique="false">
+        <column name="id_natureza_categoria_fluxo" type="bigint"/>
+      </createIndex>
+
+      <createIndex
+            indexName="idx_tb_proc_localizacao"
+            tableName="tb_processo"
+            unique="false">
+        <column name="id_localizacao" type="bigint"/>
+      </createIndex>
+
+        <createIndex
+            indexName="idx_tb_proc_prioridade"
+            tableName="tb_processo"
+            unique="false">
+            <column name="id_prioridade_processo" type="bigint"/>
+         </createIndex>
+
+            <createIndex
+            indexName="idx_tb_natu_cat_fluxo_natureza"
+            tableName="tb_natureza_categoria_fluxo"
+            unique="false">
+            <column name="id_natureza" type="bigint"/>
+         </createIndex>
+
+         <createIndex
+            indexName="idx_tb_natu_cat_fluxo_categ"
+            tableName="tb_natureza_categoria_fluxo"
+            unique="false">
+            <column name="id_categoria" type="bigint"/>
+         </createIndex>
+
+
+             <createIndex
+            indexName="idx_tb_natu_cat_fluxo_fluxo"
+            tableName="tb_natureza_categoria_fluxo"
+            unique="false">
+            <column name="id_fluxo" type="bigint"/>
+         </createIndex>
+
+              <createIndex
+            indexName="idx_tb_sigilo_proc_processo"
+            tableName="tb_sigilo_processo"
+            unique="false">
+            <column name="id_processo" type="bigint"/>
+         </createIndex>
+
+       <createIndex
+            indexName="idx_tb_part_proc_processo"
+            tableName="tb_participante_processo"
+            unique="false">
+            <column name="id_processo" type="bigint"/>
+         </createIndex>
+
+           <createIndex
+            indexName="idx_tb_part_proc_pessoa"
+            tableName="tb_participante_processo"
+            unique="false">
+            <column name="id_pessoa" type="bigint"/>
+         </createIndex>
+
+          <createIndex
+            indexName="idx_tb_part_proc_tipo_parte"
+            tableName="tb_participante_processo"
+            unique="false">
+            <column name="id_tipo_parte" type="bigint"/>
+         </createIndex>
+
+         <createIndex
+            indexName="idx_tb_part_proc_par_pai"
+            tableName="tb_participante_processo"
+            unique="false">
+            <column name="id_participante_pai" type="bigint"/>
+         </createIndex>
+
+          <createIndex
+            indexName="idx_tb_dest_mod_perf_dest"
+            tableName="tb_destinatario_modelo_comunic"
+            unique="false">
+            <column name="id_perfil_destino" type="bigint"/>
+         </createIndex>
+
+         <createIndex
+            indexName="idx_tb_dest_mod_documento"
+            tableName="tb_destinatario_modelo_comunic"
+            unique="false">
+            <column name="id_documento" type="bigint"/>
+         </createIndex>
+
+            <createIndex
+            indexName="idx_tb_dest_modelo_comun"
+            tableName="tb_destinatario_modelo_comunic"
+            unique="false">
+            <column name="id_modelo_comunicacao" type="bigint"/>
+         </createIndex>
+
+         <createIndex
+            indexName="idx_tb_mod_comu_tipo_comu"
+            tableName="tb_modelo_comunicacao"
+            unique="false">
+            <column name="id_tipo_comunicacao" type="bigint"/>
+         </createIndex>
+
+         <createIndex
+            indexName="idx_tb_mod_comu_tipo_class"
+            tableName="tb_modelo_comunicacao"
+            unique="false">
+            <column name="id_classificacao_documento" type="bigint"/>
+         </createIndex>
+
+           <createIndex
+            indexName="idx_tb_mod_comu_tipo_proc"
+            tableName="tb_modelo_comunicacao"
+            unique="false">
+            <column name="id_processo" type="bigint"/>
+         </createIndex>
+
+         <createIndex
+            indexName="idx_tb_mod_comu_tipo_loc"
+            tableName="tb_modelo_comunicacao"
+            unique="false">
+            <column name="id_localizacao_resp_assinat" type="bigint"/>
+         </createIndex>
+
+           <createIndex
+            indexName="idx_tb_mod_comu_tipo_templ"
+            tableName="tb_modelo_comunicacao"
+            unique="false">
+            <column name="id_perfil_template_resp_assinat" type="bigint"/>
+         </createIndex>
+
+
+
+           <createIndex
+            indexName="idx_tb_mod_comu_tipo_model"
+            tableName="tb_modelo_comunicacao"
+            unique="false">
+            <column name="id_modelo_documento" type="bigint"/>
+         </createIndex>
+
+
+
+           <createIndex
+            indexName="idx_tb_tipo_comunicacao_tipo"
+            tableName="tb_tipo_comunicacao"
+            unique="false">
+            <column name="id_tipo_modelo_documento" type="bigint"/>
+         </createIndex>
+
+
+        <createIndex
+            indexName="idx_tb_tipo_comunicacao_class"
+            tableName="tb_tipo_comunicacao"
+            unique="false">
+            <column name="id_classificacao_documento" type="bigint"/>
+         </createIndex>
+
+
+        <createIndex
+            indexName="idx_metadado_processo_001"
+            tableName="tb_metadado_processo"
+            unique="false">
+            <column name="id_processo" type="bigint"/>
+            <column name="nm_metadado_processo" />
+         </createIndex>
+
+        <createIndex
+            indexName="idx_metadado_processo_002"
+            tableName="tb_metadado_processo"
+            unique="false">
+            <column name="id_processo" type="bigint"/>
+            <column name="nm_metadado_processo" />
+            <column name="vl_metadado_processo" />
+        </createIndex>
+        
+        <createIndex
+            indexName="idx_metadado_processo_003"
+            tableName="tb_metadado_processo"
+            unique="false">
+            <column name="nm_metadado_processo" />
+            <column name="vl_metadado_processo" />
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle">
+        <createIndex indexName="idx_tb_part_processo_id_pessoa" tableName="tb_participante_processo" unique="false">
+            <column name="id_pessoa" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_processo_pai_jbpm" tableName="tb_processo" unique="false">
+            <column name="id_processo_pai" type="bigint"/>
+            <column name="id_jbpm" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_proc_natureza_cat_fluxo" tableName="tb_processo" unique="false">
+            <column name="id_natureza_categoria_fluxo" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_proc_localizacao" tableName="tb_processo" unique="false">
+            <column name="id_localizacao" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_proc_prioridade" tableName="tb_processo" unique="false">
+            <column name="id_prioridade_processo" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_natu_cat_fluxo_natureza" tableName="tb_natureza_categoria_fluxo" unique="false">
+            <column name="id_natureza" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_natu_cat_fluxo_categ" tableName="tb_natureza_categoria_fluxo" unique="false">
+            <column name="id_categoria" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_natu_cat_fluxo_fluxo" tableName="tb_natureza_categoria_fluxo" unique="false">
+            <column name="id_fluxo" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_sigilo_proc_processo" tableName="tb_sigilo_processo" unique="false">
+            <column name="id_processo" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_part_proc_processo" tableName="tb_participante_processo" unique="false">
+            <column name="id_processo" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_part_proc_tipo_parte" tableName="tb_participante_processo" unique="false">
+            <column name="id_tipo_parte" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_part_proc_par_pai" tableName="tb_participante_processo" unique="false">
+            <column name="id_participante_pai" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_dest_mod_perf_dest" tableName="tb_destinatario_modelo_comunic" unique="false">
+            <column name="id_perfil_destino" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_dest_mod_documento" tableName="tb_destinatario_modelo_comunic" unique="false">
+            <column name="id_documento" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_dest_modelo_comun" tableName="tb_destinatario_modelo_comunic" unique="false">
+            <column name="id_modelo_comunicacao" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_mod_comu_tipo_comu" tableName="tb_modelo_comunicacao" unique="false">
+            <column name="id_tipo_comunicacao" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_mod_comu_tipo_class" tableName="tb_modelo_comunicacao" unique="false">
+            <column name="id_classificacao_documento" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_mod_comu_tipo_proc" tableName="tb_modelo_comunicacao" unique="false">
+            <column name="id_processo" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_mod_comu_tipo_loc" tableName="tb_modelo_comunicacao" unique="false">
+            <column name="id_localizacao_resp_assinat" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_mod_comu_tipo_templ" tableName="tb_modelo_comunicacao" unique="false">
+            <column name="id_perfil_template_assinat" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_mod_comu_tipo_model" tableName="tb_modelo_comunicacao" unique="false">
+            <column name="id_modelo_documento" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_tipo_comunicacao_tipo" tableName="tb_tipo_comunicacao" unique="false">
+            <column name="id_tipo_modelo_documento" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_tb_tipo_comunicacao_class" tableName="tb_tipo_comunicacao" unique="false">
+            <column name="id_classificacao_documento" type="bigint"/>
+        </createIndex>
+
+        <createIndex indexName="idx_metadado_processo_001" tableName="tb_metadado_processo" unique="false">
+            <column name="id_processo" type="bigint"/>
+            <column name="nm_metadado_processo"/>
+        </createIndex>
+
+        <createIndex indexName="idx_metadado_processo_002" tableName="tb_metadado_processo" unique="false">
+            <column name="id_processo" type="bigint"/>
+            <column name="nm_metadado_processo"/>
+            <column name="vl_metadado_processo"/>
+        </createIndex>
+        
+        <createIndex indexName="idx_metadado_processo_003" tableName="tb_metadado_processo" unique="false">
+            <column name="nm_metadado_processo" />
+            <column name="vl_metadado_processo" />
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>

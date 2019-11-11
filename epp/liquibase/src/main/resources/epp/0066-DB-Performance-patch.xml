@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="erikliberal" id="1" dbms="mssql, postgresql, oracle">
+      <validCheckSum>7:3c206088fbfdc78120a2f6516d675dc3</validCheckSum>
+      <validCheckSum>7:204ebe6bcb9d71eb2ea03b65450bad7b</validCheckSum>
+      <createIndex
+            indexName="tb_permissao_IDX001"
+            tableName="tb_permissao"
+            unique="false">
+        <column name="ds_alvo" type="NVARCHAR(255)"/>
+      </createIndex>
+      <createIndex
+            indexName="tb_metadado_processo_IDX001"
+            tableName="tb_metadado_processo"
+            unique="false">
+        <column name="id_processo" type="BIGINT"/>
+      </createIndex>
+      <createIndex
+            indexName="tb_metadado_processo_IDX002"
+            tableName="tb_metadado_processo"
+            unique="false">
+        <column name="vl_metadado_processo" type="NVARCHAR(150)"/>
+      </createIndex>
+    </changeSet>
+
+    <changeSet author="erikliberal" id="2" dbms="mssql">
+      <createView replaceIfExists="true" schemaName="dbo" viewName="vs_situacao_processo">
+        SELECT
+            ti.token_ AS id_situacao_processo,
+            jpa.actorid_ AS nm_pooled_actor,
+            f.id_fluxo AS id_fluxo,
+            f.ds_fluxo AS nm_fluxo,
+            t.id_tarefa AS id_tarefa,
+            t.ds_tarefa AS nm_tarefa,
+            c.id_caixa AS id_caixa,
+            c.nm_caixa AS nm_caixa,
+            ti.procinst_ AS id_process_instance,
+            ti.id_ AS id_task_instance,
+            ti.task_ AS id_task,
+            ti.actorid_ AS nm_actorid,
+            pt.id_processo AS id_processo
+
+          FROM dbo.jbpm_taskinstance ti
+            INNER JOIN dbo.tb_processo_tarefa pt ON pt.id_task_instance=ti.id_
+            INNER JOIN dbo.tb_tarefa t ON t.id_tarefa=pt.id_tarefa
+            INNER JOIN dbo.tb_fluxo f ON f.id_fluxo=t.id_fluxo
+            INNER JOIN dbo.tb_processo proce ON proce.id_processo=pt.id_processo
+            INNER JOIN dbo.jbpm_taskactorpool jtap ON ti.id_ = jtap.taskinstance_
+            INNER JOIN dbo.jbpm_pooledactor jpa ON jtap.pooledactor_ = jpa.id_
+            LEFT JOIN dbo.tb_caixa c ON c.id_caixa=proce.id_caixa
+
+          WHERE
+            ti.issuspended_ = 0
+            AND
+            ti.isopen_ =1
+      </createView>
+    </changeSet>
+
+    <changeSet author="erikliberal" id="2" dbms="oracle">
+      <createView replaceIfExists="true" viewName="vs_situacao_processo">
+        SELECT
+            ti.token_ AS id_situacao_processo,
+            jpa.actorid_ AS nm_pooled_actor,
+            f.id_fluxo AS id_fluxo,
+            f.ds_fluxo AS nm_fluxo,
+            t.id_tarefa AS id_tarefa,
+            t.ds_tarefa AS nm_tarefa,
+            c.id_caixa AS id_caixa,
+            c.nm_caixa AS nm_caixa,
+            ti.procinst_ AS id_process_instance,
+            ti.id_ AS id_task_instance,
+            ti.task_ AS id_task,
+            ti.actorid_ AS nm_actorid,
+            pt.id_processo AS id_processo
+
+          FROM jbpm_taskinstance ti
+            INNER JOIN tb_processo_tarefa pt ON pt.id_task_instance=ti.id_
+            INNER JOIN tb_tarefa t ON t.id_tarefa=pt.id_tarefa
+            INNER JOIN tb_fluxo f ON f.id_fluxo=t.id_fluxo
+            INNER JOIN tb_processo proce ON proce.id_processo=pt.id_processo
+            INNER JOIN jbpm_taskactorpool jtap ON ti.id_ = jtap.taskinstance_
+            INNER JOIN jbpm_pooledactor jpa ON jtap.pooledactor_ = jpa.id_
+            LEFT JOIN tb_caixa c ON c.id_caixa=proce.id_caixa
+
+          WHERE
+            ti.issuspended_ = 0
+            AND
+            ti.isopen_ =1
+      </createView>
+    </changeSet>
+
+
+    <changeSet author="erikliberal" id="2" dbms="postgresql">
+      <!-- ATUALIZAR VIEW -->
+      <createView replaceIfExists="true" schemaName="public" viewName="vs_situacao_processo">
+        SELECT
+            ti.token_ AS id_situacao_processo,
+            jpa.actorid_ AS nm_pooled_actor,
+            f.id_fluxo AS id_fluxo,
+            f.ds_fluxo AS nm_fluxo,
+            t.id_tarefa AS id_tarefa,
+            t.ds_tarefa AS nm_tarefa,
+            c.id_caixa AS id_caixa,
+            c.nm_caixa AS nm_caixa,
+            ti.procinst_ AS id_process_instance,
+            ti.id_ AS id_task_instance,
+            ti.task_ AS id_task,
+            ti.actorid_ AS nm_actorid,
+            pt.id_processo AS id_processo
+
+          FROM public.jbpm_taskinstance ti
+            INNER JOIN public.tb_processo_tarefa pt ON pt.id_task_instance=ti.id_
+            INNER JOIN public.tb_tarefa t ON t.id_tarefa=pt.id_tarefa
+            INNER JOIN public.tb_fluxo f ON f.id_fluxo=t.id_fluxo
+            INNER JOIN public.tb_processo proce ON proce.id_processo=pt.id_processo
+            INNER JOIN public.jbpm_taskactorpool jtap ON ti.id_ = jtap.taskinstance_
+            INNER JOIN public.jbpm_pooledactor jpa ON jtap.pooledactor_ = jpa.id_
+            LEFT JOIN public.tb_caixa c ON c.id_caixa=proce.id_caixa
+
+          WHERE
+            ti.issuspended_ = false
+            AND
+            ti.isopen_ = true
+      </createView>
+    </changeSet>
+
+</databaseChangeLog>

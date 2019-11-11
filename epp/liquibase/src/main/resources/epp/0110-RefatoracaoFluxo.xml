@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="gabriel" id="1">
+        <dropColumn tableName="tb_fluxo" columnName="nr_version" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <createTable tableName="tb_definicao_processo">
+            <column name="id_definicao_processo" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="id_fluxo" type="bigint">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_definicao_processo_001" foreignKeyName="fk_definicao_processo_001" references="tb_fluxo(id_fluxo)" />
+            </column>
+            <column name="ds_xml" type="nclob" />
+            <column name="ds_xml_exec" type="nclob" />
+            <column name="ds_bpmn" type="nclob" />
+            <column name="ds_svg" type="nclob" />
+            <column name="ds_svg_exec" type="nclob" />
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <createSequence sequenceName="sq_definicao_processo" startValue="1" incrementBy="1" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <sql dbms="oracle">
+            INSERT INTO tb_definicao_processo(id_definicao_processo, id_fluxo, ds_xml, ds_xml_exec, ds_bpmn, ds_svg, ds_svg_exec)
+            SELECT sq_definicao_processo.nextval, id_fluxo, ds_xml, ds_xml_exec, ds_bpmn, ds_svg, ds_svg_exec
+            FROM tb_fluxo
+        </sql>
+
+        <sql dbms="postgresql">
+            INSERT INTO tb_definicao_processo(id_definicao_processo, id_fluxo, ds_xml, ds_xml_exec, ds_bpmn, ds_svg, ds_svg_exec)
+            SELECT nextval('sq_definicao_processo'), id_fluxo, ds_xml, ds_xml_exec, ds_bpmn, ds_svg, ds_svg_exec
+            FROM tb_fluxo
+        </sql>
+        <sql dbms="mssql">
+            INSERT INTO tb_definicao_processo(id_definicao_processo, id_fluxo, ds_xml, ds_xml_exec, ds_bpmn, ds_svg, ds_svg_exec)
+            SELECT NEXT VALUE FOR sq_definicao_processo, id_fluxo, ds_xml, ds_xml_exec, ds_bpmn, ds_svg, ds_svg_exec
+            FROM tb_fluxo
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="5">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <dropColumn columnName="ds_xml" tableName="tb_fluxo" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="6">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <dropColumn columnName="ds_xml_exec" tableName="tb_fluxo" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="7">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <dropColumn columnName="ds_bpmn" tableName="tb_fluxo" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="8">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <dropColumn columnName="ds_svg" tableName="tb_fluxo" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="9">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <dropColumn columnName="ds_svg_exec" tableName="tb_fluxo" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="10-1">
+        <dropForeignKeyConstraint baseTableName="tb_historico_proc_def" constraintName="fk_historico_proc_def_001" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="10">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+            <changeSetExecuted author="gabriel" id="10-1" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <addColumn tableName="tb_historico_proc_def">
+            <column name="id_definicao_processo" type="bigint">
+                <constraints foreignKeyName="fk_historico_proc_def_001" references="tb_definicao_processo(id_definicao_processo)" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="11">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="10" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <sql dbms="oracle, postgresql">
+            UPDATE tb_historico_proc_def h SET id_definicao_processo = ( 
+            SELECT d.id_definicao_processo FROM tb_definicao_processo d
+            WHERE d.id_fluxo = h.id_fluxo)
+        </sql>
+
+        <sql dbms="mssql">
+            UPDATE h SET h.id_definicao_processo = (
+            SELECT d.id_definicao_processo FROM tb_definicao_processo d
+            WHERE d.id_fluxo = h.id_fluxo)
+            FROM tb_historico_proc_def h
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="12">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="11" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <dropColumn columnName="id_fluxo" tableName="tb_historico_proc_def" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="13">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="12" changeLogFile="epp/0110-RefatoracaoFluxo.xml" />
+        </preConditions>
+
+        <addNotNullConstraint tableName="tb_historico_proc_def" columnName="id_definicao_processo" columnDataType="bigint" />
+    </changeSet>
+</databaseChangeLog>

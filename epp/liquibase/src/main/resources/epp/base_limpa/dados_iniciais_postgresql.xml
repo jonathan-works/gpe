@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    <changeSet author="jonasbezerra" id="1" dbms="postgresql" context="core">
+        <sql dbms="postgresql"
+            splitStatements="true"
+            stripComments="true">
+                INSERT INTO qrtz_locks (lock_name) VALUES ('CALENDAR_ACCESS');
+                INSERT INTO qrtz_locks (lock_name) VALUES ('JOB_ACCESS');
+                INSERT INTO qrtz_locks (lock_name) VALUES ('MISFIRE_ACCESS');
+                INSERT INTO qrtz_locks (lock_name) VALUES ('STATE_ACCESS');
+                INSERT INTO qrtz_locks (lock_name) VALUES ('TRIGGER_ACCESS');
+                
+                INSERT INTO tb_localizacao (id_localizacao, ds_localizacao, id_localizacao_pai, id_estrutura, in_ativo, in_estrutura, ds_caminho_completo) VALUES (1, 'e-PP', NULL, NULL, true, true, 'e-PP');
+                INSERT INTO tb_localizacao (id_localizacao, ds_localizacao, id_localizacao_pai, id_estrutura, in_ativo, in_estrutura, ds_caminho_completo) VALUES (2, 'Externo', 1, NULL, true, false, NULL);
+                
+                INSERT INTO tb_papel (id_papel, ds_identificador, ds_nome, in_ativo) VALUES (1, 'admin', 'Admin', true);
+                INSERT INTO tb_papel (id_papel, ds_identificador, ds_nome, in_ativo) VALUES (2, 'externo', 'UsuarioExterno', true);
+              
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (2, 'nomeSistema', 'Nome do Sistema', 'e-PP', NOW(), NULL, NULL, true, true);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (1, 'emailSistema', 'Email do Sistema', 'epp@infox.com.br', NOW(), NULL, NULL, true, true);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (3, 'subNomeSistema', 'Nome usado embaixo do nome principal do sistema', 'Plataforma de Processos Eletrônicos', NOW(), NULL, NULL, true, true);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (4, 'idUsuarioSistema', 'Id do usuário utilizado internamente', '0', NOW(), NULL, NULL, true, true);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (5, 'exportarXLS', 'Permitir que grid possa exportar em XLS', 'true', NOW(), NULL, NULL, true, true);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (6, 'exportarPDF', 'Permitir que grid possa exportar em PDF', 'true', NOW(), NULL, NULL, true, true);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (7, 'tituloModeloEmailMudancaSenhaComLogin', 'Titulo do modelo de e-mail para mudança de senha através de login', 'Solicitação de Senha e Login', NOW(), NULL, NULL, true, true);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (8, 'tituloModeloEmailMudancaSenha', 'Titulo para e-mail de mudança de Senha', 'Solicitação de Senha', NOW(), NULL, NULL, true, true);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (11, 'versao', 'Versão do Sistema', '2.0', NOW(), NULL, NULL, true, true);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (12, 'producao', 'Produção', 'false', NOW(), NULL, NULL, true, true);
+
+                INSERT INTO tb_usuario_login (id_usuario_login, ds_login, ds_senha, in_bloqueio, dt_expiracao_usuario, in_provisorio, id_pessoa_fisica, ds_email, in_ativo, nm_usuario, tp_usuario, ds_salt) VALUES (1, 'admin', 'B3CAA50B4DC8FE086238E999354D53E6A65B3BB1', false, NULL, false, NULL, 'email@aqui', true, 'Administrador', 'H', '0AB38DEAD2B3C7CC');
+                INSERT INTO tb_usuario_login (id_usuario_login, ds_login, ds_senha, in_bloqueio, dt_expiracao_usuario, in_provisorio, id_pessoa_fisica, ds_email, in_ativo, nm_usuario, tp_usuario, ds_salt) VALUES (0, 'sistema', 'B3CAA50B4DC8FE086238E999354D53E6A65B3BB1', false, NULL, false, NULL, 'epp@infox.com.br', true, 'Sistema', 'S', '0AB38DEAD2B3C7CC');
+                INSERT INTO tb_usuario_login (id_usuario_login, ds_login, ds_senha, in_bloqueio, dt_expiracao_usuario, in_provisorio, id_pessoa_fisica, ds_email, in_ativo, nm_usuario, tp_usuario, ds_salt) VALUES (2, 'usuarioexterno', 'FF36A89D65F866AEE9D4E397114A4F00D7078B2D', false, NULL, false, NULL, 'externo@externo', true, 'Usuário Externo', 'S', 'D010013A2B8C72C3');
+
+                INSERT INTO tb_usuario_localizacao (id_usuario_localizacao, id_usuario, id_localizacao, id_papel, id_estrutura, in_responsavel_localizacao, in_contabilizar) VALUES (1, 1, 1, 1, NULL, true, false);
+
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (1, 'Data_nao_formatada', '#{dataAtual}', true);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (2, 'Data_atual_formatada', '#{dataAtualFormatada}', true);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (3, 'Numero_processo', '#{numeroProcessoAtual}', true);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (4, 'Localizacao_usuario_logado', '#{localizacaoUsuarioLogado}', true);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (5, 'Perfil_usuario_logado', '#{perfilUsuarioLogado}', true);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (6, 'Email_usuario_logado', '#{emailUsuarioLogado}', true);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (7, 'Nome_usuario', '#{usuarioLogado}', true);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (8, 'Senha_do_usuario', '#{senhaUsuarioRec}', true);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (9, 'Nome_usuario_rec', '#{nomeUsuarioRec}', true);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (10, 'Login_usuario_rec', '#{loginUsuarioRec}', true);
+
+                INSERT INTO tb_recurso(id_recurso, ds_identificador, ds_nome) VALUES (1, '/pages/Painel/list.seam', 'Painel do Usuário');
+                INSERT INTO tb_recurso(id_recurso, ds_identificador, ds_nome) VALUES (2, '/pages/Processo/Consulta/setPrioridadeProcesso', 'Toolbar de Mudança de Prioridade do Processo');
+                INSERT INTO tb_recurso(id_recurso, ds_identificador, ds_nome) VALUES (3, '/pages/Processo/abaSigiloDocumento', 'Aba de Sigilo do Documento');
+                INSERT INTO tb_recurso(id_recurso, ds_identificador, ds_nome) VALUES (4, '/pages/Processo/abaSigiloProcesso', 'Aba de Sigilo do Processo');
+                
+                INSERT INTO tb_permissao(id_permissao, ds_acao, ds_alvo, ds_destinatario, ds_discriminador) VALUES(1, 'access', '/pages/Painel/list.seam', 'admin', 'role');
+                
+                SELECT pg_catalog.setval('sq_tb_localizacao', 3, true);
+
+                SELECT pg_catalog.setval('sq_tb_papel', 3, true);
+
+                SELECT pg_catalog.setval('sq_tb_parametro', 13, true);
+
+                SELECT pg_catalog.setval('sq_tb_usuario_login', 4, true);
+
+                SELECT pg_catalog.setval('sq_tb_usuario_localizacao', 2, true);
+
+                SELECT pg_catalog.setval('sq_tb_variavel', 11, true);
+
+                SELECT pg_catalog.setval('sq_tb_recurso', 5, true);
+
+                SELECT pg_catalog.setval('sq_tb_permissao', 2, true);
+        </sql>
+    </changeSet>
+    
+    <changeSet id="1" author="victorpasqualino" dbms="postgresql">
+    	<update tableName="tb_localizacao">
+    		<column name="ds_caminho_completo" value="e-PP|"/>
+    		<where>
+    			id_localizacao = 1
+    		</where>
+    	</update>
+    </changeSet>
+</databaseChangeLog>

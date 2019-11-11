@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="fabiopaes" id="1">
+        <addColumn tableName="tb_status_processo">
+            <column name="in_ativo" type="BOOLEAN" defaultValueBoolean="true">
+            	<constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    
+    <changeSet author="fabiopaes" id="2">
+        <createTable tableName="tb_fluxo_status_processo">
+        	<column name="id_fluxo" type="bigint">
+        		<constraints nullable="false" 
+        			foreignKeyName="fk_fluxo_status_processo_fluxo" 
+        			referencedTableName="tb_fluxo"
+        			referencedColumnNames="id_fluxo" />
+        	</column>
+        	<column name="id_status_processo" type="bigint">
+        		<constraints nullable="false" 
+        			foreignKeyName="fk_fluxo_sta_proc_sta_proc" 
+        			referencedTableName="tb_status_processo"
+        			referencedColumnNames="id_status_processo" />
+        	</column>
+        </createTable>
+        <addPrimaryKey columnNames="id_fluxo, id_status_processo" 
+        		constraintName="pk_fluxo_status_processo" 
+        		tableName="tb_fluxo_status_processo"/> 
+    </changeSet>
+    
+   	<changeSet id="3" author="fabiopaes">
+		<sql>
+			INSERT INTO tb_fluxo_status_processo (id_fluxo, id_status_processo) 
+			SELECT id_fluxo, id_status_processo FROM tb_fluxo, tb_status_processo;
+		</sql>
+	</changeSet>   
+
+    <changeSet id="4" author="fabiopaes">
+         <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM tb_recurso WHERE ds_identificador = '/pages/StatusProcesso/listView.seam'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/StatusProcesso/listView.seam" />
+            <column name="ds_nome" value="/pages/StatusProcesso/listView.seam" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

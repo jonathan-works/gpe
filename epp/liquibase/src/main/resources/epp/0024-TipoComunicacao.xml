@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql" >
+        <createTable tableName="tb_tipo_comunicacao">
+            <column name="id_tipo_comunicacao" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ds_tipo_comunicacao" type="NVARCHAR(150)">
+                <constraints nullable="false" />
+            </column>
+            <column name="nr_dias_prazo_ciencia" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_tipo_comunicacao" />
+        <createIndex indexName="tipo_comunic_ds_tipo_comunic_unq" tableName="tb_tipo_comunicacao" unique="true">
+            <column name="ds_tipo_comunicacao" />
+        </createIndex>
+    </changeSet> 
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle" >
+        <createTable tableName="tb_tipo_comunicacao">
+            <column name="id_tipo_comunicacao" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ds_tipo_comunicacao" type="NVARCHAR(150)">
+                <constraints nullable="false" />
+            </column>
+            <column name="nr_dias_prazo_ciencia" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_tipo_comunicacao" />
+        <createIndex indexName="idx_tipo_comunicacao_01" tableName="tb_tipo_comunicacao" unique="true">
+            <column name="ds_tipo_comunicacao" />
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

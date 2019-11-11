@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="gabriel" id="1">
+        <addColumn tableName="JBPM_TRANSITION">
+        	<column name="HIDDEN_" type="BOOLEAN"/>
+        </addColumn>
+        <update tableName="JBPM_TRANSITION">
+            <column name="HIDDEN_" valueBoolean="true" />
+            <column name="DESCRIPTION_" valueComputed="NULL" />
+            <where>DESCRIPTION_ = 'OCCULT_TRANSITION'</where>
+        </update>
+        <update tableName="JBPM_TRANSITION">
+            <column name="HIDDEN_" valueBoolean="false" />
+            <where>HIDDEN_ IS NULL</where>
+        </update>
+        <addNotNullConstraint tableName="JBPM_TRANSITION" columnName="HIDDEN_" 
+            columnDataType="boolean"/>
+        <modifyDataType tableName="JBPM_TRANSITION" columnName="CONDITION_" newDataType="NVARCHAR(1000)" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <customChange class="br.com.infox.liquibase.JbpmKeysMigrator" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="3" failOnError="false">
+        <preConditions>
+            <changeSetExecuted id="2" author="gabriel" changeLogFile="epp/0084-MigracoesKeysJbpm.xml" />
+        </preConditions>
+        <customChange class="br.com.infox.liquibase.JbpmDecisionMigrator" />
+    </changeSet>
+</databaseChangeLog>

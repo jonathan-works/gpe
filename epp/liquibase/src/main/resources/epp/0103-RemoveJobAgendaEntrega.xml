@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="marialuisa" id="1" dbms="mssql" runOnChange="true">
+        <sql endDelimiter="\nGO">
+            BEGIN TRY
+                DROP PROCEDURE dbo.DeleteJobQuartz;
+            END TRY
+            BEGIN CATCH
+                PRINT 'A funcao dbo.DeleteJobQuartz nao existia'
+            END CATCH
+        </sql>
+        <createProcedure dbms="mssql" encoding="utf-8" path="epp/scripts/delete_job_quartz_sqlserver.sql" />
+    </changeSet>
+
+    <changeSet author="marialuisa" id="1" dbms="postgresql" >
+        <createProcedure encoding="utf-8" path="epp/scripts/delete_job_quartz_postgres.sql" />
+    </changeSet>
+
+     <changeSet author="marialuisa" id="1" dbms="oracle">
+        <createProcedure encoding="utf-8" path="epp/scripts/delete_job_quartz_oracle.sql" />
+        <sql>ALTER PROCEDURE DeleteJobQuartz COMPILE;</sql>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="mssql">
+    	<sql endDelimiter="\nGO">
+    		Execute dbo.DeleteJobQuartz 'idTimerAgendaEntrega';
+    	</sql>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="postgresql">
+    	<sql>
+    		select DeleteJobQuartz('idTimerAgendaEntrega');
+    	</sql>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="oracle">
+    	<sql>
+    		CALL DeleteJobQuartz('idTimerAgendaEntrega');
+    	</sql>
+    </changeSet>
+
+</databaseChangeLog>

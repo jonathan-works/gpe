@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="avnerpereira" id="1">
+		<createTable tableName="tb_status_processo">
+			<column name="id_status_processo" type="bigint">
+				<constraints primaryKey="true" primaryKeyName="pk_status_documento" nullable="false"/>
+			</column>
+			<column name="nm_status_processo" type="NVARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_status_processo"/>
+	</changeSet>
+
+	<changeSet author="avnerpereira" id="2" dbms="mssql, postgresql">
+		<addColumn tableName="tb_processo_epa">
+			<column name="id_status_processo" type="bigint" >
+				<constraints nullable="true" foreignKeyName="fk_status_processo_01" references="tb_status_processo(id_status_processo)" />
+			</column>
+		</addColumn>
+		<createIndex indexName="idx_tb_processo_epa_id_status_processo" tableName="tb_processo_epa" unique="false">
+			<column name="id_status_processo"/>
+		</createIndex>			
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="2" dbms="oracle">
+		<addColumn tableName="tb_processo_epa">
+			<column name="id_status_processo" type="bigint" >
+				<constraints nullable="true" foreignKeyName="fk_status_processo_01" references="tb_status_processo(id_status_processo)" />
+			</column>
+		</addColumn>
+		<createIndex indexName="idx_processo_01" tableName="tb_processo_epa" unique="false">
+			<column name="id_status_processo"/>
+		</createIndex>			
+	</changeSet>
+	
+	<changeSet author="erikliberal" id="1">
+		<insert tableName="tb_status_processo">
+            <column name="id_status_processo" value="1"/>
+            <column name="nm_status_processo" value="Em Elaboração"/>
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" value="2"/>
+            <column name="nm_status_processo" value="Enviado"/>
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" value="3"/>
+            <column name="nm_status_processo" value="Enviado para ALEPE"/>
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" value="4"/>
+            <column name="nm_status_processo" value="Recebido"/>
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" value="5"/>
+            <column name="nm_status_processo" value="Arquivado"/>
+        </insert>
+        <sql dbms="mssql, postgresql">
+            ALTER SEQUENCE sq_status_processo RESTART WITH 6;
+        </sql>
+        <sql dbms="oracle">
+            DROP SEQUENCE sq_status_processo;
+            CREATE SEQUENCE sq_status_processo START WITH 6 INCREMENT BY 1 NOCACHE NOCYCLE;
+        </sql>
+	</changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="victorpasqualino" id="1" dbms="mssql, postgresql" >   
+		<addColumn tableName="tb_processo_documento">
+			<column name="in_excluido" type="boolean" defaultValueBoolean="false">
+				<constraints nullable="false"/>			
+			</column>
+		</addColumn>	
+		<createTable tableName="tb_historico_status_documento">	
+			<column name="id_historico_status_documento" type="bigint">
+				<constraints primaryKey="true" primaryKeyName="pk_historico_status_documento" nullable="false"/>
+			</column>
+			<column name="id_processo_documento" type="bigint">
+				<constraints nullable="false" references="tb_processo_documento(id_processo_documento)" foreignKeyName="fk_hist_doc_processo_documento"/>
+			</column>		
+			<column name="tp_alteracao_documento" type="CHAR(1)">
+				<constraints nullable="false"/>
+			</column>		
+			<column name="ds_motivo" type="NVARCHAR(2000)">
+				<constraints nullable="false"/>
+			</column>		
+			<column name="dt_alteracao" type="timestamp">
+				<constraints nullable="false"/>
+			</column>		
+			<column name="id_usuario_alteracao" type="bigint">
+				<constraints nullable="false" references="tb_usuario_login(id_usuario_login)" foreignKeyName="fk_hist_doc_id_usu_alteracao"/>
+			</column>		
+		</createTable>	
+		<createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_historico_status_documento" />
+		<sql>
+			ALTER TABLE tb_historico_status_documento ADD CONSTRAINT cc_hist_doc_tp_alt_documento CHECK (tp_alteracao_documento in ('E', 'R'));
+		</sql>		
+		<createIndex indexName="idx_tb_historico_status_documento_id_processo_documento" tableName="tb_historico_status_documento" unique="false">
+			<column name="id_processo_documento"/>
+		</createIndex>		
+		<createIndex indexName="idx_tb_historico_status_documento_id_usuario_alteracao" tableName="tb_historico_status_documento" unique="false">
+			<column name="id_usuario_alteracao"/>
+		</createIndex>
+
+        <insert tableName="tb_parametro">
+            <column name="nm_variavel" value="usuarioExternoPodeVerDocExcluido"/>
+            <column name="ds_variavel" value="Variável que indica se o usuário externo pode ver arquivos excluídos"/>
+            <column name="vl_variavel" value="false"/>
+            <column name="dt_atualizacao" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="in_ativo" valueBoolean="true"/>
+            <column name="in_sistema" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="tb_parametro">
+            <column name="nm_variavel" value="somenteUsuarioInternoVerMotivoExclusaoDoc"/>
+            <column name="ds_variavel" value="Variável que indica se o somente usuario interno pode ver motivo da exclusao"/>
+            <column name="vl_variavel" value="false"/>
+            <column name="dt_atualizacao" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="in_ativo" valueBoolean="true"/>
+            <column name="in_sistema" valueBoolean="true"/>
+        </insert>
+
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="1" dbms="oracle" >   
+		<addColumn tableName="tb_processo_documento">
+			<column name="in_excluido" type="boolean" defaultValueBoolean="false">
+				<constraints nullable="false"/>			
+			</column>
+		</addColumn>	
+		<createTable tableName="tb_historico_status_documento">	
+			<column name="id_historico_status_documento" type="bigint">
+				<constraints primaryKey="true" primaryKeyName="pk_historico_status_documento" nullable="false"/>
+			</column>
+			<column name="id_processo_documento" type="bigint">
+				<constraints nullable="false" references="tb_processo_documento(id_processo_documento)" foreignKeyName="fk_hist_doc_processo_documento"/>
+			</column>		
+			<column name="tp_alteracao_documento" type="CHAR(1)">
+				<constraints nullable="false"/>
+			</column>		
+			<column name="ds_motivo" type="NVARCHAR(2000)">
+				<constraints nullable="false"/>
+			</column>		
+			<column name="dt_alteracao" type="timestamp">
+				<constraints nullable="false"/>
+			</column>		
+			<column name="id_usuario_alteracao" type="bigint">
+				<constraints nullable="false" references="tb_usuario_login(id_usuario_login)" foreignKeyName="fk_hist_doc_id_usu_alteracao"/>
+			</column>		
+		</createTable>	
+		<createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_historico_status_documento" />
+		<sql>
+			ALTER TABLE tb_historico_status_documento ADD CONSTRAINT cc_hist_doc_tp_alt_documento CHECK (tp_alteracao_documento in ('E', 'R'))
+		</sql>		
+		<createIndex indexName="idx_historico_status_doc_01" tableName="tb_historico_status_documento" unique="false">
+			<column name="id_processo_documento"/>
+		</createIndex>		
+		<createIndex indexName="idx_historico_status_doc_02" tableName="tb_historico_status_documento" unique="false">
+			<column name="id_usuario_alteracao"/>
+		</createIndex>
+
+        <insert tableName="tb_parametro">
+        	<column name="id_parametro" valueComputed="sq_tb_parametro.nextval"/>
+            <column name="nm_variavel" value="usuarioExternoPodeVerDocExcluido"/>
+            <column name="ds_variavel" value="Variável que indica se o usuário externo pode ver arquivos excluídos"/>
+            <column name="vl_variavel" value="false"/>
+            <column name="dt_atualizacao" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="in_ativo" valueBoolean="true"/>
+            <column name="in_sistema" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="tb_parametro">
+        	<column name="id_parametro" valueComputed="sq_tb_parametro.nextval"/>
+            <column name="nm_variavel" value="somenteUsuarioInternoVerMotivoExclusaoDoc"/>
+            <column name="ds_variavel" value="Variável que indica se o somente usuario interno pode ver motivo da exclusao"/>
+            <column name="vl_variavel" value="false"/>
+            <column name="dt_atualizacao" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="in_ativo" valueBoolean="true"/>
+            <column name="in_sistema" valueBoolean="true"/>
+        </insert>
+
+	</changeSet>
+
+    <changeSet author="gabriel" id="1" dbms="mssql, oracle" >
+        <!-- A sequence está atrasada em relação ao id_recurso -->
+        <sql dbms="mssql">SELECT NEXT VALUE FOR sq_tb_recurso;</sql>
+        <sql dbms="oracle">SELECT sq_tb_recurso.nextval FROM dual;</sql>
+    </changeSet>
+
+	<changeSet author="victorpasqualino" id="2" dbms="mssql, postgresql, oracle" >
+		<insert tableName="tb_recurso" dbms="mssql">
+			<column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso"/>
+            <column name="ds_identificador" value="/pages/Processo/excluirDocumentoProcesso"/>
+            <column name="ds_nome" value="Excluir Documento do Processo"/>
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="postgresql">
+        	<column name="id_recurso" valueComputed="nextval('sq_tb_recurso')"/>
+            <column name="ds_identificador" value="/pages/Processo/excluirDocumentoProcesso"/>
+            <column name="ds_nome" value="Excluir Documento do Processo"/>
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="oracle">
+        	<column name="id_recurso" valueComputed="sq_tb_recurso.nextval"/>
+            <column name="ds_identificador" value="/pages/Processo/excluirDocumentoProcesso"/>
+            <column name="ds_nome" value="Excluir Documento do Processo"/>
+        </insert>
+
+        <insert tableName="tb_permissao" dbms="mssql" >
+        	<column name="id_permissao" valueComputed="NEXT VALUE FOR sq_tb_permissao"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/Processo/excluirDocumentoProcesso"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+
+        <insert tableName="tb_permissao" dbms="postgresql" >
+        	<column name="id_permissao" valueComputed="NEXTVAL('sq_tb_permissao')"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/Processo/excluirDocumentoProcesso"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+
+        <insert tableName="tb_permissao" dbms="oracle" >
+        	<column name="id_permissao" valueComputed="sq_tb_permissao.nextval"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/Processo/excluirDocumentoProcesso"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+	</changeSet>
+
+
+</databaseChangeLog>

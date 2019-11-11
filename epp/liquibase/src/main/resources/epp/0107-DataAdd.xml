@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="avner" id="1" dbms="mssql" runOnChange="true">
+        <sql endDelimiter="\nGO">
+            BEGIN TRY
+                DROP FUNCTION dbo.DataAdd;
+            END TRY
+            BEGIN CATCH
+                PRINT 'A funcao dbo.DataAdd ja existe'
+            END CATCH
+        </sql>
+        <createProcedure dbms="mssql" encoding="utf-8" path="epp/scripts/data_add_sqlserver.sql" />
+    </changeSet>
+
+    <changeSet author="avner" id="1" dbms="postgresql" >
+        <createProcedure encoding="utf-8" path="epp/scripts/data_add_postgres.sql" />
+    </changeSet>
+
+     <changeSet author="avner" id="1" dbms="oracle">
+        <createProcedure encoding="utf-8" path="epp/scripts/data_add_oracle.sql" />
+        <sql>ALTER FUNCTION DataAdd COMPILE;</sql>
+    </changeSet>
+
+</databaseChangeLog>

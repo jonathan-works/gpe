@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="marialuisa" id="1">
+        <dropTable tableName="tb_usuario_localizacao"/>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2">
+        <dropTable tableName="tb_item_tipo_documento"/>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="3" dbms="mssql,postgresql">
+        <addNotNullConstraint columnDataType="bigint" columnName="id_fluxo" tableName="tb_definicao_variavel_processo"/>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="4" >
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="uk_pasta_001"/>
+        </preConditions>
+        <dropUniqueConstraint constraintName="uk_pasta_001" tableName="tb_pasta" />
+    </changeSet>
+
+    <changeSet author="marialuisa" id="5" >
+        <dropUniqueConstraint constraintName="uk_modelo_pasta_001" tableName="tb_modelo_pasta" />
+    </changeSet>
+
+    <changeSet author="marialuisa" id="6" dbms="mssql">
+        <dropIndex indexName="dest_mod_comunic_pes_fis_unq" tableName="tb_destinatario_modelo_comunic"/>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="6" dbms="postgresql,oracle" >
+       <!-- <dropUniqueConstraint constraintName="dest_mod_comunic_pes_fis_unq" tableName="tb_destinatario_modelo_comunic" />-->
+    </changeSet>
+
+    <changeSet author="marialuisa" id="7" >
+        <dropUniqueConstraint constraintName="perf_temp_uk" tableName="tb_perfil_template" />
+    </changeSet>
+
+    <changeSet author="marialuisa" id="8" >
+        <dropUniqueConstraint constraintName="uc_raia_perfil_fluxo" tableName="tb_raia_perfil" />
+    </changeSet>   
+    
+    <changeSet author="marialuisa" id="9" dbms="oracle" >
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="uk_relacionamento_processo_01"/>
+        </preConditions>
+        <dropUniqueConstraint constraintName="uk_relacionamento_processo_01" tableName="tb_relacionamento_processo" />
+    </changeSet>
+
+    <changeSet author="marialuisa" id="9" dbms="postgresql" >
+        <dropUniqueConstraint constraintName="tb_relacionamento_processo_id_relacionamento_nr_processo_unique" tableName="tb_relacionamento_processo" />
+    </changeSet>
+
+</databaseChangeLog>

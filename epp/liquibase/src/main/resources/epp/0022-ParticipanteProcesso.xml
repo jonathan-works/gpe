@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<!-- Participante Processo --> 
+	<changeSet author="victorpasqualino" id="1" dbms="mssql">
+
+		<renameTable newTableName="tb_participante_processo"  oldTableName="tb_parte_processo" />
+		<renameColumn columnDataType="bigint" newColumnName="id_participante_processo" oldColumnName="id_parte_processo" tableName="tb_participante_processo"/>
+		<sql>
+			ALTER TABLE tb_participante_processo 
+			DROP CONSTRAINT DF_tb_parte_processo_id_parte_processo;
+			EXEC sp_rename 'sq_tb_parte_processo', 'sq_participante_processo';
+			ALTER TABLE tb_participante_processo 
+			ADD CONSTRAINT DF_tb_participante_processo_id_participante_processo 
+			DEFAULT (NEXT VALUE FOR sq_participante_processo) FOR [id_participante_processo];
+		</sql>
+
+		<addColumn tableName="tb_participante_processo">
+			<column name="nm_participante" type="NVARCHAR(200)">
+				<constraints nullable="false" />
+			</column>
+			<column name="id_tipo_parte" type="bigint" >
+				<constraints nullable="false" references="tb_tipo_parte(id_tipo_parte)" foreignKeyName="fk_part_proc_tipo_participante"/>
+			</column>
+			<column name="id_participante_pai" type="bigint" >
+				<constraints nullable="true" references="tb_participante_processo(id_participante_processo)" foreignKeyName="fk_part_proc_participante_pai"/>
+			</column>
+			<column name="ds_caminho_absoluto" type="NCLOB" >
+				<constraints nullable="true" />
+			</column>
+			<column name="dt_inicio_participacao" type="TIMESTAMP" />
+			<column name="dt_fim_participacao" type="TIMESTAMP" />
+        </addColumn>
+
+        <dropIndex indexName="tb_parte_processo_pessoa_processo_unique" tableName="tb_participante_processo" />
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="postgresql">
+		
+		<renameTable newTableName="tb_participante_processo"  oldTableName="tb_parte_processo" />
+		<renameColumn columnDataType="bigint" newColumnName="id_participante_processo" oldColumnName="id_parte_processo" tableName="tb_participante_processo"/>
+		<sql>
+			ALTER SEQUENCE sq_tb_parte_processo RENAME TO sq_participante_processo;
+		</sql>
+
+		<addColumn tableName="tb_participante_processo">
+			<column name="nm_participante" type="NVARCHAR(200)" />
+			<column name="id_tipo_parte" type="bigint" >
+				<constraints nullable="true" references="tb_tipo_parte(id_tipo_parte)" foreignKeyName="fk_part_proc_tipo_participante"/>
+			</column>
+			<column name="id_participante_pai" type="bigint" >
+				<constraints nullable="true" references="tb_participante_processo(id_participante_processo)" foreignKeyName="fk_part_proc_participante_pai"/>
+			</column>
+			<column name="ds_caminho_absoluto" type="NCLOB" >
+				<constraints nullable="true" />
+			</column>
+			<column name="dt_inicio_participacao" type="TIMESTAMP" />
+			<column name="dt_fim_participacao" type="TIMESTAMP" />
+        </addColumn>
+
+        <dropUniqueConstraint constraintName="tb_parte_processo_pessoa_processo_unique" tableName="tb_participante_processo" uniqueColumns="id_processo, id_pessoa"/>
+
+        <addNotNullConstraint columnDataType="NVARCHAR(200)" columnName="nm_participante" tableName="tb_participante_processo"/>
+        <addNotNullConstraint columnDataType="bigint" columnName="id_tipo_parte" tableName="tb_participante_processo"/>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle">
+
+		<renameTable newTableName="tb_participante_processo"  oldTableName="tb_parte_processo" />
+		<renameColumn newColumnName="id_participante_processo" oldColumnName="id_parte_processo" tableName="tb_participante_processo"/>
+
+		<sql>
+			RENAME sq_tb_parte_processo TO sq_participante_processo;
+		</sql>
+
+		<addColumn tableName="tb_participante_processo">
+			<column name="nm_participante" type="NVARCHAR(200)">
+				<constraints nullable="false" />
+			</column>
+			<column name="id_tipo_parte" type="BIGINT" >
+				<constraints nullable="false" references="tb_tipo_parte(id_tipo_parte)" foreignKeyName="fk_part_proc_tipo_participante"/>
+			</column>
+			<column name="id_participante_pai" type="BIGINT" >
+				<constraints nullable="true" references="tb_participante_processo(id_participante_processo)" foreignKeyName="fk_part_proc_participante_pai"/>
+			</column>
+			<column name="ds_caminho_absoluto" type="NCLOB" >
+				<constraints nullable="true" />
+			</column>
+			<column name="dt_inicio_participacao" type="TIMESTAMP" />
+			<column name="dt_fim_participacao" type="TIMESTAMP" />
+        </addColumn>
+
+        <dropUniqueConstraint constraintName="uk_parte_processo_01" tableName="tb_participante_processo" uniqueColumns="id_processo, id_pessoa"/>
+    </changeSet>
+
+	<!-- Historico Participante Processo -->
+	<changeSet author="victorpasqualino" id="2" dbms="mssql, postgresql, oracle" >
+
+		<renameTable newTableName="tb_hist_participante_processo"  oldTableName="tb_historico_parte_processo" />
+		<renameColumn columnDataType="integer" newColumnName="id_hist_participante_processo" oldColumnName="id_historico_parte_processo" tableName="tb_hist_participante_processo"/>
+		<renameColumn columnDataType="integer" newColumnName="id_participante_processo" oldColumnName="id_parte_processo" tableName="tb_hist_participante_processo"/>
+		<sql dbms="mssql" >
+			ALTER TABLE tb_hist_participante_processo 
+			DROP CONSTRAINT DF_tb_historico_parte_processo_id_historico_parte_processo;
+			EXEC sp_rename 'sq_tb_historico_parte_processo', 'sq_hist_participante_processo';
+			ALTER TABLE tb_hist_participante_processo 
+			ADD CONSTRAINT DF_tb_hist_participante_processo_id_hist_participante_processo 
+			DEFAULT (NEXT VALUE FOR sq_hist_participante_processo) FOR [id_hist_participante_processo];
+		</sql>
+
+		<sql dbms="postgresql" >
+			ALTER SEQUENCE sq_tb_historico_parte_processo RENAME TO sq_hist_participante_processo;
+		</sql>
+		<sql dbms="oracle" >
+			RENAME sq_tb_historico_parte_processo TO sq_hist_participante_processo;
+		</sql>
+
+	</changeSet>
+
+	<!--  Excluir/Adicionar Participante do Processo -->
+	<changeSet author="victorpasqualino" id="6" dbms="mssql, postgresql, oracle" >
+		<!-- SQLServer -->
+		<insert tableName="tb_recurso" dbms="mssql">
+			<column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/excluirParticipanteProcesso"/>
+            <column name="ds_nome" value="Excluir Participante do Processo"/>
+        </insert>
+        
+        <insert tableName="tb_permissao" dbms="mssql" >
+        	<column name="id_permissao" valueComputed="NEXT VALUE FOR sq_tb_permissao"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/Processo/excluirParticipanteProcesso"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="mssql" >
+        	<column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/adicionarParticipanteProcesso"/>
+            <column name="ds_nome" value="Adicionar Participante do Processo"/>
+        </insert>
+
+        <insert tableName="tb_permissao" dbms="mssql" >
+        	<column name="id_permissao" valueComputed="NEXT VALUE FOR sq_tb_permissao"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/Processo/adicionarParticipanteProcesso"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+
+        <!-- PostgreSQL -->
+        <insert tableName="tb_recurso" dbms="postgresql">
+			<column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Processo/excluirParticipanteProcesso"/>
+            <column name="ds_nome" value="Excluir Participante do Processo"/>
+        </insert>
+
+        <insert tableName="tb_permissao" dbms="postgresql" >
+        	<column name="id_permissao" valueComputed="nextval('sq_tb_permissao')"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/Processo/excluirParticipanteProcesso"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="postgresql" >
+        	<column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Processo/adicionarParticipanteProcesso"/>
+            <column name="ds_nome" value="Adicionar Participante do Processo"/>
+        </insert>
+
+        <insert tableName="tb_permissao" dbms="postgresql" >
+        	<column name="id_permissao" valueComputed="nextval('sq_tb_permissao')"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/Processo/adicionarParticipanteProcesso"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+
+		<!-- Oracle -->
+        <insert tableName="tb_recurso" dbms="oracle">
+			<column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Processo/excluirParticipanteProcesso"/>
+            <column name="ds_nome" value="Excluir Participante do Processo"/>
+        </insert>
+
+        <insert tableName="tb_permissao" dbms="oracle" >
+        	<column name="id_permissao" valueComputed="sq_tb_permissao.nextval"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/Processo/excluirParticipanteProcesso"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="oracle" >
+        	<column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Processo/adicionarParticipanteProcesso"/>
+            <column name="ds_nome" value="Adicionar Participante do Processo"/>
+        </insert>
+
+        <insert tableName="tb_permissao" dbms="oracle" >
+        	<column name="id_permissao" valueComputed="sq_tb_permissao.nextval"/>
+            <column name="ds_acao" value="access"/>
+            <column name="ds_alvo" value="/pages/Processo/adicionarParticipanteProcesso"/>
+            <column name="ds_destinatario" value="admin"/>
+            <column name="ds_discriminador" value="role"/>
+        </insert>
+	</changeSet>
+
+</databaseChangeLog>

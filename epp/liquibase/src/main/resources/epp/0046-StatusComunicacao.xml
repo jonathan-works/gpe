@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1" dbms="mssql">
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="NEXT VALUE FOR sq_status_processo" />
+            <column name="nm_status_processo" value="Comunicação com ciência" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="NEXT VALUE FOR sq_status_processo" />
+            <column name="nm_status_processo" value="Comunicação respondida" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="NEXT VALUE FOR sq_status_processo" />
+            <column name="nm_status_processo" value="Comunicação com prazo encerrado" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="NEXT VALUE FOR sq_status_processo" />
+            <column name="nm_status_processo" value="Comunicação com certidão de notificação" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="NEXT VALUE FOR sq_status_processo" />
+            <column name="nm_status_processo" value="Comunicação arquivada" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="NEXT VALUE FOR sq_status_processo" />
+            <column name="nm_status_processo" value="Comunicação arquivada com resposta" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="NEXT VALUE FOR sq_status_processo" />
+            <column name="nm_status_processo" value="Comunicação arquivada sem resposta" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="1" dbms="postgresql">
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="nextval('sq_status_processo')" />
+            <column name="nm_status_processo" value="Comunicação com ciência" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="nextval('sq_status_processo')" />
+            <column name="nm_status_processo" value="Comunicação respondida" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="nextval('sq_status_processo')" />
+            <column name="nm_status_processo" value="Comunicação com prazo encerrado" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="nextval('sq_status_processo')" />
+            <column name="nm_status_processo" value="Comunicação com certidão de notificação" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="nextval('sq_status_processo')" />
+            <column name="nm_status_processo" value="Comunicação arquivada" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="nextval('sq_status_processo')" />
+            <column name="nm_status_processo" value="Comunicação arquivada com resposta" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="nextval('sq_status_processo')" />
+            <column name="nm_status_processo" value="Comunicação arquivada sem resposta" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle">
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="sq_status_processo.nextval" />
+            <column name="nm_status_processo" value="Comunicação com ciência" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="sq_status_processo.nextval" />
+            <column name="nm_status_processo" value="Comunicação respondida" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="sq_status_processo.nextval" />
+            <column name="nm_status_processo" value="Comunicação com prazo encerrado" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="sq_status_processo.nextval" />
+            <column name="nm_status_processo" value="Comunicação com certidão de notificação" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="sq_status_processo.nextval" />
+            <column name="nm_status_processo" value="Comunicação arquivada" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="sq_status_processo.nextval" />
+            <column name="nm_status_processo" value="Comunicação arquivada com resposta" />
+        </insert>
+        <insert tableName="tb_status_processo">
+            <column name="id_status_processo" valueComputed="sq_status_processo.nextval" />
+            <column name="nm_status_processo" value="Comunicação arquivada sem resposta" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>

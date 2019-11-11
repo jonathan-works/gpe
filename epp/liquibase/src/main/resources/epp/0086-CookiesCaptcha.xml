@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet id="1" author="paulofilho">
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_cookie_captcha" />
+        <createTable tableName="tb_cookie_captcha">
+            <column name="id_cookie_captcha" type="integer" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_cookie_captcha"/>
+            </column>
+            <column name="cd_client_id" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="dt_criacao" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_usuario_cookie_captcha" />
+        <createTable tableName="tb_usuario_cookie_captcha">
+            <column name="id_cookie_captcha" type="integer">
+                <constraints nullable="false" foreignKeyName="fk_usuario_cookie_captcha_01" references="tb_cookie_captcha(id_cookie_captcha)"/>
+            </column>
+            <column name="ds_login" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_login_invalido" />
+        <createTable tableName="tb_login_invalido">
+            <column name="id_login_invalido" type="integer" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_login_invalido"/>
+            </column>
+            <column name="id_cookie_captcha" type="integer">
+                <constraints foreignKeyName="fk_tb_login_invalido_01" references="tb_cookie_captcha(id_cookie_captcha)"/>
+            </column>
+            <column name="dt_login" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+</databaseChangeLog>

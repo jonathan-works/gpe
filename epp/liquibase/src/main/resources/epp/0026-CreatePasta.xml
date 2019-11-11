@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="avner" id="1" dbms="mssql, postgresql, oracle" >
+        <createSequence sequenceName="sq_pasta" minValue="1" startValue="1"/>
+        <createTable tableName="tb_pasta">
+            <column name="id_pasta" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_pasta"/>
+            </column>
+            <column name="nm_pasta" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_visivel_externo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_removivel" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_processo" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tb_pasta_001" references="tb_processo(id_processo)"/>
+            </column>
+        </createTable>
+        <createIndex indexName="idx_tb_pasta_id_processo" tableName="tb_pasta" unique="false">
+            <column name="id_processo"/>
+        </createIndex>  
+
+        <addColumn tableName="tb_documento">
+            <column name="id_pasta" type="bigint">
+                <constraints nullable="true" references="tb_pasta(id_pasta)" foreignKeyName="fk_documento_id_pasta" />
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="avner" id="2" dbms="mssql, postgresql, oracle" >
+      <addColumn tableName="tb_pasta">
+        <column name="in_sistema" type="boolean" defaultValueBoolean="true">
+          <constraints nullable="false"/>
+        </column>
+      </addColumn>
+    </changeSet>
+
+    <changeSet author="avner" id="3" dbms="mssql, postgresql, oracle">
+        <!-- MSSQL -->
+        <insert tableName="tb_recurso" dbms="mssql">
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Pasta/adicionarPasta" />
+            <column name="ds_nome" value="Adicionar Pasta" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="mssql">
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Pasta/removerPasta" />
+            <column name="ds_nome" value="Remover Pasta" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="mssql">
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Pasta/editarPasta" />
+            <column name="ds_nome" value="Editar Pasta" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="mssql">
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Pasta/visualizarPasta" />
+            <column name="ds_nome" value="Visualizar Todas as Pastas" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="mssql">
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Pasta/moverDocumento" />
+            <column name="ds_nome" value="Mover Documento entre Pastas" />
+        </insert>
+
+        <!-- PostgreSQL -->
+        <insert tableName="tb_recurso" dbms="postgresql">
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Pasta/adicionarPasta" />
+            <column name="ds_nome" value="Adicionar Pasta" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="postgresql">
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Pasta/removerPasta" />
+            <column name="ds_nome" value="Remover Pasta" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="postgresql">
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Pasta/editarPasta" />
+            <column name="ds_nome" value="Editar Pasta" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="postgresql">
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Pasta/visualizarPasta" />
+            <column name="ds_nome" value="Visualizar Todas as Pastas" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="postgresql">
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_identificador" value="/pages/Pasta/moverDocumento" />
+            <column name="ds_nome" value="Mover Documento entre Pastas" />
+        </insert>
+
+         <!-- Oracle -->
+        <insert tableName="tb_recurso" dbms="oracle">
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Pasta/adicionarPasta" />
+            <column name="ds_nome" value="Adicionar Pasta" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="oracle">
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Pasta/removerPasta" />
+            <column name="ds_nome" value="Remover Pasta" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="oracle">
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Pasta/editarPasta" />
+            <column name="ds_nome" value="Editar Pasta" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="oracle">
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Pasta/visualizarPasta" />
+            <column name="ds_nome" value="Visualizar Todas as Pastas" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="oracle">
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_identificador" value="/pages/Pasta/moverDocumento" />
+            <column name="ds_nome" value="Mover Documento entre Pastas" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

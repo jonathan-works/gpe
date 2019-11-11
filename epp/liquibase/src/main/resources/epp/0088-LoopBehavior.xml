@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="victorpasqualino" id="1" >
+    	<addColumn tableName="JBPM_NODE">
+            <column name="ACTIVITYBEHAVIORCONFIGURATION_" type="VARCHAR(4000)" />
+            <column name="ACTIVITYBEHAVIORCLASS_" type="VARCHAR(4000)" />
+    	</addColumn>
+    </changeSet>
+    
+</databaseChangeLog>

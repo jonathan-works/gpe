@@ -1,0 +1,2451 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    <changeSet author="liquibase" id="1402499571484-2" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_ajuda" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-3" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_bloqueio_usuario" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-4" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_caixa" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-5" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_calendario_eventos" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-6" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_categoria" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-7" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_localizacao" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-8" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_historico_ajuda" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-9" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_localizacao_fisica" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-10" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_natureza_localizacao" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-11" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_papel" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-12" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_parte_processo" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-13" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_categoria_item" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-14" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_definicao_variavel_processo" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-15" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_fluxo" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-16" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_pessoa_juridica" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-17" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_fluxo_papel" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-18" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_grupo_modelo_documento" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-20" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_historico_parte_processo" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-22" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_item" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-23" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_jbpm_variavel_label" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-25" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_usuario_login" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-573" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_lista_email" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-574" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_localizacao_turno" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-575" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_log" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-576" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_log_detalhe" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-577" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_modelo_documento" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-578" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_modelo_documento_historico" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-579" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_nat_cat_fluxo_localizacao" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-580" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_natureza" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-581" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_natureza_categoria_fluxo" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-582" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_pagina" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-583" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_parametro" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-584" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_pessoa" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-585" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_pessoa_fisica" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-586" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_prioridade_processo" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-587" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_processo" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-588" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_processo_documento" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-589" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_processo_documento_bin" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-590" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_processo_epa_tarefa" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-591" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_processo_localizacao_ibpm" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-592" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_recurso" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-593" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_relacionamento" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-594" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_relacionamento_processo" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-595" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_sigilo_documento" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-596" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_sigilo_documento_permissao" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-597" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_sigilo_processo" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-598" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_sigilo_processo_permissao" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-599" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_tarefa" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-600" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_tarefa_jbpm" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-601" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_tipo_modelo_documento" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-602" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tipo_modelo_documento_papel" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-603" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_tipo_processo_documento" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-604" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tipo_processo_doc_papel" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-605" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_usuario_localizacao" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-606" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_variavel" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-607" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_variavel_tipo_modelo" minValue="1" startValue="1"/>
+    </changeSet> 
+    <changeSet author="liquibase" id="1402499571484-608" dbms="oracle" context="core">
+        <createSequence sequenceName="sq_tb_permissao" minValue="1" startValue="1"/>
+    </changeSet> 
+    <changeSet author="liquibase" id="1402499571484-609" dbms="oracle" context="core">
+        <createSequence minValue="1" startValue="1" sequenceName="sq_tb_documento_fisico"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-610" dbms="oracle" context="core">
+        <createSequence minValue="1" startValue="1" sequenceName="sq_tb_dominio_variavel_tarefa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-611" dbms="oracle" context="core">
+        <createSequence minValue="1" startValue="1" sequenceName="sq_tipo_relacio_processo"/>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="1" dbms="oracle" context="core">
+        <sql> 
+            create table JBPM_ACTION (ID_ number(38) not null, class CHAR(1) not null, NAME_ VARCHAR2(255), ISPROPAGATIONALLOWED_ number(1), ACTIONEXPRESSION_ VARCHAR2(255), ISASYNC_ number(1), REFERENCEDACTION_ number(38), ACTIONDELEGATION_ number(38), EVENT_ number(38), PROCESSDEFINITION_ number(38), EXPRESSION_ VARCHAR2(4000), TIMERNAME_ VARCHAR2(255), DUEDATE_ VARCHAR2(255), REPEAT_ VARCHAR2(255), TRANSITIONNAME_ VARCHAR2(255), TIMERACTION_ number(38), EVENTINDEX_ number(10), EXCEPTIONHANDLER_ number(38), EXCEPTIONHANDLERINDEX_ number(10), primary key (ID_));
+            create table JBPM_BYTEARRAY (ID_ number(38) not null, NAME_ VARCHAR2(255), FILEDEFINITION_ number(38), primary key (ID_));
+            create table JBPM_BYTEBLOCK (PROCESSFILE_ number(38) not null, BYTES_ BLOB, INDEX_ number(10) not null, primary key (PROCESSFILE_, INDEX_));
+            create table JBPM_COMMENT (ID_ number(38) not null, VERSION_ number(10) not null, ACTORID_ VARCHAR2(255), TIME_ timestamp, MESSAGE_ VARCHAR2(4000), TOKEN_ number(38), TASKINSTANCE_ number(38), TOKENINDEX_ number(10), TASKINSTANCEINDEX_ number(10), primary key (ID_));
+            create table JBPM_DECISIONCONDITIONS (DECISION_ number(38) not null, TRANSITIONNAME_ VARCHAR2(255), EXPRESSION_ VARCHAR2(255), INDEX_ number(10) not null, primary key (DECISION_, INDEX_));
+            create table JBPM_DELEGATION (ID_ number(38) not null, CLASSNAME_ VARCHAR2(4000), CONFIGURATION_ VARCHAR2(4000), CONFIGTYPE_ VARCHAR2(255), PROCESSDEFINITION_ number(38), primary key (ID_));
+            create table JBPM_EVENT (ID_ number(38) not null, EVENTTYPE_ VARCHAR2(255), TYPE_ char(1), GRAPHELEMENT_ number(38), PROCESSDEFINITION_ number(38), NODE_ number(38), TRANSITION_ number(38), TASK_ number(38), primary key (ID_));
+            create table JBPM_EXCEPTIONHANDLER (ID_ number(38) not null, EXCEPTIONCLASSNAME_ VARCHAR2(4000), TYPE_ char(1), GRAPHELEMENT_ number(38), PROCESSDEFINITION_ number(38), GRAPHELEMENTINDEX_ number(10), NODE_ number(38), TRANSITION_ number(38), TASK_ number(38), primary key (ID_));
+            create table JBPM_ID_GROUP (ID_ number(38) not null, CLASS_ char(1) not null, NAME_ VARCHAR2(255), TYPE_ VARCHAR2(255), PARENT_ number(38), primary key (ID_));
+            create table JBPM_ID_MEMBERSHIP (ID_ number(38) not null, CLASS_ char(1) not null, NAME_ VARCHAR2(255), ROLE_ VARCHAR2(255), USER_ number(38), GROUP_ number(38), primary key (ID_));
+            create table JBPM_ID_PERMISSIONS (ENTITY_ number(38) not null, CLASS_ VARCHAR2(255), NAME_ VARCHAR2(255), ACTION_ VARCHAR2(255));
+            create table JBPM_ID_USER (ID_ number(38) not null, CLASS_ char(1) not null, NAME_ VARCHAR2(255), EMAIL_ VARCHAR2(255), PASSWORD_ VARCHAR2(255), primary key (ID_));
+            create table JBPM_JOB (ID_ number(38) not null, CLASS_ char(1) not null, VERSION_ number(10) not null, DUEDATE_ timestamp, PROCESSINSTANCE_ number(38), TOKEN_ number(38), TASKINSTANCE_ number(38), ISSUSPENDED_ number(1), ISEXCLUSIVE_ number(1), LOCKOWNER_ VARCHAR2(255), LOCKTIME_ timestamp, EXCEPTION_ NCLOB, RETRIES_ number(10), NAME_ VARCHAR2(255), REPEAT_ VARCHAR2(255), TRANSITIONNAME_ VARCHAR2(255), ACTION_ number(38), GRAPHELEMENTTYPE_ VARCHAR2(255), GRAPHELEMENT_ number(38), NODE_ number(38), primary key (ID_));
+            create table JBPM_LOG (ID_ number(38) not null, CLASS_ char(1) not null, INDEX_ number(10), DATE_ timestamp, TOKEN_ number(38), PARENT_ number(38), MESSAGE_ VARCHAR2(2000), EXCEPTION_ VARCHAR2(4000), ACTION_ number(38), NODE_ number(38), ENTER_ timestamp, LEAVE_ timestamp, DURATION_ number(38), NEWLONGVALUE_ number(38), TRANSITION_ number(38), CHILD_ number(38), SOURCENODE_ number(38), DESTINATIONNODE_ number(38), VARIABLEINSTANCE_ number(38), OLDBYTEARRAY_ number(38), NEWBYTEARRAY_ number(38), OLDDATEVALUE_ timestamp, NEWDATEVALUE_ timestamp, OLDDOUBLEVALUE_ NUMBER(19,4), NEWDOUBLEVALUE_ NUMBER(19,4), OLDLONGIDCLASS_ VARCHAR2(255), OLDLONGIDVALUE_ number(38), NEWLONGIDCLASS_ VARCHAR2(255), NEWLONGIDVALUE_ number(38), OLDSTRINGIDCLASS_ VARCHAR2(255), OLDSTRINGIDVALUE_ VARCHAR2(255), NEWSTRINGIDCLASS_ VARCHAR2(255), NEWSTRINGIDVALUE_ VARCHAR2(255), OLDLONGVALUE_ number(38), OLDSTRINGVALUE_ VARCHAR2(4000), NEWSTRINGVALUE_ VARCHAR2(4000), TASKINSTANCE_ number(38), TASKACTORID_ VARCHAR2(255), TASKOLDACTORID_ VARCHAR2(255), SWIMLANEINSTANCE_ number(38), primary key (ID_));
+            create table JBPM_MODULEDEFINITION (ID_ number(38) not null, CLASS_ char(1) not null, NAME_ VARCHAR2(4000), PROCESSDEFINITION_ number(38), STARTTASK_ number(38), primary key (ID_));
+            create table JBPM_MODULEINSTANCE (ID_ number(38) not null, CLASS_ char(1) not null, VERSION_ number(10) not null, PROCESSINSTANCE_ number(38), TASKMGMTDEFINITION_ number(38), NAME_ VARCHAR2(255), primary key (ID_));
+            create table JBPM_NODE (ID_ number(38) not null, CLASS_ char(1) not null, NAME_ VARCHAR2(255), DESCRIPTION_ VARCHAR2(4000), PROCESSDEFINITION_ number(38), ISASYNC_ number(1), ISASYNCEXCL_ number(1), ACTION_ number(38), SUPERSTATE_ number(38), SUBPROCNAME_ VARCHAR2(255), SUBPROCESSDEFINITION_ number(38), DECISIONEXPRESSION_ NVARCHAR2(2000), DECISIONDELEGATION number(38), SCRIPT_ number(38), SIGNAL_ number(10), CREATETASKS_ number(1), ENDTASKS_ number(1), NODECOLLECTIONINDEX_ number(10), primary key (ID_));
+            create table JBPM_POOLEDACTOR (ID_ number(38) not null, VERSION_ number(10) not null, ACTORID_ VARCHAR2(255), SWIMLANEINSTANCE_ number(38), primary key (ID_));
+            create table JBPM_PROCESSDEFINITION (ID_ number(38) not null, CLASS_ char(1) not null, NAME_ VARCHAR2(255), DESCRIPTION_ VARCHAR2(4000), VERSION_ number(10), ISTERMINATIONIMPLICIT_ number(1), STARTSTATE_ number(38), primary key (ID_));
+            create table JBPM_PROCESSINSTANCE (ID_ number(38) not null, VERSION_ number(10) not null, KEY_ VARCHAR2(255), START_ timestamp, END_ timestamp, ISSUSPENDED_ number(1), PROCESSDEFINITION_ number(38), ROOTTOKEN_ number(38), SUPERPROCESSTOKEN_ number(38), primary key (ID_));
+            create table JBPM_RUNTIMEACTION (ID_ number(38) not null, VERSION_ number(10) not null, EVENTTYPE_ VARCHAR2(255), TYPE_ char(1), GRAPHELEMENT_ number(38), PROCESSINSTANCE_ number(38), ACTION_ number(38), PROCESSINSTANCEINDEX_ number(10), primary key (ID_));
+            create table JBPM_SWIMLANE (ID_ number(38) not null, NAME_ VARCHAR2(255), ACTORIDEXPRESSION_ VARCHAR2(255), POOLEDACTORSEXPRESSION_ VARCHAR2(255), ASSIGNMENTDELEGATION_ number(38), TASKMGMTDEFINITION_ number(38), primary key (ID_));
+            create table JBPM_SWIMLANEINSTANCE (ID_ number(38) not null, VERSION_ number(10) not null, NAME_ VARCHAR2(255), ACTORID_ VARCHAR2(255), SWIMLANE_ number(38), TASKMGMTINSTANCE_ number(38), primary key (ID_));
+            create table JBPM_TASK (ID_ number(38) not null, NAME_ VARCHAR2(255), DESCRIPTION_ VARCHAR2(4000), PROCESSDEFINITION_ number(38), ISBLOCKING_ number(1), ISSIGNALLING_ number(1), CONDITION_ VARCHAR2(255), DUEDATE_ VARCHAR2(255), PRIORITY_ number(10), ACTORIDEXPRESSION_ VARCHAR2(255), POOLEDACTORSEXPRESSION_ VARCHAR2(255), TASKMGMTDEFINITION_ number(38), TASKNODE_ number(38), STARTSTATE_ number(38), ASSIGNMENTDELEGATION_ number(38), SWIMLANE_ number(38), TASKCONTROLLER_ number(38), primary key (ID_));
+            create table JBPM_TASKACTORPOOL (TASKINSTANCE_ number(38) not null, POOLEDACTOR_ number(38) not null, primary key (TASKINSTANCE_, POOLEDACTOR_));
+            create table JBPM_TASKCONTROLLER (ID_ number(38) not null, TASKCONTROLLERDELEGATION_ number(38), primary key (ID_));
+            create table JBPM_TASKINSTANCE (ID_ number(38) not null, CLASS_ char(1) not null, VERSION_ number(10) not null, NAME_ VARCHAR2(255), DESCRIPTION_ VARCHAR2(4000), ACTORID_ VARCHAR2(255), CREATE_ timestamp, START_ timestamp, END_ timestamp, DUEDATE_ timestamp, PRIORITY_ number(10), ISCANCELLED_ number(1), ISSUSPENDED_ number(1), ISOPEN_ number(1), ISSIGNALLING_ number(1), ISBLOCKING_ number(1), TASK_ number(38), TOKEN_ number(38), PROCINST_ number(38), SWIMLANINSTANCE_ number(38), TASKMGMTINSTANCE_ number(38), primary key (ID_));
+            create table JBPM_TOKEN (ID_ number(38) not null, VERSION_ number(10) not null, NAME_ VARCHAR2(255), START_ timestamp, END_ timestamp, NODEENTER_ timestamp, NEXTLOGINDEX_ number(10), ISABLETOREACTIVATEPARENT_ number(1), ISTERMINATIONIMPLICIT_ number(1), ISSUSPENDED_ number(1), LOCK_ VARCHAR2(255), NODE_ number(38), PROCESSINSTANCE_ number(38), PARENT_ number(38), SUBPROCESSINSTANCE_ number(38), primary key (ID_));
+            create table JBPM_TOKENVARIABLEMAP (ID_ number(38) not null, VERSION_ number(10) not null, TOKEN_ number(38), CONTEXTINSTANCE_ number(38), primary key (ID_));
+            create table JBPM_TRANSITION (ID_ number(38) not null, NAME_ VARCHAR2(255), DESCRIPTION_ VARCHAR2(4000), PROCESSDEFINITION_ number(38), FROM_ number(38), TO_ number(38), CONDITION_ VARCHAR2(255), FROMINDEX_ number(10), primary key (ID_));
+            create table JBPM_VARIABLEACCESS (ID_ number(38) not null, VARIABLENAME_ VARCHAR2(255), ACCESS_ VARCHAR2(255), MAPPEDNAME_ VARCHAR2(255), SCRIPT_ number(38), PROCESSSTATE_ number(38), TASKCONTROLLER_ number(38), INDEX_ number(10), primary key (ID_));
+            create table JBPM_VARIABLEINSTANCE (ID_ number(38) not null, CLASS_ char(1) not null, VERSION_ number(10) not null, NAME_ VARCHAR2(255), CONVERTER_ NCHAR(1), TOKEN_ number(38), TOKENVARIABLEMAP_ number(38), PROCESSINSTANCE_ number(38), BYTEARRAYVALUE_ number(38), DATEVALUE_ timestamp, DOUBLEVALUE_ NUMBER(19,4), LONGIDCLASS_ VARCHAR2(255), LONGVALUE_ number(38), STRINGIDCLASS_ VARCHAR2(255), STRINGVALUE_ NCLOB, TASKINSTANCE_ number(38), primary key (ID_));
+            create index IDX_ACTION_ACTNDL on JBPM_ACTION (ACTIONDELEGATION_);
+            create index IDX_ACTION_REFACT on JBPM_ACTION (REFERENCEDACTION_);
+            create index IDX_ACTION_PROCDF on JBPM_ACTION (PROCESSDEFINITION_);
+            create index IDX_ACTION_EVENT on JBPM_ACTION (EVENT_);
+            create index IDX_CRTETIMERACT_TA on JBPM_ACTION (TIMERACTION_);
+            alter table JBPM_ACTION add constraint FK_ACTION_REFACT foreign key (REFERENCEDACTION_) references JBPM_ACTION;
+            alter table JBPM_ACTION add constraint FK_CRTETIMERACT_TA foreign key (TIMERACTION_) references JBPM_ACTION;
+            alter table JBPM_ACTION add constraint FK_ACTION_PROCDEF foreign key (PROCESSDEFINITION_) references JBPM_PROCESSDEFINITION;
+            alter table JBPM_ACTION add constraint FK_ACTION_EVENT foreign key (EVENT_) references JBPM_EVENT;
+            alter table JBPM_ACTION add constraint FK_ACTION_ACTNDEL foreign key (ACTIONDELEGATION_) references JBPM_DELEGATION;
+            alter table JBPM_ACTION add constraint FK_ACTION_EXPTHDL foreign key (EXCEPTIONHANDLER_) references JBPM_EXCEPTIONHANDLER;
+            alter table JBPM_BYTEARRAY add constraint FK_BYTEARR_FILDEF foreign key (FILEDEFINITION_) references JBPM_MODULEDEFINITION;
+            alter table JBPM_BYTEBLOCK add constraint FK_BYTEBLOCK_FILE foreign key (PROCESSFILE_) references JBPM_BYTEARRAY;
+            create index IDX_COMMENT_TSK on JBPM_COMMENT (TASKINSTANCE_);
+            create index IDX_COMMENT_TOKEN on JBPM_COMMENT (TOKEN_);
+            alter table JBPM_COMMENT add constraint FK_COMMENT_TOKEN foreign key (TOKEN_) references JBPM_TOKEN;
+            alter table JBPM_COMMENT add constraint FK_COMMENT_TSK foreign key (TASKINSTANCE_) references JBPM_TASKINSTANCE;
+            alter table JBPM_DECISIONCONDITIONS add constraint FK_DECCOND_DEC foreign key (DECISION_) references JBPM_NODE;
+            create index IDX_DELEG_PRCD on JBPM_DELEGATION (PROCESSDEFINITION_);
+            alter table JBPM_DELEGATION add constraint FK_DELEGATION_PRCD foreign key (PROCESSDEFINITION_) references JBPM_PROCESSDEFINITION;
+            alter table JBPM_EVENT add constraint FK_EVENT_PROCDEF foreign key (PROCESSDEFINITION_) references JBPM_PROCESSDEFINITION;
+            alter table JBPM_EVENT add constraint FK_EVENT_TRANS foreign key (TRANSITION_) references JBPM_TRANSITION;
+            alter table JBPM_EVENT add constraint FK_EVENT_NODE foreign key (NODE_) references JBPM_NODE;
+            alter table JBPM_EVENT add constraint FK_EVENT_TASK foreign key (TASK_) references JBPM_TASK;
+            alter table JBPM_ID_GROUP add constraint FK_ID_GRP_PARENT foreign key (PARENT_) references JBPM_ID_GROUP;
+            alter table JBPM_ID_MEMBERSHIP add constraint FK_ID_MEMSHIP_GRP foreign key (GROUP_) references JBPM_ID_GROUP;
+            alter table JBPM_ID_MEMBERSHIP add constraint FK_ID_MEMSHIP_USR foreign key (USER_) references JBPM_ID_USER;
+            create index IDX_JOB_TSKINST on JBPM_JOB (TASKINSTANCE_);
+            create index IDX_JOB_ACTION on JBPM_JOB (ACTION_);
+            create index IDX_JOB_NODE on JBPM_JOB (NODE_);
+            create index IDX_JOB_TOKEN on JBPM_JOB (TOKEN_);
+            create index IDX_JOB_PRINST on JBPM_JOB (PROCESSINSTANCE_);
+            alter table JBPM_JOB add constraint FK_JOB_PRINST foreign key (PROCESSINSTANCE_) references JBPM_PROCESSINSTANCE;
+            alter table JBPM_JOB add constraint FK_JOB_ACTION foreign key (ACTION_) references JBPM_ACTION;
+            alter table JBPM_JOB add constraint FK_JOB_TOKEN foreign key (TOKEN_) references JBPM_TOKEN;
+            alter table JBPM_JOB add constraint FK_JOB_NODE foreign key (NODE_) references JBPM_NODE;
+            alter table JBPM_JOB add constraint FK_JOB_TSKINST foreign key (TASKINSTANCE_) references JBPM_TASKINSTANCE;
+            create index IDX_LOG_NEWBYTES on JBPM_LOG (NEWBYTEARRAY_);
+            create index IDX_LOG_OLDBYTES on JBPM_LOG (OLDBYTEARRAY_);
+            create index IDX_LOG_TASKINST on JBPM_LOG (TASKINSTANCE_);
+            create index IDX_LOG_SWIMINST on JBPM_LOG (SWIMLANEINSTANCE_);
+            create index IDX_LOG_TRANSITION on JBPM_LOG (TRANSITION_);
+            create index IDX_LOG_VARINST on JBPM_LOG (VARIABLEINSTANCE_);
+            create index IDX_LOG_PARENT on JBPM_LOG (PARENT_);
+            create index IDX_LOG_DESTNODE on JBPM_LOG (DESTINATIONNODE_);
+            create index IDX_LOG_NODE on JBPM_LOG (NODE_);
+            create index IDX_LOG_CHILDTOKEN on JBPM_LOG (CHILD_);
+            create index IDX_LOG_TOKEN on JBPM_LOG (TOKEN_);
+            create index IDX_LOG_ACTION on JBPM_LOG (ACTION_);
+            create index IDX_LOG_SOURCENODE on JBPM_LOG (SOURCENODE_);
+            alter table JBPM_LOG add constraint FK_LOG_SOURCENODE foreign key (SOURCENODE_) references JBPM_NODE;
+            alter table JBPM_LOG add constraint FK_LOG_DESTNODE foreign key (DESTINATIONNODE_) references JBPM_NODE;
+            alter table JBPM_LOG add constraint FK_LOG_TOKEN foreign key (TOKEN_) references JBPM_TOKEN;
+            alter table JBPM_LOG add constraint FK_LOG_TRANSITION foreign key (TRANSITION_) references JBPM_TRANSITION;
+            alter table JBPM_LOG add constraint FK_LOG_TASKINST foreign key (TASKINSTANCE_) references JBPM_TASKINSTANCE;
+            alter table JBPM_LOG add constraint FK_LOG_CHILDTOKEN foreign key (CHILD_) references JBPM_TOKEN;
+            alter table JBPM_LOG add constraint FK_LOG_OLDBYTES foreign key (OLDBYTEARRAY_) references JBPM_BYTEARRAY;
+            alter table JBPM_LOG add constraint FK_LOG_SWIMINST foreign key (SWIMLANEINSTANCE_) references JBPM_SWIMLANEINSTANCE;
+            alter table JBPM_LOG add constraint FK_LOG_NEWBYTES foreign key (NEWBYTEARRAY_) references JBPM_BYTEARRAY;
+            alter table JBPM_LOG add constraint FK_LOG_ACTION foreign key (ACTION_) references JBPM_ACTION;
+            alter table JBPM_LOG add constraint FK_LOG_VARINST foreign key (VARIABLEINSTANCE_) references JBPM_VARIABLEINSTANCE;
+            alter table JBPM_LOG add constraint FK_LOG_NODE foreign key (NODE_) references JBPM_NODE;
+            alter table JBPM_LOG add constraint FK_LOG_PARENT foreign key (PARENT_) references JBPM_LOG;
+            create index IDX_MODDEF_PROCDF on JBPM_MODULEDEFINITION (PROCESSDEFINITION_);
+            create index IDX_TSKDEF_START on JBPM_MODULEDEFINITION (STARTTASK_);
+            alter table JBPM_MODULEDEFINITION add constraint FK_MODDEF_PROCDEF foreign key (PROCESSDEFINITION_) references JBPM_PROCESSDEFINITION;
+            alter table JBPM_MODULEDEFINITION add constraint FK_TSKDEF_START foreign key (STARTTASK_) references JBPM_TASK;
+            create index IDX_MODINST_PRINST on JBPM_MODULEINSTANCE (PROCESSINSTANCE_);
+            create index IDX_TASKMGTINST_TMD on JBPM_MODULEINSTANCE (TASKMGMTDEFINITION_);
+            alter table JBPM_MODULEINSTANCE add constraint FK_MODINST_PRCINST foreign key (PROCESSINSTANCE_) references JBPM_PROCESSINSTANCE;
+            alter table JBPM_MODULEINSTANCE add constraint FK_TASKMGTINST_TMD foreign key (TASKMGMTDEFINITION_) references JBPM_MODULEDEFINITION;
+            create index IDX_DECISION_DELEG on JBPM_NODE (DECISIONDELEGATION);
+            create index IDX_PSTATE_SBPRCDEF on JBPM_NODE (SUBPROCESSDEFINITION_);
+            create index IDX_NODE_PROCDEF on JBPM_NODE (PROCESSDEFINITION_);
+            create index IDX_NODE_SCRIPT on JBPM_NODE (SCRIPT_);
+            create index IDX_NODE_ACTION on JBPM_NODE (ACTION_);
+            create index IDX_NODE_SUPRSTATE on JBPM_NODE (SUPERSTATE_);
+            alter table JBPM_NODE add constraint FK_DECISION_DELEG foreign key (DECISIONDELEGATION) references JBPM_DELEGATION;
+            alter table JBPM_NODE add constraint FK_NODE_PROCDEF foreign key (PROCESSDEFINITION_) references JBPM_PROCESSDEFINITION;
+            alter table JBPM_NODE add constraint FK_NODE_ACTION foreign key (ACTION_) references JBPM_ACTION;
+            alter table JBPM_NODE add constraint FK_PROCST_SBPRCDEF foreign key (SUBPROCESSDEFINITION_) references JBPM_PROCESSDEFINITION;
+            alter table JBPM_NODE add constraint FK_NODE_SCRIPT foreign key (SCRIPT_) references JBPM_ACTION;
+            alter table JBPM_NODE add constraint FK_NODE_SUPERSTATE foreign key (SUPERSTATE_) references JBPM_NODE;
+            create index IDX_TSKINST_SWLANE on JBPM_POOLEDACTOR (SWIMLANEINSTANCE_);
+            create index IDX_PLDACTR_ACTID on JBPM_POOLEDACTOR (ACTORID_);
+            alter table JBPM_POOLEDACTOR add constraint FK_POOLEDACTOR_SLI foreign key (SWIMLANEINSTANCE_) references JBPM_SWIMLANEINSTANCE;
+            create index IDX_PROCDEF_STRTST on JBPM_PROCESSDEFINITION (STARTSTATE_);
+            alter table JBPM_PROCESSDEFINITION add constraint FK_PROCDEF_STRTSTA foreign key (STARTSTATE_) references JBPM_NODE;
+            create index IDX_PROCIN_SPROCTK on JBPM_PROCESSINSTANCE (SUPERPROCESSTOKEN_);
+            create index IDX_PROCIN_ROOTTK on JBPM_PROCESSINSTANCE (ROOTTOKEN_);
+            create index IDX_PROCIN_PROCDEF on JBPM_PROCESSINSTANCE (PROCESSDEFINITION_);
+            create index IDX_PROCIN_KEY on JBPM_PROCESSINSTANCE (KEY_);
+            alter table JBPM_PROCESSINSTANCE add constraint FK_PROCIN_PROCDEF foreign key (PROCESSDEFINITION_) references JBPM_PROCESSDEFINITION;
+            alter table JBPM_PROCESSINSTANCE add constraint FK_PROCIN_ROOTTKN foreign key (ROOTTOKEN_) references JBPM_TOKEN;
+            alter table JBPM_PROCESSINSTANCE add constraint FK_PROCIN_SPROCTKN foreign key (SUPERPROCESSTOKEN_) references JBPM_TOKEN;
+            create index IDX_RTACTN_ACTION on JBPM_RUNTIMEACTION (ACTION_);
+            create index IDX_RTACTN_PRCINST on JBPM_RUNTIMEACTION (PROCESSINSTANCE_);
+            alter table JBPM_RUNTIMEACTION add constraint FK_RTACTN_PROCINST foreign key (PROCESSINSTANCE_) references JBPM_PROCESSINSTANCE;
+            alter table JBPM_RUNTIMEACTION add constraint FK_RTACTN_ACTION foreign key (ACTION_) references JBPM_ACTION;
+            create index IDX_SWL_ASSDEL on JBPM_SWIMLANE (ASSIGNMENTDELEGATION_);
+            create index IDX_SWL_TSKMGMTDEF on JBPM_SWIMLANE (TASKMGMTDEFINITION_);
+            alter table JBPM_SWIMLANE add constraint FK_SWL_ASSDEL foreign key (ASSIGNMENTDELEGATION_) references JBPM_DELEGATION;
+            alter table JBPM_SWIMLANE add constraint FK_SWL_TSKMGMTDEF foreign key (TASKMGMTDEFINITION_) references JBPM_MODULEDEFINITION;
+            create index IDX_SWIMLANEINST_TM on JBPM_SWIMLANEINSTANCE (TASKMGMTINSTANCE_);
+            create index IDX_SWIMLINST_SL on JBPM_SWIMLANEINSTANCE (SWIMLANE_);
+            alter table JBPM_SWIMLANEINSTANCE add constraint FK_SWIMLANEINST_TM foreign key (TASKMGMTINSTANCE_) references JBPM_MODULEINSTANCE;
+            alter table JBPM_SWIMLANEINSTANCE add constraint FK_SWIMLANEINST_SL foreign key (SWIMLANE_) references JBPM_SWIMLANE;
+            create index IDX_TASK_PROCDEF on JBPM_TASK (PROCESSDEFINITION_);
+            create index IDX_TASK_SWIMLANE on JBPM_TASK (SWIMLANE_);
+            create index IDX_TASK_STARTST on JBPM_TASK (STARTSTATE_);
+            create index IDX_TSK_TSKCTRL on JBPM_TASK (TASKCONTROLLER_);
+            create index IDX_TASK_ASSDEL on JBPM_TASK (ASSIGNMENTDELEGATION_);
+            create index IDX_TASK_TSKNODE on JBPM_TASK (TASKNODE_);
+            create index IDX_TASK_TASKMGTDF on JBPM_TASK (TASKMGMTDEFINITION_);
+            alter table JBPM_TASK add constraint FK_TASK_STARTST foreign key (STARTSTATE_) references JBPM_NODE;
+            alter table JBPM_TASK add constraint FK_TASK_PROCDEF foreign key (PROCESSDEFINITION_) references JBPM_PROCESSDEFINITION;
+            alter table JBPM_TASK add constraint FK_TASK_ASSDEL foreign key (ASSIGNMENTDELEGATION_) references JBPM_DELEGATION;
+            alter table JBPM_TASK add constraint FK_TASK_SWIMLANE foreign key (SWIMLANE_) references JBPM_SWIMLANE;
+            alter table JBPM_TASK add constraint FK_TASK_TASKNODE foreign key (TASKNODE_) references JBPM_NODE;
+            alter table JBPM_TASK add constraint FK_TASK_TASKMGTDEF foreign key (TASKMGMTDEFINITION_) references JBPM_MODULEDEFINITION;
+            alter table JBPM_TASK add constraint FK_TSK_TSKCTRL foreign key (TASKCONTROLLER_) references JBPM_TASKCONTROLLER;
+            alter table JBPM_TASKACTORPOOL add constraint FK_TASKACTPL_TSKI foreign key (TASKINSTANCE_) references JBPM_TASKINSTANCE;
+            alter table JBPM_TASKACTORPOOL add constraint FK_TSKACTPOL_PLACT foreign key (POOLEDACTOR_) references JBPM_POOLEDACTOR;
+            create index IDX_TSKCTRL_DELEG on JBPM_TASKCONTROLLER (TASKCONTROLLERDELEGATION_);
+            alter table JBPM_TASKCONTROLLER add constraint FK_TSKCTRL_DELEG foreign key (TASKCONTROLLERDELEGATION_) references JBPM_DELEGATION;
+            create index IDX_TSKINST_TMINST on JBPM_TASKINSTANCE (TASKMGMTINSTANCE_);
+            create index IDX_TSKINST_SLINST on JBPM_TASKINSTANCE (SWIMLANINSTANCE_);
+            create index IDX_TASKINST_TOKN on JBPM_TASKINSTANCE (TOKEN_);
+            create index IDX_TASK_ACTORID on JBPM_TASKINSTANCE (ACTORID_);
+            create index IDX_TASKINST_TSK on JBPM_TASKINSTANCE (TASK_, PROCINST_);
+            alter table JBPM_TASKINSTANCE add constraint FK_TSKINS_PRCINS foreign key (PROCINST_) references JBPM_PROCESSINSTANCE;
+            alter table JBPM_TASKINSTANCE add constraint FK_TASKINST_TMINST foreign key (TASKMGMTINSTANCE_) references JBPM_MODULEINSTANCE;
+            alter table JBPM_TASKINSTANCE add constraint FK_TASKINST_TOKEN foreign key (TOKEN_) references JBPM_TOKEN;
+            alter table JBPM_TASKINSTANCE add constraint FK_TASKINST_SLINST foreign key (SWIMLANINSTANCE_) references JBPM_SWIMLANEINSTANCE;
+            alter table JBPM_TASKINSTANCE add constraint FK_TASKINST_TASK foreign key (TASK_) references JBPM_TASK;
+            create index IDX_TOKEN_PARENT on JBPM_TOKEN (PARENT_);
+            create index IDX_TOKEN_PROCIN on JBPM_TOKEN (PROCESSINSTANCE_);
+            create index IDX_TOKEN_NODE on JBPM_TOKEN (NODE_);
+            create index IDX_TOKEN_SUBPI on JBPM_TOKEN (SUBPROCESSINSTANCE_);
+            alter table JBPM_TOKEN add constraint FK_TOKEN_SUBPI foreign key (SUBPROCESSINSTANCE_) references JBPM_PROCESSINSTANCE;
+            alter table JBPM_TOKEN add constraint FK_TOKEN_PROCINST foreign key (PROCESSINSTANCE_) references JBPM_PROCESSINSTANCE;
+            alter table JBPM_TOKEN add constraint FK_TOKEN_NODE foreign key (NODE_) references JBPM_NODE;
+            alter table JBPM_TOKEN add constraint FK_TOKEN_PARENT foreign key (PARENT_) references JBPM_TOKEN;
+            create index IDX_TKVVARMP_TOKEN on JBPM_TOKENVARIABLEMAP (TOKEN_);
+            create index IDX_TKVARMAP_CTXT on JBPM_TOKENVARIABLEMAP (CONTEXTINSTANCE_);
+            alter table JBPM_TOKENVARIABLEMAP add constraint FK_TKVARMAP_TOKEN foreign key (TOKEN_) references JBPM_TOKEN;
+            alter table JBPM_TOKENVARIABLEMAP add constraint FK_TKVARMAP_CTXT foreign key (CONTEXTINSTANCE_) references JBPM_MODULEINSTANCE;
+            create index IDX_TRANS_PROCDEF on JBPM_TRANSITION (PROCESSDEFINITION_);
+            create index IDX_TRANSIT_FROM on JBPM_TRANSITION (FROM_);
+            create index IDX_TRANSIT_TO on JBPM_TRANSITION (TO_);
+            alter table JBPM_TRANSITION add constraint FK_TRANSITION_FROM foreign key (FROM_) references JBPM_NODE;
+            alter table JBPM_TRANSITION add constraint FK_TRANS_PROCDEF foreign key (PROCESSDEFINITION_) references JBPM_PROCESSDEFINITION;
+            alter table JBPM_TRANSITION add constraint FK_TRANSITION_TO foreign key (TO_) references JBPM_NODE;
+            alter table JBPM_VARIABLEACCESS add constraint FK_VARACC_PROCST foreign key (PROCESSSTATE_) references JBPM_NODE;
+            alter table JBPM_VARIABLEACCESS add constraint FK_VARACC_SCRIPT foreign key (SCRIPT_) references JBPM_ACTION;
+            alter table JBPM_VARIABLEACCESS add constraint FK_VARACC_TSKCTRL foreign key (TASKCONTROLLER_) references JBPM_TASKCONTROLLER;
+            create index IDX_VARINST_TK on JBPM_VARIABLEINSTANCE (TOKEN_);
+            create index IDX_VARINST_TKVARMP on JBPM_VARIABLEINSTANCE (TOKENVARIABLEMAP_);
+            create index IDX_VARINST_PRCINS on JBPM_VARIABLEINSTANCE (PROCESSINSTANCE_);
+            create index IDX_BYTEINST_ARRAY on JBPM_VARIABLEINSTANCE (BYTEARRAYVALUE_);
+            alter table JBPM_VARIABLEINSTANCE add constraint FK_VARINST_PRCINST foreign key (PROCESSINSTANCE_) references JBPM_PROCESSINSTANCE;
+            alter table JBPM_VARIABLEINSTANCE add constraint FK_VARINST_TKVARMP foreign key (TOKENVARIABLEMAP_) references JBPM_TOKENVARIABLEMAP;
+            alter table JBPM_VARIABLEINSTANCE add constraint FK_VARINST_TK foreign key (TOKEN_) references JBPM_TOKEN;
+            alter table JBPM_VARIABLEINSTANCE add constraint FK_BYTEINST_ARRAY foreign key (BYTEARRAYVALUE_) references JBPM_BYTEARRAY;
+            alter table JBPM_VARIABLEINSTANCE add constraint FK_VAR_TSKINST foreign key (TASKINSTANCE_) references JBPM_TASKINSTANCE;
+            create sequence hibernate_sequence;
+        </sql>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="2" dbms="oracle" context="core">
+        <sql>
+            CREATE TABLE qrtz_job_details
+            (
+                JOB_NAME  VARCHAR2(200) NOT NULL,
+                JOB_GROUP VARCHAR2(200) NOT NULL,
+                DESCRIPTION VARCHAR2(250) NULL,
+                JOB_CLASS_NAME   VARCHAR2(250) NOT NULL, 
+                IS_DURABLE number(1) NOT NULL,
+                IS_VOLATILE number(1) NOT NULL,
+                IS_STATEFUL number(1) NOT NULL,
+                REQUESTS_RECOVERY number(1) NOT NULL,
+                JOB_DATA BLOB NULL,
+                PRIMARY KEY (JOB_NAME,JOB_GROUP)
+            );
+
+            CREATE TABLE qrtz_job_listeners
+            (
+                JOB_NAME  VARCHAR2(200) NOT NULL, 
+                JOB_GROUP VARCHAR2(200) NOT NULL,
+                JOB_LISTENER VARCHAR2(200) NOT NULL,
+                PRIMARY KEY (JOB_NAME,JOB_GROUP,JOB_LISTENER),
+                FOREIGN KEY (JOB_NAME,JOB_GROUP) 
+                REFERENCES QRTZ_JOB_DETAILS(JOB_NAME,JOB_GROUP) 
+            );
+
+            CREATE TABLE qrtz_triggers
+            (
+                TRIGGER_NAME VARCHAR2(200) NOT NULL,
+                TRIGGER_GROUP VARCHAR2(200) NOT NULL,
+                JOB_NAME  VARCHAR2(200) NOT NULL, 
+                JOB_GROUP VARCHAR2(200) NOT NULL,
+                IS_VOLATILE NUMBER(1) NOT NULL,
+                DESCRIPTION VARCHAR2(250) NULL,
+                NEXT_FIRE_TIME number(38) NULL,
+                PREV_FIRE_TIME number(38) NULL,
+                PRIORITY INTEGER NULL,
+                TRIGGER_STATE VARCHAR2(16) NOT NULL,
+                TRIGGER_TYPE VARCHAR2(8) NOT NULL,
+                START_TIME number(38) NOT NULL,
+                END_TIME number(38) NULL,
+                CALENDAR_NAME VARCHAR2(200) NULL,
+                MISFIRE_INSTR NUMBER(5) NULL,
+                JOB_DATA BLOB NULL,
+                PRIMARY KEY (TRIGGER_NAME,TRIGGER_GROUP),
+                FOREIGN KEY (JOB_NAME,JOB_GROUP) 
+                REFERENCES QRTZ_JOB_DETAILS(JOB_NAME,JOB_GROUP) 
+            );
+
+            CREATE TABLE qrtz_simple_triggers
+            (
+                TRIGGER_NAME VARCHAR2(200) NOT NULL,
+                TRIGGER_GROUP VARCHAR2(200) NOT NULL,
+                REPEAT_COUNT number(38) NOT NULL,
+                REPEAT_INTERVAL number(38) NOT NULL,
+                TIMES_TRIGGERED number(38) NOT NULL,
+                PRIMARY KEY (TRIGGER_NAME,TRIGGER_GROUP),
+                FOREIGN KEY (TRIGGER_NAME,TRIGGER_GROUP) 
+                REFERENCES QRTZ_TRIGGERS(TRIGGER_NAME,TRIGGER_GROUP)
+            );
+
+            CREATE TABLE qrtz_cron_triggers
+            (
+                TRIGGER_NAME VARCHAR2(200) NOT NULL,
+                TRIGGER_GROUP VARCHAR2(200) NOT NULL,
+                CRON_EXPRESSION VARCHAR2(120) NOT NULL,
+                TIME_ZONE_ID VARCHAR2(80),
+                PRIMARY KEY (TRIGGER_NAME,TRIGGER_GROUP),
+                FOREIGN KEY (TRIGGER_NAME,TRIGGER_GROUP) 
+                REFERENCES QRTZ_TRIGGERS(TRIGGER_NAME,TRIGGER_GROUP)
+            );
+
+            CREATE TABLE qrtz_blob_triggers
+            (
+                TRIGGER_NAME VARCHAR2(200) NOT NULL,
+                TRIGGER_GROUP VARCHAR2(200) NOT NULL,
+                BLOB_DATA BLOB NULL,
+                PRIMARY KEY (TRIGGER_NAME,TRIGGER_GROUP),
+                FOREIGN KEY (TRIGGER_NAME,TRIGGER_GROUP) 
+                    REFERENCES QRTZ_TRIGGERS(TRIGGER_NAME,TRIGGER_GROUP)
+            );
+
+            CREATE TABLE qrtz_trigger_listeners
+            (
+                TRIGGER_NAME  VARCHAR2(200) NOT NULL, 
+                TRIGGER_GROUP VARCHAR2(200) NOT NULL,
+                TRIGGER_LISTENER VARCHAR2(200) NOT NULL,
+                PRIMARY KEY (TRIGGER_NAME,TRIGGER_GROUP,TRIGGER_LISTENER),
+                FOREIGN KEY (TRIGGER_NAME,TRIGGER_GROUP) 
+                REFERENCES QRTZ_TRIGGERS(TRIGGER_NAME,TRIGGER_GROUP)
+            );
+
+
+            CREATE TABLE qrtz_calendars
+            (
+                CALENDAR_NAME  VARCHAR2(200) NOT NULL, 
+                CALENDAR BLOB NOT NULL,
+                PRIMARY KEY (CALENDAR_NAME)
+            );
+
+
+            CREATE TABLE qrtz_paused_trigger_grps
+            (
+                TRIGGER_GROUP  VARCHAR2(200) NOT NULL, 
+                PRIMARY KEY (TRIGGER_GROUP)
+            );
+
+            CREATE TABLE qrtz_fired_triggers 
+            (
+                ENTRY_ID VARCHAR2(95) NOT NULL,
+                TRIGGER_NAME VARCHAR2(200) NOT NULL,
+                TRIGGER_GROUP VARCHAR2(200) NOT NULL,
+                IS_VOLATILE number(1) NOT NULL,
+                INSTANCE_NAME VARCHAR2(200) NOT NULL,
+                FIRED_TIME number(38) NOT NULL,
+                PRIORITY INTEGER NOT NULL,
+                STATE VARCHAR2(16) NOT NULL,
+                JOB_NAME VARCHAR2(200) NULL,
+                JOB_GROUP VARCHAR2(200) NULL,
+                IS_STATEFUL NUMBER(1) NULL,
+                REQUESTS_RECOVERY number(1) NULL,
+                PRIMARY KEY (ENTRY_ID)
+            );
+
+            CREATE TABLE qrtz_scheduler_state 
+            (
+                INSTANCE_NAME VARCHAR2(200) NOT NULL,
+                LAST_CHECKIN_TIME number(38) NOT NULL,
+                CHECKIN_INTERVAL number(38) NOT NULL,
+                PRIMARY KEY (INSTANCE_NAME)
+            );
+
+            CREATE TABLE qrtz_locks
+            (
+                LOCK_NAME  VARCHAR2(40) NOT NULL, 
+                PRIMARY KEY (LOCK_NAME)
+            );
+        </sql>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-78" dbms="oracle" context="core">
+        <createTable tableName="tb_ajuda">
+            <column name="id_ajuda" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_ajuda_pkey"/>
+            </column>
+            <column name="dt_registro" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_texto" type="NCLOB"/>
+            <column name="id_pagina" type="number(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-79" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente ao armazenamento do bloqueio de acesso ao sistema, por usu&#225;rios" tableName="tb_bloqueio_usuario">
+            <column name="id_bloqueio_usuario" remarks="Identificador do bloqueio de usu&#225;rio" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_bloqueio_usuario_pkey"/>
+            </column>
+            <column name="id_usuario" remarks="Identificador do usu&#225;rio" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_bloqueio" remarks="Data do bloqueio do usu&#225;rio" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_previsao_desbloqueio" remarks="Data de previs&#227;o do desbloqueio de usu&#225;rio" type="TIMESTAMP"/>
+            <column name="ds_motivo_bloqueio" remarks="Descri&#231;&#227;o do motivo do bloqueio de usu&#225;rio" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_desbloqueio" remarks="Data de desbloqueio do usu&#225;rio" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-80" dbms="oracle" context="core">
+        <createTable tableName="tb_caixa">
+            <column name="id_caixa" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_caixa_pkey"/>
+            </column>
+            <column name="nm_caixa" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_caixa" type="NCLOB"/>
+            <column name="id_tarefa" type="integer"/>
+            <column name="id_node_anterior" type="integer"/>
+            <column name="nm_caixa_idx" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-81" dbms="oracle" context="core">
+        <createTable tableName="tb_calendario_eventos">
+            <column name="id_calendario_evento" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_calendario_eventos_pkey"/>
+            </column>
+            <column name="id_localizacao" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_evento" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_dia" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_mes" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_ano" type="integer"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-82" dbms="oracle" context="core">
+        <createTable tableName="tb_categoria">
+            <column name="id_categoria" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_categoria_id_categoria_pk"/>
+            </column>
+            <column name="ds_categoria" type="NVARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-83" dbms="oracle" context="core">
+        <createTable tableName="tb_categoria_item">
+            <column name="id_categoria_item" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_categoria_item_pk"/>
+            </column>
+            <column name="id_categoria" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_item" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-88" dbms="oracle" context="core">
+        <createTable tableName="tb_definicao_variavel_processo">
+            <column name="id_definicao_variavel_processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_definicao_variavel_processo"/>
+            </column>
+            <column name="nm_variavel" type="NVARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_label" type="NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_fluxo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-89" dbms="oracle" context="core">
+        <createTable tableName="tb_documento_fisico">
+            <column name="id_documento_fisico" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_documento_fisico_pkey"/>
+            </column>
+            <column name="id_localizacao_fisica" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_documento_fisico" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-90" dbms="oracle" context="core">
+        <createTable tableName="tb_dominio_variavel_tarefa">
+            <column name="id_dominio_variavel_tarefa" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_dominio_variavel_tarefa"/>
+            </column>
+            <column name="ds_dominio_variavel_tarefa" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_dominio_variavel_tarefa" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-93" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente aos fluxos que pertencem ao sistema" tableName="tb_fluxo">
+            <column name="id_fluxo" remarks="Identificador do fluxo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="sys_c005738"/>
+            </column>
+            <column name="cd_fluxo" remarks="C&#243;digo do fluxo" type="NVARCHAR(30)"/>
+            <column name="ds_fluxo" remarks="Descri&#231;&#227;o do fluxo" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="qt_prazo" remarks="Quantidade de prazo para o fluxo" type="integer"/>
+            <column name="dt_inicio_publicacao" remarks="Inicio da publica&#231;&#227;o dos assuntos tempor&#225;rios. Ex.: o assunto de solicita&#231;&#227;o de uma f&#233;rias no per&#237;odo de fim de ano" type="TIMESTAMP"/>
+            <column name="dt_fim_publicacao" remarks="Inicio da publica&#231;&#227;o dos assuntos tempor&#225;rios. Ex.: o assunto de solicita&#231;&#227;o de uma f&#233;rias no per&#237;odo de fim de ano" type="TIMESTAMP"/>
+            <column name="id_usuario_publicacao" remarks="Indica quem foi o usu&#225;rio que publicou o assunto" type="integer"/>
+            <column name="ds_xml" remarks="Descri&#231;&#227;o do arquivo XML a ser utilizado no fluxo" type="NCLOB"/>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_publicado" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-94" dbms="oracle" context="core">
+        <createTable tableName="tb_fluxo_papel">
+            <column name="id_fluxo_papel" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_fluxo_papel_pk"/>
+            </column>
+            <column name="id_fluxo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_papel" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-95" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente ao grupo de modelos de documentos" tableName="tb_grupo_modelo_documento">
+            <column name="id_grupo_modelo_documento" remarks="Identificador do grupo de modelo de documento" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_grupo_modelo_documento_pkey"/>
+            </column>
+            <column name="ds_grupo_modelo_documento" remarks="Descri&#231;&#227;o do grupo de modelo de documento" type="NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-96" dbms="oracle" context="core">
+        <createTable tableName="tb_historico_ajuda">
+            <column name="id_historico_ajuda" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_registro" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_texto" type="NCLOB"/>
+            <column name="id_pagina" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-97" dbms="oracle" context="core">
+        <createTable tableName="tb_historico_parte_processo">
+            <column name="id_historico_parte_processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_tb_historico_parte_processo"/>
+            </column>
+            <column name="id_responsavel_modificacao" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_alteracao" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_motivo_modificacao" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_parte_processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-99" dbms="oracle" context="core">
+        <createTable tableName="tb_item">
+            <column name="id_item" remarks="Identificador do Item" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_item_pkey"/>
+            </column>
+            <column name="cd_item" remarks="C&#243;digo do Item" type="NVARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_item" remarks="Descri&#231;&#227;o do Item" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_item_pai" remarks="Identificador do item pai" type="integer"/>
+            <column name="ds_caminho_completo" remarks="Campo para armazenar o caminho dos id's concatenados por '/' de todos os pais na &#225;rvore do registro." type="NVARCHAR(2000)"/>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-100" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a descri&#231;&#227;o de um item do documento" tableName="tb_item_tipo_documento">
+            <column name="id_item_tipo_documento" remarks="Identificador do item de modelo" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tb_item_tipo_documento_pkey"/>
+            </column>
+            <column name="id_grupo_modelo_documento" remarks="Identificador do Grupo de modelo de documento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_localizacao" remarks="Identificador da localiza&#231;&#227;o" type="integer"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-101" dbms="oracle" context="core">
+        <createTable remarks="Cont&#233;m os labels das vari&#225;veis dos fluxos jBPM" tableName="tb_jbpm_variavel_label">
+            <column name="id_jbpm_variavel_label" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_jbpm_variavel_label"/>
+            </column>
+            <column name="nm_variavel" type="NVARCHAR(100)"/>
+            <column name="ds_label_variavel" type="NVARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-102" dbms="oracle" context="core">
+        <createTable remarks="Lista de e-mails que ser&#227;o enviados para cada n&#243; do fluxo do sistema" tableName="tb_lista_email">
+            <column name="id_lista_email" remarks="Identificador da tabela tb_lista_email." type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_lista_email_pkey"/>
+            </column>
+            <column name="id_localizacao" type="integer"/>
+            <column name="id_papel" type="integer"/>
+            <column name="id_grupo_email" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_estrutura" type="integer"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-103" dbms="oracle" context="core">
+        <createTable remarks="Tabelar referente a localiza&#231;&#227;o" tableName="tb_localizacao">
+            <column name="id_localizacao" remarks="Identificador da localiza&#231;&#227;o" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_localizacao_pkey"/>
+            </column>
+            <column name="ds_localizacao" remarks="Descri&#231;&#227;o da localiza&#231;&#227;o" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_localizacao_pai" remarks="Identificador da localiza&#231;&#227;o pai" type="integer"/>
+            <column name="id_estrutura" type="integer"/>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_estrutura" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_caminho_completo" type="NVARCHAR(2000)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-104" dbms="oracle" context="core">
+        <createTable tableName="tb_localizacao_fisica">
+            <column name="ds_localizacao_fisica" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_localizacao_fisica_pai" type="integer"/>
+            <column name="ds_caminho_completo" type="NCLOB"/>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_localizacao_fisica" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-105" dbms="oracle" context="core">
+        <createTable tableName="tb_localizacao_turno">
+            <column name="id_localizacao_turno" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_localizacao_turno_pk"/>
+            </column>
+            <column name="id_localizacao" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_hora_inicio" type="TIME WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_hora_fim" type="TIME WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_tempo_turno" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cd_dia_semana" type="NVARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-106" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente ao armazenamento de Logs do sistema" tableName="tb_log">
+            <column name="id_log" remarks="Identificador do log" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_tb_log"/>
+            </column>
+            <column name="id_usuario" remarks="Identificador do usuairo" type="integer"/>
+            <column name="id_pagina" remarks="Identificador da pagina no log" type="NVARCHAR(200)"/>
+            <column name="ds_ip" remarks="Descricao do ip do log" type="NVARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_entidade" remarks="Descricao da entidade no log" type="NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_id_entidade" remarks="Identificador da entidade no log" type="NVARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_log" remarks="Data do log" type="TIMESTAMP"/>
+            <column name="ds_package" remarks="Descricao do pacote no log" type="NVARCHAR(150)"/>
+            <column name="tp_operacao" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-107" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente ao armazenamento de Logs do sistema de forma detalhada" tableName="tb_log_detalhe">
+            <column name="id_log_detalhe" remarks="Identificador do detalhe do log" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_tb_log_detalhe"/>
+            </column>
+            <column name="id_log" remarks="Identificador do log" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_atributo" remarks="Nome do atributo no detalhe do log" type="NVARCHAR(150)"/>
+            <column name="ds_valor_anterior" remarks="Descri&#231;&#227;o do valor anterior" type="NCLOB"/>
+            <column name="ds_valor_atual" remarks="Descri&#231;&#227;o do valor atual" type="NCLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-108" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a modelos de documentos a serem utilizados no sistema" tableName="tb_modelo_documento">
+            <column name="id_modelo_documento" remarks="Identificador modelo de documento" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="sys_c005794"/>
+            </column>
+            <column name="ds_titulo_modelo_documento" remarks="Descri&#231;&#227;o do t&#237;tulo de modelo do documento" type="NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_modelo_documento" remarks="Descri&#231;&#227;o do modelo de documento" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_tipo_modelo_documento" remarks="Identificador do tipo de modelo de documento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-109" dbms="oracle" context="core">
+        <createTable tableName="tb_modelo_documento_historico">
+            <column name="id_modelo_documento_historico" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_modelo_documento_historico"/>
+            </column>
+            <column name="id_modelo_documento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario_alteracao" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_alteracao" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_titulo_modelo_documento" type="NVARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_modelo_documento" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-111" dbms="oracle" context="core">
+        <createTable tableName="tb_nat_cat_fluxo_localizacao">
+            <column name="id_nat_cat_fluxo_localizacao" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_nat_cat_fluxo_localizacao"/>
+            </column>
+            <column name="id_nat_cat_fluxo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_localizacao" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_heranca" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-112" dbms="oracle" context="core">
+        <createTable tableName="tb_natureza">
+            <column name="id_natureza" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_natureza_id_natureza_pk"/>
+            </column>
+            <column name="ds_natureza" type="NVARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_partes" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tp_partes" type="CHAR(1)"/>
+            <column defaultValueBoolean="false" name="in_lock" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_partes_fisicas" type="integer"/>
+            <column name="nr_partes_juridicas" type="integer"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-113" dbms="oracle" context="core">
+        <createTable tableName="tb_natureza_categoria_fluxo">
+            <column name="id_natureza_categoria_fluxo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_natureza_categoria_fluxo"/>
+            </column>
+            <column name="id_natureza" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_categoria" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_fluxo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-114" dbms="oracle" context="core">
+        <createTable tableName="tb_pagina">
+            <column name="id_pagina" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_pagina_pkey"/>
+            </column>
+            <column name="ds_descricao" type="NVARCHAR(100)"/>
+            <column name="ds_url" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-115" dbms="oracle" context="core">
+        <createTable tableName="tb_papel">
+            <column name="id_papel" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_identificador" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_nome" type="NVARCHAR(100)"/>
+            <column defaultValueBoolean="true" name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-116" dbms="oracle" context="core">
+        <createTable tableName="tb_papel_grupo">
+            <column name="id_papel" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="membro_do_grupo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-117" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a tabela de par&#226;metros a serem utilizados no sistema" tableName="tb_parametro">
+            <column name="id_parametro" remarks="Identificador do parametro" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_parametro_pkey"/>
+            </column>
+            <column name="nm_variavel" remarks="Nome da vari&#225;vel" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_variavel" remarks="Descri&#231;&#227;o da vari&#225;vel" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vl_variavel" remarks="Valor da vari&#225;vel" type="NVARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_atualizacao" remarks="Data da atualiza&#231;&#227;o do parametro" type="TIMESTAMP"/>
+            <column name="id_usuario_modificacao" remarks="Identificador do usu&#225;rio que modificou o parametro" type="integer"/>
+            <column name="ds_esquema_tabela_id" remarks="Campo que ser&#225; utilizado para guardar o esquema, a tabela e o id do param&#234;tro inserido. Ex: acl.tb_papel.id_papel" type="NVARCHAR(200)"/>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_sistema" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-118" dbms="oracle" context="core">
+        <createTable tableName="tb_parte_processo">
+            <column name="id_parte_processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_pessoa" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-119" dbms="oracle" context="core">
+        <createTable tableName="tb_permissao">
+            <column name="id_permissao" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_acao" type="NVARCHAR(255)"/>
+            <column name="ds_alvo" type="NVARCHAR(255)"/>
+            <column name="ds_destinatario" type="NVARCHAR(255)"/>
+            <column name="ds_discriminador" type="NVARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-120" dbms="oracle" context="core">
+        <createTable tableName="tb_pessoa">
+            <column name="id_pessoa" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_tb_pessoa"/>
+            </column>
+            <column name="nm_pessoa" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tp_pessoa" type="CHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-121" dbms="oracle" context="core">
+        <createTable tableName="tb_pessoa_fisica">
+            <column name="id_pessoa_fisica" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_cpf" type="NVARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_nascimento" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_cert_chain" type="NCLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-122" dbms="oracle" context="core">
+        <createTable tableName="tb_pessoa_juridica">
+            <column name="id_pessoa_juridica" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_cnpj" type="NVARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_razao_social" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-123" dbms="oracle" context="core">
+        <createTable tableName="tb_prioridade_processo">
+            <column name="id_prioridade_processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_prioridade_processo_pkey"/>
+            </column>
+            <column name="ds_prioridade_processo" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_peso" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-124" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a processos a serem manipulados no sistema" tableName="tb_processo">
+            <column name="id_processo" remarks="Identificador do processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="sys_c005762"/>
+            </column>
+            <column name="nr_processo" remarks="N&#250;mero do processo" type="NVARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_processo_origem" remarks="N&#250;mero do processo de origem" type="NVARCHAR(30)"/>
+            <column name="ds_complemento" remarks="Descri&#231;&#227;o do complemento" type="NVARCHAR(100)"/>
+            <column name="dt_inicio" remarks="Data de in&#237;cio do processo" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario_bloqueio" remarks="Identificador do boqueio do usu&#225;rio" type="integer"/>
+            <column name="id_usuario_cadastro_processo" remarks="Identificador do usu&#225;rio que realizou o cadastro do processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_jbpm" remarks="Identificador do ijpm" type="bigint"/>
+            <column name="dt_fim" remarks="Data t&#233;rmino do processo" type="TIMESTAMP"/>
+            <column name="nm_actor_id" type="NVARCHAR(150)"/>
+            <column name="id_caixa" type="integer"/>
+            <column name="nr_duracao" type="bigint"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-125" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a processos que possuem a mesma correla&#231;&#227;o de depend&#234;ncia" tableName="tb_processo_conexao">
+            <column name="id_processo" remarks="Identificador do processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_processo_conexo" remarks="Identificador do processo conexo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_processo_conexao" remarks="Data da conex&#227;o entre processos" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-126" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a documentos que compoem o processo" tableName="tb_processo_documento">
+            <column name="id_processo_documento" remarks="Identificador do documento do processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="sys_c005812"/>
+            </column>
+            <column name="ds_processo_documento" remarks="Descri&#231;&#227;o do documento no processo" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_processo" remarks="Identificador do processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario_inclusao" remarks="Identificador do usu&#225;rio que incluiu a conex&#227;o do processo" type="integer"/>
+            <column name="dt_inclusao" remarks="Data de inclus&#227;o do documento no processo" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_tipo_processo_documento" remarks="Identificador do tipo de documento no processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_processo_documento_bin" remarks="Identificador do documento bin&#225;rio" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_documento" remarks="N&#250;mero do documento" type="integer"/>
+            <column name="id_jbpm_task" remarks="Identificador do jbpm" type="bigint"/>
+            <column name="id_papel" type="integer"/>
+            <column name="id_usuario_alteracao" remarks="Identificador do &#250;ltimo usu&#225;rio que alterou o documento." type="integer"/>
+            <column name="id_localizacao" type="integer"/>
+            <column name="dt_alteracao" type="TIMESTAMP"/>
+            <column name="in_documento_sigiloso" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="in_anexo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-127" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a documentos que compoem o processo, sendo que o formato do armazenamento &#233; bin&#225;rio" tableName="tb_processo_documento_bin">
+            <column name="id_processo_documento_bin" remarks="Identificador do documento bin&#225;rio no processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="sys_c005815"/>
+            </column>
+            <column name="ds_extensao" remarks="Descri&#231;&#227;o da extens&#227;o do documento bin&#225;rio" type="NVARCHAR(15)"/>
+            <column name="ds_modelo_documento" remarks="Descri&#231;&#227;o do modelo de documento" type="NCLOB"/>
+            <column name="ds_md5_documento" remarks="Chave MD5 para o documento" type="NVARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_arquivo" remarks="Nome do arquivo do documento" type="NVARCHAR(300)"/>
+            <column name="id_usuario" remarks="Identificador do usu&#225;rio" type="integer"/>
+            <column name="dt_inclusao" remarks="Data de inclus&#227;o do documento" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ob_processo_documento" type="LONGVARBINARY"/>
+            <column name="nr_tamanho" remarks="N&#250;mero do tamanho do documento bin&#225;rio" type="integer"/>
+            <column name="ds_signature" type="NCLOB"/>
+            <column name="ds_cert_chain" type="NCLOB"/>
+            <column name="id_usuario_ultimo_assinar" remarks="Id do &#250;ltimo usu&#225;rio que assinou o documento." type="integer"/>
+            <column name="ds_nome_usuario_ultimo_assinar" type="NVARCHAR(100)"/>
+            <column name="ds_nome_usuario" type="NVARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-128" dbms="oracle" context="core">
+        <createTable tableName="tb_processo_epa">
+            <column name="id_processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_natureza_categoria_fluxo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_localizacao" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_porcentagem" type="integer"/>
+            <column name="nr_tempo_gasto" type="integer"/>
+            <column name="id_item_processo" type="integer"/>
+            <column defaultValue="SAT" name="st_prazo" type="NVARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="in_contabilizar" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_prioridade_processo" type="integer"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-129" dbms="oracle" context="core">
+        <createTable tableName="tb_processo_epa_tarefa">
+            <column name="id_processo_epa_tarefa" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_processo_epa_tarefa_pk"/>
+            </column>
+            <column name="id_processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_tarefa" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_inicio" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_fim" type="TIMESTAMP"/>
+            <column name="nr_porcentagem" type="integer"/>
+            <column name="id_task_instance" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_ultimo_disparo" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_tempo_gasto" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_tempo_previsto" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-130" dbms="oracle" context="core">
+        <createTable tableName="tb_processo_localizacao_ibpm">
+            <column name="id_processo_localizacao" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_processo_localizacao_ibpm"/>
+            </column>
+            <column name="id_task_jbpm" type="integer"/>
+            <column name="id_processinstance_jbpm" type="integer"/>
+            <column name="id_processo" type="integer"/>
+            <column name="id_localizacao" type="integer"/>
+            <column name="id_papel" type="integer"/>
+            <column defaultValueBoolean="false" name="in_contabilizar" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_task_instance" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-132" dbms="oracle" context="core">
+        <createTable tableName="tb_recurso">
+            <column name="id_recurso" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_recurso_pk"/>
+            </column>
+            <column name="ds_identificador" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_nome" type="NVARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-133" dbms="oracle" context="core">
+        <createTable tableName="tb_relacionamento">
+            <column name="id_relacionamento" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_relacionamento"/>
+            </column>
+            <column name="id_tipo_relaciona_processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_relacionamento" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_motivo" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_usuario" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-134" dbms="oracle" context="core">
+        <createTable tableName="tb_relacionamento_processo">
+            <column name="id_relacionamento_processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_relacionamento_processo"/>
+            </column>
+            <column name="id_processo" type="integer"/>
+            <column name="nr_processo" type="NVARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_relacionamento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-135" dbms="oracle" context="core">
+        <createTable tableName="tb_sigilo_documento">
+            <column name="id_sigilo_documento" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_sigilo_documento_pkey"/>
+            </column>
+            <column name="id_processo_documento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario_login" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_motivo" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_inclusao" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-136" dbms="oracle" context="core">
+        <createTable tableName="tb_sigilo_documento_permissao">
+            <column name="id_sigilo_documento_permissao" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_sigilo_documento_permissao"/>
+            </column>
+            <column name="id_sigilo_documento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario_login" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-137" dbms="oracle" context="core">
+        <createTable tableName="tb_sigilo_processo">
+            <column name="id_sigilo_processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_sigilo_processo_pkey"/>
+            </column>
+            <column name="id_processo_epa" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario_login" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_sigiloso" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_motivo" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_inclusao" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-138" dbms="oracle" context="core">
+        <createTable tableName="tb_sigilo_processo_permissao">
+            <column name="id_sigilo_processo_permissao" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_sigilo_processo_permissao"/>
+            </column>
+            <column name="id_sigilo_processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario_login" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-139" dbms="oracle" context="core">
+        <createTable tableName="tb_tarefa">
+            <column name="id_tarefa" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_tarefa_pkey"/>
+            </column>
+            <column name="id_fluxo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_tarefa" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_prazo" type="integer"/>
+            <column name="tp_prazo" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-140" dbms="oracle" context="core">
+        <createTable tableName="tb_tarefa_jbpm">
+            <column name="id_tarefa_jbpm" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_tafera_jbpm_pkey"/>
+            </column>
+            <column name="id_tarefa" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_jbpm_task" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-141" dbms="oracle" context="core">
+        <createTable tableName="tb_task_conteudo_index">
+            <column name="id_taskinstance" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_conteudo" type="NCLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_processo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-142" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a tipos de modelos de documentos que s&#227;o poss&#237;veis dentro do sistema" tableName="tb_tipo_modelo_documento">
+            <column name="id_tipo_modelo_documento" remarks="Identificador do tipo de modelo de documento" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_tipo_modelo_documento_pkey"/>
+            </column>
+            <column name="ds_tipo_modelo_documento" remarks="Descri&#231;&#227;o do tipo de modelo de documento" type="NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_abreviacao" remarks="Descri&#231;a&#245; da abrevia&#231;&#227;o do tipo de modelo de documento" type="NVARCHAR(7)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_grupo_modelo_documento" remarks="Identificador do grupo de modelo de documento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-143" dbms="oracle" context="core">
+        <createTable tableName="tb_tipo_modelo_documento_papel">
+            <column name="id_tipo_modelo_documento_papel" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_tipo_modelo_documento_papel"/>
+            </column>
+            <column name="id_tipo_modelo_documento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_papel" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-144" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a tipos de documentos que o processo poder&#225; utilizar" tableName="tb_tipo_processo_documento">
+            <column name="id_tipo_processo_documento" remarks="Identificador do tipo de documento no processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_tb_tipo_processo_documento"/>
+            </column>
+            <column name="ds_tipo_processo_documento" remarks="Descri&#231;&#227;o do tipo de documento no processo" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cd_tipo_documento" type="boolean"/>
+            <column name="cd_documento" remarks="Guardar o c&#243;digo das peti&#231;&#245;es de acordo com a TUP" type="NVARCHAR(30)"/>
+            <column name="ds_tipo_proc_doc_observacao" type="NVARCHAR(200)"/>
+            <column name="ds_mascara" type="NVARCHAR(100)"/>
+            <column name="tp_visibilidade" type="CHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_sistema" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_publico" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_tipo_documento" type="CHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tp_numeracao" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-145" dbms="oracle" context="core">
+        <createTable tableName="tb_tipo_processo_doc_papel">
+            <column name="id_tipo_processo_doc_papel" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_classificacao_doc_papel"/>
+            </column>
+            <column name="id_tipo_processo_documento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_papel" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_obrigatorio" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-146" dbms="oracle" context="core">
+        <createTable tableName="tb_tipo_relaciona_processo">
+            <column name="id_tipo_relaciona_processo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="pk_tipo_relaciona_processo"/>
+            </column>
+            <column name="ds_tipo_relaciona_processo" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-148" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a localiza&#231;&#227;o dos usu&#225;rios, para acessar ao sistema" tableName="tb_usuario_localizacao">
+            <column name="id_usuario_localizacao" remarks="Identificador da composi&#231;&#227;o usu&#225;rio x localiza&#231;&#227;o" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="sys_c005789"/>
+            </column>
+            <column name="id_usuario" remarks="Identificador do usu&#225;rio" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_localizacao" remarks="Identificador da localiza&#231;&#227;o" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_papel" type="integer"/>
+            <column name="id_estrutura" type="integer"/>
+            <column name="in_responsavel_localizacao" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="in_contabilizar" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-149" dbms="oracle" context="core">
+        <createTable tableName="tb_usuario_login">
+            <column name="id_usuario_login" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_login" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_senha" type="NVARCHAR(100)"/>
+            <column defaultValueBoolean="false" name="in_bloqueio" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_expiracao_usuario" type="TIMESTAMP"/>
+            <column defaultValueBoolean="false" name="in_provisorio" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_pessoa_fisica" type="integer"/>
+            <column name="ds_email" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_usuario" type="NVARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tp_usuario" type="CHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_salt" type="NVARCHAR(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-150" dbms="oracle" context="core">
+        <createTable tableName="tb_usuario_papel">
+            <column name="id_usuario" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_papel" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-151" dbms="oracle" context="core">
+        <createTable remarks="Para cada tarefa (jbpm taskInstance) finalizada guarda quem foi o usu&#225;rio que a executou" tableName="tb_usuario_taskinstance">
+            <column name="id_taskinstance" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_usuario_login" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_localizacao" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_papel" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-152" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a vari&#225;veis a serem utilizadas no sistema" tableName="tb_variavel">
+            <column name="id_variavel" remarks="Identificador da vari&#225;vel" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_variavel_pkey"/>
+            </column>
+            <column name="ds_variavel" remarks="Descri&#231;&#227;o da vari&#225;vel" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vl_variavel" remarks="Valor da vari&#225;vel" type="NVARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-153" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a vari&#225;veis que compoem um fluxo no sistema" tableName="tb_variavel_fluxo">
+            <column name="id_variavel" remarks="Identificador da vari&#225;vel" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_fluxo" remarks="Identificador do fluxo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-154" dbms="oracle" context="core">
+        <createTable remarks="Tabela referente a vari&#225;vel que poder&#225; utilizar um tipo de modelo de documento" tableName="tb_variavel_tipo_modelo">
+            <column name="id_variavel" remarks="Identificador da vari&#225;vel" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_tipo_modelo_documento" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_variavel_tipo_modelo" type="BIGINT" >
+                <constraints primaryKey="true" primaryKeyName="tb_variavel_tipo_modelo_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-193" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_localizacao_fisica" constraintName="pk_tb_localizacao_fisica" tableName="tb_localizacao_fisica"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-194" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_parte_processo" constraintName="pk_tb_parte_processo" tableName="tb_parte_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-196" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_usuario_login" constraintName="pk_usuario_login" tableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-197" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_taskinstance" constraintName="pk_usuario_taskinstance" tableName="tb_usuario_taskinstance"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-210" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_taskinstance" constraintName="pk_task_conteudo_index" tableName="tb_task_conteudo_index"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-211" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_historico_ajuda" constraintName="tb_historico_ajuda_pkey" tableName="tb_historico_ajuda"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-212" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_papel, membro_do_grupo" constraintName="tb_papel_grupo_pkey" tableName="tb_papel_grupo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-213" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_papel" constraintName="tb_papel_pkey" tableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-214" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_permissao" constraintName="tb_permissao_pkey" tableName="tb_permissao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-215" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_pessoa_fisica" constraintName="tb_pessoa_fisica_pkey" tableName="tb_pessoa_fisica"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-216" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_pessoa_juridica" constraintName="tb_pessoa_juridica_pkey" tableName="tb_pessoa_juridica"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-217" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_processo, id_processo_conexo" constraintName="tb_processo_conexao_pk" tableName="tb_processo_conexao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-218" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_processo" constraintName="tb_processo_epa_pk" tableName="tb_processo_epa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-219" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_usuario, id_papel" constraintName="tb_usuario_papel_pkey" tableName="tb_usuario_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-220" dbms="oracle" context="core">
+        <addPrimaryKey columnNames="id_variavel, id_fluxo" constraintName="tb_variavel_assunto_pkey" tableName="tb_variavel_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-221" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="nr_cpf" constraintName="idx_nr_cpf" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_pessoa_fisica"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-222" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_tarefa, id_node_anterior" constraintName="fk_caixa_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_caixa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-225" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="nm_caixa, id_tarefa" constraintName="fk_caixa_02" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_caixa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-228" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_localizacao, dt_dia, dt_mes, dt_ano" constraintName="uk_calendario_eventos_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_calendario_eventos"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-229" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_categoria" constraintName="uk_categoria_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_categoria"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-230" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_item, id_categoria" constraintName="tb_categoria_item_unq" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_categoria_item"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-231" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="nm_variavel, id_fluxo" constraintName="fk_def_variavel_processo_02" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_definicao_variavel_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-232" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="cd_fluxo" constraintName="tb_fluxo_cd_fluxo_key" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-233" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_fluxo" constraintName="tb_fluxo_ds_fluxo_unique" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-234" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_grupo_modelo_documento" constraintName="uk_grupo_modelo_documento_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_grupo_modelo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-235" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="cd_item" constraintName="tb_item_cd_item_unique" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_item"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-236" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_caminho_completo" constraintName="uk_item_ds_caminho_completo" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_item"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-237" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_item" constraintName="tb_item_ds_item_unique" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_item"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-238" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_localizacao, id_grupo_modelo_documento" constraintName="tb_item_tipo_documento_ak" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_item_tipo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-239" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_caminho_completo" constraintName="uk_localizacao_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-240" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_nat_cat_fluxo, id_localizacao" constraintName="uk_nat_cat_fluxo_loc_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_nat_cat_fluxo_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-241" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_natureza, id_categoria, id_fluxo" constraintName="uk_nat_cat_fluxo_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_natureza_categoria_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-242" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_natureza" constraintName="tb_natureza_ds_natureza_unique" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_natureza"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-243" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_identificador" constraintName="tb_papel_ds_identificador_ak" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_recurso"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-244" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_identificador" constraintName="tb_papel_ds_identificador_key" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-245" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_processo, id_pessoa" constraintName="uk_parte_processo_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_parte_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-246" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="nr_cnpj" constraintName="uk_pessoa_juridica_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_pessoa_juridica"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-247" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_relacionamento, nr_processo" constraintName="uk_relacionamento_processo_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_relacionamento_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-248" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_tarefa, id_fluxo" constraintName="tb_tarefa_unq" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_tarefa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-249" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_abreviacao" constraintName="uk_tipo_modelo_documento_02" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_tipo_modelo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-250" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_tipo_modelo_documento" constraintName="uk_tipo_modelo_documento_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_tipo_modelo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-251" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_tipo_processo_documento, id_papel" constraintName="fk_classificacao_doc_papel_03" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_tipo_processo_doc_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-252" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_tipo_relaciona_processo" constraintName="uk_tipo_relaciona_processo_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_tipo_relaciona_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-253" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_login" constraintName="tb_usuario_ds_login_key" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-254" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_usuario, id_papel, id_localizacao, id_estrutura" constraintName="uk_usuario_localizacao_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_usuario_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-255" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="ds_email" constraintName="tb_usuario_login_ds_email_key" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-257" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_pessoa_fisica" constraintName="fk_usuario_login_01" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-259" dbms="oracle" context="core">
+        <addUniqueConstraint columnNames="id_variavel, id_tipo_modelo_documento" constraintName="tb_variavel_tipo_modelo_unq" deferrable="false" disabled="false" initiallyDeferred="false" tableName="tb_variavel_tipo_modelo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-260" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_taskinstance" baseTableName="tb_usuario_taskinstance" constraintName="fk_usuario_taskinstance_04" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_" referencedTableName="jbpm_taskinstance"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-261" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario" baseTableName="tb_ajuda" constraintName="fk_tb_ajuda_id_usuario" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-262" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario" baseTableName="tb_bloqueio_usuario" constraintName="fk_bloqueio_usuario_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-265" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_publicacao" baseTableName="tb_fluxo" constraintName="fk_fluxo_id_usuario_publicacao" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-266" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario" baseTableName="tb_historico_ajuda" constraintName="fk_historico_ajuda_id_usuario" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-267" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_parte_processo" baseTableName="tb_historico_parte_processo" constraintName="fk_hist_parte_processo_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_parte_processo" referencedTableName="tb_parte_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-268" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_responsavel_modificacao" baseTableName="tb_historico_parte_processo" constraintName="fk_hist_parte_processo_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-269" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao_fisica_pai" baseTableName="tb_localizacao_fisica" constraintName="fk_tb_localizacao_fisica" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao_fisica" referencedTableName="tb_localizacao_fisica"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-270" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario" baseTableName="tb_log" constraintName="fk_tb_log_id_usuario" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-271" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_alteracao" baseTableName="tb_modelo_documento_historico" constraintName="fk_modelo_doc_historico_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-272" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_modificacao" baseTableName="tb_parametro" constraintName="fk_parametro_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+     <changeSet author="liquibase" id="1402499571484-273" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario" baseTableName="tb_processo_documento_bin" constraintName="fk_processo_doc_bin_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-274" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_ultimo_assinar" baseTableName="tb_processo_documento_bin" constraintName="fk_processo_doc_bin_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-275" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_alteracao" baseTableName="tb_processo_documento" constraintName="fk_documento_04" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-276" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_inclusao" baseTableName="tb_processo_documento" constraintName="fk_documento_03" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-277" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_bloqueio" baseTableName="tb_processo" constraintName="fk_processo_03" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-278" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_cadastro_processo" baseTableName="tb_processo" constraintName="fk_processo_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-279" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario" baseTableName="tb_usuario_localizacao" constraintName="fk_usuario_localizacao_04" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-280" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_login" baseTableName="tb_usuario_taskinstance" constraintName="fk_usuario_taskinstance_03" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-382" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_pagina" baseTableName="tb_ajuda" constraintName="tb_ajuda_id_pagina_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_pagina" referencedTableName="tb_pagina"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-383" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_node_anterior" baseTableName="tb_caixa" constraintName="tb_caixa_id_node_anterior_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_" referencedTableName="jbpm_node"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-384" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_tarefa" baseTableName="tb_caixa" constraintName="tb_caixa_id_tarefa_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_tarefa" referencedTableName="tb_tarefa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-385" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao" baseTableName="tb_calendario_eventos" constraintName="fk_calendario_eventos_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-386" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_categoria" baseTableName="tb_categoria_item" constraintName="fk_categoria_item_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_categoria" referencedTableName="tb_categoria"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-387" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_item" baseTableName="tb_categoria_item" constraintName="tb_categoria_item_id_item_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_item" referencedTableName="tb_item"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-389" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_fluxo" baseTableName="tb_definicao_variavel_processo" constraintName="fk_def_variavel_processo_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_fluxo" referencedTableName="tb_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-390" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo" baseTableName="tb_documento_fisico" constraintName="fk_documento_fisico_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo" referencedTableName="tb_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-394" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_fluxo" baseTableName="tb_fluxo_papel" constraintName="tb_fluxo_papel_id_fluxo_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_fluxo" referencedTableName="tb_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-395" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_fluxo_papel" constraintName="tb_fluxo_papel_id_papel_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-396" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_pagina" baseTableName="tb_historico_ajuda" constraintName="fk_historico_ajuda_id_pagina" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_pagina" referencedTableName="tb_pagina"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-397" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_item_pai" baseTableName="tb_item" constraintName="tb_item_id_item_pai_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_item" referencedTableName="tb_item"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-398" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_grupo_modelo_documento" baseTableName="tb_item_tipo_documento" constraintName="fk_item_tipo_documento_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_grupo_modelo_documento" referencedTableName="tb_grupo_modelo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-399" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao" baseTableName="tb_item_tipo_documento" constraintName="fk_item_tipo_documento_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-400" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao" baseTableName="tb_lista_email" constraintName="fk_lista_email_id_localizacao" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-401" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_lista_email" constraintName="tb_lista_email_id_papel_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-402" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_estrutura" baseTableName="tb_localizacao" constraintName="fk_localizacao_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-403" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao_pai" baseTableName="tb_localizacao" constraintName="fk_localizacao_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-404" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao" baseTableName="tb_localizacao_turno" constraintName="fk_localizacao_turno_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-405" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_log" baseTableName="tb_log_detalhe" constraintName="tb_log_detalhe_id_log_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_log" referencedTableName="tb_log"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-406" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_modelo_documento" baseTableName="tb_modelo_documento_historico" constraintName="fk_modelo_doc_historico_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_modelo_documento" referencedTableName="tb_modelo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-407" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_tipo_modelo_documento" baseTableName="tb_modelo_documento" constraintName="fk_modelo_documento_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_tipo_modelo_documento" referencedTableName="tb_tipo_modelo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-409" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_categoria" baseTableName="tb_natureza_categoria_fluxo" constraintName="fk_nat_cat_fluxo_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_categoria" referencedTableName="tb_categoria"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-410" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_fluxo" baseTableName="tb_natureza_categoria_fluxo" constraintName="tb_nat_cat_assun_id_fluxo_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_fluxo" referencedTableName="tb_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-411" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_natureza" baseTableName="tb_natureza_categoria_fluxo" constraintName="fk_nat_cat_fluxo_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_natureza" referencedTableName="tb_natureza"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-412" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao" baseTableName="tb_nat_cat_fluxo_localizacao" constraintName="fk_nat_cat_fluxo_loc_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-413" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_nat_cat_fluxo" baseTableName="tb_nat_cat_fluxo_localizacao" constraintName="fk_nat_cat_fluxo_loc_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_natureza_categoria_fluxo" referencedTableName="tb_natureza_categoria_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-414" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_papel_grupo" constraintName="tb_papel_grupo_id_papel_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-415" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="membro_do_grupo" baseTableName="tb_papel_grupo" constraintName="fk_papel_grupo_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-416" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_pessoa_fisica" baseTableName="tb_usuario_login" constraintName="tb_pessoa_fisica_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_pessoa_fisica" referencedTableName="tb_pessoa_fisica"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-417" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_pessoa_fisica" baseTableName="tb_pessoa_fisica" constraintName="fk_pessoa_fisica_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_pessoa" referencedTableName="tb_pessoa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-418" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_pessoa_juridica" baseTableName="tb_pessoa_juridica" constraintName="fk_pessoa_juridica_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_pessoa" referencedTableName="tb_pessoa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-419" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo_conexo" baseTableName="tb_processo_conexao" constraintName="fk_processo_conexao_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo" referencedTableName="tb_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-420" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo" baseTableName="tb_processo_conexao" constraintName="fk_processo_conexao_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo" referencedTableName="tb_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-421" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao" baseTableName="tb_processo_documento" constraintName="fk_processo_documento_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-422" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_processo_documento" constraintName="fk_processo_documento_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-423" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo_documento_bin" baseTableName="tb_processo_documento" constraintName="fk_documento_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo_documento_bin" referencedTableName="tb_processo_documento_bin"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-424" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo" baseTableName="tb_processo_documento" constraintName="fk_processo_documento_03" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo" referencedTableName="tb_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-425" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_tipo_processo_documento" baseTableName="tb_processo_documento" constraintName="fk_documento_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_tipo_processo_documento" referencedTableName="tb_tipo_processo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-429" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo" baseTableName="tb_processo_epa" constraintName="tb_processo_epa_id_processo_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo" referencedTableName="tb_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-430" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo" baseTableName="tb_processo_epa_tarefa" constraintName="fk_processo_tarefa_04" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo" referencedTableName="tb_processo_epa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-431" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_task_instance" baseTableName="tb_processo_epa_tarefa" constraintName="fk_processo_tarefa_03" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_" referencedTableName="jbpm_taskinstance"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-432" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_item_processo" baseTableName="tb_processo_epa" constraintName="tb_processo_epa_tb_item_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_item" referencedTableName="tb_item"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-433" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_caixa" baseTableName="tb_processo" constraintName="tb_processo_id_caixa_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_caixa" referencedTableName="tb_caixa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-434" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao" baseTableName="tb_processo_localizacao_ibpm" constraintName="fk_proc_localizacao_ibpm_06" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-435" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_processo_localizacao_ibpm" constraintName="fk_proc_localizacao_ibpm_05" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-436" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processinstance_jbpm" baseTableName="tb_processo_localizacao_ibpm" constraintName="fk_proc_localizacao_ibpm_04" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_" referencedTableName="jbpm_processinstance"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-437" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo" baseTableName="tb_processo_localizacao_ibpm" constraintName="fk_proc_localizacao_ibpm_03" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo" referencedTableName="tb_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-438" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_task_jbpm" baseTableName="tb_processo_localizacao_ibpm" constraintName="fk_proc_localizacao_ibpm_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_" referencedTableName="jbpm_task"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-439" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_task_instance" baseTableName="tb_processo_localizacao_ibpm" constraintName="fk_proc_localizacao_ibpm_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_" referencedTableName="jbpm_taskinstance"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-440" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_tarefa" baseTableName="tb_processo_epa_tarefa" constraintName="fk_processo_tarefa_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_tarefa" referencedTableName="tb_tarefa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-442" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_tipo_relaciona_processo" baseTableName="tb_relacionamento" constraintName="fk_relacionamento_processo_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_tipo_relaciona_processo" referencedTableName="tb_tipo_relaciona_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-443" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo" baseTableName="tb_relacionamento_processo" constraintName="fk_relacionamento_processo_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo" referencedTableName="tb_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-444" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo_documento" baseTableName="tb_sigilo_documento" constraintName="fk_sigilo_documento_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo_documento" referencedTableName="tb_processo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-445" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_login" baseTableName="tb_sigilo_documento" constraintName="fk_sigilo_documento_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-446" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_sigilo_documento" baseTableName="tb_sigilo_documento_permissao" constraintName="fk_sigilo_doc_permissao_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_sigilo_documento" referencedTableName="tb_sigilo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-447" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_login" baseTableName="tb_sigilo_documento_permissao" constraintName="fk_sigilo_doc_permissao_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-448" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_processo_epa" baseTableName="tb_sigilo_processo" constraintName="fk_sigilo_processo_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_processo" referencedTableName="tb_processo_epa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-449" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_login" baseTableName="tb_sigilo_processo" constraintName="fk_sigilo_processo_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-450" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_sigilo_processo" baseTableName="tb_sigilo_processo_permissao" constraintName="fk_sigilo_processo_permi_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_sigilo_processo" referencedTableName="tb_sigilo_processo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-451" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario_login" baseTableName="tb_sigilo_processo_permissao" constraintName="fk_sigilo_processo_permi_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-452" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_fluxo" baseTableName="tb_tarefa" constraintName="tb_tarefa_id_fluxo_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_fluxo" referencedTableName="tb_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-453" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_jbpm_task" baseTableName="tb_tarefa_jbpm" constraintName="fk_tarefa_jbpm_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_" referencedTableName="jbpm_task"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-454" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_tarefa" baseTableName="tb_tarefa_jbpm" constraintName="tb_tarefa_jbpm_id_tarefa_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_tarefa" referencedTableName="tb_tarefa"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-455" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_grupo_modelo_documento" baseTableName="tb_tipo_modelo_documento" constraintName="fk_tipo_modelo_documento_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_grupo_modelo_documento" referencedTableName="tb_grupo_modelo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-456" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_tipo_modelo_documento_papel" constraintName="fk_tipo_modelo_doc_papel_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-457" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_tipo_modelo_documento" baseTableName="tb_tipo_modelo_documento_papel" constraintName="fk_tipo_modelo_doc_papel_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_tipo_modelo_documento" referencedTableName="tb_tipo_modelo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-458" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_tipo_processo_documento" baseTableName="tb_tipo_processo_doc_papel" constraintName="fk_classificacao_doc_papel_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_tipo_processo_documento" referencedTableName="tb_tipo_processo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-459" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_tipo_processo_doc_papel" constraintName="fk_classificacao_doc_papel_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-460" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_estrutura" baseTableName="tb_usuario_localizacao" constraintName="fk_usuario_localizacao_03" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-461" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao" baseTableName="tb_usuario_localizacao" constraintName="fk_usuario_localizacao_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-462" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_usuario_localizacao" constraintName="fk_usuario_localizacao_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-463" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_usuario_papel" constraintName="tb_usuario_papel_id_papel_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-464" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_usuario" baseTableName="tb_usuario_papel" constraintName="tb_usuario_papel_id_usuario_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_usuario_login" referencedTableName="tb_usuario_login"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-465" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_localizacao" baseTableName="tb_usuario_taskinstance" constraintName="fk_usuario_taskinstance_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_localizacao" referencedTableName="tb_localizacao"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-466" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_papel" baseTableName="tb_usuario_taskinstance" constraintName="fk_usuario_taskinstance_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_papel" referencedTableName="tb_papel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-467" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_fluxo" baseTableName="tb_variavel_fluxo" constraintName="fk_variavel_fluxo_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_fluxo" referencedTableName="tb_fluxo"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-468" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_variavel" baseTableName="tb_variavel_fluxo" constraintName="fk_variavel_fluxo_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_variavel" referencedTableName="tb_variavel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-469" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_tipo_modelo_documento" baseTableName="tb_variavel_tipo_modelo" constraintName="fk_variavel_tipo_modelo_02" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_tipo_modelo_documento" referencedTableName="tb_tipo_modelo_documento"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-470" dbms="oracle" context="core">
+        <addForeignKeyConstraint baseColumnNames="id_variavel" baseTableName="tb_variavel_tipo_modelo" constraintName="fk_variavel_tipo_modelo_01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id_variavel" referencedTableName="tb_variavel"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-501" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_ajuda_01" tableName="tb_ajuda" unique="false">
+            <column name="id_pagina"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-502" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_ajuda_02" tableName="tb_ajuda" unique="false">
+            <column name="id_usuario"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-503" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_assunto4" tableName="tb_fluxo" unique="false">
+            <column name="id_usuario_publicacao"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-504" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_bloqueio_usuario1" tableName="tb_bloqueio_usuario" unique="false">
+            <column name="id_usuario"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-505" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_caixa1" tableName="tb_caixa" unique="false">
+            <column name="id_tarefa"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-508" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_historico_ajuda_02" tableName="tb_historico_ajuda" unique="false">
+            <column name="id_usuario"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-509" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_item_pai" tableName="tb_item" unique="false">
+            <column name="id_item_pai"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-510" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_item_tipo_documento1" tableName="tb_item_tipo_documento" unique="false">
+            <column name="id_grupo_modelo_documento"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-511" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_item_tipo_documento3" tableName="tb_item_tipo_documento" unique="false">
+            <column name="id_localizacao"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-512" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_lista_email1" tableName="tb_lista_email" unique="false">
+            <column name="id_localizacao"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-513" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_lista_email2" tableName="tb_lista_email" unique="false">
+            <column name="id_papel"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-514" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_localizacao3" tableName="tb_localizacao" unique="false">
+            <column name="id_estrutura"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-515" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_log2" tableName="tb_log" unique="false">
+            <column name="id_usuario"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-516" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_log3" tableName="tb_log" unique="false">
+            <column name="dt_log"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-517" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_log4" tableName="tb_log" unique="false">
+            <column name="(cast(dt_log as date))"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-518" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_modelo_documento1" tableName="tb_modelo_documento" unique="false">
+            <column name="id_tipo_modelo_documento"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-520" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_parametro2" tableName="tb_parametro" unique="false">
+            <column name="id_usuario_modificacao"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-521" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo5" tableName="tb_processo" unique="false">
+            <column name="id_usuario_bloqueio"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-522" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo6" tableName="tb_processo" unique="false">
+            <column name="id_usuario_cadastro_processo"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-523" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_conexao1" tableName="tb_processo_conexao" unique="false">
+            <column name="id_processo"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-524" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_conexao2" tableName="tb_processo_conexao" unique="false">
+            <column name="id_processo_conexo"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-525" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_documento1" tableName="tb_processo_documento" unique="false">
+            <column name="id_processo"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-526" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_documento3" tableName="tb_processo_documento" unique="false">
+            <column name="id_usuario_inclusao"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-527" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_documento5" tableName="tb_processo_documento" unique="false">
+            <column name="id_tipo_processo_documento"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-528" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_documento6" tableName="tb_processo_documento" unique="false">
+            <column name="id_processo_documento_bin"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-529" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_documento7" tableName="tb_processo_documento" unique="false">
+            <column name="id_papel"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-530" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_documento8" tableName="tb_processo_documento" unique="false">
+            <column name="id_usuario_alteracao"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-531" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_documento9" tableName="tb_processo_documento" unique="false">
+            <column name="id_localizacao"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-532" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_documento_bin2" tableName="tb_processo_documento_bin" unique="false">
+            <column name="id_usuario"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-533" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_documento_bin3" tableName="tb_processo_documento_bin" unique="false">
+            <column name="id_usuario_ultimo_assinar"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-534" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_processo_id_caixa" tableName="tb_processo" unique="false">
+            <column name="id_caixa"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-535" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_tarefa2" tableName="tb_tarefa" unique="false">
+            <column name="ds_tarefa"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-536" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_tarefa3" tableName="tb_tarefa" unique="false">
+            <column name="id_fluxo"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-537" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_tarefa_jbpm1" tableName="tb_tarefa_jbpm" unique="false">
+            <column name="id_jbpm_task"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-538" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_tarefa_jbpm2" tableName="tb_tarefa_jbpm" unique="false">
+            <column name="id_tarefa"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-539" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_tipo_documento_pessoa1" tableName="tb_tipo_processo_doc_papel" unique="false">
+            <column name="id_tipo_processo_documento"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-540" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_tipo_documento_pessoa2" tableName="tb_tipo_processo_doc_papel" unique="false">
+            <column name="id_papel"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-541" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_tipo_modelo_documento1" tableName="tb_tipo_modelo_documento" unique="false">
+            <column name="id_grupo_modelo_documento"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-542" dbms="oracle" context="core">
+        <createIndex indexName="fk_tipo_modelo_doc_papel_01" tableName="tb_tipo_modelo_documento_papel" unique="false">
+            <column name="id_papel"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-543" dbms="oracle" context="core">
+        <createIndex indexName="fk_tipo_modelo_doc_papel_02" tableName="tb_tipo_modelo_documento_papel" unique="false">
+            <column name="id_tipo_modelo_documento"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-544" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_usuario_localizacao2" tableName="tb_usuario_localizacao" unique="false">
+            <column name="id_usuario"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-545" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_usuario_localizacao4" tableName="tb_usuario_localizacao" unique="false">
+            <column name="id_localizacao"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-546" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_usuario_localizacao5" tableName="tb_usuario_localizacao" unique="false">
+            <column name="id_papel"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-547" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_usuario_localizacao6" tableName="tb_usuario_localizacao" unique="false">
+            <column name="id_estrutura"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-548" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_variavel_assunto1" tableName="tb_variavel_fluxo" unique="false">
+            <column name="id_variavel"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-549" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_variavel_assunto2" tableName="tb_variavel_fluxo" unique="false">
+            <column name="id_fluxo"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-550" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_variavel_tipo_modelo1" tableName="tb_variavel_tipo_modelo" unique="false">
+            <column name="id_variavel"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-551" dbms="oracle" context="core">
+        <createIndex indexName="idx_tb_variavel_tipo_modelo2" tableName="tb_variavel_tipo_modelo" unique="false">
+            <column name="id_tipo_modelo_documento"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-567" dbms="oracle" context="core">
+        <createIndex indexName="tb_caixa_nm_caixa" tableName="tb_caixa" unique="false">
+            <column name="nm_caixa_idx"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-569" dbms="oracle" context="core">
+        <createIndex indexName="fk_fluxo_papel_01" tableName="tb_fluxo_papel" unique="true">
+            <column name="id_fluxo"/>
+            <column name="id_papel"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-570" dbms="oracle" context="core">
+        <createView viewName="vs_situacao_processo"> SELECT taskinstan0_.token_ AS id_situacao_processo,
+                pooledacto2_.actorid_ AS nm_pooled_actor,
+                fluxo.id_fluxo,
+                processdef6_.name_ AS nm_fluxo,
+                task4_.name_ AS nm_tarefa,
+                tj.id_tarefa,
+                c.id_caixa,
+                c.nm_caixa,
+                proc.id_processo,
+                taskinstan0_.procinst_ AS id_process_instance,
+                taskinstan0_.id_ AS id_task_instance,
+                taskinstan0_.task_ AS id_task,
+                taskinstan0_.actorid_ AS nm_actorid
+               FROM ((((((((((jbpm_taskinstance taskinstan0_
+               LEFT JOIN tb_tarefa_jbpm tj ON ((tj.id_jbpm_task = taskinstan0_.task_)))
+               LEFT JOIN tb_tarefa tbtarefa ON ((tbtarefa.id_tarefa = tj.id_tarefa)))
+               LEFT JOIN tb_fluxo fluxo ON ((fluxo.id_fluxo = tbtarefa.id_fluxo)))
+               LEFT JOIN jbpm_taskactorpool pooledacto1_ ON ((taskinstan0_.id_ = pooledacto1_.taskinstance_)))
+               LEFT JOIN jbpm_pooledactor pooledacto2_ ON ((pooledacto1_.pooledactor_ = pooledacto2_.id_)))
+               RIGHT JOIN tb_processo proc ON ((proc.id_processo = ( SELECT DISTINCT ( SELECT DISTINCT longinstan1_.longvalue_
+                  FROM jbpm_variableinstance longinstan1_
+                 WHERE (((longinstan1_.class_ = 'L') AND ((longinstan1_.name_) = 'processo')) AND (longinstan1_.processinstance_ = longinstan3_.processinstance_))) AS longvalue_
+               FROM jbpm_variableinstance longinstan3_
+              WHERE (longinstan3_.token_ = taskinstan0_.token_)))))
+               LEFT JOIN tb_caixa c ON ((proc.id_caixa = c.id_caixa)))
+               LEFT JOIN jbpm_task task4_ ON ((taskinstan0_.task_ = task4_.id_)))
+               LEFT JOIN jbpm_processinstance processins5_ ON ((taskinstan0_.procinst_ = processins5_.id_)))
+               LEFT JOIN jbpm_processdefinition processdef6_ ON ((processins5_.processdefinition_ = processdef6_.id_)))
+              WHERE (EXISTS ( SELECT 1
+               FROM ((jbpm_taskinstance taskinstan7_
+               LEFT JOIN jbpm_taskactorpool pooledacto8_ ON ((taskinstan7_.id_ = pooledacto8_.taskinstance_)))
+               LEFT JOIN jbpm_pooledactor pooledacto9_ ON ((pooledacto8_.pooledactor_ = pooledacto9_.id_))),
+                jbpm_task task10_
+              WHERE ((((taskinstan7_.task_ = task10_.id_) AND (taskinstan7_.issuspended_ = 0)) AND (taskinstan7_.isopen_ = 1)) AND (taskinstan0_.id_ = taskinstan7_.id_))))
+        </createView>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-571" dbms="oracle" context="core">
+        <createView viewName="vs_tempo_medio_processo"> SELECT ncf.id_natureza_categoria_fluxo, f.qt_prazo, 
+      ( SELECT avg(pe.nr_tempo_gasto) AS avg
+                FROM tb_processo pr
+                JOIN tb_processo_epa pe ON pr.id_processo=pe.id_processo
+                JOIN tb_natureza_categoria_fluxo ncf ON ncf.id_natureza_categoria_fluxo=pe.id_natureza_categoria_fluxo
+                WHERE pr.dt_fim IS NOT NULL AND ncf.id_natureza_categoria_fluxo = pe.id_natureza_categoria_fluxo
+                GROUP BY pe.id_natureza_categoria_fluxo) AS nr_tempo_medio
+                FROM tb_natureza_categoria_fluxo ncf
+                JOIN tb_fluxo f ON (f.id_fluxo=ncf.id_fluxo)</createView>
+    </changeSet>
+    <changeSet author="liquibase" id="1402499571484-572" dbms="oracle" context="core">
+        <createView viewName="vs_tempo_medio_tarefa"> 
+            SELECT tempostarefas.id_natureza_categoria_fluxo,
+            tb_tarefa.id_tarefa,
+            tb_tarefa.ds_tarefa,
+            tb_tarefa.nr_prazo,
+            tb_tarefa.tp_prazo,
+            tempostarefas.nr_tempo_medio
+                FROM (tb_tarefa
+                JOIN ( SELECT p.id_natureza_categoria_fluxo,
+                pet.id_tarefa,
+                avg(pet.nr_tempo_gasto) AS nr_tempo_medio
+                FROM (tb_processo_epa_tarefa pet
+                JOIN tb_processo_epa p ON (pet.id_processo=p.id_processo))
+                WHERE ((NOT (pet.dt_fim IS NULL)) AND (pet.nr_tempo_gasto &gt; 0))
+                GROUP BY pet.id_tarefa, p.id_natureza_categoria_fluxo) tempostarefas ON (tempostarefas.id_tarefa=tb_tarefa.id_tarefa))
+        </createView>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="3" dbms="oracle" context="core">
+        <sql>
+            ALTER TABLE tb_prioridade_processo ADD CONSTRAINT tb_prioridade_processo_ak UNIQUE (nr_peso, ds_prioridade_processo);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

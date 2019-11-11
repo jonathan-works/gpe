@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="gabriel" id="1">
+        <addColumn tableName="JBPM_TRANSITION">
+            <column name="CONFIGURATION_" type="NCLOB" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0106-JbpmTransitionConfiguration.xml" />
+        </preConditions>
+        
+        <customChange class="br.com.infox.liquibase.JbpmTransitionHiddenMigrator" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0106-JbpmTransitionConfiguration.xml" />
+        </preConditions>
+
+        <dropColumn tableName="JBPM_TRANSITION" columnName="HIDDEN_" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0106-JbpmTransitionConfiguration.xml" />
+        </preConditions>
+
+        <addNotNullConstraint columnName="CONFIGURATION_" tableName="JBPM_TRANSITION" columnDataType="NCLOB" />
+    </changeSet>
+</databaseChangeLog>

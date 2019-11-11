@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="victorpasqualino" id="1" >
+
+		<renameTable newTableName="tb_documento_binario"  oldTableName="tb_processo_documento_bin" />
+		<renameColumn columnDataType="integer" newColumnName="id_documento_binario" oldColumnName="id_processo_documento_bin" tableName="tb_documento_binario"/>
+		<renameColumn columnDataType="bytea" newColumnName="ob_documento_binario" oldColumnName="ob_processo_documento" tableName="tb_documento_binario"/>
+
+	</changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="victorpasqualino" id="1" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="JBPM_VARIABLEACCESS">
+            <column name="VALUE_" type="NVARCHAR(1000)" />
+            <column name="TYPE_" type="NVARCHAR(200)" />
+            <column name="LABEL_" type="NVARCHAR(200)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2" dbms="mssql, postgresql, oracle">
+        <validCheckSum>7:c5291707b63b6027a0c6573636f02aa8</validCheckSum>
+        <validCheckSum>7:85d098e8c3902e064f51906e74ccb8e5</validCheckSum>
+        <addColumn tableName="JBPM_EVENT">
+            <column name="CONFIGURATION_" type="NVARCHAR(400)"/>
+        </addColumn>
+
+        <createIndex tableName="JBPM_EVENT" indexName="IDX_EVENT_CONFIGURATION">
+        	<column name="CONFIGURATION_"  type="NVARCHAR(400)"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3" dbms="mssql, postgresql, oracle">
+        <validCheckSum>7:ed6bda8b0fe93d325e15e13a4e600c6d</validCheckSum>
+        <validCheckSum>7:cf05c542707ca34b73766d6a376f2bbc</validCheckSum>
+        <addColumn tableName="JBPM_TASK" >
+            <column name="KEY_" type="NVARCHAR(256)"/>
+        </addColumn>
+
+        <addColumn tableName="JBPM_PROCESSDEFINITION">
+            <column name="KEY_" type="NVARCHAR(256)"/>
+        </addColumn> 
+
+        <addColumn tableName="JBPM_TRANSITION">
+            <column name="KEY_" type="NVARCHAR(256)"/>
+        </addColumn>
+
+        <addColumn tableName="JBPM_NODE">
+            <column name="KEY_" type="NVARCHAR(256)"/>
+        </addColumn>
+
+        <addColumn tableName="JBPM_SWIMLANE">
+            <column name="KEY_" type="NVARCHAR(256)"/>
+        </addColumn> 
+
+        <createIndex tableName="JBPM_TASK" indexName="IDX_TASK_KEY">
+        	<column name="KEY_"  type="NVARCHAR(256)"/>
+        </createIndex>
+
+        <createIndex tableName="JBPM_PROCESSDEFINITION" indexName="IDX_PROCESSDEFINITION_KEY">
+        	<column name="KEY_"  type="NVARCHAR(256)"/>
+        </createIndex>
+
+        <createIndex tableName="JBPM_TRANSITION" indexName="IDX_TRANSITION_KEY">
+        	<column name="KEY_"  type="NVARCHAR(256)"/>
+        </createIndex>
+
+        <createIndex tableName="JBPM_NODE" indexName="IDX_NODE_KEY">
+        	<column name="KEY_"  type="NVARCHAR(256)"/>
+        </createIndex>
+
+    	<createIndex tableName="JBPM_SWIMLANE" indexName="IDX_SWIMLANE_KEY">
+        	<column name="KEY_"  type="NVARCHAR(256)"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

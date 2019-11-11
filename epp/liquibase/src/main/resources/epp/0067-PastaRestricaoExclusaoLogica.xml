@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="avner" id="1" dbms="mssql, postgresql, oracle" >
+        <addColumn tableName="tb_pasta_restricao">
+            <column name="in_logic_delete" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+
+        <addColumn tableName="tb_modelo_pasta_restricao">
+            <column name="in_logic_delete" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="avner" id="2" dbms="mssql, postgresql, oracle" >
+    	<dropForeignKeyConstraint baseTableName="tb_pasta" constraintName="fk_tb_pasta_002"/>
+    	<dropColumn tableName="tb_pasta" columnName="id_modelo_pasta" />
+    </changeSet>
+
+    <changeSet author="avner" id="3" dbms="mssql, postgresql, oracle">
+        <delete tableName="tb_permissao">
+            <where>
+                ds_alvo in ('/pages/Processo/excluirDocumentoProcesso', '/pages/Pasta/adicionarPasta', '/pages/Pasta/removerPasta', '/pages/Pasta/editarPasta')
+            </where>
+        </delete>
+
+        <delete tableName="tb_recurso">
+            <where>
+                ds_identificador in ('/pages/Processo/excluirDocumentoProcesso', '/pages/Pasta/adicionarPasta', '/pages/Pasta/removerPasta', '/pages/Pasta/editarPasta')
+            </where>
+        </delete>
+    </changeSet>
+
+    <changeSet author="avner" id="4" dbms="mssql, postgresql, oracle">
+        <delete tableName="tb_permissao">
+            <where>
+                ds_alvo = '/pages/Pasta/visualizarPasta'
+            </where>
+        </delete>
+
+        <delete tableName="tb_recurso">
+            <where>
+                ds_identificador = '/pages/Pasta/visualizarPasta'
+            </where>
+        </delete>
+    </changeSet>
+</databaseChangeLog>

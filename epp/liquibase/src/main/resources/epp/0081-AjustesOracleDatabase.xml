@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="victorpasqualino" id="1" dbms="postgresql">
+		<renameTable newTableName="tb_tipo_relaciona_processo" oldTableName="tb_tipo_relacionamento_processo"/>
+		
+		<renameTable newTableName="tb_classificacao_doc_papel" oldTableName="tb_classificacao_documento_papel"/>
+
+		<renameColumn newColumnName="id_tipo_relaciona_processo" oldColumnName="id_tipo_relacionamento_processo" tableName="tb_tipo_relaciona_processo"/>
+
+        <renameColumn newColumnName="ds_tipo_relaciona_processo" oldColumnName="ds_tipo_relacionamento_processo" tableName="tb_tipo_relaciona_processo"/>
+
+        <renameColumn newColumnName="id_classificacao_doc_papel" oldColumnName="id_classificacao_documento_papel" tableName="tb_classificacao_doc_papel"/>
+
+        <renameColumn newColumnName="id_perfil_template_assinat" oldColumnName="id_perfil_template_resp_assinat" tableName="tb_modelo_comunicacao"/>
+
+        <renameColumn newColumnName="id_tipo_relaciona_processo" oldColumnName="id_tipo_relacionamento_processo" tableName="tb_relacionamento"/>
+
+        <sql endDelimiter="\nGO">
+        	ALTER SEQUENCE sq_tb_definicao_variavel_processo RENAME TO sq_definicao_variavel_processo;
+        	ALTER SEQUENCE sq_tb_modelo_documento_historico RENAME TO sq_modelo_documento_historico;
+        	ALTER SEQUENCE sq_tb_nat_cat_fluxo_localizacao RENAME TO sq_nat_cat_fluxo_localizacao;
+        	ALTER SEQUENCE sq_tb_processo_localizacao_ibpm RENAME TO sq_processo_localizacao_ibpm;
+        	ALTER SEQUENCE sq_tb_sigilo_documento_permissao RENAME TO sq_sigilo_documento_permissao;
+        	ALTER SEQUENCE sq_tb_sigilo_processo_permissao RENAME TO sq_sigilo_processo_permissao;
+        	ALTER SEQUENCE sq_tb_tipo_modelo_documento_papel RENAME TO sq_tipo_modelo_documento_papel;
+        	ALTER SEQUENCE sq_tb_tipo_relacionamento_processo RENAME TO sq_tipo_relacio_processo;
+        	ALTER SEQUENCE sq_classificacao_documento_papel RENAME TO sq_classificacao_doc_papel;
+        </sql>
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="1" dbms="mssql">
+		<renameTable newTableName="tb_tipo_relaciona_processo" oldTableName="tb_tipo_relacionamento_processo"/>
+		
+		<renameTable newTableName="tb_classificacao_doc_papel" oldTableName="tb_classificacao_documento_papel"/>
+
+		<renameColumn newColumnName="id_tipo_relaciona_processo" oldColumnName="id_tipo_relacionamento_processo" tableName="tb_tipo_relaciona_processo"/>
+
+		<dropIndex indexName="tb_tipo_relacionamento_processo_ds_tipo_relacionamento_processo" tableName="tb_tipo_relaciona_processo"/>
+
+        <renameColumn newColumnName="ds_tipo_relaciona_processo" oldColumnName="ds_tipo_relacionamento_processo" tableName="tb_tipo_relaciona_processo"/>
+
+        <renameColumn newColumnName="id_classificacao_doc_papel" oldColumnName="id_classificacao_documento_papel" tableName="tb_classificacao_doc_papel"/>
+
+        <renameColumn newColumnName="id_perfil_template_assinat" oldColumnName="id_perfil_template_resp_assinat" tableName="tb_modelo_comunicacao"/>
+
+        <renameColumn newColumnName="id_tipo_relaciona_processo" oldColumnName="id_tipo_relacionamento_processo" tableName="tb_relacionamento"/>
+
+        <dropDefaultValue columnDataType="bigint" columnName="id_definicao_variavel_processo" tableName="tb_definicao_variavel_processo"/>
+
+        <dropDefaultValue columnDataType="bigint" columnName="id_modelo_documento_historico" tableName="tb_modelo_documento_historico"/>
+
+        <dropDefaultValue columnDataType="bigint" columnName="id_nat_cat_fluxo_localizacao" tableName="tb_nat_cat_fluxo_localizacao"/>
+
+        <dropDefaultValue columnDataType="bigint" columnName="id_processo_localizacao" tableName="tb_processo_localizacao_ibpm"/>
+
+        <dropDefaultValue columnDataType="bigint" columnName="id_sigilo_documento_permissao" tableName="tb_sigilo_documento_permissao"/>
+
+        <dropDefaultValue columnDataType="bigint" columnName="id_sigilo_processo_permissao" tableName="tb_sigilo_processo_permissao"/>
+
+        <dropDefaultValue columnDataType="bigint" columnName="id_tipo_modelo_documento_papel" tableName="tb_tipo_modelo_documento_papel"/>
+
+        <dropDefaultValue columnDataType="bigint" columnName="id_tipo_relaciona_processo" tableName="tb_tipo_relaciona_processo"/>
+
+        <dropDefaultValue columnDataType="bigint" columnName="id_classificacao_doc_papel" tableName="tb_classificacao_doc_papel"/>
+
+        <sql endDelimiter="\nGO">
+        	EXEC sp_rename 'sq_tb_definicao_variavel_processo', 'sq_definicao_variavel_processo';
+        	EXEC sp_rename 'sq_tb_modelo_documento_historico', 'sq_modelo_documento_historico';
+        	EXEC sp_rename 'sq_tb_nat_cat_fluxo_localizacao', 'sq_nat_cat_fluxo_localizacao';
+        	EXEC sp_rename 'sq_tb_processo_localizacao_ibpm', 'sq_processo_localizacao_ibpm';
+        	EXEC sp_rename 'sq_tb_sigilo_documento_permissao', 'sq_sigilo_documento_permissao';
+        	EXEC sp_rename 'sq_tb_sigilo_processo_permissao', 'sq_sigilo_processo_permissao';
+        	EXEC sp_rename 'sq_tb_tipo_modelo_documento_papel', 'sq_tipo_modelo_documento_papel';
+        	EXEC sp_rename 'sq_tb_tipo_relacionamento_processo', 'sq_tipo_relacio_processo';
+        	EXEC sp_rename 'sq_classificacao_documento_papel', 'sq_classificacao_doc_papel';
+        </sql>
+
+        <createIndex indexName="tb_tipo_relacionamento_processo_ds_tipo_relacionamento_processo" tableName="tb_tipo_relaciona_processo" unique="true">
+	        <column name="ds_tipo_relaciona_processo" type="NVARCHAR(100)"/>
+	    </createIndex>
+	</changeSet>
+
+        <changeSet author="victorpasqualino" id="2" dbms="mssql, postgresql">
+                <sqlFile dbms="mssql" encoding="utf8" endDelimiter="\nGO" path="epp/scripts/migracao_oracle_mssql.sql" splitStatements="true" stripComments="true"/>
+
+                <sqlFile dbms="postgresql" encoding="utf8" endDelimiter="\nGO" path="epp/scripts/migracao_oracle_postgresql.sql" splitStatements="true" stripComments="true"/>
+        </changeSet>
+
+</databaseChangeLog>

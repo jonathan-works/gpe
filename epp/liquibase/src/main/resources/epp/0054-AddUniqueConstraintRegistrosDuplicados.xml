@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+  <changeSet author="lsampaio" id="1" dbms="mssql, postgresql">
+    <addUniqueConstraint columnNames="nm_estrutura" constraintName="tb_estrutura_nm_estrutura_uq" tableName="tb_estrutura"/>
+    <addUniqueConstraint columnNames="ds_variavel" constraintName="tb_variavel_ds_variavel_uq" tableName="tb_variavel"/>
+    <addUniqueConstraint columnNames="ds_prioridade_processo" constraintName="tb_priori_proce_ds_prioridade_processo_uq" tableName="tb_prioridade_processo"/>
+    <addUniqueConstraint columnNames="nm_variavel" constraintName="tb_parametro_nm_variavel_uq" tableName="tb_parametro"/>
+  </changeSet>
+
+  <changeSet author="victorpasqualino" id="1" dbms="oracle">
+    <addUniqueConstraint columnNames="nm_estrutura" constraintName="tb_estrutura_nm_estrutura_uq" tableName="tb_estrutura"/>
+    <addUniqueConstraint columnNames="ds_variavel" constraintName="tb_variavel_ds_variavel_uq" tableName="tb_variavel"/>
+    <addUniqueConstraint columnNames="ds_prioridade_processo" constraintName="uk_prioridade_processo" tableName="tb_prioridade_processo"/>
+    <addUniqueConstraint columnNames="nm_variavel" constraintName="tb_parametro_nm_variavel_uq" tableName="tb_parametro"/>
+  </changeSet>
+
+</databaseChangeLog>

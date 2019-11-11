@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="fabipaes" id="1">
+    	<preConditions onFail="MARK_RAN">
+    		<sqlCheck expectedResult="0">SELECT count(*) FROM tb_signal WHERE CD_SIGNAL = 'comunicacaoExpedida'</sqlCheck>
+    	</preConditions>
+    	
+        <insert tableName="tb_signal">
+        	<column name="id_signal" valueSequenceNext="sq_signal"></column>
+        	<column name="cd_signal" value="comunicacaoExpedida"></column>
+        	<column name="nm_signal" value="Comunicação Expedida"></column>
+        	<column name="in_ativo" valueBoolean="true"></column>
+        	<column name="in_sistema" valueBoolean="true"></column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

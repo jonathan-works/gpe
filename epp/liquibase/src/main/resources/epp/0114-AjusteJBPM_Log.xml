@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="jovan" id="1" dbms="mssql, postgresql">
+         <modifyDataType  columnName="OLDSTRINGVALUE_" newDataType="NCLOB" tableName="JBPM_LOG"/>
+         <modifyDataType  columnName="NEWSTRINGVALUE_" newDataType="NCLOB" tableName="JBPM_LOG"/>
+    </changeSet>
+    
+    <changeSet id="1" author="jovan" dbms="oracle">
+        <sql>
+            ALTER TABLE JBPM_LOG ADD (temp NCLOB);
+            UPDATE JBPM_LOG SET temp = OLDSTRINGVALUE_;
+            ALTER TABLE JBPM_LOG DROP COLUMN OLDSTRINGVALUE_;
+            ALTER TABLE JBPM_LOG RENAME COLUMN temp TO OLDSTRINGVALUE_;        
+            ALTER TABLE JBPM_LOG ADD (temp NCLOB);
+            UPDATE JBPM_LOG SET temp = NEWSTRINGVALUE_;
+            ALTER TABLE JBPM_LOG DROP COLUMN NEWSTRINGVALUE_;
+            ALTER TABLE JBPM_LOG RENAME COLUMN temp TO NEWSTRINGVALUE_;        
+        </sql>
+    </changeSet>
+    
+    <changeSet author="gabriel" id="1" dbms="oracle">
+        <addColumn tableName="jbpm_log">
+            <column name="oldstringvaluenew_" type="nclob" />
+            <column name="newstringvaluenew_" type="nclob" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0114-AjusteJBPM_Log.xml" />
+        </preConditions>
+        <update tableName="jbpm_log">
+            <column name="oldstringvaluenew_" valueComputed="oldstringvalue_" />
+            <column name="newstringvaluenew_" valueComputed="newstringvalue_" />
+        </update>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0114-AjusteJBPM_Log.xml" />
+        </preConditions>
+
+        <dropColumn tableName="jbpm_log" columnName="oldstringvalue_" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="4" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0114-AjusteJBPM_Log.xml" />
+        </preConditions>
+
+        <dropColumn tableName="jbpm_log" columnName="newstringvalue_" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="5" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0114-AjusteJBPM_Log.xml" />
+        </preConditions>
+
+        <renameColumn tableName="jbpm_log" oldColumnName="oldstringvaluenew_" newColumnName="oldstringvalue_" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="6" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0114-AjusteJBPM_Log.xml" />
+        </preConditions>
+
+        <renameColumn tableName="jbpm_log" oldColumnName="newstringvaluenew_" newColumnName="newstringvalue_" />
+    </changeSet>
+</databaseChangeLog>

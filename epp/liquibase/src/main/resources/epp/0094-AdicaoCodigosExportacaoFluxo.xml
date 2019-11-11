@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="marialuisa" id="1">
+		<addColumn tableName="tb_dominio_variavel_tarefa">
+			<column name="cd_dominio_variavel_tarefa" type="varchar(30)"/>
+		</addColumn>
+    </changeSet>
+    <changeSet author="marialuisa" id="2">
+		<preConditions onFail="CONTINUE">
+			<columnExists tableName="tb_dominio_variavel_tarefa" columnName="cd_dominio_variavel_tarefa" />
+		</preConditions>
+		<update tableName="tb_dominio_variavel_tarefa">
+            <column name="cd_dominio_variavel_tarefa" valueNumeric="id_dominio_variavel_tarefa"/>
+        </update>
+    </changeSet>
+	<changeSet author="marialuisa" id="3">
+		<preConditions onFail="CONTINUE">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT (1) FROM tb_dominio_variavel_tarefa WHERE cd_dominio_variavel_tarefa IS NULL;
+			</sqlCheck>
+		</preConditions>
+		<addNotNullConstraint tableName="tb_dominio_variavel_tarefa" columnName="cd_dominio_variavel_tarefa" columnDataType="varchar(30)"/>
+    </changeSet>
+	    <changeSet author="marialuisa" id="4">
+		<preConditions onFail="CONTINUE">
+			<changeSetExecuted changeLogFile="epp/0094-AdicaoCodigosExportacaoFluxo.xml" author="marialuisa" id="2" />
+			<changeSetExecuted changeLogFile="epp/0094-AdicaoCodigosExportacaoFluxo.xml" author="marialuisa" id="3" />
+		</preConditions>
+		<createIndex indexName="idx_cd_dominio_variavel_tarefa" tableName="tb_dominio_variavel_tarefa" unique="true">
+			<column name="cd_dominio_variavel_tarefa" type="varchar(30)"/>
+		</createIndex>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="5">
+		<addColumn tableName="tb_modelo_documento">
+			<column name="cd_modelo_documento" type="varchar(30)"/>
+		</addColumn>
+    </changeSet>
+    <changeSet author="marialuisa" id="6">
+		<preConditions onFail="CONTINUE">
+			<columnExists tableName="tb_modelo_documento" columnName="cd_modelo_documento" />
+		</preConditions>
+		<update tableName="tb_modelo_documento">
+            <column name="cd_modelo_documento" valueNumeric="id_modelo_documento"/>
+        </update>
+    </changeSet>
+	<changeSet author="marialuisa" id="7">
+		<preConditions onFail="CONTINUE">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT (1) FROM tb_modelo_documento WHERE cd_modelo_documento IS NULL;
+			</sqlCheck>
+		</preConditions>
+		<addNotNullConstraint tableName="tb_modelo_documento" columnName="cd_modelo_documento" columnDataType="varchar(30)"/>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="8">
+		<preConditions onFail="CONTINUE">
+			<changeSetExecuted changeLogFile="epp/0094-AdicaoCodigosExportacaoFluxo.xml" author="marialuisa" id="6" />
+			<changeSetExecuted changeLogFile="epp/0094-AdicaoCodigosExportacaoFluxo.xml" author="marialuisa" id="7" />
+		</preConditions>
+		<createIndex indexName="idx_cd_modelo_documento" tableName="tb_modelo_documento" unique="true">
+			<column name="cd_modelo_documento" type="varchar(30)"/>
+		</createIndex>
+    </changeSet>
+
+	<changeSet author="marialuisa" id="9" dbms="mssql">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="tb_controle_classes_automaticas" schemaName="tce" />
+		</preConditions>
+		<sql>
+			ALTER SCHEMA dbo TRANSFER tce.tb_controle_classes_automaticas;
+			ALTER SCHEMA dbo TRANSFER tce.sq_controle_classes_automaticas;
+			sp_rename 'sq_controle_classes_automaticas', 'sq_controle_classes_automatics';
+		</sql>
+		<renameTable newTableName="tb_controle_classes_automatics" oldTableName="tb_controle_classes_automaticas" />
+		<renameColumn newColumnName="id_controle_classes_automatics" oldColumnName="id_controle_classes_automaticas" tableName="tb_controle_classes_automatics" columnDataType="bigint"/>
+    </changeSet>
+
+	<changeSet author="marialuisa" id="10">
+		<preConditions onFail="MARK_RAN">
+			<not><tableExists tableName="tb_controle_classes_automatics" /></not>
+		</preConditions>
+		<createTable tableName="tb_controle_classes_automatics">
+            <column name="id_controle_classes_automatics" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="nm_classe_automatica" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_executar" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+	<changeSet author="marialuisa" id="11">
+		<preConditions onFail="MARK_RAN">
+			<not><sequenceExists sequenceName="sq_controle_classes_automatics" /></not>
+		</preConditions>
+        <createSequence sequenceName="sq_controle_classes_automatics" startValue="1" incrementBy="1" />
+    </changeSet>
+		
+	<changeSet author="marialuisa" id="12">
+		<createIndex indexName="idx_controle_classes_auto_001" tableName="tb_controle_classes_automatics" unique="true">
+    	    <column name="nm_classe_automatica" type="varchar(100)"/>
+	    </createIndex>
+    </changeSet>
+
+	<changeSet author="marialuisa" id="13">
+		<preConditions onFail="CONTINUE">
+			<sqlCheck expectedResult="0">
+				select count(*) from tb_task_expiration;
+			</sqlCheck>
+			<or>
+				<and>			
+					<dbms type="postgresql" />
+					<sqlCheck expectedResult="1">
+						select count(*) from tb_controle_classes_automatics where nm_classe_automatica = 'migraTaskExpiration' and in_executar = false;
+					</sqlCheck>
+				</and>
+				<and>
+					<or>
+						<dbms type="mssql" />
+						<dbms type="oracle" />
+					</or>
+					<sqlCheck expectedResult="1">
+						select count(*) from tb_controle_classes_automatics where nm_classe_automatica = 'migraTaskExpiration' and in_executar = 0;
+					</sqlCheck>
+				</and>
+			</or>
+		</preConditions>
+        <dropTable tableName="tb_task_expiration"/>
+    </changeSet>
+
+    <changeSet author="avner" id="13-1">
+    	<preConditions onFail="CONTINUE">
+    		<changeSetExecuted changeLogFile="epp/0094-AdicaoCodigosExportacaoFluxo.xml" author="marialuisa" id="13" />
+    		<not>
+    			<tableExists tableName="tb_task_expiration" />
+    		</not>
+    		<sqlCheck expectedResult="1">
+    			select count(*) from tb_controle_classes_automatics where nm_classe_automatica = 'migraTaskExpiration';
+    		</sqlCheck>
+    	</preConditions>
+		<update tableName="tb_controle_classes_automatics">
+			<column name="in_executar" type="boolean" valueBoolean="false" />
+			<where>nm_classe_automatica = 'migraTaskExpiration'</where>
+		</update>
+    </changeSet>
+
+	<changeSet author="avner" id="13-2">
+    	<preConditions onFail="CONTINUE">
+    		<changeSetExecuted changeLogFile="epp/0094-AdicaoCodigosExportacaoFluxo.xml" author="marialuisa" id="13" />
+    		<not>
+    			<tableExists tableName="tb_task_expiration" />
+    		</not>
+    		<sqlCheck expectedResult="0">
+    			select count(*) from tb_controle_classes_automatics where nm_classe_automatica = 'migraTaskExpiration';
+    		</sqlCheck>
+    	</preConditions>
+		<insert tableName="tb_controle_classes_automatics">
+			<column name="id_controle_classes_automatics" valueSequenceNext="sq_controle_classes_automatics" />
+			<column name="nm_classe_automatica" value="migraTaskExpiration" />
+			<column name="in_executar" valueBoolean="false" />
+		</insert>
+    </changeSet>
+
+	<changeSet author="marialuisa" id="14">
+        <customChange class="br.com.infox.liquibase.FluxoMigrator" />
+    </changeSet>
+
+</databaseChangeLog>

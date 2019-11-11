@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="paulofilho" id="1">
+        <validCheckSum>7:5d60e40996acb8e4575f2f37f9cd68df</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not><dbms type="postgresql" /></not>
+        </preConditions>
+        <createSequence cycle="false" incrementBy="1"
+            minValue="1" sequenceName="sq_binario" />
+        <createTable tableName="tb_binario">
+            <column name="id_binario" type="bigint">
+                <constraints nullable="false" primaryKey="true"
+                    primaryKeyName="pk_binario" />
+            </column>
+            <column name="ob_binario" type="blob">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="1" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="tb_binario" columnName="ob_binario" />
+            <not><sqlCheck expectedResult="bytea">SELECT data_type FROM information_schema.columns WHERE column_name = 'ob_binario' AND table_name = 'tb_binario'</sqlCheck></not>
+        </preConditions>
+
+        <dropSequence sequenceName="sq_binario" />
+        <dropTable tableName="tb_binario" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="tb_binario" columnName="ob_binario" /></not>
+        </preConditions>
+
+        <createSequence cycle="false" incrementBy="1"
+            minValue="1" sequenceName="sq_binario" />
+        <createTable tableName="tb_binario">
+            <column name="id_binario" type="bigint">
+                <constraints nullable="false" primaryKey="true"
+                    primaryKeyName="pk_binario" />
+            </column>
+            <column name="ob_binario" type="bytea">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
+

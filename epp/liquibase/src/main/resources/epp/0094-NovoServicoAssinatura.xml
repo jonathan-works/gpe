@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="paulofilho" id="1">
+        <dropNotNullConstraint tableName="tb_cert_sign"
+            columnName="ds_cert_chain" columnDataType="NCLOB" />
+    </changeSet>
+
+    <changeSet author="paulofilho" id="2">
+        <addColumn tableName="tb_cert_sign">
+            <column name="tp_signature" type="varchar(30)" />
+        </addColumn>
+        <createIndex tableName="tb_cert_sign" indexName="idx_tp_signature_cert_sign">
+            <column name="tp_signature" type="varchar(30)" />
+        </createIndex>
+    </changeSet>
+    <changeSet author="paulofilho" id="3">
+        <addColumn tableName="tb_assinatura_documento">
+            <column name="tp_signature" type="varchar(30)" />
+        </addColumn>
+        <createIndex tableName="tb_assinatura_documento"
+            indexName="idx_tp_signature">
+            <column name="tp_signature" type="varchar(30)" />
+        </createIndex>
+    </changeSet>
+
+
+    <changeSet author="paulofilho" id="4">
+        <sql>
+            update tb_cert_sign set tp_signature = 'MD5_ASSINADO' where
+            tp_signature is null
+        </sql>
+    </changeSet>
+    <changeSet author="paulofilho" id="5">
+        <sql>
+            update tb_assinatura_documento set tp_signature =
+            'MD5_ASSINADO' where tp_signature is null
+        </sql>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="6" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName = "idx_tp_signature_cert_sign" />
+        </preConditions>
+        <dropIndex indexName="idx_tp_signature_cert_sign" tableName="tb_cert_sign" />
+    </changeSet>
+
+    <changeSet author="paulofilho" id="6">
+        <addNotNullConstraint tableName="tb_cert_sign"
+            columnName="tp_signature" columnDataType="varchar(30)" />
+    </changeSet>
+
+    <changeSet author="marialuisa" id="7" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName = "idx_tp_signature" />
+        </preConditions>
+        <dropIndex indexName="idx_tp_signature" tableName="tb_assinatura_documento" />
+    </changeSet>
+
+    <changeSet author="paulofilho" id="7">
+        <addNotNullConstraint tableName="tb_assinatura_documento"
+            columnName="tp_signature" columnDataType="varchar(30)" />
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="8">
+        <addColumn tableName="tb_cert_sign">
+            <column name="ds_uuid_documento_bin" type="varchar(36)" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="erikliberal" id="8.1">
+        <delete tableName="tb_cert_sign" />
+    </changeSet>
+    <changeSet author="erikliberal" id="8.2">
+        <delete tableName="tb_sign_grp" />
+    </changeSet>
+    <changeSet author="erikliberal" id="8.3">
+        <dropColumn tableName="tb_cert_sign" columnName="ds_uuid_documento_bin" />
+    </changeSet>
+    <changeSet author="erikliberal" id="8.4">
+        <addColumn tableName="tb_cert_sign">
+            <column name="ds_uuid_documento_bin" type="uuid" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="1">
+        <renameColumn newColumnName="temp" oldColumnName="ds_signature" tableName="tb_assinatura_documento" />
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2">
+        <addColumn tableName="tb_assinatura_documento">
+            <column name="ds_signature" type="NCLOB" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="3">
+        <sql>
+            update tb_assinatura_documento set ds_signature = temp;
+        </sql>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="4">
+        <dropColumn columnName="temp" tableName="tb_assinatura_documento" />
+    </changeSet>
+
+    <changeSet author="paulofilho" id="10">
+        <addColumn tableName="tb_cert_sign">
+            <column name="tp_status" type="varchar(30)" />
+            <column name="cd_erro" type="varchar(50)" />
+            <column name="ds_erro" type="NCLOB" />
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="11" dbms="oracle,postgresql">
+        <sql>
+            update tb_cert_sign c
+            set tp_status = (
+                select tp_status from tb_sign_grp g
+                where g.id_sign_grp = c.id_sign_grp
+            )
+        </sql>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="11" dbms="mssql">
+        <sql>
+            update c
+            set c.tp_status = (select g.tp_status from tb_sign_grp g where g.id_sign_grp = c.id_sign_grp)
+            from tb_cert_sign as c;
+        </sql>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="12">
+        <addNotNullConstraint tableName="tb_cert_sign"
+            columnName="tp_status" columnDataType="varchar(30)" />
+    </changeSet>
+
+    <changeSet author="paulofilho" id="13">
+        <validCheckSum>7:5d789f71c0c49917081fec57c8402426</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not><dbms type="postgresql" /></not>
+        </preConditions>
+        <addColumn tableName="tb_cert_sign">
+            <column name="ob_sha256" type="blob(16)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="1" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="tb_cert_sign" columnName="ob_sha256" />
+            <not><sqlCheck expectedResult="bytea">SELECT data_type FROM information_schema.columns WHERE column_name = 'ob_sha256' AND table_name = 'tb_cert_sign'</sqlCheck></not>
+        </preConditions>
+        <dropColumn tableName="tb_cert_sign" columnName="ob_sha256" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="tb_cert_sign" columnName="ob_sha256" /></not>
+        </preConditions>
+        <addColumn tableName="tb_cert_sign">
+            <column name="ob_sha256" type="bytea" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="jovan" id="1" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="tb_cert_sign" columnName="ob_sha256" />
+            <not><sqlCheck expectedResult="64">SELECT character_maximum_length FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tb_cert_sign' AND  COLUMN_NAME = 'ob_sha256'</sqlCheck></not>
+        </preConditions>
+        <dropColumn tableName="tb_cert_sign" columnName="ob_sha256" />
+    </changeSet>
+
+    <changeSet author="jovan" id="2" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="tb_cert_sign" columnName="ob_sha256" /></not>
+        </preConditions>
+        <addColumn tableName="tb_cert_sign">
+            <column name="ob_sha256" type="blob(64)" />
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="marialuisa" id="1">
+		<addColumn tableName="JBPM_VARIABLEACCESS">
+			<column name="CONFIGURATION_" type="NCLOB"/>
+		</addColumn>
+    </changeSet>
+    
+	<changeSet author="marialuisa" id="2">
+		<preConditions onFail="MARK_RAN">
+			<or>
+				<dbms type="postgresql" />
+				<dbms type="mssql" />
+			</or>
+		</preConditions>
+		<modifyDataType columnName="POOLEDACTORSEXPRESSION_" newDataType="NCLOB" tableName="JBPM_SWIMLANE"/>
+    </changeSet>
+	
+	<changeSet author="marialuisa" id="3">
+		<preConditions onFail="MARK_RAN">
+			<dbms type="oracle" />
+			<sqlCheck expectedResult="0">
+				select count(1) from JBPM_SWIMLANE;
+			</sqlCheck>
+		</preConditions>
+		<dropColumn columnName="POOLEDACTORSEXPRESSION_" tableName="JBPM_SWIMLANE"/>
+		<addColumn tableName="JBPM_SWIMLANE">
+		    <column name="POOLEDACTORSEXPRESSION_" type="NCLOB"/>
+		</addColumn>
+	</changeSet>
+
+</databaseChangeLog>

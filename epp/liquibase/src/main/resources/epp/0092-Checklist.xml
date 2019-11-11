@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="avner" id="1">
+        <createSequence sequenceName="sq_checklist" minValue="1" startValue="1" />
+    </changeSet>
+
+    <changeSet author="avner" id="2">
+        <createTable tableName="tb_checklist">
+            <column name="id_checklist" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_checklist" />
+            </column>
+
+            <column name="id_processo" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_tb_checklist_001" references="tb_processo(id_processo)" />
+            </column>
+
+            <column name="id_pasta" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_tb_checklist_002" references="tb_pasta(id_pasta)" />
+            </column>
+
+            <column name="dt_criacao" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="id_usuario_criacao" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_tb_checklist_003" references="tb_usuario_login(id_usuario_login)" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="avner" id="3">
+        <createSequence sequenceName="sq_checklist_doc" minValue="1" startValue="1" />
+    </changeSet>
+
+    <changeSet author="avner" id="4">
+        <validCheckSum>7:c982665debb8fd830293308da8f54d01</validCheckSum>
+        <createTable tableName="tb_checklist_doc">
+            <column name="id_checklist_doc" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_checklist_doc" />
+            </column>
+
+            <column name="id_checklist" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_tb_checklist_doc_001" references="tb_checklist(id_checklist)" />
+            </column>
+
+            <column name="id_documento" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_tb_checklist_doc_002" references="tb_documento(id_documento)" />
+            </column>
+
+            <column name="tp_situacao" type="nvarchar(3)" />
+
+            <column name="ds_comentario" type="nclob" />
+
+            <column name="id_usuario_alteracao" type="bigint">
+                <constraints foreignKeyName="fk_tb_checklist_doc_003" references="tb_usuario_login(id_usuario_login)" />
+            </column>
+
+            <column name="dt_alteracao" type="timestamp" />
+
+            <column name="nr_version" type="bigint" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <sql>
+            ALTER TABLE tb_checklist_doc ADD CONSTRAINT cc_cl_doc_tp_situacao CHECK (tp_situacao in ('CON', 'NCO', 'NVE'));
+        </sql>
+    </changeSet>
+</databaseChangeLog>

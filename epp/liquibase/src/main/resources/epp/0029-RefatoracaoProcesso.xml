@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="victorpasqualino" id="4" dbms="mssql, postgresql, oracle">
+
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_metadado_processo" />
+
+        <createTable tableName="tb_metadado_processo" >
+            <column name="id_metadado_processo" type="bigint" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_metadado_processo"/>
+            </column>
+            <column name="nm_metadado_processo" type="NVARCHAR(150)">
+                <constraints nullable="false" />
+            </column>
+            <column name="vl_metadado_processo" type="NVARCHAR(150)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ds_tipo" type="NVARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_processo" type="bigint">
+                <constraints nullable="false" references="tb_processo(id_processo)" foreignKeyName="fk_metadado_processo_001" />
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted author="victorpasqualino" id="1" changeLogFile="epp/0029-RefatoracaoProcesso.xml" />
+            </not>
+        </preConditions>
+        <sql>
+            INSERT INTO tb_metadado_processo (nm_metadado_processo, vl_metadado_processo, ds_tipo, id_processo)
+            SELECT 'statusProcesso', id_status_processo, 'br.com.infox.epp.processo.status.entity.StatusProcesso', id_processo
+            FROM tb_processo WHERE id_status_processo IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="mssql, postgresql">
+        <dropColumn columnName="nm_actor_id" tableName="tb_processo" />
+        <dropColumn columnName="nr_duracao" tableName="tb_processo" />
+        <dropDefaultValue columnDataType="varchar(2)" columnName="tp_processo" tableName="tb_processo"/>
+        <dropColumn columnName="tp_processo" tableName="tb_processo" />
+        <dropColumn columnName="nr_porcentagem" tableName="tb_processo_tarefa"/>
+        <dropForeignKeyConstraint baseTableName="tb_processo" constraintName="fk_status_processo"/>
+        <dropColumn columnName="id_status_processo" tableName="tb_processo"/>
+
+        <dropForeignKeyConstraint baseTableName="tb_sigilo_processo" constraintName="tb_sigilo_processo_id_processo_epa_fkey"/>
+        
+        <dropForeignKeyConstraint baseTableName="tb_processo_tarefa" constraintName="tb_processo_epa_tarefa_id_processo_fk"/>
+
+        <addColumn  tableName="tb_processo">
+            <column name="id_localizacao" type="bigint">
+                <constraints nullable="true" references="tb_localizacao(id_localizacao)" foreignKeyName="fk_processo_localizacao"/>
+            </column>
+            <column name="nr_tempo_gasto" type="integer" />
+            <column name="id_prioridade_processo" type="bigint">
+                <constraints nullable="true" references="tb_prioridade_processo(id_prioridade_processo)" foreignKeyName="fk_processo_001"/>
+            </column>
+            <column name="st_prazo" type="varchar(3)">
+                <constraints nullable="true" />
+            </column>
+            <column name="id_natureza_categoria_fluxo" type="bigint">
+                <constraints nullable="true" references="tb_natureza_categoria_fluxo(id_natureza_categoria_fluxo)" foreignKeyName="fk_natureza_categoria_fluxo_001"/>
+            </column>
+            <column name="id_processo_pai" type="bigint">
+                <constraints nullable="true" references="tb_processo(id_processo)" foreignKeyName="fk_processo_002"/>
+            </column>
+        </addColumn>
+
+        <sql dbms="mssql" >
+            UPDATE p SET p.id_localizacao = epa.id_localizacao, p.nr_tempo_gasto = epa.nr_tempo_gasto,
+            p.id_prioridade_processo = epa.id_prioridade_processo, p.st_prazo = epa.st_prazo,
+            p.id_natureza_categoria_fluxo = epa.id_natureza_categoria_fluxo, p.id_processo_pai = NULL
+            FROM tb_processo p
+            INNER JOIN tb_processo_epa epa ON (epa.id_processo = p.id_processo);
+        </sql>
+
+        <addNotNullConstraint columnName="id_localizacao" tableName="tb_processo" columnDataType="bigint" />
+        <addNotNullConstraint columnName="id_natureza_categoria_fluxo" tableName="tb_processo" columnDataType="bigint" />
+        <addNotNullConstraint columnName="st_prazo" tableName="tb_processo" columnDataType="varchar(3)" />
+
+        <dropTable cascadeConstraints="true" tableName="tb_processo_documento"/>
+        <dropTable cascadeConstraints="true" tableName="tb_processo_epa"/>
+
+
+        <createView replaceIfExists="true" viewName="vs_tempo_medio_processo" >
+            SELECT ncf.id_natureza_categoria_fluxo, f.qt_prazo,
+                (SELECT avg(pt.nr_tempo_gasto) AS avg
+                    FROM (SELECT p.id_natureza_categoria_fluxo, p.dt_fim, p.nr_tempo_gasto
+                            FROM tb_processo p
+                             JOIN tb_natureza_categoria_fluxo n ON n.id_natureza_categoria_fluxo = p.id_natureza_categoria_fluxo) pt
+                            WHERE ((NOT (pt.dt_fim IS NULL)) AND (pt.id_natureza_categoria_fluxo = ncf.id_natureza_categoria_fluxo))
+                            GROUP BY pt.id_natureza_categoria_fluxo) AS nr_tempo_medio
+                FROM (tb_natureza_categoria_fluxo ncf JOIN tb_fluxo f ON ncf.id_fluxo = f.id_fluxo);
+        </createView>
+
+        <createView replaceIfExists="true" viewName="vs_tempo_medio_tarefa" >
+            SELECT tempostarefas.id_natureza_categoria_fluxo,
+                tb_tarefa.id_tarefa,
+                tb_tarefa.ds_tarefa,
+                tb_tarefa.nr_prazo,
+                tb_tarefa.tp_prazo,
+                tempostarefas.nr_tempo_medio
+            FROM (tb_tarefa
+            JOIN ( SELECT p.id_natureza_categoria_fluxo,
+                        pet.id_tarefa,
+                        avg(pet.nr_tempo_gasto) AS nr_tempo_medio
+                    FROM (tb_processo_tarefa pet
+                JOIN tb_processo p ON p.id_processo = pet.id_processo)
+                WHERE ((NOT (pet.dt_fim IS NULL)) AND (pet.nr_tempo_gasto &gt; 0))
+                GROUP BY pet.id_tarefa, p.id_natureza_categoria_fluxo) tempostarefas ON tb_tarefa.id_tarefa = tempostarefas.id_tarefa);
+        </createView>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle">
+        <dropColumn columnName="nm_actor_id" tableName="tb_processo" />
+        <dropColumn columnName="nr_duracao" tableName="tb_processo" />
+        <dropDefaultValue columnDataType="varchar(2)" columnName="tp_processo" tableName="tb_processo"/>
+        <dropColumn columnName="tp_processo" tableName="tb_processo" />
+        <dropColumn columnName="nr_porcentagem" tableName="tb_processo_tarefa"/>
+        <dropForeignKeyConstraint baseTableName="tb_processo" constraintName="fk_status_processo"/>
+        <dropColumn columnName="id_status_processo" tableName="tb_processo"/>
+
+        <dropForeignKeyConstraint baseTableName="tb_sigilo_processo" constraintName="fk_sigilo_processo_01"/>
+        
+        <dropForeignKeyConstraint baseTableName="tb_processo_tarefa" constraintName="fk_processo_tarefa_04"/>
+
+        <addColumn  tableName="tb_processo">
+            <column name="id_localizacao" type="bigint">
+                <constraints nullable="true" references="tb_localizacao(id_localizacao)" foreignKeyName="fk_processo_localizacao"/>
+            </column>
+            <column name="nr_tempo_gasto" type="integer" />
+            <column name="id_prioridade_processo" type="bigint">
+                <constraints nullable="true" references="tb_prioridade_processo(id_prioridade_processo)" foreignKeyName="fk_processo_001"/>
+            </column>
+            <column name="st_prazo" type="nvarchar(3)">
+                <constraints nullable="true" />
+            </column>
+            <column name="id_natureza_categoria_fluxo" type="bigint">
+                <constraints nullable="true" references="tb_natureza_categoria_fluxo(id_natureza_categoria_fluxo)" foreignKeyName="fk_processo_01"/>
+            </column>
+            <column name="id_processo_pai" type="bigint">
+                <constraints nullable="true" references="tb_processo(id_processo)" foreignKeyName="fk_processo_002"/>
+            </column>
+        </addColumn>
+
+        <addNotNullConstraint columnName="id_localizacao" tableName="tb_processo" columnDataType="bigint" />
+        <addNotNullConstraint columnName="id_natureza_categoria_fluxo" tableName="tb_processo" columnDataType="bigint" />
+        <addNotNullConstraint columnName="st_prazo" tableName="tb_processo" columnDataType="nvarchar(3)" />
+
+        <dropTable cascadeConstraints="true" tableName="tb_processo_documento"/>
+        <dropTable cascadeConstraints="true" tableName="tb_processo_epa"/>
+
+
+        <createView replaceIfExists="true" viewName="vs_tempo_medio_processo" >
+            SELECT ncf.id_natureza_categoria_fluxo, f.qt_prazo,
+                (SELECT avg(pt.nr_tempo_gasto) AS avg
+                    FROM (SELECT p.id_natureza_categoria_fluxo, p.dt_fim, p.nr_tempo_gasto
+                            FROM tb_processo p
+                             JOIN tb_natureza_categoria_fluxo n ON n.id_natureza_categoria_fluxo = p.id_natureza_categoria_fluxo) pt
+                            WHERE ((NOT (pt.dt_fim IS NULL)) AND (pt.id_natureza_categoria_fluxo = ncf.id_natureza_categoria_fluxo))
+                            GROUP BY pt.id_natureza_categoria_fluxo) AS nr_tempo_medio
+                FROM (tb_natureza_categoria_fluxo ncf JOIN tb_fluxo f ON ncf.id_fluxo = f.id_fluxo)
+        </createView>
+
+        <createView replaceIfExists="true" viewName="vs_tempo_medio_tarefa" >
+            SELECT tempostarefas.id_natureza_categoria_fluxo,
+                tb_tarefa.id_tarefa,
+                tb_tarefa.ds_tarefa,
+                tb_tarefa.nr_prazo,
+                tb_tarefa.tp_prazo,
+                tempostarefas.nr_tempo_medio
+            FROM (tb_tarefa
+            JOIN ( SELECT p.id_natureza_categoria_fluxo,
+                        pet.id_tarefa,
+                        avg(pet.nr_tempo_gasto) AS nr_tempo_medio
+                    FROM (tb_processo_tarefa pet
+                JOIN tb_processo p ON p.id_processo = pet.id_processo)
+                WHERE ((NOT (pet.dt_fim IS NULL)) AND (pet.nr_tempo_gasto &gt; 0))
+                GROUP BY pet.id_tarefa, p.id_natureza_categoria_fluxo) tempostarefas ON tb_tarefa.id_tarefa = tempostarefas.id_tarefa)
+        </createView>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2" dbms="mssql, postgresql">
+
+        <dropForeignKeyConstraint baseTableName="tb_documento" constraintName="tb_processo_documento_id_processo_fkey" />
+
+        <dropIndex indexName="idx_tb_processo_documento1" tableName="tb_documento"/>
+
+        <dropNotNullConstraint columnDataType="integer" columnName="id_processo" tableName="tb_documento"/>
+
+        <sql endDelimiter="\nGO" dbms="mssql">
+            CREATE UNIQUE NONCLUSTERED INDEX [idx_tb_documento1] ON [dbo].[tb_documento] (  [id_processo] ASC ) WHERE (  [id_processo] IS NULL ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+        </sql>
+
+        <sql dbms="postgresql">
+            CREATE INDEX idx_tb_documento1 ON tb_documento USING btree (id_processo ASC NULLS LAST);
+        </sql>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2" dbms="oracle">
+
+        <dropForeignKeyConstraint baseTableName="tb_documento" constraintName="fk_processo_documento_03" />
+
+        <dropIndex indexName="idx_tb_processo_documento1" tableName="tb_documento"/>
+
+        <dropNotNullConstraint columnDataType="integer" columnName="id_processo" tableName="tb_documento"/>
+
+        <createIndex indexName="idx_tb_documento1" tableName="tb_documento" unique="false">
+            <column name="id_processo" type="integer"/>
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="6" dbms="mssql, postgresql">
+
+        <renameColumn columnDataType="bigint" newColumnName="id_processo" oldColumnName="id_processo_epa" tableName="tb_sigilo_processo" />
+
+        <addForeignKeyConstraint baseTableName="tb_processo_tarefa" baseColumnNames="id_processo" constraintName="tb_processo_tarefa_id_processo_fk" referencedTableName="tb_processo" referencedColumnNames="id_processo" />
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="6" dbms="oracle">
+
+        <renameColumn columnDataType="bigint" newColumnName="id_processo" oldColumnName="id_processo_epa" tableName="tb_sigilo_processo" />
+
+        <addForeignKeyConstraint baseTableName="tb_processo_tarefa" baseColumnNames="id_processo" constraintName="fk_processo_tarefa_01" referencedTableName="tb_processo" referencedColumnNames="id_processo" />
+
+    </changeSet>
+
+
+</databaseChangeLog>

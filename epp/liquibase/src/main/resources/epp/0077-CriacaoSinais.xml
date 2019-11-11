@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="victorpasqualino" id="1" dbms="mssql, postgresql, oracle" >
+        <validCheckSum>7:c33bb696e8c041b2f39936c3787dbfa9</validCheckSum>
+        <createSequence sequenceName="sq_signal" minValue="1" startValue="1"/>
+        
+        <createTable tableName="tb_signal">
+            <column name="id_signal" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_signal"/>
+            </column>
+            <column name="cd_signal" type="NVARCHAR(50)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_signal_001"/>
+            </column>
+            <column name="nm_signal" type="NVARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_ativo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="idx_signal_001" tableName="tb_signal" /></not>
+        </preConditions>
+        <createIndex indexName="idx_signal_001" tableName="tb_signal">
+            <column name="cd_signal"/>
+        </createIndex>  
+    </changeSet>
+    
+</databaseChangeLog>

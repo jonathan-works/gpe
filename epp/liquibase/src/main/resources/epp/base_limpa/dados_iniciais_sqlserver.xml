@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd"> 
+    <changeSet author="jonasbezerra" id="1" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                INSERT INTO qrtz_locks (lock_name) VALUES ('CALENDAR_ACCESS');
+                INSERT INTO qrtz_locks (lock_name) VALUES ('JOB_ACCESS');
+                INSERT INTO qrtz_locks (lock_name) VALUES ('MISFIRE_ACCESS');
+                INSERT INTO qrtz_locks (lock_name) VALUES ('STATE_ACCESS');
+                INSERT INTO qrtz_locks (lock_name) VALUES ('TRIGGER_ACCESS');
+        </sql>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="2" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                INSERT INTO tb_localizacao (id_localizacao, ds_localizacao, id_localizacao_pai, id_estrutura, in_ativo, in_estrutura, ds_caminho_completo) VALUES (1, 'e-PP', NULL, NULL, 1, 1, 'e-PP');
+                INSERT INTO tb_localizacao (id_localizacao, ds_localizacao, id_localizacao_pai, id_estrutura, in_ativo, in_estrutura, ds_caminho_completo) VALUES (2, 'Externo', 1, NULL, 1, 0, NULL);
+        </sql>
+    </changeSet>
+    <changeSet id="1" author="victorpasqualino" dbms="mssql" context="core">
+    	<update tableName="tb_localizacao">
+    		<column name="ds_caminho_completo" value="e-PP|"/>
+    		<where>
+    			id_localizacao = 1
+    		</where>
+    	</update>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="3" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                INSERT INTO tb_papel (id_papel, ds_identificador, ds_nome, in_ativo) VALUES (1, 'admin', 'Admin', 1);
+                INSERT INTO tb_papel (id_papel, ds_identificador, ds_nome, in_ativo) VALUES (2, 'externo', 'UsuarioExterno', 1);
+        </sql>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="4" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (2, 'nomeSistema', 'Nome do Sistema', 'e-PP', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (1, 'emailSistema', 'Email do Sistema', 'epp@infox.com.br', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (3, 'subNomeSistema', 'Nome usado embaixo do nome principal do sistema', 'Plataforma de Processos Eletrônicos', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (4, 'idUsuarioSistema', 'Id do usuário utilizado internamente', '2', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (5, 'exportarXLS', 'Permitir que grid possa exportar em XLS', 'true', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (6, 'exportarPDF', 'Permitir que grid possa exportar em PDF', 'true', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (7, 'tituloModeloEmailMudancaSenhaComLogin', 'Titulo do modelo de e-mail para mudança de senha através de login', 'Solicitação de Senha e Login', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (8, 'tituloModeloEmailMudancaSenha', 'Titulo para e-mail de mudança de Senha', 'Solicitação de Senha', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (11, 'versao', 'Versão do Sistema', '2.0', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+                INSERT INTO tb_parametro (id_parametro, nm_variavel, ds_variavel, vl_variavel, dt_atualizacao, id_usuario_modificacao, ds_esquema_tabela_id, in_ativo, in_sistema) VALUES (12, 'producao', 'Produção', '0', CURRENT_TIMESTAMP, NULL, NULL, 1, 1);
+        </sql>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="5" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                INSERT INTO tb_usuario_login (id_usuario_login, ds_login, ds_senha, in_bloqueio, dt_expiracao_usuario, in_provisorio, id_pessoa_fisica, ds_email, in_ativo, nm_usuario, tp_usuario, ds_salt) VALUES (1, 'admin', 'B3CAA50B4DC8FE086238E999354D53E6A65B3BB1', 0, NULL, 0, NULL, 'email@aqui', 1, 'Administrador', 'H', '0AB38DEAD2B3C7CC');
+                INSERT INTO tb_usuario_login (id_usuario_login, ds_login, ds_senha, in_bloqueio, dt_expiracao_usuario, in_provisorio, id_pessoa_fisica, ds_email, in_ativo, nm_usuario, tp_usuario, ds_salt) VALUES (2, 'sistema', 'B3CAA50B4DC8FE086238E999354D53E6A65B3BB1', 0, NULL, 0, NULL, 'epp@infox.com.br', 1, 'Sistema', 'S', '0AB38DEAD2B3C7CC');
+                INSERT INTO tb_usuario_login (id_usuario_login, ds_login, ds_senha, in_bloqueio, dt_expiracao_usuario, in_provisorio, id_pessoa_fisica, ds_email, in_ativo, nm_usuario, tp_usuario, ds_salt) VALUES (3, 'usuarioexterno', 'FF36A89D65F866AEE9D4E397114A4F00D7078B2D', 0, NULL, 0, NULL, 'externo@externo', 1, 'Usuário Externo', 'S', 'D010013A2B8C72C3');
+        </sql>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="6" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                INSERT INTO tb_usuario_localizacao (id_usuario_localizacao, id_usuario, id_localizacao, id_papel, id_estrutura, in_responsavel_localizacao, in_contabilizar) VALUES (1, 1, 1, 1, NULL, 1, 0);
+        </sql>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="7" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (1, 'Data_nao_formatada', '#{dataAtual}', 1);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (2, 'Data_atual_formatada', '#{dataAtualFormatada}', 1);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (3, 'Numero_processo', '#{numeroProcessoAtual}', 1);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (4, 'Localizacao_usuario_logado', '#{localizacaoUsuarioLogado}', 1);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (5, 'Perfil_usuario_logado', '#{perfilUsuarioLogado}', 1);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (6, 'Email_usuario_logado', '#{emailUsuarioLogado}', 1);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (7, 'Nome_usuario', '#{usuarioLogado}', 1);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (8, 'Senha_do_usuario', '#{senhaUsuarioRec}', 1);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (9, 'Nome_usuario_rec', '#{nomeUsuarioRec}', 1);
+                INSERT INTO tb_variavel (id_variavel, ds_variavel, vl_variavel, in_ativo) VALUES (10, 'Login_usuario_rec', '#{loginUsuarioRec}', 1);
+        </sql>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="8" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                INSERT INTO tb_recurso(id_recurso, ds_identificador, ds_nome) VALUES (1, '/pages/Painel/list.seam', 'Painel do Usuário');
+                INSERT INTO tb_recurso(id_recurso, ds_identificador, ds_nome) VALUES (2, '/pages/Processo/Consulta/setPrioridadeProcesso', 'Toolbar de Mudança de Prioridade do Processo');
+                INSERT INTO tb_recurso(id_recurso, ds_identificador, ds_nome) VALUES (3, '/pages/Processo/abaSigiloDocumento', 'Aba de Sigilo do Documento');
+                INSERT INTO tb_recurso(id_recurso, ds_identificador, ds_nome) VALUES (4, '/pages/Processo/abaSigiloProcesso', 'Aba de Sigilo do Processo');
+        </sql>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="9" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                INSERT INTO tb_permissao(id_permissao, ds_acao, ds_alvo, ds_destinatario, ds_discriminador) VALUES(1, 'access', '/pages/Painel/list.seam', 'admin', 'role');
+        </sql>
+    </changeSet>
+    <changeSet author="jonasbezerra" id="10" dbms="mssql" context="core" >
+        <sql endDelimiter="\nGO">
+                ALTER SEQUENCE sq_tb_localizacao RESTART WITH 3;
+
+                ALTER SEQUENCE sq_tb_papel RESTART WITH 3;
+
+                ALTER SEQUENCE sq_tb_parametro RESTART WITH 13;
+
+                ALTER SEQUENCE sq_tb_usuario_login RESTART WITH 4;
+
+                ALTER SEQUENCE sq_tb_usuario_localizacao RESTART WITH 2;
+
+                ALTER SEQUENCE sq_tb_variavel RESTART WITH 11;
+
+                ALTER SEQUENCE sq_tb_recurso RESTART WITH 5;
+
+                ALTER SEQUENCE sq_tb_permissao RESTART WITH 2;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

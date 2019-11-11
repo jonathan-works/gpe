@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>br.com.infox</groupId>
+        <artifactId>bom</artifactId>
+        <version>0.0.1</version>
+    </parent>
+
+    <groupId>br.com.infox.epp</groupId>
+    <artifactId>epp-builder</artifactId>
+    <version>3.2.27-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>epp-builder</name>
+
+    <profiles>
+        <profile>
+            <id>build:bom</id>
+            <modules>
+                <module>bom</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>build:liquibase</id>
+            <modules>
+                <module>bom</module>
+                <module>liquibase</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>build:resources</id>
+            <modules>
+                <module>bom</module>
+                <module>jsf-gui</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>build:all</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>bom</module>
+                <module>jsf-gui</module>
+                <module>liquibase</module>
+            </modules>
+        </profile>
+    </profiles>
+
+</project>

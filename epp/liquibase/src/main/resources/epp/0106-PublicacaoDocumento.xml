@@ -1,0 +1,65 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+   
+    <changeSet author="paulofilho" id="1">
+        <createTable tableName="tb_local_publicacao">
+            <column name="id_local_publicacao" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="cd_local_publicacao" type="varchar(30)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="ds_local_publicacao" type="varchar(100)">
+                <constraints nullable="false" unique="true" />
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="2">
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_local_publicacao" />
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="3">
+        <createTable tableName="tb_publicacao_documento">
+            <column name="id_publicacao_documento" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="id_documento" type="bigint">
+                <constraints foreignKeyName="fk_publicacao_documento_001" references="tb_documento(id_documento)" />
+            </column>
+            <column name="id_local_publicacao" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_publicacao_documento_002" references="tb_local_publicacao(id_local_publicacao)" />
+            </column>
+            <column name="nr_publicacao" type="varchar(30)" />
+            <column name="dt_publicacao" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="nr_pagina" type="integer" />
+            <column name="ds_observacoes" type="nvarchar(2000)" />
+            <column name="id_documento_certidao" type="bigint">
+                <constraints foreignKeyName="fk_publicacao_documento_003" references="tb_documento(id_documento)" />
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="4">
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_publicacao_documento" />
+    </changeSet>
+
+    <changeSet id="5" author="paulofilho">
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="PublicacoesDocumentos/visualizar" />
+            <column name="ds_nome" value="Permissão para visualizar publicações de documentos" />
+        </insert>
+    </changeSet>
+
+    <changeSet id="6" author="jovan">
+        <insert tableName="tb_local_publicacao">
+            <column name="id_local_publicacao" valueSequenceNext="sq_local_publicacao" />
+            <column name="cd_local_publicacao" value="DO" />
+            <column name="ds_local_publicacao" value="Diário Oficial" />
+        </insert>
+    </changeSet>
+    
+</databaseChangeLog>
