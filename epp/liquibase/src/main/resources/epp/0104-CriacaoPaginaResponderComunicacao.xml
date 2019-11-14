@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="victorpasqualino" id="1">
+        <createSequence sequenceName="sq_pessoa_resposta_comunicacao" incrementBy="1" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2">
+        <createTable tableName="tb_pessoa_resposta_comunicacao">
+        
+        	<column name="id_pessoa_resposta_comunicacao" type="BIGINT">
+        		<constraints nullable="false" primaryKey="true" primaryKeyName="pk_pessoa_resposta_comunicacao"/>
+        	</column>
+        
+        	<column name="id_processo" type="BIGINT">
+        		<constraints nullable="false" foreignKeyName="fk_pessoa_resp_comun_processo" referencedColumnNames="id_processo" referencedTableName="tb_processo"/>
+        	</column>
+        	
+        	<column name="id_pessoa_fisica" type="BIGINT">
+        		<constraints nullable="false" foreignKeyName="fk_pessoa_resp_comun_pessoa" referencedColumnNames="id_pessoa_fisica" referencedTableName="tb_pessoa_fisica"/>
+        	</column>
+        	
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

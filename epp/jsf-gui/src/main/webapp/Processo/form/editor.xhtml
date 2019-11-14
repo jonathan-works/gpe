@@ -1,0 +1,144 @@
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:i="http://java.sun.com/jsf/composite/infox"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  
+  	<ui:param name="varId" value="#{formField.id}"/>
+  	<ui:param name="controller" value="#{formField.type}" />
+  	<ui:param name="readonly" value="#{formField.properties.readonly}" />
+  	<ui:param name="required" value="#{formField.properties.required}" />
+  	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
+  	<ui:param name="modelosDocumento" value="#{formField.properties.modelosDocumento}"/>
+  	
+  	<h:message for="panelEditor#{varId}" style="font-weight: bold;" styleClass="property-error property-msg #{varId}ErrorClass" />
+  	<p:outputPanel id="panelEditor#{varId}" binding="#{formField.component}" styleClass="#{varId}DivClass">
+	    <fieldset>
+	        <legend>
+                <div class="property-field-edit-name" style="display: flex;">
+    	            <h:outputText styleClass="property-field-edit-name" value="#{formField.label}" />
+    	            <h:outputText styleClass="required" rendered="#{required}" value="*" />
+                </div>
+	        </legend>
+	        <p:outputPanel id="#{varId}CombosEditorDiv" styleClass="#{varId}CombosEditorDiv">
+		    	<i:selectOneMenu id="#{varId}ClassificacaoDocumento"
+		    		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+		    		items="#{classificacoesDocumento}"
+		    		required="false"
+	                ajax="true"
+	                onstart="infox.showLoading();"
+	                oncomplete="infox.hideLoading();"
+	                render="@this @(.#{varId}EditorDiv) @(.#{varId}CombosEditorDiv) @(.#{varId}AssinaturaDocumento)"
+	                execute="@this" selectStyle="width: 250px;"
+	                hideNoSelectionLabel="#{not empty formField.properties.classificacaoDocumento}"
+		    		value="#{formField.properties.classificacaoDocumento}"
+	                converterId="br.com.infox.jsf.converter.SelectItemConverter"
+		    		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
+		    		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
+		    	</i:selectOneMenu>
+		    	<s:div id="#{varId}ToolTipDivExterna" styleClass="tooltip-editor">
+	    		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent"  
+	    			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
+	    			  	<h:graphicImage id="#{varId}helpEditTipImg" 
+	    			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+	    				<div class="epp-tooltip">
+	    					<div class="tooltip-panel">
+	    						<div><h:outputText value="Observação:"/></div>
+	    						<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}"/>
+	    					</div>
+	    				</div>
+	    		    </s:div>
+	    	    </s:div>
+		    	<wi:selectOneMenu id="#{varId}ModeloDocumento" decorationClass="#{varId}ModeloDocumento"
+		    		label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+		    		valueItems="#{modelosDocumento}"
+		    		noSelectionLabel="[Selecione o modelo]" 
+		    		required="false" selectStyle="width: 156px;"
+		    		value="#{formField.properties.modeloDocumento}"
+		    		rendered="#{ not empty formField.properties.classificacaoDocumento and not readonly and not formField.value.hasAssinatura()}">
+		    			<p:ajax event="change" process="@this"  
+		    			onstart="if (infox.editor['#{varId}Decoration'].instance.getData()) {PF('#{varId}confirmEditorSelecaoModelo').show();}else { #{varId}loadModeloDocumentoEditor();}"></p:ajax>
+		    			<f:converter converterId="br.com.infox.jsf.converter.SelectItemConverter"/> 
+		    			<f:valueChangeListener type="br.com.infox.epp.processo.form.type.ModeloDocumentoValueChange" binding="#{controller.modeloDocumentoValueChange}"/>
+		    	</wi:selectOneMenu>
+		    	<p:remoteCommand name="#{varId}loadModeloDocumentoEditor" action="#{controller.performModeloDocumento(formField, formData)}"
+            	update="@(.#{varId}EditorDiv)" process="@this" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+				<p:confirmDialog widgetVar="#{varId}confirmEditorSelecaoModelo"
+					closable="false" header="Confirmação" 
+					message="#{infoxMessages['processo.detalhes.inclusao.confirmMsgModelo']}"
+					severity="alert">
+					<div style="text-align: right;">
+						<p:commandButton value="#{infoxMessages['button.ok']}"
+							action="#{controller.performModeloDocumento(formField, formData)}"
+							update="@(.#{varId}EditorDiv)" process="@this" onstart="infox.showLoading();"
+							oncomplete="PF('#{varId}confirmEditorSelecaoModelo').hide();infox.hideLoading();" />
+							
+						<p:commandButton value="#{infoxMessages['button.cancelar']}" action="#{controller.clearModeloDocumentoSelecionado(formField)}"
+							update="@(.#{varId}ModeloDocumento)" process="@this" onstart="infox.showLoading();"
+							oncomplete="PF('#{varId}confirmEditorSelecaoModelo').hide(); infox.hideLoading();">
+						</p:commandButton>	
+
+					</div>
+				</p:confirmDialog>
+				<i:selectOneMenu id="#{varId}PastaDocumentoMenu"
+	                label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+	                required="false"
+	                render="@this"
+	                execute="@this"
+	                ajax="true" selectStyle="width: 210px;"
+	                converterId="br.com.infox.jsf.converter.SelectItemConverter"
+	                value="#{formField.properties.pasta}"
+	                items="#{formField.properties.pastas}"
+	                readonly="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+	                disabled="#{readonly or formField.value.hasAssinatura() or formField.properties.podeSelectionarPasta}"
+	                noSelectionLabel="[Padrão]">
+	            </i:selectOneMenu>
+	    	</p:outputPanel>   
+	    	<p:outputPanel id="#{varId}EditorDiv" styleClass="#{varId}EditorDiv">
+                <p:blockUI block="#{varId}BlockPanel" blocked="#{empty formField.properties.classificacaoDocumento and not readonly}" styleClass="blockui-editor" >
+                    <h:outputText value="#{infoxMessages['beanValidation.SelecioneClassificacao']}" />
+                </p:blockUI>
+                <p:outputPanel id="#{varId}BlockPanel" style="width: auto; heigth: auto;">
+    	    	    <wi:editor id="#{varId}Decoration" value="#{formField.properties.conteudo}" decoreationClass="#{varId}EditorDecorationClass"
+    	    	    	required="false" readonly="#{readonly or formField.value.hasAssinatura()}"/>
+                </p:outputPanel>
+	    	        
+	    	</p:outputPanel>
+	    	   
+	    	<p:outputPanel id="#{varId}AssinaturaDocumento" styleClass="#{varId}AssinaturaDocumento" >
+	    	   
+	    	    <p:outputPanel rendered="#{controller.podeAssinar(formField)}">
+	    		   <wi:assinador 
+	                   id="#{varId}CertificadoDigital"
+	                   execute="@this"
+	                   render="panelEditor#{varId} pageBodyDialogMessage"
+                       callbackHandler="#{assinadorController}"
+	                   onbegin="infox.showLoading();"
+	                   oncomplete="infox.hideLoading();"
+	                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
+	                   value="#{infoxMessages['assinaturas.assinar']}" />
+	    		</p:outputPanel>
+	    	
+	    	</p:outputPanel>
+	    </fieldset>
+    </p:outputPanel>
+	<script type="text/javascript">
+         (function(){
+             var id = "#{varId}";
+             var errorClass = $('.' + id + 'ErrorClass');
+             var div = $('.' + id + 'DivClass');
+             if (errorClass.length !== 0) {
+                 div.addClass('property-error');
+             } else {
+                 div.removeClass('property-error');
+             }
+         })();
+     </script>
+</ui:composition>

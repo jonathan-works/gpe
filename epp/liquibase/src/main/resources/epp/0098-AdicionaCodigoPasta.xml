@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="marialuisa" id="1">
+       <addColumn tableName="tb_modelo_pasta">
+            <column name="cd_modelo_pasta" type="nvarchar(250)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="mssql">
+        <update tableName="tb_modelo_pasta">
+            <column name="cd_modelo_pasta" type="nvarchar(250)" 
+                valueComputed="LTRIM(RTRIM(REPLACE(REPLACE((nm_modelo_pasta COLLATE sql_latin1_general_cp1251_ci_as), ' ',''), '/', '')))"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="postgresql">
+        <update tableName="tb_modelo_pasta">
+            <column name="cd_modelo_pasta" type="nvarchar(250)" 
+                valueComputed="replace(replace(trim(convert_from(convert_to(nm_modelo_pasta, 'LATIN1'), 'LATIN1')), ' ', ''), '/', '')"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="oracle">
+        <update tableName="tb_modelo_pasta">
+            <column name="cd_modelo_pasta" type="nvarchar(250)" valueComputed="replace(trim(nm_modelo_pasta), ' ', '')"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="3">
+        <addNotNullConstraint columnDataType="nvarchar(250)" columnName="cd_modelo_pasta" tableName="tb_modelo_pasta"/>
+    </changeSet>
+    
+    <changeSet author="marialuisa" id="4">
+        <addUniqueConstraint columnNames="id_fluxo, cd_modelo_pasta" constraintName="uk_modelo_pasta_001" tableName="tb_modelo_pasta"/>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="5">
+       <addColumn tableName="tb_pasta">
+            <column name="cd_pasta" type="nvarchar(250)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="6" dbms="mssql">
+        <update tableName="tb_pasta">
+            <column name="cd_pasta" type="nvarchar(250)" 
+                valueComputed="LTRIM(RTRIM(REPLACE(REPLACE((nm_pasta COLLATE sql_latin1_general_cp1251_ci_as), ' ',''), '/', '')))"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="6" dbms="postgresql">
+        <update tableName="tb_pasta">
+            <column name="cd_pasta" type="nvarchar(250)" 
+                valueComputed="replace(replace(trim(convert_from(convert_to(nm_pasta, 'LATIN1'), 'LATIN1')), ' ', ''), '/', '')"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="6" dbms="oracle">
+        <update tableName="tb_pasta">
+            <column name="cd_pasta" type="nvarchar(250)" valueComputed="replace(trim(nm_pasta), ' ', '')"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="7">
+        <addNotNullConstraint columnDataType="nvarchar(250)" columnName="cd_pasta" tableName="tb_pasta"/>
+    </changeSet>
+    
+    <changeSet author="marialuisa" id="8">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(cd_pasta)
+FROM ( select ID_PROCESSO, CD_PASTA from tb_pasta group by ID_PROCESSO, CD_PASTA having count (ID_PASTA) > 1) x</sqlCheck>
+        </preConditions>
+        <addUniqueConstraint columnNames="id_processo, cd_pasta" constraintName="uk_pasta_001" tableName="tb_pasta"/>
+    </changeSet>
+
+</databaseChangeLog>

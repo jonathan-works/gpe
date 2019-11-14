@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:reportColumn value="#{row.ativo ? messages['entity.ativo'] : messages['entity.inativo']}"
+        columnAlign="center" />
+
+</ui:composition>

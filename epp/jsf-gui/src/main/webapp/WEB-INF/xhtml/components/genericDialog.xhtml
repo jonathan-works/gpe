@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    >
+    
+    <h:form>
+        <p:remoteCommand name="showGenericDialog" update="@this @(.genericDialog)" actionListener="#{dialogController.show()}" />
+    </h:form>
+    
+    <h:form>
+        <p:remoteCommand name="clearGenericDialog" update="@this @(.genericDialog)" actionListener="#{dialogController.clear()}" />
+    </h:form>
+    
+    <p:dialog id="genericDialog"
+        dynamic="true" 
+	    modal="true"
+	    styleClass="genericDialog"
+	    widgetVar="genericDialogVar"
+        fitViewport="true"
+	    closable="true"
+	    appendTo="@(body)"
+	    header="#{dialogController.header}"
+	    onHide="PF('dlgVar').content.empty(); clearGenericDialog()"
+    >
+        <p:ajax event="close" update="@this @(.genericDialog)" listener="#{dialogController.clear()}" />
+        
+        <p:outputPanel rendered="#{not empty dialogController.src}">
+            <ui:include src="#{dialogController.src}" />
+        </p:outputPanel>
+    </p:dialog>
+
+</ui:composition>

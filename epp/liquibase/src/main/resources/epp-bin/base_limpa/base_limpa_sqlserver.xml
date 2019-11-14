@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    <changeSet author="jonasbezerra" id="1" dbms="mssql" >
+        <createSequence minValue="1" sequenceName="sq_tb_imagem_bin" startValue="1" />
+    </changeSet> 
+    <changeSet author="liquibase" id="1402915972656-1" dbms="mssql" >
+        <createTable tableName="tb_imagem_bin">
+            <column defaultValueNumeric="0" name="id_imagem_bin" type="INT" defaultValueComputed="NEXT VALUE FOR sq_tb_imagem_bin">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ds_extensao" type="VARCHAR(15)"/>
+            <column name="ds_md5_imagem" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_arquivo" type="VARCHAR(300)"/>
+            <column name="dt_inclusao" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_tamanho" type="INT"/>
+            <column name="ob_imagem" type="IMAGE"/>
+            <column name="ds_file_path" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402915972656-2" dbms="mssql" >
+        <createTable tableName="tb_processo_documento_bin">
+            <column name="id_processo_documento_bin" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ob_processo_documento" type="IMAGE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402915972656-4" dbms="mssql" >
+        <addPrimaryKey columnNames="id_processo_documento_bin" constraintName="tb_processo_documento_bin_pk" tableName="tb_processo_documento_bin"/>
+    </changeSet>
+</databaseChangeLog>

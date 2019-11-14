@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+
+    <ui:define name="title">#{infoxMessages['categoria.titlePage']}</ui:define>
+    <ui:param name="home" value="#{categoriaCrudAction}" />
+    <ui:param name="crudAction" value="#{categoriaCrudAction}" />
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{categoriaList.list(15)}"
+            bean="#{categoriaList}"
+            tableTitle="#{infoxMessages['categoria.tableTitle']}"
+            id="categoriaList" rowId="#{row.idCategoria}"
+            actionInactive="categoriaCrudAction.inactive">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarCategoriaForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigo"
+                        value="#{categoriaList.entity.codigo}"
+                        label="#{infoxMessages['categoria.codigo']}" />
+                    <wi:inputText id="categoria"
+                        value="#{categoriaList.entity.categoria}"
+                        label="#{infoxMessages['categoria.categoria']}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{categoriaList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <ui:define name="toolBar">
+                <wi:toolBarEdit id="categoriaListEditToolbar" />
+                <wi:toolBarInactive
+                    actionInactive="categoriaCrudAction.inactive(row)" />
+            </ui:define>
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['categoria.codigo']}"
+                value="#{row.codigo}" />
+            <wi:columnOutputText columnId="categoria"
+                columnHeader="#{infoxMessages['categoria.categoria']}"
+                value="#{row.categoria}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+    <ui:define name="form">
+        <wi:dataForm formId="categoriaForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="codigo"
+                value="#{crudAction.instance.codigo}" required="true"
+                label="#{infoxMessages['categoria.codigo']}" 
+                maxlength="30" />
+            <wi:inputText id="categoria"
+                value="#{crudAction.instance.categoria}" required="true"
+                label="#{infoxMessages['categoria.categoria']}" 
+                maxlength="30" />
+            <wi:selectSituacaoRadio id="ativo" required="false"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{crudAction.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
+    <ui:define name="tabs">
+        <infox:tab id="categoriaItemTab"
+            rendered="#{crudAction.isManaged()}"
+            title="#{infoxMessages['categoriaItem.titleTab']}"
+            name="categoriaItemTab"
+            action="#{crudAction.onClickCategoriaItemTab}">
+            <s:div id="categoriaItemFormDiv">
+                <wi:dataForm formId="categoriaItemForm"
+                    formTitle="#{infoxMessages['form.title']} #{crudAction.instance.categoria}">
+                    <wi:tree id="itemTree"
+                        assignTo="categoriaItemCrudAction.item"
+                        tree="#{itemTree}" required="true"
+                        label="#{infoxMessages['categoriaItem.item']}" />
+                    <ui:define name="buttons">
+                        <wi:commandButton id="saveButton"
+                            action="categoriaItemCrudAction.save()"
+                            reRender="categoriaItemFormDiv, categoriaItemDiv, categoriaItemTab, pageBodyDialogMessage"
+                            value="#{infoxMessages['crud.persist']}" />
+                    </ui:define>
+                </wi:dataForm>
+            </s:div>
+            <s:div id="categoriaItemDiv">
+                <wi:dataTable id="categoriaItemTable"
+                    values="#{categoriaItemList.list(15)}"
+                    bean="#{categoriaItemList}"
+                    tableTitle="#{infoxMessages['categoriaItem.titleDataTable']} - #{crudAction.instance.categoria}"
+                    var="row" rows="10" showSearchForm="false" panelStyle="margin-top: 1em;">
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <wi:toolBarRemove id="toolBarRemove"
+                            reRender="categoriaItemFormDiv, categoriaItemDiv"
+                            actionRemove="categoriaItemCrudAction.remove(row)" />
+                    </ui:define>
+                    <wi:columnOutputText columnId="item"
+                        columnHeader="#{infoxMessages['categoriaItem.item']}"
+                        value="#{row.item.caminhoCompletoToString()}"
+                        hideOrder="true" styleClass="rf-dt-c-left">
+                    </wi:columnOutputText>
+                </wi:dataTable>
+
+            </s:div>
+        </infox:tab>
+    </ui:define>
+</ui:composition>

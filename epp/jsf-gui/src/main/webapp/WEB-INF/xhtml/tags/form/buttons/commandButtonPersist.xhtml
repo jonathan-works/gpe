@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:commandButton id="persistButton"
+        action="#{empty persistAction ? home.homeName.concat('.persist()') : persistAction}"
+        rendered="#{empty rendered ? !home.managed : rendered}"
+        reRender="#{empty reRender ? 'pageBody, pageBodyDialogMessage' : reRender}"
+        value="#{infoxMessages['crud.persist']}">
+    </wi:commandButton>
+
+</ui:composition>

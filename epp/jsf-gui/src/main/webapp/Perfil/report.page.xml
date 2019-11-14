@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.org/schema/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd">
+
+	<restrict>#{security.checkPage()}</restrict>
+
+	<param name="order" value="#{perfilTemplateList.order}" />
+	<param name="restrictionLogicOperator" value="#{perfilTemplateList.restrictionLogicOperator}" />
+	
+	<param name="codigo" value="#{perfilTemplateList.entity.codigo}"/>
+	<param name="descricao" value="#{perfilTemplateList.entity.descricao}"/>
+	<param name="ativo" value="#{perfilTemplateList.entity.ativo}"/>
+</page>

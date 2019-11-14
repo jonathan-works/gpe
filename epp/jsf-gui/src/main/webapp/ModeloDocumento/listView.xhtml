@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+
+    <ui:define name="title">#{infoxMessages['modeloDocumento.titlePage']}</ui:define>
+    <ui:param name="home" value="#{modeloDocumentoCrudAction}" />
+
+    <ui:define name="searchGrid">
+
+        <wi:dataTable values="#{modeloDocumentoList.list(15)}"
+            bean="#{modeloDocumentoList}"
+            tableTitle="#{infoxMessages['modeloDocumento.titleView']}"
+            id="modeloDocumentoList" rowId="#{row.idModeloDocumento}">
+
+            <ui:define name="searchForm">
+
+                <wi:searchForm formId="modeloDocumentoSearchForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+
+                    <wi:inputText id="tituloModeloDocumento" maxlength="250"
+                        label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
+                        value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />
+                   	<wi:inputText id="codigoModeloDocumento" maxlength="30"
+                        label="#{infoxMessages['modeloDocumento.codigoModelo']}"
+                        value="#{modeloDocumentoList.entity.codigo}" />
+                    <wi:selectOneMenuEntity id="tipoModeloDocumento"
+                        label="#{infoxMessages['modeloDocumento.tipoModeloDocumento']}"
+                        value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
+                        items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
+                        showLabelTodos="true" />
+                    <wi:selectSituacaoOneMenu id="situacao"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{modeloDocumentoList.entity.ativo}" />
+
+                </wi:searchForm>
+
+            </ui:define>
+
+            <wi:columnOutputText columnId="tituloModeloDocumento"
+                columnHeader="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
+                value="#{row.tituloModeloDocumento}" />
+			<wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['modeloDocumento.codigoModelo']}"
+                value="#{row.codigo}" />
+            <wi:columnOutputText columnId="tipoModeloDocumento"
+                columnHeader="#{infoxMessages['modeloDocumento.tipoModeloDocumento']}"
+                value="#{row.tipoModeloDocumento}" />
+            <wi:columnSituacao
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+
+        </wi:dataTable>
+
+    </ui:define>
+
+    <ui:define name="form">
+
+        <wi:dataForm formId="modeloDocumentoForm"
+            formTitle="#{infoxMessages['form.title']}" isUploadForm="true">
+
+            <wi:selectOneMenuEntity id="tipoModeloDocumento"
+                label="#{infoxMessages['modeloDocumento.tipoModeloDocumento']}"
+                value="#{modeloDocumentoCrudAction.instance.tipoModeloDocumento}"
+                items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
+                required="true" inactiveCond="#{!item.ativo}"
+                showLabelSelecione="true" />
+             <wi:inputText id="codigoModeloDocumento" maxlength="30"
+                label="#{infoxMessages['modeloDocumento.codigoModelo']}"
+                value="#{modeloDocumentoCrudAction.instance.codigo}"
+                required="true" />
+             <wi:inputText id="tituloModeloDocumento" maxlength="250"
+                label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
+                value="#{modeloDocumentoCrudAction.instance.tituloModeloDocumento}"
+                required="true" />
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{modeloDocumentoCrudAction.instance.ativo}" />
+            <div class="decoration-div">
+	            <wi:editor id="modeloDocumento" showHtml="#{true}"
+	                label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+	                value="#{modeloDocumentoCrudAction.instance.modeloDocumento}"
+	                showVariables="true" required="true" />
+	            <a:region>
+	                <wi:imageUpload imageBean="#{imageFileUploader}" editorId="modeloDocumento" />
+	            </a:region>
+            </div>
+
+        </wi:dataForm>
+
+    </ui:define>
+
+    <ui:define name="tabs">
+        <h:form>
+            <a:jsFunction name="reloadModeloDocumento"
+                action="#{modeloDocumentoCrudAction.reloadAfterRestaurar}"
+                onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+                limitRender="true" execute="@this" render=":pageBody" />
+        </h:form>
+
+        <infox:tab id="historicoModeloDocumento"
+            rendered="#{modeloDocumentoCrudAction.isManaged()}"
+            title="#{infoxMessages['historicoModeloDocumento.titleTab']}"
+            name="historicoModeloDocumento"
+            action="#{modeloDocumentoCrudAction.onClickHistoricoTab}">
+
+            <wi:dataTable
+                values="#{historicoModeloDocumentoList.list(10)}"
+                bean="#{historicoModeloDocumentoList}"
+                tableTitle="#{infoxMessages['historicoModeloDocumento.titleView']}"
+                id="historicoModeloDocumentoList">
+
+                <ui:define name="headerToolBar">
+
+                    <wi:toolBarReportExcel
+                        rendered="#{systemFacade.exportarXLS()}"
+                        action="#{historicoModeloDocumentoList.exportarXLS()}" />
+
+                </ui:define>
+
+                <ui:define name="searchForm">
+
+                    <wi:searchForm
+                        formId="historicoModeloDocumentoSearchForm"
+                        formTitle="#{infoxMessages['searchForm.title']}">
+
+                        <wi:inputText
+                            id="historicoTituloModeloDocumento" maxlength="250"
+                            label="#{infoxMessages['historicoModeloDocumento.tituloModeloDocumento']}"
+                            value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
+                        <wi:selectOneMenuEntity id="usuarioAlteracao"
+                            label="#{infoxMessages['historicoModeloDocumento.usuarioAlteracao']}"
+                            value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
+                            items="#{historicoModeloDocumentoCrudAction.usuarioAlteracaoList}"
+                            showLabelTodos="true" />
+                        <wi:inputDate id="dataAlteracao"
+                            value="#{historicoModeloDocumentoList.entity.dataAlteracao}"
+                            label="#{infoxMessages['historicoModeloDocumento.dataAlteracao']}" />
+
+                    </wi:searchForm>
+
+                </ui:define>
+
+                <wi:columnOutputText columnId="tituloModeloDocumento"
+                    columnHeader="#{infoxMessages['historicoModeloDocumento.tituloModeloDocumento']}"
+                    value="#{row.tituloModeloDocumento}" />
+                <wi:columnOutputText columnId="usuarioAlteracao"
+                    columnHeader="#{infoxMessages['historicoModeloDocumento.usuarioAlteracao']}"
+                    value="#{row.usuarioAlteracao}" />
+                <wi:columnOutputText columnId="dataAlteracao"
+                    columnHeader="#{infoxMessages['historicoModeloDocumento.dataAlteracao']}"
+                    value="#{row.dataAlteracao}">
+
+                    <ui:define name="outputText">
+
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+
+                    </ui:define>
+
+                </wi:columnOutputText>
+                <ui:define name="toolBar">
+
+                    <a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction}"
+                        oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/ModeloDocumento/restaurar.seam','1024');"
+                        render="@this" execute="@this">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                            title="#{infoxMessages['button.selecionar']}" />
+                        <f:setPropertyActionListener value="#{row.idHistoricoModeloDocumento}" target="#{flash.idHistoricoModeloDocumento}" />
+                    </a:commandLink>
+
+                </ui:define>
+
+
+            </wi:dataTable>
+
+        </infox:tab>
+
+    </ui:define>
+
+
+</ui:composition>

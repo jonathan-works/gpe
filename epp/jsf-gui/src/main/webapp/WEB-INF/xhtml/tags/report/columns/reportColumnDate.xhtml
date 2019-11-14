@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:reportColumn columnAlign="center">
+        <s:convertDateTime pattern="#{wi:get(pattern,'dd/MM/yy kk:mm')}" />
+    </wi:reportColumn>
+
+</ui:composition>

@@ -1,0 +1,59 @@
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:composite="http://java.sun.com/jsf/composite" >
+    
+    <composite:interface>
+    	<composite:attribute name="help" />
+    	<composite:attribute name="baseUrl" type="java.lang.String" required="true" />
+    	<composite:attribute name="path" type="java.lang.String" />
+    	<composite:attribute name="emptyMessage" type="java.lang.String" default="#{infoxMessages['list.defaultNoDataLabel']}"/>
+    	<composite:attribute name="groupDelimiter" type="java.lang.String" default="group"/>
+    	<composite:attribute name="itemDelimiter" type="java.lang.String" default="item"/>
+    	
+    	<composite:facet name="headers" default="{}"/>
+    	<composite:facet name="queries" default="[]"/>
+    	<composite:facet name="itemToolBar" default="[]" type="java.util.Map"/>
+    	<composite:facet name="groupToolBar" default="[]" type="java.util.Map"/>
+    </composite:interface>
+	
+    <composite:implementation>
+    
+        <div id="#{cc.clientId}" class="groupedItemsTreeContainer"></div>
+        <script>
+        (function(){
+            var treeConfig={
+                config:{
+    				"url":"#{cc.attrs.baseUrl}",
+    				"groupDelimiter":"#{cc.attrs.groupDelimiter}",
+    				"itemDelimiter":"#{cc.attrs.itemDelimiter}",
+    				"emptyMessage":"#{cc.attrs.emptyMessage}",
+    				"headers":{},
+    				"queries":[]
+                }
+            };
+            <c:if test="#{not empty cc.attrs.path}">
+            treeConfig.config.path="#{cc.attrs.path}";
+            </c:if>
+            <c:if test="#{not empty cc.facets.headers}">
+            treeConfig.config.headers=#{elFunctions.evaluateExpressions(cc.facets.headers)};
+            </c:if>
+            <c:if test="#{not empty cc.facets.groupToolBar}">
+            treeConfig.groupToolBar=#{elFunctions.evaluateExpressions(cc.facets.groupToolBar)};
+            </c:if>
+            <c:if test="#{not empty cc.facets.itemToolBar}">
+            treeConfig.itemToolBar=#{elFunctions.evaluateExpressions(cc.facets.itemToolBar)};
+            </c:if>
+            <c:if test="#{not empty cc.facets.queries}">
+            treeConfig.config.queries=#{elFunctions.evaluateExpressions(cc.facets.queries)};
+            </c:if>
+            var TreeCategorias = window['react-components'].TreeCategorias;
+            ReactDOM.render(React.createElement(TreeCategorias, treeConfig), document.getElementById('#{cc.clientId}'));
+        })()
+    	</script>
+    </composite:implementation>
+	
+</html>

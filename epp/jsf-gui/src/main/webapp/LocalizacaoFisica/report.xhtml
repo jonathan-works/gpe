@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="title" value="Localizações Físicas" />
+
+    <wi:dataReport title="#{infoxMessages['localizacaoFisica.reportTitle']}"
+        columns="3" widths="4 2 1"
+        headerText="#{localizacaoFisicaList.criteria}">
+
+        <wi:reportColumnHeader
+            title="#{infoxMessages['localizacaoFisica.descricao']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['localizacaoFisica.localizacaoFisicaPai']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+
+        <ui:repeat var="row" value="#{localizacaoFisicaList.list()}">
+            <wi:reportColumn value="#{row.descricao}" />
+            <wi:reportColumn value="#{row.localizacaoFisicaPai}" />
+            <wi:reportColumnSituacao value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+
+    </wi:dataReport>
+
+</ui:composition>

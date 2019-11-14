@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <s:link view="#{printPath}" target="_blank"
+        rendered="#{not empty printPath}">
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/printer.png')}" title="Imprimir" />
+    </s:link>
+
+    <h:outputLink onclick="window.print()" rendered="#{empty printPath}">
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/printer.png')}" title="Imprimir" />
+    </h:outputLink>
+
+</ui:composition>

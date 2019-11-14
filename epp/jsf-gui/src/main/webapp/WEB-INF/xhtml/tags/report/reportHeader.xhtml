@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
+	<p:table
+         columns="3"
+         widthPercentage="100"
+         widths="1 3 1.5"
+         spacingBefore="#{wi:get(spacingBefore, '20')}"
+         spacingAfter="#{wi:get(spacingAfter, '30')}">
+			<p:cell
+             borderWidth="0"
+             verticalAlignment="left">
+                <p:image value="#{layoutController.getResourceAsURL('LOGO_LOGIN')}" />
+			</p:cell>
+			<p:cell
+             borderWidth="0"
+             verticalAlignment="bottom"
+             horizontalAlignment="center">
+				<p:table
+                 columns="1"
+                 widths="1">
+					<p:cell
+                     borderWidth="0"
+                     horizontalAlignment="center"
+                     verticalAlignment="bottom">
+						<p:font
+                         size="12">
+			 				<p:paragraph
+                             alignment="center">
+							       <p:text
+                                 value="#{title}" />
+							</p:paragraph>
+						</p:font>
+					</p:cell>
+					<p:cell
+                     borderWidth="0"
+                     horizontalAlignment="center"
+                     verticalAlignment="bottom">
+						<p:font
+                         size="12">
+			 				<p:paragraph
+                             alignment="center">       
+							       <p:text
+                                 value="#{subtitle}" />
+							</p:paragraph>    
+						</p:font>
+						<p:paragraph
+                         alignment="center">    
+							<p:font
+                             size="10">
+							    <p:text
+                                 value="#{nameReport}" />
+							</p:font>
+						</p:paragraph>
+					</p:cell>	 
+			    </p:table>
+			</p:cell>
+			<p:cell
+             borderWidth="0"
+             verticalAlignment="bottom">
+				<p:paragraph
+                 alignment="right">
+                    <p:font
+                     size="7">
+	                    <p:text
+                         value="Emitido em: " />  
+	                    <p:text
+                         value="#{currentTime}">
+							<s:convertDateTime
+                             pattern="dd/MM/yyyy HH:mm" />
+						</p:text>
+					</p:font>
+				</p:paragraph>
+			</p:cell>
+	</p:table>
+	<p:table
+         columns="1"
+         widthPercentage="100"
+         widths="1"
+         spacingBefore="0"
+         spacingAfter="0">
+		<p:cell
+             borderWidthTop="0.5"
+             borderWidthBottom="0"
+             borderWidthLeft="0"
+             borderWidthRight="0">
+		</p:cell>	 
+    </p:table>
+</ui:composition>

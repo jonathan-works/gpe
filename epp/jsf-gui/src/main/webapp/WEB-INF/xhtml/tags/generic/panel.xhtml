@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich">
+    <rich:panel
+        id="#{id}"
+        rendered="#{not empty rendered ? rendered : true}"
+        styleClass="#{not empty styleClass ? styleClass : ''}"
+        style="#{not empty style ? style : ''}">
+        <ui:insert />
+    </rich:panel>
+</ui:composition>

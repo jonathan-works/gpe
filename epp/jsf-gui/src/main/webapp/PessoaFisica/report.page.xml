@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.org/schema/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd">
+
+    <restrict>#{security.checkPage()}</restrict>
+
+	<param name="order" value="#{pessoaFisicaList.order}" />
+	<param name="restrictionLogicOperator" value="#{pessoaFisicaList.restrictionLogicOperator}" />
+	
+	<param name="cpf" value="#{pessoaFisicaList.entity.cpf}"/>
+	<param name="nome" value="#{pessoaFisicaList.entity.nome}"/>
+	<param name="dataNascimento" value="#{pessoaFisicaList.entity.dataNascimento}"/>
+	<param name="ativo" value="#{pessoaFisicaList.entity.ativo}"/>
+
+</page>

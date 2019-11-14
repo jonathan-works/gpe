@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    template="/WEB-INF/xhtml/templates/minimal.xhtml"
+    xmlns:h="http://java.sun.com/jsf/html">
+
+    <ui:define name="title">#{infoxMessages['historicoModeloDocumento.titlePage']}</ui:define>
+
+    <ui:define name="body">
+
+        <c:if test="#{not empty flash.idHistoricoModeloDocumento}" >
+            <c:set value="#{flash.idHistoricoModeloDocumento}" target="#{historicoModeloDocumentoCrudAction}" property="idSelecionado"/>
+        </c:if>
+
+        <rich:panel bodyClass="panel"
+            rendered="#{historicoModeloDocumentoCrudAction.selecionado != null}">
+            <h:form>
+                <wi:inputText id="#{rowId}Titulo"
+                    label="#{infoxMessages['historicoModeloDocumento.tituloModeloDocumento']}"
+                    value="#{historicoModeloDocumentoCrudAction.selecionado.tituloModeloDocumento}"
+                    readonly="true" />
+
+                <wi:inputText id="#{rowId}Situacao"
+                    label="#{infoxMessages['field.situacao']}"
+                    value="#{historicoModeloDocumentoCrudAction.selecionado.ativo ? messages['entity.ativo'] : messages['entity.inativo']}"
+                    readonly="true" />
+                <s:div id="editorROModeloDocumento">
+                    <wi:editor id="#{rowId}ModeloDocumento"
+                        value="#{historicoModeloDocumentoCrudAction.selecionado.descricaoModeloDocumento}"
+                        label="#{infoxMessages['historicoModeloDocumento.modeloDocumento']}"
+                        readonly="true" />
+                </s:div>
+                <wi:commandButton value="Restaurar" id="restaurarHistoricoSelecionado"
+                    action="historicoModeloDocumentoCrudAction.restaurar"
+                    oncomplete="window.close(); opener['reloadModeloDocumento']();" />
+            </h:form>
+        </rich:panel>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <s:span rendered="#{wi:get(rendered, 'true')}" styleClass="tb-rprt">
+        <s:link
+            view="#{empty reportPath ? pathResolver.viewIdDirectory.concat('report.xhtml') : reportPath}"
+            target="_blank">
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
+                title="#{infoxMessages['report.exportPDF']}" />
+        </s:link>
+    </s:span>
+
+</ui:composition>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+	<ui:define name="title">#{infoxMessages['comunicacao.impressao.titlePage']}</ui:define>
+	<ui:define name="body">
+		<a:jsFunction name="selectProcesso" immediate="true"
+		      execute="@this" render="@this"
+		      limitRender="true" status=":status" >
+			<a:param name="idProcesso" assignTo="#{impressaoComunicacaoAction.selected}"
+				     converter="javax.faces.Integer" />
+		</a:jsFunction>
+        
+		<wi:panel id="panelImpressaoComunicacoes" styleClass="content-block">
+			<wi:dataTable id="comunicacoes" bean="#{impressaoComunicacaoList}"
+				values="#{impressaoComunicacaoList.list(15)}"
+				tableTitle="#{infoxMessages['comunicacao.impressao.tableTitle']}" rowId="#{row.idProcesso}"
+				hideOrder="true" showGrid="#{impressaoComunicacaoList.showDataTable}">
+
+                <ui:define name="toolBar">
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}"
+							title="#{infoxMessages['comunicacao.impressao.imprimirComunicacao']}" 
+							onclick="#{rich:component('imprimirComunicacaoPopUp')}.show(); selectProcesso(#{row.idProcesso});" 
+							styleClass="pointerRow opacityHover">
+					</h:graphicImage>
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/print.png')}"
+                            title="#{infoxMessages['comunicacao.impressao.marcarImpresso']}" 
+                            onclick="#{rich:component('marcarImpressoPopUp')}.show(); selectProcesso(#{row.idProcesso});" 
+                            styleClass="pointerRow opacityHover"
+                            rendered="#{!impressaoComunicacaoList.impresso}">
+                    </h:graphicImage>
+				</ui:define>
+				
+				<ui:define name="headerToolBar" />
+				
+				<ui:define name="searchForm">
+					<wi:searchForm formId="pesquisaImpressaoSearchForm" 
+								   formTitle="#{infoxMessages['searchForm.title']}"
+                                   searchAction="#{impressaoComunicacaoList.showDataTable()}"
+                                   clearAction="#{impressaoComunicacaoList.hideDataTable()}" >
+						<wi:selectOneMenuEntity id="meioExpedicao"
+							label="#{infoxMessages['comunicacao.impressao.meioExpedicao']}"
+							value="#{impressaoComunicacaoList.meioExpedicao}" 
+							items="#{impressaoComunicacaoList.meiosExpedicao}" 
+							showLabelTodos="true" />
+							
+                        <wi:inputDataPeriodo id="dataAssinatura"
+                            label="#{infoxMessages['comunicacao.impressao.dataAssinatura']}"
+                            valueDateFrom="#{impressaoComunicacaoList.dataInicio}"
+                            valueDateTo="#{impressaoComunicacaoList.dataFim}" />
+
+                        <wi:selectBooleanRadio id="impresso"
+                            label="#{infoxMessages['comunicacao.impressao.impresso']}"
+                            value="#{impressaoComunicacaoList.impresso}"
+                            selected="false" />
+					</wi:searchForm>
+				</ui:define>
+	
+				<wi:columnOutputText id="numeroProcesso"
+					columnHeader="#{infoxMessages['comunicacao.impressao.numeroProcesso']}"
+					value="#{row.numeroProcessoRoot}" />
+				
+				<wi:columnOutputText id="tipoComunicacao"
+					columnHeader="#{infoxMessages['comunicacao.impressao.tipoComunicacao']}"
+					value="#{impressaoComunicacaoAction.getTipoComunicacao(row)}" />
+					
+				<wi:columnOutputText id="impresso"
+					columnHeader="#{infoxMessages['comunicacao.impressao.impresso']}"
+					value="#{impressaoComunicacaoAction.getImpresso(row) ? 'Sim' : 'Não'}" />
+					
+				<wi:columnOutputText id="meioExpedicao"
+					columnHeader="#{infoxMessages['comunicacao.impressao.meioExpedicao']}"
+					value="#{impressaoComunicacaoAction.getMeioExpedicao(row).label}" />
+					
+				<wi:columnDateTime id="dataAssinatura"
+					columnHeader="#{infoxMessages['comunicacao.impressao.dataAssinatura']}"
+					value="#{impressaoComunicacaoAction.getDataAssinatura(row)}" 
+					showTime="true" />
+					
+			</wi:dataTable>
+		</wi:panel>
+		
+		<rich:popupPanel id="imprimirComunicacaoPopUp" shadowDepth="1" moveable="false" onshow="onShowPopUp();">
+			<f:facet name="header">
+            	<h:outputText value="#{infoxMessages['comunicacao.impressao.imprimirComunicacao']}" />
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
+	            		onclick="#{rich:component('imprimirComunicacaoPopUp')}.hide();"/>
+	        </f:facet>
+	        <h:form id="formImpressao">
+	        	<wi:selectBooleanCheckbox id="incluirAnexos"
+	        		label="#{infoxMessages['comunicacao.impressao.incluirAnexos']}"
+	        		value="#{impressaoComunicacaoAction.impressaoCompleta}" />
+	        	
+	        	<div/>
+	        	<a:commandButton id="buttonImprimir" 
+	        		styleClass="buttons"
+	        		type="submit"
+	        		value="#{infoxMessages['comunicacao.impressao.imprimirComunicacao']}"
+	        		onclick="#{rich:component('imprimirComunicacaoPopUp')}.hide();"
+	        		oncomplete="infox.openPopUp('imprimir', '#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?scid=#{conversation.id}',screen.availWidth,screen.availHeight);"
+	        		render=":panelImpressaoComunicacoes">
+	        	</a:commandButton>
+	        		
+	        </h:form>
+		</rich:popupPanel>
+		
+        <rich:popupPanel id="marcarImpressoPopUp" shadowDepth="1" moveable="false">
+            <f:facet name="header">
+                <h:outputText value="#{infoxMessages['comunicacao.impressao.marcarImpresso']}" />
+            </f:facet>
+            <f:facet name="controls">
+                <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
+                        onclick="#{rich:component('marcarImpressoPopUp')}.hide();"/>
+            </f:facet>
+            <wi:outputText id="marcarImpressoLabelConfirm"
+                label="#{infoxMessages['comunicacao.impressao.marcarImpressoLabel']}"
+                value="#{infoxMessages['comunicacao.impressao.marcarImpressoValue']}" />
+            <h:form id="formMarcarImpresso">
+	        	<a:commandButton id="buttonMarcarImpresso" 
+	        		styleClass="buttons" 
+	        		value="#{infoxMessages['comunicacao.impressao.marcarImpressoConfirmar']}"
+	        		onclick="#{rich:component('marcarImpressoPopUp')}.hide();"
+	        		action="#{impressaoComunicacaoAction.marcarComoImpresso()}"
+	        		render=":panelImpressaoComunicacoes">
+	        	</a:commandButton>
+	        </h:form>
+        </rich:popupPanel>
+        
+		<script type="text/javascript">
+			function onShowPopUp() {
+				document.getElementById('formImpressao:incluirAnexosDecoration:incluirAnexos').checked=false;
+			}
+		</script>
+	</ui:define>
+
+</ui:composition>

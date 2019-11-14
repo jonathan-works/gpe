@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    <s:div styleClass="banner">
+        <s:div styleClass="banner-lft">
+            <h:form>
+                <a:commandLink action="#{conversationFacade.endBeforeRedirect(authenticator.urlPainel)}"
+                	execute="@this" status="dummy">
+                    <h:graphicImage styleClass="banner-logo"
+                        rendered="#{!hideImage}"
+                        url="#{layoutController.getResourceUrl('LOGO_TOPO')}" />
+                </a:commandLink>
+            </h:form>
+        </s:div>
+        <s:div styleClass="banner-ctr">
+            <div class="banner-title">#{nomeSistema}</div>
+            <div class="banner-subTitle">#{subNomeSistema}</div>
+        </s:div>
+        <s:div styleClass="banner-rgt">
+            <s:fragment rendered="#{identity.loggedIn}">
+                <s:div styleClass="divBg">
+                    <s:div styleClass="BarraPesquisa"
+                        rendered="#{security.checkPage('/pages/Pesquisa/indexedSearch.seam') and security.checkPage('/pages/Pesquisa/searchResult.seam')}">
+                        <ui:include
+                            src="/WEB-INF/xhtml/templates/barraPesquisa.xhtml" />
+                    </s:div>
+                    <s:div styleClass="SeletorSkins">
+                        <ui:include
+                            src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
+                            <ui:param name="id" value="palette" />
+                        </ui:include>
+                    </s:div>
+                </s:div>
+                <!-- Mini-Relógio -->
+                <s:div styleClass="liveclock bannerclock"></s:div>
+                <ui:include
+                    src="/WEB-INF/xhtml/templates/painelUsuario.xhtml" />
+            </s:fragment>
+        </s:div>
+    </s:div>
+</ui:composition>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="avner" id="1" dbms="mssql, postgresql, oracle" >
+        <createSequence sequenceName="sq_task_expiration" minValue="1" startValue="1"/>
+        <createTable tableName="tb_task_expiration">
+            <column name="id_task_expiration" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_task_expiration"/>
+            </column>
+            <column name="id_fluxo" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tb_task_expiration_001" references="tb_fluxo(id_fluxo)"/>
+            </column>
+            <column name="nm_tarefa" type="NVARCHAR(200)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ds_transition" type="NVARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dt_expiration" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

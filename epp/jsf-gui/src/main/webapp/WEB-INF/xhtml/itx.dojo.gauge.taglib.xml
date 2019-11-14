@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE facelet-taglib PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+  "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
+      
+<facelet-taglib>
+	<namespace>http://www.itx.com.br/dojo</namespace>
+
+    <tag>
+        <tag-name>defaultGauge</tag-name>
+        <source>tags/dojo/gauges/defaultGauge.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>progressBarGauge</tag-name>
+        <source>tags/dojo/gauges/progressBarGauge.xhtml</source>
+    </tag>
+</facelet-taglib>

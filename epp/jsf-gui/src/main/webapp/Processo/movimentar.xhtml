@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/minimal.xhtml">
+    <ui:param name="pageTitle" value="#{infoxMessages['processo.titlePage']}" />
+    <ui:define name="title">#{pageTitle}</ui:define>
+    <ui:define name="contentTitle">
+    </ui:define>
+    <ui:define name="head">
+	    <script type="text/javascript">
+			if (#{not processoEpaHome.checarVisibilidadeSemException()}) {
+				window.close();
+			}
+			if (#{not taskInstanceHome.checkAccessSemException()}) {
+				opener.atualizaPainelFluxo();
+				close();
+          	}
+	    </script>
+    </ui:define>
+    <ui:define name="scripts">
+	    <h:outputScript
+	        library="js/components"
+	        name="Modal.js" />
+	    <h:inputHidden
+	        id="taskCompleted"
+	        value="#{taskInstanceHome.taskCompleted}"></h:inputHidden>
+	    <h:inputHidden
+	        id="canClosePanel"
+	        value="#{taskInstanceHome.canClosePanelVal}"></h:inputHidden>
+	    <h:outputScript>
+	      function verifyFields() {
+	        try {
+	            opener.atualizaPainelFluxo();
+	          } catch (e) {
+	          }
+	        if ($('#taskCompleted').val() === 'true') {
+	          try {
+	            opener.atualizaPainelFluxo();
+	          } catch (e) {
+	          }
+	          if ($('#canClosePanel').val() === 'true') {
+	            close();
+	          } else {
+	            location = location.href.replace(/&amp;idTaskInstance=\d+/g, "&amp;idTaskInstance=#{taskInstanceHome.taskId}");
+	          }
+	        } else {
+	          infox.hideLoading();
+	        }
+	      }
+	    </h:outputScript>
+        <h:outputScript>
+	      function reloadPanel() {
+	          try {
+	            opener.atualizaPainelFluxo();
+	          } catch (e) {
+	          }
+	      }
+	    </h:outputScript>
+    </ui:define>
+    <ui:param
+        name="home"
+        value="#{processoEpaHome}" />
+    <ui:param
+        name="showMenu"
+        value="false" />
+    <ui:param
+        name="checkPermission"
+        value="#{processoEpaHome.checarVisibilidadeSemException()}" />
+    <ui:param
+        name="isUsuarioExterno"
+        value="#{authenticator.usuarioExterno ? 'true':'false'}" />
+    <ui:param
+        name="showMsg"
+        value="#{!isUsuarioExterno}" />
+    <ui:param
+        name="panelStyleClass"
+        value="rf-dt-crud" />
+    <ui:define name="body">
+        <ui:include src="/WEB-INF/xhtml/components/genericDialog.xhtml" />  
+        <rich:collapsiblePanel
+            switchType="client" rendered="#{checkPermission}"
+            header="#{infoxMessages['processo.titleView']} #{processoEpaHome.instance.numeroProcessoRoot} - #{taskInstance.processInstance.processDefinition.name} - #{taskInstance.name} "
+            expanded="true">
+            <h:panelGrid columns="2"  width="100%"  columnClasses="viewColumn">
+            
+            	<ui:repeat var="variavel" value="#{processoEpaHome.variaveisDetalhe}" >
+            		<wi:outputText id="variavel#{variavel.nome}"
+                    	label="#{variavel.label}"
+                    	value="#{variavel.valor}"/>
+            	</ui:repeat>
+            	
+            </h:panelGrid>
+            <ui:include src="linkAplicacaoExterna.xhtml">
+                <ui:param name="processo" value="#{processoEpaHome.instance}" />
+            </ui:include>
+        </rich:collapsiblePanel>
+        <h:form>
+            <a:jsFunction
+                name="renderButtons"
+                render="taskButtonsDiv" />
+        </h:form>
+        <infox:tabPanel
+            switchType="ajax"
+            activeTab="#{home.tab}"
+            id="movimentarTabPanel">
+            <h:form rendered="#{!isUsuarioExterno}">
+                <infox:tabHeaders />
+            </h:form>
+            <infox:tab
+                id="tabVariaveisProcesso"
+                name="tabVariaveisProcesso"
+                rendered="#{variavelProcessoAction.possuiVariaveis()}"
+                title="#{infoxMessages['variavelProcesso.variaveisProcesso']}">
+                <h:form>
+                    <rich:panel>
+                        <ui:repeat
+                            var="variavel"
+                            value="#{variavelProcessoAction.variaveis}">
+                            <wi:inputText
+                                id="variavel-#{variavel.nome.replace(':', '_')}"
+                                readonly="true"
+                                label="#{variavel.label}"
+                                value="#{variavel.valor}" />
+                        </ui:repeat>
+                    </rich:panel>
+                </h:form>
+            </infox:tab>
+            <infox:tab
+                id="tabEntrada"
+                name="tabEntrada"
+                rendered="#{not empty taskInstanceView.fields or movimentarController.isTipoProcessoAnaliseDocumento()}"
+                status=":status"
+                title="#{infoxMessages['movimentar.entrada.titleTab']}">
+                <ui:include
+                    src="/WEB-INF/xhtml/components/fragments/documentosFluxoAnalise.xhtml">
+                    <ui:param name="id" value="documentosAnaliseDocumentos" />
+                    <ui:param name="title"
+                        value="#{analiseDocumentoAction.getTituloGridDocumentosAnalise()}" />
+                    <ui:param name="rendered"
+                        value="#{movimentarController.isTipoProcessoAnaliseDocumento()}" />
+                    <ui:param name="list"
+                        value="#{analiseDocumentoAction.documentosAnalise}" />
+                    <ui:param name="showComunicacao"
+                        value="#{analiseDocumentoAction.isRespostaComunicacao()}" />
+                </ui:include>
+                <wi:form
+                    canEdit="true"
+                    formTitle="#{taskInstance.name}"
+                    home="#{taskInstanceHome}"
+                    form="#{taskInstanceView}" 
+                    showForm="#{not empty taskInstanceView.fields}"/>
+            </infox:tab>
+            <infox:tab
+                id="tabSaida"
+                name="tabSaida"
+                rendered="#{processoEpaHome.managed}"
+                status=":status"
+                title="#{infoxMessages['movimentar.saida.titleTab']}">
+                <c:if test="#{not taskPageAction.getHasTaskPage(taskInstanceHome.currentTaskInstance)}">
+                    <wi:form
+                        canEdit="true"
+                        formTitle="#{taskInstance.name}"
+                        home="#{taskInstanceForm.home}"
+                        reRenderSave="taskInstanceForm"
+                        form="#{taskInstaceForm}" />
+                </c:if>
+                <c:if test="#{taskPageAction.getHasTaskPage(taskInstanceHome.currentTaskInstance)}">
+                    <h:graphicImage
+                        id="helpBtn"
+                        styleClass="mp-help"
+                        onmouseup="#{rich:component('mp_taskNodeDescription')}.show();"
+                        value="#{layoutController.getResourceUrlByPath('/imagens/question.png')}" />
+                    <ui:include src="#{taskPageAction.getTaskPagePath(taskInstanceHome.currentTaskInstance)}" />
+                </c:if>
+            </infox:tab>
+            <infox:tab
+                id="tabAnexos"
+                name="tabAnexos"
+                rendered="#{processoEpaHome.managed}"
+                status=":status"
+                action="#{documentoList.setProcesso(processoEpaHome.instance.processoRoot)}"
+                actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
+                title="#{infoxMessages['movimentar.documentos.titleTab']}">
+                <ui:include src="pastaDocumento.xhtml">
+                	<ui:param name="pastaDocumentoRenderId" value="movimentarTabPanel" />
+                </ui:include>	
+            </infox:tab>
+            <infox:tab
+                id="tabPartesDoProcesso"
+                name="tabPartesDoProcesso"
+                status=":status"
+                action="#{participantesProcessoController.init(home.instance)}"
+                rendered="#{home.hasPartes()}"
+                title="#{infoxMessages['participanteProcesso.participantes']}">
+                <ui:include src="parteProcessoGrid.xhtml" />
+            </infox:tab>
+            <infox:tab
+                id="tabAnexar"
+                name="tabAnexar"
+                rendered="#{processoEpaHome.managed}"
+                status=":status"
+                action="#{anexarDocumentosView.setProcesso(processoEpaHome.instance)}"
+                title="#{infoxMessages['movimentar.anexar.titleTab']}">
+                <ui:include src="anexarDocumentos.xhtml" />
+            </infox:tab>
+            <infox:tab
+                id="tabComunicacao"
+                name="tabComunicacao"
+                status=":status"
+                rendered="#{security.checkPage('abaComunicacao')}"
+                title="Comunicação"
+                action="#{comunicacaoAction.clear}">
+                <ui:param name="renderRegistrarCiencia" value="#{security.checkPage('Movimentar.Comunicacao.RegistrarCiencia')}" />
+                <ui:param name="renderPedirProrrogacao" value="#{security.checkPage('Movimentar.Comunicacao.ProrrogarPrazo')}" />
+                <ui:param name="renderVisualizarDocumentos" value="#{security.checkPage('Movimentar.Comunicacao.VisualizarDocumentos')}" />
+                <ui:param name="renderVisualizarResposta" value="#{security.checkPage('Movimentar.Comunicacao.VisualizarResposta')}" />
+                <ui:include src="comunicacao.xhtml" />
+            </infox:tab>
+            <infox:tab
+                id="tabComunicacaoInterna"
+                name="tabComunicacaoInterna"
+                status=":status"
+                rendered="#{security.checkPage('abaComunicacaoInterna')}"
+                title="Comunicação Interna"
+                action="#{comunicacaoInternaView.onSelectTab(processoEpaHome.instance)}">
+                <ui:include src="comunicacaoInterna.xhtml" />
+            </infox:tab>
+            <infox:tab
+                id="tabMovimentacoes"
+                name="tabMovimentacoes"
+                rendered="#{processoEpaHome.managed}"
+                status=":status"
+                title="#{infoxMessages['movimentar.movimentacoes.titleTab']}">
+                <ui:include
+                    src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+            </infox:tab>
+            <infox:tab
+                id="tabGraficoExecucao"
+                name="tabGraficoExecucao"
+                rendered="#{processoEpaHome.managed}"
+                status=":status"
+                title="#{infoxMessages['movimentar.graficoExecucao.titleTab']}">
+                <c:set property="token" target="#{graphicExecutionView}" value="#{taskInstanceHome.currentTaskInstance.token}"/>
+                <ui:include src="executionGraphic.xhtml" />
+            </infox:tab>
+            
+            <ui:param
+                name="action"
+                value="#{localizacaoDocumentoFisicoCrudAction}" />
+            <infox:tab
+                id="documentoFisicoTab"
+                name="documentoFisicoTab"
+                rendered="#{home.isManaged() and security.checkPage('/pages/Processo/abaDocumentoFisico')}"
+                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoEpaHome.instance)}"
+                title="#{infoxMessages['documentoFisico.titleTab']}">
+                <wi:dataForm
+                    formId="documentoFisicoForm"
+                    formTitle="#{infoxMessages['documentoFisico.form']}">
+                    <wi:tree
+                        id="localizacaoFisica"
+                        assignTo="localizacaoDocumentoFisicoCrudAction.instance.localizacaoFisica"
+                        tree="#{localizacaoFisicaTree}"
+                        label="#{infoxMessages['documentoFisico.localizacaoFisica']}"
+                        required="true"
+                        noSelectionLabel="#{infoxMessages['documentoFisico.selectLocalizacaoFisica']}" />
+                    <wi:inputText
+                        id="descricaoDocumentoFisico"
+                        label="#{infoxMessages['documentoFisico.descricaoDocumentoFisico']}"
+                        required="true"
+                        value="#{action.instance.descricaoDocumentoFisico}"
+                        maxlength="150" />
+                    <ui:define name="buttons">
+                        <wi:commandButton
+                            id="saveDocumentoFisicoButton"
+                            action="localizacaoDocumentoFisicoCrudAction.save"
+                            reRender="documentoFisicoForm, documentoFisicoDiv, pageBodyDialogMessage"
+                            value="#{infoxMessages['crud.persist']}" />
+                    </ui:define>
+                </wi:dataForm>
+                <s:div id="documentoFisicoDiv">
+                    <wi:dataTable
+                        id="documentoFisicoTable2"
+                        values="#{localizacaoDocumentoFisicoCrudAction.documentoFisicoList}"
+                        var="row"
+                        rows="10"
+                        showSearchForm="false"
+                        panelStyleCss="rf-dt-crud">
+                        <ui:define name="toolBar">
+                            <wi:toolBarRemove
+                                id="toolBarInactivate"
+                                reRender="documentoFisicoDiv, pageBodyDialogMessage"
+                                actionRemove="localizacaoDocumentoFisicoCrudAction.remove(row)" />
+                        </ui:define>
+                        <ui:define name="headerToolBar" />
+                        <wi:columnOutputText
+                            columnId="localizacaoFisica"
+                            columnHeader="#{infoxMessages['documentoFisico.localizacaoFisica']}"
+                            value="#{row.localizacaoFisica.caminhoCompletoToString()}"
+                            hideOrder="true" />
+                        <wi:columnOutputText
+                            columnId="descricao"
+                            columnHeader="#{infoxMessages['documentoFisico.descricaoDocumentoFisico']}"
+                            value="#{row.descricaoDocumentoFisico}"
+                            hideOrder="true" />
+                    </wi:dataTable>
+                </s:div>
+            </infox:tab>
+            <infox:tab
+                id="tabPastaRestricao"
+                name="tabPastaRestricao"
+                status=":status"
+                title="#{infoxMessages['pasta.pastaRestricaoTab']}"
+                rendered="#{security.checkPage('/pages/Processo/abaPastaRestricao')}">
+                <ui:decorate
+                    id="frameDecorate"
+                    template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+                    <ui:define name="title">#{infoxMessages['pasta.pastaRestricaoTab']}</ui:define>
+                    <ui:include src="pastaRestricao.xhtml" />
+                </ui:decorate>
+            </infox:tab>
+            <infox:tab
+                id="relacionamentoProcessoTab"
+                name="relacionamentoProcessoTab"
+                rendered="#{home.isManaged() and relacionamentoProcessoView.podeVisualizar()}"
+                actionListener="#{relacionamentoProcessoView.initView(processoEpaHome.instance, false)}"
+                title="#{infoxMessages['relacionamentoProcesso.titleTab']}">
+                <ui:fragment rendered="#{home.tab eq 'relacionamentoProcessoTab'}">
+					<ui:include
+						src="/WEB-INF/xhtml/templates/relacionamentoprocesso/relacionamentoProcesso.xhtml" />
+                </ui:fragment>
+            </infox:tab>
+            
+        	<ui:include src="abasCustomizadasDoMovimentar.xhtml" />
+            <c:forEach var="tab" items="#{extensaoMovimentar.tabs}">
+                <ui:include src="#{tab}" />
+            </c:forEach>
+        </infox:tabPanel>
+        
+        <rich:popupPanel
+	        id="mp_taskNodeDescription"
+	        rendered="#{checkPermission}"
+	        show="false"
+	        modal="true"
+	        moveable="true"
+	        resizeable="true"
+	        styleClass="popup-help"
+	        domElementAttachment="parent">
+	        <f:facet name="header">
+	            <h:outputText value="#{infoxMessages['jbpm.taskNode.description']}" />
+	        </f:facet>
+	        <f:facet name="controls">
+		        <h:graphicImage
+		            id="mp_taskNodeCloseBtn"
+		            styleClass="mp-close"
+		            onmouseup="#{rich:component('mp_taskNodeDescription')}.hide();"
+		            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" />
+	        </f:facet>
+	        <h:outputText value="#{taskInstanceHome.taskNodeDescription}" escape="false" />
+	    </rich:popupPanel>
+        
+        <c:if test="#{not checkPermission}">
+            <wi:outputText id="error" value="#{infoxMessages['movimentar.noPermission']}" />
+        </c:if>
+        
+    </ui:define>
+</ui:composition>

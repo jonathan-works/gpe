@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+  <changeSet author="erikliberal" id="1" dbms="mssql">
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="NEXT VALUE FOR sq_skin"/>
+      <column name="cd_skin" value="branco"/>
+      <column name="nm_skin" value="Branco"/>
+    </insert>
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="NEXT VALUE FOR sq_skin"/>
+      <column name="cd_skin" value="branco-vermelho"/>
+      <column name="nm_skin" value="Branco/Vermelho"/>
+    </insert>
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="NEXT VALUE FOR sq_skin"/>
+      <column name="cd_skin" value="vermelho"/>
+      <column name="nm_skin" value="Vermelho"/>
+    </insert>
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="NEXT VALUE FOR sq_skin"/>
+      <column name="cd_skin" value="azul-etc"/>
+      <column name="nm_skin" value="Azul ETC"/>
+      <column name="in_padrao" valueBoolean="true"/>
+    </insert>
+  </changeSet>
+
+  <changeSet author="erikliberal" id="1" dbms="postgresql">
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="nextval('sq_skin')"/>
+      <column name="cd_skin" value="branco"/>
+      <column name="nm_skin" value="Branco"/>
+    </insert>
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="nextval('sq_skin')"/>
+      <column name="cd_skin" value="branco-vermelho"/>
+      <column name="nm_skin" value="Branco/Vermelho"/>
+    </insert>
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="nextval('sq_skin')"/>
+      <column name="cd_skin" value="vermelho"/>
+      <column name="nm_skin" value="Vermelho"/>
+    </insert>
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="nextval('sq_skin')"/>
+      <column name="cd_skin" value="azul-etc"/>
+      <column name="nm_skin" value="Azul ETC"/>
+      <column name="in_padrao" valueBoolean="true"/>
+    </insert>
+  </changeSet>
+
+  <changeSet author="erikliberal" id="1" dbms="oracle">
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="sq_skin.nextval"/>
+      <column name="cd_skin" value="branco"/>
+      <column name="nm_skin" value="Branco"/>
+    </insert>
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="sq_skin.nextval"/>
+      <column name="cd_skin" value="branco-vermelho"/>
+      <column name="nm_skin" value="Branco/Vermelho"/>
+    </insert>
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="sq_skin.nextval"/>
+      <column name="cd_skin" value="vermelho"/>
+      <column name="nm_skin" value="Vermelho"/>
+    </insert>
+    <insert tableName="tb_skin">
+      <column name="id_skin" valueComputed="sq_skin.nextval"/>
+      <column name="cd_skin" value="azul-etc"/>
+      <column name="nm_skin" value="Azul ETC"/>
+      <column name="in_padrao" valueBoolean="true"/>
+    </insert>
+  </changeSet>
+
+  <changeSet author="erikliberal" id="2" dbms="mssql,postgresql,oracle">
+    <update tableName="tb_skin">
+      <column name="in_padrao" valueBoolean="false"/>
+      <where>not (cd_skin='azul-etc')</where>
+    </update>
+  </changeSet>
+</databaseChangeLog>

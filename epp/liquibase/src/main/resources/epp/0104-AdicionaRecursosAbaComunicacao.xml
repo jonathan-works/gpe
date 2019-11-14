@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="marialuisa" id="1">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from tb_recurso where ds_identificador = 'Movimentar.Comunicacao.RegistrarCiencia'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="Movimentar.Comunicacao.RegistrarCiencia" />
+            <column name="ds_nome" value="Permite registrar ciência em comunicações na movimentação" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from tb_recurso where ds_identificador = 'Visualizar.Comunicacao.RegistrarCiencia'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="Visualizar.Comunicacao.RegistrarCiencia" />
+            <column name="ds_nome" value="Permite registrar ciência em comunicações na visualização" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="3">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from tb_recurso where ds_identificador = 'Movimentar.Comunicacao.ProrrogarPrazo'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="Movimentar.Comunicacao.ProrrogarPrazo" />
+            <column name="ds_nome" value="Permite pedir prorrogação de comunicaçoes na movimentação" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="4">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from tb_recurso where ds_identificador = 'Visualizar.Comunicacao.ProrrogarPrazo'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="Visualizar.Comunicacao.ProrrogarPrazo" />
+            <column name="ds_nome" value="Permite pedir prorrogação de comunicaçoes na visualização" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="5">
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="Movimentar.Comunicacao.VisualizarDocumentos" />
+            <column name="ds_nome" value="Permite visualizar os documentos da comunicação na movimentação" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="6">
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="Visualizar.Comunicacao.VisualizarDocumentos" />
+            <column name="ds_nome" value="Permite visualizar os documentos da comunicação na visualização" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="7">
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="Movimentar.Comunicacao.VisualizarResposta" />
+            <column name="ds_nome" value="Permite visualizar os documentos da resposta da comunicação na movimentação" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="8">
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="Visualizar.Comunicacao.VisualizarResposta" />
+            <column name="ds_nome" value="Permite visualizar os documentos da resposta da comunicação na visualização" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

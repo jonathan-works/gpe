@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+  <changeSet author="erikliberal" id="1" dbms="mssql, postgresql, oracle">
+    <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_sign_grp" />
+    <createTable tableName="tb_sign_grp">
+      <column name="id_sign_grp" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sign_grp" />
+      </column>
+      <column name="ds_token" type="NCHAR(36)" remarks="Token">
+        <constraints nullable="false" unique="true" uniqueConstraintName="uk_sign_grp_001"/>
+      </column>
+      <column name="tp_status" type="NCHAR(1)" remarks="Status da assinatura">
+        <constraints nullable="false"/>
+      </column>
+      <column name="dt_criacao" type="TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+   <changeSet author="erikliberal" id="2" dbms="mssql, postgresql, oracle">
+    <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_cert_sign" />
+    <createTable tableName="tb_cert_sign">
+        <column name="id_cert_sign" type="BIGINT">
+          <constraints nullable="false" primaryKey="true" primaryKeyName="pk_cert_sign" />
+        </column>
+        <column name="id_sign_grp" type="BIGINT">
+          <constraints nullable="false" foreignKeyName="fk_cert_sign_001" references="tb_sign_grp(id_sign_grp)" />
+        </column>
+        <column name="ds_cert_chain" type="NCLOB" remarks="Certificado utilizado para assinatura">
+          <constraints nullable="false" />
+        </column>
+        <column name="ds_signature" type="NCLOB" remarks="Assinatura dos dados">
+          <constraints nullable="true" />
+        </column>
+        <column name="ds_signed_data" type="NCLOB" remarks="Informação a ser assinada">
+          <constraints nullable="true" />
+        </column>
+    </createTable>
+  </changeSet>
+
+</databaseChangeLog>

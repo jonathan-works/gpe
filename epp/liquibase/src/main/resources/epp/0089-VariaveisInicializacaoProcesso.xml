@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="victorpasqualino" id="1" >
+    	<insert dbms="postgresql" tableName="tb_status_processo">
+	        <column name="id_status_processo" valueComputed="nextval('sq_status_processo')"/>
+	        <column name="nm_status_processo" value="Não Iniciado"/>
+	        <column name="ds_status_processo" value="Não Iniciado"/>
+	    </insert>
+
+	    <insert dbms="mssql" tableName="tb_status_processo">
+	        <column name="id_status_processo" valueComputed="next value for sq_status_processo"/>
+	        <column name="nm_status_processo" value="Não Iniciado"/>
+	        <column name="ds_status_processo" value="Não Iniciado"/>
+	    </insert>
+
+	    <insert dbms="oracle" tableName="tb_status_processo">
+	        <column name="id_status_processo" valueComputed="sq_status_processo.nextval"/>
+	        <column name="nm_status_processo" value="Não Iniciado"/>
+	        <column name="ds_status_processo" value="Não Iniciado"/>
+	    </insert>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2" >
+    	<createSequence cycle="false" incrementBy="1" sequenceName="sq_variavel_inicio_processo" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3" >
+    	<createTable tableName="tb_variavel_inicio_processo">
+        	<column name="id_variavel_inicio_processo" type="BIGINT">
+        		<constraints nullable="false" primaryKey="true" primaryKeyName="pk_variavel_inicio_processo"/>
+        	</column>
+        	<column name="id_processo" type="BIGINT">
+        		<constraints nullable="false" references="tb_processo(id_processo)" foreignKeyName="fk_variavel_inicio_processo_01"/>
+        	</column>
+        	<column name="nm_variavel" type="NVARCHAR(2000)"/>
+        	<column name="vl_variavel" type="NCLOB"/>
+        	<column name="ds_tipo" type="NVARCHAR(2000)"/>
+    	</createTable>
+    </changeSet>
+    
+</databaseChangeLog>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:body id="body">
+
+    <c:if test="#{not empty flash.documentoPreview}">
+        <f:event listener="#{documentoDownloader.previewDocumento(flash.documentoPreview, flash.fileName)}" type="preRenderView" />
+    </c:if>
+
+    <c:if test="#{not empty flash.idDocumentoBin}">
+        <f:event listener="#{documentoDownloader.downloadDocumentoBin(flash.idDocumentoBin)}" type="preRenderView" />
+    </c:if>
+
+    <c:if test="#{not empty flash.idDocumento}">
+        <f:event listener="#{documentoDownloader.downloadDocumento(flash.idDocumento)}" type="preRenderView" />
+    </c:if>
+    
+    <c:if test="#{not empty flash.imagem}">
+        <img src="data:image/#{flash.extensao};base64, #{flash.base64}" />
+    </c:if>
+    
+    <c:if test="#{not empty flash.html}">
+    	<h:outputText value="#{flash.html}" escape="false"/>  
+    </c:if>
+    
+    <c:if test="#{not empty flash.video}">
+        <video controls="controls" autoplay="autoplay" width="100%">
+            <source src="data:video/#{flash.extensao};base64,#{flash.base64}" type="video/#{flash.extensao}"></source>
+        </video>
+    </c:if>
+
+</h:body>
+</html>

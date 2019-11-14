@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:param name="title" value="#{infoxMessages['perfilTemplate.titlePage']}" />
+
+    <wi:dataReport title="#{infoxMessages['perfil.reportTitle']}"
+        columns="4" widths="4 4 4 2" headerText="#{perfilTemplateList.criteria}">
+
+        <wi:reportColumnHeader
+            title="#{infoxMessages['perfilTemplate.descricao']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['perfilTemplate.localizacao']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['perfil.papel']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+
+        <ui:repeat var="row" value="#{perfilTemplateList.list()}">
+            <wi:reportColumn value="#{row.descricao}" />
+            <wi:reportColumn value="#{row.localizacao.caminhoCompletoFormatado}" />
+            <wi:reportColumn value="#{row.papel}" />
+            <wi:reportColumnSituacao value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+
+    </wi:dataReport>
+
+</ui:composition>

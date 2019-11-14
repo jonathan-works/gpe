@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib">
+  <ui:param
+    name="showDialogMessage"
+    value="#{empty showDialogMessage ? true : showDialogMessage}" />
+  <ui:param
+    name="showMsg"
+    value="#{empty showMsg ? true : showMsg}" />
+  <h:outputScript
+    name="Messages.js"
+    rendered="#{showMsg}"
+    library="js/components" />
+  <s:div id="#{formId}DialogMessage">
+    <s:div
+      styleClass="d-msg hidden mdl-shadow--24dp"
+      rendered="#{showMsg}">
+      <div class="d-msg-h">
+        <label class="d-msg-h-lbl">#{infoxMessages['messages.header']}</label>
+        <h:graphicImage
+          styleClass="d-msg-h-close"
+          value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" />
+      </div>
+      <div class="d-msg-c">
+        <h:messages
+          id="#{formId}Message"
+          globalOnly="true" />
+          
+      </div>
+      <script type="text/javascript">
+              invoke([ "infox.Messages" ],
+                  function(Messages) {
+                    Messages({
+                          existsMessages : "#{showDialogMessage}",
+                          existsGlobalMessages : "#{!facesMessages.currentGlobalMessages.isEmpty()}",
+                          icon:"#{pathResolver.contextPath}/#{layoutController.getResourceUrlByPath('/imagens/Help_Desk.jpg')}",
+                          title:"#{infoxMessages['notification.msg.title']}",
+                          timeout:-1
+                        }).init();
+                  }
+              );
+            </script>
+            
+    </s:div>
+  </s:div>
+</ui:composition>

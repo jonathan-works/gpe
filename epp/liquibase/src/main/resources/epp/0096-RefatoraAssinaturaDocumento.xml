@@ -1,0 +1,152 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!-- Adiciona coluna tb_assinatura_documento.id_pessoa_fisica -->
+    <changeSet author="avner" id="1">
+        <addColumn tableName="tb_assinatura_documento">
+            <column name="id_pessoa_fisica" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_assinatura_documento_001" references="tb_pessoa_fisica(id_pessoa_fisica)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Script para popular id_pessoa_fisica -->
+    <changeSet author="avner" id="2">
+        <preConditions>
+            <changeSetExecuted author="avner" id="1" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+        </preConditions>
+        <sql>
+            update tb_assinatura_documento
+            set id_pessoa_fisica = (
+                select ul.id_pessoa_fisica
+                from tb_usuario_login ul
+                where tb_assinatura_documento.id_usuario_login = ul.id_usuario_login
+            )
+        </sql>
+    </changeSet>
+
+    <!-- Adiciona notNullConstraint em id_pessoa_fisica -->
+    <changeSet author="avner" id="3">
+        <preConditions>
+            <changeSetExecuted author="avner" id="2" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+        </preConditions>
+        <addNotNullConstraint tableName="tb_assinatura_documento" columnName="id_pessoa_fisica" columnDataType="bigint" />
+    </changeSet>
+
+    <!-- Adiciona coluna tb_assinatura_documento.id_papel -->
+    <changeSet author="avner" id="4">
+        <addColumn tableName="tb_assinatura_documento">
+            <column name="id_papel" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_assinatura_documento_002" references="tb_papel(id_papel)" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Script para popular id_papel -->
+    <changeSet author="avner" id="5">
+        <preConditions>
+            <changeSetExecuted author="avner" id="4" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+        </preConditions>
+        <sql>
+            update tb_assinatura_documento
+            set id_papel = (
+                select pt.id_papel
+                from tb_usuario_perfil up
+                    inner join tb_perfil_template pt on pt.id_perfil_template = up.id_perfil_template
+                where tb_assinatura_documento.id_usuario_perfil = up.id_usuario_perfil
+            )
+        </sql>
+    </changeSet>
+
+    <!-- Adiciona notNullConstraint em id_papel -->
+    <changeSet author="avner" id="6">
+        <preConditions>
+            <changeSetExecuted author="avner" id="5" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+        </preConditions>
+        <addNotNullConstraint tableName="tb_assinatura_documento" columnName="id_papel" columnDataType="bigint" />
+    </changeSet>
+
+    <!-- Dropa FK tb_assinatura_documento.id_usuario_login -->
+    <changeSet author="avner" id="7">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="tb_assinatura_documento_id_usuario_login_fk" foreignKeyTableName="tb_assinatura_documento"/>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="tb_assinatura_documento" constraintName="tb_assinatura_documento_id_usuario_login_fk" />
+    </changeSet>
+    
+    <changeSet author="victorpasqualino" id="7">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="FK_ASSINATURA_DOCUMENTO_02" foreignKeyTableName="tb_assinatura_documento"/>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="tb_assinatura_documento" constraintName="FK_ASSINATURA_DOCUMENTO_02" />
+    </changeSet>
+
+    <!-- Dropa coluna tb_assinatura_documento.id_usuario_login -->
+    <changeSet author="marialuisa" id="8" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName = "IX_tb_assinatura_documento_id_usuario_login_AAAFC" />
+        </preConditions>
+        <dropIndex indexName="IX_tb_assinatura_documento_id_usuario_login_AAAFC" tableName="tb_assinatura_documento" />
+    </changeSet>
+
+    <changeSet author="avner" id="8">
+        <preConditions>
+            <changeSetExecuted author="avner" id="7" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml"/>
+        </preConditions>
+        <dropColumn tableName="tb_assinatura_documento" columnName="id_usuario_login" />
+    </changeSet>
+
+    <!-- Dropa FK tb_assinatura_documento.id_usuario_perfil -->
+    <changeSet author="avner" id="9">
+        <preConditions>
+            <changeSetExecuted author="avner" id="6" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="tb_assinatura_documento" constraintName="assinatura_usu_perf_fk" />
+    </changeSet>
+
+    <!-- Dropa index idx_tb_assinatura_documento_id_usuario_perfil -->
+    <changeSet author="avner" id="10">
+        <preConditions onFail="MARK_RAN">
+            <changeSetExecuted author="avner" id="9" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+            <indexExists indexName="idx_tb_assinatura_documento_id_usuario_perfil" tableName="tb_assinatura_documento"/>
+        </preConditions>
+        <dropIndex tableName="tb_assinatura_documento" indexName="idx_tb_assinatura_documento_id_usuario_perfil" />
+    </changeSet>
+    
+    <changeSet author="victorpasqualino" id="10">
+        <preConditions onFail="MARK_RAN">
+            <changeSetExecuted author="avner" id="9" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+            <indexExists indexName="IDX_ASSINATURA_DOCUMENTO_01" tableName="tb_assinatura_documento"/>
+        </preConditions>
+        <dropIndex tableName="tb_assinatura_documento" indexName="IDX_ASSINATURA_DOCUMENTO_01" />
+    </changeSet>
+
+    <!-- Dropa coluna tb_assinatura_documento.id_usuario_perfil -->
+    <changeSet author="avner" id="11">
+        <preConditions>
+            <changeSetExecuted author="avner" id="9" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+            <changeSetExecuted author="avner" id="10" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+        </preConditions>
+        <dropColumn tableName="tb_assinatura_documento" columnName="id_usuario_perfil" />
+    </changeSet>
+
+    <!-- Cria índice tb_assinatura_documento.id_pessoa_fisica -->
+    <changeSet author="avner" id="12">
+        <preConditions>
+            <changeSetExecuted author="avner" id="3" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+        </preConditions>
+        <createIndex tableName="tb_assinatura_documento" indexName="idx_ass_doc_id_pessoa_fisica">
+            <column name="id_pessoa_fisica" type="bigint" />
+        </createIndex>
+    </changeSet>
+
+    <!-- Cria índice tb_assinatura_documento.id_papel -->
+    <changeSet author="avner" id="13">
+        <preConditions>
+            <changeSetExecuted author="avner" id="6" changeLogFile="epp/0096-RefatoraAssinaturaDocumento.xml" />
+        </preConditions>
+        <createIndex tableName="tb_assinatura_documento" indexName="idx_ass_doc_id_papel">
+            <column name="id_papel" type="bigint" />
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

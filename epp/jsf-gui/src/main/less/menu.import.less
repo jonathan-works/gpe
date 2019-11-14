@@ -1,0 +1,97 @@
+@default-font-family:Arial;
+@menu-itm-lbl-pad:4px;
+@menu-itm-lbl-marg:0px;
+@menu-itm-lbl-bord-width:1px;
+
+#menu-legado() {
+  .standard {
+    &-nav {
+      font-size:1rem;
+    }
+    &-itm {
+      position:relative;
+      list-style:none;
+    }
+    &-itm  > &-submenu  > &-itm  > &-submenu {
+      @calculated-height:-2*(@menu-itm-lbl-pad + @menu-itm-lbl-bord-width + @menu-itm-lbl-marg);
+        margin-left:100%;
+        margin-top:calc(~"@{calculated-height} - 1rem");
+    }
+    &-main {
+      position:relative;
+      display:block;
+      margin:0;
+      padding:0;
+    }
+    &-main > &-itm {
+      display:inline-block;
+      vertical-align:top;
+    }
+    &-main > &-itm > .menu-submenu{
+      margin:0;
+    }
+
+    &-submenu{
+      display:none;
+      position:absolute;
+      padding:0;
+      min-width:100%;
+      z-index:1;
+    }
+    a&-lnk{
+      display:block;
+      color:inherit;
+      text-decoration:inherit;
+      font-size:inherit;
+    }
+    &-itm-lbl{
+      font-family:@default-font-family;
+      text-decoration: none;
+      white-space: nowrap;
+      padding: @menu-itm-lbl-pad;
+      margin: @menu-itm-lbl-marg;
+      border-width: @menu-itm-lbl-bord-width;
+      border-style: solid;
+      font-size:7rem/8;
+      :hover {
+        cursor:pointer;
+      }
+    }
+    &-itm-lbl.sub-menu-lbl {
+      .image("arrow-right.png");
+      background-repeat:no-repeat;
+      background-position:center right;
+      padding-right:6px+@menu-itm-lbl-pad;
+    }
+    &-itm:hover > &-submenu,&-main,&-itm{
+      display:block;
+    }
+  }
+  .standard-colors{
+    &-nav {
+      color: @menu-txt-color;
+      background-color: @menu-bg-color;
+    }
+    &-itm {
+      background-color: @menu-bg-color;
+    }
+    &-itm-lbl{
+      border-color: darken(@menu-bg-color,5%);
+      color: @menu-nav-txt-color;
+      :hover {
+        color: @base-label-color-selecionado;
+        background-color: @menu-txt-color;
+        border-color: @menu-bg-color;
+      }
+    }
+    &-itm-lbl.sub-menu-lbl {
+      .image("arrow-right.png");
+      background-repeat:no-repeat;
+      background-position:center right;
+    }
+  }
+}
+
+.menu {
+  #menu-legado > .standard;
+}

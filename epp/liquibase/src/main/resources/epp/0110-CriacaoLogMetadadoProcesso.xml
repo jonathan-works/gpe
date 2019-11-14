@@ -1,0 +1,62 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="fabiopaes" id="1">
+		<createTable tableName="tb_historico_metadado_processo">
+			<column name="id_historico_metadado_processo" type="bigint">
+				<constraints nullable="false" primaryKey="true"
+					primaryKeyName="pk_historico_metadado_processo" />
+			</column>
+			<column name="id_metadado_processo" type="bigint">
+				<constraints nullable="true" />
+			</column>
+			<column name="nm_metadado_processo" type="nvarchar(150)">
+				<constraints nullable="true" />
+			</column>
+			<column name="vl_metadado_processo" type="nvarchar(150)">
+				<constraints nullable="true" />
+			</column>
+			<column name="ds_tipo" type="nvarchar(100)">
+				<constraints nullable="true" />
+			</column>
+			<column name="id_processo" type="bigint">
+				<constraints nullable="true" />
+			</column>
+			<column name="in_visivel" type="boolean">
+				<constraints nullable="true" />
+			</column>
+			<column name="dt_registro" type="timestamp">
+				<constraints nullable="true" />
+			</column>
+			<column name="id_usuario_logado" type="bigint">
+				<constraints nullable="true" />
+			</column>
+			<column name="ds_acao" type="nvarchar(30)">
+				<constraints nullable="true" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet author="fabiopaes" id="2">
+		<createSequence incrementBy="1" minValue="1"
+			startValue="1" sequenceName="sq_historico_metadado_processo" />
+	</changeSet>
+
+	<changeSet author="fabiopaes" id="3">
+		<addColumn tableName="tb_historico_metadado_processo">
+			<column name="ds_valor_objeto" type="nvarchar(100)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="fabiopaes" id="4">
+		<modifyDataType columnName="ds_valor_objeto" newDataType="nvarchar(255)" tableName="tb_historico_metadado_processo" />
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="5">
+        <renameColumn tableName="tb_historico_metadado_processo" oldColumnName="ds_valor_objeto" newColumnName="ds_objeto"/>
+	</changeSet>
+
+</databaseChangeLog>

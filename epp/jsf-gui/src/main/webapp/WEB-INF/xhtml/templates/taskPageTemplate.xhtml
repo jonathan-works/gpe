@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+>
+    <s:div
+        id="pageBodyTaskTemplate"
+        styleClass="pageBody"
+    >
+        <ui:insert name="pageBody">
+            <ui:insert name="taskPageBody" />
+            <s:div>
+                <wi:dataForm
+                    formId="taskPageForm"
+                    formTitle="#{wi:get(formTitle, 'Formulário')}"
+                >
+                    <ui:insert name="taskPageForm" />
+                    <ui:define name="buttons">
+                        <ui:insert name="taskPageButtons" />
+                        <s:div id="transitionDiv">
+                            <s:div
+                                rendered="#{wi:get(renderedTransition, true)}"
+                            >
+                                <h:outputText
+                                    value="#{infoxMessages['movimentar.next']} "
+                                />
+                                <ui:insert name="transitionButtons">
+                                    <ui:include
+                                        src="/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml"
+                                    />
+                                </ui:insert>
+                            </s:div>
+                        </s:div>
+                    </ui:define>
+                </wi:dataForm>
+            </s:div>
+        </ui:insert>
+    </s:div>
+</ui:composition>

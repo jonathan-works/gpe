@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:f="http://java.sun.com/jsf/core" 
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:p="http://primefaces.org/ui"
+  template="#{(empty flash.showMenu or flash.showMenu) ? '/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml': '/WEB-INF/xhtml/templates/minimal.xhtml'}" >
+  
+  <ui:define name="title">#{infoxMessages['consultaProcesso.titlePage']}</ui:define>
+  
+  <ui:define name="body">
+    <ui:include src="/WEB-INF/xhtml/components/genericDialog.xhtml" />    
+    <c:if test="#{not empty flash.showMenu}" >
+		<c:set value="#{null}" target="#{flash}" property="showMenu"/>
+	</c:if>
+  	<c:if test="#{not empty flash.idProcesso}">
+  		<c:set value="#{flash.idProcesso}" target="#{consultaController}" property="id" ></c:set>
+  		<c:set value="#{flash.idJbpm}"  target="#{org.jboss.seam.bpm.businessProcess}" property="processId"  ></c:set>
+  		<c:set value="#{flash.showBackButton}"  target="#{consultaController}" property="showBackButton"  ></c:set>
+  	</c:if>
+  	
+  	<c:if test="#{not empty flash.filtros}">
+        <c:set value="#{flash.filtros}" target="#{consultaController}" property="filtros" />
+    </c:if>
+  	
+    <rich:collapsiblePanel
+      switchType="client"
+      header="#{infoxMessages['processo.titleView']} #{consultaController.processo.numeroProcessoRoot}"
+      expanded="true">
+      <h:panelGrid
+        columns="3"
+        width="100%"
+        columnClasses="viewColumn">
+       	<ui:repeat var="variavel" value="#{consultaController.variaveisDetalhe}" >
+        	<wi:outputText id="variavel#{variavel.nome}" label="#{variavel.label}" value="#{variavel.valor}"/>
+       	</ui:repeat>
+    </h:panelGrid>
+        <ui:include src="/Processo/linkAplicacaoExterna.xhtml">
+            <ui:param name="processo" value="#{consultaController.processo}" />
+        </ui:include>
+    </rich:collapsiblePanel>
+    <infox:tabPanel
+      headerSpacing="2"
+      activeTab="#{consultaController.tab}"
+      id="consultaProcessoTabPanel">
+      <h:form>
+        <infox:tabHeaders />
+      </h:form>
+      <infox:tab
+        id="tabAnexos"
+        name="tabAnexos"
+        immediate="true"
+        actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
+        status=":status"
+        title="#{infoxMessages['processo.documentos']}">
+		<ui:include src="/Processo/pastaDocumento.xhtml">
+			<ui:param name="pastaDocumentoRenderId" value="consultaProcessoTabPanel" />
+		</ui:include>	
+      </infox:tab>
+      <infox:tab
+        id="tabPartesDoProcesso"
+        name="tabPartesDoProcesso"
+        immediate="true"
+        status=":status"
+        rendered="#{processoHandler.hasPartes()}"
+                title="#{infoxMessages['participanteProcesso.participantes']}"
+                action="#{participanteProcessoList.entity.setProcesso(consultaController.processo)}">
+         <h:panelGroup rendered="#{consultaController.tab eq 'tabPartesDoProcesso'}">
+        	<ui:include src="/Processo/parteProcessoGridRO.xhtml" />
+         </h:panelGroup>	
+      </infox:tab>
+      <infox:tab
+        id="tabAnexar"
+        name="tabAnexar"
+        immediate="true"
+        status=":status"
+        title="#{infoxMessages['processoDocumento.anexarDocumento']}"
+        action="#{anexarDocumentosView.setProcesso(consultaController.processo)}"
+        rendered="#{empty consultaController.processo.dataFim}">
+        <ui:include src="consultarAbaAnexar.xhtml" />
+      </infox:tab>
+      <infox:tab
+        id="form"
+        name="form"
+        immediate="true"
+        status=":status"
+        title="#{infoxMessages['acaoProcesso.menuText']}">
+        <ui:include
+          src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+      </infox:tab>
+      <infox:tab
+        id="documentoFisicoTab"
+        name="documentoFisicoTab"
+        action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(consultaController.processo)}"
+        rendered="#{security.checkPage('/pages/Processo/abaDocumentoFisico')}"
+        title="#{infoxMessages['documentoFisico.titleTab']}">
+        <ui:decorate
+          id="frameDecorate"
+          template="../../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+          <ui:define name="title">#{infoxMessages['documentoFisico.titleTab']}</ui:define>
+          <ui:include src="/Processo/documentoFisico.xhtml" />
+        </ui:decorate>
+      </infox:tab>
+      <infox:tab
+        id="tabPastaRestricao"
+        name="tabPastaRestricao"
+        status=":status"
+        title="#{infoxMessages['pasta.pastaRestricaoTab']}"
+        rendered="#{security.checkPage('/pages/Processo/abaPastaRestricao')}">
+        <ui:decorate
+          id="frameDecorate"
+          template="../../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+          <ui:define name="title">#{infoxMessages['pasta.pastaRestricaoTab']}</ui:define>
+          <ui:include src="../pastaRestricao.xhtml" />
+        </ui:decorate>
+      </infox:tab>
+      
+
+      <infox:tab
+        id="tabHistoricoMetadado"
+        name="tabHistoricoMetadado"
+        immediate="true"
+        actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
+        status=":status"
+        rendered="#{security.checkPage('/pages/Processo/historicoMetadado.seam')}"
+        title="#{infoxMessages['historicoMetadado.titleTab']}">
+		<ui:include src="../historicoMetadado.xhtml">
+			<ui:param name="processo" value="#{consultaController.processo}" />
+		</ui:include>	
+      </infox:tab>
+      
+      
+      <ui:include src="/Processo/Consulta/abasCustomizadasDoDetalheDoProcesso.xhtml"/>
+      <c:forEach var="tab" items="#{extensaoConsultar.tabs}">
+        <ui:include src="#{tab}" />
+      </c:forEach>
+      <div>
+      	<h:form>
+      		<p:remoteCommand name="redirectToView" action="#{consultaController.redirectToView}" process="@this" />
+              <wi:commandButton
+              	id="btnVoltar" rendered="#{consultaController.showBackButton}"
+                onclick="infox.showLoading(); redirectToView([{name: 'url', value: window.document.referrer}]); return false;"
+                value="#{infoxMessages['page.return']}" />
+         </h:form>
+      </div>
+    </infox:tabPanel>
+
+  </ui:define>
+</ui:composition>

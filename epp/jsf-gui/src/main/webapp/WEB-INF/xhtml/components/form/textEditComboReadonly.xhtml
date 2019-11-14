@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <s:div id="#{id}TipoProcDocDiv">
+        <fieldset>
+            <legend>
+                <h:outputText styleClass="property-field-edit-name" value="#{label}" />
+            </legend>
+
+            <wi:outputText id="#{id}ClassDocReadonly"
+                label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+                value="#{props.tipoProcessoDocumentoRO}"
+                rendered="#{readonly}" />
+
+            <s:div id="#{id}EditorDiv">
+                <wi:editor id="#{id}Editor"
+                    value="#{props.modeloDocumentoRO}" />
+            </s:div>
+        </fieldset>
+    </s:div>
+
+</ui:composition>

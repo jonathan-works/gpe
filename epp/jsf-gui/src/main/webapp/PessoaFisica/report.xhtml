@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="title" value="#{infoxMessages['pessoaFisica.titlePage']}" />
+
+    <wi:dataReport subtitle="Resultado da Pesquisa " title="#{title}"
+        columns="4" widths="2 4 3 1"
+        headerText="#{pessoaFisicaList.criteria}">
+
+        <wi:reportColumnHeader title="#{infoxMessages['pessoaFisica.cpf']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['pessoaFisica.nome']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['pessoaFisica.dataNascimento']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+
+        <ui:repeat var="row" value="#{pessoaFisicaList.list()}">
+            <wi:reportColumn value="#{row.cpf}" />
+            <wi:reportColumn value="#{row.nome}" />
+            <wi:reportColumn value="#{row.dataNascimento}" />
+            <wi:reportColumnSituacao value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+
+    </wi:dataReport>
+
+</ui:composition>

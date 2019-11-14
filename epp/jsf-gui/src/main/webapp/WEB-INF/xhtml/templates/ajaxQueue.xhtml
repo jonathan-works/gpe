@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:h="http://java.sun.com/jsf/html">
+
+	<ui:param
+         name="intervalPush"
+         value="#{empty intervalPush ? 120000 : intervalPush}" />
+   <h:outputScript
+		name="JAVASERVERFACES-1718-Workaround.js"
+		library="js" />
+	<h:outputScript name="ajax-queue.js" library="js" />
+	<script>
+		const CKEDITOR_BASEPATH = '#{request.contextPath}/org.richfaces.resources/javax.faces.resource/org.richfaces.ckeditor/';
+	</script>
+	
+	<script>
+		function executePoll() {
+		  var xhttp;
+		  var viewStateId = $("form:first > input[name='javax.faces.ViewState']").attr("value");
+		  if (window.XMLHttpRequest) {
+		    xhttp = new XMLHttpRequest();
+		    } else {
+		    xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+		  xhttp.open('HEAD', "#{pathResolver.contextPath}/sessionPoll?conversationId=#{org.jboss.seam.core.conversation.id}&amp;viewId=#{facesContext.viewRoot.viewId}&amp;javax.faces.ViewState=" + viewStateId);
+		  xhttp.onload = function() {
+	          setTimeout(executePoll, #{intervalPush});
+		  }
+		  xhttp.send();
+		}
+		$(document).ready(function() {
+			setTimeout(executePoll, #{intervalPush});
+     	});
+	</script>
+	
+</ui:composition>

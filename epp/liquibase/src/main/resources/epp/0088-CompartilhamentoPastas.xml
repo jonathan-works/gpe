@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="gabriel" id="3-1" dbms="postgresql, oracle, mssql">
+        <preConditions onFail="MARK_RAN">
+            <or>
+                <and>
+                    <dbms type="mssql" />
+                    <sqlCheck expectedResult="0">SELECT COUNT(*) FROM sys.indexes WHERE name LIKE 'IX_tb_documento_id_processo%'</sqlCheck>
+                </and>
+                <dbms type="postgresql" />
+                <dbms type="oracle" />
+            </or>
+        </preConditions>
+
+        <dropIndex indexName="idx_tb_documento1" tableName="tb_documento"/>
+        <dropIndex indexName="idx_documento_01" tableName="tb_documento"/>
+        <dropIndex indexName="idx_documento_02" tableName="tb_documento"/>
+
+        <addNotNullConstraint tableName="tb_documento" columnName="id_pasta" columnDataType="BIGINT" />
+
+        <createIndex indexName="idx_documento_02" tableName="tb_documento">
+            <column name="id_classificacao_documento" type="BIGINT"/>
+            <column name="in_excluido" type="BOOLEAN"/>
+        </createIndex>
+        <createIndex indexName="idx_documento_03" tableName="tb_documento">
+            <column name="id_pasta" type="BIGINT" />
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="avner" id="3-1-0" dbms="mssql">
+        <!-- TCE-PE -->
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="IX_tb_documento_id_processo_069BD" schemaName="dbo" />
+        </preConditions>
+        <dropIndex indexName="IX_tb_documento_id_processo_069BD" tableName="tb_documento"/>
+    </changeSet>
+
+    <changeSet author="avner" id="3-1-1" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="idx_tb_documento1" schemaName="dbo" />
+        </preConditions>
+        <dropIndex indexName="idx_tb_documento1" tableName="tb_documento"/>
+    </changeSet>
+
+    <changeSet author="avner" id="3-1-2" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="idx_documento_01" schemaName="dbo" />
+        </preConditions>
+        <dropIndex indexName="idx_documento_01" tableName="tb_documento"/>
+    </changeSet>
+
+    <changeSet author="avner" id="3-1-3" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="idx_documento_02" schemaName="dbo" />
+        </preConditions>
+        <dropIndex indexName="idx_documento_02" tableName="tb_documento"/>
+    </changeSet>
+
+    <changeSet author="avner" id="3-1-4" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="IX_tb_documento_id_processo_4E2B7" schemaName="dbo" />
+        </preConditions>
+        <dropIndex indexName="IX_tb_documento_id_processo_4E2B7" tableName="tb_documento"/>
+    </changeSet>
+
+    <changeSet author="avner" id="3-1-5" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="IX_tb_documento_id_processo_id_classificacao_documento_35253" schemaName="dbo" />
+        </preConditions>
+        <dropIndex indexName="IX_tb_documento_id_processo_id_classificacao_documento_35253" tableName="tb_documento"/>
+    </changeSet>
+
+    <changeSet author="avner" id="3-1-6" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="IX_tb_documento_id_pasta" schemaName="dbo" />
+        </preConditions>
+        <dropIndex indexName="IX_tb_documento_id_pasta" tableName="tb_documento" />
+    </changeSet>
+
+    <changeSet author="avner" id="3-1-7" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="IX_tb_documento_id_classificacao_documento_in_excluido_7D0FE" schemaName="dbo" />
+        </preConditions>
+        <dropIndex indexName="IX_tb_documento_id_classificacao_documento_in_excluido_7D0FE" tableName="tb_documento"/>
+    </changeSet>
+
+    <changeSet author="avner" id="3-1-8" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="IX_tb_documento_id_jbpm_task_87174" schemaName="dbo" />
+        </preConditions>
+        <dropIndex indexName="IX_tb_documento_id_jbpm_task_87174" tableName="tb_documento" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="3-2" dbms="mssql">
+        <addNotNullConstraint tableName="tb_documento" columnName="id_pasta" columnDataType="BIGINT" />
+
+		<createIndex indexName="idx_documento_01" tableName="tb_documento">
+            <column name="id_classificacao_documento" type="BIGINT"/>
+        </createIndex>
+        <createIndex indexName="idx_documento_02" tableName="tb_documento">
+            <column name="id_classificacao_documento" type="BIGINT"/>
+            <column name="in_excluido" type="BOOLEAN"/>
+        </createIndex>
+        <createIndex indexName="idx_documento_03" tableName="tb_documento">
+            <column name="id_pasta" type="BIGINT" />
+        </createIndex>
+       <createIndex indexName="IX_tb_documento_id_jbpm_task_87174" tableName="tb_documento">
+            <column name="id_jbpm_task" type="BIGINT" />
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <dropIndex indexName="idx_tb_pasta_id_processo" tableName="tb_pasta" />
+        <dropNotNullConstraint tableName="tb_pasta" columnName="id_processo" columnDataType="bigint" />
+        <dropForeignKeyConstraint baseTableName="tb_pasta" constraintName="fk_tb_pasta_001" />
+    </changeSet>
+
+    <!-- Cria sq_pasta_compartilhamento -->
+    <changeSet author="avner" id="5">
+        <createSequence sequenceName="sq_pasta_compartilhamento" minValue="1" startValue="1" />
+    </changeSet>
+
+    <!-- Cria tb_pasta_compartilhamento -->
+    <changeSet author="avner" id="6">
+        <createTable tableName="tb_pasta_compartilhamento">
+            <column name="id_pasta_compartilhamento" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_pasta_compartilhamento" />
+            </column>
+            <column name="id_pasta" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_pasta_compartilhamento_001" references="tb_pasta(id_pasta)" />
+            </column>
+            <column name="id_processo_alvo" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_pasta_compartilhamento_002" references="tb_processo(id_processo)" />
+            </column>
+            <column name="in_ativo" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Cria sq_pasta_compartilhamento_hist -->
+    <changeSet author="avner" id="7">
+        <createSequence sequenceName="sq_pasta_compartilhamento_hist" minValue="1" startValue="1" />
+    </changeSet>
+
+    <!-- Cria tb_pasta_compartilhamento_hist -->
+    <changeSet author="avner" id="8">
+        <createTable tableName="tb_pasta_compartilhamento_hist">
+            <column name="id_pasta_compartilhamento_hist" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_pasta_compartilhamento_hist" />
+            </column>
+            <column name="id_pasta_compartilhamento" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_pasta_comp_hist_001" references="tb_pasta_compartilhamento(id_pasta_compartilhamento)" />
+            </column>
+            <column name="id_usuario_login" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_pasta_comp_hist_002" references="tb_usuario_login(id_usuario_login)" />
+            </column>
+            <column name="in_acao_adicao" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="dt_acao" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Cria sq_documento_compartilhamento -->
+    <changeSet author="avner" id="9">
+        <createSequence sequenceName="sq_documento_compartilhamento" minValue="1" startValue="1" />
+    </changeSet>
+
+    <!-- Cria tb_documento_compartilhamento -->
+    <changeSet author="avner=" id="10">
+        <createTable tableName="tb_documento_compartilhamento">
+            <column name="id_documento_compartilhamento" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_compartilhamento_documento" />
+            </column>
+            <column name="id_documento" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_doc_comp_001" references="tb_documento(id_documento)" />
+            </column>
+            <column name="id_processo_alvo" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_doc_comp_002" references="tb_processo(id_processo)" />
+            </column>
+            <column name="in_ativo" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Cria sq_documento_compartilha_hist -->
+    <changeSet author="avner" id="11">
+        <createSequence sequenceName="sq_documento_compartilha_hist" minValue="1" startValue="1" />
+    </changeSet>
+
+    <!-- Cria tb_documento_compartilha_hist -->
+    <changeSet author="avner" id="12">
+        <createTable tableName="tb_documento_compartilha_hist">
+            <column name="id_documento_compartilha_hist" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_documento_compartilha_hist" />
+            </column>
+            <column name="id_documento_compartilhamento" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_doc_comp_hist_001" references="tb_documento_compartilhamento(id_documento_compartilhamento)" />
+            </column>
+            <column name="id_usuario_login" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_doc_comp_hist_002" references="tb_usuario_login(id_usuario_login)" />
+            </column>
+            <column name="in_acao_adicao" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="dt_acao" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Recurso para compartilhar pastas -->
+    <changeSet author="avner" id="13">
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="pastaCompartilhamento" />
+            <column name="ds_nome" value="Compartilhamento de Pastas" />
+        </insert>
+    </changeSet>
+
+    <!-- Recurso para compartilhar documentos -->
+    <changeSet author="avner" id="14">
+        <insert tableName="tb_recurso" >
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="documentoCompartilhamento" />
+            <column name="ds_nome" value="Compartilhamento de Documentos" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="avner" id="15">
+        <createIndex indexName="idx_doc_comp_proc_alvo" tableName="tb_documento_compartilhamento">
+            <column name="id_documento" type="BIGINT" />
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="avner" id="16">
+        <createIndex indexName="idx_pasta_comp_proc_alvo" tableName="tb_pasta_compartilhamento">
+            <column name="id_pasta" type="BIGINT" />
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

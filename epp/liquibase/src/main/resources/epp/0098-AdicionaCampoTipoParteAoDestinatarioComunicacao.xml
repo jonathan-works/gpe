@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+  <changeSet author="victorpasqualino" id="1">
+    
+    <addColumn tableName="tb_destinatario_modelo_comunic">
+        <column name="id_tipo_parte" type="bigint">
+        	<constraints nullable="true" referencedTableName="tb_tipo_parte" referencedColumnNames="id_tipo_parte" foreignKeyName="fk_dest_modelo_comunic_parte"/>
+        </column>
+    </addColumn>
+    
+  </changeSet>
+
+</databaseChangeLog>

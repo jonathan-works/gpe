@@ -1,0 +1,63 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+   
+    <changeSet author="gabriel" id="1">
+        <createSequence sequenceName="sq_endereco" minValue="1" startValue="1" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <createTable tableName="tb_endereco">
+            <column name="id_endereco" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_endereco"/>
+            </column>
+            <column name="ds_logradouro" type="varchar(100)" >
+                <constraints nullable="true" />
+            </column>
+            <column name="ds_complemento" type="varchar(100)" >
+                <constraints nullable="true" />
+            </column>
+            <column name="ds_numero" type="varchar(15)" >
+                <constraints nullable="true" />
+            </column>
+            <column name="ds_bairro" type="varchar(100)" >
+                <constraints nullable="true" />
+            </column>
+            <column name="ds_cep" type="varchar(9)" >
+                <constraints nullable="true" />
+            </column>
+            <column name="id_municipio" type="bigint" >
+                <constraints nullable="false" references="tb_municipio(id_municipio)"  foreignKeyName="fk_endereco_001"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <createSequence sequenceName="sq_pessoa_endereco" minValue="1" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0104-Endereco.xml" />
+        </preConditions>
+        <createTable tableName="tb_pessoa_endereco">
+            <column name="id_pessoa_endereco" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_pessoa_endereco"/>
+            </column>
+            <column name="id_pessoa" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_pessoa_endereco_001" references="tb_pessoa(id_pessoa)"/>
+            </column>
+            <column name="id_endereco" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_pessoa_endereco_002" references="tb_endereco(id_endereco)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="5">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0104-Endereco.xml" />
+        </preConditions>
+        <addUniqueConstraint columnNames="id_pessoa, id_endereco" constraintName="uc_tb_pessoa_endereco" tableName="tb_pessoa_endereco"/>
+    </changeSet>
+
+</databaseChangeLog>

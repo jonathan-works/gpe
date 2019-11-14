@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    
+    <h:outputScript>
+        alert('Remover referência a components-grid-tools-include-removeButton');
+    </h:outputScript>
+
+    <a:commandLink action="#{home.remove(row)}" rendered="#{canEdit}"
+        limitRender="true" status=":status"
+        render=":#{gridId}#{empty listReRender ? '' : (',').concat(listReRender)}"
+        onclick="if(!confirm('#{infoxMessages['crud.confirmRemove']}')) return false;">
+
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Remover registro" />
+        <f:param name="firstResult" value="#{bean.firstResult}" />
+        <f:param name="page" value="#{bean.page}" />
+
+    </a:commandLink>
+
+</ui:composition>

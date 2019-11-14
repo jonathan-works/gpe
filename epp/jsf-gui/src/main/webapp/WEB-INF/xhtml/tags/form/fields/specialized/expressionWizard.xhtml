@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:h="http://java.sun.com/jsf/html">
+  <h:outputScript
+    library="js/expressionWizard"
+    name="Enum.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="Node.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="Toolbar.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="BooleanOper.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="BooleanNode.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="StringNode.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="TransitionNode.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="ArithOper.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="ArithNode.js" />
+  <s:div id="#{id}">
+    <s:div
+      id="#{id}Div"
+      styleClass="expressionDiv">
+      <div class="toolbar-cont"></div>
+    </s:div>
+    <div class="expressionInput hidden">
+      <wi:inputTextarea
+        id="#{id}Text"
+        styleClass="expressionInput"
+        label="#{infoxMessages['expressionWizard.expressao']}"
+        value="#{value}"
+        showCounter="false">
+        <a:ajax
+          execute="@this"
+          event="change"
+          render="decisionNodePanel"
+          limitRender="true" />
+      </wi:inputTextarea>
+    </div>
+  </s:div>
+  <h:panelGroup id="setVariables">
+	  <h:outputScript>
+	    (function(K){
+	      var Node=K.Node;
+	      var VariableType=Node.VariableType;
+	      Node.clearVariables(VariableType.BOOLEAN);
+	      Node.clearVariables(VariableType.NUMBER);
+	      Node.clearVariables(VariableType.STRING);
+	      Node.clearVariables(VariableType.TRANSITION);
+	      Node.addVariable(#{nodeFitter.currentNode.getBooleanVariables()},VariableType.BOOLEAN);
+	      Node.addVariable(#{nodeFitter.currentNode.getNumberVariables()},VariableType.NUMBER);
+	      Node.addVariable(#{nodeFitter.currentNode.getStringVariables(definicaoVariavelProcessoAction.listVariaveis(100), variavelList.list(100))},VariableType.STRING);
+	      Node.addVariable(#{nodeFitter.currentNode.getLeavingTransitionList()},VariableType.TRANSITION);
+	      K.messages={
+	          "pt-br":{
+	            "BooleanOper.and":"E",
+	            "BooleanOper.or":"OU",
+	            "BooleanOper.not":"NEGAÇÃO",
+	            "BooleanOper.eq":"=",
+	            "BooleanOper.neq":"=|=",
+	            "BooleanOper.gt":"&gt;",
+	            "BooleanOper.gte":"&gt;=",
+	            "BooleanOper.lt":"&lt;",
+	            "BooleanOper.lte":"&lt;=",
+	            "BooleanNode.negate":"Negar",
+	            "BooleanNode.and":"Conjunção",
+	            "BooleanNode.or":"Disjunção",
+	            "BooleanNode.eq":"Igual a",
+	            "BooleanNode.neq":"Diferente de",
+	            "BooleanNode.gte":"Maior ou igual a",
+	            "BooleanNode.gt":"Maior que",
+	            "BooleanNode.lte":"Menor ou igual a",
+	            "BooleanNode.lt":"Menor que",
+	            "BooleanNode.var":"Variáveis",
+	            "BooleanNode.TRUE":"VERDADEIRO",
+	            "BooleanNode.FALSE":"FALSO",
+	            "BooleanNode.ARIT":"Expr. Aritmética",
+	            "BooleanNode.STR_COMP":"Comparação de literal",
+	            "BooleanNode.EXPR":"Expressão ternária",
+	            "BooleanNode.OVERRIDE":"Sobrescrever pai",
+	            "BooleanNode.COMPARATION":"Comparação de valores",
+	            "ArithOper.negative":"-",
+	            "ArithOper.div":"/",
+	            "ArithOper.minus":"-",
+	            "ArithOper.mult":"x",
+	            "ArithOper.plus":"+",
+	            "ArithNode.if":"SE",
+	            "ArithNode.then":"ENTÃO RETORNE",
+	            "ArithNode.else":"SENÃO RETORNE",
+	            "ArithNode.negative":"Negativar",
+	            "ArithNode.minus":"Subtrair",
+	            "ArithNode.plus":"Somar",
+	            "ArithNode.mult":"Multiplicar",
+	            "ArithNode.div":"Dividir",
+	            "ArithNode.constant":"Valor constante",
+	            "ArithNode.expression":"Expressão de decisão",
+	            "ArithNode.variable":"Variáveis",
+	            "ArithNode.override":"Sobrescrever valor",
+	            "ArithNode.number.valid.prompt":"Insira um número válido (formato: 9999999.99)",
+	            "StringNode.if":"SE",
+	            "StringNode.then":"ENTÃO RETORNE",
+	            "StringNode.else":"SENÃO RETORNE",
+	            "StringNode.prompt":"Digite cadeia sua caracteres",
+	            "StringOper.plus":"+",
+	            "StringNode.addPrefix":"Inserir antes",
+	            "StringNode.addSufix":"Inserir após",
+	            "StringNode.booleanValue":"Valor Lógico",
+	            "StringNode.stringValue":"Valor Literal",
+	            "StringNode.numberValue":"Valor Numérico",
+	            "StringNode.var":"Variáveis",
+	            "StringNode.constant":"Valor constante",
+	            "StringNode.expression":"Expressão de decisão",
+	            "StringNode.override":"Sobrescrever com valor",
+	            "TransitionNode.if":"SE",
+	            "TransitionNode.then":"ENTÃO VÁ PARA",
+	            "TransitionNode.else":"SENÃO VÁ PARA",
+	            "TransitionNode.var":"Transições",
+	            "TransitionNode.expression":"Decisão",
+	            "TransitionNode.override":"Sobrescrever pai com este valor"
+	          }
+	        };
+	    })(_parser);
+	  </h:outputScript>
+  </h:panelGroup>
+  <script
+    language="javascript"
+    charset="utf-8">
+    _parser.TransitionNode.generateTree('#{value}', #{rich:jQuery(id.concat('Div'))}[0], #{rich:jQuery(id.concat("Text"))}[0]);
+    </script>
+</ui:composition>

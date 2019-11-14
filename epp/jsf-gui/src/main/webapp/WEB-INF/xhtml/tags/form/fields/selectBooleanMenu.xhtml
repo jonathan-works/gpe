@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf"
+>
+  <ui:param
+    name="template"
+    value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}"
+  />
+  <s:decorate
+    id="#{id}Decoration"
+    template="#{template}"
+  >
+    <ui:define name="label">#{label}</ui:define>
+    <h:selectOneMenu
+      id="#{id}"
+      value="#{value}"
+      styleClass="select input"
+    >
+      <f:selectItem itemLabel="#{infoxMessages['crud.select.all']}" />
+      <f:selectItems
+        value="#{wi:get(items, selectItemFunctions.createFromString('true:crud.yes,false:crud.no'))}"
+      />
+    </h:selectOneMenu>
+  </s:decorate>
+</ui:composition>

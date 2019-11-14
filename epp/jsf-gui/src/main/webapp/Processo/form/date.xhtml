@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+    
+    <i:inputDate id="#{formField.id}" 
+    	label="#{formField.label}" 
+    	value="#{formField.value}" 
+    	required="false" 
+    	showRequired="#{formField.properties.required}"
+    	readonly="#{formField.properties.readonly}" 
+    	disabled="#{formField.properties.readonly}" 
+    	bindingComponent="#{formField.component}"
+        validatorId="#{formField.properties.validatorId}">
+    </i:inputDate>
+	    
+</ui:composition>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+        title="#{infoxMessages['button.selecionar']}" id="#{id}">
+        <f:param name="id" value="#{rowId}" />
+        <f:param name="tab" value="#{wi:get(tabName, 'form')}" />
+    </wi:toolBar>
+
+</ui:composition>

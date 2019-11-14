@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+
+    <ui:param name="props" value="#{form.buttons.properties}" />
+    <ui:param name="reRenderSave"
+        value="#{empty reRenderSave ? formId : reRenderSave}" />
+    <ui:param name="mostrarNovo"
+        value="#{empty mostrarNovo ? true : mostrarNovo}" />
+    <ui:param name="mostrarVoltar"
+        value="#{empty mostrarVoltar ? true : mostrarVoltar}" />
+    <ui:param name="persistSemNewInstance"
+        value="#{empty persistSemNewInstance ? false : persistSemNewInstance}" />
+
+    <div class="actionButtons">
+
+        <h:commandButton id="saveH" eventsQueue="editQueue"
+            action="#{home.persist()}"
+            value="#{infoxMessages['crud.persist']}" styleClass="buttons"
+            rendered="#{!home.managed and !isUploadForm and persistSemNewInstance}">
+        </h:commandButton>
+        <a:commandButton id="save" status=":status"
+            action="#{home.persist()}" eventsQueue="editQueue"
+            oncomplete="#{oncomplete}" render="#{reRenderSave}"
+            limitRender="true" value="#{infoxMessages['crud.persist']}"
+            styleClass="buttons"
+            rendered="#{!home.managed and !isUploadForm and !persistSemNewInstance}">
+        </a:commandButton>
+        <h:commandButton id="saveUpload" eventsQueue="editQueue"
+            action="#{home.persist()}"
+            value="#{infoxMessages['crud.persist']}" styleClass="buttons"
+            rendered="#{!home.managed and isUploadForm}">
+        </h:commandButton>
+        <h:commandButton id="updateUpload" eventsQueue="editQueue"
+            value="#{infoxMessages['crud.update']}" styleClass="buttons"
+            action="#{home.update()}"
+            rendered="#{home.managed and isUploadForm}">
+        </h:commandButton>
+        <a:commandButton id="update" status=":status"
+            eventsQueue="editQueue" oncomplete="#{oncomplete}"
+            render="#{reRenderSave}" limitRender="true"
+            value="#{infoxMessages['crud.update']}" styleClass="buttons"
+            action="#{home.update()}"
+            rendered="#{home.managed and !isUploadForm}">
+        </a:commandButton>
+        <ui:insert name="customButtons" />
+
+    </div>
+
+
+</ui:composition>

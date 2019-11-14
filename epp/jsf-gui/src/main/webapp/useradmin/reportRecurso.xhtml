@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
+
+	<wi:dataReport
+         title="#{infoxMessages['recurso.reportPage']}"
+         columns="2"
+         widths="1 1"
+         headerText="#{recursoList.criteria}">
+				   
+		<wi:reportColumnHeader
+             title="#{infoxMessages['recurso.nome']}" />
+		<wi:reportColumnHeader
+             title="#{infoxMessages['recurso.identificador']}" />
+				
+		<ui:repeat
+             var="row"
+             value="#{recursoList.list()}">
+			<wi:reportColumn
+                 value="#{row.nome}" />
+			<wi:reportColumn
+                 value="#{row.identificador}" />
+		</ui:repeat>
+
+	</wi:dataReport>
+	
+</ui:composition>

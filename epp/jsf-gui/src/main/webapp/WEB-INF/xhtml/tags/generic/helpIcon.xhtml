@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:a="http://richfaces.org/a4j">
+  
+  <h:form>
+      <a:commandLink execute="@this" render="@this" styleClass="button" limitRender="true"
+          actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}"
+          oncomplete="openPopUp('helpwnd', '#{pathResolver.contextPath}/help/show.seam?scid=#{conversation.id}', 800,600);">
+          <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/question.png')}" title="#{infoxMessages['ajuda.ajudaBtn']}" />
+      </a:commandLink>
+  </h:form>
+  
+</ui:composition>

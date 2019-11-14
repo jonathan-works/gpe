@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <rich:panel header="${infoxMessages['painel.tarefas']}" id="TarefasTree" styleClass="tree-tarefas" style="width: 100%; padding-bottom: 110px;">
+        <h:outputText rendered="#{empty painelTreeHandler.tarefasRoots}" value="#{infoxMessages['process.noAvailableProcesses']}"/>
+        <rich:tree
+            id="selectTarefaTree"
+            status=":status"
+            toggleType="client"
+            execute="@this"
+            oncomplete="infox.hideLoading();"
+            selectionType="ajax"
+            selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
+            render="divPainelProcessosInterna, :pesquisaListForm"
+            var="node">
+            <rich:treeModelAdaptor id="tarefaTreeModelAdaptor" nodes="#{painelTreeHandler.tarefasRoots}">
+                <rich:treeNode
+                    id="taskNode"
+                    iconCollapsed="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+                    iconExpanded="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+                    expanded="#{node.expanded}"
+                    iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+                    iconClass="tarefa-tree-icon"
+                    labelClass="tarefa-tree-lbl">
+                    <h:outputText value="#{node.entity.name}"/>
+                    <h:outputText rendered="#{node.entity.quantidade ne 0}" value=" (#{node.entity.quantidade})" />
+                    <h:outputText rendered="#{node.entity.quantidadeEmCaixa gt 0}" value=" (Em caixas: #{node.entity.quantidadeEmCaixa})" />
+                    <rich:contextMenu mode="ajax" target="taskNode" id="menuTaskNode"
+                        rendered="#{security.checkPage('/pages/Caixa/listView.seam')}"> 
+                        <rich:menuItem
+                            label="#{infoxMessages['caixa.menu.novaCaixa']}"
+                            icon="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
+                            onclick="#{rich:component('novaCaixaPanel')}.show()" />
+                    </rich:contextMenu>
+                </rich:treeNode>
+                <rich:treeModelAdaptor id="caixaTreeModelAdaptor" nodes="#{node.caixas}">
+                    <rich:treeNode
+                        id="caixaNode"
+                        iconCollapsed="#{layoutController.getResourceUrlByPath('/imagens/message.gif')}"
+                        iconExpanded="#{layoutController.getResourceUrlByPath('/imagens/message.gif')}"
+                        expanded="#{node.expanded}"
+                        iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/message.gif')}"
+                        iconClass="tarefa-tree-icon"
+                        labelClass="tarefa-tree-lbl">
+                        <h:outputText value="#{node.entity.name}" />
+                        <h:outputText value=" (#{node.entity.quantidade})" />
+                        <rich:contextMenu
+                            id="menuCaixa"
+                            mode="ajax"
+                            target="caixaNode"
+                            rendered="#{security.checkPage('/pages/Caixa/listView.seam')}">
+                            <rich:menuItem
+                                label="#{infoxMessages['caixa.menu.editaCaixa']}"
+                                icon="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.gif')}"
+                                action="#{painelUsuarioController.editarCaixa()}" />
+                            <rich:menuItem
+                                label="#{infoxMessages['caixa.menu.removerCaixa']}"
+                                icon="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                                onclick="return confirm(\'#{infoxMessages['caixa.confirm.remove']}\');"
+                                render="divPainelProcessos, TarefasTree, pageBodyDialogMessage"
+                                action="#{painelUsuarioController.removerCaixa(node)}">
+                                <f:setPropertyActionListener target="#{caixaCrudAction.id}" value="#{node.entity.id}" />
+                            </rich:menuItem>
+                        </rich:contextMenu>
+                        <rich:dropTarget
+                            acceptedTypes="#{node.parent.entity.id.toUpperCase()}"
+                            dropListener="#{painelUsuarioController.moverProcessoParaCaixaDropEventListener}"
+                            dropValue="#{node.entity.id}"
+                            render="divPainelProcessos, TarefasTree"
+                            limitRender="true" 
+                            execute="@this"/>
+                    </rich:treeNode>
+                </rich:treeModelAdaptor>
+            </rich:treeModelAdaptor>
+        </rich:tree>
+    </rich:panel>
+    <script type="text/javascript">
+    	$('.rf-trn-cnt').click(function(){infox.showLoading();});
+    </script>
+</ui:composition>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:p="http://jboss.org/schema/seam/pdf"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <p:cell grayFill="#{wi:get(grayFill,0.9)}"
+        horizontalAlignment="center" colspan="#{wi:get(colspan,1)}">
+        <p:paragraph alignment="center">#{title}</p:paragraph>
+        <c:if test="#{wi:get(renderFilter, false)}">
+            <p:paragraph alignment="center">(#{wi:get(filter,'')})</p:paragraph>
+        </c:if>
+    </p:cell>
+
+</ui:composition>

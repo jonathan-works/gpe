@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+  <changeSet author="victorpasqualino" id="1">
+    <update tableName="jbpm_node">
+        <column name="isasync_" type="boolean" valueBoolean="false"/>
+    </update>
+  </changeSet>
+
+  <changeSet author="victorpasqualino" id="2">
+  	<sql>
+  		UPDATE tb_fluxo SET ds_xml = REPLACE(ds_xml, 'async="true"', ''), ds_xml_exec = REPLACE(ds_xml_exec, 'async="true"', '');
+  	</sql>
+  </changeSet>
+
+</databaseChangeLog>

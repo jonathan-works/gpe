@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <h:panelGroup rendered="#{not monitorProcessoView.success}">
+        #{infoxMessages['monitorProcesso.erroCsv']}
+    </h:panelGroup>
+
+    <h:form>
+        <p:remoteCommand name="filterElement" action="#{monitorProcessoView.filterElement}"
+            onstart="infox.showLoading()" oncomplete="infox.hideLoading()" update=":pageBody" />
+        <p:remoteCommand name="resetFilter" action="#{monitorProcessoView.resetFilter}"
+            onstart="infox.showLoading()" oncomplete="infox.hideLoading()" update=":pageBody" />
+    </h:form>
+	<h:outputScript library="js" name="svg-pan-zoom.min.js"></h:outputScript>
+	<h:outputScript library="js" name="thumbnailViewer.js"></h:outputScript>
+	
+    <h:panelGroup rendered="#{monitorProcessoView.success}">
+        <fieldset id="fluxoDadosFieldset">
+            <legend>#{infoxMessages['monitorProcesso.fluxo.dados']}</legend>
+            <wi:outputText id="fluxoNome"
+                label="#{infoxMessages['monitorProcesso.fluxo.nome']}"
+                value="#{monitorProcessoView.fluxoNome}" />
+
+            <wi:outputText id="fluxoDescricao"
+                label="#{infoxMessages['monitorProcesso.fluxo.descricao']}"
+                value="#{monitorProcessoView.fluxoDescricao}" />
+        </fieldset>
+
+        <h:panelGroup rendered="#{not monitorProcessoView.executionGraphic}">
+   
+
+			<p:outputPanel id="svgOutput">
+	            <div style="margin-top: 2em; height: 600px; overflow: hidden; border: 1px solid black; ">
+	                <h:outputText value="#{monitorProcessoView.svg}" escape="false" />
+	            </div>
+	            <button onclick="svgFluxo.zoomIn();" type="button" class="buttons">
+	            	<wi:icon value="plus"/>
+	            </button>
+	            <button onclick="svgFluxo.reset();" type="button" class="buttons">
+	            	Reset
+	            </button>
+	            <button onclick="svgFluxo.zoomOut();" type="button" class="buttons">
+	            	<wi:icon value="minus"/>
+	            </button>
+	            <button onclick="resetFilter();" type="button" class="buttons" style="#{not monitorProcessoView.filter? 'display:none;' : '' }">
+	            	Voltar
+	            </button>
+			</p:outputPanel>
+			<script>
+			 var svgFluxo = svgPanZoom('##{wi:clientId('svgOutput').replace(':','\\\\:')} &gt; div &gt; svg', {
+          zoomEnabled: true,
+          controlIconsEnabled: true,
+          fit: true,
+        })
+			</script>
+        </h:panelGroup>
+        
+        <h:panelGroup rendered="#{monitorProcessoView.executionGraphic}">
+            <ui:include src="/Processo/executionGraphic.xhtml" />
+            <h:form>
+             <p:remoteCommand name="closeGraphicexecution" action="#{monitorProcessoView.closeGraph}"
+            onstart="infox.showLoading()" oncomplete="infox.hideLoading()" update=":pageBody" />
+             
+				 <button onclick="closeGraphicexecution();" type="button" class="buttons" >
+	            	#{infoxMessages['monitorProcesso.graphic.close']}
+	            </button>                    
+            </h:form>
+        </h:panelGroup>
+    </h:panelGroup>
+
+    <h:form>
+        <p:dataTable id="instanciaDataTable" lazy="true" rows="10" paginator="true" widgetVar="instaciaProcesso"
+            rendered="#{not monitorProcessoView.executionGraphic}" paginatorAlwaysVisible="false"
+            value="#{monitorProcessoView.monitorProcessoDataModel}" var="row">
+    
+            <p:ajax event="filter" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+            
+            <p:column id="state" styleClass="dt-toolbar-col" style="width: 60px">
+                <h:panelGroup rendered="#{row.state eq 'ERROR'}">
+                    <div class="circle" style="background-color: red; border-color: #a00; display: inline-block;" />
+                        <p:commandLink action="#{monitorProcessoView.executeNode(row)}" update=":pageBody">
+                            <h:graphicImage title="#{infoxMessages['monitorProcesso.icon.retry']}"
+                                url="#{layoutController.getMaterialDesignIcon('1x','black','18dp','replay')}" />
+                        </p:commandLink>
+                </h:panelGroup>
+    
+                <h:panelGroup rendered="#{row.state eq 'OK'}">
+                    <div class="circle" style="background-color: green; border-color: #060; display: inline-block;" />
+                </h:panelGroup>
+    
+                    <p:commandLink action="#{monitorProcessoView.viewGraph(row)}" update=":pageBody"
+                        onstart="infox.showLoading();" oncomplete="infox.hideLoading();">
+                        <h:graphicImage title="#{infoxMessages['monitorProcesso.icon.showGraph']}"
+                            url="#{layoutController.getMaterialDesignIcon('1x','black','18dp','call_made')}" />
+                    </p:commandLink>
+            </p:column>
+    
+            <p:column id="numero" filterBy="#{row.numero}" filterMatchMode="contains"
+             headerText="#{infoxMessages['monitorProcesso.instance.numeroProcesso']}">
+                <h:outputText value="#{row.numero}" />
+            </p:column>
+    
+            <p:column id="nodeName" headerText="#{infoxMessages['monitorProcesso.instance.nodeName']}">
+                <h:outputText value="#{row.nodeName}" />
+            </p:column>
+    
+            <p:column id="dataInicio" headerText="#{infoxMessages['monitorProcesso.instance.dataInicio']}">
+                <h:outputText value="#{row.dataInicio}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                </h:outputText>
+            </p:column>
+    
+    		<f:facet name="footer">
+    			<div class="ui-datatable-footer-paginator">
+    				<div class="ui-datatable-footer-paginator-right">
+    					#{infoxMessages['list.resultPrefix']}
+    					#{monitorProcessoView.monitorProcessoDataModel.rowCount}
+    					#{infoxMessages['list.resultSufix']}</div>
+    			</div>
+    		</f:facet>
+    	</p:dataTable>
+    </h:form>
+</ui:composition>

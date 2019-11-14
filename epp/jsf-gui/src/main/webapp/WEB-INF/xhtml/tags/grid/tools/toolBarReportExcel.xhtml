@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <s:span
+    rendered="#{wi:get(rendered, 'true')}"
+    styleClass="tb-rprt-xls">
+    <h:form>
+      <h:commandLink action="#{elFunctions.invokeMethod(action)}">
+        <h:graphicImage
+          url="#{layoutController.getResourceUrlByPath('/imagens/excel.png')}"
+          title="#{infoxMessages['report.exportXLS']}" />
+      </h:commandLink>
+    </h:form>
+  </s:span>
+</ui:composition>

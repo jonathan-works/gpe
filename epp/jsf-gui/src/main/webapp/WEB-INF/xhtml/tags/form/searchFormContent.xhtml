@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:rich="http://richfaces.org/rich">
+
+    <f:validateBean disabled="true">
+        <a:region>
+            <s:div styleClass="edit">
+                <rich:collapsiblePanel
+                    expanded="#{wi:get(opened, true)}"
+                    header="#{empty formTitle ? formId : formTitle}"
+                    switchType="client">
+                    <ui:param name="template"
+                        value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
+                    <ui:insert />
+                    <ui:insert name="buttons">
+                        <wi:selectOneMenu
+                            id="#{gridId}LogicOperator"
+                            label="Mostrar resultado que atenda a:"
+                            value="#{bean.restrictionLogicOperator}"
+                            rendered="#{wi:get(showLogicOperator, false)}"
+                            optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
+                            items="#{'and,or'.split(',')}" />
+
+                        <s:div
+                            rendered="#{wi:get(showButtons, true)}">
+                            <wi:commandButton id="searchButton"
+                                value="#{infoxMessages['button.pesquisar']}"
+                                action="#{searchAction}"
+                                styleClass="buttons"
+                                execute="#{formId}" oncomplete="#{wi:get(searchOnComplete, '')}"
+                                reRender="#{wi:get(searchReRender, 'pageBody')}">
+                                <a:param assignTo="#{bean.page}"
+                                    value="1" />
+                            </wi:commandButton>
+
+                            <a:region>
+                                <a:commandButton id="clearButton"
+                                    onclick="$('##{formId}').clearForm();showLoading();"
+                                    oncomplete="hideLoading();"
+                                    action="#{elFunctions.invokeMethod(clearAction)}"
+                                    value="#{infoxMessages['button.limpar']}" execute="@this"
+                                    render="#{wi:get(clearReRender, 'pageBody')}"
+                                    styleClass="buttons" />
+                            </a:region>
+                        </s:div>
+                    </ui:insert>
+                </rich:collapsiblePanel>
+            </s:div>
+        </a:region>
+    </f:validateBean>
+</ui:composition>

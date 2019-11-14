@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui"
+    xmlns:rich="http://richfaces.org/rich" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="title">Categorias de Entrega</ui:define>
+    <ui:define name="body">
+        <p:calendar style="display:none" />
+        <infox:div id="categoriaEntregaItem" styleClass="mdl-shadow--2dp">
+            <h:form>
+                <p:remoteCommand name="editarItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
+                actionListener="#{categoriaEntregaView.editarItem}"
+                onstart="infox.showLoading();" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();"/>
+                <p:remoteCommand name="configuraRestricaoItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
+                actionListener="#{categoriaEntregaView.configRestricaoItem}"
+                onstart="infox.showLoading();" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();"/>
+                <p:remoteCommand name="editarCategoria" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
+                actionListener="#{categoriaEntregaView.editarCategoria}"
+                onstart="infox.showLoading();" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();"/>
+                
+                <p:remoteCommand name="criarItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" onstart="infox.showLoading();"
+                    actionListener="#{categoriaEntregaView.criarItem}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
+                <p:remoteCommand name="criarCategoria" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" onstart="infox.showLoading();"
+                    actionListener="#{categoriaEntregaView.criarCategoria}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
+                <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@form:@parent :pageBodyDialogMessage"
+                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.configurarModeloEntrega}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
+
+                <p:remoteCommand name="removerItem" process="@this" update=":pageBodyDialogMessage"
+                    actionListener="#{categoriaEntregaView.removerItem}" onstart="infox.showLoading();"
+                    onsuccess="infox.hideLoading();document.getElementById('itemsTree').refresh();"
+                    onerror="infox.hideLoading();document.getElementById('itemsTree').refresh();" />
+                <p:remoteCommand name="removerCategoria" process="@this" update=":pageBodyDialogMessage"
+                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerCategoria}"
+                    onsuccess="document.getElementById('itemsTree').refresh();infox.hideLoading();"
+                    onerror="document.getElementById('itemsTree').refresh();infox.hideLoading();" />
+
+                <p:remoteCommand name="refreshCategoriaEntregaTree" actionListener="#{categoriaEntregaView.clear}"
+                    process="@this" update=":formFields" onstart="infox.showLoading();"
+                    onsuccess="infox.hideLoading();document.getElementById('itemsTree').refresh();"
+                    onerror="infox.hideLoading();document.getElementById('itemsTree').refresh();" />
+                <p:remoteCommand name="refreshCategoriaEntregaForm" actionListener="#{categoriaEntregaView.clear}"
+                    process="@this" update="@form:@parent" onstart="infox.showLoading();"
+                    onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
+            </h:form>
+            <infox:div style="display:inline-block;vertical-align:top;" rendered="#{'configEntregaForm.xhtml' ne categoriaEntregaView.view}">
+            <div>
+                <h:commandButton type="button" styleClass="buttons" onclick="criarCategoria([{name:'path',value:'/'}])" value="Criar Categoria" />
+            </div>
+            <i:groupedItemsTree id="itemsTree" baseUrl="#{facesContext.externalContext.requestContextPath}/rest"
+                path="#{facesContext.externalContext.requestContextPath}/rest" groupDelimiter="categoria" itemDelimiter="item">
+                <f:facet name="headers">{"#{categoriaEntregaView.accessTokenName}":"#{categoriaEntregaView.accessTokenValue}"}</f:facet>
+                <f:facet name="groupToolBar">
+                [
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','edit')}', title:'Editar Categoria', onSelect:(itm)=>editarCategoria([{name:'path',value:itm}])},
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','add')}', title:'Adicionar Item', onSelect:(itm)=>criarItem([{name:'path',value:itm}])},
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','remove')}', title:'Remover Categoria', onSelect:(itm)=>confirm('#{infoxMessages['crud.confirmRemove']}') &amp;&amp; removerCategoria([{name:'path',value:itm}])}
+                ]
+                </f:facet>
+                <f:facet name="itemToolBar">
+                [
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','edit')}', title:'Editar Item', onSelect:(itm)=>editarItem([{name:'path',value:itm}])},
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','add')}', title:'Adicionar Categoria', onSelect:(itm)=>criarCategoria([{name:'path',value:itm}])},
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','remove')}', title:'Remover Item', onSelect:(itm)=>confirm('#{infoxMessages['crud.confirmRemove']}') &amp;&amp; removerItem([{name:'path',value:itm}])},
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','lock')}', title:'Restrições', onSelect:(itm)=>configuraRestricaoItem([{name:'path',value:itm}])},
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','settings')}', title:'Configurar Entrega de Documentos', onSelect:(itm)=>configurarModeloEntrega([{name:'path',value:itm}])}
+                ]
+                </f:facet>
+            </i:groupedItemsTree>
+            </infox:div>
+            
+            <infox:div id="formFields" style="display:inline-block;vertical-align:top;">
+                <c:if test="#{not empty categoriaEntregaView.view}">
+                    <ui:include src="forms/#{categoriaEntregaView.view}" />
+                </c:if>
+            </infox:div>
+        </infox:div>
+    </ui:define>
+</ui:composition>

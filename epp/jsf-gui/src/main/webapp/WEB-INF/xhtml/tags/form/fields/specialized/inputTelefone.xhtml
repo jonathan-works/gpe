@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="template"
+        value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+
+    <s:decorate id="#{id}Decoration" template="#{template}"
+        rendered="#{wi:get(rendered, true)}">
+        <ui:define name="label">#{label}</ui:define>
+        <h:inputText id="#{id}DDD" value="#{home.instance[ddd]}"
+            styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
+            readonly="#{readonly}" disabled="#{disabled}"
+            required="#{required}">
+            <wi:mask id="#{id}DDD" mask="99" />
+        </h:inputText>
+
+        <h:inputText id="#{id}Numero" value="#{home.instance[numero]}"
+            label=" "
+            styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
+            readonly="#{readonly}" disabled="#{disabled}"
+            required="#{required}">
+            <wi:mask id="#{id}Numero" mask="9999-9999" />
+        </h:inputText>
+    </s:decorate>
+
+</ui:composition>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <h:outputScript library="js" name="components.js" />
+    <ui:param name="showMessage" value="false" />
+
+    <s:decorate id="#{id}Decoration"
+        template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+        rendered="#{wi:get(rendered, true)}">
+
+        <ui:param name="idFrom" value="#{id}From" />
+        <ui:param name="idTo" value="#{id}To" />
+        <ui:param name="tipMessage"
+            value="#{empty tipMessage ? 'A data inicial deve ser menor ou igual a data final.' : tipMessage}" />
+        <ui:param name="idToValidador"
+            value="document.getElementById('#{formId}:#{id}Decoration:#{idTo}Decoration:#{idTo}')" />
+        <ui:param name="idFromValidador"
+            value="document.getElementById('#{formId}:#{id}Decoration:#{idFrom}Decoration:#{idFrom}')" />
+        <ui:param name="label"
+            value="#{empty label ? 'Período' : label}" />
+
+        <ui:define name="label">#{label}</ui:define>
+
+        <h:outputText value="De:" />
+        <wi:inputText id="#{idFrom}" label="" value="#{valueDateFrom}"
+            template="/WEB-INF/xhtml/components/templates/base.xhtml"
+            size="7" maxlength="7"
+            required="#{required or requiredFrom}"
+            onchange="validarData(this);         validarPeriodoAnoMes(this, #{idToValidador}, false);        validarDataMaximaAtual(this);">
+            <wi:mask id="#{idFrom}" mask="99/9999" />
+            <ui:insert />
+        </wi:inputText>
+
+        <h:outputText value="#{infoxMessages['data.periodoFim']} " />
+        <wi:inputText id="#{idTo}" label="" value="#{valueDateTo}"
+            template="/WEB-INF/xhtml/components/templates/base.xhtml"
+            size="7" maxlength="7" required="#{required or requiredTo}"
+            onchange="validarData(this);          validarPeriodoAnoMes(#{idFromValidador}, this, true);         validarDataMaxima(this);">
+            <wi:mask id="#{idTo}" mask="99/9999" />
+            <ui:insert />
+        </wi:inputText>
+
+    </s:decorate>
+</ui:composition>

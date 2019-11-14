@@ -1,0 +1,730 @@
+@context-path:"#{pathResolver.contextPath}";
+
+// FUNÇÕES
+@import "font-roboto.import.less";
+@import "functions/epp-mixins.import.less";
+@import "normalizacao/base.import.less";
+
+// COMPONENTES / ÁTOMOS
+@import "atomos/fieldset.import.less";
+@import "atomos/badge.import.less";
+@import "atomos/treeCategorias.import.less";
+@import "atomos/buttons.import.less";
+@import "atomos/tree.import.less";
+@import "atomos/popup-panel.import.less";
+@import "atomos/calendar.import.less";
+@import "atomos/context-menu.import.less";
+@import "atomos/file-upload.import.less";
+@import "atomos/lista-truncada.import.less";
+@import "atomos/datatable.import.less";
+@import "atomos/dataGrid.import.less";
+@import "atomos/dataScroller.import.less";
+@import "atomos/messages.import.less";
+@import "atomos/input-text.import.less";
+@import "atomos/input-number-slider.import.less";
+@import "atomos/output-label.import.less";
+@import "atomos/snackbar.import.less";
+@import "atomos/spinner.import.less";
+@import "atomos/defaultCRUD.import.less";
+@import "atomos/abas.import.less";
+@import "atomos/auto-complete.import.less";
+@import "atomos/selectManyMenu.import.less";
+@import "atomos/scheduler.import.less";
+@import "atomos/panel.import.less";
+@import "atomos/picklist.import.less";
+@import "atomos/toolbar.import.less";
+@import "atomos/tooltip.import.less";
+
+// GRUPOS DE COMPONENTES / MOLÉCULAS
+@import "header.import.less";//OLD
+@import "menu.import.less";//OLD
+@import "moleculas/dynamicParameters.import.less";
+@import "moleculas/header.import.less";
+@import "moleculas/postit.import.less";
+@import "moleculas/menu.import.less";
+@import "moleculas/quadro.import.less";
+@import "moleculas/crud-form.import.less";
+
+// MODELOS DE PAGINAS
+@import "temas/primeUI.import.less"; // ??
+@import "temas/empty.import.less";
+@import "temas/decorator.import.less";
+
+// PÁGINAS
+@import "paginas/login.import.less";
+@import "paginas/movimentar.import.less";
+@import "paginas/bam.import.less";
+@import "paginas/paginator.import.less";
+@import "paginas/processDefinition.import.less";
+@import "paginas/definicaoVariavelProcesso.import.less";
+@import "paginas/termoAdesao.import.less";
+@import "paginas/help.import.less";
+@import "paginas/painelUsuario.import.less";
+
+.highlighted-content{
+  background-color:fadeout(@base-color-2, 60%);
+}
+
+.bg-content {
+    &-container{
+        position:relative;
+    }
+    &:before {
+        content: attr(data-bgcontent);
+        left:22%;
+        position:relative;
+        text-align: center;
+        font-size: 4.5em;
+        font-weight: 900;
+        color: rgba(0, 0, 0, 0.4);
+        .prefixed-atrib(transform, ~"translate(-50%, -50%)");
+    }
+}
+.hidden-text {
+  .prefixed-atrib(transform, ~"scale(0)");
+  height: 1px;
+  width: 1px;
+  margin-left: -1px;
+  margin-top: -1px;
+}
+.inline-form {
+  display: inline;
+}
+.action-icon {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 1.3em;
+    margin:0 2px;
+}
+.disabled-content{
+    position:relative;
+    &:after{
+      content:'';
+      position:absolute;
+      width:100%;
+      height:100%;
+      top:0;
+      left:0;
+      background-color:rgba(255,255,255,0.7);
+    }
+}
+.mdl-shadow--2dp {
+  .prefixed-atrib(box-shadow, ~"0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12)");
+}
+.mdl-shadow--3dp {
+  .prefixed-atrib(box-shadow, ~"0 3px 4px 0 rgba(0,0,0,.14),0 3px 3px -2px rgba(0,0,0,.2),0 1px 8px 0 rgba(0,0,0,.12)");
+}
+.mdl-shadow--4dp {
+  .prefixed-atrib(box-shadow, ~"0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2)");
+}
+.mdl-shadow--6dp {
+  .prefixed-atrib(box-shadow, ~"0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12),0 3px 5px -1px rgba(0,0,0,.2)");
+}
+.mdl-shadow--8dp {
+  .prefixed-atrib(box-shadow, ~"0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12),0 5px 5px -3px rgba(0,0,0,.2)");
+}
+.mdl-shadow--16dp {
+  .prefixed-atrib(box-shadow, ~"0 16px 24px 2px rgba(0,0,0,.14),0 6px 30px 5px rgba(0,0,0,.12),0 8px 10px -5px rgba(0,0,0,.2)");
+}
+.mdl-shadow--24dp {
+  .prefixed-atrib(box-shadow, ~"0 9px 46px 8px rgba(0,0,0,.14),0 11px 15px -7px rgba(0,0,0,.12),0 24px 38px 3px rgba(0,0,0,.2)");
+}
+
+@imgFolder:~"#{pathResolver.contextPath}/#{wiSkin.imageFolder}";
+@contextPath:~"#{pathResolver.contextPath}";
+
+@tableBorderWidth:1px;
+
+@sub-borda-marg:8rem/16;
+@sub-borda-pad:5rem/16;
+@sub-borda-bord-width:0;
+
+@default-font-family:"RobotoDraft","Roboto";
+
+//LAYOUT GERAL DA PÁGINA
+
+.text-center {
+  text-align: center;
+}
+
+.title {
+  font-size: 1.25rem;
+  &.tarefa-list{
+    margin-bottom: 5rem/16;
+    cursor:pointer;
+  }
+  &.process-filter {
+    margin: 0;
+    padding: 20rem/16 0 0;
+  }
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.padding-top-5 {
+  padding-top: 5rem/16;
+}
+
+.padding-top-10 {
+  padding-top: 10rem/16;
+}
+.organized {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.nodeDiv {
+  &:extend(.organized);
+}
+
+.SearchForm {
+  &:extend(.organized);
+  margin: 0 5rem/16 5rem/16 0;
+}
+
+//FIM LAYOUT GERAL
+
+.readOnly {
+  color: gray !important;
+}
+
+.checkbox {
+  width: 14rem/16 !important;
+}
+
+.panelGridCell {
+  vertical-align: top;
+}
+
+.grid {
+  overflow: auto;
+}
+
+.tableControl {
+  width: 100%;
+  text-align: right;
+}
+
+.footer {
+  text-align: center;
+}
+
+h1 {
+  color: #578BB8;
+  margin-top: 0;
+}
+
+#html {
+	height:100%;
+}
+
+#body {
+  margin: 0;
+  font-family:@default-font-family;
+}
+
+.columnHeader:hover {
+  color: #f60;
+}
+
+.viewColumn {
+  vertical-align: top;
+}
+
+.decoration-div {
+  @decoration-div-max-width:100%;
+  display: inline-block;
+  vertical-align: top;
+  max-width:@decoration-div-max-width;
+  .property.field .value > * {
+    max-width:@decoration-div-max-width;
+  }
+}
+
+.activeRow {
+  background-color: #F0F8FF !important;
+}
+
+.dr-stglpnl-b {
+  padding: 0 5rem/16;
+}
+
+.inativo {
+  text-decoration: line-through;
+  color: #f00;
+}
+
+.expirado {
+  color: #f00;
+}
+
+.nivelpai {
+  font-weight: bolder;
+}
+
+.dr-tree {
+  background-color: #fff;
+}
+
+.folderHighlighted {
+  text-decoration: none !important;
+  color: #000 !important;
+}
+
+.folderSelected {
+  border: solid 1px transparent !important;
+}
+
+// BAM
+.circ {
+  width: 15rem/16;
+  height: 15rem/16;
+  border-width: 0;
+  border-radius: 15rem/16;
+  left: 10rem/16;
+}
+
+.yellow-back {
+  background-color: #ff0;
+}
+
+.red-back {
+  background-color: #f00;
+}
+
+.highlight {
+  font-weight: bold;
+  #help &,#pagina & {
+    background-color: #ffa;
+  }
+}
+
+.defaultCell {
+  padding: 2px 3rem/16 0 3rem/16;
+}
+
+.painelLog {
+  width: 350rem/16;
+  background: transparent;
+  border: none;
+}
+
+.columnDataListToolBar {
+  width: 40rem/16;
+  padding: 2px 0 0 0;
+  text-align: center;
+  border:1px solid #CCC;
+}
+
+.transpToolBar {
+  width: 100%;
+  text-align: center;
+  .opacity(30);
+  &:hover {
+    .opacity(100);
+  }
+}
+
+#status {
+  position: fixed;
+  top:5px;
+  left:50%;
+  .prefixed-atrib(transform, translate( -50%, 0 ));
+}
+
+.opacityHover {
+  .opacity(60);
+  &:hover{
+    .opacity(100);
+    cursor: pointer;
+  }
+}
+
+.pointerRow:hover {
+	cursor: pointer;
+}
+
+img.disabled {
+  .opacity(30);
+}
+
+.transparency {
+  background-color: transparent;
+  border: none;
+}
+
+.formPesquisa{
+  & div {
+    border-radius: 5rem/16;
+    height: 30rem/16;
+    text-align: right;
+    width: 100%;
+  }
+  & input[type="image"] {
+    position: relative;
+    top: 5rem/16;
+  }
+  & a {
+    position: relative;
+    top: 3rem/16;
+    margin-right: 15rem/16;
+  }
+}
+
+.palette div {
+  width: 67rem/16;
+  height: 21rem/16;
+}
+
+.calendar-ipt.periodoMaskDate,.calendar-ipt.crud {
+  background-color: #fff;
+  border-radius: 5rem/16;
+  height: 20rem/16;
+  width: 95rem/16;
+  margin-right: 20rem/16;
+  margin-bottom: 10rem/16;
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-image:url("#{pathResolver.contextPath}/#{wiSkin.imageFolder}/btn-calendario.png");
+  padding: 0 0 0 25rem/16;
+}
+
+.linkButton {
+  padding: 3rem/16 12rem/16;
+}
+
+.reqSenha label {
+  margin: 0;
+}
+
+.conclusionSelect {
+  display: block;
+}
+
+#backgroundBlock {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+  background-color: #000;
+  .opacity(75);
+}
+
+#atividadeParteDiv {
+    form {
+        left: 50%;
+        top: 50%;
+        height: 136rem/16;
+        width: 284rem/16;
+        margin: -68rem/16 0 0 -197rem/16;
+        position: fixed;
+        z-index: 2;
+        .rich-panel {
+          height: 100rem/16;
+          margin: 0;
+          max-width: 99%;
+          padding-top: 0;
+        }
+    }
+    input[type="button"],input[type="submit"],form {
+      background-color: #FFF;
+    }
+}
+
+.expressionDiv span:hover {
+  background-color: #BBCEC2;
+  cursor: pointer;
+}
+
+.inputTextMiniW69,.inputTextMiniW25,.foneDDD,.foneNormal {
+  border-width: 0;
+  color: #000;
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+
+.label-brk-ln {
+  display: block;
+  margin: 14rem/16 0;
+}
+
+.inline-blk {
+  display: inline-block;
+  &.ipt-blk {
+    margin: 0 20rem/16 0 0;
+  }
+}
+
+.txtCaixa {
+  background-color: #FFF;
+  border-radius: 5rem/16;
+  height: 24rem/16;
+  width: 230rem/16;
+  margin-bottom: 10rem/16;
+  padding-left: 10rem/16;
+}
+
+.suggest {
+  padding-right: 20rem/16;
+  border-width: 0;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+.modPesq{
+  &Esq {
+    width: 38rem/16;
+    height: 25rem/16;
+    margin-top: 0;
+    background-repeat: no-repeat;
+  }
+
+  &Bg {
+    background-repeat: repeat-x;
+  }
+
+  &InputText {
+    border-width: 0;
+    width: 134rem/16;
+    height: 16rem/16;
+    padding-left: 3rem/16;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    color: #FFF;
+  }
+}
+
+.required {
+  padding-left: 2px;
+}
+
+//detalheLog.xhtml, documentoHTML.xhtml
+@media print {
+  .onlyprint {
+    display: block;
+    visibility: visible;
+  }
+  .noprint {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+// turnoCalendar.xhtml
+.selected {
+  background-color: #d42;
+}
+
+.fixed-selected {
+  background-color: #d00;
+}
+
+.fluxo-div {
+	font-weight:bold;
+	text-transform: uppercase;
+}
+
+// Painel/list.xhtml
+
+@p-list-margin:5rem/16;
+.p-list {
+  display: inline-block;
+  vertical-align: top;
+  width: 76%;
+  margin-right: 10rem/16;
+  margin-top: 15rem/16;
+}
+
+.p-caixas-b {
+  color: @menu-txt-color;
+  font-size: 13rem/16;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+// Seleção de turnos no calendário de localização
+.hidden.turno.calendar {
+  visibility: hidden;
+}
+
+.grid-img{
+  &,&-div {
+    width: 100%;
+  }
+  &-div {
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.help-link {
+  position: fixed;
+  top: 25rem/16;
+  right: 5rem/16;
+}
+
+.sem-resultado-ajuda {
+  position: absolute;
+  color: #f00;
+  right: 250rem/16;
+  top: 2px;
+}
+
+.status-ajuda {
+  position: absolute;
+  right: 3rem/16;
+  top: 3rem/16;
+  z-index: 1000;
+}
+
+.lateral-editor-ajuda {
+  width: 420rem/16;
+  display: inline-block;
+  vertical-align: top;
+}
+
+form {
+  margin: 0;
+  padding: 0;
+}
+
+#javax_faces_developmentstage_messages {
+  display: none;
+}
+
+//  Fim do workaround RF-12332
+
+.img-panel-cont {
+  display: inline-block;
+}
+
+.caixa-ind-lbl {
+  width:200rem/16;
+}
+.margin-top-div {
+  margin:15rem/16 0 0 0;
+}
+
+.gaugeContainer.organized {
+  width:210rem/16;
+}
+
+.panel-relative {
+	position: relative;
+}
+
+.texto-tachado{
+	text-decoration:line-through;
+	color: #f00;
+}
+
+.caixa-drag{
+  border: 1px solid @menu-txt-color;
+  background-color: @menu-bg-color;
+  color: @menu-txt-color;
+  cursor: all-scroll;
+  &:before{
+    .image("dragDropDefault.gif");
+  }
+  &.caixa-acpt {
+    &:before{
+      .image("dragDropAccept.gif");
+    }
+  }
+  &.caixa-rejt {
+    &:before{
+      .image("dragDropReject.gif");
+    }
+  }
+}
+
+.home-body {
+    height: 100%;
+}
+.rich-calendar-input {
+    &:extend(.input-text);
+}
+
+.palette-img-inpt{
+  cursor:pointer;
+}
+
+.folder {
+  color:@menu-txt-color;
+  word-break: break-all;
+  text-decoration: none;
+  vertical-align: bottom;
+}
+
+span.folder {
+  margin-left: 0.3em;
+}
+
+div.folder-row{
+  background: none;
+}
+
+.halfBlock {
+  display:inline-block;
+  position:relative;
+  width:50%;
+  vertical-align:middle;
+}
+.left-aligned {
+  &:extend(.halfBlock);
+  text-align:left;
+}
+.right-aligned {
+  &:extend(.halfBlock);
+  text-align:right;
+}
+
+.circle {
+    border-radius: 50%;
+
+    width: 12rem/16;
+    height: 12rem/16;
+    padding: 2px;
+
+    background: #fff;
+    border: 2px solid #666;
+    color: #666;
+    text-align: center;
+    font-size:12rem/16;
+    font: @default-font-family;
+}
+
+
+//  Primefaces
+
+.ui-corner-left {
+  border-radius : 0;
+}
+
+.ui-corner-right {
+  border-radius : 0;
+}
+
+.ui-state-hover {
+    box-shadow: none;
+}
+.ui-icon.ui-icon-triangle-1-s {
+  background-image: none
+}
+
+.mdl-selectfield{
+  font-family:'Roboto','Helvetica','Arial',sans-serif;
+  position:relative;
+}
+
+.texto-underline {
+	text-decoration: underline;
+}

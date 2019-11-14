@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf">
+<h:head>
+    <meta
+        http-equiv="Content-Type"
+        content="text/html; charset=UTF-8" />
+    <title>#{infoxMessages['ajuda.titlePage']}</title>
+    <link
+        rel="icon"
+        href="#{pathResolver.contextPath}/favicon.ico"
+        type="image/x-icon" />
+    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
+</h:head>
+<h:body>
+    <ui:include src="/WEB-INF/xhtml/templates/ajaxQueue.xhtml" />
+    <h:outputScript
+        name="JAVASERVERFACES-1718-Workaround.js"
+        library="js"
+        target="head" />
+    <ui:include src="/WEB-INF/xhtml/templates/jsPage.xhtml" />
+    <h:form>
+        <a:jsFunction
+            name="refreshPage"
+            status="status"
+            render="showHelp"
+            limitRender="true">
+            <a:param
+                name="idAjuda"
+                assignTo="#{ajudaView.id}" />
+        </a:jsFunction>
+    </h:form>
+    <s:div id="showHelp" styleClass="#{identity.loggedIn ? 'showHelp' : ''}">
+        <s:div id="resultado">
+            <h:outputText
+                value="#{infoxMessages['ajuda.noResult']}"
+                rendered="#{empty ajudaView.resultadoPesquisa and not empty ajudaView.textoPesquisa}"
+                styleClass="sem-resultado-ajuda" />
+        </s:div>
+        <infox:tabPanel
+            id="helpPanel2"
+            switchType="ajax"
+            activeTab="#{ajudaView.tab}">
+            <h:form>
+                <infox:tabHeaders />
+            </h:form>
+            <infox:tabChangeListener listener="#{crudTabCleaner}" />
+            <infox:tab
+                id="help"
+                name="help"
+                immediate="true"
+                status=":status"
+                title="#{infoxMessages['ajuda.panelHeader']}">
+                <wi:panel id="help-content">
+                    <h:outputText
+                        id="helpText"
+                        escape="false"
+                        rendered="#{! canEdit}"
+                        value="#{ajudaView.texto}" />
+                </wi:panel>
+            </infox:tab>
+            <infox:tab
+                id="search"
+                name="search"
+                rendered="#{!empty ajudaView.resultadoPesquisa and not empty ajudaView.textoPesquisa}"
+                title="#{infoxMessages['ajuda.result']}">
+                <h:dataTable
+                    id="helpResult"
+                    rendered="#{not empty ajudaView.textoPesquisa}"
+                    value="#{ajudaView.resultadoPesquisa}"
+                    var="v">
+                    <h:column>
+                        <wi:panel id="helpResultContent">
+                            <div class="resultado-pesquisa-ajuda label-general">
+                                <h:form>
+                                    <h:commandLink
+                                        value="#{v[0].pagina.descricao}"
+                                        oncomplete="#{rich:component('helpPanel')}.switchToItem('help');"
+                                        action="#{ajudaView.setViewId(v[0].pagina.url, false)}">
+                                        <f:param name="queryString" value="#{ajudaView.textoPesquisa}" />
+                                        <f:setPropertyActionListener value="help" target="#{ajudaView.tab}" />
+                                        <f:ajax render=":showHelp" />
+                                    </h:commandLink>
+                                </h:form>
+                                <div>
+                                    <h:outputText
+                                        value="#{v[1]}"
+                                        escape="false" />
+                                    <b>···</b>
+                                </div>
+                            </div>
+                        </wi:panel>
+                    </h:column>
+                </h:dataTable>
+            </infox:tab>
+        </infox:tabPanel>
+    </s:div>
+    <wi:panel
+        id="helpSearchPanel"
+        rendered="#{identity.loggedIn}"
+        styleClass="content-block">
+        <h:form>
+            <h:panelGroup
+                layout="block"
+                styleClass="left-aligned">
+                <h:outputLabel
+                    value="#{infoxMessages['ajuda.search']}"
+                    for="searchText" />
+                <h:inputText
+                    id="searchText"
+                    value="#{ajudaView.textoPesquisa}" />
+                <a:commandButton
+                    render="@all"
+                    image="#{layoutController.getResourceUrlByPath('/imagens/grid/arrow-next-off.gif')}"
+                    oncomplete="if (#{rich:component('helpPanel')}.getItems().length &gt; 1) #{rich:component('helpPanel')}.switchToItem('search');" />
+            </h:panelGroup>
+            <h:panelGroup
+                layout="block"
+                styleClass="right-aligned">
+                <h:outputLink value="#{pathResolver.contextPath}/help/show.seam?viewId=#{ajudaView.viewId}">
+                    <h:graphicImage
+                        url="#{layoutController.getResourceUrlByPath('/imagens/link.gif')}"
+                        title="#{infoxMessages['ajuda.link']}" />
+                </h:outputLink>
+                <h:graphicImage
+                    url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}"
+                    title="#{infoxMessages['ajuda.edit']}"
+                    styleClass="cursor-pointer"
+                    onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/help/edit.seam?scid=#{org.jboss.seam.core.conversation.id}','1024','768');" />
+            </h:panelGroup>
+            <a:status id="status">
+                <f:facet name="start">
+                    <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/spinner.gif')}" />
+                </f:facet>
+            </a:status>
+        </h:form>
+    </wi:panel>
+    
+    <wi:messages />
+</h:body>
+</html>

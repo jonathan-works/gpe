@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:ui="http://java.sun.com/jsf/facelets" id="html">
+
+<h:head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>#{nomeSistema}: <ui:insert name="title" /></title>
+  <link rel="icon" href="#{pathResolver.contextPath}/favicon.ico"
+    type="image/x-icon" />
+  <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
+  <ui:include src="/WEB-INF/xhtml/templates/jsPage.xhtml" />
+
+  <ui:insert name="baseHead" />
+</h:head>
+
+<ui:include src="include/ajaxQueue.xhtml" />
+
+<h:body id="body" onbeforeunload="#{onbeforeunload}" onload="#{onload}"
+  onunload="#{onunload}" styleClass="#{bodyClass}">
+  <ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
+  <ui:insert name="baseBody" />
+  <ui:include src="/WEB-INF/xhtml/components/fragments/font-icon-showcase.xhtml" />
+  <s:div id="script">
+  	<ui:insert name="scripts" />
+  </s:div>
+  <ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
+</h:body>
+
+</html>

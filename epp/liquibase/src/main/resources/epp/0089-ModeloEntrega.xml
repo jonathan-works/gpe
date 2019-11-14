@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="1" author="erikliberal">
+        <createTable tableName="tb_restricao_item_entrega">
+            <column name="id_categoria_entrega_item" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_localizacao" type="bigint">
+                <constraints nullable="false" />    
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="erikliberal">
+        <addPrimaryKey tableName="tb_restricao_item_entrega" columnNames="id_categoria_entrega_item, id_localizacao" />
+    </changeSet>
+    <changeSet id="3" author="erikliberal">
+        <addForeignKeyConstraint constraintName="fk_restricao_item_entrega_001" baseTableName="tb_restricao_item_entrega"
+            baseColumnNames="id_localizacao" referencedTableName="tb_localizacao" referencedColumnNames="id_localizacao" />
+    </changeSet>
+    <changeSet id="4" author="erikliberal">
+        <addForeignKeyConstraint constraintName="fk_restricao_item_entrega_002" baseTableName="tb_restricao_item_entrega"
+            baseColumnNames="id_categoria_entrega_item" referencedTableName="tb_categoria_entrega_item"
+            referencedColumnNames="id_categoria_entrega_item" />
+    </changeSet>
+
+    <changeSet id="5" author="erikliberal">
+        <preConditions>
+            <not>
+                <sequenceExists sequenceName="sq_modelo_entrega" />
+            </not>
+        </preConditions>
+        <createSequence sequenceName="sq_modelo_entrega" startValue="1" incrementBy="1" />
+    </changeSet>
+    <changeSet id="6" author="erikliberal">
+        <dropNotNullConstraint tableName="tb_modelo_pasta" columnName="id_fluxo" columnDataType="bigint"/>
+    </changeSet>
+    <changeSet id="7" author="erikliberal">
+        <preConditions>
+            <not>
+                <tableExists tableName="tb_modelo_entrega" />
+            </not>
+        </preConditions>
+        <createTable tableName="tb_modelo_entrega">
+            <column name="id_modelo_entrega" type="bigint">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="dt_liberacao" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="dt_limite_entrega" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            <column name="in_ativo" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_modelo_certidao" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_modelo_pasta" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_modelo_entrega001" referencedTableName="tb_modelo_pasta" referencedColumnNames="id_modelo_pasta"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8" author="erikliberal">
+        <preConditions>
+            <not>
+                <tableExists tableName="tb_modelo_entrega_item" />
+            </not>
+        </preConditions>
+        <createTable tableName="tb_modelo_entrega_item">
+            <column name="id_categoria_entrega_item" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_modelo_entrega_item_001"
+                    referencedColumnNames="id_categoria_entrega_item" referencedTableName="tb_categoria_entrega_item" />
+            </column>
+            <column name="id_modelo_entrega" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_modelo_entrega_item_002"
+                    referencedColumnNames="id_modelo_entrega" referencedTableName="tb_modelo_entrega" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="9" author="erikliberal">
+        <addPrimaryKey tableName="tb_modelo_entrega_item" columnNames="id_categoria_entrega_item, id_modelo_entrega" />
+    </changeSet>
+    <changeSet id="10" author="erikliberal">
+        <createSequence sequenceName="sq_modelo_entrega_responsavel" />
+    </changeSet>
+    <changeSet id="11" author="erikliberal">
+        <createTable tableName="tb_modelo_entrega_responsavel">
+            <column name="id_modelo_entrega_responsavel" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="id_tipo_parte" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_modelo_entrega_resp_001" referencedColumnNames="id_tipo_parte" referencedTableName="tb_tipo_parte"/>
+            </column>
+            <column name="id_modelo_entrega" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_modelo_entrega_resp_002" referencedColumnNames="id_modelo_entrega" referencedTableName="tb_modelo_entrega"/>
+            </column>
+            <column name="in_obrigatorio" type="boolean">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="12" author="erikliberal">
+        <createSequence sequenceName="sq_modelo_entrega_clas_doc"/>
+    </changeSet>
+    <changeSet id="13" author="erikliberal">
+        <createTable tableName="tb_modelo_entrega_clas_doc">
+            <column name="id_modelo_entrega_clas_doc" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="id_classificacao_documento" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_modelo_entrega_clas_doc_001" referencedColumnNames="id_classificacao_documento" referencedTableName="tb_classificacao_documento"/>
+            </column>
+            <column name="id_modelo_entrega" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_modelo_entrega_clas_doc_002" referencedColumnNames="id_modelo_entrega" referencedTableName="tb_modelo_entrega"/>
+            </column>
+            <column name="in_multiplos_documentos" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_obrigatorio" type="boolean">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    
+    <h:outputScript>
+        alert('Remover referência a components-grid-tools-include-reportButton');
+    </h:outputScript>
+
+    <s:link view="#{bean.viewId}/report.xhtml" target="_blank">
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}" title="#{infoxMessages['report.exportPDF']}" />
+    </s:link>
+
+</ui:composition>

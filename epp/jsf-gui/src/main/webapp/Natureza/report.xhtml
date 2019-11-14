@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="title" value="Naturezas" />
+
+    <wi:dataReport title="#{infoxMessages['natureza.reportTitle']}"
+        columns="3" widths="4 2 2" headerText="#{naturezaList.criteria}">
+
+        <wi:reportColumnHeader title="#{infoxMessages['natureza.natureza']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['natureza.hasPartes']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+
+        <ui:repeat var="row" value="#{naturezaList.list()}">
+            <wi:reportColumn value="#{row.natureza}" />
+            <wi:reportColumnBoolean value="#{row.hasPartes}" />
+            <wi:reportColumnSituacao value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+
+    </wi:dataReport>
+
+</ui:composition>

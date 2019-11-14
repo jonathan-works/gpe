@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="paulofilho" id="1">
+       <addColumn tableName="tb_natureza">
+            <column name="cd_natureza" type="nvarchar(250)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="2" dbms="mssql">
+        <update tableName="tb_natureza">
+            <column name="cd_natureza" type="nvarchar(250)"
+                valueComputed="LTRIM(RTRIM(REPLACE(REPLACE((ds_natureza COLLATE sql_latin1_general_cp1251_ci_as), ' ',''), '/', '')))" />
+        </update>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="2" dbms="postgresql">
+        <update tableName="tb_natureza">
+            <column name="cd_natureza" type="nvarchar(250)"
+                valueComputed="replace(replace(trim(convert_from(convert_to(ds_natureza, 'LATIN1'), 'LATIN1')), ' ', ''), '/', '')" />
+        </update>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="2" dbms="oracle">
+        <update tableName="tb_natureza">
+            <column name="cd_natureza" type="nvarchar(250)"
+                valueComputed="replace(trim(ds_natureza), ' ', '')" />
+        </update>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="3">
+        <addNotNullConstraint columnDataType="nvarchar(250)"
+            columnName="cd_natureza" tableName="tb_natureza" />
+    </changeSet>
+
+    <changeSet author="paulofilho" id="4">
+        <addUniqueConstraint columnNames="cd_natureza"
+            constraintName="uk_natureza_001" tableName="tb_natureza" />
+    </changeSet>
+
+    <changeSet author="paulofilho" id="5">
+       <addColumn tableName="tb_categoria">
+            <column name="cd_categoria" type="nvarchar(250)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="6" dbms="mssql">
+        <update tableName="tb_categoria">
+            <column name="cd_categoria" type="nvarchar(250)"
+                valueComputed="LTRIM(RTRIM(REPLACE(REPLACE((ds_categoria COLLATE sql_latin1_general_cp1251_ci_as), ' ',''), '/', '')))" />
+        </update>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="7" dbms="postgresql">
+        <update tableName="tb_categoria">
+            <column name="cd_categoria" type="nvarchar(250)"
+                valueComputed="replace(replace(trim(convert_from(convert_to(ds_categoria, 'LATIN1'), 'LATIN1')), ' ', ''), '/', '')" />
+        </update>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="8" dbms="oracle">
+        <update tableName="tb_categoria">
+            <column name="cd_categoria" type="nvarchar(250)"
+                valueComputed="replace(trim(ds_categoria), ' ', '')" />
+        </update>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="9">
+        <addNotNullConstraint columnDataType="nvarchar(250)"
+            columnName="cd_categoria" tableName="tb_categoria" />
+    </changeSet>
+
+    <changeSet author="paulofilho" id="10">
+        <addUniqueConstraint columnNames="cd_categoria"
+            constraintName="uk_categoria_001" tableName="tb_categoria" />
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/minimal.xhtml">
+
+    <ui:define name="title">#{infoxMessages['login.trocarSenhaBtn']}</ui:define>
+    <ui:param name="showMenu" value="false" />
+    <ui:param name="hideHelpBanner" value="true" />
+    <ui:param name="showDialogMessage" value="true" />
+
+    <ui:define name="body">
+        <p:panel header="#{infoxMessages['login.trocarSenhaBtn']}">
+            <h:form id="alterPasswordGerarSenhaForm" autocomplete="off">
+                <!-- Os 2 inputs abaixo estão aqui para impedir Firefox de auto-completar o formulário com os dados salvos na tela de login -->
+                <input type="text" style="display: none" />
+                <input type="password" style="display: none;" />
+
+                <div id="input">
+                    <div>
+                        <wi:inputText id="username" label="#{infoxMessages['login.nomeUsuario']}"
+                            value="#{credentials.username}" required="true" />
+                    </div>
+                    <div>
+                        <wi:inputSecret id="password" label="#{infoxMessages['login.senha']}"
+                            value="#{credentials.password}" required="true" />
+                    </div>
+                    <div>
+                        <wi:inputSecret id="newPassword1" label="#{infoxMessages['login.novaSenha']}"
+                            value="#{authenticator.newPassword1}" required="true" />
+                    </div>
+                    <div>
+                        <wi:inputSecret id="newPassword2" label="#{infoxMessages['login.confirmacaoNovaSenha']}"
+                            value="#{authenticator.newPassword2}" required="true" />
+                    </div>
+
+                    <div>
+                        <p:captcha id="captcha" label="Captcha" language="pt_BR"
+                            validatorMessage="#{infoxMessages['captcha.incorreto']}"
+                            requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+                        <p:messages for="captcha" severity="error"/>
+                    </div>
+                </div>
+                <div id="buttons">
+                    <h:commandButton id="confirma" styleClass="buttons"
+                        value="#{infoxMessages['login.trocarSenhaBtn']}"
+                        action="#{authenticator.login()}" />
+                    <h:button id="cancelar" styleClass="buttons" 
+                        value="Voltar para Login" outcome="/login.xhtml" />
+                </div>
+            </h:form>
+        </p:panel>
+    </ui:define>
+</ui:composition>

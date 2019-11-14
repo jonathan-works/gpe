@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <h:form id="formListeners">
+    	<wi:selectOneMenu id="listener" valueItems="#{nodeFitter.sinaisDisponiveis}" label="${infoxMessages['process.events.listener.nome']}" 
+    		showLabelSelecione="true" required="true" optionLabel="#{item.nome}" optionValue="#{item.codigo}" value="#{nodeFitter.codigoCatchSignal}"
+    		disabled="#{nodeFitter.managedCatchSignal}"/>
+
+    	<wi:selectOneMenu id="transitionListener"
+            label="#{infoxMessages['process.timer.transition']}" valueItems="#{nodeFitter.currentNode.leavingTransitions}" 
+            showLabelSelecione="true" required="true" showRequired="true" optionLabel="#{item.name}" optionValue="#{item.key}" 
+            value="#{nodeFitter.transicaoCatchSignal}"/>
+            
+        <wi:inputText id="conditionListener" label="Condição" required="false" value="#{nodeFitter.condicaoCatchSignal}">
+        	<f:validator validatorId="javax.faces.elValidator" />
+        </wi:inputText>
+    	
+    	<a:commandButton limitRender="true" render="formListeners listenersDatatable" execute="@form" styleClass="buttons" 
+    		value="${infoxMessages['process.events.listener.adicionar']}" actionListener="#{nodeFitter.addCatchSignal}" resetValues="true" 
+    		style="margin-top: 1em;" rendered="#{not nodeFitter.managedCatchSignal}"/>
+   		<a:commandButton limitRender="true" render="formListeners listenersDatatable" execute="@form" styleClass="buttons" 
+    		value="${infoxMessages['process.events.listener.gravar']}" actionListener="#{nodeFitter.saveCatchSignal}" resetValues="true" 
+    		style="margin-top: 1em;" rendered="#{nodeFitter.managedCatchSignal}"/>
+    </h:form>
+    
+    <wi:dataTable id="listenersDatatable" values="#{nodeFitter.catchSignalEvents}" showSearchForm="false" hideOrder="true"
+    	showGridCount="false">
+    
+    	<ui:define name="headerToolBar" />
+    	
+    	<ui:define name="toolBar">
+    		
+    		<h:form>
+				<a:commandLink render="formListeners" execute="@form" action="#{nodeFitter.selectCatchSignal(row)}" >
+    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"
+    					style="margin-right: 0.3em;" styleClass="opacityHover"/>
+    			</a:commandLink>
+    			<a:commandLink render="listenersDatatablePanel formListeners" execute="@form" 
+    				action="#{nodeFitter.removeCatchSignal(row)}" >
+    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}"
+    					styleClass="opacityHover"/>
+    			</a:commandLink>
+    		</h:form>
+    	</ui:define>
+    	
+    	<wi:columnOutputText columnId="nome" columnHeader="${infoxMessages['process.events.listener.nome']}" 
+    		value="#{nodeFitter.getSignalLabel(row)}"/>
+    	
+    	<wi:columnOutputText columnId="transicao" columnHeader="${infoxMessages['process.events.listener.transicao']}" 
+    		value="#{nodeFitter.getSignalTransition(row)}"/>
+    		
+    	<wi:columnOutputText columnId="condicao" columnHeader="${infoxMessages['process.events.listener.condicao']}" 
+    		value="#{nodeFitter.getSignalCondition(row)}"/>
+    
+    </wi:dataTable>
+    
+</ui:composition>

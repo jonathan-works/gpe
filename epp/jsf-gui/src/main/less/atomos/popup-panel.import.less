@@ -1,0 +1,23 @@
+@pp-hdr-bg-color:@panel-bg-color;
+@pp-hdr-txt-color:@panel-txt-color;
+
+#popup-panel() {
+  .standard{
+    body &-hdr-cnt, body &-hdr-cntrls, body &-cnt{
+      #normalize-rich-components > .fonts;
+    }
+  }
+  .standard-colors{
+    div&-hdr-cnt {
+      color:@panel-txt-color;
+    }
+
+    div&-hdr {
+      background:@panel-bg-color;
+    }
+  }
+}
+
+.rf-pp{
+  #popup-panel > .standard;
+}

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:infox="http://www.infox.com.br/jsf"
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
+	<h:head>
+		    
+	    <meta
+			 http-equiv="Content-Type"
+			 content="text/html; charset=UTF-8" />
+	    <title>
+			#{nomeSistema}: <ui:insert name="title" />
+		</title>
+		<h:outputScript
+			 library="js"
+			 name="liveclock.js" />
+		<h:outputScript
+			 library="js"
+			 name="jqueryExt.js" /> 
+		<link
+			 rel="icon"
+			 href="#{pathResolver.contextPath}/favicon.ico"
+			 type="image/x-icon" />	
+		<ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" /> 
+	
+	</h:head>
+
+	<h:body>
+		&gt;     
+	    <ui:param
+			 name="canEdit"
+			 value="#{home.editable}" />
+	    
+	    <ui:include src="header.xhtml" />
+		<ui:include src="ajaxQueue.xhtml" />
+	
+	    <ui:include src="menu.xhtml">
+			
+	        <ui:param
+				 name="projectName"
+				 value="#{nomeSistema}" />
+	    
+		</ui:include>
+	
+		<s:div
+			 styleClass="pageBody"
+			 id="pageBody">
+			  	 		
+			<wi:quadro>
+					
+				<infox:tabPanel
+					 switchType="ajax"
+					 headerSpacing="2"
+					 activeTab="#{home.tab}">
+					<h:form><infox:tabHeaders /></h:form>			
+					<infox:tab
+						 action="#{home.newInstance}"
+						 id="search"
+						 status=":status"
+						 title="Pesquisa"
+						 name="search">
+						
+						<a:region renderRegionOnly="true">
+							
+							<ui:insert name="searchGrid" />
+						
+						</a:region>
+					
+					</infox:tab>				
+					<ui:insert name="tabs" />		
+				
+				</infox:tabPanel>			
+			
+			</wi:quadro>					
+		
+		</s:div>	
+	
+	</h:body>&gt;
+
+</html>

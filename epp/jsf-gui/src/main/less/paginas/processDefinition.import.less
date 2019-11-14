@@ -1,0 +1,252 @@
+@expr-wiz-toolbar-bg-color:#a0c991;
+@expr-wiz-toolbar-color:#030;
+@expr-wiz-Transition-color:#88F;
+@expr-wiz-String-color:#66F;
+@expr-wiz-Boolean-color:#A00;
+@expr-wiz-Arith-color:#040;
+
+.pointer {
+  cursor: pointer;
+}
+
+.pd-xml {
+  &.textarea {
+    min-height: 465px;
+    resize: none;
+  }
+}
+
+.rf-dt {
+  &.dt-destinatarios {
+    width: 100%;
+  }
+}
+
+.swimlane-list {
+  display: inline-block;
+  vertical-align: top;
+}
+.swimlane-form {
+  &:extend(.swimlane-list);
+}
+.node-instance-e {
+  &:extend(.swimlane-list);
+}
+.node-instance-l {
+  &:extend(.swimlane-list);
+}
+
+.node-instance-e {
+  .flex-child(1);
+  margin:0 0 0 0.5em;
+}
+
+.node-instance-l {
+  .flex-child(0.5);
+  max-height:40em;
+  overflow:auto;
+}
+
+.node-instance-p {
+  .flex-displayed-container;
+  font-size:1rem;
+}
+
+.link {
+  text-decoration: none;
+  color: #000;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.bold-link {
+  font-weight: 900;
+}
+
+.rf-p-b{
+  &.panel{
+    &.processDefinition {
+      overflow-x: auto;
+    }
+  }
+}
+
+.graphHint-title {
+  width:100%;
+  text-align:center;
+  font-weight:bold;
+}
+
+.graphHint {
+  display:none;
+  position: absolute;
+  background: rgba(255, 255, 220, 0.75);
+  width: 500px;
+  z-index: 100;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #9F9F9F;
+  -webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+  box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+#nodes {
+  &:hover {
+    & + .graphHint {
+      display:block;
+    }
+  }
+}
+
+.toolbar{
+  position:absolute;
+  z-index:128;
+  top:20px;
+  left:0;
+  margin:0;
+  padding:0 10px 0 0;
+  background-color:@expr-wiz-toolbar-bg-color;
+  color:@expr-wiz-toolbar-color;
+  & > .toolbar-itm {
+    display:block;
+    vertical-align:top;
+    position:relative;
+    &:hover {
+      & > .toolbar {
+        display:block;
+      }
+    }
+    & > .toolbar {
+      display:none;
+      position:absolute;
+      padding:5px;
+      left:100%;
+      top:0;
+      & > .toolbar-itm {
+        display:block;
+        vertical-align:top;
+        position:relative;
+      }
+    }
+  }
+}
+
+.toolbar-itm {
+  &.Action{
+    white-space:nowrap;
+    &:hover {
+      cursor:context-menu;
+      color:@expr-wiz-toolbar-bg-color;
+      background-color:@expr-wiz-toolbar-color;
+    }
+  }
+}
+
+.Node {
+  vertical-align:middle;
+  &.Selected{
+    cursor:pointer;
+  }
+  &.Text {
+    color:#CCC;
+    &.Operator{
+      margin:0 5px;
+    }
+  }
+  & > .Value:hover {
+    &:extend(.Selected);
+  }
+  & > .Operator:hover {
+    &:extend(.Selected);
+  }
+  & > .Node{
+    &.Expression {
+      margin:0 0 0 20px;
+    }
+  }
+  &.Expression {
+    display:inline-block;
+    & > .ArithNode {
+      margin:0 0 0 20px;
+    }
+    & > .StringNode {
+      margin:0 0 0 20px;
+    }
+    & > .TransitionNode {
+      margin:0 0 0 20px;
+    }
+    & > .BooleanNode {
+      margin:0 0 0 20px;
+    }
+  }
+}
+
+.expressionInput {
+  &.hidden{
+    display:none;
+  }
+}
+.Text {
+  &.Operator {
+    padding:0 5px;
+  }
+}
+
+.TransitionNode{
+  color:@expr-wiz-Transition-color;
+  display:inline-block;
+  & > .Text{
+    color:@expr-wiz-Transition-color;
+    &.Operator{
+      .darken-color-percentage(color,@expr-wiz-Transition-color,0.5);
+      margin:0;
+      padding:0;
+    }
+  }
+}
+
+.StringNode {
+  color:@expr-wiz-String-color;
+  display:inline-block;
+  & > .Text{
+    color:@expr-wiz-String-color;
+    &.Operator{
+      .darken-color-percentage(color,@expr-wiz-String-color,0.5);
+      margin:0;
+      padding:0;
+    }
+  }
+}
+.BooleanNode{
+  color:@expr-wiz-Boolean-color;
+  display:inline-block;
+  & > .Text {
+    color:@expr-wiz-Boolean-color;
+    &.Operator {
+      .darken-color-percentage(color,@expr-wiz-Boolean-color,0.5);
+      margin:0;
+      padding:0;
+    }
+  }
+}
+.ArithNode{
+  color:@expr-wiz-Arith-color;
+  display:inline-block;
+  & > .Text {
+    color:@expr-wiz-Arith-color;
+    &.Operator {
+      .darken-color-percentage(color,@expr-wiz-Arith-color,0.5);
+      margin:0;
+      padding:0;
+    }
+  }
+}
+
+.expressionDiv{
+  & > .Node {
+    margin:0;
+  }
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    <wi:dataReport
+        title="#{infoxMessages['estrutura.titlePage']}"
+        columns="2"
+        widths="4 2"
+        headerText="#{estruturaList.criteria}">
+        <wi:reportColumnHeader title="#{infoxMessages['estrutura.nome']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+        <ui:repeat
+            var="row"
+            value="#{estruturaList.list()}">
+            <wi:reportColumn value="#{row.getNome()}" />
+            <wi:reportColumnSituacao value="#{row.ativo ? Ativo : Inativo}" columnAlign="center" />
+        </ui:repeat>
+    </wi:dataReport>
+</ui:composition>

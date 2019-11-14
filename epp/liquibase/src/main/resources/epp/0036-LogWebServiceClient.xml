@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_log_ws_client">
+            <column name="id_log_ws_client" type="bigint">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="dt_inicio_requisicao" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="dt_fim_requisicao" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            <column name="cd_webservice" type="NVARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_requisicao" type="NCLOB">
+                <constraints nullable="false" />
+            </column>
+            <column name="ds_resposta" type="NCLOB">
+                <constraints nullable="true" />
+            </column>
+            <column name="ds_info_adicional" type="NCLOB">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <createSequence sequenceName="sq_log_ws_client" minValue="1" startValue="1" incrementBy="1"/>
+	</changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,30 @@
+
+#input-text() {
+  .standard{
+
+  }
+  .standard-colors{
+
+  }
+  .primefaces{
+    body & {
+      #normalize-prime-components > .inputfield;
+    }
+    border-radius : 0;
+    &.ui-state-focus {
+      box-shadow: none;
+    }
+    input& {
+      box-shadow: none;
+      padding: 2px 4px 2px 4px;
+    }
+  }
+  .primefaces-colors{
+    &.ui-state-focus{
+      border-color: @standard-border-color;
+    }
+  }
+}
+.ui-inputfield{
+  #input-text > .primefaces;
+}

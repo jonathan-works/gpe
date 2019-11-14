@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="jovan" id="1-1" dbms="mssql">
+		<preConditions onFail="MARK_RAN">
+            <indexExists indexName="UQ__tb_tipo___8292D84A40EF29F2" schemaName="dbo" />
+        </preConditions>
+        <dropUniqueConstraint 
+            constraintName="UQ__tb_tipo___8292D84A40EF29F2" schemaName="dbo" tableName="tb_tipo_parte" uniqueColumns="nm_tipo_parte"/>
+	</changeSet>	
+
+	<changeSet author="marialuisa" id="1">
+		<modifyDataType columnName="nm_tipo_parte" newDataType="nvarchar(50)" tableName="tb_tipo_parte"/>
+	</changeSet>
+
+	<changeSet author="marialuisa" id="2">
+		<modifyDataType columnName="ds_tipo_parte" newDataType="nvarchar(200)" tableName="tb_tipo_parte"/>
+	</changeSet>
+
+	<changeSet author="jovan" id="1-2" dbms="mssql">
+		<preConditions>
+            <changeSetExecuted id="1-1" author="jovan" changeLogFile="epp/0094-AlteraTipoParte.xml" />
+        </preConditions>
+         <addUniqueConstraint columnNames="nm_tipo_parte" constraintName="UQ__tb_tipo___8292D84A40EF29F2" tableName="tb_tipo_parte"/>
+	</changeSet>	
+
+</databaseChangeLog>

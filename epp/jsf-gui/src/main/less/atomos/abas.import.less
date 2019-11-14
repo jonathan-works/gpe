@@ -1,0 +1,56 @@
+/* CORES DAS ABAS */
+#abas() {
+    .standard {
+      background-image: initial;
+      background-color: initial;
+      border-style: initial;
+      body & &-panel {
+          margin: 0.25em 0;
+          padding: 0.25em 0.5em;
+          border-width: 1px 0;
+      }
+      & &-nav {
+          background-image: initial;
+          background-color: initial;
+          border-style: initial;
+          display: inline-block;
+          padding: 0 5px;
+          margin: 0 0 1px;
+      }
+      & &-nav.ui-widget-header {
+          margin: 0;
+          padding: 0;
+          li.ui-state-default,li.ui-state-active {
+            margin: 0 0 0 2px;
+            padding: 0;
+            border-style:solid;
+            border-width: 0 0 5px;
+            border-radius: 0;
+          }
+          li.ui-state-default {
+              background-image: initial;
+              > a {
+                  text-shadow: initial;
+              }
+          }
+      }
+    }
+    .standard-colors {
+      & &-nav.ui-widget-header {
+          li.ui-state-default {
+              background-color: @infox-tab-bg-color;
+              border-color: #ccc;
+              > a {
+                  color: @infox-tab-txt-color;
+              }
+          }
+          li.ui-state-active {
+              border-color: @infox-tab-txt-color;
+          }
+      }
+    }
+}
+.ui-tabs {
+    #abas > .standard;
+    .opacity();
+}

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf" >
+    
+    <ui:param name="idPopup" value="#{id}" />
+    <ui:param name="minWidth" value="#{empty minWidth ? '850' : minWidth}" />
+    <ui:param name="minHeight" value="#{empty minHeight ? '160' : minHeight}" />
+    <ui:param name="showIniciarAnaliseDocumentos" value="#{empty showIniciarAnaliseDocumentos ? true : showIniciarAnaliseDocumentos}" />
+    
+   	<rich:popupPanel id="#{idPopup}" modal="true"  minWidth="#{minWidth}"  
+                     minHeight="#{minHeight}" shadowDepth="8" resizeable="true" >
+		<f:facet name="header">
+			<h:outputText value="#{infoxMessages['validacaoDocumentoList.assinaturas.header']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:graphicImage styleClass="d-msg-h-close" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" onmouseup="#{rich:component(idPopup)}.hide()" />
+		</f:facet>
+		<f:subview id="#{idPopup}SubView">
+			<a:jsFunction name="selectDocumentoAssinar" render="assinaturaListCont, conteudoAssinatura" 
+						  limitRender="true" execute="@this" rendered="true" oncomplete="#{rich:component(idPopup)}.show();" >
+				<a:param  name="idDocumento" converter="javax.faces.Integer"  
+						  assignTo="#{validaDocumentoAction.idDocumento}" />
+			</a:jsFunction>
+
+			<s:div id="assinaturaListCont">
+	        
+	            <wi:outputText id="classificacao" 
+	                label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}" 
+	                value="#{validaDocumentoAction.documento.classificacaoDocumento}" />
+	        
+				<wi:outputText id="descricao"
+					label="#{infoxMessages['documentoProcesso.descricao']}"
+					value="#{validaDocumentoAction.documento.descricao}" />
+	                
+				<rich:dataTable
+					value="#{validaDocumentoAction.listAssinaturaDocumento}"
+					id="assinaturaDocumentoList" rowKeyVar="row.idAssinatura"
+					rowClasses="zebra-row" styleClass="dtable rf-dt-crud" var="row">
+					<rich:column styleClass="dt-toolbar-col">
+						<f:facet name="header">
+							<h:outputText
+								value="#{infoxMessages['assinaturaDocumento.nomeUsuario']}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{row.nomeUsuario}"></h:outputText>
+					</rich:column>
+					<rich:column styleClass="dt-toolbar-col">
+						<f:facet name="header">
+							<h:outputText
+								value="#{infoxMessages['assinaturaDocumento.nomePerfil']}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{row.nomeUsuarioPerfil}"></h:outputText>
+					</rich:column>
+					<rich:column styleClass="dt-toolbar-col">
+						<f:facet name="header">
+							<h:outputText
+								value="#{infoxMessages['assinaturadocumento.dtAssinatura']}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{row.dataAssinatura}"></h:outputText>
+					</rich:column>
+				</rich:dataTable>
+			</s:div>
+			<s:div id="conteudoAssinatura">
+				<h:form id="assinaturaDocumento">
+					<s:div id="assinatura_pers">
+	
+						<a:jsFunction name="assinar"
+							actionListener="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
+							action="#{elFunctions.invokeMethod(actionPosSign)}"
+							execute="@this"
+							render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, #{afterRender}"
+							oncomplete="infox.hideLoading();" />
+	
+						<wi:certificadoDigital
+	            			id="appletAssinatura"
+							signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
+							tokenField="#{validaDocumentoAction.token}"
+							documentoBinList="#{validaDocumentoAction.documentoBin}"
+							functionPreSign="infox.showLoading();"
+							functionPosSign="assinar();"
+							rendered="#{validaDocumentoAction.podeAssinar()}" >
+	          			</wi:certificadoDigital>
+	
+					</s:div>
+				</h:form>
+				<s:div rendered="#{showIniciarAnaliseDocumentos and validaDocumentoAction.podeIniciarFluxoAnaliseDocumentos }">
+					<h:form id="inicioAnaliseDocumentoForm">
+						<a:commandButton  
+						action="#{validaDocumentoAction.inicarAnaliseDocumento()}"
+						value="#{infoxMessages['comunicacao.iniciarAnaliseDocumento']}" styleClass="buttons" 
+						limitRender="true" execute="@this" onclick="infox.showLoading();"
+						oncomplete="infox.hideLoading(); #{rich:component(idPopup)}.hide();" render="pageBodyDialogMessage, conteudoAssinatura"/> 
+					</h:form>
+				</s:div>
+				
+			</s:div>
+		</f:subview>
+	</rich:popupPanel>
+    
+</ui:composition>

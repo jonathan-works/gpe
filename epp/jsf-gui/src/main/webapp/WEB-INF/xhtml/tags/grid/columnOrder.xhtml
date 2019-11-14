@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html">
+
+    <a:commandLink execute="@this" status="status"
+        rendered="#{!hideOrder}"
+        disabled="#{orderAsc and selectedOrder}"
+        action="#{bean.setOrderedColumn(columnId.concat(' asc'))}"
+        render="#{id}Panel">
+        <h:graphicImage title="Ordem crescente"
+            styleClass="#{orderAsc and selectedOrder ? 'disabled' : ''}"
+            url="#{layoutController.getResourceUrlByPath('/imagens/grid/arrow-up.png')}" />
+    </a:commandLink>
+    <h:outputText value="#{columnHeader}" />
+    <a:commandLink execute="@this" status="status"
+        rendered="#{!hideOrder}"
+        disabled="#{!orderAsc and selectedOrder}"
+        action="#{bean.setOrderedColumn(columnId.concat(' desc'))}"
+        render="#{id}Panel">
+        <h:graphicImage title="Ordem decrescente"
+            styleClass="#{!orderAsc and selectedOrder ? 'disabled' : ''}"
+            url="#{layoutController.getResourceUrlByPath('/imagens/grid/arrow-down.png')}" />
+    </a:commandLink>
+
+</ui:composition>

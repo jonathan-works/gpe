@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="jovan" id="1" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM tb_recurso WHERE ds_identificador = 'Movimentacoes/visualizarAnexos'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_recurso" dbms="mssql">
+			<column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+			<column name="ds_identificador" value="Movimentacoes/visualizarAnexos" />
+            <column name="ds_nome" value="Visualizar anexos na aba movimentações do processo." />
+        </insert>
+
+        <insert tableName="tb_recurso" dbms="postgresql">
+			<column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+			<column name="ds_identificador" value="Movimentacoes/visualizarAnexos" />
+            <column name="ds_nome" value="Visualizar anexos na aba movimentações do processo." />
+        </insert>
+
+		<insert tableName="tb_recurso" dbms="oracle">
+			<column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+			<column name="ds_identificador" value="Movimentacoes/visualizarAnexos" />
+            <column name="ds_nome" value="Visualizar anexos na aba movimentações do processo." />
+        </insert>
+        
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <ui:param
+    name="template"
+    value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+    
+   <s:div id="#{id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+   		  rendered="#{wi:get(rendered, true) and not empty documentoUploader.documento.classificacaoDocumento}">
+   	<h:graphicImage id="#{id}helpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+	<div class="epp-tooltip">
+		<div class="tooltip-panel">
+			<div><h:outputText value="Extensões Aceitas:" /></div>
+			<ui:repeat var="documento" value="#{documentoUploader.documento.classificacaoDocumento.acceptedTypesList}">
+				<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
+			</ui:repeat>
+			<s:div styleClass="tooltip-panel-top" rendered="#{not empty documentoUploader.documento.classificacaoDocumento.observacao}">
+				<div><h:outputText value="Observação:"/></div>
+				<h:outputText value="#{documentoUploader.documento.classificacaoDocumento.observacao}" />
+			</s:div>
+		</div>
+	</div>
+  </s:div>
+  
+  <s:decorate
+    id="#{id}Decoration"
+    template="#{template}"
+    rendered="#{wi:get(rendered, true)}">
+    <ui:param name="accept" value="#{wi:get(accept, 'application/pdf')}" />
+    <ui:param name="maxFiles" value="#{wi:get(maxFiles, '1')}" />
+    
+	<ui:define name="label">#{label}</ui:define>
+    <rich:fileUpload
+      id="#{id}"
+      execute="@this"
+      status=":status"
+      limitRender="true"
+      required="#{wi:get(required, false)}"
+      fileUploadListener="#{documentoUploader.processFileUpload}"
+      addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+      clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+      clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+      doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
+      uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+      sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+      maxFilesQuantity="#{maxFiles}"
+      listHeight="50px"
+      immediateUpload="true"
+      noDuplicate="true"
+      render=":pageBodyDialogMessage #{reRender}"
+      acceptedTypes="#{accept}"
+      oncomplete="#{oncomplete}"
+      ontyperejected="alert('Extensão de arquivo inválida');"
+      onclear="clearUploadFile(); #{onclear}">
+    </rich:fileUpload>
+    
+  </s:decorate>
+
+    <a:jsFunction id="clearUploadFileId#{id}" name="clearUploadFile"
+        render="#{reRender}" execute="@this" oncomplete="infox.hideLoading()"
+        actionListener="#{documentoUploader.clearUploadFile()}" />
+
+</ui:composition>

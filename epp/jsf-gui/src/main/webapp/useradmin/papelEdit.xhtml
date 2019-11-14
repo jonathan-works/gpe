@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf">
+    
+    <a:region id="papelForm">
+        <wi:inputText
+            label="#{infoxMessages['papel.identificador']}"
+            value="#{papelCrudAction.instance.identificador}"
+            required="true"
+            rendered="#{not identityManager.roleExists(papelCrudAction.instance.identificador) or not papelCrudAction.managed}"
+            id="identificador"
+            maxlength="100" />
+        
+        <wi:outputText
+            label="#{infoxMessages['papel.identificador']}"
+            value="#{papelCrudAction.instance.identificador}"
+            rendered="#{identityManager.roleExists(papelCrudAction.instance.identificador) and papelCrudAction.managed}"
+            id="identificadorOutput"/>
+            
+        <wi:inputText
+            label="#{infoxMessages['papel.nome']}"
+            value="#{papelCrudAction.instance.nome}"
+            required="true"
+            id="nome"
+            maxlength="100" />
+            
+        <wi:selectBooleanCheckbox
+          id="termoAdesao"
+          label="#{infoxMessages['papel.form.termoAdesao']}"
+          value="#{papelCrudAction.instance.termoAdesao}"/>
+          
+        <ui:param name="targetListWidth" value="400"/>
+        <ui:param name="sourceListWidth" value="400"/>
+            
+        <infox:tabPanel
+            id="painelEdit"
+            switchType="ajax"
+            rendered="#{papelCrudAction.managed}"
+            activeTab="#{papelCrudAction.activeInnerTab}">
+            
+            <infox:tabHeaders />
+            
+            <infox:tab
+                id="papeisTab"
+                name="papeisTab"
+                status=":status"
+                actionListener="#{papelCrudAction.onClickHerdeirosOrPapelTab()}"
+                title="#{infoxMessages['papel.tableTitle']}"
+                styleClass="papelTab">
+                
+                <a:region>
+                    <wi:pickList
+                        id="papel"
+                        value="#{papelCrudAction.papeis}"
+                        itemValues="#{papelCrudAction.getPapeisDisponiveis(true)}"
+                        itemLabel="#{papelCrudAction.getNome(var)}"
+                        sourceCaption="#{infoxMessages['papel.permission.source']}"
+                        targetCaption="#{infoxMessages['papel.permission.target']}"/>
+                </a:region>
+                
+            </infox:tab>
+            
+            <infox:tab
+                status=":status"
+                id="herdeirosTab"
+                name="herdeirosTab"
+                actionListener="#{papelCrudAction.onClickHerdeirosOrPapelTab()}"
+                title="#{infoxMessages['papel.heir']}"
+                styleClass="papelTab">
+                
+                <a:region>
+                    <wi:pickList
+                        id="herdeiros"
+                        targetCaption="#{infoxMessages['papel.heir.target']}"
+                        sourceCaption="#{infoxMessages['papel.heir.source']}"
+                        value="#{papelCrudAction.membros}"
+                        itemValues="#{papelCrudAction.getPapeisDisponiveis(false)}"
+                        itemLabel="#{papelCrudAction.getNome(var)}"/>
+                </a:region>
+                
+            </infox:tab>
+            
+            <infox:tab
+                id="recursosTab"
+                name="recursosTab"
+                status=":status"
+                title="#{infoxMessages['recurso.tableTitle']}"
+                actionListener="#{papelCrudAction.onClickRecursosTab()}"
+                style="border-style: solid; border-width: 1px; border-color: lightgray">
+                
+                <a:region>
+                    <wi:pickList
+                        id="recurso"
+                        targetCaption="#{infoxMessages['papel.recurso.target']}"
+                        value="#{papelCrudAction.recursos}"
+                        itemValues="#{papelCrudAction.recursosDisponiveis}"
+                        itemLabel="#{papelCrudAction.getNomeRecurso(var)}"/>
+                </a:region>
+                
+            </infox:tab>
+            
+        </infox:tabPanel>
+        
+    </a:region>
+</ui:composition>

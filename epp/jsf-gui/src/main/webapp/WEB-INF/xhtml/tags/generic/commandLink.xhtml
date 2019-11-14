@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <a:commandLink id="#{id}" status="#{status}" render="#{render}"
+        action="#{elFunctions.invokeMethod(action)}" onclick="#{onclick}"
+        onbegin="#{onbegin}"
+        disabled="#{disabled}" oncomplete="#{oncomplete}"
+        execute="#{ajaxSingle ? '@this' : ''}"
+        limitRender="#{wi:get(limitToList, true)}"
+        rendered="#{wi:get(rendered, true)}">
+        <ui:insert />
+    </a:commandLink>
+
+</ui:composition>

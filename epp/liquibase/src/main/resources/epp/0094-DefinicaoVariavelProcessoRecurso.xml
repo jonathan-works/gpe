@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1">
+        <createSequence sequenceName="sq_def_var_proc_recurso" minValue="1" startValue="1" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <createTable tableName="tb_def_var_proc_recurso">
+            <column name="id_def_var_proc_recurso" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_def_var_proc_recurso" />
+            </column>
+            <column name="id_definicao_variavel_processo" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_def_var_proc_recurso_001" references="tb_definicao_variavel_processo(id_definicao_variavel_processo)" />
+            </column>
+            <column name="cd_recurso" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="nr_ordem" type="int" />
+            <column name="in_visivel_usuario_externo" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="nr_version" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0094-DefinicaoVariavelProcessoRecurso.xml" />
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0094-DefinicaoVariavelProcessoRecurso.xml" />
+        </preConditions>
+
+        <sql dbms="postgresql">
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT nextval('sq_def_var_proc_recurso'), id_definicao_variavel_processo, 'painelInterno', false, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel_painel = true;
+
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT nextval('sq_def_var_proc_recurso'), id_definicao_variavel_processo, 'consultaProcessos', false, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel_painel = true;
+
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT nextval('sq_def_var_proc_recurso'), id_definicao_variavel_processo, 'detalheProcesso', false, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel_painel = true;
+
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT nextval('sq_def_var_proc_recurso'), id_definicao_variavel_processo, 'consultaExterna', false, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel_painel = true;
+
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT nextval('sq_def_var_proc_recurso'), id_definicao_variavel_processo, 'movimentar', false, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel = true;
+
+            UPDATE tb_def_var_proc_recurso dr SET in_visivel_usuario_externo = true
+            WHERE EXISTS(SELECT 1 FROM tb_def_var_proc_recurso dr1
+                INNER JOIN tb_definicao_variavel_processo dv on dv.id_definicao_variavel_processo = dr1.id_definicao_variavel_processo
+                WHERE dv.nm_variavel IN ('numeroProcesso', 'dataInicioProcesso', 'naturezaProcesso', 'categoriaProcesso', 'itemProcesso')
+                AND dr1.id_def_var_proc_recurso = dr.id_def_var_proc_recurso);
+        </sql>
+        <sql dbms="postgresql" splitStatements="false">
+			DO $$
+			DECLARE fluxo record;
+			DECLARE variavel record;
+			DECLARE ordem int;
+			BEGIN
+                FOR fluxo IN 
+                SELECT DISTINCT id_fluxo FROM tb_definicao_variavel_processo d
+				WHERE EXISTS(SELECT 1 FROM tb_def_var_proc_recurso dv WHERE dv.id_definicao_variavel_processo = d.id_definicao_variavel_processo)
+				LOOP
+					ordem := 0;
+					FOR variavel IN 
+					SELECT id_definicao_variavel_processo FROM tb_definicao_variavel_processo d WHERE d.id_fluxo = fluxo.id_fluxo AND
+					EXISTS(SELECT 1 FROM tb_def_var_proc_recurso dv WHERE dv.id_definicao_variavel_processo = d.id_definicao_variavel_processo)
+					ORDER BY nr_ordem
+					LOOP
+						UPDATE tb_def_var_proc_recurso d SET nr_ordem = ordem
+						WHERE d.id_definicao_variavel_processo = variavel.id_definicao_variavel_processo;
+						
+						ordem := ordem + 1;
+					END LOOP;
+				END LOOP;
+			END
+			$$;
+        </sql>
+
+        <sql dbms="mssql">
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT NEXT VALUE FOR sq_def_var_proc_recurso, id_definicao_variavel_processo, 'painelInterno', 0, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel_painel = 1;
+
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT NEXT VALUE FOR sq_def_var_proc_recurso, id_definicao_variavel_processo, 'consultaProcessos', 0, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel_painel = 1;
+
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT NEXT VALUE FOR sq_def_var_proc_recurso, id_definicao_variavel_processo, 'detalheProcesso', 0, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel_painel = 1;
+
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT NEXT VALUE FOR sq_def_var_proc_recurso, id_definicao_variavel_processo, 'consultaExterna', 0, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel_painel = 1;
+
+            INSERT INTO tb_def_var_proc_recurso (id_def_var_proc_recurso, id_definicao_variavel_processo, cd_recurso, in_visivel_usuario_externo, nr_version)
+            SELECT NEXT VALUE FOR sq_def_var_proc_recurso, id_definicao_variavel_processo, 'movimentar', 0, 0
+            FROM tb_definicao_variavel_processo
+            WHERE in_visivel = 1;
+            
+            UPDATE tb_def_var_proc_recurso SET in_visivel_usuario_externo = 1
+            FROM tb_def_var_proc_recurso dr
+            WHERE EXISTS(SELECT 1 FROM tb_def_var_proc_recurso dr1
+                INNER JOIN tb_definicao_variavel_processo dv on dv.id_definicao_variavel_processo = dr1.id_definicao_variavel_processo
+                WHERE dv.nm_variavel IN ('numeroProcesso', 'dataInicioProcesso', 'naturezaProcesso', 'categoriaProcesso', 'itemProcesso')
+                AND dr1.id_def_var_proc_recurso = dr.id_def_var_proc_recurso);
+       </sql>
+        <sql dbms="mssql" splitStatements="false">
+			DECLARE @fluxo TABLE(id_fluxo BIGINT);
+			DECLARE @variavel TABLE(id_definicao_variavel_processo BIGINT, nr_ordem INT);
+			DECLARE @id_fluxo BIGINT;
+			DECLARE @id_definicao_variavel_processo BIGINT;
+			DECLARE @ordem INT;
+
+			INSERT INTO @fluxo
+			SELECT DISTINCT id_fluxo FROM tb_definicao_variavel_processo d
+			WHERE EXISTS(SELECT 1 FROM tb_def_var_proc_recurso dv WHERE dv.id_definicao_variavel_processo = d.id_definicao_variavel_processo);
+
+			WHILE EXISTS(SELECT 1 FROM @fluxo)
+			BEGIN
+			    SET @id_fluxo = (SELECT TOP 1 id_fluxo FROM @fluxo);
+
+			    INSERT INTO @variavel (id_definicao_variavel_processo, nr_ordem)
+				SELECT d.id_definicao_variavel_processo, d.nr_ordem FROM tb_definicao_variavel_processo d
+			    WHERE d.id_fluxo = @id_fluxo 
+				AND EXISTS(SELECT 1 FROM tb_def_var_proc_recurso dv WHERE dv.id_definicao_variavel_processo = d.id_definicao_variavel_processo);
+
+			    SET @ordem = 0;
+
+			    WHILE EXISTS(SELECT 1 FROM @variavel)
+			    BEGIN
+			        SET @id_definicao_variavel_processo = (SELECT TOP 1 id_definicao_variavel_processo FROM @variavel ORDER BY nr_ordem);
+			        UPDATE tb_def_var_proc_recurso SET nr_ordem = @ordem WHERE id_definicao_variavel_processo = @id_definicao_variavel_processo;
+			        SET @ordem = @ordem + 1;
+			        DELETE FROM @variavel WHERE id_definicao_variavel_processo = @id_definicao_variavel_processo;
+			    END;
+
+			    DELETE FROM @fluxo WHERE id_fluxo = @id_fluxo;
+			END;
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="4" dbms="postgresql, oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0094-DefinicaoVariavelProcessoRecurso.xml" />
+        </preConditions>
+
+        <dropColumn tableName="tb_definicao_variavel_processo" columnName="in_visivel_painel" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="5" dbms="mssql">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0094-DefinicaoVariavelProcessoRecurso.xml" />
+        </preConditions>
+        
+        <dropDefaultValue tableName="tb_definicao_variavel_processo" columnName="in_visivel_painel" />
+        <dropColumn tableName="tb_definicao_variavel_processo" columnName="in_visivel_painel" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="6">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0094-DefinicaoVariavelProcessoRecurso.xml" />
+        </preConditions>
+
+        <dropColumn tableName="tb_definicao_variavel_processo" columnName="nr_ordem" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="7" dbms="postgresql, oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0094-DefinicaoVariavelProcessoRecurso.xml" />
+        </preConditions>
+
+        <dropColumn tableName="tb_definicao_variavel_processo" columnName="in_visivel" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="7" dbms="mssql">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0094-DefinicaoVariavelProcessoRecurso.xml" />
+        </preConditions>
+
+        <dropDefaultValue tableName="tb_definicao_variavel_processo" columnName="in_visivel" />
+        <dropColumn tableName="tb_definicao_variavel_processo" columnName="in_visivel" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="8">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0094-DefinicaoVariavelProcessoRecurso.xml" />
+        </preConditions>
+
+        <addNotNullConstraint tableName="tb_def_var_proc_recurso" columnName="nr_ordem" columnDataType="int" />
+    </changeSet>
+</databaseChangeLog>
+

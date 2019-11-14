@@ -1,0 +1,14 @@
+<beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+
+	<interceptors>
+		<class>br.com.infox.epp.cdi.transaction.TransactionalInterceptor</class>
+		<class>br.com.infox.epp.ws.interceptors.LogInterceptor</class>
+		<class>br.com.infox.epp.ws.interceptors.TokenAuthenticationInterceptor</class>
+		<class>br.com.infox.epp.ws.interceptors.ValidacaoInterceptor</class>
+		<class>br.com.infox.epp.cdi.exception.ExceptionInterceptor</class>
+		<class>br.com.infox.core.token.AccessTokenAuthenticationInterceptor</class>
+        <class>br.com.infox.core.rest.RestThreadPoolInterceptor</class>
+	</interceptors>
+	
+</beans>

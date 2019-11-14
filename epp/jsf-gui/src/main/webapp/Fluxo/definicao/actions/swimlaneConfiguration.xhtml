@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="swimlanesForm" rendered="#{not empty swimlaneFitter.currentSwimlane}">
+		<p:panel style="float: left;height: 155px" header="#{infoxMessages['processdef.swimlane.perfil']}" styleClass="perfilPanel">
+			<i:autoComplete id="perfil" dropdown="true"
+				value="#{swimlaneFitter.currentSwimlane.perfil}"
+				label="#{infoxMessages['processdef.swimlane.perfil']}"
+				converter="br.com.infox.jsf.converter.EntityConverter" var="perfil"
+				itemLabel="#{perfil.descricao}" itemValue="#{perfil}"
+				forceSelection="true" required="true"
+				completeMethod="#{swimlaneFitter.currentSwimlane.getPerfis}" />
+				
+			<h:commandButton id="addPerfilBtn" style="display: block" value="Adicionar" styleClass="buttons"
+				action="#{swimlaneFitter.currentSwimlane.adicionarPerfil}">
+				<p:ajax event="action" process="@(.perfilPanel)" update="@(.perfilPanel) @(.swimlaneConfigurationTable)"
+					 onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+			</h:commandButton>
+		</p:panel>
+
+		<p:panel style="float: left; margin-left: 10px;height: 155px" header="#{infoxMessages['processdef.swimlane.usuario']}" styleClass="usuarioPanel">
+			<i:autoComplete id="usuario" dropdown="true"
+				label="#{infoxMessages['processdef.swimlane.usuario']}"
+				value="#{swimlaneFitter.currentSwimlane.usuario}"
+				converter="br.com.infox.jsf.converter.EntityConverter"
+				var="usuario" itemLabel="#{usuario.nomeUsuario}"
+				itemValue="#{usuario}" forceSelection="true" required="true"
+				completeMethod="#{swimlaneFitter.currentSwimlane.getUsuarios}" />
+				
+			<h:commandButton id="addUsuarioBtn" style="display: block" value="Adicionar"
+				styleClass="buttons" action="#{swimlaneFitter.currentSwimlane.adicionarUsuario}">
+				<p:ajax event="action" process="@(.usuarioPanel)" update="@(.usuarioPanel) @(.swimlaneConfigurationTable)"
+					 onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/> 
+			</h:commandButton>
+		</p:panel>
+
+		<p:panel id="panelGrupo" style="float: left; margin-left: 10px;height: 155px" header="#{infoxMessages['processdef.swimlane.grupo']}" styleClass="grupoPanel">
+			<i:autoCompleteTree id="localizacao" value="#{swimlaneFitter.currentSwimlane.grupo.localizacao}" label="Localização"
+	            completeMethod="#{swimlaneFitter.currentSwimlane.getLocalizacoes}" minQueryLength="3" partialSubmit="true"
+	            placeholder="Escolha a localização..." ajax="true" execute="@this" dropdown="true" inputStyle="width: 228px;"
+	            immediate="false" render="@(.grupoPanel)"  listener="#{swimlaneFitter.currentSwimlane.updatePerfisGrupo}" 
+	            caminhoAbsoluto="#{item.caminhoCompleto}" itemLabel="#{item.localizacao}" itemDisabled="#{not item.ativo}"
+	            onstart="PF('blockUiPanelGrupo').show();" oncomplete="PF('blockUiPanelGrupo').hide();"
+	            />
+            <p:blockUI block="panelGrupo" widgetVar="blockUiPanelGrupo"></p:blockUI>
+			<h:panelGroup rendered="#{not empty swimlaneFitter.currentSwimlane.perfisPermitidosGrupo}">
+				<wi:selectOneMenuEntity id="perfilGrupo" value="#{swimlaneFitter.currentSwimlane.grupo.perfil}"
+					label="#{infoxMessages['processdef.swimlane.perfil']}"
+					optionLabel="#{item.descricao}" required="true" styleClass="width:200px"
+					items="#{swimlaneFitter.currentSwimlane.perfisPermitidosGrupo}" />
+					
+				<h:commandButton id="addGrupoBtn" style="margin-top: 14px;" value="#{infoxMessages['processdef.swimlane.add']}" 
+					action="#{swimlaneFitter.currentSwimlane.adicionarGrupo}" styleClass="buttons">
+					<p:ajax event="action" process="@(.grupoPanel)" update="@(.grupoPanel) @(.swimlaneConfigurationTable)"
+						 onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+				</h:commandButton>
+			</h:panelGroup>
+		</p:panel>
+		
+		<p:panel style="float: left; margin-left: 10px;height: 155px;width: 380px;" header="#{infoxMessages['processdef.swimlane.el']}" styleClass="elPanel">
+			<i:inputTextarea id="el" value="#{swimlaneFitter.currentSwimlane.expression}" required="true" inputStyle="width: 340px;height: 40px;"
+				label="#{infoxMessages['processdef.swimlane.el']}" cols="35" showCounter="false" validatorId="javax.faces.elValidator"/>
+			
+			<h:commandButton id="addElBtn" style="display: block" value="#{infoxMessages['processdef.swimlane.add']}" 
+				action="#{swimlaneFitter.currentSwimlane.adicionarExpressao}" styleClass="buttons">
+				<p:ajax event="action" process="@(.elPanel)" update="@(.elPanel) @(.swimlaneConfigurationTable)"
+					 onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+			</h:commandButton>
+		</p:panel>
+	</h:form>
+	
+	<div style="clear: both;" />
+	<p:dataTable id="swimlaneConfigurationTable" var="row" value="#{swimlaneFitter.currentSwimlane.configuracoes}"
+		rendered="#{not empty swimlaneFitter.currentSwimlane}" style="margin-top: 10px;" 
+		styleClass="swimlaneConfigurationTable dtable rf-dt-crud" rows="5" paginator="true" paginatorAlwaysVisible="false"
+	 	emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+		
+		<p:column styleClass="dt-toolbar-col">
+			<h:form>
+				<h:commandLink onclick="return confirm('#{infoxMessages['processdef.swimlane.remover']}')">
+					<p:ajax event="click" process="@this" update="@(.swimlaneConfigurationTable)" 
+						listener="#{swimlaneFitter.currentSwimlane.removerConfiguracao(row)}"
+						onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" 
+						title="#{wi:get(title, messages['crud.remove'])}" />
+				</h:commandLink>
+			</h:form>
+		</p:column>
+		
+		<p:column headerText="#{infoxMessages['processdef.swimlane.tipo']}">
+			<h:outputText rendered="#{row.left eq 'perfil'}" value="#{infoxMessages['processdef.swimlane.perfil']}" />
+			<h:outputText rendered="#{row.left eq 'usuario'}" value="#{infoxMessages['processdef.swimlane.usuario']}" />
+			<h:outputText rendered="#{row.left eq 'grupo'}" value="#{infoxMessages['processdef.swimlane.grupo']}" />
+			<h:outputText rendered="#{row.left eq 'el'}" value="#{infoxMessages['processdef.swimlane.el']}" />
+		</p:column>
+		
+		<p:column headerText="#{infoxMessages['processdef.swimlane.configuracao']}">
+			<h:outputText rendered="#{row.left eq 'perfil'}" value="#{row.right.descricao}" />
+			
+			<h:outputText rendered="#{row.left eq 'usuario'}" value="#{row.right.nomeUsuario}" />
+			
+			<h:outputText rendered="#{row.left eq 'grupo'}" value="#{infoxMessages['processdef.swimlane.localizacao']}: " style="font-weigth: bolder" />
+			<h:outputText rendered="#{row.left eq 'grupo'}" value="#{swimlaneFitter.currentSwimlane.getCaminhoLocalizacao(row.right.localizacao)}" />
+			<ui:fragment rendered="#{row.left eq 'grupo'}"><br /></ui:fragment>
+			<h:outputText rendered="#{row.left eq 'grupo'}" value="#{infoxMessages['processdef.swimlane.perfil']}: " style="font-weigth: bolder" />
+			<h:outputText rendered="#{row.left eq 'grupo'}" value="#{row.right.perfil.descricao}" />
+			
+			<h:outputText rendered="#{row.left eq 'el'}" value="#{row.right}" />
+		</p:column>
+
+		<f:facet name="footer">
+			<div class="ui-datatable-footer-paginator">
+				<div class="ui-datatable-footer-paginator-right">
+					#{infoxMessages['list.resultPrefix']}
+					#{swimlaneFitter.currentSwimlane.configuracoes.size()}
+					#{infoxMessages['list.resultSufix']}
+				</div>
+			</div>
+		</f:facet>
+	</p:dataTable>
+
+</ui:composition>

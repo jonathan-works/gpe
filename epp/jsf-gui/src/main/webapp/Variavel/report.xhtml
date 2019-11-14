@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    <wi:dataReport
+        title="#{infoxMessages['variavel.titlePage']}"
+        columns="3"
+        widths="3 4 2"
+        headerText="#{variavelList.criteria}">
+        <wi:reportColumnHeader title="#{infoxMessages['variavel.variavel']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['variavel.valorVariavel']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+        <ui:repeat
+            var="row"
+            value="#{variavelList.list()}">
+            <wi:reportColumn value="#{row.variavel}" />
+            <wi:reportColumn value="#{row.valorVariavel}" />
+            <wi:reportColumnSituacao
+                value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+    </wi:dataReport>
+</ui:composition>

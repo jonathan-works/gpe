@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <ui:param
+    name="useCheckBox"
+    value="#{empty useCheckBox ? (empty props.useCheckBox ? false : props.useCheckBox) : useCheckBox}" />
+  <ui:param
+    name="checkBoxRendered"
+    value="#{empty checkBoxRendered ? (empty props.checkBoxRendered ? (useCheckBox and !home.managed) : props.checkBoxRendered) : checkBoxRendered}" />
+  <ui:param
+    name="renderDefault"
+    value="#{id}HiddenId, #{id}ClearDiv, #{id}Panel" />
+  <ui:param
+    name="render"
+    value="#{empty render ? renderDefault : renderDefault.concat((',').concat(render)) }" />
+  <rich:tree
+    id="#{id}Tree"
+    toggleType="#{wi:get(switchType, 'ajax')}"
+    data="#{item}"
+    immediate="true"
+    nodeType="#{item.type}"
+    render="#{render}"
+    selectionType="ajax"
+    selectionChangeListener="#{tree.processTreeSelectionChange}"
+    execute="@this"
+    status=":status"
+    limitRender="true"
+    var="item"
+    onselectionchange="#{onselected}"
+    oncomplete="#{rich:component(id.concat('Panel'))}.switchToItem('false')">
+    <rich:treeModelRecursiveAdaptor
+      roots="#{tree.roots}"
+      nodes="#{item.nodes}" />
+    <ui:param
+      name="isPai"
+      value="#{item.entity == home.instance}" />
+    <ui:param
+      name="ativo"
+      value="#{item.entity.ativo}" />
+    <ui:param
+      name="cantSelect"
+      value="#{not item.canSelect()}" />
+    <ui:param
+      name="styleClass"
+      value="#{not empty styleClass ? styleClass : (ativo ? '' : 'tree-inactive')}" />
+    <rich:treeNode
+      highlightedClass="#{folderSelectable ? '' : 'folderHighlighted'}"
+      selectedClass="#{folderSelectable ? '' : 'folderSelected'}"
+      type="folder"
+      iconExpanded="#{empty icon ? tree.iconFolder : icon}"
+      iconLeaf="#{empty iconLeaf ? tree.iconLeaf : iconLeaf}">
+      <div>
+        <h:selectBooleanCheckbox
+          id="#{id}CheckBoxTree"
+          value="#{item.selected}"
+          rendered="#{checkBoxRendered}">
+          <a:ajax
+            listener="#{tree.setSelectedNode(item)}"
+            status=":status"
+            event="click"
+            execute="@this"
+            render="#{id}CheckBoxTree, #{id}Label" />
+        </h:selectBooleanCheckbox>
+         
+        <h:outputText
+          styleClass="#{styleClass}"
+          value="#{item.entity}" />
+      </div>
+    </rich:treeNode>
+    <rich:treeNode
+      type="leaf"
+      nodeClass=""
+      iconCollapsed="#{tree.iconLeaf}"
+      iconExpanded="#{tree.iconLeaf}"
+      iconLeaf="#{tree.iconLeaf}">
+      <div>
+        <h:outputText
+          styleClass="#{styleClass}"
+          value="#{item.entity}" />
+      </div>
+    </rich:treeNode>
+  </rich:tree>
+</ui:composition>

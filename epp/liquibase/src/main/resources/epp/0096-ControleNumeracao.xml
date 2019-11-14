@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="marialuisa" id="1">
+		<createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_controle_numeracao" />
+	</changeSet>
+
+	<changeSet author="marialuisa" id="2">
+		<createTable tableName="tb_controle_numeracao">
+			<column name="id_controle_numeracao" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        	<column name="nm_key" type="varchar(250)">
+        		<constraints nullable="false"/>
+        	</column>
+        	<column name="nr_proximo_numero" type="bigint">
+        		<constraints nullable="false"/>
+        	</column>
+        	<column name="nr_version" type="bigint">
+        		<constraints nullable="false"/>
+        	</column>
+	    </createTable>
+	</changeSet>
+
+	<changeSet author="marialuisa" id="3">
+		<addUniqueConstraint columnNames="nm_key" constraintName="uk_controle_numeracao_001" tableName="tb_controle_numeracao"/>
+	</changeSet>
+
+</databaseChangeLog>

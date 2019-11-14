@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib">
+	
+	<ui:param
+		 name="canReport"
+		 value="#{wiacsSecurity.checkPage(viewId.concat('/report.seam'))}" />
+	<ui:param
+		 name="width"
+		 value="#{18 + (canReport ? 18 : 0) + (canEdit ? 18 : 0)}" />
+	<s:div >
+		
+		<ui:include src="../include/filterButton.xhtml" />
+
+		<h:form
+			 
+			 ajaxSubmit="true"
+			 eventsQueue="edit"
+			 rendered="#{canEdit}"
+			 limitToList="true">
+			
+			<a:commandLink
+				 status=":status"
+				 render="#{modalPanelId}Region"
+                 limitRender="true"
+				 action="#{home.newInstance()}"
+				 oncomplete="showModal('#{modalPanelId}')">
+				
+				<h:graphicImage
+					 url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
+					 title="Adicionar novo registro"
+					  />
+			
+			</a:commandLink>
+		
+		</h:form>
+			
+		<h:form >
+			
+			<a:jsFunction
+				 eventsQueue="edit"
+				 render="#{gridId}List"
+                 limitRender="true"
+				 name="refreshView" />						
+		
+		</h:form>
+		
+	
+	</s:div>
+
+</ui:composition>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
+	
+	<rich:collapsiblePanel id="painelVisualizarComunicacao" header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
+	
+		<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
+	   		<ui:param name="id" value="visualizarComunicacao" />
+	   		<ui:param name="showDestinatario" value="false" />
+	   		<ui:param name="meioExpedicao" value="#{visualizarComunicacaoAction.destinatario.meioExpedicao.descricao}" />
+	   		<ui:param name="showMeioExpedicao" value="true" />
+	   		<ui:param name="dataEnvio" value="#{visualizarComunicacaoAction.dataEnvio}" />
+	   		<ui:param name="showDataResposta" value="false" />
+	   		<ui:param name="tipoComunicacao" value="#{visualizarComunicacaoAction.destinatario.modeloComunicacao.tipoComunicacao.descricao}" />
+	   		<ui:param name="idDestinatario" value="#{visualizarComunicacaoAction.destinatario.id}" />
+            <ui:param name="isAnexo" value="#{not empty visualizarComunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}" />
+            <ui:param name="idDocumentoComunicacao" value="#{visualizarComunicacaoAction.destinatario.documentoComunicacao.id}" />
+	   	</ui:include>
+	    
+	    <ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
+	    		<ui:param name="id" value="documentosAnexadosComunicacao" />
+	    		<ui:param name="showNumeroDocumento" value="true" />
+	    		<ui:param name="tableTitle" value="#{infoxMessages['comunicacao.documentosAnexadosComunicacao']}" />
+	    		<ui:param name="rendered" value="#{documentoComunicacaoList.getResultCount() gt 0}" />
+	    </ui:include>
+
+	</rich:collapsiblePanel>
+	<h:form rendered="#{not props.readonly and not props.type eq 'FRAME'}">
+		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
+	</h:form>
+</ui:composition>

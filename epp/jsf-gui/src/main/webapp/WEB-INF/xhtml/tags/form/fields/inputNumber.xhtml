@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="converterId" value="#{wi:get(converterId,'integerConverter')}" />
+    <h:outputScript library="js" name="components.js" />
+    <wi:inputText id="#{id}Number"
+        onkeyup="#{wi:get(onkeyup, 'onlyNumber(this)')}"
+        converterId="#{converterId}">
+        <ui:insert />
+    </wi:inputText>
+
+</ui:composition>

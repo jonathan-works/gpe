@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    <wi:dataReport
+        title="#{infoxMessages['usuario.titlePage']}"
+        columns="5"
+        widths="3 5 2 2 2"
+        headerText="#{usuarioLoginList.criteria}">
+        <wi:reportColumnHeader title="#{infoxMessages['usuarioLogin.nome']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['usuarioLogin.perfis']}"/>
+        <wi:reportColumnHeader title="#{infoxMessages['usuarioLogin.bloqueio']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['usuarioLogin.provisorio']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+        <ui:repeat
+            var="row"
+            value="#{usuarioLoginList.list()}">
+            <wi:reportColumn value="#{row.nomeUsuario}" />
+            <wi:reportColumnList value="#{row.perfisFormatados.split(', ')}" />
+            <wi:reportColumnBoolean value="#{row.bloqueio}" />
+            <wi:reportColumnBoolean value="#{row.provisorio}" />
+            <wi:reportColumnSituacao
+                value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+    </wi:dataReport>
+</ui:composition>

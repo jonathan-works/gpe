@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="body">
+        <infox:tabPanel
+            id="defaultTabPanel"
+            switchType="ajax"
+            activeTab="#{search.tab}">
+            <h:form>
+                <infox:tabHeaders />
+            </h:form>
+            <infox:tab
+                id="conteudo"
+                name="conteudo"
+                rendered="true"
+                immediate="true"
+                status=":status"
+                title="#{infoxMessages['indexedSearch.conteudo']}">
+                <div>
+                    <h:outputText
+                        value="#{taskConteudoSearch.resultadoPesquisa.size()}"
+                        style="font-weight: bold" />
+                    <h:outputText
+                        value=" #{infoxMessages['indexedSearch.resultAbout']} " />
+                    <h:outputText
+                        value="#{taskConteudoSearch.palavraPesquisada}"
+                        style="font-weight: bold" />
+                </div>
+                <h:form>
+                    <rich:dataTable
+                        id="conteudoSearchResult"
+                        rows="#{taskConteudoSearch.pageSize}"
+                        rendered="#{! empty taskConteudoSearch.resultadoPesquisa}"
+                        value="#{taskConteudoSearch.resultadoPesquisa}"
+                        var="taskConteudo"
+                        styleClass="full-sized">
+                        <rich:column>
+                            <div>
+                                <s:link
+                                    target="_blank"
+                                    view="/Processo/Consulta/paginator.xhtml"
+                                    value="Processo: #{taskConteudo.numeroProcesso} #{documentoSearch.getNameTarefa(taskConteudo.idTaskInstance)}">
+                                    <f:param
+                                        name="inicio"
+                                        value="0" />
+                                    <f:param
+                                        name="taskId"
+                                        value="#{taskConteudo.idTaskInstance}" />
+                                    <f:param
+                                        name="idProcesso"
+                                        value="#{taskConteudo.numeroProcesso}" />
+                                </s:link>
+                                <div>
+                                    <h:outputText
+                                        value="#{taskConteudoSearch.getBestFragments(taskConteudo)}"
+                                        escape="false" />
+                                </div>
+                            </div>
+                        </rich:column>
+                    </rich:dataTable>
+                    <rich:dataScroller
+                        for="conteudoSearchResult"
+                        maxPages="10" />
+                </h:form>
+            </infox:tab>
+            <infox:tab
+                id="documentos"
+                name="documentos"
+                rendered="true"
+                immediate="true"
+                status=":status"
+                title="#{infoxMessages['indexedSearch.documentoTitleTab']}">
+                <s:div id="resultado">
+                    <div>
+                        <h:outputText
+                            value="#{documentoSearch.resultadoPesquisa.size()}"
+                            style="font-weight: bold" />
+                        <h:outputText
+                            value=" #{infoxMessages['indexedSearch.resultAbout']} " />
+                        <h:outputText
+                            value="#{documentoSearch.palavraPesquisada}"
+                            style="font-weight: bold" />
+                    </div>
+                    <h:form>
+                        <rich:dataTable
+                            id="searchResult"
+                            rows="#{documentoSearch.pageSize}"
+                            rendered="#{not empty documentoSearch.resultadoPesquisa}"
+                            value="#{documentoSearch.resultadoPesquisa}"
+                            var="document"
+                            styleClass="full-sized">
+                            <rich:column>
+                                <div>
+                                    <s:link
+                                        target="_blank"
+                                        view="/Processo/Consulta/paginator.xhtml"
+                                        value="Processo: #{processoSearcher.getNumeroProcesso(document.processo.idProcesso)} #{documentoSearch.getNameTarefa(document.idJbpmTask)}">
+                                        <f:param
+                                            name="inicio"
+                                            value="0" />
+                                        <f:param
+                                            name="taskId"
+                                            value="#{document.idJbpmTask}" />
+                                        <f:param
+                                            name="processoId"
+                                            value="#{document.processo.idJbpm}" />
+                                        <f:param
+                                            name="idProcesso"
+                                            value="#{document.processo.idProcesso}" />
+                                    </s:link>
+                                    <div>
+                                        <h:outputText
+                                            value="#{infoxMessages['indexedSearch.foundAt']} #{document.descricao}" />
+                                    </div>
+                                </div>
+                            </rich:column>
+                        </rich:dataTable>
+                        <rich:dataScroller
+                            for="searchResult"
+                            maxPages="10" />
+                    </h:form>
+                </s:div>
+            </infox:tab>
+        </infox:tabPanel>
+    </ui:define>
+</ui:composition>

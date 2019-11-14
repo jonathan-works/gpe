@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a="http://richfaces.org/a4j">
+    <ui:param name="variavel"
+        value="#{processBuilder.taskFitter.currentTask.currentVariable}" />
+    <s:div id="modeloDocumentoDiv">
+        <rich:panel header="Modelo de documento: #{variavel.name}">
+            <wi:ajaxDiv id="divM2MVar">
+                <div class="picklist-div">
+                    <rich:panel
+                        header="#{infoxMessages['associatedModeloDocumentoVariavel.tableTitle']}"
+                        id="associatedModeloDocumentoVariavelListPanel"
+                        bodyClass="dtable-p-b"
+                        styleClass="dtable-p picklist">
+                        <rich:dataTable
+                            value="#{variavel.modeloEditorHandler.modeloDocumentoList}"
+                            id="associatedModeloDocumentoVariavelList"
+                            rowKeyVar="key"
+                            styleClass="dtable rf-dt-crud picklist-dt"
+                            var="row">
+                            <wi:columnOutputText hideOrder="true"
+                                columnId="tituloModeloDocumento"
+                                columnHeader="#{infoxMessages['associatedModeloDocumentoVariavel.tituloModeloDocumento']}"
+                                value="#{row}" />
+                            <rich:column styleClass="dt-toolbar-col">
+                                <h:form>
+                                    <a:commandLink limitRender="true"
+                                        render="divM2MVar, modeloDocumentoDiv"
+                                        action="#{variavel.modeloEditorHandler.removeModelo(row)}">
+                                        <h:graphicImage
+                                            url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
+                                            title="#{infoxMessages['button.delete']}" />
+                                    </a:commandLink>
+                                </h:form>
+                            </rich:column>
+                        </rich:dataTable>
+                    </rich:panel>
+                </div>
+                <div class="picklist-div">
+                    <wi:dataTable
+                        values="#{associativeModeloDocumentoList.list(15)}"
+                        bean="#{associativeModeloDocumentoList}"
+                        tableTitle="#{infoxMessages['associativeModeloDocumento.tableTitle']}"
+                        id="associativeModeloDocumentoList"
+                        rowId="#{row.idModeloDocumento}"
+                        panelStyleClass="picklist"
+                        styleClass="picklist-dt">
+                        <ui:define name="searchForm">
+                            <wi:searchForm
+                                formId="pesquisarModeloDocumentoForm"
+                                formTitle="#{infoxMessages['searchForm.title']}"
+                                searchReRender="modeloDocumentoDiv"
+                                clearReRender="modeloDocumentoDiv"
+                                clearAction="associativeModeloDocumentoList.newInstance">
+                                <wi:inputText id="tituloModeloDocumento"
+                                    label="#{infoxMessages['associativeModeloDocumento.tituloModeloDocumento']}"
+                                    value="#{associativeModeloDocumentoList.parameters.tituloModeloDocumento}"
+                                    maxlength="150" />
+                            </wi:searchForm>
+                        </ui:define>
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <h:form>
+                                <a:commandLink limitRender="true"
+                                    render="divM2MVar"
+                                    action="#{variavel.modeloEditorHandler.addModelo(row)}">
+                                    <h:graphicImage
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
+                                        title="#{infoxMessages['button.add']}" />
+                                </a:commandLink>
+                                
+                            </h:form>
+                        </ui:define>
+                        <wi:columnOutputText
+                            columnId="tituloModeloDocumento"
+                            columnHeader="#{infoxMessages['associativeModeloDocumento.tituloModeloDocumento']}"
+                            value="#{row}" />
+                    </wi:dataTable>
+                </div>
+            </wi:ajaxDiv>
+        </rich:panel>
+    </s:div>
+</ui:composition>

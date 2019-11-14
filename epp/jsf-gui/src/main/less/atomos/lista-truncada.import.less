@@ -1,0 +1,26 @@
+#truncated-list() {
+	@max-list-size:3;
+	
+	.standard {
+		& *:nth-child(2n) {
+		   background-color:rgba(0,0,0,0.15);
+		}
+		&:not(:hover) *:nth-child(n+4) {
+		   visibility:hidden;
+		   height:0;
+		}
+		&:not(:hover) *:nth-child(4){
+		   height:1em;
+		}
+		&:not(:hover) *:nth-child(4)::before {
+		   content:"...";
+		   display:block;
+		   visibility:visible;
+		   background-color:rgba(0,0,0,0.15);
+		}
+	}
+}
+
+.truncated-list {
+	#truncated-list > .standard;
+}

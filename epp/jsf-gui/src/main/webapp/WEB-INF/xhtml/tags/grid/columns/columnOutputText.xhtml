@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:column>
+        <ui:param name="editRowOnClick"
+            value="#{wi:get(editRowOnClick, false)}" />
+        <ui:param name="tabOnClick"
+            value="#{wi:get(tabOnClick, 'form')}" />
+        <ui:param name="escape" value="#{wi:get(escape, true)}" />
+        <div class="#{styleClass}">
+            <ui:insert />
+
+            <ui:fragment rendered="#{editRowOnClick}">
+                <a:region>
+                    <a:commandLink action="#{home.setInstance(row)}"
+                        render="#{wi:get(reRender,'pageBody')}"
+                        limitRender="true" status=":status">
+                        <c:if test="#{tabOnClick == 'form'}">
+                            <a:param name="id" value="#{rowId}" />
+                        </c:if>
+                        <a:param name="tab"
+                            value="#{wi:get(tabOnClick, 'form')}"
+                            assignTo="#{home.tab}" />
+
+                        <h:outputText value="#{value}"
+                            escape="#{escape}"
+                            styleClass="#{styleClass}">
+                            <ui:insert name="outputText" />
+                        </h:outputText>
+                    </a:commandLink>
+                </a:region>
+            </ui:fragment>
+        </div>
+        <s:div rendered="#{not editRowOnClick}"
+            styleClass="#{styleClass}" style="#{styleOutputDiv}">
+            <h:outputText value="#{value}" escape="#{escape}"
+                style="#{styleOutputText}">
+                <ui:insert name="outputText" />
+            </h:outputText>
+        </s:div>
+    </wi:column>
+
+</ui:composition>

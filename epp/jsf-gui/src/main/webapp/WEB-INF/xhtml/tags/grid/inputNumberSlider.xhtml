@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich">
+
+    <rich:inputNumberSlider enableManualInput="false" showArrows="true"
+        value="#{bean.page}" step="1" minValue="1" width="250px"
+        maxValue="#{bean.pageCount}" showTooltip="true">
+        <a:ajax event="change" status="status" queueId="default" onbegin="infox.showLoading()" oncomplete="infox.hideLoading();"
+            limitRender="true" render="#{id}Panel" execute="@this"/>
+    </rich:inputNumberSlider>
+
+</ui:composition>

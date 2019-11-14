@@ -1,0 +1,10 @@
+*.orig
+*~
+.classpath
+.externalToolBuilders
+.factorypath
+.metadata
+.project
+.settings
+target
+.apt_generated/

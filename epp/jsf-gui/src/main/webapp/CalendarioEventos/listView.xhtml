@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf" xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich" xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="title">#{infoxMessages['calendarioEventos.titlePage']}</ui:define>
+    <ui:define name="body">
+        <infox:tabPanel id="defaultTabPanel" switchType="ajax">
+            <h:form>
+                <infox:tabHeaders />
+            </h:form>
+            <infox:tabChangeListener listener="#{crudTabCleaner}" />
+            <infox:tab id="search" name="search" immediate="true" title="#{infoxMessages['template.abaPesquisaText']}"
+                action="#{calendarioEventosCrudAction.clickSearchTab}">
+                <wi:dataTable id="calendarioEventosList" bean="#{calendarioEventosList}"
+                    values="#{calendarioEventosList.list(10)}"
+                    tableTitle="#{infoxMessages['calendarioEventos.titlePage']}">
+                    <ui:define name="searchForm">
+                        <wi:searchForm formId="pesquisarCalendarioEventosForm"
+                            formTitle="#{infoxMessages['searchForm.title']}">
+                            <wi:inputText id="descricaoEvento"
+                                label="#{infoxMessages['calendarioEventos.descricaoEvento']}"
+                                value="#{calendarioEventosList.descricaoEvento}" maxlength="100" />
+                            <wi:selectOneMenuEnum id="tipoPrestacaoContas"
+                                label="#{infoxMessages['calendarioEventos.tipoEvento']}"
+                                items="#{calendarioEventosCrudAction.tiposEvento}"
+                                value="#{calendarioEventosList.tipoEvento}" />
+                            <wi:inputDataPeriodo id="dataInicio" label="#{infoxMessages['calendarioEventos.periodo']}"
+                                valueDateFrom="#{calendarioEventosList.dataInicioPeriodo}"
+                                valueDateTo="#{calendarioEventosList.dataFimPeriodo}" />
+                        </wi:searchForm>
+                    </ui:define>
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+						<h:form>
+							<a:commandLink action="#{calendarioEventosCrudAction.edit(row)}"
+								render="defaultTabPanel" execute="@this">
+								<h:graphicImage
+									url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+									title="#{infoxMessages['button.selecionar']}" />
+							</a:commandLink>
+							<a:commandLink action="#{calendarioEventosCrudAction.remover(row)}"
+								onclick="return confirm('#{infoxMessages['crud.confirmRemove']}');"
+								rendered="#{empty row.serie}"
+								render="defaultTabPanel pageBodyDialogMessage" execute="@this">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+									title="#{infoxMessages['crud.remove']}" />
+							</a:commandLink>
+							<a:commandLink action="#{calendarioEventosCrudAction.setCalendarioToRemove(row)}"
+								onclick="infox.showLoading();" execute="@this"
+								oncomplete="infox.hideLoading(); #{rich:component('removerEventoPopup')}.show();"
+								rendered="#{not empty row.serie}">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+									title="#{infoxMessages['crud.remove']}" />
+							</a:commandLink>
+						</h:form>
+					</ui:define>
+                    <wi:columnOutputText columnId="localizacao"
+                        columnHeader="#{infoxMessages['calendarioEventos.localizacao']}" value="#{row.localizacao}" />
+                    <wi:columnOutputText columnId="descricaoEvento"
+                        columnHeader="#{infoxMessages['calendarioEventos.descricaoEvento']}"
+                        value="#{row.descricaoEvento}" />
+                    <wi:columnOutputText columnId="tipoEvento"
+                        columnHeader="#{infoxMessages['calendarioEventos.tipoEvento']}" value="#{row.tipoEvento.label}" />
+                    <wi:columnOutputText columnId="dataEvento" hideOrder="true"
+                        columnHeader="#{infoxMessages['calendarioEventos.dataEvento']}" value="#{row.periodo}" />
+                </wi:dataTable>
+            </infox:tab>
+            <infox:tab id="form" name="form" immediate="true" title="#{infoxMessages['template.abaFormularioText']}"
+                action="#{calendarioEventosCrudAction.clickFormTab}">
+                <h:form id="formTabForm">
+                    <wi:inputText id="descricaoEvento" label="#{infoxMessages['calendarioEventos.descricaoEvento']}"
+                        value="#{calendarioEventosCrudAction.descricao}" maxlength="100"
+                        required="true" />
+                        
+                    <f:event listener="#{calendarioEventosCrudAction.validarDatas}" type="postValidate" />
+                    <wi:inputDate id="dataInicio" label="#{infoxMessages['calendarioEventos.dataInicio']}"
+                        value="#{calendarioEventosCrudAction.dataInicio}" required="true"
+                        rendered="#{not calendarioEventosCrudAction.persisted}" />
+                    <wi:outputText id="dataInicioPersisted"
+                    	label="#{infoxMessages['calendarioEventos.dataInicio']}"
+                        value="#{calendarioEventosCrudAction.dataInicio}"
+                    	rendered="#{calendarioEventosCrudAction.persisted}" />
+                    	
+                    <wi:inputDate id="dataFim" label="#{infoxMessages['calendarioEventos.dataFim']}"
+                        value="#{calendarioEventosCrudAction.dataFim}" required="false" 
+                        rendered="#{not calendarioEventosCrudAction.persisted}" />
+                    <wi:outputText id="dataFimPersisted"
+                    	label="#{infoxMessages['calendarioEventos.dataFim']}"
+                        value="#{calendarioEventosCrudAction.dataFim}"
+                    	rendered="#{calendarioEventosCrudAction.persisted}" />
+                    	
+                    <wi:selectBooleanCheckbox id="periodico" label="#{infoxMessages['calendarioEventos.periodico']}"
+                        value="#{calendarioEventosCrudAction.anual}"
+                        rendered="#{not calendarioEventosCrudAction.persisted}" />
+                    <wi:outputText id="periodicoPersisted"
+                    	label="#{infoxMessages['calendarioEventos.periodico']}"
+                    	value="#{calendarioEventosCrudAction.anual ? 'Sim' : 'Não'}"
+                    	rendered="#{calendarioEventosCrudAction.persisted}" />
+                    
+                    <wi:selectOneMenuEnum id="tipoPrestacaoContas"
+                        label="#{infoxMessages['calendarioEventos.tipoEvento']}"
+                        items="#{calendarioEventosCrudAction.tiposEvento}"
+                        value="#{calendarioEventosCrudAction.tipoEvento}" required="true"
+                        rendered="#{not calendarioEventosCrudAction.persisted}" />
+                    <wi:outputText id="tipoEventoPersisted"
+                    	label="#{infoxMessages['calendarioEventos.tipoEvento']}"
+                        value="#{calendarioEventosCrudAction.tipoEvento}"
+                    	rendered="#{calendarioEventosCrudAction.persisted}" />
+                    <div>
+                        <a:commandButton action="#{calendarioEventosCrudAction.persist}"
+                            render="defaultTabPanel :pageBodyDialogMessage calendarioProblems" execute="@form"
+                            styleClass="buttons" value="#{infoxMessages['crud.persist']}"
+                            rendered="#{not calendarioEventosCrudAction.persisted}" />
+                        <a:commandButton action="#{calendarioEventosCrudAction.update}"
+                            render="@form :pageBodyDialogMessage" execute="@form"
+                            styleClass="buttons" value="#{infoxMessages['crud.update']}"
+                            rendered="#{calendarioEventosCrudAction.persisted and not calendarioEventosCrudAction.parteSerie}" />
+                        <a:commandButton action="#{calendarioEventosCrudAction.update}"
+                            onclick="return confirm('Esse evento faz parte de uma série logo a atualização será aplicada em toda série. Deseja continuar?');"
+                            render="@form :pageBodyDialogMessage" execute="@form"
+                            styleClass="buttons" value="#{infoxMessages['crud.update']}"
+                            rendered="#{calendarioEventosCrudAction.persisted and calendarioEventosCrudAction.parteSerie}" />
+                        <a:commandButton action="#{calendarioEventosCrudAction.newInstance}"
+                            render="defaultTabPanel :pageBodyDialogMessage" execute="@this" styleClass="buttons"
+                            value="#{infoxMessages['crud.new']}" />
+                    </div>
+                </h:form>
+            </infox:tab>
+        </infox:tabPanel>
+        <s:div id="calendarioProblems">
+            <rich:popupPanel id="calendarioProblemsPopup"
+                autosized="true"
+                show="#{calendarioEventosCrudAction.calendarioEventosModifications != null and not empty calendarioEventosCrudAction.calendarioEventosModifications}"
+                modal="true">
+                <f:facet name="controls">
+                    <h:form>
+                        <a:commandLink action="#{calendarioEventosCrudAction.cancelar}" render=":pageBodyDialogMessage"
+                            execute="@this" onbegin="#{rich:component('calendarioProblemsPopup')}.hide();">
+                            <h:graphicImage id="closeBtn" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" />
+                        </a:commandLink>
+                    </h:form>
+                </f:facet>
+                <f:facet name="header">#{messages['calendarioEventos.modifications']}</f:facet>
+                <h:form>
+                    <a:commandButton action="#{calendarioEventosCrudAction.aplicarModificacoes}"
+                        render="defaultTabPanel :pageBodyDialogMessage calendarioProblems" execute="@this"
+                        onbegin="#{rich:component('calendarioProblemsPopup')}.hide();infox.showLoading();"
+                        oncomplete="infox.hideLoading();"
+                        onclick="return confirm('Esta é uma ação sem retorno. Deseja continuar?');" styleClass="buttons"
+                        value="#{messages['calendarioEventos.modifications.confirm']}" />
+                    <a:commandButton action="#{calendarioEventosCrudAction.cancelar}" type="reset" immediate="true"
+                        render=":pageBodyDialogMessage" execute="@this" styleClass="buttons" value="#{messages['calendarioEventos.modifications.cancel']}"
+                        onbegin="#{rich:component('calendarioProblemsPopup')}.hide();" />
+                </h:form>
+                <div style="overflow: auto; max-height: 432px;max-width:1300px;">
+                    <rich:dataTable value="#{calendarioEventosCrudAction.calendarioEventosModifications}"
+                        var="modification">
+                        <f:facet name="header">
+                        </f:facet>
+                        <h:column>
+                            <h:outputText value="#{modification}" />
+                        </h:column>
+                        <h:column>
+                            <div style="max-height:15rem; overflow:auto;">
+                            <h:outputText rendered="#{modification.issues == null or empty modification.issues}" value="#{messages['calendarioEventos.modifications.empty']}" />
+                            <h:dataTable value="#{modification.issues}" var="issue" rendered="#{modification.issues != null and not empty modification.issues}"
+                                rowClasses="zebra-row">
+                                <h:column>
+                                    <f:facet name="header">#{messages['calendarioEventos.issue.issue']}</f:facet>
+                                    <h:outputText value="#{issue.issue}" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{messages['calendarioEventos.issue.previousState']}</f:facet>
+                                    <h:outputText value="#{issue.previousState}" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{messages['calendarioEventos.issue.futureState']}</f:facet>
+                                    <h:outputText value="#{issue.futureState}" />
+                                </h:column>
+                            </h:dataTable>
+                            </div>
+                        </h:column>
+                    </rich:dataTable>
+                    
+                </div>
+            </rich:popupPanel>
+        </s:div>
+
+		<rich:popupPanel id="removerEventoPopup" autosized="true" modal="true" header="#{infoxMessages['confirmDialog.header']}"
+			onbeforehide="newInstance();">
+			<f:facet name="controls">
+				<h:graphicImage id="removerEventoPopupCloseBtn"
+					styleClass="mp-close"
+					value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+					onmouseup="#{rich:component('removerEventoPopup')}.hide();" />
+			</f:facet>
+			<h:outputText value="#{infoxMessages['calendarioEventos.msgRemove']}" />
+			<h:form>
+				<a:commandButton id="removerEventoBtn" styleClass="buttons"
+					action="#{calendarioEventosCrudAction.removerEvento()}"
+					render="defaultTabPanel pageBodyDialogMessage" execute="@this" onclick="infox.showLoading();"
+					oncomplete="#{rich:component('removerEventoPopup')}.hide(); infox.hideLoading();"
+					value="#{infoxMessages['calendarioEventos.removerEvento']}" />
+				<a:commandButton id="removerSerieBtn" styleClass="buttons"
+					action="#{calendarioEventosCrudAction.removerSerie()}"
+					render="defaultTabPanel pageBodyDialogMessage" execute="@this" onclick="infox.showLoading();"
+					oncomplete="#{rich:component('removerEventoPopup')}.hide(); infox.hideLoading();"
+					value="#{infoxMessages['calendarioEventos.removerSerie']}" />
+			</h:form>
+			
+		</rich:popupPanel>
+		<a:jsFunction name="newInstance" action="#{calendarioEventosCrudAction.newInstance()}" />
+	</ui:define>
+</ui:composition>

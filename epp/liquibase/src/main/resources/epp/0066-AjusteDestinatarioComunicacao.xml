@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="marialuisa" id="1" dbms="mssql">
+        <dropIndex indexName="dest_mod_comunic_loc_unq" tableName="tb_destinatario_modelo_comunic" />
+    </changeSet>
+
+    <changeSet author="marialuisa" id="1" dbms="postgresql, oracle">
+        <dropUniqueConstraint constraintName="dest_mod_comunic_loc_unq" tableName="tb_destinatario_modelo_comunic" /> 
+    </changeSet>
+    
+    <changeSet author="marialuisa" id="2" dbms="mssql, postgresql">
+        <addColumn tableName="tb_destinatario_modelo_comunic" >
+            <column name="id_processo" type="bigint">
+                <constraints nullable="true" references="tb_processo(id_processo)" foreignKeyName="dest_modelo_comunic_processo_fk" />
+            </column>
+        </addColumn>
+        <sql dbms="mssql">
+            UPDATE d SET id_processo = 
+            (SELECT m.id_processo FROM tb_metadado_processo m WHERE m.nm_metadado_processo = 'destinatarioComunicacao' 
+                AND m.vl_metadado_processo = CAST(d.id_destinatario_modelo_comunic AS VARCHAR))
+                FROM tb_destinatario_modelo_comunic d;
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE tb_destinatario_modelo_comunic d SET id_processo = 
+            (SELECT m.id_processo FROM tb_metadado_processo m WHERE m.nm_metadado_processo = 'destinatarioComunicacao' 
+                AND CAST(m.vl_metadado_processo AS BIGINT) = d.id_destinatario_modelo_comunic);
+        </sql>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="oracle">
+        <addColumn tableName="tb_destinatario_modelo_comunic" >
+            <column name="id_processo" type="bigint">
+                <constraints nullable="true" references="tb_processo(id_processo)" foreignKeyName="fk_dest_modelo_comunic_01" />
+            </column>
+        </addColumn>
+        <sql dbms="mssql">
+            UPDATE d SET id_processo = 
+            (SELECT m.id_processo FROM tb_metadado_processo m WHERE m.nm_metadado_processo = 'destinatarioComunicacao' 
+                AND m.vl_metadado_processo = CAST(d.id_destinatario_modelo_comunic AS VARCHAR))
+                FROM tb_destinatario_modelo_comunic d;
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE tb_destinatario_modelo_comunic d SET id_processo = 
+            (SELECT m.id_processo FROM tb_metadado_processo m WHERE m.nm_metadado_processo = 'destinatarioComunicacao' 
+                AND CAST(m.vl_metadado_processo AS BIGINT) = d.id_destinatario_modelo_comunic);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

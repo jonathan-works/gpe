@@ -1,0 +1,47 @@
+#crud-form(){
+  .editable-field {
+    margin: 0 15rem/16 15rem/16 0;
+  }
+  .editable-field-name{
+    font-weight: bold;
+  }
+  .editable-field-value{
+    font-size:1em;
+    padding: 1em/4 0;
+    &.property-error{
+      padding: 3rem/16;
+    }
+  }
+  .editable-field-error {
+    &-error{
+      border: 1px solid #f00;
+      border-radius: 5rem/16;
+    }
+    &-error&-msg{
+      background-color: #FFFFE0;
+      display: inline-block;
+      margin: 0 0 1px 20rem/16;
+      padding: 2px;
+    }
+  }
+  .standard{
+  }
+  .standard-colors{
+    .required {
+      color:@bg-color-required;
+    }
+  }
+}
+.property-field-edit-name , .property.field.view .name{
+  #crud-form > .editable-field-name;
+}
+.property-field-edit-value, .value {
+  #crud-form > .editable-field-value;
+}
+.property-field-edit,.property.field.edit {
+  #crud-form > .editable-field;
+}
+.property {
+  #crud-form > .editable-field-error;
+}
+#crud-form > .standard;

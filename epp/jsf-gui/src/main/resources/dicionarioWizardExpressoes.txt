@@ -1,0 +1,26 @@
+  ArithOp      =: "+" | "-" | "*" | "/"
+  BoolOp       =: "&&" | "||"
+  ArithCompOp =: {BasicCompOp} | ">=" | "<=" | ">" | "<"
+  BasicCompOp =: "==" | "!="
+  
+  Value =: {Arithmetic} | {String} | {Boolean} | {Date} | TIMESPAN | TRANSITION | {Enumeration}
+  
+  Arithmetic =: "(" {Arithmetic} {ArithOp} {Arithmetic} ")" | {Identifier} | NUMBER_CONSTANT | {Boolean} ? {Arithmetic} : {Arithmetic}
+  
+  String =: {Identifier} | "StringConstant" | {Value} + {String} | {String} + {Value} | {Boolean} ? {String} : {String}
+  
+  Boolean =: true | false | {Identifier} | ( {Arithmetic} {ArithCompOp} {Arithmetic} ) |
+              | ( {String} {BasicCompOp} {String} ) | ({Date} {ArithCompOp} {Date}) | ( {Boolean} {BoolOp} {Boolean} ) | "!" {Boolean}
+  
+EXEMPLOS DE EXPRESSÕES:
+  (NUMERO X)          ..  [idade] + 12 .. #{idade+12}
+  (NUMERO Y)          ..  ( [X] + ( [Y] + ( [idade] * 5 ) ) ) .. #{(X+(Y+(idade*5)))}
+  ({String} CONCLUSAO)  ..  "nomePaginaPadrao"[tipoPagina][acessoPagina]  .. #{'nomePaginaPadrao'+tipoPagina+acessoPagina}
+  ({String} ASSINATURA) ..  "Atenciosamente, "[nomeUsuario]" "[papelUsuario]" "[dataAtualFormatada]" "()
+  
+  Teste Arithmetic
+  true ? ((valor1 + 10) - (valor2 * 15)) : ((valor3 / 20) + (valor4 - 5))
+  
+  Teste Boolean
+( {String} {BasicCompOp} {String} ) | ({Date} {ArithCompOp} {Date}) | ( {Boolean} {BoolOp} {Boolean} ) | "!" {Boolean}
+  ( ( ( ( ( true || false ) && ( bool1 || ( {Arithmetic} {ArithCompOp} {Arithmetic} ) ) ) || ( ( ( {Arithmetic} {ArithCompOp} {Arithmetic} ) || ( {Arithmetic} {ArithCompOp} {Arithmetic} ) ) && ( ( {Arithmetic} {ArithCompOp} {Arithmetic} ) || ( {Arithmetic} {ArithCompOp} {Arithmetic} ) ) ) ) && ( ( ( ( {Arithmetic} {ArithCompOp} {Arithmetic} ) || ( {String} {BasicCompOp} {String} ) ) && ( {String} {BasicCompOp} {String} ) ) || false ) ) && true )

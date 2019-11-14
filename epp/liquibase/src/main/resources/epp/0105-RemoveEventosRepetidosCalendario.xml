@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="marialuisa" id="1">
+        <sql dbms="postgresql, oracle">
+            delete from tb_calendario_eventos cv
+            where cv.id_serie_eventos is not null 
+            and exists (select 1 from tb_calendario_eventos ceCopy 
+                where cv.id_calendario_evento != ceCopy.id_calendario_evento 
+                and cv.id_localizacao = ceCopy.id_localizacao 
+                and cv.ds_evento = ceCopy.ds_evento 
+                and cv.tp_evento = ceCopy.tp_evento 
+                and cv.id_serie_eventos = ceCopy.id_serie_eventos 
+                and cv.dt_inicio = ceCopy.dt_inicio 
+                and cv.dt_fim = ceCopy.dt_fim)
+            and cv.id_calendario_evento not in (select min (ce.id_calendario_evento) from tb_calendario_eventos ce
+                where ce.id_serie_eventos is not null 
+                and exists (select 1 from tb_calendario_eventos ceCopy
+                    where ce.id_calendario_evento != ceCopy.id_calendario_evento 
+                    and ce.id_localizacao = ceCopy.id_localizacao 
+                    and ce.ds_evento = ceCopy.ds_evento 
+                    and ce.tp_evento = ceCopy.tp_evento 
+                    and ce.id_serie_eventos = ceCopy.id_serie_eventos 
+                    and ce.dt_inicio = ceCopy.dt_inicio 
+                    and ce.dt_fim = ceCopy.dt_fim)
+                group by ce.id_serie_eventos);
+        </sql>
+        <sql dbms="mssql">
+            delete cv from tb_calendario_eventos cv
+            where cv.id_serie_eventos is not null 
+            and exists (select 1 from tb_calendario_eventos ceCopy 
+                where cv.id_calendario_evento != ceCopy.id_calendario_evento
+                and cv.id_localizacao = ceCopy.id_localizacao 
+                and cv.ds_evento = ceCopy.ds_evento 
+                and cv.tp_evento = ceCopy.tp_evento 
+                and cv.id_serie_eventos = ceCopy.id_serie_eventos 
+                and cv.dt_inicio = ceCopy.dt_inicio 
+                and cv.dt_fim = ceCopy.dt_fim)
+            and cv.id_calendario_evento not in (select min (ce.id_calendario_evento) from dbo.tb_calendario_eventos ce
+                where ce.id_serie_eventos is not null
+                and exists (select 1 from tb_calendario_eventos ceCopy
+                    where ce.id_calendario_evento != ceCopy.id_calendario_evento
+                    and ce.id_localizacao = ceCopy.id_localizacao 
+                    and ce.ds_evento = ceCopy.ds_evento 
+                    and ce.tp_evento = ceCopy.tp_evento 
+                    and ce.id_serie_eventos = ceCopy.id_serie_eventos 
+                    and ce.dt_inicio = ceCopy.dt_inicio 
+                    and ce.dt_fim = ceCopy.dt_fim)
+                group by ce.id_serie_eventos);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

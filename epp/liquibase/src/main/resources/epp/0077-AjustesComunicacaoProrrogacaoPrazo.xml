@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="marialuisa" id="1" dbms="mssql, postgresql, oracle" >
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(id_parametro) FROM tb_parametro WHERE nm_variavel = 'codigoFluxoComunicacaoNaoEletronico'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_parametro" dbms="mssql" >
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="codigoFluxoComunicacaoNaoEletronico" />
+            <column name="ds_variavel" value="Código do fluxo de comunicação não eletrônica" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="postgresql">
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="codigoFluxoComunicacaoNaoEletronico" />
+            <column name="ds_variavel" value="Código do fluxo de comunicação não eletrônica" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="oracle">
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="codigoFluxoComunicacaoNaoEletronico" />
+            <column name="ds_variavel" value="Código do fluxo de comunicação não eletrônica" />
+            <column name="vl_variavel" value=" " />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+    </changeSet>
+    
+    <changeSet author="marialuisa" id="2" dbms="mssql, postgresql, oracle" >
+        <addColumn tableName="tb_tipo_comunicacao">
+            <column name="id_classificacao_ped_prorroga" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_tp_comunic_classif_prorrog" references="tb_classificacao_documento(id_classificacao_documento)" />
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="marialuisa" id="3" dbms="mssql, postgresql, oracle" >
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(id_parametro) FROM tb_parametro WHERE nm_variavel = 'prorrogarPrazoAutomaticamentePorModelo'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_parametro" dbms="mssql" >
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="prorrogarPrazoAutomaticamentePorModelo" />
+            <column name="ds_variavel" value="Indica se a prorrogação de prazo de uma comunicação deve prorrogar todas daquele mesmo modelo" />
+            <column name="vl_variavel" value="false" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="postgresql">
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="prorrogarPrazoAutomaticamentePorModelo" />
+            <column name="ds_variavel" value="Indica se a prorrogação de prazo de uma comunicação deve prorrogar todas daquele mesmo modelo" />
+            <column name="vl_variavel" value="false" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="oracle">
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="prorrogarPrazoAutomaticamentePorModelo" />
+            <column name="ds_variavel" value="Indica se a prorrogação de prazo de uma comunicação deve prorrogar todas daquele mesmo modelo" />
+            <column name="vl_variavel" value="false" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+    </changeSet>
+    
+</databaseChangeLog>
+ 

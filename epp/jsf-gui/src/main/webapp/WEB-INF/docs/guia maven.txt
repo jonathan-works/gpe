@@ -1,0 +1,5 @@
+Provavelmente será preciso instalar as libs abaixo no repositório do Maven
+
+mvn install:install-file -DgroupId=br.com.infox -DartifactId=jbpmGraph -Dpackaging=jar -Dversion=1.0 -Dfile=jbpmGraph-1.0.jar -DgeneratePom=true
+
+mvn install:install-file -DgroupId=javax.el -DartifactId=el-api -Dpackaging=jar -Dversion=1.2 -Dfile=el-api.jar -DgeneratePom=true

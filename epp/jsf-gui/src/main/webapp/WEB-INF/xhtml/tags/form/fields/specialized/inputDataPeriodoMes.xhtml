@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param
+        name="template"
+        value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+    <h:outputScript
+        library="js"
+        name="components.js" />
+    <s:decorate
+        id="#{id}Decoration"
+        template="#{template}"
+        rendered="#{wi:get(rendered, true)}">
+        <ui:param
+            name="idFromForm"
+            value="#{id}FromForm" />
+        <ui:param
+            name="idToForm"
+            value="#{id}ToForm" />
+        <!--		<ui:param name="idFirstAction" value="#{id}FirstAction" />-->
+        <!--		<ui:param name="idSecondAction" value="#{id}SecondAction" />-->
+        <wi:mask
+            selector=".#{id}maskDate"
+            mask="99/99/9999" />
+        <ui:define name="label">#{label}</ui:define>
+        <h:outputText value="#{infoxMessages['data.periodoInicio']}" />
+        <rich:calendar
+            id="#{idFromForm}"
+            value="#{valueDateFrom}"
+            direction="auto"
+            enableManualInput="true"
+            inputStyle="display:inline-block; "
+            disabled="#{disabled}"
+            required="#{required}"
+            inputClass="#{id}maskDate input date"
+            styleClass="date"
+            showWeeksBar="#{wi:get(showWeeksBar, false)}"
+            datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"
+            onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', true);"
+            oninputblur="validarData(this);                          validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', true);" />
+        <h:outputText value=" #{infoxMessages['data.periodoInicio']} " />
+        <rich:calendar
+            id="#{idToForm}"
+            value="#{valueDateTo}"
+            direction="auto"
+            enableManualInput="true"
+            disabled="#{disabled}"
+            required="#{required}"
+            inputClass="#{id}maskDate input date"
+            styleClass="date"
+            showWeeksBar="#{wi:get(showWeeksBar, false)}"
+            datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"
+            onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false);"
+            oninputblur="validarData(this);                          validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false);" />
+        <ui:insert />
+        <wi:commandButton
+            id="mesAnteriorBt"
+            value="#{idFirstButtonValue}"
+            action="#{idFirstAction}"
+            reRender="#{idToForm},#{idFromForm}"
+            rendered="#{false or idRenderButtons}" />
+        <wi:commandButton
+            id="mesAtualBt"
+            value="#{idSecondButtonValue}"
+            action="#{idSecondAction}"
+            reRender="#{idFromForm},#{idToForm}"
+            rendered="#{false or idRenderButtons}" />
+    </s:decorate>
+</ui:composition>

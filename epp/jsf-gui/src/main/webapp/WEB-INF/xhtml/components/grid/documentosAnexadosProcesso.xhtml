@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <div class="anexos">
+        <wi:dataTable
+            values="#{consultaController.getProcessoDocumentoList(task.id)}"
+            tableTitle="#{infoxMessages['anexosProcesso.titleView']}"
+            id="documentosAnexadosList"
+            rowId="#{row.idDocumento}" panelStyleClass="anexos"
+            hideOrder="true">
+            <ui:define name="headerToolBar" />
+            <ui:define name="toolBar">
+                <ui:include src="processoDocumentoBin.xhtml">
+                    <ui:param name="bin"
+                        value="#{row.documentoBin}" />
+                    <ui:param name="header"
+                        value="#{row.descricao}" />
+                </ui:include>
+            </ui:define>
+            <wi:columnOutputText columnId="processoDocumento"
+            	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+                columnHeader="#{infoxMessages['anexosProcesso.processoDocumento']}"
+                value="#{row.descricao}" />
+            <wi:columnOutputText columnId="dataAnexo"
+            	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+                columnHeader="#{infoxMessages['anexosProcesso.dataInclusao']}"
+                value="#{row.documentoBin.dataInclusao}">
+                <ui:define name="outputText">
+                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                </ui:define>
+            </wi:columnOutputText>
+        </wi:dataTable>
+    </div>
+    <s:div style="padding-top: 10px;">
+        <wi:selectBooleanRadio id="sistema"
+            label="#{infoxMessages['anexosProcesso.showAllDocuments']}"
+            value="#{consultaController.showAllDocuments}">
+            <a:ajax execute="@this" event="change" render="documentosAnexadosListPanel"/>
+        </wi:selectBooleanRadio>
+    </s:div>
+    <wi:assinaturaPopup id="assinaturaDocumentoPopup" afterRender="documentosAnexadosList" />
+
+</ui:composition>

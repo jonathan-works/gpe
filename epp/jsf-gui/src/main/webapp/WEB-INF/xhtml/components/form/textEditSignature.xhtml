@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="editorId" value="#{id}Editor" />
+    <ui:param name="idSignature" value="#{id}signature" />
+    <ui:param name="idCertChain" value="#{id}certChain" />
+    
+   	<c:if test="#{not empty props.documentoVariavelController.pasta}">
+		<c:set target="#{taskInstanceHome.variaveisDocumento[id]}" property="pasta" value="#{props.documentoVariavelController.pasta}" />
+	</c:if>
+    <f:subview id="#{f.id}SubView">
+        <p:outputPanel id="#{f.id}Block">
+            <fieldset>
+                <legend>
+                    <h:outputText styleClass="property-field-edit-name" value="#{label}" />
+                </legend>
+                <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
+                    label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+                    items="#{home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id))}"
+                    showLabelSelecione="true" required="#{wi:get(required, false)}"
+                    value="#{home.variaveisDocumento[id].classificacaoDocumento}"
+                    readonly="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
+    			or home.variaveisDocumento[id].hasAssinatura()}"
+                    disabled="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
+    			or home.variaveisDocumento[id].hasAssinatura()}">
+                    <f:validateBean disabled="true"/>
+                    <f:validator validatorId="classificacaoEditorValidator" for="@this"/>
+                    <f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>
+                </wi:selectOneMenuEntity>
+                <ui:include src="/WEB-INF/xhtml/components/form/comboModelos.xhtml" />
+                <wi:selectOneMenuEntity id="#{f.id}PastaDocumentoMenu"
+                    label="#{infoxMessages['documentoProcesso.pastaDocumento']}"
+                    value="#{home.variaveisDocumento[id].pasta}"
+                    items="#{props.documentoVariavelController.pastas}"
+                    readonly="#{readonly or home.variaveisDocumento[id].hasAssinatura() or props.documentoVariavelController.disableSelectOne}"
+                    disabled="#{readonly or home.variaveisDocumento[id].hasAssinatura() or props.documentoVariavelController.disableSelectOne}"
+                    showLabelSelecione="true" noSelectionLabel="[Padrão]">
+                    <a:ajax render="@this" event="change" execute="@this" limitRender="true" />
+                    <f:validateBean disabled="true" />
+                </wi:selectOneMenuEntity>
+                
+                <p:outputPanel id="#{id}EditorDiv">
+                    <i:help id="#{editorId.replace('-','')}ToolTipDiv"
+                        rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao and not (readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura())}">
+                        <div>
+                            <h:outputText value="Observação:" />
+                        </div>
+                        <h:outputText
+                            value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}" />
+                    </i:help>
+                    <wi:editor id="${editorId}" label="#{infoxMessages['indexedSearch.conteudo']}"
+                        value="#{taskInstanceHome.variaveisDocumento[id].documentoBin.modeloDocumento}"
+                        readonly="${readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}">
+                    </wi:editor>
+                </p:outputPanel>
+                <p:outputPanel id="assinaturaDocumentoDiv#{f.id}">
+                    <p:outputPanel id="conteudoAssinatura#{f.id}"
+                        rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
+                        <wi:assinador id="botaoAssinatura#{f.id}"
+                           callbackHandler="#{props.documentoVariavelController}"
+                           assinavelProvider="#{props.documentoVariavelController.assinavelProvider}"
+                           execute="@this assinaturaDocumentoDiv#{f.id}"
+                           render="assinaturaDocumentoDiv#{f.id} #{id}EditorDiv pageBodyDialogMessage @form botaoAssinatura"
+                           onbegin="infox.showLoading();"
+                           oncomplete="infox.hideLoading();"
+                           value="#{infoxMessages['assinaturas.assinar']}">
+                        </wi:assinador>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </fieldset>
+        </p:outputPanel>
+    </f:subview>
+</ui:composition>

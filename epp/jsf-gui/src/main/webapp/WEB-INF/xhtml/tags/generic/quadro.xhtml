@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <div class="pageContent #{styleClass}">
+        <div class="subBorda #{styleClass}">
+	    	<div class="banner #{styleClass}">
+	    		<ui:insert name="banner"></ui:insert>
+	    	</div>
+            <div class="tituloPagina #{styleClass}">
+                <ui:insert name="contentTitle">#{title}</ui:insert>
+            </div>
+            <div class="conteudo #{styleClass}">
+                <ui:insert />
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

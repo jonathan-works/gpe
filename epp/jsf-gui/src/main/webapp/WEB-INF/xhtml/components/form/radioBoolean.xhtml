@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="sim" value="#{empty sim ? props.sim : sim}" />
+
+    <wi:selectOneRadio valueList="true:crud.yes,false:crud.no"
+        boxChecked="#{sim ? 0 : 1}" disabled="#{props.disabled}">
+        <ui:insert />
+    </wi:selectOneRadio>
+</ui:composition>

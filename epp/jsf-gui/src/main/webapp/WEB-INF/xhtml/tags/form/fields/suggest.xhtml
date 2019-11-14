@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:wi="http://www.itx.com.br/jsf"
+>
+  <ui:param
+    name="maxlength"
+    value="#{empty maxlength ? '50' : maxlength}"
+  />
+  <ui:param
+    name="template"
+    value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}"
+  />
+  <ui:param
+    name="minChars"
+    value="#{empty props.minChars ? (empty minChars ? '1' : minChars) : props.minChars}"
+  />
+  
+  <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+  
+  <s:decorate
+    id="#{id}Decoration"
+    template="#{template}"
+    rendered="#{rendered}"
+    styleClass="decoration-div suggest-div #{wi:get(decorationClass,'')}"
+  >
+    <ui:define name="label">#{label}</ui:define>
+    <infox:suggest
+      id="#{id}"
+      minChars="#{minChars}"
+      value="#{value}"
+      required="#{required}"
+      suggestProvider="#{suggestProvider}"
+      disabled="#{disabled}"
+      ajax="#{ajax}"
+      render="#{render}"
+      style="#{style}"
+      rendered="#{rendered}"
+      styleClass="#{styleClass}"
+      maxlength="#{maxlength}"
+    />
+  </s:decorate>
+</ui:composition>

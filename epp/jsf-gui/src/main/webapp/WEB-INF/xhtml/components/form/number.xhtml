@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
+		
+		<script type="text/javascript">  
+			function onlyNumber(obj){
+				valor = obj.value;
+				obj.value = valor.replace(/\D/g,"");
+   			}  
+		</script>
+		
+		<ui:param
+		 name="style"
+		 value="#{empty style ? props.style : style}" />
+		<ui:param
+		 name="maxlength"
+		 value="#{empty maxlength ? props.maxlength : maxlength}" />
+		<ui:param
+         name="maximo"
+         value="#{wi:get(props.valorMaximo, '')}" />
+        <ui:param
+         name="minimo"
+         value="#{wi:get(props.valorMinimo, '')}" />
+		
+		<s:decorate
+		 id="#{id}Decoration"
+		 template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+		 rendered="#{empty rendered or rendered}">
+		
+			<ui:define name="label">#{label}</ui:define>
+			<h:inputText 
+			 id="#{id}"
+			 value="#{value}"
+			 styleClass="#{readonly ? 'readOnly' : '' } inputText"
+			 readonly="#{readonly}"
+			 disabled="#{disabled}"
+			 maxlength="#{empty maxlength ? 50 : maxlength}"
+			 onkeyup="onlyNumber(this)">
+				<f:converter converterId="javax.faces.Long"/>
+				<ui:insert />
+			     
+			    <c:if test="#{not empty maximo and not empty minimo}">
+			         <f:validateDoubleRange maximum="#{maximo}" minimum="#{minimo}" />
+			    </c:if>
+			    <c:if test="#{not empty maximo and empty minimo}">
+                     <f:validateDoubleRange maximum="#{maximo}" />
+                </c:if>
+                <c:if test="#{empty maximo and not empty minimo}">
+                     <f:validateDoubleRange minimum="#{minimo}" />
+                </c:if>
+			
+		</h:inputText>
+		
+	</s:decorate>
+
+	
+</ui:composition>

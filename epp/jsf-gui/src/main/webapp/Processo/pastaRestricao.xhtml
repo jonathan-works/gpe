@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:dataTable id="pastaTable"
+        bean="#{pastaList}"
+        values="#{pastaList.list(15)}"
+        rowId="#{row.id}" >
+
+        <ui:define name="searchForm">
+            <wi:searchForm formId="pastaSearchForm"
+                formTitle="#{infoxMessages['searchForm.title']}">
+                
+                <wi:inputText id="nome" value="#{pastaList.entity.nome}"
+                    label="#{infoxMessages['pasta.nome']}" />
+                <wi:inputText id="codigo" value="#{pastaList.entity.codigo}"
+                    label="#{infoxMessages['pasta.codigo']}" />
+                <wi:inputText id="descricao" value="#{pastaList.entity.descricao}"
+                    label="#{infoxMessages['pasta.descricao']}" />
+                <div />
+                <ui:define name="buttons">
+					<wi:commandButton id="searchButton"
+						value="#{infoxMessages['button.pesquisar']}"
+						action="#{searchAction}" styleClass="buttons"
+						reRender="#{wi:get(searchReRender, 'pageBody')}">
+						<a:param assignTo="#{bean.page}" value="1" />
+					</wi:commandButton>
+					<a:commandButton id="clearButton"
+						onclick="$('##{formId}').clearForm();showLoading();"
+						oncomplete="hideLoading();"
+						action="#{elFunctions.invokeMethod(clearAction)}"
+						value="#{infoxMessages['button.limpar']}" execute="@this"
+						render="#{wi:get(clearReRender, 'pageBody')}"
+						styleClass="buttons" />
+                    <a:commandButton id="addPastaBtn"
+                        value="#{infoxMessages['documentoProcesso.addFolder']}"
+                        onclick="infox.showLoading();"
+                        oncomplete="#{rich:component('addPastaPanel')}.show(); infox.hideLoading();"
+                        render="@this pastaRestricaoDiv" limitRender="true" styleClass="buttons"
+                        action="#{pastaRestricaoAction.newInstance()}"/>
+				</ui:define>
+            </wi:searchForm>
+        </ui:define>
+
+        <!-- Lista de pastas -->
+        <ui:define name="headerToolBar" />
+        <ui:define name="toolBar">
+            <a:commandLink action="#{pastaRestricaoAction.selectPasta(row)}"
+            	execute="@this" limitRender="true" rendered="true"
+            	render="pastaRestricaoDiv"
+            	onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['pasta.select']}" />
+            </a:commandLink>
+            <wi:toolBar action="#{pastaRestricaoAction.removePasta(row)}"
+                limitToList="true" status=":status"
+                rendered="#{pastaRestricaoAction.canRemovePasta(row)}"
+                reRender="pastaTable pastaRestricaoDiv"
+                onclick="if (confirm('#{infoxMessages['crud.confirmRemove']}')) {infox.showLoading(); return true;} else return false;"
+                oncomplete="infox.hideLoading();"
+                url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                title="#{infoxMessages['crud.remove']}" />
+        </ui:define>
+        <wi:columnOutputText columnId="nome"
+            columnHeader="#{infoxMessages['pasta.nome']}"
+            value="#{row.nome}" />
+        <wi:columnOutputText columnId="codigo"
+            columnHeader="#{infoxMessages['pasta.codigo']}"
+            value="#{row.codigo}" />
+        <wi:columnOutputText columnId="descricao"
+            columnHeader="#{infoxMessages['pasta.descricao']}"
+            value="#{row.descricao}" />
+        <wi:columnOutputText
+	       	columnId="ordem"
+	        columnHeader="#{infoxMessages['pasta.ordem']}"
+      		value="#{row.ordem}" />
+        <wi:columnBoolean
+            columnId="padrao"
+            columnHeader="#{infoxMessages['pasta.padrao']}"
+            value="#{pastaRestricaoAction.isPastaDefault(row)}" />
+      		
+      	<ui:include src="Pasta/pastaListColunasAdicionais.xhtml"/>
+
+    </wi:dataTable>
+    
+	<s:div id="pastaRestricaoDiv" style="margin-top: 1em;">
+        <!-- Edição dos campos da pasta -->
+        <rich:panel id="editPastaPanel" header="#{infoxMessages['pasta.selected']} - #{pastaRestricaoAction.instance}"
+            rendered="#{pastaRestricaoAction.pastaSelecionada}">
+            <h:form>
+                <wi:inputText id="editPastaInputName"
+                    value="#{pastaRestricaoAction.instance.nome}"
+                    required="true" maxlength="250"
+                    disabled="#{not pastaRestricaoAction.instance.editavel}"
+                    label="#{infoxMessages['pasta.nome']}">
+                    <f:validator validatorId="nomePastaValidator" />
+                    <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
+                    <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
+                </wi:inputText>
+                
+                <wi:inputText id="editPastaInputCodigo"
+                    value="#{pastaRestricaoAction.instance.codigo}"
+                    required="true" maxlength="250"
+                    disabled="#{not pastaRestricaoAction.instance.editavel}"
+                    label="#{infoxMessages['pasta.codigo']}">
+                    <f:validator validatorId="codigoPastaValidator" />
+                    <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
+                    <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
+                </wi:inputText>
+
+                <wi:inputText id="editPastaInputDescricao"
+                    value="#{pastaRestricaoAction.instance.descricao}"
+                    required="false" maxlength="250"
+                    disabled="#{not pastaRestricaoAction.instance.editavel}"
+                    label="#{infoxMessages['pasta.descricao']}">
+                </wi:inputText>
+
+                <wi:inputNumber id="editPastaInputOrdem"
+                    value="#{pastaRestricaoAction.instance.ordem}"
+                    disabled="#{not pastaRestricaoAction.instance.editavel}"
+                    required="true" label="#{infoxMessages['pasta.ordem']}">
+                    <f:validator validatorId="ordemPastaValidator" />
+                    <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
+                    <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
+                </wi:inputNumber>
+
+                <wi:selectBooleanCheckbox id="padraoInput"
+                    rendered="#{not pastaRestricaoAction.pastaSelecionadaPadrao}"
+                    label="#{infoxMessages['pasta.padrao']}"
+                    value="#{pastaRestricaoAction.pastaSelecionadaPadrao}" />
+                <wi:outputText id="outputPadraoInput"
+                    rendered="#{pastaRestricaoAction.pastaSelecionadaPadrao}"
+                    label="#{infoxMessages['pasta.padrao']}"
+                    value="#{infoxMessages['crud.yes']}" />
+
+                <ui:include src="Pasta/pastaAtributosAdicionais.xhtml"/>
+
+                <wi:commandButton id="editPastaButton"
+                    action="#{pastaRestricaoAction.updatePasta()}"
+                    rendered="#{pastaRestricaoAction.instance.editavel}"
+                    execute="@form" onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
+                    value="#{infoxMessages['pasta.edit']}"
+                    reRender="@form pastaTable pastaTablePanel pastaRestricaoDiv pageBodyDialogMessage" />
+
+            </h:form>
+
+            <!-- Lista de restrições -->
+    		<wi:dataTable id="pastaRestricaoTable"
+    			values="#{pastaRestricaoAction.restricoes}" rowId="#{row.id}"
+    			showSearchForm="false" showGrid="#{pastaRestricaoAction.pastaSelecionada}"
+    			tableTitle="#{infoxMessages['pasta.restricoes']} - #{pastaRestricaoAction.instance}">
+
+    			<ui:define name="headerToolBar" />
+    			<ui:define name="toolBar">
+                    <wi:toolBar id="viewPastaRestricao"
+                        rendered="#{pastaRestricaoAction.canEditRestricao(row)}"
+                        reRender="pastaRestricaoDiv"
+                        action="#{pastaRestricaoAction.loadRestricao(row)}"
+                        onclick="infox.showLoading();" title="#{infoxMessages['pasta.restricao.select']}"
+                    	oncomplete="infox.hideLoading(); #{rich:component('editRestricaoPanel')}.show();"
+                        url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+                    <wi:toolBar id="removePastaRestricao"
+                        action="#{pastaRestricaoAction.removeRestricao(row)}"
+                        rendered="#{pastaRestricaoAction.canRemoveRestricao(row)}"
+    					reRender="pastaRestricaoDiv" title="#{infoxMessages['pasta.restricao.remove']}"
+    					url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
+    			</ui:define>
+    
+                <wi:columnEnum columnId="tipoPastaRestricao"
+                    hideOrder="true"
+                    columnHeader="#{infoxMessages['pasta.tipoRestricao']}"
+                    value="#{row.tipoPastaRestricao}" />
+                <wi:columnOutputText columnId="alvo"
+                    hideOrder="true"
+                    columnHeader="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{pastaRestricaoAction.getAlvoFormatado(row)}" />
+                <wi:columnBoolean columnId="read"
+                    hideOrder="true"
+                    columnHeader="#{infoxMessages['pasta.visualizarRestricao']}"
+                    value="#{row.read}" />
+                <wi:columnBoolean columnId="write"
+                    hideOrder="true"
+                    columnHeader="#{infoxMessages['pasta.inserirRestricao']}"
+                    value="#{row.write}" />
+                <wi:columnBoolean columnId="delete"
+                    hideOrder="true"
+                    columnHeader="#{infoxMessages['pasta.retirarRestricao']}"
+                    value="#{row.delete}" />
+                <wi:columnBoolean columnId="logicDelete"
+                    hideOrder="true"
+                    columnHeader="#{infoxMessages['pasta.exclusaoLogicaRestricao']}"
+                    value="#{row.logicDelete}" />
+                    
+            </wi:dataTable>
+            <h:form>
+        		<a:commandButton id="addRestricaoButton"
+        			value="#{infoxMessages['pasta.adicionarRestricao']}" 
+                    onclick="infox.showLoading();"
+                    oncomplete="infox.hideLoading();#{rich:component('addRestricaoPanel')}.show();"
+        			render="@this addRestricaoPanel" limitRender="true" styleClass="buttons"
+                    rendered="#{pastaRestricaoAction.canEditRestricoes()}"
+                    action="#{pastaRestricaoAction.newRestricaoInstance()}" />
+            </h:form>
+        </rich:panel>
+	</s:div>
+
+	<script type="text/javascript">
+        
+        function clearAddRestricaoFields() {
+        	#{rich:jQuery('tipoRestricaoInput')}.val('');
+        	${rich:jQuery('alvoInputDiv')}.hide();
+        	#{rich:jQuery('alvoTipoPapelInput')}.val('');
+        	#{rich:jQuery('alvoTipoLocalizacaoInput')}.val('');
+        	#{rich:jQuery('alvoTipoParticipanteInput')}.attr('checked', true);
+        	#{rich:jQuery('readInput')}.attr('checked', false);
+        	#{rich:jQuery('writeInput')}.attr('checked', false);
+        	#{rich:jQuery('deleteInput')}.attr('checked', false);
+        	#{rich:jQuery('logicDeleteInput')}.attr('checked', false);
+        	$('.property-error.property-msg').remove();
+            $('.property-error').removeClass('property-error');
+        }
+        
+        function clearEditRestricaoFields() {
+        	#{rich:jQuery('editTipoRestricaoInput')}.val('');
+        	${rich:jQuery('editAlvoInputDiv')}.hide();
+        	#{rich:jQuery('editAlvoTipoPapelInput')}.val('');
+        	#{rich:jQuery('editAlvoTipoLocalizacaoInput')}.val('');
+        	#{rich:jQuery('editAlvoTipoParticipanteInput')}.attr('checked', true);
+        	#{rich:jQuery('editReadInput')}.attr('checked', false);
+        	#{rich:jQuery('editWriteInput')}.attr('checked', false);
+        	#{rich:jQuery('editDeleteInput')}.attr('checked', false);
+        	#{rich:jQuery('editLogicDeleteInput')}.attr('checked', false);
+        	$('.property-error.property-msg').remove();
+            $('.property-error').removeClass('property-error');
+        }
+  	</script>
+
+    <ui:include src="Pasta/addPastaPopup.xhtml"/>
+
+    <rich:popupPanel id="addRestricaoPanel" moveable="true" show="false"
+        resizeable="true" minWidth="290" minHeight="430"
+        header="#{infoxMessages['pasta.restricao.add']}"
+        onbeforehide="clearAddRestricaoFields();">
+        <f:facet name="controls">
+            <h:graphicImage id="pastaRestricaoPanelCloseBtn"
+                styleClass="mp-close"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+                onmouseup="#{rich:component('addRestricaoPanel')}.hide();" />
+        </f:facet>
+        <h:form>
+            <wi:selectOneMenuEnum id="tipoRestricaoInput" required="true"
+                label="#{infoxMessages['pasta.tipoRestricao']}"
+                items="#{pastaRestricaoAction.getTiposRestricao()}"
+                value="#{pastaRestricaoAction.restricaoInstance.tipoPastaRestricao}">
+                <a:ajax event="change" render="alvoInputDiv" />
+            </wi:selectOneMenuEnum>
+            <s:div id="alvoInputDiv">
+                <wi:outputText id="alvoTipoDefault"
+                    rendered="#{pastaRestricaoAction.isRestricaoDefault()}"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{infoxMessages['pasta.restricao.alvoTodos']}" />
+                <wi:selectOneMenuEntity id="alvoTipoPapelInput"
+                    rendered="#{pastaRestricaoAction.isRestricaoPapel()}"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{pastaRestricaoAction.alvoRestricaoPapel}"
+                    showRequired="true" required="true"
+                    items="#{pastaRestricaoAction.alvoPapelList}" />
+                <wi:tree id="alvoTipoLocalizacaoInput"
+                    rendered="#{pastaRestricaoAction.isRestricaoLocalizacao()}"
+                    assignTo="pastaRestricaoAction.alvoRestricaoLocalizacao"
+                    tree="#{localizacaoTree}"
+                    icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                    iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+                    required="true"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}" />
+                <wi:selectOneRadio id="alvoTipoParticipanteInput"
+                    valueList="true:pasta.restricao.participantes,false:pasta.restricao.naoParticipantes"
+                    rendered="#{pastaRestricaoAction.isRestricaoParticipante()}"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{pastaRestricaoAction.alvoRestricaoParticipante}"/>
+            </s:div>
+            <wi:selectBooleanCheckbox id="readInput"
+                label="#{infoxMessages['pasta.visualizarRestricao']}"
+                value="#{pastaRestricaoAction.restricaoInstance.read}" />
+            <wi:selectBooleanCheckbox id="writeInput"
+                label="#{infoxMessages['pasta.inserirRestricao']}"
+                value="#{pastaRestricaoAction.restricaoInstance.write}" />
+            <wi:selectBooleanCheckbox id="deleteInput"
+                label="#{infoxMessages['pasta.retirarRestricao']}"
+                value="#{pastaRestricaoAction.restricaoInstance.delete}" />
+            <wi:selectBooleanCheckbox id="logicDeleteInput"
+                label="#{infoxMessages['pasta.exclusaoLogicaRestricao']}"
+                value="#{pastaRestricaoAction.restricaoInstance.logicDelete}" />
+            <br />
+            <wi:commandButton id="addRestricaoButton"
+                action="#{pastaRestricaoAction.persistRestricao()}"
+                execute="@form" limitRender="true"
+                oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addRestricaoPanel')}.hide();}else{clearAddRestricaoFields()}"
+                value="#{infoxMessages['button.add']}"
+                reRender="@form pastaRestricaoDiv pageBodyDialogMessage" />
+        </h:form>
+    </rich:popupPanel>
+    
+    <rich:popupPanel id="editRestricaoPanel" moveable="true" show="false"
+        resizeable="true" minWidth="290" minHeight="430"
+        header="#{infoxMessages['pasta.restricao.edit']}"
+        onbeforehide="clearEditRestricaoFields();">
+        <f:facet name="controls">
+            <h:graphicImage id="editPastaRestricaoPanelCloseBtn"
+                styleClass="mp-close"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+                onmouseup="#{rich:component('editRestricaoPanel')}.hide();" />
+        </f:facet>
+        <h:form>
+            <s:div id="editTipoRestricaoInputDiv">
+                <wi:selectOneMenuEnum id="editTipoRestricaoInput" required="true"
+                    label="#{infoxMessages['pasta.tipoRestricao']}"
+                    rendered="#{not pastaRestricaoAction.isRestricaoDefault()}"
+                    items="#{pastaRestricaoAction.getTiposRestricao()}"
+                    disabled="#{pastaRestricaoAction.isRestricaoDefault()}"
+                    value="#{pastaRestricaoAction.restricaoInstance.tipoPastaRestricao}">
+                    <a:ajax event="change" render="editAlvoInputDiv" />
+                </wi:selectOneMenuEnum>
+                <wi:outputText id="editTipoRestricaoDefault"
+                    rendered="#{pastaRestricaoAction.isRestricaoDefault()}"
+                    label="#{infoxMessages['pasta.tipoRestricao']}"
+                    value="#{infoxMessages['pasta.restricaoDefault']}" />
+            </s:div>
+            <s:div id="editAlvoInputDiv">
+                <wi:outputText id="editAlvoTipoDefault"
+                    rendered="#{pastaRestricaoAction.isRestricaoDefault()}"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{infoxMessages['pasta.restricao.alvoTodos']}" />
+                <wi:selectOneMenuEntity id="editAlvoTipoPapelInput"
+                    rendered="#{pastaRestricaoAction.isRestricaoPapel()}"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{pastaRestricaoAction.alvoRestricaoPapel}"
+                    showRequired="true" required="true"
+                    items="#{pastaRestricaoAction.alvoPapelList}" />
+                <wi:tree id="editAlvoTipoLocalizacaoInput"
+                    rendered="#{pastaRestricaoAction.isRestricaoLocalizacao()}"
+                    assignTo="pastaRestricaoAction.alvoRestricaoLocalizacao"
+                    tree="#{localizacaoTree}"
+                    icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                    iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+                    required="true"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}" />
+                <wi:selectOneRadio id="editAlvoTipoParticipanteInput"
+                    valueList="true:pasta.restricao.participantes,false:pasta.restricao.naoParticipantes"
+                    rendered="#{pastaRestricaoAction.isRestricaoParticipante()}"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{pastaRestricaoAction.alvoRestricaoParticipante}"/>
+            </s:div>
+            <wi:selectBooleanCheckbox id="editReadInput"
+                label="#{infoxMessages['pasta.visualizarRestricao']}"
+                value="#{pastaRestricaoAction.restricaoInstance.read}" />
+            <wi:selectBooleanCheckbox id="editWriteInput"
+                label="#{infoxMessages['pasta.inserirRestricao']}"
+                value="#{pastaRestricaoAction.restricaoInstance.write}" />
+            <wi:selectBooleanCheckbox id="editDeleteInput"
+                label="#{infoxMessages['pasta.retirarRestricao']}"
+                value="#{pastaRestricaoAction.restricaoInstance.delete}" />
+            <wi:selectBooleanCheckbox id="editLogicDeleteInput"
+                label="#{infoxMessages['pasta.exclusaoLogicaRestricao']}"
+                value="#{pastaRestricaoAction.restricaoInstance.logicDelete}" />
+            <br />
+            <wi:commandButton id="editRestricaoButton"
+                action="#{pastaRestricaoAction.updateRestricao()}"
+                execute="@form" limitRender="true"
+                oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('editRestricaoPanel')}.hide();}else{clearEditRestricaoFields()}"
+                value="#{infoxMessages['button.save']}"
+                reRender="@form pastaRestricaoDiv" />
+        </h:form>
+    </rich:popupPanel>
+
+</ui:composition>

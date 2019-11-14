@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:infox="http://www.infox.com.br/jsf">
+	
+    <s:div id="painelProcessosDocumento" style="width: 100%; margin-left: 0.6em;" >
+        <s:div id="processosDocumento" rendered="#{painelUsuarioController.canShowProcessoList()}" >
+    
+	        <wi:dataTable
+	           values="#{consultaProcessoList.list(10)}"
+	           bean="#{consultaProcessoList}"
+	           styleClass="p-list-dtable"
+	           tableTitle="#{infoxMessages['consultaProcesso.processos']}"
+	           id="consultaProcessoDocumentoList"
+	           rowId="#{row.idProcesso}"
+	           searchFormStyleClass="p-list-search"
+	           panelStyleClass="p-list-panel"
+	           hideOrder="true" >
+	         
+	         <ui:define name="searchForm">
+	           <wi:searchForm
+	             opened="false"
+	             formId="consultaProcessoDocumentoForm"
+	             formTitle="#{infoxMessages['searchForm.title']}"
+	             searchReRender="painelProcessosDocumento"
+	             clearAction="consultaProcessoList.newInstance()"
+	             clearReRender="painelProcessosDocumento" 
+	             searchAction="#{consultaProcessoList.search()}">
+	             
+	             <wi:inputText
+                    id="numeroProcessoRoot"
+                    label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
+                    value="#{consultaProcessoList.numeroProcessoRoot}" />
+	             
+	             <wi:inputDataPeriodo
+	                id="periodo"
+	                label="#{infoxMessages['data.inputPeriodo']}"
+	                valueDateFrom="#{consultaProcessoList.dataInicio}"
+	                valueDateTo="#{consultaProcessoList.dataFim}" />
+
+				<wi:selectOneMenuEntity id="natureza" label="#{infoxMessages['natureza.tableTitle']}"
+					value="#{consultaProcessoList.natureza}" showLabelSelecione="true"
+					items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}">
+					<a:ajax execute="@this" render="natureza categoriaOutPutPanel"
+						listener="#{naturezaCategoriaFluxoFacade.loadCategoriaList(consultaProcessoList.natureza)}"></a:ajax>
+                    <a:ajax execute="@none" render="categoriaOutputPanel" listener="#{consultaProcessoList.setCategoria(null)}" />
+				</wi:selectOneMenuEntity>
+
+				<a:outputPanel id="categoriaOutPutPanel">
+
+					<wi:selectOneMenuEntity disabled="#{empty consultaProcessoList.natureza}"
+						id="categoria" label="#{infoxMessages['categoria.tableTitle']}"
+						value="#{consultaProcessoList.categoria}" showLabelSelecione="true"
+						inNewLine="true" items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
+				</a:outputPanel>
+				
+				<ui:include src="/Painel/filtroExtra.xhtml" />
+				
+				</wi:searchForm>
+	         </ui:define>
+	         
+	         <infox:dynamicColumns columns="#{consultaProcessoList.dynamicColumns}" />
+	         
+	         <ui:define name="headerToolBar">
+	           <ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
+	         </ui:define>
+	         
+	         <ui:define name="toolBar">
+	           <ui:include src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml" />
+	         </ui:define>
+	         
+         	</wi:dataTable>
+           </s:div>
+    </s:div>
+          
+</ui:composition>

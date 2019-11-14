@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
+
+	<wi:dataReport
+         title="#{infoxMessages['grupoModeloDocumento.titlePage']}"
+         columns="2"
+         widths="5 1"
+         headerText="#{grupoModeloDocumentoList.criteria}">
+				   
+		<wi:reportColumnHeader
+             title="#{infoxMessages['grupoModeloDocumento.grupoModeloDocumento']}" />
+		<wi:reportColumnHeader
+             title="#{infoxMessages['field.situacao']}" />
+				
+		<ui:repeat
+             var="row"
+             value="#{grupoModeloDocumentoList.list()}">
+			
+			<wi:reportColumn
+                 value="#{row.grupoModeloDocumento}" />
+			<wi:reportColumnSituacao
+                 value="#{row.ativo}" />
+			
+		</ui:repeat>
+
+	</wi:dataReport>
+	
+</ui:composition>

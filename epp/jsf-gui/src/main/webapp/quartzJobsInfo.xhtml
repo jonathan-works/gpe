@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:param
+      name="pageTitle"
+      value="#{infoxMessages['quartz.titlePage']}"
+    />
+    <ui:define name="body">
+
+        <wi:panel id="quartzPanel" styleClass="content-block">
+        
+
+            <wi:dataTable rowKeyVar="key" id="collectionTable" var="row"
+                panelWidth="99%" showToolbarColumn="false"
+                showGridCount="false" tableTitle="#{infoxMessages['quartz.titlePage']}"
+                panelStyleClass="full-sized short-margin-top"
+                values="#{quartzJobsInfo.detailJobsInfo}">
+
+                <rich:column>
+                    <f:facet name="header">#{infoxMessages['quartz.triggerName']}</f:facet>
+                    <h:outputText value="#{row.triggerName}" />
+                </rich:column>
+
+                <rich:column>
+                    <f:facet name="header">#{infoxMessages['quartz.jobName']}</f:facet>
+                    <h:outputText value="#{row.jobName}" />
+                </rich:column>
+
+                <rich:column>
+                    <f:facet name="header">#{infoxMessages['quartz.cronExpression']}</f:facet>
+                    <h:outputText value="#{row.cronExpression}" />
+                </rich:column>
+
+                <rich:column>
+                    <f:facet name="header">#{infoxMessages['quartz.previousFireTime']}</f:facet>
+                    <h:outputText value="#{row.previousFireTime}">
+                        <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+                    </h:outputText>
+                </rich:column>
+
+                <rich:column>
+                    <f:facet name="header">#{infoxMessages['quartz.nextFireTime']}</f:facet>
+                    <h:outputText value="#{row.nextFireTime}">
+                        <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+                    </h:outputText>
+                </rich:column>
+
+
+                <rich:column>
+                    <f:facet name="header">#{infoxMessages['quartz.jobExpression']}</f:facet>
+                    <h:outputText value="#{row.jobExpression}" />
+                </rich:column>
+
+                <rich:column>
+                    <f:facet name="header">#{infoxMessages['quartz.validJob']}</f:facet>
+                    <h:outputText value="#{row.jobValid ? 'Sim' : 'Não'}" />
+                </rich:column>
+
+                <rich:column
+                    rendered="#{s:hasRole('admin') or s:hasRole('administrador')}">
+                    <h:form>
+                        <a:commandLink value="#{infoxMessages['button.execute']}"
+                            action="#{quartzJobsInfo.triggerJob(row.jobName, row.groupName)}"
+                            rendered="#{row.jobValid}" render="quartzPanel, pageBodyDialogMessage" />
+                    </h:form>
+                    <h:form>
+                        <a:commandLink
+                            value="#{infoxMessages['button.delete']}"
+                            action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName, row.triggerName)}"
+                            render="quartzPanel, pageBodyDialogMessage" />
+                    </h:form>
+                </rich:column>
+            </wi:dataTable>
+
+            <h:form>
+                <wi:commandButton id="btAtualizar" reRender="pagina"
+                    value="Atualizar Página" />
+                <wi:commandButton
+                    rendered="#{(s:hasRole('admin') or s:hasRole('administrador')) and not producao}"
+                    id="btApagarJobs" reRender="pagina"
+                    action="#{quartzJobsInfo.apagarJobs()}"
+                    value="#{infoxMessages['quartz.deleteAllJobs']}" />
+
+            </h:form>
+        </wi:panel>
+
+    </ui:define>
+</ui:composition>

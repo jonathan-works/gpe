@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="victorpasqualino" id="1" dbms="mssql, postgresql, oracle">
+       <addColumn tableName="tb_perfil_template">
+            <column name="cd_perfil_template" type="NVARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2" dbms="mssql">
+        <update tableName="tb_perfil_template">
+            <column name="cd_perfil_template" type="NVARCHAR(50)" 
+                valueComputed="LTRIM(RTRIM(REPLACE(REPLACE((ds_perfil_template COLLATE sql_latin1_general_cp1251_ci_as), ' ',''), '/', '')))"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2" dbms="postgresql">
+        <update tableName="tb_perfil_template">
+            <column name="cd_perfil_template" type="NVARCHAR(50)" 
+                valueComputed="replace(replace(trim(convert_from(convert_to(ds_perfil_template, 'LATIN1'), 'LATIN1')), ' ', ''), '/', '')"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="gabriel" id="1" dbms="oracle">
+        <update tableName="tb_perfil_template">
+            <column name="cd_perfil_template" type="NVARCHAR(50)" valueComputed="replace(trim(ds_perfil_template), ' ', '')"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3" dbms="mssql, postgresql, oracle">
+        <addNotNullConstraint columnDataType="NVARCHAR(50)" columnName="cd_perfil_template" tableName="tb_perfil_template"/>
+    
+        <createIndex indexName="idx_codigo_perfil" tableName="tb_perfil_template" unique="true">
+            <column name="cd_perfil_template" type="NVARCHAR(50)" />
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

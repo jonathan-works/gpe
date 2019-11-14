@@ -1,0 +1,45 @@
+#badge() {
+  .standard {
+    text-align:center;
+    position: relative;
+    white-space: nowrap;
+    margin-right: 1.75em;
+
+    &&-overlap {
+        margin-right: 1em;
+    }
+
+    &[data-badge] {
+      &:after {
+        content: attr(data-badge);
+        /*
+        .prefixed-value(display,flex);
+        .prefixed-atrib(flex-direction, row);
+        .prefixed-atrib(flex-wrap, row);
+        .prefixed-atrib(justify-content, row);
+        .prefixed-atrib(align-content, center);
+        .prefixed-atrib(align-items, center);
+        top: -0.95em;
+        right: -1.8em;
+        */
+        top: -0.90em;
+        right:-1.75em;
+        display:block;
+        position: absolute;
+        font-family: @default-font-family;
+        font-weight: 600;
+        font-size: 1em;
+        width: 1.75em;
+        height: 1.75em;
+        border-radius: 50%;
+        background: @badges-bg-color;
+        color: @badges-txt-color;
+      }
+    }
+  }
+}
+.mdl-badge{
+  @badges-bg-color:#000;
+  @badges-txt-color:#fff;
+  #badge > .standard;
+}

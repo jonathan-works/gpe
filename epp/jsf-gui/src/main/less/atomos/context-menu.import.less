@@ -1,0 +1,20 @@
+@ctx-menu-bg-color:#a0c991;
+@ctx-menu-txt-color:#030;
+
+div.rf-ctx-lst {
+  background-color:lighten(@ctx-menu-bg-color,10%);
+  color:@ctx-menu-txt-color;
+}
+span.rf-ctx-itm-lbl {
+  color:@ctx-menu-txt-color;
+  font-family:@default-font-family;
+}
+div.rf-ctx-lst-bg {
+  background-image:none;
+  border:lighten(@ctx-menu-bg-color,10%);
+}
+div.rf-ctx-itm-sel {
+  background-image:none;
+  background-color:darken(@ctx-menu-bg-color,10%);
+  color:lighten(@ctx-menu-bg-color,10%);
+}

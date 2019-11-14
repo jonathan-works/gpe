@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="listHeight" value="#{wi:get(listsHeight, '300px')}" />
+    <ui:param name="listWidth" value="#{wi:get(listWidth, '350px')}" />
+
+    <h:outputScript name="pickList.js" library="js" />
+    <script type="text/javascript">
+                    invoke([ "infox.PickList", "infox.escapeId" ], function(
+                            PickList, escapeId) {
+                        var id = escapeId("##{rich:clientId(id)}");
+                        var inputId = "##{id}Filtro";
+                        PickList(id, inputId);
+                    });
+                </script>
+    <s:div styleClass="pick-filter">
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/search.gif')}" />
+        <input id="#{id}Filtro" class="inputText" />
+    </s:div>
+    <s:div styleClass="pick-cont">
+        <rich:pickList id="#{id}" value="#{value}"
+            addAllText="#{infoxMessages['button.addAll']}" addText="#{infoxMessages['button.add']}"
+            removeAllText="#{infoxMessages['button.deleteAll']}" removeText="#{infoxMessages['button.delete']}"
+            listHeight="#{listHeight}" moveControlsVerticalAlign="top"
+            switchByClick="true" sourceCaption="#{sourceCaption}"
+            targetCaption="#{targetCaption}" showButtonsLabel="false"
+            listWidth="#{listWidth}">
+            <s:selectItems value="#{itemValues}" var="var"
+                label="#{itemLabel}" />
+            <ui:insert />
+        </rich:pickList>
+    </s:div>
+
+</ui:composition>

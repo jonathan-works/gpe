@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.org/schema/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="http://richfaces.org/a4j"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:dataTable values="#{documentoAnexoList.list(10)}" id="documentosTable" bean="#{documentoAnexoList}" 
+       rowId="#{row.id}" tableTitle="#{infoxMessages['sigiloDocumento.documentos']}" 
+       hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud" showSearchForm="false">
+       
+       <ui:define name="toolBar" />
+       <ui:define name="headerToolBar" />
+       
+       <rich:column width="10%">
+           <f:facet name="header">
+               <h:outputText value="#{infoxMessages['sigiloDocumento.documento.identificador']}" />
+           </f:facet>
+           <center><h:outputText value="#{row.numeroDocumento}" /></center>
+       </rich:column>
+       
+       <rich:column>
+           <f:facet name="header">
+               <h:outputText value="#{infoxMessages['sigiloDocumento.documento.nome']}" />
+           </f:facet>
+           <h:outputText value="#{row.descricao}" />
+       </rich:column>
+       
+       <rich:column width="10%">
+           <f:facet name="header">
+               <h:outputText value="#{infoxMessages['sigiloDocumento.documento.documento']}" />
+           </f:facet>
+           <center>
+               <a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction}"
+                   execute="@this" render="@this"
+                   onclick="infox.showLoading();"
+                   oncomplete="#{fileDownloader.getWindowOpen(row.documentoBin)} infox.hideLoading()">
+                   <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" />
+                   <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+               </a:commandLink>
+           </center>
+       </rich:column>
+       
+       <rich:column width="10%">
+           <f:facet name="header">
+               <h:outputText value="#{infoxMessages['sigiloDocumento.sigiloso']}" />
+           </f:facet>
+           <center>
+               <h:form>
+                   <h:selectBooleanCheckbox value="#{sigiloDocumentoAction.sigiloDocumentoMap[row.id]}"
+                       disabled="#{not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}">
+                       <a:ajax execute="@this" event="change" render="documentosTable, informacoesAdicionais" limitRender="true" 
+                           listener="#{sigiloDocumentoAction.prepararGravacaoSigilo(row)}"/>
+                   </h:selectBooleanCheckbox>
+               </h:form>
+           </center>
+       </rich:column>
+       
+       <rich:column width="10%">
+           <f:facet name="header">
+               <h:outputText value="#{infoxMessages['sigiloDocumento.detalhes']}" />
+           </f:facet>
+           <center>
+               <h:form rendered="#{empty sigiloDocumentoController.fragmentoARenderizar or sigiloDocumentoController.fragmentoARenderizar eq 'DETALHE_SIGILO'}">
+                   <a:commandLink style="cursor: default" 
+                       execute="@this" render="documentosTable, informacoesAdicionais" limitRender="true">
+                       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/search_16.png')}" title="#{infoxMessages['sigiloDocumento.verDetalhes']}" style="cursor: pointer"/>
+                       <f:setPropertyActionListener target="#{sigiloDocumentoController.fragmentoARenderizar}" value="DETALHE_SIGILO" />
+                       <f:setPropertyActionListener target="#{sigiloDocumentoList.documento}" value="#{row}" />
+                   </a:commandLink>
+               </h:form>
+               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/search_16_gray.png')}" title="#{infoxMessages['sigiloDocumento.verDetalhes']}"
+                   rendered="#{not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}" />
+           </center>
+       </rich:column>
+       
+       <rich:column width="10%">
+           <f:facet name="header">
+               <h:panelGroup>
+                   <h:outputText value="#{infoxMessages['sigiloDocumento.gerenciarPermissoes']}" style="display: block"/>
+                   <h:form rendered="#{sigiloDocumentoPermissaoAction.canManagePermissions() and (empty sigiloDocumentoController.fragmentoARenderizar or sigiloDocumentoController.fragmentoARenderizar eq 'DETALHE_SIGILO')}">
+	                   <a:commandLink style="cursor: default"
+	                       execute="@this" limitRender="true" render="documentosTable, informacoesAdicionais">
+	                       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['sigiloDocumento.gerenciarPermissoes']}" style="cursor: pointer" />
+	                       <f:setPropertyActionListener target="#{sigiloDocumentoController.fragmentoARenderizar}" value="PERMISSOES_SIGILO" />
+	                       <f:setPropertyActionListener target="#{sigiloDocumentoList.documento}" value="#{row}" />
+	                   </a:commandLink>
+	               </h:form>
+                   <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add_gray.png')}" title="#{infoxMessages['sigiloDocumento.gerenciarPermissoes']}"
+                       rendered="#{sigiloDocumentoPermissaoAction.canManagePermissions() and not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}" />
+               </h:panelGroup>
+           </f:facet>
+           <center>
+               <h:form rendered="#{sigiloDocumentoAction.isSigiloso(row)}">
+                   <h:selectBooleanCheckbox value="#{sigiloDocumentoPermissaoAction.permissoesMap[row.id]}"
+                       disabled="#{not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}">
+                       <a:ajax event="change" execute="@this" render="documentosTable" limitRender="true" />
+                   </h:selectBooleanCheckbox>
+               </h:form>
+           </center>
+       </rich:column>
+    
+    </wi:dataTable>
+    
+    <s:div id="informacoesAdicionais" style="margin-top: 1em;">
+    
+        <wi:dataForm rendered="#{sigiloDocumentoController.fragmentoARenderizar eq 'MOTIVO_SIGILO'}" formId="sigiloDocumentoForm"
+            formTitle="#{infoxMessages['sigiloDocumento.sigiloDocumentoForm']}">
+           <wi:inputTextarea label="#{infoxMessages['sigiloDocumento.motivo']}" required="true" showCounter="false" value="#{sigiloDocumentoAction.motivo}" id="motivo"/>
+           <ui:define name="buttons">
+               <a:commandButton value="Gravar" action="#{sigiloDocumentoAction.gravarSigiloDocumento}" styleClass="buttons"
+                   render="informacoesAdicionais, documentosTable, pageBodyDialogMessage" limitRender="true">
+                   <p:resetInput target="#{wi:clientId(motivo)}" />
+               </a:commandButton>
+               <a:commandButton value="Cancelar" action="#{sigiloDocumentoAction.resetarSigiloDocumento}" execute="@this"
+                   limitRender="true" render="documentosTable, informacoesAdicionais" styleClass="buttons"/>
+           </ui:define>           
+        </wi:dataForm>
+        
+        <wi:dataTable showGrid="#{sigiloDocumentoController.fragmentoARenderizar eq 'DETALHE_SIGILO'}" id="detalheSigiloTable"
+            tableTitle="#{infoxMessages['sigiloDocumento.detalhes']}" bean="#{sigiloDocumentoList}" showSearchForm="false"
+            values="#{sigiloDocumentoList.list(5)}" hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud"
+            rowId="#{row.id}">
+            
+            <ui:define name="toolBar" />
+            <ui:define name="headerToolBar" />
+            
+            <rich:column width="5%">
+               <f:facet name="header">
+                   <h:outputText value="#{infoxMessages['sigiloDocumento.documento.identificador']}" />
+               </f:facet>
+               <center><h:outputText value="#{row.documento.numeroDocumento}" /></center>
+           </rich:column>
+           
+           <rich:column width="18%">
+               <f:facet name="header">
+                   <h:outputText value="#{infoxMessages['sigiloDocumento.usuario.nome']}" />
+               </f:facet>
+               <center><h:outputText value="#{row.usuario}" /></center>
+           </rich:column>
+    
+           <rich:column width="2%">
+               <f:facet name="header">
+                   <h:outputText value="#{infoxMessages['sigiloDocumento.sigiloso']}" />
+               </f:facet>
+               <center><h:outputText value="#{row.ativo ? 'Sim' : 'Não'}" /></center>
+           </rich:column>
+              
+           <rich:column width="10%">
+               <f:facet name="header">
+                   <h:outputText value="#{infoxMessages['sigiloDocumento.dataInclusao']}" />
+               </f:facet>
+               <center>
+                   <h:outputText value="#{row.dataInclusao}">
+                       <s:convertDateTime type="both"/>
+                   </h:outputText>
+               </center>
+           </rich:column>
+           
+           <rich:column>
+               <f:facet name="header">
+                   <h:outputText value="#{infoxMessages['sigiloDocumento.motivo']}" />
+               </f:facet>
+               <h:outputText value="#{row.motivo}" />
+           </rich:column>
+            
+        </wi:dataTable>
+        
+        <wi:dataTable id="permissoesTable" values="#{usuarioRaiaList.list(10)}" bean="#{usuarioRaiaList}"
+           tableTitle="#{infoxMessages['sigiloDocumento.usuarios']}" hideOrder="true" showGrid="#{sigiloDocumentoController.fragmentoARenderizar eq 'PERMISSOES_SIGILO'}"
+           showSearchForm="#{sigiloDocumentoController.fragmentoARenderizar eq 'PERMISSOES_SIGILO'}">
+           
+           <ui:define name="headerToolBar" />
+           
+           <ui:define name="toolBar">
+               <h:form>
+                   <h:selectBooleanCheckbox value="#{sigiloDocumentoPermissaoAction.usuariosMap[row.idUsuarioLogin]}">
+                       <a:ajax event="change" execute="@this" />
+                   </h:selectBooleanCheckbox>
+               </h:form>
+           </ui:define>
+           
+           <ui:define name="searchForm">
+               <wi:searchForm formId="permissoesSearchForm" formTitle="#{infoxMessages['sigiloDocumento.usuarios']}">
+                   <wi:inputText id="nome" value="#{usuarioRaiaList.nomeUsuario}" label="#{infoxMessages['sigiloDocumento.usuario.nome']}" />
+                   <wi:selectOneMenuEntity id="perfilTemplate" value="#{usuarioRaiaList.perfil}" 
+                       label="#{infoxMessages['perfil.titlePage']}"
+                       items="#{usuarioRaiaList.perfis}" showLabelSelecione="true" />
+               </wi:searchForm>
+           </ui:define>
+           
+           <rich:column>
+               <f:facet name="header">
+                   <h:outputText value="#{infoxMessages['sigiloDocumento.usuario.nome']}" />
+               </f:facet>
+               <h:outputText value="#{row.nomeUsuario}" />
+           </rich:column>
+           
+           <rich:column>
+	           <f:facet name="header">
+	               <h:outputText value="#{infoxMessages['sigiloDocumento.usuario.cpf']}" />
+	           </f:facet>
+	           <h:outputText value="#{row.pessoaFisica.cpf}" />
+           </rich:column>
+           
+           <ui:define name="conteudoAdicional">
+               <h:form rendered="#{sigiloDocumentoController.fragmentoARenderizar eq 'PERMISSOES_SIGILO' and 
+                    usuarioRaiaList.resultCount gt 0}">
+		           <a:commandButton value="Gravar" action="#{sigiloDocumentoPermissaoAction.gravarPermissoes}" limitRender="true" 
+		               render="documentosTable, informacoesAdicionais, pageBodyDialogMessage" execute="@this" styleClass="buttons" />
+		           <a:commandButton value="Cancelar" action="#{sigiloDocumentoPermissaoAction.resetarPermissoes}" execute="@this"
+		               limitRender="true" render="documentosTable, informacoesAdicionais" styleClass="buttons"/>
+		       </h:form>
+           </ui:define>
+           
+       </wi:dataTable>
+       
+    </s:div>
+
+</ui:composition>

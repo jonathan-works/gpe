@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+
+    <ui:define name="body">
+        <ui:param name="showSearchTab"
+            value="#{empty showSearchTab ? true : showSearchTab}" />
+        <ui:param name="showFormTab"
+            value="#{empty showFormTab ? true : showFormTab}" />
+        <infox:tabPanel id="defaultTabPanel" switchType="ajax"
+            activeTab="#{home.tab}">
+            <h:form>
+                <infox:tabHeaders />
+            </h:form>
+
+            <infox:tabChangeListener listener="#{crudTabCleaner}" />
+
+            <infox:tab id="search" name="search"
+                rendered="#{showSearchTab}" immediate="true"
+                status=":status"
+                title="#{infoxMessages['template.abaPesquisaText']}"
+                action="#{home.onClickSearchTab}">
+                <a:region>
+                    <s:div id="searchGridRegion">
+                        <ui:insert name="searchGrid" />
+                    </s:div>
+                </a:region>
+            </infox:tab>
+
+            <infox:tab id="form" name="form" rendered="#{showFormTab}"
+                immediate="true" status=":status"
+                disabled="#{empty disabledForm ? false : disabledForm}"
+                title="#{empty titleFormTab ? messages['template.abaFormularioText'] : titleFormTab}"
+                action="#{home.onClickFormTab}">
+                <a:region>
+                    <ui:insert name="form" />
+                </a:region>
+            </infox:tab>
+
+            <ui:insert name="tabs">
+            
+            </ui:insert>
+
+        </infox:tabPanel>
+        
+        <ui:insert name="extraContent" />
+    </ui:define>
+</ui:composition>

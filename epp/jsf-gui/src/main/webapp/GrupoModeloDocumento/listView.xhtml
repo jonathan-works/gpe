@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['grupoModeloDocumento.titlePage']}</ui:define>
+    <ui:param name="home" value="#{grupoModeloDocumentoCrudAtion}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{grupoModeloDocumentoList.list(15)}"
+            bean="#{grupoModeloDocumentoList}"
+            tableTitle="#{infoxMessages['grupoModeloDocumento.grupoModeloDocumento']}"
+            id="grupoModeloDocumentoList"
+            rowId="#{row.idGrupoModeloDocumento}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="grupoModeloDocumentoSearchForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+
+                    <wi:inputText id="grupoModeloDocumento"
+                        label="#{infoxMessages['grupoModeloDocumento.grupoModeloDocumento']}"
+                        value="#{grupoModeloDocumentoList.entity.grupoModeloDocumento}"
+                        length="50" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        value="#{grupoModeloDocumentoList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText columnId="grupoModeloDocumento"
+                columnHeader="#{infoxMessages['grupoModeloDocumento.grupoModeloDocumento']}"
+                value="#{row.grupoModeloDocumento}" />
+            <wi:columnSituacao
+                columnHeader="#{infoxMessages['field.situacao']}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="grupoModeloDocumentoForm"
+            formTitle="#{infoxMessages['form.title']}">
+
+            <wi:inputText id="grupoModeloDocumento"
+                label="#{infoxMessages['grupoModeloDocumento.grupoModeloDocumento']}"
+                value="#{home.instance.grupoModeloDocumento}"
+                required="true" maxlength="30" />
+
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{home.instance.ativo}" />
+
+        </wi:dataForm>
+    </ui:define>
+
+</ui:composition>

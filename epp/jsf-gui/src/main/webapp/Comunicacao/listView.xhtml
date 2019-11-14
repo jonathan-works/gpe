@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+	<ui:define name="title">#{infoxMessages['comunicacao.comunicacoes']}</ui:define>
+
+	<ui:define name="body">
+		<infox:tabPanel switchType="ajax"
+			activeTab="#{expedicaoComunicacaoAction.tab}"
+			id="comunicacaoTabPanel">
+			<h:form>
+				<infox:tabHeaders />
+			</h:form>
+			<infox:tab id="list" name="list" immediate="true"
+				title="#{infoxMessages['comunicacao.comunicacoes']}"
+				action="#{expedicaoComunicacaoAction.setModeloComunicacao(null)}">
+				
+				
+				<wi:searchForm formId="assinaturaDocumentosSessaoSearchForm" formTitle="#{infoxMessages['searchForm.title']}">
+					<i:inputText id="numeroProcessofiltro"
+						label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
+						value="#{expedicaoComunicacaoAction.lazyData.numeroProcesso}" />
+					<i:selectOneMenu id="tipoComunicacaoFiltro"
+						label="#{infoxMessages['comunicacao.tipoComunicacao']}"
+						value="#{expedicaoComunicacaoAction.lazyData.tipoComunicacao}"
+						items="#{expedicaoComunicacaoAction.tiposComunicacao}" selectStyle="max-width: 260px;"
+						converterId="br.com.infox.jsf.converter.SelectItemConverter" />
+					<i:selectBooleanCheckbox id="expedidaFiltro"
+						label="#{infoxMessages['comunicacao.expedida']}"
+						value="#{expedicaoComunicacaoAction.lazyData.expedida}" />
+	
+					<ui:define name="buttons">
+						<div>
+							<h:commandButton id="comunicacaoSearchBtn"
+								actionListener="#{expedicaoComunicacaoAction.limpaSelecionados()}"
+								action="#{expedicaoComunicacaoAction.lazyData.search()}"
+								styleClass="buttons"
+								value="#{infoxMessages['button.pesquisar']}">
+								<p:ajax update="pageBody" process="@form"  onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />								
+							</h:commandButton>
+							<h:commandButton id="comunicacaoClearBtn"
+								actionListener="#{expedicaoComunicacaoAction.limpaSelecionados()}"
+								action="#{expedicaoComunicacaoAction.lazyData.clear()}"
+								styleClass="buttons"
+								value="#{infoxMessages['button.limpar']}">
+								<p:ajax update="pageBody" process="@form" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />	
+							</h:commandButton>
+						</div>
+					</ui:define>
+				</wi:searchForm>
+				
+				
+				<h:form>
+					<p:dataTable id="assinaturaDocumentosSessao" styleClass="dtable rf-dt-crud"
+						binding="#{expedicaoComunicacaoAction.lazyData.dataTable}" 
+						paginator="true" rows="15" lazy="true" var="row" value="#{expedicaoComunicacaoAction.lazyData}" 
+						selection="#{expedicaoComunicacaoAction.selecionados}" rowSelectMode="checkbox"
+						emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}" paginatorAlwaysVisible="false"
+						filters="#{expedicaoComunicacaoAction.lazyData.filters}"
+						disabledSelection="#{expedicaoComunicacaoAction.lazyData.expedida}">
+						
+						<p:ajax event="toggleSelect" process="@this" update="@(.btnVerificaAssinar)" partialSubmit="true" />
+						<p:ajax event="rowSelectCheckbox" process="@this" update="@(.btnVerificaAssinar)" partialSubmit="true" />
+						<p:ajax event="rowUnselectCheckbox" process="@this" update="@(.btnVerificaAssinar)" partialSubmit="true" />
+						
+						<f:facet name="footer">
+	                        <i:datatableRowCount rowCount="#{expedicaoComunicacaoAction.lazyData.rowCount}" />	
+	                    </f:facet>
+						
+						<p:column selectionMode="multiple"  styleClass="dt-toolbar-col"  />
+						<p:column styleClass="dt-toolbar-col">
+							<p:commandLink id="abrirDestinatario" update="@(.pageBody)" process="@this" partialSubmit="true" >
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+								<f:setPropertyActionListener value="#{row}" target="#{expedicaoComunicacaoAction.modeloComunicacao}" />
+								<f:setPropertyActionListener value="form" target="#{expedicaoComunicacaoAction.tab}" />
+							</p:commandLink>
+						</p:column>
+						<p:column headerText="#{infoxMessages['consultaProcesso.numeroProcesso']}">
+							#{row.processo.numeroProcessoRoot}
+						</p:column>
+						<p:column headerText="#{infoxMessages['comunicacao.tipoComunicacao']}">
+							#{row.tipoComunicacao.descricao}
+						</p:column>
+						<p:column headerText="#{infoxMessages['processoDocumento.classificacaoDocumento']}">
+							#{row.classificacaoComunicacao.descricao}
+						</p:column>
+						<p:column headerText="#{infoxMessages['comunicacao.expedida']}">
+							<h:outputText value="#{expedicaoComunicacaoAction.isExpedida(row) ? messages['crud.yes'] : messages['crud.no']}" />
+						</p:column>
+					</p:dataTable>
+					
+					<p:outputPanel style="text-align: left;" styleClass="btnVerificaAssinar">
+					<h:commandButton id="btnVerificaAssinar"
+						action="#{expedicaoComunicacaoAction.verificaDocumentosAssinarLote()}"
+						styleClass="buttons" rendered="#{not empty expedicaoComunicacaoAction.selecionados and not expedicaoComunicacaoAction.lazyData.expedida}"
+						value="#{infoxMessages['comunicacao.msg.botaoVerifica']}">
+						<p:ajax update="@(.corpoModal)" process="@form" onstart="infox.showLoading();" oncomplete="infox.hideLoading(); #{rich:component('listarAssinaturasPanel')}.show();" />	
+					</h:commandButton>
+					</p:outputPanel>
+					
+					<rich:popupPanel id="listarAssinaturasPanel" autosized="true" modal="true" header="#{infoxMessages['confirmDialog.header']}" style="max-height: 80%; max-width:80%;">
+						<p:outputPanel style="text-align: left;" styleClass="corpoModal">
+							<div>
+								<h:outputText value="#{infoxMessages['comunicacao.msg.naoPodeAssinar']}" style="font-weight: bold;" 
+									rendered="#{not empty expedicaoComunicacaoAction.documentosNaoPodeAssinar}" />
+								<p:dataTable id="documentosNaoPode" styleClass="dtable rf-dt-crud"
+									rendered="#{not empty expedicaoComunicacaoAction.documentosNaoPodeAssinar}"
+								    paginator="true" rows="15" var="row" value="#{expedicaoComunicacaoAction.documentosNaoPodeAssinar}"
+								    emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}" paginatorAlwaysVisible="false">
+									<p:column headerText="#{infoxMessages['comunicacao.destinatario']}">
+										#{row.destinatario.nome}
+									</p:column>
+									<p:column headerText="#{infoxMessages['comunicacao.meioExpedicao']}">
+										#{row.meioExpedicao.descricao}
+									</p:column>
+									<p:column headerText="#{infoxMessages['comunicacao.prazoAtendimento']}">
+										#{row.prazo}
+									</p:column>
+								</p:dataTable>
+							</div>
+	
+							<div style="padding: 20px 0px;">
+								<h:outputText value="#{infoxMessages['comunicacao.msg.podeAssinar']}"  style="font-weight: bold;"
+									 rendered="#{not empty expedicaoComunicacaoAction.documentosPodeAssinar}" />
+								<h:outputText value="Deve ser selecionado ao menos um documento passível de assinatura." style="font-weight: bold;"
+									rendered="#{empty expedicaoComunicacaoAction.documentosPodeAssinar}" />
+								<p:dataTable id="documentosPode" styleClass="dtable rf-dt-crud"
+									rendered="#{not empty expedicaoComunicacaoAction.documentosPodeAssinar}"
+								    paginator="true" rows="15" var="row" value="#{expedicaoComunicacaoAction.documentosPodeAssinar}"
+								    emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}" paginatorAlwaysVisible="false">
+									<p:column headerText="#{infoxMessages['comunicacao.destinatario']}">
+										#{row.destinatario.nome}
+									</p:column>
+									<p:column headerText="#{infoxMessages['comunicacao.meioExpedicao']}">
+										#{row.meioExpedicao.descricao}
+									</p:column>
+									<p:column headerText="#{infoxMessages['comunicacao.prazoAtendimento']}">
+										#{row.prazo}
+									</p:column>
+								</p:dataTable>
+								
+								<p:outputPanel style="text-align: left;" styleClass="botaoAssinar">
+					                <wi:assinador id="assinarTodosDocumentosButton"
+					                    rendered="#{not empty expedicaoComunicacaoAction.documentosPodeAssinar}"
+					                    callbackHandler="#{expedicaoComunicacaoAction}"
+					                    assinavelProvider="#{expedicaoComunicacaoAction.assinavelProvider}"
+					                    execute="@this"
+					                    render="pageBodyDialogMessage pageBody"
+					                    onbegin="infox.showLoading();"
+								        oncomplete="infox.hideLoading();"
+					                    value="#{infoxMessages['assinaturaDecisao.btn']}">
+					                </wi:assinador>
+									<a:commandButton id="btncancelarpop"
+										onbegin="infox.showLoading();" oncomplete="#{rich:component('listarAssinaturasPanel')}.hide(); infox.hideLoading();"
+										styleClass="buttons"
+										value="#{infoxMessages['sigiloProcesso.cancelar']}">
+									</a:commandButton>
+								</p:outputPanel>
+							</div>
+						</p:outputPanel>
+
+
+					</rich:popupPanel>
+				
+				</h:form>
+				
+			</infox:tab>
+			
+			<infox:tab id="form" name="form" immediate="true" title="#{infoxMessages['comunicacao.expedicao']}"
+				rendered="#{not empty expedicaoComunicacaoAction.modeloComunicacao}">
+				<wi:dataTable id="destinatarios"
+					bean="#{destinatarioModeloComunicacaoList}"
+					values="#{destinatarioModeloComunicacaoList.list(15)}"
+					tableTitle="#{infoxMessages['comunicacao.destinatarios']}" rowId="#{row.id}" showSearchForm="false"
+					hideOrder="true" showToolbarColumn="#{!expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}">
+					<ui:define name="toolBar">
+						<h:form>
+							<a:commandLink
+								action="#{expedicaoComunicacaoAction.setDestinatario(row)}"
+								render="comunicacaoForm" execute="@this"
+								rendered="#{not row.expedido}">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}"
+									title="#{infoxMessages['button.selecionar']}" />
+							</a:commandLink>
+							
+							<a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction}" 
+								oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
+								rendered="#{row.expedido}" render="@this" execute="@this">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="#{infoxMessages['comunicacao.imprimirComunicacao']}" />
+								<f:setPropertyActionListener value="#{row.id}" target="#{flash.idDestinatario}" />
+							</a:commandLink>
+						</h:form>
+					</ui:define>
+					<ui:define name="headerToolBar" />
+
+					<wi:columnOutputText id="nome" columnHeader="#{infoxMessages['comunicacao.destinatario']}"
+						value="#{row.nome}" />
+					<wi:columnOutputText id="meioExpedicao"
+						columnHeader="#{infoxMessages['comunicacao.meioExpedicao']}"
+						value="#{row.meioExpedicao.descricao}" />
+					<wi:columnOutputText id="prazo" columnHeader="#{infoxMessages['comunicacao.prazoAtendimento']}"
+						value="#{row.prazo}" />
+				</wi:dataTable>
+				<h:form id="comunicacaoForm">
+					<a:commandButton id="visualizarComunicacaoIndividual"
+									action="#{jsfUtil.applyLastPhaseFlashAction}" 
+									value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+									styleClass="buttons" render="@this" execute="@this"
+									rendered="#{not empty expedicaoComunicacaoAction.destinatario}"
+									oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+						<f:setPropertyActionListener value="#{expedicaoComunicacaoAction.destinatario.id}" target="#{flash.idDestinatario}" />
+					</a:commandButton>
+					<a:commandButton id="visualizarComunicacaoGeral"
+									action="#{jsfUtil.applyLastPhaseFlashAction}"
+									value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+									styleClass="buttons" render="@this" execute="@this"
+									rendered="#{expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}"
+									oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+						<f:setPropertyActionListener value="#{expedicaoComunicacaoAction.modeloComunicacao.id}" target="#{flash.idModelo}" />
+						<f:setPropertyActionListener value="#{expedicaoComunicacaoAction.modeloComunicacao.destinatarios.get(0).id}" target="#{flash.idDestinatario}" />
+					</a:commandButton>
+					
+					<a:jsFunction name="assinar"
+								action="#{expedicaoComunicacaoAction.expedirComunicacao()}"
+								execute="@form"
+								render="comunicacaoForm, pageBodyDialogMessage, destinatarios"
+								oncomplete="infox.hideLoading();" />
+					<wi:certificadoDigital id="appletAssinatura"
+                            tokenField="#{expedicaoComunicacaoAction.token}"
+							documentoBinList="#{expedicaoComunicacaoAction.documentoBinComunicacao}"
+							functionPreSign="infox.showLoading();"
+							functionPosSign="assinar();"
+							rendered="#{expedicaoComunicacaoAction.podeRenderizarApplet() and not expedicaoComunicacaoAction.destinatario.expedido}"
+							signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}"/>
+							
+					<a:commandButton id="btnExpedirComunicacaoAssinada" execute="@form" styleClass="buttons"
+						value="${infoxMessages['comunicacao.expedirComunicacao']}"
+						rendered="#{expedicaoComunicacaoAction.comunicacaoSuficientementeAssinada and not expedicaoComunicacaoAction.destinatario.expedido}"
+						action="#{expedicaoComunicacaoAction.expedirComunicacao()}"
+						onclick="infox.showLoading();"
+						render="comunicacaoForm, pageBodyDialogMessage, destinatarios"
+						oncomplete="infox.hideLoading();"/>
+						
+					<a:commandButton id="reabrirComunicacao" 
+						render="comunicacaoTabPanel :pageBodyDialogMessage" execute="@this"
+						value="#{infoxMessages['comunicacao.devolverEdicao']}" 
+						styleClass="buttons"
+						rendered="#{expedicaoComunicacaoAction.modeloComunicacao.finalizada and not expedicaoComunicacaoAction.isExpedida(expedicaoComunicacaoAction.modeloComunicacao)}"
+						action="#{expedicaoComunicacaoAction.reabrirComunicacao()}" 
+						onclick="infox.showLoading();"
+						oncomplete="infox.hideLoading();"/>
+						
+				</h:form>
+			</infox:tab>
+		</infox:tabPanel>
+	</ui:define>
+
+</ui:composition>

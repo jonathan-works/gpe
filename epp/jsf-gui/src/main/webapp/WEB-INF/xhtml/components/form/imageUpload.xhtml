@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+>
+    <h:outputScript
+        library="js"
+        name="imageUpload.js"
+    />
+    <ui:param
+        name="rendered"
+        value="#{empty rendered ? true : rendered}"
+    />
+    <s:div rendered="#{rendered}">
+        <rich:collapsiblePanel
+            id="uploadImagem"
+            switchType="ajax"
+            opened="false"
+            label="#{infoxMessages['image.album']}"
+            onclick="configureDragDrop()"
+        >
+            <rich:fileUpload
+                fileUploadListener="#{imageFileUploader.processFileUpload}"
+                id="upload"
+                execute="@this"
+                onupload="uploadHandler(event, '#{imageFileUploader.imagePath}')"
+                onuploadcomplete="insert()"
+                maxFilesQuantity="10"
+                addLabel="#{infoxMessages['image.new']}"
+                clearAllLabel="#{infoxMessages['image.clearAll']}"
+                clearLabel="#{infoxMessages['image.clear']}"
+                listHeight="0px"
+                immediateUpload="true"
+                noDuplicate="true"
+                status=":status"
+                render="uploadImagem"
+                acceptedTypes="jpg, gif, png"
+            >
+            </rich:fileUpload>
+            <rich:dataGrid
+                value="#{imageFileUploader.images}"
+                elements="20"
+                columns="4"
+                var="img"
+            >
+                <s:div>
+                    <img
+                        src="#{img}"
+                        title="#{infoxMessages['image.drag']}"
+                    />
+                </s:div>
+                <f:facet name="footer">
+                    <rich:dataScroller />
+                </f:facet>
+            </rich:dataGrid>
+        </rich:collapsiblePanel>
+    </s:div>
+</ui:composition>

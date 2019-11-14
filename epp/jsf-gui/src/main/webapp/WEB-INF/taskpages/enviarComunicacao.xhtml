@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:wi="http://www.itx.com.br/jsf"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a="http://richfaces.org/a4j"
+      xmlns:s="http://jboss.org/schema/seam/taglib"
+      xmlns:infox="http://www.infox.com.br/jsf"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:i="http://java.sun.com/jsf/composite/infox">
+
+	<h:outputScript library="js" name="components.js" />
+	<s:div style="background-color: white; padding-top: 20px; margin-bottom: 20px; padding-left: 10px; padding-right: 10px;">
+		<s:div id="comunicacaoDiv">
+			<!-- Combo de tipo de comunicação e botão de visualizar comunicação -->
+			<h:form id="comunicacaoForm">
+				<wi:selectOneMenuEntity id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
+					showRequired="true" items="#{envioComunicacaoController.tiposComunicacao}"
+					value="#{envioComunicacaoController.tipoComunicacao}"
+					disabled="#{not envioComunicacaoController.canChooseTipoComunicacao()}">
+					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
+				</wi:selectOneMenuEntity>
+				<a:commandButton id="visualizarComunicacao" 
+					render="@this" execute="@this"
+					action="#{jsfUtil.applyLastPhaseFlashAction}"
+					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+					styleClass="buttons"
+					rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
+					oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+					<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
+				</a:commandButton>
+				<a:commandButton id="reabrirComunicacao" 
+					render="comunicacaoDiv buttonsTaskPageComunicacaoForm" execute="@this"
+					value="#{infoxMessages['comunicacao.reabrir']}" 
+					styleClass="buttons"
+					rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not envioComunicacaoController.expedida}"
+					action="#{envioComunicacaoController.reabrirComunicacao()}" 
+					onclick="infox.showLoading();"
+					oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
+			</h:form>
+			
+			<!-- Painel dos Destinatários -->
+			<ui:include src="/WEB-INF/taskpages/comunicacao/destinatarios.xhtml"></ui:include>
+			
+			<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
+			<h:form id="visualizarComunicacaoAnexoForm">
+				<s:div rendered="#{envioComunicacaoController.podeExibirBotaoVisualizarComunicacoes()}">
+					<a:commandButton id="visualizarComunicacao" 
+							render="@this" execute="@this"
+							value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+							styleClass="buttons" action="#{jsfUtil.applyLastPhaseFlashAction}"
+							oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+						<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
+					</a:commandButton>
+          		</s:div>
+			</h:form>
+			
+			<!-- Expedição individual de comunicações (o ofício da comunicação é o texto do editor) -->
+			<h:form id="comunicacaoDestinatarioForm">
+				<s:div id="assinatura_pers" rendered="#{not envioComunicacaoController.modeloComunicacao.documentoBinario
+					and not empty envioComunicacaoController.destinatario and not envioComunicacaoController.destinatario.expedido}">
+					
+					<a:commandButton id="visualizarComunicacao" 
+								action="#{jsfUtil.applyLastPhaseFlashAction}"
+								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+								styleClass="buttons" render="@this" execute="@this"
+								oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+						<f:setPropertyActionListener value="#{envioComunicacaoController.destinatario.id}" target="#{flash.idDestinatario}" />
+					</a:commandButton>
+					<a:commandButton id="btnExpedirComunicacaoAssinada" execute="@this" styleClass="buttons"
+						value="${infoxMessages['comunicacao.expedirComunicacao']}"
+						rendered="#{envioComunicacaoController.comunicacaoSuficientementeAssinada}"
+						action="#{envioComunicacaoController.expedirComunicacao()}"
+						onclick="infox.showLoading();"
+						render="pageBodyDialogMessage comunicacaoDiv"
+						oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+						
+					<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
+						execute="@this appletAssinaturaToken" 
+						render="pageBodyDialogMessage comunicacaoDiv assinaturaListExpedirComunicacao buttonsTaskPageComunicacaoForm"
+					  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+             
+					<wi:certificadoDigital id="appletAssinatura"
+                        tokenField="#{envioComunicacaoController.token}"
+						documentoBinList="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin}"
+						functionPreSign="infox.showLoading();"
+						functionPosSign="assinar();"
+						rendered="#{envioComunicacaoController.podeRenderizarApplet() and not envioComunicacaoController.comunicacaoSuficientementeAssinada}"
+						signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}" />
+          		</s:div>
+			</h:form>
+
+			<!-- Ofício da Comunicação -->
+			<h:form id="documentoComunicacaoForm">
+				<s:div style="vertical-align: top; margin-top: 1em;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+				<rich:collapsiblePanel id="editorDocumentoComunicacaoPanel" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}" 
+					bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
+					<s:div>
+	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
+	    					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+				      		items="#{documentoComunicacaoAction.classificacoes}"
+				      		showLabelSelecione="true" showRequired="true"
+				      		value="#{envioComunicacaoController.modeloComunicacao.classificacaoComunicacao}"
+				      		readonly="#{not envioComunicacaoController.modeloComunicacao.minuta}"
+	      					disabled="#{not envioComunicacaoController.modeloComunicacao.minuta}">
+	      					<a:ajax event="change"
+	        					render="tooltipComunicacao"
+	        					execute="@this"
+	        					limitRender="true" />
+	    				</wi:selectOneMenuEntity>
+				   		<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"> 
+				  			<h:graphicImage id="imgTootipEditorComunicacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+				  			<s:fragment rendered="#{not empty envioComunicacaoController.modeloComunicacao.classificacaoComunicacao.observacao}">
+								<div class="epp-tooltip" style="display:inline;" >
+									<div class="tooltip-panel">
+										<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
+										<h:outputText value="#{envioComunicacaoController.modeloComunicacao.classificacaoComunicacao.observacao}"/>
+									</div>
+								</div>
+							</s:fragment>
+				   		</s:div>
+	  				</s:div>
+					<wi:selectOneMenuEntity id="modeloDocumento" value="#{envioComunicacaoController.modeloComunicacao.modeloDocumento}" 
+						label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+						readonly="#{not envioComunicacaoController.modeloComunicacao.minuta}"
+						disabled="#{not envioComunicacaoController.modeloComunicacao.minuta}"
+						noSelectionLabel="[Selecione o modelo]" items="#{documentoComunicacaoAction.modelosDocumento}">
+						<a:ajax event="change" render="comunicacaoEditorDiv" execute="@this" limitRender="true"
+							listener="#{documentoComunicacaoAction.assignModeloDocumento}"/>
+					</wi:selectOneMenuEntity>
+					<c:if test="#{documentoComunicacaoAction.isPermittedAddMarcador()}">
+						<div class="property-field-edit" style="display: inline-block;">
+							<div class="property-field-edit-name">
+								<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorEditor"/>
+							</div>
+							<div class="property-field-edit-value">
+								<p:autoComplete id="marcadorEditor" multiple="true" 
+									value="#{envioComunicacaoController.modeloComunicacao.codigosMarcadores}" 
+						        	completeMethod="#{documentoComunicacaoAction.autoCompleteMarcadores}"
+						        	itemLabel="#{item}" itemValue="#{item}" var="item" 
+						        	readonly="#{not envioComunicacaoController.modeloComunicacao.minuta}"
+						        	disabled="#{not envioComunicacaoController.modeloComunicacao.minuta}"
+						        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+						        	<p:ajax event="itemSelect" update="@this" process="@this" />
+						        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+						        </p:autoComplete>
+					        </div>
+						</div>
+					</c:if>
+					<s:div>
+						<wi:selectBooleanRadio id="minuta" value="#{envioComunicacaoController.modeloComunicacao.minuta}"
+							label="#{infoxMessages['comunicacao.minutaLabel']}" 
+							readonly="#{not envioComunicacaoController.modeloComunicacao.minuta}" 
+							disabled="#{not envioComunicacaoController.modeloComunicacao.minuta}" />
+					</s:div>
+					<s:div id="comunicacaoEditorDiv">
+						<wi:editor id="comunicacao" value="#{envioComunicacaoController.modeloComunicacao.textoComunicacao}" 
+							readonly="#{not envioComunicacaoController.modeloComunicacao.minuta}"/>
+					</s:div>
+				</rich:collapsiblePanel>
+				</s:div>
+				
+				<!-- Painel dos Documentos Anexos -->
+				<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacao.xhtml"></ui:include>
+			
+				<rich:panel id="panelFinalizacaoDaElaboracaoComunicacao" style="margin-top: 1em; margin-bottom: 1em;">
+					<!-- Finalização e Responsáveis pela Expedição da Comunicação -->
+					<s:div id="responsaveisAssinatura">
+						<wi:selectBooleanCheckbox id="finalizada" label="#{infoxMessages['comunicacao.finalizada']}" 
+							value="#{envioComunicacaoController.finalizada}" disabled="#{envioComunicacaoController.modeloComunicacao.finalizada}">
+							<a:ajax event="change" execute="@this" render="responsaveisAssinatura" />
+						</wi:selectBooleanCheckbox>
+						<s:div rendered="#{envioComunicacaoController.finalizada and not envioComunicacaoController.modeloComunicacao.finalizada
+							and envioComunicacaoController.canChooseResponsavelAssinatura()}"
+							style="display:inline-block">
+							<div>
+								<wi:outputText id="mensagemSelecionarLocalizacaoResponsavelAssinatura"
+									label="#{infoxMessages['comunicacao.mensagemLocalizacaoResponsavelAssinatura']}" />
+							</div>
+							
+							<i:autoComplete id="localizacaoResponsavelAssinatura" label="#{infoxMessages['comunicacao.localizacoes']}"
+                       			value="#{envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}"
+                       			completeMethod="#{envioComunicacaoController.getLocalizacoesDisponiveisAssinatura}"
+                       			converter="org.jboss.seam.ui.EntityConverter" style="position: relative;" minQueryLength="1"
+                       			var="item" itemLabel="#{item.localizacao}" itemValue="#{item}" forceSelection="true"
+                       			ajax="true" event="itemSelect" render="@(.perfis-responsavel-assinatura) @(.button-gravar-comunicacao)"
+                       			onstart="infox.showLoading();" oncomplete="infox.hideLoading();"
+                       			onselect="#{envioComunicacaoController.verificaExistenciaUsuario()}">
+			                    <f:facet name="itemtip">
+			                         <h:outputText value="#{item.caminhoCompletoFormatado}" />
+			                    </f:facet>
+	            			</i:autoComplete>
+				        	<wi:selectOneMenuEntity id="perfisPermitidos" styleClass="perfis-responsavel-assinatura"
+					            value="#{envioComunicacaoController.modeloComunicacao.perfilResponsavelAssinatura}"
+					            label="#{infoxMessages['usuarioPerfil.perfil']}"
+					            items="#{destinatarioComunicacaoAction.perfisPermitidos}"
+					            disabled="#{empty envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}">
+					            <a:ajax event="change" execute="@this" limitRender="true" render="gravarComunicacaoButtonDiv"
+					            	onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+					            	listener="#{envioComunicacaoController.verificaExistenciaUsuario()}"/>
+					        </wi:selectOneMenuEntity>
+				        </s:div>
+				        <s:fragment rendered="#{(envioComunicacaoController.modeloComunicacao.finalizada or not envioComunicacaoController.canChooseResponsavelAssinatura())
+				        	and envioComunicacaoController.exibirResponsaveisAssinatura}">
+				        	<wi:outputText id="localizacaoRespAssinatura" label="#{infoxMessages['comunicacao.localizacaoRespAssinatura']}" 
+				        		value="#{envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura.caminhoCompletoFormatado}"/>
+				        	<wi:outputText id="perfilRespAssinatura" label="#{infoxMessages['comunicacao.perfilRespAssinatura']}"
+				        		value="#{envioComunicacaoController.modeloComunicacao.perfilResponsavelAssinatura.descricao}"
+				        		rendered="#{not empty envioComunicacaoController.modeloComunicacao.perfilResponsavelAssinatura}" />
+				        </s:fragment>
+			        </s:div>
+		        </rich:panel>
+		        
+		        <!-- Botões de Controle -->
+		        <s:div id="gravarComunicacaoButtonDiv" styleClass="button-gravar-comunicacao">
+					<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
+						action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
+						rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada and 
+							envioComunicacaoController.existeUsuarioLocalizacaoAssinatura()}"
+						oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+					<wi:commandButton id="gravarWithConfirmation" value="#{infoxMessages['crud.update']}" 
+						action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
+						rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada and 
+							not envioComunicacaoController.existeUsuarioLocalizacaoAssinatura()}"
+						oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+				</s:div>
+			</h:form>
+			
+			<!-- Popup dos Documentos Anexos -->
+			<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacaoPopup.xhtml"></ui:include>
+			
+		</s:div>
+	</s:div>
+	<c:if test="#{envioComunicacaoController.showFormButtonsEnd}">
+	    <h:form id="buttonsTaskPageComunicacaoForm">
+			<ui:fragment rendered="#{envioComunicacaoController.inTask and (envioComunicacaoController.expedida or envioComunicacaoController.exibirTransicoes)}">
+				<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
+				<ui:param name="taskEndAction" value="envioComunicacaoController.endTask(taskInstanceHome.name)" />
+				<ui:include src="#{envioComunicacaoController.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml' : ''}" />
+			</ui:fragment>
+	   </h:form>
+   </c:if>
+</ui:composition>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['localizacaoFisica.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{localizacaoFisicaCrudAction}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{localizacaoFisicaList.list(15)}"
+            bean="#{localizacaoFisicaList}"
+            tableTitle="#{infoxMessages['localizacaoFisica.tableTitle']}"
+            id="localizacaoFisicaList"
+            rowId="#{row.idLocalizacaoFisica}" hideOrder="true">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarlocalizacaoFisicaForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="descricao"
+                        label="#{infoxMessages['localizacaoFisica.descricao']}"
+                        value="#{localizacaoFisicaList.entity.descricao}"
+                        maxlength="150" />
+                    <wi:tree id="localizacaoFisicaPai"
+                        assignTo="localizacaoFisicaList.entity.localizacaoFisicaPai"
+                        tree="#{localizacaoFisicaTree}"
+                        icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                        iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+                        label="#{infoxMessages['localizacaoFisica.localizacaoFisicaPai']}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{localizacaoFisicaList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+
+            <wi:columnOutputTextIdent columnId="descricao"
+                columnHeader="#{infoxMessages['localizacaoFisica.descricao']}"
+                value="#{row.descricao}"
+                fullPath="#{row.caminhoCompleto}" />
+            <wi:columnOutputText columnId="localizacaoFisicaPai"
+                columnHeader="#{infoxMessages['localizacaoFisica.localizacaoFisicaPai']}"
+                value="#{row.localizacaoFisicaPai}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                columnWidth="10%" value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="localizacaoFisicaForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="descricao" required="true"
+                label="#{infoxMessages['localizacaoFisica.descricao']}"
+                value="#{localizacaoFisicaCrudAction.instance.descricao}" />
+            <wi:tree id="localizacaoFisicaPai"
+                assignTo="localizacaoFisicaCrudAction.instance.localizacaoFisicaPai"
+                tree="#{localizacaoFisicaTree}"
+                icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}" iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+                label="#{infoxMessages['localizacaoFisica.pai']}" />
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{localizacaoFisicaCrudAction.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
+
+</ui:composition>

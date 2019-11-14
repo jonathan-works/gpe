@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+Para que o desafio do captcha seja renovado é necessário remover o componente 
+do contexto da sessão. Esta operação pode ser realizado através da chamada 
+do seguinte método:
+
+    #{sessionContext.remove('org.jboss.seam.captcha.captcha')}
+-->
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+
+    <h:graphicImage id="captchaImg"
+        value="/seam/resource/captcha?f=#{currentDate.time}" />
+    <wi:inputText id="#{id}Captcha" value="#{captcha.response}"
+        label="Informe o valor do cálculo:">
+    </wi:inputText>
+
+
+</ui:composition>

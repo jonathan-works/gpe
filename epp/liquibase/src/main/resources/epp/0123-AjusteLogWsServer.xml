@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="jovan" id="1" dbms="mssql, postgresql">
+        
+        <modifyDataType  columnName="CD_MENSAGEM_RETORNO" newDataType="NCLOB" tableName="TB_LOG_WS_SERVER"/>
+    </changeSet>
+
+    <changeSet author="jovan" id="2">
+        <modifyDataType  columnName="CD_WEBSERVICE" newDataType="VARCHAR(2000)" tableName="TB_LOG_WS_SERVER"/>
+    </changeSet>    
+
+    <changeSet author="jovan" id="1" dbms="oracle">
+        <addColumn tableName="TB_LOG_WS_SERVER">
+            <column name="CD_MENSAGEM_RETORNO_NEW" type="nclob" />
+        </addColumn>
+        <update tableName="TB_LOG_WS_SERVER">
+            <column name="CD_MENSAGEM_RETORNO_NEW" valueComputed="CD_MENSAGEM_RETORNO" />
+        </update>
+        <dropColumn tableName="TB_LOG_WS_SERVER" columnName="CD_MENSAGEM_RETORNO" />
+
+        <renameColumn tableName="TB_LOG_WS_SERVER" oldColumnName="CD_MENSAGEM_RETORNO_NEW" newColumnName="CD_MENSAGEM_RETORNO" />
+    </changeSet>
+
+</databaseChangeLog>

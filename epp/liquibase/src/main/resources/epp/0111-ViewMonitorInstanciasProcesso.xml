@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="gabriel" id="1" runOnChange="true">
+        <createView replaceIfExists="true" viewName="vs_monitor_instancias_processo">
+			SELECT vi.stringvalue_ AS nr_processo, n.NAME_ AS nm_node, ti.START_ AS dt_inicio, 'OK' AS ds_state, tkn.ID_ AS id_token, 
+			n.KEY_ AS cd_node_key, n.PROCESSDEFINITION_ AS id_process_definition
+
+			FROM JBPM_TASKINSTANCE ti
+			INNER JOIN JBPM_TASK t ON (t.ID_ = ti.TASK_)
+			INNER JOIN JBPM_TOKEN tkn ON (tkn.ID_ = ti.TOKEN_)
+			INNER JOIN JBPM_NODE n ON (n.ID_ = t.TASKNODE_), JBPM_VARIABLEINSTANCE vi
+			WHERE ti.END_ IS NULL AND vi.TOKEN_ = tkn.ID_ AND vi.NAME_ = 'numeroProcesso' AND tkn.processinstance_ IS NOT NULL AND EXISTS (SELECT 1 FROM JBPM_VARIABLEINSTANCE vi2 WHERE vi2.TOKEN_ = tkn.id_ AND vi2.NAME_ = 'processo' AND EXISTS (SELECT 1 FROM tb_processo p WHERE p.id_processo = vi2.LONGVALUE_))
+
+			UNION ALL
+
+			SELECT vi.stringvalue_ AS nr_processo, n.NAME_ AS nm_node, tkn.START_ AS dt_inicio, 'ERROR' AS ds_state, tkn.ID_ AS id_token, 
+			n.KEY_ AS cd_node_key, n.PROCESSDEFINITION_ AS id_process_definition
+
+			FROM JBPM_TOKEN tkn INNER JOIN JBPM_NODE n ON (n.ID_ = tkn.NODE_), JBPM_VARIABLEINSTANCE vi
+			WHERE tkn.END_ IS NULL AND tkn.LOCK_ IS NULL AND n.CLASS_ IN ('N', 'M', 'D')
+			AND vi.TOKEN_ = tkn.ID_ AND vi.NAME_ = 'numeroProcesso' AND tkn.processinstance_ IS NOT NULL AND EXISTS (SELECT 1 FROM JBPM_VARIABLEINSTANCE vi2 WHERE vi2.TOKEN_ = tkn.id_ AND vi2.NAME_ = 'processo' AND EXISTS (SELECT 1 FROM tb_processo p WHERE p.id_processo = vi2.LONGVALUE_))
+
+        </createView>
+    </changeSet>
+</databaseChangeLog>

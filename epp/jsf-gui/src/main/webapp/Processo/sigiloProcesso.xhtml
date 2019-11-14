@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:rich="http://richfaces.org/rich">
+    
+    <s:div id="sigiloProcessoDiv">
+    
+	    <rich:panel header="#{infoxMessages['sigiloProcesso.processo']}">
+	        <h:form id="sigiloProcessoForm">
+	            <a:jsFunction name="prepararInclusaoSigilo" execute="@this, sigiloso" render="sigiloProcessoDiv" limitRender="true">
+    	            <f:setPropertyActionListener value="#{true}" target="#{sigiloProcessoAction.modoInclusao}" />
+                    <f:setPropertyActionListener value="#{null}" target="#{sigiloProcessoAction.informacaoTelaSigilo}" />
+	            </a:jsFunction>
+	            
+	            <wi:selectBooleanCheckbox id="sigiloso" value="#{sigiloProcessoAction.sigiloProcesso.sigiloso}" label="#{infoxMessages['sigiloProcesso.sigiloso']}" disabled="#{sigiloProcessoAction.modoInclusao}"
+	               onclick="prepararInclusaoSigilo()" />
+	               
+	            <wi:inputTextarea id="motivo" showCounter="false" value="#{sigiloProcessoAction.sigiloProcesso.motivo}" label="#{infoxMessages['sigiloProcesso.motivo']}"
+	                required="true" rendered="#{sigiloProcessoAction.modoInclusao}"/>
+	                
+	            <s:div style="clear: both">
+	                <a:commandButton value="#{infoxMessages['sigiloProcesso.gravar']}" action="#{sigiloProcessoAction.gravarSigiloProcesso}" render="sigiloProcessoDiv, pageBodyDialogMessage"
+	                    limitRender="true" rendered="#{sigiloProcessoAction.modoInclusao}" styleClass="buttons">
+                        <p:resetInput target="#{wi:clientId(motivo)}" />
+                    </a:commandButton>
+	                <a:commandButton value="#{infoxMessages['sigiloProcesso.cancelar']}" action="#{sigiloProcessoAction.resetSigiloProcesso}" limitRender="true" 
+	                    render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" rendered="#{sigiloProcessoAction.modoInclusao}"
+	                    styleClass="buttons"/>
+	                <a:commandButton value="#{infoxMessages['sigiloProcesso.verDetalhes']}" limitRender="true" render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" rendered="#{not sigiloProcessoAction.modoInclusao}"
+	                   styleClass="buttons">
+	                    <f:setPropertyActionListener value="D" target="#{sigiloProcessoAction.informacaoTelaSigilo}" />
+	                </a:commandButton>
+	                <a:commandButton value="#{infoxMessages['sigiloProcesso.gerenciarPermissoes']}" limitRender="true" render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" rendered="#{not sigiloProcessoAction.modoInclusao and sigiloProcessoAction.sigiloso}"
+	                   styleClass="buttons">
+	                    <f:setPropertyActionListener value="P" target="#{sigiloProcessoAction.informacaoTelaSigilo}" />
+	                </a:commandButton>
+	            </s:div>
+	            
+	        </h:form>
+	    </rich:panel>
+	    
+	    <s:div id="detalhesSigiloProcesso" rendered="#{sigiloProcessoAction.informacaoTelaSigilo eq 'D'}" 
+	       style="margin-top: 1em;">
+	    
+	        <wi:dataTable id="sigiloProcessoTable" values="#{sigiloProcessoList.list(5)}" bean="#{sigiloProcessoList}" panelWidth="100%"
+	            tableTitle="#{infoxMessages['sigiloProcesso.detalhes']}" hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud"
+	            showSearchForm="false">
+	            
+	            <ui:define name="toolBar" />
+	            <ui:define name="headerToolBar" />
+	            
+	            <rich:column width="18%">
+	                <f:facet name="header">
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.usuario.nome']}" />
+	                </f:facet>
+	                <center><h:outputText value="#{row.usuario}" /></center>
+	            </rich:column>
+	     
+	            <rich:column width="2%">
+	                <f:facet name="header">
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.sigiloso']}" />
+	                </f:facet>
+	                <center><h:outputText value="#{row.sigiloso ? 'Sim' : 'Não'}" /></center>
+	            </rich:column>
+	               
+	            <rich:column width="10%">
+	                <f:facet name="header">
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.dataInclusao']}" />
+	                </f:facet>
+	                <center>
+	                    <h:outputText value="#{row.dataInclusao}">
+	                        <s:convertDateTime type="both"/>
+	                    </h:outputText>
+	                </center>
+	            </rich:column>
+	            
+	            <rich:column>
+	                <f:facet name="header">
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.motivo']}" />
+	                </f:facet>
+	                <h:outputText value="#{row.motivo}" />
+	            </rich:column>
+	        </wi:dataTable>
+	           
+	    </s:div>
+	           
+	    <s:div id="permissoesSigiloProcesso" rendered="#{sigiloProcessoAction.informacaoTelaSigilo eq 'P'}"
+	       style="margin-top: 1em;">
+	           
+	        <wi:dataTable id="permissoesProcessoTable" values="#{usuarioRaiaList.list(10)}" bean="#{usuarioRaiaList}"
+	            tableTitle="#{infoxMessages['sigiloProcesso.usuarios']}" hideOrder="true" searchFormStyleDiv="padding-left: 10px" showMsg="false">
+	            
+	            <ui:define name="headerToolBar" />
+	            
+	            <ui:define name="toolBar">
+	                <h:form>
+	                 <h:selectBooleanCheckbox value="#{sigiloProcessoAction.usuariosPermissao[row.idUsuarioLogin]}">
+	                     <a:ajax event="change" execute="@this" />
+	                 </h:selectBooleanCheckbox>
+	             </h:form>
+	            </ui:define>
+	            
+	            <ui:define name="searchForm">
+	                <wi:searchForm formId="permissoesProcessoSearchForm" formTitle="#{infoxMessages['searchForm.title']}" 
+	                    searchReRender="permissoesSigiloProcesso">
+	                    <wi:inputText id="nome" value="#{usuarioRaiaList.nomeUsuario}" label="#{infoxMessages['sigiloProcesso.usuario.nome']}" />
+	                    <wi:selectOneMenuEntity id="perfilTemplate" value="#{usuarioRaiaList.perfil}" 
+	                        items="#{usuarioRaiaList.perfis}" showLabelSelecione="true"
+	                        label="#{infoxMessages['perfil.titlePage']}"/>
+	                </wi:searchForm>
+	            </ui:define>
+	            
+	            <rich:column>
+	                <f:facet name="header">
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.usuario.nome']}" />
+	                </f:facet>
+	                <h:outputText value="#{row.nomeUsuario}" />
+	            </rich:column>
+	            
+	            <rich:column>
+	                   <f:facet name="header">
+	                       <h:outputText value="#{infoxMessages['sigiloProcesso.usuario.cpf']}" />
+	                   </f:facet>
+	                   <h:outputText value="#{row.pessoaFisica.cpf}" />
+	            </rich:column>
+	            
+	            <ui:define name="conteudoAdicional">
+	               <h:form rendered="#{usuarioRaiaList.resultCount gt 0}">
+		                <a:commandButton value="#{infoxMessages['sigiloProcesso.gravar']}" action="#{sigiloProcessoAction.gravarPermissoes}" limitRender="true" 
+		                    render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" styleClass="buttons"/>
+		                <a:commandButton value="#{infoxMessages['sigiloProcesso.cancelar']}" action="#{sigiloProcessoAction.resetPermissoes}" execute="@this"
+		                    limitRender="true" render="sigiloProcessoDiv, pageBodyDialogMessage" styleClass="buttons"/>
+		           </h:form>
+	            </ui:define>
+	            
+	        </wi:dataTable>
+	           
+	    </s:div>
+	    
+    </s:div>
+    
+</ui:composition>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:itx="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <h:outputScript library="js" name="util.js" />
+
+    <div>
+            	<script>
+	            	function showMessageModalStatus(){
+	            		headerContent = document.querySelector('#modalStatus_header_content');
+	            		if(window.infox &amp;&amp; window.infox.messageModalStatus)
+	            			headerContent.textContent = window.infox.messageModalStatus;
+	            		else
+	            			headerContent.textContent = "Por favor, aguarde...";
+        	    	}
+            	</script>
+        <rich:popupPanel id="modalStatus" width="200" height="60" header="Content"
+            shadowOpacity="0" onshow="showMessageModalStatus();" zindex="99999">
+            <div>
+            	<h:outputText id="messageModalStatusSpan" styleClass="messageModalStatus"/> 
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/status/ajax-loader-retangular.gif')}" />
+            </div>
+        </rich:popupPanel>
+    </div>
+
+</ui:composition>

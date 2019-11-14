@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="victorpasqualino" id="1" dbms="mssql, postgresql" >
+
+		<renameTable newTableName="tb_documento"  oldTableName="tb_processo_documento" />
+		<dropColumn columnName="in_ativo" tableName="tb_documento"/>
+		<renameColumn columnDataType="bigint" newColumnName="id_documento" oldColumnName="id_processo_documento" tableName="tb_documento"/>
+		<renameColumn columnDataType="bigint" newColumnName="ds_documento" oldColumnName="ds_processo_documento" tableName="tb_documento"/>
+		<sql dbms="mssql" >
+			ALTER TABLE tb_documento 
+			DROP CONSTRAINT DF_tb_processo_documento_id_processo_documento;
+			EXEC sp_rename 'sq_tb_processo_documento', 'sq_documento';
+			ALTER TABLE tb_documento 
+			ADD CONSTRAINT DF_tb_documento_id_documento 
+			DEFAULT (NEXT VALUE FOR sq_documento) FOR [id_documento];
+		</sql>
+		<sql dbms="postgresql" >
+    		ALTER SEQUENCE sq_tb_processo_documento RENAME TO sq_documento;
+    	</sql>
+		<addColumn  tableName="tb_documento">
+        	<column name="id_perfil_template" type="bigint">
+        		<constraints nullable="true" references="tb_perfil_template(id_perfil_template)" foreignKeyName="fk_perfil_template"/>
+        	</column>
+    	</addColumn>
+    	<sql>
+    		UPDATE tb_documento SET id_perfil_template = (select id_perfil_template from tb_perfil_template p where id_papel = p.id_papel and id_localizacao = p.id_localizacao) where id_papel is not null and id_localizacao is not null;
+			UPDATE tb_documento SET id_perfil_template = (select id_perfil_template from tb_perfil_template p where id_papel = p.id_papel and id_localizacao is null) where id_papel is not null and id_localizacao is null;
+    	</sql>
+    	<dropIndex indexName="idx_tb_processo_documento7" tableName="tb_documento"/>
+    	<dropForeignKeyConstraint baseTableName="tb_documento" constraintName="tb_processo_documento_id_papel_fkey"/> 
+    	<dropIndex indexName="idx_tb_processo_documento9" tableName="tb_documento"/>
+    	<dropForeignKeyConstraint baseTableName="tb_documento" constraintName="tb_processo_documento_id_localizacao_fkey"/> 
+    	<dropColumn columnName="id_papel" tableName="tb_documento"/> 
+    	<dropColumn columnName="id_localizacao" tableName="tb_documento"/>
+    	<renameColumn columnDataType="integer" newColumnName="id_documento_bin" oldColumnName="id_processo_documento_bin" tableName="tb_documento"/>
+    	<renameColumn columnDataType="integer" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_documento"/>
+    	<renameColumn columnDataType="bigint" newColumnName="id_documento" oldColumnName="id_processo_documento" tableName="tb_historico_status_documento"/>
+    	<renameColumn columnDataType="integer" newColumnName="id_documento" oldColumnName="id_processo_documento" tableName="tb_sigilo_documento"/>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle" >
+
+		<renameTable newTableName="tb_documento"  oldTableName="tb_processo_documento" />
+		<dropColumn columnName="in_ativo" tableName="tb_documento"/>
+		<renameColumn columnDataType="bigint" newColumnName="id_documento" oldColumnName="id_processo_documento" tableName="tb_documento"/>
+		<renameColumn columnDataType="bigint" newColumnName="ds_documento" oldColumnName="ds_processo_documento" tableName="tb_documento"/>
+		<sql>
+    		RENAME sq_tb_processo_documento TO sq_documento;
+    	</sql>
+		<addColumn  tableName="tb_documento">
+        	<column name="id_perfil_template" type="bigint">
+        		<constraints nullable="true" references="tb_perfil_template(id_perfil_template)" foreignKeyName="fk_perfil_template"/>
+        	</column>
+    	</addColumn>
+    	<sql>
+    		UPDATE tb_documento SET id_perfil_template = (select id_perfil_template from tb_perfil_template p where id_papel = p.id_papel and id_localizacao = p.id_localizacao) where id_papel is not null and id_localizacao is not null;
+			UPDATE tb_documento SET id_perfil_template = (select id_perfil_template from tb_perfil_template p where id_papel = p.id_papel and id_localizacao is null) where id_papel is not null and id_localizacao is null;
+    	</sql>
+    	<dropIndex indexName="idx_tb_processo_documento7" tableName="tb_documento"/>
+    	<dropForeignKeyConstraint baseTableName="tb_documento" constraintName="fk_processo_documento_02"/> 
+    	<dropIndex indexName="idx_tb_processo_documento9" tableName="tb_documento"/>
+    	<dropForeignKeyConstraint baseTableName="tb_documento" constraintName="fk_processo_documento_01"/> 
+    	<dropColumn columnName="id_papel" tableName="tb_documento"/> 
+    	<dropColumn columnName="id_localizacao" tableName="tb_documento"/>
+    	<renameColumn columnDataType="integer" newColumnName="id_documento_bin" oldColumnName="id_processo_documento_bin" tableName="tb_documento"/>
+    	<renameColumn columnDataType="integer" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_documento"/>
+    	<renameColumn columnDataType="bigint" newColumnName="id_documento" oldColumnName="id_processo_documento" tableName="tb_historico_status_documento"/>
+    	<renameColumn columnDataType="integer" newColumnName="id_documento" oldColumnName="id_processo_documento" tableName="tb_sigilo_documento"/>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2" dbms="mssql" >
+    	<validCheckSum>7:a799538faf625afecd7224afd1c849c5</validCheckSum>
+    	<validCheckSum>7:7926d8223b160f798154df3770959188</validCheckSum>
+    	<renameTable newTableName="tb_classificacao_documento"  oldTableName="tb_tipo_processo_documento" />		
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_classificacao_documento"/>
+		<renameColumn columnDataType="character varying(100)" newColumnName="ds_classificacao_documento" oldColumnName="ds_tipo_processo_documento" tableName="tb_classificacao_documento"/>
+		<renameColumn columnDataType="character varying(4000)" newColumnName="ds_observacao" oldColumnName="ds_tipo_processo_documento_observacao" tableName="tb_classificacao_documento"/>
+		<dropColumn columnName="cd_tipo_documento" tableName="tb_classificacao_documento"/>	
+		<sql>
+			ALTER TABLE tb_classificacao_documento 
+			DROP CONSTRAINT DF_tb_tipo_processo_documento_id_tipo_processo_documento;
+			EXEC sp_rename 'sq_tb_tipo_processo_documento', 'sq_classificacao_documento';
+			ALTER TABLE tb_classificacao_documento 
+			ADD CONSTRAINT DF_tb_classificacao_documento_id_classificacao_documento 
+			DEFAULT (NEXT VALUE FOR sq_classificacao_documento) FOR [id_classificacao_documento];
+		</sql>
+
+		<dropIndex indexName="extensao_ak" tableName="tb_extensao_arquivo"/>
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_extensao_arquivo"/>
+		<createIndex unique="true" indexName="extensao_ak" tableName="tb_extensao_arquivo">
+			<column name="id_classificacao_documento" type="bigint"/>
+            <column name="ds_extensao" type="NVARCHAR(30)" />
+		</createIndex>
+
+		<renameTable newTableName="tb_classificacao_documento_papel"  oldTableName="tb_tipo_processo_documento_papel" />
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_documento_papel" oldColumnName="id_tipo_processo_documento_papel" tableName="tb_classificacao_documento_papel"/>
+		<sql>
+			ALTER TABLE tb_classificacao_documento_papel 
+			DROP CONSTRAINT DF_tb_tipo_processo_documento_papel_id_tipo_processo_documento_papel;
+			EXEC sp_rename 'sq_tb_tipo_processo_documento_papel', 'sq_classificacao_documento_papel';
+			ALTER TABLE tb_classificacao_documento_papel 
+			ADD CONSTRAINT DF_tb_classificacao_documento_papel_id_classificacao_documento_papel 
+			DEFAULT (NEXT VALUE FOR sq_classificacao_documento_papel) FOR [id_classificacao_documento_papel];
+		</sql>
+	
+		<dropIndex indexName="tb_tipo_processo_documento_papel_unq" tableName="tb_classificacao_documento_papel"/>
+		<renameColumn columnDataType="integer" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_classificacao_documento_papel"/>
+		<createIndex unique="true" indexName="tb_classificacao_documento_papel_unq" tableName="tb_classificacao_documento_papel">
+			<column name="id_classificacao_documento" type="bigint"/>
+            <column name="id_papel" type="bigint" />
+		</createIndex>
+
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_variavel_classificacao_doc"/>
+
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="2" dbms="postgresql" >
+		<renameTable newTableName="tb_classificacao_documento"  oldTableName="tb_tipo_processo_documento" />
+    	<sql>
+    		ALTER SEQUENCE sq_tb_tipo_processo_documento RENAME TO sq_classificacao_documento;
+    	</sql>
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_classificacao_documento"/>
+		<renameColumn columnDataType="character varying(100)" newColumnName="ds_classificacao_documento" oldColumnName="ds_tipo_processo_documento" tableName="tb_classificacao_documento"/>
+		<renameColumn columnDataType="character varying(4000)" newColumnName="ds_observacao" oldColumnName="ds_tipo_processo_documento_observacao" tableName="tb_classificacao_documento"/>
+		<dropColumn columnName="cd_tipo_documento" tableName="tb_classificacao_documento"/>	
+
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_extensao_arquivo"/>
+
+		<renameTable newTableName="tb_classificacao_documento_papel"  oldTableName="tb_tipo_processo_documento_papel" />
+		<sql>
+			ALTER SEQUENCE sq_tb_tipo_processo_documento_papel RENAME TO sq_classificacao_documento_papel;
+		</sql>
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_documento_papel" oldColumnName="id_tipo_processo_documento_papel" tableName="tb_classificacao_documento_papel"/>
+		<renameColumn columnDataType="integer" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_classificacao_documento_papel"/>
+
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_variavel_classificacao_doc"/>
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="2" dbms="oracle" >
+		<renameTable newTableName="tb_classificacao_documento"  oldTableName="tb_tipo_processo_documento" />
+    	<sql>
+    		RENAME sq_tb_tipo_processo_documento TO sq_classificacao_documento;
+    	</sql>
+		<renameColumn newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_classificacao_documento"/>
+		<renameColumn newColumnName="ds_classificacao_documento" oldColumnName="ds_tipo_processo_documento" tableName="tb_classificacao_documento"/>
+		<renameColumn newColumnName="ds_observacao" oldColumnName="ds_tipo_proc_doc_observacao" tableName="tb_classificacao_documento"/>
+		<dropColumn columnName="cd_tipo_documento" tableName="tb_classificacao_documento"/>	
+
+		<renameColumn columnDataType="BIGINT" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_extensao_arquivo"/>
+
+		<renameTable newTableName="tb_classificacao_doc_papel"  oldTableName="tb_tipo_processo_doc_papel" />
+		<sql>
+			RENAME sq_tipo_processo_doc_papel TO sq_classificacao_doc_papel;
+		</sql>
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_doc_papel" oldColumnName="id_tipo_processo_doc_papel" tableName="tb_classificacao_doc_papel"/>
+		<renameColumn columnDataType="integer" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_classificacao_doc_papel"/>
+
+		<renameColumn columnDataType="bigint" newColumnName="id_classificacao_documento" oldColumnName="id_tipo_processo_documento" tableName="tb_variavel_classificacao_doc"/>
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="3" dbms="mssql, postgresql" >
+
+		<renameTable newTableName="tb_documento_bin"  oldTableName="tb_processo_documento_bin" />
+		<renameColumn columnDataType="bigint" newColumnName="id_documento_bin" oldColumnName="id_processo_documento_bin" tableName="tb_documento_bin"/>
+		<sql dbms="mssql" >
+			ALTER TABLE tb_documento_bin 
+			DROP CONSTRAINT DF_tb_processo_documento_bin_id_processo_documento_bin;
+			EXEC sp_rename 'sq_tb_processo_documento_bin', 'sq_documento_bin';
+			ALTER TABLE tb_documento_bin 
+			ADD CONSTRAINT DF_tb_documento_bin_id_documento_bin 
+			DEFAULT (NEXT VALUE FOR sq_documento_bin) FOR [id_documento_bin];
+		</sql>
+		<sql dbms="postgresql" >
+			ALTER SEQUENCE sq_tb_processo_documento_bin RENAME TO sq_documento_bin;
+		</sql>
+
+		<dropIndex indexName="idx_tb_processo_documento_bin2" tableName="tb_documento_bin"/>
+		<dropForeignKeyConstraint baseTableName="tb_documento_bin" constraintName="fk_tb_processo_documento_bin_id_usuario"/> 
+		<dropColumn columnName="id_usuario" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ob_processo_documento" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ds_signature" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ds_cert_chain" tableName="tb_documento_bin"/>
+		<dropIndex indexName="idx_tb_processo_documento_bin3" tableName="tb_documento_bin"/>
+		<dropForeignKeyConstraint baseTableName="tb_documento_bin" constraintName="fk_tb_processo_documento_bin_id_usuario_ultimo_assinar"/> 
+		<dropColumn columnName="id_usuario_ultimo_assinar" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ds_nome_usuario_ultimo_assinar" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ds_nome_usuario" tableName="tb_documento_bin"/>
+
+		<renameColumn columnDataType="bigint" newColumnName="id_documento_bin" oldColumnName="id_processo_documento_bin" tableName="tb_assinatura_documento"/>
+
+		<renameColumn columnDataType="bigint" newColumnName="id_documento_bin" oldColumnName="id_processo_documento_bin" tableName="tb_pessoa_fisica"/>
+
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="3" dbms="oracle" >
+
+		<renameTable newTableName="tb_documento_bin"  oldTableName="tb_processo_documento_bin" />
+		<renameColumn columnDataType="bigint" newColumnName="id_documento_bin" oldColumnName="id_processo_documento_bin" tableName="tb_documento_bin"/>
+		<sql>
+			RENAME sq_tb_processo_documento_bin TO sq_documento_bin;
+		</sql>
+		<dropIndex indexName="idx_tb_processo_documento_bin2" tableName="tb_documento_bin"/>
+		<dropForeignKeyConstraint baseTableName="tb_documento_bin" constraintName="fk_processo_doc_bin_01"/> 
+		<dropColumn columnName="id_usuario" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ob_processo_documento" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ds_signature" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ds_cert_chain" tableName="tb_documento_bin"/>
+		<dropIndex indexName="idx_tb_processo_documento_bin3" tableName="tb_documento_bin"/>
+		<dropForeignKeyConstraint baseTableName="tb_documento_bin" constraintName="fk_processo_doc_bin_02"/> 
+		<dropColumn columnName="id_usuario_ultimo_assinar" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ds_nome_usuario_ultimo_assinar" tableName="tb_documento_bin"/>
+		<dropColumn columnName="ds_nome_usuario" tableName="tb_documento_bin"/>
+
+		<renameColumn columnDataType="bigint" newColumnName="id_documento_bin" oldColumnName="id_processo_documento_bin" tableName="tb_assinatura_documento"/>
+
+		<renameColumn columnDataType="bigint" newColumnName="id_documento_bin" oldColumnName="id_processo_documento_bin" tableName="tb_pessoa_fisica"/>
+
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="4" >
+		<createTable tableName="tb_processo_documento">	
+			<column name="id_processo" type="integer">
+				<constraints primaryKey="true" primaryKeyName="pk_processo_documento" nullable="false"/>
+			</column>
+			<column name="id_documento" type="bigint">
+				<constraints nullable="false" references="tb_documento(id_documento)" foreignKeyName="fk_documento"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="5" dbms="mssql, postgresql" >
+
+		<addColumn tableName="tb_processo">
+        	<column name="tp_processo" type="CHAR(2)" defaultValue='PE'/>
+    	</addColumn>
+
+    	<addColumn tableName="tb_processo">
+        	<column name="id_status_processo" type="bigint">
+        		<constraints nullable="true" references="tb_status_processo(id_status_processo)" foreignKeyName="fk_status_processo"/>
+        	</column>
+    	</addColumn>
+
+    	<sql dbms="mssql" >
+    		UPDATE p SET p.id_status_processo = (select pe.id_status_processo from tb_processo_epa pe where pe.id_processo = p.id_processo) FROM tb_processo p;
+    	</sql>
+
+    	<sql dbms="postgresql" >
+    		UPDATE tb_processo SET id_status_processo = (select id_status_processo from tb_processo_epa pe where pe.id_processo = id_processo);
+    	</sql>
+
+    	<dropIndex indexName="idx_tb_processo_epa_id_status_processo" tableName="tb_processo_epa"/>
+    	<dropForeignKeyConstraint baseTableName="tb_processo_epa" constraintName="fk_status_processo_01"/> 
+    	<dropColumn columnName="id_status_processo" tableName="tb_processo_epa"/>
+    	<dropColumn columnName="nr_processo_origem" tableName="tb_processo"/>
+    	<dropColumn columnName="ds_complemento" tableName="tb_processo"/> 
+    	<dropIndex indexName="idx_tb_processo5" tableName="tb_processo"/>
+    	<dropForeignKeyConstraint baseTableName="tb_processo" constraintName="fk_tb_processo_id_usuario_bloqueio"/> 
+    	<dropColumn columnName="id_usuario_bloqueio" tableName="tb_processo"/>
+
+    	<renameTable newTableName="tb_processo_tarefa"  oldTableName="tb_processo_epa_tarefa" />
+    	<renameColumn columnDataType="bigint" newColumnName="id_processo_tarefa" oldColumnName="id_processo_epa_tarefa" tableName="tb_processo_tarefa"/>
+    	
+    	<sql dbms="mssql" >
+			ALTER TABLE tb_processo_tarefa 
+			DROP CONSTRAINT DF_tb_processo_epa_tarefa_id_processo_epa_tarefa;
+			EXEC sp_rename 'sq_tb_processo_epa_tarefa', 'sq_processo_tarefa';
+			ALTER TABLE tb_processo_tarefa 
+			ADD CONSTRAINT DF_tb_processo_tarefa_id_processo_tarefa 
+			DEFAULT (NEXT VALUE FOR sq_processo_tarefa) FOR [id_processo_tarefa];
+		</sql>
+
+		<sql dbms="postgresql" >
+    		ALTER SEQUENCE sq_tb_processo_epa_tarefa RENAME TO sq_processo_tarefa;
+    	</sql>	
+
+	</changeSet>
+
+	<changeSet author="victorpasqualino" id="5" dbms="oracle" >
+
+		<addColumn tableName="tb_processo">
+        	<column name="tp_processo" type="CHAR(2)" defaultValue='PE'/>
+    	</addColumn>
+
+    	<addColumn tableName="tb_processo">
+        	<column name="id_status_processo" type="BIGINT">
+        		<constraints nullable="true" references="tb_status_processo(id_status_processo)" foreignKeyName="fk_status_processo"/>
+        	</column>
+    	</addColumn>
+
+    	<sql>
+    		UPDATE tb_processo SET id_status_processo = (select id_status_processo from tb_processo_epa pe where pe.id_processo = id_processo);
+    	</sql>
+
+    	<dropIndex indexName="idx_processo_01" tableName="tb_processo_epa"/>
+    	<dropForeignKeyConstraint baseTableName="tb_processo_epa" constraintName="fk_status_processo_01"/> 
+    	<dropColumn columnName="id_status_processo" tableName="tb_processo_epa"/>
+    	<dropColumn columnName="nr_processo_origem" tableName="tb_processo"/>
+    	<dropColumn columnName="ds_complemento" tableName="tb_processo"/> 
+    	<dropIndex indexName="idx_tb_processo5" tableName="tb_processo"/>
+    	<dropForeignKeyConstraint baseTableName="tb_processo" constraintName="fk_processo_03"/> 
+    	<dropColumn columnName="id_usuario_bloqueio" tableName="tb_processo"/>
+
+    	<renameTable newTableName="tb_processo_tarefa"  oldTableName="tb_processo_epa_tarefa" />
+    	<renameColumn columnDataType="bigint" newColumnName="id_processo_tarefa" oldColumnName="id_processo_epa_tarefa" tableName="tb_processo_tarefa"/>
+    	
+    	<sql dbms="postgresql" >
+    		RENAME sq_tb_processo_epa_tarefa TO sq_processo_tarefa;
+    	</sql>	
+
+	</changeSet>
+
+</databaseChangeLog>

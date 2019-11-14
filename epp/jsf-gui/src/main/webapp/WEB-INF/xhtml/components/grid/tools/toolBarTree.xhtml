@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+
+    <ui:param name="treeMode"
+        value="#{empty treeMode ? false : treeMode}" />
+    <h:form>
+
+        <div>
+            <a:region renderRegionOnly="false">
+                <a:commandLink status=":status" render=":pageBody"
+                    limitRender="true" id="#{gridId}Edit">
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                        title="#{infoxMessages['button.selecionar']}" />
+                    <f:param name="id"
+                        value="#{treeMode ? row.entity[bean.key] : row[bean.key]}" />
+                    <f:param name="tab" value="form" />
+                </a:commandLink>
+            </a:region>
+            <a:commandLink
+                action="#{home.inactiveRecursive(treeMode ? row.entity : row)}"
+                rendered="#{wi:get(canEdit, true)}" limitRender="true"
+                status=":status" render=":#{gridId}"
+                onclick="if(!confirm('Esta ação irá inativar todos os filhos deste registro. Confirma?')) return false;">
+
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                    title="#{infoxMessages['button.inactive']}" />
+                <f:param name="firstResult" value="#{bean.firstResult}" />
+                <f:param name="page" value="#{bean.page}" />
+
+            </a:commandLink>
+        </div>
+    </h:form>
+</ui:composition>

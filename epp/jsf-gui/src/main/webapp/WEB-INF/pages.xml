@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id: pages.xml 516 2010-08-12 23:21:53Z jplacerda $ -->
+
+<pages xmlns="http://jboss.org/schema/seam/pages"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
+
+       no-conversation-view-id="/home.xhtml"
+       login-view-id="/login.xhtml">
+
+    <page view-id="*">
+        <navigation>
+            <rule if-outcome="home">
+                <redirect view-id="/home.xhtml"/>
+            </rule>
+        </navigation>
+    </page>
+
+    <exception class="javax.persistence.EntityNotFoundException">
+        <redirect view-id="/error.xhtml">
+            <message>Não encontrado.</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.persistence.OptimisticLockException">
+        <end-conversation/>
+        <redirect view-id="/error.xhtml">
+            <message>Algum usuário alterou o mesmo dado, por favor tente novamente.</message>
+        </redirect>
+    </exception>
+    
+    <exception class="org.jboss.seam.security.AuthorizationException" log="false">
+        <redirect view-id="/home.xhtml">
+            <message>Sem permissão para acessar a página.</message>
+        </redirect>
+    </exception>
+    
+    <exception class="org.jboss.seam.security.NotLoggedInException" log="false">
+        <redirect view-id="/login.xhtml">
+            <message>Por favor, identifique-se.</message>
+        </redirect>
+    </exception>
+    
+    <exception class="org.jboss.seam.web.FileUploadException">
+        <redirect view-id="/error.xhtml">
+            <message>O tamanho do arquivo não pode ser maior que 2 MB.</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.faces.application.ViewExpiredException" log="false">
+        <redirect view-id="/error.xhtml">
+            <message>Sua sessão expirou, por favor tente novamente.</message>
+        </redirect>
+    </exception>
+     
+    <exception class="javax.security.auth.login.LoginException" log="false">
+        <redirect view-id="/login.xhtml" />
+    </exception>
+    
+    <exception class="br.com.infox.core.exception.EppSystemException">
+        <redirect>
+            <message severity="ERROR"></message>
+        </redirect>
+    </exception>
+
+    <exception class="br.com.infox.core.exception.EppConfigurationException" log="false">
+        <redirect view-id="/errorConfiguration.xhtml">
+        </redirect>
+    </exception>
+
+    <exception log="false" >
+        <redirect view-id="/errorUnexpected.xhtml">
+			<message>Erro inesperado, por favor tente novamente.</message>
+        </redirect>
+    </exception>
+    
+</pages>

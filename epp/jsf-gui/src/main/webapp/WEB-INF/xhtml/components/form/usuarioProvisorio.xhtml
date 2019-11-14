@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <s:decorate id="#{f.id}DecorationProvisorio"
+        template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+        rendered="#{usuarioLoginCrudAction.managed}">
+
+        <wi:selectBooleanRadio id="#{id}Provisorio"
+            value="#{usuarioLoginCrudAction.instance.provisorio}"
+            label="#{infoxMessages['usuario.provisorio']}">
+            <a:ajax event="change" execute="@this"
+                render="provisorioDiv" />
+        </wi:selectBooleanRadio>
+
+        <s:div id="provisorioDiv">
+            <wi:inputDate id="#{id}DataExpiracao"
+                label="#{infoxMessages['usuario.dataExpiracao']}"
+                value="#{usuarioLoginCrudAction.instance.dataExpiracao}"
+                future="true" showRequired="true" required="true"
+                rendered="#{usuarioLoginCrudAction.instance.provisorio}" />
+        </s:div>
+    </s:decorate>
+
+</ui:composition>

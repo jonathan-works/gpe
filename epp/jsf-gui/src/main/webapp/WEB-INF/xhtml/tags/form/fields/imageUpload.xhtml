@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:rich="http://richfaces.org/rich">
+  <ui:param
+    name="imageBean"
+    value="#{wi:get(imageBean, imageFileUploader)}" />
+  <h:outputScript
+    library="js"
+    name="imageUpload.js" />
+  <s:div
+    rendered="#{wi:get(rendered, true)}"
+    styleClass="img-panel-cont">
+    <rich:collapsiblePanel
+      id="#{wi:get(editorId, 'editorId')}ImagePanel"
+      switchType="ajax"
+      expanded="#{wi:get(opened, 'false')}"
+      header="#{infoxMessages['image.album']}">
+      <rich:fileUpload
+        id="upload"
+        execute="@this"
+        status=":status"
+        limitRender="true"
+        required="#{wi:get(required, false)}"
+        fileUploadListener="#{imageBean.processFileUpload}"
+        addLabel="#{infoxMessages['image.new']}"
+        clearAllLabel="#{infoxMessages['image.clearAll']}"
+        clearLabel="#{infoxMessages['image.clear']}"
+        uploadLabel="#{infoxMessages['image.upload']}"
+        doneLabel="#{infoxMessages['image.done']}"
+        maxFilesQuantity="10"
+        listHeight="0px"
+        immediateUpload="true"
+        noDuplicate="true"
+        render="#{wi:get(editorId, 'editorId')}ImagePanel initImageUploadScript"
+        acceptedTypes="jpg, gif, png">
+      </rich:fileUpload>
+      <rich:dataGrid
+        value="#{imageBean.images}"
+        elements="30"
+        columns="6"
+        var="img"
+        styleClass="d-grid-img">
+        <div class="grid-img-div">
+          <img
+            src="#{img}"
+            class="grid-img"
+            title="#{infoxMessages['image.click']}" 
+            onmousedown="return false;"/>
+        </div>
+        <f:facet name="footer">
+          <rich:dataScroller />
+        </f:facet>
+      </rich:dataGrid>
+      <ui:param name="useBase64" value="#{empty useBase64 ? true : useBase64}" />
+      <h:outputScript id="initImageUploadScript">
+        invoke(["infox.imageUpload"],function initImageUpload(imageUpload) {
+          $(".grid-img").click(function gridImgOnClick() {
+            imageUpload.click(this, "#{wi:get(editorId, 'editorId')}", '#{useBase64}');
+          });
+        });
+      </h:outputScript>
+    </rich:collapsiblePanel>
+  </s:div>
+</ui:composition>

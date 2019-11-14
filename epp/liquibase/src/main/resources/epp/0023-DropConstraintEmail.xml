@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+  <changeSet author="avner" id="1" dbms="mssql" >
+      <dropIndex indexName="tb_usuario_login_ds_email_key" tableName="tb_usuario_login"/>
+      <dropIndex indexName="tb_usuario_login_ds_email_key1" tableName="tb_usuario_login"/>
+      <dropIndex indexName="tb_usuario_login_id_pessoa_fisica_key1" tableName="tb_usuario_login"/>
+	</changeSet>
+
+	<changeSet author="avner" id="1" dbms="postgresql" >
+      <dropUniqueConstraint constraintName="tb_usuario_login_ds_email_key" tableName="tb_usuario_login"/>
+      <dropUniqueConstraint constraintName="tb_usuario_login_ds_email_key1" tableName="tb_usuario_login"/>
+      <dropUniqueConstraint constraintName="tb_usuario_login_id_pessoa_fisica_key1" tableName="tb_usuario_login"/>
+	</changeSet>
+
+  <changeSet author="victorpasqualino" id="1" dbms="oracle" >
+      <dropUniqueConstraint constraintName="tb_usuario_login_ds_email_key" tableName="tb_usuario_login"/>
+      <dropUniqueConstraint constraintName="fk_usuario_login_01" tableName="tb_usuario_login"/>
+  </changeSet>
+
+</databaseChangeLog>

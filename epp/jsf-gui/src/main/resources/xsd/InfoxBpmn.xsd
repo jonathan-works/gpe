@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema elementFormDefault="qualified"
+	xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:sem="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	targetNamespace="http://www.infox.com.br/schema/bpmn/1.0">
+	
+	<xsd:import namespace="http://www.omg.org/spec/BPMN/20100524/MODEL" schemaLocation="Semantic.xsd" />
+	
+	<xsd:attribute name="events" default="none">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="none" />
+				<xsd:enumeration value="enter" />
+				<xsd:enumeration value="exit" />
+				<xsd:enumeration value="both" />
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:attribute>
+</xsd:schema>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="gabriel" id="1" dbms="postgresql">
+        <sql>
+            UPDATE tb_documento_bin SET in_minuta = false WHERE ds_extensao IS NOT NULL AND in_minuta = true;
+
+            UPDATE tb_documento_bin b SET dt_assin_sufic = x.dt_assinatura FROM
+            (SELECT bin.id_documento_bin, MIN(a.dt_assinatura) AS dt_assinatura FROM tb_documento_bin bin
+            INNER JOIN tb_assinatura_documento a ON (a.id_documento_bin = bin.id_documento_bin)
+            INNER JOIN tb_documento doc ON (doc.id_documento_bin = bin.id_documento_bin)
+            WHERE bin.in_assin_sufic = true AND bin.in_minuta = false AND bin.dt_assin_sufic IS NULL AND ((NOT EXISTS 
+            (SELECT 1 FROM tb_reg_assin_suf r WHERE r.tp_assinatura = 'O' AND r.id_documento_bin = bin.id_documento_bin))
+            OR EXISTS (SELECT 1 FROM tb_reg_assin_suf r WHERE r.tp_assinatura = 'S' AND r.id_documento_bin = bin.id_documento_bin))
+            GROUP BY bin.id_documento_bin) x
+            WHERE b.id_documento_bin = x.id_documento_bin;
+
+            UPDATE tb_documento_bin b SET dt_assin_sufic = x.dt_assinatura FROM
+            (SELECT bin.id_documento_bin, MAX(a.dt_assinatura) AS dt_assinatura FROM tb_documento_bin bin
+            INNER JOIN tb_assinatura_documento a ON (a.id_documento_bin = bin.id_documento_bin)
+            WHERE bin.in_assin_sufic = true AND bin.in_minuta = false AND bin.dt_assin_sufic IS NULL AND EXISTS 
+            (SELECT 1 FROM tb_reg_assin_suf r WHERE r.tp_assinatura = 'O' AND r.tp_assinatura != 'S' AND r.id_documento_bin = bin.id_documento_bin)
+            GROUP BY bin.id_documento_bin) x
+            WHERE b.id_documento_bin = x.id_documento_bin;
+
+            UPDATE tb_documento_bin b SET dt_assin_sufic = x.dt_inclusao, in_assin_sufic = true FROM
+            (SELECT bin.dt_inclusao, bin.id_documento_bin FROM tb_documento_bin bin
+            INNER JOIN tb_documento doc ON (doc.id_documento_bin = bin.id_documento_bin)
+            WHERE NOT EXISTS (SELECT 1 FROM tb_classificacao_documento_papel cdp WHERE cdp.id_classificacao_documento = doc.id_classificacao_documento
+              AND cdp.tp_assinatura IN ('O', 'S'))
+            AND (bin.dt_assin_sufic IS NULL OR bin.in_assin_sufic = false)) x
+            WHERE b.id_documento_bin = x.id_documento_bin;
+        </sql>
+    </changeSet>
+    <changeSet author="gabriel" id="2" dbms="mssql">
+        <sql>
+            UPDATE dbo.tb_documento_bin SET in_minuta = 0 WHERE ds_extensao IS NOT NULL AND in_minuta = 1;
+
+            UPDATE b SET b.dt_assin_sufic = x.dt_assinatura FROM
+            (SELECT bin.id_documento_bin, MIN(a.dt_assinatura) AS dt_assinatura FROM tb_documento_bin bin
+            INNER JOIN tb_assinatura_documento a ON (a.id_documento_bin = bin.id_documento_bin)
+            INNER JOIN tb_documento doc ON (doc.id_documento_bin = bin.id_documento_bin)
+            WHERE bin.in_assin_sufic = 1 AND bin.in_minuta = 0 AND bin.dt_assin_sufic IS NULL AND ((NOT EXISTS 
+            (SELECT 1 FROM tb_reg_assin_suf r WHERE r.tp_assinatura = 'O' AND r.id_documento_bin = bin.id_documento_bin))
+            OR EXISTS (SELECT 1 FROM tb_reg_assin_suf r WHERE r.tp_assinatura = 'S' AND r.id_documento_bin = bin.id_documento_bin))
+            GROUP BY bin.id_documento_bin) x
+            INNER JOIN tb_documento_bin b ON (b.id_documento_bin = x.id_documento_bin);
+
+            UPDATE b SET b.dt_assin_sufic = x.dt_assinatura FROM
+            (SELECT bin.id_documento_bin, MAX(a.dt_assinatura) AS dt_assinatura FROM tb_documento_bin bin
+            INNER JOIN tb_assinatura_documento a ON (a.id_documento_bin = bin.id_documento_bin)
+            WHERE bin.in_assin_sufic = 1 AND bin.in_minuta = 0 AND bin.dt_assin_sufic IS NULL AND EXISTS 
+            (SELECT 1 FROM tb_reg_assin_suf r WHERE r.tp_assinatura = 'O' AND r.tp_assinatura != 'S' AND r.id_documento_bin = bin.id_documento_bin)
+            GROUP BY bin.id_documento_bin) x
+            INNER JOIN tb_documento_bin b ON (b.id_documento_bin = x.id_documento_bin);
+
+            UPDATE b SET b.dt_assin_sufic = x.dt_inclusao, b.in_assin_sufic = 1 FROM
+            (SELECT bin.dt_inclusao, bin.id_documento_bin FROM tb_documento_bin bin
+            INNER JOIN tb_documento doc ON (doc.id_documento_bin = bin.id_documento_bin)
+            WHERE NOT EXISTS (SELECT 1 FROM tb_classificacao_documento_papel cdp WHERE cdp.id_classificacao_documento = doc.id_classificacao_documento
+              AND cdp.tp_assinatura IN ('O', 'S'))
+            AND (bin.dt_assin_sufic IS NULL OR bin.in_assin_sufic = 0)) x
+            INNER JOIN dbo.tb_documento_bin b ON (b.id_documento_bin = x.id_documento_bin);
+          </sql>
+      </changeSet>
+
+</databaseChangeLog>

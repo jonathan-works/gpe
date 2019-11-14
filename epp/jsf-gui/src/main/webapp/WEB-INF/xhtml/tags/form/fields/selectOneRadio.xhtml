@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="template"
+        value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+
+    <s:decorate id="#{id}Decoration" template="#{template}"
+        styleClass="decoration-div sel-one-radio-div #{wi:get(decorationClass,'')}"
+        rendered="#{wi:get(rendered, true)}">
+        <ui:define name="label">#{label}</ui:define>
+        <h:selectOneRadio id="#{id}" value="#{value}"
+            layout="#{wi:get(direction, 'line')}Direction"
+            disabled="#{disabled}" required="#{required}"
+            onchange="#{onchange}" readonly="#{readonly}"
+            styleClass="radio">
+            <f:selectItems value="#{selectItemFunctions.createFromString(valueList) }" />
+            <ui:insert />
+            <script>
+				invoke(["infox.escapeId"],function(EscapeId) {
+					var id = EscapeId(#{empty value} ? (#{not empty f.id} ?
+												"##{rich:clientId(id)}:#{f.id}:#{empty boxChecked ? 0 : boxChecked}" :
+												"##{rich:clientId(id)}:#{empty boxChecked ? 0 : boxChecked}") :	"");
+					$(id).attr({checked:true});
+				});
+			</script>
+        </h:selectOneRadio>
+    </s:decorate>
+
+</ui:composition>

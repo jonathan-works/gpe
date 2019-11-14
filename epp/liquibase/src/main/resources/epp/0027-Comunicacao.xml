@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql">
+        <createTable tableName="tb_modelo_comunicacao">
+            <column name="id_modelo_comunicacao" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_tipo_comunicacao" type="bigint">
+                <constraints nullable="false" references="tb_tipo_comunicacao(id_tipo_comunicacao)" foreignKeyName="modelo_comunic_tipo_comunic_fk"/>
+            </column>
+            <column name="ds_comunicacao" type="NCLOB">
+                <constraints nullable="true"/>
+            </column>
+            <column name="id_classificacao_documento" type="bigint">
+                <constraints nullable="true" references="tb_classificacao_documento(id_classificacao_documento)" foreignKeyName="modelo_comunic_classif_doc_fk" />
+            </column>
+            <column name="in_finalizada" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_processo" type="bigint">
+                <constraints nullable="false" references="tb_processo(id_processo)" foreignKeyName="modelo_comunic_processo_fk" />
+            </column>
+            <column name="id_localizacao_resp_assinat" type="bigint">
+                <constraints nullable="true" references="tb_localizacao(id_localizacao)" foreignKeyName="modelo_comunic_localizacao_fk" />
+            </column>
+            <column name="id_perfil_template_resp_assinat" type="bigint">
+                <constraints nullable="true" references="tb_perfil_template(id_perfil_template)" foreignKeyName="modelo_comunic_perfil_template_fk" />
+            </column>
+            <column name="id_modelo_documento" type="bigint">
+                <constraints nullable="true" references="tb_modelo_documento(id_modelo_documento)" foreignKeyName="modelo_comunic_modelo_doc_fk" />
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_modelo_comunicacao" />
+
+        <createTable tableName="tb_documento_modelo_comunic">
+            <column name="id_documento_modelo_comunic" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="id_modelo_comunicacao" type="bigint">
+                <constraints nullable="false" references="tb_modelo_comunicacao(id_modelo_comunicacao)" foreignKeyName="doc_modelo_comunic_modelo_comunic_fk" />
+            </column>
+            <column name="id_documento" type="bigint">
+                <constraints nullable="false" references="tb_documento(id_documento)" foreignKeyName="doc_modelo_comunic_documento_fk"/>
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_documento_modelo_comunic" />
+
+        <createTable tableName="tb_destinatario_modelo_comunic">
+            <column name="id_destinatario_modelo_comunic" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="id_pessoa_fisica" type="bigint">
+                <constraints nullable="true" references="tb_pessoa_fisica(id_pessoa_fisica)" foreignKeyName="dest_modelo_comunic_pessoa_fisica_fk" />
+            </column>
+            <column name="id_localizacao" type="bigint">
+                <constraints nullable="true" references="tb_localizacao(id_localizacao)" foreignKeyName="dest_modelo_comunic_localizacao_fk" />
+            </column>
+            <column name="id_modelo_comunicacao" type="bigint">
+                <constraints nullable="false" references="tb_modelo_comunicacao(id_modelo_comunicacao)" foreignKeyName="dest_modelo_comunic_modelo_comunic_fk" />
+            </column>
+            <column name="tp_meio_expedicao" type="character(2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="nr_prazo" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="in_expedido" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_documento_bin" type="bigint">
+                <constraints nullable="true" references="tb_documento_bin(id_documento_bin)" foreignKeyName="dest_modelo_comunic_doc_bin_fk" />
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_destinatario_modelo_comunic" />
+        <sql dbms="mssql" > 
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT cc_dest_modelo_comunic_meio_expedicao CHECK (tp_meio_expedicao IN ('EM', 'DO', 'SI', 'IM'));
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT cc_dest_modelo_comunic_dest CHECK ((id_pessoa_fisica IS NULL AND id_localizacao IS NOT NULL) OR (id_pessoa_fisica IS NOT NULL AND id_localizacao IS NULL));
+            CREATE UNIQUE NONCLUSTERED INDEX [dest_mod_comunic_pes_fis_unq] ON [dbo].[tb_destinatario_modelo_comunic] ([id_pessoa_fisica] ASC, [id_modelo_comunicacao] ASC) WHERE ([id_pessoa_fisica] IS NOT NULL) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+            CREATE UNIQUE NONCLUSTERED INDEX [dest_mod_comunic_loc_unq] ON [dbo].[tb_destinatario_modelo_comunic] ([id_localizacao] ASC, [id_modelo_comunicacao] ASC) WHERE ([id_localizacao] IS NOT NULL) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+        </sql>
+        <sql dbms="postgresql" >
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT cc_dest_modelo_comunic_meio_expedicao CHECK (tp_meio_expedicao IN ('EM', 'DO', 'SI', 'IM'));
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT cc_dest_modelo_comunic_dest CHECK ((id_pessoa_fisica IS NULL AND id_localizacao IS NOT NULL) OR (id_pessoa_fisica IS NOT NULL AND id_localizacao IS NULL));
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT dest_mod_comunic_pes_fis_unq UNIQUE (id_pessoa_fisica, id_modelo_comunicacao);
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT dest_mod_comunic_loc_unq UNIQUE (id_localizacao, id_modelo_comunicacao);
+        </sql>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle">
+        <createTable tableName="tb_modelo_comunicacao">
+            <column name="id_modelo_comunicacao" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_tipo_comunicacao" type="bigint">
+                <constraints nullable="false" references="tb_tipo_comunicacao(id_tipo_comunicacao)" foreignKeyName="modelo_comunic_tipo_comunic_fk"/>
+            </column>
+            <column name="ds_comunicacao" type="NCLOB">
+                <constraints nullable="true"/>
+            </column>
+            <column name="id_classificacao_documento" type="bigint">
+                <constraints nullable="true" references="tb_classificacao_documento(id_classificacao_documento)" foreignKeyName="modelo_comunic_classif_doc_fk" />
+            </column>
+            <column name="in_finalizada" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_processo" type="bigint">
+                <constraints nullable="false" references="tb_processo(id_processo)" foreignKeyName="modelo_comunic_processo_fk" />
+            </column>
+            <column name="id_localizacao_resp_assinat" type="bigint">
+                <constraints nullable="true" references="tb_localizacao(id_localizacao)" foreignKeyName="modelo_comunic_localizacao_fk" />
+            </column>
+            <column name="id_perfil_template_assinat" type="bigint">
+                <constraints nullable="true" references="tb_perfil_template(id_perfil_template)" foreignKeyName="fk_modelo_comunicacao_01" />
+            </column>
+            <column name="id_modelo_documento" type="bigint">
+                <constraints nullable="true" references="tb_modelo_documento(id_modelo_documento)" foreignKeyName="modelo_comunic_modelo_doc_fk" />
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_modelo_comunicacao" />
+
+        <createTable tableName="tb_documento_modelo_comunic">
+            <column name="id_documento_modelo_comunic" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="id_modelo_comunicacao" type="bigint">
+                <constraints nullable="false" references="tb_modelo_comunicacao(id_modelo_comunicacao)" foreignKeyName="fk_doc_modelo_comunic_02" />
+            </column>
+            <column name="id_documento" type="bigint">
+                <constraints nullable="false" references="tb_documento(id_documento)" foreignKeyName="fk_doc_modelo_comunic_01"/>
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_documento_modelo_comunic" />
+
+        <createTable tableName="tb_destinatario_modelo_comunic">
+            <column name="id_destinatario_modelo_comunic" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="id_pessoa_fisica" type="bigint">
+                <constraints nullable="true" references="tb_pessoa_fisica(id_pessoa_fisica)" foreignKeyName="fk_dest_modelo_comunic_03" />
+            </column>
+            <column name="id_localizacao" type="bigint">
+                <constraints nullable="true" references="tb_localizacao(id_localizacao)" foreignKeyName="fk_dest_modelo_comunic_04" />
+            </column>
+            <column name="id_modelo_comunicacao" type="bigint">
+                <constraints nullable="false" references="tb_modelo_comunicacao(id_modelo_comunicacao)" foreignKeyName="fk_dest_modelo_comunic_02" />
+            </column>
+            <column name="tp_meio_expedicao" type="NCHAR(2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="nr_prazo" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="in_expedido" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_documento_bin" type="bigint">
+                <constraints nullable="true" references="tb_documento_bin(id_documento_bin)" foreignKeyName="dest_modelo_comunic_doc_bin_fk" />
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_destinatario_modelo_comunic" />
+        <sql>
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT cc_dest_modelo_comunic_01 CHECK (tp_meio_expedicao IN ('EM', 'DO', 'SI', 'IM'));
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT cc_dest_modelo_comunic_dest CHECK ((id_pessoa_fisica IS NULL AND id_localizacao IS NOT NULL) OR (id_pessoa_fisica IS NOT NULL AND id_localizacao IS NULL));
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT dest_mod_comunic_pes_fis_unq UNIQUE (id_pessoa_fisica, id_modelo_comunicacao);
+            ALTER TABLE tb_destinatario_modelo_comunic ADD CONSTRAINT dest_mod_comunic_loc_unq UNIQUE (id_localizacao, id_modelo_comunicacao);
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2" dbms="mssql, postgresql">
+        <dropForeignKeyConstraint baseTableName="tb_documento" constraintName="tb_processo_documento_id_processo_fkey" />
+        <addForeignKeyConstraint baseTableName="tb_documento" baseColumnNames="id_processo" referencedTableName="tb_processo" referencedColumnNames="id_processo" constraintName="tb_processo_documento_id_processo_fkey" />
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2" dbms="oracle">
+        <dropForeignKeyConstraint baseTableName="tb_documento" constraintName="fk_processo_documento_03" />
+        <addForeignKeyConstraint baseTableName="tb_documento" baseColumnNames="id_processo" referencedTableName="tb_processo" referencedColumnNames="id_processo" constraintName="fk_processo_documento_03" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="3" dbms="mssql, postgresql, oracle">
+        <addForeignKeyConstraint baseTableName="tb_participante_processo" baseColumnNames="id_processo" referencedTableName="tb_processo" referencedColumnNames="id_processo" constraintName="partic_processo_processo_fk" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="4" dbms="mssql, postgresql, oracle" >
+        <insert tableName="tb_parametro" dbms="mssql" >
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="raizLocalizacoesComunicacao" />
+            <column name="ds_variavel" value="Localização raiz das localizações destinatárias de comunicações" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="mssql" >
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="codigoFluxoComunicacao" />
+            <column name="ds_variavel" value="Código do fluxo de comunicação" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+
+        <insert tableName="tb_parametro" dbms="postgresql">
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="raizLocalizacoesComunicacao" />
+            <column name="ds_variavel" value="Localização raiz das localizações destinatárias de comunicações" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="postgresql">
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="codigoFluxoComunicacao" />
+            <column name="ds_variavel" value="Código do fluxo de comunicação" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+
+        <insert tableName="tb_parametro" dbms="oracle">
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="raizLocalizacoesComunicacao" />
+            <column name="ds_variavel" value="Localização raiz das localizações destinatárias de comunicações" />
+            <column name="vl_variavel" value=" " />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="oracle">
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="codigoFluxoComunicacao" />
+            <column name="ds_variavel" value="Código do fluxo de comunicação" />
+            <column name="vl_variavel" value=" " />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="5" dbms="mssql">
+        <update tableName="tb_documento_bin">
+            <column name="ds_uuid" type="uuid" valueComputed="NEWID()" />
+            <where>ds_uuid IS NULL</where>
+        </update>
+        <dropIndex indexName="documento_bin_ds_uuid_unq" tableName="tb_documento_bin" />
+        <addNotNullConstraint tableName="tb_documento_bin" columnName="ds_uuid" columnDataType="uuid" />
+        <addUniqueConstraint tableName="tb_documento_bin" columnNames="ds_uuid" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="5-1" dbms="postgresql">
+        <customChange class="br.com.infox.liquibase.UUIDGenerator">
+            <param name="sql" value="UPDATE tb_documento_bin SET ds_uuid = ? WHERE id_documento_bin = ?"  />
+            <param name="primaryKeySql" value="SELECT id_documento_bin FROM tb_documento_bin WHERE ds_uuid IS NULL"/>
+        </customChange>
+        <dropIndex indexName="documento_bin_ds_uuid_unq" tableName="tb_documento_bin" />
+        <addNotNullConstraint tableName="tb_documento_bin" columnName="ds_uuid" columnDataType="uuid" />
+        <addUniqueConstraint tableName="tb_documento_bin" columnNames="ds_uuid" />
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="5" dbms="oracle">
+        <update tableName="tb_documento_bin">
+            <column name="ds_uuid" type="uuid" valueComputed="sys_guid()" />
+            <where>ds_uuid IS NULL</where>
+        </update>
+        <dropIndex indexName="documento_bin_ds_uuid_unq" tableName="tb_documento_bin" />
+        <addNotNullConstraint tableName="tb_documento_bin" columnName="ds_uuid" columnDataType="uuid" />
+        <addUniqueConstraint tableName="tb_documento_bin" columnNames="ds_uuid" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="6" dbms="mssql, postgresql, oracle"> 
+        <insert tableName="tb_variavel" dbms="mssql">
+            <column name="id_variavel" valueComputed="NEXT VALUE FOR sq_tb_variavel" />
+            <column name="ds_variavel" value="nomeDestinatarioComunicacao" />
+            <column name="vl_variavel" value="#{nomeDestinatarioComunicacao}" />
+            <column name="in_ativo" value="1" />
+        </insert>
+        <insert tableName="tb_variavel" dbms="mssql">
+            <column name="id_variavel" valueComputed="NEXT VALUE FOR sq_tb_variavel" />
+            <column name="ds_variavel" value="meioExpedicaoComunicacao" />
+            <column name="vl_variavel" value="#{meioExpedicaoComunicacao}" />
+            <column name="in_ativo" value="1" />
+        </insert>
+        <insert tableName="tb_variavel" dbms="mssql">
+            <column name="id_variavel" valueComputed="NEXT VALUE FOR sq_tb_variavel" />
+            <column name="ds_variavel" value="prazoDestinatarioComunicacao" />
+            <column name="vl_variavel" value="#{prazoDestinatarioComunicacao}" />
+            <column name="in_ativo" value="1" />
+        </insert>
+        <!-- PostgreSQL -->
+        <insert tableName="tb_variavel" dbms="postgresql">
+            <column name="id_variavel" valueComputed="nextval('sq_tb_variavel')" />
+            <column name="ds_variavel" value="nomeDestinatarioComunicacao" />
+            <column name="vl_variavel" value="#{nomeDestinatarioComunicacao}" />
+            <column name="in_ativo" value="1" />
+        </insert>
+        <insert tableName="tb_variavel" dbms="postgresql">
+            <column name="id_variavel" valueComputed="nextval('sq_tb_variavel')" />
+            <column name="ds_variavel" value="meioExpedicaoComunicacao" />
+            <column name="vl_variavel" value="#{meioExpedicaoComunicacao}" />
+            <column name="in_ativo" value="1" />
+        </insert>
+        <insert tableName="tb_variavel" dbms="postgresql">
+            <column name="id_variavel" valueComputed="nextval('sq_tb_variavel')" />
+            <column name="ds_variavel" value="prazoDestinatarioComunicacao" />
+            <column name="vl_variavel" value="#{prazoDestinatarioComunicacao}" />
+            <column name="in_ativo" value="1" />
+        </insert>
+        <!-- Oracle -->
+        <insert tableName="tb_variavel" dbms="oracle">
+            <column name="id_variavel" valueComputed="sq_tb_variavel.nextval" />
+            <column name="ds_variavel" value="nomeDestinatarioComunicacao" />
+            <column name="vl_variavel" value="#{nomeDestinatarioComunicacao}" />
+            <column name="in_ativo" value="1" />
+        </insert>
+        <insert tableName="tb_variavel" dbms="oracle">
+            <column name="id_variavel" valueComputed="sq_tb_variavel.nextval" />
+            <column name="ds_variavel" value="meioExpedicaoComunicacao" />
+            <column name="vl_variavel" value="#{meioExpedicaoComunicacao}" />
+            <column name="in_ativo" value="1" />
+        </insert>
+        <insert tableName="tb_variavel" dbms="oracle">
+            <column name="id_variavel" valueComputed="sq_tb_variavel.nextval" />
+            <column name="ds_variavel" value="prazoDestinatarioComunicacao" />
+            <column name="vl_variavel" value="#{prazoDestinatarioComunicacao}" />
+            <column name="in_ativo" value="1" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="7" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_recurso" dbms="mssql">
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso" />
+            <column name="ds_identificador" value="abaComunicacao" />
+            <column name="ds_nome" value="Aba de Comunicação" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="postgresql">
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')" />
+            <column name="ds_nome" value="Aba de Comunicação" />
+            <column name="ds_identificador" value="abaComunicacao" />
+        </insert>
+        <insert tableName="tb_recurso" dbms="oracle">
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval" />
+            <column name="ds_nome" value="Aba de Comunicação" />
+            <column name="ds_identificador" value="abaComunicacao" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="8" dbms="mssql, postgresql">
+        <dropNotNullConstraint columnDataType="bigint" tableName="tb_modelo_comunicacao" columnName="id_modelo_documento" />
+        <dropNotNullConstraint columnDataType="bigint" tableName="tb_modelo_comunicacao" columnName="id_classificacao_documento" />
+        <dropNotNullConstraint columnDataType="NCLOB" tableName="tb_modelo_comunicacao" columnName="ds_comunicacao" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="9" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_modelo_comunicacao">
+            <column name="in_minuta" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

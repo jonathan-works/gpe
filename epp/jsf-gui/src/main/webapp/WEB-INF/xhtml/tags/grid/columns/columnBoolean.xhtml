@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:columnOutputText value="#{value ? messages['crud.yes'] : messages['crud.no']}"
+        columnStyle="text-align:center; #{columnStyle}"
+        columnWidth="#{wi:get(columnWidth, '10%')}" />
+</ui:composition>

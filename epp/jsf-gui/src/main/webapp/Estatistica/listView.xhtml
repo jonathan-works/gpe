@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="title">#{infoxMessages['temposMedios.titlePage']}</ui:define>
+    <ui:define name="body">
+        <wi:panel
+            id="estatisticaPanel"
+            styleClass="content-block">
+            <ui:param
+                name="tempoMedioProcesso"
+                value="0" />
+            <ui:param
+                name="id"
+                value="tempoMedioTarefaList" />
+            <s:div
+                id="#{id}SearchForm"
+                styleClass="dtable-search-form">
+                <ui:param
+                    name="formId"
+                    value="pesquisarTempoMedioProcesso" />
+                <h:form id="#{formId}">
+                    <f:validateBean disabled="true">
+                        <s:div styleClass="edit">
+                            <rich:collapsiblePanel
+                                expanded="true"
+                                header="#{infoxMessages['searchForm.title']}"
+                                switchType="client">
+                                <ui:param
+                                    name="template"
+                                    value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
+                                <wi:selectOneMenuEntity
+                                    id="naturezaCategoriaFluxo"
+                                    label="#{infoxMessages['naturezaCategoriaFluxo.tableTitle']}"
+                                    value="#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo}"
+                                    items="#{tempoMediaTarefaAction.naturezaCategoriaFluxoList}"
+                                    showLabel="#{infoxMessages['crud.select.select']}" />
+                                <wi:inputDate
+                                    id="dataInicio"
+                                    label="#{infoxMessages['temposMedios.dataInicio']}"
+                                    value="#{tempoMedioTarefaList.parameters.dataInicio}">
+                                </wi:inputDate>
+                                <wi:inputDate
+                                    id="dataFim"
+                                    label="#{infoxMessages['temposMedios.dataFim']}"
+                                    value="#{tempoMedioTarefaList.parameters.dataFim}">
+                                </wi:inputDate>
+                                <s:div>
+                                    <wi:commandButton
+                                        id="searchButton"
+                                        value="#{infoxMessages['button.pesquisar']}"
+                                        reRender="pageBody">
+                                        <a:param
+                                            assignTo="#{tempoMedioTarefaList.page}"
+                                            value="1" />
+                                    </wi:commandButton>
+                                    <a:region>
+                                        <a:commandButton
+                                            id="clearButton"
+                                            onclick="$('##{formId}').clearForm();showLoading();"
+                                            oncomplete="hideLoading();"
+                                            action="#{tempoMedioTarefaList.newInstance()}"
+                                            value="#{infoxMessages['button.limpar']}"
+                                            execute="@this"
+                                            render="pageBody"
+                                            styleClass="buttons" />
+                                    </a:region>
+                                </s:div>
+                            </rich:collapsiblePanel>
+                        </s:div>
+                    </f:validateBean>
+                </h:form>
+            </s:div>
+            <a:region>
+                <rich:panel
+                    id="#{id}Panel"
+                    rendered="#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo != null}"
+                    header="[#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo}] #{infoxMessages['temposMedios.dataTable']} #{tempoMedioTarefaList.tempoMedioProcessoFormatado}. #{infoxMessages['temposMedios.prazo.dataTable']} #{tempoMedioTarefaList.prazoFluxo}"
+                    bodyClass="dtable-p-b"
+                    styleClass="dtable-p">
+                    <rich:dataTable
+                        id="#{id}"
+                        value="#{tempoMedioTarefaList.list(10)}"
+                        rowKeyVar="key"
+                        rowClasses=""
+                        styleClass="dtable rf-dt-crud"
+                        var="row">
+                        <rich:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{infoxMessages['fluxo.tarefa']}"></h:outputText>
+                            </f:facet>
+                            <s:div>
+                                <h:outputText value="#{row.tarefa.tarefa}"></h:outputText>
+                            </s:div>
+                        </rich:column>
+                        <rich:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{infoxMessages['temposMedios.tempoMedio']}"></h:outputText>
+                            </f:facet>
+                            <s:div>
+                                <h:outputText value="#{row.tempoMedioFormatado}"></h:outputText>
+                            </s:div>
+                        </rich:column>
+                        <rich:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{infoxMessages['temposMedios.prazo']}"></h:outputText>
+                            </f:facet>
+                            <s:div>
+                                <h:outputText value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.label}">
+                                </h:outputText>
+                            </s:div>
+                        </rich:column>
+                        <rich:column>
+                            <f:facet name="header">
+                                <h:outputText value="Número de Processos contabilizados"></h:outputText>
+                            </f:facet>
+                            <s:div>
+                                <h:outputText value="#{row.instancias}"></h:outputText>
+                            </s:div>
+                        </rich:column>
+                    </rich:dataTable>
+                    <h:outputText
+                        value="#{infoxMessages['list.resultPrefix']} #{tempoMedioTarefaList.resultCount} #{infoxMessages['list.resultSufix']}"
+                        styleClass="dt-res-count" />
+                    <s:div rendered="#{tempoMedioTarefaList.nextExists or tempoMedioTarefaList.previousExists}">
+                        <h:form>
+                            <ui:param
+                                name="bean"
+                                value="#{tempoMedioTarefaList}" />
+                            <ui:include src="/WEB-INF/xhtml/tags/grid/inputNumberSlider.xhtml" />
+                        </h:form>
+                    </s:div>
+                </rich:panel>
+            </a:region>
+        </wi:panel>
+    </ui:define>
+</ui:composition>

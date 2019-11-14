@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql">
+        <createTable tableName="tb_variavel_classificacao_doc">
+            <column name="id_variavel_classificacao_doc" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nm_variavel" type="NVARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_fluxo" type="bigint">
+                <constraints nullable="false" references="tb_fluxo(id_fluxo)" foreignKeyName="fk_tb_variavel_classificacao_doc_id_fluxo"/>
+            </column>
+            <column name="id_tipo_processo_documento" type="bigint">
+                <constraints nullable="false" references="tb_tipo_processo_documento(id_tipo_processo_documento)" foreignKeyName="fk_tb_variavel_classificacao_doc_id_tp_proc_doc"/>
+            </column>
+            <column name="in_publicado" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_remover_na_publicacao" type="boolean">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_variavel_classificacao_doc" />
+        <addUniqueConstraint tableName="tb_variavel_classificacao_doc" columnNames="nm_variavel, id_fluxo, id_tipo_processo_documento" />
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle">
+        <createTable tableName="tb_variavel_classificacao_doc">
+            <column name="id_variavel_classificacao_doc" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nm_variavel" type="NVARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_fluxo" type="bigint">
+                <constraints nullable="false" references="tb_fluxo(id_fluxo)" foreignKeyName="fk_variavel_class_doc_02"/>
+            </column>
+            <column name="id_tipo_processo_documento" type="bigint">
+                <constraints nullable="false" references="tb_tipo_processo_documento(id_tipo_processo_documento)" foreignKeyName="fk_variavel_class_doc_03"/>
+            </column>
+            <column name="in_publicado" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="in_remover_na_publicacao" type="boolean">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createSequence incrementBy="1" minValue="1" startValue="1" sequenceName="sq_variavel_classificacao_doc" />
+        <addUniqueConstraint tableName="tb_variavel_classificacao_doc" columnNames="nm_variavel, id_fluxo, id_tipo_processo_documento" />
+    </changeSet>
+    
+</databaseChangeLog>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:wi="http://www.itx.com.br/jsf"
+>
+  <ui:param
+    name="actionInactive"
+    value="#{empty actionInactive ? home.homeName.concat('.inactive(row)') : actionInactive}"
+  />
+  <wi:toolBar
+    action="#{actionInactive}"
+    rendered="#{row.ativo}"
+    limitToList="true"
+    status=":status"
+    render="#{wi:get(reRender, 'searchGridRegion')},pageBodyDialogMessage"
+    onclick="return confirm(\'#{infoxMessages['crud.confirmInactivate']}\');"
+    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+    title="#{infoxMessages['button.inactive']}"
+  />
+</ui:composition>

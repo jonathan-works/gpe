@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+
+    <rich:collapsiblePanel label="Colunas" opened="false"
+        switchType="client">
+        <h:form id="#{gridId}ColumnListForm">
+            <rich:dataTable value="#{bean.allColumns}" var="col"
+                rowKeyVar="key">
+                <ui:param name="visible"
+                    value="#{bean.visibleColumns.contains(col)}" />
+                <rich:column
+                    styleClass="dr-table-subheader rich-table-subheader">
+                    <div>
+                        <div>
+                            &gt;
+                            <a:commandLink
+                                render="#{gridId}Div,#{gridId}ColumnListForm"
+                                limitRender="true" status="status"
+                                action="#{bean.toggleVisibleColumn(col.id)}"
+                                styleClass="opacityHover">
+                                     url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
+                                     title="Mostrar coluna"
+									rendered="#{!visible}"/&gt;
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/removeCol.png')}" title="Esconder coluna"
+                                    rendered="#{visible}" />
+                            </a:commandLink>
+                            <a:commandLink rendered="#{key != 0}"
+                                render="#{gridId}Div,#{gridId}ColumnListForm"
+                                limitRender="true" status="status"
+                                action="#{bean.moveColumnUp(col)}"
+                                styleClass="opacityHover">
+                                     url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/up.gif')}"
+                                     title="Subir"
+                                     rendered="#{visible}" /&gt;
+							</a:commandLink>
+                            <a:commandLink
+                                rendered="#{key lt bean.visibleColumns.size - 1}"
+                                render="#{gridId}Div,#{gridId}ColumnListForm"
+                                limitRender="true" status="status"
+                                action="#{bean.moveColumnDown(col)}"
+                                styleClass="opacityHover">
+                                     url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}"
+                                     title="Descer"
+                                     rendered="#{visible}" /&gt;
+							</a:commandLink>
+
+                        </div>
+
+                    </div>
+
+                </rich:column>
+                <rich:column>
+
+                    <f:facet name="header">Coluna</f:facet>
+                    <h:outputText value="#{infoxMessages[col.toString()]}" />
+
+                </rich:column>
+
+            </rich:dataTable>
+
+        </h:form>
+
+    </rich:collapsiblePanel>
+
+
+</ui:composition>

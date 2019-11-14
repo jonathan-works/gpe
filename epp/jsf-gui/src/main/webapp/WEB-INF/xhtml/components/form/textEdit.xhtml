@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+
+    <wi:editor
+        showVariables="#{empty props.showVariables ? showVariables : props.showVariables}"
+        theme="#{empty props.theme ? theme : props.theme}"
+        width="#{empty props.width ? width : props.width}"
+        height="#{empty props.height ? height : props.height}"
+        autoResize="#{empty props.autoResize ? autoResize : props.autoResize}"
+        onchange="#{empty props.onchange ? onchange : props.onchange}"
+        rendered="#{empty props.rendered ? rendered : props.rendered}">
+    </wi:editor>
+
+
+</ui:composition>

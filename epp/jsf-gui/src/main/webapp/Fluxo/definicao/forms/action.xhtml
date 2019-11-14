@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf"
+>
+    <s:div id="#{id}Action">
+        <a:commandLink
+            id="#{id}Link"
+            render="actionTemplate"
+            onclick="idTextarea='form:nodes:nodeEventeventSubView:nodeEventAction:nodeEventActionExpressionDecoration:nodeEventActionExpression'"
+            action="#{event.setTemplate()}"
+            limitRender="true"
+            rendered="false"
+            oncomplete="#{rich:component('actionTemplatePanel')}.show()"
+        >
+            <h:graphicImage
+                url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/wizard.gif')}"
+                title="Assistente para expressão"
+            />
+        </a:commandLink>
+        <wi:inputTextarea
+            id="#{id}ActionExpression"
+            value="#{event.currentAction.actionExpression}"
+            label="#{infoxMessages['process.events.action.expression']}"
+            showCounter="false"
+            styleClass="textAreaExpressionAction"
+        >
+        	<f:validator validatorId="jbpmExpressionValidator" />
+            <a:ajax
+                event="change"
+                limitRender="true"
+                execute="@this"
+                render="pageBodyDialogMessage :processDefinition:eventsForm:nodeEventActionExpressionDecoration"
+            />
+        </wi:inputTextarea>
+        <div style="display: inline-block">
+            <h:graphicImage id="#{id}helpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                onclick="#{rich:component('expressoesAjudaGeralPopUpPanel')}.show();" />
+        </div>
+    </s:div>
+
+	<ui:include src="../helpers/expressoesAjuda.xhtml">
+		<ui:param name="id" value="expressoesAjudaGeralPopUpPanel" />
+		<ui:param name="methods" value="#{bpmExpressionService.externalEventosMethods}" />
+		<ui:param name="targetExpressionFieldClass" value="textAreaExpressionAction" />
+	</ui:include>
+
+</ui:composition>

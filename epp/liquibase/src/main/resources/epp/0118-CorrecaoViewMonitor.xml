@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="paulofilho" id="1">
+        <createView replaceIfExists="true" viewName="vs_monitor_instancias_processo">
+            SELECT processo.nr_processo AS nr_processo, n.NAME_ AS nm_node, ti.START_ AS dt_inicio, 'OK' AS ds_state, tkn.ID_ AS id_token, 
+			n.KEY_ AS cd_node_key, n.PROCESSDEFINITION_ AS id_process_definition
+			FROM JBPM_TASKINSTANCE ti
+			INNER JOIN TB_PROCESSO_JBPM procJbpm ON procJbpm.ID_PROCESS_INSTANCE = ti.PROCINST_
+			INNER JOIN TB_PROCESSO processo ON processo.ID_PROCESSO = procJbpm.ID_PROCESSO
+			INNER JOIN JBPM_TASK t ON (t.ID_ = ti.TASK_)
+			INNER JOIN JBPM_TOKEN tkn ON (tkn.ID_ = ti.TOKEN_)
+			INNER JOIN JBPM_NODE n ON (n.ID_ = t.TASKNODE_)
+			WHERE ti.END_ IS NULL AND tkn.processinstance_ IS NOT NULL
+			
+			UNION ALL
+			
+			SELECT processo.nr_processo AS nr_processo, n.NAME_ AS nm_node, tkn.START_ AS dt_inicio, 'ERROR' AS ds_state, tkn.ID_ AS id_token, 
+			n.KEY_ AS cd_node_key, n.PROCESSDEFINITION_ AS id_process_definition
+			FROM JBPM_TOKEN tkn 
+			INNER JOIN TB_PROCESSO_JBPM procJbpm ON procJbpm.ID_PROCESS_INSTANCE = tkn.PROCESSINSTANCE_
+			INNER JOIN TB_PROCESSO processo ON processo.ID_PROCESSO = procJbpm.ID_PROCESSO
+			INNER JOIN JBPM_NODE n ON (n.ID_ = tkn.NODE_)
+			WHERE tkn.END_ IS NULL AND tkn.LOCK_ IS NULL AND n.CLASS_ IN ('N', 'M', 'D')
+			AND tkn.processinstance_ IS NOT NULL
+        </createView>
+    </changeSet>
+</databaseChangeLog>

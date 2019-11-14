@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="jovan" id="1" dbms="mssql">
+        <sql>
+           update dbo.tb_processo set dt_fim = (select END_ from dbo.JBPM_PROCESSINSTANCE jpi where jpi.ID_ = id_jbpm)
+        </sql>
+    </changeSet>
+
+    <changeSet author="jovan" id="1" dbms="postgresql">
+        <sql>
+           update tb_processo set dt_fim = (select END_ from JBPM_PROCESSINSTANCE jpi where jpi.ID_ = id_jbpm)
+        </sql>
+    </changeSet>
+</databaseChangeLog>

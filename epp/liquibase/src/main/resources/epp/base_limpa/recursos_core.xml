@@ -1,0 +1,495 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    <changeSet author="avner" id="1">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_recurso where ds_identificador = '/pages/Fluxo/listView.seam';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Fluxo/listView.seam" />
+            <column name="ds_nome" value="/pages/Fluxo/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Fluxo/definicao/processDefinition.seam" />
+            <column name="ds_nome" value="/pages/Fluxo/definicao/processDefinition.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Fluxo/definicao/exportarFluxo.seam" />
+            <column name="ds_nome" value="/pages/Fluxo/definicao/exportarFluxo.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Fluxo/report.seam" />
+            <column name="ds_nome" value="/pages/Fluxo/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Localizacao/listView.seam" />
+            <column name="ds_nome" value="/pages/Localizacao/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Localizacao/report.seam" />
+            <column name="ds_nome" value="/pages/Localizacao/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/home.seam" />
+            <column name="ds_nome" value="/pages/home.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/termoAdesao.seam" />
+            <column name="ds_nome" value="/pages/termoAdesao.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/validaDoc.seam" />
+            <column name="ds_nome" value="/pages/validaDoc.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/StatusProcesso/listView.seam" />
+            <column name="ds_nome" value="/pages/StatusProcesso/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/ConsultaExterna/listView.seam" />
+            <column name="ds_nome" value="/pages/ConsultaExterna/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Painel/documentoHTML.seam" />
+            <column name="ds_nome" value="/pages/Painel/documentoHTML.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/CalendarioEventos/listView.seam" />
+            <column name="ds_nome" value="/pages/CalendarioEventos/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/CalendarioEventos/report.seam" />
+            <column name="ds_nome" value="/pages/CalendarioEventos/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Parametro/listView.seam" />
+            <column name="ds_nome" value="/pages/Parametro/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Parametro/report.seam" />
+            <column name="ds_nome" value="/pages/Parametro/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/ClassificacaoDocumento/listView.seam" />
+            <column name="ds_nome" value="/pages/ClassificacaoDocumento/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/ClassificacaoDocumento/report.seam" />
+            <column name="ds_nome" value="/pages/ClassificacaoDocumento/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Variavel/listView.seam" />
+            <column name="ds_nome" value="/pages/Variavel/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Variavel/report.seam" />
+            <column name="ds_nome" value="/pages/Variavel/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/ModeloDocumento/restaurar.seam" />
+            <column name="ds_nome" value="/pages/ModeloDocumento/restaurar.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/ModeloDocumento/listView.seam" />
+            <column name="ds_nome" value="/pages/ModeloDocumento/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/ModeloDocumento/historicoReport.seam" />
+            <column name="ds_nome" value="/pages/ModeloDocumento/historicoReport.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/ModeloDocumento/report.seam" />
+            <column name="ds_nome" value="/pages/ModeloDocumento/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/BAM/Produtividade/listView.seam" />
+            <column name="ds_nome" value="/pages/BAM/Produtividade/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/BAM/Produtividade/report.seam" />
+            <column name="ds_nome" value="/pages/BAM/Produtividade/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/BAM/listView.seam" />
+            <column name="ds_nome" value="/pages/BAM/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/useradmin/reportPapel.seam" />
+            <column name="ds_nome" value="/pages/useradmin/reportPapel.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/useradmin/papelEdit.seam" />
+            <column name="ds_nome" value="/pages/useradmin/papelEdit.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/useradmin/papelListView.seam" />
+            <column name="ds_nome" value="/pages/useradmin/papelListView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/useradmin/reportRecurso.seam" />
+            <column name="ds_nome" value="/pages/useradmin/reportRecurso.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/useradmin/recursoListView.seam" />
+            <column name="ds_nome" value="/pages/useradmin/recursoListView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Natureza/listView.seam" />
+            <column name="ds_nome" value="/pages/Natureza/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Natureza/report.seam" />
+            <column name="ds_nome" value="/pages/Natureza/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/help/show.seam" />
+            <column name="ds_nome" value="/pages/help/show.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/help/edit.seam" />
+            <column name="ds_nome" value="/pages/help/edit.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/TipoParte/listView.seam" />
+            <column name="ds_nome" value="/pages/TipoParte/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/criarComunicacao.seam" />
+            <column name="ds_nome" value="/pages/Processo/criarComunicacao.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/criarComunicacaoInterna.seam" />
+            <column name="ds_nome" value="/pages/Processo/criarComunicacaoInterna.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/startTaskForm.seam" />
+            <column name="ds_nome" value="/pages/Processo/startTaskForm.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/movimentar.seam" />
+            <column name="ds_nome" value="/pages/Processo/movimentar.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/listView.seam" />
+            <column name="ds_nome" value="/pages/Processo/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/visualizarProcesso.seam" />
+            <column name="ds_nome" value="/pages/Processo/visualizarProcesso.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/baixarComunicacao.seam" />
+            <column name="ds_nome" value="/pages/Processo/baixarComunicacao.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/Consulta/paginator.seam" />
+            <column name="ds_nome" value="/pages/Processo/Consulta/paginator.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/Consulta/list.seam" />
+            <column name="ds_nome" value="/pages/Processo/Consulta/list.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Processo/Consulta/listView.seam" />
+            <column name="ds_nome" value="/pages/Processo/Consulta/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/error.seam" />
+            <column name="ds_nome" value="/pages/error.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/CategoriaEntregaItem/listView.seam" />
+            <column name="ds_nome" value="/pages/CategoriaEntregaItem/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Pesquisa/searchResult.seam" />
+            <column name="ds_nome" value="/pages/Pesquisa/searchResult.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Pesquisa/indexedSearch.seam" />
+            <column name="ds_nome" value="/pages/Pesquisa/indexedSearch.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Comunicacao/listView.seam" />
+            <column name="ds_nome" value="/pages/Comunicacao/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Comunicacao/Responder/listView.seam" />
+            <column name="ds_nome" value="/pages/Comunicacao/Responder/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Comunicacao/Impressao/listView.seam" />
+            <column name="ds_nome" value="/pages/Comunicacao/Impressao/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Comunicacao/Impressao/imprimirComunicacao.seam" />
+            <column name="ds_nome" value="/pages/Comunicacao/Impressao/imprimirComunicacao.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/BpmExecutionGraph/listView.seam" />
+            <column name="ds_nome" value="/pages/BpmExecutionGraph/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/automaticNodes.seam" />
+            <column name="ds_nome" value="/pages/automaticNodes.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/login.seam" />
+            <column name="ds_nome" value="/pages/login.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Estatistica/listView.seam" />
+            <column name="ds_nome" value="/pages/Estatistica/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Estatistica/report.seam" />
+            <column name="ds_nome" value="/pages/Estatistica/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Estrutura/listView.seam" />
+            <column name="ds_nome" value="/pages/Estrutura/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/PessoaFisica/listView.seam" />
+            <column name="ds_nome" value="/pages/PessoaFisica/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/PessoaFisica/report.seam" />
+            <column name="ds_nome" value="/pages/PessoaFisica/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/PrioridadeProcesso/listView.seam" />
+            <column name="ds_nome" value="/pages/PrioridadeProcesso/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/TipoModeloDocumento/listView.seam" />
+            <column name="ds_nome" value="/pages/TipoModeloDocumento/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/TipoModeloDocumento/report.seam" />
+            <column name="ds_nome" value="/pages/TipoModeloDocumento/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Perfil/listView.seam" />
+            <column name="ds_nome" value="/pages/Perfil/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Perfil/report.seam" />
+            <column name="ds_nome" value="/pages/Perfil/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/quartzJobsInfo.seam" />
+            <column name="ds_nome" value="/pages/quartzJobsInfo.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/PessoaJuridica/listView.seam" />
+            <column name="ds_nome" value="/pages/PessoaJuridica/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/PessoaJuridica/report.seam" />
+            <column name="ds_nome" value="/pages/PessoaJuridica/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Sinal/listView.seam" />
+            <column name="ds_nome" value="/pages/Sinal/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Caixa/listView.seam" />
+            <column name="ds_nome" value="/pages/Caixa/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/GrupoModeloDocumento/listView.seam" />
+            <column name="ds_nome" value="/pages/GrupoModeloDocumento/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/GrupoModeloDocumento/report.seam" />
+            <column name="ds_nome" value="/pages/GrupoModeloDocumento/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/LocalizacaoFisica/listView.seam" />
+            <column name="ds_nome" value="/pages/LocalizacaoFisica/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/LocalizacaoFisica/report.seam" />
+            <column name="ds_nome" value="/pages/LocalizacaoFisica/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/layout.seam" />
+            <column name="ds_nome" value="/pages/layout.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/setLog.seam" />
+            <column name="ds_nome" value="/pages/setLog.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/TipoComunicacao/listView.seam" />
+            <column name="ds_nome" value="/pages/TipoComunicacao/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/TipoComunicacao/report.seam" />
+            <column name="ds_nome" value="/pages/TipoComunicacao/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/downloadDocumento.seam" />
+            <column name="ds_nome" value="/pages/downloadDocumento.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/TipoRelacionamentoProcesso/listView.seam" />
+            <column name="ds_nome" value="/pages/TipoRelacionamentoProcesso/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/updateBAM.seam" />
+            <column name="ds_nome" value="/pages/updateBAM.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Item/listView.seam" />
+            <column name="ds_nome" value="/pages/Item/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Item/report.seam" />
+            <column name="ds_nome" value="/pages/Item/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Categoria/listView.seam" />
+            <column name="ds_nome" value="/pages/Categoria/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Categoria/report.seam" />
+            <column name="ds_nome" value="/pages/Categoria/report.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Consulta/Log/Quartz/listView.seam" />
+            <column name="ds_nome" value="/pages/Consulta/Log/Quartz/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Consulta/Log/list.seam" />
+            <column name="ds_nome" value="/pages/Consulta/Log/list.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Consulta/Log/detalheLog.seam" />
+            <column name="ds_nome" value="/pages/Consulta/Log/detalheLog.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Consulta/Log/Erro/listView.seam" />
+            <column name="ds_nome" value="/pages/Consulta/Log/Erro/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Usuario/listView.seam" />
+            <column name="ds_nome" value="/pages/Usuario/listView.seam" />
+        </insert>
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueSequenceNext="sq_tb_recurso" />
+            <column name="ds_identificador" value="/pages/Usuario/report.seam" />
+            <column name="ds_nome" value="/pages/Usuario/report.seam" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="avner" id="2">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_permissao where ds_alvo = '/pages/useradmin/papelListView.seam' and ds_destinatario = 'admin';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="tb_permissao">
+            <column name="id_permissao" valueSequenceNext="sq_tb_permissao" />
+            <column name="ds_acao" value="access" />
+            <column name="ds_alvo" value="/pages/useradmin/papelListView.seam" />
+            <column name="ds_destinatario" value="admin" />
+            <column name="ds_discriminador" value="role" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

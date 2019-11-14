@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['pessoaJuridica.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{pessoaJuridicaCrudAction}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{pessoaJuridicaList.list(15)}"
+            bean="#{pessoaJuridicaList}"
+            tableTitle="#{infoxMessages['pessoaJuridica.tableTitle']}"
+            id="pessoaJuridicaList" rowId="#{row.idPessoa}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarPjForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="cnpj"
+                        value="#{pessoaJuridicaList.entity.cnpj}"
+                        label="#{infoxMessages['pessoaJuridica.cnpj']}" styleClass="cnpj"
+                        size="18" maxlength="18">
+                    </wi:inputText>
+                    <wi:mask selector=".cnpj" mask="99.999.999/9999-99" />
+                    <wi:inputText id="nomePessoa"
+                        label="#{infoxMessages['pessoaJuridica.nome']}"
+                        value="#{pessoaJuridicaList.entity.nome}"
+                        maxlength="150" />
+                    <wi:inputText id="razaoSocial"
+                        label="#{infoxMessages['pessoaJuridica.razaoSocial']}"
+                        value="#{pessoaJuridicaList.entity.razaoSocial}"
+                        maxlength="100" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{pessoaJuridicaList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+
+            <wi:columnOutputText columnId="cnpj"
+                columnHeader="#{infoxMessages['pessoaJuridica.cnpj']}"
+                value="#{row.cnpj}">
+                <ui:define name="outputText">
+                    <f:converter converterId="cnpjConverter"/>
+                </ui:define>
+            </wi:columnOutputText>
+            <wi:columnOutputText columnId="nome"
+                columnHeader="#{infoxMessages['pessoaJuridica.nome']}"
+                value="#{row.nome}" />
+            <wi:columnOutputText columnId="razaoSocial"
+                columnHeader="#{infoxMessages['pessoaJuridica.razaoSocial']}"
+                value="#{row.razaoSocial}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="pessoaJuridicaForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputCnpj id="cnpj"
+                value="#{pessoaJuridicaCrudAction.instance.cnpj}"
+                required="true" label="#{infoxMessages['pessoaJuridica.cnpj']}" />
+            <wi:inputText id="nomePessoa" label="#{infoxMessages['pessoaJuridica.nome']}"
+                required="true"
+                value="#{pessoaJuridicaCrudAction.instance.nome}"
+                maxlength="150" />
+            <wi:inputText id="razaoSocial"
+                label="#{infoxMessages['pessoaJuridica.razaoSocial']}"
+                value="#{pessoaJuridicaCrudAction.instance.razaoSocial}"
+                required="true" maxlength="100" />
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{pessoaJuridicaCrudAction.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
+
+</ui:composition>

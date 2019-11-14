@@ -1,0 +1,56 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wi="http://www.itx.com.br/jsf" xmlns:a="http://richfaces.org/a4j"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
+	<s:div id="relacionamentoProcessoExternoListDiv">
+		<wi:dataTable id="relacionamentoProcessoExternoListDatatable"
+			bean="#{relacionamentoProcessoExternoList}"
+			values="#{relacionamentoProcessoExternoList.list(10)}"
+			tableTitle="#{infoxMessages['relacionamentoProcesso.processosExternos']}"
+			rowId="#{row.idRelacionamentoProcesso}" showSearchForm="false"
+			panelStyleClass="rel-proc-dt">
+			<ui:define name="headerToolBar" />
+			<ui:define name="toolBar">
+				<h:column>
+					<h:form>
+						<a:commandLink
+							action="#{relacionamentoProcessoExternoList.remove(row)}"
+							onclick="return confirm('#{infoxMessages['crud.confirmRemove']}');"
+							render="relacionamentoProcessoExternoListDiv pageBodyDialogMessage"
+							execute="@this"
+							rendered="#{not relacionamentoProcessoExternoList.readOnly}">
+							<h:graphicImage
+								url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+								title="#{infoxMessages['crud.remove']}" />
+						</a:commandLink>
+					</h:form>
+				</h:column>
+			</ui:define>
+			<h:column>
+				<f:facet name="header">#{infoxMessages['relacionamentoProcesso.numeroProcesso']}</f:facet>
+				<h:outputText value="#{row.numeroProcesso}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">#{infoxMessages['relacionamentoProcesso.nomeTipo']}</f:facet>
+				<h:outputText
+					value="#{row.relacionamento.tipoRelacionamentoProcesso}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">#{infoxMessages['relacionamentoProcesso.motivo']}</f:facet>
+				<h:outputText value="#{row.relacionamento.motivo}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">#{infoxMessages['relacionamentoProcesso.nomeUsuario']}</f:facet>
+				<h:outputText value="#{row.relacionamento.nomeUsuario}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">#{infoxMessages['relacionamentoProcesso.dataRelacionamento']}</f:facet>
+				<h:outputText value="#{row.relacionamento.dataRelacionamento}" />
+			</h:column>
+		</wi:dataTable>
+	</s:div>
+</ui:composition>

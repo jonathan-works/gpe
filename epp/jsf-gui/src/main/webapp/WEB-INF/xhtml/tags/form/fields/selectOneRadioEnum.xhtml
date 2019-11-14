@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <s:decorate id="#{id}Decoration"
+        template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+        rendered="#{wi:get(rendered, true)}" styleClass="decoration-div">
+        <ui:define name="label">#{label}</ui:define>
+        <h:selectOneRadio id="#{id}" value="#{value}"
+            layout="#{direction}" required="#{required}"
+            disabled="#{disabled}" styleClass="radio" >
+            <s:selectItems
+                value="#{empty items ? value.values() : items}"
+                var="enum" label="#{enum.label}" />
+            <ui:insert />
+            <s:convertEnum />
+        </h:selectOneRadio>
+    </s:decorate>
+
+</ui:composition>

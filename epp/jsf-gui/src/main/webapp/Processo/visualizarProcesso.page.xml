@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.org/schema/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
+      login-required="true"
+>
+    
+    <description>Processo: #{processoEpaHome.instance}</description>
+    <begin-conversation join="true"/>
+    <restrict>#{security.checkPage()}</restrict>
+
+
+	<!-- Parametros para RESTFull -->
+	<param name="inTabExpedidas" value="#{processoEpaHome.inTabExpedidas}" />
+    <param name="tab" value="#{processoEpaHome.tab}"/>
+
+    <param name="idProcesso" value="#{processoEpaHome.processoIdProcesso}"/>
+    <param name="idTaskInstance" value="#{processoEpaHome.idTaskInstance}" />    
+    <action execute="#{processoEpaHome.visualizarTarefaProcesso()}" on-postback="false"/>
+ 
+    <action execute="#{sigiloProcessoAction.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
+    <action execute="#{sigiloProcessoList.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
+    <action execute="#{sigiloDocumentoAction.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
+    <action execute="#{documentoAnexoList.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
+    <action execute="#{pastaList.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
+
+</page>

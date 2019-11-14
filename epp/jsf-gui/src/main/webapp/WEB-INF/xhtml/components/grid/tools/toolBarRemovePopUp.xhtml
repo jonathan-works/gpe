@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+
+    <ui:param name="mainId"
+        value="#{empty treeModeEntityId ? row[bean.key] : treeModeEntityId}" />
+    <ui:param name="idPopUp" value="popup_#{mainId}" />
+    <h:form>
+        <a:region renderRegionOnly="false">
+            <div>
+                <s:link view="#{linkDetalhe}" target="#{idPopUp}"
+                    onclick="openPopUp('#{idPopUp}', 'about:blank');">
+                    <s:conversationPropagation type="none" />
+                    <f:param name="id" value="#{mainId}" />
+                    <h:graphicImage title="Visualizar"
+                        url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" />
+                </s:link>
+                <a:commandLink action="#{home.remove(row)}"
+                    rendered="#{canEdit}" limitRender="true"
+                    status=":status" render=":#{gridId}"
+                    onclick="if(!confirm('Confirma?')) return false;">
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                        title="#{infoxMessages['button.delete']}" />
+                    <f:param name="firstResult"
+                        value="#{bean.firstResult}" />
+                    <f:param name="page" value="#{bean.page}" />
+                </a:commandLink>
+            </div>
+        </a:region>
+    </h:form>
+
+</ui:composition>

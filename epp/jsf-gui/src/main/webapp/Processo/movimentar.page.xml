@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.org/schema/seam/pages"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
+login-required="true"
+>
+    <restrict>#{security.checkPage()}</restrict>
+    
+    <description>Processo: #{processoEpaHome.instance}</description>
+    <begin-conversation join="true"/>
+    <!-- Parametros para RESTFull -->
+    <param name="tab" value="#{processoEpaHome.tab}"/>
+    <param name="idProcesso" value="#{processoEpaHome.processoIdProcesso}" />
+    <param name="idTaskInstance" value="#{processoEpaHome.idTaskInstance}" />
+    <action execute="#{processoEpaHome.iniciarTarefaProcesso()}" on-postback="false"/>
+    <action execute="#{movimentarController.init(processoEpaHome.instance)}" on-postback="false"/>
+</page>

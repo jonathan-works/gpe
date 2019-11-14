@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <script type="text/javascript">
+        window.addEventListener("load", function() {
+            alert("Remover a referência para este taskButtons");
+        });
+    </script>
+    <s:div
+        id="taskButtonsDiv"
+        styleClass="actionButtons">
+        <ui:param
+            name="props"
+            value="#{form.buttons.properties}" />
+        <ui:param
+            name="reRenderSave"
+            value="#{empty reRenderSave ? formId : reRenderSave}" />
+        <a:commandButton
+            id="update"
+            rendered="#{!empty form.fields and processoEpaHome.managed}"
+            status=":status"
+            eventsQueue="editQueue"
+            oncomplete="#{oncomplete}"
+            render="#{reRenderSave}, taskButtonsDiv"
+            limitRender="true"
+            value="#{infoxMessages['crud.update']}"
+            styleClass="buttons"
+            action="#{taskInstanceHome.update(home)}" />
+        <a:commandButton
+            id="persist"
+            rendered="#{!empty form.fields and !processoEpaHome.managed}"
+            status=":status"
+            eventsQueue="editQueue"
+            render="#{reRenderSave}, taskButtonsDiv"
+            limitRender="true"
+            value="#{infoxMessages['crud.update']}"
+            styleClass="buttons"
+            action="#{taskInstanceHome.persist(home)}" />
+        <h:outputText
+            value="#{infoxMessages['movimentar.next']} "
+            rendered="true" />
+        <c:if test="#{taskInstanceHome.transitions.size gt 3}">
+            <h:selectOneMenu value="#{taskInstanceHome.name}">
+                <f:selectItems
+                    value="#{taskInstanceHome.transtionsSelectItems}" />
+            </h:selectOneMenu>
+            <a:commandButton
+                action="#{taskInstanceHome.end(taskInstanceHome.name)}"
+                value="OK"
+                onmouseup="showLoading()"
+                status="none"
+                styleClass="buttons"
+                eventsQueue="editQueue"
+                oncomplete="#{oncomplete};verifyFields();"
+                render=":script,#{reRenderSave}"
+                limitRender="true" />
+        </c:if>
+        <c:if test="#{taskInstanceHome.transitions.size le 3}">
+            <a:repeat
+                value="#{taskInstanceHome.transitions}"
+                var="transition">
+                <a:commandButton
+                    status="none"
+                    eventsQueue="editQueue"
+                    oncomplete="#{oncomplete};verifyFields();"
+                    onmouseup="showLoading()"
+                    render=":script,#{reRenderSave}"
+                    limitRender="true"
+                    value="#{transition.name}"
+                    styleClass="buttons"
+                    action="#{taskInstanceHome.end(transition.name)}" />
+            </a:repeat>
+        </c:if>
+    </s:div>
+</ui:composition>

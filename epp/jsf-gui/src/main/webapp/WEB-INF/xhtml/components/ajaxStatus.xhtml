@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:itx="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <a4j:status id="status">
+        <f:facet name="start">
+            <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/status/ajax-loader-retangular.gif')}"
+                styleClass="status" />
+        </f:facet>
+    </a4j:status>
+</ui:composition>

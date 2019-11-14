@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    
+    <changeSet author="victorpasqualino" id="1" > 
+
+        <addColumn tableName="tb_destinatario_modelo_comunic">
+        	<column name="in_individual" type="BOOLEAN"/>
+    	</addColumn>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2">
+        <insert dbms="mssql" tableName="tb_recurso">
+            <column name="id_recurso" valueComputed="NEXT VALUE FOR sq_tb_recurso"/>
+            <column name="ds_identificador" value="abaComunicacaoInterna"/>
+            <column name="ds_identificador" value="Recurso para visualização da aba de Comunicação Interna"/>
+        </insert>
+
+        <insert dbms="postgresql" tableName="tb_recurso">
+            <column name="id_recurso" valueComputed="nextval('sq_tb_recurso')"/>
+            <column name="ds_identificador" value="abaComunicacaoInterna"/>
+            <column name="ds_identificador" value="Recurso para visualização da aba de Comunicação Interna"/>
+        </insert>
+
+        <insert dbms="oracle" tableName="tb_recurso">
+            <column name="id_recurso" valueComputed="sq_tb_recurso.nextval"/>
+            <column name="ds_identificador" value="abaComunicacaoInterna"/>
+            <column name="ds_identificador" value="Recurso para visualização da aba de Comunicação Interna"/>
+        </insert>
+    </changeSet> 
+
+    <changeSet author="victorpasqualino" id="3">
+
+        <insert tableName="tb_parametro" dbms="mssql" >
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="raizLocalizacoesComunicacaoInterna" />
+            <column name="ds_variavel" value="Código da localização raiz para tree" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+
+        <insert tableName="tb_parametro" dbms="postgresql" >
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="raizLocalizacoesComunicacaoInterna" />
+            <column name="ds_variavel" value="Código da localização raiz para tree" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+
+        <insert tableName="tb_parametro" dbms="oracle" >
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="raizLocalizacoesComunicacaoInterna" />
+            <column name="ds_variavel" value="Código da localização raiz para tree" />
+            <column name="vl_variavel" value=" " />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="4">
+
+        <insert tableName="tb_parametro" dbms="mssql" >
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="codigoFluxoComunicacaoInterna" />
+            <column name="ds_variavel" value="Código do fluxo de Comunicação Interna" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+
+        <insert tableName="tb_parametro" dbms="postgresql" >
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="codigoFluxoComunicacaoInterna" />
+            <column name="ds_variavel" value="CCódigo do fluxo de Comunicação Interna" />
+            <column name="vl_variavel" value="" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+
+        <insert tableName="tb_parametro" dbms="oracle" >
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="codigoFluxoComunicacaoInterna" />
+            <column name="ds_variavel" value="Código do fluxo de Comunicação Interna" />
+            <column name="vl_variavel" value=" " />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+
+    </changeSet>
+
+    <changeSet author="avner" id="5">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">
+                select count(*) from tb_recurso where ds_identificador = 'raizLocalizacoesComunicacaoInterna';
+            </sqlCheck>
+        </preConditions>
+        <delete tableName="tb_recurso">
+            <where>ds_identificador = 'raizLocalizacoesComunicacaoInterna'</where>
+        </delete>
+    </changeSet>
+</databaseChangeLog>

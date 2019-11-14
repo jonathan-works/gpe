@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <h:outputScript>
+        alert('Remover referência a components-grid-tools-include-editButton');
+    </h:outputScript>
+
+    <ui:param name="listReRender"
+        value="#{empty listReRender ? ':pagebody' : listReRender}" />
+    <a:region renderRegionOnly="false">
+        <a:commandLink action="#{home.setId(row[bean.key])}"
+            rendered="#{canEdit and listReRender == ':pagebody'}"
+            limitRender="true" status=":status" render="#{listReRender}">
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.gif')}"
+                title="#{infoxMessages['button.selecionar']}" />
+            <f:param name="firstResult" value="#{bean.firstResult}" />
+            <f:param name="page" value="#{bean.page}" />
+        </a:commandLink>
+    </a:region>
+    <a:commandLink action="#{home.setId(row[bean.key])}"
+        rendered="#{canEdit and listReRender != ':pagebody'}"
+        limitRender="true" status=":status" render="#{listReRender}">
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.gif')}"
+            title="#{infoxMessages['button.selecionar']}" />
+        <f:param name="firstResult" value="#{bean.firstResult}" />
+        <f:param name="page" value="#{bean.page}" />
+    </a:commandLink>
+</ui:composition>

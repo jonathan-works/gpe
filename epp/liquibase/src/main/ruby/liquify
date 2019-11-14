@@ -1,0 +1,221 @@
+#!/usr/bin/env ruby
+#
+# Author: Jonas S. Bezerra
+#
+#
+
+require 'optparse'
+require 'ostruct'
+
+
+hosts = Hash.new
+hosts['sqlserver'] = if ENV['SQLSERVER_LOCAL'] == "1" then "localhost" else  "172.20.1.61" end
+hosts['postgresql'] = "localhost"
+hosts['oracle'] = "172.20.1.73"
+
+ports = Hash.new
+ports['sqlserver'] = if ENV['SQLSERVER_LOCAL'] == "1" then "1433" else "1435" end
+ports['postgresql'] = "5432"
+ports['oracle'] = "1521"
+
+class ConfigFactory
+
+    def self.create_defaults_file(sgbd) 
+        defaults_file = Hash.new
+        defaults_file[:normal] = "--defaultsFile=config/#{sgbd}.properties"
+        defaults_file[:bin] = "--defaultsFile=config/#{sgbd + '-bin'}.properties"
+        defaults_file
+    end
+
+    def self.create_urls(options)
+        url = Hash.new
+        if options.sgbd == "sqlserver"
+            url[:normal] = "--url=\"jdbc:sqlserver://#{options.host}\\SQLEXPRESS:#{options.port};databaseName=#{options.database};SelectMethod=cursor\""
+            url[:bin] = "--url=\"jdbc:sqlserver://#{options.host}\\SQLEXPRESS:#{options.port};databaseName=#{options.database_bin};SelectMethod=cursor\""
+        elsif options.sgbd == "postgresql"
+            url[:normal] = "--url=\"jdbc:postgresql://#{options.host}:#{options.port}/#{options.database}\""
+            url[:bin] = "--url=\"jdbc:postgresql://#{options.host}:#{options.port}/#{options.database_bin}\""
+        elsif options.sgbd == "oracle" 
+            url[:normal] = "--url=\"jdbc:oracle:thin:@#{options.host}:#{options.port}/#{options.database}\""
+            url[:bin] = "--url=\"jdbc:oracle:thin:@#{options.host}:#{options.port}/#{options.database}\""
+        end
+        url
+    end
+    
+    def self.create_credentials(options)
+        "--username=#{options.username} --password=#{options.password}"
+    end
+
+    def self.create_credentials_bin(options)
+        "--username=#{options.username_bin} --password=#{options.password}"
+    end
+    
+    def self.create_commands(options)
+        defaults_file = create_defaults_file(options.sgbd)
+        urls = create_urls options
+        credentials = create_credentials options
+        credentials_bin = credentials;
+        if options.sgbd == "oracle"
+            credentials_bin = create_credentials_bin options
+        end
+        commands = Hash.new
+        commands[:normal] = "./liquibase #{defaults_file[:normal]} #{urls[:normal]} #{credentials} #{options.log} #{options.action} #{"-Dliquibase.user.name=" + options.username} #{options.schemaETC} #{options.schemaJULGAMENTO}"
+        commands[:bin] = "./liquibase #{defaults_file[:bin]} #{urls[:bin]} #{credentials_bin} #{options.log} #{options.action}"
+        commands
+    end
+    
+end
+
+class LiquifyParser
+
+    def self.parse(args)
+        options = OpenStruct.new
+        options.inplace = false
+        options.encoding = "utf8"
+        options.transfer_type = :auto
+        options.verbose = false
+        options.log = '--logLevel=INFO'
+
+        opt_parser = OptionParser.new do |opts|
+            opts.banner = "Usage: liquify [options]"
+            opts.separator ""
+            opts.separator "Specific options:"
+
+            opts.on("-s", "--sgbd", :REQUIRED,"Defines the sgbd for liquibase to use") do |sgbd|
+                options.sgbd = sgbd
+                
+            end
+
+            opts.on("-d", "--database", :REQUIRED, "Database name") do |database|
+                options.database = database
+                options.database_bin = database + "_bin"
+            end
+
+            opts.on("--host", :REQUIRED, "Host Address") do |host|
+               options.host = host
+            end
+            
+            opts.on("--port", :REQUIRED, "Port") do |port|
+                options.port = port
+            end
+
+            opts.on("-u", "--username", :REQUIRED, "Username") do |username|
+                options.username = username
+                options.username_bin = username + "_bin"
+            end
+
+            opts.on("-p", "--password", :REQUIRED, "Password") do |password|
+                options.password = password
+            end
+            
+            opts.on("--action", :REQUIRED, "Action to be executed by liquibase. Default action: update") do |action|
+                options.action = action
+            end
+            
+            opts.on("-b", "--[no-]bin", :NONE, "Only binary database") do |binary|
+                options.binary = binary
+            end
+            
+            opts.on("--debug", :NONE, "Print the command instead of executing it") do |debug|
+                options.debug = debug
+            end
+
+            opts.on("-l", "--log", :NONE, "Log in INFO mod") do |log|
+                options.log = "--logLevel=INFO"
+            end
+
+            opts.on_tail("-h", "--help", :NONE, "Show this message") do
+                puts opts
+                exit
+            end
+
+        end
+
+        opt_parser.parse!(args)
+
+        if options.sgbd == "oracle"
+            options.schemaETC = "-Dschema.etc.name=" + options.username.upcase + "_ETC"
+            options.schemaJULGAMENTO = "-Dschema.julgamento.name=" + options.username.upcase + "_JULGAMENTO"
+        else
+            options.schemaETC = "-Dschema.etc.name=etc"
+            options.schemaJULGAMENTO = "-Dschema.julgamento.name=julgamento"
+        end
+        
+        options
+    end
+end
+
+options = LiquifyParser.parse(ARGV)
+# puts ARGV
+
+if options.sgbd == nil 
+    puts "SGBD NOT DEFINED"
+    exit
+elsif options.sgbd != "sqlserver" and options.sgbd != "postgresql" and options.sgbd != "oracle"
+    puts "DATABASE NOT SUPPORTED YET"
+    exit
+end
+
+if options.database == nil
+    puts "DATABASE NAME NOT DEFINED"
+    exit
+end
+
+if options.username == nil
+    if options.sgbd == "postgresql"
+        options.username = "postgres"
+        puts "Assuming user to be 'postgres'"
+    else
+        puts "USERNAME CAN'T BE NULL"
+        exit
+    end
+end
+
+if options.password == nil
+    if options.sgbd == "postgresql"
+        options.password = "postgres"
+    else
+        puts "PASSWORD CAN'T BE NULL"
+        exit
+    end
+end
+
+if options.host == nil
+    options.host = hosts[options.sgbd]
+    puts "Assuming host to be #{options.host}"
+end
+
+if options.port == nil
+    options.port = ports[options.sgbd]
+    puts "Assuming port to be #{options.port}"
+end
+
+if options.action == nil
+    options.action = "update"
+    puts "No action defined. Executing UPDATE"
+end
+   
+commands = ConfigFactory.create_commands options
+
+unless options.debug
+    unless options.binary
+        if options.sgbd == "oracle"
+            puts "Executing #{options.action} in #{options.username}"
+        else 
+            puts "Executing #{options.action} in #{options.database}"
+        end
+        system commands[:normal]
+    end
+    if options.binary.nil? or options.binary
+        if options.sgbd == "oracle"
+            puts "Executing #{options.action} in #{options.username_bin}"
+        else 
+            puts "Executing #{options.action} in #{options.database_bin}"
+        end
+        system commands[:bin]
+    end
+else
+    puts "DEBUG MODE"
+    puts commands[:normal]
+    puts commands[:bin]
+end

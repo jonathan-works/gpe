@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="avner" id="1" dbms="mssql, postgresql" >
+        <createSequence sequenceName="sq_documento_temporario" minValue="1" startValue="1"/>
+        <createTable tableName="tb_documento_temporario">
+            <column name="id_documento_temporario" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_documento_temporario" />
+            </column>
+
+            <column name="id_classificacao_documento" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_tb_documento_temporario_id_classificacao_documento" references="tb_classificacao_documento(id_classificacao_documento)" />
+            </column>
+
+            <column name="id_documento_bin" type="bigint" >
+            	<constraints nullable="false" foreignKeyName="fk_tb_documento_temporario_id_documento_bin" references="tb_documento_bin(id_documento_bin)" />
+            </column>
+            
+			<column name="id_processo" type="bigint" >
+				<constraints nullable="false" foreignKeyName="fk_tb_documento_temporario_id_processo" references="tb_processo(id_processo)" />
+			</column>
+			
+			<column name="ds_documento" type="varchar(100)" >
+				<constraints nullable="false" />
+			</column>
+			
+			<column name="nr_documento" type="bigint" />
+			
+			<column name="in_anexo" type="boolean" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			
+			<column name="id_jbpm_task" type="bigint"/>
+			
+			<column name="id_perfil_template" type="bigint">
+				<constraints foreignKeyName="fk_tb_documento_temporario_id_perfil_template" references="tb_perfil_template(id_perfil_template)" />
+			</column>
+			
+			<column name="dt_inclusao" type="timestamp">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="id_usuario_inclusao" type="bigint">
+				<constraints foreignKeyName="fk_tb_documento_temporario_id_usuario_inclusao" references="tb_usuario_login(id_usuario_login)" />
+			</column>
+			
+			<column name="dt_alteracao" type="timestamp" />
+			
+			<column name="id_usuario_alteracao" type="bigint">
+				<constraints foreignKeyName="fk_tb_documento_temporario_id_usuario_alteracao" references="tb_usuario_login(id_usuario_login)" />
+			</column>
+
+			<column name="id_pasta" type="bigint">
+				<constraints foreignKeyName="fk_tb_documento_temporario_id_pasta" references="tb_pasta(id_pasta)" />
+			</column>
+			
+			<column name="id_localizacao" type="bigint">
+				<constraints foreignKeyName="fk_tb_documento_temporario_id_localizacao" references="tb_localizacao(id_localizacao)" />
+			</column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="oracle" >
+        <createSequence sequenceName="sq_documento_temporario" minValue="1" startValue="1"/>
+        <createTable tableName="tb_documento_temporario">
+            <column name="id_documento_temporario" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_documento_temporario" />
+            </column>
+
+            <column name="id_classificacao_documento" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_documento_temporario_07" references="tb_classificacao_documento(id_classificacao_documento)" />
+            </column>
+
+            <column name="id_documento_bin" type="bigint" >
+            	<constraints nullable="false" foreignKeyName="fk_documento_temporario_03" references="tb_documento_bin(id_documento_bin)" />
+            </column>
+            
+			<column name="id_processo" type="bigint" >
+				<constraints nullable="false" foreignKeyName="fk_documento_temporario_06" references="tb_processo(id_processo)" />
+			</column>
+			
+			<column name="ds_documento" type="NVARCHAR(100)" >
+				<constraints nullable="false" />
+			</column>
+			
+			<column name="nr_documento" type="bigint" />
+			
+			<column name="in_anexo" type="boolean" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			
+			<column name="id_jbpm_task" type="bigint"/>
+			
+			<column name="id_perfil_template" type="bigint">
+				<constraints foreignKeyName="fk_documento_temporario_01" references="tb_perfil_template(id_perfil_template)" />
+			</column>
+			
+			<column name="dt_inclusao" type="timestamp">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="id_usuario_inclusao" type="bigint">
+				<constraints foreignKeyName="fk_documento_temporario_05" references="tb_usuario_login(id_usuario_login)" />
+			</column>
+			
+			<column name="dt_alteracao" type="timestamp" />
+			
+			<column name="id_usuario_alteracao" type="bigint">
+				<constraints foreignKeyName="fk_documento_temporario_04" references="tb_usuario_login(id_usuario_login)" />
+			</column>
+
+			<column name="id_pasta" type="bigint">
+				<constraints foreignKeyName="fk_documento_temporario_02" references="tb_pasta(id_pasta)" />
+			</column>
+			
+			<column name="id_localizacao" type="bigint">
+				<constraints foreignKeyName="fk_documento_temporario_08" references="tb_localizacao(id_localizacao)" />
+			</column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

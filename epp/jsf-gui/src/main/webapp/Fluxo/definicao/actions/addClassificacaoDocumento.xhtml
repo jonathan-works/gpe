@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a="http://richfaces.org/a4j">
+    <s:div id="variavelClassificacaoDocumentoDiv" rendered="#{not empty variavelClassificacaoDocumentoAction.currentVariable}">
+        <rich:panel
+            header="Classificações de documento da variável #{variavelClassificacaoDocumentoAction.currentVariable.label}">
+            <div class="picklist-div">
+                <rich:panel
+                    header="#{infoxMessages['variavelClassificacaoDocumento.tableTitle']}"
+                    id="variavelClassificacaoDocumentoListPanel"
+                    bodyClass="dtable-p-b"
+                    styleClass="dtable-p picklist">
+                    <rich:dataTable
+                        value="#{variavelClassificacaoDocumentoAction.classificacoesDaVariavel}"
+                        id="variavelClassificacaoDocumentoList"
+                        rowKeyVar="key"
+                        styleClass="dtable rf-dt-crud picklist-dt"
+                        var="row">
+                        <wi:columnOutputText hideOrder="true"
+                            columnId="classificacaoDocumento"
+                            columnHeader="#{infoxMessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
+                            value="#{row.descricao}" />
+                        <rich:column styleClass="dt-toolbar-col">
+                            <h:form>
+                                <a:commandLink limitRender="true"
+                                    render="variavelClassificacaoDocumentoDiv"
+                                    action="#{variavelClassificacaoDocumentoAction.removerClassificacao(row)}">
+                                    <h:graphicImage
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
+                                        title="#{infoxMessages['button.delete']}" />
+                                </a:commandLink>
+                            </h:form>
+                        </rich:column>
+                    </rich:dataTable>
+                </rich:panel>
+            </div>
+            <div class="picklist-div">
+                <wi:dataTable
+                    values="#{variavelClassificacaoDocumentoAction.classificacoesDisponiveis}"
+                    bean="#{variavelClassificacaoDocumentoAction}"
+                    tableTitle="#{infoxMessages['variavelClassificacaoDocumento.classificacaoDocumento.tableTitle']}"
+                    id="classificacoesDisponiveisList"
+                    rowId="#{row.id}" panelStyleClass="picklist"
+                    styleClass="picklist-dt"
+                    hideOrder="true">
+                    <ui:define name="searchForm">
+                        <wi:searchForm
+                            formId="pesquisarClassificacaoDocumentoForm"
+                            formTitle="#{infoxMessages['searchForm.title']}"
+                            searchReRender="variavelClassificacaoDocumentoDiv"
+                            clearReRender="variavelClassificacaoDocumentoDiv"
+                            clearAction="variavelClassificacaoDocumentoAction.clearSearch"
+                            searchAction="variavelClassificacaoDocumentoAction.resetSearch">
+                            <wi:inputText id="tituloModeloDocumento"
+                                label="#{infoxMessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
+                                value="#{variavelClassificacaoDocumentoAction.nomeClassificacaoDocumento}"
+                                maxlength="150" />
+                        </wi:searchForm>
+                    </ui:define>
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <h:form>
+                            <a:commandLink limitRender="true"
+                                render="variavelClassificacaoDocumentoDiv"
+                                action="#{variavelClassificacaoDocumentoAction.adicionarClassificacao(row)}">
+                                <h:graphicImage
+                                    url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
+                                    title="#{infoxMessages['button.add']}" />
+                            </a:commandLink>
+                        </h:form>
+                    </ui:define>
+                    <wi:columnOutputText
+                        columnId="classificacaoDocumento"
+                        columnHeader="#{infoxMessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
+                        value="#{row.descricao}" />
+                </wi:dataTable>
+            </div>
+        </rich:panel>
+    </s:div>
+</ui:composition>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
+>
+  <ui:param
+    name="home"
+    value="#{papelCrudAction}"
+  />
+  <ui:define name="title">#{infoxMessages['papel.titlePage']}</ui:define>
+  <ui:define name="searchGrid">
+    <wi:dataTable
+      values="#{papelList.list(15)}"
+      bean="#{papelList}"
+      tableTitle="#{infoxMessages['papel.tableTitle']}"
+      id="papelList"
+      rowId="#{row.idPapel}"
+      reportPath="/useradmin/reportPapel.xhtml"
+    >
+      <ui:define name="searchForm">
+        <wi:searchForm
+          formId="pesquisarPapelForm"
+          formTitle="#{infoxMessages['searchForm.title']}"
+        >
+          <wi:inputText
+            id="nome"
+            label="#{infoxMessages['papel.nome']}"
+            value="#{papelList.entity.nome}"
+            maxlength="100"
+          />
+          <wi:inputText
+            id="identificador"
+            label="#{infoxMessages['papel.identificador']}"
+            value="#{papelList.entity.identificador}"
+            maxlength="100"
+          />
+        </wi:searchForm>
+      </ui:define>
+      <wi:columnOutputText
+        columnId="nome"
+        columnHeader="#{infoxMessages['papel.nome']}"
+        value="#{row.nome}"
+      />
+      <wi:columnOutputText
+        columnId="identificador"
+        columnHeader="#{infoxMessages['papel.identificador']}"
+        value="#{row.identificador}"
+      />
+      <ui:define name="toolBar">
+        <wi:toolBarEdit id="papelListedit" />
+        <wi:toolBarRemove />
+      </ui:define>
+    </wi:dataTable>
+  </ui:define>
+  <ui:define name="form">
+    <wi:dataForm
+      formId="papel"
+      formTitle="#{infoxMessages['form.title']}"
+      updateAction="papelCrudAction.save()"
+      persistAction="papelCrudAction.save()"
+    >
+      <ui:include src="papelEdit.xhtml" />
+    </wi:dataForm>
+  </ui:define>
+  <ui:define name="tabs">
+    <infox:tab
+      id="tabPapeis"
+      status=":status"
+      title="#{infoxMessages['papel.visaoHierarquica']}"
+      name="tabPapeis"
+      action="#{rolesTree.clearTree()}"
+    >
+      <h:form>
+        <a:commandButton
+          styleClass="buttons"
+          value="#{infoxMessages['papel.visaoHierarquica.revert']}"
+          render="@form"
+          execute="@this"
+          action="#{rolesTree.inverter}"
+          eventsQueue="editQueue"
+        />
+        <span> <h:outputText
+            rendered="#{rolesTree.invertida}"
+            value="#{infoxMessages['papel.roleTree.titleReverted']}"
+          /> <h:outputText
+            rendered="#{!rolesTree.invertida}"
+            value="#{infoxMessages['papel.roleTree.title']}"
+          />
+        </span>
+        <rich:tree
+          data="#{item}"
+          selectionType="ajax"
+          render="pageBody"
+          var="item"
+          selectionChangeListener="#{rolesTree.processTreeSelectionChange}"
+        >
+          <rich:treeModelRecursiveAdaptor
+            roots="#{rolesTree.roots}"
+            nodes="#{item.nodes}"
+          >
+            <c:set var="pathResource" value="/imagens/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}" />
+            <rich:treeNode
+              iconCollapsed="#{layoutController.getResourceUrlByPath(pathResource)}"
+              iconExpanded="#{layoutController.getResourceUrlByPath(pathResource)}"
+              iconLeaf="#{layoutController.getResourceUrlByPath(pathResource)}"
+            >
+              #{item.entity}
+            </rich:treeNode>
+            <rich:treeModelAdaptor nodes="#{item.entity.recursos}">
+              <rich:treeNode iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/resource.gif')}">#{item}</rich:treeNode>
+            </rich:treeModelAdaptor>
+          </rich:treeModelRecursiveAdaptor>
+        </rich:tree>
+      </h:form>
+    </infox:tab>
+  </ui:define>
+</ui:composition>

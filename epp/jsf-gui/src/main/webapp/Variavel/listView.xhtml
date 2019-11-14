@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    <ui:define name="title"> #{infoxMessages['variavel.titlePage']} </ui:define>
+    <ui:param
+        name="home"
+        value="#{variavelCrudAction}" />
+    <ui:define name="searchGrid">
+        <wi:dataTable
+            values="#{variavelList.list(15)}"
+            bean="#{variavelList}"
+            tableTitle="#{infoxMessages['variavel.titleView']}"
+            id="variavelList"
+            rowId="#{row.idVariavel}">
+            <ui:define name="searchForm">
+                <wi:searchForm
+                    formId="pesquisarVariavelForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText
+                        id="variavel"
+                        value="#{variavelList.entity.variavel}"
+                        label="#{infoxMessages['variavel.variavel']}"
+                        maxlength="100" />
+                    <wi:inputText
+                        id="valorVariavel"
+                        label="#{infoxMessages['variavel.valorVariavel']}"
+                        value="#{variavelList.entity.valorVariavel}"
+                        maxlength="200" />
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{variavelList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText
+                columnId="variavel"
+                columnHeader="#{infoxMessages['variavel.variavel']}"
+                value="#{row.variavel}" />
+            <wi:columnOutputText
+                columnId="valorVariavel"
+                columnHeader="#{infoxMessages['variavel.valorVariavel']}"
+                value="#{row.valorVariavel}" />
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+    <ui:define name="form">
+        <wi:dataForm
+            formId="variavelForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText
+                id="variavel"
+                value="#{home.instance.variavel}"
+                label="#{infoxMessages['variavel.variavel']}"
+                size="35"
+                required="true" />
+            <div style="display: inline-block; margin-right: 1.5em">
+                <wi:inputTextarea id="valorVariavel"
+                    label="#{infoxMessages['variavel.valorVariavel']}"
+                    value="#{home.instance.valorVariavel}"
+                    maxlength="200"
+                    styleClass="textAreaExpressionAction"
+                    style="margin-right: 0em"
+                    required="true">
+                    <f:validator validatorId="jbpmExpressionValidator" />
+                    <a:ajax event="change" limitRender="true"
+                        execute="@this"
+                        render="pageBodyDialogMessage :processDefinition:eventsForm:nodeEventActionExpressionDecoration" />
+                </wi:inputTextarea>
+                <div style="display: inline-block">
+                    <h:graphicImage id="#{id}helpEditTipImg"
+                        url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                        onclick="#{rich:component('expressoesAjudaGeralPopUpPanel')}.show();" />
+                </div>
+            </div>
+            <wi:selectSituacaoRadio
+                id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{home.instance.ativo}" />
+        </wi:dataForm>
+        <ui:include src="/Fluxo/definicao/helpers/expressoesAjuda.xhtml">
+            <ui:param name="id" value="expressoesAjudaGeralPopUpPanel" />
+            <ui:param name="methods" value="#{bpmExpressionService.externalEventosMethods}" />
+            <ui:param name="targetExpressionFieldClass" value="textAreaExpressionAction" />
+        </ui:include>        
+    </ui:define>
+    <ui:define name="tabs">
+        <infox:tab
+            rendered="#{home.managed and not empty associativeTipoModeloDocumentoList.variavelToIgnore}"
+            title="Tipos de Modelo de Documento"
+            id="tipoModelo"
+            name="tipoModelo"
+            action="#{home.onClickTipoModeloTab}">
+            <wi:ajaxDiv id="divM2MVar">
+                <s:div styleClass="Associated">
+                    <wi:dataTable
+                        values="#{associatedTipoModeloVariavelList.list(15)}"
+                        bean="#{associatedTipoModeloVariavelList}"
+                        tableTitle="#{infoxMessages['associatedTipoModeloVariavel.tableTitle']}"
+                        id="associatedTipoModeloVariavelList"
+                        rowId="#{row.idVariavelTipoModelo}"
+                        styleClass="Associated-dt"
+                        panelStyleClass="rf-dt-crud"
+                        searchFormStyleClass="hidden">
+                        <ui:define name="searchForm" />
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <a:region>
+                                <a:commandLink
+                                    limitRender="true"
+                                    render="divM2MVar"
+                                    action="#{variavelTipoModeloDocumentoCrudAction.removeTipoModeloVariavel(row)}"
+                                    rendered="true">
+                                    <h:graphicImage
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
+                                        title="#{infoxMessages['button.delete']}" />
+                                </a:commandLink>
+                            </a:region>
+                        </ui:define>
+                        <wi:columnOutputText
+                            columnId="tipoModeloDocumento"
+                            columnHeader="#{infoxMessages['associatedTipoModeloVariavel.tipoModeloDocumento']}"
+                            value="#{row.tipoModeloDocumento}" />
+                        <wi:columnOutputText
+                            columnId="tipoModeloDocumento.grupoModeloDocumento"
+                            columnHeader="#{infoxMessages['associatedTipoModeloVariavel.grupoModeloDocumento']}"
+                            value="#{row.tipoModeloDocumento.grupoModeloDocumento}" />
+                    </wi:dataTable>
+                </s:div>
+                <s:div styleClass="padding-top-5">
+                    <wi:dataTable
+                        values="#{associativeTipoModeloDocumentoList.list(15)}"
+                        bean="#{associativeTipoModeloDocumentoList}"
+                        tableTitle="#{infoxMessages['associativeTipoModeloDocumento.tableTitle']}"
+                        id="associativeTipoModeloDocumentoList"
+                        rowId="#{row.idTipoModeloDocumento}"
+                        styleClass="Associative-dt"
+                        showGrid="#{home.managed}">
+                        <ui:define name="searchForm">
+                            <wi:searchForm
+                                formId="pesquisarTipoModeloDocumentoForm"
+                                formTitle="#{infoxMessages['searchForm.title']}">
+                                <wi:inputText
+                                    id="tipoModeloDocumento"
+                                    label="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}"
+                                    value="#{associativeTipoModeloDocumentoList.entity.tipoModeloDocumento}"
+                                    maxlength="150" />
+                                <wi:suggest
+                                    id="grupoModeloDocumento"
+                                    suggestProvider="#{grupoModeloDocumentoSuggest}"
+                                    value="#{associativeTipoModeloDocumentoList.entity.grupoModeloDocumento}"
+                                    label="#{infoxMessages['tipoModeloDocumento.grupoModeloDocumento']}" />
+                                <wi:inputText
+                                    id="abreviacao"
+                                    label="#{infoxMessages['tipoModeloDocumento.abreviacao']}"
+                                    value="#{associativeTipoModeloDocumentoList.entity.abreviacao}"
+                                    maxlength="5" />
+                                <wi:selectSituacaoOneMenu
+                                    id="ativo"
+                                    label="#{infoxMessages['field.situacao']}"
+                                    value="#{associativeTipoModeloDocumentoList.entity.ativo}" />
+                            </wi:searchForm>
+                        </ui:define>
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <a:region>
+                                <a:commandLink
+                                    limitRender="true"
+                                    render="divM2MVar"
+                                    action="#{variavelTipoModeloDocumentoCrudAction.addTipoModeloVariavel(row)}"
+                                    rendered="true">
+                                    <h:graphicImage
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
+                                        title="#{infoxMessages['button.add']}" />
+                                </a:commandLink>
+                            </a:region>
+                        </ui:define>
+                        <wi:columnOutputText
+                            columnId="tipoModeloDocumento"
+                            columnHeader="#{infoxMessages['associativeTipoModeloVariavel.tipoModeloDocumento']}"
+                            value="#{row.tipoModeloDocumento}" />
+                        <wi:columnOutputText
+                            columnId="tipoModeloDocumento.grupoModeloDocumento"
+                            columnHeader="#{infoxMessages['associativeTipoModeloVariavel.grupoModeloDocumento']}"
+                            value="#{row.grupoModeloDocumento}" />
+                        <wi:columnOutputText
+                            columnId="abreviacao"
+                            columnHeader="#{infoxMessages['associativeTipoModeloVariavel.abreviacao']}"
+                            value="#{row.abreviacao}" />
+                        <wi:columnSituacao
+                            columnId="ativo"
+                            columnHeader="#{infoxMessages['field.situacao']}"
+                            value="#{row.ativo}" />
+                    </wi:dataTable>
+                </s:div>
+            </wi:ajaxDiv>
+        </infox:tab>
+    </ui:define>
+        
+</ui:composition>

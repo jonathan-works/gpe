@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:i="http://java.sun.com/jsf/composite/infox"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:p="http://primefaces.org/ui"
+  template="/WEB-INF/xhtml/templates/minimal.xhtml">
+ 
+  <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{empty processBuilder.instance ? '' : processBuilder.instance.name}</ui:define>
+  <ui:define name="head">
+	<f:metadata>
+		<f:event listener="#{processBuilder.load()}" type="preRenderView" />
+	</f:metadata>
+    <h:outputScript
+      name="jbpmGraph.js"
+      library="js" />
+    <h:outputScript
+      name="underscore.js"
+      library="js" />
+    <h:outputScript name="fullscreen.js" library="js" />  
+    <h:outputStylesheet name="diagram-js.css" library="modelador/css" />
+    <h:outputStylesheet name="modelador.css" library="modelador/css" />
+	<link type="text/css" href="#{pathResolver.contextPath}/resources/modelador/vendor/bpmn-font/css/bpmn.css" rel="stylesheet"></link>
+	<h:outputScript name="bundle.js" library="modelador" />
+	
+	<style>
+		.modeladorExibido {
+			background-color: white;
+			height: 600px;
+			width: 95%;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		
+		.modeladorEscondido {
+			width: 0;
+			height: 0;
+			visibility: hidden;
+		}
+		
+		.modeladorExibido.modeladorFullscreen {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+	
+	<script>
+		function initModelador() {
+	        window.modeler = new InfoxBpmnModeler({
+				'container': '#modelador',	        	
+	        	'bpmn': document.getElementById("#{rich:clientId('bpmnOriginal')}").value,
+	        	'configureElement': configureElement
+	        });
+		}
+		
+        function updateBpmn() {
+			doUpdate(JSON.stringify(window.modeler.getBpmnInformation()));
+		}
+        
+        function moveContainerModeladorToBody() {
+        	var containerModelador = $("#modelador");
+        	if (containerModelador.parent()[0] !== document.body) {
+	        	containerModelador.removeClass('modeladorExibido');
+	        	containerModelador.addClass('modeladorEscondido');
+	        	containerModelador.appendTo('body');
+        	}
+        }
+        
+        function moveContainerModeladorToTab() {
+        	var containerModelador = $("#modelador");
+        	if (containerModelador.parent()[0].id !== 'parentModelador') {
+	        	containerModelador.removeClass('modeladorEscondido');
+	        	containerModelador.addClass('modeladorExibido');
+	        	containerModelador.appendTo('#parentModelador');
+        	}
+        }
+        
+        function reinitModelador() {
+			var renderer = window.modeler.getRenderer();
+        	var transformTooltipContainer = $('.djs-tooltip-container', renderer.container).css('transform');
+        	var transformOverlayContainer = $('.djs-overlay-container', renderer.container).css('transform');
+        	var transformViewport = $('.viewport', renderer.container).attr('transform');
+        	renderer.destroy();
+        	initModelador();
+        	renderer = window.modeler.getRenderer();
+        	$('.djs-tooltip-container', renderer.container).css('transform', transformTooltipContainer);
+        	$('.djs-overlay-container', renderer.container).css('transform', transformOverlayContainer);
+        	$('.viewport', renderer.container).attr('transform', transformViewport);
+        	moveContainerModeladorToTabIfInTab();
+        }
+        
+        function moveContainerModeladorToTabIfInTab() {
+        	if ($('#parentModelador').length === 1) {
+        		moveContainerModeladorToTab();
+        	}
+        }
+        
+        $(document).ready(function() {
+        	function handler(event) {
+        		if (event.srcElement.id === 'modelador') {
+        			var containerModelador = $("#modelador");
+        			if (document.fullscreenElement) {
+        				containerModelador.addClass('modeladorFullscreen');
+        			} else {
+        				containerModelador.removeClass('modeladorFullscreen');
+        			}
+        		}
+    		}
+        	
+        	document.addEventListener('fullscreenchange', handler, false);
+        	document.addEventListener('webkitfullscreenchange', handler, false);
+        	document.addEventListener('mozfullscreenchange', handler, false);
+        	
+        	initModelador();
+        });
+   </script>
+	
+  </ui:define>
+  <ui:define name="body">
+    <!-- rich:tree para carregar javascript da tree para o nó de email. Não retirar, ver ticket #70361  -->
+  	<rich:tree />
+    <ui:param
+      name="def"
+      value="#{processBuilder.instance}" />
+      
+   	 <h:form id="modeladorForm">
+		<a:jsFunction name="doUpdate" execute="@this" render=":processDefinition @form :pageBodyDialogMessage" action="#{bpmnView.update}"
+			actionListener="#{processBuilder.prepareUpdate}" onbeforedomupdate="moveContainerModeladorToBody()"
+			oncomplete="reinitModelador(); infox.hideLoading();">
+			<a:param name="bpmnInformation" assignTo="#{bpmnView.bpmnInformation}"/>
+		</a:jsFunction>
+		<a:jsFunction name="configureElement" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configureElement}"
+			onbeforedomupdate="moveContainerModeladorToBody()">
+			<a:param name="elementKey" assignTo="#{bpmnView.elementKey}" />
+		</a:jsFunction>
+     	
+     	<h:inputHidden id="bpmnOriginal" value="#{bpmnView.definicaoProcesso.bpmn}" />
+	</h:form>
+	
+    <infox:tabPanel
+      switchType="ajax"
+      activeTab="#{processBuilder.tab}"
+      id="processDefinition">
+      <h:form>
+        <infox:tabHeaders />
+      </h:form>
+      <infox:tab
+        name="propriedadesTab"
+        id="propriedadesTab"
+        title="#{infoxMessages['processBuilder.properties']}"
+        render="processDefinitionButtonsForm"
+        onbeforedomupdate="moveContainerModeladorToBody()">
+        <rich:panel header="#{infoxMessages['processBuilder.info']}">
+          <h:form>
+            <wi:inputText
+              id="codFluxo"
+              label="#{infoxMessages['fluxo.codFluxo']}"
+              value="#{processBuilder.definicaoProcesso.fluxo.codFluxo}"
+              readonly="true">
+              <f:validator validatorId="jsfComponentIdValidator" />
+            </wi:inputText>
+            <wi:inputText
+              id="nome"
+              label="#{infoxMessages['fluxo.fluxo']}"
+              value="#{def.name}"
+              readonly="true" />
+            <wi:inputTextarea
+              id="description"
+              value="#{def.description}"
+              label="#{infoxMessages['processBuilder.description']}"
+              showCounter="false">
+              <a:ajax
+                event="change"
+                execute="@this" />
+            </wi:inputTextarea>
+          </h:form>
+        </rich:panel>
+        <ui:include src="historico.xhtml" />
+        <rich:panel
+          styleClass="SwimlanePanel"
+          header="#{infoxMessages['processBuilder.swimlanes']}">
+          <ui:include src="swimlanes.xhtml" />
+        </rich:panel>
+      </infox:tab>
+      <infox:tab
+        name="nodesTab"
+        id="nodesTab"
+        title="#{infoxMessages['processBuilder.nodes']}"
+        render="processDefinitionButtonsForm"
+        onbeforedomupdate="moveContainerModeladorToBody()">
+        <ui:include src="nodes.xhtml" />
+      </infox:tab>
+      <infox:tab
+        name="modeladorTab"
+        id="modeladorTab"
+        title="#{infoxMessages['processBuilder.modelador']}"
+        render="processDefinitionButtonsForm"
+        oncomplete="moveContainerModeladorToTab()">
+        <ui:include src="modelador.xhtml" />
+      </infox:tab>
+    </infox:tabPanel>
+    <h:form id="processDefinitionButtonsForm">
+      <h:outputScript>
+        function checkIfEditorExists() {
+          if (typeof infox.editor!=="undefined") {
+            for(var key in infox.editor) {
+              infox.editor[key].instance.fire("blur");
+            }
+          }
+        }
+      </h:outputScript>
+      <a:commandButton
+        id="gravar"
+        value="#{infoxMessages['processBuilder.saveBtn']}"
+        styleClass="buttons #{wi:get(styleClass, '')}"
+        onclick="infox.showLoading(); checkIfEditorExists(); updateBpmn(); return false;" />
+      <a:commandButton
+        id="new"
+        action="#{processBuilder.clearDefinition}"
+        value="#{infoxMessages['processBuilder.newBtn']}"
+        render=":processDefinition @form :modeladorForm :pageBodyDialogMessage"
+        onclick="if (!confirm('#{infoxMessages['processBuilder.confirmNew']}')) return false; infox.showLoading();"
+        onbeforedomupdate="moveContainerModeladorToBody();"
+        oncomplete="reinitModelador(); infox.hideLoading();"
+        styleClass="buttons #{wi:get(styleClass, '')}" />
+    </h:form>
+    <s:div id="actionTemplate">
+      <wi:modalPanel
+        id="actionTemplatePanel"
+        height="550"
+        width="920">
+        <c:if
+          test="#{!empty actionTemplate.fileName}">
+          <ui:include src="/Fluxo/definicao/actions/setModeloDocumento.xhtml" />
+        </c:if>
+      </wi:modalPanel>
+    </s:div>
+    <wi:modalPanel
+        id="modeloDocumentoVariavelEditorPanel"
+        height="550"
+        width="920">
+       <ui:include src="actions/setModeloDocumento.xhtml" />
+    </wi:modalPanel>
+    <wi:modalPanel
+      id="dominioVariavelTarefaPanel"
+      height="550"
+      width="920"
+      onbeforehide="renderDominio()">
+      <ui:include src="actions/dominioVariavelTarefa.xhtml" />
+    </wi:modalPanel>
+    <wi:modalPanel
+      id="classificacoesParaVariavelPanel"
+      height="550"
+      width="920">
+      <ui:include src="actions/addClassificacaoDocumento.xhtml" />
+    </wi:modalPanel>
+
+	<p:dialog id="configuracaoSwimlanePanel" appendTo="body" modal="true" closable="true" dynamic="true" widgetVar="configuracaoSwimlanePanel"
+		header="#{swimlaneFitter.currentSwimlane.name}" style="margin-left: 10px; margin-right: 10px">
+		<ui:include src="actions/swimlaneConfiguration.xhtml" />
+	</p:dialog>
+    <rich:popupPanel id="modalVisualizarHistorico" width="950" height="650" maxHeight="600" modal="true" header="Histórico">
+		<f:facet name="controls">
+		    <h:graphicImage styleClass="mp-close"
+		        value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+		        onclick="#{rich:component('modalVisualizarHistorico')}.hide();" />
+		</f:facet>
+		<ui:include src="visualizarHistorico.xhtml" />
+	</rich:popupPanel>
+	
+	<div id="modelador" class="modeladorEscondido" />
+	
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle" >
+        <createTable tableName="tb_doc_resposta_comunicacao">
+            <column name="id_doc_resposta_comunicacao" type="bigint">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="id_processo" type="bigint">
+                <constraints nullable="false" references="tb_processo(id_processo)" foreignKeyName="fk_doc_resp_comunic_processo" />
+            </column>
+            <column name="id_documento" type="bigint">
+                <constraints nullable="false" references="tb_documento(id_documento)" foreignKeyName="fk_doc_resp_comunic_documento" />
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="tb_doc_resposta_comunicacao" constraintName="unq_doc_resposta_comunicacao" columnNames="id_processo, id_documento" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2" dbms="mssql, postgresql, oracle" >
+        <createSequence sequenceName="sq_doc_resposta_comunicacao" startValue="1" incrementBy="1" minValue="1" />
+    </changeSet>
+</databaseChangeLog>

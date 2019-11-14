@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+  <ui:define name="title">#{infoxMessages['localizacao.titlePage']}</ui:define>
+  <ui:param
+    name="home"
+    value="#{localizacaoCrudAction}" />
+  <ui:define name="searchGrid">
+    <wi:dataTable
+      values="#{localizacaoList.list(15)}"
+      bean="#{localizacaoList}"
+      tableTitle="#{infoxMessages['localizacao.tableTitle']}"
+      id="localizacaoList"
+      rowId="#{row.idLocalizacao}">
+      <ui:define name="searchForm">
+        <wi:searchForm
+          formId="pesquisarLocalizacaoForm"
+          formTitle="#{infoxMessages['searchForm.title']}">
+          <wi:inputText
+            id="codigoItem"
+            value="#{localizacaoList.entity.localizacao}"
+            label="#{infoxMessages['localizacao.localizacao']}" />
+          <wi:tree
+            id="localizacaoPai"
+            assignTo="localizacaoList.entity.localizacaoPai"
+            tree="#{localizacaoTree}"
+            icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+            iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+            label="#{infoxMessages['localizacao.localizacaoPai']}" />
+          <wi:selectSituacaoOneMenu
+            id="ativo"
+            label="#{infoxMessages['field.situacao']}"
+            value="#{localizacaoList.entity.ativo}" />
+        </wi:searchForm>
+      </ui:define>
+      <wi:columnOutputText
+        styleClass="rf-tr"
+        hideOrder="true"
+        columnId="codigo"
+        columnHeader="#{infoxMessages['localizacao.codigo']}"
+        value="#{row.codigo}" />
+      <wi:columnOutputText
+        styleClass="rf-tr"
+        hideOrder="true"
+        columnId="caminhoCompleto"
+        columnHeader="#{infoxMessages['localizacao.localizacao']}"
+        value="#{localizacaoCrudAction.formatCaminhoCompleto(row)}" />
+      <wi:columnSituacao
+        hideOrder="true"
+        columnId="ativo"
+        columnHeader="#{infoxMessages['field.situacao']}"
+        value="#{row.ativo}" />
+    </wi:dataTable>
+  </ui:define>
+  <ui:define name="form">
+    <ui:param
+      name="isEditable"
+      value="#{not authenticator.getLocalizacaoAtual().equals(localizacaoCrudAction.instance)}" />
+    <wi:dataForm
+      formId="localizacaoForm"
+      formTitle="#{infoxMessages['form.title']}">
+      <wi:inputText
+        id="codigo"
+        label="#{infoxMessages['localizacao.codigo']}"
+        value="#{localizacaoCrudAction.instance.codigo}"
+        maxlength="50" 
+        required="true"/>
+      <wi:inputText
+        id="localizacao"
+        required="true"
+        label="#{infoxMessages['localizacao.localizacao']}"
+        value="#{localizacaoCrudAction.instance.localizacao}"
+        readonly="#{not isEditable}"
+        maxlength="100" />
+      <wi:outputText
+        id="localizacaoPaiOut"
+        value="#{localizacaoCrudAction.instance.localizacaoPai}"
+        label="#{infoxMessages['localizacao.localizacaoPai']}"
+        rendered="#{authenticator.getLocalizacaoAtual().equals(localizacaoCrudAction.instance)}" />
+      <wi:tree
+        id="localizacaoPai"
+        assignTo="localizacaoCrudAction.localizacaoPai"
+        tree="#{localizacaoTree}"
+        icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+        iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+        required="true"
+        rendered="#{isEditable}"
+        label="#{infoxMessages['localizacao.localizacaoPai']}" />
+      <wi:selectOneMenuEntity
+        id="estruturaFilho"
+        value="#{localizacaoCrudAction.instance.estruturaFilho}"
+        label="#{infoxMessages['localizacao.estruturaFilho']}"
+        items="#{localizacaoCrudAction.getEstruturasDisponiveis()}"
+        readonly="#{not isEditable}"
+        rendered="#{empty authenticator.getLocalizacaoAtual().getEstruturaPai()}"
+        showLabelSelecione="true" />
+      <wi:selectSituacaoRadio
+        id="ativo"
+        label="#{infoxMessages['field.situacao']}"
+        value="#{localizacaoCrudAction.instance.ativo}"
+        disabled="#{not isEditable}" />
+      <ui:define name="buttons">
+        <s:fragment rendered="#{isEditable}">
+          <wi:commandButtonSave />
+          <wi:commandButtonNew />
+        </s:fragment>
+      </ui:define>
+    </wi:dataForm>
+  </ui:define>
+  <ui:define name="tabs">
+  </ui:define>
+</ui:composition>

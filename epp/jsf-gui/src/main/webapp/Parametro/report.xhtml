@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="title" value="Localizações Físicas" />
+
+    <wi:dataReport title="#{infoxMessages['parametro.reportTitle']}"
+        columns="7" widths="4 4 4 4 4 2 2"
+        headerText="#{parametroList.criteria}"
+        marginLeft="40"
+        marginRight="30">
+
+        <wi:reportColumnHeader
+            title="#{infoxMessages['parametro.nomeVariavel']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['parametro.descricaoVariavel']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['parametro.valorVariavel']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['parametro.dataAtualizacao']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['parametro.usuarioModificacao']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['parametro.sistema']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+
+        <ui:repeat var="row" value="#{parametroList.list()}">
+
+            <wi:reportColumn value="#{row.nomeVariavel}" />
+            <wi:reportColumn value="#{row.descricaoVariavel}" />
+            <wi:reportColumn value="#{row.valorVariavel}" />
+            <wi:reportColumnDate value="#{row.dataAtualizacao}" />
+            <wi:reportColumn value="#{row.usuarioModificacao}" />
+            <wi:reportColumnBoolean value="#{row.sistema}" />
+            <wi:reportColumnSituacao value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+
+    </wi:dataReport>
+
+</ui:composition>

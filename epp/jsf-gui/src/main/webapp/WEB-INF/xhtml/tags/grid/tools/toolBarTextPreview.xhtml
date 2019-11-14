@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:toolBarGraphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="Pré-visualizar"
+        onclickGraphicImage="mp = this.nextSibling.id; #{rich:component('mp_'.concat(c.id))}.show()" />
+
+    <rich:popupPanel id="mp_#{c.id}" height="560" width="720"
+        resizeable="false" domElementAttachment="parent">
+        <f:facet name="header">
+            <h:outputText value="Pré-visualização do texto:" />
+        </f:facet>
+        <f:facet name="controls">
+            <span onclick="#{rich:component('mp_'.concat(c.id))}.hide()">X</span>
+        </f:facet>
+        <h:form>
+	        <wi:editor id="mp_editor_#{c.id}" label="Texto" width="660" 
+	                    height="450"
+	                    readonly="true"
+	                    value="#{value}" />
+	    </h:form>
+    </rich:popupPanel>
+
+</ui:composition>

@@ -1,0 +1,23 @@
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:composite="http://java.sun.com/jsf/composite" >
+    
+    <composite:interface>
+    	
+    	<composite:attribute name="rowCount" required="true" displayName="rowCount"/>
+    	
+    </composite:interface>
+	
+    <composite:implementation>
+    	<div class="ui-datatable-footer-paginator">
+			<div class="ui-datatable-footer-paginator-right" align="right">
+				<h:outputText value="#{fn:replace(infoxMessages['list.result.single'], '\\{rowCount\\}', cc.attrs.rowCount)}" rendered="#{cc.attrs.rowCount eq 1}"/>
+				<h:outputText value="#{fn:replace(infoxMessages['list.result.multiple'], '\\{rowCount\\}', cc.attrs.rowCount)}" rendered="#{cc.attrs.rowCount ne 1}"/>
+			</div>
+		</div>
+    </composite:implementation>
+	
+</html>
+
+

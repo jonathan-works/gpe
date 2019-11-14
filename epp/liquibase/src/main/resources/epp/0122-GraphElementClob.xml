@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="gabriel" id="1">
+        <createSequence sequenceName="sq_graph_element_clob" startValue="1" minValue="1" incrementBy="1" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <createTable tableName="tb_graph_element_clob">
+            <column name="id_graph_element_clob" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="ds_description" type="nclob" />
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0122-graphelementclob.xml" />
+        </preConditions>
+
+        <addColumn tableName="jbpm_node">
+            <column name="id_graph_element_clob" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_node_01" references="tb_graph_element_clob(id_graph_element_clob)" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0122-graphelementclob.xml" />
+        </preConditions>
+
+        <addColumn tableName="jbpm_task">
+            <column name="id_graph_element_clob" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_task_01" references="tb_graph_element_clob(id_graph_element_clob)" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="5">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0122-graphelementclob.xml" />
+        </preConditions>
+
+        <addColumn tableName="jbpm_transition">
+            <column name="id_graph_element_clob" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_transition_01" references="tb_graph_element_clob(id_graph_element_clob)" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="6">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0122-graphelementclob.xml" />
+        </preConditions>
+
+        <addColumn tableName="jbpm_processdefinition">
+            <column name="id_graph_element_clob" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_processdefinition_01" references="tb_graph_element_clob(id_graph_element_clob)" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="7" dbms="mssql">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0122-GraphElementClob.xml"/>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0122-GraphElementClob.xml"/>
+            <changeSetExecuted author="gabriel" id="5" changeLogFile="epp/0122-GraphElementClob.xml"/>
+            <changeSetExecuted author="gabriel" id="6" changeLogFile="epp/0122-GraphElementClob.xml"/>
+        </preConditions>
+
+        <sql>
+            CREATE UNIQUE NONCLUSTERED INDEX uk_node_01 ON JBPM_NODE(id_graph_element_clob) WHERE id_graph_element_clob IS NOT NULL;
+
+            CREATE UNIQUE NONCLUSTERED INDEX uk_task_01 ON JBPM_TASK(id_graph_element_clob) WHERE id_graph_element_clob IS NOT NULL;
+            
+            CREATE UNIQUE NONCLUSTERED INDEX uk_processdefinition_01 ON JBPM_PROCESSDEFINITION(id_graph_element_clob) WHERE id_graph_element_clob IS NOT NULL;
+
+            CREATE UNIQUE NONCLUSTERED INDEX uk_transition_01 ON JBPM_TRANSITION(id_graph_element_clob) WHERE id_graph_element_clob IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="7" dbms="postgresql,oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0122-GraphElementClob.xml"/>
+        </preConditions>
+        
+        <addUniqueConstraint tableName="jbpm_node" columnNames="id_graph_element_clob" constraintName="uk_node_01" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="8" dbms="postgresql,oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4" changeLogFile="epp/0122-GraphElementClob.xml"/>
+        </preConditions>
+        
+        <addUniqueConstraint tableName="jbpm_task" columnNames="id_graph_element_clob" constraintName="uk_task_01" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="9" dbms="postgresql,oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="6" changeLogFile="epp/0122-GraphElementClob.xml"/>
+        </preConditions>
+        
+        <addUniqueConstraint tableName="jbpm_processdefinition" columnNames="id_graph_element_clob" constraintName="uk_processdefinition_01" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="10" dbms="postgresql,oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="5" changeLogFile="epp/0122-GraphElementClob.xml"/>
+        </preConditions>
+        
+        <addUniqueConstraint tableName="jbpm_transition" columnNames="id_graph_element_clob" constraintName="uk_transition_01" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="11">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0122-GraphElementClob.xml" />
+            <changeSetExecuted author="gabriel" id="7" changeLogFile="epp/0122-GraphElementClob.xml" />
+            <and>
+                <or>
+                    <dbms type="mssql" />
+                    <and>
+                        <not><dbms type="mssql"/></not>
+                        <changeSetExecuted author="gabriel" id="8" changeLogFile="epp/0122-GraphElementClob.xml" />
+                        <changeSetExecuted author="gabriel" id="9" changeLogFile="epp/0122-GraphElementClob.xml" />
+                        <changeSetExecuted author="gabriel" id="10" changeLogFile="epp/0122-GraphElementClob.xml" />
+                    </and>
+                </or>
+            </and>
+        </preConditions>
+
+        <createProcedure dbms="postgresql">
+            DO $$
+            DECLARE
+                current_id_graph_element_clob BIGINT;
+                data_row RECORD;
+
+            BEGIN
+                FOR data_row IN SELECT id_, description_ FROM JBPM_NODE WHERE description_ IS NOT NULL
+
+                LOOP
+                    current_id_graph_element_clob := nextval('sq_graph_element_clob');
+                    INSERT INTO tb_graph_element_clob (id_graph_element_clob, ds_description) VALUES (current_id_graph_element_clob, data_row.description_);
+                    UPDATE JBPM_NODE SET id_graph_element_clob = current_id_graph_element_clob WHERE id_ = data_row.id_;
+                END LOOP;
+                
+                FOR data_row IN SELECT id_, description_ FROM JBPM_TASK WHERE description_ IS NOT NULL
+
+                LOOP
+                    current_id_graph_element_clob := nextval('sq_graph_element_clob');
+                    INSERT INTO tb_graph_element_clob (id_graph_element_clob, ds_description) VALUES (current_id_graph_element_clob, data_row.description_);
+                    UPDATE JBPM_TASK SET id_graph_element_clob = current_id_graph_element_clob WHERE id_ = data_row.id_;
+                END LOOP;
+
+                FOR data_row IN SELECT id_, description_ FROM JBPM_PROCESSDEFINITION WHERE description_ IS NOT NULL
+                LOOP
+                    current_id_graph_element_clob := nextval('sq_graph_element_clob');
+                    INSERT INTO tb_graph_element_clob (id_graph_element_clob, ds_description) VALUES (current_id_graph_element_clob, data_row.description_);
+                    UPDATE JBPM_PROCESSDEFINITION SET id_graph_element_clob = current_id_graph_element_clob WHERE id_ = data_row.id_;
+                END LOOP;
+
+                FOR data_row IN SELECT id_, description_ FROM JBPM_TRANSITION WHERE description_ IS NOT NULL
+                LOOP
+                    current_id_graph_element_clob := nextval('sq_graph_element_clob');
+                    INSERT INTO tb_graph_element_clob (id_graph_element_clob, ds_description) VALUES (current_id_graph_element_clob, data_row.description_);
+                    UPDATE JBPM_TRANSITION SET id_graph_element_clob = current_id_graph_element_clob WHERE id_ = data_row.id_;
+                END LOOP;
+            END; $$
+        </createProcedure>
+
+        <createProcedure dbms="mssql">
+            DECLARE
+                @current_id_graph_element_clob BIGINT,
+                @id_graph_element BIGINT,
+                @description VARCHAR(4000);
+                
+            DECLARE node_cursor CURSOR FOR SELECT id_, description_ FROM JBPM_NODE WHERE description_ IS NOT NULL;
+            DECLARE task_cursor CURSOR FOR SELECT id_, description_ FROM JBPM_TASK WHERE description_ IS NOT NULL;
+            DECLARE proc_def_cursor CURSOR FOR SELECT id_, description_ FROM JBPM_PROCESSDEFINITION WHERE description_ IS NOT NULL;
+            DECLARE transition_cursor CURSOR FOR SELECT id_, description_ FROM JBPM_TRANSITION WHERE description_ IS NOT NULL;
+
+                OPEN node_cursor;
+                FETCH NEXT FROM node_cursor INTO @id_graph_element, @description;
+
+                WHILE @@FETCH_STATUS = 0
+                BEGIN
+                    SELECT @current_id_graph_element_clob = NEXT VALUE FOR sq_graph_element_clob;
+                    INSERT INTO tb_graph_element_clob(id_graph_element_clob, ds_description) VALUES (@current_id_graph_element_clob, @description);
+                    UPDATE JBPM_NODE SET id_graph_element_clob = @current_id_graph_element_clob WHERE id_ = @id_graph_element;
+                    FETCH NEXT FROM node_cursor INTO @id_graph_element, @description;
+                END;
+                CLOSE node_cursor;
+                DEALLOCATE node_cursor;
+
+                OPEN task_cursor;
+                FETCH NEXT FROM task_cursor INTO @id_graph_element, @description;
+
+                WHILE @@FETCH_STATUS = 0
+                BEGIN
+                    SELECT @current_id_graph_element_clob = NEXT VALUE FOR sq_graph_element_clob;
+                    INSERT INTO tb_graph_element_clob(id_graph_element_clob, ds_description) VALUES (@current_id_graph_element_clob, @description);
+                    UPDATE JBPM_TASK SET id_graph_element_clob = @current_id_graph_element_clob WHERE id_ = @id_graph_element;
+                    FETCH NEXT FROM task_cursor INTO @id_graph_element, @description;
+                END;
+                CLOSE task_cursor;
+                DEALLOCATE task_cursor;
+
+                OPEN proc_def_cursor;
+                FETCH NEXT FROM proc_def_cursor INTO @id_graph_element, @description;
+
+                WHILE @@FETCH_STATUS = 0
+                BEGIN
+                    SELECT @current_id_graph_element_clob = NEXT VALUE FOR sq_graph_element_clob;
+                    INSERT INTO tb_graph_element_clob(id_graph_element_clob, ds_description) VALUES (@current_id_graph_element_clob, @description);
+                    UPDATE JBPM_PROCESSDEFINITION SET id_graph_element_clob = @current_id_graph_element_clob WHERE id_ = @id_graph_element;
+                    FETCH NEXT FROM proc_def_cursor INTO @id_graph_element, @description;
+                END;
+                CLOSE proc_def_cursor;
+                DEALLOCATE proc_def_cursor;
+
+                OPEN transition_cursor;
+                FETCH NEXT FROM transition_cursor INTO @id_graph_element, @description;
+
+                WHILE @@FETCH_STATUS = 0
+                BEGIN
+                    SELECT @current_id_graph_element_clob = NEXT VALUE FOR sq_graph_element_clob;
+                    INSERT INTO tb_graph_element_clob(id_graph_element_clob, ds_description) VALUES (@current_id_graph_element_clob, @description);
+                    UPDATE JBPM_TRANSITION SET id_graph_element_clob = @current_id_graph_element_clob WHERE id_ = @id_graph_element;
+                    FETCH NEXT FROM transition_cursor INTO @id_graph_element, @description;
+                END;
+                CLOSE transition_cursor;
+                DEALLOCATE transition_cursor;
+        </createProcedure>
+
+        <createProcedure dbms="oracle">
+            DECLARE
+                current_id_graph_element_clob NUMBER;
+                TYPE data_row IS RECORD (
+                    id_ NUMBER,
+                    description_ VARCHAR(4000)
+                );
+
+            BEGIN
+                FOR data_row IN (SELECT id_, description_ FROM JBPM_NODE WHERE description_ IS NOT NULL)
+                LOOP
+                    current_id_graph_element_clob := sq_graph_element_clob.nextval;
+
+                    INSERT INTO tb_graph_element_clob (id_graph_element_clob, ds_description) VALUES (current_id_graph_element_clob, data_row.description_);
+                    UPDATE JBPM_NODE SET id_graph_element_clob = current_id_graph_element_clob WHERE id_ = data_row.id_;
+                END LOOP;
+
+                FOR data_row IN (SELECT id_, description_ FROM JBPM_TASK WHERE description_ IS NOT NULL)
+                LOOP
+                    current_id_graph_element_clob := sq_graph_element_clob.nextval;
+                    
+                    INSERT INTO tb_graph_element_clob (id_graph_element_clob, ds_description) VALUES (current_id_graph_element_clob, data_row.description_);
+                    UPDATE JBPM_TASK SET id_graph_element_clob = current_id_graph_element_clob WHERE id_ = data_row.id_;
+                END LOOP;
+
+                FOR data_row IN (SELECT id_, description_ FROM JBPM_PROCESSDEFINITION WHERE description_ IS NOT NULL)
+                LOOP
+                    current_id_graph_element_clob := sq_graph_element_clob.nextval;
+
+                    INSERT INTO tb_graph_element_clob (id_graph_element_clob, ds_description) VALUES (current_id_graph_element_clob, data_row.description_);
+                    UPDATE JBPM_PROCESSDEFINITION SET id_graph_element_clob = current_id_graph_element_clob WHERE id_ = data_row.id_;
+                END LOOP;
+
+                FOR data_row IN (SELECT id_, description_ FROM JBPM_TRANSITION WHERE description_ IS NOT NULL)
+                LOOP
+                    current_id_graph_element_clob := sq_graph_element_clob.nextval;
+                    INSERT INTO tb_graph_element_clob (id_graph_element_clob, ds_description) VALUES (current_id_graph_element_clob, data_row.description_);
+                    UPDATE JBPM_TRANSITION SET id_graph_element_clob = current_id_graph_element_clob WHERE id_ = data_row.id_;
+                END LOOP;
+            END;
+        </createProcedure>
+    </changeSet>
+
+    <changeSet author="gabriel" id="12">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="11" changeLogFile="epp/0122-GraphElementClob.xml" />
+        </preConditions>
+
+        <dropColumn tableName="jbpm_node" columnName="description_" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="13">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="11" changeLogFile="epp/0122-GraphElementClob.xml" />
+        </preConditions>
+
+        <dropColumn tableName="jbpm_task" columnName="description_" />
+    </changeSet>
+    
+    <changeSet author="gabriel" id="14">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="11" changeLogFile="epp/0122-GraphElementClob.xml" />
+        </preConditions>
+
+        <dropColumn tableName="jbpm_processdefinition" columnName="description_" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="15">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="11" changeLogFile="epp/0122-GraphElementClob.xml" />
+        </preConditions>
+
+        <dropColumn tableName="jbpm_transition" columnName="description_" />
+    </changeSet>
+</databaseChangeLog>

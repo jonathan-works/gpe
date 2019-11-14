@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
+>
+    <ui:param name="selectable" value="#{wi:get(selectable, 'true')}" />
+
+    <script type="text/javascript">
+        function onshowPopup#{id}() {
+            var value = $('.#{id}');
+            var width = $(window).width() * 0.9;
+            var height = $(window).height() * 0.9;
+            var top = (($(window).height() - height) / 2);
+            var left = (($(window).width() - width) / 2);
+            value.css('width', width + 'px');
+            value.css('height', height + 'px');
+            value.css('top', top + 'px');
+            value.css('left', left + 'px');
+            $('.#{id} .filtered-fieldset--content').css('height', $(window).height() * 0.8);
+            $('.rf-pp-cnt-scrlr').css('width', '100%');
+            $('.rf-pp-cnt-scrlr').css('height', '100%');
+        }
+    </script>
+    
+    <rich:popupPanel id="#{id}" modal="true" header="#{infoxMessages['process.events.expression.title']}" resizeable="true"
+        styleClass="#{id}" onshow="onshowPopup#{id}();">
+        <h:panelGroup rendered="#{selectable}">
+            <script type="text/javascript">
+    	    	function onSelectBpmnExpression#{id}(obj) {
+    	    		var text = $(obj).text().trim();
+    	    		#{rich:component(id)}.hide();
+    	    		$('.#{targetExpressionFieldClass}').val(text);
+    	    		$('.#{targetExpressionFieldClass}').change();
+    	    	}
+    	    </script>
+	    </h:panelGroup>
+        <f:facet name="controls">
+            <h:graphicImage styleClass="mp-close"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+                onclick="#{rich:component(id)}.hide();" />
+        </f:facet>
+        
+        <style>
+            .content-block.hidden {
+                display:none;
+            }
+        </style>
+        <p:outputPanel>
+            <fieldset class="filtered-fieldset"
+                style="position: relative">
+                <legend>
+                    <input
+                        oninput="infox.filter({input:this, filtered:'##{component.clientId} .filtered-fieldset--content> .content-block'.replace(/:/g,'\\:')})" />
+                    <wi:icon value="search" />
+                </legend>
+                <div class="filtered-fieldset--content"
+                    style="overflow: auto;">
+                    <ui:repeat value="#{methods}" var="method">
+                        <rich:panel styleClass="content-block"
+                            style="margin: 1.5em 0 0">
+                            <div class="decoration-div">
+                                <div class="property-field-edit-name">#{infoxMessages[method.name]}</div>
+                                <div class="property-field-edit-value">#{infoxMessages[method.tooltip]}</div>
+                            </div>
+                            <div />
+                            <h:panelGroup rendered="#{selectable}">
+                                <div class="decoration-div"
+                                    style="margin: 1em 0 0">
+                                    <div
+                                        class="property-field-edit-name">#{infoxMessages['process.events.expression.example']}</div>
+                                    <div
+                                        class="property-field-edit-value"
+                                        style="cursor: pointer;"
+                                        onclick="onSelectBpmnExpression#{id}(this)"
+                                        title="Selecionar">
+                                        #{method.expression}</div>
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{not selectable}">
+                                <div class="decoration-div"
+                                    style="margin: 1em 0 0">
+                                    <div
+                                        class="property-field-edit-name">#{infoxMessages['process.events.expression.example']}</div>
+                                    <div
+                                        class="property-field-edit-value">#{method.expression}</div>
+                                </div>
+                            </h:panelGroup>
+
+                            <s:div style="margin: 1em 0 0;"
+                                rendered="#{not empty method.getParameters()}">
+                                <h:outputText
+                                    styleClass="property-field-edit-name"
+                                    value="#{infoxMessages['process.events.expression.parameters']}" />
+                                <div style="padding: 0 0 0 1.5em;">
+                                    <ui:repeat var="p"
+                                        value="#{method.getParameters()}">
+                                        <div class="decoration-div">
+                                            <div
+                                                class="property-field-edit-name">#{infoxMessages[p.label()]}#{p.selectable()
+                                                ? '' : '*'}</div>
+                                            <div
+                                                class="property-field-edit-value">#{infoxMessages[p.tooltip()]}</div>
+                                        </div>
+                                        <div />
+                                    </ui:repeat>
+                                    <h:outputText
+                                        style="margin:1.5em 0 0"
+                                        styleClass="property-field-edit-name"
+                                        value="#{infoxMessages['process.events.expression.notSelectable']}" />
+                                </div>
+                            </s:div>
+                        </rich:panel>
+                    </ui:repeat>
+                </div>
+            </fieldset>
+        </p:outputPanel>
+    </rich:popupPanel>
+</ui:composition>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://jboss.org/schema/seam/pdf">
+
+    <p:document title="#{bean.reportId}" pageSize="A4"
+        margins="30 20 40 30" orientation="#{bean.orientation}">
+
+        <p:header borderWidthTop="0" borderWidthBottom="1"
+            borderColorBottom="lightgray">
+            <ui:include src="header.xhtml" />
+        </p:header>
+
+        <f:facet name="header">
+            <p:footer borderWidthTop="1" borderColorTop="lightgray"
+                borderWidthBottom="0" alignment="center">
+                <p:paragraph spacingAfter="15">
+                    <p:pageNumber />
+                </p:paragraph>
+            </p:footer>
+        </f:facet>
+
+        <ui:include src="header.xhtml" />
+        <ui:include
+            src="/WEB-INF/xhtml/components/report/bodyTemplate/#{bean.bodyTemplate.id}.xhtml" />
+
+    </p:document>
+
+</ui:composition>

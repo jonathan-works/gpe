@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    <ui:define name="title">#{infoxMessages['perfil.titlePage']}</ui:define>
+    <ui:param 
+        name="home" 
+        value="#{perfilTemplateCrudAction}"/>
+    <ui:define name="searchGrid">
+        <wi:dataTable bean="#{perfilTemplateList}"
+            values="#{perfilTemplateList.list(20)}"
+            tableTitle="#{infoxMessages['perfil.tableName']}"
+            id="perfilList" rowId="#{row.id}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="perfilTemplateSearchForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigo"
+                        label="#{infoxMessages['perfil.codigo']}"
+                        value="#{perfilTemplateList.entity.codigo}"
+                        maxlength="50"/>
+                    <wi:inputText id="perfil"
+                        label="#{infoxMessages['perfil.descricao']}"
+                        value="#{perfilTemplateList.entity.descricao}"/>
+                    <wi:tree id="localizacao"
+                        assignTo="perfilTemplateList.entity.localizacao"
+                        tree="#{estruturaLocalizacoesPerfilTree}"
+                        icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                        iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+                        label="#{infoxMessages['perfil.localizacao']}" 
+                        styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
+                    <wi:tree id="papel"
+                        assignTo="perfilTemplateList.entity.papel"
+                        tree="#{papelTree}"
+                        icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                        iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+                        label="#{infoxMessages['perfil.papel']}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        value="#{perfilTemplateList.entity.ativo}"
+                        label="#{infoxMessages['field.situacao']}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['perfil.codigo']}"
+                value="#{row.codigo}" />
+            <wi:columnOutputText columnId="descricao"
+                columnHeader="#{infoxMessages['perfil.descricao']}"
+                value="#{row.descricao}" />
+            <wi:columnOutputText columnId="localizacao"
+                columnHeader="#{infoxMessages['perfil.localizacao']}"
+                value="#{row.localizacao.caminhoCompletoFormatado}" />
+            <wi:columnOutputText columnId="papel"
+                columnHeader="#{infoxMessages['perfil.papel']}"
+                value="#{row.papel}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+    <ui:define name="form">
+        <wi:dataForm formId="perfilTemplateForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="codigo"
+                label="#{infoxMessages['perfil.codigo']}"
+                value="#{perfilTemplateCrudAction.instance.codigo}"
+                required="true" rendered="#{not perfilTemplateCrudAction.managed}"/>
+            <wi:outputText id="codigoOut"
+                label="#{infoxMessages['perfil.codigo']}"
+                value="#{perfilTemplateCrudAction.instance.codigo}" 
+                rendered="#{perfilTemplateCrudAction.managed}"/>
+            <wi:inputText id="perfil"
+                label="#{infoxMessages['perfil.descricao']}"
+                value="#{perfilTemplateCrudAction.instance.descricao}"
+                required="true"/>
+            <wi:tree id="localizacao"
+                assignTo="perfilTemplateCrudAction.instance.localizacao"
+                tree="#{estruturaLocalizacoesPerfilTree}"
+                icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+                label="#{infoxMessages['perfilTemplate.localizacao']}"
+                styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
+            <wi:tree id="papel"
+                assignTo="perfilTemplateCrudAction.instance.papel"
+                tree="#{papelTree}"
+                icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+                label="#{infoxMessages['perfil.papel']}" required="true" />
+            <wi:selectSituacaoRadio id="ativo"
+                value="#{perfilTemplateCrudAction.instance.ativo}"
+                label="#{infoxMessages['field.situacao']}" />
+        </wi:dataForm>
+    </ui:define>
+    <ui:define name="tabs" />
+</ui:composition>

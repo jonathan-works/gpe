@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://jboss.org/schema/seam/pdf"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="columnAlign" value="#{wi:get(columnAlign,'left')}" />
+    <p:cell padding="3" horizontalAlignment="#{columnAlign}">
+        <p:list indent="#{wi:get(ident,'10')}">
+            <ui:repeat value="#{value}" var="v">
+                <p:listItem>
+                    <p:text horizontalAlignment="#{columnAlign}"
+                        value="#{v}" />
+                </p:listItem>
+            </ui:repeat>
+            <ui:insert />
+        </p:list>
+    </p:cell>
+
+</ui:composition>

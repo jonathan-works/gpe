@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <ui:param name="parentId" value="#{id}Div" />
+    <ui:param name="values" value="#{event.actions}" />
+    <s:div id="#{parentId}">
+    <ui:decorate template="dataTable.xhtml">
+        <ui:param name="styleClass" value="tabelaVariaveis" />
+        <ui:param name="id" value="#{id}Actions" />
+        <ui:define name="headerToolBar">
+            <a:commandLink action="#{event.addAction()}" execute="@this" render="#{parentId}"
+                limitRender="true">
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
+                    title="#{infoxMessages['process.events.action.new']}" />
+            </a:commandLink>
+        </ui:define>
+        <ui:define name="toolBar">
+            <h:graphicImage title="#{infoxMessages['process.events.action.remove']}"
+                url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}">
+                <a:ajax event="click" listener="#{event.removeAction(row)}"
+                    onbeforesubmit="if(!confirm('Confirma?')) return false;" execute="@this" render="#{parentId}"
+                    limitRender="true" />
+            </h:graphicImage>
+        </ui:define>
+        <ui:define name="columns">
+            <rich:column>
+                <f:facet name="header">#{infoxMessages['process.events.actions']}</f:facet>
+                <a:commandLink execute="@this" action="#{event.setCurrentAction(row)}"
+                    rendered="#{row.event.eventType != 'new-event'}" render="#{parentId}" limitRender="true">
+                    <a:outputPanel>
+                        <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                            <c:set var="pathResource" value="/imagens/jbpm/#{event.getIcon(row)}.gif" />
+                            <h:graphicImage url="#{layoutController.getResourceUrlByPath(pathResource)}" />
+                            <h:outputText
+                                value="#{empty row.name ? messages['process.events.action'].concat(key + 1) : row.name}" />
+                        </h:panelGrid>
+                    </a:outputPanel>
+                </a:commandLink>
+                <wi:selectOneMenu id="events" width="100%" widthDiv="100%"
+                    rendered="#{row.event.eventType == 'new-event'}" items="#{parent.supportedEventTypes}"
+                    value="#{parent.eventType}">
+                    <a:ajax execute="@this" event="change" render="#{parentId}" limitRender="true" />
+                </wi:selectOneMenu>
+            </rich:column>
+        </ui:define>
+    </ui:decorate>
+    <s:div id="#{id}EventDiv">
+        <c:if test="#{!empty event.currentActionType and !empty event.currentAction}">
+            <ui:param name="eventDiv" value="#{id}Div" />
+            <wi:inputText id="#{id}ActionName" value="#{event.currentAction.name}"
+                label="#{infoxMessages['process.events.action.name']}">
+                <a:ajax execute="@this" event="change" render="#{eventDiv}" limitRender="true" />
+            </wi:inputText>
+            <ui:include src="forms/#{event.currentActionType}.xhtml">
+                <ui:param name="widthDiv" value="100%" />
+                <ui:param name="height" value="height:100px" />
+            </ui:include>
+        </c:if>
+    </s:div>
+    </s:div>
+</ui:composition>

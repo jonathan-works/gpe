@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:rich="http://richfaces.org/rich">
+
+    <ui:param name="clearAction"
+        value="#{not empty clearAction ? clearAction : bean.entityListName.concat('.newInstance()')}" />
+    <c:if test="#{empty inForm or not inForm}">
+	    <h:form id="#{formId}">
+	    	<ui:include src="searchFormContent.xhtml" />
+	    </h:form>
+	</c:if>
+	<c:if test="#{inForm}">
+	    <s:div id="#{formId}" rendered="#{inForm}">
+	    	<ui:include src="searchFormContent.xhtml" />
+	    </s:div>
+	</c:if>
+</ui:composition>

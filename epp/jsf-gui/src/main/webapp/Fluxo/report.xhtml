@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    <wi:dataReport
+        title="#{infoxMessages['fluxo.titlePage']}"
+        columns="4"
+        widths="2 5 2 2"
+        headerText="#{fluxoList.criteria}">
+        <wi:reportColumnHeader
+            title="#{infoxMessages['fluxo.codFluxo']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['fluxo.descricao']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['fluxo.publicado']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+        <ui:repeat
+            var="row"
+            value="#{fluxoList.list()}">
+            <wi:reportColumn value="#{row.codFluxo}" />
+            <wi:reportColumn value="#{row.fluxo}" />
+            <wi:reportColumnBoolean value="#{row.publicado}" />
+            <wi:reportColumnSituacao
+                value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+    </wi:dataReport>
+</ui:composition>

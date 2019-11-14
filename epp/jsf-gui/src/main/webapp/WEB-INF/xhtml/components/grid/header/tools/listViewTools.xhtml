@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <s:div>
+        <ui:include src="../include/filterButton.xhtml" />
+        <h:form rendered="#{canEdit}" ajaxSubmit="true"
+            eventsQueue="edit" limitToList="true">
+            <a:commandLink status=":status"
+                render="#{modalPanelId}Region" limitRender="true"
+                action="#{home.newInstance()}"
+                oncomplete="showModal('#{modalPanelId}')">
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
+                    title="Adicionar novo registro" />
+            </a:commandLink>
+        </h:form>
+        <ui:include src="../include/reportButton.xhtml" />
+    </s:div>
+</ui:composition>

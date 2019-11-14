@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    <ui:define name="title">#{infoxMessages['fluxo.titlePage']}</ui:define>
+    <ui:param
+        name="home"
+        value="#{fluxoCrudAction}" />
+    <ui:define name="searchGrid">
+        <wi:dataTable
+            values="#{fluxoList.list(15)}"
+            bean="#{fluxoList}"
+            tableTitle="#{infoxMessages['fluxo.tableTitle']}"
+            id="fluxoList"
+            rowId="#{row.idFluxo}">
+            <ui:define name="searchForm">
+                <wi:searchForm
+                    formId="pesquisarFluxoForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText
+                        id="codFluxo"
+                        label="#{infoxMessages['fluxo.codFluxo']}"
+                        value="#{fluxoList.entity.codFluxo}" />
+                    <wi:inputText
+                        id="descricao"
+                        label="#{infoxMessages['fluxo.descricao']}"
+                        value="#{fluxoList.entity.fluxo}" />
+                    <wi:inputDataPeriodo
+                        id="dataPublicacao"
+                        label="#{infoxMessages['fluxo.dataPublicacao']}"
+                        valueDateFrom="#{fluxoList.entity.dataInicioPublicacao}"
+                        valueDateTo="#{fluxoList.entity.dataFimPublicacao}" />
+                    <wi:selectBooleanMenu
+                        id="publicado"
+                        label="#{infoxMessages['fluxo.publicado']}"
+                        value="#{fluxoList.entity.publicado}" />
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{fluxoList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText
+                columnId="codFluxo"
+                columnHeader="#{infoxMessages['fluxo.codFluxo']}"
+                value="#{row.codFluxo}" />
+            <wi:columnOutputText
+                columnId="fluxo"
+                columnHeader="#{infoxMessages['fluxo.descricao']}"
+                value="#{row.fluxo}" />
+            <wi:columnOutputText
+                columnId="dataInicioPublicacao"
+                columnHeader="#{infoxMessages['fluxo.dataInicioPublicacao']}"
+                value="#{row.dataInicioPublicacao}" />
+            <wi:columnOutputText
+                columnId="dataFimPublicacao"
+                columnHeader="#{infoxMessages['fluxo.dataFimPublicacao']}"
+                value="#{row.dataFimPublicacao}" />
+            <wi:columnBoolean
+                columnId="publicado"
+                columnHeader="#{infoxMessages['fluxo.publicado']}"
+                value="#{row.publicado}" />
+                
+            <wi:columnBoolean columnId="possuirAlteracoes" columnHeader="#{infoxMessages['fluxo.alterado']}" value="#{not (row.definicaoProcesso.xml eq row.definicaoProcesso.xmlExecucao)}"/>
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+            <ui:define name="toolBar">
+                <h:form style="display:inline-block;">
+                    <a:commandLink id="publicar"
+                        action="#{fluxoMergeView.deploy(row)}"
+                        onclick="if (!confirm('#{infoxMessages['fluxo.publicar.confirm']}')) { return false; }"
+                        onbegin="infox.showLoading();"
+                        rendered="#{not empty row.definicaoProcesso.xml and (row.definicaoProcesso.xml ne row.definicaoProcesso.xmlExecucao or not row.publicado)}"
+                        render="fluxoListPanel pageBodyDialogMessage modalDeployForm"
+                        oncomplete="infox.hideLoading();opener.refreshPage();">
+                        <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{layoutController.getResourceUrlByPath('/imagens/deploy.png')}" />
+                    </a:commandLink>
+                <wi:toolBarEdit id="fluxoListedit" />
+                <a:commandLink id="inativar"
+                        action="#{fluxoCrudAction.inactive(row)}"
+                        onclick="return confirm(\'#{infoxMessages['crud.confirmInactivate']}\');"
+                        onbegin="infox.showLoading();"
+                        rendered="#{row.ativo}"
+                        render="fluxoListPanel pageBodyDialogMessage"
+                        oncomplete="infox.hideLoading();">
+                        <wi:toolBarGraphicImage title="#{infoxMessages['button.inactive']}" url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
+                    </a:commandLink>
+                </h:form>
+            </ui:define>
+        </wi:dataTable>
+        
+        <rich:popupPanel id="modalDeploy" width="450" height="450" maxHeight="600" modal="true" header="Problemas na Publicação"
+			onbeforehide="clearMergePointsBundle()">
+			<f:facet name="controls">
+			    <h:graphicImage styleClass="mp-close"
+			        value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+			        onclick="#{rich:component('modalDeploy')}.hide();" />
+			</f:facet>
+			<h:form id="modalDeployForm">
+				<s:div rendered="#{not empty fluxoMergeView.mergePointsBundle and not empty fluxoMergeView.mergePointsBundle.invalidMergePoints}">
+					<h:outputText value="Os nós abaixo são necessários:" />
+					<rich:dataTable value="#{fluxoMergeView.mergePointsBundle.invalidMergePoints}" var="row" styleClass="dtable rf-dt-crud full-sized"
+						rowClasses="zebra-row">
+						<rich:column>
+							<f:facet name="header">Nome do Nó</f:facet>
+							<h:outputText value="#{row.name}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Quantidade de Instâncias</f:facet>
+							<h:outputText value="#{row.count}" />
+						</rich:column>
+					</rich:dataTable>
+					<a:jsFunction name="clearMergePointsBundle" action="#{fluxoMergeView.clear}" execute="@this" render="@form" limitRender="true" />
+					<script>
+						#{rich:component('modalDeploy')}.show();
+					</script>
+				</s:div>
+			</h:form>
+		</rich:popupPanel>
+    </ui:define>
+    <ui:define name="form">
+        <wi:dataForm
+            formId="fluxoForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText
+                id="codFluxo"
+                rendered="#{not fluxoCrudAction.hasProcessoRunning}"
+                value="#{fluxoCrudAction.instance.codFluxo}"
+                required="true"
+                label="#{infoxMessages['fluxo.codFluxo']}"
+                maxlength="30" >
+                <f:validator validatorId="jsfComponentIdValidator" />
+            </wi:inputText>
+            <wi:outputText id="codFluxoReadonly"
+                rendered="#{fluxoCrudAction.hasProcessoRunning}"
+                label="#{infoxMessages['fluxo.codFluxo']}"
+                value="#{fluxoCrudAction.instance.codFluxo}" />
+            <wi:inputText
+                id="descricaoFluxo"
+                rendered="#{not fluxoCrudAction.hasProcessoRunning}"
+                required="true"
+                label="#{infoxMessages['fluxo.descricao']}"
+                value="#{fluxoCrudAction.instance.fluxo}" 
+                maxlength="100" />
+            <wi:outputText id="descricaoFluxoReadonly"
+                rendered="#{fluxoCrudAction.hasProcessoRunning}"
+                label="#{infoxMessages['fluxo.descricao']}"
+                value="#{fluxoCrudAction.instance.fluxo}" />
+            <wi:inputNumber
+                id="prazoDias"
+                label="#{infoxMessages['fluxo.qtPrazo']}"
+                required="true"
+                value="#{fluxoCrudAction.instance.qtPrazo}"
+                maxlength="10" />
+            <wi:inputDate
+                id="dataInicio"
+                label="#{infoxMessages['fluxo.dataInicioPublicacao']}"
+                required="true"
+                value="#{fluxoCrudAction.instance.dataInicioPublicacao}" />
+            <wi:inputDate
+                id="dataFim"
+                label="#{infoxMessages['fluxo.dataFimPublicacao']}"
+                value="#{fluxoCrudAction.instance.dataFimPublicacao}" />
+            <wi:outputText id="statusPublicacao" rendered="#{fluxoCrudAction.managed}" label="#{infoxMessages['fluxo.publicado']}"
+                value="#{fluxoCrudAction.instance.publicado ? 'Sim' : 'Não'}" />
+            <ui:include src="atributos.xhtml" />
+            <wi:selectSituacaoRadio
+                id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{fluxoCrudAction.instance.ativo}" />
+
+            <ui:define name="buttons">
+                <a:commandButton value="#{infoxMessages['crud.persist']}" action="#{fluxoCrudAction.persist}" execute="@form"
+					limitRender="true" render=":pageBodyDialogMessage :defaultTabPanel" rendered="#{not fluxoCrudAction.managed}"
+					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
+					
+				<a:commandButton value="#{infoxMessages['crud.update']}" action="#{fluxoCrudAction.update}" execute="@form"
+					limitRender="true" render="pageBodyDialogMessage @form" rendered="#{fluxoCrudAction.managed}"
+					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
+					
+                <a:commandButton value="#{infoxMessages['crud.new']}" actionListener="#{jsfUtil.clearForm}"  
+                	action="#{fluxoCrudAction.newInstance}" execute="@this"
+					limitRender="true" render=":pageBodyDialogMessage :defaultTabPanel"
+					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
+					
+                <wi:commandButton id="botaoGerarReplica" action="fluxoCrudAction.gerarReplica()" reRender="modalReplicaForm"
+                    rendered="#{fluxoCrudAction.managed}" value="#{infoxMessages['fluxo.duplicar']}" oncomplete="#{rich:component('modalReplica')}.show()"/>
+     
+                <a:commandButton id="exportButton" styleClass="buttons" type="button" action="#{jsfUtil.applyLastPhaseFlashAction}"
+                    oncomplete="infox.openPopUp('_self', '#{pathResolver.contextPath}/Fluxo/definicao/exportarFluxo.seam','1024');"
+                    execute="@this" render="@this" rendered="#{fluxoCrudAction.canExportar()}" value="#{infoxMessages['fluxo.exportar']}">
+                	<f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
+                </a:commandButton>
+                
+                <wi:commandButton
+                    id="definicao"
+                    value="#{infoxMessages['fluxo.definicao']}"
+                    rendered="#{fluxoCrudAction.managed}"
+                    onclick="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?cdFluxo=#{fluxoController.fluxo.codFluxo}',1300,850); return false;">
+                </wi:commandButton>
+                <wi:commandButton id="importarFluxo" value="#{infoxMessages['fluxo.importar']}" onclick="#{rich:component('modalImportFluxo')}.show(); return false;"
+                	rendered="#{fluxoCrudAction.managed}"/>
+            </ui:define>
+        </wi:dataForm>
+        <rich:popupPanel id="modalImportFluxo" width="450" height="450" maxHeight="600" modal="true" header="#{infoxMessages['fluxo.importar']}"
+			onbeforehide="clearFluxoImportMessages()">
+		    <f:facet name="controls">
+		        <h:graphicImage styleClass="mp-close"
+		            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+		            onclick="#{rich:component('modalImportFluxo')}.hide();" />
+		    </f:facet>
+		    <c:set property="fluxo" target="#{fluxoUploader}" value="#{fluxoCrudAction.instance}" />
+		    <h:form enctype="multipart/form-data">
+		    	<a:jsFunction name="clearFluxoImportMessages" action="#{fluxoUploader.clearMessages}" execute="@this" limitRender="true" 
+		    		render="mensagensImportacaoFluxo importarButtonDiv" oncomplete="#{rich:component('fluxoFileUpload')}.clear()"/>
+		    	<i:selectOneRadio id="selectTipoArquivoImport" required="true" label="#{infoxMessages['fluxo.importar.tipoArquivo']}"
+                       items="#{selectItemFunctions.createFromString('true:fluxo.importar.bpmn,false:fluxo.importar.epp')}"
+                       value="#{fluxoUploader.tipoImportBpmn}" ajax="true" render="@(.panelUploadFile)" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+			    <p:outputLabel styleClass="panelUploadFile">
+				    <rich:fileUpload id="fluxoFileUpload" execute="@this" limitRender="true" acceptedTypes="#{fluxoUploader.acceptedTypes}"
+				          tipMessage="#{infoxMessages['fluxo.importar.tipMessage']}"
+				          maxFilesQuantity="1" fileUploadListener="#{fluxoUploader.processFileUpload}"
+				          immediateUpload="true" listWidth="260px" listHeight="58px"
+				          noDuplicate="true" addLabel="#{infoxMessages['button.add']}"
+				          clearAllLabel="#{infoxMessages['fileUpload.clearAll']}"
+				          clearLabel="#{infoxMessages['fileUpload.clear']}"
+				          uploadLabel="#{infoxMessages['fileUpload.upload']}"
+				          doneLabel="#{infoxMessages['fileUpload.done']}"
+				          sizeExceededLabel="#{infoxMessages['fileUpload.error.size']}"
+				          validatorMessage="#{infoxMessages['fileUpload.error.validator']}"
+				          requiredMessage="#{infoxMessages['fileUpload.error.required']}"
+				          ontyperejected="new infox.Messages().dialog(\'#{infoxMessages['fluxo.importar.error.fileExtension']}\')"
+				          render="importarFluxoButtonDiv mensagensImportacaoFluxo">
+				          <f:facet name="label">
+				            <h:outputText value="{_KB}KB de {KB}KB" />
+				          </f:facet>
+					</rich:fileUpload>
+				</p:outputLabel>
+				<s:div id="mensagensImportacaoFluxo">
+			        <rich:panel header="Problemas na Importação" rendered="#{not empty fluxoUploader.mensagens}">
+			        	<ul>
+			        		<ui:repeat value="#{fluxoUploader.mensagens}" var="mensagem">
+				            	<li><h:outputText value="#{mensagem}" /></li>
+			            	</ui:repeat>
+			          	</ul>
+			        </rich:panel>
+			      </s:div>
+				<p:outputPanel layout="block" id="importarFluxoButtonDiv">
+					<a:commandButton value="#{infoxMessages['fluxo.importar']}" action="#{fluxoUploader.importar}" execute="@this"
+						limitRender="true" render="pageBodyDialogMessage importarFluxoButtonDiv mensagensImportacaoFluxo" 
+						oncomplete="infox.hideLoading(); closeModalImportarFluxo();"
+						onclick="if (!confirm('Atenção: ao importar o fluxo, as configurações do fluxo antigo serão perdidas. Deseja continuar?')) return false; infox.showLoading();"
+						rendered="#{fluxoUploader.podeImportar()}" styleClass="buttons"/>
+					<script>
+						function closeModalImportarFluxo() {
+							if (#{fluxoUploader.fluxoImportado}) {
+								clearFluxoImportMessages();
+								#{rich:component('modalImportFluxo')}.hide();
+							}
+						}
+					</script>
+				</p:outputPanel>
+			</h:form>
+		</rich:popupPanel>
+		
+		<rich:popupPanel id="modalReplica" width="450" height="200" maxHeight="200" modal="true" header="#{infoxMessages['fluxo.exportar']}">
+		    <f:facet name="controls">
+		        <h:graphicImage styleClass="mp-close"
+		            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+		            onclick="#{rich:component('modalReplica')}.hide();" />
+		    </f:facet>
+		    <h:form id="modalReplicaForm">
+		    	<wi:inputText
+	                id="codFluxo"
+	                value="#{fluxoCrudAction.replica.codFluxo}"
+	                required="true"
+	                label="#{infoxMessages['fluxo.codFluxo']}"
+	                maxlength="30">
+                	<f:validator validatorId="jsfComponentIdValidator" />
+	            </wi:inputText>
+	            <wi:inputText
+	                id="descricaoFluxo"
+	                required="true"
+	                label="#{infoxMessages['fluxo.descricao']}"
+	                value="#{fluxoCrudAction.replica.fluxo}" 
+	                maxlength="100" />
+	            <div />
+				<a:commandButton value="#{infoxMessages['fluxo.exportar']}" action="#{fluxoCrudAction.gravarReplica}" execute="@form"
+					limitRender="true" render="pageBodyDialogMessage @form fluxoForm" 
+					oncomplete="infox.hideLoading(); closeModalBpmn();"
+					onclick="infox.showLoading();"
+					styleClass="buttons"/>
+				<script>
+					function closeModalBpmn() {
+						if (#{empty fluxoCrudAction.replica}) {
+							#{rich:component('modalReplica')}.hide();
+						}
+					}
+				</script>
+			</h:form>
+		</rich:popupPanel>
+    </ui:define>
+    <ui:define name="tabs">
+        <ui:param
+            name="action"
+            value="#{fluxoPapelAction}" />
+        <infox:tab
+            id="fluxoPapelTab"
+            rendered="#{home.isManaged()}"
+            action="#{action.init()}"
+            title="#{infoxMessages['fluxoPapel.titleTab']}"
+            name="fluxoPapelTab">
+            <wi:dataForm
+                formId="fluxoPapelForm"
+                formTitle="#{infoxMessages['form.title']}">
+                <wi:tree
+                    id="papelTree"
+                    label="#{infoxMessages['fluxoPapel.papel']}"
+                    assignTo="fluxoPapelAction.instance.papel"
+                    tree="#{action.papelTreeHandler}"
+                    required="true" />
+                <ui:define name="buttons">
+                    <wi:commandButton
+                        id="saveButton"
+                        action="fluxoPapelAction.save"
+                        reRender="fluxoPapelForm, fluxoPapelDiv, pageBodyDialogMessage"
+                        value="#{infoxMessages['crud.persist']}" />
+                </ui:define>
+            </wi:dataForm>
+            <s:div id="fluxoPapelDiv">
+                <rich:dataTable
+                    id="fluxoPapelTable"
+                    value="#{action.fluxoPapelList}"
+                    var="row"
+                    rows="10">
+                    <rich:column>
+                        <wi:toolBarRemove
+                            id="toolBarRemove"
+                            reRender="fluxoPapelDiv"
+                            actionRemove="fluxoPapelAction.remove(row)" />
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">
+                            <h:outputText
+                                value="#{infoxMessages['fluxoPapel.papel']}" />
+                        </f:facet>
+                        <h:outputText value="#{row.papel}" />
+                    </rich:column>
+                </rich:dataTable>
+                <rich:dataScroller
+                    id="dsFluxoPapelTable"
+                    for="fluxoPapelTable"
+                    lastPageMode="full"
+                    align="left"
+                    renderIfSinglePage="false" />
+            </s:div>
+        </infox:tab>
+        <infox:tab
+            id="natCatFluxoLoc"
+            name="natCatFluxoLoc"
+            rendered="#{home.managed}"
+            title="#{infoxMessages['localizacao.titleView']}"
+            action="#{fluxoCrudAction.onClicknatCatFluxoLocTab}">
+            <s:div id="natCatFluxoLocDiv">
+                <div>
+                    <wi:dataForm
+                        formId="natCatFluxoLocForm"
+                        formTitle="#{infoxMessages['form.title']}: #{fluxoCrudAction.instance}">
+                        <wi:selectOneMenuEntity
+                            id="naturezaCategoriaFluxo"
+                            value="#{fluxoLocalizacaoCrudAction.naturezaCategoriaFluxo}"
+                            required="true"
+                            label="#{infoxMessages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
+                            showLabelSelecione="true"
+                            items="#{fluxoLocalizacaoCrudAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoCrudAction.instance)}" />
+                        <wi:tree
+                            id="localizacao"
+                            assignTo="fluxoLocalizacaoCrudAction.localizacao"
+                            label="#{infoxMessages['localizacao.titleView']}"
+                            required="true"
+                            tree="#{localizacaoFullTree}" 
+                            styleClass="#{empty item.entity.estruturaPai ? 'tree-notselectable' : ''}" />
+                        <ui:define name="buttons">
+                            <wi:commandButton
+                                id="saveButton"
+                                action="fluxoLocalizacaoCrudAction.save"
+                                reRender="natCatFluxoLocDiv, pageBodyDialogMessage"
+                                value="#{infoxMessages['crud.persist']}" />
+                        </ui:define>
+                    </wi:dataForm>
+                </div>
+                <s:div id="dtable">
+                    <wi:dataTable
+                        values="#{natCatFluxoLocalizacaoList.list(15)}"
+                        bean="#{natCatFluxoLocalizacaoList}"
+                        tableTitle="#{infoxMessages['natCatFluxoLocalizacao.tableTitle']}"
+                        id="natCatFluxoLocalizacaoList"
+                        rowId="#{row.idNatCatFluxoLocalizacao}"
+                        actionInactive="fluxoLocalizacaoCrudAction.inactive"
+                        showSearchForm="false" panelStyle="margin-top: 1em;">
+                        <ui:define name="searchForm" />
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <wi:toolBarRemove
+                                actionRemove="fluxoLocalizacaoCrudAction.remove(row)"
+                                reRender="natCatFluxoLocDiv pageBodyDialogMessage" />
+                        </ui:define>
+                        <wi:columnOutputText
+                            columnId="naturezaCategoriaFluxo.natureza"
+                            columnHeader="#{infoxMessages['naturezaCategoriaFluxo.natureza']}"
+                            columnWidth="25%"
+                            value="#{row.naturezaCategoriaFluxo.natureza}" />
+                        <wi:columnOutputText
+                            columnId="naturezaCategoriaFluxo.categoria"
+                            columnHeader="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"
+                            columnWidth="20%"
+                            value="#{row.naturezaCategoriaFluxo.categoria}" />
+                        <wi:columnOutputText
+                            columnId="naturezaCategoriaFluxo.fluxo"
+                            columnHeader="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
+                            columnWidth="20%"
+                            value="#{row.naturezaCategoriaFluxo.fluxo}" />
+                        <wi:columnOutputText
+                            columnId="localizacao"
+                            columnHeader="#{infoxMessages['localizacao.titleView']}"
+                            columnWidth="20%"
+                            value="#{row.localizacao}" />
+                    </wi:dataTable>
+                </s:div>
+            </s:div>
+        </infox:tab>
+        <infox:tab
+	        name="modeloPastasTab"
+	        id="modeloPastasTab"
+	        title="#{infoxMessages['modeloPasta.tabTitle']}"
+	        rendered="#{home.isManaged()}"
+            action="#{modeloPastaRestricaoAction.init()}">
+	        <ui:include src="definicao/modeloPastaRestricao.xhtml" />	        
+      	</infox:tab>
+      	<infox:tab
+	        name="definicaoVariaveisTab"
+	        id="definicaoVariaveisTab"
+	        title="#{infoxMessages['processBuilder.definicaoVariavelProcesso']}"
+	        rendered="#{fluxoCrudAction.managed}"
+            action="#{definicaoVariavelProcessoAction2.init()}">
+	        <ui:include src="definicaoVariavelProcesso2.xhtml" />	        
+      	</infox:tab>
+
+        <infox:tab 
+            name="monitorTab"
+            id="monitorTab"
+            title="#{infoxMessages['monitorProcesso.title']}"
+            rendered="#{home.isManaged() and not empty home.instance.definicaoProcesso.svgExecucao}"
+            action="#{monitorProcessoView.selectFluxo()}">
+            <ui:include src="definicao/monitorProcesso.xhtml" />
+        </infox:tab>
+        
+        
+        <c:forEach items="#{fluxoCrudAction.pagesExtensao}" var="pagina">
+	        <ui:include src="#{pagina}" />
+        </c:forEach>
+        
+        
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+      	<infox:tab
+            id="statusProcessoFluxo"
+            name="statusProcessoFluxo"
+            rendered="#{home.managed and not fluxoCrudAction.replica}"
+            title="#{infoxMessages['statusProcesso.titleView']}">
+            <s:div id="statusProcessoFluxoDiv">
+                <div>
+                    <wi:dataForm
+                        formId="statusProcessoFluxoForm"
+                        formTitle="#{infoxMessages['form.title']}">
+                        <i:selectOneMenu
+                            id="statusProcessoFluxo"
+                            value="#{fluxoStatusProcessoView.statusProcesso}"
+                            required="true"
+                            converterId="br.com.infox.jsf.converter.EntityConverter"
+                            label="#{infoxMessages['statusProcesso.statusFluxo']}"
+                            showLabelSelecione="true"
+                            items="#{fluxoStatusProcessoView.statusProcessosNaoRelacionados(fluxoCrudAction.instance)}" />
+                        <ui:define name="buttons">
+                            <wi:commandButton
+                                id="saveButton"
+                                action="#{fluxoStatusProcessoView.incluir(fluxoCrudAction.instance)}"
+                                reRender="statusProcessoFluxoDiv, pageBodyDialogMessage"
+                                value="#{infoxMessages['crud.persist']}" />
+                        </ui:define>
+                    </wi:dataForm>
+                </div>
+                <s:div id="statusProcessoDiv">
+                    <wi:dataTable
+                        values="#{fluxoStatusProcessoView.statusProcessosRelacionados(fluxoCrudAction.instance)}"
+                        bean="#{statusProcessoList}"
+                        tableTitle="#{infoxMessages['statusProcesso.tableTitle']}"
+                        id="statusProcessoList"
+                        rowId="#{row.idStatusProcesso}"
+                        actionInactive="fluxoStatusProcessoView.inactive"
+                        hideOrder="true"
+                        showSearchForm="false" panelStyle="margin-top: 1em;">
+                        <ui:define name="searchForm" />
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <wi:toolBarRemove
+                                actionRemove="fluxoStatusProcessoView.remover(fluxoCrudAction.instance, row)"
+                                reRender="statusProcessoFluxoDiv pageBodyDialogMessage" />
+                        </ui:define>
+                        <wi:columnOutputText
+                            columnId="fluxoStatusProcesso.nome"
+                            columnHeader="#{infoxMessages['statusProcesso.nome']}"
+                            columnWidth="25%"
+                            value="#{row.nome}" />
+                        <wi:columnOutputText
+                            columnId="fluxoStatusProcesso.descricao"
+                            columnHeader="#{infoxMessages['statusProcesso.descricao']}"
+                            columnWidth="20%"
+                            value="#{row.descricao}" />
+                    </wi:dataTable>
+                </s:div>
+            </s:div>
+        </infox:tab>
+    </ui:define>
+    
+</ui:composition>
+

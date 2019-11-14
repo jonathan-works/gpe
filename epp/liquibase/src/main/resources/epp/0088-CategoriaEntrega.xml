@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="paulofilho" id="1" >
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_categoria_entrega" />
+    	<createTable tableName="tb_categoria_entrega">
+    		<column name="id_categoria_entrega" type="bigint">
+    			<constraints nullable="false" primaryKey="true" primaryKeyName="pk_categoria_entrega"/>
+    		</column>
+            <column name="cd_categoria_entrega" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ds_categoria_entrega" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_categoria_entrega_pai" type="bigint">
+                <constraints foreignKeyName="fk_tb_categoria_entrega_01" references="tb_categoria_entrega(id_categoria_entrega)"/>
+            </column>
+    	</createTable>
+    	<createIndex tableName="tb_categoria_entrega" indexName="idx_cd_categoria_entrega" unique="true">
+    		<column name="cd_categoria_entrega" />
+    	</createIndex>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="2" >
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_categoria_entrega_item" />
+    	<createTable tableName="tb_categoria_entrega_item">
+    		<column name="id_categoria_entrega_item" type="bigint">
+    			<constraints nullable="false" primaryKey="true" primaryKeyName="pk_categoria_entrega_item"/>
+    		</column>
+            <column name="cd_categoria_entrega_item" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ds_categoria_entrega_item" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_categoria_entrega" type="bigint">
+                <constraints foreignKeyName="fk_categoria_entrega_item_01" references="tb_categoria_entrega(id_categoria_entrega)"/>
+            </column>
+    	</createTable>
+    	<createIndex tableName="tb_categoria_entrega_item" indexName="idx_cd_categoria_entrega_item" unique="true">
+    		<column name="cd_categoria_entrega_item" />
+    	</createIndex>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="3" >
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_categoria_item_relac" />
+    	<createTable tableName="tb_categoria_item_relac">
+    		<column name="id_categoria_item_relac" type="bigint">
+    			<constraints nullable="false" primaryKey="true" primaryKeyName="pk_categoria_item_relac"/>
+    		</column>
+            <column name="id_categoria_item_filho" type="bigint">
+                <constraints foreignKeyName="fk_tb_categoria_item_rel_01" references="tb_categoria_entrega_item(id_categoria_entrega_item)"/>
+            </column>
+            <column name="id_categoria_item_pai" type="bigint">
+                <constraints foreignKeyName="fk_tb_categoria_item_rel_02" references="tb_categoria_entrega_item(id_categoria_entrega_item)"/>
+            </column>
+    	</createTable>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="4" >
+        <createIndex indexName="ix_categoria_item_relac_001" tableName="tb_categoria_item_relac" unique="true">
+            <column name="id_categoria_item_filho" type="bigint"/>
+            <column name="id_categoria_item_pai" type="bigint" />
+        </createIndex>
+    </changeSet>
+    
+    
+</databaseChangeLog>

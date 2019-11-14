@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
+
+	<ui:param name="id" value="#{empty id ? 'id' : id}"></ui:param>
+	<ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+	<ui:param name="title" value="#{empty title ? '' : title}"></ui:param>
+	
+	<rich:panel header="#{title}" rendered="#{rendered}">
+		<rich:dataTable value="#{list}" id="#{id}documentosResposta"
+			var="bean" styleClass="dtable rf-dt-crud">
+			<rich:column styleClass="dt-toolbar-col">
+				<h:form>
+					<a:commandLink rendered="true"
+                        action="#{jsfUtil.applyLastPhaseFlashAction}"
+                        oncomplete="#{fileDownloader.getWindowOpen(bean.documentoBin)}">
+                        <f:setPropertyActionListener value="#{bean.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+					</a:commandLink>
+				</h:form>
+			</rich:column>
+			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{bean.numeroDocumento}" />
+			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
+			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
+			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.documentoBin.sizeFormatado}" />
+		</rich:dataTable>
+	</rich:panel>
+</ui:composition>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <div id="postit" class="note" style="display: inline-block">
+        <div class="body">
+            <b>#{task.name}</b>
+        </div>
+        <div class="author">Por:
+            #{userHandler.getUsuarioByTaskInstance(task)}</div>
+        <span class="date">Em: <h:outputText
+                value="#{task.start}">
+                <s:convertDateTime />
+            </h:outputText></span>
+        <h:outputText value="#{variableHandler.getNumeroDocumentoTarefa(task.id)}" />
+    </div>
+
+</ui:composition>

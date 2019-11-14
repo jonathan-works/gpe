@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition 
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:param name="title" value="Modelo de Documento" />
+
+	<wi:dataReport title="#{title}"
+				   columns="3"
+				   widths="4 4 1"
+				   headerText="#{modeloDocumentoList.criteria}">
+				   
+		<wi:reportColumnHeader title="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['modeloDocumento.tipoModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['field.situacao']}"/>
+				
+		<ui:repeat var="row" value="#{modeloDocumentoList.list()}">
+			<wi:reportColumn value="#{row.tituloModeloDocumento}" />
+			<wi:reportColumn value="#{row.tipoModeloDocumento}" />
+			<wi:reportColumnSituacao value="#{row.ativo}"
+							 columnAlign="center"/>
+		</ui:repeat>
+
+	</wi:dataReport>
+	
+</ui:composition>

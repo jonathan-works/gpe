@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['tipoRelacionamentoProcesso.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{tipoRelacionamentoProcessoCrudAction}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable
+            id="tipoRelacionamentoProcessoList"
+            rowId="#{row.idTipoRelacionamento}"
+            bean="#{tipoRelacionamentoProcessoList}"
+            values="#{tipoRelacionamentoProcessoList.list(15)}"
+            tableTitle="#{infoxMessages['tipoRelacionamentoProcesso.tableTitle']}"
+        >
+            <ui:define name="headerToolBar" />
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarTipoRelacionamentoProcessoForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigo"
+                        value="#{tipoRelacionamentoProcessoList.entity.codigo}"
+                        label="#{infoxMessages['tipoRelacionamentoProcesso.codigo']}" />
+                    <wi:inputText id="tipoRelacionamento"
+                        value="#{tipoRelacionamentoProcessoList.entity.tipoRelacionamento}"
+                        label="#{infoxMessages['tipoRelacionamentoProcesso.tipoRelacionamento']}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{tipoRelacionamentoProcessoList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText
+                columnId="codigo"
+                columnHeader="#{infoxMessages['tipoRelacionamentoProcesso.codigo']}"
+                value="#{row.codigo}"
+            />
+            <wi:columnOutputText
+                columnId="tipoRelacionamento"
+                columnHeader="#{infoxMessages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
+                value="#{row.tipoRelacionamento}"
+            />
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                columnWidth="15%"
+                value="#{row.ativo}"
+            />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="tipoRelacionamentoProcessoForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText
+                id="codigo"
+                label="#{infoxMessages['tipoRelacionamentoProcesso.codigo']}"
+                disabled="#{tipoRelacionamentoProcessoCrudAction.managed}"
+                value="#{tipoRelacionamentoProcessoCrudAction.instance.codigo}"
+                
+                required="true"
+                maxlength="30" />
+            <wi:inputText
+                id="tipoRelacionamento"
+                label="#{infoxMessages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
+                value="#{tipoRelacionamentoProcessoCrudAction.instance.tipoRelacionamento}"
+                required="true"
+                maxlength="100" />
+            <wi:selectSituacaoRadio
+                id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{tipoRelacionamentoProcessoCrudAction.instance.ativo}"
+            />
+        </wi:dataForm>
+    </ui:define>
+
+</ui:composition>

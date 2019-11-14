@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui" xmlns:i="http://java.sun.com/jsf/composite/infox">
+    
+    <rich:collapsiblePanel id="activityBehaviorPanel" expanded="#{not activity.activityNodeType.none}" switchType="client" 
+    	header="#{infoxMessages['process.def.activity.loopCharacteristics']}">
+    	
+    	<h:form>
+    		<i:selectOneMenu id="loopType"  value="#{nodeFitter.nodeHandler.activityNodeType}"
+        		items="#{nodeFitter.nodeHandler.activityNodeTypes}" itemLabel="#{item.label}" label="#{infoxMessages['process.def.activity.loop.type']}" 
+        		hideNoSelectionLabel="true"	ajax="true" render="@(.activityBehaviorPanel) @form" execute="@this" onstart="infox.showLoading();" 
+        		oncomplete="infox.hideLoading();" listener="#{nodeFitter.nodeHandler.onChangeActivityNodeType}"/>
+        		
+        	<i:help id="variaveisToolTip" rendered="#{not nodeFitter.nodeHandler.activityNodeType.none}" 
+        		style="display:inline-block;">
+        		<div><h:outputText value="Variáveis:" /></div>
+				<ui:repeat var="variavel" value="#{nodeFitter.nodeHandler.activityNodeType.variables}">
+					<div>
+						<h:outputText value="#{variavel.key} - " style="font-weight: bold;"/>
+						<h:outputText value="#{variavel.value}"/>
+					</div>
+				</ui:repeat>
+        	</i:help>
+    	</h:form>
+        
+        <p:outputPanel styleClass="activityBehaviorPanel">
+            
+            <ui:fragment rendered="#{nodeFitter.nodeHandler.activityNodeType.multiInstance}">
+                <ui:include src="multiInstance.xhtml" />
+            </ui:fragment>
+            
+            <ui:fragment rendered="#{nodeFitter.nodeHandler.activityNodeType.loop}">
+                <ui:include src="loop.xhtml" />
+            </ui:fragment>
+            
+        </p:outputPanel>
+        
+    </rich:collapsiblePanel>
+</ui:composition>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition 
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<wi:dataReport title="#{historicoModeloDocumento.reportTitle}"
+				   columns="3"
+				   widths="4 4 1"
+				   headerText="#{historicoModeloDocumentoList.criteria}">
+				   
+		<wi:reportColumnHeader title="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['historicoModeloDocumento.usuario']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['historicoModeloDocumento.dataAlteracao']}"/>
+				
+		<ui:repeat var="row" value="#{historicoModeloDocumentoList.list()}">
+			<wi:reportColumn value="#{row.tituloModeloDocumento}" />
+			<wi:reportColumn value="#{row.usuarioAlteracao}" />
+			<wi:reportColumn value="#{row.dataAlteracao}" />
+		</ui:repeat>
+
+	</wi:dataReport>
+	
+</ui:composition>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    
+    <changeSet author="victorpasqualino" id="1" > 
+        <addColumn tableName="tb_caixa">
+        	<column name="cd_node_key" type="NVARCHAR(255)">
+        		<constraints nullable="false"/>
+        	</column>
+        	<column name="cd_node_key_anterior" type="NVARCHAR(255)"/>
+    	</addColumn>
+
+    	<createIndex indexName="idx_caixa_01" tableName="tb_caixa" unique="false">
+        	<column name="cd_node_key" type="NVARCHAR(255)"/>
+    	</createIndex>
+
+    	<createIndex indexName="idx_caixa_02" tableName="tb_caixa" unique="false">
+        	<column name="cd_node_key_anterior" type="NVARCHAR(255)"/>
+    	</createIndex>
+
+    	<createIndex indexName="idx_caixa_03" tableName="tb_caixa" unique="true">
+        	<column name="cd_node_key" type="NVARCHAR(255)"/>
+        	<column name="cd_node_key_anterior" type="NVARCHAR(255)"/>
+    	</createIndex>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="2">
+        <sql dbms="mssql">
+            UPDATE caixa
+            SET caixa.cd_node_key = node.KEY_
+            FROM tb_caixa caixa
+            INNER JOIN tb_tarefa tarefa ON tarefa.id_tarefa = caixa.id_tarefa
+            INNER JOIN tb_tarefa_jbpm tj ON tj.id_tarefa = tarefa.id_tarefa
+            INNER JOIN JBPM_TASK task ON task.ID_ = tj.id_jbpm_task
+            INNER JOIN JBPM_NODE node ON node.ID_ = task.TASKNODE_ or node.ID_ = task.STARTSTATE_ 
+            WHERE node.KEY_ IS NOT NULL;
+        </sql>
+        <sql dbms="mssql">
+            UPDATE caixa
+            SET caixa.cd_node_key_anterior = node.KEY_
+            FROM tb_caixa caixa
+            INNER JOIN JBPM_NODE node ON node.ID_ = caixa.id_node_anterior 
+            WHERE node.KEY_ IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3" dbms="mssql">
+
+        <dropIndex indexName="idx_tb_caixa1" tableName="tb_caixa"/>
+        <dropIndex indexName="tb_caixa_id_tarefa_id_node_anterior_key" tableName="tb_caixa"/>
+        <dropIndex indexName="tb_caixa_id_tarefa_id_node_anterior_key1" tableName="tb_caixa"/>
+        <dropIndex indexName="tb_caixa_id_tarefa_id_node_anterior_key2" tableName="tb_caixa"/>
+        <dropIndex indexName="tb_caixa_nm_caixa_id_tarefa_key" tableName="tb_caixa"/>
+        <dropIndex indexName="tb_caixa_nm_caixa_id_tarefa_key1" tableName="tb_caixa"/>
+        <dropIndex indexName="tb_caixa_nm_caixa_id_tarefa_key2" tableName="tb_caixa"/>
+
+        <dropForeignKeyConstraint baseTableName="tb_caixa" constraintName="tb_caixa_id_tarefa_fkey"/>
+        <dropColumn columnName="id_tarefa" tableName="tb_caixa"/>
+
+        <dropForeignKeyConstraint baseTableName="tb_caixa" constraintName="tb_caixa_id_node_anterior_fkey"/>
+        <dropColumn columnName="id_node_anterior" tableName="tb_caixa"/>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3-1" dbms="postgresql">
+
+        <dropIndex indexName="idx_tb_caixa1" tableName="tb_caixa"/>
+        <dropUniqueConstraint constraintName="tb_caixa_id_tarefa_id_node_anterior_key" tableName="tb_caixa"/>
+        <dropUniqueConstraint constraintName="tb_caixa_id_tarefa_id_node_anterior_key1" tableName="tb_caixa"/>
+        <dropUniqueConstraint constraintName="tb_caixa_id_tarefa_id_node_anterior_key2" tableName="tb_caixa"/>
+        <dropUniqueConstraint constraintName="tb_caixa_nm_caixa_id_tarefa_key" tableName="tb_caixa"/>
+        <dropUniqueConstraint constraintName="tb_caixa_nm_caixa_id_tarefa_key1" tableName="tb_caixa"/>
+        <dropUniqueConstraint constraintName="tb_caixa_nm_caixa_id_tarefa_key2" tableName="tb_caixa"/>
+
+        <dropForeignKeyConstraint baseTableName="tb_caixa" constraintName="tb_caixa_id_tarefa_fkey"/>
+        <dropColumn columnName="id_tarefa" tableName="tb_caixa"/>
+
+        <dropForeignKeyConstraint baseTableName="tb_caixa" constraintName="tb_caixa_id_node_anterior_fkey"/>
+        <dropColumn columnName="id_node_anterior" tableName="tb_caixa"/>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3" dbms="oracle">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="idx_tb_caixa1" tableName="tb_caixa" />
+        </preConditions>
+        <dropIndex indexName="idx_tb_caixa1" tableName="tb_caixa"/>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3-1" dbms="oracle">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="fk_caixa_01" tableName="tb_caixa" />
+        </preConditions>
+        <dropUniqueConstraint constraintName="fk_caixa_01" tableName="tb_caixa"/>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3-2" dbms="oracle">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="tb_caixa_id_tarefa_fkey" />
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="tb_caixa" constraintName="tb_caixa_id_tarefa_fkey"/>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3-3" dbms="oracle">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="tb_caixa_id_node_anterior_fkey" />
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="tb_caixa" constraintName="tb_caixa_id_node_anterior_fkey"/>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3-4" dbms="oracle">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="fk_caixa_02" tableName="tb_caixa" />
+        </preConditions>
+        <dropUniqueConstraint constraintName="fk_caixa_02" tableName="tb_caixa"/>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3-5" dbms="oracle">
+        <preConditions onFail="MARK_RAN">
+            <columnExists columnName="id_tarefa" tableName="tb_caixa"/>
+        </preConditions>
+        <dropColumn columnName="id_tarefa" tableName="tb_caixa"/>
+    </changeSet>
+        
+    <changeSet author="gabriel" id="3-6" dbms="oracle">
+        <preConditions onFail="MARK_RAN">
+            <columnExists columnName="id_node_anterior" tableName="tb_caixa"/>
+        </preConditions>
+        <dropColumn columnName="id_node_anterior" tableName="tb_caixa"/>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="4" >
+        <dropView viewName="vs_situacao_processo"/>
+    </changeSet>
+    
+</databaseChangeLog>

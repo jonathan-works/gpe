@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="paulofilho" id="1">
+        <addColumn tableName="tb_tipo_relaciona_processo">
+            <column name="cd_tipo_relaciona_processo" type="nvarchar(30)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="2">
+        <sql>
+            update tb_tipo_relaciona_processo set
+            cd_tipo_relaciona_processo = ds_tipo_relaciona_processo
+        </sql>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="3">
+        <addNotNullConstraint tableName="tb_tipo_relaciona_processo"
+            columnName="cd_tipo_relaciona_processo" columnDataType="nvarchar(30)" />
+        <createIndex tableName="tb_tipo_relaciona_processo"
+            indexName="idx_cd_tipo_relaciona_processo" unique="true">
+            <column name="cd_tipo_relaciona_processo" type="nvarchar(30)" />
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

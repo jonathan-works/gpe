@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+  <changeSet author="erikliberal" dbms="mssql, postgresql, oracle" id="1">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="tb_serie_eventos"/>
+        <sequenceExists sequenceName="sq_serie_eventos"/>
+        <columnExists columnName="dt_inicio" tableName="tb_calendario_eventos"/>
+        <columnExists columnName="dt_fim" tableName="tb_calendario_eventos"/>
+        <columnExists columnName="id_serie_eventos" tableName="tb_calendario_eventos"/>
+      </not>
+      <columnExists columnName="dt_dia" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_mes" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_ano" tableName="tb_calendario_eventos"/>
+    </preConditions>
+    <createSequence minValue="1" sequenceName="sq_serie_eventos" startValue="1"/>
+
+    <createTable tableName="tb_serie_eventos">
+      <column name="id_serie_eventos" type="BIGINT">
+        <constraints primaryKey="true" primaryKeyName="pk_serie_eventos"/>
+      </column>
+      <column defaultValue="A" name="tp_serie" type="NCHAR(1)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addColumn tableName="tb_calendario_eventos">
+      <column name="dt_inicio" type="timestamp"></column>
+      <column name="dt_fim" type="timestamp"></column>
+      <column defaultValue="F" name="tp_evento" type="NCHAR(1)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="id_serie_eventos" type="bigint">
+        <constraints foreignKeyName="fk_tb_calendario_eventos_001" nullable="true" references="tb_serie_eventos(id_serie_eventos)"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="erikliberal" dbms="postgresql" id="2">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="tb_serie_eventos"/>
+      <sequenceExists sequenceName="sq_serie_eventos"/>
+      <columnExists columnName="dt_inicio" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="id_serie_eventos" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_dia" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_mes" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_ano" tableName="tb_calendario_eventos"/>
+    </preConditions>
+    <comment>Rotina que realiza atualização de dados de forma consistente</comment>
+    <update tableName="tb_calendario_eventos">
+      <column name="dt_inicio" type="timestamp" valueComputed="(SELECT to_date(concat(dt_dia,'-',dt_mes,'-', EXTRACT(year FROM CURRENT_TIMESTAMP)),'dd-MM-yyyy') FROM tb_calendario_eventos e2 WHERE tb_calendario_eventos.id_calendario_evento=e2.id_calendario_evento)" />
+      <where>dt_inicio is null</where>
+    </update>
+    <sql splitStatements="false">
+      DO $$DECLARE
+        eventos CURSOR FOR SELECT id_calendario_evento from tb_calendario_eventos where dt_ano IS NULL AND id_serie_eventos IS NULL;
+        idCal bigint;
+        idSerie bigint;
+        BEGIN
+        OPEN eventos;
+        FOR idCal IN SELECT id_calendario_evento FROM tb_calendario_eventos WHERE dt_ano IS NULL
+        LOOP
+          INSERT INTO tb_serie_eventos (id_serie_eventos, tp_serie) VALUES (nextval('sq_serie_eventos'), 'A');
+          SELECT INTO idSerie MAX(id_serie_eventos) FROM tb_serie_eventos;
+          UPDATE tb_calendario_eventos SET id_serie_eventos = idSerie WHERE id_calendario_evento = idCal;
+        END LOOP;
+        CLOSE eventos;
+      END$$;
+    </sql>
+    <dropUniqueConstraint constraintName="tb_calendario_eventos_localizacao_data_unique" tableName="tb_calendario_eventos"/>
+  </changeSet>
+
+
+  <changeSet author="erikliberal" dbms="mssql" id="2">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="tb_serie_eventos"/>
+      <sequenceExists sequenceName="sq_serie_eventos"/>
+      <columnExists columnName="dt_inicio" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="id_serie_eventos" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_dia" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_mes" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_ano" tableName="tb_calendario_eventos"/>
+    </preConditions>
+    <comment>Rotina que realiza atualização de dados de forma consistente</comment>
+    <update tableName="tb_calendario_eventos">
+      <column name="dt_inicio" type="timestamp" valueComputed="(SELECT CONVERT(DATE, concat(DATEPART(year,CURRENT_TIMESTAMP), '.', dt_mes, '.', dt_dia), 102) FROM tb_calendario_eventos e2 WHERE tb_calendario_eventos.id_calendario_evento=e2.id_calendario_evento)"></column>
+      <where>dt_inicio is null</where>
+    </update>
+    <sql>
+      DECLARE eventos CURSOR FOR select id_calendario_evento from tb_calendario_eventos where dt_ano IS NULL AND id_serie_eventos IS NULL
+      DECLARE @idCal bigint
+      DECLARE @idSerie bigint
+      OPEN eventos
+      FETCH NEXT FROM eventos INTO @idCal WHILE @@FETCH_STATUS = 0
+      BEGIN
+        INSERT INTO tb_serie_eventos (id_serie_eventos, tp_serie) VALUES (NEXT VALUE FOR sq_serie_eventos, 'A')
+        SELECT @idSerie=MAX(id_serie_eventos) FROM tb_serie_eventos
+        UPDATE tb_calendario_eventos SET id_serie_eventos = @idSerie WHERE id_calendario_evento = @idCal
+        FETCH NEXT FROM eventos INTO @idCal
+      END
+    </sql>
+    <dropIndex indexName="tb_calendario_eventos_localizacao_data_unique" tableName="tb_calendario_eventos"/>
+  </changeSet>
+
+  <changeSet author="erikliberal" dbms="oracle" id="2">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="tb_serie_eventos"/>
+      <sequenceExists sequenceName="sq_serie_eventos"/>
+      <columnExists columnName="dt_inicio" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="id_serie_eventos" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_dia" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_mes" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_ano" tableName="tb_calendario_eventos"/>
+    </preConditions>
+    <dropUniqueConstraint constraintName="uk_calendario_eventos_01" tableName="tb_calendario_eventos"/>
+  </changeSet>
+
+  <changeSet author="erikliberal" dbms="mssql, postgresql, oracle" id="3">
+    <preConditions onFail="MARK_RAN">
+      <columnExists columnName="dt_inicio" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_fim" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_dia" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_mes" tableName="tb_calendario_eventos"/>
+      <columnExists columnName="dt_ano" tableName="tb_calendario_eventos"/>
+    </preConditions>
+    <update tableName="tb_calendario_eventos">
+      <column name="dt_fim" type="timestamp" valueComputed="(SELECT dt_inicio FROM tb_calendario_eventos e2 WHERE tb_calendario_eventos.id_calendario_evento=e2.id_calendario_evento)"></column>
+      <where>dt_fim is null</where>
+    </update>
+    <addNotNullConstraint columnDataType="timestamp" columnName="dt_inicio" tableName="tb_calendario_eventos"/>
+    <addNotNullConstraint columnDataType="timestamp" columnName="dt_fim" tableName="tb_calendario_eventos"/>
+    <dropColumn columnName="dt_dia" tableName="tb_calendario_eventos"/>
+    <dropColumn columnName="dt_mes" tableName="tb_calendario_eventos"/>
+    <dropColumn columnName="dt_ano" tableName="tb_calendario_eventos"/>
+  </changeSet>
+
+</databaseChangeLog>

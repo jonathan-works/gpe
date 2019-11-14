@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/xhtml/templates/core/errorTemplate.xhtml">
+    
+    <ui:param name="showMsg" value="false" />
+    
+    <ui:define name="body">
+        <f:event listener="#{failResponseAction.putHeader()}" type="preRenderView" />
+        <f:event listener="#{unexpectedErrorView.sendErrorLog()}" type="preRenderView" />
+        
+        <wi:panel id="unexpectedErrorPanel" styleClass="content-block">
+        
+        	<h:outputText value="Desculpe-nos pelo transtorno, ocorreu um erro inesperado. Por favor, contate o suporte para que o problema seja corrigido."
+            	style="font-size: 15px;"/>
+        
+            <p:outputPanel style="margin-bottom: 1em;" rendered="#{not empty unexpectedErrorView.codigoErro}">
+            	<h:outputLabel for="codigoErro" value="Código de erro:" style="font-size: 15px;"/>
+            	<h:outputText id="codigoErro" value="#{unexpectedErrorView.codigoErro}" style="margin-left: 1em; color: red; font-size: 15px;"/>
+            </p:outputPanel>
+            
+        </wi:panel>
+    </ui:define>
+</ui:composition>

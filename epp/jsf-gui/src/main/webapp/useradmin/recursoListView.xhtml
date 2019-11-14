@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:a="http://richfaces.org/a4j"
+  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+  <ui:param
+    name="home"
+    value="#{recursoCrudAction}" />
+  <ui:param
+    name="showFormTab"
+    value="#{home.managed}" />
+  <ui:define name="title">#{infoxMessages['recurso.titlePage']}</ui:define>
+  <ui:define name="searchGrid">
+    <wi:dataTable
+      values="#{recursoList.list(15)}"
+      bean="#{recursoList}"
+      tableTitle="#{infoxMessages['recurso.tableTitle']}"
+      id="recursoList"
+      rowId="#{row.idRecurso}"
+      reportPath="/useradmin/reportRecurso.xhtml">
+      <ui:define name="searchForm">
+        <wi:searchForm
+          formId="pesquisarRecursoForm"
+          formTitle="#{infoxMessages['searchForm.title']}">
+          <wi:inputText
+            id="nome"
+            label="#{infoxMessages['recurso.nome']}"
+            value="#{recursoList.entity.nome}"
+            maxlength="100" />
+          <wi:inputText
+            id="identificador"
+            label="#{infoxMessages['recurso.identificador']}"
+            value="#{recursoList.entity.identificador}"
+            maxlength="100" />
+        </wi:searchForm>
+      </ui:define>
+      <wi:columnOutputText
+        columnId="nome"
+        columnHeader="#{infoxMessages['recurso.nome']}"
+        value="#{row.nome}" />
+      <wi:columnOutputText
+        columnId="identificador"
+        columnHeader="#{infoxMessages['recurso.identificador']}"
+        value="#{row.identificador}" />
+      <ui:define name="toolBar">
+        <wi:toolBarEdit id="recursoListedit" />
+      </ui:define>
+    </wi:dataTable>
+  </ui:define>
+  <ui:define name="form">
+    <wi:dataForm
+      formId="recursos"
+      formTitle="#{infoxMessages['form.title']}"
+      updateAction="recursoCrudAction.save()"
+      persistAction="recursoCrudAction.save()">
+      <wi:outputText
+        id="identificador"
+        label="#{infoxMessages['recurso.identificador']}"
+        value="#{recursoCrudAction.instance.identificador}">
+      </wi:outputText>
+      <wi:inputText
+        id="nome"
+        label="#{infoxMessages['recurso.nome']}"
+        value="#{recursoCrudAction.instance.nome}"
+        required="true" />
+      <ui:define name="buttons">
+        <wi:commandButtonSave />
+      </ui:define>
+    </wi:dataForm>
+  </ui:define>
+  <ui:define name="tabs">
+    <infox:tab
+      id="papeisTab"
+      rendered="#{recursoCrudAction.isManaged()}"
+      title="#{infoxMessages['recursoPapel.titleTab']}"
+      name="papeisTab"
+      action="#{recursoPapelController.setRecurso(recursoCrudAction.instance)}">
+      <wi:dataForm
+        formId="papel"
+        formTitle="#{infoxMessages['recurso.papelTitleForm']} - #{recursoCrudAction.instance.nome}">
+          <wi:pickList
+            id="recurso"
+            targetCaption="#{infoxMessages['recurso.papeis']}"
+            value="#{recursoPapelController.papeis}"
+            itemValues="#{recursoPapelController.papeisDisponiveis}"
+            itemLabel="#{var}" />
+        <ui:define name="buttons">
+          <a:commandButton
+            id="papeisButton"
+            actionListener="#{recursoPapelController.save()}"
+            render="pageBodyDialogMessage, papeisTab, @this"
+            execute="@form"
+            styleClass="buttons"
+            limitRender="true"
+            value="#{infoxMessages['crud.update']}" />
+        </ui:define>
+      </wi:dataForm>
+    </infox:tab>
+  </ui:define>
+</ui:composition>

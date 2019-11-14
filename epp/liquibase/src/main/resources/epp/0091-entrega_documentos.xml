@@ -1,0 +1,55 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1">
+        <createSequence sequenceName="sq_entrega" incrementBy="1" startValue="1" />
+        <createTable tableName="tb_entrega">
+            <column name="id_entrega" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_entrega" />
+            </column>
+            <column name="id_localizacao" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_entrega_001" references="tb_localizacao(id_localizacao)" />
+            </column>
+            <column name="dt_entrega" type="timestamp" />
+            <column name="id_modelo_entrega" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_entrega_002" references="tb_modelo_entrega(id_modelo_entrega)" />
+            </column>
+            <column name="id_pasta" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_entrega_003" references="tb_pasta(id_pasta)" unique="true" uniqueConstraintName="uk_entrega_001" />
+            </column>
+            <column name="id_usuario_entrega" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_entrega_004" references="tb_usuario_login(id_usuario_login)" />
+            </column>
+            <column name="id_certidao_entrega" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_entrega_005" references="tb_documento_bin(id_documento_bin)" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <createSequence sequenceName="sq_entrega_responsavel" incrementBy="1" startValue="1" />
+        <createTable tableName="tb_entrega_responsavel">
+            <column name="id_entrega_responsavel" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_entrega_responsavel" />
+            </column>
+            <column name="id_entrega" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_entrega_responsavel_001" references="tb_entrega(id_entrega)" />
+            </column>
+            <column name="ds_nome" type="nvarchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_pessoa" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_entrega_responsavel_002" references="tb_pessoa(id_pessoa)" />
+            </column>
+            <column name="id_tipo_parte" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_entrega_responsavel_003" references="tb_tipo_parte(id_tipo_parte)" />
+            </column>
+            <column name="dt_inicio" type="timestamp" />
+            <column name="dt_fim" type="timestamp" />
+            <column name="id_responsavel_vinculado" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_entrega_responsavel_004" references="tb_entrega_responsavel(id_entrega_responsavel)" />
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

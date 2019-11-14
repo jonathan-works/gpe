@@ -1,0 +1,16 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+    <include file="epp-bin/base_limpa/base_limpa_oracle.xml" />
+    <include file="epp-bin/base_limpa/base_limpa_sqlserver.xml" />
+    <include file="epp-bin/base_limpa/base_limpa_postgresql.xml" />
+    <include file="epp-bin/0001-RefatoracaoDocumentoBinario.xml" />
+    <include file="epp-bin/0002-Binario.xml" />
+
+ 
+    <include file="epp-bin/extensao/master.xml" />
+   
+</databaseChangeLog>

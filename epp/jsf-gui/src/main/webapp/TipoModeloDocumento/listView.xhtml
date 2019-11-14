@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    <ui:define name="title">#{infoxMessages['tipoModeloDocumento.titlePage']}</ui:define>
+    <ui:param name="home" value="#{tipoModeloDocumentoCrudAction}" />
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{tipoModeloDocumentoList.list(15)}"
+            bean="#{tipoModeloDocumentoList}"
+            tableTitle="#{infoxMessages['tipoModeloDocumento.tableTitle']}"
+            id="tipoModeloDocumentoList"
+            rowId="#{row.idTipoModeloDocumento}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarTipoModeloDocumentoForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:suggest id="grupoModeloDocumento"
+                        suggestProvider="#{grupoModeloDocumentoSuggest}"
+                        value="#{tipoModeloDocumentoList.entity.grupoModeloDocumento}"
+                        label="#{infoxMessages['tipoModeloDocumento.grupoModeloDocumento']}" />
+                    <wi:inputText id="tipoModeloDocumento"
+                        label="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}"
+                        value="#{tipoModeloDocumentoList.entity.tipoModeloDocumento}" />
+                    <wi:inputText id="abreviacao"
+                        label="#{infoxMessages['tipoModeloDocumento.abreviacao']}"
+                        value="#{tipoModeloDocumentoList.entity.abreviacao}"
+                        maxlength="5" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{tipoModeloDocumentoList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText columnId="grupoModeloDocumento"
+                columnHeader="#{infoxMessages['tipoModeloDocumento.grupoModeloDocumento']}"
+                value="#{row.grupoModeloDocumento}" />
+            <wi:columnOutputText columnId="tipoModeloDocumento"
+                columnHeader="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}"
+                value="#{row.tipoModeloDocumento}" />
+            <wi:columnOutputText columnId="abreviacao"
+                columnHeader="#{infoxMessages['tipoModeloDocumento.abreviacao']}"
+                value="#{row.abreviacao}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+    <ui:define name="form">
+        <wi:dataForm formId="tipoModeloDocumentoForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:suggest id="grupoModeloDocumento"
+                suggestProvider="#{grupoModeloDocumentoSuggest}"
+                value="#{tipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
+                label="#{infoxMessages['tipoModeloDocumento.grupoModeloDocumento']}"
+                required="true" />
+            <wi:inputText id="tipoModeloDocumento"
+                label="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}"
+                value="#{tipoModeloDocumentoCrudAction.instance.tipoModeloDocumento}"
+                maxlength="50" required="true" />
+            <wi:inputText id="abreviacao"
+                label="#{infoxMessages['tipoModeloDocumento.abreviacao']}"
+                value="#{tipoModeloDocumentoCrudAction.instance.abreviacao}"
+                required="true" maxlength="5" />
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{tipoModeloDocumentoCrudAction.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
+    <ui:define name="tabs">
+        <infox:tab id="modeloDocumento" status=":status"
+            rendered="#{home.managed}"
+            title="#{infoxMessages['tipoModeloDocumento.modeloDocumentoList']}"
+            name="modeloDocumento">
+            <wi:dataTable
+                values="#{tipoModeloDocumentoCrudAction.listaDeModeloDocumento}"
+                hideOrder="true" showSearchForm="false" panelStyle="margin-top: 1em;"
+                tableTitle="#{infoxMessages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoCrudAction.instance)}"
+                id="associativeModeloDocumentoList"
+                rowId="#{row.idModeloDocumento}"
+                panelStyleClass="rf-dt-crud" styleClass="Associated-dt">
+                <ui:define name="headerToolBar" />
+                <ui:define name="toolBar">
+                    <wi:toolBarTab
+                        linkDetalhe="/ModeloDocumento/listView.seam" />
+                </ui:define>
+                <wi:columnOutputText columnId="tipoModeloDocumento"
+                    columnHeader="#{infoxMessages['associativeModeloDocumento.tipoModeloDocumento']}"
+                    value="#{row.tipoModeloDocumento}" />
+                <wi:columnOutputText columnId="tituloModeloDocumento"
+                    columnHeader="#{infoxMessages['associativeModeloDocumento.tituloModeloDocumento']}"
+                    value="#{row}" />
+                <wi:columnSituacao columnId="tituloModeloDocumento"
+                    columnHeader="#{infoxMessages['field.situacao']}"
+                    value="#{row.ativo}" />
+            </wi:dataTable>
+        </infox:tab>
+        <infox:tab id="variaveis" status=":status"
+            rendered="#{home.managed}"
+            title="#{infoxMessages['tipoModeloDocumento.variaveis']}"
+            name="variaveis"
+            action="#{home.onClickVariaveisTab}">
+            <wi:ajaxDiv id="divM2MVar">
+                <s:div styleClass="Associated">
+                    <wi:dataTable
+                        values="#{associativeVariavelList.list(15)}"
+                        bean="#{associativeVariavelList}"
+                        tableTitle="#{infoxMessages['associativeVariavel.tableTitle']}"
+                        id="associativeVariavelList"
+                        rowId="#{row.idVariavel}"
+                        styleClass="Associative-dt">
+                        <ui:define name="searchForm">
+                            <wi:searchForm
+                                formId="pesquisarTipoModeloDocumento"
+                                formTitle="#{infoxMessages['searchForm.title']}">
+                                <wi:inputText id="variavel"
+                                    label="#{infoxMessages['associativeVariavel.variavel']}"
+                                    value="#{associativeVariavelList.entity.variavel}" />
+                                <wi:inputText id="valorVariavel"
+                                    label="#{infoxMessages['associativeVariavel.valorVariavel']}"
+                                    value="#{associativeVariavelList.entity.valorVariavel}" />
+                                <wi:selectSituacaoOneMenu id="ativo"
+                                    label="#{infoxMessages['field.situacao']}"
+                                    value="#{associativeVariavelList.entity.ativo}" />
+                            </wi:searchForm>
+                        </ui:define>
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <a:region>
+                                <a:commandLink limitRender="true"
+                                    render="divM2MVar"
+                                    action="#{tipoModeloDocumentoVariavelCrudAction.addVariavelTipoModelo(row)}"
+                                    rendered="true">
+                                    <h:graphicImage
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
+                                        title="#{infoxMessages['button.add']}" />
+                                </a:commandLink>
+                            </a:region>
+                        </ui:define>
+                        <wi:columnOutputText columnId="variavel"
+                            columnHeader="#{infoxMessages['associativeVariavel.variavel']}"
+                            value="#{row.variavel}" />
+                        <wi:columnOutputText columnId="valorVariavel"
+                            columnHeader="#{infoxMessages['associativeVariavel.valorVariavel']}"
+                            value="#{row.valorVariavel}" />
+                        <wi:columnSituacao columnId="ativo"
+                            columnHeader="#{infoxMessages['field.situacao']}"
+                            value="#{row.ativo}" />
+                    </wi:dataTable>
+                </s:div>
+                <s:div styleClass="padding-top-5">
+                    <wi:dataTable
+                        values="#{associatedVariavelTipoModeloList.list(15)}"
+                        bean="#{associatedVariavelTipoModeloList}"
+                        tableTitle="#{infoxMessages['associatedVariavelTipoModelo.tableTitle']}"
+                        id="associatedVariavelTipoModeloList"
+                        rowId="#{row.idVariavelTipoModelo}"
+                        panelStyleClass="rf-dt-crud"
+                        styleClass="Associated-dt"
+                        searchFormStyleClass="hidden"
+                        showSearchForm="false" panelStyle="margin-top: 1em;">
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <a:region>
+                                <a:commandLink limitRender="true"
+                                    render="divM2MVar"
+                                    action="#{tipoModeloDocumentoVariavelCrudAction.removeVariavelTipoModelo(row)}"
+                                    rendered="true">
+                                    <h:graphicImage
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
+                                        title="#{infoxMessages['button.delete']}" />
+                                </a:commandLink>
+                            </a:region>
+                        </ui:define>
+                        <wi:columnOutputText columnId="variavel"
+                            columnHeader="#{infoxMessages['associatedVariavelTipoModelo.variavel']}"
+                            value="#{row.variavel}" />
+                        <wi:columnOutputText columnId="variavel"
+                            columnHeader="#{infoxMessages['associatedVariavelTipoModelo.valorVariavel']}"
+                            value="#{row.variavel.valorVariavel}" />
+                    </wi:dataTable>
+                </s:div>
+            </wi:ajaxDiv>
+        </infox:tab>
+        <infox:tab id="papeis" status=":status"
+            rendered="#{home.managed}"
+            title="#{infoxMessages['tipoModeloDocumento.papeis']}"
+            name="papeis"
+            action="#{home.onClickPapeisTab}">
+            <s:div id="divAssociarPapel">
+                <wi:dataForm formId="tipoModeloDocumentoPapelForm"
+                    formTitle="#{infoxMessages['form.title']}">
+                    <wi:selectOneMenuEntity id="papel"
+                        label="#{infoxMessages['tipoModeloDocumento.papel']}"
+                        items="#{tipoModeloDocumentoPapelCrudAction.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}"
+                        value="#{tipoModeloDocumentoPapelCrudAction.instance.papel}"
+                        required="true"
+                        showLabel="#{infoxMessages['crud.select.select']}" />
+                    <ui:define name="buttons">
+                        <wi:commandButtonPersist
+                            home="#{tipoModeloDocumentoPapelCrudAction}"
+                            persistAction="tipoModeloDocumentoPapelCrudAction.save()" />
+                    </ui:define>
+                </wi:dataForm>
+                <wi:dataTable
+                    values="#{tipoModeloDocumentoPapelList.list(15)}"
+                    bean="#{tipoModeloDocumentoPapelList}"
+                    tableTitle="#{infoxMessages['tipoModeloDocumentoPapel.tableTitle']}"
+                    id="tipoModeloDocumentoPapelList"
+                    rowId="#{row.idTipoModeloDocumentoPapel}"
+                    searchFormStyleClass="hidden" showMsg="false"
+                    showSearchForm="false" panelStyle="margin-top: 1em;">
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <wi:toolBarRemove id="toolBarRemove"
+                            reRender="divAssociarPapel"
+                            actionRemove="tipoModeloDocumentoPapelCrudAction.remove(row)" />
+                    </ui:define>
+                    <wi:columnOutputText columnId="o.papel.nome"
+                        columnHeader="#{infoxMessages['tipoModeloDocumento.papel']}"
+                        value="#{row.papel}" />
+                </wi:dataTable>
+            </s:div>
+        </infox:tab>
+    </ui:define>
+</ui:composition>

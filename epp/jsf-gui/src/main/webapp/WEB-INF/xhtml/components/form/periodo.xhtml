@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <h:outputScript library="js" name="components.js" />
+
+    <s:decorate id="#{id}Decoration"
+        template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+        rendered="#{empty rendered or rendered}">
+
+        <ui:param name="requiredFrom"
+            value="#{empty required ? props.requiredFrom : required}" />
+        <ui:param name="requiredTo"
+            value="#{empty required ? props.requiredTo : required}" />
+        <ui:param name="idFromForm" value="#{props.idDateFrom}Form" />
+        <ui:param name="idToForm" value="#{props.idDateTo}Form" />
+
+        <wi:mask selector=".#{id}#{formId}maskDate" mask="99/99/9999" />
+        <ui:define name="label">#{label}</ui:define>
+        <h:outputText value="De " />
+        <rich:calendar id="#{idFromForm}"
+            value="#{home.instance[props.idDateFrom]}"
+            enableManualInput="true"
+            inputStyle="width: 70px; display:inline; "
+            disabled="#{disabled}"
+            showWeeksBar="#{wi:get(showWeeksBar, false)}"
+            required="#{requiredFrom}"
+            inputClass="#{id}#{formId}maskDate"
+            datePattern="#{empty props.pattern ? 'dd/MM/yyyy' : props.pattern}"
+            onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', true);"
+            oninputblur="validarData(this);
+            validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', true);" />
+        <h:outputText value=" Até " />
+        <rich:calendar id="#{idToForm}"
+            value="#{home.instance[props.idDateTo]}"
+            enableManualInput="true" inputStyle="width: 70px"
+            disabled="#{disabled}" required="#{requiredTo}"
+            inputClass="#{id}#{formId}maskDate"
+            datePattern="#{empty props.pattern ? 'dd/MM/yyyy' : props.pattern}"
+            onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false);"
+            oninputblur="validarData(this); 
+            validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', false);" />
+        <ui:insert />
+    </s:decorate>
+
+</ui:composition>

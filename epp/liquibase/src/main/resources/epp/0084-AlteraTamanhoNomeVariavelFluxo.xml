@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="marialuisa" id="1" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists schemaName="dbo" indexName="tb_definicao_variavel_processo_nm_variavel_id_fluxo_key"/>
+        </preConditions>
+        <dropIndex indexName="tb_definicao_variavel_processo_nm_variavel_id_fluxo_key" tableName="tb_definicao_variavel_processo"/>
+    </changeSet>
+    
+    <changeSet author="marialuisa" id="2" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+             <sqlCheck expectedResult="1">SELECT COUNT(1) FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME='tb_definicao_variavel_processo_nm_variavel_id_fluxo_key'</sqlCheck>
+        </preConditions>
+        <dropUniqueConstraint
+            constraintName="tb_definicao_variavel_processo_nm_variavel_id_fluxo_key"
+            tableName="tb_definicao_variavel_processo"/>
+    </changeSet>
+    
+    <changeSet author="gabriel" id="1" dbms="oracle">
+        <dropUniqueConstraint constraintName="FK_DEF_VARIAVEL_PROCESSO_02" tableName="tb_definicao_variavel_processo" />
+    </changeSet>
+
+    <changeSet author="marialuisa" id="3" dbms="mssql, postgresql, oracle">        
+        <preConditions onFail="CONTINUE">
+            <or>
+                <and>
+                    <dbms type="mssql" />
+                    <changeSetExecuted author="marialuisa" id="1" changeLogFile="epp/0084-AlteraTamanhoNomeVariavelFluxo.xml" />
+                </and>
+                <and>
+                    <dbms type="postgresql" />
+                    <changeSetExecuted author="marialuisa" id="2" changeLogFile="epp/0084-AlteraTamanhoNomeVariavelFluxo.xml" />
+                </and>
+                <and>
+                    <dbms type="oracle" />
+                    <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0084-AlteraTamanhoNomeVariavelFluxo.xml" />
+                </and>
+            </or>
+        </preConditions>
+        
+        <modifyDataType
+            columnName="nm_variavel"
+            newDataType="varchar(255)"
+            tableName="tb_definicao_variavel_processo"/>
+        <addUniqueConstraint
+            columnNames="nm_variavel, id_fluxo"
+            constraintName="tb_def_variavel_processo_uk_01"
+            tableName="tb_definicao_variavel_processo" />
+    </changeSet>
+    
+</databaseChangeLog>

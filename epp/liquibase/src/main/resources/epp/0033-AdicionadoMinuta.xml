@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle" >
+        <addColumn tableName="tb_documento_bin">
+            <column name="in_minuta" type="boolean" />
+        </addColumn>
+        <sql dbms="mssql" >
+            UPDATE d SET d.in_minuta = 0 FROM tb_documento_bin d WHERE ds_extensao IS NULL OR 
+                EXISTS (SELECT 1 FROM tb_assinatura_documento a WHERE a.id_documento_bin = d.id_documento_bin);
+
+            UPDATE tb_documento_bin SET in_minuta = 1 WHERE in_minuta IS NULL;
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE tb_documento_bin d SET in_minuta = false WHERE ds_extensao IS NULL OR 
+                EXISTS (SELECT 1 FROM tb_assinatura_documento a WHERE a.id_documento_bin = d.id_documento_bin);
+
+            UPDATE tb_documento_bin SET in_minuta = true WHERE in_minuta IS NULL;
+        </sql>
+        <sql dbms="oracle">
+            UPDATE tb_documento_bin d SET in_minuta = 0 WHERE ds_extensao IS NULL OR 
+                EXISTS (SELECT 1 FROM tb_assinatura_documento a WHERE a.id_documento_bin = d.id_documento_bin)
+        </sql>
+        <sql dbms="oracle">
+            UPDATE tb_documento_bin SET in_minuta = 1 WHERE in_minuta IS NULL
+        </sql>
+        <addNotNullConstraint columnName="in_minuta" columnDataType="boolean" tableName="tb_documento_bin" />
+    </changeSet>
+
+</databaseChangeLog>

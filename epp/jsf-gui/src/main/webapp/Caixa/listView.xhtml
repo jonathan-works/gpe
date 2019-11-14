@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['caixa.titlePage']}</ui:define>
+    <ui:param name="id" value="caixa#{id}" />
+
+    <ui:param name="home" value="#{caixaCrudAction}" />
+
+    <ui:define name="body">
+        <infox:tabPanel id="defaultTabPanel" switchType="ajax"
+            activeTab="#{caixaCrudAction.tab}">
+            <h:form>
+                <infox:tabHeaders />
+            </h:form>
+            <infox:tab id="form" name="search"
+                rendered="#{caixaCrudAction.managed}" immediate="true"
+                status=":status" title="Formulário"
+                action="#{caixaCrudAction.onClickFormTab}">
+                <wi:dataForm formId="caixaForm"
+                    formTitle="#{infoxMessages['form.title']}">
+                    <wi:inputText id="tarefa" label="Tarefa"
+                        value="#{caixaCrudAction.taskName}"
+                        required="true" disabled="true" />
+                    <wi:inputText id="nomeCaixa"
+                        label="#{infoxMessages['caixa.nomeCaixa']}"
+                        value="#{caixaCrudAction.instance.nomeCaixa}"
+                        required="true" length="100" />
+                    <wi:inputTextarea id="dsCaixa"
+                        label="#{infoxMessages['caixa.dsCaixa']}"
+                        value="#{caixaCrudAction.instance.dsCaixa}"
+                        showCounter="false" />
+
+                    <wi:selectOneMenu id="idNodeAnterior"
+                        label="Nó Anterior"
+                        value="#{caixaCrudAction.instance.taskKeyAnterior}"
+                        valueItems="#{caixaCrudAction.getPreviousNodes()}" />
+                    <ui:define name="buttons">
+                        <wi:commandButtonUpdate />
+                        <wi:commandButton id="voltarBtn" value="Voltar"
+                            disabled="#{disabled}"
+                            onclick="location.href='#{pathResolver.getContextPath()}/Painel/list.seam'">
+                        </wi:commandButton>
+                    </ui:define>
+                </wi:dataForm>
+            </infox:tab>
+        </infox:tabPanel>
+    </ui:define>
+
+</ui:composition>

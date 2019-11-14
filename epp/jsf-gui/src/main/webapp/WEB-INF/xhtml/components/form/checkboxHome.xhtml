@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
+		<ui:param
+		 name="direction"
+		 value="#{props.direction.toUpperCase() == 'V' ? 'page' : 'line'}Direction" />		
+		<ui:param
+		 name="width"
+		 value="#{empty width ? '800px' : width}" /> 
+		<s:decorate
+		 id="#{id}Decoration"
+		 template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+		 rendered="#{empty rendered or rendered}">
+		
+			
+			<div >
+			
+			 	<ui:define name="label">
+						 	
+				 	<h:selectBooleanCheckbox
+					 id="#{id}"
+					 styleClass="checkbox"
+					 value="#{home[id]}"
+					 required="#{required}"
+					 disabled="#{not empty readonly and readonly ? true : disabled}"
+					 onclick="#{onclick}">
+					
+						<ui:insert />
+					
+				</h:selectBooleanCheckbox>
+				 	#{label}
+			 	
+			</ui:define>					 			    
+			
+		</div>				
+		
+	</s:decorate>			
+	
+</ui:composition>

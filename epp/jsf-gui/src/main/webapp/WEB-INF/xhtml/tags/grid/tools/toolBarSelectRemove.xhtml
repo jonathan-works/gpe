@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="removeAction"
+        value="#{empty removeAction ? 'home.remove(row)' : removeAction}" />
+    <div>
+        <a:region renderRegionOnly="false">
+            <a:commandLink action="#{home.setInstance(row)}"
+                status=":status" render="#{reRender}" limitRender="true"
+                id="#{gridId}Edit">
+                <wi:toolBarGraphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                    title="#{infoxMessages['button.selecionar']}" />
+            </a:commandLink>
+            <a:commandLink
+                action="#{elFunctions.invokeMethod(removeAction)}"
+                rendered="#{wi:get(canEdit,true)}" limitRender="true"
+                status=":status" render="#{reRender}"
+                onclick="if(!confirm('Confirma?')) return false;">
+                <wi:toolBarGraphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                    title="#{infoxMessages['button.delete']}" />
+            </a:commandLink>
+        </a:region>
+    </div>
+</ui:composition>

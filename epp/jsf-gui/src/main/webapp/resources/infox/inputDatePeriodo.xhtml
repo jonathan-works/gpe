@@ -1,0 +1,124 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+
+    <composite:attribute name="id"/>
+    <composite:attribute name="rendered" default="true" />
+    <composite:attribute name="labelDateFrom" />
+    <composite:attribute name="labelDateTo" />
+    <composite:attribute name="help" />
+    <composite:attribute name="valueDateFrom" type="java.util.Date" />
+    <composite:attribute name="valueDateTo" type="java.util.Date" />
+    <composite:attribute name="disabled" default="false" />
+    <composite:attribute name="readonly" default="false" />
+    <composite:attribute name="styleClass" />
+    <composite:attribute name="onblur" />
+    <composite:attribute name="required" default="false" />
+    <composite:attribute name="showWeeksBar" default="false" />
+    <composite:attribute name="showApplyButton" default="false" />
+    <composite:attribute name="defaultTime" />
+    <composite:attribute name="mode" />
+    <composite:attribute name="dataModel" />
+    <composite:attribute name="oninputblur" />
+    <composite:attribute name="onchanged" />
+    <composite:attribute name="validatorId" />
+    <composite:attribute name="enableManualInput" default="true" />
+    <composite:attribute name="pattern" type="java.lang.String" default="dd/MM/yyyy" />
+    <composite:attribute name="maskDate" type="java.lang.String"
+        default="#{cc.attrs.pattern.replaceAll('[a-zA-Z]', '9')}" />
+
+    <!-- Ajax Attributes -->
+    <composite:attribute name="ajax" default="false" />
+    <composite:attribute name="render" default="@this" />
+    <composite:attribute name="execute" default="@this" />
+    <composite:attribute name="listener" method-signature="void action" />
+    <composite:attribute name="immediate" default="false" />
+    <composite:attribute name="onstart" />
+    <composite:attribute name="oncomplete" />
+
+    <composite:facet name="label" />
+</composite:interface>
+
+<composite:implementation>
+    <h:outputScript library="js" name="jquery.maskedinput.js" />
+    <h:outputScript library="js" name="components.js" />
+    <p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputDate-div" rendered="#{cc.attrs.rendered}">
+        <script type="text/javascript">
+            var id = "#{cc.attrs.id}";
+            var errorClass = $('.' + id + 'ErrorClass');
+            var div = $('.' + id + 'DivClass');
+            if (errorClass.length !== 0) {
+                div.addClass('property-error');
+            } else {
+                div.removeClass('property-error');
+            }
+        </script>
+        <div class="property-field-edit">
+            <div class="property-field-edit-name">
+                <h:outputLabel id="#{cc.attrs.id}LabelDateFrom" for="#{cc.attrs.id}InputDateFrom">
+                    <h:outputText value="#{cc.attrs.labelDateFrom} " rendered="#{not empty cc.attrs.labelDateFrom}" />
+                    <c:if test="#{not empty cc.attrs.help}">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                            title="#{cc.attrs.help}" style="vertical-align: middle;" />
+                    </c:if>
+                    <composite:renderFacet name="label" />
+                </h:outputLabel>
+                <h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
+                <h:message for="#{cc.attrs.id}InputDateFrom" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass" />
+            </div>
+            <div class="property-field-edit-value  #{cc.attrs.id}DivClassFrom">
+                <p:calendar id="#{cc.attrs.id}InputDateFrom" readonlyInput="#{not cc.attrs.enableManualInput}" locale="#{localeUtil.requestLocale}"
+                	required="#{cc.attrs.required}"
+                    disabled="#{cc.attrs.disabled}" value="#{cc.attrs.valueDateFrom}" showWeek="#{cc.attrs.showWeeksBar}"
+                    readonly="#{cc.attrs.readonly}" pattern="#{cc.attrs.pattern}" 
+                    widgetVar="#{cc.attrs.id}InputDateFromVar"
+                    onchange="#{cc.attrs.onchanged}" update="#{cc.attrs.render}" placeholder="__/__/____"
+                    mask="#{cc.attrs.maskDate}" mindate="#{cc.attrs.mindate}">
+                    <c:if test="#{cc.attrs.future}">
+                        <f:validator validatorId="futureDateOnlyValidator" />
+                    </c:if>
+                    <c:if test="#{cc.attrs.past}">
+                        <f:validator validatorId="pastDateValidator" />
+                    </c:if>
+                    <composite:insertChildren />
+                </p:calendar>
+            </div>
+        </div>
+        
+        
+         <div class="property-field-edit">
+            <div class="property-field-edit-name">
+                <h:outputLabel id="#{cc.attrs.id}LabelDateTo" for="#{cc.attrs.id}InputDateTo">
+                    <h:outputText value="#{cc.attrs.labelDateTo} " rendered="#{not empty cc.attrs.labelDateTo}" />
+                    <c:if test="#{not empty cc.attrs.help}">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                            title="#{cc.attrs.help}" style="vertical-align: middle;" />
+                    </c:if>
+                    <composite:renderFacet name="label" />
+                </h:outputLabel>
+                <h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
+                <h:message for="#{cc.attrs.id}InputDateTo" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass" />
+            </div>
+            <div class="property-field-edit-value  #{cc.attrs.id}DivClassFrom">
+                <p:calendar id="#{cc.attrs.id}InputDateTo" readonlyInput="#{not cc.attrs.enableManualInput}" locale="#{localeUtil.requestLocale}"
+                	required="#{cc.attrs.required}"
+                    disabled="#{cc.attrs.disabled}" value="#{cc.attrs.valueDateTo}" showWeek="#{cc.attrs.showWeeksBar}"
+                    readonly="#{cc.attrs.readonly}" pattern="#{cc.attrs.pattern}" widgetVar="#{cc.attrs.id}InputDateToVar"
+                    onchange="#{cc.attrs.onchanged}" update="#{cc.attrs.render}" placeholder="__/__/____"
+                    mask="#{cc.attrs.maskDate}" mindate="#{cc.attrs.mindate}" >
+                    <c:if test="#{cc.attrs.future}">
+                        <f:validator validatorId="futureDateOnlyValidator" />
+                    </c:if>
+                    <c:if test="#{cc.attrs.past}">
+                        <f:validator validatorId="pastDateValidator" />
+                    </c:if>
+                    <composite:insertChildren />
+                </p:calendar>
+            </div>
+        </div>
+    </p:outputPanel>
+</composite:implementation>
+
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="idPopUp" value="#{resultList[rowId]}" />
+    <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"
+        oncomplete="openPopUp('#{idPopUp}', '#{wi:get(target,null)}');">
+        <f:param name="id"
+            value="#{empty toolBarIdRow ? rowId : toolBarIdRow}" />
+    </wi:toolBar>
+
+</ui:composition>

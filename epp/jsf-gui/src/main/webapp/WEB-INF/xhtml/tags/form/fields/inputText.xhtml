@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="template"
+        value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+
+    <s:decorate id="#{id}Decoration" template="#{template}"
+        styleClass="decoration-div inputText-div #{wi:get(decorationClass,'')}"
+        rendered="#{wi:get(rendered, true)}">
+        <ui:define name="label">#{label}</ui:define>
+        <h:inputText id="#{id}" value="#{value}" readonly="#{readonly}"
+            disabled="#{disabled}" required="#{required}" size="#{size}"
+            styleClass="#{readonly ? 'readOnly' : styleClass } input text crud"
+            onblur="#{onblur}" onchange="#{onchange}"
+            onkeypress="#{onkeypress}" onkeyup="#{onkeyup}"
+            maxlength="#{wi:get(maxlength, 255)}"
+            immediate="#{immediate}">
+            <ui:insert />
+            <f:converter
+                converterId="#{wi:get(converterId, 'stringConverter')}" />
+        </h:inputText>
+    </s:decorate>
+
+</ui:composition>

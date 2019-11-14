@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html" >
+    
+    <ui:param name="idDocumento" value="#{idDocumento}" />
+    <ui:param name="renderedLock" value="#{renderedLock}" />
+    <ui:param name="hideSignature" value="#{not empty hideSignature ? hideSignature : false}" />
+ 
+	<h:graphicImage title="#{infoxMessages['assinaturas.assinar']}"
+				alt="#{infoxMessages['assinaturas.assinar']}"
+				url="#{layoutController.getResourceUrlByPath('/imagens/lock_unlock.png')}" 
+				style="cursor: pointer" styleClass="#{styleClass}"
+				rendered="#{(not renderedLock) and (not hideSignature) }" 
+				onmouseup="selectDocumentoAssinar( #{idDocumento} );" />
+				
+	<h:graphicImage title="#{infoxMessages['assinaturas.validar']}"
+                 alt="#{infoxMessages['assinaturas.validar']}"
+                 url="#{layoutController.getResourceUrlByPath('/imagens/lock.png')}" 
+                 style="cursor: pointer" styleClass="#{styleClass}"
+                 rendered="#{renderedLock and (not hideSignature)}" 
+                 onmouseup="selectDocumentoAssinar( #{idDocumento} );" />
+ 
+
+</ui:composition>

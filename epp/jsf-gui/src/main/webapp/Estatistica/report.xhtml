@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition 
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <wi:dataReport title="#{infoxMessages['temposMedios.reportPage']}"
+                   columns="3"
+                   widths="4 4 4">
+                   
+        <wi:reportColumnHeader title="#{infoxMessages['temposMedios.descricaoTarefa']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['temposMedios.tempoMedio']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['temposMedios.prazo']}" />
+                
+        <ui:repeat var="row" value="#{tempoMedioTarefaList.list()}">
+            <wi:reportColumn value="#{row.nomeTarefa}"/>
+            <wi:reportColumn value="#{row.getTempoMedioFormatado()}"/>
+            <wi:reportColumn value="#{row.prazo} #{row.tipoPrazo.label}"/>
+        </ui:repeat>
+
+    </wi:dataReport>
+	
+</ui:composition>

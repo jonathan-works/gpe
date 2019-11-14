@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://jboss.org/schema/seam/pdf"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="columnAlign" value="#{wi:get(columnAlign,'left')}" />
+    <p:cell padding="3" horizontalAlignment="#{columnAlign}"
+        colspan="#{wi:get(colspan,1)}">
+        <p:paragraph horizontalAlignment="#{columnAlign}">
+            <p:text horizontalAlignment="#{columnAlign}"
+                value="#{value}">
+                <ui:insert />
+            </p:text>
+        </p:paragraph>
+    </p:cell>
+
+</ui:composition>

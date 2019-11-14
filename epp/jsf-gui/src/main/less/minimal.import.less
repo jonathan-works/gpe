@@ -1,0 +1,28 @@
+@banner-margin:2rem;
+@minimal-banner-height:10rem;
+
+.minimal {
+  .painelUsuario {
+  }
+  .banner {
+		.background-image(@image-name:"logo_epp_topo.png");
+    background-repeat: no-repeat;
+		background-size:auto 100%;
+    text-align: right;
+		height:calc(@minimal-banner-height~" - "2*@banner-margin~" - "6px);
+		margin: @banner-margin;
+    &clock {
+      .liveclock {
+        right: inherit;
+        top: inherit;
+        text-align: inherit;
+      }
+    }
+  }
+  .conteudo {
+    height:calc(100%~" - "@minimal-banner-height);
+  }
+  .tituloPagina {
+    text-align: left;
+  }
+}

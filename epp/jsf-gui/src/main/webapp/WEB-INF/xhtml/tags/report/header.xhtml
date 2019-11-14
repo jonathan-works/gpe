@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://jboss.org/schema/seam/pdf"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
+
+	<p:paragraph
+         alignment="center"><p:font
+             size="18">#{nomeSistema}</p:font></p:paragraph>
+	<p:table
+         columns="2"
+         widthPercentage="100"
+         widths="4 1"
+         spacingBefore="20"
+         spacingAfter="33">
+		<p:cell
+             verticalAlignment="middle"
+             borderWidth="0">
+			<p:font
+                 size="16">
+				<p:paragraph>#{infoxMessages[bean.title.concat('.titlePage')]}</p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell
+             horizontalAlignment="right"
+             borderWidth="0">
+			<p:font
+                 size="8">
+				<p:table
+                     columns="1">
+					<p:cell
+                         horizontalAlignment="right"
+                         borderWidth="0">
+						<p:paragraph>
+							<p:text
+                                 value="#{currentDate}">
+								<f:convertDateTime />
+							</p:text>
+						</p:paragraph>
+					</p:cell>
+					<p:cell
+                         borderWidth="0"
+                         horizontalAlignment="right">
+						<p:paragraph
+                             alignment="right">
+							<p:text
+                                 value="#{currentTime}">
+								<s:convertDateTime
+                                     pattern="HH:mm:ss" />
+							</p:text>
+						</p:paragraph>
+					</p:cell>
+				</p:table>
+			</p:font>
+		</p:cell>
+	</p:table>
+
+</ui:composition>

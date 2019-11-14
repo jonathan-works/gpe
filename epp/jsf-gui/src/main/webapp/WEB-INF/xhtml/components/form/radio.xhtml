@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
+	
+		<ui:param
+		 name="direction"
+		 value="#{props.direction.toUpperCase() == 'V' ? 'page' : 'line'}Direction" />
+		<ui:param
+		 name="valueList"
+		 value="#{empty valueList ? props.valueList : valueList}" />
+		<ui:param
+		 name="boxChecked"
+		 value="#{empty boxChecked ? props.boxChecked : boxChecked}" />
+		
+		<s:decorate
+		 id="#{id}Decoration"
+		 template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+		 rendered="#{empty rendered or rendered}">
+		
+			<ui:define name="label">#{label}</ui:define>
+			<h:selectOneRadio
+			 id="#{id}"
+			 value="#{value}"
+			 layout="#{direction}"
+			 disabled="#{disabled}"
+			 required="#{required}"
+			 onchange="#{onchange}"
+			 readonly="#{readonly}"
+			 styleClass="radio">
+			 
+				<f:selectItems value="#{selectItemFunctions.createFromString(valueList) }" />
+				<ui:insert />
+			
+		</h:selectOneRadio>
+		
+	</s:decorate>
+		
+		<script>
+			invoke(["infox.escapeId"],function(EscapeId) {
+				if ('#{value}' == '') {
+					$(EscapeId("##{formId}:#{f.id}:#{f.id}Decoration:#{f.id}:#{empty boxChecked ? 0 : boxChecked}"))
+					.attr({checked:true});			
+				}
+			});
+		</script>
+			
+	
+</ui:composition>

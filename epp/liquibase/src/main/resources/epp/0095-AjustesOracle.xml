@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="gabriel" id="1">
+        <dropNotNullConstraint columnName="vl_variavel" tableName="tb_parametro" columnDataType="nvarchar(2000)" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2" dbms="oracle">
+        <sql>
+            RENAME sq_tb_processo_epa_tarefa TO sq_processo_tarefa;
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <dropNotNullConstraint columnName="ds_conteudo" tableName="tb_task_conteudo_index" columnDataType="NCLOB" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <preConditions onFail="MARK_RAN">
+            <not><dbms type="oracle" /></not>
+        </preConditions>
+        <modifyDataType tableName="TB_PARTICIPANTE_PROCESSO" newDataType="varchar(4000)" columnName="DS_CAMINHO_ABSOLUTO" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="4-1" dbms="oracle">
+        <dropColumn columnName="ds_caminho_absoluto" tableName="tb_participante_processo" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="4-2" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="4-1" changeLogFile="epp/0095-AjustesOracle.xml" />
+        </preConditions>
+        <addColumn tableName="tb_participante_processo">
+            <column name="ds_caminho_absoluto" type="varchar(4000)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_partic_proc_001" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="5">
+        <preConditions onFail="MARK_RAN">
+            <not><dbms type="oracle" /></not>
+        </preConditions>
+        <modifyDataType tableName="TB_LOCALIZACAO_FISICA" newDataType="varchar(4000)" columnName="DS_CAMINHO_COMPLETO" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="5-1" dbms="oracle">
+        <dropColumn columnName="ds_caminho_completo" tableName="tb_localizacao_fisica" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="5-2" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="5-1" changeLogFile="epp/0095-AjustesOracle.xml" />
+        </preConditions>
+        <addColumn tableName="tb_localizacao_fisica">
+            <column name="ds_caminho_completo" type="varchar(4000)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_loc_fisica_01" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+	<changeSet author="gabriel" id="6">
+        <preConditions onFail="MARK_RAN">
+            <not><dbms type="oracle" /></not>
+        </preConditions>
+	    <modifyDataType tableName="TB_LOCALIZACAO" newDataType="varchar(4000)" columnName="DS_CAMINHO_COMPLETO" />
+	</changeSet>
+
+    <changeSet author="gabriel" id="6-1" dbms="oracle">
+        <addColumn tableName="tb_localizacao">
+            <column name="ds_caminho_completo_tmp" type="varchar(4000)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="6-2" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="6-1" changeLogFile="epp/0095-AjustesOracle.xml" />
+        </preConditions>
+        <update tableName="tb_localizacao">
+            <column name="ds_caminho_completo_tmp" valueComputed="ds_caminho_completo" />
+        </update>
+    </changeSet>
+
+    <changeSet author="gabriel" id="6-3" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="6-2" changeLogFile="epp/0095-AjustesOracle.xml" />
+        </preConditions>
+        <dropColumn columnName="ds_caminho_completo" tableName="tb_localizacao" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="6-4" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="6-3" changeLogFile="epp/0095-AjustesOracle.xml" />
+        </preConditions>
+        <addColumn tableName="tb_localizacao">
+            <column name="ds_caminho_completo" type="varchar(4000)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="6-5" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="6-4" changeLogFile="epp/0095-AjustesOracle.xml" />
+        </preConditions>
+        <update tableName="tb_localizacao">
+            <column name="ds_caminho_completo" valueComputed="ds_caminho_completo_tmp" />
+        </update>
+    </changeSet>
+
+    <changeSet author="gabriel" id="6-6" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="6-5" changeLogFile="epp/0095-AjustesOracle.xml" />
+        </preConditions>
+        <dropColumn columnName="ds_caminho_completo_tmp" tableName="tb_localizacao" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="6-7" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="6-6" changeLogFile="epp/0095-AjustesOracle.xml" />
+        </preConditions>
+        <addNotNullConstraint tableName="tb_localizacao" columnName="ds_caminho_completo" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="6-8" dbms="oracle">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="6-7" changeLogFile="epp/0095-AjustesOracle.xml" />
+        </preConditions>
+        <addUniqueConstraint columnNames="ds_caminho_completo" tableName="tb_localizacao" constraintName="uk_localizacao_01" />
+    </changeSet>
+
+	<changeSet author="gabriel" id="7">
+	    <modifyDataType tableName="TB_ITEM" newDataType="varchar(4000)" columnName="DS_CAMINHO_COMPLETO" />
+	</changeSet>
+    
+    <changeSet author="gabriel" id="8" dbms="oracle">
+        <addUniqueConstraint columnNames="id_pessoa_fisica" tableName="tb_usuario_login" constraintName="uk_usuario_login_01" />
+    </changeSet>
+</databaseChangeLog>

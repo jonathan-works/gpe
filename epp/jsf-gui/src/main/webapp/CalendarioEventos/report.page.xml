@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.org/schema/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd">
+
+    <begin-conversation join="true" />
+    <restrict>#{security.checkPage()}</restrict>
+    <param name="order" value="#{calendarioEventosList.order}" />
+    <param name="restrictionLogicOperator" value="#{calendarioEventosList.restrictionLogicOperator}" />
+    <param name="idLocalizacao" value="#{calendarioEventosList.entity.localizacao.idLocalizacao}"/>
+    <param name="evento" value="#{calendarioEventosList.entity.descricaoEvento}"/>
+    <param name="dia" value="#{calendarioEventosList.entity.dia}" />
+    <param name="mes" value="#{calendarioEventosList.entity.mes}" />
+    <param name="ano" value="#{calendarioEventosList.entity.ano}" />
+
+</page>

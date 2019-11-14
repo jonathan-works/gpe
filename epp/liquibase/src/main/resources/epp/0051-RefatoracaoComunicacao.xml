@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle" >
+        <addColumn tableName="tb_destinatario_modelo_comunic">
+            <column name="id_documento" type="bigint">
+                <constraints references="tb_documento(id_documento)" foreignKeyName="fk_dest_modelo_comunic_doc" />
+            </column>
+        </addColumn>
+        <dropForeignKeyConstraint baseTableName="tb_destinatario_modelo_comunic" constraintName="dest_modelo_comunic_doc_bin_fk" />
+        <dropColumn tableName="tb_destinatario_modelo_comunic" columnName="id_documento_bin" />
+    </changeSet>
+
+</databaseChangeLog>

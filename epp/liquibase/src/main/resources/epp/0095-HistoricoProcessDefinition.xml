@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1">
+        <createSequence sequenceName="sq_historico_proc_def" startValue="1" incrementBy="1" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <createTable tableName="tb_historico_proc_def">
+            <column name="id_historico_proc_def" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_historico_proc_def" />
+            </column>
+            <column name="id_fluxo" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_historico_proc_def_001" references="tb_fluxo(id_fluxo)" />
+            </column>
+            <column name="ds_process_definition" type="NCLOB">
+                <constraints nullable="false" />
+            </column>
+            <column name="ds_bpmn" type="NCLOB" />
+            <column name="ds_svg" type="NCLOB" />
+            <column name="nr_revisao" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="dt_alteracao" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

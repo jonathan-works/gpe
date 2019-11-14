@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <ui:param name="removeAllExpression"
+        value="#{'#{'}#{removeAllExpression}}" />
+    <ui:param name="reRenderRemove"
+        value="#{empty reRenderRemove ? gridId.concat(', ').concat(gridId.substring(2)) : reRenderRemove}" />
+    <h:form>
+        <a:commandLink limitRender="true" status=":status"
+            render="#{reRenderRemove}"
+            action="#{expressions.createMethodExpression(removeAllExpression).invoke(null)}"
+            rendered="#{canEdit}">
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
+                title="#{infoxMessages['button.deleteAll']}" />
+        </a:commandLink>
+    </h:form>
+
+</ui:composition>

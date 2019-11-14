@@ -1,0 +1,61 @@
+#panel() {
+  .panel-specs{
+    font-family: @default-font-family;
+  }
+  .panel-specs-colors{
+    background-image:none;
+    background-color: @panel-bg-color;
+    color: @panel-txt-color;
+  }
+  .standard {
+    body &-b {
+      #normalize-rich-components > .fonts;
+      padding:1em;
+    }
+    body &-hdr{
+      #normalize-rich-components > .fonts;
+      padding:2em/11;
+      border-width:1em/11;
+    }
+    & > &-hdr,&-hdr.dt-form-p-h{
+        #panel > .panel-specs;
+    }
+  }
+  .standard-colors {
+    border-color:@standard-border-color;
+    & > &-hdr,&-hdr.dt-form-p-h{
+        #panel > .panel-specs-colors;
+    }
+  }
+  .collapsible {
+    &-gr{
+      border-spacing: 0;
+    }
+    &.rf-tgp{
+        padding: 0;
+    }
+    &-hdr-exp&-hdr, &-hdr-colps&-hdr{
+        #panel > .panel-specs;
+    }
+  }
+  .collapsible-colors {
+    &.rf-tgp{
+        border-color:@panelBorderColor;
+    }
+    &-hdr-exp&-hdr, &-hdr-colps&-hdr{
+        #panel > .panel-specs-colors;
+    }
+    &-hdr-exp&-hdr{
+        background-color:@toggle-panel-bg-color;
+        color:@toggle-panel-txt-color;
+    }
+  }
+}
+
+.rf-p {
+  #panel > .standard;
+}
+
+.rf-cp{
+  #panel > .collapsible;
+}

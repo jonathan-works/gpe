@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich" xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <rich:panel bodyClass="panel processDefinition" id="tasksPanel">
+        <f:facet name="header">
+            <h:outputText value="#{infoxMessages['process.task.tableTitle']} #{taskFitter.tasks.get(0).task.name}" />
+        </f:facet>
+        <ui:include src="task.xhtml">
+            <ui:param name="t" value="#{taskFitter.currentTask}" />
+        </ui:include>
+    </rich:panel>
+</ui:composition>

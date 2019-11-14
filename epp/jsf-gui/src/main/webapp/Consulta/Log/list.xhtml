@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+  <ui:define name="title">#{infoxMessages['consultaEntidadeLog.titulo']}</ui:define>
+
+  <ui:define name="body">
+      <wi:panel id="logPanel" styleClass="content-block">
+        <wi:dataTable values="#{entidadeLogList.list(15)}"
+          bean="#{entidadeLogList}"
+          tableTitle="#{infoxMessages['consultaEntidadeLogGrid.titulo']}"
+          id="entidadeLogListTable"
+          showGrid="#{entidadeLogList.instance.inPesquisa}">
+          <ui:define name="searchForm">
+            <wi:searchForm formId="pesquisarLogForm"
+              formTitle="#{infoxMessages['searchForm.title']}" showLogicOperator="false"
+              showButtons="false">
+              <wi:selectOneMenu id="nomeEntidade"
+                value="#{entidadeLogList.instance.nomeEntidade}"
+                items="#{entidadeLogList.nomesDasEntidades}"
+                noSelectionLabel="#{infoxMessages['crud.select.all']}"
+                label="#{infoxMessages['entidadeLog.nomeEntidade']}" />
+
+              <wi:selectOneMenuEntity id="usuario"
+                value="#{entidadeLogList.instance.usuario}"
+                items="#{entidadeLogList.usuariosQuePossuemLogs}"
+                noSelectionLabel="#{infoxMessages['crud.select.all']}"
+                label="#{infoxMessages['entidadeLog.usuario']}" />
+
+              <wi:inputText id="ip"
+                value="#{entidadeLogList.instance.ip}"
+                label="#{infoxMessages['entidadeLog.ip']}" />
+
+              <wi:selectOneMenuEnum id="tipoOperacao"
+                items="#{entidadeLogList.tipoOperacaoLogEnumValues}"
+                value="#{entidadeLogList.instance.tipoOperacaoLogEnum}"
+                label="#{infoxMessages['entidadeLog.tipoOperacao']}"
+                noSelectionLabel="#{infoxMessages['crud.select.all']}" />
+
+              <wi:inputDataPeriodo id="periodo"
+                valueDateFrom="#{entidadeLogList.instance.dataInicio}"
+                valueDateTo="#{entidadeLogList.instance.dataFim}"
+                validatePastDateFrom="true" validatePastDateTo="true" />
+
+              <s:div styleClass="actionButtons">
+                <wi:commandButton id="consulta"
+                  value="#{infoxMessages['entidadeLog.consulta.button']}"
+                  action="#{entidadeLogList.instance.setInPesquisa(true)}"
+                  onclick="infox.showLoading();"
+                  oncomplete="infox.hideLoading();" reRender="pageBody" />
+
+                <wi:commandButton id="novaConsulta"
+                  value="#{infoxMessages['entidadeLog.novaConsulta.button']}"
+                  onclick="showLoading();" oncomplete="hideLoading();"
+                  action="#{entidadeLogList.limparTela()}"
+                  reRender="pageBody" />
+              </s:div>
+            </wi:searchForm>
+          </ui:define>
+
+          <ui:define name="headerToolBar">#{infoxMessages['entidadeLog.detalhe']}</ui:define>
+          <ui:define name="toolBar">
+            <s:link view="/Consulta/Log/detalheLog.seam"
+              onclick="infox.openPopUp('comprovante', '');"
+              target="comprovante">
+              <s:conversationPropagation type="none" />
+              <f:param name="idPesquisa" value="#{row.idLog}" />
+              <h:graphicImage title="Visualizar"
+                url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+            </s:link>
+          </ui:define>
+
+          <wi:columnOutputText columnId="nomeEntidade"
+            columnHeader="#{infoxMessages['entidadeLog.nomeEntidade']}"
+            value="#{row.nomeEntidade}" />
+          <wi:columnOutputText columnId="idEntidade"
+            columnHeader="#{infoxMessages['entidadeLog.idEntidade']}"
+            value="#{row.idEntidade}" />
+          <wi:columnOutputText columnId="ip"
+            columnHeader="#{infoxMessages['entidadeLog.ip']}"
+            value="#{row.ip}" />
+          <wi:columnDateTime columnId="dataLog"
+            columnHeader="#{infoxMessages['entidadeLog.dataLog']}"
+            value="#{row.dataLog}" pattern="dd/MM/yy kk:mm" />
+          <wi:columnOutputText columnId="usuario"
+            columnHeader="#{infoxMessages['entidadeLog.usuario']}"
+            value="#{row.usuario}" />
+          <wi:columnEnum columnId="tipoOperacao"
+            columnHeader="#{infoxMessages['entidadeLog.tipoOperacao']}"
+            value="#{row.tipoOperacao}" />
+        </wi:dataTable>
+      </wi:panel>
+  </ui:define>
+</ui:composition>

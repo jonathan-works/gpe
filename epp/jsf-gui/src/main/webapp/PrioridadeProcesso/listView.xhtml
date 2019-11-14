@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['prioridadeProcesso.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{prioridadeProcessoCrudAction}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{prioridadeProcessoList.list(15)}"
+            bean="#{prioridadeProcessoList}"
+            tableTitle="#{infoxMessages['prioridadeProcesso.tableTitle']}"
+            id="prioridadeProcessoList" rowId="#{row.idPrioridade}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarPrioridadeProcessoForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    
+                    <wi:inputNumber id="peso"
+                        value="#{prioridadeProcessoList.entity.peso}"
+                        label="#{infoxMessages['prioridadeProcesso.peso']}" />
+                        
+                    <wi:inputText id="descricaoPrioridadeProcesso"
+                        label="#{infoxMessages['prioridadeProcesso.descricaoPrioridade']}"
+                        value="#{prioridadeProcessoList.entity.descricaoPrioridade}"
+                        maxlength="150" />
+
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{prioridadeProcessoList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            
+            <ui:define name="headerToolBar"/>
+
+            <wi:columnOutputText columnId="peso"
+                columnHeader="#{infoxMessages['prioridadeProcesso.peso']}"
+                value="#{row.peso}" />
+            <wi:columnOutputText columnId="descricaoPrioridade"
+                columnHeader="#{infoxMessages['prioridadeProcesso.descricaoPrioridade']}"
+                value="#{row.descricaoPrioridade}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="prioridadeProcessoForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputNumber id="peso"
+                value="#{prioridadeProcessoCrudAction.instance.peso}"
+                required="true"
+                label="#{infoxMessages['prioridadeProcesso.peso']}" 
+                maxlength="10"/>
+            <wi:inputText id="descricaoPrioridade"
+                label="#{infoxMessages['prioridadeProcesso.descricaoPrioridade']}"
+                required="true"
+                value="#{prioridadeProcessoCrudAction.instance.descricaoPrioridade}"
+                maxlength="150" />
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}" required="true"
+                value="#{prioridadeProcessoCrudAction.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:inputText id="#{id}" styleClass="inputCep" size="9"
+        maxlength="9">
+        <ui:insert />
+    </wi:inputText>
+    <wi:mask selector=".inputCep" mask="99999-999" />
+
+</ui:composition>

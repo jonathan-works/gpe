@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle" >
+        <addColumn tableName="tb_tipo_comunicacao">
+            <column name="id_tipo_modelo_documento" type="bigint">
+                <constraints nullable="true" references="tb_tipo_modelo_documento(id_tipo_modelo_documento)" foreignKeyName="fk_tp_comunic_tp_modelo_doc" />
+            </column>
+            <column name="id_classificacao_documento" type="bigint">
+                <constraints nullable="true" references="tb_classificacao_documento(id_classificacao_documento)" foreignKeyName="fk_tp_comunic_classif_doc" />
+            </column>
+        </addColumn>
+	</changeSet>
+
+</databaseChangeLog>

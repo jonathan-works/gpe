@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+  
+  <ui:define name="baseBody">
+    <div style="width: 49%; float: left">
+      <applet width="200" height="25" id="certificacao"
+        code="ChupaCabraApplet"
+        archive="#{pathResolver.contextPath}/certificado/chupaCabraApplet.jar">
+        <param name="formId" value="formCertificados" />
+        <param name="outputField" value="#{rich:clientId('outputText')}" />
+      </applet>
+      <h:form id="formCertificados">
+        <span style="display:none">
+        <wi:inputTextarea
+          id="outputText"
+          value="#{certificadoChupaCabra.dadosCertificado}"
+         />
+         </span>
+      </h:form>
+      
+      <a:jsFunction name="readCertificado" action="#{certificadoChupaCabra.read()}">
+        <a:param assignTo="#{certificadoChupaCabra.dadosCertificado}" name="param1"></a:param>
+      </a:jsFunction>
+      
+      <h:outputScript>
+        function validate(){
+          var outputText = document.getElementById("#{rich:clientId('outputText')}");
+          var text = outputText.value;
+          if (text.trim()!==""){
+            readCertificado(text);
+            outputText.value="";
+          }
+        }
+        setInterval(validate,1000);
+      </h:outputScript>
+      
+    </div>
+    <h:messages globalOnly="true" styleClass="message" />
+  </ui:define>
+</ui:composition> 

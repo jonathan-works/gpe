@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="gabriel" id="1" dbms="oracle, postgresql">
+        <createTable tableName="tb_processo_jbpm">
+            <column name="id_processo" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_processo_jbpm_01" references="tb_processo(id_processo)"/>
+            </column>
+            <column name="id_process_instance" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_processo_jbpm_02" references="jbpm_processinstance(id_)" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="1" dbms="mssql">
+        <createTable tableName="tb_processo_jbpm">
+            <column name="id_processo" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_processo_jbpm_01" references="tb_processo(id_processo)"/>
+            </column>
+            <column name="id_process_instance" type="numeric(19)">
+                <constraints nullable="false" foreignKeyName="fk_processo_jbpm_02" references="jbpm_processinstance(id_)" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0118-ProcessoJbpm.xml" />
+        </preConditions>
+
+        <addPrimaryKey tableName="tb_processo_jbpm" constraintName="pk_processo_jbpm" columnNames="id_processo, id_process_instance" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0118-ProcessoJbpm.xml" />
+        </preConditions>
+
+        <sql>
+            INSERT INTO tb_processo_jbpm (id_processo, id_process_instance)
+            SELECT vi.longvalue_, vi.processinstance_
+            FROM jbpm_variableinstance vi
+            WHERE vi.class_ = 'L' AND vi.name_ = 'processo' AND
+            EXISTS(SELECT 1 FROM tb_processo p WHERE p.id_processo = vi.longvalue_)
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0118-ProcessoJbpm.xml" />
+        </preConditions>
+
+        <createProcedure dbms="postgresql">
+            CREATE FUNCTION update_tb_processo_jbpm() RETURNS trigger AS $$
+            BEGIN
+                INSERT INTO tb_processo_jbpm (id_processo, id_process_instance)
+                VALUES (NEW.longvalue_, NEW.processinstance_);
+                RETURN NEW;
+            END $$ LANGUAGE 'plpgsql'
+        </createProcedure>
+
+        <createProcedure dbms="postgresql">
+            CREATE TRIGGER update_tb_processo_jbpm AFTER INSERT ON jbpm_variableinstance FOR EACH ROW WHEN (NEW.class_ = 'L' AND NEW.name_ = 'processo') EXECUTE PROCEDURE update_tb_processo_jbpm();
+        </createProcedure>
+
+        <createProcedure dbms="oracle">
+            CREATE TRIGGER update_tb_processo_jbpm AFTER INSERT
+		    ON jbpm_variableinstance FOR EACH ROW
+    		WHEN(
+    			NEW.class_ = 'L'
+    			AND NEW.name_ = 'processo'
+	    	)
+            BEGIN
+            INSERT INTO tb_processo_jbpm(id_processo, id_process_instance) VALUES (:NEW.longvalue_, :NEW.processinstance_);
+            END;
+        </createProcedure>
+
+        <createProcedure dbms="mssql">
+            CREATE TRIGGER update_tb_processo_jbpm ON jbpm_variableinstance AFTER INSERT AS
+            INSERT INTO tb_processo_jbpm (id_processo, id_process_instance)
+            SELECT i.longvalue_, i.processinstance_ FROM inserted i
+            WHERE i.class_ = 'L' AND i.name_ = 'processo'
+        </createProcedure>
+    </changeSet>
+
+    <changeSet author="gabriel" id="5" dbms="oracle, postgresql">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0118-ProcessoJbpm.xml" />
+        </preConditions>
+
+        <createIndex indexName="idx_processo_jbpm_01" tableName="tb_processo_jbpm" unique="true">
+            <column name="id_process_instance" type="bigint" />
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="gabriel" id="5" dbms="mssql">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0118-ProcessoJbpm.xml" />
+        </preConditions>
+
+        <createIndex indexName="idx_processo_jbpm_01" tableName="tb_processo_jbpm" unique="true">
+            <column name="id_process_instance" type="numeric(19)" />
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="gabriel" id="6">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0118-ProcessoJbpm.xml" />
+        </preConditions>
+
+        <createIndex indexName="idx_processo_jbpm_02" tableName="tb_processo_jbpm">
+            <column name="id_processo" type="bigint" />
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

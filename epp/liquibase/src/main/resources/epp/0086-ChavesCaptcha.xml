@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+<changeSet author="paulofilho" id="1">
+    <update tableName="tb_parametro">
+        <column name="vl_variavel" type="varchar(4000)" value="6LdTvh0TAAAAAF0l_SrExJCVzGEbpW2ij48sBPrV" />
+        <where>nm_variavel = 'recaptchaPublicKey'</where>
+    </update>
+    <update tableName="tb_parametro">
+        <column name="vl_variavel" type="varchar(4000)" value="6LdTvh0TAAAAAA2AG5OrKcS38obTNw_6j6EAzt9b" />
+        <where>nm_variavel = 'recaptchaPrivateKey'</where>
+    </update>
+</changeSet>
+
+</databaseChangeLog>

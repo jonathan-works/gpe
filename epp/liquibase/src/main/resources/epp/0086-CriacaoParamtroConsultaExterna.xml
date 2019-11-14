@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="marialuisa" id="1" dbms="mssql, postgresql, oracle" >
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(id_parametro) FROM tb_parametro WHERE nm_variavel = 'ativaConsultaExternaPadrao'</sqlCheck>
+        </preConditions>
+        <insert tableName="tb_parametro" dbms="mssql" >
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="ativaConsultaExternaPadrao" />
+            <column name="ds_variavel" value="Indica se a consulta externa padrao está ativa" />
+            <column name="vl_variavel" value="false" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="postgresql">
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="ativaConsultaExternaPadrao" />
+            <column name="ds_variavel" value="Indica se a consulta externa padrao está ativa" />
+            <column name="vl_variavel" value="false" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+        <insert tableName="tb_parametro" dbms="oracle">
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="ativaConsultaExternaPadrao" />
+            <column name="ds_variavel" value="Indica se a consulta externa padrao está ativa" />
+            <column name="vl_variavel" value="false" />
+            <column name="in_ativo" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
+        </insert>
+    </changeSet>
+        
+</databaseChangeLog>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://jboss.org/schema/seam/pdf"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="title" value="Items" />
+
+
+    <wi:dataReport title="#{infoxMessages['item.reportTitle']}" columns="4"
+        widths="2 4 2 1" headerText="#{itemList.criteria}">
+
+        <wi:reportColumnHeader title="#{infoxMessages['item.codigoItem']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['item.descricaoItem']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['item.itemPai']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+
+        <ui:repeat var="row" value="#{itemList.list()}">
+
+            <wi:reportColumn value="#{row.codigoItem}" />
+            <wi:reportColumn value="#{row.descricaoItem}" />
+            <wi:reportColumn value="#{row.itemPai}" />
+            <wi:reportColumn value="#{row.ativo ? messages['entity.ativo'] : messages['entity.inativo']}"
+                columnAlign="center" />
+
+        </ui:repeat>
+
+    </wi:dataReport>
+
+</ui:composition>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    <changeSet author="paulofilho" id="1" dbms="mssql, postgresql, oracle" >
+        <validCheckSum>7:8c1a16e4903fcefb897c3d20621bea83</validCheckSum>
+        <validCheckSum>7:9f8ee1cdbcad073561a220fa91efaf62</validCheckSum>
+        <addColumn tableName="tb_relacionamento_processo">
+            <column name="tp_processo" type="NCHAR(3)"/>
+        </addColumn>
+        <update tableName="tb_relacionamento_processo" >
+            <column name="tp_processo" value="INT"/>
+            <where> id_processo is not null </where> 
+        </update>
+        <update tableName="tb_relacionamento_processo" >
+            <column name="tp_processo" value="EXT"/>
+            <where> id_processo is  null </where> 
+        </update>
+    </changeSet>
+
+    <changeSet author="paulofilho" id="2" dbms="mssql">
+        <validCheckSum>7:945b4fee1650f0e5c7b7983cff160ba4</validCheckSum>
+        <validCheckSum>7:d94b3f6f0df07e499bd604b9606bf4f9</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">
+                select count(*) from sys.indexes
+                where name = 'tb_relacionamento_processo_id_processo_unique'
+                and is_unique = 1
+            </sqlCheck>
+        </preConditions>
+        <dropIndex indexName="tb_relacionamento_processo_id_processo_unique" tableName="tb_relacionamento_processo"/>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">
+                select count(*) from sys.indexes
+                where name = 'tb_relacionamento_processo_id_processo_unique'
+                and is_unique = 1
+            </sqlCheck>
+        </preConditions>
+        <dropIndex indexName="tb_relacionamento_processo_nr_processo_unique" tableName="tb_relacionamento_processo"/>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="4" dbms="mssql, postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="tb_relacionamento_processo_id_processo_unique"/></not>
+        </preConditions>
+        <createIndex tableName="tb_relacionamento_processo" indexName="tb_relacionamento_processo_id_processo_unique">
+            <column name="id_processo"  type="bigint"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="5" dbms="mssql, postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="tb_relacionamento_processo_nr_processo_unique"/></not>
+        </preConditions>
+        <createIndex tableName="tb_relacionamento_processo" indexName="tb_relacionamento_processo_nr_processo_unique">
+            <column name="nr_processo"  type="NVARCHAR(30)"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="6" dbms="mssql">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="tb_relacionamento_processo_nr_processo_unique"/>
+        </preConditions>
+        <dropIndex indexName="tb_relacionamento_processo_nr_processo_unique" tableName="tb_relacionamento_processo"/>
+    </changeSet>
+    
+    <changeSet author="paulofilho" id="3" dbms="mssql, postgresql, oracle" >
+        <dropNotNullConstraint
+            columnDataType="NVARCHAR(30)"
+            columnName="nr_processo"
+            tableName="tb_relacionamento_processo"/>
+            
+        <addNotNullConstraint
+            columnDataType="NCHAR(3)"
+            columnName="tp_processo"
+            tableName="tb_relacionamento_processo"/>
+    </changeSet>
+
+</databaseChangeLog>
+

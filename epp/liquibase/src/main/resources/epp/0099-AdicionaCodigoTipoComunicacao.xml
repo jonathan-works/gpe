@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="marialuisa" id="1">
+       <addColumn tableName="tb_tipo_comunicacao">
+            <column name="cd_tipo_comunicacao" type="nvarchar(150)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="mssql">
+        <update tableName="tb_tipo_comunicacao">
+            <column name="cd_tipo_comunicacao" type="nvarchar(150)" 
+                valueComputed="LTRIM(RTRIM(REPLACE(REPLACE((ds_tipo_comunicacao COLLATE sql_latin1_general_cp1251_ci_as), ' ',''), '/', '')))"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="postgresql">
+        <update tableName="tb_tipo_comunicacao">
+            <column name="cd_tipo_comunicacao" type="nvarchar(150)" 
+                valueComputed="replace(replace(trim(convert_from(convert_to(ds_tipo_comunicacao, 'LATIN1'), 'LATIN1')), ' ', ''), '/', '')"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="2" dbms="oracle">
+        <update tableName="tb_tipo_comunicacao">
+            <column name="cd_tipo_comunicacao" type="nvarchar(150)" valueComputed="replace(trim(ds_tipo_comunicacao), ' ', '')"/>
+        </update>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="3">
+        <addNotNullConstraint columnDataType="varchar(150)" columnName="cd_tipo_comunicacao" tableName="tb_tipo_comunicacao"/>
+    </changeSet>
+
+    <changeSet author="marialuisa" id="4">
+        <addUniqueConstraint columnNames="cd_tipo_comunicacao" constraintName="uk_tipo_comunicacao_001" tableName="tb_tipo_comunicacao"/>
+    </changeSet>
+    
+</databaseChangeLog>

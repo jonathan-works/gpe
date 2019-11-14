@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page xmlns="http://jboss.org/schema/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
+	login-required="true">
+
+	<begin-conversation join="true" />
+	<param name="idProcesso" value="#{consultaController.id}" />
+	<param name="inicio" value="#{processoHandler.inicio}" />
+	<param name="taskId" value="#{processoHandler.taskId}" />
+	<param name="idJbpm" value="#{org.jboss.seam.bpm.businessProcess.processId}" />
+	<param name="processoId" value="#{processoHandler.processoId}" />
+	<action execute="#{consultaController.checarVisibilidade()}"
+		on-postback="false" />
+</page>

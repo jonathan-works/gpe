@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/xhtml/templates/minimal.xhtml">
+
+    <ui:define name="title">#{infoxMessages['consultaExterna.titlePage']}</ui:define>
+    <ui:param name="showMenu" value="false" />
+    <ui:param name="controller" value="#{consultaExternaController}"/>
+    <ui:param name="hideHelpBanner" value="true" />
+    
+    <ui:define name="body">
+
+        <infox:tabPanel switchType="ajax" id="consultaExternaTabPanel"
+            activeTab="#{consultaExternaController.tab}">
+
+            <h:form>
+                <infox:tabHeaders />
+            </h:form>
+
+            <infox:tab id="searchNumeroProcesso"
+                name="searchNumeroProcesso"
+                title="#{infoxMessages['consultaProcesso.porNumeroProcesso']}"
+                status=":status" action="#{controller.onClickSearchNumeroTab()}">
+                <wi:dataTable
+                    values="#{consultaProcessoExterno.list(15)}"
+                    bean="#{consultaProcessoExterno}"
+                    tableTitle="#{infoxMessages['consultaExterna.tableTitle']}"
+                    id="consultaProcessoExterno"
+                    rowId="#{row.idProcesso}"
+                    showGrid="#{consultaProcessoExterno.exibirTable}">
+
+                    <ui:define name="headerToolBar" />
+
+                    <ui:define name="searchForm">
+                        <wi:searchForm formId="pesquisarProcessoEpaForm"
+                            formTitle="#{infoxMessages['searchForm.title']}"
+                            clearAction="consultaProcessoExterno.esconderTable()"
+                            searchAction="consultaProcessoExterno.exibirTable()">
+                            <wi:inputText id="numeroProcesso"
+                                label="#{infoxMessages['processoEpp.numeroProcesso']}"
+                                value="#{consultaProcessoExterno.numeroProcesso}"
+                                minlength="1"
+                                required="true" />
+                        </wi:searchForm>
+                    </ui:define>
+
+                    <ui:define name="toolBar">
+                        <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                            title="#{infoxMessages['button.selecionar']}" action="#{consultaExternaController.selectProcesso(row)}"/>
+                    </ui:define>
+
+                    <infox:dynamicColumns columns="#{consultaProcessoDynamicColumnsController.dynamicColumns}" />
+                </wi:dataTable>
+                #{consultaProcessoDynamicColumnsController.clearMensagensValidacao()}
+            </infox:tab>
+
+            <infox:tab id="searchParteProcesso"
+                name="searchParteProcesso"
+                title="#{infoxMessages['consultaProcesso.porParteProcesso']}"
+                status=":status" action="#{controller.onClickSearchParteTab()}">
+                <p:outputPanel layout="block" id="consultaProcessoExternoPorPartesDiv">
+	                <wi:dataTable
+	                    values="#{consultaProcessoExternoPorPartes.list(15)}"
+	                    bean="#{consultaProcessoExternoPorPartes}"
+	                    tableTitle="#{infoxMessages['consultaExternaPorPartes.tableTitle']}"
+	                    id="consultaProcessoExternoPorPartes"
+	                    rowId="#{row.idProcesso}"
+	                    showGrid="#{consultaProcessoExternoPorPartes.exibirTable and not empty consultaProcessoExternoPorPartes.fluxo and not empty consultaProcessoExternoPorPartes.nomePartes}">
+	
+	                    <ui:define name="headerToolBar" />
+	
+	                    <ui:define name="searchForm">
+	                        <wi:searchForm
+	                            formId="pesquisarProcessoEpaPorPartesForm"
+	                            formTitle="#{infoxMessages['searchForm.title']}"
+	                            clearAction="consultaProcessoExternoPorPartes.esconderTable()"
+	                            searchAction="consultaProcessoExternoPorPartes.exibirTable()">
+	                            <div class="property-field-edit-name">
+									<h:outputLabel id="fluxoLabel" for="fluxo">
+										<h:outputText value="Tipo de Processo" />
+									</h:outputLabel>
+								</div>
+	                            <p:autoComplete	id="fluxo" value="#{consultaProcessoExternoPorPartes.fluxo}" scrollHeight="300"
+									completeMethod="#{consultaProcessoDynamicColumnsController.getFluxos}" forceSelection="true"
+									var="item" itemLabel="#{item.fluxo}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
+									minQueryLength="3" dropdown="true">
+									<a:ajax event="itemSelect" execute="@this" render="consultaProcessoExternoPorPartesDiv" 
+										onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+								</p:autoComplete>
+	                            <wi:inputText id="nomeParte"
+	                                label="#{infoxMessages['processoEpp.nome']}"
+	                                value="#{consultaProcessoExternoPorPartes.nomePartes}"
+	                                minlength="1" rendered="#{not empty consultaProcessoExternoPorPartes.fluxo}" />
+	                        </wi:searchForm>
+	                    </ui:define>
+	
+	                    <ui:define name="toolBar">
+	                        <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}" 
+	                            action="#{consultaExternaController.selectProcesso(row)}"/>
+	                    </ui:define>
+	
+	                    <infox:dynamicColumns columns="#{consultaProcessoDynamicColumnsController.dynamicColumns}" />
+	                </wi:dataTable>
+	                #{consultaProcessoDynamicColumnsController.clearMensagensValidacao()}
+	        	</p:outputPanel>
+            </infox:tab>
+
+            <infox:tab id="processoExternoView"
+                name="processoExternoView"
+                title="#{infoxMessages['consultaProcesso.view']}"
+                status=":status" rendered="#{not empty controller.processo}">
+
+				<h:form rendered="#{consultaExternaController.mostrarCaptcha}" style="font-size:14px;">
+					<div style="display: inline-block;">
+		          		<p:captcha id="captcha" label="Captcha" language="pt_BR" validatorMessage="#{infoxMessages['captcha.incorreto']}" requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+	          			<p:messages for="captcha" severity="error"/>
+		          		<div style="text-align: center; margin-top: 0.5em">
+		          			<a:commandButton styleClass="buttons" value="OK" render="processoExternoView" execute="@form" action="#{consultaExternaController.validateCaptcha}" />
+		          		</div>
+	          		</div>
+				</h:form>
+                
+                <h:messages globalOnly="true" styleClass="message"
+                    id="globalMessages" />
+
+				<p:outputPanel >
+	                <h:form id="processoView" rendered="#{not consultaExternaController.mostrarCaptcha}">
+	                    <rich:collapsiblePanel switchType="client"
+	                        expanded="true">
+	                        <h:panelGrid columns="2" width="100%"
+	                            columnClasses="viewColumn">
+	                            <wi:outputText id="dataInicio"
+	                                label="#{infoxMessages['processo.dataInicio']}"
+	                                value="#{controller.processo.dataInicio}">
+	                                <f:convertDateTime
+	                                    pattern="dd/MM/yyyy kk:mm" />
+	                            </wi:outputText>
+	                            <wi:outputText id="usuarioCadastro"
+	                                label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
+	                                value="#{controller.processo.usuarioCadastro.nomeUsuario}" />
+	                        </h:panelGrid>
+	                    </rich:collapsiblePanel>
+	
+	
+	                    <infox:tabPanel switchType="ajax">
+	                        <infox:tabHeaders />
+	
+	                        <infox:tab id="form" name="form"
+	                            title="#{infoxMessages['acaoProcesso.menuText']}"
+	                            immediate="true" status=":status"
+	                            style="border-style: solid; border-width: 1px; border-color: lightgray">
+	
+	                            <rich:dataTable
+	                                value="#{controller.processo.processoTarefaList}"
+	                                rowKeyVar="key" var="task" styleClass="rf-dt-crud">
+	                                <rich:column styleClass="defaultCell">
+	                                    <f:facet name="header">#{infoxMessages['tarefa.nome']}</f:facet>
+	                                    <h:outputText value="#{task.tarefa}" />
+	                                </rich:column>
+	
+	                                <rich:column style="text-align: center"
+	                                    styleClass="defaultCell">
+	                                    <f:facet name="header">#{infoxMessages['tarefa.inicio']}</f:facet>
+	                                    <h:outputText value="#{task.dataInicio}">
+	                                        <s:convertDateTime
+	                                            pattern="dd/MM/yy kk:mm:ss" />
+	                                    </h:outputText>
+	                                </rich:column>
+	
+	                                <rich:column style="text-align: center"
+	                                    styleClass="defaultCell">
+	                                    <f:facet name="header">#{infoxMessages['tarefa.termino']}</f:facet>
+	                                    <h:outputText value="#{task.dataFim}">
+	                                        <s:convertDateTime
+	                                            pattern="dd/MM/yy kk:mm:ss" />
+	                                    </h:outputText>
+	                                </rich:column>
+	                                <rich:column style="text-align:center"
+	                                    styleClass="defaultCell">
+	                                    <f:facet name="header">#{infoxMessages['tarefa.documentos']}</f:facet>
+	                                    <rich:dataTable
+	                                        value="#{controller.getAnexosPublicos(task)}"
+	                                        rowKeyVar="key" var="doc">
+	                                        <rich:column>
+	                                        	<h:form>
+		                                            <a:commandLink execute="@this" render="@form" action="#{jsfUtil.applyLastPhaseFlashAction()}"
+		                                                oncomplete="#{fileDownloader.getWindowOpen(doc.documentoBin)}" >
+		                                                <f:setPropertyActionListener value="#{doc.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+	            										<f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
+		                                                <h:graphicImage
+		                                                    title="Visualizar"
+		                                                    url="#{layoutController.getResourceUrlByPath(empty doc.documentoBin.extensao ? '/imagens/view.png' : '/imagens/mod/pdf.gif')}" />
+		                                            </a:commandLink>
+	                                            </h:form>
+	                                        </rich:column>
+	                                        <rich:column>
+	                                            <h:outputText
+	                                                value="#{doc.descricao}" />
+	                                        </rich:column>
+	                                        <rich:column>
+	                                            <h:outputText
+	                                                value="#{doc.documentoBin.dataInclusao}">
+	                                                <s:convertDateTime
+	                                                    pattern="dd/MM/yy" />
+	                                            </h:outputText>
+	                                        </rich:column>
+	                                    </rich:dataTable>
+	                                </rich:column>
+	                            </rich:dataTable>
+	                        </infox:tab>
+	
+	                    </infox:tabPanel>
+	                </h:form>
+                </p:outputPanel>
+            </infox:tab>
+
+        </infox:tabPanel>
+    </ui:define>
+
+</ui:composition>

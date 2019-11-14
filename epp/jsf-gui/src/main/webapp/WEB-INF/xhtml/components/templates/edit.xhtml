@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+
+  <ui:param
+    name="widthDiv"
+    value="#{empty props.widthDiv ? (empty widthDiv ? '250px' : widthDiv) : props.widthDiv}" />
+  <ui:param
+    name="inNewLine"
+    value="#{empty inNewLine ? props.inNewLine : inNewLine}" />
+  <ui:param
+    name="tipMessage"
+    value="#{empty props.tipMessage ? tipMessage : props.tipMessage}" />
+  <ui:param
+    name="required"
+    value="#{required or requiredField}" />
+  <ui:param
+    name="showRequired"
+    value="#{not empty showRequired ? showRequired : required and not empty label}" />
+  <ui:param
+    name="homeRef"
+    value="#{empty homeRef ? home : homeRef}" />
+  <ui:param
+    name="fieldName"
+    value="#{(wi:get(fieldId, id)).toString().replaceAll('\\.', '_')}" />
+  <ui:param
+    name="fieldId"
+    value="field#{fieldName}" />
+  <ui:param
+    name="renderTipMessage"
+    value="#{wi:get(renderTipMessage, true)}"></ui:param>
+  <ui:param name="inline" value="#{empty inline ? false : inline}" />
+
+  <s:fragment rendered="#{!excludeFields.matches('.*\\b'.concat(id).concat('\\b.*'))}">
+    <div class="property-field-edit">
+      <s:div id="#{fieldId}Div" styleClass="property-field-edit-name" style="#{inline ? 'display:inline' : ''}">
+        <h:outputLabel for="#{id}">
+          <ui:insert name="label" />
+          <h:outputText styleClass="required" rendered="#{showRequired}" value="*" />
+        </h:outputLabel>
+        <c:if test="#{not empty tipMessage and renderTipMessage}">
+          <h:graphicImage
+            id="#{fieldId}EditTipImg"
+            url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+          <rich:tooltip
+            for="#{fieldId}EditTipImg"
+            value="#{tipMessage}" />
+        </c:if>
+        <s:message
+          styleClass="property-error property-msg"
+          rendered="#{empty showMessage ? true : showMessage}" />
+      </s:div>
+      <s:div id="#{fieldId}Container" rendered="#{!obfuscate}" styleClass="property-field-edit-value #{invalid ? 'property-error':''}" style="#{inline ? 'display:inline' : ''}">
+        <ui:insert />
+      </s:div>
+      <h:outputText value="ocultado" rendered="#{obfuscate}" />
+    </div>
+  </s:fragment>
+</ui:composition>

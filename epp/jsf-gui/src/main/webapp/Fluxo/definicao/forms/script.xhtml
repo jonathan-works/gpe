@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+>
+    <s:div id="#{id}Script">
+        <wi:inputTextarea
+            id="#{id}Event"
+            value="#{event.currentAction.expression}"
+            label="Expressão"
+        >
+            <a:ajax
+                event="change"
+                execute="@this"
+                render="#{id}EventList"
+                limitRender="true"
+            />
+        </wi:inputTextarea>
+    </s:div>
+</ui:composition>

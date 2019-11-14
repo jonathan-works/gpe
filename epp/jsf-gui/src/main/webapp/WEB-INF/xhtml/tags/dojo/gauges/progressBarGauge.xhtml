@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:param name="id" value="#{wi:get(id, 'default')}" />
+
+    <script type="text/javascript">
+    invoke(["infox.ProgressBarGauge"],function(ProgressBarGauge) {
+    	ProgressBarGauge({
+    	    id:"#{id}Gauge",
+    	    containerId:"#{id}GaugeContainer",
+    	    min:#{wi:get(min,false)},
+    	    max:#{wi:get(max,false)},
+    	    value:#{wi:get(value,false)},
+    	    hideValues:#{wi:get(hideValues,false)},
+    	    tickInterval:#{wi:get(tickInterval, false)},
+    	    width:#{wi:get(width, false)},
+    	    height:#{wi:get(height, false)},
+    	    barHeight:#{wi:get(barHeight, false)},
+    	    barWidth:#{wi:get(barWidth,false)},
+    	    barPosX:#{wi:get(barPosX,false)},
+    	    barPosY:#{wi:get(barPosY,false)},
+    	    draggable:#{wi:get(draggable, false)},
+    	    hideTicks:#{wi:get(hideTicks, false)},
+    	    indicatorLabel:#{wi:get(indicatorLabel, false)},
+    	    colors:{}
+    	});
+    });
+    </script>
+    <div id="#{id}GaugeContainer" class="barGaugeContainer">
+        <div id="#{id}Gauge" class="gauge"></div>
+    </div>
+
+</ui:composition>

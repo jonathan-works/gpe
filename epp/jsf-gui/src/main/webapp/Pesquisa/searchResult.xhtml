@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="head">
+        <ui:param
+            name="selectable"
+            value="false" />
+    </ui:define>
+    <ui:define name="body">
+        <h:outputScript
+            library="js"
+            name="jquery.hotkeys.js" />
+        <h:outputScript
+            library="js"
+            namme="searchResult.js" />
+        <wi:panel
+            id="searchResultPanel"
+            styleClass="content-block">
+            <s:div id="resultado">
+                <div>
+                    <div>Pesquisa de documentos</div>
+                    <h:panelGroup rendered="#{search.resultSize gt 0}">
+                        <h:outputText
+                            value="#{search.firstRow} a #{search.lastRow}"
+                            style="font-weight: bold" />
+                        <h:outputText value=" de " />
+                    </h:panelGroup>
+                    <h:outputText
+                        value="#{search.resultSize}"
+                        style="font-weight: bold" />
+                    <h:outputText value=" documentos sobre " />
+                    <h:outputText
+                        value="#{search.searchText}"
+                        style="font-weight: bold" />
+                </div>
+                <h:form>
+                    <h:dataTable
+                        id="searchResult"
+                        rows="#{search.pageSize}"
+                        rendered="#{! empty search.searchResult}"
+                        value="#{search.searchResult}"
+                        var="v">
+                        <h:column>
+                            <div>
+                                <s:link
+                                    target="_blank"
+                                    view="/Processo/Consulta/paginator.xhtml"
+                                    value="Processo: #{processoSearcher.getNumeroProcesso(v.processo)} - #{v.taskName}">
+                                    <f:param
+                                        name="queryString"
+                                        value="#{search.searchText}" />
+                                    <f:param
+                                        name="inicio"
+                                        value="0" />
+                                    <f:param
+                                        name="taskId"
+                                        value="#{v.taskId}" />
+                                    <f:param
+                                        name="idProcesso"
+                                        value="#{v.processo}" />
+                                </s:link>
+                                <div>
+                                    <h:outputText
+                                        value="#{v.texto}"
+                                        escape="false" />
+                                    <h:outputText
+                                        rendered="#{not empty v.nomeArquivo}"
+                                        value="#{infoxMessages['search.foundAtPdf']} #{v.nomeArquivo}" />
+                                </div>
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </s:div>
+            <s:div id="searchPager">
+                <h:form id="pager">
+                    <h:panelGrid
+                        columns="5"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        rendered="#{search.resultSize &gt; 0 and (search.previousPageAvailable or search.nextPageAvailable)}">
+                        <c:set var="pathResource" value="/imagens/grid/arrow-first#{search.previousPageAvailable ? '' : '-off'}.gif" />
+                        <h:commandButton
+                            id="firstPage"
+                            action="#{search.firstPage()}"
+                            disabled="#{!search.previousPageAvailable}"
+                            image="#{layoutController.getResourceUrlByPath(pathResource)}" />
+                        <c:set var="pathResource" value="/imagens/grid/arrow-previous#{search.previousPageAvailable ? '' : '-off'}.gif" />
+                        <h:commandButton
+                            id="previousPage"
+                            action="#{search.previousPage()}"
+                            disabled="#{!search.previousPageAvailable}"
+                            image="#{layoutController.getResourceUrlByPath(pathResource)}" />
+                        <c:set var="pathResource" value="/imagens/grid/arrow-next#{search.nextPageAvailable ? '' : '-off'}.gif" />
+                        <h:commandButton
+                            id="nextPage"
+                            action="#{search.nextPage()}"
+                            disabled="#{!search.nextPageAvailable}"
+                            image="#{layoutController.getResourceUrlByPath(pathResource)}" />
+                        <c:set var="pathResource" value="/imagens/grid/arrow-last#{search.nextPageAvailable ? '' : '-off'}.gif" />
+                        <h:commandButton
+                            id="lastPage"
+                            action="#{search.lastPage()}"
+                            disabled="#{!search.nextPageAvailable}"
+                            image="#{layoutController.getResourceUrlByPath(pathResource)}" />
+                    </h:panelGrid>
+                </h:form>
+            </s:div>
+        </wi:panel>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <div class="pageContent">
+        <div class="subBorda">
+            <div class="tituloPagina label-header">
+                <ui:insert name="title">#{title}</ui:insert>
+                <wi:helpIcon />
+            </div>
+            <div class="conteudo">
+                <ui:insert />
+            </div>
+        </div>
+    </div>
+</ui:composition>

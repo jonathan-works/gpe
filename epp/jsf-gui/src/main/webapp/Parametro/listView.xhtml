@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+	<ui:define name="title">#{infoxMessages['parametro.titlePage']}</ui:define>
+	<ui:param name="home" value="#{parametroCrudAction}" />
+
+	<ui:define name="body">
+        <div id="dynamicForm">
+    		<h:form>
+    			<h:selectOneMenu value="#{parametroView.grupo}" styleClass="input select"
+    				hideNoSelectionOption="true" title="#{infoxMessages['parametro.grupos.title']}">
+    				<f:selectItems value="#{parametroView.grupos}" />
+    				<f:ajax event="change" execute="@this" render=":parametersForm" />
+    			</h:selectOneMenu>
+    		</h:form>
+    		<h:form id="parametersForm" rendered="#{not empty parametroView.formFields}"
+    			enctype="application/x-www-form-urlencoded" acceptcharset="UTF-8">
+    			<wi:dynamicFieldSet value="#{parametroView.formFields}" />
+    			<h:commandButton value="#{infoxMessages['crud.update']}" action="#{parametroView.publish}"  styleClass="buttons" />
+    		</h:form>
+        </div>
+	</ui:define>
+
+</ui:composition>

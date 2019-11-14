@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" id="1" context="core" dbms="postgresql">
+        <insert tableName="tb_papel">
+            <column name="id_papel" valueComputed="nextval('sq_tb_papel')" />
+            <column name="ds_nome" value="Sistema"/>
+            <column name="ds_identificador" value="sistema"/>
+            <column name="in_termo_adesao" valueBoolean="false"/>
+        </insert>
+        <insert tableName="tb_perfil_template">
+            <column name="id_perfil_template" valueComputed="nextval('sq_perfil_template')" />
+            <column name="ds_perfil_template" value="Sistema" />
+            <column name="id_papel" valueComputed="(SELECT id_papel FROM tb_papel WHERE ds_identificador = 'sistema')" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+        <insert tableName="tb_usuario_perfil">
+            <column name="id_usuario_perfil" valueComputed="nextval('sq_tb_usuario_perfil')" />
+            <column name="id_usuario_login" valueComputed="(SELECT CAST(vl_variavel AS INT) FROM tb_parametro WHERE nm_variavel = 'idUsuarioSistema')" />
+            <column name="id_perfil_template" valueComputed="(SELECT id_perfil_template FROM tb_perfil_template WHERE ds_perfil_template = 'Sistema')" />
+            <column name="id_localizacao" valueComputed="(SELECT id_localizacao FROM tb_localizacao WHERE id_localizacao_pai IS NULL AND id_estrutura_pai IS NULL)"/>
+            <column name="in_responsavel" valueBoolean="false" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2" context="core" dbms="mssql">
+        <insert tableName="tb_papel">
+            <column name="id_papel" valueComputed="next value for sq_tb_papel" />
+            <column name="ds_nome" value="Sistema"/>
+            <column name="ds_identificador" value="sistema"/>
+            <column name="in_termo_adesao" valueBoolean="false"/>
+        </insert>
+        <insert tableName="tb_perfil_template">
+            <column name="id_perfil_template" valueComputed="next value for sq_perfil_template" />
+            <column name="ds_perfil_template" value="Sistema" />
+            <column name="id_papel" valueComputed="(SELECT id_papel FROM tb_papel WHERE ds_identificador = 'sistema')" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+        <insert tableName="tb_usuario_perfil">
+            <column name="id_usuario_perfil" valueComputed="next value for sq_tb_usuario_perfil" />
+            <column name="id_usuario_login" valueComputed="(SELECT CAST(vl_variavel AS INT) FROM tb_parametro WHERE nm_variavel = 'idUsuarioSistema')" />
+            <column name="id_perfil_template" valueComputed="(SELECT id_perfil_template FROM tb_perfil_template WHERE ds_perfil_template = 'Sistema')" />
+            <column name="id_localizacao" valueComputed="(SELECT id_localizacao FROM tb_localizacao WHERE id_localizacao_pai IS NULL AND id_estrutura_pai IS NULL)"/>
+            <column name="in_responsavel" valueBoolean="false" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2" context="core" dbms="oracle">
+        <insert tableName="tb_papel">
+            <column name="id_papel" valueComputed="sq_tb_papel.nextval" />
+            <column name="ds_nome" value="Sistema"/>
+            <column name="ds_identificador" value="sistema"/>
+            <column name="in_termo_adesao" valueBoolean="false"/>
+        </insert>
+        <insert tableName="tb_perfil_template">
+            <column name="id_perfil_template" valueComputed="sq_perfil_template.nextval" />
+            <column name="ds_perfil_template" value="Sistema" />
+            <column name="id_papel" valueComputed="(SELECT id_papel FROM tb_papel WHERE ds_identificador = 'sistema')" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+        <insert tableName="tb_usuario_perfil">
+            <column name="id_usuario_perfil" valueComputed="sq_tb_usuario_perfil.nextval" />
+            <column name="id_usuario_login" valueComputed="(SELECT CAST(vl_variavel AS INT) FROM tb_parametro WHERE nm_variavel = 'idUsuarioSistema')" />
+            <column name="id_perfil_template" valueComputed="(SELECT id_perfil_template FROM tb_perfil_template WHERE ds_perfil_template = 'Sistema')" />
+            <column name="id_localizacao" valueComputed="(SELECT id_localizacao FROM tb_localizacao WHERE id_localizacao_pai IS NULL AND id_estrutura_pai IS NULL)"/>
+            <column name="in_responsavel" valueBoolean="false" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>

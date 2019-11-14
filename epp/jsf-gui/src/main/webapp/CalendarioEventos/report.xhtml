@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
+
+	<wi:dataReport
+         title="#{infoxMessages['calendarioEventos.reportPage']}"
+         columns="3"
+         widths="2 4 2"
+         headerText="#{calendarioEventosList.criteria}">
+				   
+		<wi:reportColumnHeader
+             title="#{infoxMessages['calendarioEventos.localizacao']}" />
+		<wi:reportColumnHeader
+             title="#{infoxMessages['calendarioEventos.descricaoEvento']}" />
+		<wi:reportColumnHeader
+             title="#{infoxMessages['calendarioEventos.dataEvento']}" />
+				
+		<ui:repeat
+             var="row"
+             value="#{calendarioEventosList.list()}">
+			<wi:reportColumn
+                 value="#{row.localizacao}" />
+			<wi:reportColumn
+                 value="#{row.descricaoEvento}" />
+			<wi:reportColumn
+                 value="#{row.stringDataEvento}" />
+		</ui:repeat>
+
+	</wi:dataReport>
+	
+</ui:composition>

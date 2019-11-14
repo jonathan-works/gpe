@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <h:outputScript
+    library="js"
+    name="tree.js" />
+  <ui:param
+    name="id"
+    value="#{wi:get(gridId, formId)}#{id}" />
+  <ui:param
+    name="width"
+    value="#{wi:get(width, 248)}" />
+  <ui:param
+    name="folderSelectable"
+    value="#{wi:get(folderSelectable, tree.folderSelectable)}" />
+  <ui:param
+    name="expanded"
+    value="#{wi:get(expanded, false)}" />
+  <ui:param
+    name="template"
+    value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+  <s:decorate
+    template="#{template}"
+    id="#{id}TreeDecoration"
+    styleClass="decoration-div tree-div #{wi:get(decorationClass,'')}"
+    rendered="#{empty rendered or rendered}">
+    <ui:define name="label">#{label}</ui:define>
+    <c:if test="#{!empty assignTo}">
+			#{tree.setExpression(assignTo)}
+		</c:if>
+    <s:div
+      id="#{id}Form"
+      styleClass="tree">
+      <s:div id="#{id}HiddenId">
+        <h:inputHidden
+          id="#{id}HiddenRequired"
+          required="#{required and empty tree.selected}"
+          rendered="#{required}"
+        />
+      </s:div>
+      <ui:param
+        name="border"
+        value="#{invalid ? 'red' : 'inherit'}" />
+      <div class="tree-cont">
+        <rich:collapsiblePanel
+          id="#{id}Panel"
+          headerClass="tree-hdr"
+          bodyClass="tree-b"
+          styleClass="tree-p"
+          onswitch="setZIndex('#{rich:clientId(id.concat('Panel'))}')"
+          immediate="false"
+          switchType="client"
+          status=":status"
+          header="#{tree.getSelectedView(tree.selected)}"
+          expanded="#{expanded}">
+          <wi:treePanel
+            switchType="#{switchType}"
+            onclick="#{folderSelectable ? '' : 'return false;'};" />
+        </rich:collapsiblePanel>
+        <s:div
+          id="#{id}ClearDiv"
+          styleClass="tree-div-clear">
+          <a:commandLink
+            id="#{id}Close"
+            status="status"
+            rendered="#{!empty tree.selected}"
+            action="#{tree.clearTree(rich:clientId(id.concat('Tree')))}"
+            immediate="true"
+            render="#{id}Form #{clearRender}">
+            <h:graphicImage
+              value="#{layoutController.getResourceUrlByPath('/imagens/clear.gif')}"
+              title="#{infoxMessages['button.limpar']}" />
+          </a:commandLink>
+          <h:graphicImage
+            value="#{layoutController.getResourceUrlByPath('/imagens/mod/clear_off.gif')}"
+            rendered="#{empty tree.selected}"
+            title="#{infoxMessages['button.limpar']}" />
+        </s:div>
+      </div>
+    </s:div>
+  </s:decorate>
+</ui:composition>

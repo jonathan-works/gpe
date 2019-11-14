@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+  <changeSet author="jonas" id="1" dbms="mssql, postgresql, oracle">
+    <addColumn tableName="tb_usuario_taskinstance">
+      <column name="id_localizacao_externa" type="BIGINT">
+        <constraints foreignKeyName="tb_usuario_taskinstace_fk" references="tb_localizacao(id_localizacao)"/>
+      </column>
+    </addColumn>
+    <sql>
+      UPDATE tb_usuario_taskinstance SET id_localizacao_externa=1 WHERE id_localizacao_externa IS NULL;
+    </sql>
+    <addNotNullConstraint columnDataType="BIGINT" columnName="id_localizacao_externa" tableName="tb_usuario_taskinstance"/>
+  </changeSet>
+</databaseChangeLog>

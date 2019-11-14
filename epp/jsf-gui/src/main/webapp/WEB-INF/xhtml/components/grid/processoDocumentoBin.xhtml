@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf" 
+	xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:i="http://java.sun.com/jsf/composite/infox">
+	
+    <ui:param name="bin" value="#{empty bin ? c.value : bin}" />
+    <ui:param name="isModelo" value="#{empty bin.extensao}" />
+    <ui:param name="row" value="#{row}" />
+    
+    <span>
+        <span class="#{row.excluido ? 'inativo' : ''}" />
+        
+        <p:commandLink process="@this" update="@this"
+            action="#{jsfUtil.applyLastPhaseFlashAction}"
+            onstart="infox.showLoading();" oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(row.documentoBin)}">
+            <h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
+                title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>
+            <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+            <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
+        </p:commandLink>
+
+        <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover" renderedLock="#{bin.suficientementeAssinado}" />
+
+        <p:commandLink
+            rendered="#{security.checkPage('PublicacoesDocumentos/visualizar') and not empty row.publicacoes}" 
+            update="@this @(.genericDialog)" process="@this" 
+            action="#{dialogController.builder()
+                .src('/Processo/publicacaoDialog.xhtml')
+                .header(infoxMessages['publicacao.popup.header'])
+                .show()}" 
+            style="text-decoration: none"
+        >
+            <i:icon value="globe" text="#{infoxMessages['processoDocumento.visualizarPublicacao']}" style="font-size: 16px; vertical-align: top; color: rgb(0,80, 180);"/>
+            <f:setPropertyActionListener value="#{row}" target="#{publicacaoDialogView.documento}"/>
+        </p:commandLink> 
+
+    </span>
+</ui:composition>

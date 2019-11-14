@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['item.titlePage']}</ui:define>
+    <ui:param name="home" value="#{itemCrudAction}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{itemList.list(15)}" bean="#{itemList}"
+            tableTitle="#{infoxMessages['item.tableTitle']}" id="itemList"
+            rowId="#{row.idItem}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarItemForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigoItem"
+                        value="#{itemList.entity.codigoItem}"
+                        label="#{infoxMessages['item.codigoItem']}" />
+                    <wi:inputText id="descricaoItem"
+                        value="#{itemList.entity.descricaoItem}"
+                        label="#{infoxMessages['item.descricaoItem']}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{itemList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText columnId="codigoItem"
+                columnHeader="#{infoxMessages['item.codigoItem']}"
+                columnWidth="20%" value="#{row.codigoItem}" />
+            <wi:columnOutputTextIdent columnId="caminhoCompleto"
+                columnHeader="#{infoxMessages['item.descricaoItem']}"
+                value="#{row.descricaoItem}"
+                fullPath="#{row.caminhoCompleto}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                columnWidth="15%" value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="itemForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="codigoItem" required="true"
+                label="#{infoxMessages['item.codigoItem']}"
+                value="#{itemCrudAction.instance.codigoItem}"
+                maxlength="30" />
+            <wi:inputText id="descricao" required="true"
+                label="#{infoxMessages['item.descricaoItem']}"
+                value="#{itemCrudAction.instance.descricaoItem}" 
+                maxlength="100" />
+            <wi:tree id="itemPai"
+                assignTo="itemCrudAction.instance.itemPai"
+                tree="#{itemTree}" icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
+                label="#{infoxMessages['item.itemPai']}" />
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{itemCrudAction.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
+
+</ui:composition>

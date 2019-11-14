@@ -1,0 +1,17 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="paulofilho" id="1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="tb_entrega" columnName="id_responsavel_principal"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="tb_entrega">
+            <column name="id_responsavel_principal" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_entrega_006" references="tb_entrega_responsavel(id_entrega_responsavel)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

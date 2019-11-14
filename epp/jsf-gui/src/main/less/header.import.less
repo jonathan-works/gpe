@@ -1,0 +1,77 @@
+@banner-height:115px;
+@banner-calc-height:@banner-height+5px;
+
+.banner {
+  color:@menu-txt-color;
+  height:@banner-height;
+  .bg-deg-color(@header-bg-color,@header-bg-deg-color);
+
+  .divBg {
+    background-color: @menu-bg-color;
+  }
+
+  &.minimal{
+    background:transparent;
+  }
+
+}
+.banner-logo {
+    max-height: @banner-height;
+}
+.banner-subTitle,.banner-title{
+  font-family: @default-font-family;
+}
+
+.banner-lft, .banner-ctr, .banner-rgt,.BarraPesquisa, .SeletorSkins {
+    display: inline-block;
+    vertical-align: top;
+}
+.banner-lft, .banner-rgt {
+    width: 34%;
+}
+.banner-ctr {
+    text-align: center;
+    width: 32%;
+}
+.banner-title {
+    margin-top: 15px;
+}
+
+.banner-rgt {
+    text-align: right;
+}
+.divBg {
+    width: 100%;
+    height: 28px;
+    border-bottom-left-radius: 28px;
+}
+.divBg.hidden {
+    visibility: hidden;
+}
+.BP-ipt {
+    width: 120px;
+}
+.BP-lbl {
+    font-weight: bold;
+}
+.palette-img-inpt {
+    width: 18px;
+    height: auto;
+    cursor: pointer;
+}
+.PaletteMenu {
+    width: 250px;
+}
+.bannerclock.liveclock {
+    float: right;
+    top: 0%;
+    text-align: right;
+    font-family:@default-font-family;
+    font-weight: bold;
+}
+.property-field-edit-name.painelUsuario-label {
+    color: inherit;
+}
+.painelUsuario-label, .painelUsuario-select {
+    display: block;
+}

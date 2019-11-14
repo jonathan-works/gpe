@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="id" value="#{wi:get(id, facesContext.viewRoot.createUniqueId())}" />
+    <ui:param name="rendered" value="#{wi:get(rendered, true)}" />
+        
+    <div id="#{id}MenuContent">
+        <ui:insert />
+    </div>
+    <infox:div rendered="#{rendered}" id="#{id}"></infox:div>
+    <h:outputScript rendered="#{rendered}">
+    	(function(){
+        	var #{id}MenuFunctions={
+                handlePerfilClick:function(event, itm){
+                   infox.showLoading();
+                   location.href = '#{pathResolver.contextPath}/trocarPerfil?idPerfil=' + itm;
+                },
+                handleOpenAjuda:function(event, itm){
+                   infox.showLoading();
+                   var viewId = '#{facesContext.viewRoot.viewId.replace('.xhtml', '.seam')}';
+                   openPopUp('helpwnd', '#{pathResolver.contextPath}/openHelp?scid=#{conversation.id}&amp;viewId=' + viewId, 800, 600);
+                   infox.hideLoading();
+                },
+                handleSkinSwapClick:function(event, itm){
+                    infox.showLoading();
+                    location.href = '#{pathResolver.contextPath}/trocarSkin?idSkin=' + itm;
+                },
+                handleLogoutClick:function(event, itm){
+                	infox.showLoading();
+                    location.href = '#{pathResolver.contextPath}/logout';
+                }
+            };
+    		var menuConfig={
+                    "content":{selector:"#{id}MenuContent"},
+                    "navigationMenu":{searchPlaceholder:"Digite sua busca aqui...","items":#{menuHandler.actionMenuJson}},
+                    "topMenu":{
+                        searchPlaceholder:"Digite sua busca aqui...",
+                        items:[
+                               {"label":"#{infoxMessages['skin.title']}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','palette')}", items:[
+                                       <ui:repeat var="selItem" value="#{wiSkin.skinList}">
+                                           {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handleSkinSwapClick },
+                                       </ui:repeat>
+                               ]},
+                               {label: "#{infoxMessages['ajuda.ajudaBtn']}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','help')}", onClick:#{id}MenuFunctions.handleOpenAjuda},
+                               {label: "#{infoxMessages['painel.titlePage']}", url: "#{facesContext.externalContext.context.contextPath}/Painel/list.seam", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','home')}"},
+                               {label: "#{usuarioLogado} &lt;#{authenticator.usuarioPerfilAtualSingle}&gt;", iconAlign:"right", icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','person')}", "items":[
+               					{"label":"Perfis", showChildren:true, items:[
+                                         <ui:repeat var="selItem" value="#{authenticator.usuarioPerfilListItems}">
+                                             {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handlePerfilClick },
+                                         </ui:repeat>
+               					]}
+               				]},	
+                               {"label": "#{infoxMessages['menu.logout']}", onClick:#{id}MenuFunctions.handleLogoutClick, hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','power_settings_new')}"}
+               				]
+                    }
+                };
+             ReactDOM.render(
+                 React.createElement(window['react-components'].NavigationMenu, menuConfig),
+                 document.getElementById("#{wi:clientId(id)}")
+            );
+    	})();
+    </h:outputScript>
+
+</ui:composition>

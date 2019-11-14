@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <c:if test="#{not empty form}">
+    <ui:param name="formId" value="#{empty formId ? form.formId.concat('Form') : formId}" />
+    <ui:param name="formIdAcs" value="#{form.formId.concat('Form')}" />
+    <c:if test="#{not empty home}">
+      #{form.setHome(home.homeName)}
+    </c:if>
+    <ui:param name="home" value="#{empty home ? form.home : home}" />
+    <ui:param name="instance" value="#{home.instance}" />
+    <ui:param name="showForm" value="#{empty showForm ? true : showForm}" />
+    
+    <h:form id="#{formId}" rendered="#{showForm}">
+      <a:region>
+        <s:div styleClass="edit">
+          <rich:panel>
+            <f:facet name="header">
+              #{empty formTitle ? formId : formTitle}
+              <h:graphicImage
+                id="helpBtn"
+                styleClass="mp-help" 
+                onmouseup="#{rich:component('mp_taskNodeDescription')}.show();"
+                value="#{layoutController.getResourceUrlByPath('/imagens/question.png')}" />
+            </f:facet>
+            <s:div>
+              <c:if test="#{form.tabbed}">
+                <infox:tabPanel switchType="client">
+                  <infox:tabHeaders />
+                  <ui:repeat
+                    value="#{form.rootFields}"
+                    var="rf">
+                    <ui:param
+                      name="id"
+                      value="#{rf.id}" />
+                    <ui:param
+                      name="props"
+                      value="#{rf.properties}" />
+                    <ui:param
+                      name="value"
+                      value="#{home.instance[id]}" />
+                    <ui:param
+                      name="label"
+                      value="#{empty props.label ? rf.label : props.label}" />
+                    <ui:param
+                      name="label"
+                      value="#{expressions.createValueExpression(label).value}" />
+                    <ui:param
+                      name="rendered"
+                      value="#{empty props.rendered ? rf.rendered : props.rendered}" />
+                    <ui:param
+                      name="rendered"
+                      value="#{empty rendered ? true : rendered}" />
+                    <ui:param
+                      name="showRequired"
+                      value="#{empty props.required ? rf.required : props.required}" />
+                    <ui:param name="required" value="false" />
+                    <ui:param
+                      name="disabled"
+                      value="#{props.disabled}" />
+                    <ui:param
+                      name="reRender"
+                      value="#{empty props.reRender ? reRender : props.reRender}" />
+                    <ui:param
+                      name="readonly"
+                      value="#{empty props.readonly ? false : elFunctions.evaluateExpression(props.readonly)}" />
+                    <ui:param
+                      name="maxlength"
+                      value="#{props.length}" />
+                    <ui:param
+                      name="bypassUpdate"
+                      value="#{props.bypassUpdate}" />
+                    <ui:include
+                      id="#{rf.id}"
+                      src="#{props.pagePath}" />
+                  </ui:repeat>
+                </infox:tabPanel>
+              </c:if>
+              <c:if test="#{!form.tabbed}">
+                <c:forEach
+                  items="#{form.fields}"
+                  var="f">
+                  <ui:param
+                    name="id"
+                    value="#{f.id}" />
+                  <ui:param
+                    name="props"
+                    value="#{f.properties}" />
+                  <ui:param
+                    name="value"
+                    value="#{home.instance[id]}" />
+                  <ui:param
+                    name="disabled"
+                    value="#{props.disabled}" />
+                  <ui:param
+                    name="label"
+                    value="#{empty props.label ? f.label : props.label}" />
+                  <ui:param
+                    name="label"
+                    value="#{expressions.createValueExpression(label).value}" />
+                  <ui:param
+                    name="rendered"
+                    value="#{empty props.rendered ? f.rendered : props.rendered}" />
+                  <ui:param
+                    name="rendered"
+                    value="#{empty rendered ? true : rendered}" />
+                  <ui:param
+                    name="showRequired"
+                    value="#{empty props.required ? f.required : props.required}" />
+                  <ui:param name="required" value="false" />
+                  <ui:param
+                    name="bypassUpdate"
+                    value="#{props.bypassUpdate}" />
+                  <ui:param
+                    name="reRender"
+                    value="#{empty props.reRender ? reRender : props.reRender}" />
+                  <ui:param
+                    name="readonly"
+                    value="#{empty props.readonly ? false : elFunctions.evaluateExpression(props.readonly)}" />
+                  <ui:param
+                    name="maxlength"
+                    value="#{props.length}" />
+                  <ui:param
+                    name="type"
+                    value="#{f.type.startsWith('documentoIdentificacaoHome') ? 'docsIdentificacao/'.concat(elFunctions.evaluateExpression(f.type)) : f.type }" />
+                  <ui:include src="#{props.pagePath}" />
+                </c:forEach>
+              </c:if>
+              <div>
+                <s:div
+                  rendered="#{canEdit and !empty form.fields and form.hasRequiredField()}">
+                  <img
+                    src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
+                  <span class="required">*</span>#{infoxMessages['form.required']}</s:div>
+              </div>
+            </s:div>
+          </rich:panel>
+          <c:if test="#{wi:get(canEdit, true)}">
+            <s:div id="divBotao">
+              <ui:param
+                name="buttons"
+                value="#{form.buttons.id}#{empty modalPanelId ? '' : '_modal'}" />
+              <ui:include
+                src="/WEB-INF/xhtml/components/form/buttons/#{buttons}.xhtml" />
+            </s:div>
+          </c:if>
+        </s:div>
+      </a:region>
+    </h:form>
+    <s:fragment rendered="#{not empty focus}">
+      <h:outputScript>
+        invoke(["infox.escapeId"],function(EscapeId) {
+          var id = EscapeId("#{formId}:#{focus}:#{focus}Decoration:#{focus}");
+          $(id).focus();
+        });
+      </h:outputScript>
+    </s:fragment>
+  </c:if>
+</ui:composition>

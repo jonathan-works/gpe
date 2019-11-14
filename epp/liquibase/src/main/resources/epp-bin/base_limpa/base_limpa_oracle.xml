@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    <changeSet author="jonasbezerra" id="1" dbms="oracle" >
+        <createSequence sequenceName="sq_tb_imagem_bin" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase" id="1402917546956-1" dbms="oracle" >
+        <createTable remarks="Tabela referente a imagens do sistema, sendo que o formato do armazenamento é binário" tableName="tb_imagem_bin">
+            <column name="id_imagem_bin" remarks="Identificador da imagem" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pk_tb_imagem_bin"/>
+            </column>
+            <column name="ds_extensao" remarks="Campo contendo a extensão da imagem" type="NVARCHAR(15)"/>
+            <column name="ds_md5_imagem" remarks="Chave MD5 para a imagem" type="NVARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_arquivo" remarks="Nome do arquivo da imagem" type="NVARCHAR(300)"/>
+            <column name="dt_inclusao" remarks="Data de inclusão da imagem" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nr_tamanho" remarks="Número do tamanho da imagem" type="INTEGER"/>
+            <column name="ob_imagem" type="BLOB"/>
+            <column name="ds_file_path" type="NVARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402917546956-2" dbms="oracle">
+        <createTable tableName="tb_processo_documento_bin">
+            <column name="id_processo_documento_bin" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ob_processo_documento" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase" id="1402917546956-3" dbms="oracle">
+        <addPrimaryKey columnNames="id_processo_documento_bin" constraintName="tb_processo_documento_bin_pk" tableName="tb_processo_documento_bin"/>
+    </changeSet>
+</databaseChangeLog>

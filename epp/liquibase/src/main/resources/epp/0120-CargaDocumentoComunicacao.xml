@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="fabipaes" id="1">
+        <sql dbms="oracle">
+			INSERT INTO JBPM_VARIABLEINSTANCE (ID_, CLASS_, VERSION_, NAME_, CONVERTER_, TOKEN_, TOKENVARIABLEMAP_, PROCESSINSTANCE_, LONGVALUE_ )
+			SELECT hibernate_sequence.nextval, 'L', 0, 'documentoComunicacao','I', pinst.roottoken_, tvm.id_, comunicacao.id_jbpm, dmc.id_documento 
+			FROM TB_PROCESSO p 
+			    INNER JOIN TB_NATUREZA_CATEGORIA_FLUXO ngf ON ngf.ID_NATUREZA_CATEGORIA_FLUXO = p.ID_NATUREZA_CATEGORIA_FLUXO
+			    INNER JOIN TB_FLUXO f ON f.id_fluxo = ngf.id_fluxo
+			    INNER JOIN tb_processo comunicacao on comunicacao.id_processo_root = p.id_Processo
+			    INNER JOIN JBPM_PROCESSINSTANCE pinst ON pinst.ID_ = comunicacao.ID_JBPM
+			    INNER JOIN TB_DESTINATARIO_MODELO_COMUNIC dmc ON dmc.id_processo = comunicacao.ID_PROCESSO
+			    INNER JOIN JBPM_TOKENVARIABLEMAP tvm ON tvm.Token_ = pinst.roottoken_
+			WHERE f.CD_FLUXO = 'notificacaoAtraso';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

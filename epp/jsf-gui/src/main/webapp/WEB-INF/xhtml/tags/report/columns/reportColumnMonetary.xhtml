@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <wi:reportColumn value="#{value}">
+        <f:converter converterId="monetarioConverter" />
+    </wi:reportColumn>
+
+</ui:composition>

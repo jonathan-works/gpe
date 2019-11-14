@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
+		<ui:param
+		 name="style"
+		 value="#{empty style ? props.style : style}" />
+		<s:decorate
+		 id="#{id}Decoration"
+		 template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+		 rendered="#{empty rendered or rendered}">
+		
+			<ui:define name="label">#{label}</ui:define>
+			<h:inputText
+			 id="#{id}"
+			 value="#{value}"
+			 styleClass="#{readonly ? 'readOnly' : '' } inputText"
+			 readonly="#{readonly}"
+			 disabled="#{disabled}"
+			 required="#{required}"
+			 
+			 onkeypress="#{onkeypress}"
+			 maxlength="#{empty maxlength ? 255 : maxlength}">
+			
+				<ui:insert />
+				<f:converter converterId="floatConverter" />
+			
+		</h:inputText>
+		
+	</s:decorate>
+
+	
+</ui:composition>

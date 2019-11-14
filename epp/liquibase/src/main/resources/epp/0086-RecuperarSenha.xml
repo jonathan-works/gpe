@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="avner" context="core" id="1" dbms="postgresql, mssql, oracle">
+        <createSequence cycle="false" incrementBy="1" minValue="1" sequenceName="sq_recuperacao_senha" />
+        <createTable tableName="tb_recuperacao_senha">
+            <column name="id_recuperacao_senha" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_recuperacao_senha" />
+            </column>
+
+            <column name="cd_recuperacao_senha" type="NVARCHAR(5)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="id_usuario_login" type="BIGINT">
+                <constraints foreignKeyName="fk_recuperacao_senha_001" references="tb_usuario_login(id_usuario_login)" />
+            </column>
+
+            <column name="dt_criacao" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="in_utilizado" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="avner" context="core" id="2" dbms="postgresql, mssql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(id_parametro) FROM tb_parametro WHERE nm_variavel = 'tempoExpiracaoCodigoRecuperacaoSenha'</sqlCheck>
+        </preConditions>
+
+        <insert tableName="tb_parametro" dbms="mssql">
+            <column name="id_parametro" valueComputed="NEXT VALUE FOR sq_tb_parametro" />
+            <column name="nm_variavel" value="tempoExpiracaoCodigoRecuperacaoSenha" />
+            <column name="ds_variavel" value="Tempo em minutos para expiração do código de recuperação de senha" />
+            <column name="vl_variavel" value="60" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+
+        <insert tableName="tb_parametro" dbms="postgresql">
+            <column name="id_parametro" valueComputed="nextval('sq_tb_parametro')" />
+            <column name="nm_variavel" value="tempoExpiracaoCodigoRecuperacaoSenha" />
+            <column name="ds_variavel" value="Tempo em minutos para expiração do código de recuperação de senha" />
+            <column name="vl_variavel" value="60" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+
+        <insert tableName="tb_parametro" dbms="oracle">
+            <column name="id_parametro" valueComputed="sq_tb_parametro.nextval" />
+            <column name="nm_variavel" value="tempoExpiracaoCodigoRecuperacaoSenha" />
+            <column name="ds_variavel" value="Nome da pasta onde serão colocados os documentos gerados pelo sistema no fluxo" />
+            <column name="vl_variavel" value="60"/>
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>

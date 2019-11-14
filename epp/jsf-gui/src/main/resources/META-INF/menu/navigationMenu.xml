@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<menu xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
+    <item xsi:type="Submenu" label="menu.documentacao">
+        <item xsi:type="MenuItem" label="documentacao.menuText" url="/Documentacao/documentacao.xhtml"/>
+    </item>
+    <item xsi:type="Submenu" label="menu.processo">
+        <item xsi:type="MenuItem" label="processo.iniciarMenuText" url="/Processo/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="processo.consultarMenuText" url="/Processo/Consulta/listView.xhtml"/>
+    </item>
+    <item xsi:type="Submenu" label="menu.administracao">
+        <item xsi:type="Submenu" label="menu.contAcesso">
+            <item xsi:type="MenuItem" label="papel.menuText" url="/useradmin/papelListView.xhtml"/>
+            <item xsi:type="MenuItem" label="recurso.menuText" url="/useradmin/recursoListView.xhtml"/>
+            <item xsi:type="MenuItem" label="usuario.menuText" url="/Usuario/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="localizacao.menuText" url="/Localizacao/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="estrutura.menuText" url="/Estrutura/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="perfil.menuText" url="/Perfil/listView.xhtml"/>
+        </item>
+        <item xsi:type="Submenu" label="menu.documentos">
+            <item xsi:type="Submenu" label="menu.modeloDocumento">
+                <item xsi:type="MenuItem" label="grupoModeloDocumento.menuText" url="/GrupoModeloDocumento/listView.xhtml"/>
+                <item xsi:type="MenuItem" label="tipoModeloDocumento.menuText" url="/TipoModeloDocumento/listView.xhtml"/>
+                <item xsi:type="MenuItem" label="modeloDocumento.menuText" url="/ModeloDocumento/listView.xhtml"/>
+            </item>
+            <item xsi:type="MenuItem" label="tipoProcessoDocumento.menuText" url="/ClassificacaoDocumento/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="variavel.menuText" url="/Variavel/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="localizacaoFisica.menuText" url="/LocalizacaoFisica/listView.xhtml"/>
+        </item>
+        <item xsi:type="Submenu" label="menu.fluxos">
+            <item xsi:type="MenuItem" label="fluxo.menuText" url="/Fluxo/listView.xhtml"/>
+            <item xsi:type="Submenu" label="menu.agrupamento">
+                <item xsi:type="MenuItem" label="natureza.menuText" url="/Natureza/listView.xhtml"/>
+                <item xsi:type="MenuItem" label="categoria.menuText" url="/Categoria/listView.xhtml"/>
+                <item xsi:type="MenuItem" label="item.menuText" url="/Item/listView.xhtml"/>
+            </item>
+            <item xsi:type="MenuItem" label="tipoParte.menuText" url="/TipoParte/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="signal.menuText" url="/Sinal/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="statusProcesso.menuText" url="/StatusProcesso/listView.xhtml"/>
+        </item>
+        <item xsi:type="Submenu" label="log.logs">
+            <item xsi:type="MenuItem" label="log.menuText" url="/Consulta/Log/list.xhtml"/>
+            <item xsi:type="MenuItem" label="log.erro.menuText" url="/Consulta/Log/Erro/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="quartzLog.menuText" url="/Consulta/Log/Quartz/listView.xhtml"/>
+        </item>
+        <item xsi:type="MenuItem" label="calendarioEventos.menuText" url="/CalendarioEventos/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="parametro.menuText" url="/Parametro/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="customVariables.menu" url="/CustomVariable/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="prioridadeProcesso.menuText" url="/PrioridadeProcesso/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="tipoComunicacao.menuText" url="/TipoComunicacao/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="tipoRelacionamentoProcesso.menuText" url="/TipoRelacionamentoProcesso/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="automaticNodes.menuText" url="/automaticNodes.xhtml"/>
+        <item xsi:type="MenuItem" label="quartzJobsInfo.menuText" url="/quartzJobsInfo.xhtml"/>
+        <item xsi:type="MenuItem" label="layout.menuText" url="/layout.xhtml"/>
+        <item xsi:type="MenuItem" label="meioExpedicao.menuText" url="/MeioExpedicao/listView.xhtml"/>
+    </item>
+    <item xsi:type="Submenu" label="menu.controle">
+        <item xsi:type="MenuItem" label="bam.menuText" url="/BAM/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="produtividade.menuText" url="/BAM/Produtividade/listView.xhtml"/>
+        <item xsi:type="Submenu" label="relatorios.menuText">
+            <item xsi:type="MenuItem" label="temposMedios.menuText" url="/Estatistica/listView.xhtml"/>
+        </item>
+    </item>
+    <item xsi:type="Submenu" label="menu.operacoes">
+        <item xsi:type="Submenu" label="comunicacao.menuText">
+            <item xsi:type="MenuItem" label="comunicacoes.menuText" url="/Comunicacao/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="comunicacoes.impressao.menuText" url="/Comunicacao/Impressao/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="comunicacoes.responder.menuText" url="/Comunicacao/Responder/listView.xhtml"/>
+        </item>
+    </item>
+</menu>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:rich="http://richfaces.org/rich">
+
+    <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key"
+        styleClass="#{styleClass}" var="row" rowClasses="#{rowClasses}" rowClass="#{rowClass}">
+        <rich:column styleClass="dr-dt-sh" rendered="#{empty showToolbar ? true : showToolbar}">
+            <f:facet name="header">
+                <ui:insert name="headerToolBar" />
+            </f:facet>
+            <div>
+                <ui:insert name="toolBar" />
+            </div>
+        </rich:column>
+        <ui:insert name="columns" />
+    </rich:dataTable>
+
+</ui:composition>

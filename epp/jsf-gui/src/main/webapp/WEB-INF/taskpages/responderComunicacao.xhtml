@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
+	
+	<p:panel id="painelComunicacao" header="#{infoxMessages['comunicacao.comunicacao']}" style="margin-top: 1rem;">
+	
+		<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
+	   		<ui:param name="id" value="respExibirComunicacao" />
+	   		<ui:param name="showDestinatario" value="false" />
+	   		<ui:param name="meioExpedicao" value="#{respostaComunicacaoAction.meioExpedicao.descricao}" />
+	   		<ui:param name="showMeioExpedicao" value="true" />
+	   		<ui:param name="showDataEnvio" value="false" />
+	   		<ui:param name="prazoResposta" value="#{respostaComunicacaoAction.prazoResposta}" />
+	   		<ui:param name="showPrazoResposta" value="true" />
+	   		<ui:param name="showDataResposta" value="false" />
+	   		<ui:param name="tipoComunicacao" value="#{respostaComunicacaoAction.tipoComunicacao.descricao}" />
+	   		<ui:param name="statusProrrogacao" value="#{respostaComunicacaoAction.statusProrrogacao}" />
+	   		<ui:param name="showStatusProrrogacao" value="true" />
+	   		<ui:param name="idDestinatario" value="#{respostaComunicacaoAction.idDestinatario}" />
+	   	</ui:include>
+
+		<ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
+	    		<ui:param name="id" value="documentosAnexadosComunicacao" />
+	    		<ui:param name="rendered" value="#{documentoComunicacaoList.getResultCount() gt 0}" />
+	    </ui:include>
+
+	</p:panel>
+	
+	<p:panel widgetVar="panelPessoaResponder" collapsed="true" toggleable="true" style="margin-top:1em"
+		rendered="#{respostaComunicacaoAction.possivelLiberarResponder}" styleClass="panelPessoaResponder">
+		
+		<f:facet name="header">
+			<p:outputPanel styleClass="panelPessoaResponderHeaderText">
+				<h:outputText value="#{infoxMessages['comunicacao.nenhumLiberadoResponder']}"
+					rendered="#{empty respostaComunicacaoAction.pessoaResponderComunicacaoList}"/>
+				<h:outputText value="#{respostaComunicacaoAction.pessoaResponderComunicacaoList.size()} #{infoxMessages['comunicacao.liberadoResponder']}" 
+					rendered="#{not empty respostaComunicacaoAction.pessoaResponderComunicacaoList}"/>
+			 </p:outputPanel>
+		</f:facet>
+		
+		<div class="decoration-div">
+			<div class="pro	perty-field-edit">
+				<div class="property-field-edit-name" >
+					<h:outputLabel style="display: block;" value="#{infoxMessages['comunicacao.localizacao']}"/>
+				</div>
+				<div class="property-field-edit-value" >
+					<h:outputText value="#{authenticator.getLocalizacaoAtual().localizacao}"/>
+				</div>
+			</div>
+		</div>
+		
+		<h:form id="pessoaResponderForm">
+			
+			<wi:selectOneMenuEntity id="perfilResponder" label="#{infoxMessages['comunicacao.responder.perfil']}" 
+				value="#{respostaComunicacaoAction.perfilResponderFilter}" required="false" items="#{respostaComunicacaoAction.perfilTemplateList}">
+				<p:ajax update="@form:pessoaResponderDecoration" process="@this" listener="#{respostaComunicacaoAction.onChangePerfilResponder}" 
+					onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+			</wi:selectOneMenuEntity>
+				
+			<wi:selectOneMenuEntity id="pessoaResponder" label="#{infoxMessages['comunicacao.responder.pessoa']}"  
+				required="true" items="#{respostaComunicacaoAction.pessoaResponderList}" value="#{respostaComunicacaoAction.pessoaResponder}"/>
+			
+			<h:commandButton value="#{infoxMessages['button.add']}" actionListener="#{respostaComunicacaoAction.adicionarPessoaResponder}"
+				styleClass="buttons" style="margin-top: 10px; margin-left: 3rem;">
+				<p:ajax process="@form" update="@form @(.pessoaResponderDataTable) @(.panelPessoaResponderHeaderText) :pageBodyDialogMessage" 
+					partialSubmit="true" onstart="infox.showLoading()" oncomplete="infox.hideLoading()"/>
+			</h:commandButton>
+			
+		</h:form>
+		
+		<p:dataTable id="pessoaResponderDataTable" styleClass="pessoaResponderDataTable" style="margin-top: 1rem;"
+			value="#{respostaComunicacaoAction.pessoaResponderComunicacaoList}" var="pessoaComunicacao"
+			emptyMessage="" rows="10" paginatorAlwaysVisible="false" paginator="true" paginatorPosition="top">
+			
+			<p:column style="width: 16px;">
+				<h:form>
+					<p:commandLink action="#{respostaComunicacaoAction.removerPessoaResponder(pessoaComunicacao)}" 
+						onstart="if (confirm('#{infoxMessages['crud.confirmRemove']}')) { infox.showLoading(); return true; } else { return false;}" 
+						oncomplete="infox.hideLoading();"
+						process="@this" update="@(.pessoaResponderDataTable) @(.panelPessoaResponderHeaderText) :pageBodyDialogMessage">
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+	        				title="#{infoxMessages['crud.remove']}" styleClass="opacityHover"/>
+					</p:commandLink>
+				</h:form>
+			</p:column>
+			
+			<p:column headerText="#{infoxMessages['pessoaFisica.cpf']}" style="text-align: center;">
+				<h:outputText value="#{pessoaComunicacao.pessoaFisica.codigoFormatado}"/>
+			</p:column>
+			
+			<p:column headerText="#{infoxMessages['pessoaFisica.nome']}" style="text-align: center;">
+				<h:outputText value="#{pessoaComunicacao.pessoaFisica.nome}"/>
+			</p:column>
+			
+		</p:dataTable>
+		
+	</p:panel>
+	
+  	<p:panel id="editorRespostaComunicacaoFormPanel" header="#{infoxMessages['comunicacao.editor']}" style="margin-top:1em"
+  		rendered="#{not empty respostaComunicacaoAction.classificacoesEditor}" collapsed="true" toggleable="true"
+  		widgetVar="panelPessoaResponderEditor">
+    	<h:form id="editorRespostaComunicacaoForm">
+          	<ui:param name="minuta" value="#{empty respostaComunicacaoAction.documentoEdicao.id or 
+				respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" />
+			<wi:inputText id="descricao" value="#{respostaComunicacaoAction.documentoEdicao.descricao}"
+				required="true" label="#{infoxMessages['processo.anexarDocumentoDescricao']}" 
+				readonly="#{not minuta}" disabled="#{not minuta}"/>
+			<wi:selectOneMenuEntity id="classificacao"
+ 				label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+	      		items="#{respostaComunicacaoAction.classificacoesEditor}"
+	      		showLabelSelecione="true"
+	      		required="true"
+	      		value="#{respostaComunicacaoAction.classificacaoDocumentoEditor}"
+	      		readonly="#{not minuta}"
+				disabled="#{not minuta}">
+				<a:ajax event="change"
+					render="tooltipComunicacao minutaDiv"
+					execute="@this"
+					limitRender="true" />
+			</wi:selectOneMenuEntity>
+			<s:div id="tooltipComunicacao" style="display: inline-block;">
+		   		<s:div styleClass="tooltip-parent" style="width: 10px" 
+		  			rendered="#{not empty respostaComunicacaoAction.documentoEdicao.classificacaoDocumento.observacao}">
+		  		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+					<div class="epp-tooltip">
+						<div class="tooltip-panel">
+							<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
+							<h:outputText value="#{respostaComunicacaoAction.documentoEdicao.classificacaoDocumento.observacao}"/>
+						</div>
+					</div>
+		   		</s:div>
+			</s:div>
+			<s:div id="minutaDiv">
+				<wi:selectOneMenuEntity id="modeloDocumento" value="#{respostaComunicacaoAction.modeloDocumento}" 
+					label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+					noSelectionLabel="[Selecione o modelo]" items="#{respostaComunicacaoAction.modeloDocumentoList}"
+					rendered="#{minuta and not empty respostaComunicacaoAction.modeloDocumentoList}">
+					<a:ajax event="change" render="respostaComunicacaoDiv" execute="@this" limitRender="true"
+						listener="#{respostaComunicacaoAction.assignModeloDocumento}"/>
+				</wi:selectOneMenuEntity>
+				<wi:selectBooleanRadio id="minuta" value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" 
+					label="#{infoxMessages['processoDocumentoBin.minuta']}" disabled="#{not minuta}"
+					rendered="#{not assinaturaDocumentoService.precisaAssinatura(respostaComunicacaoAction.documentoEdicao.classificacaoDocumento)}" />
+			</s:div>
+			<s:div id="respostaComunicacaoDiv">
+				<wi:editor id="respostaComunicacao" readonly="#{not minuta}" 
+					value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.modeloDocumento}" />
+			</s:div>
+			<wi:commandButton id="gravarResposta" action="respostaComunicacaoAction.gravarResposta" 
+				value="#{infoxMessages['crud.update']}" reRender="pageBodyDialogMessage, @form, respostasPanel, taskButtonsForm"
+				rendered="#{minuta}"/>
+			<wi:commandButton id="newDocumento" action="respostaComunicacaoAction.newDocumentoEdicao" 
+				value="#{infoxMessages['crud.new']}" reRender="pageBodyDialogMessage, @form" execute="@this"/>
+        </h:form>
+    </p:panel>
+    
+    <p:panel id="anexoRespostaComunicacaoFormPanel" header="#{infoxMessages['anexosProcesso.titleView']}" 
+    	style="margin-top: 1rem" rendered="#{not empty respostaComunicacaoAction.classificacoesAnexo}"
+    	collapsed="true" toggleable="true" widgetVar="panelPessoaResponderUpload">
+    	<h:form id="anexoRespostaComunicacaoForm">
+			<wi:inputText id="descricaoAnexo" value="#{respostaComunicacaoAction.descricaoAnexo}"
+				label="#{infoxMessages['documentoProcesso.descricao']}" showRequired="true">
+				<a:ajax event="change" execute="@this" limitRender="true" render="uploadDiv"/>
+			</wi:inputText>
+			<wi:selectOneMenuEntity id="classificacaoAnexo" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+		      	items="#{respostaComunicacaoAction.classificacoesAnexo}" showLabelSelecione="true"
+		      	showRequired="true"	value="#{respostaComunicacaoAction.classificacaoAnexo}">
+				<a:ajax event="change" execute="@this" limitRender="true" render="uploadDiv"/>
+			</wi:selectOneMenuEntity>
+			<s:div id="tooltipClassificacaoAnexo">
+		   		<s:div styleClass="tooltip-parent" style="width: 10px" 
+		  			rendered="#{not empty respostaComunicacaoAction.classificacaoAnexo.observacao}">
+		  		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+					<div class="epp-tooltip">
+						<div class="tooltip-panel">
+							<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
+							<h:outputText value="#{respostaComunicacaoAction.classificacaoAnexo.observacao}"/>
+						</div>
+					</div>
+		   		</s:div>
+			</s:div>
+			<s:div id="uploadDiv">
+				<wi:fileUpload id="documentoResposta"
+					reRender="pageBodyDialogMessage uploadButton"
+					accept="#{respostaComunicacaoAction.classificacaoAnexo.acceptedTypes}"
+					rendered="#{not empty respostaComunicacaoAction.classificacaoAnexo 
+						and not empty respostaComunicacaoAction.descricaoAnexo
+						and not empty respostaComunicacaoAction.classificacaoAnexo.extensaoArquivosList}" />
+			</s:div>
+			<s:div id="uploadButton">
+				<wi:commandButton id="gravarResposta"
+					action="respostaComunicacaoAction.gravarAnexoResposta"
+					execute="@this"
+					value="#{infoxMessages['crud.update']}"
+					reRender="pageBodyDialogMessage, @form, respostasPanel, taskButtonsForm"
+					rendered="#{respostaComunicacaoAction.anexoValido}" />
+			</s:div>
+		</h:form>
+    </p:panel>
+	
+	<wi:assinaturaPopup id="respostaComunicacaoAssinaturaDocumentoPopup" afterRender="respostasPanel" showIniciarAnaliseDocumentos="false" 
+			actionPosSign="respostaComunicacaoAction.verificarPossibilidadeEnvioResposta()" />
+			
+	<p:panel header="#{infoxMessages['comunicacao.documentosResposta']}" style="margin-top:1em"
+        rendered="#{not empty respostaComunicacaoAction.classificacoesEditor or not empty respostaComunicacaoAction.classificacoesAnexo}">
+        
+		<wi:dataTable id="respostas" tableTitle="#{infoxMessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
+			values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true" >
+			<ui:define name="searchForm">
+				<wi:searchForm formId="respostasForm" searchReRender="respostasPanel, respostasSearchForm"
+				        clearReRender="respostasPanel, respostasSearchForm" formTitle="#{infoxMessages['searchForm.title']}">
+					<wi:inputText value="#{respostaComunicacaoList.descricaoDocumento}" label="#{infoxMessages['documentoProcesso.descricao']}" />
+		        </wi:searchForm>
+	        </ui:define>
+			<ui:define name="headerToolBar" />
+			<ui:define name="toolBar">
+				<h:form>
+					<wi:toolBarAssinatura idDocumento="#{row.documento.id}" idAssinatura="respostaComunicacaoAssinaturaDocumentoPopup"
+				    	renderedLock="#{not empty row.documento.documentoBin.assinaturas}" 
+				    	styleClass="opacityHover"/>
+					<a:commandLink action="#{respostaComunicacaoAction.setDocumentoEdicao(row.documento)}"
+						render="editorRespostaComunicacaoForm" rendered="#{empty row.documento.documentoBin.extensao}"
+						oncomplete="PF('panelPessoaResponderEditor').expand(); PF('panelPessoaResponderUpload').collapse()">
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}" 
+							styleClass="opacityHover"/>
+					</a:commandLink>
+					<a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction()}"
+						rendered="#{not empty row.documento.documentoBin.extensao}" 
+                        oncomplete="#{fileDownloader.getWindowOpen(row.documento.documentoBin)}">
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"
+							styleClass="opacityHover"/>
+                        <f:setPropertyActionListener value="#{row.documento.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+                    </a:commandLink>
+					<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row.documento)}"
+						render="respostasPanel, editorRespostaComunicacaoForm, pageBodyDialogMessage, taskButtonsForm"
+						rendered="#{respostaComunicacaoAction.podeRemoverDocumento(row.documento)}"
+						onclick="return confirm('#{infoxMessages['crud.confirmRemove']}')">
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['crud.remove']}"
+							styleClass="opacityHover"/>
+					</a:commandLink>
+				</h:form>
+			</ui:define>
+			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.documento.descricao}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.documento.classificacaoDocumento.descricao}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documento.documentoBin.sizeFormatado}" />
+			<wi:columnBoolean columnHeader="#{infoxMessages['processoDocumentoBin.minuta']}" value="#{row.documento.documentoBin.minuta}" />
+			<ui:define name="conteudoAdicional">
+				<h:form style="text-align:left">
+					<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
+						action="respostaComunicacaoAction.enviarRespostaComunicacao()" reRender="respostasPanel, pageBodyDialogMessage, editorRespostaComunicacaoForm, anexoRespostaComunicacaoForm, painelComunicacao" 
+						rendered="#{respostaComunicacaoAction.possivelMostrarBotaoEnvio}" execute="@this"/>
+				</h:form>
+			</ui:define>
+		</wi:dataTable>
+		
+	</p:panel>
+	
+	<c:if test="#{empty showTaskButtons ? true : showTaskButtons}">
+		<h:form>
+			<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
+		</h:form>
+	</c:if>
+	
+	<script type="text/javascript">
+	
+		function clickEditorUploadPanel(widgetClicked, widgetOther) {
+			widgetClicked.toggle();
+			widgetOther.collapse();
+		}
+	
+		$(document).ready( function() {
+			var widgetPanelResponder = PF('panelPessoaResponder');
+			if (widgetPanelResponder != undefined) {
+				widgetPanelResponder.toggler.remove();
+				widgetPanelResponder.header.css("cursor", "pointer");
+				widgetPanelResponder.header.click(function(){ widgetPanelResponder.toggle(); })
+			}
+			
+			var widgetPanelResponderUpload = PF('panelPessoaResponderUpload');
+			var widgetPanelResponderEditor = PF('panelPessoaResponderEditor');
+			
+			if (widgetPanelResponderEditor != undefined) {
+				widgetPanelResponderEditor.toggler.remove();
+				widgetPanelResponderEditor.header.css("cursor", "pointer");
+				widgetPanelResponderEditor.header.click(function() {clickEditorUploadPanel(widgetPanelResponderEditor, widgetPanelResponderUpload);})
+			}
+			
+			if (widgetPanelResponderUpload != undefined) {
+				widgetPanelResponderUpload.toggler.remove();
+				widgetPanelResponderUpload.header.css("cursor", "pointer");
+				widgetPanelResponderUpload.header.click(function() {clickEditorUploadPanel(widgetPanelResponderUpload, widgetPanelResponderEditor);})
+			}
+		} )
+		
+	</script>
+	
+</ui:composition>

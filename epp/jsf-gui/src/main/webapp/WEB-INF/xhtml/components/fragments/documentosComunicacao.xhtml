@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
+	
+	<ui:param name="id" value="#{empty id ? 'id' : id}"></ui:param>
+
+	<s:fragment rendered="#{empty rendered ? false : rendered}">
+		<wi:dataTable id="#{id}documentosComunicacao"
+			tableTitle="#{tableTitle}"
+			values="#{empty bean ? documentoComunicacaoList.list(5) : bean.list(5)}"
+			bean="#{empty bean ? documentoComunicacaoList : bean}"
+			rowId="#{row.id}"
+			hideOrder="#{empty hideOrder ? true : hideOrder}"
+			showSearchForm="false"
+			panelStyle="margin-top:1em">
+				<ui:define name="headerToolBar" />
+				<ui:define name="toolBar">
+					<rich:column styleClass="dt-toolbar-col">
+						<h:form>
+                            <a:commandLink execute="@this" render="@this"
+                                action="#{jsfUtil.applyLastPhaseFlashAction}"
+                                oncomplete="#{fileDownloader.getWindowOpen(row.documentoBin)}">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+                                <f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+                            </a:commandLink>
+						</h:form>
+					</rich:column>
+				</ui:define>
+				<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{row.numeroDocumento}" 
+					columnRendered="#{showNumeroDocumento}"/>
+				<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
+				<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento}" />
+				<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
+		</wi:dataTable>
+	</s:fragment>
+		
+</ui:composition>

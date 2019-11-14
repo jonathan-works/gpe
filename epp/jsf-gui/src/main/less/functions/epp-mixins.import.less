@@ -1,0 +1,114 @@
+.material-design-icon(@name,@dpr:'1x', @color:'black', @size:'18dp'){
+  background-image:~"url(#{layoutController.getMaterialDesignIconUrl('@{dpr}','@{color}','@{size}','@{name}')})";
+}
+
+.background-image(@base-path:@imgFolder, @image-name) {
+  background-image: ~"url("%("%s/%s",@base-path,@image-name)~")";
+}
+.image(@imgName) {
+  background-image: ~"url("%("%s/%s",@imgFolder,@imgName)~")";
+}
+.z-depth(@level) {
+  box-shadow: 0 2px*@level 5px*@level 0 rgba(0,0,0,0.8/@level), 0 2px*@level 10px*@level 0 rgba(0,0,0,0.6/@level);
+}
+
+.with-prefixed-atribute(@atrib, @value){
+
+}
+
+.opacity(@value:100){
+  opacity:@value/100;
+  filter: ~"alpha(opacity = @{value})";
+}
+
+.prefixed-atrib(@atrib;@rest ...) {
+  -webkit-@{atrib}: ~"@{rest}";
+  -moz-@{atrib}: ~"@{rest}";
+  -ms-@{atrib}: ~"@{rest}";
+  -o-@{atrib}: ~"@{rest}";
+  @{atrib}: ~"@{rest}";
+  ;
+}
+.prefixed-value(@atrib, @rest ...){
+  @{atrib}: ~"-webkit-@{rest}";
+  @{atrib}: ~"-moz-@{rest}";
+  @{atrib}: ~"-ms-@{rest}";
+  @{atrib}: ~"-o-@{rest}";
+  @{atrib}: ~"@{rest}";
+}
+
+.transition(...) {
+  .prefixed-atrib(transition,@arguments);
+}
+.user-select(...) {
+  .prefixed-atrib(user-select,@arguments);
+}
+.transform-origin(...) {
+  .prefixed-atrib(transform-origin,@arguments);
+}
+.transform(...) {
+  .prefixed-atrib(transform,@arguments);
+}
+.display-inline-flex() {
+  .prefixed-value(display,inline-flex);
+}
+.display-flex() {
+  .prefixed-value(display,flex);
+}
+.flex(@ratio:1) {
+  .prefixed-atrib(flex,@ratio);
+}
+.flex-displayed-container() {
+  &:extend(.display-flex);
+}
+.flex-child(@ratio:1) {
+  .flex(@ratio);
+}
+.flex-displayed-child() {
+  .flex-child(1);
+}
+.central-block-section() {
+  position: absolute;
+  width: 355px;
+  height: 122px;
+}
+.bg-dual-block() {
+  position: fixed;
+  height: 50%;
+  width: 100%;
+}
+.box-sizing(@value) {
+  .prefixed-atrib(box-sizing, @value);
+}
+.full-scr() {
+  width: 100%;
+  height: 100%;
+}
+.linear-gradient(@content) {
+  .prefixed-value(background, linear-gradient(@content));
+}
+.bg-deg-color(@startColor, @endColor) when (@startColor = @endColor) {
+  background: @startColor;
+}
+.bg-deg-color(@startColor, @endColor) when not (@startColor = @endColor) {
+  background: @startColor;
+  .linear-gradient(~"top, "@startColor~" 0%, "@endColor~" 100%");
+  background: linear-gradient(to bottom, @startColor 0%,@endColor 100%);
+}
+.btn-deg-color(@startColor, @endColor) when (@startColor = @endColor) {
+  background: @startColor;
+}
+.btn-deg-color(@startColor, @endColor) when not (@startColor = @endColor) {
+  background: @startColor;
+  .linear-gradient(~"top, @{startColor} 0%, @{endColor} 100%");
+  background: linear-gradient(to bottom, @startColor 0%,@endColor 100%);
+}
+.darken-color-percentage(@atrib, @color, @perc) {
+  @{atrib}: hsl(hue(@color),saturation(@color),lightness(@color)*@perc);
+}
+.deg-color(@cor) when (luminance(@cor)<=50%) {
+  @deg-color: lighten(@cor,30%);
+}
+.deg-color(@cor) when (luminance(@cor) > 50%) {
+  @deg-color: darken(@cor,30%);
+}

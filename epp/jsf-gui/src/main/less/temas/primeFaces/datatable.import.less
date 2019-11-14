@@ -1,0 +1,50 @@
+.ui-widget-content {
+  & > td {
+    font-family: @default-font-family;
+  }
+}
+
+span {
+  &.ui-column-title{
+    font-family: @default-font-family;
+  }
+  &.ui-paginator-page{
+    font-family: @default-font-family;
+  }
+}
+
+div {
+  &.ui-datatable {
+    font-family: @default-font-family;
+    & th {
+      &.ui-state-default{
+        background-color:#ddd;
+        background-image:none;
+        color:#000;
+        border-color:#d4cfc7;
+        border-width:1px;
+        border-style:solid;
+
+      }
+    }
+  }
+}
+tbody {
+  &.ui-datatable-data {
+    & tr {
+      background:none;
+      &.ui-datatable-odd {
+        background-color: @zebra-row-color-even;
+        &:hover {
+          background-color: @zebra-row-color-over;
+        }
+      }
+      &.ui-datatable-even {
+        background-color: @zebra-row-color-odd;
+        &:hover {
+          background-color: @zebra-row-color-over;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['statusProcesso.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{statusProcessoView}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{statusProcessoList.list(15)}"
+            bean="#{statusProcessoList}"
+            tableTitle="#{infoxMessages['statusProcesso.tableTitle']}"
+            id="statusProcessoList" rowId="#{row.idStatusProcesso}">
+            
+            <ui:define name="headerToolBar"/>
+            
+            <ui:define name="toolBar">
+            	<h:form>
+            		<a:commandLink execute="@this" render=":pageBody" action="#{statusProcessoView.load(row)}" limitRender="true">
+            			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="Selecionar" styleClass="opacityHover"/>
+            			<f:setPropertyActionListener value="form" target="#{statusProcessoView.tab}" />
+            		</a:commandLink>
+            		
+            		<a:commandLink execute="@form" render="statusProcessoListPanel :pageBodyDialogMessage" 
+            			action="#{statusProcessoView.inativar}" limitRender="true" rendered="#{row.ativo}">
+            			<f:setPropertyActionListener value="#{row.idStatusProcesso}" target="#{statusProcessoView.id}" />
+            			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Inativar" styleClass="opacityHover"/>
+            		</a:commandLink>
+            	</h:form>
+            </ui:define>
+            
+            <ui:define name="searchForm">
+                <wi:searchForm formId="StatusProcessoSearchForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    
+                    <wi:inputText id="nome"
+                        value="#{statusProcessoList.nome}"
+                        label="#{infoxMessages['statusProcesso.nome']}" />
+                        
+                    <wi:inputText id="descricao"
+                        label="#{infoxMessages['statusProcesso.descricao']}"
+                        value="#{statusProcessoList.descricao}" />
+                        
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{statusProcessoList.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            
+            <wi:columnOutputText columnId="nome"
+                columnHeader="#{infoxMessages['statusProcesso.nome']}"
+                value="#{row.nome}" />
+                
+            <wi:columnOutputText columnId="descricao"
+                columnHeader="#{infoxMessages['statusProcesso.descricao']}"
+                value="#{row.descricao}" />
+            
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+                
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+    	<wi:dataForm formId="StatusProcessoForm" formTitle="#{infoxMessages['statusProcesso.StatusProcessoForm']}">
+			
+			<wi:outputText id="nomeOut" label="#{infoxMessages['statusProcesso.nome']}"
+				value="#{statusProcessoView.nome}" rendered="#{not empty statusProcessoView.id}"/>
+			
+			<wi:inputText id="nome" required="true" label="#{infoxMessages['statusProcesso.nome']}"
+				value="#{statusProcessoView.nome}" maxlength="50" 
+				rendered="#{empty statusProcessoView.id}"/>
+				
+			<wi:inputText id="descricao" required="true" label="#{infoxMessages['statusProcesso.descricao']}" 
+				value="#{statusProcessoView.descricao}" maxlength="200" />
+				
+			<wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{statusProcessoView.ativo}" />
+
+			<ui:define name="buttons">
+				<a:commandButton action="#{statusProcessoView.inserir}" value="#{infoxMessages['crud.persist']}" 
+					rendered="#{empty statusProcessoView.id}" render="@form :pageBodyDialogMessage" execute="@form"
+					styleClass="buttons"/>
+					
+				<a:commandButton action="#{statusProcessoView.atualizar}" value="#{infoxMessages['crud.update']}" 
+					rendered="#{not empty statusProcessoView.id}" render="@form :pageBodyDialogMessage" execute="@form"
+					styleClass="buttons"/>
+					
+				<a:commandButton action="#{statusProcessoView.newInstance}" value="#{infoxMessages['crud.new']}" 
+					rendered="#{not empty statusProcessoView.id}" render="@form" execute="@form"
+					styleClass="buttons"/>
+			</ui:define>
+
+		</wi:dataForm>
+    </ui:define>
+
+</ui:composition>

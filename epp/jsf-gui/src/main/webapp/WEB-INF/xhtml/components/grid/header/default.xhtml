@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib">
+	
+		<ui:param
+		 name="id"
+		 value="#{c.id.contains('.') ? c.id.split('\\.')[0] : c.id}" />
+		<ui:param
+		 name="f"
+		 value="#{bean.fields[id]}" />
+		<ui:param
+		 name="type"
+		 value="#{f.type}" />
+		<ui:param
+		 name="type"
+		 value="#{empty type ? 'default' : type}" />
+		<ui:param
+		 name="isLeftGrid"
+		 value="#{empty isLeftGrid ? 'false' : isLeftGrid}" />
+		
+		<ui:param
+		 name="header"
+		 value="#{empty props.header ? c.header : props.header}" />
+		<ui:param
+		 name="evalHeader"
+		 value="#{empty props.evalHeader ? false : props.evalHeader}" />
+		<ui:param
+		 name="header"
+		 value="#{evalHeader ? elFunctions.evaluateExpression(header) : header}" />
+		<ui:param
+		 name="mostrarOrdenar"
+		 value="#{isLeftGrid != true and false}" />
+
+  <h:form ajaxSubmit="true">
+		
+  	<a:commandLink
+			 styleClass="columnHeader"
+			 render="#{gridId}"
+			 status=":status"
+			 value="#{header} #{bean.order==asc ? messages.down : ( bean.order==desc ? messages.up : '' )} #{empty bean.entity[f.id] ? '' : '*'}"
+			 limitRender="true"
+			 rendered="#{mostrarOrdenar}">
+			
+       <f:param
+				 name="#{bean.gridId}.order"
+				 value="#{bean.order==asc ? desc : asc}" />
+   
+		</a:commandLink>
+   <h:outputText
+			 value="#{header}"
+			 rendered="#{not mostrarOrdenar}" />
+   
+	</h:form>
+
+</ui:composition>

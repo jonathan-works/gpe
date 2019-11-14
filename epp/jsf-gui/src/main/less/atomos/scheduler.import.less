@@ -1,0 +1,18 @@
+#scheduler() {
+    .standard {
+        .fc-event.fc-event-clickable {
+            cursor: pointer;
+            .prefixed-atrib(transform-origin, center center);
+            &:hover {
+                .prefixed-atrib(transform, scale( 1.05 ));
+                .mdl-shadow--2dp;
+            }
+        }
+    }
+    .standard-colors {
+    }
+}
+
+.fc {
+    #scheduler > .standard;
+}

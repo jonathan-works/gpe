@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="default.xhtml"
+>
+
+    <script type="text/javascript">
+        window.addEventListener("load", function() {
+            alert("Remover a referência para este fluxo-component");
+        });
+    </script>
+    <ui:define name="customButtons">
+        <wi:commandButton
+            id="updateButton"
+            action="fluxoCrudAction.criarReplica()"
+            reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
+            rendered="#{fluxoCrudAction.managed}"
+            value="Incluir como..."
+        >
+        </wi:commandButton>
+        <wi:commandButton
+            id="definicao"
+            action="#{processBuilder.load(fluxoCrudAction.instance)}"
+            value="Definição"
+            rendered="#{fluxoCrudAction.managed}"
+            oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?scid=#{conversation.id}',1300,850);"
+        >
+        </wi:commandButton>
+        <wi:commandButton
+            id="importarXPDL"
+            value="#{infoxMessages['importarXPDL.button']}"
+            rendered="#{fluxoCrudAction.managed}"
+            onclick="openPopUp('importarXPDL', '#{pathResolver.getContextPath()}/Fluxo/importar/importarXPDL.seam?scid=#{conversation.id}',1300,850);"
+        >
+        </wi:commandButton>
+    </ui:define>
+</ui:composition>

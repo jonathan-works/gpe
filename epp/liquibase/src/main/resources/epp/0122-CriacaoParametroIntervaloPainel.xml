@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="victorpasqualino" id="1">
+
+        <insert tableName="tb_parametro">
+        	<column name="id_parametro" valueSequenceNext="sq_tb_parametro"/>
+            <column name="nm_variavel" value="intervaloAtualizacaoPainel"/>
+        	<column name="ds_variavel" value="Intervalo de Atualização do painel do usuário em segundos"/>
+        	<column name="vl_variavel" value="10"/>
+            <column name="in_ativo" valueBoolean="true"/>
+        	<column name="in_sistema" valueBoolean="false"/>
+        </insert>
+        
+    </changeSet>
+</databaseChangeLog>

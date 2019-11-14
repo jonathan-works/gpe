@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
+    <fieldset>
+            <legend>#{categoriaEntregaView.restricaoCategoriaEntregaItemController.categoriaEntregaItem.categoriaEntrega.descricao}:
+                #{categoriaEntregaView.restricaoCategoriaEntregaItemController.categoriaEntregaItem.descricao}</legend>
+    <h:form>
+        <fieldset>
+            <legend>Restrições</legend>
+            <div style="text-align: center;">
+                <i:autoComplete id="localizacao"
+                    value="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.restricao}"
+                    converter="br.com.infox.jsf.converter.EntityConverter"
+                    completeMethod="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.completeLocalizacao}"
+                    dropdownMode="blank" itemLabel="#{item.localizacao}" itemValue="#{item}"
+                    forceSelection="true">
+                    <f:facet name="itemtip">#{item.caminhoCompletoFormatado}</f:facet>
+                </i:autoComplete>
+                <h:commandButton styleClass="buttons" value="Adicionar"
+                    action="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.adicionar}">
+                    <p:ajax process="@parent" update="@parent :pageBodyDialogMessage" />
+                </h:commandButton>
+            </div>
+            <p:dataTable var="item" styleClass="ifx-dataTable" reflow="true" rows="15" paginator="true"
+                value="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.restricoes}" emptyMessage=""
+                paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {LastPageLink}">
+                <f:facet name="footer">
+                    <div class="ui-datatable-footer-paginator">
+                        <div class="ui-datatable-footer-paginator-right">#{infoxMessages['list.resultPrefix']}
+                            #{categoriaEntregaView.restricaoCategoriaEntregaItemController.restricoes.size()}
+                            #{infoxMessages['list.resultSufix']}</div>
+                    </div>
+                </f:facet>
+                <p:column styleClass="ifx-dataTable-toolBar">
+                    <h:commandLink
+                        action="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.remover(item)}"
+                        onclick="if(!confirm('#{infoxMessages['crud.confirmRemove']}')) return false;">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                            title="#{infoxMessages['button.delete']}" />
+                        <p:ajax process="@this" update="@parent:@parent:@parent" />
+                    </h:commandLink>
+                </p:column>
+                <p:column headerText="Localização">
+                    <span class="tooltip-parent">
+                        <h:outputText value="#{item.localizacao}" />
+                        <span class="epp-tooltip">
+                            <span class="tooltip-panel">
+                                #{item.caminhoCompletoFormatado}
+                            </span>
+                        </span>
+                    </span>
+                </p:column>
+            </p:dataTable>
+        </fieldset>
+        <h:commandButton action="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.gravar}" value="Salvar"
+            styleClass="buttons">
+            <p:ajax process="@form" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();"
+                onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaTree();" />
+        </h:commandButton>
+        <h:commandButton type="reset" value="Voltar" styleClass="buttons" action="#{categoriaEntregaView.clear}">
+            <p:ajax immediate="true" process="@this" update="@this :pageBodyDialogMessage"
+                onstart="infox.showLoading();" onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaTree();" />
+        </h:commandButton>
+    </h:form>
+    </fieldset>
+
+</ui:composition>

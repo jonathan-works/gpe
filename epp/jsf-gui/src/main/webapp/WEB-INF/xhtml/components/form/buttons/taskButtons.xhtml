@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="taskEndAction" value="#{empty taskEndAction ? 'taskInstanceHome.end(taskInstanceHome.name)' : taskEndAction}"/>
+    <s:div
+        id="taskButtonsDiv"
+        styleClass="actionButtons">
+        <ui:param
+            name="props"
+            value="#{form.buttons.properties}" />
+        <ui:param
+            name="reRenderSave"
+            value="#{empty reRenderSave ? formId : reRenderSave}" />
+        <a:commandButton
+            id="update"
+            status="none"
+            rendered="#{!empty form.fields and processoEpaHome.managed and !isUsuarioExterno}"
+            onmouseup="showLoading()"
+            oncomplete="#{oncomplete}; hideLoading();"
+            render="#{reRenderSave},:pageBodyDialogMessage"
+            value="#{infoxMessages['crud.update']}"
+            styleClass="buttons"
+            action="#{taskInstanceHome.update(home)}" />
+        <!-- Implementar -->
+        <a:commandButton
+            id="unlock"
+            execute="@this"
+            status="none"
+            rendered="#{processoEpaHome.managed and !isUsuarioExterno}"
+            onmouseup="showLoading()"
+            onbeforedomupdate="reloadPanel();"
+            oncomplete="#{oncomplete};hideLoading();close()"
+            render="#{reRenderSave}"
+            value="#{infoxMessages['movimentar.liberarTarefa']}"
+            styleClass="buttons"
+            action="#{taskInstanceHome.removeUsuario()}" />
+        <a:commandButton
+            id="persist"
+            rendered="#{!empty form.fields and !processoEpaHome.managed and !isUsuarioExterno}"
+            status="none"
+            onmouseup="showLoading()"
+            oncomplete="hideLoading()"
+            render="#{reRenderSave}"
+            value="#{infoxMessages['crud.persist']}"
+            styleClass="buttons"
+            action="#{taskInstanceHome.persist(home)}" />
+        <h:outputText
+            styleClass="label-general"
+            value="#{infoxMessages['movimentar.next']} "
+            rendered="#{taskInstanceHome.transitions.size gt 0}" />
+        <c:if test="#{taskInstanceHome.transitions.size gt 3}">
+            <h:selectOneMenu value="#{taskInstanceHome.name}">
+                <f:selectItems
+                    value="#{taskInstanceHome.transtionsSelectItems}" />
+            </h:selectOneMenu>
+            <a:commandButton
+                action="#{elFunctions.invokeMethod(taskEndAction)}"
+                value="OK"
+                status="none"
+                onmouseup="showLoading()"
+                styleClass="buttons"
+                oncomplete="verifyFields();"
+                render=":script,#{reRenderSave},:pageBodyDialogMessage" />
+        </c:if>
+        <c:if test="#{taskInstanceHome.transitions.size le 3}">
+            <a:repeat
+                value="#{taskInstanceHome.transitions}"
+                var="transition">
+                <a:commandButton
+                    status="none"
+                    onmouseup="showLoading()"
+                    oncomplete="verifyFields();"
+                    render=":pageBodyDialogMessage,:script,#{reRenderSave}"
+                    value="#{transition.name}"
+                    styleClass="buttons"
+                    action="#{elFunctions.invokeMethod(taskEndAction)}">
+                    <f:setPropertyActionListener target="#{taskInstanceHome.name}" value="#{transition.name}" />
+                </a:commandButton>
+            </a:repeat>
+        </c:if>
+        <ui:fragment
+            rendered="#{taskInstanceController.podeExibirPrioridadeProcesso()}">
+            <h:outputText
+                value="#{infoxMessages['prioridadeProcesso.comboBox']}"
+                style="margin-left: 40px;" />
+            <h:selectOneMenu
+                value="#{processoEpaHome.instance.prioridadeProcesso}">
+                <s:selectItems
+                    value="#{prioridadeProcessoList.listAtivos()}"
+                    var="p"
+                    label="#{p.descricaoPrioridade}"
+                    noSelectionLabel="Sem prioridade"
+                    hideNoSelectionLabel="false" />
+                <s:convertEntity />
+            </h:selectOneMenu>
+        </ui:fragment>
+    </s:div>
+</ui:composition>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_definicao_variavel_processo">
+            <column name="nr_ordem" type="integer" />
+            <column name="nr_version" type="bigint" />
+        </addColumn>
+        <update tableName="tb_definicao_variavel_processo">
+            <column name="nr_version" value="0" />
+        </update>
+        <sql dbms="mssql">
+            <![CDATA[
+            UPDATE d SET d.nr_ordem = COALESCE(
+                (SELECT COUNT(dd.id_definicao_variavel_processo) FROM tb_definicao_variavel_processo dd 
+                WHERE dd.id_definicao_variavel_processo < d.id_definicao_variavel_processo AND dd.id_fluxo = d.id_fluxo), 0)
+            FROM tb_definicao_variavel_processo d;
+            ]]>
+        </sql>
+        <sql dbms="postgresql, oracle">
+            <![CDATA[
+            UPDATE tb_definicao_variavel_processo d SET nr_ordem = COALESCE(
+                (SELECT COUNT(dd.id_definicao_variavel_processo) FROM tb_definicao_variavel_processo dd 
+                WHERE dd.id_definicao_variavel_processo < d.id_definicao_variavel_processo AND dd.id_fluxo = d.id_fluxo), 0);
+            ]]>
+        </sql>
+        <addNotNullConstraint columnDataType="integer" tableName="tb_definicao_variavel_processo" columnName="nr_ordem" />
+        <addNotNullConstraint columnDataType="bigint" tableName="tb_definicao_variavel_processo" columnName="nr_version" />
+    </changeSet>
+</databaseChangeLog>

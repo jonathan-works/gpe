@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+    <a:region renderRegionOnly="false">
+        <div>
+            <s:link view="#{linkDetalhe}">
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                    title="#{infoxMessages['button.selecionar']}" />
+                <f:param name="id" value="#{row[bean.key]}" />
+                <f:param name="tab" value="form" />
+                <f:param name="goBackUrl" value="#{goBackUrl}" />
+                <f:param name="goBackId" value="#{goBackId}" />
+                <f:param name="goBackTab" value="#{goBackTab}" />
+                <s:conversationPropagation type="none" />
+            </s:link>
+        </div>
+    </a:region>
+</ui:composition>

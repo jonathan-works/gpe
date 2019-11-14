@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+    
+    <changeSet author="gabriel" id="1" dbms="mssql,postgresql">
+        <sql dbms="mssql">
+            UPDATE t SET actorid_ = 
+            (SELECT ul.ds_login FROM tb_usuario_login ul INNER JOIN tb_usuario_taskinstance uti ON (uti.id_usuario_login = ul.id_usuario_login) WHERE uti.id_taskinstance = t.ID_)
+            FROM JBPM_TASKINSTANCE t
+            WHERE t.ISOPEN_ = 1 AND t.ISSUSPENDED_ = 0;
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE JBPM_TASKINSTANCE t SET actorid_ = 
+            (SELECT ul.ds_login FROM tb_usuario_login ul INNER JOIN tb_usuario_taskinstance uti ON (uti.id_usuario_login = ul.id_usuario_login) WHERE uti.id_taskinstance = t.ID_)
+            WHERE t.ISOPEN_ = true AND t.ISSUSPENDED_ = false;
+        </sql>
+    </changeSet>
+    <changeSet author="gabriel" id="2" dbms="mssql,postgresql">
+        <sql dbms="mssql">
+            UPDATE t SET ASSIGNEE_ = 
+            (SELECT ul.ds_login FROM tb_usuario_login ul INNER JOIN tb_usuario_taskinstance uti ON (uti.id_usuario_login = ul.id_usuario_login) WHERE uti.id_taskinstance = t.ID_)
+            FROM JBPM_TASKINSTANCE t
+            WHERE t.ISOPEN_ = 1 AND t.ISSUSPENDED_ = 0;
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE JBPM_TASKINSTANCE t SET ASSIGNEE_ = 
+            (SELECT ul.ds_login FROM tb_usuario_login ul INNER JOIN tb_usuario_taskinstance uti ON (uti.id_usuario_login = ul.id_usuario_login) WHERE uti.id_taskinstance = t.ID_)
+            WHERE t.ISOPEN_ = true AND t.ISSUSPENDED_ = false;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

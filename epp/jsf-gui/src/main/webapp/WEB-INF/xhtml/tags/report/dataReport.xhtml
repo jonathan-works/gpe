@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://jboss.org/schema/seam/pdf"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <c:if test="#{empty widths}">
+        <c:forEach begin="1" end="#{columns}">
+            <ui:param name="widths" value="#{widths}1 " />
+        </c:forEach>
+    </c:if>
+    <ui:param name="title"
+        value="#{wi:get(title, messages['report.title'])}" />
+    <ui:param name="subtitle"
+        value="#{wi:get(subtitle, messages['report.subtitle'])}" />
+
+    <p:document title="#{title}" pageSize="A4"
+        margins="#{wi:get(marginLeft,'60')} #{wi:get(marginRight,'30')} #{wi:get(marginTop,'40')} #{wi:get(marginBotton,'30')}"
+        orientation="#{wi:get(orientation, 'portrait')}">
+
+        <f:facet name="header">
+            <p:footer borderWidthTop="1" borderColorTop="lightgray"
+                borderWidthBottom="0" alignment="center">
+                <p:paragraph spacingAfter="15">
+                    <p:pageNumber />
+                </p:paragraph>
+            </p:footer>
+        </f:facet>
+        <ui:include src="reportHeader.xhtml">
+            <ui:param name="spacingAfter" value="0" />
+        </ui:include>
+
+        <p:font size="8">
+            <p:paragraph spacingAfter="15">
+                <p:text value="#{headerText}" />
+            </p:paragraph>
+        </p:font>
+        <p:font size="#{wi:get(fontSize,10)}">
+            <p:table columns="#{columns}"
+                widthPercentage="#{wi:get(widthPercentage,100)}"
+                headerRows="#{wi:get(headerRows,1)}" widths="#{widths}">
+
+                <ui:insert />
+
+            </p:table>
+        </p:font>
+
+    </p:document>
+
+</ui:composition>

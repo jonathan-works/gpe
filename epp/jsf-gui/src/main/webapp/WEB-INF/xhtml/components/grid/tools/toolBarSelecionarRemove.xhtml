@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+
+    <h:form>
+        <div>
+            <a:region renderRegionOnly="false">
+                <a:commandLink action="#{home.setTab()}"
+                    status=":status" render=":pageBody"
+                    limitRender="true" id="#{gridId}Edit">
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                        title="#{infoxMessages['button.selecionar']}" />
+                    <f:param name="id" value="#{row[bean.key]}" />
+                </a:commandLink>
+                <a:commandLink action="#{home.remove(row)}"
+                    rendered="#{canEdit}" limitRender="true"
+                    status=":status" render=":#{gridId}"
+                    onclick="if(!confirm('Confirma?')) return false;">
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                        title="#{infoxMessages['button.delete']}" />
+                    <f:param name="firstResult"
+                        value="#{bean.firstResult}" />
+                    <f:param name="page" value="#{bean.page}" />
+                </a:commandLink>
+            </a:region>
+        </div>
+    </h:form>
+
+</ui:composition>

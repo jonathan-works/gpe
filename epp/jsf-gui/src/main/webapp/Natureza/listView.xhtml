@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['natureza.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{naturezaCrudAction}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{naturezaList.list(15)}"
+            bean="#{naturezaList}"
+            tableTitle="#{infoxMessages['natureza.tableTitle']}"
+            id="naturezaList" rowId="#{row.idNatureza}"
+            actionInactive="naturezaCrudAction.inactive">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarNaturezaForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigo"
+                        value="#{naturezaList.entity.codigo}"
+                        label="#{infoxMessages['natureza.codigo']}" />
+                    <wi:inputText id="natureza"
+                        value="#{naturezaList.entity.natureza}"
+                        label="#{infoxMessages['natureza.natureza']}" />
+                    <wi:selectBooleanMenu id="hasPartes"
+                        label="#{infoxMessages['natureza.hasPartes']}"
+                        value="#{naturezaList.entity.hasPartes}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{naturezaList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <ui:define name="toolBar">
+                <wi:toolBarEdit id="naturezaListEditToolbar" />
+                <wi:toolBarInactive
+                    actionInactive="naturezaCrudAction.inactive(row)" />
+            </ui:define>
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['natureza.codigo']}"
+                value="#{row.codigo}" />
+            <wi:columnOutputText columnId="natureza"
+                columnHeader="#{infoxMessages['natureza.natureza']}"
+                value="#{row.natureza}" />
+            <wi:columnBoolean columnId="hasPartes"
+                columnHeader="#{infoxMessages['natureza.hasPartes']}"
+                columnWidth="15%" value="#{row.hasPartes}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                columnWidth="15%" value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="naturezaForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="codigo"
+                value="#{naturezaCrudAction.instance.codigo}"
+                required="true" label="#{infoxMessages['natureza.codigo']}"
+                disabled="#{naturezaCrudAction.instance.locked}" 
+                maxlength="30" />
+            <wi:inputText id="natureza"
+                value="#{naturezaCrudAction.instance.natureza}"
+                required="true" label="#{infoxMessages['natureza.natureza']}"
+                disabled="#{naturezaCrudAction.instance.locked}" 
+                maxlength="30" />
+            <wi:selectBooleanRadio id="hasPartes"
+                label="#{infoxMessages['natureza.hasPartes']}"
+                value="#{naturezaCrudAction.instance.hasPartes}"
+                disabled="#{naturezaCrudAction.instance.locked}">
+                <a:ajax event="change" render="partesDiv, numeroPartesDiv"
+                    limitRender="true" status=":status" execute="@this" />
+            </wi:selectBooleanRadio>
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{naturezaCrudAction.instance.ativo}" />
+                
+             <wi:selectBooleanRadio id="primaria"
+                label="#{infoxMessages['natureza.primaria']}"
+                value="#{naturezaCrudAction.instance.primaria}">
+            </wi:selectBooleanRadio>
+
+            <s:div id="partesDiv">
+                <wi:selectOneMenuEnum id="tipoDasPartes"
+                    label="#{infoxMessages['natureza.tipoDasPartes']}"
+                    items="#{naturezaCrudAction.getTiposDePartes()}"
+                    value="#{naturezaCrudAction.instance.tipoPartes}"
+                    required="true" showLabelSelecione="true"
+                    disabled="#{naturezaCrudAction.instance.locked}"
+                    rendered="#{naturezaCrudAction.instance.hasPartes}">
+                    <a:ajax event="change"
+                        render="numeroPartesDiv"
+                        limitRender="true" status=":status"
+                        execute="@this" />
+                </wi:selectOneMenuEnum>
+            </s:div>
+            <s:div id="numeroPartesDiv">
+                <wi:inputNumber id="numeroPartesFisicas"
+                    label="#{infoxMessages['natureza.numeroPartesFisicas']}"
+                    required="true"
+                    value="#{naturezaCrudAction.instance.numeroPartesFisicas}"
+                    disabled="#{naturezaCrudAction.instance.locked}"
+                    rendered="#{naturezaCrudAction.instance.hasPartes and not empty naturezaCrudAction.instance.tipoPartes and !naturezaCrudAction.instance.apenasPessoaJuridica()}" 
+                    maxlength="10" />
+                <wi:inputNumber id="numeroPartesJuridicas"
+                    label="#{infoxMessages['natureza.numeroPartesJuridicas']}"
+                    required="true"
+                    value="#{naturezaCrudAction.instance.numeroPartesJuridicas}"
+                    disabled="#{naturezaCrudAction.instance.locked}"
+                    rendered="#{naturezaCrudAction.instance.hasPartes and not empty naturezaCrudAction.instance.tipoPartes and !naturezaCrudAction.instance.apenasPessoaFisica()}" 
+                    maxlength="10" />
+            </s:div>
+        </wi:dataForm> 
+    </ui:define>
+
+    <ui:define name="tabs">
+        <infox:tab id="naturezaCategoriaFluxoTab"
+            rendered="#{naturezaCrudAction.isManaged()}"
+            title="#{infoxMessages['naturezaCategoriaFluxo.titleTab']}"
+            name="naturezaCategoriaFluxoTab"
+            action="#{naturezaCrudAction.onClickNaturezaCategoriaFluxoTab}">
+            <s:div id="naturezaCategoriaFluxoFormDiv">
+                <wi:dataForm formId="naturezaCategoriaFluxoForm"
+                    formTitle="#{infoxMessages['form.title']} - #{naturezaCrudAction.instance.natureza}">
+                    <wi:selectOneMenuEntity id="categorias"
+                        label="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"
+                        value="#{naturezaCategoriaFluxoCrudAction.instance.categoria}"
+                        required="true"
+                        items="#{naturezaCategoriaFluxoCrudAction.categorias}"
+                        inactiveCond="#{not item.ativo}"
+                        showLabelSelecione="true" />
+                    <wi:selectOneMenuEntity id="fluxo"
+                        label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
+                        value="#{naturezaCategoriaFluxoCrudAction.instance.fluxo}"
+                        required="true"
+                        items="#{naturezaCategoriaFluxoFacade.getFluxoList()}"
+                        inactiveCond="#{not item.ativo}"
+                        showLabelSelecione="true" />
+                    <ui:define name="buttons">
+                        <wi:commandButton id="saveButton"
+                            action="naturezaCategoriaFluxoCrudAction.save()"
+                            reRender="naturezaCategoriaFluxoFormDiv, naturezaCategoriaFluxoDiv, naturezaCategoriaFluxoTab, pageBodyDialogMessage"
+                            value="#{infoxMessages['crud.persist']}" />
+                    </ui:define>
+                </wi:dataForm>
+            </s:div>
+            <s:div id="naturezaCategoriaFluxoDiv">
+                <wi:dataTable id="naturezaCategoriaFluxoTable"
+                    values="#{naturezaCategoriaFluxoList.list(15)}"
+                    bean="#{naturezaCategoriaFluxoList}"
+                    tableTitle="#{infoxMessages['naturezaCategoriaFluxo.titleDataTable']} - #{naturezaCrudAction.instance.natureza}"
+                    var="row" rows="10" showSearchForm="false" panelStyle="margin-top: 1em;"
+                    panelStyleClass="rf-dt-crud">
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <wi:toolBarRemove id="toolBarRemove"
+                            reRender="naturezaCategoriaFluxoFormDiv, naturezaCategoriaFluxoDiv"
+                            actionRemove="naturezaCategoriaFluxoCrudAction.remove(row)" />
+                    </ui:define>
+                    <wi:columnOutputText columnId="categoria"
+                        columnHeader="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"
+                        value="#{row.categoria}" hideOrder="true"
+                        styleClass="rf-dt-c-left" />
+                    <wi:columnOutputText columnId="fluxo"
+                        columnHeader="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
+                        value="#{row.fluxo}" hideOrder="true"
+                        styleClass="rf-dt-c-left" />
+                </wi:dataTable>
+
+            </s:div>
+        </infox:tab>
+    </ui:define>
+
+</ui:composition>

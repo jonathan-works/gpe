@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
+
+		<s:div id="#{id}DivCpf">
+		
+			<wi:mask
+			 id="#{id}Cpf"
+			 mask="999.999.999-99" />
+	
+			<s:decorate
+			 id="#{id}Decoration"
+			 template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+			
+				
+				<ui:param
+				 name="showInfo"
+				 value="#{readonly or disabled}" />
+			
+				<ui:define name="label">#{label}</ui:define>
+				<c:if test="#{!showInfo}">
+				
+					<h:inputText
+					 id="#{id}Cpf"
+					 value="#{value}"
+					 styleClass="#{readonly ? 'readOnly' : '' } inputText"
+					 readonly="#{readonly}"
+					 disabled="#{disabled}"
+					 required="#{required}"
+					 size="15"
+					 maxlength="15">
+					
+						<ui:insert />
+						<f:converter converterId="stringConverter" />								
+					
+				</h:inputText>
+					
+				
+			</c:if>
+				<c:if test="#{showInfo}">
+				
+					<h:outputText value="#{value}" />
+					<h:inputHidden
+					 id="#{id}Cpf"
+					 value="#{value}"
+					 required="#{required}" />
+				
+			</c:if>			
+			
+		</s:decorate>	
+		
+	</s:div>
+		
+	
+</ui:composition>

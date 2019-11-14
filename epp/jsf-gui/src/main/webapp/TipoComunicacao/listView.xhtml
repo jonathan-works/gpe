@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['tipoComunicacao.titlePage']}</ui:define>
+    <ui:param name="home" value="#{tipoComunicacaoCrudAction}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{tipoComunicacaoList.list(15)}"
+            bean="#{tipoComunicacaoList}"
+            tableTitle="#{infoxMessages['tipoComunicacao.tableTitle']}"
+            id="tipoComunicacaoList" rowId="#{row.id}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="tipoComunicacaoSearchForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="descricao"
+                        label="#{infoxMessages['tipoComunicacao.descricao']}" 
+                        value="#{tipoComunicacaoList.entity.descricao}"/>
+                    <wi:inputText id="codigo"
+                        label="#{infoxMessages['tipoComunicacao.codigo']}" 
+                        value="#{tipoComunicacaoList.entity.codigo}"/>
+                    <wi:selectOneMenu id="tipoUsoComunicacao" label="#{infoxMessages['tipoComunicacao.tipoUso']}" 
+		            	value="#{tipoComunicacaoList.entity.tipoUsoComunicacao}"
+		            	showLabelTodos="true" optionLabel="#{item.label}"
+		            	items="#{tipoComunicacaoCrudAction.tipoUsoComunicacaoDisponiveis()}"/>
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{tipoComunicacaoList.entity.ativo}" />
+                    <wi:selectOneMenuEntity id="classificacaoDocumento" label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" 
+		            	value="#{tipoComunicacaoList.entity.classificacaoDocumento}"
+		            	items="#{tipoComunicacaoCrudAction.classificacoesDocumento}"/>
+            		<wi:selectOneMenuEntity id="tipoModeloDocumento" label="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}" 
+		            	value="#{tipoComunicacaoList.entity.tipoModeloDocumento}"
+		            	items="#{tipoComunicacaoCrudAction.tiposModeloDocumento}"/>
+                </wi:searchForm>
+            </ui:define>
+
+            <wi:columnOutputText columnId="descricao"
+                columnHeader="#{infoxMessages['tipoComunicacao.descricao']}"
+                value="#{row.descricao}" />
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['tipoComunicacao.codigo']}"
+                value="#{row.codigo}" />
+            <wi:columnOutputText columnId="tipoUsoComunicacao"
+                columnHeader="#{infoxMessages['tipoComunicacao.tipoUso']}"
+                value="#{row.tipoUsoComunicacao.label}" />
+            <wi:columnOutputText columnId="quantidadeDiasCiencia"
+                columnHeader="#{infoxMessages['tipoComunicacao.diasCiencia']}"
+                value="#{row.quantidadeDiasCiencia}" />
+            <wi:columnOutputText columnId="classificacaoDocumento"
+                columnHeader="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+                value="#{row.classificacaoDocumento}" />
+            <wi:columnOutputText columnId="tipoModeloDocumento"
+                columnHeader="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}"
+                value="#{row.tipoModeloDocumento}" />
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="tipoComunicacaoForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="descricao"
+                label="#{infoxMessages['tipoComunicacao.descricao']}"
+                value="#{tipoComunicacaoCrudAction.instance.descricao}"
+                required="true" />
+            <wi:inputText id="codigo"
+                label="#{infoxMessages['tipoComunicacao.codigo']}"
+                value="#{tipoComunicacaoCrudAction.instance.codigo}"
+                required="true" />
+           	<wi:selectOneMenu id="tipoUsoComunicacao" label="#{infoxMessages['tipoComunicacao.tipoUso']}" 
+            	value="#{tipoComunicacaoCrudAction.instance.tipoUsoComunicacao}" optionLabel="#{item.label}"
+            	required="true" hideNoSelectionLabel="true"
+            	items="#{tipoComunicacaoCrudAction.tipoUsoComunicacaoDisponiveis()}"/>
+            <wi:inputNumber id="diasCiencia"
+                label="#{infoxMessages['tipoComunicacao.diasCiencia']}"
+                value="#{tipoComunicacaoCrudAction.instance.quantidadeDiasCiencia}"
+                onkeyup="onlyPositiveNumber(this)" 
+                required="true"/>
+            <wi:selectOneMenuEntity id="classificacaoDocumento" label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" 
+            	value="#{tipoComunicacaoCrudAction.instance.classificacaoDocumento}"
+            	items="#{tipoComunicacaoCrudAction.classificacoesDocumento}"/>
+            <wi:selectOneMenuEntity id="tipoModeloDocumento" label="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}" 
+            	value="#{tipoComunicacaoCrudAction.instance.tipoModeloDocumento}"
+            	items="#{tipoComunicacaoCrudAction.tiposModeloDocumento}"/>
+            <wi:selectSituacaoRadio
+                columnId="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{tipoComunicacaoCrudAction.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
+
+   <ui:define name="tabs">
+    	<infox:tab id="classificacoesDocumentoResposta" name="classificacoesDocumentoResposta" rendered="#{home.managed}"
+            immediate="true" status=":status" title="#{infoxMessages['tipoComunicacao.classificacoesTitle']}">
+            
+            <div id="classificacoesRespostaComunicacao" class="picklist-div" style="width: 49%; vertical-align:top;">
+            	<rich:panel id="classificacoesAssociadasListPanel"
+				      header="#{infoxMessages['tipoComunicacao.classificacoesResposta']}"
+				      bodyClass="dtable-p-b"
+				      style="min-height: auto"
+				      styleClass="dtable-p picklist">
+		        	<rich:dataTable value="#{home.instance.tipoComunicacaoClassificacaoDocumentos}" var="row" 
+		        			rendered="#{not empty home.instance.tipoComunicacaoClassificacaoDocumentos}"
+			        		id="classificacoesAssociadasList" styleClass="dtable rf-dt-crud picklist-dt">
+			        		 <wi:columnOutputText columnId="codigoDocumento" hideOrder="true"
+				                columnHeader="#{infoxMessages['tipoProcessoDocumento.codigoDocumento']}"
+				                value="#{row.classificacaoDocumento.codigoDocumento}" />
+			        		<wi:columnOutputText columnId="descricao" hideOrder="true"
+				                columnHeader="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+				                value="#{row.classificacaoDocumento.descricao}" />
+				            <wi:columnEnum columnId="inTipoDocumento" hideOrder="true"
+				                columnHeader="#{infoxMessages['tipoProcessoDocumento.uso']}"
+				                value="#{row.classificacaoDocumento.inTipoDocumento}" />
+				            <wi:columnSituacao columnId="ativo" hideOrder="true"
+				                columnHeader="#{infoxMessages['field.situacao']}"
+				                value="#{row.classificacaoDocumento.ativo}" />
+			        		<rich:column styleClass="dt-toolbar-col">
+			        			<h:form>
+				        			<a:commandLink limitRender="true"
+							    		render="classificacoesDocumentoResposta, pageBodyDialogMessage"
+							    		action="#{tipoComunicacaoCrudAction.removeClassificacaoDocumentoResposta(row)}">
+							            <h:graphicImage
+							                url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
+							                title="#{infoxMessages['button.delete']}" />
+									</a:commandLink>
+								</h:form>
+							</rich:column>
+		        	</rich:dataTable>
+        		</rich:panel>
+            </div>
+            
+            <div id="classificacoesDisponiveisDiv" class="picklist-div" style="width: 49%">
+            	<wi:dataTable id="classificacoesDisponiveis" bean="#{classificacaoDocumentoRespostaComunicacaoList}"
+		        		values="#{classificacaoDocumentoRespostaComunicacaoList.list(15)}" rowId="#{row.id}"
+		        		tableTitle="#{infoxMessages['tipoComunicacao.classificacoesDisponiveis']}"
+		        		panelStyle="min-height: auto"
+		        		panelStyleClass="picklist" styleClass="picklist-dt" searchFormStyle="width: 100%">
+		        		<ui:define name="searchForm">
+		        			<wi:searchForm
+			                    formId="pesquisarClassificacaoDocumentoForm"
+			                    formTitle="#{infoxMessages['searchForm.title']}" opened="false">
+			                    <wi:inputText id="codigoDocumento"
+			                        value="#{classificacaoDocumentoRespostaComunicacaoList.entity.codigoDocumento}"
+			                        label="#{infoxMessages['tipoProcessoDocumento.codigoDocumento']}"
+			                        maxlength="30" />
+			                    <wi:inputText id="descricao"
+			                        label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+			                        value="#{classificacaoDocumentoRespostaComunicacaoList.entity.descricao}"
+			                        maxlength="100" />
+			                    <wi:selectOneMenuEnum id="usoTipoDocumento"
+			                        label="#{infoxMessages['tipoProcessoDocumento.uso']}"
+			                        items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
+			                        value="#{classificacaoDocumentoRespostaComunicacaoList.entity.inTipoDocumento}"
+			                        noSelectionLabel="#{infoxMessages['crud.select.all']}" />
+			                    <wi:selectSituacaoOneMenu id="ativo"
+			                        label="#{infoxMessages['field.situacao']}"
+			                        value="#{classificacaoDocumentoRespostaComunicacaoList.ativo}" />
+			                </wi:searchForm>
+		        		</ui:define>
+						<ui:define name="headerToolBar" />
+						<ui:define name="toolBar">
+						    <h:form>
+						    	<a:commandLink limitRender="true"
+						    		render="classificacoesDocumentoResposta, pageBodyDialogMessage"
+						    		action="#{tipoComunicacaoCrudAction.addClassificacaoDocumentoResposta(row)}">
+						            <h:graphicImage
+						                url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
+						                title="#{infoxMessages['button.add']}" />
+								</a:commandLink>
+		                	</h:form>
+						</ui:define>
+						 <wi:columnOutputText columnId="codigoDocumento"
+			                columnHeader="#{infoxMessages['tipoProcessoDocumento.codigoDocumento']}"
+			                value="#{row.codigoDocumento}" />
+		        		<wi:columnOutputText columnId="descricao"
+			                columnHeader="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+			                value="#{row.descricao}" />
+			            <wi:columnEnum columnId="inTipoDocumento"
+			                columnHeader="#{infoxMessages['tipoProcessoDocumento.uso']}"
+			                value="#{row.inTipoDocumento}" />
+			            <wi:columnSituacao columnId="ativo"
+			                columnHeader="#{infoxMessages['field.situacao']}"
+			                value="#{row.ativo}" />
+		        	</wi:dataTable>
+            </div>
+	    </infox:tab>
+	    <ui:include src="camposAdicionais.xhtml"/>
+    </ui:define>
+</ui:composition>

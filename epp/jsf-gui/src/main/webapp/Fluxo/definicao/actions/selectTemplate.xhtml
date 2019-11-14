@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:a="http://richfaces.org/a4j"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:s="http://jboss.org/schema/seam/taglib">
+
+	<s:div id="modeloDocumentoDiv">
+	
+		<rich:panel header="Selecione o assistente:">
+		
+			<h:form>
+			
+				<rich:dataTable var="t" value="#{actionTemplateHandler.publicTemplateList}">
+				
+					<rich:column>
+					
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/action.gif')}" />
+						
+					</rich:column>
+					
+					<rich:column>
+					
+						<a:commandLink value="#{t.label}"     
+                             action="#{actionTemplateHandler.setCurrentTemplate(t)}"
+                             render="actionTemplatePanel"
+                             limitRender="true"/>
+						
+					</rich:column>
+					
+				</rich:dataTable>
+				
+			</h:form>
+			
+		</rich:panel>
+		
+	</s:div>
+
+</ui:composition>

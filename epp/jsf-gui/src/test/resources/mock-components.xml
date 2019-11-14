@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id: components.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
+
+<components
+	xmlns="http://jboss.org/schema/seam/components"
+	xmlns:core="http://jboss.org/schema/seam/core"
+	xmlns:bpm="http://jboss.org/schema/seam/bpm"
+	xmlns:async="http://jboss.org/schema/seam/async"
+	xmlns:persistence="http://jboss.org/schema/seam/persistence"
+	xmlns:security="http://jboss.org/schema/seam/security"
+	xmlns:mail="http://jboss.org/schema/seam/mail"
+	xmlns:web="http://jboss.org/schema/seam/web"
+	xmlns:document="http://jboss.org/schema/seam/document"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.org/schema/seam/core http://jboss.org/schema/seam/core-2.3.xsd 
+                 http://jboss.org/schema/seam/persistence http://jboss.org/schema/seam/persistence-2.3.xsd 
+                 http://jboss.org/schema/seam/security http://jboss.org/schema/seam/security-2.3.xsd
+                 http://jboss.org/schema/seam/mail http://jboss.org/schema/seam/mail-2.3.xsd
+                 http://jboss.org/schema/seam/web http://jboss.org/schema/seam/web-2.3.xsd
+                 http://jboss.org/schema/seam/document http://jboss.org/schema/seam/document-2.3.xsd
+                 http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">
+
+	<core:init
+		debug="true"
+		jndi-pattern="java:app/EPA-ejb/#{ejbName}" />
+		
+	<web:multipart-filter disabled="true"></web:multipart-filter>
+
+	<core:manager
+		concurrent-request-timeout="2000"
+		conversation-timeout="300000"
+		conversation-id-parameter="scid"
+		parent-conversation-id-parameter="pid"
+		default-flush-mode="MANUAL" />
+
+	<persistence:managed-persistence-context
+		name="entityManager"
+		auto-create="true"
+		persistence-unit-jndi-name="java:jboss/EPPTestDataSource" />
+
+	<security:jpa-identity-store
+		user-class="br.com.infox.epp.access.entity.UsuarioLogin"
+		role-class="br.com.infox.epp.access.entity.Papel" />
+
+	<security:jpa-permission-store
+		user-permission-class="br.com.infox.epp.access.entity.Permissao" />
+
+	<security:remember-me
+		enabled="false"
+		mode="disabled" />
+
+	<mail:mail-session
+		host="mail.infox.com.br"
+		tls="false"
+		port="25"
+		debug="false"
+		ssl="false"
+		username="sistemaepa@infox.com.br"
+		password="minot@uro"
+		session-jndi-name="java:jboss/mail/epp" />
+	
+	<bpm:jbpm>
+		<bpm:process-definitions></bpm:process-definitions>
+		<bpm:pageflow-definitions></bpm:pageflow-definitions>
+	</bpm:jbpm>
+
+	<core:resource-loader>
+		<core:bundle-names>
+			<value>entity_messages</value>
+			<value>messages</value>
+		</core:bundle-names>
+	</core:resource-loader>
+
+</components>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
+
+	<h:panelGroup id="#{empty id ? 'divApplet' : id}">
+		<s:fragment rendered="#{empty rendered ? true : rendered}">
+			<applet width="#{empty width ? '140' : width}" height="25"
+				id="certificacao#{id}" code="SmartCardSignerApplet"
+				archive="#{pathResolver.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+				<param name="formId" value="#{formId}" />
+				<param name="signButtonCaption"
+					value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" />
+				<param name="certificationChainField"
+					value="#{certificationChainField}" />
+				<param name="signatureField" value="#{signatureField}" />
+				<param name="urlDownload"
+					value="#{pathResolver.urlProject}/certificado/" />
+				<param name="getDataFunction" value="#{getDataFunction}" />
+				<param name="useBase64Function" value="#{useBase64Function}" />
+				<param name="functionPreSign" value="#{functionPreSign}" />
+				<param name="functionPosSign" value="#{functionPosSign}" />
+				<param name="functionPosSignOk" value="#{functionPosSignOk}" />
+				<param name="functionPosSignError" value="#{functionPosSignError}" />
+				<param name="urlDownloadFile" value="#{urlDownloadFile}" />
+				<param name="urlConfigProviderFile"
+					value="#{pathResolver.urlProject}/certificado/providerConfig.conf" />
+				<param name="debug" value="#{empty debug ? false : debug}" />
+				<param name="dataAtual" value="#{currentDatetime}" />
+				<param name="caListDownloadFile"
+					value="#{pathResolver.urlProject}/downloadCaList.seam" />
+				<param name="loginMode"
+					value="#{empty loginMode ? false : loginMode}" />
+				<param name="useProviderDll"
+					value="#{empty useProviderDll ? false : useProviderDll}" />
+			</applet>
+		</s:fragment>
+	</h:panelGroup>
+
+</ui:composition>

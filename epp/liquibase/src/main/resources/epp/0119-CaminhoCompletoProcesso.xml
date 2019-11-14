@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="gabriel" id="1">
+        <addColumn tableName="tb_processo">
+            <column name="ds_caminho_completo" type="varchar(4000)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="1" changeLogFile="epp/0119-CaminhoCompletoProcesso.xml" />
+        </preConditions>
+
+        <sql dbms="mssql">
+            WITH hierarquia_processos (id_processo, id_processo_pai, ds_caminho_completo) AS
+            (
+            	SELECT pai.id_processo, pai.id_processo_pai, CAST(CONCAT(pai.id_processo, '|') AS VARCHAR(4000)) AS ds_caminho_completo
+            	FROM tb_processo pai WHERE pai.id_processo_pai IS NULL
+            	UNION ALL
+            	SELECT filho.id_processo, filho.id_processo_pai, CAST(CONCAT(h.ds_caminho_completo, filho.id_processo, '|') AS VARCHAR(4000)) AS ds_caminho_completo
+            	FROM tb_processo filho
+            	INNER JOIN hierarquia_processos h ON filho.id_processo_pai = h.id_processo
+            )
+            UPDATE p SET ds_caminho_completo = h.ds_caminho_completo
+            FROM tb_processo p INNER JOIN hierarquia_processos h ON p.id_processo = h.id_processo
+        </sql>
+
+        <sql dbms="postgresql">
+            WITH RECURSIVE hierarquia_processos (id_processo, id_processo_pai, ds_caminho_completo) AS
+            (
+            	SELECT pai.id_processo, pai.id_processo_pai, CONCAT(pai.id_processo, '|') AS ds_caminho_completo
+            	FROM tb_processo pai WHERE pai.id_processo_pai IS NULL
+            	UNION ALL
+            	SELECT filho.id_processo, filho.id_processo_pai, CONCAT(h.ds_caminho_completo, filho.id_processo, '|') AS ds_caminho_completo
+            	FROM tb_processo filho
+            	INNER JOIN hierarquia_processos h ON filho.id_processo_pai = h.id_processo
+            )
+            UPDATE tb_processo p SET ds_caminho_completo = (
+                SELECT h.ds_caminho_completo FROM hierarquia_processos h 
+                WHERE p.id_processo = h.id_processo
+            )
+        </sql>
+
+        <sql dbms="oracle">
+            MERGE INTO tb_processo p USING (
+                WITH hierarquia_processos(id_processo, id_processo_pai, ds_caminho_completo) AS (
+                    SELECT pai.id_processo, pai.id_processo, CONCAT(pai.id_processo, '|') AS ds_caminho_completo
+                    FROM tb_processo pai
+                    WHERE pai.id_processo_pai IS NULL
+
+                    UNION ALL
+
+                    SELECT filho.id_processo, filho.id_processo_pai, CONCAT(CONCAT(h.ds_caminho_completo, filho.id_processo), '|') AS ds_caminho_completo
+                    FROM tb_processo filho
+                    INNER JOIN hierarquia_processos h ON h.id_processo = filho.id_processo_pai
+                ) SELECT * FROM hierarquia_processos
+            ) h ON (h.id_processo = p.id_processo)
+            WHEN MATCHED THEN UPDATE SET p.ds_caminho_completo = h.ds_caminho_completo
+        </sql>
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="2" changeLogFile="epp/0119-CaminhoCompletoProcesso.xml" />
+        </preConditions>
+
+        <addNotNullConstraint tableName="tb_processo" columnName="ds_caminho_completo" columnDataType="VARCHAR(4000)" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="3" changeLogFile="epp/0119-CaminhoCompletoProcesso.xml" />
+        </preConditions>
+
+        <addUniqueConstraint tableName="tb_processo" columnNames="ds_caminho_completo" constraintName="uk_processo_01" />
+    </changeSet>
+
+</databaseChangeLog>

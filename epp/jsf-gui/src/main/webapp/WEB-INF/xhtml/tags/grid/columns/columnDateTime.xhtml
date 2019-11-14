@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="patternDefault"
+        value="#{showDate eq false ? '' : 'dd/MM/yyyy'}#{showTime ? ' kk:mm' : ''}" />
+
+    <wi:columnOutputText columnStyle="text-align:center; #{columnStyle}"
+        columnWidth="#{wi:get(columnWidth, '80px')}">
+        <ui:define name="outputText">
+            <s:convertDateTime
+                pattern="#{wi:get(pattern, patternDefault)}" />
+        </ui:define>
+    </wi:columnOutputText>
+
+</ui:composition>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="template"
+        value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+
+    <s:decorate id="#{id}Decoration" template="#{template}"
+        styleClass="decoration-div editor-div #{wi:get(decorationClass,'')}"
+        rendered="#{wi:get(rendered, true)}">
+
+        <script type="text/javascript">
+            // Label da lista de variáveis
+            namespace("infox.editor.#{id}",{
+                get variaveis() {
+                    var result = {
+                        label:"Variáveis",
+                        list:[
+                            <a:repeat value="#{modeloDocumentoCrudAction.variaveis}"
+                                var="v">
+                                {
+                                    label:"#{v.variavel}",
+                                    value:"#"+"{#{v.variavel}}"
+                                },
+                            </a:repeat>
+                        ]
+                    };
+                    return result;
+                },
+                get id(){
+                    return "#{rich:clientId(id)}:inp";
+                },
+                get instance() {
+                    return CKEDITOR.instances["#{rich:clientId(id)}:inp"];
+                },
+                insertHtml:function(content) {
+                    var editor = this.instance;
+                    editor.focus();
+                    editor.fire('saveSnapshot');
+                    editor.insertHtml(content);
+                    editor.fire('saveSnapshot');
+                },
+                insertText:function(content) {
+                    var editor = this.instance;
+                    editor.focus();
+                    editor.fire('saveSnapshot');
+                    editor.insertText(content);
+                    editor.fire('saveSnapshot');
+                },
+                insertImageBase64:function(path) {
+                    var img = document.createElement("img");
+                    img.src = infox.imageSrcToBase64(path);
+                    var container = document.createElement("div");
+                    container.appendChild(img);
+                    this.insertHtml(container.innerHTML);
+                },
+                insertImage:function(path) {
+                    var img = document.createElement("img");
+                    var a = document.createElement("a");
+                    a.href = path;
+                    img.src = a.pathname;
+                    var container = document.createElement("div");
+                    container.appendChild(img);
+                    this.insertHtml(container.innerHTML);
+                }
+            });
+        </script>
+
+        <ui:define name="label">#{label}</ui:define>
+        <span id="#{id}Locator" />
+        <rich:editor
+        	id="#{id}"
+        	value="#{value}"
+            toolbar="#{readonly ? 'empty':wi:get(toolbar, 'InfoxToolbar')}"
+            readonly="#{readonly}"
+            required="#{required}" width="#{width}" height="#{height}"
+            onchange="#{wi:get(onchange, 'void(0);')}" >
+			<ui:param name="editorHeight" value="#{wi:get(height, 390)}" />
+			<ui:param name="editorWidth" value="#{wi:get(width, 625)}" />
+			<ui:param name="canCollapse" value="#{wi:get(canCollapse, false)}" />
+            <f:facet name="config">
+                protectedSource: [/#\{[^{}]+\}/g],
+                extraPlugins: 'showprotected',
+                removePlugins: 'elementspath',
+                allowedContent: {
+                    '$1': {
+                        elements: CKEDITOR.dtd,
+                        attributes: true,
+                        styles: true,
+                        classes: true
+                    }
+                },
+                disallowedContent: 'script; *[on*]',
+                resize_enable:true,
+                resize_dir:'both',
+                toolbar_empty:[],
+                uiColor:'#DDDDDD',
+                language:'pt-br',
+                toolbarCanCollapse:#{canCollapse},
+                width:'#{editorWidth}',
+                height:'#{editorHeight}',
+                toolbar_InfoxToolbar:
+                [
+                { name:'document',items:["DocProps","Preview","Print"]},
+                { name:'clipboard',items:["Cut","Copy","Paste","PasteText","PasteFromWord","-","Undo","Redo"]},
+                { name:'editing',items:["Find","Replace","-","SelectAll"]},
+                { name:'basicstyles', items: ['Bold', 'Italic', 'Strike', 'Underline',"Subscript","Superscript","-","RemoveFormat"] },
+                { name:'tools', items:['Maximize']},
+                <a:region rendered="#{wi:get(showHtml,false)}">
+                	{ name:'sourcecode', items:['Source']},
+                </a:region>
+                { name:'paragraph',items:["NumberedList","BulletedList","-","Outdent","Indent","-","Blockquote","CreateDiv","-","JustifyLeft","JustifyCenter","JustifyRight","JustifyBlock","-","BidiLtr","BidiRtl"]},
+                { name:'links',items:["Link","Unlink","Anchor","variables.cmb"]},
+                { name:'styles', items:["Styles","Format","Font","FontSize"]},
+                { name:'colors',items:["TextColor","BGColor"]}
+                ],
+                tabSpaces:4,
+                on:{
+                    instanceReady: function() {
+                        #{wi:get(oninit, '')};
+                    },
+                    configLoaded:function(evt) {
+                        var editor = evt.editor;
+                        var config = editor.config;
+                        var tags = [
+                            <a:repeat value="#{modeloDocumentoCrudAction.variaveis}" var="v">
+                                {
+                                    label:"#{v.variavel}",
+                                    value:"#"+"{#{v.variavel}}"
+                                },
+                            </a:repeat>
+                        ];
+                        if (tags.length &lt; 1) {
+                            return;
+                        }
+                        editor.ui.addRichCombo('variables.cmb', {
+                            label : "Variáveis",
+                            title : "Variáveis",
+                            voiceLabel : "Variaveis",
+                            className : 'cke_format',
+                            multiSelect : false,
+                            panel : {
+                                css : [ config.contentsCss,
+                                        CKEDITOR.getUrl('skins/' + config.skin + '/editor.css') ]
+                            },
+                            init : function() {
+                                this.startGroup("Variaveis");
+                                for ( var this_tag in tags) {
+                                    //this.add(VALOR_INSERIDO,LABEL_LIST,VALOR_SELECIONADO)
+                                    this.add(tags[this_tag].value, tags[this_tag].label,
+                                            tags[this_tag].label);
+                                }
+                            },
+                
+                            onClick : function(value) {
+                                editor.focus();
+                                editor.fire('saveSnapshot');
+                                editor.insertText(value);
+                                editor.fire('saveSnapshot');
+                            }
+                        });
+                    }
+                }
+            </f:facet>
+
+            <f:param name="language" value="pt-br" />
+            <f:param name="relative_urls" value="false" />
+            <f:param name="theme_advanced_toolbar_location" value="top" />
+            <f:param name="theme_advanced_toolbar_align" value="left" />
+            <f:param name="plugins"
+                value="epa,spellchecker,table,advhr,advimage,advlink,inlinepopups,searchreplace,print,contextmenu,paste,fullscreen,visualchars" />
+            <f:param name="theme_advanced_buttons1_add"
+                value="fontselect,fontsizeselect,|,selectall,cut,copy,paste,pastetext,pasteword,|,search,replace" />
+            <f:param name="theme_advanced_buttons2_add"
+                value="#{varsList},blockquote,insertdate,inserttime,forecolor,backcolor,|,tablecontrols" />
+            <f:param name="theme_advanced_buttons3_add"
+                value="visualchars,advhr,|,print,|,spellchecker,|,undo,redo,|,fullscreen" />
+            <f:param name="theme_advanced_disable"
+                value="formatselect,styleselect,link,image,unlink,anchor,cleanup,help,code" />
+            <f:param name="setup" value="tabKeyAction" />
+            <f:converter converterId="editorCleanerConverter" />
+            <ui:insert />
+        </rich:editor>
+        <ui:insert name="conteudoApplet" />
+    </s:decorate>
+
+</ui:composition>

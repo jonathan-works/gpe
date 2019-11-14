@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['signal.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{signalView}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{signalList.list(15)}"
+            bean="#{signalList}"
+            tableTitle="#{infoxMessages['signal.tableTitle']}"
+            id="signalList" rowId="#{row.id}">
+            
+            <ui:define name="headerToolBar"/>
+            
+            <ui:define name="toolBar">
+            	<h:form>
+            		<a:commandLink execute="@this" render=":pageBody" action="#{signalView.load(row)}" limitRender="true">
+            			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="Selecionar" styleClass="opacityHover"/>
+            			<f:setPropertyActionListener value="form" target="#{signalView.tab}" />
+            		</a:commandLink>
+            		
+            		<a:commandLink execute="@form" render="signalListPanel :pageBodyDialogMessage" 
+            			action="#{signalView.inativar}" limitRender="true" rendered="#{row.ativo and not row.sistema}">
+            			<f:setPropertyActionListener value="#{row.id}" target="#{signalView.id}" />
+            			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Inativar" styleClass="opacityHover"/>
+            		</a:commandLink>
+            	</h:form>
+            </ui:define>
+            
+            <ui:define name="searchForm">
+                <wi:searchForm formId="signalSearchForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    
+                    <wi:inputText id="codigo"
+                        value="#{signalList.codigo}"
+                        label="#{infoxMessages['signal.codigo']}" />
+                        
+                    <wi:inputText id="nome"
+                        label="#{infoxMessages['signal.nome']}"
+                        value="#{signalList.nome}" />
+                        
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{signalList.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['signal.codigo']}"
+                value="#{row.codigo}" />
+                
+            <wi:columnOutputText columnId="nome"
+                columnHeader="#{infoxMessages['signal.nome']}"
+                value="#{row.nome}" />
+            
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+                
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+    	<wi:dataForm formId="SignalForm" formTitle="#{infoxMessages['signal.signalForm']}">
+			
+			<wi:outputText id="codigoOut" label="#{infoxMessages['signal.codigo']}"
+				value="#{signalView.codigo}" rendered="#{not empty signalView.id}"/>
+			
+			<wi:inputText id="codigo" required="true" label="#{infoxMessages['signal.codigo']}"
+				value="#{signalView.codigo}" maxlength="50" 
+				rendered="#{empty signalView.id}"/>
+				
+			<wi:inputText id="nome" required="true" label="#{infoxMessages['signal.nome']}" 
+				value="#{signalView.nome}" maxlength="200" />
+				
+			<wi:selectSituacaoRadio id="ativo"
+                rendered="#{not signalView.sistema}"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{signalView.ativo}" />
+
+			<ui:define name="buttons">
+				<a:commandButton action="#{signalView.inserir}" value="#{infoxMessages['crud.persist']}" 
+					rendered="#{empty signalView.id}" render="@form :pageBodyDialogMessage" execute="@form"
+					styleClass="buttons"/>
+					
+				<a:commandButton action="#{signalView.atualizar}" value="#{infoxMessages['crud.update']}" 
+					rendered="#{not empty signalView.id}" render="@form :pageBodyDialogMessage" execute="@form"
+					styleClass="buttons"/>
+					
+				<a:commandButton action="#{signalView.newInstance}" value="#{infoxMessages['crud.new']}" 
+					rendered="#{not empty signalView.id}" render="@form" execute="@form"
+					styleClass="buttons"/>
+			</ui:define>
+
+		</wi:dataForm>
+    </ui:define>
+
+</ui:composition>

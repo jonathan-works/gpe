@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+  <changeSet author="victorpasqualino" id="1">
+    <insert tableName="tb_parametro">
+		<column name="id_parametro" valueSequenceNext="sq_tb_parametro" />
+		<column name="nm_variavel" value="ativarMassiveReindex" />
+		<column name="ds_variavel" value="Ativar Massive Reindex" />
+		<column name="vl_variavel" value="true" />
+		<column name="in_sistema" valueBoolean="true" />
+		<column name="in_ativo" valueBoolean="true" />
+	</insert>
+  </changeSet>
+
+</databaseChangeLog>

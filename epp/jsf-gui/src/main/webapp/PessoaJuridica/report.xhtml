@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:param name="title"
+        value="#{infoxMessages['pessoaJuridica.titlePage']}" />
+
+    <wi:dataReport subtitle="Resultado da Pesquisa " title="#{title}"
+        columns="4" widths="2 4 3 1"
+        headerText="#{pessoaJuridicaList.criteria}">
+
+        <wi:reportColumnHeader
+            title="#{infoxMessages['pessoaJuridica.cnpj']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['pessoaJuridica.nome']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['pessoaJuridica.razaoSocial']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
+
+        <ui:repeat var="row" value="#{pessoaJuridicaList.list()}">
+            <wi:reportColumn value="#{row.cnpj}" />
+            <wi:reportColumn value="#{row.nome}" />
+            <wi:reportColumn value="#{row.razaoSocial}" />
+            <wi:reportColumnSituacao value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+
+    </wi:dataReport>
+
+</ui:composition>

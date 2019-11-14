@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
+
+	<ui:param
+		name="direction"
+		value="#{props.direction.toUpperCase() == 'V' ? 'page' : 'line'}Direction" />
+	<ui:param
+		name="reRender"
+		value="#{empty props.reRender ? reRender : props.reRender }" />
+	<ui:param
+		name="sim"
+		value="#{empty sim ? props.sim : sim}" />
+
+	<wi:selectOneRadio
+		valueList="true:crud.yes, false:crud.no"
+		boxChecked="#{sim ? 0 : 1}">
+
+		<a:ajax
+			event="click"
+			status="status"
+			render="mascaraDiv"
+			execute="@this" />
+
+	</wi:selectOneRadio>
+
+	<s:div id="mascaraDiv">
+
+		<wi:inputText
+			id="#{id}MotivoBloqueio"
+			rendered="#{classificacaoDocumentoCrudAction.instance.numera}"
+			label="#{infoxMessages['tipoProcessoDocumento.mascara']}"
+			value="#{classificacaoDocumentoCrudAction.instance.mascara}"
+			required="true"
+			maxlength="50" />
+
+	</s:div>
+
+
+</ui:composition>

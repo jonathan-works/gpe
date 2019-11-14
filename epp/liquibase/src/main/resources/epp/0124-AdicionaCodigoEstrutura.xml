@@ -1,0 +1,23 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="paulofilho" id="1">
+        <addColumn tableName="tb_estrutura">
+            <column  name="cd_estrutura" type="varchar(30)" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="jovan" id="1">
+               <modifyDataType  columnName="cd_estrutura" newDataType="varchar(50)" tableName="tb_estrutura"/>
+    </changeSet>    
+    <changeSet author="paulofilho" id="2">
+        <update tableName="tb_estrutura">
+            <column name="cd_estrutura" valueComputed="nm_estrutura"/>
+        </update>
+    </changeSet>
+    <changeSet author="paulofilho" id="3">
+        <addNotNullConstraint tableName="tb_estrutura" columnName="cd_estrutura" columnDataType="varchar(30)"/>            
+        <addUniqueConstraint constraintName="uk_estrutura_cd" columnNames="cd_estrutura" tableName="tb_estrutura" />
+    </changeSet>
+    
+    
+</databaseChangeLog>

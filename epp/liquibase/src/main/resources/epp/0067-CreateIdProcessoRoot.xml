@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="jovan" id="1" dbms="mssql, postgresql, oracle">
+        
+     <addColumn tableName="tb_processo">
+        <column name="id_processo_root" type="BIGINT"/>
+    </addColumn>
+     
+     <sql dbms="mssql">
+      UPDATE p1
+        SET p1.id_processo_root = (select p.id_processo from tb_processo p where p.nr_processo = dbo.NumeroProcessoRoot(p1.id_processo)) FROM tb_processo p1;
+     </sql>
+
+     <sql dbms="postgresql">
+        UPDATE tb_processo p SET id_processo_root = (select p1.id_processo from tb_processo p1 where p1.nr_processo = NumeroProcessoRoot(p.id_processo));
+     </sql>
+
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="1" dbms="mssql" runAlways="true">
+        <sql>
+            UPDATE p1
+            SET p1.id_processo_root = (select p.id_processo from tb_processo p where p.nr_processo = dbo.NumeroProcessoRoot(p1.id_processo)) FROM tb_processo p1;
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>

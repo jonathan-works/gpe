@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <rich:panel bodyClass="panel" styleClass="#{nodeFitter.currentNode.nodeType ne 'Decision' ? 'flex-displayed-child' : ''}">
+        <f:facet name="header">
+            <h:panelGrid
+                columns="2"
+                cellpadding="0"
+                cellspacing="0">
+                <c:set var="pathResource" value="/imagens/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif" />
+                <h:graphicImage
+                    url="#{layoutController.getResourceUrlByPath(pathResource)}" />
+                <h:outputText
+                    value="#{type == 'from' ? messages['process.transitions.arriving'] : messages['process.transitions.leaving']}" />
+            </h:panelGrid>
+        </f:facet>
+        <ui:param
+            name="values"
+            value="#{type == 'from' ? transitionFitter.arrivingTransitions : transitionFitter.leavingTransitions}" />
+        <rich:dataTable
+            value="#{values}"
+            id="transition#{type}Table"
+            styleClass="#{nodeFitter.currentNode.nodeType eq 'Decision' and type eq 'to' ? 'dtable rf-dt-crud' : 'tabelaVariaveis'}"
+            rowKeyVar="rowNumber"
+            var="transicaoHandler">
+            <rich:column rendered="#{type=='from'}">
+                <f:facet name="header">#{infoxMessages['process.transition.origin']}</f:facet>
+                <h:outputText
+                    rendered="#{!empty transicaoHandler.from}"
+                    value="#{transicaoHandler.fromName}" />
+            </rich:column>
+            <rich:column rendered="#{type=='to'}">
+                <f:facet name="header">#{infoxMessages['process.transition.destination']}</f:facet>
+                <h:outputText
+                    rendered="#{!empty transicaoHandler.to}"
+                    value="#{transicaoHandler.toName}" />
+            </rich:column>
+            <rich:column id="transitionName">
+                <f:facet name="header">#{infoxMessages['process.transition.name']}</f:facet>
+                <h:form>
+                    <h:outputText value="#{transicaoHandler.name}" />
+                    <a:commandLink
+                        render="nodes"
+                        title="#{infoxMessages['process.transition.goto']}"
+                        execute="@this"
+                        action="#{nodeFitter.setCurrentNode(transicaoHandler, type)}"
+                        limitRender="true">
+                        <h:graphicImage
+                            url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/up.gif')}"
+                            rendered="#{type == 'from'}" />
+                        <h:graphicImage
+                            url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}"
+                            rendered="#{type == 'to'}" />
+                    </a:commandLink>
+                </h:form>
+            </rich:column>
+            <rich:column id="conditionColumn" rendered="#{type eq 'to' and nodeFitter.currentNode.nodeType eq 'Decision'}" style="width: 40%">
+                <f:facet name="header">
+                    #{infoxMessages['process.transition.condition']}
+                    <ui:include src="helpers/expressoesAjuda.xhtml">
+                        <ui:param name="id" value="expressoesAjudaGatewayPopupPanel#{transicaoHandler.name}" />
+                        <ui:param name="methods" value="#{bpmExpressionService.externalGatewayMethods}" />
+                        <ui:param name="selectable" value="false" />
+                    </ui:include>
+                    <div style="display: inline-block">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                            onclick="#{rich:component('expressoesAjudaGatewayPopupPanel'.concat(transicaoHandler.name))}.show();" />
+                    </div>
+                </f:facet>
+                <h:form>
+	                <h:inputTextarea value="#{transicaoHandler.transition.condition}" maxlength="1000" style="width: 100%"
+	                 styleClass="textAreaexpressoesAjudaGatewayPopupPanel#{transicaoHandler.name}"
+	                 converter="stringConverter">
+	                    <a:ajax event="change" execute="@this" render="transition#{type}Table" limitRender="true" />
+	                </h:inputTextarea>
+                </h:form>
+            </rich:column>
+            <rich:column id="occulTransitionButtonColumn" rendered="#{type eq 'to'}">
+                <f:facet name="header">#{infoxMessages['process.transition.ocultar']}</f:facet>
+                <h:form>
+                    <center>
+                        <h:selectBooleanCheckbox
+                            id="occultTransitionButton"
+                            value="#{transicaoHandler.transition.configuration.hidden}">
+                            <a:ajax
+                                event="change"
+                                execute="@this"
+                                render="transition#{type}Table"
+                                limitRender="true" />
+                        </h:selectBooleanCheckbox>
+                    </center>
+                </h:form>
+            </rich:column>
+            <rich:column rendered="#{type eq 'to' and nodeFitter.currentNode.nodeType eq 'Task'}">
+                <f:facet name="header">#{infoxMessages['process.transition.validateForm']}</f:facet>
+                <h:form>
+                    <center>
+                        <h:selectBooleanCheckbox
+                            value="#{transicaoHandler.transition.configuration.validateForm}">
+                            <a:ajax
+                                event="change"
+                                execute="@this"
+                                render="transition#{type}Table"
+                                limitRender="true" />
+                        </h:selectBooleanCheckbox>
+                    </center>
+                </h:form>
+            </rich:column>
+        </rich:dataTable>
+    </rich:panel>
+</ui:composition>

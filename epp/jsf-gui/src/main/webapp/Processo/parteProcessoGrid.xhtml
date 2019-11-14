@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="isUsuarioAtualResponsavel"
+        value="#{authenticator.isUsuarioAtualResponsavel() ? true : false}" />
+
+    <s:div id="buscaDiv">
+        <ui:include src="participanteProcesso.xhtml" />
+    </s:div>
+    
+    <s:div id="parteProcessoListDiv" styleClass="padding-top-5">
+        <wi:dataTable id="participantesTable" showSearchForm="false"
+            values="#{participantesProcessoController.participantes}"
+            tableTitle="#{infoxMessages['participanteProcesso.participantes']}">
+            <ui:define name="headerToolBar" />
+            <ui:define name="toolBar">
+                <wi:toolBar
+                    rendered="#{row.ativo and participantesProcessoController.podeInativarPartes(row.pessoa.tipoPessoa)}"
+                    action="#{participanteProcessoCrudAction.setInstance(row)}"
+                    reRender="parteProcessoListDiv" title="#{infoxMessages['participanteProcesso.removerParte']}"
+                    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" id="ativo" />
+                <wi:toolBar
+                    rendered="#{not row.ativo and participantesProcessoController.podeAdicionarPartes(row.pessoa.tipoPessoa)}"
+                    action="#{participanteProcessoCrudAction.setInstance(row)}" title="#{infoxMessages['participanteProcesso.ativarParte']}"
+                    reRender="parteProcessoListDiv" url="#{layoutController.getResourceUrlByPath('/imagens/stock_undelete.png')}"
+                    id="inativo" />
+                <wi:toolBar
+                    rendered="#{row.historicoParticipanteList.size > 0}"
+                    action="participanteProcessoCrudAction.setShowHistory(row)"
+                    reRender="historicoParticipantePanelDiv" title="#{infoxMessages['participanteProcesso.historicoParte']}"
+                    url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                    id="viewHistorico" />
+            </ui:define>
+            <wi:columnOutputTextIdent columnId="pessoa.nome"
+            	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+                columnHeader="#{infoxMessages['participanteProcesso.nomeParticipante']}"
+                value="#{row.nome}"
+                hideOrder="true"
+                fullPath="#{row.caminhoAbsoluto}"/>
+      		<wi:columnOutputText columnId="cpfCnpj"
+       			styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+                columnHeader="#{infoxMessages['participanteProcesso.codigo']}"
+                value="#{row.pessoa.codigoFormatado}" hideOrder="true" >
+            </wi:columnOutputText>
+            <wi:columnOutputText columnId="tipoParticipante" 
+            	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+            	value="#{row.tipoParte}"
+            	columnHeader="#{infoxMessages['participanteProcesso.tipoParticipante']}"
+            	hideOrder="true"/>
+           	<wi:columnDateTime columnId="dataInicio" value="#{row.dataInicio}"
+           		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+           		showTime="false" columnHeader="#{infoxMessages['participanteProcesso.dataInicio']}"
+           		hideOrder="true"/>
+           	<wi:columnDateTime columnId="dataFim" value="#{row.dataFim}"
+           		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+           		showTime="false" columnHeader="#{infoxMessages['participanteProcesso.dataFim']}"
+          		hideOrder="true"/>
+
+        </wi:dataTable>
+     
+        <s:div id="atividadeParteDiv"
+            rendered="#{participanteProcessoCrudAction.isManaged() and !participanteProcessoCrudAction.showHistory}"
+            styleClass="padding-top-5">
+            <s:div id="backgroundBlock"></s:div>
+            <br />
+            <wi:dataForm formId="atividadeParte"
+                formTitle="#{infoxMessages['participanteProcesso.alteracao']}">
+                <wi:inputText id="motivo" required="true"
+                    label="Motivo da Modificação"
+                    value="#{participanteProcessoCrudAction.motivoModificacao}" />
+                <ui:define name="buttons">
+                    <wi:commandButton id="persistButton"
+                        action="#{participanteProcessoCrudAction.inverterSituacao()}"
+                        rendered="true" reRender="parteProcessoListDiv, buscaDiv"
+                        value="#{infoxMessages['participanteProcesso.modificar']}" />
+                    <wi:commandButton id="cancelarButton"
+                        action="#{participanteProcessoCrudAction.newInstance()}"
+                        rendered="true" execute="@this"
+                        reRender="parteProcessoListDiv, buscaDiv" value="Cancelar" />
+                </ui:define>
+            </wi:dataForm>
+        </s:div>
+        
+        <s:div
+          id="historicoParticipantePanelDiv"
+          rendered="#{participanteProcessoCrudAction.showHistory}"
+          style="margin-top:20px; width:100%;">
+          <rich:panel
+            id="historicoParticipantePanel"
+            headerClass=""
+            bodyClass="dtable-p-b"
+            styleClass="dtable-p"
+            style="width:100%;">
+
+            <f:facet name="header">
+              <h:outputText value="#{infoxMessages['historicoParticipanteProcesso.tableTile']}" />
+            </f:facet>
+
+            <rich:dataTable id="historicoParticipanteDataTable"
+              var="historicoParticipante" style="width:100%"
+              value="#{participanteProcessoCrudAction.getInstance().historicoParticipanteList}">
+
+              <rich:column style="text-align:center;">
+                <f:facet name="header">#{infoxMessages['historicoParticipanteProcesso.responsavelPorModificacao']}</f:facet>
+                <h:outputText
+                  value="#{historicoParticipante.responsavelPorModificacao}" />
+              </rich:column>
+              <rich:column style="text-align:center;">
+                <f:facet name="header">#{infoxMessages['historicoParticipanteProcesso.dataModificacao']}</f:facet>
+                <h:outputText
+                  value="#{historicoParticipante.dataModificacao}" />
+              </rich:column>
+              <rich:column style="text-align:center;">
+                <f:facet name="header">#{infoxMessages['historicoParticipanteProcesso.motivoModificacao']}</f:facet>
+                <h:outputText
+                  value="#{historicoParticipante.motivoModificacao}" />
+              </rich:column>
+              <rich:column style="text-align:center;">
+                <f:facet name="header">#{infoxMessages['historicoParticipanteProcesso.ativo']}</f:facet>
+                <h:outputText
+                  value="#{historicoParticipante.ativo ? 'Excluído' : 'Restaurado'}" />
+              </rich:column>
+            </rich:dataTable>
+          </rich:panel>
+        </s:div>
+    </s:div>
+</ui:composition>

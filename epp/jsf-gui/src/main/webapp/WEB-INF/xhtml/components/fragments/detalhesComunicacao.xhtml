@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:infox="http://www.infox.com.br/jsf">
+
+	<ui:param name="id" value="#{empty id ? 'idDetalhesComunicacao' : id}"></ui:param>
+	<ui:param name="prazoResposta" value="#{empty prazoResposta ? '-' : prazoResposta}"></ui:param>
+    <ui:param name="isAnexo" value="#{empty isAnexo ? false : isAnexo}" />
+
+	<wi:outputText id="#{id}meioExpedicao"
+		label="#{infoxMessages['comunicacao.meioExpedicao']}"
+		value="#{meioExpedicao}"
+		rendered="#{empty showMeioExpedicao ? false : showMeioExpedicao}" />
+	<wi:outputText id="#{id}destinatario"
+		label="#{infoxMessages['comunicacao.destinatario']}"
+		value="#{destinatario}"
+		rendered="#{empty showDestinatario ? true : showDestinatario}" />
+	<wi:outputText id="#{id}dataExpedicaoComunicacao"
+		label="#{infoxMessages['comunicacao.dataEnvio']}"
+		value="#{dataEnvio}"
+		rendered="#{empty showDataEnvio ? true : showDataEnvio}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
+	<wi:outputText id="#{id}dataCienciaComunicacao"
+		label="#{infoxMessages['comunicacao.dataCiencia']}"
+		value="#{dataCiencia}"
+		rendered="#{not empty dataCiencia}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
+	<wi:outputText id="#{id}responsavelCienciaComunicacao"
+		label="#{infoxMessages['comunicacao.responsavelConfirmacao']}"
+		value="#{responsavelCiencia}"
+		rendered="#{not empty responsavelCiencia}" />
+	<wi:outputText id="#{id}tipoComunicacao"
+		label="#{infoxMessages['comunicacao.tipoComunicacao']}"
+		value="#{tipoComunicacao}"
+		rendered="#{empty showTipoComunicacao ? true : showTipoComunicacao}" />
+	<wi:outputText id="#{id}statusProrrogacao" 
+		label="#{infoxMessages['comunicacao.statusProrrogacao']}"
+		value="#{statusProrrogacao}"
+		rendered="#{empty showStatusProrrogacao ? false : showStatusProrrogacao}">
+	</wi:outputText>
+	<wi:outputText id="#{id}prazoResposta" 
+		label="#{infoxMessages['comunicacao.prazoResposta']}"
+		value="#{prazoResposta}"
+		rendered="#{empty showPrazoResposta ? false : showPrazoResposta}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
+	<wi:outputText id="#{id}dataResposta"
+		label="#{infoxMessages['comunicacao.dataResposta']}"
+		value="#{dataResposta}"
+		rendered="#{empty showDataResposta ? true : showDataResposta}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
+	
+	<ui:fragment rendered="#{empty showInfoAdicionais ? not empty informacoesAdicionais : showInfoAdicionais}">
+		<ui:include src="#{informacoesAdicionais}"></ui:include>
+	</ui:fragment>
+	
+	<h:form>
+		<a:commandButton
+			id="#{id}baixarComunicacaoBtn"
+			value="#{infoxMessages['comunicacao.visualizarComunicacao']}"
+			styleClass="buttons" type="button" 
+            action="#{jsfUtil.applyLastPhaseFlashAction}"
+			oncomplete="#{fileDownloader.getWindowOpen(documentoComunicacao.documentoBin)}"
+			rendered="#{empty showDownloadDocumentoPrincipal ? false : showDownloadDocumentoPrincipal}">
+            <f:setPropertyActionListener value="#{documentoComunicacao.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+        </a:commandButton>
+		<a:commandButton id="#{id}visualizarComunicacao" 
+			   action="#{jsfUtil.applyLastPhaseFlashAction}"
+               value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+               styleClass="buttons" render="@this" execute="@this"
+               oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
+               rendered="#{not isAnexo and empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}" >
+        	<f:setPropertyActionListener value="#{idDestinatario}" target="#{flash.idDestinatario}" />
+        </a:commandButton>
+		<a:commandButton id="#{id}visualizarComunicacaoAnexo"
+            value="#{infoxMessages['comunicacao.visualizarComunicacao']}"
+            styleClass="buttons" render="@this" execute="@this" action="#{jsfUtil.applyLastPhaseFlashAction()}"
+            oncomplete="#{fileDownloader.getWindowOpenByIdDocumento(idDocumentoComunicacao)}"
+            rendered="#{isAnexo and empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}" >
+            <f:setPropertyActionListener value="#{idDocumentoComunicacao}" target="#{flash.idDocumento}" />
+            <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
+        </a:commandButton>
+	</h:form>
+
+</ui:composition>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
+    xmlns:p="http://primefaces.org/ui">
+    <style>
+        .font-icon-showcase{
+            bottom: 10px;
+            background-color:rgba(255,255,255,0.7);
+            position:absolute;
+            text-align:center;
+        }
+        .font-icon-showcase .content{
+            overflow:auto;
+            width:640px;
+            height:480px;
+        }
+        .icon-container{
+            display:inline-block;
+            vertical-align:top;
+            padding:10px;
+            text-align:center;
+            font-size:16px;
+        }
+        .icon-container .fa, .icon-container .material-icons{
+            font-size:24px;
+        }
+        .icon-container.hidden,.font-icon-showcase.hidden{
+            display:none;
+        }
+    </style>
+    <p:outputPanel >
+        <div class="font-icon-showcase hidden">
+            <div class="filter">
+                <input id="inputBuscaIcone" placeholder="Filtro"
+                    oninput="infox.filter({input:this, filtered:'.font-icon-showcase .icon-container'});"
+                    style="margin-left:6px;"></input>
+                <label for="inputBuscaIcone">
+                    <i:icon value="search" styleClass="action-icon" />
+                </label>
+            </div>
+            <div class="content">
+            </div>
+        </div>
+        <h:outputScript>
+//<![CDATA[
+(function () {
+    var charBuffer = [
+    ];
+    var bufferCleaner = undefined;
+    var cleanBuffer = function () {
+        charBuffer = [
+        ];
+    };
+    var startCleanBufferTimer = function () {
+        bufferCleaner = setTimeout(cleanBuffer, 1000);
+    };
+    var stopCleanBufferTimer = function () {
+        clearTimeout(bufferCleaner);
+    };
+    var restartCleanBufferTimer = function () {
+        stopCleanBufferTimer();
+        startCleanBufferTimer();
+    };
+    var shortcuts = {};
+    document.querySelector('body').addEventListener('keypress', function (evt) {
+        charBuffer.push(evt.keyCode || evt.charCode);
+        var stringFromBuffer = charBuffer.join(',');
+        if (shortcuts[stringFromBuffer]) {
+            shortcuts[stringFromBuffer].apply({
+            }, [
+                stringFromBuffer
+            ]);
+            cleanBuffer();
+            stopCleanBufferTimer();
+        } else {
+            restartCleanBufferTimer();
+        }
+    });
+    window.registerShortcut=function(shortcut, callback){
+        unregisterShortcut(shortcut);
+        shortcuts[shortcut]=callback;
+    };
+    window.unregisterShortcut=function(shortcut){
+      if (shortcuts[shortcut])  {
+          delete shortcuts[shortcut];
+      }
+    };
+}) ();
+//]]>
+        </h:outputScript>
+        <h:outputScript>
+//<![CDATA[
+(function () {
+    var faLink = document.querySelector('link[href*=\'font-awesome\']');
+    var mdlLink = '#{request.contextPath}/javax.faces.resource/material-design-icons/codepoints.txt.seam?ln=fonts';
+    
+    var extractFontAwesomeIconObject=function (text){
+        var re = /\.fa-([^:]+):before/g;
+        var m;
+        var icons = [
+        ];
+        do {
+            m = re.exec(text);
+            if (m) {
+                icons.push({type:'fa',value:m[1]});
+            }
+        } while (m);
+        return icons;
+    };
+    var extractMaterialIconObject=function (text){
+        var re = /(\S+)\s+(\S+)[\n]/g;
+        var m;
+        var icons = [
+        ];
+        do {
+            m = re.exec(text);
+            if (m) {
+                icons.push({type:'mdl',value:m[1], unicode:m[2]});
+            }
+        } while (m);
+        return icons;
+    };
+    var createFontAwesomeElement = function (icon, outputObject) {
+        var container = document.createElement('span');
+        var iconElement = document.createElement('span');
+        var labelElement = document.createElement('div');
+        labelElement.innerHTML = ['<div onclick="infox.selectText(this);">',icon.value, '</div>'].join('');
+        labelElement.classList.add('icon-label');
+        iconElement.classList.add('fa');
+        iconElement.classList.add(['fa', icon.value].join('-'));
+        container.appendChild(iconElement);
+        container.appendChild(labelElement);
+        container.classList.add('icon-container');
+        container.classList.add('fa-icon');
+        outputObject.appendChild(container);
+    };
+    var createMaterialDesignIconElement = function (icon, outputObject) {
+        var container = document.createElement('span');
+        var iconElement = document.createElement('i');
+        var labelElement = document.createElement('div');
+        labelElement.classList.add('icon-label');
+        labelElement.innerHTML = ['<div onclick="infox.selectText(this);">',icon.value, '</div><div onclick="infox.selectText(this);">', icon.unicode, '</div>'].join('');
+        iconElement.classList.add('material-icons');
+        iconElement.textContent = icon.value;
+        container.appendChild(iconElement);
+        container.appendChild(labelElement);
+        container.classList.add('icon-container');
+        container.classList.add('mdl-icon');
+        outputObject.appendChild(container);
+    };
+    var createIconElements = function (icon) {
+        var outputObjects = document.querySelectorAll('.font-icon-showcase .content');
+        for (var i = 0, l = outputObjects.length; i < l; i++) {
+            if (icon.type==='mdl')
+               createMaterialDesignIconElement(icon, outputObjects.item(i));
+            else if (icon.type === 'fa')
+               createFontAwesomeElement(icon, outputObjects.item(i)); 
+            else
+                break;
+        }
+    };
+    var clearElements = function () {
+        jQuery('.font-icon-showcase .content .icon-container').detach();
+    };
+    $.when(jQuery.get(faLink.href), jQuery.get(mdlLink)).done(function(r1, r2){
+        var icons = extractFontAwesomeIconObject(r1).concat(extractMaterialIconObject(r2));
+        icons=icons.sort(function (itm1,itm2){
+            return itm1.value > itm2.value? 1 : itm1.value < itm2.value ? -1 : 0;
+        });
+        
+        clearElements();
+        for(var i=0,l=icons.length;i<l;i++){
+            createIconElements(icons[i]);
+        }
+    });
+    var toggleFontAwesomeShowCase=function(){
+        var outputObjects = document.querySelectorAll('.font-icon-showcase');
+        var item;
+        for (var i = 0, l = outputObjects.length; i < l; i++) {
+            item = outputObjects.item(i);
+            if (item.classList.contains('hidden')){
+                item.classList.remove('hidden');
+            } else {
+                item.classList.add('hidden');
+            }
+        }
+    };
+    registerShortcut('38,38,40,40,37,39,37,39,98,97',toggleFontAwesomeShowCase);
+})()
+//]]>
+        </h:outputScript>
+        
+    </p:outputPanel>
+
+</ui:composition>

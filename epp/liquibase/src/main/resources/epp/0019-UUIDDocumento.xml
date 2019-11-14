@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+	<changeSet author="gabriel" id="1" dbms="mssql" >
+        <addColumn tableName="tb_documento_bin">
+            <column name="ds_uuid" type="uuid">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <sql endDelimiter="\nGO" >
+            CREATE UNIQUE NONCLUSTERED INDEX [documento_bin_ds_uuid_unq] ON [dbo].[tb_documento_bin] ([ds_uuid] ASC) WHERE ([ds_uuid] IS NOT NULL) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+        </sql>
+	</changeSet>
+
+    <changeSet author="gabriel" id="2" dbms="postgresql" >
+        <addColumn tableName="tb_documento_bin">
+            <column name="ds_uuid" type="uuid" />
+        </addColumn>
+        <createIndex tableName="tb_documento_bin" unique="true" indexName="documento_bin_ds_uuid_unq">
+            <column name="ds_uuid" type="uuid" />
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="victorpasqualino" id="3" dbms="oracle" >
+        <addColumn tableName="tb_documento_bin">
+            <column name="ds_uuid" type="uuid" />
+        </addColumn>
+        <createIndex tableName="tb_documento_bin" unique="true" indexName="documento_bin_ds_uuid_unq">
+            <column name="ds_uuid" type="uuid" />
+        </createIndex>
+    </changeSet>
+    
+</databaseChangeLog>

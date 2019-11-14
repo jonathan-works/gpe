@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	xmlns:infox="http://www.infox.com.br/jsf">
+
+	<ui:param name="pastaDocumentoRenderId"
+		value="#{empty pastaDocumentoRenderId ? '' : pastaDocumentoRenderId}" />
+	<a:jsFunction name="selectDocumento" immediate="true" execute="@this"
+		render="historicoDocumentoPanelDiv" limitRender="true"
+		status=":status">
+		<a:param name="idDocumento"
+			assignTo="#{documentoProcessoAction.idDocumento}"
+			converter="javax.faces.Integer" />
+	</a:jsFunction>
+
+	<rich:collapsiblePanel expanded="true" id="documentoFilterPanel"
+		header="#{infoxMessages['searchForm.title']}" switchType="client">
+		<h:form>
+			<i:selectOneMenu id="classificacaoFilter" label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}" 
+				value="#{documentoProcessoAction.documentoFilter.idClassificacaoDocumento}"
+				items="#{documentoProcessoAction.listClassificacaoDocumento}"
+				noSelectionLabel="#{infoxMessages['crud.select.all']}"
+				converterId="javax.faces.Integer"
+				itemLabel="#{item.descricao}" itemValue="#{item.id}"/>
+			
+			<i:inputNumber id="numeroDocumentoFilter" label="#{infoxMessages['documentoProcesso.numeroDocumento']}"
+				value="#{documentoProcessoAction.documentoFilter.numeroDocumento}"/>
+			
+	        <div class="property-field-edit" style="display: inline-block;">
+				<div class="property-field-edit-name">
+					<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorFilter"/>
+				</div>
+				<div class="property-field-edit-value">
+					<p:autoComplete id="marcadorFilter" multiple="true" 
+						value="#{documentoProcessoAction.documentoFilter.marcadores}" 
+			        	completeMethod="#{documentoProcessoAction.autoCompleteMarcadores}"
+			        	itemLabel="#{item}" itemValue="#{item}" var="item"
+			        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+			        	<p:ajax event="itemSelect" update="@this" process="@this" />
+			        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+			        </p:autoComplete>
+		        </div>
+			</div>
+			
+			<div>
+				<h:commandButton id="btnFiltrarDocumentos"
+					value="#{infoxMessages['button.pesquisar']}"
+                    actionListener="#{pastaAction.resetarContadoresDocumentosCompartilhados()}"
+					action="#{documentoProcessoAction.filtrarDocumentos()}"
+					styleClass="buttons buttons">
+					<f:ajax immediate="true" execute="@form"
+						render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form" />
+				</h:commandButton>
+			</div>
+
+		</h:form>
+	</rich:collapsiblePanel>
+	
+	<div style="margin-top: 5px;" />
+	<s:div id="documentoListDiv" styleClass="documentoListDiv">
+		<wi:dataTable values="#{pastaAction.activeBean.list(15)}"
+			bean="#{pastaAction.activeBean}" id="documentoList"
+			showGrid="#{pastaAction.isShowGrid()}"
+			tableTitle="#{pastaAction.tableTitle}"
+			rowId="#{row.id}" showSearchForm="true">
+
+			<ui:define name="searchForm">
+                <!-- Painel de pastas do processo -->
+				<rich:panel>
+					<f:facet name="header">
+						<h:panelGroup>
+							<h:outputText value="#{infoxMessages['pasta.pastas']}" />
+							<ui:repeat var="tag" value="#{documentoProcessoAction.documentoFilter.marcadores}">
+								<h:outputText value="#{tag}" styleClass="marcadorLabel" style="top: 3px;margin-left: 3px;"/>
+							</ui:repeat>
+						</h:panelGroup>
+					</f:facet>
+                    <ui:repeat var="pasta" value="#{pastaAction.pastaList}">
+                        <s:div rendered="#{pastaAction.canSee(pasta)}" styleClass="rf-tr-nd folder-row">
+                            <rich:dropTarget
+                                acceptedTypes="doc#{consultaController.processo.idProcesso}"
+                                dropListener="#{pastaAction.associaDocumento}"
+                                dropValue="#{pasta}" rendered="#{pastaAction.canWrite(pasta)}"
+                                render="documentoListPanel, documentoListSearchForm"
+                                limitRender="true" />
+                            <p:commandLink process="@this" update="@(.pastaCompartilhamentoModal)"
+                                onstart="infox.showLoading();" oncomplete="PF('pastaCompartilhamentoModal').show(); infox.hideLoading();"
+                                rendered="#{security.checkPage('pastaCompartilhamento')}"
+                                action="#{pastaAction.configurarCompartilhamentoPasta(pasta)}">
+                                <h:graphicImage title="#{eventCache.get('pastaAction.getNomePastaConfigurarCompartilhamento(pasta)', pasta.id)}"
+                                    url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'share')}"
+                                    style="opacity: #{pastaAction.possuiCompartilhamento(pasta) ? 1 : 0.3}" />
+                            </p:commandLink>
+                            <a:commandLink render="documentoListDiv pageBodyDialogMessage" execute="@form"
+                                action="#{pastaAction.selectPasta(pasta)}"
+                                onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+                                styleClass="folder" limitRender="true">
+                                <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'folder')}" title="#{pasta}" />
+                                <h:outputText class="folder" value="#{eventCache.get('pastaAction.getNomePasta(pasta)', pasta.id)}" />
+                            </a:commandLink>
+                        </s:div>
+                    </ui:repeat>
+				</rich:panel>
+
+                <!-- Painel de pastas compartilhadas com este processo -->
+                <rich:panel style="margin-top: 5px;" rendered="#{not empty pastaAction.processoPastaCompList}">
+                    <f:facet name="header">
+                        <h:panelGroup>
+                            <h:outputText value="#{infoxMessages['pasta.compartilhamento.pastas']}" />
+                            <ui:repeat var="tag" value="#{documentoProcessoAction.documentoFilter.marcadores}">
+                                <h:outputText value="#{tag}" styleClass="marcadorLabel" style="top: 3px;margin-left: 3px;"/>
+                            </ui:repeat>
+                        </h:panelGroup>
+                    </f:facet>
+                    <ui:repeat var="processo" value="#{pastaAction.processoPastaCompList}">
+                        <div style="margin-bottom: 1em;">
+                            <h:outputText value="#{processo.numeroProcesso}" style="font-weight: bold;"/>
+                            <s:div rendered="#{processo.documentoCompartilhado}" styleClass="folder-row" style="margin-left: 0.6em; padding-left: 1.4em;">
+                                <a:commandLink render="documentoListDiv pageBodyDialogMessage" execute="@form"
+                                    action="#{pastaAction.selectPastaDocumentosCompartilhados(processo.processo)}"
+                                    onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+                                    styleClass="folder" limitRender="true">
+                                    <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'folder_shared')}" title="#{pasta}" />
+                                    <h:outputText class="folder"
+                                        value="#{infoxMessages['documento.compartilhamento.nomePasta']} (#{pastaAction.getQtdDocumentoCompartilhado(processo)})" />
+                                </a:commandLink>
+                            </s:div>
+                            <ui:repeat var="pasta" value="#{processo.pastas}">
+                                <s:div rendered="#{pastaAction.canSee(pasta)}" styleClass="folder-row" style="margin-left: 0.6em;">
+                                    <p:commandLink process="@this" update="@(.confirmaRemoverCompModal)"
+                                        rendered="#{security.checkPage('pastaCompartilhamento')}"
+                                        onstart="infox.showLoading();" oncomplete="PF('confirmaRemoverCompModal').show(); infox.hideLoading();"
+                                        action="#{pastaAction.selectCompartilhamentoToRemove(pasta)}">
+                                        <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'clear')}"
+                                            title="#{infoxMessages['pasta.compartilhamento.remover']}" />
+                                    </p:commandLink>
+                                    <a:commandLink render="documentoListDiv pageBodyDialogMessage" execute="@form"
+                                        action="#{pastaAction.selectPastaCompartilhada(pasta)}"
+                                        onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+                                        styleClass="folder" limitRender="true">
+                                        <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'folder_shared')}" title="#{pasta}" />
+                                        <h:outputText class="folder" value="#{eventCache.get('pastaAction.getNomePasta(pasta)', pasta.id)}" />
+                                    </a:commandLink>
+                                </s:div>
+                            </ui:repeat>
+                        </div>
+                    </ui:repeat>
+                </rich:panel>
+			</ui:define>
+
+			<ui:define name="toolBar">
+				<rich:dragSource type="doc#{consultaController.processo.idProcesso}"
+					dragValue="#{row}"
+					rendered="#{pastaAction.canDeleteFromInstance()}"
+					dragIndicator="indicator">
+					<rich:dragIndicator id="indicator" acceptClass="caixa-acpt"
+						draggingClass="caixa-drag" rejectClass="caixa-rejt">
+						<span class="caixa-ind-lbl">#{row.descricao}</span>
+					</rich:dragIndicator>
+				</rich:dragSource>
+                <p:commandLink process="@this" update="@(.documentoCompModal)"
+                    rendered="#{security.checkPage('documentoCompartilhamento') and not pastaAction.pastaCompartilhada and not pastaAction.documentoCompartilhado}"
+                    onstart="infox.showLoading();" oncomplete="PF('documentoCompModal').show(); infox.hideLoading();"
+                    action="#{pastaAction.configurarCompartilhamentoDocumento(row)}">
+                    <h:graphicImage title="#{eventCache.get('pastaAction.getNomeDocumentoConfigurarCompartilhamento(row)', row.id)}"
+                        url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'share')}"
+                        style="opacity: #{pastaAction.possuiCompartilhamento(row) ? 1 : 0.3}" />
+                </p:commandLink>
+                <p:commandLink process="@this" update="@(.confirmaRemoverCompDocModal)"
+                    rendered="#{security.checkPage('documentoCompartilhamento') and pastaAction.documentoCompartilhado}"
+                    onstart="infox.showLoading();" oncomplete="PF('confirmaRemoverCompDocModal').show(); infox.hideLoading();"
+                    action="#{pastaAction.selectCompartilhamentoDocumentoToRemove(row)}">
+                    <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'clear')}"
+                        title="#{infoxMessages['pasta.compartilhamento.remover']}" />
+                </p:commandLink>
+				<h:graphicImage rendered="#{pastaAction.canDeleteFromInstance()}"
+					url="#{layoutController.getResourceUrlByPath('/imagens/anexo.png')}"
+					title="#{infoxMessages['documentoProcesso.moverDocumento']}" />
+				<h:graphicImage styleClass="opacityHover"
+					url="#{layoutController.getResourceUrlByPath('/imagens/time_16.png')}"
+					title="#{infoxMessages['button.historico']}"
+					rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
+					onmouseup="selectDocumento(#{rowId});" />
+				<h:graphicImage styleClass="opacityHover"
+					url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+					rendered="#{not row.excluido and pastaAction.canLogicDeleteFromInstance()}"
+					title="#{infoxMessages['button.delete']}"
+					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
+				<h:graphicImage styleClass="opacityHover"
+					url="#{layoutController.getResourceUrlByPath('/imagens/stock_undelete.png')}"
+					rendered="#{row.excluido and pastaAction.canLogicDeleteFromInstance()}"
+					title="#{infoxMessages['button.restaurar']}"
+					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
+                
+                
+                
+				<h:form style="display:inline">
+					<ui:include
+						src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+						<ui:param name="bin" value="#{row.documentoBin}" />
+						<ui:param name="header" value="#{row.descricao}" />
+                        <ui:param name="hideSignature" value="#{not documentoProcessoAction.deveMostrarCadeado(row)}" />
+					</ui:include>
+				</h:form>
+				
+			</ui:define>
+
+			<ui:define name="headerToolBar" />
+
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="numeroDocumento"
+				columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}"
+				value="#{row.numeroDocumento}" />
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="usuarioInclusao"
+				columnHeader="#{infoxMessages['assinaturas.usuario']}"
+				value="#{row.usuarioInclusao}" />
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="dataInclusao"
+				columnHeader="#{infoxMessages['assinaturas.dataInclusao']}"
+				value="#{row.dataInclusao}" />
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="classificacaoDocumento"
+				columnHeader="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
+				value="#{row.classificacaoDocumento}" />
+
+			<wi:column columnId="descricao"
+				columnHeader="#{infoxMessages['documentoProcesso.descricao']}">
+				<div align="center">
+					<h:outputText value="#{row.descricao}" style="display: block;" />
+					<ui:repeat var="marcador"
+						value="#{row.documentoBin.marcadoresList}">
+						<h:outputText value="#{marcador.codigo} "
+							style=" #{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+							styleClass="marcadorLabel" />
+					</ui:repeat>
+				</div>
+			</wi:column>
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="processoDocumentoBin.sizeFormatado"
+				columnHeader="#{infoxMessages['processoDocumento.tamanho']}"
+				value="#{row.documentoBin.sizeFormatado}" />
+		</wi:dataTable>
+	</s:div>
+	<script type="text/javascript">
+		  function clearFieldsExcludeRestore() {
+		      var maxlength = 4000;
+		      #{rich:jQuery('motivoExclusaoRestauracao')}.val('');
+		      #{rich:jQuery('motivoExclusaoRestauracaocounterDiv')}.text('(0 / '+maxlength+')');
+		      $('.property-error.property-msg').remove();
+	          $('.property-error').removeClass('property-error');
+		  }
+		  
+		  function setValuesToExcludeRestore(isExclusao, idDocumento, numeroDocumento, dsDocumento, classificacao) {
+		      #{rich:jQuery('hiddenIdDocumento')}.val(idDocumento);
+		      #{rich:jQuery('numeroDocumento')}.text(numeroDocumento);
+		      #{rich:jQuery('processoDocumento')}.text(dsDocumento);
+		      #{rich:jQuery('tipoProcessoDocumentoOutPanel')}.text(classificacao);
+		      if (isExclusao) {
+		          $('.rf-pp-hdr.motivo-header > div').text('Exclusão de Documento');
+		          #{rich:jQuery('excluirRestaurarDocButton')}.attr('value','Excluir');
+		          alterarMotivoDaExlusaoRestauracao('Motivo da Exclusão');
+		      } else {
+		          $('.rf-pp-hdr.motivo-header > div').text('Restauração de Documento');
+		          #{rich:jQuery('excluirRestaurarDocButton')}.attr('value', 'Restaurar');
+		          alterarMotivoDaExlusaoRestauracao('Motivo da Restauração');
+		      }
+		  }
+		
+		  function alterarMotivoDaExlusaoRestauracao(label){
+		      var labelTextArea = $('label[for=\''+#{rich:jQuery('motivoExclusaoRestauracao')}.attr('id')+'\']');
+		      labelTextArea.text(label);
+		      labelTextArea.append($("<span> * </span>").addClass("required"));
+		  }
+		
+		  function atualizarOnValidationFailed() {
+		      var teste = $('.rf-pp-hdr.motivo-header').children(0).text();
+		      if (teste === 'Exclusão de Documento') {
+		          #{rich:jQuery('excluirRestaurarDocButton')}.attr('value','Excluir');
+		          alterarMotivoDaExlusaoRestauracao('Motivo da Exclusão');
+		      } else {
+		          #{rich:jQuery('excluirRestaurarDocButton')}.attr('value', 'Restaurar');
+		          alterarMotivoDaExlusaoRestauracao('Motivo da Restauração');
+		      }
+		  }
+	</script>
+	
+	<rich:popupPanel id="requestMotivoPanel" header="teste"
+		headerClass="motivo-header" moveable="true" show="false"
+		resizeable="true" minWidth="690" minHeight="310"
+		onbeforeshow="clearFieldsExcludeRestore();">
+		<f:facet name="controls">
+			<h:graphicImage id="mp_taskNodeCloseBtn" styleClass="mp-close"
+				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+				onmouseup="#{rich:component('requestMotivoPanel')}.hide();" />
+		</f:facet>
+		<wi:outputText id="numeroDocumento"
+			label="#{infoxMessages['processoDocumento.numeroDocumento']}" />
+
+		<wi:outputText id="tipoProcessoDocumentoOutPanel"
+			label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
+
+		<wi:outputText id="processoDocumento"
+			label="#{infoxMessages['processoDocumentoBin.documento']}" />
+		<h:form id="excluirRestaurarDocumentoForm">
+			<div>
+				<h:inputHidden id="hiddenIdDocumento"
+					value="#{documentoProcessoAction.idDocumentoAlter}"
+					converter="javax.faces.Integer" />
+				<wi:inputTextarea id="motivoExclusaoRestauracao" maxlength="4000"
+					required="true" cols="60" rows="5" label="Motivo"
+					value="#{documentoProcessoAction.motivoExclusaoRestauracao}">
+					<f:validator validatorId="emptyStringValidator" />
+				</wi:inputTextarea>
+			</div>
+			<div>
+				<a:commandButton id="excluirRestaurarDocButton"
+					actionListener="#{documentoProcessoAction.exclusaoRestauracaoDocumento()}"
+					limitRender="true" execute="@form"
+					rendered="#{empty hiddenIdDocumento}"
+					onclick="infox.showLoading();"
+					oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
+					value="Enviar" render="@form, documentoList, pageBodyDialogMessage"
+					styleClass="buttons" />
+			</div>
+		</h:form>
+	</rich:popupPanel>
+
+	<s:div id="historicoDocumentoPanelDiv"
+		style="margin-top:20px; width:100%;">
+		<rich:panel id="historicoDocumentoPanel" headerClass=""
+			rendered="#{not empty documentoProcessoAction.processoDocumentoSelected}"
+			bodyClass="dtable-p-b" styleClass="dtable-p" style="width:100%;">
+
+			<f:facet name="header">
+				<h:outputText
+					value="#{infoxMessages['historicoStatusDocumento.tableTile']}" />
+				<h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+					onmouseup="selectDocumento(0);" style="float:right;" />
+			</f:facet>
+
+			<rich:dataTable id="historicoDocumentoDataTable"
+				var="historicoDocumento" style="width:100%"
+				value="#{documentoProcessoAction.listHistoricoStatusDocumento}">
+
+				<rich:column style="text-align:center;">
+					<f:facet name="header">#{infoxMessages['historicoStatusDocumento.nomeUsuarioAlterou']}</f:facet>
+					<h:outputText
+						value="#{historicoDocumento.usuarioAlteracao.nomeUsuario}" />
+				</rich:column>
+
+				<rich:column style="text-align:center;">
+					<f:facet name="header">#{infoxMessages['historicoStatusDocumento.dataAlteracao']}</f:facet>
+					<h:outputText value="#{historicoDocumento.dataAlteracao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column style="text-align:center;">
+					<f:facet name="header">#{infoxMessages['historicoStatusDocumento.tipoOperacao']}</f:facet>
+					<h:outputText
+						value="#{historicoDocumento.tipoAlteracaoDocumento.label}" />
+				</rich:column>
+
+				<rich:column>
+					<f:facet name="header">#{infoxMessages['historicoStatusDocumento.motivo']}</f:facet>
+					<h:outputText value="#{historicoDocumento.motivo}" />
+				</rich:column>
+
+			</rich:dataTable>
+		</rich:panel>
+	</s:div>
+
+    <p:dialog id="pastaCompartilhamentoModal" widgetVar="pastaCompartilhamentoModal" styleClass="pastaCompartilhamentoModal"
+        modal="true" width="50%" position="center top" visible="false"
+        header="#{pastaCompartilhamentoView.dialogTitle}">
+        <p:ajax event="close" process="@this" update="documentoListPanel documentoListSearchForm"
+            onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+        <h:panelGroup id="pastaCompartilhamentoModalPanel" styleClass="pastaCompartilhamentoModalPanel" rendered="#{not empty pastaCompartilhamentoView.pasta}">
+            <p:dataTable value="#{pastaCompartilhamentoView.processosRelacionados}" var="processo" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+                <p:column styleClass="dt-toolbar-col">
+                    <p:commandLink rendered="#{not pastaCompartilhamentoView.possuiCompartilhamento(processo)}"
+                        action="#{pastaCompartilhamentoView.adicionarCompartilhamento(processo)}"
+                        process="@this" update="@(.pastaCompartilhamentoModalPanel)">
+                        <h:graphicImage title="#{infoxMessages['pasta.compartilhamento.adicionar']}"
+                            url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'share')}" />
+                    </p:commandLink>
+                    <p:commandLink rendered="#{pastaCompartilhamentoView.possuiCompartilhamento(processo)}"
+                        action="#{pastaCompartilhamentoView.removerCompartilhamento(processo)}"
+                        process="@this" update="@(.pastaCompartilhamentoModalPanel)">
+                        <h:graphicImage title="#{infoxMessages['pasta.compartilhamento.remover']}"
+                            url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'delete')}" />
+                    </p:commandLink>
+                </p:column>
+                <p:column headerText="#{infoxMessages['pasta.compartilhamento.processo']}">
+                    <h:outputText value="#{processo.numeroProcesso}" />
+                </p:column>
+                <p:column headerText="#{infoxMessages['pasta.compartilhamento.possuiCompartilhamento']}">
+                    <h:outputText value="#{infoxMessages[pastaCompartilhamentoView.possuiCompartilhamento(processo) ? 'crud.yes' : 'crud.no']}" />
+                </p:column>
+            </p:dataTable>
+        </h:panelGroup>
+    </p:dialog>
+
+    <p:dialog id="confirmaRemoverCompModal" widgetVar="confirmaRemoverCompModal" styleClass="confirmaRemoverCompModal"
+        modal="true" width="50%" position="center top" visible="false">
+        <f:facet name="header">
+            <h:outputText value="#{infoxMessages['pasta.compartilhamento.atencao']}" />
+        </f:facet>
+        <h:panelGroup id="confirmaRemoverCompModalPanel" styleClass="confirmaRemoverCompModalPanel">
+            <h3>
+                <h:outputText value="#{pastaAction.msgRemoverCompartilhamento}" />
+            </h3>
+            <h:form>
+                <a:commandButton id="confirmRemoverCompartilhamento" styleClass="buttons"
+                    execute="@this" render="documentoListDiv documentoFilterPanel" limitRender="true"
+                    action="#{pastaAction.removerCompartilhamento()}"
+                    onbegin="infox.showLoading();" oncomplete="PF('confirmaRemoverCompModal').hide(); infox.hideLoading();"
+                    value="#{infoxMessages['pasta.compartilhamento.remover']}" />
+                <a:commandButton id="cancelRemoverCompartilhamento" styleClass="buttons"
+                    execute="@this" oncomplete="PF('confirmaRemoverCompModal').hide();"
+                    value="#{infoxMessages['button.cancelar']}" />
+            </h:form>
+        </h:panelGroup>
+    </p:dialog>
+
+    <p:dialog id="documentoCompModal" widgetVar="documentoCompModal" styleClass="documentoCompModal"
+        modal="true" width="50%" position="center top" visible="false" 
+        header="#{documentoCompartilhamentoView.dialogTitle}">
+        <p:ajax event="close" process="@this" update="documentoListPanel"
+            onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+        <h:panelGroup id="documentoCompModalPanel" styleClass="documentoCompModalPanel" rendered="#{not empty documentoCompartilhamentoView.documento}">
+            <p:dataTable value="#{documentoCompartilhamentoView.processosRelacionados}" var="processo" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+                <p:column styleClass="dt-toolbar-col">
+                    <p:commandLink rendered="#{not documentoCompartilhamentoView.possuiCompartilhamento(processo)}"
+                        action="#{documentoCompartilhamentoView.adicionarCompartilhamento(processo)}"
+                        process="@this" update="@(.documentoCompModalPanel)">
+                        <h:graphicImage title="#{infoxMessages['documento.compartilhamento.adicionar']}"
+                            url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'share')}" />
+                    </p:commandLink>
+                    <p:commandLink rendered="#{documentoCompartilhamentoView.possuiCompartilhamento(processo)}"
+                        action="#{documentoCompartilhamentoView.removerCompartilhamento(processo)}"
+                        process="@this" update="@(.documentoCompModalPanel)">
+                        <h:graphicImage title="#{infoxMessages['documento.compartilhamento.remover']}"
+                            url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'delete')}" />
+                    </p:commandLink>
+                </p:column>
+                <p:column headerText="#{infoxMessages['pasta.compartilhamento.processo']}">
+                    <h:outputText value="#{processo.numeroProcesso}" />
+                </p:column>
+                <p:column headerText="#{infoxMessages['documento.compartilhamento.possuiCompartilhamento']}">
+                    <h:outputText value="#{infoxMessages[documentoCompartilhamentoView.possuiCompartilhamento(processo) ? 'crud.yes' : 'crud.no']}" />
+                </p:column>
+            </p:dataTable>
+        </h:panelGroup>
+    </p:dialog>
+
+    <p:dialog id="confirmaRemoverCompDocModal" widgetVar="confirmaRemoverCompDocModal" styleClass="confirmaRemoverCompDocModal"
+        modal="true" width="50%" position="center top" visible="false">
+        <f:facet name="header">
+            <h:outputText value="#{infoxMessages['pasta.compartilhamento.atencao']}" />
+        </f:facet>
+        <h:panelGroup id="confirmaRemoverCompDocModalPanel" styleClass="confirmaRemoverCompDocModalPanel">
+            <h3>
+                <h:outputText value="#{pastaAction.msgRemoverCompartilhamentoDocumento}" />
+            </h3>
+            <h:form>
+                <a:commandButton id="confirmRemoverCompartilhamento" styleClass="buttons"
+                    execute="@this" render="documentoListDiv documentoFilterPanel" limitRender="true"
+                    action="#{pastaAction.removerCompartilhamentoDocumento()}"
+                    onbegin="infox.showLoading();" oncomplete="PF('confirmaRemoverCompDocModal').hide(); infox.hideLoading();"
+                    value="#{infoxMessages['pasta.compartilhamento.remover']}" />
+                <a:commandButton id="cancelRemoverCompartilhamento" styleClass="buttons"
+                    execute="@this" oncomplete="PF('confirmaRemoverCompDocModal').hide();"
+                    value="#{infoxMessages['button.cancelar']}" />
+            </h:form>
+        </h:panelGroup>
+    </p:dialog>
+
+	<wi:assinaturaPopup id="assinaturaDocumentoPopup"
+		afterRender="documentoList" />
+</ui:composition>

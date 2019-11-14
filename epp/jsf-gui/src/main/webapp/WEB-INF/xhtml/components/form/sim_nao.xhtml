@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <s:decorate
+    id="#{id}Decoration"
+    template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+    rendered="#{empty rendered or rendered}">
+    <ui:define name="label">#{label}</ui:define>
+    <h:selectOneRadio
+      id="#{id}"
+      value="#{value}"
+      disabled="#{not empty readonly and readonly ? true : disabled}"
+      onchange="#{onchange}"
+      onclick="#{onclick}"
+      styleClass="radio"
+      converter="javax.faces.Boolean">
+      <f:selectItems
+        value="#{selectItemFunctions.createFromString('true:crud.yes,false:crud.no') }" />
+      <ui:insert />
+    </h:selectOneRadio>
+    <h:outputScript>
+      invoke(["infox.escapeId"],function(EscapeId) {
+      	if( #{not empty value} ){
+	      	$(EscapeId("##{rich:clientId(id)}:#{empty boxChecked ? 0 : boxChecked}"))
+	      	.attr({checked:#{empty value ? true : value}});
+      	}
+      });
+	</h:outputScript>
+  </s:decorate>
+</ui:composition>

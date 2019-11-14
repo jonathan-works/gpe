@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:i="http://java.sun.com/jsf/composite/infox">
+
+	<!-- Div com os formulários para upload e editor -->
+	<div id="anexarDocumentosDiv"
+		style="display: inline-block; width: 55%; min-width: 640px; margin: 0em 0.5em 1em 0em; vertical-align: top;">
+
+		<!-- Panel de upload -->
+		<rich:collapsiblePanel id="uploadPanel"
+			header="#{infoxMessages['fileUpload.header']}"
+			style="margin-bottom: 1em" switchType="client">
+			<h:form id="uploadForm">
+			
+				<wi:inputText id="uploadDescricao" required="true"
+					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
+					value="#{anexarDocumentosView.descricaoUploader}" maxlength="260" />
+				<wi:selectOneMenuEntity id="uploadClassificacao" required="true"
+					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+					value="#{anexarDocumentosView.classificacaoDocumentoUploader}"
+					items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('D')}">
+					<a:ajax event="change"
+						onbeforesubmit="infox.showLoading();"
+						oncomplete="infox.hideLoading();" render="uploadArquivoDiv"
+						limitRender="true" execute="@this"
+						listener="#{anexarDocumentosView.onChangeUploadClassificacaoDocumento()}" />
+				</wi:selectOneMenuEntity>
+ 
+				<wi:selectOneMenuEntity id="uploadPastaUploader"
+					label="#{infoxMessages['pasta.pasta']}"
+					value="#{anexarDocumentosView.pastaUploader}"
+					items="#{pastaAction.getPastaListComRestricaoEscrita()}">
+				</wi:selectOneMenuEntity>
+				
+				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
+					<div class="property-field-edit">
+						<div class="property-field-edit-name">
+							<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorUpload"/>
+						</div>
+						<div class="property-field-edit-value">
+							<p:autoComplete id="marcadorUpload" multiple="true" 
+								value="#{anexarDocumentosView.marcadoresUpload}" 
+					        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresUpload}"
+					        	converter="br.com.infox.converter.marcador" itemLabel="#{item.codigo}" itemValue="#{item}" var="item"
+					        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+					        	<p:ajax event="itemSelect" update="@this" process="@this" />
+					        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+					        </p:autoComplete>
+				        </div>
+					</div>
+				</c:if>
+				
+				<s:div id="uploadArquivoDiv">
+					<s:div id="uploadArquivoTooltipDiv"
+						rendered="#{anexarDocumentosView.showUploader}">
+						<div class="tooltip-parent" style="width: 10px">
+							<h:graphicImage id="helpEditTipImg"
+								url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+							<div class="epp-tooltip">
+								<div class="tooltip-panel">
+									<div>
+										<h:outputText value="Extensões Aceitas:" />
+									</div>
+									<ui:repeat var="extensao"
+										value="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypesList}">
+										<div>
+											<h:outputText value="#{extensao}"
+												styleClass="tooltip-panel-div" />
+										</div>
+									</ui:repeat>
+									<s:div styleClass="tooltip-panel-top"
+										rendered="#{not empty anexarDocumentosView.classificacaoDocumentoUploader.observacao}">
+										<div>
+											<h:outputText value="Observação:" />
+										</div>
+										<h:outputText
+											value="#{anexarDocumentosView.classificacaoDocumentoUploader.observacao}" />
+									</s:div>
+								</div>
+							</div>
+						</div>
+
+						<rich:fileUpload id="uploadArquivo" execute="@this"
+							status=":status" limitRender="true"
+							onbegin="infox.showLoading('Fazendo upload de arquivos..')"
+							fileUploadListener="#{anexarDocumentosView.fileUploadListener}"
+							addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+							clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+							clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+							doneLabel="#{infoxMessages['anexarDocumentos.doneLabel']}"
+							uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+							sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+							maxFilesQuantity="20" immediateUpload="true" noDuplicate="true"
+							render="uploadArquivoAnexarButton pageBodyDialogMessage"
+							acceptedTypes="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypes}"
+							serverErrorLabel="Erro no envio"
+							onerror="processErrorMessage(this);"
+							onuploadcomplete="infox.hideLoading(); addClearEventUploadModelo();"
+							rendered="#{not empty anexarDocumentosView.classificacaoDocumentoUploader.extensaoArquivosList}">
+						</rich:fileUpload>
+						
+						<script type="text/javascript">
+							function processErrorMessage(uploader) {
+								var message = event.currentTarget.getResponseHeader('Error-Message');
+								uploader.serverErrorProcLabel = message;
+							}
+                        </script>
+						
+                        <a:jsFunction id="onClickClearItemList" name="onClickClearItemList" render="uploadArquivoAnexarButton"
+                            actionListener="#{anexarDocumentosView.removeDocumentoUpload}" immediate="true" onbegin="infox.showLoading();"
+                            oncomplete="infox.hideLoading();">
+                            <a:param name="fileName"/>
+                        </a:jsFunction>
+
+						<s:div id="uploadArquivoAnexarButton">
+							<a:commandButton id="uploadSubmitButton" styleClass="buttons"
+								action="#{anexarDocumentosView.persistUpload(rich:clientId('uploadPanel'))}"
+								value="#{infoxMessages['crud.update']}"
+								onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
+								rendered="#{anexarDocumentosView.showUploaderButton}"
+								render="uploadDescricaoDecoration uploadClassificacaoDecoration documentoDataTable pageBodyDialogMessage"/>
+						</s:div>
+					</s:div>
+				</s:div>
+			</h:form>
+		</rich:collapsiblePanel>
+		
+		<script type="text/javascript">
+	        function addClearEventUploadModelo() {
+	        	var upload = #{rich:component('uploadArquivo')};
+	        	var clearButton = upload.clearButton;
+	        	clearButton.click((function() {
+			      var fileName = 'ALL_FILES';
+			      return function() { 
+			    	  onClickClearItemList(fileName);
+			      }
+			    })());
+	        	var items = upload.submitedItems;
+	        	for (var i in items) {
+	        		var item = items[i];
+	        		var link = item.link;
+	        		if (item.model.state === 'done') {
+	        			link.click((function() {
+	  				      var fileName = item.model.file.name
+	  				      return function() { 
+	  				    	  onClickClearItemList(fileName);
+	  				      }
+	  				    })());
+	        		}
+	        	}
+	        }
+        </script>
+        
+		<!-- Panel de editor -->
+		<rich:collapsiblePanel id="editorPanel" header="Editor"
+			switchType="client">
+
+			<h:form id="editorForm">
+				<ui:param name="minuta"
+					value="#{empty anexarDocumentosView.documentoEditor.id or anexarDocumentosView.documentoEditor.documentoBin.minuta}" />
+				<wi:inputText id="editorDescricao" required="true"
+					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
+					value="#{anexarDocumentosView.documentoEditor.descricao}"
+					disabled="#{not minuta}" readonly="#{not minuta}" maxlength="260" />
+
+				<wi:selectOneMenuEntity id="editorClassificacao" required="true"
+					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+					value="#{anexarDocumentosView.documentoEditor.classificacaoDocumento}"
+					items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('P')}"
+					disabled="#{not minuta}" readonly="#{not minuta}">
+					<a:ajax event="change"
+						listener="#{anexarDocumentosView.onChangeEditorClassificacaoDocumento()}"
+						onbeforesubmit="infox.showLoading();"
+						oncomplete="infox.hideLoading();"
+						render="selectModeloDocumentoDiv editorDiv" limitRender="true"
+						execute="@this" />
+				</wi:selectOneMenuEntity>
+
+				<wi:selectOneMenuEntity id="editorPasta"
+					label="#{infoxMessages['pasta.pasta']}"
+					value="#{anexarDocumentosView.documentoEditor.pasta}"
+					items="#{pastaAction.getPastaListComRestricaoEscrita()}"
+					disabled="#{not minuta}" />
+				
+				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
+					<div class="property-field-edit">
+						<div class="property-field-edit-name">
+							<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorEditor"/>
+						</div>
+						<div class="property-field-edit-value">
+							<p:autoComplete id="marcadorEditor" multiple="true" 
+								value="#{anexarDocumentosView.marcadoresEditor}" 
+					        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresEditor}"
+					        	converter="br.com.infox.converter.marcador" itemLabel="#{item.codigo}" itemValue="#{item}" var="item"
+					        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+					        	<p:ajax event="itemSelect" update="@this" process="@this" />
+					        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+					        </p:autoComplete>
+				        </div>
+					</div>
+				</c:if>
+
+				<s:div id="selectModeloDocumentoDiv">
+					<wi:selectOneMenuEntity id="editorModeloDocumento" required="false"
+						label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+						value="#{anexarDocumentosView.modeloDocumento}"
+						items="#{anexarDocumentosView.modeloDocumentoList}"
+						disabled="#{not minuta}" readonly="#{not minuta}"
+						rendered="#{anexarDocumentosView.showModeloDocumentoCombo}">
+						<a:ajax event="change"
+							execute="@this" render="editorDiv"
+							listener="#{anexarDocumentosView.onSelectModeloDocumento}" />
+					</wi:selectOneMenuEntity>
+				</s:div>
+
+				<s:div id="editorDiv">
+					<s:div id="editorToolTipDiv" styleClass="tooltip-parent"
+						style="width: 10px">
+						<h:graphicImage id="#{id}helpEditTipImg"
+							url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+						<div class="epp-tooltip">
+							<div class="tooltip-panel">
+								<div>
+									<h:outputText value="Observação:" />
+								</div>
+								<h:outputText
+									value="#{anexarDocumentosView.documentoEditor.classificacaoDocumento.observacao}" />
+							</div>
+						</div>
+
+					</s:div>
+					<s:div id="minutaDiv">
+						<wi:selectBooleanRadio id="minuta"
+							value="#{anexarDocumentosView.documentoEditor.documentoBin.minuta}"
+							label="#{infoxMessages['processoDocumentoBin.minuta']}"
+							disabled="#{not minuta}" readonly="#{not minuta}" />
+					</s:div>
+
+					<wi:editor width="620px" id="modeloDocumento"
+						label="#{infoxMessages['tipoProcessoDocumento.modelo']}"
+						value="#{anexarDocumentosView.documentoEditor.documentoBin.modeloDocumento}"
+						requiredField="false" required="true" readonly="#{not minuta}"
+						showVariables="false" />
+				</s:div>
+				<s:div id="buttonsDiv">
+					<a:commandButton id="editorSubmitButton" styleClass="buttons"
+						action="#{anexarDocumentosView.persistEditor()}"
+						value="#{infoxMessages['crud.update']}" rendered="#{minuta}"
+						onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
+						render="@form documentoDataTable pageBodyDialogMessage" />
+					<a:commandButton id="editorNewButton" styleClass="buttons"
+						action="#{anexarDocumentosView.newEditorInstance()}"
+						value="#{infoxMessages['crud.new']}" execute="@this"
+						onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
+						render="@form documentoDataTable pageBodyDialogMessage" />
+				</s:div>
+			</h:form>
+		</rich:collapsiblePanel>
+	</div>
+
+	<s:div id="documentoDiv" style="display: inline-block; width: 44%">
+		<!-- Panel com dataTable de documentos temporários -->
+		<rich:collapsiblePanel id="documentoPanel" style="width: 100%;"
+			header="Documentos Anexados" switchType="client">
+			<s:div id="documentoDataTable">
+				<h:form id="documentosDataTableForm">
+					<wi:dataTable id="documentosAnexadosTable" showSearchForm="false"
+						values="#{anexarDocumentosView.documentoTemporarioList}"
+						rowId="#{row.id}" showGridCount="false"
+						bean="#{anexarDocumentosView}" showToolbarColumn="false"
+						panelStyle="overflow: auto; max-height: 300px;">
+
+						<ui:define name="headerToolBar" />
+						<ui:define name="toolBar" />
+
+						<rich:column id="checkboxColumn">
+							<f:facet name="header">
+								<h:selectBooleanCheckbox onclick="checkAllChildrenBoxes();"
+									styleClass="checkButtonMarcarTodos" />
+							</f:facet>
+							<h:selectBooleanCheckbox value="#{row.check}"
+								onclick="updateMarcarTodos($(this));"
+								styleClass="checkButtonDocumento" />
+						</rich:column>
+
+						<rich:column id="toolBarColumn" styleClass="dt-toolbar-col">
+							<ui:param name="isModelo"
+								value="#{empty row.documentoBin.extensao}" />
+
+							<a:commandLink id="viewMinutaLink" execute="@form"
+								rendered="#{row.documentoBin.minuta}"
+								render="editorForm" limitRender="true" status=":status"
+								styleClass="opacityHover" onclick="infox.showLoading();"
+								oncomplete="infox.hideLoading();"
+								actionListener="#{anexarDocumentosView.viewDocumento(row)}">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+							</a:commandLink>
+
+							<a:commandLink id="downloadLink" execute="@form"
+								action="#{jsfUtil.applyLastPhaseFlashAction}"
+								rendered="#{not row.documentoBin.minuta}"
+								status=":status" styleClass="opacityHover"
+								onclick="infox.showLoading();" render="@this"
+								oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(row.documentoBin)}">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+								<f:setPropertyActionListener value="#{row.documentoBin.id}" target="#{flash.idDocumentoBin}" />
+							</a:commandLink>
+
+							<a:commandLink
+								oncomplete="#{rich:component('assinaturasDocumento')}.show();"
+								onclick="infox.showLoading('Carregando Assinaturas....');"
+								rendered="#{not empty row.documentoBin.assinaturas}"
+								render="assinaturaListCont">
+								<h:graphicImage
+									title="#{infoxMessages['anexarDocumentos.visualizarAssinaturas']}"
+									alt="#{infoxMessages['anexarDocumentos.visualizarAssinaturas']}"
+									url="#{layoutController.getResourceUrlByPath('/imagens/lock.png')}" style="cursor: pointer"
+									styleClass="#{styleClass}" />
+								<f:setPropertyActionListener value="#{row}"
+									target="#{anexarDocumentosView.docTempMostrarAssinaturas}" />
+							</a:commandLink>
+
+						</rich:column>
+
+						<wi:columnOutputText columnId="classificacaoDocumento.descricao"
+							columnHeader="#{infoxMessages['anexarDocumentos.classificacao']}"
+							value="#{row.classificacaoDocumento}" />
+							
+						<wi:column columnId="descricao"
+							columnHeader="#{infoxMessages['anexarDocumentos.descricao']}">
+							<div align="center">
+								<h:outputText value="#{row.descricao}" style="display: block;" />
+								<ui:repeat var="marcador"
+									value="#{row.documentoBin.marcadoresList}">
+									<h:outputText value="#{marcador.codigo} "
+										styleClass="marcadorLabel" />
+								</ui:repeat>
+							</div>
+						</wi:column>
+
+						<wi:columnOutputText columnId="dataInclusao"
+							columnHeader="#{infoxMessages['anexarDocumentos.data']}"
+							value="#{row.dataInclusao}" />
+
+						<wi:columnOutputText columnId="pasta"
+							columnHeader="#{infoxMessages['anexarDocumentos.pasta']}"
+							value="#{row.pasta}" />
+					</wi:dataTable>
+
+					<a:commandButton id="excluirButton" styleClass="buttons"
+						action="#{anexarDocumentosView.onClickExcluirButton()}"
+						onclick="if (confirm('#{infoxMessages['anexarDocumentos.confirmaRemover']}')) {infox.showLoading(); return true;} else return false;"
+						execute="@form"
+						render="editorPanel documentoDiv pageBodyDialogMessage"
+						oncomplete="infox.hideLoading(); desmarcarMarcarTodos();"
+						value="#{infoxMessages['anexarDocumentos.button.excluir']}" />
+
+					<a:commandButton value="Assinar" styleClass="buttons"
+						action="#{anexarDocumentosView.selectSignableDocuments()}"
+						execute="@form" onclick="infox.showLoading();"
+						oncomplete="#{rich:component('assinarDocumentosPopUpPanel')}.show();infox.hideLoading();"
+						render="@this assinarDocumentosPopUpPanelOutput" />
+
+					<a:commandButton id="enviarButton" styleClass="buttons"
+						action="#{anexarDocumentosView.onClickEnviarButton()}"
+						onclick="infox.showLoading();" execute="@form"
+						render="enviarDocumentosPopup"
+						oncomplete="infox.hideLoading(); #{rich:component('enviarDocumentosPopup')}.show();"
+						value="#{infoxMessages['anexarDocumentos.button.enviar']}" />
+				</h:form>
+			</s:div>
+		</rich:collapsiblePanel>
+	</s:div>
+
+	<rich:popupPanel id="assinarDocumentosPopUpPanel" autosized="true"
+		modal="true" maxHeight="600"
+		header="#{infoxMessages['anexarDocumentos.titleModalAssinatura']}">
+		<f:facet name="controls">
+			<h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn"
+				styleClass="mp-close" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+				onmouseup="#{rich:component('assinarDocumentosPopUpPanel')}.hide();" />
+		</f:facet>
+
+		<a:outputPanel id="assinarDocumentosPopUpPanelOutput" layout="block">
+
+			<!-- Painel com documentos que são minuta -->
+			<a:outputPanel layout="block"
+				rendered="#{not empty anexarDocumentosView.documentosMinutas}">
+				<h:outputLabel
+					value="#{infoxMessages['anexarDocumentos.msgSemPermissaoAssinarMinuta']}"
+					style="font-weight:bold;" />
+				<br />
+				<wi:dataTable id="documentosMinutas" showSearchForm="false"
+					hideOrder="true" values="#{anexarDocumentosView.documentosMinutas}"
+					rowId="#{row.id}" showToolbarColumn="false">
+
+					<wi:columnOutputText columnId="classificacao"
+						value="#{row.classificacaoDocumento}"
+						columnHeader="#{infoxMessages['anexarDocumentos.classificacao']}" />
+
+					<wi:columnOutputText columnId="descricao" value="#{row.descricao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.descricao']}" />
+
+					<wi:columnOutputText columnId="data" value="#{row.dataInclusao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.data']}" />
+				</wi:dataTable>
+			</a:outputPanel>
+
+			<!-- Painel com documentos que não serão assinados -->
+			<a:outputPanel layout="block"
+				rendered="#{not empty anexarDocumentosView.documentosNaoAssinaveis}">
+				<h:outputLabel
+					value="#{infoxMessages['anexarDocumentos.msgSemPermissaoAssinarDocumentos']}"
+					style="font-weight:bold;" />
+				<br />
+				<wi:dataTable id="documentosNaoPodemSerAssinados"
+					showSearchForm="false" hideOrder="true"
+					values="#{anexarDocumentosView.documentosNaoAssinaveis}"
+					rowId="#{row.id}" showToolbarColumn="false">
+
+					<wi:columnOutputText columnId="classificacao"
+						value="#{row.classificacaoDocumento}"
+						columnHeader="#{infoxMessages['anexarDocumentos.classificacao']}" />
+
+					<wi:columnOutputText columnId="descricao" value="#{row.descricao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.descricao']}" />
+
+					<wi:columnOutputText columnId="data" value="#{row.dataInclusao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.data']}" />
+				</wi:dataTable>
+			</a:outputPanel>
+
+			<br />
+
+			<!-- Painel com documentos a serem assinados -->
+			<a:outputPanel layout="block">
+				<h:outputText
+					value="#{infoxMessages['anexarDocumentos.msgDocumentosNaoSelecionados']}"
+					style="font-weight:bold;  font-size: 1.2em;"
+					rendered="#{empty anexarDocumentosView.documentosAssinaveis}" />
+
+				<h:outputLabel
+					value="#{infoxMessages['anexarDocumentos.msgDocumentosSeraoAssinados']}"
+					style="font-weight:bold;  font-size: 1.2em;"
+					rendered="#{not empty anexarDocumentosView.documentosAssinaveis}" />
+				<br />
+				<wi:dataTable id="documentosAptosAssinatura" hideOrder="true"
+					rendered="#{not empty anexarDocumentosView.documentosAssinaveis}"
+					showSearchForm="false" style="border-width: 1.5em;"
+					values="#{anexarDocumentosView.documentosAssinaveis}"
+					rowId="#{row.id}" showToolbarColumn="false">
+
+					<wi:columnOutputText columnId="classificacao"
+						value="#{row.classificacaoDocumento}"
+						columnHeader="#{infoxMessages['anexarDocumentos.classificacao']}" />
+
+					<wi:columnOutputText columnId="descricao" value="#{row.descricao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.descricao']}" />
+
+					<wi:columnOutputText columnId="data" value="#{row.dataInclusao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.data']}" />
+				</wi:dataTable>
+			</a:outputPanel>
+
+			<div align="center">
+				<h:form>
+                    <wi:assinador
+                        id="assinarButton"
+                        tokenField="#{anexarDocumentosView.tokenAssinatura}"
+                        assinavelProvider="#{anexarDocumentosView.assinavelProvider}"
+                        execute="@this"
+                        rendered="#{not empty anexarDocumentosView.documentosAssinaveis}"
+                        render="pageBodyDialogMessage documentoDiv assinarDocumentosPopUpPanelOutput"
+                        onbegin="infox.showLoading();"
+                        oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();"
+                        signAction="#{anexarDocumentosView.signDocuments}" />
+
+					<a:commandButton id="cancelarAssinaturaButton" styleClass="buttons"
+						value="#{infoxMessages['button.cancelar']}"
+						onclick="#{rich:component('assinarDocumentosPopUpPanel')}.hide();" />
+				</h:form>
+			</div>
+
+		</a:outputPanel>
+
+	</rich:popupPanel>
+
+	<rich:popupPanel id="enviarDocumentosPopup" resizeable="true"
+		minWidth="350" minHeight="200"
+		header="#{infoxMessages['anexarDocumentos.enviarDocumentos.header']}">
+		<f:facet name="controls">
+			<h:graphicImage id="enviarDocumentosPopupCloseBtn"
+				styleClass="mp-close" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+				onmouseup="#{rich:component('enviarDocumentosPopup')}.hide();" />
+		</f:facet>
+		<ui:param name="faltaAssinatura"
+			value="#{not empty anexarDocumentosView.faltaAssinar}" />
+		<s:div rendered="#{faltaAssinatura}">
+			<h:outputText
+				value="#{infoxMessages['anexarDocumentos.enviarDocumentos.falha']}"
+				style="font-weight: bold; margin-bottom: 1em" />
+			<ui:repeat var="assinatura"
+				value="#{anexarDocumentosView.faltaAssinar}">
+				<br />
+				<h:outputText value="#{assinatura}" />
+				<br />
+			</ui:repeat>
+			<h:commandButton id="closeEnviarDocumentosButton"
+				styleClass="buttons" value="#{infoxMessages['button.cancelar']}"
+				onclick="#{rich:component('enviarDocumentosPopup')}.hide(); return false;" />
+		</s:div>
+
+		<s:div rendered="#{not faltaAssinatura}">
+			<h:outputText
+				rendered="#{empty anexarDocumentosView.documentosParaEnviar}"
+				value="#{infoxMessages['anexarDocumentos.nenhumDocumentoSelecionado']}" />
+			<s:div
+				rendered="#{not empty anexarDocumentosView.documentosParaEnviar}">
+				<h:outputText
+					value="#{infoxMessages['anexarDocumentos.confirmaEnviar']}" />
+				<br />
+				<a:commandButton id="enviarDocumentosAnaliseButton"
+					styleClass="buttons"
+					value="#{infoxMessages['anexarDocumentos.button.enviar']}"
+					action="#{anexarDocumentosView.enviarDocumentosMarcados()}"
+					execute="@this" render="documentoDataTable pageBodyDialogMessage"
+					onclick="infox.showLoading();"
+					oncomplete="#{rich:component('enviarDocumentosPopup')}.hide(); infox.hideLoading(); desmarcarMarcarTodos();" />
+			</s:div>
+		</s:div>
+
+	</rich:popupPanel>
+
+	<rich:popupPanel id="assinaturasDocumento" minWidth="850"
+		minHeight="200" autosized="true" onshow="infox.hideLoading();">
+		<f:facet name="header">
+			<h:outputText
+				value="#{infoxMessages['validacaoDocumentoList.assinaturas.header']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:graphicImage styleClass="d-msg-h-close"
+				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+				onmouseup="#{rich:component('assinaturasDocumento')}.hide()" />
+		</f:facet>
+
+		<s:div id="assinaturaListCont">
+
+			<wi:outputText id="classificacao"
+				label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
+				value="#{anexarDocumentosView.docTempMostrarAssinaturas.classificacaoDocumento}" />
+
+			<wi:outputText id="descricao"
+				label="#{infoxMessages['documentoProcesso.descricao']}"
+				value="#{anexarDocumentosView.docTempMostrarAssinaturas.descricao}" />
+
+			<rich:dataTable
+				value="#{anexarDocumentosView.docTempMostrarAssinaturas.documentoBin.assinaturas}"
+				id="assinaturaDocumentoList" rowKeyVar="row.idAssinatura"
+				rowClasses="zebra-row" styleClass="dtable rf-dt-crud" var="row">
+				<rich:column styleClass="dt-toolbar-col">
+					<f:facet name="header">
+						<h:outputText
+							value="#{infoxMessages['assinaturaDocumento.nomePerfil']}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{row.nomeUsuarioPerfil}"></h:outputText>
+				</rich:column>
+				<rich:column styleClass="dt-toolbar-col">
+					<f:facet name="header">
+						<h:outputText
+							value="#{infoxMessages['assinaturadocumento.dtAssinatura']}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{row.dataAssinatura}"></h:outputText>
+				</rich:column>
+			</rich:dataTable>
+		</s:div>
+		<br />
+		<div align="center">
+			<h:commandButton
+				value="#{infoxMessages['anexarDocumentos.btnFecharVisualizacaoAssinaturas']}"
+				onclick="#{rich:component('assinaturasDocumento')}.hide()"
+				styleClass="buttons"></h:commandButton>
+		</div>
+
+	</rich:popupPanel>
+
+	<script>
+    function checkAllChildrenBoxes(){
+        $('.checkButtonDocumento').prop('checked',$('.checkButtonMarcarTodos').prop('checked'));
+    }
+    
+    function desmarcarMarcarTodos(){
+        $('.checkButtonMarcarTodos').prop('checked',false);
+    }
+    
+    function updateMarcarTodos(checkBox){
+        if(!checkBox.prop('checked')){
+            $('.checkButtonMarcarTodos').prop('checked',false);
+        }else{
+            $('.checkButtonMarcarTodos').prop('checked',isTodosCheckBoxesMarcados());
+        }
+    }
+    function isTodosCheckBoxesMarcados(){
+        checkButtonsArray = $('.checkButtonDocumento');
+        if(!checkButtonsArray)
+            return false;
+
+        for (var i = 0; i &lt; checkButtonsArray.size(); i++) {
+            if(!$(checkButtonsArray[i]).prop('checked'))
+                return false;
+        }
+            return true;
+    }
+</script>
+</ui:composition>

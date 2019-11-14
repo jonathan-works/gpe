@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf">
+    
+     <h:outputScript>
+	      function reload() { 
+	        location = '#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{processoEpaHome.instance.idProcesso}&amp;idTaskInstance=#{taskInstanceHome.taskId}'; 
+	      }
+	 </h:outputScript>
+    
+    <h:form>
+		<a:commandButton value="Criar Comunicação Interna" styleClass="buttons" render="@form" execute="@form"
+			action="#{jsfUtil.applyLastPhaseFlashAction}"
+			oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam?scid=#{conversation.id}','1024');">
+			<f:setPropertyActionListener value="#{true}" target="#{flash.abaComunicacao}" />
+		</a:commandButton>    
+    </h:form>
+    
+    <wi:dataTable id="comunicacaoInternaNaoExpedidaList" tableTitle="Comunicações Internas não expedidas" panelStyle="margin-top: 1em;" 
+    	values="#{comunicacaoInternaView.comunicacoesInternasNaoFinalizadas}" hideOrder="true" showSearchForm="false">
+    	
+    	<ui:define name="headerToolBar" />
+    	
+    	<ui:define name="toolBar">
+    		<h:form>
+    			<a:commandLink render="@form" execute="@form" style="margin-right: 0.3em;"
+    				action="#{jsfUtil.applyLastPhaseFlashAction}"
+					oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam?scid=#{conversation.id}','1024');">
+					<f:setPropertyActionListener value="#{row.id}" target="#{flash.idModeloComunicacao}" />
+					<f:setPropertyActionListener value="#{true}" target="#{flash.abaComunicacao}" />
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" />
+				</a:commandLink>
+				<a:commandLink styleClass="opacityHover" render="comunicacaoInternaNaoExpedidaListPanel" execute="@form" 
+					action="#{comunicacaoInternaView.excluirModelo(row)}">
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Remover Comunicação"/>
+				</a:commandLink>
+    		</h:form>
+    	</ui:define>
+    
+    	<wi:columnOutputText columnId="tipoComunicacao" columnHeader="Tipo Comunicação" value="#{row.tipoComunicacao}"/>
+    	
+    	<wi:column columnId="destinatarios" columnHeader="Destinatários">
+    		<ui:repeat var="destinatario" value="#{row.destinatarios}" varStatus="status">
+    			<div style="display: block;">
+    				<h:outputText value="#{destinatario.nomeDestino} "/>
+    				<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"
+    					rendered="#{not empty destinatario.destino}">
+    					<h:graphicImage id="tooltipLocalizacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+    					<div class="epp-tooltip" style="display:inline;" >
+    						<div class="tooltip-panel">
+    							<h:outputText value="#{destinatario.nome}"/>
+   							</div>
+						</div>
+					</s:div>
+				</div>
+    		</ui:repeat>
+    	</wi:column>
+    	
+    	<wi:column columnId="dataAlteracao" columnHeader="Data de Alteração">
+    		<h:outputText value="#{row.dataAlteracao}">
+    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+    		</h:outputText>
+    	</wi:column>
+    	
+    </wi:dataTable>
+    
+    <wi:dataTable id="comunicacaoInternaList" tableTitle="Comunicações Internas expedidas" values="#{comunicacaoInternaView.comunicacoesInternas}"
+    	hideOrder="true" showSearchForm="false" panelStyle="margin-top: 1em;">
+    	
+    	<ui:define name="headerToolBar" />
+    	
+    	<ui:define name="toolBar">
+    		<h:form>
+    			<a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction}"
+					render="@this" execute="@this"
+					oncomplete="#{fileDownloader.getWindowOpenByIdDocumento(comunicacaoInternaView.getIdDocumentoComunicacao(row))}">
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
+                    <f:setPropertyActionListener value="#{comunicacaoInternaView.getIdDocumentoComunicacao(row)}" target="#{flash.idDocumento}" />
+					<f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
+				</a:commandLink>
+    		</h:form>
+    	</ui:define>
+    
+    	<wi:columnOutputText columnId="numeroProcesso" columnHeader="Número Processo" value="#{row.numeroProcesso}"/>
+    	
+    	<wi:columnOutputText columnId="remetente" columnHeader="Remetente" value="#{row.getMetadado('remetente')}"/>
+    	
+    	<wi:column columnId="destinatarios" columnHeader="Destinatário(s)">
+    		<ui:repeat var="destinatario" value="#{row.getMetadadoList('destinatarioComunicacao')}" >
+    			<div style="display: block;">
+    				<h:outputText value="#{destinatario.value.nomeDestino} "/>
+    				<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"
+    					rendered="#{not empty destinatario.value.destino}">
+    					<h:graphicImage id="tooltipLocalizacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+    					<div class="epp-tooltip" style="display:inline;" >
+    						<div class="tooltip-panel">
+    							<h:outputText value="#{destinatario.value.nome}"/>
+    						</div>
+    					</div>
+    				</s:div>
+    			</div>
+    		</ui:repeat>
+    	</wi:column>
+    	
+    	<wi:columnOutputText columnId="tipoComunicacao" columnHeader="Tipo da Comunicação" 
+    		value="#{row.getMetadado('destinatarioComunicacao').value.modeloComunicacao.tipoComunicacao}"/>
+    	
+    	<wi:column columnId="tarefa(s)" columnHeader="Tarefas">
+    		<ui:repeat var="task" value="#{comunicacaoInternaView.getTaskNames(row)}" varStatus="status">
+    			<h:outputText value="#{task}" style="display: block;"/>
+    		</ui:repeat>
+    	</wi:column>
+    	
+    	<wi:columnDateTime columnId="dataInicio" columnHeader="Data de Início" value="#{row.dataInicio}" showTime="true"/>
+    	<wi:columnDateTime columnId="dataFim" columnHeader="Data de Fim" value="#{row.dataFim}"/>
+    	
+    </wi:dataTable>
+    
+</ui:composition>

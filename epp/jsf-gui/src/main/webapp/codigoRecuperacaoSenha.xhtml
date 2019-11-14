@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/minimal.xhtml">
+
+    <ui:define name="title">#{infoxMessages['login.esqueciSenhaBtn']}</ui:define>
+    <ui:param name="showMenu" value="false" />
+    <ui:param name="hideHelpBanner" value="true" />
+    <ui:param name="showDialogMessage" value="true" />
+
+    <ui:define name="body">
+        <p:panel header="#{infoxMessages['login.msgSolicitarCodigo']}">
+            <h:form id="codigoRecuperacaoSenhaForm">
+                <div>
+                    <wi:inputText id="loginInput" label="#{infoxMessages['login.nomeUsuario']}"
+                        required="true" value="#{recuperacaoSenhaView.login}" />
+                </div>
+
+                <div>
+                    <p:captcha id="captcha" label="Captcha" language="pt_BR"
+                        validatorMessage="#{infoxMessages['captcha.incorreto']}"
+                        requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+                    <p:messages for="captcha" severity="error"/>
+                </div>
+
+                <div>
+                    <a:commandButton id="submitButton" styleClass="buttons"
+                        execute="@form" render="@form pageBodyDialogMessage"
+                        action="#{jsfUtil.applyLastPhaseFlashAction}"
+                        onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
+                        actionListener="#{recuperacaoSenhaView.requisitarCodigoRecuperacao()}"
+                        value="#{infoxMessages['login.requisitarCodigoSenhaBtn']}">
+                        <f:setPropertyActionListener value="#{recuperacaoSenhaView.login}" target="#{flash.login}" />
+                    </a:commandButton>
+                    <h:button id="voltarButtn"  styleClass="buttons"
+                        value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}"
+                        outcome="/login.seam" />
+                    <h:button id="jaPossuoCodigo" styleClass="buttons"
+                        value="#{infoxMessages['login.jaPossuoCodigo']}"
+                        outcome="/recuperacaoSenha.seam" />
+                </div>
+            </h:form>
+            <ui:remove>
+            <div>
+                <h3>#{recuperacaoSenhaView.login}</h3>
+                <form id="formHidden" target="/codigoRecuperacaoSenha.seam" method="post">
+                    <h:inputHidden id="hidden" value="asdf" />
+                    <a href="javascript:{}" onclick="document.getElementById('formHidden').submit();">asdf</a>
+                </form>
+            </div>
+            </ui:remove>
+        </p:panel>
+    </ui:define>
+</ui:composition>

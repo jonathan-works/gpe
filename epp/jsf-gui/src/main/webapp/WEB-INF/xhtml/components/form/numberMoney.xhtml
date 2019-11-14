@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	 xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://richfaces.org/a4j"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:f="http://java.sun.com/jsf/core"
+	 xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:rich="http://richfaces.org/rich"
+	 xmlns:s="http://jboss.org/schema/seam/taglib"
+	 xmlns:wi="http://www.itx.com.br/jsf">
+	
+		<ui:param
+		 name="style"
+		 value="#{empty style ? props.style : style}" />
+		<ui:param
+		 name="maxlength"
+		 value="#{empty maxlength ? props.maxlength : maxlength}" /> 
+		 
+		<wi:inputMoney id="#{id}" value="#{value}"
+			 readonly="#{readonly}"
+			 disabled="#{disabled}"
+			 size="#{size}"
+			 styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
+			 onblur="#{onblur}"
+			 onchange="#{onchange}"
+			 onkeypress="#{onkeypress}"
+			 onkeyup="#{onkeyup}"
+			 nullable="true"
+			 maxlength="20">
+			 <ui:insert />
+		</wi:inputMoney>
+		
+	
+</ui:composition>

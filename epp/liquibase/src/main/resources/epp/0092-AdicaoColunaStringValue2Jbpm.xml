@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="victorpasqualino" id="1">
+        <addColumn tableName="jbpm_variableinstance">
+            <column name="stringvalue2_" type="nvarchar(2000)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="victorpasqualino" id="2">
+        <addColumn tableName="jbpm_log">
+            <column name="oldstringvalue2_" type="nvarchar(2000)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="victorpasqualino" id="3">
+        <addColumn tableName="jbpm_log">
+            <column name="newstringvalue2_" type="nvarchar(2000)"/>
+        </addColumn>
+    </changeSet>
+    
+</databaseChangeLog>

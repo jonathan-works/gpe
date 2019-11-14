@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    <ui:define name="title">#{infoxMessages['pessoaFisica.titlePage']}</ui:define>
+    <ui:param
+        name="home"
+        value="#{pessoaFisicaCrudAction}" />
+    <ui:define name="searchGrid">
+        <wi:dataTable
+            values="#{pessoaFisicaList.list(15)}"
+            bean="#{pessoaFisicaList}"
+            tableTitle="#{infoxMessages['pessoaFisica.tableTitle']}"
+            id="pessoaFisicaList"
+            rowId="#{row.idPessoa}">
+            <ui:define name="searchForm">
+                <wi:searchForm
+                    formId="pesquisarPessoaFisicaForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText
+                        id="cpf"
+                        size="15"
+                        maxlength="15"
+                        value="#{pessoaFisicaList.entity.cpf}"
+                        label="#{infoxMessages['pessoaFisica.cpf']}"
+                        styleClass="inputCpf">
+                    </wi:inputText>
+                    <wi:mask
+                        selector=".inputCpf"
+                        mask="999.999.999-99" />
+                    <wi:inputText
+                        id="nome"
+                        value="#{pessoaFisicaList.entity.nome}"
+                        label="#{infoxMessages['pessoaFisica.nome']}" />
+                    <wi:inputDate
+                        id="dataNascimento"
+                        value="#{pessoaFisicaList.entity.dataNascimento}"
+                        label="#{infoxMessages['pessoaFisica.dataNascimento']}" />
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{pessoaFisicaList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText
+                columnId="cpf"
+                columnHeader="#{infoxMessages['pessoaFisica.cpf']}"
+                value="#{row.cpf}">
+                <ui:define name="outputText">
+                    <f:converter converterId="cpfConverter"/>
+                </ui:define>
+            </wi:columnOutputText>
+            <wi:columnOutputText
+                columnId="nome"
+                columnHeader="#{infoxMessages['pessoaFisica.nome']}"
+                value="#{row.nome}" />
+            <wi:columnOutputText
+                columnId="dataNascimento"
+                columnHeader="#{infoxMessages['pessoaFisica.dataNascimento']}"
+                value="#{row.dataNascimento}">
+                <ui:define name="outputText">
+                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                </ui:define>
+            </wi:columnOutputText>
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+    <ui:define name="form">
+        <wi:dataForm
+            formId="pessoaFisicaForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputCpf
+                id="cpf"
+                value="#{pessoaFisicaCrudAction.instance.cpf}"
+                label="#{infoxMessages['pessoaFisica.cpf']}"
+                required="true" />
+            <wi:inputText
+                id="nome"
+                value="#{pessoaFisicaCrudAction.instance.nome}"
+                label="#{infoxMessages['pessoaFisica.nome']}"
+                required="true" />
+            <wi:inputDate
+                id="dataNascimento"
+                value="#{pessoaFisicaCrudAction.instance.dataNascimento}"
+                label="#{infoxMessages['pessoaFisica.dataNascimento']}"
+                required="true" />
+            <wi:selectSituacaoRadio
+                id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{pessoaFisicaCrudAction.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
+</ui:composition>

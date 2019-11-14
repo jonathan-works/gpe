@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param
+        name="template"
+        value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+    <ui:param
+        name="widthDiv"
+        value="200px" />
+    <ui:param
+        name="datePattern"
+        value="#{wi:get(pattern, 'dd/MM/yyyy')}" />
+    <ui:param
+        name="maskDate"
+        value="#{datePattern.replaceAll('[a-zA-Z]', '9')}" />
+    <h:outputScript
+        library="js"
+        name="components.js" />
+    <s:decorate
+        id="#{id}Decoration"
+        template="#{template}"
+        styleClass="decoration-div inputDate-div #{wi:get(decorationClass,'')}"
+        rendered="#{wi:get(rendered, true)}">
+        <ui:define name="label">#{label}</ui:define>
+        <rich:calendar
+            id="#{id}"
+            direction="auto"
+            enableManualInput="#{wi:get(enableManualInput, true)}"
+            disabled="#{wi:get(disabled, false)}"
+            readonly="#{wi:get(readonly, false)}"
+            required="#{required}"
+            mode="#{mode}"
+            value="#{value}"
+            showWeeksBar="#{wi:get(showWeeksBar, false)}"
+            styleClass="date"
+            defaultTime="#{defaultTime}"
+            resetTimeOnDateSelect="#{empty defaultTime ? false : true}"
+            inputStyle="#{datePattern.contains('HH')? 'width:130px;' : 'width:100px;'}"
+            inputClass="#{id}maskDate date"
+            datePattern="#{datePattern}"
+            oninputblur="validarData(this); #{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}#{oninputblur}"
+            onchanged="#{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}#{onchanged}"
+            reRender="#{reRender}"
+            dataModel="#{dataModel}"
+            showApplyButton="#{wi:get(showApplyButton, false)}"
+            popup="#{empty popup ? 'true' : popup}">
+            <c:if test="#{wi:get(future, false)}">
+                <f:validator validatorId="futureDateOnlyValidator" />
+            </c:if>
+            <c:if test="#{wi:get(past, false)}">
+                <f:validator validatorId="pastDateValidator" />
+            </c:if>
+            <c:if test="#{(not empty startDate) or (not empty endDate) or (not empty errorMessage)}">
+                <f:validator validatorId="dateRangeValidator" />
+            </c:if>
+            <c:if test="#{not empty startDate}">
+                <f:attribute
+                    name="startDate"
+                    value="#{startDate}" />
+            </c:if>
+            <c:if test="#{not empty endDate}">
+                <f:attribute
+                    name="endDate"
+                    value="#{endDate}" />
+            </c:if>
+            <c:if test="#{not empty errorMessage}">
+                <f:attribute
+                    name="errorMessage"
+                    value="#{errorMessage}" />
+            </c:if>
+            <ui:insert />
+        </rich:calendar>
+        <c:if test="#{wi:get(enableManualInput, true)}">
+            <wi:mask
+                selector=".#{id}maskDate"
+                mask="#{maskDate}" />
+        </c:if>
+    </s:decorate>
+</ui:composition>

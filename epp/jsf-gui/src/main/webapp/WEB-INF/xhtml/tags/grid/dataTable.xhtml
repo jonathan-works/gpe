@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <s:div
+    id="#{id}SearchForm"
+    styleClass="dtable-search-form #{searchFormStyleClass}"
+    style="#{searchFormStyle}"
+    rendered="#{empty showSearchForm ? true : showSearchForm}">
+    <ui:insert name="searchForm" />
+  </s:div>
+  <a:region>
+    <rich:panel
+      rendered="#{wi:get(showGrid, true)}"
+      header="#{tableTitle}"
+      id="#{id}Panel"
+      bodyClass="dtable-p-b #{bodyClass}"
+      style="#{panelStyle}"
+      styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'}">
+      <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key" rowClasses="#{rowClasses} zebra-row" 
+        styleClass="dtable rf-dt-crud #{styleClass}" onrowmouseup="#{onrowmouseup}" var="row" rendered="#{empty rendered? 'true' : rendered}" >
+        <rich:column styleClass="dt-toolbar-col" rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
+          			 rowspan="#{empty columnRowspan ? '1':columnRowspan}">
+          <f:facet name="header">
+            <s:div>
+              <ui:insert name="headerToolBar">
+                <ui:param name="home" value="#{wi:get(home, '')}"/>
+                <wi:toolBarReport
+                  rendered="#{systemFacade.exportarPDF()}"/>
+                <wi:toolBarReportExcel
+                  rendered="#{systemFacade.exportarXLS() and not empty bean.template}"
+                  action="#{bean.exportarXLS()}"/>
+              </ui:insert>
+            </s:div>
+          </f:facet>
+          <ui:insert name="toolBar">
+            <wi:toolBarEdit id="#{id}edit" />
+            <wi:toolBarInactive />
+          </ui:insert>
+        </rich:column>
+        <ui:insert />
+        <f:facet name="noData">
+        	<div align="left">
+        		#{empty noDataLabel ? infoxMessages['list.defaultNoDataLabel']: noDataLabel }
+        	</div>
+        </f:facet>
+      </rich:dataTable>
+      <div style="text-align:right;">
+      <h:outputText value="#{infoxMessages['list.resultPrefix']} #{not empty bean ? bean.resultCount : values.size()} #{infoxMessages['list.resultSufix']}"
+         rendered="#{ ( empty rendered ? 'true' : rendered ) and (wi:get(showGridCount, true) )}"/>
+      </div>
+      <s:div rendered="#{bean.previousExists or bean.nextExists}" style="#{(empty rendered ? true : rendered) and (wi:get(showGridCount, true) ) ? 'margin-top:-1em;':''}">
+        <ui:fragment rendered="#{empty inForm ? false : inForm}">
+          <ui:include src="inputNumberSlider.xhtml" />
+        </ui:fragment>
+        <h:form style="text-align: initial" rendered="#{empty inForm ? true : not inForm}">
+          <ui:include src="inputNumberSlider.xhtml" />
+        </h:form>
+      </s:div>
+      <ui:insert name="conteudoAdicional" />
+    </rich:panel>
+    <h:outputScript>
+(function(tableId){
+    'use strict';
+    var headers=[];
+    function visitNodeList(nodeList, func){
+        'use strict';
+        for(var i=0,l=nodeList.length;i&lt;l;i++){
+            func.apply(this,[nodeList.item(i),i]);
+        }
+    }
+    function visitHeaderCell(cell,i){
+        'use strict';
+        headers[i]=cell.textContent.trim();
+    }
+    function visitBodyCell(cell, i){
+        'use strict';
+        if (!cell.querySelector('.rf-dt-c-shdr-c')){
+            var localHeader = document.createElement('span');
+            localHeader.classList.add('rf-dt-c-shdr-c');
+            localHeader.textContent=headers[i%headers.length];
+            cell.insertBefore(localHeader, cell.firstChild);
+        }
+    }
+    function visitTable(table){
+        'use strict';
+        visitNodeList(table.querySelectorAll('.rf-dt-thd .rf-dt-shdr-c'), visitHeaderCell);
+        visitNodeList(table.querySelectorAll('.rf-dt-b .rf-dt-r .rf-dt-c'), visitBodyCell);
+    }
+    var table = document.getElementById(tableId);
+    if (table) visitTable(table);
+})("#{rich:clientId(id)}");
+    </h:outputScript>
+  </a:region>
+</ui:composition>

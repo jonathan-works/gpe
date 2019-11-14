@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet author="gabriel" dbms="mssql, postgresql, oracle" id="1">
+        <addColumn tableName="tb_fluxo">
+            <column name="in_bpmn" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="ds_bpmn_xml" type="NCLOB" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="2">
+        <createTable tableName="tb_access_token">
+            <column name="id_access_token" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="ds_token" type="uuid">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="tp_token_requester" type="NVARCHAR(50)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createSequence sequenceName="sq_access_token" minValue="1" incrementBy="1" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="3">
+        <addColumn tableName="tb_fluxo">
+            <column name="ds_svg" type="NCLOB" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="4">
+        <addColumn tableName="tb_fluxo">
+            <column name="ds_bpmn" type="NCLOB" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="5" dbms="mssql">
+        <dropDefaultValue columnDataType="boolean" columnName="in_bpmn" tableName="tb_fluxo" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="6">
+        <preConditions>
+            <or>
+                <not><dbms type="mssql" /></not>
+                <changeSetExecuted author="gabriel" id="5" changeLogFile="epp/0077-ModeladorWeb.xml" />
+            </or>
+        </preConditions>
+        <dropColumn tableName="tb_fluxo" columnName="in_bpmn" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="7">
+        <dropColumn tableName="tb_fluxo" columnName="ds_bpmn_xml" />
+    </changeSet>
+
+    <changeSet author="gabriel" id="8">
+        <addColumn tableName="tb_fluxo">
+            <column name="nr_version" type="bigint" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gabriel" id="9">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="8" changeLogFile="epp/0077-ModeladorWeb.xml" />
+        </preConditions>
+        <update tableName="tb_fluxo">
+            <column name="nr_version" value="0" />
+        </update>
+    </changeSet>
+
+    <changeSet author="gabriel" id="10">
+        <preConditions>
+            <changeSetExecuted author="gabriel" id="9" changeLogFile="epp/0077-ModeladorWeb.xml" />
+        </preConditions>
+
+        <addNotNullConstraint tableName="tb_fluxo" columnName="nr_version" columnDataType="bigint" />
+    </changeSet>
+
+    <changeSet author="avner" id="10">
+        <addColumn tableName="tb_fluxo">
+            <column name="ds_svg_exec" type="NCLOB" />
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

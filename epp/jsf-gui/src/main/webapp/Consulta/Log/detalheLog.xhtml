@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:f="http://java.sun.com/jsf/core" id="html">
+<h:head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <h:outputStylesheet target="head">
+    .rf-dt-thd {
+      background-color:#D4F2D6;
+    }
+    .rf-dt {
+      width:100%;
+    }
+    .btn-cont {
+      text-align:center;
+    }
+  </h:outputStylesheet>
+</h:head>
+<h:body id="body">
+  <rich:dataTable
+    value="#{entidadeLogList.getEntityLogDetailList(param.idPesquisa)}"
+    var="var">
+    <rich:column>
+      <f:facet name="header">#{infoxMessages['log.nomeAtributo']}</f:facet>
+      <h:outputText value="#{var.nomeAtributo}" />
+    </rich:column>
+    <rich:column>
+      <f:facet name="header">#{infoxMessages['log.valorAnterior']}</f:facet>
+      <h:outputText
+        value="#{var.valorAnterior == null ? 'null' : var.valorAnterior}"
+        escape="!var.isBinario()" />
+    </rich:column>
+    <rich:column>
+      <f:facet name="header">#{infoxMessages['log.valorAtual']}</f:facet>
+      <h:outputText
+        value="#{var.valorAtual == null ? 'null' : var.valorAtual}"
+        escape="!var.isBinario()" />
+    </rich:column>
+  </rich:dataTable>
+
+  <div class="btn-cont">
+    <button id="btnimprimir" class="noprint" onclick="print();">#{infoxMessages['button.print']}</button>
+  </div>
+</h:body>
+</html>

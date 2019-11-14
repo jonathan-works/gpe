@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <ui:param
+    name="template"
+    value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+  <ui:param
+    name="noSelectionLabel"
+    value="#{ empty showLabel ? (empty noSelectionLabel ? (showLabelTodos ? messages['crud.select.all'] :messages['crud.select.select'] ) : noSelectionLabel) : showLabel }" />
+  <s:decorate
+    id="#{id}Decoration"
+    template="#{template}"
+    styleClass="decoration-div sel-one-menu-div #{wi:get(decorationClass,'')}"
+    rendered="#{wi:get(rendered, true)}">
+    <ui:define name="label">#{label}</ui:define>
+    <h:selectOneMenu
+      id="#{id}"
+      value="#{value}"
+      styleClass="input select #{wi:get(styleClass,'')}"
+      required="#{required}"
+      onchange="#{onchange}"
+      readonly="#{readonly}"
+      style="#{selectStyle}"
+      disabled="#{disabled}">
+      <c:if test="#{not empty valueItems}">
+        <f:selectItem
+          noSelectionOption="true"
+          itemValue="#{null}"
+          itemLabel="#{noSelectionLabel}" />
+        <f:selectItems value="#{valueItems}" var="item" itemLabel="#{empty optionLabel ? item : optionLabel}" 
+        	itemValue="#{empty optionValue ? item : optionValue}" />
+      </c:if>
+      <c:if test="#{empty valueItems}">
+        <s:selectItems
+          value="#{items}"
+          var="item"
+          styleClass="input select #{wi:get(styleClass,'')}"
+          itemValue="#{empty itemValue ? item : itemValue}"
+          label="#{empty optionExpression ? (empty optionLabel ? item : optionLabel) : selectItemFunctions.getSelectExpressionSelectItem(optionExpression, item)}"
+          hideNoSelectionLabel="#{hideNoSelectionLabel}"
+          noSelectionLabel="#{noSelectionLabel}"
+          disabled="#{wi:get(inactiveCond,'')}" />
+      </c:if>
+      <ui:insert />
+    </h:selectOneMenu>
+  </s:decorate>
+</ui:composition>

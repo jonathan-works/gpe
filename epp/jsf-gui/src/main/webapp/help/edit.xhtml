@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:rich="http://richfaces.org/rich"
+  template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+  <ui:define name="title">#{infoxMessages['ajuda.titlePage']}</ui:define>
+  <ui:define name="baseBody">
+    <s:div id="formAjuda">
+      <wi:dataForm
+        formId="ajudaForm"
+        formTitle="#{infoxMessages['ajuda.text']}">
+        <div style="display: inline-block;">
+            <wi:editor
+              id="texto"
+              label="#{infoxMessages['ajuda.text']}"
+              width="660"
+              height="450"
+              value="#{ajudaCrudAction.instance.texto}">
+              <f:converter converterId="internalLinkHelpEditorConverter" />
+            </wi:editor>
+            <div />
+            <wi:commandButton
+              id="ajudaPersistButton"
+              action="ajudaCrudAction.save"
+              value="#{infoxMessages['crud.update']}"
+              reRender="gridAjuda, formAjudaDialogMessage"
+              oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})">
+            </wi:commandButton>
+            <ui:define name="buttons">
+            </ui:define>
+        </div>
+        <s:div styleClass="lateral-editor-ajuda">
+          <wi:imageUpload imageBean="#{helpFileUploader}" editorId="texto" useBase64="true" />
+          <s:div
+            id="gridAjuda"
+            styleClass="padding-top-5">
+            <wi:dataTable
+              values="#{historicoAjudaList.list(15)}"
+              bean="#{historicoAjudaList}"
+              tableTitle="#{infoxMessages['ajuda.historico']}"
+              panelStyleClass="grid-lateral-editor-ajuda"
+              id="historicoAjudaId"
+              showGrid="#{historicoAjudaList.isExibGrid()}"
+              rowId="#{row.idHistoricoAjuda}"
+              showSearchForm="false"
+              inForm="true">
+              <ui:define name="headerToolBar" />
+              <wi:columnDateTime
+                columnId="dataRegistro"
+                columnHeader="#{infoxMessages['ajuda.historico.data']}"
+                value="#{row.dataRegistro}"
+                showTime="true" />
+              <wi:columnOutputText
+                columnId="usuario"
+                columnHeader="#{infoxMessages['ajuda.historico.usuario']}"
+                value="#{row.usuario}" />
+              <ui:define name="toolBar">
+                <wi:toolBar
+                  id="recuperarRevisao"
+                  url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
+                  title="#{infoxMessages['ajuda.historico.recuperar']}"
+                  render="formAjuda, gridAjuda"
+                  action="ajudaCrudAction.recuperar(row)"
+                  limitToList="true"
+                  oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})" />
+                <wi:toolBarTextPreview value="#{row.texto}" />
+              </ui:define>
+            </wi:dataTable>
+          </s:div>
+        </s:div>
+        <wi:messages formId="formAjuda"
+          			 rendered="true"
+          			 globalOnly="true" />
+      </wi:dataForm>
+    </s:div>
+  </ui:define>
+</ui:composition>

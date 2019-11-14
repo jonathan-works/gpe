@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <h:outputScript library="js" name="util.js" />
+
+    <a:commandButton id="#{id}" action="#{elFunctions.invokeMethod(action)}"
+        tabindex="#{tabindex}" rendered="#{wi:get(rendered,true)}"
+        limitRender="true" execute="#{execute}"
+        type="#{buttonType}" onmouseup="#{onmouseup}" onbegin="infox.showLoading();"
+        onclick="#{onclick}"
+        oncomplete="infox.hideLoading();#{oncomplete}" value="#{value}"
+        render="#{reRender}" disabled="#{disabled}"
+        immediate="#{immediate}" actionListener="#{elFunctions.invokeMethod(actionListener)}"
+        styleClass="buttons #{wi:get(styleClass, '')}">
+        <ui:insert />
+    </a:commandButton>
+
+</ui:composition>

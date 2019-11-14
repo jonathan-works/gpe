@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <h:outputScript library="js" name="jquery.maskedinput.js" />
+
+    <ui:param name="id" value="##{id}" />
+    <ui:param name="fixed"
+        value="#{fixed ? (',{').concat('fixed:true').concat('}') : '' }" />
+
+    <rich:jQuery selector="#{wi:get(selector, id)}" timing="domready"
+        query="mask('#{mask}'#{fixed})" />
+
+</ui:composition>

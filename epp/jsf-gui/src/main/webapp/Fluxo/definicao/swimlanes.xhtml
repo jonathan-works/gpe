@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+	<rich:dataTable var="row" value="#{swimlaneFitter.swimlanes}" id="swimlanesTable" style="display: inline-block">
+		<rich:column styleClass="dr-dt-sh">
+			<h:form>
+				<a:commandLink action="#{swimlaneFitter.removeSwimlane(row)}"
+					execute="@this"	onclick="return confirm('#{infoxMessages['processBuilder.confirm']}')"
+					render="swimlanesTable" limitRender="true">
+					<h:graphicImage	title="#{infoxMessages['processBuilder.removeSwimlane']}"
+						url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+						styleClass="opacityHover pointer" />
+				</a:commandLink>
+			</h:form>
+        </rich:column>
+        
+        <rich:column>
+			<rich:column>
+				<f:facet name="header">#{infoxMessages['processBuilder.swimlanes']}</f:facet>
+				<h:form>
+					<a:commandLink action="#{swimlaneFitter.setCurrentSwimlane(row)}" onbegin="infox.showLoading();"
+						execute="@this" render="configuracaoSwimlanePanel" styleClass="link" limitRender="true"
+						oncomplete="PF('configuracaoSwimlanePanel').show(); infox.hideLoading();">
+						<h:outputText value="#{row.swimlane.name}"/>
+					</a:commandLink>
+				</h:form>
+			</rich:column>
+		</rich:column>
+	</rich:dataTable>
+</ui:composition>
