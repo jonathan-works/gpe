@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.com.infox</groupId>
+  <artifactId>bom</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+  <name>bom-infox</name>
+  <url>http://www.infox.com.br</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.build.timestamp.format>yyyy-MM-dd_HH-mm-ss</maven.build.timestamp.format>
+  </properties>
+
+  <organization>
+    <name>Infox</name>
+    <url>http://www.infox.com.br</url>
+  </organization>
+
+  <distributionManagement>
+    <repository>
+      <id>infox-releases</id>
+      <name>Infox Releases</name>
+      <url>http://ci.infox.intranet:8081/nexus/content/repositories/infox-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>infox-snapshots</id>
+      <name>Infox Snapshots</name>
+      <url>http://ci.infox.intranet:8081/nexus/content/repositories/infox-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+</project>

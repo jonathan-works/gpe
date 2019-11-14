@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>infox-commons</artifactId>
+	<name>Infox Commons</name>
+	<description>List, Maps and other collections</description>
+  
+  <parent>
+    <groupId>br.com.infox</groupId>
+    <artifactId>infox-framework</artifactId>
+    <version>0.0.2</version>
+  </parent>
+  
+	<dependencies>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j.version}</version>
+      <scope>compile</scope>
+    </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<type>jar</type>
+			<scope>test</scope>
+      <version>${junit.version}</version>
+		</dependency>
+	</dependencies>
+
+	<organization>
+		<name>Infox</name>
+		<url>http://www.infox.com.br</url>
+	</organization>
+
+</project>

@@ -23,14 +23,14 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>oracle</groupId>
-            <artifactId>ojdbc</artifactId>
-            <version>6</version>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>19.3.0.0</version>
         </dependency>
-        <dependency>
+	<dependency>
             <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>7.4.1.jre8</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -90,7 +90,7 @@
                             <outputProperty>liquibase.classpath</outputProperty>
                             <prependGroupId>false</prependGroupId>
                             <prefix>lib</prefix>
-                            <excludeArtifactIds>ojdbc,sqljdbc4,postgresql,liquibase-core,lombok</excludeArtifactIds>
+                            <excludeArtifactIds>ojdbc8,mssql-jdbc,postgresql,liquibase-core,lombok</excludeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>
@@ -102,7 +102,7 @@
                             <outputProperty>liquibase.jdbc.oracle.classpath</outputProperty>
                             <prependGroupId>false</prependGroupId>
                             <prefix>lib</prefix>
-                            <includeArtifactIds>ojdbc</includeArtifactIds>
+                            <includeArtifactIds>ojdbc8</includeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>
@@ -114,7 +114,7 @@
                             <outputProperty>liquibase.jdbc.sqlserver.classpath</outputProperty>
                             <prependGroupId>false</prependGroupId>
                             <prefix>lib</prefix>
-                            <includeArtifactIds>sqljdbc4</includeArtifactIds>
+                            <includeArtifactIds>mssql-jdbc</includeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>

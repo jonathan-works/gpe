@@ -1,0 +1,58 @@
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.com.infox</groupId>
+  <artifactId>infox-framework</artifactId>
+  <version>0.0.2</version>
+  <name>Infox Framework</name>
+  <packaging>pom</packaging>
+
+<properties>
+  <log4j.version>2.1</log4j.version>
+  <junit.version>4.12</junit.version>
+  <jboss.javaee.version>1.0.0.Final</jboss.javaee.version>
+</properties>
+  <modules>
+    <module>commons</module>
+    <module>certificateSignature/</module>
+    <module>access-control</module>
+    <module>mail</module>
+    <module>core</module>
+  </modules>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.18</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.1</version>
+          <configuration>
+            <source>1.7</source>
+            <target>1.7</target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <distributionManagement>
+    <repository>
+      <id>infox-releases</id>
+      <name>Infox Releases</name>
+      <url>http://hudson.infox.intranet:8081/nexus/content/repositories/infox-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>infox-snapshots</id>
+      <name>Infox Snapshots</name>
+      <url>http://hudson.infox.intranet:8081/nexus/content/repositories/infox-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+</project>

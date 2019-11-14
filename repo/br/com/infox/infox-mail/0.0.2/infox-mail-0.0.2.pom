@@ -1,0 +1,46 @@
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>infox-mail</artifactId>
+  <name>Infox Mail</name>
+  <packaging>jar</packaging>
+  <description>Infox Module for e-Mailing</description>
+
+  <parent>
+    <groupId>br.com.infox</groupId>
+    <artifactId>infox-framework</artifactId>
+    <version>0.0.2</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>br.com.infox</groupId>
+      <artifactId>infox-commons</artifactId>
+      <version>${parent.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec</groupId>
+      <artifactId>jboss-javaee-6.0</artifactId>
+      <version>1.0.0.Final</version>
+      <type>pom</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+      <version>${junit.version}</version>
+    </dependency>
+  </dependencies>
+
+  <organization>
+    <name>Infox</name>
+    <url>http://www.infox.com.br</url>
+  </organization>
+
+</project>
