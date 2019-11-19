@@ -1,0 +1,46 @@
+#!/usr/bin/env groovy
+pipeline {
+    agent none
+
+    triggers {
+        cron('0 12 * * *')
+    }
+
+    environment {
+        projectName = 'ePP'
+        trunkBranchName = 'master'
+    }
+    stages {
+
+        stage('Compilação, testes unitários, package e deploy para o nexus') {
+            agent any
+            tools {
+                maven 'Maven'
+            }
+            steps {
+                script {
+                    sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
+                    sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
+                }
+            }
+            post {
+                always {
+                    junit testResults: '**/target/surefire-reports/TEST-*.xml'
+
+                    recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
+                    recordIssues enabledForFailure: true, tool: checkStyle()
+                    // recordIssues enabledForFailure: true, tool: spotBugs()
+                    recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
+                    recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
+                    deleteDir()
+                }
+            }
+        }
+
+    }
+
+}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2a121df07... Jenkinsfile para builds de estabilização
