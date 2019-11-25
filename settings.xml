@@ -41,16 +41,7 @@
       </properties>
     </profile>
   </profiles>
-  <proxies>
-    <proxy>
-      <id>optional</id>
-      <active>true</active>
-      <protocol>http</protocol>
-      <host>wpad.infox.intranet</host>
-      <port>8080</port>
-      <nonProxyHosts>172.*|*.infox.intranet|localhost|127.0.0.1</nonProxyHosts>
-    </proxy>
-  </proxies>
+
   <activeProfiles>
     <activeProfile>epp</activeProfile>
   </activeProfiles>
