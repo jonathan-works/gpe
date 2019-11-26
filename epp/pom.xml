@@ -9,10 +9,10 @@
     </parent>
 
     <groupId>br.com.infox.epp</groupId>
-    <artifactId>epp-builder</artifactId>
+    <artifactId>epp-parent</artifactId>
     <version>3.2.27-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>epp-builder</name>
+    <name>epp-parent</name>
 
     <profiles>
         <profile>
