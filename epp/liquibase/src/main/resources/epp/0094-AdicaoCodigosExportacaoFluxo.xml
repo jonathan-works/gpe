@@ -152,7 +152,7 @@
     </changeSet>
 
 	<changeSet author="avner" id="13-2">
-    	<preConditions onFail="CONTINUE">
+    	<preConditions onFail="MARK_RAN">
     		<changeSetExecuted changeLogFile="epp/0094-AdicaoCodigosExportacaoFluxo.xml" author="marialuisa" id="13" />
     		<not>
     			<tableExists tableName="tb_task_expiration" />
