@@ -16,6 +16,10 @@
     <dependencies>
         <dependency>
             <groupId>br.com.infox</groupId>
+            <artifactId>liquibase-executor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.infox</groupId>
             <artifactId>liquibase-ext</artifactId>
         </dependency>
         <dependency>
@@ -39,6 +43,7 @@
         </dependency>
     </dependencies>
     <properties>
+        <liquibase.module.exec.args>-md epp</liquibase.module.exec.args>
         <liquibase.classpath.mainArtifact>lib/${project.build.finalName}.${project.packaging}</liquibase.classpath.mainArtifact>
         <liquibase.changeLogFile>epp/master.xml</liquibase.changeLogFile>
         <liquibase.changeLogFile.bin>epp-bin/master.xml</liquibase.changeLogFile.bin>
