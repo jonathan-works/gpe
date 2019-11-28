@@ -49,7 +49,7 @@ public class OracleSafeNamesTest {
             try {
                 String path = file.getPath();
                 if (path.endsWith(JAVA_SUFFIX)) {
-                    String className=path.substring(ROOT_FOLDER.length()+1, path.indexOf(JAVA_SUFFIX)).replace('/', '.');
+                    String className=path.substring(ROOT_FOLDER.length()+1, path.indexOf(JAVA_SUFFIX)).replace(File.separatorChar, '.');
                     Class<?> loadedClass = loader.loadClass(className);
                     if (loadedClass.getAnnotation(Table.class) != null) {
                         set.add(loadedClass);
