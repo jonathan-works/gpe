@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+
+        <div class="epp-new-layout-header--epp-new-menu-area">
+            <c:if test="#{showMenu and not wi:get(flash.hideMenu,  false)}">
+                <wi:icon styleClass="epp-new-menu-itm-action action-icon" type="mdl"
+                    text="Menu" value="menu"
+                    onclick="(function(e){ var drawer = document.querySelector('.epp-new-layout-drawer'); drawer.classList.contains('ui-active') ? drawer.classList.remove('ui-active') : drawer.classList.add('ui-active')  }).bind(this)(event)" />
+            </c:if>
+
+            <h:graphicImage title="Logo" styleClass="epp-new-layout-header--logo"
+            	url="#{layoutController.getResourceUrl('LOGO_LOGIN')}" />
+        </div>
+
+        <infox:div id="epp-new-layout-header-user-epp-new-menu" rendered="#{identity.loggedIn}"
+            styleClass="epp-new-layout-header--user-epp-new-menu">
+            <c:if test="#{not wi:get(flash.hideMenu,  false)}">
+                <div class="epp-new-menu-user-epp-new-menu epp-new-layout-header--palette-menu">
+                    <div class="epp-new-menu-itm-action"
+                        onclick="(function(e){ var drawer=this.parentNode.querySelector('.epp-new-menu-subepp-new-menu'); drawer.classList.contains('ui-active') ? drawer.classList.remove('ui-active') : drawer.classList.add('ui-active')  }).bind(this)(event)">
+                        <wi:icon styleClass="action-icon" type="mdl" value="palette" text="#{infoxMessages['skin.title']}" />
+                    </div>
+                    <ul class="epp-new-menu-subepp-new-menu">
+                        <ui:repeat var="selItem" value="#{wiSkin.skinList}">
+                            <li class="epp-new-menu-itm">
+                                <a class="epp-new-menu-itm-action"
+                                    href="#{pathResolver.contextPath}/trocarSkin?idSkin=#{selItem.value}">
+                                    <h:outputText value="#{selItem.label}" />
+                                </a>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+                    <script>
+                        //<![CDATA[
+                            (function(){
+                                var submenu=document.querySelector(".epp-new-layout-header--palette-menu .epp-new-menu-subepp-new-menu");
+                                var submenuParent = submenu.parentNode;
+                                var closeTimer = undefined;
+                                var inactivateTarget = function(target){
+                                    if (target.classList.contains('ui-active'))
+                                       target.classList.remove('ui-active');
+                                    clearTimeout(closeTimer);
+                                };
+                                var timeoutAction = function(){
+                                    inactivateTarget(submenu);
+                                }
+                                submenuParent.addEventListener("mouseenter", function(evt){
+                                    clearTimeout(closeTimer);
+                                });
+                                submenuParent.addEventListener("mouseleave", function(evt){
+                                   closeTimer = setTimeout(timeoutAction, 1000);
+                                });
+                            })();
+                        //]]>
+                    </script>
+                </div>
+                <wi:icon styleClass="action-icon" style="cursor: pointer;" type="mdl" value="help" text="#{infoxMessages['ajuda.ajudaBtn']}"
+                	onclick="openPopUp('helpwnd', '#{pathResolver.contextPath}/openHelp?viewId=#{facesContext.viewRoot.viewId.replace('.xhtml', '.seam')}', 800, 600);" />
+                <h:link outcome="/Painel/list.xhtml" styleClass="epp-new-menu-itm-action">
+                    <wi:icon styleClass="action-icon" type="mdl" value="home" text="#{infoxMessages['painel.titlePage']}" />
+                </h:link>
+            </c:if>
+            <c:if test="#{wi:get(flash.hideMenu,  false)}">
+                <div class="epp-new-menu-user-epp-new-menu">
+                    <div class="epp-new-menu-itm-action">
+                        <div class="epp-new-menu-user-epp-new-menu--perfil">
+                            <div>
+                                <h:outputText value="#{usuarioLogadoPerfilAtual.localizacao} - #{usuarioLogadoPerfilAtual.perfilTemplate}" />
+                                <wi:icon value="angle-down" styleClass="epp-new-layout-header--icon" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+            <c:if test="#{not wi:get(flash.hideMenu,  false)}">
+            <div class="epp-new-menu-user-epp-new-menu epp-menu--user-menu" style="flex-basis: 100% !important;">
+                <div class="epp-new-menu-itm-action" style="display: block;"
+                    onclick="(function(e){ var drawer=this.parentNode.querySelector('.epp-new-menu-subepp-new-menu'); drawer.classList.contains('ui-active') ? drawer.classList.remove('ui-active') : drawer.classList.add('ui-active')  }).bind(this)(event)">
+                    <div style="text-align: center;">
+                    	<wi:icon styleClass="action-icon" type="mdl" value="person" text="#{infoxMessages['painel.titlePage']}" />
+	                    <div class="epp-new-menu-user-epp-new-menu--perfil">
+	                        <div>
+	                            <div><h:outputText value="#{usuarioLogado}" /></div>
+	                            <h:outputText value="#{usuarioLogadoPerfilAtual.localizacao} - #{usuarioLogadoPerfilAtual.perfilTemplate}" />
+	                            <wi:icon value="angle-down" styleClass="epp-new-layout-header--icon" />
+	                        </div>
+	                    </div>
+	                </div>
+                </div>
+                <ul class="epp-new-menu-subepp-new-menu epp-menu--user-perfil-menu">
+                    <li class="epp-new-menu-itm ui-disabled">
+                        <div class="epp-new-menu-itm-perfil--flexbox">
+                            <div><h:outputText styleClass="text-bold" value="Perfil" /></div>
+                            <c:if test="#{authenticator.usuarioPerfilListItems.size() gt 3}">
+                                <div>
+                                    <h:form>
+                                        <p:commandLink value="Ver Todos" styleClass="epp-new-menu-itm-action epp-new-menu-item-action-lnk"
+                                            onstart="infox.showLoading();" update="@(.modalSelecaoPerfilPanel)"
+                                            onclick="document.querySelector('ul, .epp-new-menu-subepp-new-menu .ui-active').classList.remove('ui-active');"
+                                            oncomplete="infox.hideLoading(); #{rich:component('selecionarPerfil')}.show();"/>
+
+                                        <ui:fragment rendered="#{selecionarPerfilController.renderizarConteudoModalSelecaoPerfil}">
+                                            <a class="epp-new-menu-itm-action epp-new-menu-item-action-lnk" href="##{rich:clientId('selecionarPerfil')}"
+                                                onclick="#{rich:component('selecionarPerfil')}.show();">Ver Todos</a>
+                                        </ui:fragment>
+                                    </h:form>
+                                </div>
+                            </c:if>
+                        </div>
+                    </li>
+                    <ui:repeat var="perfil" value="#{wi:truncateList(authenticator.usuarioPerfilListItems, 0, 3)}">
+                        <li class="epp-new-menu-itm #{authenticator.usuarioPerfilAtualCombo eq perfil.value ? 'ui-selected':''}">
+                        	<h:form styleClass="epp-new-menu-itm-action-form">
+                                <a:commandLink disabled="#{authenticator.usuarioPerfilAtualCombo eq perfil.value}"
+                                    execute="@this" status="dummy" styleClass="epp-new-menu-itm-action" value="#{perfil.label}"
+                                    onclick="infox.showLoading();">
+                                    <f:setPropertyActionListener target="#{authenticator.usuarioPerfilAtualCombo}"
+                                        value="#{perfil.value}" />
+                                </a:commandLink>
+                            </h:form></li>
+                    </ui:repeat>
+                    <li class="epp-new-menu-itm">
+                    	<h:form>
+                            <a:commandLink execute="@this" status="dummy" action="#{authenticator.unAuthenticate()}"
+                                onclick="infox.showLoading();" styleClass="epp-new-menu-itm-action epp-new-menu-item-action-lnk">
+                                <h:outputText value="Sair" />
+                            </a:commandLink>
+                        </h:form>
+                    </li>
+                </ul>
+                <script>
+                        //<![CDATA[
+                            (function(){
+                                var submenu=document.querySelector(".epp-new-layout-header--user-epp-new-menu .epp-new-menu-subepp-new-menu.epp-menu--user-perfil-menu");
+                                var submenuParent = submenu.parentNode;
+                                var closeTimer = undefined;
+                                var inactivateTarget = function(target){
+                                    if (target.classList.contains('ui-active'))
+                                       target.classList.remove('ui-active');
+                                    clearTimeout(closeTimer);
+                                };
+                                var timeoutAction = function(){
+                                    inactivateTarget(submenu);
+                                }
+                                submenuParent.addEventListener("mouseenter", function(evt){
+                                    clearTimeout(closeTimer);
+                                });
+                                submenuParent.addEventListener("mouseleave", function(evt){
+                                   closeTimer = setTimeout(timeoutAction, 1000);
+                                });
+                            })();
+                        //]]>
+                </script>
+            </div>
+            </c:if>
+        </infox:div>
+
+</ui:composition>

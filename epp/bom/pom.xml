@@ -19,6 +19,7 @@
         <version.epp>3.2.27-SNAPSHOT</version.epp>
         <version.liquibase-epp>3.2.26</version.liquibase-epp>
         <version.liquibase-ext>1.1.2</version.liquibase-ext>
+        <version.liquibase-executor>1.0.0</version.liquibase-executor>
         <version.certificado-digital>1.0.12</version.certificado-digital>
         <version.git-commit-id-plugin>2.2.1</version.git-commit-id-plugin>
         <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
@@ -119,6 +120,11 @@
                 <groupId>br.com.infox</groupId>
                 <artifactId>liquibase-ext</artifactId>
                 <version>${version.liquibase-ext}</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.infox</groupId>
+                <artifactId>liquibase-executor</artifactId>
+                <version>${version.liquibase-executor}</version>
             </dependency>
             <dependency>
                 <groupId>br.com.infox.epp</groupId>

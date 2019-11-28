@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    <h:form rendered="#{showMenu}">
+        <div style="padding:2em 1em 0">
+            <input id="inputBuscaItemMenu" class="input-filter" placeholder="Filtro"></input> 
+        </div>
+        <nav class="epp-new-menu-nav">
+            <ul class="epp-new-menu-main">
+                <c:forEach items="#{menuNavigation.actionMenu}" var="drop">
+                    <ui:include src="menuElement.xhtml">
+                        <ui:param name="element" value="#{drop}" />
+                    </ui:include>
+                </c:forEach>
+            </ul>
+            <script>
+                //<![CDATA[
+                    (function(){
+                    	document.getElementById("inputBuscaItemMenu").addEventListener("input", function(event) {
+                    		infox.filter({
+                    			input:event.target,
+								filtered:'.epp-new-layout-drawer .epp-new-menu-itm',
+								onclear:function(elem) {
+									elem.classList.remove('ui-active');
+									elem.classList.remove('hidden');
+								}, onmatched:function(elem){
+									elem.classList.add('ui-active');
+									elem.classList.remove('hidden');
+								}, onunmatched:function(elem){
+									elem.classList.remove('ui-active');
+									elem.classList.add('hidden');
+								}
+							});
+                    	});
+                        var clearActives = function (element) {
+                            var list = element.querySelectorAll(".ui-active");
+                            for(var i=0,l=list.length; i<l; i++){
+                                list.item(i).classList.remove("ui-active");
+                            }
+                        };
+                        var handleClickOnTarget = function (node) {
+                            var addClass = !node.classList.contains("ui-active");
+                            if (node.parentNode)
+                                clearActives(node.parentNode);
+                            if (addClass)
+                               node.classList.add("ui-active");
+                        };
+                        var clickBehavior = function (event){
+                            event.preventDefault();
+                            if (event.target.parentNode)
+                                handleClickOnTarget(event.target.parentNode);
+                        };
+                        var list = document.querySelectorAll(".epp-new-layout-drawer .epp-new-menu-main .epp-new-menu-itm-lbl.sub-epp-new-menu-lbl");
+                        for(var i=0,l=list.length; i<l; i++){
+                           list.item(i).addEventListener("click", clickBehavior);
+                        }
+                    })();
+                //]]>
+                </script>
+        </nav>
+    </h:form>
+</ui:composition>

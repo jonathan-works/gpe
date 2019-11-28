@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    <li class="epp-new-menu-itm epp-new-menu-itm--is-subepp-new-menu">
+        <div class="epp-new-menu-itm-lbl sub-epp-new-menu-lbl">
+            <h:outputText value="#{element.label}" />
+        </div>
+        <ul class="epp-new-menu-subepp-new-menu">
+            <c:forEach items="#{element.items}" var="menuElement">
+                <ui:include src="menuElement.xhtml">
+                    <ui:param name="element" value="#{menuElement}" />
+                </ui:include>
+            </c:forEach>
+        </ul>
+    </li>
+</ui:composition>

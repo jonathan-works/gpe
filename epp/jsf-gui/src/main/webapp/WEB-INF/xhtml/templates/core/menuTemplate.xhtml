@@ -1,22 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:h="http://java.sun.com/jsf/html" xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+    xmlns:a="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf" xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
     <ui:define name="baseHead">
-        <h:outputScript library="js" name="liveclock.js" />
         <ui:insert name="head" />
     </ui:define>
+    <ui:param name="showMenu" value="#{wi:get(showMenu, identity.loggedIn and !usuarioLogado.provisorio)}" />
     <ui:define name="baseBody">
         <h:outputScript library="js" name="jqueryExt.js" />
-        <wi:menu id="menu" menuHandler="#{menuNavigation}" rendered="#{not wi:get(flash.hideMenu,  false)}">
-            <s:div styleClass="pageBody" id="pageBody">
-                <div>
-                    <ui:insert name="body" />
+        
+        <ui:param name="nestedDialogView" value="#{wi:get(flash.nestedDialogView,  false) or wi:get(facesContext.externalContext.requestParameterMap.nestedDialogView,  false)}" />
+        <h:panelGroup layout="block" styleClass="pageBody epp-new-layout" id="pageBody">
+            <ui:param name="showMenu" value="#{wi:get(showMenu, true) and menuNavigation.actionMenu.size() gt 0}" />
+            <header class="epp-new-layout-header">
+                <ui:fragment rendered="#{not nestedDialogView}">
+                    <ui:include src="/WEB-INF/xhtml/templates/menu/header.xhtml" />
+                </ui:fragment>
+            </header>
+            <div class="epp-new-layout-content-drawer">
+                <div class="epp-new-layout-drawer">
+                    <ui:fragment rendered="#{not nestedDialogView}">
+                        <ui:include src="/WEB-INF/xhtml/templates/menu/drawer.xhtml" />
+                    </ui:fragment>
                 </div>
-                <wi:messages formId="pageBody" rendered="#{empty showMsg ? true : showMsg}" globalOnly="true" />
-            </s:div>
-        </wi:menu>
+                <div class="epp-new-layout-content">
+                    <div class="epp-new-layout--titulo-pagina" data-title="">
+                        <h:outputScript>
+                        //<![CDATA[
+                        (function(){
+                            var pageTitle=document.head.querySelector("title").textContent;
+                            document.querySelector(".epp-new-layout-content > .epp-new-layout--titulo-pagina").dataset['title']=pageTitle;
+                        })();
+                        //]]>
+                        </h:outputScript>
+                    </div>
+                    <main class="epp-new-layout-content--main">
+                        <div class="epp-new-layout-content--main--container">
+                            <div class="epp-new-layout-content--main--body">
+                                <ui:insert name="body">
+                                    <rich:panel styleClass="content-block">
+                                        <ui:insert name="body-content">
+                                        </ui:insert>
+                                    </rich:panel>
+                                </ui:insert>
+                            </div>
+                        </div>
+                    </main>
+                    <wi:messages formId="pageBody" rendered="#{empty showMsg ? true : showMsg}" globalOnly="true" />
+                </div>
+            </div>
+        </h:panelGroup>
+        <ui:include src="/WEB-INF/xhtml/templates/menu/modalSelecaoPerfil.xhtml" />
     </ui:define>
 </ui:composition>

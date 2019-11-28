@@ -217,6 +217,8 @@
     <include file="epp/0124-AdicionaCodigoEstrutura.xml" />
     <include file="epp/extensao/master.xml" />
     
+    <include file="epp/projeto00124527/master.xml" />
+    
     <!-- Precisa Rodar após todos os scripts -->
     <include file="epp/XXXX-DarPermissaoTabelasOracle.xml"/>
 

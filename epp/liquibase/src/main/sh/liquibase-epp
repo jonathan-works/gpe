@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+diretorio=$(dirname $0)
+cd $diretorio
+java -cp $(ls -1 lib/* | tr '\n' ':' | sed 's/:$//g' ; echo) br.com.infox.liquibase.LiquibaseExecutorMain ${liquibase.module.exec.args} ${1+"$@"}

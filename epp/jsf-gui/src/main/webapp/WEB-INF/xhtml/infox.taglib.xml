@@ -464,6 +464,10 @@ version="2.0">
         <source>tags/generic/menu.xhtml</source>
     </tag>
     <tag>
+        <tag-name>field</tag-name>
+        <source>components/templates/field.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>dynamicFieldSet</tag-name>
         <component>
             <component-type>DynamicFieldSet</component-type>

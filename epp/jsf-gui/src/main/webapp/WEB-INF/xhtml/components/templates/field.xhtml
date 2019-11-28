@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <p:outputPanel id="#{wi:get(id,'')}"
+        rendered="#{wi:get(rendered, true)}"
+        style="#{style}"
+        styleClass="decoration-div #{wi:get(styleClass,'')}">
+        <script type="text/javascript">
+			var id = "#{wi:get(id,'')}";
+			var errorClass = $('.' + id + 'ErrorClass');
+			var div = $('.' + id + 'DivClass');
+			if (errorClass.length !== 0) {
+				div.addClass('property-error');
+			} else {
+				div.removeClass('property-error');
+			}
+		</script>
+        <div class="property-field-edit">
+            <p:outputPanel layout="block" styleClass="property-field-edit-name #{labelPanelStyleClass}">
+                <h:outputLabel id="#{wi:get(id,'')}Label"
+                    for="#{wi:get(id,'')}Input">
+                    <ui:insert name="label">
+                        <h:outputText value="#{wi:get(label,'')} " />
+                    </ui:insert>
+                    <h:outputText styleClass="required"
+                        rendered="#{wi:get(required, wi:get(showRequired, false))}" value="*" />
+                    <c:if test="#{not empty help}">
+                        <h:graphicImage
+                            url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                            title="#{wi:get(help,'')}"
+                            style="vertical-align: middle;" />
+                    </c:if>
+                </h:outputLabel>
+                <h:message for="#{wi:get(id,'')}Input"
+                    styleClass="property-error property-msg #{wi:get(id,'')}ErrorClass" />
+            </p:outputPanel>
+            <div
+                class="property-field-edit-value  #{wi:get(id,'')}DivClass">
+                <ui:insert />
+            </div>
+        </div>
+    </p:outputPanel>
+
+</ui:composition>
