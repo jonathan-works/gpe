@@ -50,10 +50,6 @@
     <s:div id="#{id}EventDiv">
         <c:if test="#{!empty event.currentActionType and !empty event.currentAction}">
             <ui:param name="eventDiv" value="#{id}Div" />
-            <wi:inputText id="#{id}ActionName" value="#{event.currentAction.name}"
-                label="#{infoxMessages['process.events.action.name']}">
-                <a:ajax execute="@this" event="change" render="#{eventDiv}" limitRender="true" />
-            </wi:inputText>
             <ui:include src="forms/#{event.currentActionType}.xhtml">
                 <ui:param name="widthDiv" value="100%" />
                 <ui:param name="height" value="height:100px" />

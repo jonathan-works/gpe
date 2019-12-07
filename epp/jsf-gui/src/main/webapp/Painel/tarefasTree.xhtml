@@ -16,6 +16,7 @@
             status=":status"
             toggleType="client"
             execute="@this"
+            onbegin="infox.showLoading();"
             oncomplete="infox.hideLoading();"
             selectionType="ajax"
             selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
@@ -83,6 +84,5 @@
         </rich:tree>
     </rich:panel>
     <script type="text/javascript">
-    	$('.rf-trn-cnt').click(function(){infox.showLoading();});
     </script>
 </ui:composition>

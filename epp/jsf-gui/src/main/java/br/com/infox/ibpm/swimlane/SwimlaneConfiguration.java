@@ -15,12 +15,16 @@ import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.ibpm.type.PooledActorType;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 public class SwimlaneConfiguration {
     private static final Pattern PATTERN_EXPRESSION = Pattern.compile("#[{][^{}]+[}]");
     
     private List<PerfilTemplate> perfis = new ArrayList<>();
     private List<UsuarioLogin> usuarios = new ArrayList<>();
+    private List<Localizacao> localizacoes = new ArrayList<>();
     private List<Grupo> grupos = new ArrayList<>();
     private List<String> expressoes = new ArrayList<>();
     
@@ -82,6 +86,13 @@ public class SwimlaneConfiguration {
     public String toPooledActorsExpression() {
         StringBuilder sb = new StringBuilder();
         
+        for (Localizacao localizacao : localizacoes) {
+        	if (sb.length() > 0) {
+        		sb.append(',');
+        	}
+        	sb.append(PooledActorType.LOCAL.toPooledActorId(localizacao.getCodigo()));
+        }
+        
         for (PerfilTemplate perfil : perfis) {
             if (sb.length() > 0) {
                 sb.append(',');
@@ -113,37 +124,7 @@ public class SwimlaneConfiguration {
         return sb.toString();
     }
 
-    public List<PerfilTemplate> getPerfis() {
-        return perfis;
-    }
     
-    public void setPerfis(List<PerfilTemplate> perfis) {
-        this.perfis = perfis;
-    }
-    
-    public List<UsuarioLogin> getUsuarios() {
-        return usuarios;
-    }
-    
-    public void setUsuarios(List<UsuarioLogin> usuarios) {
-        this.usuarios = usuarios;
-    }
-    
-    public List<Grupo> getGrupos() {
-        return grupos;
-    }
-    
-    public void setGrupos(List<Grupo> grupos) {
-        this.grupos = grupos;
-    }
-    
-    public List<String> getExpressoes() {
-        return expressoes;
-    }
-    
-    public void setExpressoes(List<String> expressoes) {
-        this.expressoes = expressoes;
-    }
     
     public static class Grupo {
         private Localizacao localizacao;

@@ -255,8 +255,6 @@ img.epp-new-layout-header--logo {
     font-weight: 600;
     padding: 7px;
     border-color: @button-bg-deg-color;
-    background-color: @button-bg-color;
-    color: @button-txt-color;
     text-shadow: none!important;
     text-align: center;
     vertical-align: middle;
@@ -379,43 +377,43 @@ img.epp-new-layout-header--logo {
   content: 'chevron_right';
 }
 .epp-new-layout-drawer .epp-new-menu-itm--is-subepp-new-menu.ui-active > .epp-new-menu-itm-lbl {
-  background: @menu-txt-color;
-  color: @menu-bg-color;
+  background: @menu-bg-color;
+  color: @menu-txt-color;
 }
 .epp-new-layout-drawer .epp-new-menu-itm--is-subepp-new-menu.ui-active > .epp-new-menu-itm-lbl:after {
   content: 'expand_more';
 }
 .epp-new-layout-drawer .epp-new-menu-itm-lbl:hover {
-  background: @menu-txt-color;
-  color: @menu-bg-color;
-}
-.epp-new-layout-header {
   background: @menu-bg-color;
   color: @menu-txt-color;
+}
+.epp-new-layout-header {
+  background: @menu-txt-color;
+  color: @menu-bg-color;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.18);
 }
 .epp-new-layout-header--user-epp-new-menu .epp-new-menu-subepp-new-menu .epp-new-menu-itm {
-    color: @menu-txt-color;
+    color: @menu-bg-color;
     border-bottom: 1px solid #607482 !important;
     &.ui-disabled {
-        background: @menu-txt-color;
-        color: @menu-bg-color;
+        background: @menu-bg-color;
+        color: @menu-txt-color;
 
         .epp-new-menu-itm-action:hover{
-    	    color: @menu-txt-color;
-            background: @menu-bg-color;
+    	    color: @menu-bg-color;
+            background: @menu-txt-color;
         }
     }
     &.ui-selected {
-        background: fade(@menu-txt-color,90%);
-        color: @menu-bg-color;
+        background: fade(@menu-bg-color,90%);
+        color: @menu-txt-color;
     }
     &:not(.ui-selected):not(.ui-disabled):hover {
         background: rgba(0,0,0,0.1);
     }
 }
 .epp-new-layout-header--user-epp-new-menu > .epp-new-menu-user-epp-new-menu > .epp-new-menu-subepp-new-menu {
-  background: @menu-bg-color;
+  background: @menu-txt-color;
   border: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-border-radius: 2px;

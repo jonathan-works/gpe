@@ -399,11 +399,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.maven-compiler-plugin}</version>
                 <configuration>
-                	<compilerVersion>${version.maven-compiler-java}</compilerVersion>
-                    <source>${version.maven-compiler-java}</source>
-                    <target>${version.maven-compiler-java}</target>
                     <compilerArguments>
                         <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor,lombok.launch.AnnotationProcessorHider$AnnotationProcessor</processor>
                     </compilerArguments>
