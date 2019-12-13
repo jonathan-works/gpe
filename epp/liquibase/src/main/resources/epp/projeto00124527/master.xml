@@ -7,5 +7,6 @@
     <include file="epp/projeto00124527/001-SinalSolicitacaoCadastro.xml" />
     <include file="epp/projeto00124527/002-TabelaContribuinte.xml" />
     <include file="epp/projeto00124527/003-TabelaServidor.xml" />
+    <include file="epp/projeto00124527/004-Parametros.xml" />
 
 </databaseChangeLog>
