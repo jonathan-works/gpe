@@ -1,4 +1,4 @@
-package br.com.infox.epp.contribuinte;
+package br.com.infox.epp.solicitante;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,7 +17,7 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
-public class ContribuinteView implements Serializable {
+public class SolicitanteView implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,18 +26,26 @@ public class ContribuinteView implements Serializable {
 
     @Getter
     @Setter
-    private ContribuinteVO contribuinteVO;
+    private SolicitanteVO solicitanteVO;
 
     @PostConstruct
     protected void init() {
-    	this.contribuinteVO = new ContribuinteVO();
+    	this.solicitanteVO = new SolicitanteVO();
 	}
 
     public void consultarTurmalina() {
     }
 
+    public void novo() {
+        this.solicitanteVO = new SolicitanteVO();
+    }
+
     @ExceptionHandled(MethodType.PERSIST)
     public void gravar() {
+    }
+
+    @ExceptionHandled(MethodType.UPDATE)
+    public void atualizar() {
     }
 
     public List<Estado> getEstadosList() {

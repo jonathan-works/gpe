@@ -1,11 +1,9 @@
-package br.com.infox.epp.contribuinte;
+package br.com.infox.epp.servidor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.endereco.view.EnderecoVO;
 import br.com.infox.epp.pessoa.annotation.Cpf;
-import br.com.infox.util.time.Date;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of="id")
-public class ContribuinteVO {
+public class ServidorVO {
 
 	private Long id;
 
@@ -25,38 +23,26 @@ public class ContribuinteVO {
 	@Cpf
 	private String cpf;
 
-	private String matricula;
-
 	@NotNull
 	@Size(min = 6, max = 256)
 	private String nomeCompleto;
 
 	@NotNull
-	private Character sexo;
-
-	@NotNull
-	private Date dataNascimento;
-
-	@NotNull
-	@Size(min = 3, max = 20)
-    private String numeroRg;
-
-	@NotNull
 	@Size(min = 3, max = 256)
-    private String emissorRg;
+	private String cargoFuncao;
 
 	@NotNull
-    private String ufRg;
-
-	@NotNull
-	@Size(min = 6, max = 256)
-	private String nomeMae;
+    private String telefone;
 
 	@NotNull
     private String email;
 
-    private String telefone;
+	@NotNull
+	@Size(min = 3, max = 256)
+	private String secretaria;
 
-    private EnderecoVO enderecoVO;
+	@NotNull
+	@Size(min = 6, max = 256)
+	private String departamento;
 
 }

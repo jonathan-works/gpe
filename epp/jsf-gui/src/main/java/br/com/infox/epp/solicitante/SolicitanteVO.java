@@ -1,4 +1,4 @@
-package br.com.infox.epp.contribuinte;
+package br.com.infox.epp.solicitante;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of="id")
-public class ContribuinteVO {
+public class SolicitanteVO {
 
 	private Long id;
 

@@ -1,48 +1,44 @@
-package br.com.infox.epp.contribuinte;
+package br.com.infox.epp.servidor;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
-import br.com.infox.epp.municipio.Estado;
-import br.com.infox.epp.municipio.EstadoSearch;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named
 @ViewScoped
-public class ContribuinteView implements Serializable {
+public class ServidorView implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Inject
-    private EstadoSearch estadoSearch;
-
     @Getter
     @Setter
-    private ContribuinteVO contribuinteVO;
+    private ServidorVO servidorVO;
 
     @PostConstruct
     protected void init() {
-    	this.contribuinteVO = new ContribuinteVO();
+    	this.servidorVO = new ServidorVO();
 	}
 
     public void consultarTurmalina() {
+    }
+
+    public void novo() {
+        this.servidorVO = new ServidorVO();
     }
 
     @ExceptionHandled(MethodType.PERSIST)
     public void gravar() {
     }
 
-    public List<Estado> getEstadosList() {
-        List<Estado> estadosList = estadoSearch.findAll();
-        return estadosList;
+    @ExceptionHandled(MethodType.UPDATE)
+    public void atualizar() {
     }
 
 }
