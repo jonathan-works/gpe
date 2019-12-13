@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="idForm" value="#{empty idForm ? 'novoEndereco' : idForm}" />
+
+	<p:outputPanel>
+		<h:form id="#{idForm}EnderecoForm">
+			<fieldset>
+				<legend>#{infoxMessages['gerenciadorEndereco.titulo']}</legend>
+				<div>
+					<wi:field id="cidade"
+						label="#{infoxMessages['gerenciadorEndereco.cidade']}">
+						<h:inputText id="cidadeInput" required="true"
+							value="#{gerenciadorEnderecoController.enderecoVO.cidade}"
+							size="30" maxlength="100" />
+					</wi:field>
+
+					<wi:field id="logradouro"
+						label="#{infoxMessages['gerenciadorEndereco.logradouro']}">
+						<h:inputText id="logradouroInput" required="true"
+							value="#{gerenciadorEnderecoController.enderecoVO.logradouro}"
+							size="30" maxlength="256" />
+					</wi:field>
+
+					<wi:field id="bairro"
+						label="#{infoxMessages['gerenciadorEndereco.bairro']}">
+						<h:inputText id="bairroInput" required="true"
+							value="#{gerenciadorEnderecoController.enderecoVO.bairro}"
+							size="30" maxlength="256" />
+					</wi:field>
+
+					<wi:field id="complemento"
+						label="#{infoxMessages['gerenciadorEndereco.complemento']}">
+						<h:inputText id="complementoEnderecoInput"
+							value="#{gerenciadorEnderecoController.enderecoVO.complemento}"
+							size="30" maxlength="256" />
+					</wi:field>
+
+					<wi:field id="numero"
+						label="#{infoxMessages['gerenciadorEndereco.numero']}">
+						<h:inputText id="numeroInput" required="true"
+							value="#{gerenciadorEnderecoController.enderecoVO.numero}"
+							size="12" maxlength="20" />
+					</wi:field>
+
+					<wi:field id="cep"
+						label="#{infoxMessages['gerenciadorEndereco.cep']}">
+						<p:inputMask id="cepInput" required="true"
+							value="#{gerenciadorEnderecoController.enderecoVO.cep}"
+							size="12" maxlength="9" mask="99999-999" >
+						</p:inputMask>
+					</wi:field>
+				</div>
+			</fieldset>
+		</h:form>
+	</p:outputPanel>
+
+</ui:composition>

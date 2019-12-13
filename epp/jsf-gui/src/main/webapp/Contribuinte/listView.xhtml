@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['contribuinte.titlePage']}</ui:define>
+
+    <ui:define name="body">
+    	<h:form id="contribuinteForm">
+    		<p:panel style="border-width: 1px; border-style: solid;"
+				header="#{infoxMessages['contribuinte.titlePage']}">
+				<p:outputPanel id="panelConsultaTurmalina" styleClass="panelConsultaTurmalina">
+					<wi:field id="cpf" required="true"
+						label="#{infoxMessages['contribuinte.cpf']}">
+						<p:inputMask id="cpfInput"
+							mask="999.999.999-99"
+							size="14"
+							value="#{contribuinteView.contribuinteVO.cpf}">
+	                        <f:validator validatorId="cpfValidator" />
+	                        <f:converter converterId="cpfConverter" />
+						</p:inputMask>
+					</wi:field>
+
+					<wi:field id="matricula"
+						label="#{infoxMessages['contribuinte.matricula']}">
+						<p:inputText id="matriculaInput"
+							size="14"
+							maxlength="10"
+							value="#{contribuinteView.contribuinteVO.matricula}" />
+					</wi:field>
+
+					<p:commandButton id="consultarTurmalinaBtn"
+						update="panelDadoscontribuinte, panelButtons"
+						process="@this"
+						action="#{contribuinteView.consultarTurmalina()}"
+						onclick="infox.showLoading();"
+						oncomplete="infox.hideLoading();"
+						value="#{infoxMessages['contribuinte.consultarTurmalina']}"
+						styleClass="buttons buttons-primary" />
+				</p:outputPanel>
+
+				<p:outputPanel id="panelDadoscontribuinte" styleClass="panelDadoscontribuinte">
+					<wi:field id="nomeCompleto" required="true"
+						label="#{infoxMessages['contribuinte.nomeCompleto']}">
+						<p:inputText id="nomeCompletoInput"
+							required="true"
+							size="30"
+							maxlength="256"
+							value="#{contribuinteView.contribuinteVO.nomeCompleto}" />
+					</wi:field>
+
+					<wi:field id="genero" required="true"
+	                	label="#{infoxMessages['contribuinte.genero']}">
+	                    <h:selectOneMenu id="generoInput"
+	                    	required="true"
+	                        value="#{contribuinteView.contribuinteVO.sexo}">
+	                        <f:selectItem noSelectionOption="true"
+	                        	itemValue="#{null}"
+	                            itemLabel="#{messages['crud.select.select']}" />
+	                        <f:selectItems
+	                         	value="#{selectItemFunctions.createFromString('M:Masculino,F:Feminino')}" />
+	                    </h:selectOneMenu>
+					</wi:field>
+
+					<wi:field id="dataNascimento" required="true"
+						label="#{infoxMessages['contribuinte.dataNascimento']}">
+						<p:calendar id="dataNascimentoInput"
+							required="true"
+							maxdate="#{now}"
+							pattern="dd/MM/yyyy"
+							placeholder="__/__/____"
+							mask="99/99/9999"
+							value="#{contribuinteView.contribuinteVO.dataNascimento}">
+							<f:validator validatorId="pastDateValidator" />
+							<p:ajax event="dateSelect" process="@this" />
+							<p:ajax event="change" process="@this" />
+							<p:ajax event="blur" process="@this" />
+						</p:calendar>
+					</wi:field>
+
+					<fieldset style="display: inline;">
+						<legend>#{infoxMessages['gerenciadorRg.rg']}<span style="color: red;"> *</span></legend>
+                       	<wi:field id="numeroRg"
+	                    	label="#{infoxMessages['gerenciadorRg.numero']}">
+	                        <p:inputNumber
+	                            id="numeroRgInput"
+	                            required="true"
+	                            size="10"
+	                            maxlength="20"
+	                            decimalPlaces="0"
+	                            requiredMessage="Campo Obrigatório"
+	                            value="#{contribuinteView.contribuinteVO.numeroRg}" />
+	                    </wi:field>
+
+	                    <wi:field id="emissorRg"
+	                        label="#{infoxMessages['gerenciadorRg.orgaoEmissor']}">
+	                        <p:inputText
+	                            id="emissorRgInput"
+	                            required="true"
+	                            size="10"
+	                            maxlength="256"
+	                            value="#{contribuinteView.contribuinteVO.emissorRg}" />
+	                    </wi:field>
+
+	                    <wi:field id="ufRg"
+	                        label="#{infoxMessages['gerenciadorRg.uf']}">
+	                        <h:selectOneMenu id="ufRgInput"
+	                            required="true"
+	                            value="#{contribuinteView.contribuinteVO.ufRg}">
+	                            <f:selectItem noSelectionOption="true"
+	                                itemValue="#{null}"
+	                                itemLabel="#{messages['crud.select.select']}" />
+	                            <f:selectItems var="itemUf"
+	                            	value="#{contribuinteView.estadosList}" />
+	                            <f:converter
+	                                converterId="br.com.infox.jsf.converter.SelectItemConverter" />
+	                        </h:selectOneMenu>
+	                    </wi:field>
+					</fieldset>
+
+					<wi:field id="nomeMae" required="true"
+						label="#{infoxMessages['contribuinte.nomeMae']}">
+						<p:inputText id="nomeMaeInput"
+							required="true"
+							size="30"
+							maxlength="256"
+							value="#{contribuinteView.contribuinteVO.nomeMae}" />
+					</wi:field>
+
+					<wi:field id="email" required="true"
+						label="#{infoxMessages['contribuinte.email']}">
+						<p:inputText id="emailInput"
+							required="true"
+							size="30"
+							maxlength="256"
+							value="#{contribuinteView.contribuinteVO.email}">
+							<f:validator validatorId="emailValidator" />
+						</p:inputText>
+					</wi:field>
+
+					<wi:field id="telefone"
+						label="#{infoxMessages['contribuinte.telefone']}">
+						<p:inputMask id="telefoneInput"
+	                        mask="+999 (99) 9 9999 9999"
+							size="22"
+							value="#{contribuinteView.contribuinteVO.telefone}" />
+					</wi:field>
+
+					<ui:include src="/Endereco/gerenciador.xhtml">
+						<ui:param name="idForm" value="#{idForm}" />
+					</ui:include>
+
+					<div style="margin-bottom: 10px" />
+
+	                <s:div styleClass="required-alert" rendered="true">
+	                    <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
+	                    <span class="required">*</span>
+	                    <span>#{infoxMessages['form.required']}</span>
+	                </s:div>
+				</p:outputPanel>
+			</p:panel>
+
+			<p:outputPanel id="panelButtons" styleClass="panelButtons">
+				<p:commandButton id="solicitarCadastroBtn"
+					update="contribuinteForm, pageBodyDialogMessage"
+					process="@form"
+					action="#{contribuinteView.gravar()}"
+					onclick="infox.showLoading();"
+					oncomplete="infox.hideLoading();"
+					value="#{infoxMessages['solicitacaoCadastro.solicitarCadastro']}"
+					styleClass="buttons buttons-primary" />
+			</p:outputPanel>
+		</h:form>
+	</ui:define>
+</ui:composition>
