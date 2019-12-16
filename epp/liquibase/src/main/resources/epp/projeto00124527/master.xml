@@ -8,5 +8,6 @@
     <include file="epp/projeto00124527/002-TabelaContribuinte.xml" />
     <include file="epp/projeto00124527/003-TabelaServidor.xml" />
     <include file="epp/projeto00124527/004-Parametros.xml" />
+    <include file="epp/projeto00124527/005-Sequences.xml" />
 
 </databaseChangeLog>
