@@ -1,4 +1,4 @@
-package br.com.infox.epp.contribuinte;
+package br.com.infox.epp.loglab.view;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,6 +10,7 @@ import javax.inject.Named;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
 import lombok.Getter;
@@ -26,11 +27,11 @@ public class ContribuinteView implements Serializable {
 
     @Getter
     @Setter
-    private ContribuinteVO contribuinteVO;
+    private ContribuinteSolicitanteVO contribuinteVO;
 
     @PostConstruct
     protected void init() {
-    	this.contribuinteVO = new ContribuinteVO();
+    	this.contribuinteVO = new ContribuinteSolicitanteVO();
 	}
 
     public void consultarTurmalina() {

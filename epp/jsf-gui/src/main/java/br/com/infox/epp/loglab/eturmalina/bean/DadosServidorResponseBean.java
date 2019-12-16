@@ -1,4 +1,4 @@
-package br.com.infox.epp.eturmalina.bean;
+package br.com.infox.epp.loglab.eturmalina.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

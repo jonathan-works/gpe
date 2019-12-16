@@ -1,4 +1,4 @@
-package br.com.infox.epp.solicitacaocadastro;
+package br.com.infox.epp.loglab.vo;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

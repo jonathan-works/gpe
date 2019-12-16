@@ -1,4 +1,4 @@
-package br.com.infox.epp.solicitante;
+package br.com.infox.epp.loglab.service;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import javax.ejb.TransactionAttributeType;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class SolicitanteService implements Serializable {
+public class ContribuinteService implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

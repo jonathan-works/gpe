@@ -1,4 +1,4 @@
-package br.com.infox.epp.endereco.view;
+package br.com.infox.epp.loglab.vo;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -1,9 +1,8 @@
-package br.com.infox.epp.solicitante;
+package br.com.infox.epp.loglab.vo;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.endereco.view.EnderecoVO;
 import br.com.infox.epp.pessoa.annotation.Cpf;
 import br.com.infox.util.time.Date;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of="id")
-public class SolicitanteVO {
+public class ContribuinteSolicitanteVO {
 
 	private Long id;
 
