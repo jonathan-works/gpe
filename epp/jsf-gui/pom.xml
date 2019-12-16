@@ -660,7 +660,7 @@
                                 <!-- Arquivo do serviço http://201.65.242.138:28081/e-turmalina/servlet/awsintegracao_rh?wsdl" -->
                                 <wsdlFile>eTurmalina_homologacao.wsdl</wsdlFile>
                             </wsdlFiles>
-                            <packageName>br.com.infox.epp.eturmalina.ws</packageName>
+                            <packageName>br.com.infox.epp.loglab.eturmalina.ws</packageName>
                             <xadditionalHeaders>true</xadditionalHeaders>
                         </configuration>
                         <phase>generate-sources</phase>

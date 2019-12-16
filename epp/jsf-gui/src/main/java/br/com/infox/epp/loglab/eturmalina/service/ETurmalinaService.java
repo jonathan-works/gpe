@@ -10,10 +10,10 @@ import javax.ejb.TransactionAttributeType;
 
 import com.google.gson.Gson;
 
-import br.com.infox.epp.eturmalina.ws.WSIntegracaoRH;
-import br.com.infox.epp.eturmalina.ws.WSIntegracaoRHGETDADOSSERVIDOR;
-import br.com.infox.epp.eturmalina.ws.WSIntegracaoRHGETDADOSSERVIDORResponse;
-import br.com.infox.epp.eturmalina.ws.WSIntegracaoRHSoapPort;
+import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRH;
+import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRHGETDADOSSERVIDOR;
+import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRHGETDADOSSERVIDORResponse;
+import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRHSoapPort;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorBean;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorResponseBean;
 import br.com.infox.epp.system.Parametros;
