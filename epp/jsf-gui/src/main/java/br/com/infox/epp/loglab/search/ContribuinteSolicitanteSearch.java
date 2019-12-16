@@ -19,7 +19,7 @@ public class ContribuinteSolicitanteSearch {
     private ETurmalinaService eTurmalinaService;
     
     public List<ContribuinteSolicitanteVO> getDadosContribuinteSolicitante(String numeroCpf, String numeroMatricula){
-        
+
         List<ContribuinteSolicitanteVO> contribuinteSolicitanteList = new ArrayList<ContribuinteSolicitanteVO>();
         
         DadosServidorBean dadosServidor = new DadosServidorBean(numeroCpf, numeroMatricula);

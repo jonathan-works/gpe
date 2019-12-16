@@ -89,22 +89,6 @@
                 <p:column headerText="#{infoxMessages['contribuinte.nomeCompleto']}">
                     <h:outputText value="#{row.nomeCompleto}" />
                 </p:column>
-                
-                <p:column headerText="#{infoxMessages['gerenciadorRg.rg']}">
-                    <h:outputText value="#{row.numeroRg}" />
-                </p:column>
-                
-                <p:column headerText="#{infoxMessages['gerenciadorRg.orgaoEmissor']}">
-                    <h:outputText value="#{row.emissorRg} - #{row.ufRg}" />
-                </p:column>
-                
-                <p:column headerText="#{infoxMessages['gerenciadorEndereco.cidade']}">
-                    <h:outputText value="#{row.endereco.cidade}" />
-                </p:column>
-                
-                <p:column headerText="#{infoxMessages['gerenciadorEndereco.cep']}">
-                    <h:outputText value="#{row.endereco.cep}" />
-                </p:column>
             </p:dataTable>
         </p:outputPanel>
 

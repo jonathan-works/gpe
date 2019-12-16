@@ -57,12 +57,69 @@ public class ETurmalinaService implements Serializable{
 	}
 
     public void teste() {
+        print("4039888", "00156347105");
+        print("4038994", "85550620120");
+        print("4007282", "01293453188");
+        print("4038919", "37796682115");
+        print("2557833", "28390709104");
+        print("4008072", "02488723118");
+        print("4857268", "65421221172");
+        print("4855334", "63197871120");
+        print("4040906", "25801325115");
+        print("4032096", "79554970153");
+        print("4855391", "02370114177");
+        print("4045867", "03878630107");
+        print("2575513", "54527252100");
+        print("2965047", "79278108120");
+        print("4038365", "69400970153");
+        print("4877721", "27869113972");
+        print("4039008", "76794652820");
+        print("4028699", "76794652820");
+        print("4040686", "53641353149");
+        print("2979414", "04825802168");
+        print("2575719", "54435609134");
+        print("2576842", "29277043172");
+        print("2577959", "35379081134");
+        print("4038453", "00951750160");
+        print("4854152", "72556005149");
+        print("4041661", "72556005149");
+        print("4044801", "00187675163");
+        print("4856382", "73087572187");
+        print("2968727", "62097636187");
+        print("4036708", "03634169192");
+        print("2576835", "54476690149");
+        print("4047574", "04610423120");
+        print("4039255", "01477101110");
+        print("4882006", "16185595168");
+        print("2586231", "31836038100");
+        print("2576846", "47472502120");
+        print("2021186", "20737947187");
+        print("4027992", "51341620182");
+        print("4029479", "47432594104");
+        print("4048697", "46062394172");
+        print("2973986", "32952104115");
+        print("2975570", "20742533115");
+        print("4036129", "68943822120");
+        print("4036204", "00094100152");
+        print("4036199", "48794805172");
+        print("4036205", "70127360115");
+        print("4036707", "12750435854");
+        print("4848461", "32605455149");
+        print("4021858", "01683657152");
+        print("4045105", "39360687120");
+    }
+
+    public void print(String matricula, String cpf) {
+
         DadosServidorBean dadosServidor = new DadosServidorBean();
-        dadosServidor.setMatricula("4883048");
-        dadosServidor.setCpf("73533548104");
+        dadosServidor.setMatricula(matricula);
+        dadosServidor.setCpf(cpf);
+
+        System.out.println("***********************************************************");
+        System.out.println("Matricula: " + matricula);
+        System.out.println("Cpf: " + cpf);
         
         List<DadosServidorResponseBean> dadosResponseList = getDadosServidor(dadosServidor);
-        
         for (DadosServidorResponseBean dadosServidorResponseBean : dadosResponseList) {
             System.out.println("-----------------------------------------------------------");
             System.out.println("Matricula: " + dadosServidorResponseBean.getMatricula());
@@ -89,5 +146,7 @@ public class ETurmalinaService implements Serializable{
             System.out.println("ServidorRGOrgao: " + dadosServidorResponseBean.getServidorRGOrgao());
             System.out.println("-----------------------------------------------------------");
         }
+        System.out.println("***********************************************************");
+        
     }
 }
