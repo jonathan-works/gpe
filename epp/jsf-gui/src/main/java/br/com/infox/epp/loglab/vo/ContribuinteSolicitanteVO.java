@@ -1,10 +1,11 @@
 package br.com.infox.epp.loglab.vo;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.pessoa.annotation.Cpf;
-import br.com.infox.util.time.Date;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -45,7 +46,7 @@ public class ContribuinteSolicitanteVO {
     private String emissorRg;
 
 	@NotNull
-    private String ufRg;
+    private Long idEstadoRg;
 
 	@NotNull
 	@Size(min = 6, max = 256)
@@ -56,6 +57,16 @@ public class ContribuinteSolicitanteVO {
 
     private String telefone;
 
-    private EnderecoVO endereco;
+	private String cidade;
+
+	private String logradouro;
+
+	private String bairro;
+
+	private String complemento;
+
+	private String numero;
+
+	private String cep;
 
 }

@@ -82,7 +82,7 @@ public class ContribuinteSolicitante implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_estado", nullable = false)
-    private Estado idEstagoRg;
+    private Estado estadoRg;
 
 	@NotNull
 	@Size(min = 6, max = 256)

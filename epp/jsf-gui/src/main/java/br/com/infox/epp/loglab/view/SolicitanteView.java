@@ -10,6 +10,8 @@ import javax.inject.Named;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.loglab.search.ContribuinteSolicitanteSearch;
+import br.com.infox.epp.loglab.service.SolicitanteService;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
@@ -23,35 +25,74 @@ public class SolicitanteView implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject
+    private SolicitanteService solicitanteService;
+    @Inject
+    private ContribuinteSolicitanteSearch contribuinteSolicitanteSearch;
+    @Inject
     private EstadoSearch estadoSearch;
 
     @Getter
     @Setter
     private ContribuinteSolicitanteVO solicitanteVO;
+    @Getter
+    @Setter
+    private Estado estado;
+    @Getter
+    @Setter
+    private String numeroCpf;
+    @Getter
+    @Setter
+    private String numeroMatricula;
+    @Getter
+    @Setter
+    private List<ContribuinteSolicitanteVO> contribuinteSolicitanteList;
 
     @PostConstruct
     protected void init() {
-    	this.solicitanteVO = new ContribuinteSolicitanteVO();
+    	limpar();
 	}
 
     public void consultarTurmalina() {
+    	if (numeroCpf != null) {
+    		contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
+    	}
     }
 
     public void novo() {
-        this.solicitanteVO = new ContribuinteSolicitanteVO();
+    	limpar();
     }
 
     @ExceptionHandled(MethodType.PERSIST)
     public void gravar() {
+    	alterarEstado();
+    	solicitanteService.gravar(solicitanteVO);
     }
 
     @ExceptionHandled(MethodType.UPDATE)
     public void atualizar() {
+    	alterarEstado();
+    	solicitanteService.gravar(solicitanteVO);
     }
 
     public List<Estado> getEstadosList() {
         List<Estado> estadosList = estadoSearch.findAll();
         return estadosList;
+    }
+
+    private void alterarEstado() {
+        if(estado != null) {
+        	solicitanteVO.setIdEstadoRg(estado.getId());
+        } else {
+        	solicitanteVO.setIdEstadoRg(null);
+        }
+    }
+
+    public void limpar() {
+    	solicitanteVO = null;
+    	estado = null;
+    	numeroCpf = null;
+    	numeroMatricula = null;
+    	contribuinteSolicitanteList = null;
     }
 
 }

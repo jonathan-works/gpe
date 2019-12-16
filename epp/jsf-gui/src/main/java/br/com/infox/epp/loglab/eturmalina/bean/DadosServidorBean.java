@@ -12,9 +12,9 @@ import lombok.Setter;
 public class DadosServidorBean {
     private String cpf;
     private String matricula;
-    
+
     public DadosServidorBean(String cpf) {
         this.cpf = cpf;
-        this.matricula = "";
     }
+
 }

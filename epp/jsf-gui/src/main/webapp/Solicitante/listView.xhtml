@@ -15,39 +15,60 @@
 
     <ui:define name="body">
     	<h:form id="solicitanteForm">
-    		<p:panel id="panelSolicitante" style="border-width: 1px; border-style: solid;"
+    		<p:panel id="panelSolicitante" styleClass="panelSolicitante" style="border-width: 1px; border-style: solid;"
 				header="#{infoxMessages['solicitante.titlePage']}">
-				<p:outputPanel id="panelConsultaTurmalina" styleClass="panelConsultaTurmalina">
-					<wi:field id="cpf" required="true"
+				<p:outputPanel id="panelConsultaTurmalina" styleClass="panelConsultaTurmalina"
+					rendered="#{empty solicitanteView.solicitanteVO}">
+					<wi:field id="numeroCpf" required="true"
 						label="#{infoxMessages['solicitante.cpf']}">
-						<p:inputMask id="cpfInput"
+						<p:inputMask id="numeroCpfInput"
 							mask="999.999.999-99"
 							size="14"
-							value="#{solicitanteView.solicitanteVO.cpf}">
+							value="#{solicitanteView.numeroCpf}">
 	                        <f:validator validatorId="cpfValidator" />
 	                        <f:converter converterId="cpfConverter" />
 						</p:inputMask>
 					</wi:field>
 
-					<wi:field id="matricula"
+					<wi:field id="numeroMatricula"
 						label="#{infoxMessages['solicitante.matricula']}">
-						<p:inputText id="matriculaInput"
+						<p:inputText id="numeroMatriculaInput"
 							size="14"
 							maxlength="10"
-							value="#{solicitanteView.solicitanteVO.matricula}" />
+							value="#{solicitanteView.numeroMatricula}" />
 					</wi:field>
 
 					<p:commandButton id="consultarTurmalinaBtn"
-						update="panelDadosSolicitante"
-						process="@this"
+						update="@(.panelConsultaTurmalina) :pageBodyDialogMessage"
+						process="@(.panelConsultaTurmalina)"
 						action="#{solicitanteView.consultarTurmalina()}"
-						onclick="infox.showLoading();"
-						oncomplete="infox.hideLoading();"
+						onstart="infox.showLoading();"
+						oncomplete="infox.hideLoading(); PF('listaContribuintesDialog').show();"
 						value="#{infoxMessages['solicitante.consultarTurmalina']}"
 						styleClass="buttons buttons-primary" />
+
+                    <wi:selectEturmalinaDialog id="listaContribuintesDialog"
+                            view="#{solicitanteView}"
+                            list="#{solicitanteView.contribuinteSolicitanteList}"
+                            selectObject="#{solicitanteView.solicitanteVO}"
+                            showListContribuinteSolicitante="true"
+                            header="#{infoxMessages['solicitante.titlePage']}"/>
 				</p:outputPanel>
 
-				<p:outputPanel id="panelDadosSolicitante" styleClass="panelDadosSolicitante">
+				<p:outputPanel id="panelDadosSolicitante" styleClass="panelDadosSolicitante"
+					rendered="#{!empty solicitanteView.solicitanteVO}">
+					<wi:field id="cpf"
+						label="#{infoxMessages['solicitante.cpf']}">
+						<p:outputLabel id="cpfOutput"
+							value="#{solicitanteView.solicitanteVO.cpf}" />
+					</wi:field>
+
+                    <wi:field id="matricula"
+                    	 label="#{infoxMessages['solicitante.matricula']}">
+                        <p:outputLabel id="matriculaOutput"
+                            value="#{solicitanteView.solicitanteVO.matricula}" />
+                    </wi:field>
+
 					<wi:field id="nomeCompleto" required="true"
 						label="#{infoxMessages['solicitante.nomeCompleto']}">
 						<p:inputText id="nomeCompletoInput"
@@ -110,15 +131,17 @@
 	                            value="#{solicitanteView.solicitanteVO.emissorRg}" />
 	                    </wi:field>
 
-	                    <wi:field id="ufRg"
+	                    <wi:field id="idEstadoRg"
 	                        label="#{infoxMessages['gerenciadorRg.uf']}">
-	                        <h:selectOneMenu id="ufRgInput"
+	                        <h:selectOneMenu id="idEstadoRgInput"
 	                            required="true"
-	                            value="#{solicitanteView.solicitanteVO.ufRg}">
-	                            <f:selectItem noSelectionOption="true"
+	                            value="#{solicitanteView.estado}">
+	                            <f:selectItem
+	                            	noSelectionOption="true"
 	                                itemValue="#{null}"
 	                                itemLabel="#{messages['crud.select.select']}" />
-	                            <f:selectItems var="itemUf"
+	                            <f:selectItems
+	                            	var="itemUf"
 	                            	value="#{solicitanteView.estadosList}" />
 	                            <f:converter
 	                                converterId="br.com.infox.jsf.converter.SelectItemConverter" />
@@ -154,9 +177,51 @@
 							value="#{solicitanteView.solicitanteVO.telefone}" />
 					</wi:field>
 
-					<ui:include src="/Endereco/gerenciador.xhtml">
-						<ui:param name="idForm" value="#{idForm}" />
-					</ui:include>
+					<fieldset>
+						<legend>#{infoxMessages['gerenciadorEndereco.titulo']}</legend>
+						<wi:field id="cidade"
+							label="#{infoxMessages['gerenciadorEndereco.cidade']}">
+							<h:inputText id="cidadeInput" required="true"
+								value="#{solicitanteView.solicitanteVO.cidade}"
+								size="30" maxlength="100" />
+						</wi:field>
+
+						<wi:field id="logradouro"
+							label="#{infoxMessages['gerenciadorEndereco.logradouro']}">
+							<h:inputText id="logradouroInput" required="true"
+								value="#{solicitanteView.solicitanteVO.logradouro}"
+								size="30" maxlength="256" />
+						</wi:field>
+
+						<wi:field id="bairro"
+							label="#{infoxMessages['gerenciadorEndereco.bairro']}">
+							<h:inputText id="bairroInput" required="true"
+								value="#{solicitanteView.solicitanteVO.bairro}"
+								size="30" maxlength="256" />
+						</wi:field>
+
+						<wi:field id="complemento"
+							label="#{infoxMessages['gerenciadorEndereco.complemento']}">
+							<h:inputText id="complementoEnderecoInput"
+								value="#{solicitanteView.solicitanteVO.complemento}"
+								size="30" maxlength="256" />
+						</wi:field>
+
+						<wi:field id="numero"
+							label="#{infoxMessages['gerenciadorEndereco.numero']}">
+							<h:inputText id="numeroInput" required="true"
+								value="#{solicitanteView.solicitanteVO.numero}"
+								size="12" maxlength="20" />
+						</wi:field>
+
+						<wi:field id="cep"
+							label="#{infoxMessages['gerenciadorEndereco.cep']}">
+							<p:inputMask id="cepInput" required="true"
+								value="#{solicitanteView.solicitanteVO.cep}"
+								size="12" maxlength="9" mask="99999-999" >
+							</p:inputMask>
+						</wi:field>
+					</fieldset>
 
 					<div style="margin-bottom: 10px" />
 
@@ -170,27 +235,27 @@
 
 			<p:outputPanel id="panelButtons" styleClass="panelButtons">
 				<p:commandButton id="incluirBtn"
-					update="panelSolicitante, pageBodyDialogMessage"
+					update="@(.panelSolicitante) :pageBodyDialogMessage"
 					process="@form"
 					action="#{solicitanteView.gravar()}"
 					onclick="infox.showLoading();"
 					oncomplete="infox.hideLoading();"
 					value="#{infoxMessages['crud.persist']}"
-					rendered="#{empty solicitanteView.solicitanteVO.id}"
+					rendered="#{!empty solicitanteView.solicitanteVO and empty solicitanteView.solicitanteVO.id}"
 					styleClass="buttons buttons-primary" />
 
 				<p:commandButton id="atualizarBtn"
-					update="panelSolicitante pageBodyDialogMessage"
+					update="@(.panelSolicitante) :pageBodyDialogMessage"
 					process="@form"
 					action="#{solicitanteView.atualizar()}"
 					onclick="infox.showLoading();"
 					oncomplete="infox.hideLoading();"
 					value="#{infoxMessages['crud.update']}"
-					rendered="#{not empty solicitanteView.solicitanteVO.id}"
+					rendered="#{!empty solicitanteView.solicitanteVO and not empty solicitanteView.solicitanteVO.id}"
 					styleClass="buttons buttons-primary" />
 
 				<p:commandButton id="novoBtn"
-					update="panelSolicitante"
+					update="@(.panelSolicitante) @(.panelButtons) :pageBodyDialogMessage"
                     process="@this"
                     resetValues="true"
 					action="#{solicitanteView.novo()}"

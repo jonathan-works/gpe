@@ -28,7 +28,7 @@
 	                        <f:converter converterId="cpfConverter" />
 						</p:inputMask>
 					</wi:field>
-                    
+
 					<wi:field id="numeroMatricula"
 						label="#{infoxMessages['contribuinte.matricula']}">
 						<p:inputText id="numeroMatriculaInput"
@@ -45,7 +45,7 @@
 						oncomplete="infox.hideLoading(); PF('listaContribuintesDialog').show();"
 						value="#{infoxMessages['contribuinte.consultarTurmalina']}"
 						styleClass="buttons buttons-primary" />
-            
+
                     <wi:selectEturmalinaDialog id="listaContribuintesDialog"
                             view="#{contribuinteView}"
                             list="#{contribuinteView.contribuinteSolicitanteList}"
@@ -58,17 +58,17 @@
                     styleClass="panelDadoscontribuinte"
                     rendered="#{!empty contribuinteView.contribuinte}">
                     <hr class="hrDivider ui-separator ui-state-default ui-corner-all" />
-                    
+
 					<wi:field id="cpf" label="#{infoxMessages['contribuinte.cpf']}">
 						<p:outputLabel id="cpfOutput"
 							value="#{contribuinteView.contribuinte.cpf}" />
 					</wi:field>
-                    
+
                     <wi:field id="matricula" label="#{infoxMessages['contribuinte.matricula']}">
                         <p:outputLabel id="matriculaOutput"
                             value="#{contribuinteView.contribuinte.matricula}" />
                     </wi:field>
-                    
+
                     <wi:field id="nomeCompleto" required="true"
                         label="#{infoxMessages['contribuinte.nomeCompleto']}">
                         <p:inputText id="nomeCompletoInput"
@@ -174,10 +174,6 @@
 							size="22"
 							value="#{contribuinteView.contribuinte.telefone}" />
 					</wi:field>
-
-					<ui:include src="/Endereco/gerenciador.xhtml">
-						<ui:param name="idForm" value="#{idForm}" />
-					</ui:include>
 
 					<div style="margin-bottom: 10px" />
 

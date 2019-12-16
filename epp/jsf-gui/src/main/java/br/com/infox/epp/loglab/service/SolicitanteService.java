@@ -1,15 +1,53 @@
 package br.com.infox.epp.loglab.service;
 
-import java.io.Serializable;
-
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+
+import br.com.infox.cdi.dao.Dao;
+import br.com.infox.cdi.qualifier.GenericDao;
+import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.epp.loglab.model.ContribuinteSolicitante;
+import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
+import br.com.infox.epp.municipio.Estado;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class SolicitanteService implements Serializable {
+public class SolicitanteService extends PersistenceController {
 
-    private static final long serialVersionUID = 1L;
+	@Inject
+	@GenericDao
+	private Dao<ContribuinteSolicitante, Long> solicitanteDAO;
+
+	public ContribuinteSolicitante gravar(ContribuinteSolicitanteVO solicitanteVO) {
+		ContribuinteSolicitante solicitante = solicitanteFromContribuinteSolicitanteVO(solicitanteVO);
+		if (solicitante.getId() == null) {
+			solicitanteDAO.persist(solicitante);
+		} else {
+			solicitanteDAO.update(solicitante);
+		}
+		return solicitante;
+	}
+
+	private ContribuinteSolicitante solicitanteFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo) {
+		ContribuinteSolicitante solicitante = new ContribuinteSolicitante();
+		solicitante.setId(vo.getId());
+		solicitante.setCpf(vo.getCpf());
+		solicitante.setMatricula(vo.getMatricula());
+		solicitante.setNomeCompleto(vo.getNomeCompleto());
+		solicitante.setSexo(vo.getSexo());
+		solicitante.setDataNascimento(vo.getDataNascimento());
+		solicitante.setNumeroRg(vo.getNumeroRg());
+		solicitante.setEmissorRg(vo.getEmissorRg());
+		solicitante.setEstadoRg(getEntityManager().getReference(Estado.class, vo.getIdEstadoRg()));
+		solicitante.setNomeMae(vo.getNomeMae());
+		solicitante.setEmail(vo.getEmail());
+		solicitante.setTelefone(vo.getTelefone());
+		solicitante.setCidade(vo.getCidade());
+		solicitante.setLogradouro(vo.getLogradouro());
+		solicitante.setBairro(vo.getBairro());
+		solicitante.setComplemento(vo.getComplemento());
+		solicitante.setNumero(vo.getNumero());
+		solicitante.setCep(vo.getCep());
+		return solicitante;
+	}
 
 }
