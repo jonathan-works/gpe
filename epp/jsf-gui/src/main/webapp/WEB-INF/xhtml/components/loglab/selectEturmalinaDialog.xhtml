@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="view" value="#{view}" />
+    <ui:param name="list" value="#{list}" />
+    <ui:param name="selectObject" value="#{selectObject}" />
+    
+    <ui:param name="showListServidor" value="#{empty showListServidor ? false : showListServidor}" />
+    <ui:param name="showListContribuinteSolicitante" value="#{empty showListContribuinteSolicitante ? false : showListContribuinteSolicitante}" />
+
+    <p:dialog widgetVar="#{id}"
+              styleClass="#{styleClass}"
+              modal="true"
+              resizable="false"
+              fitViewport="true"
+              closable="true"
+              width="90%"
+              height="60%"
+              header="#{header}">
+        <p:ajax event="close"
+                onclick="PF('#{id}').hide();"
+                process="@this"
+                resetValues="true"
+                update="@form" />
+            
+        <p:outputPanel id="#{id}PanelServidorDialog"
+                       rendered="#{showListServidor}">
+            <p:dataTable id="#{id}DataTableServidorDialog"
+                         value="#{list}"
+                         var="row"
+                         paginator="true"
+                         selection="#{selectObject}"
+                         rows="10"
+                         rowKey="#{row.id}"
+                         emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+                <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                
+                <p:column headerText="#{infoxMessages['servidor.cpf']}">
+                    <h:outputText value="#{row.cpf}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['servidor.nomeCompleto']}">
+                    <h:outputText value="#{row.nomeCompleto}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['servidor.cargoFuncao']}">
+                    <h:outputText value="#{row.cargoFuncao}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['servidor.secretaria']}">
+                    <h:outputText value="#{row.secretaria}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['servidor.departamento']}">
+                    <h:outputText value="#{row.departamento}" />
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+            
+        <p:outputPanel id="#{id}PanelContribuinteSolicitanteDialog"
+                       rendered="#{showListContribuinteSolicitante}">
+            <p:dataTable id="#{id}DataTableContribuinteSolicitanteDialog"
+                         value="#{list}"
+                         var="row"
+                         paginator="true"
+                         selection="#{selectObject}"
+                         rows="10"
+                         rowKey="#{row}"
+                         emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+                
+                <p:ajax event="rowSelectRadio" process="@this" onstart="showLoading()" oncomplete="hideLoading()" />
+                <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                
+                <p:column headerText="#{infoxMessages['contribuinte.cpf']}">
+                    <h:outputText value="#{row.cpf}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['contribuinte.matricula']}">
+                    <h:outputText value="#{row.matricula}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['contribuinte.nomeCompleto']}">
+                    <h:outputText value="#{row.nomeCompleto}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['gerenciadorRg.rg']}">
+                    <h:outputText value="#{row.numeroRg}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['gerenciadorRg.orgaoEmissor']}">
+                    <h:outputText value="#{row.emissorRg} - #{row.ufRg}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['gerenciadorEndereco.cidade']}">
+                    <h:outputText value="#{row.endereco.cidade}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['gerenciadorEndereco.cep']}">
+                    <h:outputText value="#{row.endereco.cep}" />
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+
+        <p:outputPanel id="#{id}Buttons">
+            <p:commandButton id="#{id}SelecionarBtn"
+                update="@this"
+                process="@this"
+                onclick="PF('#{id}').hide();"
+                value="OK"
+                styleClass="buttons buttons-primary" />
+        </p:outputPanel>
+    </p:dialog>
+</ui:composition>

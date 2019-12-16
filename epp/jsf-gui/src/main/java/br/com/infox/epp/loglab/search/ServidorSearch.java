@@ -17,7 +17,7 @@ public class ServidorSearch {
     @Inject
     private ETurmalinaService eTurmalinaService;
     
-    public List<ServidorVO> getDadosContribuinteSolicitante(String numeroCpf){
+    public List<ServidorVO> getDadosServidor(String numeroCpf){
         
         List<ServidorVO> servidorList = new ArrayList<ServidorVO>();
         
@@ -26,11 +26,24 @@ public class ServidorSearch {
         List<DadosServidorResponseBean> dadosServidores = eTurmalinaService.getDadosServidor(dadosServidor);
         
         for (DadosServidorResponseBean dadosServidorResponseBean : dadosServidores) {
-            ServidorVO servidor = new ServidorVO();
+            ServidorVO servidor = convertDadosServidorResponse(dadosServidorResponseBean);
             
-            //TODO: IMPLEMENTAR CONVERSAO
+            servidorList.add(servidor);
         }
         
         return servidorList;
+    }
+    
+    private ServidorVO convertDadosServidorResponse(DadosServidorResponseBean dadosServidorResponseBean) {
+        ServidorVO servidor = new ServidorVO();
+        servidor.setCpf(dadosServidorResponseBean.getCpf());
+        servidor.setNomeCompleto(dadosServidorResponseBean.getNome());
+        servidor.setCargoFuncao(dadosServidorResponseBean.getCargoCarreira());
+        
+        //TODO: VERIFICAR OS RETORNOS
+//        servidor.setSecretaria(dadosServidorResponseBean.get);
+//        servidor.setDepartamento(dadosServidorResponseBean.get);
+
+        return servidor;
     }
 }

@@ -10,6 +10,7 @@ import javax.inject.Named;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.loglab.search.ContribuinteSolicitanteSearch;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
@@ -24,17 +25,29 @@ public class ContribuinteView implements Serializable {
 
     @Inject
     private EstadoSearch estadoSearch;
+    @Inject
+    private ContribuinteSolicitanteSearch contribuinteSolicitanteSearch;
 
-    @Getter
-    @Setter
-    private ContribuinteSolicitanteVO contribuinteVO;
+    @Getter @Setter
+    private String numeroCpf;
+    @Getter @Setter
+    private String numeroMatricula;
+    @Getter @Setter
+    private List<ContribuinteSolicitanteVO> contribuinteSolicitanteList;  
+    
+    @Getter @Setter
+    private ContribuinteSolicitanteVO contribuinte;
 
     @PostConstruct
     protected void init() {
-    	this.contribuinteVO = new ContribuinteSolicitanteVO();
+        numeroCpf = null;
+        numeroMatricula = null;
+        contribuinte = null;
+        contribuinteSolicitanteList = null;
 	}
 
     public void consultarTurmalina() {
+        contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
     }
 
     @ExceptionHandled(MethodType.PERSIST)
@@ -45,5 +58,4 @@ public class ContribuinteView implements Serializable {
         List<Estado> estadosList = estadoSearch.findAll();
         return estadosList;
     }
-
 }

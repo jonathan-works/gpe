@@ -56,6 +56,6 @@ public class ContribuinteSolicitanteVO {
 
     private String telefone;
 
-    private EnderecoVO enderecoVO;
+    private EnderecoVO endereco;
 
 }

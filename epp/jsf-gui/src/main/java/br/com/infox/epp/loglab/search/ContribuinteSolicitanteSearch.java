@@ -10,6 +10,7 @@ import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorBean;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorResponseBean;
 import br.com.infox.epp.loglab.eturmalina.service.ETurmalinaService;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
+import br.com.infox.epp.loglab.vo.EnderecoVO;
 
 @Stateless
 public class ContribuinteSolicitanteSearch {
@@ -26,11 +27,25 @@ public class ContribuinteSolicitanteSearch {
         List<DadosServidorResponseBean> dadosServidores = eTurmalinaService.getDadosServidor(dadosServidor);
         
         for (DadosServidorResponseBean dadosServidorResponseBean : dadosServidores) {
-            ContribuinteSolicitanteVO contribuinteSolicitante = new ContribuinteSolicitanteVO();
+            ContribuinteSolicitanteVO contribuinteSolicitante = convertDadosServidorResponse(dadosServidorResponseBean);
             
-            //TODO: IMPLEMENTAR CONVERSAO
+            contribuinteSolicitanteList.add(contribuinteSolicitante);
         }
         
         return contribuinteSolicitanteList;
+    }
+    
+    private ContribuinteSolicitanteVO convertDadosServidorResponse(DadosServidorResponseBean dadosServidorResponseBean) {
+        ContribuinteSolicitanteVO contribuinteSolicitante = new ContribuinteSolicitanteVO();
+        contribuinteSolicitante.setCpf(dadosServidorResponseBean.getCpf());
+        contribuinteSolicitante.setMatricula(dadosServidorResponseBean.getMatricula());
+        contribuinteSolicitante.setNomeCompleto(dadosServidorResponseBean.getNome());
+        contribuinteSolicitante.setNumeroRg(dadosServidorResponseBean.getServidorRG());
+        contribuinteSolicitante.setEmissorRg(dadosServidorResponseBean.getServidorRGEmissao());
+        contribuinteSolicitante.setUfRg(dadosServidorResponseBean.getServidorRGOrgao());
+        contribuinteSolicitante.setNomeMae(dadosServidorResponseBean.getServidorFiliacaoMae());
+        contribuinteSolicitante.setEndereco(new EnderecoVO());
+        
+        return contribuinteSolicitante;
     }
 }

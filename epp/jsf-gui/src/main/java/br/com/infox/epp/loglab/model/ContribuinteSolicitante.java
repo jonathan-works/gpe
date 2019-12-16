@@ -1,6 +1,7 @@
 package br.com.infox.epp.loglab.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +23,6 @@ import org.hibernate.annotations.Persister;
 import br.com.infox.core.persistence.SchemaSingleTableEntityPersister;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.pessoa.annotation.Cpf;
-import br.com.infox.util.time.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -67,7 +67,7 @@ public class ContribuinteSolicitante implements Serializable {
 
 	@NotNull
     @Column(name = "dt_nascimento", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
 
 	@NotNull
