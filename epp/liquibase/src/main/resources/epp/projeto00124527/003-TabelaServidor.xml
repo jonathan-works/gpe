@@ -24,7 +24,7 @@
             <column name="ds_email" type="varchar(256)">
   				<constraints nullable="false"/>
             </column>
-            <column name="nr_telefone" type="varchar(20)"/>
+            <column name="nr_telefone" type="varchar(25)"/>
             <column name="ds_secretaria" type="varchar(256)">
   				<constraints nullable="false"/>
             </column>

@@ -24,26 +24,26 @@ public class SolicitanteService extends PersistenceController {
 
 	@Inject
 	private UsuarioLoginManager usuarioLoginManager;
-    
 	@Inject
     private ContribuinteSolicitanteSearch contribuinteSolicitanteSearch;
 
-	public ContribuinteSolicitante gravar(ContribuinteSolicitanteVO solicitanteVO) {
-        if(contribuinteSolicitanteSearch.isExisteUsuarioContribuinteSolicitante(solicitanteVO.getCpf())) {
-            throw new ValidationException("Já existe um usuário cadastrado para este CPF.");
-        }
-        
+	public ContribuinteSolicitanteVO gravar(ContribuinteSolicitanteVO solicitanteVO) {
 		ContribuinteSolicitante solicitante = solicitanteFromContribuinteSolicitanteVO(solicitanteVO);
 		if (solicitante.getId() == null) {
-			solicitanteDAO.persist(solicitante);
-			if (solicitante.getId() != null) {
-				UsuarioLogin usuarioLogin = usuarioLoginFromContribuinteSolicitanteVO(solicitanteVO);
-				usuarioLoginManager.persist(usuarioLogin, true);
-			}
+	        if (contribuinteSolicitanteSearch.isExisteUsuarioContribuinteSolicitante(solicitanteVO.getCpf())) {
+	            throw new ValidationException("Já existe um usuário cadastrado para este CPF.");
+	        } else {
+				solicitanteDAO.persist(solicitante);
+				if (solicitante.getId() != null) {
+					solicitanteVO.setId(solicitante.getId());
+					UsuarioLogin usuarioLogin = usuarioLoginFromContribuinteSolicitanteVO(solicitanteVO);
+					usuarioLoginManager.persist(usuarioLogin, true);
+				}
+	        }
 		} else {
 			solicitanteDAO.update(solicitante);
 		}
-		return solicitante;
+		return solicitanteVO;
 	}
 
 	private ContribuinteSolicitante solicitanteFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo) {

@@ -46,7 +46,7 @@
             <column name="ds_email" type="varchar(256)">
   				<constraints nullable="false"/>
             </column>
-            <column name="nr_telefone_celular" type="varchar(20)"/>
+            <column name="nr_telefone_celular" type="varchar(25)"/>
 			<column name="ds_cidade" type="varchar(100)"/>
             <column name="ds_logradouro" type="varchar(256)"/>
             <column name="ds_bairro" type="varchar(256)"/>
