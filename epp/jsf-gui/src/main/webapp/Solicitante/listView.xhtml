@@ -24,6 +24,7 @@
 						<p:inputMask id="numeroCpfInput"
 							mask="999.999.999-99"
 							size="14"
+                            required="true"
 							value="#{solicitanteView.numeroCpf}">
 	                        <f:validator validatorId="cpfValidator" />
 	                        <f:converter converterId="cpfConverter" />
@@ -43,7 +44,7 @@
 						process="@(.panelConsultaTurmalina)"
 						action="#{solicitanteView.consultarTurmalina()}"
 						onstart="infox.showLoading();"
-						oncomplete="infox.hideLoading(); PF('listaContribuintesDialog').show();"
+						oncomplete="infox.hideLoading();"
 						value="#{infoxMessages['solicitante.consultarTurmalina']}"
 						styleClass="buttons buttons-primary" />
 
@@ -117,6 +118,7 @@
 	                            size="10"
 	                            maxlength="20"
 	                            decimalPlaces="0"
+                                thousandSeparator=""
 	                            requiredMessage="Campo Obrigatório"
 	                            value="#{solicitanteView.solicitanteVO.numeroRg}" />
 	                    </wi:field>

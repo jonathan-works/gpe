@@ -18,8 +18,12 @@ public class ContribuinteSolicitanteSearch {
 
     @Inject
     private ETurmalinaService eTurmalinaService;
+    
     @Inject
     private EstadoSearch estadoSearch;
+    
+    @Inject
+    private UsuarioSearch usuarioSearch;
 
     public List<ContribuinteSolicitanteVO> getDadosContribuinteSolicitante(String numeroCpf, String numeroMatricula){
         List<ContribuinteSolicitanteVO> contribuinteSolicitanteList = new ArrayList<ContribuinteSolicitanteVO>();
@@ -32,6 +36,10 @@ public class ContribuinteSolicitanteSearch {
         }
 
         return contribuinteSolicitanteList;
+    }
+    
+    public boolean isExisteUsuarioContribuinteSolicitante(String numeroCpf){
+        return usuarioSearch.isExisteUsuarioByNumeroCpf(numeroCpf);
     }
 
     private ContribuinteSolicitanteVO convertDadosServidorResponse(DadosServidorResponseBean dadosServidorResponseBean) {

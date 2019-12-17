@@ -37,8 +37,10 @@
                          paginator="true"
                          selection="#{selectObject}"
                          rows="10"
-                         rowKey="#{row.id}"
+                         rowKey="#{row}"
                          emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+                
+                <p:ajax event="rowSelectRadio" process="@this" onstart="showLoading()" oncomplete="hideLoading()" />
                 <p:column selectionMode="single" style="width:16px;text-align:center"/>
 
                 <p:column headerText="#{infoxMessages['servidor.cpf']}">

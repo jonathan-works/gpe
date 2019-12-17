@@ -10,8 +10,10 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.loglab.model.ContribuinteSolicitante;
+import br.com.infox.epp.loglab.search.ContribuinteSolicitanteSearch;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
+import br.com.infox.seam.exception.ValidationException;
 
 @Stateless
 public class SolicitanteService extends PersistenceController {
@@ -22,8 +24,15 @@ public class SolicitanteService extends PersistenceController {
 
 	@Inject
 	private UsuarioLoginManager usuarioLoginManager;
+    
+	@Inject
+    private ContribuinteSolicitanteSearch contribuinteSolicitanteSearch;
 
 	public ContribuinteSolicitante gravar(ContribuinteSolicitanteVO solicitanteVO) {
+        if(contribuinteSolicitanteSearch.isExisteUsuarioContribuinteSolicitante(solicitanteVO.getCpf())) {
+            throw new ValidationException("Já existe um usuário cadastrado para este CPF.");
+        }
+        
 		ContribuinteSolicitante solicitante = solicitanteFromContribuinteSolicitanteVO(solicitanteVO);
 		if (solicitante.getId() == null) {
 			solicitanteDAO.persist(solicitante);

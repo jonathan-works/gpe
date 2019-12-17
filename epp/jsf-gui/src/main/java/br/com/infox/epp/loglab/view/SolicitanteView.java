@@ -16,6 +16,7 @@ import br.com.infox.epp.loglab.service.SolicitanteService;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
+import br.com.infox.jsf.util.JsfUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -56,6 +57,7 @@ public class SolicitanteView implements Serializable {
     public void consultarTurmalina() {
     	if (numeroCpf != null) {
     		contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
+            JsfUtil.instance().execute("PF('listaContribuintesDialog').show();");
     	}
     }
 
