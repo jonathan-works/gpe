@@ -10,6 +10,7 @@ import javax.inject.Named;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.loglab.contribuinte.type.ContribuinteEnum;
 import br.com.infox.epp.loglab.search.ContribuinteSolicitanteSearch;
 import br.com.infox.epp.loglab.service.SolicitanteService;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
@@ -64,19 +65,27 @@ public class SolicitanteView implements Serializable {
 
     @ExceptionHandled(MethodType.PERSIST)
     public void gravar() {
+    	preencherTipoContribuinte();
     	alterarEstado();
     	solicitanteService.gravar(solicitanteVO);
     }
 
     @ExceptionHandled(MethodType.UPDATE)
     public void atualizar() {
-    	alterarEstado();
     	solicitanteService.gravar(solicitanteVO);
     }
 
     public List<Estado> getEstadosList() {
         List<Estado> estadosList = estadoSearch.findAll();
         return estadosList;
+    }
+
+    private void preencherTipoContribuinte() {
+    	if (solicitanteVO == null) return;
+
+    	if (solicitanteVO.getTipoContribuinte() == null) {
+        	solicitanteVO.setTipoContribuinte(ContribuinteEnum.SO);
+        }
     }
 
     private void alterarEstado() {

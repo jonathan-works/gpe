@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +23,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Persister;
 
 import br.com.infox.core.persistence.SchemaSingleTableEntityPersister;
+import br.com.infox.epp.loglab.contribuinte.type.ContribuinteEnum;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.pessoa.annotation.Cpf;
 import lombok.EqualsAndHashCode;
@@ -48,6 +51,10 @@ public class ContribuinteSolicitante implements Serializable {
     @Column(name = "id_contribuinte", nullable = false, unique = true)
     private Long id;
 
+	@Enumerated(EnumType.STRING)
+    @Column(name = "tp_contribuinte", nullable = false)
+	private ContribuinteEnum tipoContribuinte;
+
 	@NotNull
 	@Cpf
     @Column(name = "nr_cpf", nullable = false)
@@ -63,7 +70,7 @@ public class ContribuinteSolicitante implements Serializable {
 
 	@NotNull
     @Column(name = "tp_sexo", nullable = false)
-	private Character sexo;
+	private String sexo;
 
 	@NotNull
     @Column(name = "dt_nascimento", nullable = false)
@@ -80,8 +87,8 @@ public class ContribuinteSolicitante implements Serializable {
     @Column(name = "ds_emissor_rg", nullable = false)
     private String emissorRg;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_estado", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_estado_rg", nullable = false)
     private Estado estadoRg;
 
 	@NotNull

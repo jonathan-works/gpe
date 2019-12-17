@@ -11,19 +11,18 @@
     <ui:param name="view" value="#{view}" />
     <ui:param name="list" value="#{list}" />
     <ui:param name="selectObject" value="#{selectObject}" />
-
     <ui:param name="showListServidor" value="#{empty showListServidor ? false : showListServidor}" />
     <ui:param name="showListContribuinteSolicitante" value="#{empty showListContribuinteSolicitante ? false : showListContribuinteSolicitante}" />
 
-    <p:dialog widgetVar="#{id}"
-              styleClass="#{styleClass}"
-              modal="true"
-              resizable="false"
-              fitViewport="true"
-              closable="true"
-              width="90%"
-              height="60%"
-              header="#{header}">
+    <p:dialog id="#{id}"
+    	widgetVar="#{id}"
+        header="#{header}"
+        modal="true"
+        closable="true"
+        resizable="false"
+        draggable="false"
+		responsive="true">
+
         <p:ajax event="close"
                 onclick="PF('#{id}').hide();"
                 process="@this"

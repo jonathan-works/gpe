@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.epp.loglab.contribuinte.type.ContribuinteEnum;
 import br.com.infox.epp.pessoa.annotation.Cpf;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,6 +23,9 @@ public class ContribuinteSolicitanteVO {
 	private Long id;
 
 	@NotNull
+	private ContribuinteEnum tipoContribuinte;
+
+	@NotNull
 	@Cpf
 	private String cpf;
 
@@ -32,7 +36,7 @@ public class ContribuinteSolicitanteVO {
 	private String nomeCompleto;
 
 	@NotNull
-	private Character sexo;
+	private String sexo;
 
 	@NotNull
 	private Date dataNascimento;
