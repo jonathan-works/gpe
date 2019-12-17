@@ -15,7 +15,7 @@
 
     <ui:define name="body">
     	<h:form id="contribuinteForm">
-    		<p:panel style="border-width: 1px; border-style: solid;"
+    		<p:panel id="panelContribuinte" styleClass="panelContribuinte" style="border-width: 1px; border-style: solid;"
 				header="#{infoxMessages['contribuinte.titlePage']}">
 				<p:outputPanel id="panelConsultaTurmalina" styleClass="panelConsultaTurmalina">
 					<wi:field id="numeroCpf" required="true"
@@ -23,6 +23,7 @@
 						<p:inputMask id="numeroCpfInput"
 							mask="999.999.999-99"
 							size="14"
+							required="true"
 							value="#{contribuinteView.numeroCpf}">
 	                        <f:validator validatorId="cpfValidator" />
 	                        <f:converter converterId="cpfConverter" />
@@ -38,35 +39,38 @@
 					</wi:field>
 
 					<p:commandButton id="consultarTurmalinaBtn"
-						update="panelConsultaTurmalina"
-						process="panelConsultaTurmalina"
+						update="@(.panelConsultaTurmalina) :pageBodyDialogMessage"
+						process="@(.panelConsultaTurmalina)"
 						action="#{contribuinteView.consultarTurmalina()}"
-                        onstart="infox.showLoading();"
-						oncomplete="infox.hideLoading(); PF('listaContribuintesDialog').show();"
+						onstart="infox.showLoading();"
+						oncomplete="infox.hideLoading();"
 						value="#{infoxMessages['contribuinte.consultarTurmalina']}"
 						styleClass="buttons buttons-primary" />
 
-                    <wi:selectEturmalinaDialog id="listaContribuintesDialog"
-                            view="#{contribuinteView}"
-                            list="#{contribuinteView.contribuinteSolicitanteList}"
-                            selectObject="#{contribuinteView.contribuinte}"
-                            showListContribuinteSolicitante="true"
-                            header="Lista de Contribuintes"/>
+					<wi:selectEturmalinaDialog id="listaContribuintesDialog"
+	                	view="#{contribuinteView}"
+	                    list="#{contribuinteView.contribuinteSolicitanteList}"
+	                    selectObject="#{contribuinteView.contribuinteVO}"
+	                    showListContribuinteSolicitante="true"
+	                    header="#{infoxMessages['contribuinte.titlePage']}"/>
 				</p:outputPanel>
 
-				<p:outputPanel id="panelDadoscontribuinte"
-                    styleClass="panelDadoscontribuinte"
-                    rendered="#{!empty contribuinteView.contribuinte}">
+				<p:outputPanel id="panelDadosContribuinte" styleClass="panelDadosContribuinte"
+                    rendered="#{!empty contribuinteView.contribuinteVO}">
+
+                    <div style="margin-bottom: 10px" />
                     <hr class="hrDivider ui-separator ui-state-default ui-corner-all" />
 
-					<wi:field id="cpf" label="#{infoxMessages['contribuinte.cpf']}">
+					<wi:field id="cpf"
+						label="#{infoxMessages['contribuinte.cpf']}">
 						<p:outputLabel id="cpfOutput"
-							value="#{contribuinteView.contribuinte.cpf}" />
+							value="#{contribuinteView.contribuinteVO.cpf}" />
 					</wi:field>
 
-                    <wi:field id="matricula" label="#{infoxMessages['contribuinte.matricula']}">
+                    <wi:field id="matricula"
+                    	label="#{infoxMessages['contribuinte.matricula']}">
                         <p:outputLabel id="matriculaOutput"
-                            value="#{contribuinteView.contribuinte.matricula}" />
+                            value="#{contribuinteView.contribuinteVO.matricula}" />
                     </wi:field>
 
                     <wi:field id="nomeCompleto" required="true"
@@ -75,14 +79,14 @@
                             required="true"
                             size="30"
                             maxlength="256"
-                            value="#{contribuinteView.contribuinte.nomeCompleto}" />
+                            value="#{contribuinteView.contribuinteVO.nomeCompleto}" />
                     </wi:field>
 
 					<wi:field id="genero" required="true"
 	                	label="#{infoxMessages['contribuinte.genero']}">
 	                    <h:selectOneMenu id="generoInput"
 	                    	required="true"
-	                        value="#{contribuinteView.contribuinte.sexo}">
+	                        value="#{contribuinteView.contribuinteVO.sexo}">
 	                        <f:selectItem noSelectionOption="true"
 	                        	itemValue="#{null}"
 	                            itemLabel="#{messages['crud.select.select']}" />
@@ -99,7 +103,7 @@
 							pattern="dd/MM/yyyy"
 							placeholder="__/__/____"
 							mask="99/99/9999"
-							value="#{contribuinteView.contribuinte.dataNascimento}">
+							value="#{contribuinteView.contribuinteVO.dataNascimento}">
 							<f:validator validatorId="pastDateValidator" />
 							<p:ajax event="dateSelect" process="@this" />
 							<p:ajax event="change" process="@this" />
@@ -108,38 +112,41 @@
 					</wi:field>
 
 					<fieldset style="display: inline;">
-						<legend>#{infoxMessages['gerenciadorRg.rg']}<span style="color: red;"> *</span></legend>
+						<legend>#{infoxMessages['registroGeral.titulo']}<span style="color: red;"> *</span></legend>
                        	<wi:field id="numeroRg"
-	                    	label="#{infoxMessages['gerenciadorRg.numero']}">
+	                    	label="#{infoxMessages['registroGeral.numero']}">
 	                        <p:inputNumber
 	                            id="numeroRgInput"
 	                            required="true"
 	                            size="10"
 	                            maxlength="20"
 	                            decimalPlaces="0"
+	                            thousandSeparator=""
 	                            requiredMessage="Campo Obrigatório"
-	                            value="#{contribuinteView.contribuinte.numeroRg}" />
+	                            value="#{contribuinteView.contribuinteVO.numeroRg}" />
 	                    </wi:field>
 
 	                    <wi:field id="emissorRg"
-	                        label="#{infoxMessages['gerenciadorRg.orgaoEmissor']}">
+	                        label="#{infoxMessages['registroGeral.orgaoEmissor']}">
 	                        <p:inputText
 	                            id="emissorRgInput"
 	                            required="true"
 	                            size="10"
 	                            maxlength="256"
-	                            value="#{contribuinteView.contribuinte.emissorRg}" />
+	                            value="#{contribuinteView.contribuinteVO.emissorRg}" />
 	                    </wi:field>
 
-	                    <wi:field id="ufRg"
-	                        label="#{infoxMessages['gerenciadorRg.uf']}">
-	                        <h:selectOneMenu id="ufRgInput"
+	                    <wi:field id="idEstadoRg"
+	                        label="#{infoxMessages['registroGeral.uf']}">
+	                        <h:selectOneMenu id="idEstadoRgInput"
 	                            required="true"
-	                            value="#{contribuinteView.contribuinte.ufRg}">
-	                            <f:selectItem noSelectionOption="true"
+	                            value="#{contribuinteView.estado}">
+	                            <f:selectItem
+	                            	noSelectionOption="true"
 	                                itemValue="#{null}"
 	                                itemLabel="#{messages['crud.select.select']}" />
-	                            <f:selectItems var="itemUf"
+	                            <f:selectItems
+	                            	var="itemUf"
 	                            	value="#{contribuinteView.estadosList}" />
 	                            <f:converter
 	                                converterId="br.com.infox.jsf.converter.SelectItemConverter" />
@@ -153,7 +160,7 @@
 							required="true"
 							size="30"
 							maxlength="256"
-							value="#{contribuinteView.contribuinte.nomeMae}" />
+							value="#{contribuinteView.contribuinteVO.nomeMae}" />
 					</wi:field>
 
 					<wi:field id="email" required="true"
@@ -162,7 +169,7 @@
 							required="true"
 							size="30"
 							maxlength="256"
-							value="#{contribuinteView.contribuinte.email}">
+							value="#{contribuinteView.contribuinteVO.email}">
 							<f:validator validatorId="emailValidator" />
 						</p:inputText>
 					</wi:field>
@@ -172,8 +179,54 @@
 						<p:inputMask id="telefoneInput"
 	                        mask="+999 (99) 9 9999 9999"
 							size="22"
-							value="#{contribuinteView.contribuinte.telefone}" />
+							value="#{contribuinteView.contribuinteVO.telefone}" />
 					</wi:field>
+
+					<fieldset>
+						<legend>#{infoxMessages['endereco.titulo']}</legend>
+						<wi:field id="cidade"
+							label="#{infoxMessages['endereco.cidade']}">
+							<h:inputText id="cidadeInput"
+								value="#{contribuinteView.contribuinteVO.cidade}"
+								size="30" maxlength="100" />
+						</wi:field>
+
+						<wi:field id="logradouro"
+							label="#{infoxMessages['endereco.logradouro']}">
+							<h:inputText id="logradouroInput"
+								value="#{contribuinteView.contribuinteVO.logradouro}"
+								size="30" maxlength="256" />
+						</wi:field>
+
+						<wi:field id="bairro"
+							label="#{infoxMessages['endereco.bairro']}">
+							<h:inputText id="bairroInput"
+								value="#{contribuinteView.contribuinteVO.bairro}"
+								size="30" maxlength="256" />
+						</wi:field>
+
+						<wi:field id="complemento"
+							label="#{infoxMessages['endereco.complemento']}">
+							<h:inputText id="complementoEnderecoInput"
+								value="#{contribuinteView.contribuinteVO.complemento}"
+								size="30" maxlength="256" />
+						</wi:field>
+
+						<wi:field id="numero"
+							label="#{infoxMessages['endereco.numero']}">
+							<h:inputText id="numeroInput"
+								value="#{contribuinteView.contribuinteVO.numero}"
+								size="12" maxlength="20" />
+						</wi:field>
+
+						<wi:field id="cep"
+							label="#{infoxMessages['endereco.cep']}">
+							<p:inputMask id="cepInput"
+								value="#{contribuinteView.contribuinteVO.cep}"
+								size="12" maxlength="9" mask="99999-999" >
+							</p:inputMask>
+						</wi:field>
+					</fieldset>
 
 					<div style="margin-bottom: 10px" />
 
@@ -187,13 +240,12 @@
 
 			<p:outputPanel id="panelButtons" styleClass="panelButtons">
 				<p:commandButton id="solicitarCadastroBtn"
-                    rendered="#{!empty contribuinteView.contribuinte}"
-					update="contribuinteForm, pageBodyDialogMessage"
+					update="@(.panelContribuinte) @(.panelButtons) :pageBodyDialogMessage"
 					process="@form"
-					action="#{contribuinteView.gravar()}"
 					onclick="infox.showLoading();"
 					oncomplete="infox.hideLoading();"
 					value="#{infoxMessages['solicitacaoCadastro.solicitarCadastro']}"
+					rendered="#{!empty contribuinteView.contribuinteVO}"
 					styleClass="buttons buttons-primary" />
 			</p:outputPanel>
 		</h:form>
