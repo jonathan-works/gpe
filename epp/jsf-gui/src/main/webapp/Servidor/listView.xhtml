@@ -50,6 +50,12 @@
 
                 <p:outputPanel id="panelDadosServidor" styleClass="panelDadosServidor"
                     rendered="#{!empty servidorView.servidorVO}">
+                    <wi:field id="cpf"
+                        label="#{infoxMessages['servidor.cpf']}">
+                        <p:outputLabel id="cpfOutput"
+                            value="#{servidorView.servidorVO.cpf}" />
+                    </wi:field>
+                    
 					<wi:field id="nomeCompleto" required="true"
 						label="#{infoxMessages['servidor.nomeCompleto']}">
 						<p:inputText id="nomeCompletoInput"

@@ -62,8 +62,4 @@ public class SolicitacaoCadastroView implements Serializable {
         List<Estado> estadosList = estadoSearch.findAll();
         return estadosList ;
     }
-    
-    public void teste() {
-        solicitacaoCadastroService.teste();
-    }
 }

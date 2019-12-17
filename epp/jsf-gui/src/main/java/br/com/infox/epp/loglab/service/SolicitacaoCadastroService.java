@@ -9,7 +9,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import br.com.infox.epp.loglab.eturmalina.service.ETurmalinaService;
 import br.com.infox.epp.loglab.vo.SolicitacaoCadastroVO;
 import br.com.infox.ibpm.sinal.SignalParam;
 import br.com.infox.ibpm.sinal.SignalParam.Type;
@@ -65,11 +64,5 @@ public class SolicitacaoCadastroService implements Serializable {
         params.add(new SignalParam(VARIAVEL_DEPARTAMENTO_SOLICITANTE, solicitacaoCadastro.getDepartamento(), Type.VARIABLE));
         
         return params;
-    }
-
-    @Inject
-    private ETurmalinaService eTurmalinaService;
-    public void teste() {
-        eTurmalinaService.teste();
     }
 }
