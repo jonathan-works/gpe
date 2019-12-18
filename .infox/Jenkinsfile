@@ -40,7 +40,3 @@ pipeline {
     }
 
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 2a121df07... Jenkinsfile para builds de estabilização
