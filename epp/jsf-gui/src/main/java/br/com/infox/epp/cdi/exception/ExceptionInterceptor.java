@@ -30,6 +30,9 @@ public class ExceptionInterceptor implements Serializable {
 	@AroundInvoke
 	public Object handleException(InvocationContext context) throws Exception {
 		ExceptionHandled annotation = context.getMethod().getAnnotation(ExceptionHandled.class);
+		if (annotation == null) {
+			annotation = context.getMethod().getDeclaringClass().getAnnotation(ExceptionHandled.class);
+		}
 		try {
 			Object result = context.proceed();
 			switch (annotation.value()) {

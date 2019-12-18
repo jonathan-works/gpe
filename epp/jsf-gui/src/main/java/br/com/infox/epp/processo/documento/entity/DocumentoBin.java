@@ -40,6 +40,8 @@ import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.core.util.SizeConverter;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.documento.domain.Assinavel;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
@@ -406,6 +408,12 @@ public class DocumentoBin implements Serializable {
 		} else if (!uuid.equals(other.uuid))
 			return false;
 		return true;
+	}
+	
+	public Assinavel toAssinavel(ClassificacaoDocumento classificacaoDocumento) {
+		Documento documento = new Documento();
+		documento.setDocumentoBin(this);
+		return documento;
 	}
 
 }

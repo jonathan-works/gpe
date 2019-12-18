@@ -118,7 +118,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">#{infoxMessages['process.task.var.label']}</f:facet>
-                <h:form id="varLabelForm">
+                <h:form id="varLabelForm" rendered="#{var.type ne 'PARAMETER'}">
                     <s:div id="varLabel">
                         <h:inputText value="#{var.label}">
                             <a:ajax execute="@this" limitRender="true" event="change" render="varLabel" />

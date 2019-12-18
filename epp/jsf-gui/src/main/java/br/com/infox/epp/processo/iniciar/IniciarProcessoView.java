@@ -90,7 +90,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         }
         Papel papel = Authenticator.getPapelAtual();
         UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
-        createProcesso(localizacao, usuarioLogin);
+        createProcesso(Authenticator.getUsuarioPerfilAtual().getLocalizacao(), usuarioLogin);
         iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         naturezaCategoriaFluxoItemList = natCatFluxoLocalizacaoDAO.listByLocalizacaoAndPapel(localizacao, papel);
         tipoParteList = tipoParteSearch.findAll();
