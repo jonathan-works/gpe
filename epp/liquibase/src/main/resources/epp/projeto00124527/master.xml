@@ -10,5 +10,6 @@
     <include file="epp/projeto00124527/004-Parametros.xml" />
     <include file="epp/projeto00124527/005-Sequences.xml" />
     <include file="epp/projeto00124527/006-Recursos.xml" />
+    <include file="epp/projeto00124527/007-SinalCadastroContribuinte.xml" />
 
 </databaseChangeLog>

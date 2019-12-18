@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorBean;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorResponseBean;
@@ -40,16 +41,20 @@ public class ETurmalinaService implements Serializable{
     private List<DadosServidorResponseBean> getServidoresEmExercicio(WSIntegracaoRHGETDADOSSERVIDORResponse retornoWs) {
         List<DadosServidorResponseBean> servidoresEmExercicioList = new ArrayList<DadosServidorResponseBean>();
         
-        if(retornoWs.getRetorno() != null){
-            Gson gson = new Gson();
-            List<DadosServidorResponseBean> dadosRetorno = gson.fromJson(retornoWs.getRetorno(), DadosServidorResponseBean.getListType());
-            
-            for (DadosServidorResponseBean dadosServidorResponse : dadosRetorno) {
-                if(dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCÍCIO")
-                        || dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCICIO")){
-                    servidoresEmExercicioList.add(dadosServidorResponse);
+        try {
+            if(retornoWs.getRetorno() != null){
+                Gson gson = new Gson();
+                List<DadosServidorResponseBean> dadosRetorno = gson.fromJson(retornoWs.getRetorno(), DadosServidorResponseBean.getListType());
+                
+                for (DadosServidorResponseBean dadosServidorResponse : dadosRetorno) {
+                    if(dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCÍCIO")
+                            || dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCICIO")){
+                        servidoresEmExercicioList.add(dadosServidorResponse);
+                    }
                 }
             }
+        }catch (JsonSyntaxException e) {
+            return servidoresEmExercicioList;
         }
         
         return servidoresEmExercicioList;

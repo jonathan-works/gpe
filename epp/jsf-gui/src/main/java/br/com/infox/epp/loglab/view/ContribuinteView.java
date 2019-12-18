@@ -7,8 +7,13 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.loglab.contribuinte.type.ContribuinteEnum;
 import br.com.infox.epp.loglab.search.ContribuinteSolicitanteSearch;
+import br.com.infox.epp.loglab.service.ContribuinteService;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
@@ -42,6 +47,9 @@ public class ContribuinteView implements Serializable {
     @Getter
     @Setter
     private List<ContribuinteSolicitanteVO> contribuinteSolicitanteList;
+    
+    @Inject
+    private ContribuinteService contribuinteService;
 
     @PostConstruct
     protected void init() {
@@ -53,6 +61,15 @@ public class ContribuinteView implements Serializable {
     		contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
             JsfUtil.instance().execute("PF('listaContribuintesDialog').show();");
     	}
+    }
+    
+    @ExceptionHandled
+    public void criarSolicitacaoCadastro() {
+        preencherTipoContribuinte();
+        alterarEstado();
+        contribuinteService.criarSinalContribuinte(contribuinteVO);
+        limpar();
+        FacesMessages.instance().add("Solicitação de Cadastro criada com sucesso");
     }
 
     public List<Estado> getEstadosList() {
@@ -68,4 +85,19 @@ public class ContribuinteView implements Serializable {
     	contribuinteSolicitanteList = null;
     }
 
+    private void preencherTipoContribuinte() {
+        if (contribuinteVO == null) return;
+
+        if (contribuinteVO.getTipoContribuinte() == null) {
+            contribuinteVO.setTipoContribuinte(ContribuinteEnum.CO);
+        }
+    }
+
+    private void alterarEstado() {
+        if(estado != null) {
+            contribuinteVO.setIdEstadoRg(estado.getId());
+        } else {
+            contribuinteVO.setIdEstadoRg(null);
+        }
+    }
 }

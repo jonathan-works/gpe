@@ -63,7 +63,7 @@
 
 					<wi:field id="cpf"
 						label="#{infoxMessages['contribuinte.cpf']}">
-						<p:outputLabel id="cpfOutput"
+						<p:outputLabel id="cpfInput"
 							value="#{contribuinteView.contribuinteVO.cpf}" />
 					</wi:field>
 
@@ -242,6 +242,7 @@
 				<p:commandButton id="solicitarCadastroBtn"
 					update="@(.panelContribuinte) @(.panelButtons) :pageBodyDialogMessage"
 					process="@form"
+                    action="#{contribuinteView.criarSolicitacaoCadastro()}"
 					onclick="infox.showLoading();"
 					oncomplete="infox.hideLoading();"
 					value="#{infoxMessages['solicitacaoCadastro.solicitarCadastro']}"

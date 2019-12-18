@@ -34,6 +34,8 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
@@ -183,10 +185,17 @@ public class SignalService {
         versionQuery.groupBy(from.get("name"));
         versionQuery.having(cb.equal(from.get("name"), definition.get("name")));
         
+        Subquery<Integer> fluxoQuery = cq.subquery(Integer.class);
+        Root<Fluxo> fluxo = fluxoQuery.from(Fluxo.class);
+        fluxoQuery.select(cb.literal(1));
+        fluxoQuery.where(cb.equal(fluxo.get(Fluxo_.fluxo), definition.get("name")),
+                cb.isTrue(fluxo.get(Fluxo_.ativo)));
+        
         cq.where(
             cb.equal(event.get("eventType"), eventType),
             cb.equal(definition.get("version"), versionQuery),
-            cb.equal(node.type(), StartState.class)
+            cb.equal(node.type(), StartState.class),
+            cb.exists(fluxoQuery)
         );
         return getEntityManager().createQuery(cq).getResultList();
     }
