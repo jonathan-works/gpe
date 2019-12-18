@@ -22,6 +22,8 @@ pipeline {
                     sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
                     sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
                 }
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*.war', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*liquibase*.tar.gz', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
             }
             post {
                 always {
@@ -40,7 +42,3 @@ pipeline {
     }
 
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 2a121df07... Jenkinsfile para builds de estabilização
