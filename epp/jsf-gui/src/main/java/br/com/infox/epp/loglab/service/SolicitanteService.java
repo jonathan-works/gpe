@@ -13,6 +13,9 @@ import br.com.infox.epp.loglab.model.ContribuinteSolicitante;
 import br.com.infox.epp.loglab.search.ContribuinteSolicitanteSearch;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.manager.PessoaService;
+import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.seam.exception.ValidationException;
 
 @Stateless
@@ -23,6 +26,8 @@ public class SolicitanteService extends PersistenceController {
 	private Dao<ContribuinteSolicitante, Long> solicitanteDAO;
 
 	@Inject
+	private PessoaService pessoaService;
+	@Inject
 	private UsuarioLoginManager usuarioLoginManager;
 	@Inject
     private ContribuinteSolicitanteSearch contribuinteSolicitanteSearch;
@@ -32,14 +37,19 @@ public class SolicitanteService extends PersistenceController {
 		if (solicitante.getId() == null) {
 	        if (contribuinteSolicitanteSearch.isExisteUsuarioContribuinteSolicitante(solicitanteVO.getCpf())) {
 	            throw new ValidationException("Já existe um usuário cadastrado para este CPF.");
-	        } else {
-				solicitanteDAO.persist(solicitante);
-				if (solicitante.getId() != null) {
-					solicitanteVO.setId(solicitante.getId());
-					UsuarioLogin usuarioLogin = usuarioLoginFromContribuinteSolicitanteVO(solicitanteVO);
-					usuarioLoginManager.persist(usuarioLogin, true);
-				}
 	        }
+
+			solicitanteDAO.persist(solicitante);
+			if (solicitante.getId() != null) {
+				solicitanteVO.setId(solicitante.getId());
+
+				PessoaFisica pessoaFisica = pessoaFisicaFromContribuinteSolicitanteVO(solicitanteVO);
+				pessoaService.persist(pessoaFisica);
+				if (pessoaFisica.getIdPessoa() != null) {
+					UsuarioLogin usuarioLogin = usuarioLoginFromContribuinteSolicitanteVO(solicitanteVO, pessoaFisica);
+					usuarioLoginManager.persist(usuarioLogin, Boolean.TRUE);
+				}
+			}
 		} else {
 			solicitanteDAO.update(solicitante);
 		}
@@ -70,13 +80,24 @@ public class SolicitanteService extends PersistenceController {
 		return solicitante;
 	}
 
-	private UsuarioLogin usuarioLoginFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo) {
+	private PessoaFisica pessoaFisicaFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo) {
+		PessoaFisica pessoaFisica = new PessoaFisica();
+		pessoaFisica.setTipoPessoa(TipoPessoaEnum.F);
+		pessoaFisica.setNome(vo.getNomeCompleto());
+		pessoaFisica.setAtivo(Boolean.TRUE);
+		pessoaFisica.setCpf(vo.getCpf());
+		pessoaFisica.setDataNascimento(vo.getDataNascimento());
+		return pessoaFisica;
+	}
+
+	private UsuarioLogin usuarioLoginFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo, PessoaFisica pessoaFisica) {
 		UsuarioLogin usuarioLogin = new UsuarioLogin();
 		usuarioLogin.setLogin(vo.getCpf());
 		usuarioLogin.setNomeUsuario(vo.getNomeCompleto());
 		usuarioLogin.setEmail(vo.getEmail());
-		usuarioLogin.setAtivo(true);
+		usuarioLogin.setAtivo(Boolean.TRUE);
 		usuarioLogin.setTipoUsuario(UsuarioEnum.H);
+		usuarioLogin.setPessoaFisica(pessoaFisica);
 		return usuarioLogin;
 	}
 
