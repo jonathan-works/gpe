@@ -11,5 +11,6 @@
     <include file="epp/projeto00124527/005-Sequences.xml" />
     <include file="epp/projeto00124527/006-Recursos.xml" />
     <include file="epp/projeto00124527/007-SinalCadastroContribuinte.xml" />
+    <include file="epp/projeto00124527/008-ParametroUrlServico.xml" />
 
 </databaseChangeLog>
