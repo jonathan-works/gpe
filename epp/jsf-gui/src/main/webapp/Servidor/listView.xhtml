@@ -12,7 +12,7 @@
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
     <ui:define name="title">#{infoxMessages['servidor.titlePage']}</ui:define>
-    
+
     <ui:define name="body">
         <h:form id="servidorForm">
             <p:panel id="panelServidor" styleClass="panelServidor" style="border-width: 1px; border-style: solid;"
@@ -39,7 +39,7 @@
                         oncomplete="infox.hideLoading();"
                         value="#{infoxMessages['servidor.consultarTurmalina']}"
                         styleClass="buttons buttons-primary" />
-                        
+
                     <wi:selectEturmalinaDialog id="listaServidoresDialog"
                             view="#{servidorView}"
                             list="#{servidorView.servidorList}"
@@ -55,7 +55,7 @@
                         <p:outputLabel id="cpfOutput"
                             value="#{servidorView.servidorVO.cpf}" />
                     </wi:field>
-                    
+
 					<wi:field id="nomeCompleto" required="true"
 						label="#{infoxMessages['servidor.nomeCompleto']}">
 						<p:inputText id="nomeCompletoInput"
@@ -78,7 +78,7 @@
 						label="#{infoxMessages['servidor.telefone']}">
 						<p:inputMask id="telefoneInput"
 							required="true"
-	                        mask="+999 (99) 9 9999 9999"
+	                        mask="(99) 99999999?9"
 							size="22"
 							value="#{servidorView.servidorVO.telefone}" />
 					</wi:field>

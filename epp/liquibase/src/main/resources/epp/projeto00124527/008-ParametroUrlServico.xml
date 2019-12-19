@@ -12,8 +12,8 @@
     <changeSet author="jonathamoreira" id="1" dbms="mssql, postgresql, oracle">
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
-            <column name="nm_variavel" value="dsLoginUsuarioETurmalin" />
-            <column name="vl_variavel" value="http://201.65.242.138:28081/e-turmalina/servlet/awsintegracao_rh?wsdl" />
+            <column name="nm_variavel" value="dsUrlServicoETurmalina" />
+            <column name="vl_variavel" value="-1" />
             <column name="ds_variavel" value="URL de acesso ao serviço do e-Turmalina" />
             <column name="in_sistema" valueBoolean="true" />
             <column name="in_ativo" valueBoolean="true" />
