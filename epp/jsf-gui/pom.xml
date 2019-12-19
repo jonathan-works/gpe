@@ -654,7 +654,7 @@
                         <configuration>
                             <wsdlFiles>
                                 <!-- Arquivo do serviço http://201.65.242.138:28081/e-turmalina/servlet/awsintegracao_rh?wsdl" -->
-                                <wsdlFile>eTurmalina_homologacao.wsdl</wsdlFile>
+                                <wsdlFile>eTurmalina.wsdl</wsdlFile>
                             </wsdlFiles>
                             <packageName>br.com.infox.epp.loglab.eturmalina.ws</packageName>
                             <xadditionalHeaders>true</xadditionalHeaders>
@@ -684,37 +684,6 @@
     <profiles>
         <profile>
             <id>producao</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>jaxws-maven-plugin</artifactId>
-                        <version>2.5</version>
-                        <configuration>
-                            <target>2.2</target>
-                            <wsdlDirectory>${project.basedir}/src/main/resources/META-INF/wsdl</wsdlDirectory>
-                            <sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>eTurmalina</id>
-                                <configuration>
-                                    <wsdlFiles>
-                                        <!-- Arquivo do serviço http://201.65.242.138:28081/e-turmalina/servlet/awsintegracao_rh?wsdl" -->
-                                        <wsdlFile>eTurmalina_producao.wsdl</wsdlFile>
-                                    </wsdlFiles>
-                                    <packageName>br.com.infox.epp.loglab.eturmalina.ws</packageName>
-                                    <xadditionalHeaders>true</xadditionalHeaders>
-                                </configuration>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>wsimport</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>desenvolvimento</id>
