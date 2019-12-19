@@ -22,29 +22,25 @@ public class SolicitacaoCadastroVO {
     @NotNull
     @Cpf
     private String cpf;
-    
+
     @NotNull
     @Size(min = 3, max = 20)
     private String numeroRg;
-    
+
     @NotNull
     @Size(min = 3, max = 256)
     private String emissorRg;
-    
+
     @NotNull
     private String ufRg;
-    
+
     @NotNull
     private String telefone;
-    
-    @NotNull
-    @Size(min = 3, max = 256)
+
     private String cargo;
-    
-    @NotNull
-    @Size(min = 3, max = 256)
+
     private String departamento;
-    
+
     @Override
     public String toString() {
         return nomeCompleto;

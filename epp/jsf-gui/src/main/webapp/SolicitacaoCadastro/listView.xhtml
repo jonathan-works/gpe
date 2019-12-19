@@ -44,10 +44,10 @@
 	                </wi:field>
 
 					<fieldset style="display: inline;">
-						<legend>#{infoxMessages['gerenciadorRg.rg']}<span style="color: red;"> *</span></legend>
+						<legend>#{infoxMessages['registroGeral.titulo']}<span style="color: red;"> *</span></legend>
 	                    <wi:field
 	                        id="numeroRgSolicitante"
-	                        label="#{infoxMessages['solicitacaoCadastro.numeroRg']}">
+	                    	label="#{infoxMessages['registroGeral.numero']}">
 	                        <p:inputNumber
 	                            id="numeroRgSolicitanteInput"
 	                            required="true"
@@ -61,7 +61,7 @@
 
 	                    <wi:field
 	                        id="emissorRgSolicitante"
-	                        label="#{infoxMessages['solicitacaoCadastro.emissorRg']}">
+	                        label="#{infoxMessages['registroGeral.orgaoEmissor']}">
 	                        <p:inputText
 	                            id="emissorRgSolicitanteInput"
 	                            required="true"
@@ -72,7 +72,7 @@
 
 	                    <wi:field
 	                        id="ufRgSolicitante"
-	                        label="#{infoxMessages['solicitacaoCadastro.ufRg']}">
+	                        label="#{infoxMessages['registroGeral.uf']}">
 	                        <h:selectOneMenu id="ufRgSolicitanteInput"
 	                            required="true"
 	                            value="#{solicitacaoCadastroView.estado}">
@@ -95,18 +95,16 @@
 	                    <p:inputMask
 	                        id="telefoneSolicitanteInput"
 	                        required="true"
-	                        mask="+999 (99) 9 9999 9999"
+	                        mask="(99) 99999999?9"
 	                        size="22"
 	                        value="#{solicitacaoCadastroView.instance.telefone}"/>
 	                </wi:field>
 
 	                <wi:field
 	                    id="cargoSolicitante"
-	                    required="true"
 	                    label="#{infoxMessages['solicitacaoCadastro.cargo']}">
 	                    <p:inputText
 	                        id="cargoSolicitanteInput"
-	                        required="true"
 	                        size="30"
 	                        maxlength="256"
 	                        value="#{solicitacaoCadastroView.instance.cargo}" />
@@ -114,11 +112,9 @@
 
 	                <wi:field
 	                    id="departamentoSolicitante"
-	                    required="true"
 	                    label="#{infoxMessages['solicitacaoCadastro.departamento']}">
 	                    <p:inputText
 	                        id="departamentoSolicitanteInput"
-	                        required="true"
 	                        size="30"
 	                        maxlength="256"
 	                        value="#{solicitacaoCadastroView.instance.departamento}" />

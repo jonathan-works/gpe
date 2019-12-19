@@ -23,11 +23,11 @@ import br.com.infox.seam.exception.ValidationException;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ContribuinteService extends PersistenceController implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private static final String CODIGO_SINAL_CADASTRO_CONTRIBUINTE = "cadastroContribuinte";
-    
+
     private static final String VARIAVEL_TIPO_CONTRIBUINTE = "tipoContribuinte";
     private static final String VARIAVEL_CPF_CONTRIBUINTE = "cpfContribuinte";
     private static final String VARIAVEL_MATRICULA_CONTRIBUINTE = "matriculaContribuinte";
@@ -46,13 +46,13 @@ public class ContribuinteService extends PersistenceController implements Serial
     private static final String VARIAVEL_COMPLEMENTO_ENDERECO_CONTRIBUINTE = "complementoEnderecoContribuinte";
     private static final String VARIAVEL_NUMERO_ENDERECO_CONTRIBUINTE = "numeroEnderecoContribuinte";
     private static final String VARIAVEL_CEP_ENDERECO_CONTRIBUINTE = "cepEnderecoContribuinte";
-    
-    @Inject
-    private SignalService signalService;
 
     @Inject
+    private SignalService signalService;
+    @Inject
     private SignalSearch signalSearch;
-    
+    @Inject
+    private ContribuinteSolicitanteService contribuinteSolicitanteService;
     @Inject
     private ContribuinteSolicitanteSearch contribuinteSolicitanteSearch;
 
@@ -60,25 +60,26 @@ public class ContribuinteService extends PersistenceController implements Serial
         if (contribuinteSolicitanteSearch.isExisteUsuarioContribuinteSolicitante(contribuinteVO.getCpf())) {
             throw new ValidationException("Já existe um usuário cadastrado para este CPF.");
         }
-        
+
         validarSinal();
         List<SignalParam> params = getParametros(contribuinteVO);
         signalService.startStartStateListening(CODIGO_SINAL_CADASTRO_CONTRIBUINTE, params);
+        contribuinteSolicitanteService.gravar(contribuinteVO);
     }
-    
+
     private void validarSinal() {
         if(!signalSearch.existeSignalByCodigo(CODIGO_SINAL_CADASTRO_CONTRIBUINTE)) {
             throw new ValidationException("Não foi encontrado o sinal com código \"" + CODIGO_SINAL_CADASTRO_CONTRIBUINTE + "\".");
         }
     }
-    
+
     private List<SignalParam> getParametros(ContribuinteSolicitanteVO contribuinteVO) {
         List<SignalParam> params = new ArrayList<>();
-        
+
         String dataNascimentoContribuinte = DateUtil.formatarData(contribuinteVO.getDataNascimento());
         Estado estado = getEntityManager().find(Estado.class, contribuinteVO.getIdEstadoRg());
         String ufRgContribuinte = estado.getCodigo();
-        
+
         params.add(new SignalParam(VARIAVEL_TIPO_CONTRIBUINTE, contribuinteVO.getTipoContribuinte().getLabel(), Type.VARIABLE));
         params.add(new SignalParam(VARIAVEL_CPF_CONTRIBUINTE, contribuinteVO.getCpf(), Type.VARIABLE));
         params.add(new SignalParam(VARIAVEL_MATRICULA_CONTRIBUINTE, contribuinteVO.getMatricula(), Type.VARIABLE));
@@ -97,7 +98,8 @@ public class ContribuinteService extends PersistenceController implements Serial
         params.add(new SignalParam(VARIAVEL_COMPLEMENTO_ENDERECO_CONTRIBUINTE, contribuinteVO.getComplemento(), Type.VARIABLE));
         params.add(new SignalParam(VARIAVEL_NUMERO_ENDERECO_CONTRIBUINTE, contribuinteVO.getNumero(), Type.VARIABLE));
         params.add(new SignalParam(VARIAVEL_CEP_ENDERECO_CONTRIBUINTE, contribuinteVO.getCep(), Type.VARIABLE));
-        
+
         return params;
     }
+
 }

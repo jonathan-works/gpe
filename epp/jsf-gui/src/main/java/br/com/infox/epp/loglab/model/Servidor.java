@@ -63,14 +63,10 @@ public class Servidor implements Serializable {
     @Column(name = "nr_telefone", nullable = true)
     private String telefone;
 
-	@NotNull
-	@Size(min = 3, max = 256)
-    @Column(name = "ds_secretaria", nullable = false)
+    @Column(name = "ds_secretaria", nullable = true)
 	private String secretaria;
 
-	@NotNull
-	@Size(min = 6, max = 256)
-    @Column(name = "ds_departamento", nullable = false)
+    @Column(name = "ds_departamento", nullable = true)
 	private String departamento;
 
     @Override

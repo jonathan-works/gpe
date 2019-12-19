@@ -52,7 +52,7 @@
                     rendered="#{!empty servidorView.servidorVO}">
                     <wi:field id="cpf"
                         label="#{infoxMessages['servidor.cpf']}">
-                        <p:outputLabel id="cpfOutput"
+                        <p:outputLabel id="cpfInput"
                             value="#{servidorView.servidorVO.cpf}" />
                     </wi:field>
 
@@ -94,19 +94,17 @@
 						</p:inputText>
 					</wi:field>
 
-					<wi:field id="secretaria" required="true"
+					<wi:field id="secretaria"
 						label="#{infoxMessages['servidor.secretaria']}">
 						<p:inputText id="secretariaInput"
-							required="true"
 							size="30"
 							maxlength="256"
 							value="#{servidorView.servidorVO.secretaria}" />
 					</wi:field>
 
-					<wi:field id="departamento" required="true"
+					<wi:field id="departamento"
 						label="#{infoxMessages['servidor.departamento']}">
 						<p:inputText id="departamentoInput"
-							required="true"
 							size="30"
 							maxlength="256"
 							value="#{servidorView.servidorVO.departamento}" />

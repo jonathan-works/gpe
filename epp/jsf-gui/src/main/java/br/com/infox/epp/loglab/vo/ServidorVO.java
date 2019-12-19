@@ -37,12 +37,8 @@ public class ServidorVO {
 	@NotNull
     private String email;
 
-	@NotNull
-	@Size(min = 3, max = 256)
 	private String secretaria;
 
-	@NotNull
-	@Size(min = 6, max = 256)
 	private String departamento;
 
 }

@@ -12,7 +12,7 @@ import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.loglab.contribuinte.type.ContribuinteEnum;
 import br.com.infox.epp.loglab.search.ContribuinteSolicitanteSearch;
-import br.com.infox.epp.loglab.service.SolicitanteService;
+import br.com.infox.epp.loglab.service.ContribuinteSolicitanteService;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
@@ -27,7 +27,7 @@ public class SolicitanteView implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private SolicitanteService solicitanteService;
+    private ContribuinteSolicitanteService contribuinteSolicitanteService;
     @Inject
     private ContribuinteSolicitanteSearch contribuinteSolicitanteSearch;
     @Inject
@@ -69,12 +69,12 @@ public class SolicitanteView implements Serializable {
     public void gravar() {
     	preencherTipoContribuinte();
     	alterarEstado();
-    	solicitanteService.gravar(solicitanteVO);
+    	contribuinteSolicitanteService.gravar(solicitanteVO);
     }
 
     @ExceptionHandled(MethodType.UPDATE)
     public void atualizar() {
-    	solicitanteService.gravar(solicitanteVO);
+    	contribuinteSolicitanteService.gravar(solicitanteVO);
     }
 
     public List<Estado> getEstadosList() {

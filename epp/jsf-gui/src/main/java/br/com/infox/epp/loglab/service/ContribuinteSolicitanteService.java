@@ -19,11 +19,11 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.seam.exception.ValidationException;
 
 @Stateless
-public class SolicitanteService extends PersistenceController {
+public class ContribuinteSolicitanteService extends PersistenceController {
 
 	@Inject
 	@GenericDao
-	private Dao<ContribuinteSolicitante, Long> solicitanteDAO;
+	private Dao<ContribuinteSolicitante, Long> contribuinteSolicitanteDAO;
 
 	@Inject
 	private PessoaService pessoaService;
@@ -32,28 +32,28 @@ public class SolicitanteService extends PersistenceController {
 	@Inject
     private ContribuinteSolicitanteSearch contribuinteSolicitanteSearch;
 
-	public ContribuinteSolicitanteVO gravar(ContribuinteSolicitanteVO solicitanteVO) {
-		ContribuinteSolicitante solicitante = solicitanteFromContribuinteSolicitanteVO(solicitanteVO);
+	public ContribuinteSolicitanteVO gravar(ContribuinteSolicitanteVO vo) {
+		ContribuinteSolicitante solicitante = solicitanteFromContribuinteSolicitanteVO(vo);
 		if (solicitante.getId() == null) {
-	        if (contribuinteSolicitanteSearch.isExisteUsuarioContribuinteSolicitante(solicitanteVO.getCpf())) {
+	        if (contribuinteSolicitanteSearch.isExisteUsuarioContribuinteSolicitante(vo.getCpf())) {
 	            throw new ValidationException("Já existe um usuário cadastrado para este CPF.");
 	        }
 
-			solicitanteDAO.persist(solicitante);
+	        contribuinteSolicitanteDAO.persist(solicitante);
 			if (solicitante.getId() != null) {
-				solicitanteVO.setId(solicitante.getId());
+				vo.setId(solicitante.getId());
 
-				PessoaFisica pessoaFisica = pessoaFisicaFromContribuinteSolicitanteVO(solicitanteVO);
+				PessoaFisica pessoaFisica = pessoaFisicaFromContribuinteSolicitanteVO(vo);
 				pessoaService.persist(pessoaFisica);
 				if (pessoaFisica.getIdPessoa() != null) {
-					UsuarioLogin usuarioLogin = usuarioLoginFromContribuinteSolicitanteVO(solicitanteVO, pessoaFisica);
+					UsuarioLogin usuarioLogin = usuarioLoginFromContribuinteSolicitanteVO(vo, pessoaFisica);
 					usuarioLoginManager.persist(usuarioLogin, Boolean.TRUE);
 				}
 			}
 		} else {
-			solicitanteDAO.update(solicitante);
+			contribuinteSolicitanteDAO.update(solicitante);
 		}
-		return solicitanteVO;
+		return vo;
 	}
 
 	private ContribuinteSolicitante solicitanteFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo) {
