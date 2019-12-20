@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+						http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="jonathamoreira_hugocasais" dbms="mssql, postgresql, oracle">
+    	<createTable tableName="tb_contribuinte">
+            <column name="id_contribuinte" type="bigint">
+                <constraints nullable="false"
+                	primaryKey="true"
+                	primaryKeyName="pk_contribuinte"/>
+            </column>
+            <column name="tp_contribuinte" type="char(2)">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="nr_cpf" type="varchar(11)">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="nr_matricula" type="varchar(10)"/>
+            <column name="nm_contribuinte" type="varchar(256)">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="tp_sexo" type="char(1)">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="dt_nascimento" type="timestamp">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="nr_rg" type="varchar(20)">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="ds_emissor_rg" type="varchar(256)">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="id_estado_rg" type="bigint">
+				<constraints foreignKeyName="fk_contribuinte_01"
+					referencedTableName="tb_estado"
+					referencedColumnNames="id_estado"
+					nullable="false"/>
+            </column>
+            <column name="nm_mae_contribuinte" type="varchar(256)">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="ds_email" type="varchar(256)">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="nr_telefone_celular" type="varchar(25)"/>
+			<column name="ds_cidade" type="varchar(100)"/>
+            <column name="ds_logradouro" type="varchar(256)"/>
+            <column name="ds_bairro" type="varchar(256)"/>
+            <column name="ds_complemento" type="varchar(256)"/>
+            <column name="nr_residencia" type="varchar(20)"/>
+            <column name="nr_cep" type="varchar(10)"/>
+    	</createTable>
+    </changeSet>
+
+</databaseChangeLog>

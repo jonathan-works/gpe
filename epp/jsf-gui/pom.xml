@@ -621,6 +621,51 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/wsimport</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <target>2.2</target>
+                    <wsdlDirectory>${project.basedir}/src/main/resources/META-INF/wsdl</wsdlDirectory>
+                    <sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>eTurmalina</id>
+                        <configuration>
+                            <wsdlFiles>
+                                <!-- Arquivo do serviço http://201.65.242.138:28081/e-turmalina/servlet/awsintegracao_rh?wsdl" -->
+                                <wsdlFile>eTurmalina.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>br.com.infox.epp.loglab.eturmalina.ws</packageName>
+                            <xadditionalHeaders>true</xadditionalHeaders>
+                        </configuration>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <properties>

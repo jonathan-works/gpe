@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['servidor.titlePage']}</ui:define>
+
+    <ui:define name="body">
+        <h:form id="servidorForm">
+            <p:panel id="panelServidor" styleClass="panelServidor" style="border-width: 1px; border-style: solid;"
+                header="#{infoxMessages['servidor.titlePage']}">
+                <p:outputPanel id="panelConsultaTurmalina" styleClass="panelConsultaTurmalina"
+                    rendered="#{empty servidorView.servidorVO}">
+                    <wi:field id="numeroCpf" required="true"
+                        label="#{infoxMessages['servidor.cpf']}">
+                        <p:inputMask id="numeroCpfInput"
+                            mask="999.999.999-99"
+                            size="14"
+                            required="true"
+                            value="#{servidorView.numeroCpf}">
+                            <f:validator validatorId="cpfValidator" />
+                            <f:converter converterId="cpfConverter" />
+                        </p:inputMask>
+                    </wi:field>
+
+                    <p:commandButton id="consultarTurmalinaBtn"
+                        update="@(.panelConsultaTurmalina) :pageBodyDialogMessage"
+                        process="@(.panelConsultaTurmalina)"
+                        action="#{servidorView.consultarTurmalina()}"
+                        onstart="infox.showLoading();"
+                        oncomplete="infox.hideLoading();"
+                        value="#{infoxMessages['servidor.consultarTurmalina']}"
+                        styleClass="buttons buttons-primary" />
+
+                    <wi:selectEturmalinaDialog id="listaServidoresDialog"
+                            view="#{servidorView}"
+                            list="#{servidorView.servidorList}"
+                            selectObject="#{servidorView.servidorVO}"
+                            showListServidor="true"
+                            header="#{infoxMessages['servidor.titlePage']}"/>
+                </p:outputPanel>
+
+                <p:outputPanel id="panelDadosServidor" styleClass="panelDadosServidor"
+                    rendered="#{!empty servidorView.servidorVO}">
+                    <wi:field id="cpf"
+                        label="#{infoxMessages['servidor.cpf']}">
+                        <p:outputLabel id="cpfInput"
+                            value="#{servidorView.servidorVO.cpf}" />
+                    </wi:field>
+
+					<wi:field id="nomeCompleto" required="true"
+						label="#{infoxMessages['servidor.nomeCompleto']}">
+						<p:inputText id="nomeCompletoInput"
+							required="true"
+							size="30"
+							maxlength="256"
+							value="#{servidorView.servidorVO.nomeCompleto}" />
+					</wi:field>
+
+					<wi:field id="cargoFuncao" required="true"
+						label="#{infoxMessages['servidor.cargoFuncao']}">
+						<p:inputText id="cargoFuncaoInput"
+							required="true"
+							size="30"
+							maxlength="256"
+							value="#{servidorView.servidorVO.cargoFuncao}" />
+					</wi:field>
+
+					<wi:field id="telefone" required="true"
+						label="#{infoxMessages['servidor.telefone']}">
+						<p:inputMask id="telefoneInput"
+							required="true"
+	                        mask="(99) 99999999?9"
+							size="22"
+							value="#{servidorView.servidorVO.telefone}" />
+					</wi:field>
+
+					<wi:field id="email" required="true"
+						label="#{infoxMessages['servidor.email']}">
+						<p:inputText id="emailInput"
+							required="true"
+							size="30"
+							maxlength="256"
+							value="#{servidorView.servidorVO.email}">
+							<f:validator validatorId="emailValidator" />
+						</p:inputText>
+					</wi:field>
+
+					<wi:field id="secretaria"
+						label="#{infoxMessages['servidor.secretaria']}">
+						<p:inputText id="secretariaInput"
+							size="30"
+							maxlength="256"
+							value="#{servidorView.servidorVO.secretaria}" />
+					</wi:field>
+
+					<wi:field id="departamento"
+						label="#{infoxMessages['servidor.departamento']}">
+						<p:inputText id="departamentoInput"
+							size="30"
+							maxlength="256"
+							value="#{servidorView.servidorVO.departamento}" />
+					</wi:field>
+
+					<div style="margin-bottom: 10px" />
+
+	                <s:div styleClass="required-alert" rendered="true">
+	                    <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
+	                    <span class="required">*</span>
+	                    <span>#{infoxMessages['form.required']}</span>
+	                </s:div>
+				</p:outputPanel>
+			</p:panel>
+
+			<p:outputPanel id="panelButtons" styleClass="panelButtons">
+				<p:commandButton id="incluirBtn"
+					update="@(.panelServidor) :pageBodyDialogMessage"
+					process="@form"
+					action="#{servidorView.gravar()}"
+					onclick="infox.showLoading();"
+					oncomplete="infox.hideLoading();"
+					value="#{infoxMessages['crud.persist']}"
+					rendered="#{!empty servidorView.servidorVO and empty servidorView.servidorVO.id}"
+					styleClass="buttons buttons-primary" />
+
+				<p:commandButton id="atualizarBtn"
+					update="@(.panelServidor) :pageBodyDialogMessage"
+					process="@form"
+					action="#{servidorView.atualizar()}"
+					onclick="infox.showLoading();"
+					oncomplete="infox.hideLoading();"
+					value="#{infoxMessages['crud.update']}"
+					rendered="#{!empty servidorView.servidorVO and not empty servidorView.servidorVO.id}"
+					styleClass="buttons buttons-primary" />
+
+				<p:commandButton id="novoBtn"
+					update="@(.panelServidor) @(.panelButtons) :pageBodyDialogMessage"
+                    process="@this"
+                    resetValues="true"
+					action="#{servidorView.novo()}"
+					onclick="infox.showLoading();"
+					oncomplete="infox.hideLoading();"
+					value="#{infoxMessages['crud.new']}"
+					styleClass="buttons buttons-primary" />
+			</p:outputPanel>
+		</h:form>
+	</ui:define>
+</ui:composition>

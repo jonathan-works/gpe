@@ -1,4 +1,4 @@
-package br.com.infox.epp.solicitacaocadastro;
+package br.com.infox.epp.loglab.vo;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,29 +22,25 @@ public class SolicitacaoCadastroVO {
     @NotNull
     @Cpf
     private String cpf;
-    
+
     @NotNull
     @Size(min = 3, max = 20)
     private String numeroRg;
-    
+
     @NotNull
     @Size(min = 3, max = 256)
     private String emissorRg;
-    
+
     @NotNull
     private String ufRg;
-    
+
     @NotNull
     private String telefone;
-    
-    @NotNull
-    @Size(min = 3, max = 256)
+
     private String cargo;
-    
-    @NotNull
-    @Size(min = 3, max = 256)
+
     private String departamento;
-    
+
     @Override
     public String toString() {
         return nomeCompleto;

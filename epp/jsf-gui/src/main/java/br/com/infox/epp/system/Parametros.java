@@ -12,7 +12,7 @@ import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.system.parametro.ParametroDefinition;
 
 public enum Parametros {
-    
+
     IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO("usuarioExternoPodeVerDocExcluido"),
     SOMENTE_USUARIO_INTERNO_PODE_VER_HISTORICO("somenteUsuarioInternoVerMotivoExclusaoDoc"),
     ID_USUARIO_PROCESSO_SISTEMA("idUsuarioProcessoSistema"),
@@ -30,6 +30,12 @@ public enum Parametros {
     IS_PRORROGACAO_AUTOMATICA_POR_MODELO_COMUNICACAO("prorrogarPrazoAutomaticamentePorModelo"),
     RICHFACES_FILE_UPLOAD_MAX_FILES_QUANTITY("richFileUploadMaxFilesQuantity"),
     WEB_SERVICE_TOKEN("webserviceToken"),
+    DS_URL_SERVICO_ETURMALINA(
+    		new ParametroDefinition<String>("eTurmalina", "dsUrlServicoETurmalina", FieldType.STRING)),
+    DS_LOGIN_USUARIO_ETURMALINA(
+            new ParametroDefinition<String>("eTurmalina", "dsLoginUsuarioETurmalina", FieldType.STRING)),
+    DS_SENHA_USUARIO_ETURMALINA(
+            new ParametroDefinition<String>("eTurmalina", "dsSenhaUsuarioETurmalina", FieldType.STRING)),
     CODIGO_CLIENTE_ENVIO_LOG("codigoClienteEnvioLog"),
     PASSWORD_CLIENTE_ENVIO_LOG("passwordClienteEnvioLog"),
     IS_ATIVO_ENVIO_LOG_AUTOMATICO("ativarServicoEnvioLogAutomatico"),
@@ -56,7 +62,7 @@ public enum Parametros {
 
     private Parametros(String grupo, String nome, boolean sistema){
         this(new ParametroDefinition<>(grupo, nome, FieldType.STRING, sistema, false));
-        
+
     }
     private Parametros(String grupo, String nome){
         this(new ParametroDefinition<>(grupo, nome, FieldType.STRING));
@@ -64,7 +70,7 @@ public enum Parametros {
     private Parametros(String grupo, String nome, FieldType fieldType){
         this(new ParametroDefinition<>(grupo, nome, fieldType));
     }
-    
+
     private Parametros(ParametroDefinition<?> parametroDefinition) {
         this.label = parametroDefinition.getNome();
         this.parametroDefinition = parametroDefinition;
@@ -82,7 +88,7 @@ public enum Parametros {
     public String getValue() {
         return (String) Contexts.getApplicationContext().get(this.label);
     }
-    
+
     public <T> T getValue(Class<T> clazz) {
     	String valueString = (String) Contexts.getApplicationContext().get(this.label);
     	if ( !StringUtil.isEmpty(valueString) ) {
@@ -92,7 +98,7 @@ public enum Parametros {
     		return null;
     	}
     }
-    
+
     public <T> T getValueOrDefault(Class<T> clazz, T defaultValue) {
     	T objectT = getValue(clazz);
         return null == objectT ? defaultValue : objectT ;

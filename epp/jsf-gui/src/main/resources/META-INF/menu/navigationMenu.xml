@@ -15,6 +15,8 @@
             <item xsi:type="MenuItem" label="localizacao.menuText" url="/Localizacao/listView.xhtml"/>
             <item xsi:type="MenuItem" label="estrutura.menuText" url="/Estrutura/listView.xhtml"/>
             <item xsi:type="MenuItem" label="perfil.menuText" url="/Perfil/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="servidor.menuText" url="/Servidor/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="solicitante.menuText" url="/Solicitante/listView.xhtml"/>
         </item>
         <item xsi:type="Submenu" label="menu.documentos">
             <item xsi:type="Submenu" label="menu.modeloDocumento">

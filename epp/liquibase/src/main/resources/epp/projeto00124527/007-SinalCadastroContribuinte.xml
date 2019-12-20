@@ -7,13 +7,13 @@
 
     <changeSet author="hugocasais" id="1" dbms="mssql, postgresql, oracle">
     	<preConditions onFail="MARK_RAN">
-    		<sqlCheck expectedResult="0">SELECT count(*) FROM tb_signal WHERE CD_SIGNAL = 'solicitacaoCadastro'</sqlCheck>
+    		<sqlCheck expectedResult="0">SELECT count(*) FROM tb_signal WHERE CD_SIGNAL = 'cadastroContribuinte'</sqlCheck>
     	</preConditions>
 
         <insert tableName="tb_signal">
-        	<column name="id_signal" valueComputed="${nextValueForSqSignal}"></column>
-        	<column name="cd_signal" value="solicitacaoCadastro"></column>
-        	<column name="nm_signal" value="Solicitação de Cadastro"></column>
+        	<column name="id_signal" valueSequenceNext="sq_signal"></column>
+        	<column name="cd_signal" value="cadastroContribuinte"></column>
+        	<column name="nm_signal" value="Solicitação de Cadastro de Contribuinte"></column>
         	<column name="in_ativo" valueBoolean="true"></column>
         	<column name="in_sistema" valueBoolean="true"></column>
         </insert>

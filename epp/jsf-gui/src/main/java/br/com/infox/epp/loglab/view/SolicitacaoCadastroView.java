@@ -1,4 +1,4 @@
-package br.com.infox.epp.solicitacaocadastro;
+package br.com.infox.epp.loglab.view;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,6 +10,8 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.loglab.service.SolicitacaoCadastroService;
+import br.com.infox.epp.loglab.vo.SolicitacaoCadastroVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
 import lombok.Getter;

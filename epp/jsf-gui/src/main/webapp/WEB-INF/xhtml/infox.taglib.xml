@@ -468,6 +468,10 @@ version="2.0">
         <source>components/templates/field.xhtml</source>
     </tag>
     <tag>
+        <tag-name>selectEturmalinaDialog</tag-name>
+        <source>components/loglab/selectEturmalinaDialog.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>dynamicFieldSet</tag-name>
         <component>
             <component-type>DynamicFieldSet</component-type>

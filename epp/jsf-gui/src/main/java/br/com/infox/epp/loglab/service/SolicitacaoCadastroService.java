@@ -1,4 +1,4 @@
-package br.com.infox.epp.solicitacaocadastro;
+package br.com.infox.epp.loglab.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import br.com.infox.epp.loglab.vo.SolicitacaoCadastroVO;
 import br.com.infox.ibpm.sinal.SignalParam;
 import br.com.infox.ibpm.sinal.SignalParam.Type;
 import br.com.infox.ibpm.sinal.SignalSearch;
