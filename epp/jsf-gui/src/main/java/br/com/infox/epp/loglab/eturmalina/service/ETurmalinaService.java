@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.xml.ws.WebServiceException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -31,9 +32,8 @@ public class ETurmalinaService implements Serializable{
 
     public List<DadosServidorResponseBean> getDadosServidor(DadosServidorBean dadosServidor) {
     	validarParametros();
-
-        WSIntegracaoRHGETDADOSSERVIDOR request = criarDadosServidor(dadosServidor);
         try {
+            WSIntegracaoRHGETDADOSSERVIDOR request = criarDadosServidor(dadosServidor);
             URL url = new URL(Parametros.DS_URL_SERVICO_ETURMALINA.getValue());
             WSIntegracaoRH wsIntegracao = new WSIntegracaoRH(url);
             WSIntegracaoRHSoapPort service = wsIntegracao.getWSIntegracaoRHSoapPort();
@@ -43,20 +43,22 @@ public class ETurmalinaService implements Serializable{
             List<DadosServidorResponseBean> dadosResponseList = getServidoresEmExercicio(response);
             return dadosResponseList;
 		} catch (MalformedURLException m) {
-			throw new RuntimeException(m);
+            throw new EppConfigurationException("URL inválida.");
+		} catch (WebServiceException we) {
+            throw new EppConfigurationException("Falha ao tentar acessar serviço de consulta do e-TURMALINA.");
 		}
     }
 
     private List<DadosServidorResponseBean> getServidoresEmExercicio(WSIntegracaoRHGETDADOSSERVIDORResponse retornoWs) {
         List<DadosServidorResponseBean> servidoresEmExercicioList = new ArrayList<DadosServidorResponseBean>();
         try {
-            if(retornoWs.getRetorno() != null){
+            if (retornoWs.getRetorno() != null){
                 Gson gson = new Gson();
                 List<DadosServidorResponseBean> dadosRetorno = gson.fromJson(retornoWs.getRetorno(), DadosServidorResponseBean.getListType());
 
                 for (DadosServidorResponseBean dadosServidorResponse : dadosRetorno) {
-                    if(dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCÍCIO")
-                            || dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCICIO")){
+                    if (dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCÍCIO")
+                     || dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCICIO")){
                         servidoresEmExercicioList.add(dadosServidorResponse);
                     }
                 }
