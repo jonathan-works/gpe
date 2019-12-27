@@ -1,11 +1,13 @@
 package br.com.infox.epp.loglab.search;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorBean;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorResponseBean;
 import br.com.infox.epp.loglab.eturmalina.service.ETurmalinaService;
@@ -47,10 +49,13 @@ public class ContribuinteSolicitanteSearch {
         contribuinteSolicitante.setCpf(dadosServidorResponseBean.getCpf());
         contribuinteSolicitante.setMatricula(dadosServidorResponseBean.getMatricula());
         contribuinteSolicitante.setNomeCompleto(dadosServidorResponseBean.getNome());
+        Date dataNascimento = DateUtil.parseDate(dadosServidorResponseBean.getServidorDataNascimento(), "dd/MM/yyyy"); 
+        contribuinteSolicitante.setDataNascimento(dataNascimento);
         contribuinteSolicitante.setNumeroRg(dadosServidorResponseBean.getServidorRG());
         contribuinteSolicitante.setEmissorRg(dadosServidorResponseBean.getServidorRGEmissao());
         Estado estado = estadoSearch.retrieveEstadoByCodigo(dadosServidorResponseBean.getServidorRGOrgao());
         contribuinteSolicitante.setIdEstadoRg(estado != null ? estado.getId() : null);
+        contribuinteSolicitante.setCdEstadoRg(estado != null ? estado.getCodigo() : null);
         contribuinteSolicitante.setNomeMae(dadosServidorResponseBean.getServidorFiliacaoMae());
         contribuinteSolicitante.setCidade(null);
         contribuinteSolicitante.setLogradouro(null);

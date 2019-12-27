@@ -49,8 +49,10 @@ public class ContribuinteSolicitanteVO {
 	@Size(min = 3, max = 256)
     private String emissorRg;
 
-	@NotNull
+    @NotNull
     private Long idEstadoRg;
+
+    private String cdEstadoRg;
 
 	@NotNull
 	@Size(min = 6, max = 256)

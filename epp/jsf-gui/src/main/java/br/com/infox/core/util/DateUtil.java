@@ -2,6 +2,7 @@ package br.com.infox.core.util;
 
 import java.sql.Time;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -243,6 +244,19 @@ public class DateUtil {
     public static Date getFimAno(Date data) {
         DateTime dateTime = new DateTime(data).withZone(DateTimeZone.UTC);
         return dateTime.withDate(dateTime.getYear(), 12, 31).withTime(23, 59, 59, 999).toDate();
+    }
+    
+    public static Date parseDate(String date, String formato) {
+        try {
+            if (date == null || date == "") {
+                return null;
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat(formato);
+            sdf.setLenient(false);
+            return sdf.parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
 }

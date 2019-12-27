@@ -44,23 +44,23 @@
                 <p:column selectionMode="single" style="width:16px;text-align:center"/>
 
                 <p:column headerText="#{infoxMessages['servidor.cpf']}">
-                    <h:outputText value="#{row.cpf}" />
+                    <h:outputText value="#{!empty row.cpf ?  row.cpf : 'Não fornecido'}" />
                 </p:column>
 
                 <p:column headerText="#{infoxMessages['servidor.nomeCompleto']}">
-                    <h:outputText value="#{row.nomeCompleto}" />
+                    <h:outputText value="#{!empty row.nomeCompleto ?  row.nomeCompleto : 'Não fornecido'}" />
                 </p:column>
 
                 <p:column headerText="#{infoxMessages['servidor.cargoFuncao']}">
-                    <h:outputText value="#{row.cargoFuncao}" />
+                    <h:outputText value="#{!empty row.cargoFuncao ?  row.cargoFuncao : 'Não fornecido'}" />
                 </p:column>
 
                 <p:column headerText="#{infoxMessages['servidor.secretaria']}">
-                    <h:outputText value="#{row.secretaria}" />
+                    <h:outputText value="#{!empty row.secretaria ?  row.secretaria : 'Não fornecido'}" />
                 </p:column>
 
                 <p:column headerText="#{infoxMessages['servidor.departamento']}">
-                    <h:outputText value="#{row.departamento}" />
+                    <h:outputText value="#{!empty row.departamento ?  row.departamento : 'Não fornecido'}" />
                 </p:column>
             </p:dataTable>
         </p:outputPanel>
@@ -80,15 +80,35 @@
                 <p:column selectionMode="single" style="width:16px;text-align:center"/>
 
                 <p:column headerText="#{infoxMessages['contribuinte.cpf']}">
-                    <h:outputText value="#{row.cpf}" />
+                    <h:outputText value="#{!empty row.cpf ?  row.cpf : 'Não fornecido'}" />
                 </p:column>
 
                 <p:column headerText="#{infoxMessages['contribuinte.matricula']}">
-                    <h:outputText value="#{row.matricula}" />
+                    <h:outputText value="#{!empty row.matricula ?  row.matricula : 'Não fornecido'}" />
                 </p:column>
 
                 <p:column headerText="#{infoxMessages['contribuinte.nomeCompleto']}">
-                    <h:outputText value="#{row.nomeCompleto}" />
+                    <h:outputText value="#{!empty row.nomeCompleto ?  row.nomeCompleto : 'Não fornecido'}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['contribuinte.nomeMae']}">
+                    <h:outputText value="#{!empty row.nomeMae ?  row.nomeMae : 'Não fornecido'}" />
+                </p:column>
+
+                <p:column headerText="#{infoxMessages['contribuinte.dataNascimento']}">
+                    <h:outputText value="#{!empty row.dataNascimento ?  row.dataNascimento : 'Não fornecido'}" />
+                </p:column>
+
+                <p:column headerText="#{infoxMessages['registroGeral.titulo']} - #{infoxMessages['registroGeral.numero']}">
+                    <h:outputText value="#{!empty row.numeroRg ?  row.numeroRg : 'Não fornecido'}" />
+                </p:column>
+
+                <p:column headerText="#{infoxMessages['registroGeral.titulo']} - #{infoxMessages['registroGeral.orgaoEmissor']}">
+                    <h:outputText value="#{!empty row.emissorRg ?  row.emissorRg : 'Não fornecido'}" />
+                </p:column>
+
+                <p:column headerText="#{infoxMessages['registroGeral.titulo']} - #{infoxMessages['registroGeral.uf']}">
+                    <h:outputText value="#{!empty row.cdEstadoRg ?  row.cdEstadoRg : 'Não fornecido'}" />
                 </p:column>
             </p:dataTable>
         </p:outputPanel>
