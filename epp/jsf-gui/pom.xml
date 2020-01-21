@@ -340,8 +340,8 @@
             <artifactId>javassist</artifactId>
         </dependency>
 		<dependency>
-			<groupId>br.com.infox.certificadoDigital</groupId>
-			<artifactId>certificado-digital</artifactId>
+			<groupId>br.com.infox.cms</groupId>
+           	<artifactId>certificado-digital-rest-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
