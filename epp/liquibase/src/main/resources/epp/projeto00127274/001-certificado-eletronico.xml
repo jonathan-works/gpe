@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="nextValueForSqRecurso" value="nextval('sq_tb_recurso')" dbms="postgresql" />
+    <property name="nextValueForSqRecurso" value="sq_tb_recurso.nextval" dbms="oracle" />
+    <property name="nextValueForSqRecurso" value="next value for sq_tb_recurso" dbms="mssql" />
+
+    <changeSet author="marcone" id="1" >
+    	<addColumn tableName="tb_assinatura_documento">
+    		<column name="ds_ip" type="varchar(100)" />
+    	</addColumn>
+   	</changeSet>
+    <changeSet author="marcone" id="2" >
+    	<addColumn tableName="tb_assinatura_documento">
+    		<column name="id_localizacao" type="bigint">
+    			<constraints
+    				foreignKeyName="fk_assinatura_documento_003"
+    				referencedTableName="tb_localizacao"
+    				referencedColumnNames="id_localizacao"
+   				/>
+    		</column>
+    	</addColumn>
+    </changeSet>
+    <changeSet author="marcone" id="3" >
+    	<addColumn tableName="tb_classificacao_doc_papel">
+    		<column name="tp_meio_assinatura" type="char(1)" />
+    	</addColumn>
+   	</changeSet>
+   	<changeSet author="marcone" id="4" dbms="mssql, postgresql, oracle">
+		<sql>
+			ALTER TABLE tb_classificacao_doc_papel ADD CONSTRAINT cc_classificacao_doc_papel CHECK (tp_meio_assinatura in ('T', 'E'))
+		</sql>
+   	</changeSet>
+</databaseChangeLog>

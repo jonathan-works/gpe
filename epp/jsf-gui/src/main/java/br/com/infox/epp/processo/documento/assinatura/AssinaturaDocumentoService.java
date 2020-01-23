@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
 import org.jboss.seam.ScopeType;
@@ -71,7 +73,7 @@ public class AssinaturaDocumentoService {
     private ValidadorAssinatura validadorAssinatura;
     @Inject
     private ValidadorUsuarioCertificado validadorUsuarioCertificado;
-    
+
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
         return documentoBin != null
@@ -168,7 +170,7 @@ public class AssinaturaDocumentoService {
         }
         return isDocumentoTotalmenteAssinado(mapAssinaturas);
     }
-    
+
     public boolean isDocumentoTotalmenteAssinado(DocumentoBin documento){
         if (documento.isMinuta()) {
             return false;
@@ -179,11 +181,11 @@ public class AssinaturaDocumentoService {
     	}
     	return false;
     }
-    
+
     boolean isDocumentoTotalmenteAssinado(Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas) {
         List<Boolean> obrigatorias = mapAssinaturas.get(TipoAssinaturaEnum.O);
         List<Boolean> suficientes = mapAssinaturas.get(TipoAssinaturaEnum.S);
-        
+
         return (obrigatorias.isEmpty() && suficientes.isEmpty())
                 || (!obrigatorias.isEmpty() && areAllTrue(obrigatorias))
                 || (!suficientes.isEmpty() && isOneTrue(suficientes));
@@ -199,7 +201,7 @@ public class AssinaturaDocumentoService {
         }
         return result;
     }
-    
+
     private boolean areAllTrue(List<Boolean> booleans){
         boolean result = true;
         for (boolean b : booleans) {
@@ -222,7 +224,7 @@ public class AssinaturaDocumentoService {
         }
         return result;
     }
-    
+
     public boolean isDocumentoAssinado(Integer idDocumentoBin, PessoaFisica pessoaFisica) {
         DocumentoBin bin = documentoBinManager.find(idDocumentoBin);
         if (bin != null && bin.getAssinaturas() != null) {
@@ -238,7 +240,7 @@ public class AssinaturaDocumentoService {
     public boolean isDocumentoAssinado(Documento documento, UsuarioLogin usuarioLogin) {
     	return isDocumentoAssinado(documento.getDocumentoBin(), usuarioLogin);
     }
-    
+
     public boolean isDocumentoAssinado(DocumentoBin documentoBin, UsuarioLogin usuarioLogin) {
     	if (documentoBin == null) {
     		return false;
@@ -268,15 +270,15 @@ public class AssinaturaDocumentoService {
     public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, PessoaFisica pessoaFisica) throws CertificadoException, AssinaturaException {
     	validadorUsuarioCertificado.verificaCertificadoUsuarioLogado(certChainBase64Encoded, pessoaFisica);
     }
-    
-    
+
+
     public void validarCertificado(String certChain, PessoaFisica pessoaFisica) throws CertificadoException, AssinaturaException {
 		verificaCertificadoUsuarioLogado(certChain, pessoaFisica);
-		checkValidadeCertificado(certChain);    	
+		checkValidadeCertificado(certChain);
     }
-    
+
     public void validarCertificado(String certChain) throws CertificadoException {
-		checkValidadeCertificado(certChain);    	
+		checkValidadeCertificado(certChain);
     }
 
     public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, DadosAssinatura dadosAssinatura) throws CertificadoException, AssinaturaException, DAOException {
@@ -287,11 +289,24 @@ public class AssinaturaDocumentoService {
 		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
 		validadorAssinatura.validarAssinatura(signedData, tipoSignedData, Base64.decodeBase64(signature), usuario.getPessoaFisica());
 
-		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature, tipoAssinatura);
+		String ip = null;
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if (fc != null) {
+            ip = ((HttpServletRequest) fc.getExternalContext().getRequest()).getRemoteAddr();
+        }
+
+		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
+	        documentoBin,
+	        usuarioPerfilAtual,
+	        certChain,
+	        signature,
+	        tipoAssinatura,
+	        ip
+        );
 		List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
 		documentoBin.getAssinaturas().add(assinaturaDocumento);
 		assinaturaDocumentoDAO.persist(assinaturaDocumento);
-		
+
 		if (documentoBin.isMinuta()){
 			documentoBin.setMinuta(Boolean.FALSE);
 		}
@@ -354,11 +369,11 @@ public class AssinaturaDocumentoService {
         Documento documento = documentoManager.find(idDocumento);
         return documento != null && isDocumentoAssinado(documento, usuarioLogin);
     }
-    
+
     public boolean isDocumentoAssinado(DocumentoBin documentoBin, Papel papel, UsuarioLogin usuario) {
         boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
-            if (assinaturaDocumento.getPapel().equals(papel) && 
+            if (assinaturaDocumento.getPapel().equals(papel) &&
             		assinaturaDocumento.getPessoaFisica().equals(usuario.getPessoaFisica())) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
@@ -366,7 +381,7 @@ public class AssinaturaDocumentoService {
         }
         return result;
     }
-    
+
     public boolean podeRenderizarApplet(Papel papel, ClassificacaoDocumento classificacao, Integer idDocumento, UsuarioLogin usuario) {
     	Documento documento = documentoManager.find(idDocumento);
     	if (documento == null) {
@@ -374,15 +389,15 @@ public class AssinaturaDocumentoService {
     	}
     	return podeRenderizarApplet(papel, classificacao, documento.getDocumentoBin(), usuario);
     }
-    
+
     public boolean podeRenderizarApplet(Papel papel, ClassificacaoDocumento classificacao, DocumentoBin documentoBin, UsuarioLogin usuario) {
     	if (documentoBin == null || (documentoBin != null && documentoBin.isMinuta())) {
     		return false;
     	}
-    	return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) && 
+    	return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) &&
     			!isDocumentoAssinado(documentoBin, papel, usuario);
     }
-    
+
     public boolean precisaAssinatura(ClassificacaoDocumento classificacaoDocumento){
     	if(classificacaoDocumento != null){
 	    	List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapelList = classificacaoDocumento.getClassificacaoDocumentoPapelList();
@@ -396,7 +411,7 @@ public class AssinaturaDocumentoService {
     	}
     	return true;
     }
-    
+
     protected void checkValidadeCertificado(String certChain) throws CertificadoException {
         try {
             CertificateManager.instance().verificaCertificado(certChain);
@@ -417,9 +432,9 @@ public class AssinaturaDocumentoService {
             }
         }
     }
-    
+
     public boolean isAssinavelPorUsuarioAtual(Papel papel, ClassificacaoDocumento classificacao, DocumentoBin documentoBin, UsuarioLogin usuario) {
-        return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) && 
+        return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) &&
                 !isDocumentoAssinado(documentoBin, papel, usuario);
     }
 }
