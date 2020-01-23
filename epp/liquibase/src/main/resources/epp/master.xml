@@ -119,7 +119,7 @@
     <include file="epp/0085-CriacaoLogErro.xml" />
     <include file="epp/0086-AjustesDocumentoBin.xml" />
     <include file="epp/0086-CriacaoParamtroConsultaExterna.xml" />
-    <include file="epp/0086-CriacaoIndicesMelhoriaPainel.xml" /> 
+    <include file="epp/0086-CriacaoIndicesMelhoriaPainel.xml" />
     <include file="epp/0086-ChavesCaptcha.xml" />
     <include file="epp/0086-RecuperarSenha.xml" />
     <include file="epp/0086-CookiesCaptcha.xml" />
@@ -138,24 +138,24 @@
     <include file="epp/0090-Jbpm_Event_Configuration_Tipo_Text.xml" />
     <include file="epp/0091-RefatoraAgendaEntrega.xml" />
     <include file="epp/0091-entrega_documentos.xml" />
-    <include file="epp/0092-AdicaoColunaTaskKeyModeloComunicacao.xml" /> 
+    <include file="epp/0092-AdicaoColunaTaskKeyModeloComunicacao.xml" />
     <include file="epp/0092-Checklist.xml" />
-    <include file="epp/0092-AdicaoColunaStringValue2Jbpm.xml" /> 
+    <include file="epp/0092-AdicaoColunaStringValue2Jbpm.xml" />
     <include file="epp/0093-AdicaoColunaHierarquiaItensModeloEntrega.xml" />
-    <include file="epp/0093-AdicaoCodigoTipoRelacionamentoProcesso.xml" /> 
+    <include file="epp/0093-AdicaoCodigoTipoRelacionamentoProcesso.xml" />
     <include file="epp/0094-DefinicaoVariavelProcessoRecurso.xml" />
     <include file="epp/0094-JbpmLog.xml" />
     <include file="epp/0094-AdicaoCodigosExportacaoFluxo.xml" />
     <include file="epp/0094-LinksParaAplicacoesExternas.xml" />
     <include file="epp/0094-CriacaoMarcadorDocumento.xml" />
     <include file="epp/0094-AlteraTipoParte.xml" />
-    <include file="epp/0094-NovoServicoAssinatura.xml" /> 
+    <include file="epp/0094-NovoServicoAssinatura.xml" />
     <include file="epp/0095-HistoricoProcessDefinition.xml" />
     <include file="epp/0095-CriacaoCustomVariables.xml" />
     <include file="epp/0095-AdicionaConfigurationVariableAccess.xml" />
     <include file="epp/0095-AjustaHistoricoModeloDocumento.xml" />
     <include file="epp/0095-AjustesOracle.xml" />
-    <include file="epp/0095-ResponsavelPrincipalEntrega.xml" /> 
+    <include file="epp/0095-ResponsavelPrincipalEntrega.xml" />
     <include file="epp/0096-parametro_massive_reindex.xml" />
     <include file="epp/0096-RefatoraAssinaturaDocumento.xml" />
     <include file="epp/0096-ControleNumeracao.xml" />
@@ -184,7 +184,7 @@
     <include file="epp/0105-AdicionaParametroRaizAssinaturaComunicacao.xml" />
     <include file="epp/0105-RemoveEventosRepetidosCalendario.xml" />
     <include file="epp/0106-AddDataInclusaoCalendarioEventos.xml" />
-    <include file="epp/0106-AdicionarCampoAtivoTabelaStatusProcesso.xml" />	
+    <include file="epp/0106-AdicionarCampoAtivoTabelaStatusProcesso.xml" />
     <include file="epp/0106-TipoListNumberOracle.xml" />
     <include file="epp/0106-PublicacaoDocumento.xml" />
     <include file="epp/0106-JbpmTransitionConfiguration.xml" />
@@ -216,9 +216,10 @@
     <include file="epp/0123-AjusteLogWsServer.xml" />
     <include file="epp/0124-AdicionaCodigoEstrutura.xml" />
     <include file="epp/extensao/master.xml" />
-    
+
     <include file="epp/projeto00124527/master.xml" />
-    
+    <include file="epp/projeto00127274/master.xml" />
+
     <!-- Precisa Rodar após todos os scripts -->
     <include file="epp/XXXX-DarPermissaoTabelasOracle.xml"/>
 

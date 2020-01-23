@@ -95,6 +95,13 @@
                     <li class="epp-new-menu-itm ui-disabled">
                         <div class="epp-new-menu-itm-perfil--flexbox">
                             <div><h:outputText styleClass="text-bold" value="Perfil" /></div>
+                            <div>
+                            <p:commandLink 
+                                action="/Usuario/detalhes.xhtml"
+                                styleClass="epp-new-menu-itm-action epp-new-menu-item-action-lnk"
+                                value="#{infoxMessages['detalhesUsuario.titlePage']}"
+                            />
+                            </div>
                             <c:if test="#{authenticator.usuarioPerfilListItems.size() gt 3}">
                                 <div>
                                     <h:form>
