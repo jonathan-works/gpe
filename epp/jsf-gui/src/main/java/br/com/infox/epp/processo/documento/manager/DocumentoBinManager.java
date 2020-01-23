@@ -42,6 +42,7 @@ import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
@@ -68,7 +69,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
 		return createProcessoDocumentoBin(documento.getDocumentoBin());
 	}
-	
+
 	public DocumentoBin createProcessoDocumentoBin(DocumentoBin bin) throws DAOException {
 		byte[] dados = bin.getProcessoDocumento();
 		if (bin.isBinario() && dados != null) {
@@ -88,7 +89,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		}
 		return bin;
 	}
-	
+
 	public DocumentoBin createProcessoDocumentoBin(DocumentoBin bin, InputStream inputStream) throws DAOException, IOException {
 	    byte[] dados = IOUtils.toByteArray(inputStream);
         if (bin.isBinario() && dados != null) {
@@ -119,7 +120,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		bin.setMinuta(false);
 		return persist(bin);
 	}
-	
+
 	public DocumentoBin createProcessoDocumentoBin(final String tituloDocumento, final byte[] conteudo, final String fileType) throws DAOException{
 		DocumentoBin bin = new DocumentoBin();
         bin.setNomeArquivo(tituloDocumento);
@@ -133,34 +134,39 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	public DocumentoBin getByUUID(final UUID uuid) {
 		return getDao().getByUUID(uuid);
 	}
-		
+
 	public static class MargemPdfException extends BusinessException {
 
 		private static final long serialVersionUID = 1L;
-		
+
 		public MargemPdfException(String mensagem) {
 			super(mensagem);
 		}
-		
+
 		public MargemPdfException(String mensagem, Throwable e) {
 			super(mensagem, e);
 		}
-		
+
 	}
-	
+
     public byte[] writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode) {
         try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
             writeMargemDocumento(pdf, textoAssinatura, textoCodigo, qrcode, outStream);
             return outStream.toByteArray();
         } catch (IOException e) {
         	throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
-        }        
+        }
+    }
+
+    public void writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode,
+            OutputStream outStream) {
+        writeMargemDocumento(pdf,  textoAssinatura, textoCodigo, qrcode, outStream, true);
     }
 
 	public void writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode,
-			OutputStream outStream) {
+			OutputStream outStream, boolean bottom) {
     	if(InfoxPdfReader.isCriptografado(pdf)) {
-            throw new MargemPdfException("Documento somente leitura, não é possível gravar");    		
+            throw new MargemPdfException("Documento somente leitura, não é possível gravar");
     	}
         try {
         	final PdfReader pdfReader = new PdfReader(pdf);
@@ -182,10 +188,17 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         			right = top;
         			top = tempRight;
         		}
-        		image.setAbsolutePosition(right - 65, top - 70);
-        		content.addImage(image);
-        		ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
-        		ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 35, top - 70, -90);
+        		if(bottom) {
+        		    image.setAbsolutePosition(0, 0);
+                    content.addImage(image);
+                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, codPhrase, 52, 15, 0);
+                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, phrase, 52, 25, 0);
+        		} else {
+        		    image.setAbsolutePosition(right - 65, top - 70);
+                    content.addImage(image);
+                    ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
+                    ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 35, top - 70, -90);
+        		}
         	}
 
         	stamper.close();
@@ -211,7 +224,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
             return QRCode.from(getUrlValidacaoDocumento() + "?cod=" + documento.getUuid().toString())
                     .to(ImageType.GIF).withSize(60, 60).stream().toByteArray();
         }
-        
+
 	public String getTextoCodigo(final UUID uuid) {
         final StringBuilder sb = new StringBuilder("Acesse em: ");
 		sb.append(getUrlValidacaoDocumento());
@@ -222,18 +235,23 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     }
 
     public String getTextoAssinatura(final DocumentoBin documento) {
-        final StringBuilder sb = new StringBuilder();
+        final StringBuilder assinadores = new StringBuilder();
         for (int i = 0; i < documento.getAssinaturas().size(); i++) {
-            if (i == 0) {
-                sb.append("Documento Assinado Digitalmente por: ");
-            } else {
-                sb.append(", ");
+            if (i != 0) {
+                assinadores.append(", ");
             }
             AssinaturaDocumento assinatura = documento.getAssinaturas().get(i);
-            sb.append(assinatura.getNomeUsuario());
+            assinadores.append(
+                String.format("%s, %s, às %3$tH:%3$tM",
+                    assinatura.getNomeUsuario(),
+                    assinatura.getPapel(),
+                    assinatura.getDataAssinatura()
+                )
+            );
         }
 
-        return sb.toString();
+        return Parametros.TEXTO_RODAPE_DOCUMENTO.getValue()
+            .replaceAll("${assinadores}", assinadores.toString());
     }
 
 	@Override
@@ -250,8 +268,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		}
 		return documentoBin;
 	}
-	
-	
+
+
 	public void setDocumentoSuficientementeAssinado(DocumentoBin documentoBin) throws DAOException {
 		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
 		documentoBin.setDataSuficientementeAssinado(new Date());
@@ -283,7 +301,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	public String getUrlValidacaoDocumento(final DocumentoBin documento) {
 		return getUrlValidacaoDocumento() + "?cod=" + documento.getUuid();
 	}
-	
+
 	public Boolean isDocumentoBinAssinadoPorPapel(DocumentoBin bin, Papel papel) {
 	    return getDao().isDocumentoBinAssinadoPorPapel(bin, papel);
 	}
