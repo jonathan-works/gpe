@@ -56,22 +56,22 @@ public class Servidor implements Serializable {
     @NotNull
     private ContatoLoglab contatoLoglab;
 
-	@NotNull
-	@Cpf
+    @NotNull
+    @Cpf
     @Column(name = "nr_cpf", nullable = false)
-	private String cpf;
+    private String cpf;
 
-	@NotNull
-	@Size(min = 6, max = 256)
+    @NotNull
+    @Size(min = 6, max = 256)
     @Column(name = "nm_servidor", nullable = false)
-	private String nomeCompleto;
+    private String nomeCompleto;
 
-	@NotNull
-	@Size(min = 3, max = 256)
+    @NotNull
+    @Size(min = 3, max = 256)
     @Column(name = "ds_cargo_funcao", nullable = false)
-	private String cargoFuncao;
+    private String cargoFuncao;
 
-	@NotNull
+    @NotNull
     @Column(name = "ds_email", nullable = false)
     private String email;
 
@@ -79,10 +79,10 @@ public class Servidor implements Serializable {
     private String telefone;
 
     @Column(name = "ds_secretaria", nullable = true)
-	private String secretaria;
+    private String secretaria;
 
     @Column(name = "ds_departamento", nullable = true)
-	private String departamento;
+    private String departamento;
 
     @Override
     public String toString() {

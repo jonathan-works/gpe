@@ -15,14 +15,14 @@ import lombok.Setter;
 @EqualsAndHashCode(of="id")
 public class EmpresaVO {
 
-	private Long id;
+    private Long id;
     private Integer idPessoaJuridica;
     private String cnpj;
-	private String tipoEmpresa;
-	private String razaoSocial;
-	private String nomeFantasia;
-	private Date dataAbertura;	
-	private String TelefoneCelular;
+    private String tipoEmpresa;
+    private String razaoSocial;
+    private String nomeFantasia;
+    private Date dataAbertura;
+    private String TelefoneCelular;
     private String telefoneFixo;
     private String email;
     private String codEstado;

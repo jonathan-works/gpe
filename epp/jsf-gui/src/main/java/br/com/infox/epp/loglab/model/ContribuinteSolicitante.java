@@ -61,39 +61,39 @@ public class ContribuinteSolicitante implements Serializable {
     @NotNull
     private PessoaFisica pessoaFisica;
 
-	@Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(name = "tp_contribuinte", nullable = false)
-	private ContribuinteEnum tipoContribuinte;
+    private ContribuinteEnum tipoContribuinte;
 
-	@NotNull
-	@Cpf
+    @NotNull
+    @Cpf
     @Column(name = "nr_cpf", nullable = false)
-	private String cpf;
+    private String cpf;
 
     @Column(name = "nr_matricula", nullable = true)
-	private String matricula;
+    private String matricula;
 
-	@NotNull
-	@Size(min = 6, max = 256)
+    @NotNull
+    @Size(min = 6, max = 256)
     @Column(name = "nm_contribuinte", nullable = false)
-	private String nomeCompleto;
+    private String nomeCompleto;
 
-	@NotNull
+    @NotNull
     @Column(name = "tp_sexo", nullable = false)
-	private String sexo;
+    private String sexo;
 
-	@NotNull
+    @NotNull
     @Column(name = "dt_nascimento", nullable = false)
-	@Temporal(TemporalType.DATE)
-	private Date dataNascimento;
+    @Temporal(TemporalType.DATE)
+    private Date dataNascimento;
 
-	@NotNull
-	@Size(min = 3, max = 20)
+    @NotNull
+    @Size(min = 3, max = 20)
     @Column(name = "nr_rg", nullable = false)
     private String numeroRg;
 
-	@NotNull
-	@Size(min = 3, max = 256)
+    @NotNull
+    @Size(min = 3, max = 256)
     @Column(name = "ds_emissor_rg", nullable = false)
     private String emissorRg;
 
@@ -101,12 +101,12 @@ public class ContribuinteSolicitante implements Serializable {
     @JoinColumn(name = "id_estado_rg", nullable = false)
     private Estado estadoRg;
 
-	@NotNull
-	@Size(min = 6, max = 256)
+    @NotNull
+    @Size(min = 6, max = 256)
     @Column(name = "nm_mae_contribuinte", nullable = false)
-	private String nomeMae;
+    private String nomeMae;
 
-	@NotNull
+    @NotNull
     @Column(name = "ds_email", nullable = false)
     private String email;
 
@@ -114,10 +114,10 @@ public class ContribuinteSolicitante implements Serializable {
     private String telefone;
 
     @Column(name = "ds_cidade", nullable = true)
-	private String cidade;
+    private String cidade;
 
     @Column(name = "ds_logradouro", nullable = true)
-	private String logradouro;
+    private String logradouro;
 
     @Column(name = "ds_bairro", nullable = true)
     private String bairro;
@@ -126,10 +126,10 @@ public class ContribuinteSolicitante implements Serializable {
     private String complemento;
 
     @Column(name = "nr_residencia", nullable = true)
-	private String numero;
+    private String numero;
 
     @Column(name = "nr_cep", nullable = true)
-	private String cep;
+    private String cep;
 
     @Override
     public String toString() {
