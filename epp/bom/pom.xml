@@ -336,6 +336,17 @@
             	<version>1.0-a1579620039</version>
         	</dependency>
             <dependency>
+            	<groupId>br.com.infox.cms</groupId>
+            	<artifactId>assinador-cms-api</artifactId>
+            	<version>1.0-SNAPSHOT</version>
+        	</dependency>
+            <dependency>
+            	<groupId>br.com.infox.cms</groupId>
+            	<artifactId>assinador-cms</artifactId>
+            	<version>1.0-SNAPSHOT</version>
+            	<scope>runtime</scope>
+        	</dependency>
+            <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-highlighter</artifactId>
                 <version>3.6.2</version>
