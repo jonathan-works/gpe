@@ -1,5 +1,8 @@
 package br.com.infox.epp.loglab.model;
 
+import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.ID_VARIAVEL;
+import static javax.persistence.FetchType.LAZY;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,6 +30,7 @@ import br.com.infox.core.persistence.SchemaSingleTableEntityPersister;
 import br.com.infox.epp.loglab.contribuinte.type.ContribuinteEnum;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.pessoa.annotation.Cpf;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +55,11 @@ public class ContribuinteSolicitante implements Serializable {
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_contribuinte", nullable = false, unique = true)
     private Long id;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "id_pessoa_fisica", nullable = false)
+    @NotNull
+    private PessoaFisica pessoaFisica;
 
 	@Enumerated(EnumType.STRING)
     @Column(name = "tp_contribuinte", nullable = false)

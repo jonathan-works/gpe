@@ -1,5 +1,7 @@
 package br.com.infox.epp.loglab.model;
 
+import static javax.persistence.FetchType.LAZY;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -7,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -16,6 +20,7 @@ import org.hibernate.annotations.Persister;
 
 import br.com.infox.core.persistence.SchemaSingleTableEntityPersister;
 import br.com.infox.epp.pessoa.annotation.Cpf;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +45,16 @@ public class Servidor implements Serializable {
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_servidor", nullable = false, unique = true)
     private Long id;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "id_pessoa_fisica", nullable = false)
+    @NotNull
+    private PessoaFisica pessoaFisica;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "id_contato_loglab", nullable = false)
+    @NotNull
+    private ContatoLoglab contatoLoglab;
 
 	@NotNull
 	@Cpf
