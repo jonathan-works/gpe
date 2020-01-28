@@ -33,7 +33,6 @@
             <modules>
                 <module>bom</module>
                 <module>jsf-gui</module>
-                <module>cms-signer</module>
             </modules>
         </profile>
         <profile>
@@ -44,7 +43,6 @@
             <modules>
                 <module>bom</module>
                 <module>jsf-gui</module>
-                <module>cms-signer</module>
                 <module>liquibase</module>
             </modules>
         </profile>
