@@ -95,30 +95,30 @@ public class Servidor implements Serializable {
 
     @Column(name = "dt_nomeacao_contratacao", nullable = true)
     @Temporal(TemporalType.DATE)
-    private Date DataNomeacaoContratacao;
+    private Date dataNomeacaoContratacao;
 
     @Column(name = "dt_posse", nullable = true)
     @Temporal(TemporalType.DATE)
-    private Date DataPosse;
+    private Date dataPosse;
 
     @Column(name = "dt_exercicio", nullable = true)
     @Temporal(TemporalType.DATE)
-    private Date DataExercicio;
+    private Date dataExercicio;
 
     @Column(name = "ds_subfolha", nullable = true)
     private String subFolha;
 
     @Column(name = "ds_jornada", nullable = true)
-    private String Jornada;
+    private String jornada;
 
     @Column(name = "ds_ocupacao_carreira", nullable = true)
-    private String OcupacaoCarreira;
+    private String ocupacaoCarreira;
 
     @Column(name = "ds_cargo_carreira", nullable = true)
-    private String CargoCarreira;
+    private String cargoCarreira;
 
     @Column(name = "ds_ocupacao_comissao", nullable = true)
-    private String OcupacaoComissao;
+    private String ocupacaoComissao;
 
     @Column(name = "ds_cargo_comissao", nullable = true)
     private String cargoComissao;
