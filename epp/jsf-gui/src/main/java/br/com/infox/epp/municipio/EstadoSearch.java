@@ -38,4 +38,15 @@ public class EstadoSearch {
         }
 	}
 
+    public List<String> getListCodEstado() {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<String> query = cb.createQuery(String.class);
+        Root<Estado> estado = query.from(Estado.class);
+        
+        query.select(estado.get(Estado_.codigo));
+        query.orderBy(cb.asc(estado.get(Estado_.codigo)));
+        
+        return getEntityManager().createQuery(query).getResultList();
+    }
+
 }

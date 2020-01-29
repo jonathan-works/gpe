@@ -167,59 +167,39 @@
 		           	render="@form:loadedByParticipante" style="margin-top: 0.8em;"/>
 	          
 		        <p:outputPanel id="loadedByParticipante">
-		          		
-		       		<i:inputCpf id="cpf" label="#{infoxMessages['pessoaFisica.cpf']}"
-		                value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.codigo}"
-		                required="true" rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}" 
-		                ajax="true" render="@form:loadedByParticipante" listener="#{iniciarProcessoView.onChangeParticipanteCpf}" />
-		            
-		            <i:inputCnpj id="cnpj" label="#{infoxMessages['pessoaJuridica.cnpj']}"
-		                value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.codigo}"
-		                required="true" rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'J'}"
-		                ajax="true" render="@form:nome @form:razao" listener="#{iniciarProcessoView.onChangeParticipanteCnpj}" />
-		            
-		            <i:inputText id="nome" value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.nome}" required="true"
-		                label="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F' ? infoxMessages['pessoaFisica.nome'] : infoxMessages['pessoaJuridica.nomeFantasia']}" 
-		                disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.pessoaLoaded}"/>
-		             
-		            <i:inputEmail id="email" label="#{infoxMessages['pessoaFisica.email']}" 
-		            	value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.email}"
-		            	rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}" 
-		            	disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.meioContatoLoaded}"
-		            	required="false" />
-		            	
-		            <i:inputText id="razao"
-		                value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.razaoSocial}"
-		                label="#{infoxMessages['pessoaJuridica.razaoSocial']}" required="true" 
-		                rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'J'}" 
-		                disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.pessoaLoaded}"/>
-		                
-		            <wi:inputDate id="dataNascimento" label="#{infoxMessages['pessoaFisica.dataNascimento']}"
-		                value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataNascimento}"
-		                rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}"
-		                disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.pessoaLoaded 
-		                			and not empty iniciarProcessoView.iniciarProcessoParticipanteVO.pessoa.dataNascimento}"
-		                required="false" />
-		                
-		            <wi:selectOneMenuEntity id="tipoPartes" label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
-						items="#{iniciarProcessoView.tipoParteList}" required="true" showLabelSelecione="true"
-						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoParte}" />
-					
-					<wi:inputDate id="dataInicio"
-						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataInicio}"
-						label="#{infoxMessages['participanteProcesso.dataInicioParticipacao']}"
-						required="false" />
-							
-					<wi:inputDate id="dataFim"
-						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataFim}"
-						label="#{infoxMessages['participanteProcesso.dataFimParticipacao']}" 
-						required="false"/>
-						
-					<i:inputTree id="participanteSuperior" root="#{iniciarProcessoView.root}" 
-						label="#{infoxMessages['participanteProcesso.superior']}" 
-						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.parent}" 
-						help="Para desselecionar um item clique ctrl + clique"/>
-						
+		          	<wi:empresaFields id="empresaParticipante"
+                                      rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'J'}"
+                                      viewObject="#{iniciarProcessoView.empresaVO}"
+                                      codEstadoList="#{iniciarProcessoView.getListCodEstado()}">
+                    
+                    <wi:selectEturmalinaDialog id="listaContribuintesDialog"
+                        view="#{solicitanteView}"
+                        list="#{solicitanteView.contribuinteSolicitanteList}"
+                        selectObject="#{solicitanteView.solicitanteVO}"
+                        showListContribuinteSolicitante="true"
+                        header="#{infoxMessages['solicitante.titlePage']}"/>
+                    </wi:empresaFields>
+                </p:outputPanel>
+                
+                <p:outputPanel id="partePanel">
+    		            <wi:selectOneMenuEntity id="tipoPartes" label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
+    						items="#{iniciarProcessoView.tipoParteList}" required="true" showLabelSelecione="true"
+    						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoParte}" />
+    					
+    					<wi:inputDate id="dataInicio"
+    						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataInicio}"
+    						label="#{infoxMessages['participanteProcesso.dataInicioParticipacao']}"
+    						required="false" />
+    							
+    					<wi:inputDate id="dataFim"
+    						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataFim}"
+    						label="#{infoxMessages['participanteProcesso.dataFimParticipacao']}" 
+    						required="false"/>
+    						
+    					<i:inputTree id="participanteSuperior" root="#{iniciarProcessoView.root}" 
+    						label="#{infoxMessages['participanteProcesso.superior']}" 
+    						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.parent}" 
+    						help="Para desselecionar um item clique ctrl + clique"/>
 		        </p:outputPanel>
 		        
 		        <div>

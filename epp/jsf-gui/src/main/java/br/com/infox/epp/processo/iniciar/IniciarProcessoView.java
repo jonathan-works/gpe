@@ -26,9 +26,11 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
+import br.com.infox.epp.loglab.vo.EmpresaVO;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
+import br.com.infox.epp.municipio.EstadoSearch;
 import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -48,6 +50,8 @@ import br.com.infox.epp.tipoParte.TipoParteSearch;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
+import lombok.Getter;
+import lombok.Setter;
 
 @Named
 @ViewScoped
@@ -71,6 +75,8 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private ProcessoSearch processoSearch;
     @Inject
     private StatusProcessoSearch statusProcessoSearch;
+    @Inject
+    private EstadoSearch estadoSearch;
 
     private List<Processo> processosCriados;
     private List<NaturezaCategoriaFluxoItem> naturezaCategoriaFluxoItemList;
@@ -81,6 +87,10 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private NaturezaCategoriaFluxoItem naturezaCategoriaFluxoItem;
     private Processo processo;
     private IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO;
+    
+    @Getter
+    @Setter
+    private EmpresaVO empresaVO;
     
     @PostConstruct
     private void init() {
@@ -96,6 +106,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         tipoParteList = tipoParteSearch.findAll();
         processosCriados = processoSearch.getProcessosNaoIniciados(Authenticator.getUsuarioLogado());
         participanteProcessoList = new ArrayList<>();
+        empresaVO = new EmpresaVO();
     }
 
     private void createProcesso(Localizacao localizacao, UsuarioLogin usuarioLogin) {
@@ -300,5 +311,9 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
 
     public void setProcesso(Processo processo) {
         this.processo = processo;
+    }
+    
+    public List<String> getListCodEstado() {
+        return estadoSearch.getListCodEstado();
     }
 }
