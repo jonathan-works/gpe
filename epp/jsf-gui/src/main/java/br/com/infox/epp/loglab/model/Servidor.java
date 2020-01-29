@@ -139,6 +139,9 @@ public class Servidor implements Serializable {
     @Column(name = "ds_orgao_rg", nullable = true)
     private String orgaoEmissoRG;
 
+    @Column(name = "ds_situacao", nullable = true)
+    private String situacao;
+
     @Override
     public String toString() {
         return getCpf() + " - " + getNomeCompleto();
