@@ -65,6 +65,10 @@ public class ContribuinteSolicitanteVO {
 
     private String cidade;
 
+    private Long idEstado;
+
+    private String cdEstado;
+
     private String logradouro;
 
     private String bairro;
