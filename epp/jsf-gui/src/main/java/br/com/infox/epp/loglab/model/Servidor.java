@@ -3,6 +3,7 @@ package br.com.infox.epp.loglab.model;
 import static javax.persistence.FetchType.LAZY;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -51,11 +54,6 @@ public class Servidor implements Serializable {
     @NotNull
     private PessoaFisica pessoaFisica;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "id_contato_loglab", nullable = false)
-    @NotNull
-    private ContatoLoglab contatoLoglab;
-
     @NotNull
     @Cpf
     @Column(name = "nr_cpf", nullable = false)
@@ -66,7 +64,6 @@ public class Servidor implements Serializable {
     @Column(name = "nm_servidor", nullable = false)
     private String nomeCompleto;
 
-    @NotNull
     @Size(min = 3, max = 256)
     @Column(name = "ds_cargo_funcao", nullable = false)
     private String cargoFuncao;
@@ -78,11 +75,69 @@ public class Servidor implements Serializable {
     @Column(name = "nr_telefone", nullable = true)
     private String telefone;
 
+    //Orgao
     @Column(name = "ds_secretaria", nullable = true)
     private String secretaria;
 
+    //LocalTrabalho
     @Column(name = "ds_departamento", nullable = true)
     private String departamento;
+
+    @Column(name = "nr_matricula", nullable = true)
+    private String matricula;
+
+    @Column(name = "nr_celular", nullable = true)
+    private String celular;
+
+    @Column(name = "dt_nascimento", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Date dataNascimento;
+
+    @Column(name = "dt_nomeacao_contratacao", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Date DataNomeacaoContratacao;
+
+    @Column(name = "dt_posse", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Date DataPosse;
+
+    @Column(name = "dt_exercicio", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Date DataExercicio;
+
+    @Column(name = "ds_subfolha", nullable = true)
+    private String subFolha;
+
+    @Column(name = "ds_jornada", nullable = true)
+    private String Jornada;
+
+    @Column(name = "ds_ocupacao_carreira", nullable = true)
+    private String OcupacaoCarreira;
+
+    @Column(name = "ds_cargo_carreira", nullable = true)
+    private String CargoCarreira;
+
+    @Column(name = "ds_ocupacao_comissao", nullable = true)
+    private String OcupacaoComissao;
+
+    @Column(name = "ds_cargo_comissao", nullable = true)
+    private String cargoComissao;
+
+    @Column(name = "nm_pai", nullable = true)
+    private String pai;
+
+    @Column(name = "nm_mae", nullable = true)
+    private String mae;
+
+    @Column(name = "nr_rg", nullable = true)
+    private String numeroRg;
+
+    @Column(name = "dt_emissao_rg", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Date dataEmissaoRg;
+
+    @Column(name = "ds_orgao_rg", nullable = true)
+    private String orgaoEmissoRG;
 
     @Override
     public String toString() {

@@ -116,6 +116,10 @@ public class ContribuinteSolicitante implements Serializable {
     @Column(name = "ds_cidade", nullable = true)
     private String cidade;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_estado", nullable = true)
+    private Estado estado;
+
     @Column(name = "ds_logradouro", nullable = true)
     private String logradouro;
 
