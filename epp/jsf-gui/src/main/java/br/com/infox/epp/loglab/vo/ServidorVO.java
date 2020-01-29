@@ -17,28 +17,28 @@ import lombok.Setter;
 @EqualsAndHashCode(of="id")
 public class ServidorVO {
 
-	private Long id;
+    private Long id;
 
-	@NotNull
-	@Cpf
-	private String cpf;
+    @NotNull
+    @Cpf
+    private String cpf;
 
-	@NotNull
-	@Size(min = 6, max = 256)
-	private String nomeCompleto;
+    @NotNull
+    @Size(min = 6, max = 256)
+    private String nomeCompleto;
 
-	@NotNull
-	@Size(min = 3, max = 256)
-	private String cargoFuncao;
+    @NotNull
+    @Size(min = 3, max = 256)
+    private String cargoFuncao;
 
-	@NotNull
+    @NotNull
     private String telefone;
 
-	@NotNull
+    @NotNull
     private String email;
 
-	private String secretaria;
+    private String secretaria;
 
-	private String departamento;
+    private String departamento;
 
 }
