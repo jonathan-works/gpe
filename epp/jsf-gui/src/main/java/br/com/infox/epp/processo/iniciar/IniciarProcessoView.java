@@ -78,14 +78,25 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     @Inject
     private EstadoSearch estadoSearch;
 
+    @Getter
     private List<Processo> processosCriados;
+    @Getter
     private List<NaturezaCategoriaFluxoItem> naturezaCategoriaFluxoItemList;
+    @Getter
     private List<TipoParte> tipoParteList;
+    @Getter
     private TreeNode root = new DefaultTreeNode("Root", null);
+    @Getter
     private List<IniciarProcessoParticipanteVO> participanteProcessoList;
 
+    @Getter
+    @Setter
     private NaturezaCategoriaFluxoItem naturezaCategoriaFluxoItem;
+    @Getter
+    @Setter
     private Processo processo;
+    @Getter
+    @Setter
     private IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO;
 
     @Getter
@@ -267,50 +278,6 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             iniciarProcessoParticipanteVO.getParent().getChildren().remove(iniciarProcessoParticipanteVO);
         }
         participanteProcessoList.remove(iniciarProcessoParticipanteVO);
-    }
-
-    public List<Processo> getProcessosCriados() {
-        return processosCriados;
-    }
-
-    public List<NaturezaCategoriaFluxoItem> getNaturezaCategoriaFluxoItemList() {
-        return naturezaCategoriaFluxoItemList;
-    }
-
-    public List<TipoParte> getTipoParteList() {
-        return tipoParteList;
-    }
-
-    public List<IniciarProcessoParticipanteVO> getParticipanteProcessoList() {
-        return participanteProcessoList;
-    }
-
-    public TreeNode getRoot() {
-        return root;
-    }
-
-    public IniciarProcessoParticipanteVO getIniciarProcessoParticipanteVO() {
-        return iniciarProcessoParticipanteVO;
-    }
-
-    public void setIniciarProcessoParticipanteVO(IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO) {
-        this.iniciarProcessoParticipanteVO = iniciarProcessoParticipanteVO;
-    }
-
-    public NaturezaCategoriaFluxoItem getNaturezaCategoriaFluxoItem() {
-        return naturezaCategoriaFluxoItem;
-    }
-
-    public void setNaturezaCategoriaFluxoItem(NaturezaCategoriaFluxoItem naturezaCategoriaFluxoItem) {
-        this.naturezaCategoriaFluxoItem = naturezaCategoriaFluxoItem;
-    }
-
-    public Processo getProcesso() {
-        return processo;
-    }
-
-    public void setProcesso(Processo processo) {
-        this.processo = processo;
     }
 
     public List<String> getListCodEstado() {
