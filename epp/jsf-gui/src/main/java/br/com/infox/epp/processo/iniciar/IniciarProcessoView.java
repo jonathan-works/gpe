@@ -57,8 +57,8 @@ import lombok.Setter;
 @ViewScoped
 public class IniciarProcessoView extends AbstractIniciarProcesso {
 
-	private static final long serialVersionUID = 1L;
-	
+    private static final long serialVersionUID = 1L;
+
     @Inject
     private NatCatFluxoLocalizacaoDAO natCatFluxoLocalizacaoDAO;
     @Inject
@@ -83,15 +83,15 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private List<TipoParte> tipoParteList;
     private TreeNode root = new DefaultTreeNode("Root", null);
     private List<IniciarProcessoParticipanteVO> participanteProcessoList;
-    
+
     private NaturezaCategoriaFluxoItem naturezaCategoriaFluxoItem;
     private Processo processo;
     private IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO;
-    
+
     @Getter
     @Setter
     private EmpresaVO empresaVO;
-    
+
     @PostConstruct
     private void init() {
         Localizacao localizacao = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao();
@@ -117,13 +117,13 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         processo.setProcessoRoot(processo);
         processo.setDataInicio(DateTime.now().toDate());
     }
-    
+
     @ExceptionHandled
     public void removerProcesso(Processo processo) {
         processoManager.removerProcessoNaoIniciado(processo);
         processosCriados.remove(processo);
     }
-    
+
     @ExceptionHandled
     public String iniciar(Processo processo) {
         String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
@@ -173,14 +173,14 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             return "/Painel/list.seam?faces-redirect=true";
         }
     }
-    
+
     private boolean hasStartTaskForm(Task startTask) {
-        return startTask.getTaskController() != null 
+        return startTask.getTaskController() != null
                 && startTask.getTaskController().getVariableAccesses() != null
                 && !startTask.getTaskController().getVariableAccesses().isEmpty()
                 && !containsOnlyParameterVariable(startTask);
     }
-    
+
     private boolean containsOnlyParameterVariable(Task startTask) {
         List<VariableAccess> variableAccesses = startTask.getTaskController().getVariableAccesses();
         for (VariableAccess variableAccess : variableAccesses) {
@@ -190,19 +190,19 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         }
         return true;
     }
-    
+
     public void onSelectNaturezaCategoriaFluxoItem() {
         if (naturezaCategoriaFluxoItem != null) {
             processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoItem.getNaturezaCategoriaFluxo());
         }
     }
-    
+
     public void onChangeTipoPessoa() {
         TipoPessoaEnum tipoPessoa = iniciarProcessoParticipanteVO.getTipoPessoa();
         iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         iniciarProcessoParticipanteVO.setTipoPessoa(tipoPessoa);
     }
-    
+
     public void onChangeParticipanteCpf() {
         PessoaFisica pessoaFisica = pessoaFisicaDAO.searchByCpf(iniciarProcessoParticipanteVO.getCodigo());
         if (pessoaFisica != null) {
@@ -213,7 +213,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             iniciarProcessoParticipanteVO.limparDadosPessoaFisica();
         }
     }
-    
+
     public void onChangeParticipanteCnpj() {
         PessoaJuridica pessoaJuridica = pessoaJuridicaDAO.searchByCnpj(iniciarProcessoParticipanteVO.getCodigo());
         if (pessoaJuridica != null) {
@@ -222,7 +222,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             iniciarProcessoParticipanteVO.limparDadosPessoaJuridica();
         }
     }
-    
+
     public void onClickNovoParticipante() {
         iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
     }
@@ -241,7 +241,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         }
     }
-    
+
     private boolean podeAdicionarParticipante(IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO) {
         TreeNode parent = iniciarProcessoParticipanteVO.getParent() == null ? root : iniciarProcessoParticipanteVO.getParent();
         return !parent.getChildren().contains(iniciarProcessoParticipanteVO);
@@ -251,7 +251,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         removerParticipante(iniciarProcessoParticipanteVO, null);
         Collections.sort(participanteProcessoList);
     }
-    
+
     private void removerParticipante(IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO, Iterator<TreeNode> iterator) {
         if (!iniciarProcessoParticipanteVO.isLeaf()) {
             Iterator<TreeNode> iteratorList = iniciarProcessoParticipanteVO.getChildren().iterator();
@@ -268,7 +268,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         }
         participanteProcessoList.remove(iniciarProcessoParticipanteVO);
     }
-    
+
     public List<Processo> getProcessosCriados() {
         return processosCriados;
     }
@@ -276,11 +276,11 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     public List<NaturezaCategoriaFluxoItem> getNaturezaCategoriaFluxoItemList() {
         return naturezaCategoriaFluxoItemList;
     }
-    
+
     public List<TipoParte> getTipoParteList() {
         return tipoParteList;
     }
-    
+
     public List<IniciarProcessoParticipanteVO> getParticipanteProcessoList() {
         return participanteProcessoList;
     }
@@ -312,7 +312,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     public void setProcesso(Processo processo) {
         this.processo = processo;
     }
-    
+
     public List<String> getListCodEstado() {
         return estadoSearch.getListCodEstado();
     }
