@@ -9,5 +9,6 @@
     <include file="epp/projeto00127265/003-AddColunasContrubuinte.xml" />
     <include file="epp/projeto00127265/004-AddColunasSituacaoServidor.xml" />
     <include file="epp/projeto00127265/005-RetirarObrigatoriedadeCargoFuncaoServidor.xml" />
+    <include file="epp/projeto00127265/006-RetirarObrigatoriedadeTabelaContribuinte.xml" />
 
 </databaseChangeLog>

@@ -89,16 +89,16 @@ public class ContribuinteSolicitante implements Serializable {
 
     @NotNull
     @Size(min = 3, max = 20)
-    @Column(name = "nr_rg", nullable = false)
+    @Column(name = "nr_rg", nullable = true)
     private String numeroRg;
 
     @NotNull
     @Size(min = 3, max = 256)
-    @Column(name = "ds_emissor_rg", nullable = false)
+    @Column(name = "ds_emissor_rg", nullable = true)
     private String emissorRg;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_estado_rg", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_estado_rg", nullable = true)
     private Estado estadoRg;
 
     @NotNull

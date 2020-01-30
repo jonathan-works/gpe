@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="heliolima" id="1"
+        dbms="mssql, postgresql, oracle">
+        <dropNotNullConstraint
+            tableName="tb_contribuinte" columnDataType="varchar(20)"
+            columnName="nr_rg" />
+        <dropNotNullConstraint
+            tableName="tb_contribuinte" columnDataType="varchar(256)"
+            columnName="ds_emissor_rg" />
+        <dropNotNullConstraint
+            tableName="tb_contribuinte" columnDataType="bigint"
+            columnName="id_estado_rg" />
+    </changeSet>
+
+</databaseChangeLog>
