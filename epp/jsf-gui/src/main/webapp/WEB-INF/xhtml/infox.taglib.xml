@@ -472,6 +472,10 @@ version="2.0">
         <source>components/loglab/empresaFields.xhtml</source>
     </tag>
     <tag>
+        <tag-name>servidorContribuinteFields</tag-name>
+        <source>components/loglab/servidorContribuinteFields.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>selectEturmalinaDialog</tag-name>
         <source>components/loglab/selectEturmalinaDialog.xhtml</source>
     </tag>

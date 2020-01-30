@@ -26,7 +26,10 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
+import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
 import br.com.infox.epp.loglab.vo.EmpresaVO;
+import br.com.infox.epp.loglab.vo.PesquisaParticipanteVO;
+import br.com.infox.epp.loglab.vo.ServidorContribuinteVO;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
@@ -103,6 +106,14 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     @Setter
     private EmpresaVO empresaVO;
 
+    @Getter
+    @Setter
+    private ServidorContribuinteVO servidorContribuinteVO;
+
+    @Getter
+    @Setter
+    private PesquisaParticipanteVO pesquisaParticipanteVO;
+
     @PostConstruct
     private void init() {
         Localizacao localizacao = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao();
@@ -117,7 +128,12 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         tipoParteList = tipoParteSearch.findAll();
         processosCriados = processoSearch.getProcessosNaoIniciados(Authenticator.getUsuarioLogado());
         participanteProcessoList = new ArrayList<>();
+        
         empresaVO = new EmpresaVO();
+        servidorContribuinteVO = new ServidorContribuinteVO();
+        servidorContribuinteVO.setTipoParticipante(TipoParticipanteEnum.CO);
+        pesquisaParticipanteVO = new PesquisaParticipanteVO();
+        pesquisaParticipanteVO.setTipoParticipante(TipoParticipanteEnum.CO);
     }
 
     private void createProcesso(Localizacao localizacao, UsuarioLogin usuarioLogin) {
@@ -212,6 +228,12 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         TipoPessoaEnum tipoPessoa = iniciarProcessoParticipanteVO.getTipoPessoa();
         iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         iniciarProcessoParticipanteVO.setTipoPessoa(tipoPessoa);
+    }
+    
+    public void buscarServidorContribuinte() {
+        System.out.println(pesquisaParticipanteVO.getCpf());
+        
+        iniciarProcessoParticipanteVO.setCodigo(pesquisaParticipanteVO.getCpf());
     }
 
     public void onChangeParticipanteCpf() {

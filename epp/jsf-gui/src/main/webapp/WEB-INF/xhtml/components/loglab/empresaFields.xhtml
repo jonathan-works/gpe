@@ -8,14 +8,17 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <ui:param name="viewObject" value="#{viewObject}" />
+    <ui:param name="codEstadoList" value="#{codEstadoList}" />
+    
     <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
     
-    <p:outputPanel id="#{id}PanelEmpresa"
+    <p:outputPanel id="#{identificador}"
+                   styleClass="#{identificador}"
                    rendered="#{rendered}">
-        <wi:field id="#{id}Cnpj"
+        <wi:field id="#{identificador}Cnpj"
                   required="true"
                   label="#{infoxMessages['empresa.cnpj']}">
-            <p:inputMask id="#{id}CnpjInput"
+            <p:inputMask id="#{identificador}CnpjInput"
                          mask="99.999.999/9999-99"
                          size="18"
                          required="true"
@@ -25,38 +28,38 @@
             </p:inputMask>
         </wi:field>
 
-        <wi:field id="#{id}TipoEmpresa"
+        <wi:field id="#{identificador}TipoEmpresa"
                   label="#{infoxMessages['empresa.tipoEmpresa']}">
-            <p:inputText id="#{id}TipoEmpresaInput"
+            <p:inputText id="#{identificador}TipoEmpresaInput"
                          size="30"
                          maxlength="10"
                          value="#{viewObject.tipoEmpresa}" />
         </wi:field>
 
-        <wi:field id="#{id}RazaoSocial"
+        <wi:field id="#{identificador}RazaoSocial"
                   required="true"
                   label="#{infoxMessages['empresa.razaoSocial']}">
-            <p:inputText id="#{id}RazaoSocialInput"
+            <p:inputText id="#{identificador}RazaoSocialInput"
                          size="30"
                          required="true"
                          maxlength="256"
                          value="#{viewObject.razaoSocial}" />
         </wi:field>
 
-        <wi:field id="#{id}NomeFantasia"
+        <wi:field id="#{identificador}NomeFantasia"
                   required="true"
                   label="#{infoxMessages['empresa.nomeFantasia']}">
-            <p:inputText id="#{id}NomeFantasiaInput"
+            <p:inputText id="#{identificador}NomeFantasiaInput"
                          size="30"
                          required="true"
                          maxlength="256"
                          value="#{viewObject.nomeFantasia}" />
         </wi:field>
 
-        <wi:field id="#{id}DataAbertura"
+        <wi:field id="#{identificador}DataAbertura"
                   required="true"
                   label="#{infoxMessages['empresa.dataAbertura']}">
-            <p:calendar id="#{id}DataAberturaInput"
+            <p:calendar id="#{identificador}DataAberturaInput"
                         required="true"
                         maxdate="#{now}"
                         pattern="dd/MM/yyyy"
@@ -70,28 +73,28 @@
             </p:calendar>
         </wi:field>
         
-        <wi:field id="#{id}TelefoneCelular"
+        <wi:field id="#{identificador}TelefoneCelular"
                   required="true"
                   label="#{infoxMessages['empresa.telefoneCelular']}">
-            <p:inputMask id="#{id}TelefoneCelularInput"
+            <p:inputMask id="#{identificador}TelefoneCelularInput"
                          mask="(99) 99999999?9"
                          size="22"
                          required="true"
                          value="#{viewObject.telefoneCelular}"/>
         </wi:field>
         
-        <wi:field id="#{id}TelefoneFixo"
+        <wi:field id="#{identificador}TelefoneFixo"
                   label="#{infoxMessages['empresa.telefoneFixo']}">
-            <p:inputMask id="#{id}TelefoneFixoInput"
+            <p:inputMask id="#{identificador}TelefoneFixoInput"
                          mask="(99) 99999999?9"
                          size="22"
                          value="#{viewObject.telefoneFixo}"/>
         </wi:field>
 
-        <wi:field id="#{id}Email"
+        <wi:field id="#{identificador}Email"
                   required="true"
                   label="#{infoxMessages['empresa.email']}">
-            <p:inputText id="#{id}EmailInput"
+            <p:inputText id="#{identificador}EmailInput"
                          required="true"
                          size="30"
                          maxlength="256"
@@ -100,9 +103,9 @@
             </p:inputText>
         </wi:field>
 
-        <wi:field id="#{id}CodEstado"
+        <wi:field id="#{identificador}CodEstado"
                   label="#{infoxMessages['empresa.codEstado']}">
-            <h:selectOneMenu id="#{id}CodEstadoInput"
+            <h:selectOneMenu id="#{identificador}CodEstadoInput"
                              value="#{viewObject.codEstado}">
                 <f:selectItem noSelectionOption="true"
                               itemValue="#{null}"
@@ -113,49 +116,49 @@
             </h:selectOneMenu>
         </wi:field>
 
-        <wi:field id="#{id}Cidade"
+        <wi:field id="#{identificador}Cidade"
                   label="#{infoxMessages['empresa.cidade']}">
-            <p:inputText id="#{id}CidadeInput"
+            <p:inputText id="#{identificador}CidadeInput"
                          size="30"
                          maxlength="100"
                          value="#{viewObject.cidade}" />
         </wi:field>
 
-        <wi:field id="#{id}Logradouro"
+        <wi:field id="#{identificador}Logradouro"
                   label="#{infoxMessages['empresa.logradouro']}">
-            <p:inputText id="#{id}LogradouroInput"
+            <p:inputText id="#{identificador}LogradouroInput"
                          size="30"
                          maxlength="256"
                          value="#{viewObject.logradouro}" />
         </wi:field>
 
-        <wi:field id="#{id}Bairro"
+        <wi:field id="#{identificador}Bairro"
                   label="#{infoxMessages['empresa.bairro']}">
-            <p:inputText id="#{id}BairroInput"
+            <p:inputText id="#{identificador}BairroInput"
                          size="30"
                          maxlength="256"
                          value="#{viewObject.bairro}" />
         </wi:field>
 
-        <wi:field id="#{id}Complemento"
+        <wi:field id="#{identificador}Complemento"
                   label="#{infoxMessages['empresa.complemento']}">
-            <p:inputText id="#{id}complementoInput"
+            <p:inputText id="#{identificador}complementoInput"
                          size="30"
                          maxlength="256"
                          value="#{viewObject.complemento}" />
         </wi:field>
 
-        <wi:field id="#{id}Numero"
+        <wi:field id="#{identificador}Numero"
                   label="#{infoxMessages['empresa.numero']}">
-            <p:inputText id="#{id}NumeroInput"
+            <p:inputText id="#{identificador}NumeroInput"
                          size="30"
                          maxlength="20"
                          value="#{viewObject.numero}" />
         </wi:field>
         
-        <wi:field id="#{id}Cep"
+        <wi:field id="#{identificador}Cep"
                   label="#{infoxMessages['empresa.cep']}">
-            <p:inputMask id="#{id}CepInput"
+            <p:inputMask id="#{identificador}CepInput"
                          mask="99999-999"
                          size="22"
                          value="#{viewObject.cep}"/>

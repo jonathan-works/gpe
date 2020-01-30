@@ -156,8 +156,8 @@
 		</fieldset>
 		
 		<p:dialog id="novoParticipanteDialog" header="#{infoxMessages['participanteProcesso.novoParticipante']}" 
-			widgetVar="dialogAdicionarParticipante" fitViewport="true" responsive="true"
-			modal="true" closeOnEscape="true" width="60%" height="90%" >
+			widgetVar="dialogAdicionarParticipante" fitViewport="true" responsive="true" position="top"
+			modal="true" closeOnEscape="true" width="95%" height="95%" >
 			
 			<h:form>
 		        <i:selectOneRadio id="radioTipoPessoa"	label="#{infoxMessages['pessoa.tipoPessoa']}"
@@ -167,21 +167,24 @@
 		           	render="@form:loadedByParticipante" style="margin-top: 0.8em;"/>
 	          
 		        <p:outputPanel id="loadedByParticipante">
-		          	<wi:empresaFields id="empresaParticipante"
+                    <wi:servidorContribuinteFields
+                        identificador="servContrParticipante"
+                        rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}"
+                        view="#{iniciarProcessoView}"
+                        viewObject="#{iniciarProcessoView.servidorContribuinteVO}"
+                        searchObject="#{iniciarProcessoView.pesquisaParticipanteVO}"
+                        codEstadoList="#{iniciarProcessoView.getListCodEstado()}">
+                    </wi:servidorContribuinteFields>
+                    
+		          	<wi:empresaFields identificador="empresaParticipante"
                                       rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'J'}"
                                       viewObject="#{iniciarProcessoView.empresaVO}"
-                                      codEstadoList="#{iniciarProcessoView.getListCodEstado()}">
-                    
-                    <wi:selectEturmalinaDialog id="listaContribuintesDialog"
-                        view="#{solicitanteView}"
-                        list="#{solicitanteView.contribuinteSolicitanteList}"
-                        selectObject="#{solicitanteView.solicitanteVO}"
-                        showListContribuinteSolicitante="true"
-                        header="#{infoxMessages['solicitante.titlePage']}"/>
-                    </wi:empresaFields>
+                                      codEstadoList="#{iniciarProcessoView.getListCodEstado()}" />
                 </p:outputPanel>
                 
                 <p:outputPanel id="partePanel">
+                    <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
+                        <legend class="name">#{infoxMessages['participanteProcesso.dadosParticipante']}</legend>
     		            <wi:selectOneMenuEntity id="tipoPartes" label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
     						items="#{iniciarProcessoView.tipoParteList}" required="true" showLabelSelecione="true"
     						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoParte}" />
@@ -200,7 +203,8 @@
     						label="#{infoxMessages['participanteProcesso.superior']}" 
     						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.parent}" 
     						help="Para desselecionar um item clique ctrl + clique"/>
-		        </p:outputPanel>
+                    </fieldset>
+                </p:outputPanel>
 		        
 		        <div>
 		         	<h:commandButton value="#{infoxMessages['button.add']}" action="#{iniciarProcessoView.adicionarParticipante}" styleClass="buttons">
