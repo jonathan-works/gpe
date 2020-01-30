@@ -31,30 +31,11 @@ public class ServidorContribuinteVO {
     @Size(min = 6, max = 256)
     private String nomeCompleto;
     private String sexo;
-    private String telefone;
-    private String celular;
+    private Date dataNascimento;
+    private String nomeMae;
     @NotNull
     private String email;
-
-    private String orgao;
-    private String localTrabalho;
-    private Date dataNomeacaoContratacao;
-    private Date dataPosse;
-    private Date dataExercicio;
-    private String situacao;
-    private String subFolha;
-    private String jornada;
-    private String ocupacaoCarreira;
-    private String cargoCarreira;
-    private String ocupacaoComissao;
-    private String cargoComissao;
-    private String nomePai;
-    private String nomeMae;
-    private Date dataNascimento;
-    private String numeroRg;
-    private Date dataEmissaoRg;
-    private String orgaoEmissorRG;
-
+    private String celular;
     private String codEstado;
     @Size(min = 3, max = 100)
     private String cidade;
@@ -67,4 +48,21 @@ public class ServidorContribuinteVO {
     @Size(min = 3, max = 20)
     private String numero;
     private String cep;
+    
+    private Date dataNomeacao;
+    private Date dataPosse;
+    private Date dataExercicio;
+    private String situacao;
+    private String orgao;
+    private String localTrabalho;
+    private String subFolha;
+    private String jornada;
+    private String ocupacaoCarreira;
+    private String cargoCarreira;
+    private String ocupacaoComissao;
+    private String cargoComissao;
+    private String nomePai;
+    private String numeroRg;
+    private Date dataEmissaoRg;
+    private String orgaoEmissorRG;
 }
