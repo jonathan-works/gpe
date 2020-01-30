@@ -22,24 +22,20 @@ public class ServidorContribuinteVO {
 
     private Long id;
     private Integer idPessoaFisica;
-
     private TipoParticipanteEnum tipoParticipante;
 
     @NotNull
     @Cpf
     private String cpf;
-
     private String matricula;
-
     @Size(min = 6, max = 256)
     private String nomeCompleto;
-
     private String sexo;
-
     private String telefone;
-
+    private String celular;
     @NotNull
     private String email;
+
     private String orgao;
     private String localTrabalho;
     private Date dataNomeacaoContratacao;
