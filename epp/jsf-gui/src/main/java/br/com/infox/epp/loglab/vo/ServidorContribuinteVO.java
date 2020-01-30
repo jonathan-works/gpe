@@ -21,6 +21,7 @@ import lombok.Setter;
 public class ServidorContribuinteVO {
 
     private Long id;
+    private Integer idPessoaFisica;
 
     private TipoParticipanteEnum tipoParticipante;
 
@@ -45,7 +46,7 @@ public class ServidorContribuinteVO {
     private Date dataPosse;
     private Date dataExercicio;
     private String situacao;
-    private String SubFolha;
+    private String subFolha;
     private String jornada;
     private String ocupacaoCarreira;
     private String cargoCarreira;
@@ -58,9 +59,9 @@ public class ServidorContribuinteVO {
     private Date dataEmissaoRg;
     private String orgaoEmissorRG;
 
+    private String codEstado;
     @Size(min = 3, max = 100)
     private String cidade;
-    private String cdEstado;
     @Size(min = 3, max = 256)
     private String logradouro;
     @Size(min = 3, max = 256)
