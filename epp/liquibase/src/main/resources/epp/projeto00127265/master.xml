@@ -8,5 +8,6 @@
     <include file="epp/projeto00127265/002-TabelaEmpresa.xml" />
     <include file="epp/projeto00127265/003-AddColunasContrubuinte.xml" />
     <include file="epp/projeto00127265/004-AddColunasSituacaoServidor.xml" />
+    <include file="epp/projeto00127265/005-RetirarObrigatoriedadeCargoFuncaoServidor.xml" />
 
 </databaseChangeLog>

@@ -65,7 +65,7 @@ public class Servidor implements Serializable {
     private String nomeCompleto;
 
     @Size(min = 3, max = 256)
-    @Column(name = "ds_cargo_funcao", nullable = false)
+    @Column(name = "ds_cargo_funcao", nullable = true)
     private String cargoFuncao;
 
     @NotNull
