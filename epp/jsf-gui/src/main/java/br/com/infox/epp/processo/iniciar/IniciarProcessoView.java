@@ -2,8 +2,11 @@ package br.com.infox.epp.processo.iniciar;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -142,8 +145,18 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         processosCriados = processoSearch.getProcessosNaoIniciados(Authenticator.getUsuarioLogado());
         participanteProcessoList = new ArrayList<>();
 
-        empresaVO = new EmpresaVO();
-        servidorContribuinteVO = new ServidorContribuinteVO();
+        limparDadosParticipante();
+    }
+
+    public void limparDadosParticipante() {
+        empresaVO = null;
+        empresaList = null;
+        limparServidorContribuinte();
+    }
+
+    public void limparServidorContribuinte() {
+        servidorContribuinteVO = null;
+        servidorContribuinteList = null;
         servidorContribuinteVO.setTipoParticipante(TipoParticipanteEnum.CO);
         pesquisaParticipanteVO = new PesquisaParticipanteVO();
         pesquisaParticipanteVO.setTipoParticipante(TipoParticipanteEnum.CO);
@@ -241,6 +254,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         TipoPessoaEnum tipoPessoa = iniciarProcessoParticipanteVO.getTipoPessoa();
         iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         iniciarProcessoParticipanteVO.setTipoPessoa(tipoPessoa);
+        limparDadosParticipante();
     }
 
     public void buscarServidorContribuinte() {
