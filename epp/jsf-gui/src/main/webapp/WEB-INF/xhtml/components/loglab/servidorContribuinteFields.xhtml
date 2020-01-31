@@ -66,14 +66,15 @@
                                  value="#{searchObject.matricula}" />
                 </wi:field>
                 
-                <p:commandButton id="#{identificador}BuscarBtn"
-                            update="@(.#{identificador}) :pageBodyDialogMessage"
-                            process="#{identificador}BuscaPanel"
-                            action="#{view.buscarServidorContribuinte()}"
+                <h:commandButton id="#{identificador}BuscarBtn"
+                                 action="#{view.buscarServidorContribuinte()}"
+                                 value="#{infoxMessages['servidorContribuinte.buscar']}"
+                                 styleClass="buttons buttons-primary" >
+                    <p:ajax process="#{identificador}BuscaPanel"
+                            update="@(.#{identificador}) @(.#{listDialog}) :pageBodyDialogMessage"
                             onstart="infox.showLoading();"
-                            oncomplete="infox.hideLoading();"
-                            value="#{infoxMessages['servidorContribuinte.buscar']}"
-                            styleClass="buttons buttons-primary" />
+                            oncomplete="infox.hideLoading();"/>
+                </h:commandButton>    
             </fieldset>
         </p:outputPanel>
         

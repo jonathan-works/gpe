@@ -468,12 +468,20 @@ version="2.0">
         <source>components/templates/field.xhtml</source>
     </tag>
     <tag>
+        <tag-name>empresaDialog</tag-name>
+        <source>components/loglab/empresaDialog.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>empresaFields</tag-name>
         <source>components/loglab/empresaFields.xhtml</source>
     </tag>
     <tag>
         <tag-name>servidorContribuinteFields</tag-name>
         <source>components/loglab/servidorContribuinteFields.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>servidorContribuinteDialog</tag-name>
+        <source>components/loglab/servidorContribuinteDialog.xhtml</source>
     </tag>
     <tag>
         <tag-name>selectEturmalinaDialog</tag-name>

@@ -27,6 +27,8 @@ import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
 import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
+import br.com.infox.epp.loglab.search.EmpresaSearch;
+import br.com.infox.epp.loglab.search.ServidorContribuinteSearch;
 import br.com.infox.epp.loglab.vo.EmpresaVO;
 import br.com.infox.epp.loglab.vo.PesquisaParticipanteVO;
 import br.com.infox.epp.loglab.vo.ServidorContribuinteVO;
@@ -52,6 +54,7 @@ import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.epp.tipoParte.TipoParteSearch;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessException;
 import lombok.Getter;
 import lombok.Setter;
@@ -80,6 +83,10 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private StatusProcessoSearch statusProcessoSearch;
     @Inject
     private EstadoSearch estadoSearch;
+    @Inject
+    private ServidorContribuinteSearch servidorContribuinteSearch;
+    @Inject
+    private EmpresaSearch empresaSearch;
 
     @Getter
     private List<Processo> processosCriados;
@@ -105,10 +112,16 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     @Getter
     @Setter
     private EmpresaVO empresaVO;
+    
+    @Getter
+    private List<EmpresaVO> empresaList;
 
     @Getter
     @Setter
     private ServidorContribuinteVO servidorContribuinteVO;
+    
+    @Getter
+    private List<ServidorContribuinteVO> servidorContribuinteList;
 
     @Getter
     @Setter
@@ -231,11 +244,49 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
     
     public void buscarServidorContribuinte() {
-        System.out.println(pesquisaParticipanteVO.getCpf());
-        
-        iniciarProcessoParticipanteVO.setCodigo(pesquisaParticipanteVO.getCpf());
-    }
+        servidorContribuinteList = servidorContribuinteSearch.pesquisaServidorContribuinte(pesquisaParticipanteVO);
 
+        if(servidorContribuinteList != null && servidorContribuinteList.size() > 0) {
+            if(servidorContribuinteList.size() == 1) {
+                servidorContribuinteVO = servidorContribuinteList.get(0);
+                servidorContribuinteList = null;
+            } else {
+                JsfUtil.instance().execute("PF('servidorContribuinteDialog').show();");
+            }
+        } else {
+            servidorContribuinteVO = new ServidorContribuinteVO();
+            servidorContribuinteVO.setTipoParticipante(pesquisaParticipanteVO.getTipoParticipante());
+        }
+        
+    }
+    
+    public void selecionarServidorContribuinte(ServidorContribuinteVO row) {
+        servidorContribuinteVO = row;
+        servidorContribuinteList = null;
+        JsfUtil.instance().execute("PF('servidorContribuinteDialog').hide();");
+    }
+    
+    public void buscarEmpresa() {
+        empresaList = empresaSearch.pesquisaEmpresaVO(pesquisaParticipanteVO);
+
+        if(empresaList != null && empresaList.size() > 0) {
+            if(empresaList.size() == 1) {
+                empresaVO = empresaList.get(0);
+                empresaList = null;
+            } else {
+                JsfUtil.instance().execute("PF('empresaDialog').show();");
+            }
+        } else {
+            empresaVO = new EmpresaVO();
+        }
+    }
+    
+    public void selecionarEmpresa(EmpresaVO row) {
+        empresaVO = row;
+        empresaList = null;
+        JsfUtil.instance().execute("PF('empresaDialog').hide();");
+    }
+    
     public void onChangeParticipanteCpf() {
         PessoaFisica pessoaFisica = pessoaFisicaDAO.searchByCpf(iniciarProcessoParticipanteVO.getCodigo());
         if (pessoaFisica != null) {

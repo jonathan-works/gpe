@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="view" value="#{view}" />
+    <ui:param name="list" value="#{list}" />
+
+    <p:dialog id="#{id}"
+              widgetVar="#{id}"
+              header="#{infoxMessages['empresa.titleDialog']}"
+              modal="true"
+              appendToBody="true"
+              closable="true"
+              resizable="false"
+              draggable="false"
+              responsive="true">
+
+        <p:ajax event="close"
+                onclick="PF('#{id}').hide();"
+                process="@this"
+                resetValues="true"
+                update="@form" />
+
+        <p:dataGrid id="#{id}DataGrid"
+                    value="#{list}"
+                    var="row"
+                    layout="grid"
+                    paginator="true"
+                    rows="10"
+                    columns="7"
+                    emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+            
+            <h:panelGrid columns="1" style="width:25px">
+                <p:commandButton id="#{id}SelecionarBtn"
+                            update="@this"
+                            process="@this"
+                            onclick="PF('#{id}').hide();"
+                            action="#{view.selecionarEmpresa(row)}"
+                            value="#{infoxMessages['empresa.selecionar']}"
+                            styleClass="buttons buttons-primary" />
+            </h:panelGrid>
+            
+            <h:panelGrid columns="6">
+                <h:outputText value="#{infoxMessages['empresa.cnpj']}"/>
+                <h:outputText value="#{row.cnpj}">
+                    <f:converter converterId="cnpjConverter"/>
+                </h:outputText>
+                
+                <h:outputText value="#{infoxMessages['empresa.razaoSocial']}"/>
+                <h:outputText value="#{row.razaoSocial}"/>
+                
+                <h:outputText value="#{infoxMessages['empresa.nomeFantasia']}"/>
+                <h:outputText value="#{row.nomeFantasia}"/>
+                
+                <h:outputText value="#{infoxMessages['empresa.tipoEmpresa']}"/>
+                <h:outputText value="#{row.tipoEmpresa}"/>
+                
+                <h:outputText value="#{infoxMessages['empresa.dataAbertura']}"/>
+                <h:outputText value="#{row.dataAbertura}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </h:outputText>
+                
+                <h:outputText value="#{infoxMessages['empresa.telefoneCelular']}"/>
+                <h:outputText value="#{row.telefoneCelular}"/>
+                
+                <h:outputText value="#{infoxMessages['empresa.telefoneFixo']}"/>
+                <h:outputText value="#{row.telefoneFixo}"/>
+                
+                <h:outputText value="#{infoxMessages['empresa.email']}"/>
+                <h:outputText value="#{row.email}"/>
+                
+                <h:outputText value="#{infoxMessages['servidorContribuinte.codEstado']}"/>
+                <h:outputText value="#{row.codEstado}"/>
+            
+                <h:outputText value="#{infoxMessages['servidorContribuinte.cidade']}"/>
+                <h:outputText value="#{row.cidade}"/>
+            
+                <h:outputText value="#{infoxMessages['servidorContribuinte.logradouro']}"/>
+                <h:outputText value="#{row.logradouro}"/>
+            
+                <h:outputText value="#{infoxMessages['servidorContribuinte.bairro']}"/>
+                <h:outputText value="#{row.bairro}"/>
+            
+                <h:outputText value="#{infoxMessages['servidorContribuinte.complemento']}"/>
+                <h:outputText value="#{row.complemento}"/>
+            
+                <h:outputText value="#{infoxMessages['servidorContribuinte.numero']}"/>
+                <h:outputText value="#{row.numero}"/>
+            
+                <h:outputText value="#{infoxMessages['servidorContribuinte.cep']}"/>
+                <h:outputText value="#{row.cep}"/>
+            </h:panelGrid>
+        </p:dataGrid>
+    </p:dialog>
+</ui:composition>

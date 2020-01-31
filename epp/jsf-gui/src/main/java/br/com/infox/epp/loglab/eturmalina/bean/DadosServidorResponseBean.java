@@ -16,28 +16,28 @@ import com.google.gson.reflect.TypeToken;
 @AllArgsConstructor
 public class DadosServidorResponseBean {
 
-    private String matricula;
-    private String nome;
-    private String cpf;
-    private String dataNomeacaoContratacao;
-    private String dataPosse;
-    private String dataExercicio;
-    private String situacao;
-    private String status;
-    private String orgao;
-    private String localTrabalho;
-    private String subFolha;
-    private String jornada;
-    private String ocupacaoCarreira;
-    private String cargoCarreira;
-    private String ocupacaoComissao;
-    private String cargoComissao;
-    private String servidorFiliacaoPai;
-    private String servidorFiliacaoMae;
-    private String servidorRG;
-    private String servidorDataNascimento;
-    private String servidorRGEmissao;
-    private String servidorRGOrgao;
+    private String Matricula;
+    private String Nome;
+    private String Cpf;
+    private String DataNomeacaoContratacao;
+    private String DataPosse;
+    private String DataExercicio;
+    private String Situacao;
+    private String Status;
+    private String Orgao;
+    private String LocalTrabalho;
+    private String SubFolha;
+    private String Jornada;
+    private String OcupacaoCarreira;
+    private String CargoCarreira;
+    private String OcupacaoComissao;
+    private String CargoComissao;
+    private String ServidorFiliacaoPai;
+    private String ServidorFiliacaoMae;
+    private String ServidorRG;
+    private String ServidorDataNascimento;
+    private String ServidorRGEmissao;
+    private String ServidorRGOrgao;
 
     public static Type getListType(){
         return new TypeToken<List<DadosServidorResponseBean>>(){}.getType();

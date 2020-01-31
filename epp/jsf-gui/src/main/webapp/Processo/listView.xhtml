@@ -172,6 +172,7 @@
                         rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}"
                         view="#{iniciarProcessoView}"
                         viewObject="#{iniciarProcessoView.servidorContribuinteVO}"
+                        listDialog="servidorContribuinteFormDialog"
                         searchObject="#{iniciarProcessoView.pesquisaParticipanteVO}"
                         codEstadoList="#{iniciarProcessoView.getListCodEstado()}">
                     </wi:servidorContribuinteFields>
@@ -215,5 +216,12 @@
 			        
 	        </h:form>
 		</p:dialog>
+        
+        <h:form id="servidorContribuinteFormDialog"
+                styleClass="servidorContribuinteFormDialog">
+            <wi:servidorContribuinteDialog id="servidorContribuinteDialog"
+                            view="#{iniciarProcessoView}"
+                            list="#{iniciarProcessoView.servidorContribuinteList}"/>
+        </h:form>                
     </ui:define>
 </ui:composition>

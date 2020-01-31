@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="view" value="#{view}" />
+    <ui:param name="list" value="#{list}" />
+
+    <p:dialog id="#{id}"
+              widgetVar="#{id}"
+              header="#{infoxMessages['servidorContribuinte.titleDialog']}"
+              modal="true"
+              appendToBody="true"
+              closable="true"
+              resizable="false"
+              draggable="false"
+              responsive="true">
+
+        <p:ajax event="close"
+                onclick="PF('#{id}').hide();"
+                process="@this"
+                resetValues="true"
+                update="@form" />
+
+        <p:dataGrid id="#{id}DataGrid"
+                    value="#{list}"
+                    var="row"
+                    layout="grid"
+                    paginator="true"
+                    rows="10"
+                    columns="1"
+                    emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+            
+            <h:panelGrid columns="7">
+                <h:panelGrid columns="1" style="width:25px">
+                    <p:commandButton id="#{id}SelecionarBtn"
+                                update="@this"
+                                process="@this"
+                                onclick="PF('#{id}').hide();"
+                                action="#{view.selecionarServidorContribuinte(row)}"
+                                value="#{infoxMessages['servidorContribuinte.selecionar']}"
+                                styleClass="buttons buttons-primary" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="6" >
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.nomeCompleto']}"
+                                  style="font-weight: bold"/>
+                    <h:outputText value="#{row.nomeCompleto}"/>
+                    
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.cpf']}"
+                                  style="font-weight: bold"/>
+                    <h:outputText value="#{row.cpf}">
+                        <f:converter converterId="cpfConverter"/>
+                    </h:outputText>
+                    
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.matricula']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.matricula}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.sexo']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    <h:outputText value="#{row.sexo}"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.dataNascimento']}"
+                                  style="font-weight: bold"/>
+                    <h:outputText value="#{row.dataNascimento}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                    
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.nomeMae']}"
+                                  style="font-weight: bold"/>
+                    <h:outputText value="#{row.nomeMae}"/>
+                    
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.email']}"
+                                  style="font-weight: bold"/>
+                    <h:outputText value="#{row.email}"/>
+                    
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.celular']}"
+                                  style="font-weight: bold"/>
+                    <h:outputText value="#{row.celular}"/>
+                    
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.codEstado']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    <h:outputText value="#{row.codEstado}"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.cidade']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    <h:outputText value="#{row.cidade}"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.logradouro']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    <h:outputText value="#{row.logradouro}"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.bairro']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    <h:outputText value="#{row.bairro}"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.complemento']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    <h:outputText value="#{row.complemento}"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.numero']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    <h:outputText value="#{row.numero}"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.cep']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    <h:outputText value="#{row.cep}"
+                                  rendered="#{row.tipoParticipante eq 'CO'}"/>
+                    
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.dataNomeacao']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.dataNomeacao}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.dataPosse']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.dataPosse}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.dataExercicio']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.dataExercicio}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.situacao']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.situacao}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.orgao']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.orgao}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.localTrabalho']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.localTrabalho}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.subFolha']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.subFolha}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.jornada']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.jornada}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.ocupacaoCarreira']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.ocupacaoCarreira}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.cargoCarreira']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.cargoCarreira}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.ocupacaoComissao']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.ocupacaoComissao}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.cargoComissao']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.cargoComissao}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.nomePai']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.nomePai}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.numeroRg']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.numeroRg}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.dataEmissaoRg']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.dataEmissaoRg}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                
+                    <h:outputText value="#{infoxMessages['servidorContribuinte.orgaoEmissorRG']}"
+                                  style="font-weight: bold"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                    <h:outputText value="#{row.orgaoEmissorRG}"
+                                  rendered="#{row.tipoParticipante eq 'SE'}"/>
+                </h:panelGrid>
+            </h:panelGrid>
+        </p:dataGrid>
+    </p:dialog>
+</ui:composition>
