@@ -149,14 +149,14 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         empresaVO = null;
         empresaList = null;
+        pesquisaParticipanteVO = new PesquisaParticipanteVO();
+        pesquisaParticipanteVO.setTipoParticipante(TipoParticipanteEnum.CO);
         limparServidorContribuinte();
     }
 
     public void limparServidorContribuinte() {
         servidorContribuinteVO = null;
         servidorContribuinteList = null;
-        pesquisaParticipanteVO = new PesquisaParticipanteVO();
-        pesquisaParticipanteVO.setTipoParticipante(TipoParticipanteEnum.CO);
     }
 
     private void createProcesso(Localizacao localizacao, UsuarioLogin usuarioLogin) {
