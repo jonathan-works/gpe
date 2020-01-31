@@ -137,7 +137,7 @@ public class Servidor implements Serializable {
     private Date dataEmissaoRg;
 
     @Column(name = "ds_orgao_rg", nullable = true)
-    private String orgaoEmissoRG;
+    private String orgaoEmissorRG;
 
     @Column(name = "ds_situacao", nullable = true)
     private String situacao;

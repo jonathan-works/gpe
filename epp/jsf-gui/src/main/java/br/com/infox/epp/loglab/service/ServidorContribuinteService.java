@@ -82,7 +82,7 @@ public class ServidorContribuinteService extends PersistenceController {
         servidor.setNumeroRg(vo.getNumeroRg());
         servidor.setOcupacaoCarreira(vo.getOcupacaoCarreira());
         servidor.setOcupacaoComissao(vo.getOcupacaoComissao());
-        servidor.setOrgaoEmissoRG(vo.getOrgaoEmissorRG());
+        servidor.setOrgaoEmissorRG(vo.getOrgaoEmissorRG());
         servidor.setPai(vo.getNomePai());
         servidor.setPessoaFisica(pessoaFisica);
         servidor.setSecretaria(vo.getOrgao());
