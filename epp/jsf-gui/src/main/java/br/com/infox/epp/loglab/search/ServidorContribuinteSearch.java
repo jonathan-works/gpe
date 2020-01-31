@@ -35,6 +35,15 @@ public class ServidorContribuinteSearch extends PersistenceController {
     @Inject
     private ETurmalinaService eTurmalinaService;
 
+    public List<ServidorContribuinteVO> pesquisaServidorContribuinte(PesquisaParticipanteVO pesquisaParticipanteVO) {
+        if (TipoParticipanteEnum.CO.equals(pesquisaParticipanteVO.getTipoParticipante())) {
+            return pesquisaContribuinte(pesquisaParticipanteVO);
+        } else {
+            return pesquisaServidorETurmalina(pesquisaParticipanteVO);
+        }
+
+    }
+
     public List<ServidorContribuinteVO> pesquisaContribuinte(PesquisaParticipanteVO pesquisaParticipanteVO) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ServidorContribuinteVO> query = cb.createQuery(ServidorContribuinteVO.class);
@@ -57,7 +66,7 @@ public class ServidorContribuinteSearch extends PersistenceController {
         return getEntityManager().createQuery(query).getResultList();
     }
 
-    public List<ServidorContribuinteVO> pesquisaServidor(PesquisaParticipanteVO pesquisaParticipanteVO) {
+    public List<ServidorContribuinteVO> pesquisaServidorBaseLocal(PesquisaParticipanteVO pesquisaParticipanteVO) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ServidorContribuinteVO> query = cb.createQuery(ServidorContribuinteVO.class);
         Root<Servidor> servidor = query.from(Servidor.class);
