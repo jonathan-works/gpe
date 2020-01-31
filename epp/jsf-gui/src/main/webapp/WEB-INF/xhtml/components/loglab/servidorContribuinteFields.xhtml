@@ -33,6 +33,7 @@
                         <p:ajax update="@(.#{identificador})"
                                 event="change"
                                 process="@this"
+                                listener="#{view.limparServidorContribuinte()}"
                                 onstart="infox.showLoading();"
                                 oncomplete="infox.hideLoading();"/>
                     </p:selectOneRadio>
@@ -78,324 +79,327 @@
             </fieldset>
         </p:outputPanel>
         
-        <p:outputPanel id="#{identificador}ContribuintePanel"
-                       styleClass="#{identificador}ContribuintePanel"
-                       rendered="#{searchObject.tipoParticipante eq 'CO'}">
-            <fieldset id="#{identificador}ContribuinteFieldset" style="margin-top: 1.5em;">
-                <legend class="name">#{infoxMessages['servidorContribuinte.dadosContribuinte']}</legend>
-                <wi:field id="#{identificador}TipoParticipanteContribuinteOutput"
-                          label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
-                    <p:outputLabel id="#{identificador}TipoParticipanteContribuinteOutputInput"
-                                   value="#{viewObject.tipoParticipante.label}" />
-                </wi:field>
-                
-                <wi:field id="#{identificador}CpfContribuinte"
-                          required="true"
-                          rendered="#{empty viewObject.idPessoaFisica}"
-                          label="#{infoxMessages['servidorContribuinte.cpf']}">
-                    <p:inputMask id="#{identificador}CpfContribuinteInput"
-                                 mask="999.999.999-99"
-                                 size="14"
-                                 required="true"
-                                 value="#{viewObject.cpf}">
-                        <f:validator validatorId="cpfValidator" />
-                        <f:converter converterId="cpfConverter" />
-                    </p:inputMask>
-                </wi:field>
-                
-                <wi:field id="#{identificador}CpfContribuinteOutput"
-                          rendered="#{!empty viewObject.idPessoaFisica}"
-                          label="#{infoxMessages['servidorContribuinte.cpf']}">
-                    <p:outputLabel id="#{identificador}CpfContribuinteOutputInput"
-                                   value="#{viewObject.cpf}" />
-                </wi:field>
-                
-                <wi:field id="#{identificador}NomeCompleto"
-                          required="true"
-                          label="#{infoxMessages['servidorContribuinte.nomeCompleto']}">
-                    <p:inputText id="#{identificador}NomeCompletoInput"
-                                 size="30"
-                                 required="true"
-                                 maxlength="256"
-                                 value="#{viewObject.nomeCompleto}" />
-                </wi:field>
         
-                <wi:field id="#{identificador}Sexo"
-                          required="true"
-                          label="#{infoxMessages['servidorContribuinte.sexo']}">
-                    <h:selectOneMenu id="#{identificador}SexoInput"
+        <p:outputPanel rendered="#{!empty viewObject}">
+            <p:outputPanel id="#{identificador}ContribuintePanel"
+                           styleClass="#{identificador}ContribuintePanel"
+                           rendered="#{searchObject.tipoParticipante eq 'CO'}">
+                <fieldset id="#{identificador}ContribuinteFieldset" style="margin-top: 1.5em;">
+                    <legend class="name">#{infoxMessages['servidorContribuinte.dadosContribuinte']}</legend>
+                    <wi:field id="#{identificador}TipoParticipanteContribuinteOutput"
+                              label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
+                        <p:outputLabel id="#{identificador}TipoParticipanteContribuinteOutputInput"
+                                       value="#{viewObject.tipoParticipante.label}" />
+                    </wi:field>
+                    
+                    <wi:field id="#{identificador}CpfContribuinte"
+                              required="true"
+                              rendered="#{empty viewObject.idPessoaFisica}"
+                              label="#{infoxMessages['servidorContribuinte.cpf']}">
+                        <p:inputMask id="#{identificador}CpfContribuinteInput"
+                                     mask="999.999.999-99"
+                                     size="14"
                                      required="true"
-                                     value="#{viewObject.sexo}">
-                        <f:selectItem noSelectionOption="true"
-                                      itemValue="#{null}"
-                                      itemLabel="#{messages['crud.select.select']}" />
-                        <f:selectItems value="#{selectItemFunctions.createFromString('M:Masculino,F:Feminino')}" />
-                    </h:selectOneMenu>
-                </wi:field>
-                
-                <wi:field id="#{identificador}DataNascimento"
-                          required="true"
-                          label="#{infoxMessages['servidorContribuinte.dataNascimento']}">
-                    <p:calendar id="#{identificador}DataNascimentoInput"
-                                required="true"
-                                maxdate="#{now}"
-                                pattern="dd/MM/yyyy"
-                                placeholder="__/__/____"
-                                mask="99/99/9999"
-                                value="#{viewObject.dataNascimento}">
-                        <f:validator validatorId="pastDateValidator" />
-                        <p:ajax event="dateSelect" process="@this" />
-                        <p:ajax event="change" process="@this" />
-                        <p:ajax event="blur" process="@this" />
-                    </p:calendar>
-                </wi:field>
-        
-                <wi:field id="#{identificador}NomeMae"
-                          required="true"
-                          label="#{infoxMessages['servidorContribuinte.nomeMae']}">
-                    <p:inputText id="#{identificador}NomeMaeInput"
-                                 size="30"
-                                 required="true"
-                                 maxlength="256"
-                                 value="#{viewObject.nomeMae}" />
-                </wi:field>
+                                     value="#{viewObject.cpf}">
+                            <f:validator validatorId="cpfValidator" />
+                            <f:converter converterId="cpfConverter" />
+                        </p:inputMask>
+                    </wi:field>
+                    
+                    <wi:field id="#{identificador}CpfContribuinteOutput"
+                              rendered="#{!empty viewObject.idPessoaFisica}"
+                              label="#{infoxMessages['servidorContribuinte.cpf']}">
+                        <p:outputLabel id="#{identificador}CpfContribuinteOutputInput"
+                                       value="#{viewObject.cpf}" />
+                    </wi:field>
+                    
+                    <wi:field id="#{identificador}NomeCompleto"
+                              required="true"
+                              label="#{infoxMessages['servidorContribuinte.nomeCompleto']}">
+                        <p:inputText id="#{identificador}NomeCompletoInput"
+                                     size="30"
+                                     required="true"
+                                     maxlength="256"
+                                     value="#{viewObject.nomeCompleto}" />
+                    </wi:field>
             
-                <wi:field id="#{identificador}EmailContribuinte"
-                          required="true"
-                          label="#{infoxMessages['servidorContribuinte.email']}">
-                    <p:inputText id="#{identificador}EmailContribuinteInput"
-                                 required="true"
-                                 size="30"
-                                 maxlength="256"
-                                 value="#{viewObject.email}">
-                        <f:validator validatorId="emailValidator" />
-                    </p:inputText>
-                </wi:field>
+                    <wi:field id="#{identificador}Sexo"
+                              required="true"
+                              label="#{infoxMessages['servidorContribuinte.sexo']}">
+                        <h:selectOneMenu id="#{identificador}SexoInput"
+                                         required="true"
+                                         value="#{viewObject.sexo}">
+                            <f:selectItem noSelectionOption="true"
+                                          itemValue="#{null}"
+                                          itemLabel="#{messages['crud.select.select']}" />
+                            <f:selectItems value="#{selectItemFunctions.createFromString('M:Masculino,F:Feminino')}" />
+                        </h:selectOneMenu>
+                    </wi:field>
+                    
+                    <wi:field id="#{identificador}DataNascimento"
+                              required="true"
+                              label="#{infoxMessages['servidorContribuinte.dataNascimento']}">
+                        <p:calendar id="#{identificador}DataNascimentoInput"
+                                    required="true"
+                                    maxdate="#{now}"
+                                    pattern="dd/MM/yyyy"
+                                    placeholder="__/__/____"
+                                    mask="99/99/9999"
+                                    value="#{viewObject.dataNascimento}">
+                            <f:validator validatorId="pastDateValidator" />
+                            <p:ajax event="dateSelect" process="@this" />
+                            <p:ajax event="change" process="@this" />
+                            <p:ajax event="blur" process="@this" />
+                        </p:calendar>
+                    </wi:field>
+            
+                    <wi:field id="#{identificador}NomeMae"
+                              required="true"
+                              label="#{infoxMessages['servidorContribuinte.nomeMae']}">
+                        <p:inputText id="#{identificador}NomeMaeInput"
+                                     size="30"
+                                     required="true"
+                                     maxlength="256"
+                                     value="#{viewObject.nomeMae}" />
+                    </wi:field>
                 
-                <wi:field id="#{identificador}CelularContribuinte"
-                          required="true"
-                          label="#{infoxMessages['servidorContribuinte.celular']}">
-                    <p:inputMask id="#{identificador}CelularContribuinteInput"
-                                 mask="(99) 99999999?9"
-                                 size="22"
-                                 required="true"
-                                 value="#{viewObject.celular}"/>
-                </wi:field>
-                
-                <wi:field id="#{identificador}CodEstado"
-                          label="#{infoxMessages['servidorContribuinte.codEstado']}">
-                    <h:selectOneMenu id="#{identificador}CodEstadoInput"
-                                     value="#{viewObject.codEstado}">
-                        <f:selectItem noSelectionOption="true"
-                                      itemValue="#{null}"
-                                      itemLabel="#{messages['crud.select.select']}" />
-                        <f:selectItems var="itemUf"
-                                       value="#{codEstadoList}" />
-                        <f:converter converterId="br.com.infox.jsf.converter.SelectItemConverter" />
-                    </h:selectOneMenu>
-                </wi:field>
-        
-                <wi:field id="#{identificador}Cidade"
-                          label="#{infoxMessages['servidorContribuinte.cidade']}">
-                    <p:inputText id="#{identificador}CidadeInput"
-                                 size="30"
-                                 maxlength="100"
-                                 value="#{viewObject.cidade}" />
-                </wi:field>
-        
-                <wi:field id="#{identificador}Logradouro"
-                          label="#{infoxMessages['servidorContribuinte.logradouro']}">
-                    <p:inputText id="#{identificador}LogradouroInput"
-                                 size="30"
-                                 maxlength="256"
-                                 value="#{viewObject.logradouro}" />
-                </wi:field>
-        
-                <wi:field id="#{identificador}Bairro"
-                          label="#{infoxMessages['servidorContribuinte.bairro']}">
-                    <p:inputText id="#{identificador}BairroInput"
-                                 size="30"
-                                 maxlength="256"
-                                 value="#{viewObject.bairro}" />
-                </wi:field>
-        
-                <wi:field id="#{identificador}Complemento"
-                          label="#{infoxMessages['servidorContribuinte.complemento']}">
-                    <p:inputText id="#{identificador}ComplementoInput"
-                                 size="30"
-                                 maxlength="256"
-                                 value="#{viewObject.complemento}" />
-                </wi:field>
-        
-                <wi:field id="#{identificador}Numero"
-                          label="#{infoxMessages['servidorContribuinte.numero']}">
-                    <p:inputText id="#{identificador}NumeroInput"
-                                 size="30"
-                                 maxlength="20"
-                                 value="#{viewObject.numero}" />
-                </wi:field>
-                
-                <wi:field id="#{identificador}Cep"
-                          label="#{infoxMessages['servidorContribuinte.cep']}">
-                    <p:inputMask id="#{identificador}CepInput"
-                                 mask="99999-999"
-                                 size="22"
-                                 value="#{viewObject.cep}"/>
-                </wi:field>
-            </fieldset>
-        </p:outputPanel>
-        
-        <p:outputPanel id="#{identificador}ServidorPanel"
-                       styleClass="#{identificador}ServidorPanel"
-                       rendered="#{searchObject.tipoParticipante eq 'SE' 
-                                    and !empty viewObject.cpf}">
-            <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
-                <legend class="name">#{infoxMessages['servidorContribuinte.dadosServidor']}</legend>
-                
-                <wi:field id="#{identificador}TipoParticipanteServidorOutput"
-                          label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
-                    <p:outputLabel id="#{identificador}TipoParticipanteServidorOutputInput"
-                                   value="#{viewObject.tipoParticipante.label}" />
-                </wi:field>
-                <wi:field id="#{identificador}CpfServidorOutput"
-                          label="#{infoxMessages['servidorContribuinte.cpf']}">
-                    <p:outputLabel id="#{identificador}cpfServidorOutputInput"
-                                   value="#{viewObject.cpf}" />
-                </wi:field>
-                <wi:field id="#{identificador}MatriculaServidorOutput"
-                          label="#{infoxMessages['servidorContribuinte.matricula']}">
-                    <p:outputLabel id="#{identificador}MatriculaServidorOutputInput"
-                                   value="#{viewObject.matricula}" />
-                </wi:field>
-                <wi:field id="#{identificador}NomeCompletoServidorOutput"
-                          label="#{infoxMessages['servidorContribuinte.nomeCompleto']}">
-                    <p:outputLabel id="#{identificador}NomeCompletoServidorOutputInput"
-                                   value="#{viewObject.nomeCompleto}" />
-                </wi:field>
-        
-                <wi:field id="#{identificador}EmailServidor"
-                          required="true"
-                          label="#{infoxMessages['servidorContribuinte.email']}">
-                    <p:inputText id="#{identificador}EmailServidorInput"
-                                 required="true"
-                                 size="30"
-                                 maxlength="256"
-                                 value="#{viewObject.email}">
-                        <f:validator validatorId="emailValidator" />
-                    </p:inputText>
-                </wi:field>
-                
-                <wi:field id="#{identificador}CelularServidor"
-                          required="true"
-                          label="#{infoxMessages['servidorContribuinte.celular']}">
-                    <p:inputMask id="#{identificador}CelularServidorInput"
-                                 mask="(99) 99999999?9"
-                                 size="22"
-                                 required="true"
-                                 value="#{viewObject.celular}"/>
-                </wi:field>
-                
-                <wi:field id="#{identificador}DataNascimentoServidorOutput"
-                          label="#{infoxMessages['servidorContribuinte.dataNascimento']}">
-                    <p:outputLabel id="#{identificador}DataNascimentoServidorOutputInput"
-                                   value="#{viewObject.dataNascimento}" >
-                        <f:convertDateTime pattern="dd/MM/yyyy"/>
-                    </p:outputLabel>
-                </wi:field>
-                <wi:field id="#{identificador}NomeMaeServidorOutput"
-                          label="#{infoxMessages['servidorContribuinte.nomeMae']}">
-                    <p:outputLabel id="#{identificador}NomeMaeServidorOutputInput"
-                                   value="#{viewObject.nomeMae}" />
-                </wi:field>
-                <wi:field id="#{identificador}DataNomeacao"
-                          label="#{infoxMessages['servidorContribuinte.dataNomeacao']}">
-                    <p:outputLabel id="#{identificador}DataNomeacaoInput"
-                                   value="#{viewObject.dataNomeacao}">
-                        <f:convertDateTime pattern="dd/MM/yyyy"/>
-                    </p:outputLabel>
-                </wi:field>
-                <wi:field id="#{identificador}DataPosse"
-                          label="#{infoxMessages['servidorContribuinte.dataPosse']}">
-                    <p:outputLabel id="#{identificador}DataPosseInput"
-                                   value="#{viewObject.dataPosse}">
-                        <f:convertDateTime pattern="dd/MM/yyyy"/>
-                    </p:outputLabel>
-                </wi:field>
-                <wi:field id="#{identificador}DataExercicio"
-                          label="#{infoxMessages['servidorContribuinte.dataExercicio']}">
-                    <p:outputLabel id="#{identificador}DataExercicioInput"
-                                   value="#{viewObject.dataExercicio}">
-                        <f:convertDateTime pattern="dd/MM/yyyy"/>
-                    </p:outputLabel>
-                </wi:field>
-                <wi:field id="#{identificador}Situacao"
-                          label="#{infoxMessages['servidorContribuinte.situacao']}">
-                    <p:outputLabel id="#{identificador}SituacaoInput"
-                                   value="#{viewObject.situacao}"/>
-                </wi:field>
-                <wi:field id="#{identificador}Orgao"
-                          label="#{infoxMessages['servidorContribuinte.orgao']}">
-                    <p:outputLabel id="#{identificador}OrgaoInput"
-                                   value="#{viewObject.orgao}"/>
-                </wi:field>
-                <wi:field id="#{identificador}LocalTrabalho"
-                          label="#{infoxMessages['servidorContribuinte.localTrabalho']}">
-                    <p:outputLabel id="#{identificador}LocalTrabalhoInput"
-                                   value="#{viewObject.localTrabalho}"/>
-                </wi:field>
-                <wi:field id="#{identificador}SubFolha"
-                          label="#{infoxMessages['servidorContribuinte.subFolha']}">
-                    <p:outputLabel id="#{identificador}SubFolhaInput"
-                                   value="#{viewObject.subFolha}"/>
-                </wi:field>
-                <wi:field id="#{identificador}Jornada"
-                          label="#{infoxMessages['servidorContribuinte.jornada']}">
-                    <p:outputLabel id="#{identificador}JornadaInput"
-                                   value="#{viewObject.jornada}"/>
-                </wi:field>
-                <wi:field id="#{identificador}OcupacaoCarreira"
-                          label="#{infoxMessages['servidorContribuinte.ocupacaoCarreira']}">
-                    <p:outputLabel id="#{identificador}OcupacaoCarreiraInput"
-                                   value="#{viewObject.ocupacaoCarreira}"/>
-                </wi:field>
-                <wi:field id="#{identificador}CargoCarreira"
-                          label="#{infoxMessages['servidorContribuinte.cargoCarreira']}">
-                    <p:outputLabel id="#{identificador}CargoCarreiraInput"
-                                   value="#{viewObject.cargoCarreira}"/>
-                </wi:field>
-                <wi:field id="#{identificador}OcupacaoComissao"
-                          label="#{infoxMessages['servidorContribuinte.ocupacaoComissao']}">
-                    <p:outputLabel id="#{identificador}OcupacaoComissaoInput"
-                                   value="#{viewObject.ocupacaoComissao}"/>
-                </wi:field>
-                <wi:field id="#{identificador}CargoComissao"
-                          label="#{infoxMessages['servidorContribuinte.cargoComissao']}">
-                    <p:outputLabel id="#{identificador}CargoComissaoInput"
-                                   value="#{viewObject.cargoComissao}"/>
-                </wi:field>
-                <wi:field id="#{identificador}NomePai"
-                          label="#{infoxMessages['servidorContribuinte.nomePai']}">
-                    <p:outputLabel id="#{identificador}NomePaiInput"
-                                   value="#{viewObject.nomePai}"/>
-                </wi:field>
-                <wi:field id="#{identificador}NumeroRg"
-                          label="#{infoxMessages['servidorContribuinte.numeroRg']}">
-                    <p:outputLabel id="#{identificador}NumeroRgInput"
-                                   value="#{viewObject.numeroRg}"/>
-                </wi:field>
-                <wi:field id="#{identificador}DataEmissaoRg"
-                          label="#{infoxMessages['servidorContribuinte.dataEmissaoRg']}">
-                    <p:outputLabel id="#{identificador}DataEmissaoRgInput"
-                                   value="#{viewObject.dataEmissaoRg}">
-                        <f:convertDateTime pattern="dd/MM/yyyy"/>
-                    </p:outputLabel>
-                </wi:field>
-                <wi:field id="#{identificador}OrgaoEmissorRG"
-                          label="#{infoxMessages['servidorContribuinte.orgaoEmissorRG']}">
-                    <p:outputLabel id="#{identificador}OrgaoEmissorRGInput"
-                                   value="#{viewObject.orgaoEmissorRG}"/>
-                </wi:field>
-            </fieldset>
+                    <wi:field id="#{identificador}EmailContribuinte"
+                              required="true"
+                              label="#{infoxMessages['servidorContribuinte.email']}">
+                        <p:inputText id="#{identificador}EmailContribuinteInput"
+                                     required="true"
+                                     size="30"
+                                     maxlength="256"
+                                     value="#{viewObject.email}">
+                            <f:validator validatorId="emailValidator" />
+                        </p:inputText>
+                    </wi:field>
+                    
+                    <wi:field id="#{identificador}CelularContribuinte"
+                              required="true"
+                              label="#{infoxMessages['servidorContribuinte.celular']}">
+                        <p:inputMask id="#{identificador}CelularContribuinteInput"
+                                     mask="(99) 99999999?9"
+                                     size="22"
+                                     required="true"
+                                     value="#{viewObject.celular}"/>
+                    </wi:field>
+                    
+                    <wi:field id="#{identificador}CodEstado"
+                              label="#{infoxMessages['servidorContribuinte.codEstado']}">
+                        <h:selectOneMenu id="#{identificador}CodEstadoInput"
+                                         value="#{viewObject.codEstado}">
+                            <f:selectItem noSelectionOption="true"
+                                          itemValue="#{null}"
+                                          itemLabel="#{messages['crud.select.select']}" />
+                            <f:selectItems var="itemUf"
+                                           value="#{codEstadoList}" />
+                            <f:converter converterId="br.com.infox.jsf.converter.SelectItemConverter" />
+                        </h:selectOneMenu>
+                    </wi:field>
+            
+                    <wi:field id="#{identificador}Cidade"
+                              label="#{infoxMessages['servidorContribuinte.cidade']}">
+                        <p:inputText id="#{identificador}CidadeInput"
+                                     size="30"
+                                     maxlength="100"
+                                     value="#{viewObject.cidade}" />
+                    </wi:field>
+            
+                    <wi:field id="#{identificador}Logradouro"
+                              label="#{infoxMessages['servidorContribuinte.logradouro']}">
+                        <p:inputText id="#{identificador}LogradouroInput"
+                                     size="30"
+                                     maxlength="256"
+                                     value="#{viewObject.logradouro}" />
+                    </wi:field>
+            
+                    <wi:field id="#{identificador}Bairro"
+                              label="#{infoxMessages['servidorContribuinte.bairro']}">
+                        <p:inputText id="#{identificador}BairroInput"
+                                     size="30"
+                                     maxlength="256"
+                                     value="#{viewObject.bairro}" />
+                    </wi:field>
+            
+                    <wi:field id="#{identificador}Complemento"
+                              label="#{infoxMessages['servidorContribuinte.complemento']}">
+                        <p:inputText id="#{identificador}ComplementoInput"
+                                     size="30"
+                                     maxlength="256"
+                                     value="#{viewObject.complemento}" />
+                    </wi:field>
+            
+                    <wi:field id="#{identificador}Numero"
+                              label="#{infoxMessages['servidorContribuinte.numero']}">
+                        <p:inputText id="#{identificador}NumeroInput"
+                                     size="30"
+                                     maxlength="20"
+                                     value="#{viewObject.numero}" />
+                    </wi:field>
+                    
+                    <wi:field id="#{identificador}Cep"
+                              label="#{infoxMessages['servidorContribuinte.cep']}">
+                        <p:inputMask id="#{identificador}CepInput"
+                                     mask="99999-999"
+                                     size="22"
+                                     value="#{viewObject.cep}"/>
+                    </wi:field>
+                </fieldset>
+            </p:outputPanel>
+            
+            <p:outputPanel id="#{identificador}ServidorPanel"
+                           styleClass="#{identificador}ServidorPanel"
+                           rendered="#{searchObject.tipoParticipante eq 'SE' 
+                                        and !empty viewObject.cpf}">
+                <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
+                    <legend class="name">#{infoxMessages['servidorContribuinte.dadosServidor']}</legend>
+                    
+                    <wi:field id="#{identificador}TipoParticipanteServidorOutput"
+                              label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
+                        <p:outputLabel id="#{identificador}TipoParticipanteServidorOutputInput"
+                                       value="#{viewObject.tipoParticipante.label}" />
+                    </wi:field>
+                    <wi:field id="#{identificador}CpfServidorOutput"
+                              label="#{infoxMessages['servidorContribuinte.cpf']}">
+                        <p:outputLabel id="#{identificador}cpfServidorOutputInput"
+                                       value="#{viewObject.cpf}" />
+                    </wi:field>
+                    <wi:field id="#{identificador}MatriculaServidorOutput"
+                              label="#{infoxMessages['servidorContribuinte.matricula']}">
+                        <p:outputLabel id="#{identificador}MatriculaServidorOutputInput"
+                                       value="#{viewObject.matricula}" />
+                    </wi:field>
+                    <wi:field id="#{identificador}NomeCompletoServidorOutput"
+                              label="#{infoxMessages['servidorContribuinte.nomeCompleto']}">
+                        <p:outputLabel id="#{identificador}NomeCompletoServidorOutputInput"
+                                       value="#{viewObject.nomeCompleto}" />
+                    </wi:field>
+            
+                    <wi:field id="#{identificador}EmailServidor"
+                              required="true"
+                              label="#{infoxMessages['servidorContribuinte.email']}">
+                        <p:inputText id="#{identificador}EmailServidorInput"
+                                     required="true"
+                                     size="30"
+                                     maxlength="256"
+                                     value="#{viewObject.email}">
+                            <f:validator validatorId="emailValidator" />
+                        </p:inputText>
+                    </wi:field>
+                    
+                    <wi:field id="#{identificador}CelularServidor"
+                              required="true"
+                              label="#{infoxMessages['servidorContribuinte.celular']}">
+                        <p:inputMask id="#{identificador}CelularServidorInput"
+                                     mask="(99) 99999999?9"
+                                     size="22"
+                                     required="true"
+                                     value="#{viewObject.celular}"/>
+                    </wi:field>
+                    
+                    <wi:field id="#{identificador}DataNascimentoServidorOutput"
+                              label="#{infoxMessages['servidorContribuinte.dataNascimento']}">
+                        <p:outputLabel id="#{identificador}DataNascimentoServidorOutputInput"
+                                       value="#{viewObject.dataNascimento}" >
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </wi:field>
+                    <wi:field id="#{identificador}NomeMaeServidorOutput"
+                              label="#{infoxMessages['servidorContribuinte.nomeMae']}">
+                        <p:outputLabel id="#{identificador}NomeMaeServidorOutputInput"
+                                       value="#{viewObject.nomeMae}" />
+                    </wi:field>
+                    <wi:field id="#{identificador}DataNomeacao"
+                              label="#{infoxMessages['servidorContribuinte.dataNomeacao']}">
+                        <p:outputLabel id="#{identificador}DataNomeacaoInput"
+                                       value="#{viewObject.dataNomeacao}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </wi:field>
+                    <wi:field id="#{identificador}DataPosse"
+                              label="#{infoxMessages['servidorContribuinte.dataPosse']}">
+                        <p:outputLabel id="#{identificador}DataPosseInput"
+                                       value="#{viewObject.dataPosse}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </wi:field>
+                    <wi:field id="#{identificador}DataExercicio"
+                              label="#{infoxMessages['servidorContribuinte.dataExercicio']}">
+                        <p:outputLabel id="#{identificador}DataExercicioInput"
+                                       value="#{viewObject.dataExercicio}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </wi:field>
+                    <wi:field id="#{identificador}Situacao"
+                              label="#{infoxMessages['servidorContribuinte.situacao']}">
+                        <p:outputLabel id="#{identificador}SituacaoInput"
+                                       value="#{viewObject.situacao}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}Orgao"
+                              label="#{infoxMessages['servidorContribuinte.orgao']}">
+                        <p:outputLabel id="#{identificador}OrgaoInput"
+                                       value="#{viewObject.orgao}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}LocalTrabalho"
+                              label="#{infoxMessages['servidorContribuinte.localTrabalho']}">
+                        <p:outputLabel id="#{identificador}LocalTrabalhoInput"
+                                       value="#{viewObject.localTrabalho}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}SubFolha"
+                              label="#{infoxMessages['servidorContribuinte.subFolha']}">
+                        <p:outputLabel id="#{identificador}SubFolhaInput"
+                                       value="#{viewObject.subFolha}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}Jornada"
+                              label="#{infoxMessages['servidorContribuinte.jornada']}">
+                        <p:outputLabel id="#{identificador}JornadaInput"
+                                       value="#{viewObject.jornada}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}OcupacaoCarreira"
+                              label="#{infoxMessages['servidorContribuinte.ocupacaoCarreira']}">
+                        <p:outputLabel id="#{identificador}OcupacaoCarreiraInput"
+                                       value="#{viewObject.ocupacaoCarreira}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}CargoCarreira"
+                              label="#{infoxMessages['servidorContribuinte.cargoCarreira']}">
+                        <p:outputLabel id="#{identificador}CargoCarreiraInput"
+                                       value="#{viewObject.cargoCarreira}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}OcupacaoComissao"
+                              label="#{infoxMessages['servidorContribuinte.ocupacaoComissao']}">
+                        <p:outputLabel id="#{identificador}OcupacaoComissaoInput"
+                                       value="#{viewObject.ocupacaoComissao}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}CargoComissao"
+                              label="#{infoxMessages['servidorContribuinte.cargoComissao']}">
+                        <p:outputLabel id="#{identificador}CargoComissaoInput"
+                                       value="#{viewObject.cargoComissao}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}NomePai"
+                              label="#{infoxMessages['servidorContribuinte.nomePai']}">
+                        <p:outputLabel id="#{identificador}NomePaiInput"
+                                       value="#{viewObject.nomePai}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}NumeroRg"
+                              label="#{infoxMessages['servidorContribuinte.numeroRg']}">
+                        <p:outputLabel id="#{identificador}NumeroRgInput"
+                                       value="#{viewObject.numeroRg}"/>
+                    </wi:field>
+                    <wi:field id="#{identificador}DataEmissaoRg"
+                              label="#{infoxMessages['servidorContribuinte.dataEmissaoRg']}">
+                        <p:outputLabel id="#{identificador}DataEmissaoRgInput"
+                                       value="#{viewObject.dataEmissaoRg}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </wi:field>
+                    <wi:field id="#{identificador}OrgaoEmissorRG"
+                              label="#{infoxMessages['servidorContribuinte.orgaoEmissorRG']}">
+                        <p:outputLabel id="#{identificador}OrgaoEmissorRGInput"
+                                       value="#{viewObject.orgaoEmissorRG}"/>
+                    </wi:field>
+                </fieldset>
+            </p:outputPanel>
         </p:outputPanel>
         
         <ui:insert />

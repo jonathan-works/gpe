@@ -468,6 +468,10 @@ version="2.0">
         <source>components/templates/field.xhtml</source>
     </tag>
     <tag>
+        <tag-name>dialogOutput</tag-name>
+        <source>components/loglab/dialogOutput.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>empresaDialog</tag-name>
         <source>components/loglab/empresaDialog.xhtml</source>
     </tag>

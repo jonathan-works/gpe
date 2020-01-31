@@ -159,12 +159,13 @@
 			widgetVar="dialogAdicionarParticipante" fitViewport="true" responsive="true" position="top"
 			modal="true" closeOnEscape="true" width="95%" height="95%" >
 			
-			<h:form>
+			<h:form id="novoParticipanteFormDialog"
+                    styleClass="novoParticipanteFormDialog">
 		        <i:selectOneRadio id="radioTipoPessoa"	label="#{infoxMessages['pessoa.tipoPessoa']}"
 		           	items="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa.values()}" 
-		           	value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa}" 
+		           	value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa}"
 		           	ajax="true" listener="#{iniciarProcessoView.onChangeTipoPessoa}" itemLabel="#{item.label}" 
-		           	render="@form:loadedByParticipante" style="margin-top: 0.8em;"/>
+		           	render="@form" style="margin-top: 0.8em;"/>
 	          
 		        <p:outputPanel id="loadedByParticipante">
                     <wi:servidorContribuinteFields
@@ -177,10 +178,15 @@
                         codEstadoList="#{iniciarProcessoView.getListCodEstado()}">
                     </wi:servidorContribuinteFields>
                     
-		          	<wi:empresaFields identificador="empresaParticipante"
-                                      rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'J'}"
-                                      viewObject="#{iniciarProcessoView.empresaVO}"
-                                      codEstadoList="#{iniciarProcessoView.getListCodEstado()}" />
+                    <wi:empresaFields
+                        identificador="empresaParticipante"
+                        rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'J'}"
+                        view="#{iniciarProcessoView}"
+                        viewObject="#{iniciarProcessoView.empresaVO}"
+                        listDialog="empresaFormDialog"
+                        searchObject="#{iniciarProcessoView.pesquisaParticipanteVO}"
+                        codEstadoList="#{iniciarProcessoView.getListCodEstado()}">
+                    </wi:empresaFields>
                 </p:outputPanel>
                 
                 <p:outputPanel id="partePanel">
@@ -221,7 +227,16 @@
                 styleClass="servidorContribuinteFormDialog">
             <wi:servidorContribuinteDialog id="servidorContribuinteDialog"
                             view="#{iniciarProcessoView}"
+                            paginaPrincipal="novoParticipanteFormDialog"
                             list="#{iniciarProcessoView.servidorContribuinteList}"/>
-        </h:form>                
+        </h:form>
+        
+        <h:form id="empresaFormDialog"
+                styleClass="empresaFormDialog">
+            <wi:empresaDialog id="empresaDialog"
+                              view="#{iniciarProcessoView}"
+                              paginaPrincipal="novoParticipanteFormDialog"
+                              list="#{iniciarProcessoView.empresaList}"/>
+        </h:form>
     </ui:define>
 </ui:composition>

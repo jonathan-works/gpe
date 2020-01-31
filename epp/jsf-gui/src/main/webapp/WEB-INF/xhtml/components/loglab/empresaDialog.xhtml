@@ -41,59 +41,59 @@
                             process="@this"
                             onclick="PF('#{id}').hide();"
                             action="#{view.selecionarEmpresa(row)}"
-                            value="#{infoxMessages['empresa.selecionar']}"
+                            label="#{infoxMessages['empresa.selecionar']}"
                             styleClass="buttons buttons-primary" />
             </h:panelGrid>
             
-            <h:panelGrid columns="6">
-                <h:outputText value="#{infoxMessages['empresa.cnpj']}"/>
-                <h:outputText value="#{row.cnpj}">
+            <h:panelGrid columns="3">
+                <wi:dialogOutput label="#{infoxMessages['empresa.cnpj']}"
+                                 value="#{row.cnpj}">
                     <f:converter converterId="cnpjConverter"/>
-                </h:outputText>
+                </wi:dialogOutput>
                 
-                <h:outputText value="#{infoxMessages['empresa.razaoSocial']}"/>
-                <h:outputText value="#{row.razaoSocial}"/>
+                <wi:dialogOutput label="#{infoxMessages['empresa.razaoSocial']}"
+                                 value="#{row.razaoSocial}"/>
                 
-                <h:outputText value="#{infoxMessages['empresa.nomeFantasia']}"/>
-                <h:outputText value="#{row.nomeFantasia}"/>
+                <wi:dialogOutput label="#{infoxMessages['empresa.nomeFantasia']}"
+                                 value="#{row.nomeFantasia}"/>
                 
-                <h:outputText value="#{infoxMessages['empresa.tipoEmpresa']}"/>
-                <h:outputText value="#{row.tipoEmpresa}"/>
+                <wi:dialogOutput label="#{infoxMessages['empresa.tipoEmpresa']}"
+                                 value="#{row.tipoEmpresa}"/>
                 
-                <h:outputText value="#{infoxMessages['empresa.dataAbertura']}"/>
-                <h:outputText value="#{row.dataAbertura}">
+                <wi:dialogOutput label="#{infoxMessages['empresa.dataAbertura']}"
+                                 value="#{row.dataAbertura}">
                     <f:convertDateTime pattern="dd/MM/yyyy"/>
-                </h:outputText>
+                </wi:dialogOutput>
                 
-                <h:outputText value="#{infoxMessages['empresa.telefoneCelular']}"/>
-                <h:outputText value="#{row.telefoneCelular}"/>
+                <wi:dialogOutput label="#{infoxMessages['empresa.telefoneCelular']}"
+                                 value="#{row.telefoneCelular}"/>
                 
-                <h:outputText value="#{infoxMessages['empresa.telefoneFixo']}"/>
-                <h:outputText value="#{row.telefoneFixo}"/>
+                <wi:dialogOutput label="#{infoxMessages['empresa.telefoneFixo']}"
+                                 value="#{row.telefoneFixo}"/>
                 
-                <h:outputText value="#{infoxMessages['empresa.email']}"/>
-                <h:outputText value="#{row.email}"/>
+                <wi:dialogOutput label="#{infoxMessages['empresa.email']}"
+                                 value="#{row.email}"/>
                 
-                <h:outputText value="#{infoxMessages['servidorContribuinte.codEstado']}"/>
-                <h:outputText value="#{row.codEstado}"/>
+                <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.codEstado']}"
+                                 value="#{row.codEstado}"/>
             
-                <h:outputText value="#{infoxMessages['servidorContribuinte.cidade']}"/>
-                <h:outputText value="#{row.cidade}"/>
+                <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cidade']}"
+                                 value="#{row.cidade}"/>
             
-                <h:outputText value="#{infoxMessages['servidorContribuinte.logradouro']}"/>
-                <h:outputText value="#{row.logradouro}"/>
+                <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.logradouro']}"
+                                 value="#{row.logradouro}"/>
             
-                <h:outputText value="#{infoxMessages['servidorContribuinte.bairro']}"/>
-                <h:outputText value="#{row.bairro}"/>
+                <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.bairro']}"
+                                 value="#{row.bairro}"/>
             
-                <h:outputText value="#{infoxMessages['servidorContribuinte.complemento']}"/>
-                <h:outputText value="#{row.complemento}"/>
+                <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.complemento']}"
+                                 value="#{row.complemento}"/>
             
-                <h:outputText value="#{infoxMessages['servidorContribuinte.numero']}"/>
-                <h:outputText value="#{row.numero}"/>
+                <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.numero']}"
+                                 value="#{row.numero}"/>
             
-                <h:outputText value="#{infoxMessages['servidorContribuinte.cep']}"/>
-                <h:outputText value="#{row.cep}"/>
+                <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cep']}"
+                                 value="#{row.cep}"/>
             </h:panelGrid>
         </p:dataGrid>
     </p:dialog>

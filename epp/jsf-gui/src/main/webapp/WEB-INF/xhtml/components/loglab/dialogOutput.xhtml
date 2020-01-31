@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+    
+    <p:outputPanel rendered="#{rendered}">
+        <h:outputText value="#{label}: "
+                      style="font-weight: bold;"
+                      escape="false"/>
+        <div style="clear: both;" />
+        <h:outputText value="#{empty value ? 'Não informado' : value}">
+            <ui:insert />
+        </h:outputText>
+    </p:outputPanel>
+</ui:composition>

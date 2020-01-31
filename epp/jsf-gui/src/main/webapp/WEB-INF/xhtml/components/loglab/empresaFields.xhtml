@@ -7,162 +7,215 @@
     xmlns:p="http://primefaces.org/ui"
     xmlns:wi="http://www.itx.com.br/jsf">
 
+    <ui:param name="view" value="#{view}" />
+    <ui:param name="searchObject" value="#{searchObject}" />
     <ui:param name="viewObject" value="#{viewObject}" />
     <ui:param name="codEstadoList" value="#{codEstadoList}" />
     
     <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+    <ui:param name="showPesquisa" value="#{empty showPesquisa ? true : showPesquisa}" />
     
     <p:outputPanel id="#{identificador}"
                    styleClass="#{identificador}"
                    rendered="#{rendered}">
-        <wi:field id="#{identificador}Cnpj"
-                  required="true"
-                  label="#{infoxMessages['empresa.cnpj']}">
-            <p:inputMask id="#{identificador}CnpjInput"
-                         mask="99.999.999/9999-99"
-                         size="18"
-                         required="true"
-                         value="#{viewObject.cnpj}">
-                <f:validator validatorId="cnpjValidator" />
-                <f:converter converterId="cnpjConverter" />
-            </p:inputMask>
-        </wi:field>
-
-        <wi:field id="#{identificador}TipoEmpresa"
-                  label="#{infoxMessages['empresa.tipoEmpresa']}">
-            <p:inputText id="#{identificador}TipoEmpresaInput"
-                         size="30"
-                         maxlength="10"
-                         value="#{viewObject.tipoEmpresa}" />
-        </wi:field>
-
-        <wi:field id="#{identificador}RazaoSocial"
-                  required="true"
-                  label="#{infoxMessages['empresa.razaoSocial']}">
-            <p:inputText id="#{identificador}RazaoSocialInput"
-                         size="30"
-                         required="true"
-                         maxlength="256"
-                         value="#{viewObject.razaoSocial}" />
-        </wi:field>
-
-        <wi:field id="#{identificador}NomeFantasia"
-                  required="true"
-                  label="#{infoxMessages['empresa.nomeFantasia']}">
-            <p:inputText id="#{identificador}NomeFantasiaInput"
-                         size="30"
-                         required="true"
-                         maxlength="256"
-                         value="#{viewObject.nomeFantasia}" />
-        </wi:field>
-
-        <wi:field id="#{identificador}DataAbertura"
-                  required="true"
-                  label="#{infoxMessages['empresa.dataAbertura']}">
-            <p:calendar id="#{identificador}DataAberturaInput"
-                        required="true"
-                        maxdate="#{now}"
-                        pattern="dd/MM/yyyy"
-                        placeholder="__/__/____"
-                        mask="99/99/9999"
-                        value="#{viewObject.dataAbertura}">
-                <f:validator validatorId="pastDateValidator" />
-                <p:ajax event="dateSelect" process="@this" />
-                <p:ajax event="change" process="@this" />
-                <p:ajax event="blur" process="@this" />
-            </p:calendar>
-        </wi:field>
+        <p:outputPanel id="#{identificador}BuscaPanel"
+                       rendered="#{showPesquisa}">
+            <fieldset id="#{identificador}BuscaFieldset" style="margin-top: 1.5em;">
+                <legend class="name">#{infoxMessages['empresa.buscar']}</legend>
+                <wi:field id="#{identificador}BuscaCnpj"
+                          label="#{infoxMessages['empresa.cnpj']}">
+                    <p:inputMask id="#{identificador}BuscaCnpjInput"
+                                 mask="99.999.999/9999-99"
+                                 size="18"
+                                 value="#{searchObject.cnpj}">
+                        <f:converter converterId="cnpjConverter" />
+                    </p:inputMask>
+                </wi:field>
+                    
+                <wi:field id="#{identificador}BuscaRazaoSocial"
+                          label="#{infoxMessages['empresa.razaoSocial']}">
+                    <p:inputText id="#{identificador}BuscaRazaoSocialInput"
+                                 size="30"
+                                 maxlength="256"
+                                 value="#{searchObject.razaoSocial}" />
+                </wi:field>
         
-        <wi:field id="#{identificador}TelefoneCelular"
-                  required="true"
-                  label="#{infoxMessages['empresa.telefoneCelular']}">
-            <p:inputMask id="#{identificador}TelefoneCelularInput"
-                         mask="(99) 99999999?9"
-                         size="22"
-                         required="true"
-                         value="#{viewObject.telefoneCelular}"/>
-        </wi:field>
+                <wi:field id="#{identificador}BuscaNomeFantasia"
+                          label="#{infoxMessages['empresa.nomeFantasia']}">
+                    <p:inputText id="#{identificador}BuscaNomeFantasiaInput"
+                                 size="30"
+                                 maxlength="256"
+                                 value="#{searchObject.nomeFantasia}" />
+                </wi:field>
+                
+                <h:commandButton id="#{identificador}BuscarBtn"
+                                 action="#{view.buscarEmpresa()}"
+                                 value="#{infoxMessages['empresa.buscar']}"
+                                 styleClass="buttons buttons-primary" >
+                    <p:ajax process="#{identificador}BuscaPanel"
+                            update="@(.#{identificador}) @(.#{listDialog}) :pageBodyDialogMessage"
+                            onstart="infox.showLoading();"
+                            oncomplete="infox.hideLoading();"/>
+                </h:commandButton>    
+            </fieldset>
+        </p:outputPanel>
         
-        <wi:field id="#{identificador}TelefoneFixo"
-                  label="#{infoxMessages['empresa.telefoneFixo']}">
-            <p:inputMask id="#{identificador}TelefoneFixoInput"
-                         mask="(99) 99999999?9"
-                         size="22"
-                         value="#{viewObject.telefoneFixo}"/>
-        </wi:field>
-
-        <wi:field id="#{identificador}Email"
-                  required="true"
-                  label="#{infoxMessages['empresa.email']}">
-            <p:inputText id="#{identificador}EmailInput"
-                         required="true"
-                         size="30"
-                         maxlength="256"
-                         value="#{viewObject.email}">
-                <f:validator validatorId="emailValidator" />
-            </p:inputText>
-        </wi:field>
-
-        <wi:field id="#{identificador}CodEstado"
-                  label="#{infoxMessages['empresa.codEstado']}">
-            <h:selectOneMenu id="#{identificador}CodEstadoInput"
-                             value="#{viewObject.codEstado}">
-                <f:selectItem noSelectionOption="true"
-                              itemValue="#{null}"
-                              itemLabel="#{messages['crud.select.select']}" />
-                <f:selectItems var="itemUf"
-                               value="#{codEstadoList}" />
-                <f:converter converterId="br.com.infox.jsf.converter.SelectItemConverter" />
-            </h:selectOneMenu>
-        </wi:field>
-
-        <wi:field id="#{identificador}Cidade"
-                  label="#{infoxMessages['empresa.cidade']}">
-            <p:inputText id="#{identificador}CidadeInput"
-                         size="30"
-                         maxlength="100"
-                         value="#{viewObject.cidade}" />
-        </wi:field>
-
-        <wi:field id="#{identificador}Logradouro"
-                  label="#{infoxMessages['empresa.logradouro']}">
-            <p:inputText id="#{identificador}LogradouroInput"
-                         size="30"
-                         maxlength="256"
-                         value="#{viewObject.logradouro}" />
-        </wi:field>
-
-        <wi:field id="#{identificador}Bairro"
-                  label="#{infoxMessages['empresa.bairro']}">
-            <p:inputText id="#{identificador}BairroInput"
-                         size="30"
-                         maxlength="256"
-                         value="#{viewObject.bairro}" />
-        </wi:field>
-
-        <wi:field id="#{identificador}Complemento"
-                  label="#{infoxMessages['empresa.complemento']}">
-            <p:inputText id="#{identificador}complementoInput"
-                         size="30"
-                         maxlength="256"
-                         value="#{viewObject.complemento}" />
-        </wi:field>
-
-        <wi:field id="#{identificador}Numero"
-                  label="#{infoxMessages['empresa.numero']}">
-            <p:inputText id="#{identificador}NumeroInput"
-                         size="30"
-                         maxlength="20"
-                         value="#{viewObject.numero}" />
-        </wi:field>
+        <p:outputPanel id="#{identificador}ContribuintePanel"
+                       styleClass="#{identificador}ContribuintePanel"
+                       rendered="#{!empty viewObject}">
+            <fieldset id="#{identificador}ContribuinteFieldset" style="margin-top: 1.5em;">
+                <legend class="name">#{infoxMessages['empresa.dadosEmpresa']}</legend>
         
-        <wi:field id="#{identificador}Cep"
-                  label="#{infoxMessages['empresa.cep']}">
-            <p:inputMask id="#{identificador}CepInput"
-                         mask="99999-999"
-                         size="22"
-                         value="#{viewObject.cep}"/>
-        </wi:field>
+                <wi:field id="#{identificador}Cnpj"
+                          required="true"
+                          label="#{infoxMessages['empresa.cnpj']}">
+                    <p:inputMask id="#{identificador}CnpjInput"
+                                 mask="99.999.999/9999-99"
+                                 size="18"
+                                 required="true"
+                                 value="#{viewObject.cnpj}">
+                        <f:validator validatorId="cnpjValidator" />
+                        <f:converter converterId="cnpjConverter" />
+                    </p:inputMask>
+                </wi:field>
+        
+                <wi:field id="#{identificador}TipoEmpresa"
+                          label="#{infoxMessages['empresa.tipoEmpresa']}">
+                    <p:inputText id="#{identificador}TipoEmpresaInput"
+                                 size="30"
+                                 maxlength="10"
+                                 value="#{viewObject.tipoEmpresa}" />
+                </wi:field>
+        
+                <wi:field id="#{identificador}RazaoSocial"
+                          required="true"
+                          label="#{infoxMessages['empresa.razaoSocial']}">
+                    <p:inputText id="#{identificador}RazaoSocialInput"
+                                 size="30"
+                                 required="true"
+                                 maxlength="256"
+                                 value="#{viewObject.razaoSocial}" />
+                </wi:field>
+        
+                <wi:field id="#{identificador}NomeFantasia"
+                          required="true"
+                          label="#{infoxMessages['empresa.nomeFantasia']}">
+                    <p:inputText id="#{identificador}NomeFantasiaInput"
+                                 size="30"
+                                 required="true"
+                                 maxlength="256"
+                                 value="#{viewObject.nomeFantasia}" />
+                </wi:field>
+        
+                <wi:field id="#{identificador}DataAbertura"
+                          required="true"
+                          label="#{infoxMessages['empresa.dataAbertura']}">
+                    <p:calendar id="#{identificador}DataAberturaInput"
+                                required="true"
+                                maxdate="#{now}"
+                                pattern="dd/MM/yyyy"
+                                placeholder="__/__/____"
+                                mask="99/99/9999"
+                                value="#{viewObject.dataAbertura}">
+                        <f:validator validatorId="pastDateValidator" />
+                        <p:ajax event="dateSelect" process="@this" />
+                        <p:ajax event="change" process="@this" />
+                        <p:ajax event="blur" process="@this" />
+                    </p:calendar>
+                </wi:field>
+                
+                <wi:field id="#{identificador}TelefoneCelular"
+                          required="true"
+                          label="#{infoxMessages['empresa.telefoneCelular']}">
+                    <p:inputMask id="#{identificador}TelefoneCelularInput"
+                                 mask="(99) 99999999?9"
+                                 size="22"
+                                 required="true"
+                                 value="#{viewObject.telefoneCelular}"/>
+                </wi:field>
+                
+                <wi:field id="#{identificador}TelefoneFixo"
+                          label="#{infoxMessages['empresa.telefoneFixo']}">
+                    <p:inputMask id="#{identificador}TelefoneFixoInput"
+                                 mask="(99) 99999999?9"
+                                 size="22"
+                                 value="#{viewObject.telefoneFixo}"/>
+                </wi:field>
+        
+                <wi:field id="#{identificador}Email"
+                          required="true"
+                          label="#{infoxMessages['empresa.email']}">
+                    <p:inputText id="#{identificador}EmailInput"
+                                 required="true"
+                                 size="30"
+                                 maxlength="256"
+                                 value="#{viewObject.email}">
+                        <f:validator validatorId="emailValidator" />
+                    </p:inputText>
+                </wi:field>
+        
+                <wi:field id="#{identificador}CodEstado"
+                          label="#{infoxMessages['empresa.codEstado']}">
+                    <h:selectOneMenu id="#{identificador}CodEstadoInput"
+                                     value="#{viewObject.codEstado}">
+                        <f:selectItem noSelectionOption="true"
+                                      itemValue="#{null}"
+                                      itemLabel="#{messages['crud.select.select']}" />
+                        <f:selectItems var="itemUf"
+                                       value="#{codEstadoList}" />
+                        <f:converter converterId="br.com.infox.jsf.converter.SelectItemConverter" />
+                    </h:selectOneMenu>
+                </wi:field>
+        
+                <wi:field id="#{identificador}Cidade"
+                          label="#{infoxMessages['empresa.cidade']}">
+                    <p:inputText id="#{identificador}CidadeInput"
+                                 size="30"
+                                 maxlength="100"
+                                 value="#{viewObject.cidade}" />
+                </wi:field>
+        
+                <wi:field id="#{identificador}Logradouro"
+                          label="#{infoxMessages['empresa.logradouro']}">
+                    <p:inputText id="#{identificador}LogradouroInput"
+                                 size="30"
+                                 maxlength="256"
+                                 value="#{viewObject.logradouro}" />
+                </wi:field>
+        
+                <wi:field id="#{identificador}Bairro"
+                          label="#{infoxMessages['empresa.bairro']}">
+                    <p:inputText id="#{identificador}BairroInput"
+                                 size="30"
+                                 maxlength="256"
+                                 value="#{viewObject.bairro}" />
+                </wi:field>
+        
+                <wi:field id="#{identificador}Complemento"
+                          label="#{infoxMessages['empresa.complemento']}">
+                    <p:inputText id="#{identificador}complementoInput"
+                                 size="30"
+                                 maxlength="256"
+                                 value="#{viewObject.complemento}" />
+                </wi:field>
+        
+                <wi:field id="#{identificador}Numero"
+                          label="#{infoxMessages['empresa.numero']}">
+                    <p:inputText id="#{identificador}NumeroInput"
+                                 size="30"
+                                 maxlength="20"
+                                 value="#{viewObject.numero}" />
+                </wi:field>
+                
+                <wi:field id="#{identificador}Cep"
+                          label="#{infoxMessages['empresa.cep']}">
+                    <p:inputMask id="#{identificador}CepInput"
+                                 mask="99999-999"
+                                 size="22"
+                                 value="#{viewObject.cep}"/>
+                </wi:field>
+            </fieldset>
+        </p:outputPanel>
         
         <ui:insert />
     </p:outputPanel>
