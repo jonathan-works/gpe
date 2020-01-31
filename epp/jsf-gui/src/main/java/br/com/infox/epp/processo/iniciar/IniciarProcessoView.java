@@ -112,14 +112,14 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     @Getter
     @Setter
     private EmpresaVO empresaVO;
-    
+
     @Getter
     private List<EmpresaVO> empresaList;
 
     @Getter
     @Setter
     private ServidorContribuinteVO servidorContribuinteVO;
-    
+
     @Getter
     private List<ServidorContribuinteVO> servidorContribuinteList;
 
@@ -141,7 +141,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         tipoParteList = tipoParteSearch.findAll();
         processosCriados = processoSearch.getProcessosNaoIniciados(Authenticator.getUsuarioLogado());
         participanteProcessoList = new ArrayList<>();
-        
+
         empresaVO = new EmpresaVO();
         servidorContribuinteVO = new ServidorContribuinteVO();
         servidorContribuinteVO.setTipoParticipante(TipoParticipanteEnum.CO);
@@ -242,7 +242,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         iniciarProcessoParticipanteVO.setTipoPessoa(tipoPessoa);
     }
-    
+
     public void buscarServidorContribuinte() {
         servidorContribuinteList = servidorContribuinteSearch.pesquisaServidorContribuinte(pesquisaParticipanteVO);
 
@@ -257,15 +257,15 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             servidorContribuinteVO = new ServidorContribuinteVO();
             servidorContribuinteVO.setTipoParticipante(pesquisaParticipanteVO.getTipoParticipante());
         }
-        
+
     }
-    
+
     public void selecionarServidorContribuinte(ServidorContribuinteVO row) {
         servidorContribuinteVO = row;
         servidorContribuinteList = null;
         JsfUtil.instance().execute("PF('servidorContribuinteDialog').hide();");
     }
-    
+
     public void buscarEmpresa() {
         empresaList = empresaSearch.pesquisaEmpresaVO(pesquisaParticipanteVO);
 
@@ -280,13 +280,13 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             empresaVO = new EmpresaVO();
         }
     }
-    
+
     public void selecionarEmpresa(EmpresaVO row) {
         empresaVO = row;
         empresaList = null;
         JsfUtil.instance().execute("PF('empresaDialog').hide();");
     }
-    
+
     public void onChangeParticipanteCpf() {
         PessoaFisica pessoaFisica = pessoaFisicaDAO.searchByCpf(iniciarProcessoParticipanteVO.getCodigo());
         if (pessoaFisica != null) {

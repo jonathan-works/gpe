@@ -26,7 +26,7 @@ import br.com.infox.seam.security.SecurityUtil;
 @ViewScoped
 public class ParticipantesProcessoController extends AbstractParticipantesController {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private static final int QUANTIDADE_MINIMA_PARTES = 1;
 
     @Inject
@@ -39,9 +39,9 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     private ParticipanteProcessoTreeHandler participanteProcessoTree;
     @Inject
     private ParticipanteProcessoService participanteProcessoService;
-    
+
     protected List<TipoParte> tipoPartes;
-    
+
     @Override
     public void init(Holder<Processo> processoHolder) {
         super.init(processoHolder);
@@ -50,36 +50,36 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
             setTipoPessoa(TipoPessoaEnum.J);
         }
     }
-    
+
     @Override
     protected void clearParticipanteProcesso() {
-    	super.clearParticipanteProcesso(); 
-    	participanteProcessoTree.clearTree();
+        super.clearParticipanteProcesso();
+        participanteProcessoTree.clearTree();
     }
-    
+
     @Override
     protected void initEmailParticipante() {
-    	UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByPessoaFisica((PessoaFisica) getParticipanteProcesso().getPessoa());
-		if (usuario != null) {
-			email = usuario.getEmail();
-		} else {
-			super.initEmailParticipante();
-		}
+        UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByPessoaFisica((PessoaFisica) getParticipanteProcesso().getPessoa());
+        if (usuario != null) {
+            email = usuario.getEmail();
+        } else {
+            super.initEmailParticipante();
+        }
     }
-    
+
     protected Natureza getNatureza() {
         return getProcesso().getNaturezaCategoriaFluxo().getNatureza();
     }
-    
+
     public List<ParticipanteProcesso> getParticipantes() {
-    	if (getProcesso() != null) {
-    		return getProcesso().getParticipantes();
-    	}
-    	return null;
+        if (getProcesso() != null) {
+            return getProcesso().getParticipantes();
+        }
+        return null;
     }
-    
+
     public List<ParticipanteProcesso> getParticipantesAtivos() {
-    	return getPartesAtivas(getProcesso().getParticipantes());
+        return getPartesAtivas(getProcesso().getParticipantes());
     }
 
     protected List<ParticipanteProcesso> filtrar(List<ParticipanteProcesso> participantes, TipoPessoaEnum tipoPessoa) {
@@ -91,7 +91,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
         }
         return filtrado;
     }
-    
+
     protected List<ParticipanteProcesso> getPartesAtivas(List<ParticipanteProcesso> participantes) {
         List<ParticipanteProcesso> participantesAtivas = new ArrayList<>();
         for (ParticipanteProcesso participante : participantes) {
@@ -101,48 +101,48 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
         }
         return participantesAtivas;
     }
-    
+
     public boolean podeInativarPartes(String tipoPessoa){
-    	if (TipoPessoaEnum.F.name().equals(tipoPessoa)) {
-    		return podeInativarPartesFisicas();
-    	} else if (TipoPessoaEnum.J.name().equals(tipoPessoa)) {
-    		return podeInativarPartesJuridicas();
-    	} else {
-    		return false;
-    	}
+        if (TipoPessoaEnum.F.name().equals(tipoPessoa)) {
+            return podeInativarPartesFisicas();
+        } else if (TipoPessoaEnum.J.name().equals(tipoPessoa)) {
+            return podeInativarPartesJuridicas();
+        } else {
+            return false;
+        }
     }
-    
+
     public boolean podeInativarPartesFisicas() {
         return securityUtil.checkPage(RECURSO_EXCLUIR)
-        		&& getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
+                && getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
     }
 
     public boolean podeInativarPartesJuridicas() {
         return securityUtil.checkPage(RECURSO_EXCLUIR)
-        		&& getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
+                && getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
     }
-    
+
     public boolean podeVisualizarDetalhesParticipante(ParticipanteProcesso participanteProcesso) {
-    	return participanteProcesso.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F) && securityUtil.checkPage(RECURSO_VISUALIZAR);
+        return participanteProcesso.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F) && securityUtil.checkPage(RECURSO_VISUALIZAR);
     }
-    
+
     public List<TipoParte> getTipoPartes() {
-    	if (tipoPartes == null){
-    		tipoPartes = tipoParteManager.findAll();
-    	}
-		return tipoPartes;
-	}
-    
-    public boolean podeAdicionarPartes(String tipoPessoa){
-    	if (TipoPessoaEnum.F.name().equals(tipoPessoa)) {
-    		return podeAdicionarPartesFisicas();
-    	} else if (TipoPessoaEnum.J.name().equals(tipoPessoa)) {
-    		return podeAdicionarPartesJuridicas();
-    	} else {
-    		return false;
-    	}
+        if (tipoPartes == null){
+            tipoPartes = tipoParteManager.findAll();
+        }
+        return tipoPartes;
     }
-    
+
+    public boolean podeAdicionarPartes(String tipoPessoa){
+        if (TipoPessoaEnum.F.name().equals(tipoPessoa)) {
+            return podeAdicionarPartesFisicas();
+        } else if (TipoPessoaEnum.J.name().equals(tipoPessoa)) {
+            return podeAdicionarPartesJuridicas();
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public boolean podeAdicionarPartesFisicas() {
         return securityUtil.checkPage(RECURSO_ADICIONAR) && participanteProcessoService.podeAdicionarPartesFisicas(getProcesso());
@@ -162,21 +162,21 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     public boolean apenasPessoaJuridica() {
         return ParteProcessoEnum.J.equals(getNatureza().getTipoPartes());
     }
-    
+
     @Override
     public void includeParticipanteProcesso() {
-    	super.includeParticipanteProcesso();
-    	participanteProcessoTree.clearTree();
+        super.includeParticipanteProcesso();
+        participanteProcessoTree.clearTree();
     }
-    
-    public ParticipanteProcesso getParticipantePai() {
-		return getParticipanteProcesso().getParticipantePai();
-	}
 
-	public void setParticipantePai(ParticipanteProcesso participantePai) {
-		if (participantePai != null && participantePai.getAtivo()){
-			getParticipanteProcesso().setParticipantePai(participantePai);
-		}
-	}
+    public ParticipanteProcesso getParticipantePai() {
+        return getParticipanteProcesso().getParticipantePai();
+    }
+
+    public void setParticipantePai(ParticipanteProcesso participantePai) {
+        if (participantePai != null && participantePai.getAtivo()){
+            getParticipanteProcesso().setParticipantePai(participantePai);
+        }
+    }
 
 }
