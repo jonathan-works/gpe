@@ -59,7 +59,7 @@ public class ServidorContribuinteSearch extends PersistenceController {
             Expression<String> expressionLike = cb.concat(cb.literal("%"), pesquisaParticipanteVO.getNomeCompleto());
             expressionLike = cb.concat(expressionLike, cb.literal("%"));
             where = cb.and(where,
-                    cb.like(cb.lower(contribuinte.get(ContribuinteSolicitante_.nomeCompleto)), expressionLike));
+                    cb.like(cb.lower(contribuinte.get(ContribuinteSolicitante_.nomeCompleto)), cb.lower(expressionLike)));
         }
         query.where(where);
 
