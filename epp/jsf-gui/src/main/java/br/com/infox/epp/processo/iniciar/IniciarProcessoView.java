@@ -2,11 +2,9 @@ package br.com.infox.epp.processo.iniciar;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -139,7 +137,6 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         Papel papel = Authenticator.getPapelAtual();
         UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
         createProcesso(Authenticator.getUsuarioPerfilAtual().getLocalizacao(), usuarioLogin);
-        iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         naturezaCategoriaFluxoItemList = natCatFluxoLocalizacaoDAO.listByLocalizacaoAndPapel(localizacao, papel);
         tipoParteList = tipoParteSearch.findAll();
         processosCriados = processoSearch.getProcessosNaoIniciados(Authenticator.getUsuarioLogado());
@@ -149,6 +146,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
 
     public void limparDadosParticipante() {
+        iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         empresaVO = null;
         empresaList = null;
         limparServidorContribuinte();
@@ -157,7 +155,6 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     public void limparServidorContribuinte() {
         servidorContribuinteVO = null;
         servidorContribuinteList = null;
-        servidorContribuinteVO.setTipoParticipante(TipoParticipanteEnum.CO);
         pesquisaParticipanteVO = new PesquisaParticipanteVO();
         pesquisaParticipanteVO.setTipoParticipante(TipoParticipanteEnum.CO);
     }
