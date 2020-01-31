@@ -157,6 +157,9 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     public void limparServidorContribuinte() {
         servidorContribuinteVO = null;
         servidorContribuinteList = null;
+        pesquisaParticipanteVO.setCpf(null);
+        pesquisaParticipanteVO.setMatricula(null);
+        pesquisaParticipanteVO.setNomeCompleto(null);
     }
 
     private void createProcesso(Localizacao localizacao, UsuarioLogin usuarioLogin) {
