@@ -215,7 +215,7 @@
 
                 <div>
                      <h:commandButton value="#{infoxMessages['button.add']}" action="#{iniciarProcessoView.adicionarParticipante}" styleClass="buttons">
-                         <p:ajax process="@form" update="@form:loadedByParticipante :pageBodyDialogMessage :iniciarProcessoForm:participanteList"
+                         <p:ajax process="@form" update="@form:loadedByParticipante :pageBodyDialogMessage :iniciarProcessoForm:participanteList partePanel"
                              partialSubmit="true" />
                      </h:commandButton>
                 </div>
