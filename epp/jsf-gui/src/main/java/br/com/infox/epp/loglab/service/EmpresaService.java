@@ -15,6 +15,7 @@ import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -38,7 +39,10 @@ public class EmpresaService extends PersistenceController {
     }
 
     private Empresa empresaFromEmpresaVO(EmpresaVO vo) {
-        PessoaJuridica pessoaJuridica = pessoaJuridicaManager.find(vo.getIdPessoaJuridica());
+        PessoaJuridica pessoaJuridica = pessoaJuridicaManager.getByCnpj(vo.getCnpj());
+        if(pessoaJuridica == null) {
+            throw new BusinessRollbackException("Falha ao associar a pessoa jurídica: " + vo.toString());
+        }
         Estado estado = null;
         Empresa empresa = new Empresa();
         empresa.setId(vo.getId());
