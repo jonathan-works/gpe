@@ -118,4 +118,9 @@ public class ServidorContribuinteVO {
         this.subFolha = servidor.getSubFolha();
         this.tipoParticipante = TipoParticipanteEnum.SE;
     }
+
+    @Override
+    public String toString() {
+        return getCpf() + " - " + getNomeCompleto();
+    }
 }

@@ -48,4 +48,9 @@ public class EmpresaVO {
     @Size(min = 3, max = 20)
     private String numero;
     private String cep;
+
+    @Override
+    public String toString() {
+        return getCnpj() + " - " + getNomeFantasia();
+    }
 }
