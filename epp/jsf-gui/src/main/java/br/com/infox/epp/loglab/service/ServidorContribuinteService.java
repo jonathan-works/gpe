@@ -113,6 +113,7 @@ public class ServidorContribuinteService extends PersistenceController {
         contribuinte.setNomeMae(vo.getNomeMae());
         contribuinte.setNumero(vo.getNumero());
         contribuinte.setSexo(vo.getSexo());
+        contribuinte.setTelefone(vo.getCelular());
         contribuinte.setTipoContribuinte(ContribuinteEnum.CO);
         return contribuinte;
     }

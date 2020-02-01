@@ -86,6 +86,7 @@ public class ServidorContribuinteVO {
         this.nomeMae = contribuinte.getNomeMae();
         this.numero = contribuinte.getNumero();
         this.sexo = contribuinte.getSexo();
+        this.celular = contribuinte.getTelefone();
         this.tipoParticipante = TipoParticipanteEnum.CO;
     }
 
