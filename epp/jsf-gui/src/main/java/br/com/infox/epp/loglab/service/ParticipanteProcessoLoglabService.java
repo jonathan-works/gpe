@@ -39,8 +39,4 @@ public class ParticipanteProcessoLoglabService extends PersistenceController {
         }
     }
 
-    public void gravarProcessoMetadadoParticipantePastaEmpresa() {
-
-    }
-
 }
