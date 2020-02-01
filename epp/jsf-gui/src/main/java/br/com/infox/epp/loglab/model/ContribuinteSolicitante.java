@@ -87,12 +87,10 @@ public class ContribuinteSolicitante implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dataNascimento;
 
-    @NotNull
     @Size(min = 3, max = 20)
     @Column(name = "nr_rg", nullable = true)
     private String numeroRg;
 
-    @NotNull
     @Size(min = 3, max = 256)
     @Column(name = "ds_emissor_rg", nullable = true)
     private String emissorRg;
