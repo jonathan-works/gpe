@@ -146,7 +146,9 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
 
     public void limparDadosParticipante() {
+        TipoPessoaEnum tipoPessoa = iniciarProcessoParticipanteVO != null ? iniciarProcessoParticipanteVO.getTipoPessoa() : TipoPessoaEnum.F;
         iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
+        iniciarProcessoParticipanteVO.setTipoPessoa(tipoPessoa);
         empresaVO = null;
         empresaList = null;
         pesquisaParticipanteVO = new PesquisaParticipanteVO();
@@ -251,9 +253,6 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
 
     public void onChangeTipoPessoa() {
-        TipoPessoaEnum tipoPessoa = iniciarProcessoParticipanteVO.getTipoPessoa();
-        iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
-        iniciarProcessoParticipanteVO.setTipoPessoa(tipoPessoa);
         limparDadosParticipante();
     }
 
@@ -322,7 +321,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
 
     public void onClickNovoParticipante() {
-        iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
+        limparDadosParticipante();
     }
 
     public void adicionarParticipante() {
