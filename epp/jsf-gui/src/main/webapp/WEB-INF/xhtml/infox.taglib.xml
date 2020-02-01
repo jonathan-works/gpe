@@ -480,12 +480,20 @@ version="2.0">
         <source>components/loglab/empresaFields.xhtml</source>
     </tag>
     <tag>
-        <tag-name>servidorContribuinteFields</tag-name>
-        <source>components/loglab/servidorContribuinteFields.xhtml</source>
+        <tag-name>empresaOutputFields</tag-name>
+        <source>components/loglab/empresaOutputFields.xhtml</source>
     </tag>
     <tag>
         <tag-name>servidorContribuinteDialog</tag-name>
         <source>components/loglab/servidorContribuinteDialog.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>servidorContribuinteFields</tag-name>
+        <source>components/loglab/servidorContribuinteFields.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>servidorContribuinteOutputFields</tag-name>
+        <source>components/loglab/servidorContribuinteOutputFields.xhtml</source>
     </tag>
     <tag>
         <tag-name>selectEturmalinaDialog</tag-name>

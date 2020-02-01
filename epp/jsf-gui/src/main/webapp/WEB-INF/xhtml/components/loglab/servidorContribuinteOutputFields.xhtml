@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="searchObject" value="#{searchObject}" />
+    
+    <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+    
+    <p:outputPanel id="#{identificador}"
+                   styleClass="#{identificador}"
+                   rendered="#{rendered}">
+        <p:outputPanel id="#{identificador}ContribuintePanel"
+                       styleClass="#{identificador}ContribuintePanel"
+                       rendered="#{searchObject.tipoParticipante eq 'CO'}">
+            <fieldset id="#{identificador}ContribuinteFieldset" style="margin-top: 1.5em;">
+                <legend class="name">#{infoxMessages['servidorContribuinte.dadosContribuinte']}</legend>
+                
+                <wi:field id="#{identificador}TipoParticipanteContribuinteOutput"
+                          label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
+                    <p:outputLabel id="#{identificador}TipoParticipanteContribuinteOutputInput"
+                                   value="#{viewObject.tipoParticipante.label}" />
+                </wi:field>
+                <wi:field id="#{identificador}CpfContribuinteOutput"
+                          label="#{infoxMessages['servidorContribuinte.cpf']}">
+                    <p:outputLabel id="#{identificador}CpfContribuinteOutputInput"
+                                   value="#{viewObject.cpf}">
+                        <f:converter converterId="cpfConverter"/>
+                    </p:outputLabel>
+                </wi:field>
+                <wi:field id="#{identificador}NomeCompletoOutput"
+                          label="#{infoxMessages['servidorContribuinte.nomeCompleto']}">
+                    <p:outputLabel id="#{identificador}NomeCompletoOutputInput"
+                                   value="#{viewObject.nomeCompleto}"/>
+                </wi:field>
+                <wi:field id="#{identificador}SexoOutput"
+                          label="#{infoxMessages['servidorContribuinte.sexo']}">
+                    <p:outputLabel id="#{identificador}SexoOutputInput"
+                                   value="#{viewObject.sexo}"/>
+                </wi:field>
+                <wi:field id="#{identificador}DataNascimentoOutput"
+                          label="#{infoxMessages['servidorContribuinte.dataNascimento']}">
+                    <p:outputLabel id="#{identificador}DataNascimentoOutputInput"
+                                   value="#{viewObject.dataNascimento}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:outputLabel>
+                </wi:field>
+                <wi:field id="#{identificador}NomeMaeOutput"
+                          label="#{infoxMessages['servidorContribuinte.nomeMae']}">
+                    <p:outputLabel id="#{identificador}NomeMaeOutputInput"
+                                   value="#{viewObject.nomeMae}" />
+                </wi:field>
+                <wi:field id="#{identificador}EmailContribuinteOutput"
+                          label="#{infoxMessages['servidorContribuinte.email']}">
+                    <p:outputLabel id="#{identificador}EmailContribuinteOutputInput"
+                                   value="#{viewObject.email}"/>
+                </wi:field>
+                <wi:field id="#{identificador}CelularContribuinteOutput"
+                          label="#{infoxMessages['servidorContribuinte.celular']}">
+                    <p:inputMask id="#{identificador}CelularContribuinteOutputInput"
+                                 value="#{viewObject.celular}"/>
+                </wi:field>
+                <wi:field id="#{identificador}CodEstadoOutput"
+                          label="#{infoxMessages['servidorContribuinte.codEstado']}">
+                    <p:outputLabel id="#{identificador}CodEstadoInput"
+                                   value="#{viewObject.codEstado}"/>
+                </wi:field>
+                <wi:field id="#{identificador}CidadeOutput"
+                          label="#{infoxMessages['servidorContribuinte.cidade']}">
+                    <p:outputLabel id="#{identificador}CidadeOutputInput"
+                                   value="#{viewObject.cidade}" />
+                </wi:field>
+                <wi:field id="#{identificador}LogradouroOutput"
+                          label="#{infoxMessages['servidorContribuinte.logradouro']}">
+                    <p:outputLabel id="#{identificador}LogradouroOutputInput"
+                                   value="#{viewObject.logradouro}" />
+                </wi:field>
+                <wi:field id="#{identificador}BairroOutput"
+                          label="#{infoxMessages['servidorContribuinte.bairro']}">
+                    <p:outputLabel id="#{identificador}BairroOutputInput"
+                                   value="#{viewObject.bairro}" />
+                </wi:field>
+                <wi:field id="#{identificador}ComplementoOutput"
+                          label="#{infoxMessages['servidorContribuinte.complemento']}">
+                    <p:outputLabel id="#{identificador}ComplementoOutputInput"
+                                   value="#{viewObject.complemento}" />
+                </wi:field>
+                <wi:field id="#{identificador}NumeroOutput"
+                          label="#{infoxMessages['servidorContribuinte.numero']}">
+                    <p:outputLabel id="#{identificador}NumeroOutputInput"
+                                   value="#{viewObject.numero}" />
+                </wi:field>
+                <wi:field id="#{identificador}CepOutput"
+                          label="#{infoxMessages['servidorContribuinte.cep']}">
+                    <p:outputLabel id="#{identificador}CepOutputInput"
+                                   value="#{viewObject.cep}"/>
+                </wi:field>
+            </fieldset>
+        </p:outputPanel>
+            
+        <p:outputPanel id="#{identificador}ServidorPanel"
+                       styleClass="#{identificador}ServidorPanel"
+                       rendered="#{searchObject.tipoParticipante eq 'SE'}">
+            <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
+                <legend class="name">#{infoxMessages['servidorContribuinte.dadosServidor']}</legend>
+                
+                <wi:field id="#{identificador}TipoParticipanteServidorOutput"
+                          label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
+                    <p:outputLabel id="#{identificador}TipoParticipanteServidorOutputInput"
+                                   value="#{viewObject.tipoParticipante.label}" />
+                </wi:field>
+                <wi:field id="#{identificador}CpfServidorOutput"
+                          label="#{infoxMessages['servidorContribuinte.cpf']}">
+                    <p:outputLabel id="#{identificador}cpfServidorOutputInput"
+                                   value="#{viewObject.cpf}" />
+                </wi:field>
+                <wi:field id="#{identificador}MatriculaServidorOutput"
+                          label="#{infoxMessages['servidorContribuinte.matricula']}">
+                    <p:outputLabel id="#{identificador}MatriculaServidorOutputInput"
+                                   value="#{viewObject.matricula}" />
+                </wi:field>
+                <wi:field id="#{identificador}NomeCompletoServidorOutput"
+                          label="#{infoxMessages['servidorContribuinte.nomeCompleto']}">
+                    <p:outputLabel id="#{identificador}NomeCompletoServidorOutputInput"
+                                   value="#{viewObject.nomeCompleto}" />
+                </wi:field>
+                <wi:field id="#{identificador}EmailServidorOutput"
+                          label="#{infoxMessages['servidorContribuinte.email']}">
+                    <p:outputLabel id="#{identificador}EmailServidorOutputInput"
+                                   value="#{viewObject.email}" />
+                </wi:field>
+                <wi:field id="#{identificador}CelularServidorOutput"
+                          label="#{infoxMessages['servidorContribuinte.celular']}">
+                    <p:outputLabel id="#{identificador}CelularServidorOutputInput"
+                                   value="#{viewObject.celular}" />
+                </wi:field>
+                <wi:field id="#{identificador}DataNascimentoServidorOutput"
+                          label="#{infoxMessages['servidorContribuinte.dataNascimento']}">
+                    <p:outputLabel id="#{identificador}DataNascimentoServidorOutputInput"
+                                   value="#{viewObject.dataNascimento}" >
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:outputLabel>
+                </wi:field>
+                <wi:field id="#{identificador}NomeMaeServidorOutput"
+                          label="#{infoxMessages['servidorContribuinte.nomeMae']}">
+                    <p:outputLabel id="#{identificador}NomeMaeServidorOutputInput"
+                                   value="#{viewObject.nomeMae}" />
+                </wi:field>
+                <wi:field id="#{identificador}DataNomeacao"
+                          label="#{infoxMessages['servidorContribuinte.dataNomeacao']}">
+                    <p:outputLabel id="#{identificador}DataNomeacaoInput"
+                                   value="#{viewObject.dataNomeacao}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:outputLabel>
+                </wi:field>
+                <wi:field id="#{identificador}DataPosse"
+                          label="#{infoxMessages['servidorContribuinte.dataPosse']}">
+                    <p:outputLabel id="#{identificador}DataPosseInput"
+                                   value="#{viewObject.dataPosse}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:outputLabel>
+                </wi:field>
+                <wi:field id="#{identificador}DataExercicio"
+                          label="#{infoxMessages['servidorContribuinte.dataExercicio']}">
+                    <p:outputLabel id="#{identificador}DataExercicioInput"
+                                   value="#{viewObject.dataExercicio}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:outputLabel>
+                </wi:field>
+                <wi:field id="#{identificador}Situacao"
+                          label="#{infoxMessages['servidorContribuinte.situacao']}">
+                    <p:outputLabel id="#{identificador}SituacaoInput"
+                                   value="#{viewObject.situacao}"/>
+                </wi:field>
+                <wi:field id="#{identificador}Orgao"
+                          label="#{infoxMessages['servidorContribuinte.orgao']}">
+                    <p:outputLabel id="#{identificador}OrgaoInput"
+                                   value="#{viewObject.orgao}"/>
+                </wi:field>
+                <wi:field id="#{identificador}LocalTrabalho"
+                          label="#{infoxMessages['servidorContribuinte.localTrabalho']}">
+                    <p:outputLabel id="#{identificador}LocalTrabalhoInput"
+                                   value="#{viewObject.localTrabalho}"/>
+                </wi:field>
+                <wi:field id="#{identificador}SubFolha"
+                          label="#{infoxMessages['servidorContribuinte.subFolha']}">
+                    <p:outputLabel id="#{identificador}SubFolhaInput"
+                                   value="#{viewObject.subFolha}"/>
+                </wi:field>
+                <wi:field id="#{identificador}Jornada"
+                          label="#{infoxMessages['servidorContribuinte.jornada']}">
+                    <p:outputLabel id="#{identificador}JornadaInput"
+                                   value="#{viewObject.jornada}"/>
+                </wi:field>
+                <wi:field id="#{identificador}OcupacaoCarreira"
+                          label="#{infoxMessages['servidorContribuinte.ocupacaoCarreira']}">
+                    <p:outputLabel id="#{identificador}OcupacaoCarreiraInput"
+                                   value="#{viewObject.ocupacaoCarreira}"/>
+                </wi:field>
+                <wi:field id="#{identificador}CargoCarreira"
+                          label="#{infoxMessages['servidorContribuinte.cargoCarreira']}">
+                    <p:outputLabel id="#{identificador}CargoCarreiraInput"
+                                   value="#{viewObject.cargoCarreira}"/>
+                </wi:field>
+                <wi:field id="#{identificador}OcupacaoComissao"
+                          label="#{infoxMessages['servidorContribuinte.ocupacaoComissao']}">
+                    <p:outputLabel id="#{identificador}OcupacaoComissaoInput"
+                                   value="#{viewObject.ocupacaoComissao}"/>
+                </wi:field>
+                <wi:field id="#{identificador}CargoComissao"
+                          label="#{infoxMessages['servidorContribuinte.cargoComissao']}">
+                    <p:outputLabel id="#{identificador}CargoComissaoInput"
+                                   value="#{viewObject.cargoComissao}"/>
+                </wi:field>
+                <wi:field id="#{identificador}NomePai"
+                          label="#{infoxMessages['servidorContribuinte.nomePai']}">
+                    <p:outputLabel id="#{identificador}NomePaiInput"
+                                   value="#{viewObject.nomePai}"/>
+                </wi:field>
+                <wi:field id="#{identificador}NumeroRg"
+                          label="#{infoxMessages['servidorContribuinte.numeroRg']}">
+                    <p:outputLabel id="#{identificador}NumeroRgInput"
+                                   value="#{viewObject.numeroRg}"/>
+                </wi:field>
+                <wi:field id="#{identificador}DataEmissaoRg"
+                          label="#{infoxMessages['servidorContribuinte.dataEmissaoRg']}">
+                    <p:outputLabel id="#{identificador}DataEmissaoRgInput"
+                                   value="#{viewObject.dataEmissaoRg}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:outputLabel>
+                </wi:field>
+                <wi:field id="#{identificador}OrgaoEmissorRG"
+                          label="#{infoxMessages['servidorContribuinte.orgaoEmissorRG']}">
+                    <p:outputLabel id="#{identificador}OrgaoEmissorRGInput"
+                                   value="#{viewObject.orgaoEmissorRG}"/>
+                </wi:field>
+            </fieldset>
+        </p:outputPanel>
+        
+        <ui:insert />
+    </p:outputPanel>
+</ui:composition>

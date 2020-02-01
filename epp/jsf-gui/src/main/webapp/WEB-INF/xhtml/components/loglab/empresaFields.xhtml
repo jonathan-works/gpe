@@ -68,6 +68,7 @@
         
                 <wi:field id="#{identificador}Cnpj"
                           required="true"
+                          rendered="#{empty viewObject.idPessoaJuridica}"
                           label="#{infoxMessages['empresa.cnpj']}">
                     <p:inputMask id="#{identificador}CnpjInput"
                                  mask="99.999.999/9999-99"
@@ -77,6 +78,15 @@
                         <f:validator validatorId="cnpjValidator" />
                         <f:converter converterId="cnpjConverter" />
                     </p:inputMask>
+                </wi:field>
+                
+                <wi:field id="#{identificador}CnpjOutput"
+                          rendered="#{!empty viewObject.idPessoaFisica}"
+                          label="#{infoxMessages['empresa.cnpj']}">
+                    <p:outputLabel id="#{identificador}CnpjOutputInput"
+                                   value="#{viewObject.cnpj}">
+                        <f:converter converterId="cnpjConverter"/>
+                    </p:outputLabel>
                 </wi:field>
         
                 <wi:field id="#{identificador}TipoEmpresa"

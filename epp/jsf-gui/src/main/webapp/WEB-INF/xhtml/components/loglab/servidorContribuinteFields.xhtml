@@ -110,7 +110,9 @@
                               rendered="#{!empty viewObject.idPessoaFisica}"
                               label="#{infoxMessages['servidorContribuinte.cpf']}">
                         <p:outputLabel id="#{identificador}CpfContribuinteOutputInput"
-                                       value="#{viewObject.cpf}" />
+                                       value="#{viewObject.cpf}">
+                            <f:converter converterId="cpfConverter"/>
+                        </p:outputLabel>
                     </wi:field>
                     
                     <wi:field id="#{identificador}NomeCompleto"
