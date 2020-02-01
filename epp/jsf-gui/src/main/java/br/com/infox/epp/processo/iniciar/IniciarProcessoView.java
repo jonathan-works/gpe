@@ -20,6 +20,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import br.com.infox.core.exception.EppConfigurationException;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -274,22 +275,30 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
 
     public void buscarServidorContribuinte() {
-        servidorContribuinteList = servidorContribuinteSearch.pesquisaServidorContribuinte(pesquisaParticipanteVO);
+        if (StringUtil.isEmpty(pesquisaParticipanteVO.getCpf())
+                && StringUtil.isEmpty(pesquisaParticipanteVO.getNomeCompleto())
+                && StringUtil.isEmpty(pesquisaParticipanteVO.getMatricula())) {
+            FacesMessages.instance().add("Por favor, preencha pelo menos um campo de busca.");
+        } else {
+            servidorContribuinteList = servidorContribuinteSearch.pesquisaServidorContribuinte(pesquisaParticipanteVO);
 
-        if(servidorContribuinteList != null && servidorContribuinteList.size() > 0) {
-            if(servidorContribuinteList.size() == 1) {
-                servidorContribuinteVO = servidorContribuinteList.get(0);
-                onChangeParticipanteCpf();
-                servidorContribuinteList = null;
+            if(servidorContribuinteList != null && servidorContribuinteList.size() > 0) {
+                if(servidorContribuinteList.size() == 1) {
+                    servidorContribuinteVO = servidorContribuinteList.get(0);
+                    onChangeParticipanteCpf();
+                    servidorContribuinteList = null;
+                } else {
+                    JsfUtil.instance().execute("PF('servidorContribuinteDialog').show();");
+                }
+            } else if(pesquisaParticipanteVO.getTipoParticipante().equals(TipoParticipanteEnum.CO)) {
+                servidorContribuinteVO = new ServidorContribuinteVO();
+                servidorContribuinteVO.setTipoParticipante(pesquisaParticipanteVO.getTipoParticipante());
+                servidorContribuinteVO.setCpf(pesquisaParticipanteVO.getCpf());
+                FacesMessages.instance().add("Contribuinte não encontrado. Preencha os dados para adicionar um novo.");
             } else {
-                JsfUtil.instance().execute("PF('servidorContribuinteDialog').show();");
+                FacesMessages.instance().add("Nenhum registro foi encontrado com os dados da busca.");
             }
-        } else if(pesquisaParticipanteVO.getTipoParticipante().equals(TipoParticipanteEnum.CO)) {
-            servidorContribuinteVO = new ServidorContribuinteVO();
-            servidorContribuinteVO.setTipoParticipante(pesquisaParticipanteVO.getTipoParticipante());
-            servidorContribuinteVO.setCpf(pesquisaParticipanteVO.getCpf());
         }
-
     }
 
     public void selecionarServidorContribuinte(ServidorContribuinteVO row) {
@@ -300,18 +309,26 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
 
     public void buscarEmpresa() {
-        empresaList = empresaSearch.pesquisaEmpresaVO(pesquisaParticipanteVO);
-
-        if(empresaList != null && empresaList.size() > 0) {
-            if(empresaList.size() == 1) {
-                empresaVO = empresaList.get(0);
-                onChangeParticipanteCnpj();
-                empresaList = null;
-            } else {
-                JsfUtil.instance().execute("PF('empresaDialog').show();");
-            }
+        if (StringUtil.isEmpty(pesquisaParticipanteVO.getCnpj())
+                && StringUtil.isEmpty(pesquisaParticipanteVO.getNomeFantasia())
+                && StringUtil.isEmpty(pesquisaParticipanteVO.getRazaoSocial())) {
+            FacesMessages.instance().add("Por favor, preencha pelo menos um campo de busca.");
         } else {
-            empresaVO = new EmpresaVO();
+            empresaList = empresaSearch.pesquisaEmpresaVO(pesquisaParticipanteVO);
+
+            if(empresaList != null && empresaList.size() > 0) {
+                if(empresaList.size() == 1) {
+                    empresaVO = empresaList.get(0);
+                    onChangeParticipanteCnpj();
+                    empresaList = null;
+                } else {
+                    JsfUtil.instance().execute("PF('empresaDialog').show();");
+                }
+            } else {
+                empresaVO = new EmpresaVO();
+                empresaVO.setCnpj(pesquisaParticipanteVO.getCnpj());
+                FacesMessages.instance().add("Registro não encontrado. Preencha os dados para adicionar um novo.");
+            }
         }
     }
 
