@@ -30,12 +30,12 @@ import br.com.infox.seam.exception.BusinessException;
 
 public abstract class AbstractParticipantesController implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	protected static final String RECURSO_ADICIONAR = "/pages/Processo/adicionarParticipanteProcesso";
-	protected static final String RECURSO_EXCLUIR = "/pages/Processo/excluirParticipanteProcesso";
-	protected static final String RECURSO_VISUALIZAR = "/pages/Processo/exibirDetalhesParticipanteProcesso";
-	private static final LogProvider LOG = Logging.getLogProvider(AbstractParticipantesController.class);
-	
+    private static final long serialVersionUID = 1L;
+    protected static final String RECURSO_ADICIONAR = "/pages/Processo/adicionarParticipanteProcesso";
+    protected static final String RECURSO_EXCLUIR = "/pages/Processo/excluirParticipanteProcesso";
+    protected static final String RECURSO_VISUALIZAR = "/pages/Processo/exibirDetalhesParticipanteProcesso";
+    private static final LogProvider LOG = Logging.getLogProvider(AbstractParticipantesController.class);
+
     @Inject
     protected PessoaFisicaManager pessoaFisicaManager;
     @Inject
@@ -48,181 +48,181 @@ public abstract class AbstractParticipantesController implements Serializable {
     protected ProcessoManager processoManager;
     @Inject
     protected ActionMessagesService actionMessagesService;
-    
+
     private ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
     private Holder<Processo> processoHolder;
     private TipoPessoaEnum tipoPessoa = TipoPessoaEnum.F;
     protected String email;
     protected MeioContato meioContato;
-    
+
     @Deprecated
     public void init(Processo processo) {
         init(new Holder<Processo>(processo));
     }
-    
+
     public void init(Holder<Processo> processoHolder) {
         this.processoHolder = processoHolder;
     }
-    
+
     protected void clearParticipanteProcesso() {
-    	participanteProcesso = new ParticipanteProcesso();
-    	participanteProcesso.setPessoa(tipoPessoa == TipoPessoaEnum.F ? new PessoaFisica() : new PessoaJuridica());
-    	meioContato = new MeioContato();
-    	email = null;
+        participanteProcesso = new ParticipanteProcesso();
+        participanteProcesso.setPessoa(tipoPessoa == TipoPessoaEnum.F ? new PessoaFisica() : new PessoaJuridica());
+        meioContato = new MeioContato();
+        email = null;
     }
-    
+
     public abstract boolean podeAdicionarPartesFisicas();
-    
+
     public abstract boolean podeAdicionarPartesJuridicas();
 
     public abstract boolean apenasPessoaFisica();
 
     public abstract boolean apenasPessoaJuridica();
-    
+
     protected void afterSaveParticipante(ParticipanteProcesso participanteProcesso){};
 
-	public void searchByCpf() {
+    public void searchByCpf() {
         String cpf = getParticipanteProcesso().getPessoa().getCodigo();
         getParticipanteProcesso().setPessoa(pessoaFisicaManager.getByCpf(cpf));
         if (getParticipanteProcesso().getPessoa() == null) {
-        	PessoaFisica pessoaFisica = new PessoaFisica();
-        	pessoaFisica.setCpf(cpf);
-        	pessoaFisica.setAtivo(true);
-        	getParticipanteProcesso().setPessoa(pessoaFisica);
+            PessoaFisica pessoaFisica = new PessoaFisica();
+            pessoaFisica.setCpf(cpf);
+            pessoaFisica.setAtivo(true);
+            getParticipanteProcesso().setPessoa(pessoaFisica);
         } else {
-        	initEmailParticipante();
+            initEmailParticipante();
         }
     }
 
-	protected void initEmailParticipante() {
-		meioContato = meioContatoManager.getMeioContatoByPessoaAndTipo(getParticipanteProcesso().getPessoa(), TipoMeioContatoEnum.EM);
-		if (meioContato == null){
-			meioContato = new MeioContato();
-		} else {
-			email = meioContato.getMeioContato();
-		}
-	}
+    protected void initEmailParticipante() {
+        meioContato = meioContatoManager.getMeioContatoByPessoaAndTipo(getParticipanteProcesso().getPessoa(), TipoMeioContatoEnum.EM);
+        if (meioContato == null){
+            meioContato = new MeioContato();
+        } else {
+            email = meioContato.getMeioContato();
+        }
+    }
 
     public void searchByCnpj() {
         String cnpj = getParticipanteProcesso().getPessoa().getCodigo();
         getParticipanteProcesso().setPessoa(pessoaJuridicaManager.getByCnpj(cnpj));
         if (getParticipanteProcesso().getPessoa() == null) {
-        	PessoaJuridica pessoaJuridica = new PessoaJuridica();
-        	pessoaJuridica.setCnpj(cnpj);
-        	pessoaJuridica.setAtivo(true);
-        	getParticipanteProcesso().setPessoa(pessoaJuridica);
+            PessoaJuridica pessoaJuridica = new PessoaJuridica();
+            pessoaJuridica.setCnpj(cnpj);
+            pessoaJuridica.setAtivo(true);
+            getParticipanteProcesso().setPessoa(pessoaJuridica);
         }
     }
-    
+
     public TipoPessoaEnum[] getTipoPessoaValues(){
-    	return TipoPessoaEnum.values();
+        return TipoPessoaEnum.values();
     }
-    
+
     public boolean podeAdicionarAlgumTipoDeParte() {
-    	return podeAdicionarPartesFisicas() || podeAdicionarPartesJuridicas();
+        return podeAdicionarPartesFisicas() || podeAdicionarPartesJuridicas();
     }
-    
+
     public boolean podeAdicionarAmbosTiposDeParte() {
-    	return podeAdicionarPartesFisicas() && podeAdicionarPartesJuridicas();
+        return podeAdicionarPartesFisicas() && podeAdicionarPartesJuridicas();
     }
-    
+
     @Transactional
     public void includeParticipanteProcesso(){
-		try {
-			getParticipanteProcesso().setProcesso(getProcesso());
-	    	existeParticipante(getParticipanteProcesso());
-	    	if (getParticipanteProcesso().getPessoa().getIdPessoa() == null) {
-	    		if (getParticipanteProcesso().getPessoa().getTipoPessoa() == TipoPessoaEnum.F) {
-		    		pessoaFisicaManager.persist((PessoaFisica) getParticipanteProcesso().getPessoa());
-		    	} else {
-		    		pessoaJuridicaManager.persist((PessoaJuridica) getParticipanteProcesso().getPessoa());
-		    	}
-	    	} 
-	    	if (getParticipanteProcesso().getPessoa().getTipoPessoa() == TipoPessoaEnum.F) {
-	    		includeMeioContato(getParticipanteProcesso().getPessoa());
-	    	}
-		    ParticipanteProcesso participantePersist = participanteProcessoManager.persist(getParticipanteProcesso());
-		    processoHolder.value = processoManager.merge(getProcesso());
-		    processoManager.refresh(getProcesso());
-		    participanteProcessoManager.flush();
-		    afterSaveParticipante(participantePersist);
-		} catch (DAOException e) {
-		    actionMessagesService.handleDAOException(e);
-		    LOG.error("Não foi possível inserir a pessoa " + getParticipanteProcesso().getPessoa(), e);
-		} catch (BusinessException e){
-		 	FacesMessages.instance().add(e.getMessage());
-		} finally {
-		    clearParticipanteProcesso();
-		}
+        try {
+            getParticipanteProcesso().setProcesso(getProcesso());
+            existeParticipante(getParticipanteProcesso());
+            if (getParticipanteProcesso().getPessoa().getIdPessoa() == null) {
+                if (getParticipanteProcesso().getPessoa().getTipoPessoa() == TipoPessoaEnum.F) {
+                    pessoaFisicaManager.persist((PessoaFisica) getParticipanteProcesso().getPessoa());
+                } else {
+                    pessoaJuridicaManager.persist((PessoaJuridica) getParticipanteProcesso().getPessoa());
+                }
+            }
+            if (getParticipanteProcesso().getPessoa().getTipoPessoa() == TipoPessoaEnum.F) {
+                includeMeioContato(getParticipanteProcesso().getPessoa());
+            }
+            ParticipanteProcesso participantePersist = participanteProcessoManager.persist(getParticipanteProcesso());
+            processoHolder.value = processoManager.merge(getProcesso());
+            processoManager.refresh(getProcesso());
+            participanteProcessoManager.flush();
+            afterSaveParticipante(participantePersist);
+        } catch (DAOException e) {
+            actionMessagesService.handleDAOException(e);
+            LOG.error("Não foi possível inserir a pessoa " + getParticipanteProcesso().getPessoa(), e);
+        } catch (BusinessException e){
+             FacesMessages.instance().add(e.getMessage());
+        } finally {
+            clearParticipanteProcesso();
+        }
     }
-    
+
     protected void includeMeioContato(Pessoa pessoa) throws DAOException {
-    	if (getEmail() == null || getEmail().equals(getMeioContato().getMeioContato())) {
-    		return;
-    	}
-    	boolean jaPossuiEmail = meioContatoManager.existeMeioContatoByPessoaTipoValor(pessoa, TipoMeioContatoEnum.EM, getEmail());
-    	if (!jaPossuiEmail) {
-    		getMeioContato().setPessoa(pessoa);
-    		getMeioContato().setMeioContato(getEmail());
-    		getMeioContato().setTipoMeioContato(TipoMeioContatoEnum.EM);
-    		meioContatoManager.persist(getMeioContato());
-    	}
-	}
-    
-    protected void existeParticipante(ParticipanteProcesso participanteProcesso){
-    	ParticipanteProcesso pai = participanteProcesso.getParticipantePai();
-    	Pessoa pessoa = participanteProcesso.getPessoa();
-    	if (pessoa.getIdPessoa() == null) {
-    		return; 
-    	}
-    	Processo processo = participanteProcesso.getProcesso();
-    	TipoParte tipo = participanteProcesso.getTipoParte();
-    	if (pai != null && pai.getPessoa().equals(participanteProcesso.getPessoa())) {
-    		throw new BusinessException("Participante não pode ser filho dele mesmo");
-    	}
-    	boolean existe = participanteProcessoManager.existeParticipanteByPessoaProcessoPaiTipoLock(pessoa, processo, pai, tipo);
-    	if (existe) {
-    		throw new BusinessException("Participante já cadastrado");
-    	}
+        if (getEmail() == null || getEmail().equals(getMeioContato().getMeioContato())) {
+            return;
+        }
+        boolean jaPossuiEmail = meioContatoManager.existeMeioContatoByPessoaTipoValor(pessoa, TipoMeioContatoEnum.EM, getEmail());
+        if (!jaPossuiEmail) {
+            getMeioContato().setPessoa(pessoa);
+            getMeioContato().setMeioContato(getEmail());
+            getMeioContato().setTipoMeioContato(TipoMeioContatoEnum.EM);
+            meioContatoManager.persist(getMeioContato());
+        }
     }
-    
-	public ParticipanteProcesso getParticipanteProcesso() {
-		return participanteProcesso;
-	}
 
-	public void setParticipanteProcesso(ParticipanteProcesso participanteProcesso) {
-		this.participanteProcesso = participanteProcesso;
-	}
+    protected void existeParticipante(ParticipanteProcesso participanteProcesso){
+        ParticipanteProcesso pai = participanteProcesso.getParticipantePai();
+        Pessoa pessoa = participanteProcesso.getPessoa();
+        if (pessoa.getIdPessoa() == null) {
+            return;
+        }
+        Processo processo = participanteProcesso.getProcesso();
+        TipoParte tipo = participanteProcesso.getTipoParte();
+        if (pai != null && pai.getPessoa().equals(participanteProcesso.getPessoa())) {
+            throw new BusinessException("Participante não pode ser filho dele mesmo");
+        }
+        boolean existe = participanteProcessoManager.existeParticipanteByPessoaProcessoPaiTipoLock(pessoa, processo, pai, tipo);
+        if (existe) {
+            throw new BusinessException("Participante já cadastrado");
+        }
+    }
 
-	public MeioContato getMeioContato() {
-		return meioContato;
-	}
+    public ParticipanteProcesso getParticipanteProcesso() {
+        return participanteProcesso;
+    }
 
-	public void setMeioContato(MeioContato meioContato) {
-		this.meioContato = meioContato;
-	}
+    public void setParticipanteProcesso(ParticipanteProcesso participanteProcesso) {
+        this.participanteProcesso = participanteProcesso;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public MeioContato getMeioContato() {
+        return meioContato;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setMeioContato(MeioContato meioContato) {
+        this.meioContato = meioContato;
+    }
 
-	public Processo getProcesso() {
-		return processoHolder != null ? processoHolder.value : null;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public TipoPessoaEnum getTipoPessoa() {
-		return tipoPessoa;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setTipoPessoa(TipoPessoaEnum tipoPessoa) {
-		if (!getTipoPessoa().equals(tipoPessoa)) {
-			this.tipoPessoa = tipoPessoa;
-			clearParticipanteProcesso();
-		}
-	}
-	
+    public Processo getProcesso() {
+        return processoHolder != null ? processoHolder.value : null;
+    }
+
+    public TipoPessoaEnum getTipoPessoa() {
+        return tipoPessoa;
+    }
+
+    public void setTipoPessoa(TipoPessoaEnum tipoPessoa) {
+        if (!getTipoPessoa().equals(tipoPessoa)) {
+            this.tipoPessoa = tipoPessoa;
+            clearParticipanteProcesso();
+        }
+    }
+
 }
