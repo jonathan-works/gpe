@@ -9,6 +9,11 @@ pipeline {
     environment {
         projectName = 'ePP'
         trunkBranchName = 'master'
+        telegramStagingChatId = credentials('infox-epp-sqa-chat-id')
+        telegramApiKey = credentials('telegram-api-key')
+    }
+    options {
+        buildDiscarder logRotator(artifactNumToKeepStr: '2')
     }
     stages {
 
@@ -19,8 +24,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
-                    sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
+                    sh "mvn -Dmaven.repo.local=${pwd()}/.git/mavenRepository -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
+                    sh "mvn -Dmaven.repo.local=${pwd()}/.git/mavenRepository -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
                 }
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*.war', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*liquibase*.tar.gz', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
@@ -35,6 +40,60 @@ pipeline {
                     recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
                     recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
                     deleteDir()
+                }
+            }
+        }
+
+        stage('Confirmar implantação') {
+            input {
+                message "Informe onde implantar, ou aborte para cancelar"
+                parameters {
+                    string(defaultValue: 'marshall.infox.intranet', description: 'Endereço DNS ou IP do servidor para implantar', name: 'serverAddress', trim: true)
+                    string(defaultValue: '1', description: 'Número da instância para implantação', name: 'context', trim: true)
+                    string(defaultValue: 'jboss', description: 'Nome do usuário para implantação', name: 'user', trim: true)
+                }
+            }
+            stages {
+                stage('Implantar em servidor') {
+                    agent any
+                    when {
+                        allOf {
+                            expression { return !(env.serverAddress?:'').trim().empty }
+                            expression { return !(env.context?:'').trim().empty }
+                            expression { return !(env.user?:'').trim().empty }
+                        }
+                        beforeAgent true
+                    }
+                    steps {
+                        unarchive mapping:['epp/**/target/*.war': 'epp.war','epp/**/target/*liquibase*.tar.gz':'liquibase-epp.tar.gz']
+                        script {
+                            sshagent(['5056b284-4ce6-40e9-9e7d-cf9c786dd190']) {
+                                sh "scp epp.war liquibase-epp.tar.gz ${env.user}@${env.serverAddress}:"
+                            }
+                            ssh {
+                                sshAgent('5056b284-4ce6-40e9-9e7d-cf9c786dd190')
+                                user(env.user)
+                                host(env.serverAddress)
+                                //DOWNLOAD DOS ARTEFATOS
+                                cmd("sh /usr/local/sbin/implantar '${env.context}' \"\$(pwd)/epp.war\" \"\$(pwd)/liquibase-epp.tar.gz\"")
+                                exec()
+                            }
+                        }
+                    }
+                    post {
+                        success {
+                            script {
+                                telegram {
+                                    apiKey(telegramApiKey)
+                                    chatId(telegramStagingChatId)
+                                    sendMessage("Artefatos foram implantados no servidor ${params.serverAddress} na instância ${params.context}")
+                                }
+                            }
+                        }
+                        always {
+                            deleteDir()
+                        }
+                    }
                 }
             }
         }
