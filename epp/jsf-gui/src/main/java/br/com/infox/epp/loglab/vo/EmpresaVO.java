@@ -37,15 +37,10 @@ public class EmpresaVO {
     @NotNull
     private String email;
     private String codEstado;
-    @Size(min = 3, max = 100)
     private String cidade;
-    @Size(min = 3, max = 256)
     private String logradouro;
-    @Size(min = 3, max = 256)
     private String bairro;
-    @Size(min = 3, max = 256)
     private String complemento;
-    @Size(min = 3, max = 20)
     private String numero;
     private String cep;
 

@@ -30,7 +30,6 @@ public class ServidorContribuinteVO {
     @Cpf
     private String cpf;
     private String matricula;
-    @Size(min = 6, max = 256)
     private String nomeCompleto;
     private String sexo;
     private Date dataNascimento;
@@ -39,15 +38,10 @@ public class ServidorContribuinteVO {
     private String email;
     private String celular;
     private String codEstado;
-    @Size(min = 3, max = 100)
     private String cidade;
-    @Size(min = 3, max = 256)
     private String logradouro;
-    @Size(min = 3, max = 256)
     private String bairro;
-    @Size(min = 3, max = 256)
     private String complemento;
-    @Size(min = 3, max = 20)
     private String numero;
     private String cep;
 
