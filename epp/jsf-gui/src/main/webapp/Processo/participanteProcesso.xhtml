@@ -22,50 +22,35 @@
             		limitRender="true" execute="@this"/>	
             </wi:selectOneRadioEnum>
             
-            <h:panelGroup id="loadedByParticipante" 
+            <p:outputPanel id="loadedByParticipante" 
             		rendered="#{not empty participantesProcessoController.tipoPessoa}">
             		
-           		<wi:inputCpf id="cpf"
-	                value="#{participantesProcessoController.participanteProcesso.pessoa.cpf}"
-	                label="#{infoxMessages['pessoaFisica.cpf']}"
-	                assignTo="participantesProcessoController.participanteProcesso.pessoa.cpf"
-	                required="true" rendered="#{participantesProcessoController.tipoPessoa eq 'F'}">
-	                <a:ajax event="blur" onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
-	                    listener="#{participantesProcessoController.searchByCpf()}"
-	                    execute="@this" render="nome, email, dataNascimento" limitRender="true"/>
-	            </wi:inputCpf>
-	            
-	            <wi:inputCnpj id="cnpj"
-	                value="#{participantesProcessoController.participanteProcesso.pessoa.cnpj}"
-	                label="#{infoxMessages['pessoaJuridica.cnpj']}"
-	                assignTo="participantesProcessoController.participanteProcesso.pessoa.cnpj"
-	                required="true" rendered="#{participantesProcessoController.tipoPessoa eq 'J'}">
-	                <a:ajax event="blur" execute="@this" render="nome, razao"
-	                	limitRender="true" listener="#{participantesProcessoController.searchByCnpj()}" />
-	            </wi:inputCnpj>
-	            
-	            <wi:inputText id="nome"
-	                value="#{participantesProcessoController.participanteProcesso.pessoa.nome}"
-	                label="#{participantesProcessoController.tipoPessoa eq 'F' ? infoxMessages['pessoaFisica.nome'] : infoxMessages['pessoaJuridica.nomeFantasia']}" 
-	                required="true" />
-	             
-	            <wi:inputEmail id="email"
-	            	value="#{participantesProcessoController.email}"
-	            	label="#{infoxMessages['pessoaFisica.email']}" 
-	            	rendered="#{participantesProcessoController.tipoPessoa eq 'F'}" 
-	            	required="false"/>
-	            	
-	            <wi:inputText id="razao"
-	                value="#{participantesProcessoController.participanteProcesso.pessoa.razaoSocial}"
-	                label="#{infoxMessages['pessoaJuridica.razaoSocial']}" required="true" 
-	                rendered="#{participantesProcessoController.tipoPessoa eq 'J'}" />
-	                
-	            <wi:inputDate id="dataNascimento"
-	                value="#{participantesProcessoController.participanteProcesso.pessoa.dataNascimento}"
-	                label="#{infoxMessages['pessoaFisica.dataNascimento']}" 
-	                rendered="#{participantesProcessoController.tipoPessoa eq 'F'}"
-	                required="false" />
-	                
+                <wi:servidorContribuinteFields
+                    identificador="servContrParticipante"
+                    rendered="#{participantesProcessoController.tipoPessoa eq 'F'}"
+                    view="#{participantesProcessoController}"
+                    viewObject="#{participantesProcessoController.servidorContribuinteVO}"
+                    listDialog="servidorContribuinteFormDialog"
+                    searchObject="#{participantesProcessoController.pesquisaParticipanteVO}"
+                    codEstadoList="#{participantesProcessoController.getListCodEstado()}">
+                </wi:servidorContribuinteFields>
+
+                <wi:empresaFields
+                    identificador="empresaParticipante"
+                    rendered="#{participantesProcessoController.tipoPessoa eq 'J'}"
+                    view="#{participantesProcessoController}"
+                    viewObject="#{participantesProcessoController.empresaVO}"
+                    listDialog="empresaFormDialog"
+                    searchObject="#{participantesProcessoController.pesquisaParticipanteVO}"
+                    codEstadoList="#{participantesProcessoController.getListCodEstado()}">
+                </wi:empresaFields>
+            </p:outputPanel>
+                
+                    
+                    
+            <p:outputPanel id="partePanel">
+                <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
+                    <legend class="name">#{infoxMessages['participanteProcesso.dadosParticipante']}</legend>
 	            <wi:selectOneMenuEntity id="tipoPartes"
 					items="#{participantesProcessoController.tipoPartes}"
 					value="#{participantesProcessoController.participanteProcesso.tipoParte}"
@@ -86,7 +71,8 @@
 					value="#{participantesProcessoController.participanteProcesso.dataFim}"
 					label="#{infoxMessages['participanteProcesso.dataFimParticipacao']}" 
 					required="false"/>
-	        </h:panelGroup>
+                </fieldset>
+            </p:outputPanel>
 	        
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
@@ -96,6 +82,22 @@
             </ui:define>
             
         </wi:dataForm>
+
+        <h:form id="servidorContribuinteFormDialog"
+                styleClass="servidorContribuinteFormDialog">
+            <wi:servidorContribuinteDialog id="servidorContribuinteDialog"
+                            view="#{participantesProcessoController}"
+                            paginaPrincipal="novoParticipanteFormDialog"
+                            list="#{participantesProcessoController.servidorContribuinteList}"/>
+        </h:form>
+
+        <h:form id="empresaFormDialog"
+                styleClass="empresaFormDialog">
+            <wi:empresaDialog id="empresaDialog"
+                              view="#{participantesProcessoController}"
+                              paginaPrincipal="novoParticipanteFormDialog"
+                              list="#{participantesProcessoController.empresaList}"/>
+        </h:form>
     </s:div>
     
 </ui:composition>
