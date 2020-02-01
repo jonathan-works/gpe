@@ -18,6 +18,7 @@ import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoaFisica.PessoaFisicaSearch;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -61,7 +62,7 @@ public class ServidorContribuinteService extends PersistenceController {
     }
 
     private Servidor servidorFromServidorContribuinteVO(ServidorContribuinteVO vo) {
-        PessoaFisica pessoaFisica = pessoaFisicaSearch.find(vo.getIdPessoaFisica());
+        PessoaFisica pessoaFisica = recuperarPessoaFisica(vo);
         Servidor servidor = new Servidor();
         servidor.setId(vo.getId());
         servidor.setCargoCarreira(vo.getCargoCarreira());
@@ -92,7 +93,7 @@ public class ServidorContribuinteService extends PersistenceController {
     }
 
     private ContribuinteSolicitante contribuinteFromServidorContribuinteVO(ServidorContribuinteVO vo) {
-        PessoaFisica pessoaFisica = pessoaFisicaSearch.find(vo.getIdPessoaFisica());
+        PessoaFisica pessoaFisica = recuperarPessoaFisica(vo);
         Estado estado = null;
         ContribuinteSolicitante contribuinte = new ContribuinteSolicitante();
         contribuinte.setId(vo.getId());
@@ -116,5 +117,13 @@ public class ServidorContribuinteService extends PersistenceController {
         contribuinte.setTelefone(vo.getCelular());
         contribuinte.setTipoContribuinte(ContribuinteEnum.CO);
         return contribuinte;
+    }
+
+    private PessoaFisica recuperarPessoaFisica(ServidorContribuinteVO vo) {
+        PessoaFisica pessoaFisica = pessoaFisicaSearch.getByCpf(vo.getCpf());
+        if(pessoaFisica == null) {
+            throw new BusinessRollbackException("Falha ao associar a pessoa física: " + vo.toString());
+        }
+        return pessoaFisica;
     }
 }
