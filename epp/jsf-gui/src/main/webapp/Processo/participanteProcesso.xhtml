@@ -14,65 +14,68 @@
             rendered="#{participantesProcessoController.podeAdicionarAlgumTipoDeParte()}"
             formTitle="Incluir Participante" expandedPanelForm="false">
 
-            <wi:selectOneRadioEnum id="radioTipoPessoa"
-                label="#{infoxMessages['pessoa.tipoPessoa']}" required="true"
-                items="#{participantesProcessoController.tipoPessoaValues}"
-                value="#{participantesProcessoController.tipoPessoa}"
-                rendered="#{participantesProcessoController.podeAdicionarAmbosTiposDeParte()}">
-                <a:ajax event="change" render="loadedByParticipante" immediate="true"
-                    limitRender="true" execute="@this"/>
-            </wi:selectOneRadioEnum>
-
-            <p:outputPanel id="loadedByParticipante"
-                    rendered="#{not empty participantesProcessoController.tipoPessoa}">
-
-                <wi:servidorContribuinteFields
-                    identificador="servContrParticipante"
-                    rendered="#{participantesProcessoController.tipoPessoa eq 'F'}"
-                    view="#{participantesProcessoController}"
-                    viewObject="#{participantesProcessoController.participanteProcessoVO.servidorContribuinteVO}"
-                    listDialog="servidorContribuinteFormDialog"
-                    searchObject="#{participantesProcessoController.pesquisaParticipanteVO}"
-                    codEstadoList="#{participantesProcessoController.getListCodEstado()}">
-                </wi:servidorContribuinteFields>
-
-                <wi:empresaFields
-                    identificador="empresaParticipante"
-                    rendered="#{participantesProcessoController.tipoPessoa eq 'J'}"
-                    view="#{participantesProcessoController}"
-                    viewObject="#{participantesProcessoController.participanteProcessoVO.empresaVO}"
-                    listDialog="empresaFormDialog"
-                    searchObject="#{participantesProcessoController.pesquisaParticipanteVO}"
-                    codEstadoList="#{participantesProcessoController.getListCodEstado()}">
-                </wi:empresaFields>
-            </p:outputPanel>
-
-
-
-            <p:outputPanel id="partePanel">
-                <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
-                    <legend class="name">#{infoxMessages['participanteProcesso.dadosParticipante']}</legend>
-                <wi:selectOneMenuEntity id="tipoPartes"
-                    items="#{participantesProcessoController.tipoPartes}"
-                    value="#{participantesProcessoController.tipoParte}"
-                    label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
-                    required="true" showLabelSelecione="true" />
-
-                <wi:tree id="participanteSuperior"
-                    label="#{infoxMessages['participanteProcesso.superior']}"
-                    assignTo="participantesProcessoController.participantePai"
-                    tree="#{participanteProcessoTree}" />
-
-                <wi:inputDate id="dataInicio"
-                    value="#{participantesProcessoController.participanteProcessoVO.dataInicio}"
-                    label="#{infoxMessages['participanteProcesso.dataInicioParticipacao']}"
-                    required="false" />
-
-                <wi:inputDate id="dataFim"
-                    value="#{participantesProcessoController.participanteProcessoVO.dataFim}"
-                    label="#{infoxMessages['participanteProcesso.dataFimParticipacao']}"
-                    required="false"/>
-                </fieldset>
+            <p:outputPanel id="novoParticipantePanel"
+                    styleClass="novoParticipantePanel">
+                <wi:selectOneRadioEnum id="radioTipoPessoa"
+                    label="#{infoxMessages['pessoa.tipoPessoa']}" required="true"
+                    items="#{participantesProcessoController.tipoPessoaValues}"
+                    value="#{participantesProcessoController.tipoPessoa}"
+                    rendered="#{participantesProcessoController.podeAdicionarAmbosTiposDeParte()}">
+                    <a:ajax event="change" render="loadedByParticipante" immediate="true"
+                        limitRender="true" execute="@this"/>
+                </wi:selectOneRadioEnum>
+    
+                <p:outputPanel id="loadedByParticipante"
+                        rendered="#{not empty participantesProcessoController.tipoPessoa}">
+    
+                    <wi:servidorContribuinteFields
+                        identificador="servContrParticipante"
+                        rendered="#{participantesProcessoController.tipoPessoa eq 'F'}"
+                        view="#{participantesProcessoController}"
+                        viewObject="#{participantesProcessoController.participanteProcessoVO.servidorContribuinteVO}"
+                        listDialog="servidorContribuinteFormDialog"
+                        searchObject="#{participantesProcessoController.pesquisaParticipanteVO}"
+                        codEstadoList="#{participantesProcessoController.getListCodEstado()}">
+                    </wi:servidorContribuinteFields>
+    
+                    <wi:empresaFields
+                        identificador="empresaParticipante"
+                        rendered="#{participantesProcessoController.tipoPessoa eq 'J'}"
+                        view="#{participantesProcessoController}"
+                        viewObject="#{participantesProcessoController.participanteProcessoVO.empresaVO}"
+                        listDialog="empresaFormDialog"
+                        searchObject="#{participantesProcessoController.pesquisaParticipanteVO}"
+                        codEstadoList="#{participantesProcessoController.getListCodEstado()}">
+                    </wi:empresaFields>
+                </p:outputPanel>
+    
+    
+    
+                <p:outputPanel id="partePanel">
+                    <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
+                        <legend class="name">#{infoxMessages['participanteProcesso.dadosParticipante']}</legend>
+                    <wi:selectOneMenuEntity id="tipoPartes"
+                        items="#{participantesProcessoController.tipoPartes}"
+                        value="#{participantesProcessoController.tipoParte}"
+                        label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
+                        required="true" showLabelSelecione="true" />
+    
+                    <wi:tree id="participanteSuperior"
+                        label="#{infoxMessages['participanteProcesso.superior']}"
+                        assignTo="participantesProcessoController.participantePai"
+                        tree="#{participanteProcessoTree}" />
+    
+                    <wi:inputDate id="dataInicio"
+                        value="#{participantesProcessoController.participanteProcessoVO.dataInicio}"
+                        label="#{infoxMessages['participanteProcesso.dataInicioParticipacao']}"
+                        required="false" />
+    
+                    <wi:inputDate id="dataFim"
+                        value="#{participantesProcessoController.participanteProcessoVO.dataFim}"
+                        label="#{infoxMessages['participanteProcesso.dataFimParticipacao']}"
+                        required="false"/>
+                    </fieldset>
+                </p:outputPanel>
             </p:outputPanel>
 
             <ui:define name="buttons">
@@ -88,7 +91,7 @@
                 styleClass="servidorContribuinteFormDialog">
             <wi:servidorContribuinteDialog id="servidorContribuinteDialog"
                             view="#{participantesProcessoController}"
-                            paginaPrincipal="novoParticipanteFormDialog"
+                            paginaPrincipal="novoParticipantePanel"
                             list="#{participantesProcessoController.servidorContribuinteList}"/>
         </h:form>
 
@@ -96,7 +99,7 @@
                 styleClass="empresaFormDialog">
             <wi:empresaDialog id="empresaDialog"
                               view="#{participantesProcessoController}"
-                              paginaPrincipal="novoParticipanteFormDialog"
+                              paginaPrincipal="novoParticipantePanel"
                               list="#{participantesProcessoController.empresaList}"/>
         </h:form>
     </s:div>

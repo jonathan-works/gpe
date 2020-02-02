@@ -315,90 +315,90 @@
                     <wi:field id="#{identificador}DataNomeacao"
                               label="#{infoxMessages['servidorContribuinte.dataNomeacao']}">
                         <p:outputLabel id="#{identificador}DataNomeacaoInput"
-                                       value="#{viewObject.dataNomeacao}">
+                                       value="#{empty viewObject.dataNomeacao ? 'Não informado' : viewObject.dataNomeacao}">
                             <f:convertDateTime pattern="dd/MM/yyyy"/>
                         </p:outputLabel>
                     </wi:field>
                     <wi:field id="#{identificador}DataPosse"
                               label="#{infoxMessages['servidorContribuinte.dataPosse']}">
                         <p:outputLabel id="#{identificador}DataPosseInput"
-                                       value="#{viewObject.dataPosse}">
+                                       value="#{empty viewObject.dataPosse ? 'Não informado' : viewObject.dataPosse}">
                             <f:convertDateTime pattern="dd/MM/yyyy"/>
                         </p:outputLabel>
                     </wi:field>
                     <wi:field id="#{identificador}DataExercicio"
                               label="#{infoxMessages['servidorContribuinte.dataExercicio']}">
                         <p:outputLabel id="#{identificador}DataExercicioInput"
-                                       value="#{viewObject.dataExercicio}">
+                                       value="#{empty viewObject.dataExercicio ? 'Não informado' : viewObject.dataExercicio}">
                             <f:convertDateTime pattern="dd/MM/yyyy"/>
                         </p:outputLabel>
                     </wi:field>
                     <wi:field id="#{identificador}Situacao"
                               label="#{infoxMessages['servidorContribuinte.situacao']}">
                         <p:outputLabel id="#{identificador}SituacaoInput"
-                                       value="#{viewObject.situacao}"/>
+                                       value="#{empty viewObject.situacao ? 'Não informado' : viewObject.situacao}"/>
                     </wi:field>
                     <wi:field id="#{identificador}Orgao"
                               label="#{infoxMessages['servidorContribuinte.orgao']}">
                         <p:outputLabel id="#{identificador}OrgaoInput"
-                                       value="#{viewObject.orgao}"/>
+                                       value="#{empty viewObject.orgao ? 'Não informado' : viewObject.orgao}"/>
                     </wi:field>
                     <wi:field id="#{identificador}LocalTrabalho"
                               label="#{infoxMessages['servidorContribuinte.localTrabalho']}">
                         <p:outputLabel id="#{identificador}LocalTrabalhoInput"
-                                       value="#{viewObject.localTrabalho}"/>
+                                       value="#{empty viewObject.localTrabalho ? 'Não informado' : viewObject.localTrabalho}"/>
                     </wi:field>
                     <wi:field id="#{identificador}SubFolha"
                               label="#{infoxMessages['servidorContribuinte.subFolha']}">
                         <p:outputLabel id="#{identificador}SubFolhaInput"
-                                       value="#{viewObject.subFolha}"/>
+                                       value="#{empty viewObject.subFolha ? 'Não informado' : viewObject.subFolha}"/>
                     </wi:field>
                     <wi:field id="#{identificador}Jornada"
                               label="#{infoxMessages['servidorContribuinte.jornada']}">
                         <p:outputLabel id="#{identificador}JornadaInput"
-                                       value="#{viewObject.jornada}"/>
+                                       value="#{empty viewObject.jornada ? 'Não informado' : viewObject.jornada}"/>
                     </wi:field>
                     <wi:field id="#{identificador}OcupacaoCarreira"
                               label="#{infoxMessages['servidorContribuinte.ocupacaoCarreira']}">
                         <p:outputLabel id="#{identificador}OcupacaoCarreiraInput"
-                                       value="#{viewObject.ocupacaoCarreira}"/>
+                                       value="#{empty viewObject.ocupacaoCarreira ? 'Não informado' : viewObject.ocupacaoCarreira}"/>
                     </wi:field>
                     <wi:field id="#{identificador}CargoCarreira"
                               label="#{infoxMessages['servidorContribuinte.cargoCarreira']}">
                         <p:outputLabel id="#{identificador}CargoCarreiraInput"
-                                       value="#{viewObject.cargoCarreira}"/>
+                                       value="#{empty viewObject.cargoCarreira ? 'Não informado' : viewObject.cargoCarreira}"/>
                     </wi:field>
                     <wi:field id="#{identificador}OcupacaoComissao"
                               label="#{infoxMessages['servidorContribuinte.ocupacaoComissao']}">
                         <p:outputLabel id="#{identificador}OcupacaoComissaoInput"
-                                       value="#{viewObject.ocupacaoComissao}"/>
+                                       value="#{empty viewObject.ocupacaoComissao ? 'Não informado' : viewObject.ocupacaoComissao}"/>
                     </wi:field>
                     <wi:field id="#{identificador}CargoComissao"
                               label="#{infoxMessages['servidorContribuinte.cargoComissao']}">
                         <p:outputLabel id="#{identificador}CargoComissaoInput"
-                                       value="#{viewObject.cargoComissao}"/>
+                                       value="#{empty viewObject.cargoComissao ? 'Não informado' : viewObject.cargoComissao}"/>
                     </wi:field>
                     <wi:field id="#{identificador}NomePai"
                               label="#{infoxMessages['servidorContribuinte.nomePai']}">
                         <p:outputLabel id="#{identificador}NomePaiInput"
-                                       value="#{viewObject.nomePai}"/>
+                                       value="#{empty viewObject.nomePai ? 'Não informado' : viewObject.nomePai}"/>
                     </wi:field>
                     <wi:field id="#{identificador}NumeroRg"
                               label="#{infoxMessages['servidorContribuinte.numeroRg']}">
                         <p:outputLabel id="#{identificador}NumeroRgInput"
-                                       value="#{viewObject.numeroRg}"/>
+                                       value="#{empty viewObject.numeroRg ? 'Não informado' : viewObject.numeroRg}"/>
                     </wi:field>
                     <wi:field id="#{identificador}DataEmissaoRg"
                               label="#{infoxMessages['servidorContribuinte.dataEmissaoRg']}">
                         <p:outputLabel id="#{identificador}DataEmissaoRgInput"
-                                       value="#{viewObject.dataEmissaoRg}">
+                                       value="#{empty viewObject.dataEmissaoRg ? 'Não informado' : viewObject.dataEmissaoRg}">
                             <f:convertDateTime pattern="dd/MM/yyyy"/>
                         </p:outputLabel>
                     </wi:field>
                     <wi:field id="#{identificador}OrgaoEmissorRG"
                               label="#{infoxMessages['servidorContribuinte.orgaoEmissorRG']}">
                         <p:outputLabel id="#{identificador}OrgaoEmissorRGInput"
-                                       value="#{viewObject.orgaoEmissorRG}"/>
+                                       value="#{empty viewObject.orgaoEmissorRG ? 'Não informado' : viewObject.orgaoEmissorRG}"/>
                     </wi:field>
                 </fieldset>
             </p:outputPanel>
