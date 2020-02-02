@@ -14,14 +14,19 @@ import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
 import br.com.infox.epp.loglab.search.EmpresaSearch;
 import br.com.infox.epp.loglab.search.ServidorContribuinteSearch;
+import br.com.infox.epp.loglab.service.ParticipanteProcessoLoglabService;
 import br.com.infox.epp.loglab.vo.EmpresaVO;
+import br.com.infox.epp.loglab.vo.ParticipanteProcessoVO;
 import br.com.infox.epp.loglab.vo.PesquisaParticipanteVO;
 import br.com.infox.epp.loglab.vo.ServidorContribuinteVO;
+import br.com.infox.epp.municipio.EstadoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoService;
@@ -55,19 +60,15 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     private ServidorContribuinteSearch servidorContribuinteSearch;
     @Inject
     private EmpresaSearch empresaSearch;
+    @Inject
+    private EstadoSearch estadoSearch;
+    @Inject
+    private ParticipanteProcessoLoglabService participanteProcessoLoglabService;
 
     protected List<TipoParte> tipoPartes;
 
     @Getter
-    @Setter
-    private EmpresaVO empresaVO;
-
-    @Getter
     private List<EmpresaVO> empresaList;
-
-    @Getter
-    @Setter
-    private ServidorContribuinteVO servidorContribuinteVO;
 
     @Getter
     private List<ServidorContribuinteVO> servidorContribuinteList;
@@ -76,6 +77,10 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     @Setter
     private PesquisaParticipanteVO pesquisaParticipanteVO;
 
+    @Getter
+    @Setter
+    private ParticipanteProcessoVO participanteProcessoVO;
+
     @Override
     public void init(Holder<Processo> processoHolder) {
         super.init(processoHolder);
@@ -83,11 +88,14 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
         if (!podeAdicionarPartesFisicas() && podeAdicionarPartesJuridicas()) {
             setTipoPessoa(TipoPessoaEnum.J);
         }
-        limparDadosParticipante();
     }
 
     public void limparDadosParticipante() {
-        empresaVO = null;
+        participanteProcessoVO = new ParticipanteProcessoVO();
+        if(getTipoPessoa() != null) {
+            participanteProcessoVO.setTipoPessoa(getTipoPessoa());
+        }
+        participanteProcessoVO.setIdProcesso(getProcesso().getIdProcesso());
         empresaList = null;
         pesquisaParticipanteVO = new PesquisaParticipanteVO();
         pesquisaParticipanteVO.setTipoParticipante(TipoParticipanteEnum.CO);
@@ -95,7 +103,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     }
 
     public void limparServidorContribuinte() {
-        servidorContribuinteVO = null;
+        participanteProcessoVO.setServidorContribuinteVO(null);
         servidorContribuinteList = null;
         limparCamposPesquisa();
     }
@@ -227,18 +235,37 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     }
 
     @Override
+    @ExceptionHandled
     public void includeParticipanteProcesso() {
-        super.includeParticipanteProcesso();
+        ParticipanteProcesso participantePersist = participanteProcessoLoglabService.gravarParticipanteProcesso(participanteProcessoVO);
+        afterSaveParticipante(participantePersist);
         participanteProcessoTree.clearTree();
+        limparDadosParticipante();
+    }
+
+    @Override
+    protected void afterSaveParticipante(ParticipanteProcesso participanteProcesso) {
+        super.afterSaveParticipante(participanteProcesso);
+        setProcesso(participanteProcesso.getProcesso());
     }
 
     public ParticipanteProcesso getParticipantePai() {
-        return getParticipanteProcesso().getParticipantePai();
+        return participanteProcessoManager.find(participanteProcessoVO.getIdParticipantePai());
     }
 
     public void setParticipantePai(ParticipanteProcesso participantePai) {
         if (participantePai != null && participantePai.getAtivo()){
-            getParticipanteProcesso().setParticipantePai(participantePai);
+            participanteProcessoVO.setIdParticipantePai(participantePai.getId());
+        }
+    }
+
+    public TipoParte getTipoParte() {
+        return tipoParteManager.getTipoParteByIdentificador(participanteProcessoVO.getCdTipoParte());
+    }
+
+    public void setTipoParte(TipoParte tipoParte) {
+        if(tipoParte != null) {
+            participanteProcessoVO.setCdTipoParte(tipoParte.getIdentificador());
         }
     }
 
@@ -252,16 +279,16 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
 
             if(servidorContribuinteList != null && servidorContribuinteList.size() > 0) {
                 if(servidorContribuinteList.size() == 1) {
-                    servidorContribuinteVO = servidorContribuinteList.get(0);
-//                    onChangeParticipanteCpf();
+                    participanteProcessoVO.setServidorContribuinteVO(servidorContribuinteList.get(0));
+                    searchByCpf();
                     servidorContribuinteList = null;
                 } else {
                     JsfUtil.instance().execute("PF('servidorContribuinteDialog').show();");
                 }
             } else if(pesquisaParticipanteVO.getTipoParticipante().equals(TipoParticipanteEnum.CO)) {
-                servidorContribuinteVO = new ServidorContribuinteVO();
-                servidorContribuinteVO.setTipoParticipante(pesquisaParticipanteVO.getTipoParticipante());
-                servidorContribuinteVO.setCpf(pesquisaParticipanteVO.getCpf());
+                participanteProcessoVO.setServidorContribuinteVO(new ServidorContribuinteVO());
+                participanteProcessoVO.getServidorContribuinteVO().setTipoParticipante(pesquisaParticipanteVO.getTipoParticipante());
+                participanteProcessoVO.getServidorContribuinteVO().setCpf(pesquisaParticipanteVO.getCpf());
                 FacesMessages.instance().add("Contribuinte não encontrado. Preencha os dados para adicionar um novo.");
             } else {
                 FacesMessages.instance().add("Nenhum registro foi encontrado com os dados da busca.");
@@ -270,8 +297,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     }
 
     public void selecionarServidorContribuinte(ServidorContribuinteVO row) {
-        servidorContribuinteVO = row;
-//        onChangeParticipanteCpf();
+        participanteProcessoVO.setServidorContribuinteVO(row);
+        searchByCpf();
         servidorContribuinteList = null;
         JsfUtil.instance().execute("PF('servidorContribuinteDialog').hide();");
     }
@@ -286,24 +313,48 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
 
             if(empresaList != null && empresaList.size() > 0) {
                 if(empresaList.size() == 1) {
-                    empresaVO = empresaList.get(0);
-//                    onChangeParticipanteCnpj();
+                    participanteProcessoVO.setEmpresaVO(empresaList.get(0));
+                    searchByCnpj();
                     empresaList = null;
                 } else {
                     JsfUtil.instance().execute("PF('empresaDialog').show();");
                 }
             } else {
-                empresaVO = new EmpresaVO();
-                empresaVO.setCnpj(pesquisaParticipanteVO.getCnpj());
+                participanteProcessoVO.setEmpresaVO(new EmpresaVO());
+                participanteProcessoVO.getEmpresaVO().setCnpj(pesquisaParticipanteVO.getCnpj());
                 FacesMessages.instance().add("Registro não encontrado. Preencha os dados para adicionar um novo.");
             }
         }
     }
 
     public void selecionarEmpresa(EmpresaVO row) {
-        empresaVO = row;
-//        onChangeParticipanteCnpj();
+        participanteProcessoVO.setEmpresaVO(row);
+        searchByCnpj();
         empresaList = null;
         JsfUtil.instance().execute("PF('empresaDialog').hide();");
+    }
+
+    public List<String> getListCodEstado() {
+        return estadoSearch.getListCodEstado();
+    }
+
+    @Override
+    public void searchByCpf() {
+        String cpf = participanteProcessoVO.getServidorContribuinteVO().getCpf();
+        PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(cpf);
+        if (pessoaFisica != null) {
+            participanteProcessoVO.getServidorContribuinteVO().setNomeCompleto(pessoaFisica.getNome());
+            participanteProcessoVO.getServidorContribuinteVO().setDataNascimento(pessoaFisica.getDataNascimento());
+        }
+    }
+
+    @Override
+    public void searchByCnpj() {
+        String cnpj = participanteProcessoVO.getEmpresaVO().getCnpj();
+        PessoaJuridica pessoaJuridica = pessoaJuridicaManager.getByCnpj(cnpj);
+        if (pessoaJuridica != null) {
+            participanteProcessoVO.getEmpresaVO().setNomeFantasia(pessoaJuridica.getNome());
+            participanteProcessoVO.getEmpresaVO().setRazaoSocial(pessoaJuridica.getRazaoSocial());
+        }
     }
 }

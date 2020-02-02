@@ -214,6 +214,12 @@ public abstract class AbstractParticipantesController implements Serializable {
         return processoHolder != null ? processoHolder.value : null;
     }
 
+    public void setProcesso(Processo processo) {
+        if(processoHolder != null) {
+            processoHolder.value = processo;
+        }
+    }
+
     public TipoPessoaEnum getTipoPessoa() {
         return tipoPessoa;
     }
