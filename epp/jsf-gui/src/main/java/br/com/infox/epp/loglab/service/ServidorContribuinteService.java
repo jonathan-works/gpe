@@ -17,6 +17,7 @@ import br.com.infox.epp.loglab.vo.ServidorContribuinteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.pessoaFisica.PessoaFisicaSearch;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
@@ -63,6 +64,9 @@ public class ServidorContribuinteService extends PersistenceController {
 
     private Servidor servidorFromServidorContribuinteVO(ServidorContribuinteVO vo) {
         PessoaFisica pessoaFisica = recuperarPessoaFisica(vo);
+        if(pessoaFisica == null) {
+            throw new BusinessRollbackException("Falha ao associar a pessoa física: " + vo.toString());
+        }
         Servidor servidor = new Servidor();
         servidor.setId(vo.getId());
         servidor.setCargoCarreira(vo.getCargoCarreira());
@@ -94,6 +98,9 @@ public class ServidorContribuinteService extends PersistenceController {
 
     private ContribuinteSolicitante contribuinteFromServidorContribuinteVO(ServidorContribuinteVO vo) {
         PessoaFisica pessoaFisica = recuperarPessoaFisica(vo);
+        if(pessoaFisica == null) {
+            throw new BusinessRollbackException("Falha ao associar a pessoa física: " + vo.toString());
+        }
         Estado estado = null;
         ContribuinteSolicitante contribuinte = new ContribuinteSolicitante();
         contribuinte.setId(vo.getId());
@@ -121,9 +128,18 @@ public class ServidorContribuinteService extends PersistenceController {
 
     private PessoaFisica recuperarPessoaFisica(ServidorContribuinteVO vo) {
         PessoaFisica pessoaFisica = pessoaFisicaSearch.getByCpf(vo.getCpf());
+        return pessoaFisica;
+    }
+
+    public PessoaFisica convertPessoaFisicaFromServidorContribuinteVO(ServidorContribuinteVO vo) {
+        PessoaFisica pessoaFisica = recuperarPessoaFisica(vo);
         if(pessoaFisica == null) {
-            throw new BusinessRollbackException("Falha ao associar a pessoa física: " + vo.toString());
+            pessoaFisica = new PessoaFisica();
         }
+        pessoaFisica.setTipoPessoa(TipoPessoaEnum.F);
+        pessoaFisica.setNome(vo.getNomeCompleto());
+        pessoaFisica.setAtivo(Boolean.TRUE);
+        pessoaFisica.setCpf(vo.getCpf());
         return pessoaFisica;
     }
 }

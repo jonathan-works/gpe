@@ -68,4 +68,16 @@ public class EmpresaService extends PersistenceController {
         return empresa;
     }
 
+    public PessoaJuridica convertPessoaJuridicaFromServidorContribuinteVO(EmpresaVO vo) {
+        PessoaJuridica pessoaJuridica = pessoaJuridicaManager.getByCnpj(vo.getCnpj());
+        if(pessoaJuridica == null) {
+            pessoaJuridica = new PessoaJuridica();
+        }
+        pessoaJuridica.setAtivo(Boolean.TRUE);
+        pessoaJuridica.setCnpj(vo.getCnpj());
+        pessoaJuridica.setNome(vo.getNomeFantasia());
+        pessoaJuridica.setRazaoSocial(vo.getRazaoSocial());
+        return pessoaJuridica;
+    }
+
 }
