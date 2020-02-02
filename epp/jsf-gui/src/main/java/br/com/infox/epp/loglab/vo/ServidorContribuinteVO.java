@@ -64,7 +64,9 @@ public class ServidorContribuinteVO {
 
     public ServidorContribuinteVO(ContribuinteSolicitante contribuinte) {
         this.id = contribuinte.getId();
-        this.idPessoaFisica = contribuinte.getPessoaFisica().getIdPessoa();
+        if(contribuinte.getPessoaFisica() != null) {
+            this.idPessoaFisica = contribuinte.getPessoaFisica().getIdPessoa();
+        }
         this.bairro = contribuinte.getBairro();
         this.cep = contribuinte.getCep();
         this.cidade = contribuinte.getCidade();
@@ -106,7 +108,9 @@ public class ServidorContribuinteVO {
         this.ocupacaoComissao = servidor.getOcupacaoComissao();
         this.orgaoEmissorRG = servidor.getOrgaoEmissorRG();
         this.nomePai = servidor.getPai();
-        this.idPessoaFisica = servidor.getPessoaFisica().getIdPessoa();
+        if(servidor.getPessoaFisica() != null) {
+            this.idPessoaFisica = servidor.getPessoaFisica().getIdPessoa();
+        }
         this.orgao = servidor.getSecretaria();
         this.situacao = servidor.getSituacao();
         this.subFolha = servidor.getSubFolha();
