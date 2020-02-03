@@ -20,6 +20,7 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
+import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.exceptions.BadPasswordException;
 import com.lowagie.text.pdf.ColumnText;
@@ -173,7 +174,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         	final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
         	final Font font = new Font(Font.TIMES_ROMAN, 8);
 
-        	final Phrase phrase = new Phrase(textoAssinatura, font);
+        	final Phrase phrase = new Paragraph(textoAssinatura, font);
         	final Phrase codPhrase = new Phrase(textoCodigo, font);
 
         	for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
@@ -191,8 +192,14 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         		if(bottom) {
         		    image.setAbsolutePosition(0, 0);
                     content.addImage(image);
-                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, codPhrase, 52, 15, 0);
-                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, phrase, 52, 25, 0);
+                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, codPhrase, 52, 12, 0);
+                    ColumnText ct = new ColumnText(content);
+            		float bottm = pdfReader.getCropBox(page).getBottom();
+            		ct.setAlignment(Element.ALIGN_JUSTIFIED);
+					ct.setSimpleColumn(52, bottm+58, right - 10, bottm+20);
+            		ct.addElement(phrase);
+            		ct.go();
+//                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, phrase, 52, 25, 0);
         		} else {
         		    image.setAbsolutePosition(right - 65, top - 70);
                     content.addImage(image);
@@ -226,9 +233,9 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         }
 
 	public String getTextoCodigo(final UUID uuid) {
-        final StringBuilder sb = new StringBuilder("Acesse em: ");
+        final StringBuilder sb = new StringBuilder("A autenticidade do documento pode ser conferida neste link: ");
 		sb.append(getUrlValidacaoDocumento());
-		sb.append(" Código do documento: ");
+		sb.append("?cod=");
 		sb.append(uuid);
 		String string = sb.toString();
         return string;
