@@ -11,7 +11,7 @@
             <column name="nm_variavel" value="textoRodapeDocumento" />
             <column name="vl_variavel" value="Documento assinado eletronicamente por ${assinadores}, conforme art3º, VI, b, do Decreto 6.768/2018 de 03/10/2018 da Prefeitura Municipal de Cuiabá." />
             <column name="ds_variavel" value="Texto do rodapé do documento" />
-            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_sistema" valueBoolean="false" />
             <column name="in_ativo" valueBoolean="true" />
         </insert>
     </changeSet>

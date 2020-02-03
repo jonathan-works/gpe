@@ -28,6 +28,7 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
@@ -44,12 +45,12 @@ import br.com.infox.seam.util.ComponentUtil;
 @Named(DarCienciaAction.NAME)
 @ViewScoped
 public class DarCienciaAction implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(DarCienciaAction.class);
 	private static final String COMPROVANTE_DE_CIENCIA = "Comprovante de Ciência";
 	public static final String NAME = "darCienciaAction";
-	
+
 	@Inject
 	private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
 	@Inject
@@ -70,7 +71,7 @@ public class DarCienciaAction implements Serializable {
 	protected ActionMessagesService actionMessagesService;
 	@Inject
 	private EntityManager entityManager;
-	
+
 	private AssinavelProvider assinavelProvider;
 
 	private List<ClassificacaoDocumento> classificacoesDocumentoCiencia;
@@ -78,23 +79,23 @@ public class DarCienciaAction implements Serializable {
 	private Date dataCiencia;
 	private boolean ciencia;
 	private String textoCiencia;
-	private boolean editorCiencia = false; 
+	private boolean editorCiencia = false;
 	private ClassificacaoDocumento classificacaoDocumentoCiencia;
 	private boolean assinaDocumentoCiencia;
 	private boolean enviaSemAssinarDocumentoCiencia;
 	private String tokenAssinaturaDocumentoCiencia;
 	private String signableDocumentoCiencia;
-	
+
 	public void setDestinatarioCiencia(DestinatarioBean destinatario) {
 		clear();
 		this.setDestinatario(destinatario);
 		ciencia = true;
 	}
-	
+
 	private void validaClassificacaoCiencia() {
 		if (getClassificacaoDocumentoCiencia() != null) {
 			enviaSemAssinarDocumentoCiencia = !assinaturaDocumentoService.precisaAssinatura(getClassificacaoDocumentoCiencia());
-			assinaDocumentoCiencia = classificacaoDocumentoPapelManager.papelPodeTornarSuficientementeAssinado(Authenticator.getPapelAtual(), getClassificacaoDocumentoCiencia()); 
+			assinaDocumentoCiencia = classificacaoDocumentoPapelManager.papelPodeTornarSuficientementeAssinado(Authenticator.getPapelAtual(), getClassificacaoDocumentoCiencia());
 			if (!enviaSemAssinarDocumentoCiencia && !assinaDocumentoCiencia) {
 				FacesMessages.instance().add("O papel atual não consegue completar as assinaturas dessa classificação de documento.");
 			}
@@ -141,13 +142,13 @@ public class DarCienciaAction implements Serializable {
 
 	protected void darCienciaManualAssinar(DadosAssinatura dadosAssinatura, Documento documentoCiencia)
 			throws CertificadoException, AssinaturaException {
-		prazoComunicacaoService.darCienciaManualAssinar(getDestinatarioModeloComunicacao(getDestinatario()).getProcesso(), getDataCiencia(), documentoCiencia, 
+		prazoComunicacaoService.darCienciaManualAssinar(getDestinatarioModeloComunicacao(getDestinatario()).getProcesso(), getDataCiencia(), documentoCiencia,
 				dadosAssinatura, Authenticator.getUsuarioPerfilAtual());
 	}
-	
+
 	protected Documento criarDocumentoCiencia() {
 		Documento documento = null;
-		if (isEditorCiencia()) {	
+		if (isEditorCiencia()) {
 			documento = new Documento();
 			DocumentoBin bin = new DocumentoBin();
 			documento.setDocumentoBin(bin);
@@ -162,10 +163,10 @@ public class DarCienciaAction implements Serializable {
 		}
 		return documento;
 	}
-	
+
 	protected void validaDocumentoAssinatura(List<DadosAssinatura> dadosAssinatura) throws CertificadoException {
 		if(!assinadorService.validarDadosAssinados(dadosAssinatura, getAssinavelProvider())) {
-			throw new CertificadoException("Documento recebido difere do documento enviado para assinatura.");			
+			throw new CertificadoException("Documento recebido difere do documento enviado para assinatura.");
 		}
 		if (!isEditorCiencia()) {
 			if (!documentoUploader.isValido()) {
@@ -198,11 +199,11 @@ public class DarCienciaAction implements Serializable {
 		clear();
 		FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.ciencia"));
 	}
-	
+
 	protected DestinatarioModeloComunicacao getDestinatarioModeloComunicacao(DestinatarioBean bean) {
 		return entityManager.find(DestinatarioModeloComunicacao.class, bean.getIdDestinatario());
 	}
-	
+
 	private void clear() {
 		comunicacaoAction.clear();
 		ciencia = false;
@@ -213,7 +214,7 @@ public class DarCienciaAction implements Serializable {
 		setSignableDocumentoCiencia(null);
 		setTokenAssinaturaDocumentoCiencia(null);
 	}
-	
+
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoCiencia() {
 		if (isCiencia() && classificacoesDocumentoCiencia == null) {
 			boolean isModelo = isEditorCiencia();
@@ -221,7 +222,7 @@ public class DarCienciaAction implements Serializable {
 		}
 		return classificacoesDocumentoCiencia;
 	}
-	
+
 	public DestinatarioBean getDestinatario() {
 		return destinatario;
 	}
@@ -237,19 +238,19 @@ public class DarCienciaAction implements Serializable {
 		}
 		return null;
 	}
-	
+
 	public Date getDataCiencia() {
 		return dataCiencia;
 	}
-	
+
 	public void setDataCiencia(Date dataCiencia) {
 		this.dataCiencia = dataCiencia;
 	}
-	
+
 	public boolean isCiencia() {
 		return ciencia;
 	}
-	
+
 	public ClassificacaoDocumento getClassificacaoDocumentoCiencia() {
 		return classificacaoDocumentoCiencia;
 	}
@@ -257,12 +258,12 @@ public class DarCienciaAction implements Serializable {
 	public void setClassificacaoDocumentoCiencia(
 			ClassificacaoDocumento classificacaoDocumentoCiencia) {
 		this.classificacaoDocumentoCiencia = classificacaoDocumentoCiencia;
-		if (!isEditorCiencia()){ 
+		if (!isEditorCiencia()){
 			documentoUploader.setClassificacaoDocumento(classificacaoDocumentoCiencia);
 		}
 		validaClassificacaoCiencia();
 	}
-	
+
 	public String getTextoCiencia() {
 		return textoCiencia;
 	}
@@ -287,11 +288,11 @@ public class DarCienciaAction implements Serializable {
 	public boolean getEnviaSemAssinarDocumentoCiencia(){
 		return enviaSemAssinarDocumentoCiencia;
 	}
-	
+
 	public boolean getAssinaDocumentoCiencia(){
 		return assinaDocumentoCiencia;
 	}
-	
+
 	public String getTokenAssinaturaDocumentoCiencia() {
 		return tokenAssinaturaDocumentoCiencia;
 	}
@@ -315,7 +316,9 @@ public class DarCienciaAction implements Serializable {
 			} else if (documentoUploader.getDocumento() != null) {
 				byte[] data = documentoUploader.getDocumento().getDocumentoBin().getProcessoDocumento();
 				documentoUploader.getDocumento().getDocumentoBin().setMd5Documento(MD5Encoder.encode(data));
-				assinavelProvider = new AssinavelGenericoProvider(data);
+				assinavelProvider = new AssinavelGenericoProvider(
+			        new AssinavelGenericoProvider.DocumentoComRegraAssinatura(TipoMeioAssinaturaEnum.T, data)
+		        );
 			}
 		}
 		return assinavelProvider;
@@ -324,5 +327,5 @@ public class DarCienciaAction implements Serializable {
 	public void setAssinavelProvider(AssinavelProvider assinavelProvider) {
 		this.assinavelProvider = assinavelProvider;
 	}
-	
+
 }

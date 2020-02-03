@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet author="marcone" id="1" dbms="mssql">
+		<createTable tableName="tb_certificado_eletronico_bin">
+			<column name="id_certificado_eletronico_bin" type="bigint">
+                <constraints nullable="false"
+                	primaryKey="true"
+                	primaryKeyName="pk_certificado_eletronico_bin"/>
+			</column>
+			<column name="ob_crt" type="IMAGE">
+				<constraints nullable="false" />
+			</column>
+			<column name="ob_key" type="IMAGE">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="marcone" id="2" dbms="postgresql">
+		<createTable tableName="tb_certificado_eletronico_bin">
+			<column name="id_certificado_eletronico_bin" type="bigint">
+                <constraints nullable="false"
+                	primaryKey="true"
+                	primaryKeyName="pk_certificado_eletronico_bin"/>
+			</column>
+			<column name="ob_crt" type="BYTEA">
+				<constraints nullable="false" />
+			</column>
+			<column name="ob_key" type="BYTEA">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="marcone" id="3" dbms="oracle">
+		<createTable tableName="tb_certificado_eletronico_bin">
+			<column name="id_certificado_eletronico_bin" type="bigint">
+                <constraints nullable="false"
+                	primaryKey="true"
+                	primaryKeyName="pk_certificado_eletronico_bin"/>
+			</column>
+			<column name="ob_crt" type="BLOB">
+				<constraints nullable="false" />
+			</column>
+			<column name="ob_key" type="BLOB">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

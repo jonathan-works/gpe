@@ -23,7 +23,6 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
-import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelSource;
@@ -60,13 +59,17 @@ public class AssinadorService implements Serializable {
 	@Inject
 	private InfoxMessages infoxMessages;
 
-	
-	
+
+
 	@Inject
 	private ValidadorAssinatura validadorAssinatura;
 
 	public String criarListaAssinaveis(AssinavelProvider assinavelProvider) {
 		return groupService.createNewGroupWithAssinavelProvider(assinavelProvider);
+	}
+
+	public String criarListaAssinaveisAssinaturaEletronica(AssinavelProvider assinavelProvider) {
+	    return groupService.createNewGroupWithAssinavelProvider(assinavelProvider);
 	}
 
 	public DadosAssinaturaLegada getDadosAssinaturaLegada(byte[] signature) {
@@ -121,11 +124,11 @@ public class AssinadorService implements Serializable {
 
 	public List<DadosAssinatura> getDadosAssinatura(String tokenGrupo) throws AssinaturaException {
 		List<DadosAssinatura> retorno = groupService.getDadosAssinatura(tokenGrupo);
-		
+
 		for(DadosAssinatura dados : retorno) {
-			validarStatus(dados);			
+			validarStatus(dados);
 		}
-		
+
 		return retorno;
 	}
 
@@ -152,7 +155,7 @@ public class AssinadorService implements Serializable {
 			if(documentoBin == null) {
 				throw new RuntimeException("Documento com UUID " + uuidDocumentoBin + " não encontrado no banco de dados");
 			}
-			
+
 			try {
 	                        assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(),
 	                                        TipoAssinatura.PKCS7, dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData());
@@ -161,7 +164,7 @@ public class AssinadorService implements Serializable {
 	                }
 		}
 		else {
-			validarAssinatura(dadosAssinatura, usuarioPerfil.getUsuarioLogin().getPessoaFisica());			
+			validarAssinatura(dadosAssinatura, usuarioPerfil.getUsuarioLogin().getPessoaFisica());
 		}
 	}
 
@@ -176,7 +179,7 @@ public class AssinadorService implements Serializable {
 		if (!StatusToken.SUCESSO.equals(dadosAssinatura.getStatus())) {
 			if (dadosAssinatura.getMensagemErro() != null) {
 				throw new AssinaturaException(dadosAssinatura.getMensagemErro());
-			} 
+			}
 			else if (StatusToken.EXPIRADO.equals(dadosAssinatura.getStatus())) {
 		        throw new AssinaturaException(infoxMessages.get("assinatura.error.hasExpired"));
 		    }
@@ -184,26 +187,22 @@ public class AssinadorService implements Serializable {
 				throw new AssinaturaException(
 						"Status da assinatura inválido: " + dadosAssinatura.getStatus().toString());
 			}
-		}		
+		}
 	}
-	
+
 	public void validarAssinatura(DadosAssinatura dadosAssinatura, PessoaFisica pessoaFisica)
 			throws AssinaturaException {
 		validarStatus(dadosAssinatura);
 		validadorAssinatura.validarAssinatura(dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData(), dadosAssinatura.getAssinatura(), pessoaFisica);
 	}
 
-	public boolean validarDadosAssinadosByText(List<DadosAssinatura> dadosAssinatura, List<String> textList) {
-		return validarDadosAssinados(dadosAssinatura, new AssinavelGenericoProvider(textList));
-	}
+    public boolean validarDadosAssinadosByText(List<DadosAssinatura> dadosAssinatura, List<String> textList) {
+        return validarDadosAssinados(dadosAssinatura, new AssinavelGenericoProvider(textList));
+    }
 
-	public boolean validarDadosAssinadosByData(List<DadosAssinatura> dadosAssinatura, List<byte[]> dataList) {
-		return validarDadosAssinados(dadosAssinatura, new AssinavelGenericoProvider(dataList.toArray(new byte[][] {})));
-	}
-
-	public boolean validarDadosAssinados(List<DadosAssinatura> dadosAssinatura, List<DocumentoBin> documentoBinList) {
-		return validarDadosAssinados(dadosAssinatura, new AssinavelDocumentoBinProvider(documentoBinList));
-	}
+    public boolean validarDadosAssinadosByData(List<DadosAssinatura> dadosAssinatura, List<byte[]> dataList) {
+        return validarDadosAssinados(dadosAssinatura, new AssinavelGenericoProvider(dataList.toArray(new byte[][] {})));
+    }
 
 	/**
 	 * Valida se os dados assinados foram os dados representados pelo
@@ -241,7 +240,7 @@ public class AssinadorService implements Serializable {
 		groupService.erroProcessamento(token, uuidAssinavel, codigo, mensagem);
 	}
 	/**
-	 * @deprecated Método não funciona com a assinatura em modo homologação 
+	 * @deprecated Método não funciona com a assinatura em modo homologação
 	 */
 	@Deprecated
 	public void assinarDocumento(DocumentoBin documentoBin, String codigoPerfil, String codigoLocalizacao,
@@ -279,7 +278,7 @@ public class AssinadorService implements Serializable {
 	public void validarToken(String token) {
 		groupService.validarToken(token);
 	}
-	
+
 	/**
 	 * Valida e assina todos os assináveis agrupados por um token além de apagar o grupo depois de assiná-lo
 	 * @param tokenGrupo

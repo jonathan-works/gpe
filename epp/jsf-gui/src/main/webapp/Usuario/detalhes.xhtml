@@ -37,11 +37,43 @@
         title="#{infoxMessages['detalhesUsuario.titlePage']}"
     >
         <wi:panel id="panelImpressaoComunicacoes">
+            <p:outputPanel
+                styleClass="panelImpressaoComunicacoesContainer"
+            >
             <wi:outputText
                 id="nomeUsuario"
                 value="#{detalheUsuarioView.nome}"
                 label="#{infoxMessages['detalhesUsuario.nomeUsuario']}"
             />
+            
+            <h:panelGroup rendered="#{detalheUsuarioView.botaoGerarCertificadoDesabilitado}">
+                <wi:outputText
+                    id="dataInicio"
+                    value="#{detalheUsuarioView.dataInicio}"
+                    label="#{infoxMessages['detalhesUsuario.dataInicio']}"
+                />
+                <wi:outputText
+                    id="dataFim"
+                    value="#{detalheUsuarioView.dataFim}"
+                    label="#{infoxMessages['detalhesUsuario.dataFim']}"
+                />
+            </h:panelGroup>
+            
+            <h:panelGroup rendered="#{not detalheUsuarioView.botaoGerarCertificadoDesabilitado}">
+                <h:form>
+                    <p:commandButton
+                        action="#{detalheUsuarioView.gerarCertificado}"
+                        ajax="true"
+                        partialSubmit="true"
+                        onclick="showLoading()"
+                        oncomplete="hideLoading()"
+                        value="Gerar certificado"
+                        update="@(.panelImpressaoComunicacoesContainer) :pageBodyDialogMessage"
+                        styleClass="buttons buttons-primary"
+                    />
+                </h:form>
+            </h:panelGroup>
+            
             <div>
                 <h:outputText value="#{infoxMessages['detalhesUsuario.termo']}:" style="font-weight: bold;"/>
             </div>
@@ -55,6 +87,7 @@
                 <a href="#{detalheUsuarioView.urlTermoAdesao}">Download</a>
             </object>
             </div>
+            </p:outputPanel>
         </wi:panel>
     </infox:tab>
 </infox:tabPanel>

@@ -120,7 +120,15 @@ public class AssinaturaDocumento implements Serializable, Assinatura {
 	@Column(name = "tp_signature")
 	private TipoAssinatura signatureType;
 
-	public AssinaturaDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature, TipoAssinatura signatureType, String ip) throws CertificadoException {
+	public AssinaturaDocumento(
+        DocumentoBin documentoBin,
+        UsuarioPerfil usuarioPerfil,
+        String certChain,
+        String signature,
+        TipoAssinatura
+        signatureType,
+        String ip
+    ) throws CertificadoException {
         this.documentoBin=documentoBin;
         this.pessoaFisica = usuarioPerfil.getUsuarioLogin().getPessoaFisica();
         this.nomeUsuario = CertificadoFactory.createCertificado(certChain).getNome();

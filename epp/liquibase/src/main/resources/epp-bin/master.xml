@@ -10,7 +10,9 @@
     <include file="epp-bin/0001-RefatoracaoDocumentoBinario.xml" />
     <include file="epp-bin/0002-Binario.xml" />
 
- 
+
     <include file="epp-bin/extensao/master.xml" />
-   
+
+    <include file="epp-bin/projeto00127274/master.xml" />
+
 </databaseChangeLog>

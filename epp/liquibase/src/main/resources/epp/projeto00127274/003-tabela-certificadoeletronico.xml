@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="nextValueForSqParametro" value="nextval('sq_tb_parametro')" dbms="postgresql" />
+    <property name="nextValueForSqParametro" value="sq_tb_parametro.nextval" dbms="oracle" />
+    <property name="nextValueForSqParametro" value="next value for sq_tb_parametro" dbms="mssql" />
+
+    <changeSet id="1" author="marcone" dbms="mssql, postgresql, oracle">
+        <createSequence
+        	sequenceName="sq_certificado_eletronico"
+        	incrementBy="1"
+        	minValue="1"
+        	startValue="1"
+       	/>
+    </changeSet>
+    <changeSet id="2" author="marcone" dbms="mssql, postgresql, oracle">
+    	<createTable tableName="tb_certificado_eletronico">
+            <column name="id_certificado_eletronico" type="bigint">
+                <constraints
+                	nullable="false"
+                	primaryKey="true"
+                	primaryKeyName="pk_certificado_eletronico"/>
+            </column>
+            <column name="id_certificado_eletronico_pai" type="bigint">
+				<constraints
+					foreignKeyName="fk_certificado_eletronico1"
+					referencedTableName="tb_certificado_eletronico"
+					referencedColumnNames="id_certificado_eletronico"
+					nullable="true"
+				/>
+            </column>
+            <column name="id_pessoa_fisica" type="bigint">
+				<constraints
+					foreignKeyName="fk_certificado_eletronico2"
+					referencedTableName="tb_pessoa_fisica"
+					referencedColumnNames="id_pessoa_fisica"
+					nullable="true"
+				/>
+            </column>
+            <column name="ds_senha" type="varchar(100)">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="dt_cadastro" type="TIMESTAMP">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="dt_inicio" type="TIMESTAMP">
+  				<constraints nullable="false"/>
+            </column>
+            <column name="dt_fim" type="TIMESTAMP">
+  				<constraints nullable="false"/>
+            </column>
+    	</createTable>
+    </changeSet>
+
+    <changeSet id="3" author="marcone" dbms="mssql, postgresql, oracle">
+    	<addColumn tableName="tb_pessoa_fisica">
+    		<column name="id_certificado_eletronico" type="bigint">
+				<constraints
+					foreignKeyName="fk_pessoa_fisica_cert_eletroni"
+					referencedTableName="tb_certificado_eletronico"
+					referencedColumnNames="id_certificado_eletronico"
+					nullable="true"
+				/>
+            </column>
+    	</addColumn>
+    </changeSet>
+
+    <changeSet author="marcone" id="4" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="idCertificadoEletronicoRaiz" />
+            <column name="vl_variavel" value="-1" />
+            <column name="ds_variavel" value="Certificado Eletrônico Raiz" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+    <changeSet author="marcone" id="5" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="infoCertificadoEletronicoRaiz" />
+            <column name="vl_variavel" value="CN=Prefeitura de Cuiabá, O=Prefeitura de Cuiabá, C=BR, ST=MT" />
+            <column name="ds_variavel" value="Informações do Certificado Eletrônico Raiz" />
+            <column name="in_sistema" valueBoolean="false" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>

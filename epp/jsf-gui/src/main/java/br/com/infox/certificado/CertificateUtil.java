@@ -20,10 +20,10 @@ import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
 import br.com.infox.certificado.exception.CertificadoException;
 
-class CertificateUtil {
-    private static final ASN1ObjectIdentifier OID_DADOS_TITULAR_PF = new ASN1ObjectIdentifier("2.16.76.1.3.1");
-    private static final ASN1ObjectIdentifier OID_DADOS_ELEITORAIS = new ASN1ObjectIdentifier("2.16.76.1.3.5");
-    private static final ASN1ObjectIdentifier OID_DADOS_INSS = new ASN1ObjectIdentifier("2.16.76.1.3.6");
+public class CertificateUtil {
+    public static final ASN1ObjectIdentifier OID_DADOS_TITULAR_PF = new ASN1ObjectIdentifier("2.16.76.1.3.1");
+    public static final ASN1ObjectIdentifier OID_DADOS_ELEITORAIS = new ASN1ObjectIdentifier("2.16.76.1.3.5");
+    public static final ASN1ObjectIdentifier OID_DADOS_INSS = new ASN1ObjectIdentifier("2.16.76.1.3.6");
 
     static DadosPessoaFisica parseDadosPessoaFisica(ASN1ObjectIdentifier oid, String info, DadosPessoaFisica dadosPessoaFisica) throws CertificadoException {
         SimpleDateFormat certJUSDateFormatter = new SimpleDateFormat("ddMMyyyy");
@@ -54,7 +54,7 @@ class CertificateUtil {
         }
         return dadosPessoaFisica;
     }
-    
+
     static Map<ASN1ObjectIdentifier, String> parseSubjectAlternativeNames(X509Certificate mainCertificate) throws CertificadoException {
         Map<ASN1ObjectIdentifier, String> otherNames = new HashMap<>();
         try {
@@ -70,7 +70,7 @@ class CertificateUtil {
                     ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier) seq.getObjectAt(0);
                     ASN1TaggedObject tagged = (ASN1TaggedObject) seq.getObjectAt(1);
                     ASN1Object obj = tagged.getObject();
-                    
+
                     String info = null;
                     if (obj instanceof ASN1OctetString) {
                         info = new String(((ASN1OctetString) obj).getOctets());
@@ -79,7 +79,7 @@ class CertificateUtil {
                     } else if (obj instanceof DERUTF8String) {
                         info = ((DERUTF8String) obj).getString();
                     }
-                    
+
                     if (info == null || info.isEmpty()) {
                         continue;
                     }

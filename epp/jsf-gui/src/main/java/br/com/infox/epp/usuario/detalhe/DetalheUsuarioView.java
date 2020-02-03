@@ -1,6 +1,7 @@
 package br.com.infox.epp.usuario.detalhe;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -12,6 +13,8 @@ import br.com.infox.epp.access.TermoAdesaoService;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.certificadoeletronico.CertificadoEletronicoService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,14 +31,31 @@ public class DetalheUsuarioView implements Serializable {
     private String termo;
     @Getter
     private String urlTermoAdesao;
+    @Getter
+    private Date dataInicio;
+    @Getter
+    private Date dataFim;
     @Inject
     private TermoAdesaoService termoAdesaoService;
+    @Inject
+    private CertificadoEletronicoService certificadoEletronicoService;
+    @Getter
+    private boolean botaoGerarCertificadoDesabilitado;
 
     @PostConstruct
     private void init() {
+        refreshInitValues();
+    }
+
+    private void refreshInitValues() {
         UsuarioLogin usuario = Authenticator.getUsuarioLogado();
         this.nome = usuario.getNomeUsuario();
         if(usuario.getPessoaFisica() != null && usuario.getPessoaFisica().getTermoAdesao() != null) {
+            if(usuario.getPessoaFisica().getCertificadoEletronico() != null) {
+                this.botaoGerarCertificadoDesabilitado = usuario.getPessoaFisica().getCertificadoEletronico().isAtivo();
+                this.dataInicio = usuario.getPessoaFisica().getCertificadoEletronico().getDataInicio();
+                this.dataFim = usuario.getPessoaFisica().getCertificadoEletronico().getDataFim();
+            }
             this.termo = usuario.getPessoaFisica().getTermoAdesao().getModeloDocumento();
             this.urlTermoAdesao = termoAdesaoService.buildUrlDownload(
                 getHttpServletRequest().getContextPath(),
@@ -45,8 +65,10 @@ public class DetalheUsuarioView implements Serializable {
         }
     }
 
-    public void onClickTabAssinaturas() {
-        System.out.println("asd");
+    @ExceptionHandled(successMessage = "Certificado gerado com sucesso")
+    public void gerarCertificado() {
+        certificadoEletronicoService.gerarCertificado(Authenticator.getUsuarioLogado().getPessoaFisica());
+        refreshInitValues();
     }
 
     private HttpServletRequest getHttpServletRequest() {

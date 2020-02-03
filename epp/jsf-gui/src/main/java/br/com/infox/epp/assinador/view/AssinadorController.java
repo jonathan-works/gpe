@@ -29,6 +29,9 @@ import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.seam.path.PathResolver;
@@ -45,6 +48,8 @@ public class AssinadorController implements Serializable, AssinaturaCallback {
     private AssinadorGroupService groupService;
     @Inject
     private PathResolver pathResolver;
+    @Inject
+    private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 
     private String token;
 
@@ -57,11 +62,14 @@ public class AssinadorController implements Serializable, AssinaturaCallback {
     }
 
     public String criarGrupoAssinaturaWithDocumentoBin(DocumentoBin documentoBin) {
-        return criarGrupoAssinatura(new AssinavelDocumentoBinProvider(documentoBin));
+        return criarGrupoAssinatura(new AssinavelDocumentoBinProvider(new AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura(
+            TipoMeioAssinaturaEnum.T,
+            documentoBin
+        )));
     }
 
     public String criarGrupoAssinaturaWithDocumentoBin(List<DocumentoBin> documentoBinList) {
-        return criarGrupoAssinatura(new AssinavelDocumentoBinProvider(documentoBinList));
+        return criarGrupoAssinatura(new AssinavelDocumentoBinProvider(TipoMeioAssinaturaEnum.T, documentoBinList));
     }
 
     public String criarGrupoAssinatura(AssinavelProvider assinavelProvider) {
@@ -135,7 +143,7 @@ public class AssinadorController implements Serializable, AssinaturaCallback {
             }
         }
     }
-    
+
     public AssinavelProvider criarAssinavelProvider(String textoAssinavel) {
         return new AssinavelGenericoProvider(textoAssinavel);
     }
@@ -144,12 +152,17 @@ public class AssinadorController implements Serializable, AssinaturaCallback {
         return new AssinavelGenericoProvider(textoAssinavelList);
     }
 
-    public AssinavelProvider criarAssinavelProviderBin(DocumentoBin documentoBin) {
-        return new AssinavelDocumentoBinProvider(documentoBin);
+    public AssinavelProvider criarAssinavelProviderBin(ClassificacaoDocumento cd, DocumentoBin documentoBin) {
+        TipoMeioAssinaturaEnum tma = classificacaoDocumentoPapelManager.getTipoMeioAssinaturaUsuarioLogadoByClassificacaoDocumento(cd);
+        return new AssinavelDocumentoBinProvider(
+            new AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura(
+                    tma, documentoBin
+        ));
     }
 
-    public AssinavelProvider criarAssinavelProviderBin(List<DocumentoBin> documentoBinList) {
-        return new AssinavelDocumentoBinProvider(documentoBinList);
+    public AssinavelProvider criarAssinavelProviderBin(ClassificacaoDocumento cd, List<DocumentoBin> documentoBinList) {
+        TipoMeioAssinaturaEnum tma = classificacaoDocumentoPapelManager.getTipoMeioAssinaturaUsuarioLogadoByClassificacaoDocumento(cd);
+        return new AssinavelDocumentoBinProvider(tma, documentoBinList);
     }
 
     public AssinavelProvider criarAssinavelProviderByteArray(byte[] documentoBin) {

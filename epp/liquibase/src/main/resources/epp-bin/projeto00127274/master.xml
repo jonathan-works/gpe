@@ -4,9 +4,6 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
          			  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
 
-    <include file="epp/projeto00127274/001-certificado-eletronico.xml" />
-    <include file="epp/projeto00127274/002-detalhes-usuario.xml" />
-    <include file="epp/projeto00127274/003-tabela-certificadoeletronico.xml" />
-    <include file="epp/projeto00127274/004-parametro-texto-qrcode.xml" />
+    <include file="epp-bin/projeto00127274/003-tabela-certificadoeletronico.xml" />
 
 </databaseChangeLog>

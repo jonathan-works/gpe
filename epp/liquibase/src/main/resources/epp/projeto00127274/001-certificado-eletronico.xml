@@ -31,4 +31,13 @@
 			ALTER TABLE tb_classificacao_doc_papel ADD CONSTRAINT cc_classificacao_doc_papel CHECK (tp_meio_assinatura in ('T', 'E'))
 		</sql>
    	</changeSet>
+   	<changeSet author="marcone" id="9">
+		<insert tableName="tb_recurso" >
+			<column name="id_recurso"
+				valueComputed="${nextValueForSqRecurso}" />
+			<column name="ds_identificador"
+				value="/pages/CertificadoEletronico/listView.seam" />
+			<column name="ds_nome" value="Certificado Eletrônico" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>

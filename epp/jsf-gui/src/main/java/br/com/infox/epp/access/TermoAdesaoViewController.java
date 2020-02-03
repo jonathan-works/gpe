@@ -164,7 +164,9 @@ public class TermoAdesaoViewController implements Serializable, AssinaturaCallba
     }
 
     public AssinavelProvider getAssinavelProvider() {
-        return new AssinavelDocumentoBinProvider(getTermoAdesao());
+        return new AssinavelDocumentoBinProvider(
+            new AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura(null, getTermoAdesao())
+        );
     }
 
 }

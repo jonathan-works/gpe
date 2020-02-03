@@ -124,7 +124,9 @@ public class CertificadoECPF implements Certificado, CertificadoDadosPessoaFisic
         String cnToken = "CN=";
         String nomeCertificadora = cn.substring(cn.indexOf(cnToken)
                 + cnToken.length());
-        nomeCertificadora = nomeCertificadora.substring(0, nomeCertificadora.indexOf(','));
+        if(nomeCertificadora.indexOf(',') >= 0) {
+            nomeCertificadora = nomeCertificadora.substring(0, nomeCertificadora.indexOf(','));
+        }
         return nomeCertificadora;
     }
 
@@ -162,7 +164,7 @@ public class CertificadoECPF implements Certificado, CertificadoDadosPessoaFisic
 
         // Recupera o O
         o = map.get("O");
-        
+
         Map<ASN1ObjectIdentifier, String> otherNames = CertificateUtil.parseSubjectAlternativeNames(mainCertificate);
         for (ASN1ObjectIdentifier oid : otherNames.keySet()) {
             this.dadosPessoaFisica = CertificateUtil.parseDadosPessoaFisica(oid, otherNames.get(oid), this.dadosPessoaFisica);
@@ -241,7 +243,7 @@ public class CertificadoECPF implements Certificado, CertificadoDadosPessoaFisic
 
     @Override
     public String getOrgaoExpedidor() {
-        return dadosPessoaFisica.orgaoExpedidor; 
+        return dadosPessoaFisica.orgaoExpedidor;
     }
 
     @Override

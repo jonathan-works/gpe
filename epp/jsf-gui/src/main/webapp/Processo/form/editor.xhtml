@@ -122,7 +122,7 @@
                        callbackHandler="#{assinadorController}"
 	                   onbegin="infox.showLoading();"
 	                   oncomplete="infox.hideLoading();"
-	                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.value.documentoBin)}"
+	                   assinavelProvider="#{assinadorController.criarAssinavelProviderBin(formField.properties.classificacaoDocumento, formField.value.documentoBin)}"
 	                   value="#{infoxMessages['assinaturas.assinar']}" />
 	    		</p:outputPanel>
 	    	

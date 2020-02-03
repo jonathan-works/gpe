@@ -13,25 +13,25 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 public class AssinadorProducer {
-	
+
 	@Inject
 	private TrustStoreService trustStoreService;
 
 	@Produces
 	public CertPathValidator createCertPath() throws NoSuchAlgorithmException, KeyStoreException, InvalidAlgorithmParameterException {
 		CertPathValidator certPathValidator = CertPathValidator.getInstance("PKIX");
-		
+
 		return certPathValidator;
 	}
-	
+
 	@Produces
 	public PKIXParameters createPKIXParameters() throws KeyStoreException, InvalidAlgorithmParameterException {
 		KeyStore keyStore = trustStoreService.getTrustStore();
 		PKIXParameters params = new PKIXParameters(keyStore);
-		params.setRevocationEnabled(true);
-		return params;		
+		params.setRevocationEnabled(false); //TODO Verificar como gerar certificado com revogação
+		return params;
 	}
-	
+
 	@Produces
 	public CertificateFactory createCertificateFactory() throws CertificateException {
 		return CertificateFactory.getInstance("X.509");
