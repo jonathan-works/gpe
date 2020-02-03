@@ -132,6 +132,33 @@ public class ServidorContribuinteSearch extends PersistenceController {
         }
     }
 
+    public ServidorContribuinteVO getContribuinteByCPF(String cpf) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ServidorContribuinteVO> query = cb.createQuery(ServidorContribuinteVO.class);
+        Root<ContribuinteSolicitante> contribuinte = query.from(ContribuinteSolicitante.class);
+        Join<ContribuinteSolicitante, Estado> estado = contribuinte.join(ContribuinteSolicitante_.estado, JoinType.LEFT);
+
+        query.select(cb.construct(query.getResultType(), contribuinte.get(ContribuinteSolicitante_.id),
+                contribuinte.get(ContribuinteSolicitante_.pessoaFisica).get(PessoaFisica_.idPessoa),
+                contribuinte.get(ContribuinteSolicitante_.cpf), contribuinte.get(ContribuinteSolicitante_.nomeCompleto),
+                contribuinte.get(ContribuinteSolicitante_.dataNascimento),
+                contribuinte.get(ContribuinteSolicitante_.sexo), contribuinte.get(ContribuinteSolicitante_.nomeMae),
+                contribuinte.get(ContribuinteSolicitante_.email), contribuinte.get(ContribuinteSolicitante_.telefone),
+                estado.get(Estado_.codigo), contribuinte.get(ContribuinteSolicitante_.cidade),
+                contribuinte.get(ContribuinteSolicitante_.logradouro),
+                contribuinte.get(ContribuinteSolicitante_.bairro),
+                contribuinte.get(ContribuinteSolicitante_.complemento),
+                contribuinte.get(ContribuinteSolicitante_.numero), contribuinte.get(ContribuinteSolicitante_.cep)));
+
+        query.where(cb.equal(contribuinte.get(ContribuinteSolicitante_.cpf), cpf));
+
+        try {
+            return getEntityManager().createQuery(query).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
     public List<ServidorContribuinteVO> pesquisaServidorETurmalina(PesquisaParticipanteVO pesquisaParticipanteVO) {
         List<ServidorContribuinteVO> servidorList = new ArrayList<>();
         DadosServidorBean dadosServidor = new DadosServidorBean(pesquisaParticipanteVO.getCpf(),
