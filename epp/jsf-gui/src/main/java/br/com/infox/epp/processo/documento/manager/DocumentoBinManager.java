@@ -251,7 +251,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         }
 
         return Parametros.TEXTO_RODAPE_DOCUMENTO.getValue()
-            .replaceAll("${assinadores}", assinadores.toString());
+            .replaceAll("\\$\\{assinadores\\}", assinadores.toString());
     }
 
 	@Override
