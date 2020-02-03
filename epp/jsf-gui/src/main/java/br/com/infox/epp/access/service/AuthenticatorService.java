@@ -39,6 +39,7 @@ import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.CertificateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
+import br.com.infox.epp.certificadoeletronico.CertificadoEletronicoService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.system.util.ParametroUtil;
@@ -78,6 +79,8 @@ public class AuthenticatorService {
     private UsuarioPerfilDAO usuarioPerfilDAO;
     @Inject
     private InfoxMessages infoxMessages;
+    @Inject
+    private CertificadoEletronicoService certificadoEletronicoService;
 
     public static final String CERTIFICATE_ERROR_UNKNOWN = "certificate.error.unknown";
 
@@ -116,6 +119,9 @@ public class AuthenticatorService {
             usuarioPerfilList.add(new SelectItem(usuarioPerfil.getIdUsuarioPerfil(), usuarioPerfil.toString()));
         }
         Contexts.getSessionContext().set(USUARIO_PERFIL_LIST, usuarioPerfilList);
+        if (certificadoEletronicoService.podeEmitirCertificado(usuario.getPessoaFisica())) {
+        	certificadoEletronicoService.gerarCertificado(usuario.getPessoaFisica());
+        }
     }
 
     public UsuarioLogin getUsuarioByLogin(String login) {

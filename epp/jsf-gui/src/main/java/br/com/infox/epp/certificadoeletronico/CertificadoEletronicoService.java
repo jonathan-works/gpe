@@ -46,6 +46,14 @@ public class CertificadoEletronicoService extends PersistenceController {
     public EntityManager getEntityManagerBin() {
         return EntityManagerProducer.getEntityManagerBin();
     }
+    
+    public boolean podeEmitirCertificado(PessoaFisica pf) {
+    	return pf != null && (
+			pf.getCertificadoEletronico() == null // Não possui certificado
+			|| !pf.getCertificadoEletronico().isAtivo() // Certificado inativo
+			|| new Date().after(pf.getCertificadoEletronico().getDataFim()) // Certificado expirado
+		);
+    }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void gerarCertificadoRaiz() {
@@ -53,6 +61,9 @@ public class CertificadoEletronicoService extends PersistenceController {
         Parametro parametro = getParametroCertificadoRaiz();
         parametro.setValorVariavel(idCertificadoEletronicoRaiz.toString());
         parametroManager.persist(parametro);
+        for (PessoaFisica pessoaFisica : pessoaFisicaDao.findAll()) {
+        	gerarCertificado(pessoaFisica);
+		}
         parametroManager.flush();
     }
 
@@ -100,6 +111,11 @@ public class CertificadoEletronicoService extends PersistenceController {
         return certificadoEletronicoDao.findById(idCertificadoEletronicoRaiz);
     }
 
+    public boolean existeCertificadoEletronicoBinRaiz() {
+    	Long idCertificadoEletronicoRaiz = Long.parseLong(getParametroCertificadoRaiz().getValorVariavel());
+        return idCertificadoEletronicoRaiz != null && idCertificadoEletronicoRaiz > 0;
+    }
+    
     public CertificadoEletronicoBin getCertificadoEletronicoBinRaiz() {
         Long idCertificadoEletronicoRaiz = Long.parseLong(getParametroCertificadoRaiz().getValorVariavel());
         if(idCertificadoEletronicoRaiz == null || idCertificadoEletronicoRaiz <= 0) {
