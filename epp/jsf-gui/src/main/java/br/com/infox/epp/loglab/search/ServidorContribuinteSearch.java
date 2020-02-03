@@ -2,6 +2,7 @@ package br.com.infox.epp.loglab.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -82,7 +83,10 @@ public class ServidorContribuinteSearch extends PersistenceController {
         }
         query.where(where);
 
-        return getEntityManager().createQuery(query).getResultList();
+        List<ServidorContribuinteVO> resultList = getEntityManager().createQuery(query).getResultList();
+        List<ServidorContribuinteVO> listaPessoaFisica = pesquisaPessoaFisicaContribuinte(pesquisaParticipanteVO, resultList.stream().map(ServidorContribuinteVO::getIdPessoaFisica).collect(Collectors.toList()));
+        resultList.addAll(listaPessoaFisica);
+        return resultList;
     }
 
     public List<ServidorContribuinteVO> pesquisaServidorBaseLocal(PesquisaParticipanteVO pesquisaParticipanteVO) {
@@ -175,6 +179,36 @@ public class ServidorContribuinteSearch extends PersistenceController {
             servidor.setIdPessoaFisica(servidorByCpf.getIdPessoaFisica());
         }
         return servidor;
+    }
+
+    private List<ServidorContribuinteVO> pesquisaPessoaFisicaContribuinte(PesquisaParticipanteVO pesquisaParticipanteVO, List<Integer> idsExclusao) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ServidorContribuinteVO> query = cb.createQuery(ServidorContribuinteVO.class);
+        Root<PessoaFisica> pessoaFisica = query.from(PessoaFisica.class);
+
+        query.select(cb.construct(query.getResultType(), pessoaFisica.get(PessoaFisica_.idPessoa),
+                pessoaFisica.get(PessoaFisica_.cpf), pessoaFisica.get(PessoaFisica_.nome),
+                pessoaFisica.get(PessoaFisica_.dataNascimento)));
+
+        Predicate where = cb.conjunction();
+
+        if(idsExclusao != null && !idsExclusao.isEmpty()) {
+            where = cb.and(where, cb.not(pessoaFisica.get(PessoaFisica_.idPessoa).in(idsExclusao)));
+        }
+
+        if (!StringUtil.isEmpty(pesquisaParticipanteVO.getCpf())) {
+            where = cb.and(where,
+                    cb.equal(pessoaFisica.get(PessoaFisica_.cpf), pesquisaParticipanteVO.getCpf()));
+        }
+        if (!StringUtil.isEmpty(pesquisaParticipanteVO.getNomeCompleto())) {
+            Expression<String> expressionLike = cb.concat(cb.literal("%"), pesquisaParticipanteVO.getNomeCompleto());
+            expressionLike = cb.concat(expressionLike, cb.literal("%"));
+            where = cb.and(where,
+                    cb.like(cb.lower(pessoaFisica.get(PessoaFisica_.nome)), cb.lower(expressionLike)));
+        }
+        query.where(where);
+
+        return getEntityManager().createQuery(query).getResultList();
     }
 
 }
