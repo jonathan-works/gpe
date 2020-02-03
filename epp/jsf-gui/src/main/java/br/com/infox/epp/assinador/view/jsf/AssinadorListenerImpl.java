@@ -5,6 +5,7 @@ import java.lang.annotation.Annotation;
 import java.security.KeyPair;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.faces.context.FacesContext;
@@ -15,6 +16,7 @@ import br.com.infox.assinatura.PoliticaAssinaturaFactory;
 import br.com.infox.assinatura.assinador.impl.AssinadorFactory;
 import br.com.infox.assinatura.assinador.signable.SimpleSignableIO;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
@@ -24,6 +26,7 @@ import br.com.infox.epp.certificadoeletronico.CertificadoEletronicoService;
 import br.com.infox.epp.certificadoeletronico.builder.CertUtil;
 import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronico;
 import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronicoBin;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
 public class AssinadorListenerImpl implements AssinadorListener, Serializable {
@@ -82,13 +85,13 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
         Assinador componente = (Assinador)evt.getComponent();
         //Idealmente viria do componente, atribuindo o padrão
         PoliticaAssinatura politicaDeAssinatura = PoliticaAssinaturaFactory.getDefault().fromOID(PoliticaAssinatura.AD_RB_CMS_V_2_1);
-        UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
-        if(usuarioPerfilAtual == null
-                || usuarioPerfilAtual.getUsuarioLogin() == null
-                || usuarioPerfilAtual.getUsuarioLogin().getPessoaFisica() == null) {
+        PessoaFisica pfComponente = button.getPessoaAssinatura();
+        PessoaFisica pfAutenticada = Optional.ofNullable(Authenticator.getUsuarioPerfilAtual()).map(UsuarioPerfil::getUsuarioLogin).map(UsuarioLogin::getPessoaFisica).orElse(null);
+        if(pfComponente == null && pfAutenticada == null) {
             throw new BusinessRollbackException("Pessoa não encontrada.");
         }
-        CertificadoEletronico certificadoEletronicoUsuarioLogado = usuarioPerfilAtual.getUsuarioLogin().getPessoaFisica().getCertificadoEletronico();
+        
+        CertificadoEletronico certificadoEletronicoUsuarioLogado = Optional.ofNullable(pfComponente).orElse(pfAutenticada).getCertificadoEletronico();
         if(certificadoEletronicoUsuarioLogado == null) {
             throw new BusinessRollbackException("Usuário não possui certificado");
         }

@@ -51,6 +51,8 @@ html,body {
                             render="DialogMessage termoAdesaoFormPanel"
                             onbegin="infox.showLoading();"
                             oncomplete="infox.hideLoading();"
+                            pessoaAssinatura="#{termoAdesaoViewController.pessoaFisica}"
+                            labelAssinaturaEletronica="Assinar termo de adesão eletrônicamente"
                             value="#{infoxMessages['login.assinarTermoAdesao']}">
                         </wi:assinador>
                     </h:form>
