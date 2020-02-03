@@ -265,7 +265,9 @@
                     <wi:field id="#{identificador}CpfServidorOutput"
                               label="#{infoxMessages['servidorContribuinte.cpf']}">
                         <p:outputLabel id="#{identificador}cpfServidorOutputInput"
-                                       value="#{viewObject.cpf}" />
+                                       value="#{viewObject.cpf}">
+                            <f:converter converterId="cpfConverter"/>
+                        </p:outputLabel>
                     </wi:field>
                     <wi:field id="#{identificador}MatriculaServidorOutput"
                               label="#{infoxMessages['servidorContribuinte.matricula']}">
@@ -303,14 +305,14 @@
                     <wi:field id="#{identificador}DataNascimentoServidorOutput"
                               label="#{infoxMessages['servidorContribuinte.dataNascimento']}">
                         <p:outputLabel id="#{identificador}DataNascimentoServidorOutputInput"
-                                       value="#{viewObject.dataNascimento}" >
+                                       value="#{empty viewObject.dataNascimento ? 'Não informado' : viewObject.dataNascimento}">
                             <f:convertDateTime pattern="dd/MM/yyyy"/>
                         </p:outputLabel>
                     </wi:field>
                     <wi:field id="#{identificador}NomeMaeServidorOutput"
                               label="#{infoxMessages['servidorContribuinte.nomeMae']}">
                         <p:outputLabel id="#{identificador}NomeMaeServidorOutputInput"
-                                       value="#{viewObject.nomeMae}" />
+                                       value="#{empty viewObject.nomeMae ? 'Não informado' : viewObject.nomeMae}"/>
                     </wi:field>
                     <wi:field id="#{identificador}DataNomeacao"
                               label="#{infoxMessages['servidorContribuinte.dataNomeacao']}">
