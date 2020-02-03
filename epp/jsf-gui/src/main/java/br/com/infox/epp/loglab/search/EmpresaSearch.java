@@ -1,6 +1,7 @@
 package br.com.infox.epp.loglab.search;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -19,6 +20,7 @@ import br.com.infox.epp.loglab.model.Empresa_;
 import br.com.infox.epp.loglab.vo.EmpresaVO;
 import br.com.infox.epp.loglab.vo.PesquisaParticipanteVO;
 import br.com.infox.epp.municipio.Estado_;
+import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica_;
 
 @Stateless
@@ -79,6 +81,41 @@ public class EmpresaSearch extends PersistenceController {
             expressionLike = cb.concat(cb.literal("%"), pesquisaParticipanteVO.getRazaoSocial());
             expressionLike = cb.concat(expressionLike, cb.literal("%"));
             where = cb.and(where, cb.like(cb.lower(empresa.get(Empresa_.razaoSocial)), cb.lower(expressionLike)));
+        }
+        query.where(where);
+
+        List<EmpresaVO> resultList = getEntityManager().createQuery(query).getResultList();
+        List<EmpresaVO> listaPessoaJuridica = pesquisaPessoaFisicaEmpresaVO(pesquisaParticipanteVO, resultList.stream().map(EmpresaVO::getIdPessoaJuridica).collect(Collectors.toList()));
+        resultList.addAll(listaPessoaJuridica);
+        return resultList;
+    }
+
+    private List<EmpresaVO> pesquisaPessoaFisicaEmpresaVO(PesquisaParticipanteVO pesquisaParticipanteVO, List<Integer> idsExclusao) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<EmpresaVO> query = cb.createQuery(EmpresaVO.class);
+        Root<PessoaJuridica> pessoaJuridica = query.from(PessoaJuridica.class);
+        query.select(cb.construct(query.getResultType(),
+                pessoaJuridica.get(PessoaJuridica_.idPessoa), pessoaJuridica.get(PessoaJuridica_.cnpj),
+                pessoaJuridica.get(PessoaJuridica_.razaoSocial),
+                pessoaJuridica.get(PessoaJuridica_.nome)));
+
+        Predicate where = cb.conjunction();
+        if(idsExclusao != null && !idsExclusao.isEmpty()) {
+            where = cb.and(where, cb.not(pessoaJuridica.get(PessoaJuridica_.idPessoa).in(idsExclusao)));
+        }
+        Expression<String> expressionLike;
+        if (!StringUtil.isEmpty(pesquisaParticipanteVO.getCnpj())) {
+            where = cb.and(where, cb.equal(pessoaJuridica.get(PessoaJuridica_.cnpj), pesquisaParticipanteVO.getCnpj()));
+        }
+        if (!StringUtil.isEmpty(pesquisaParticipanteVO.getNomeFantasia())) {
+            expressionLike = cb.concat(cb.literal("%"), pesquisaParticipanteVO.getNomeFantasia());
+            expressionLike = cb.concat(expressionLike, cb.literal("%"));
+            where = cb.and(where, cb.like(cb.lower(pessoaJuridica.get(PessoaJuridica_.nome)), cb.lower(expressionLike)));
+        }
+        if (!StringUtil.isEmpty(pesquisaParticipanteVO.getRazaoSocial())) {
+            expressionLike = cb.concat(cb.literal("%"), pesquisaParticipanteVO.getRazaoSocial());
+            expressionLike = cb.concat(expressionLike, cb.literal("%"));
+            where = cb.and(where, cb.like(cb.lower(pessoaJuridica.get(PessoaJuridica_.razaoSocial)), cb.lower(expressionLike)));
         }
         query.where(where);
 
