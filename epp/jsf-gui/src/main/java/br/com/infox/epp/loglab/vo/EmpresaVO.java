@@ -44,6 +44,13 @@ public class EmpresaVO {
     private String numero;
     private String cep;
 
+    public EmpresaVO(Integer idPessoaJuridica, String cnpj, String razaoSocial, String nomeFantasia) {
+        this.idPessoaJuridica = idPessoaJuridica;
+        this.cnpj = cnpj;
+        this.razaoSocial = razaoSocial;
+        this.nomeFantasia = nomeFantasia;
+    }
+
     @Override
     public String toString() {
         return getCnpj() + " - " + getNomeFantasia();
