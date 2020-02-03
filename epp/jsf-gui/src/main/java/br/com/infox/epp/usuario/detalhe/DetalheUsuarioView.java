@@ -21,58 +21,69 @@ import lombok.Setter;
 @Named
 @ViewScoped
 public class DetalheUsuarioView implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Getter @Setter
-    private String tab = "info";
-    @Getter
-    private String nome;
-    @Getter
-    private String termo;
-    @Getter
-    private String urlTermoAdesao;
-    @Getter
-    private Date dataInicio;
-    @Getter
-    private Date dataFim;
-    @Inject
-    private TermoAdesaoService termoAdesaoService;
-    @Inject
-    private CertificadoEletronicoService certificadoEletronicoService;
-    @Getter
-    private boolean botaoGerarCertificadoDesabilitado;
+	@Getter
+	@Setter
+	private String tab = "info";
+	@Getter
+	private String nome;
+	@Getter
+	private String termo;
+	@Getter
+	private String urlTermoAdesao;
+	@Getter
+	private Date dataInicio;
+	@Getter
+	private Date dataFim;
+	@Inject
+	private TermoAdesaoService termoAdesaoService;
+	@Inject
+	private CertificadoEletronicoService certificadoEletronicoService;
+	@Getter
+	private boolean possuiCertificadoEmitido = false;
+	@Getter
+	private boolean podeEmitirCertificado = false;
+	@Getter
+	private boolean podeExibirTermoAdesao = false;
 
-    @PostConstruct
-    private void init() {
-        refreshInitValues();
-    }
+	@PostConstruct
+	private void init() {
+		possuiCertificadoEmitido = false;
+		podeEmitirCertificado = false;
+		podeExibirTermoAdesao = false;
+		refreshInitValues();
+	}
 
-    private void refreshInitValues() {
-        UsuarioLogin usuario = Authenticator.getUsuarioLogado();
-        this.nome = usuario.getNomeUsuario();
-        if(usuario.getPessoaFisica() != null && usuario.getPessoaFisica().getTermoAdesao() != null) {
-            if(usuario.getPessoaFisica().getCertificadoEletronico() != null) {
-                this.botaoGerarCertificadoDesabilitado = usuario.getPessoaFisica().getCertificadoEletronico().isAtivo();
-                this.dataInicio = usuario.getPessoaFisica().getCertificadoEletronico().getDataInicio();
-                this.dataFim = usuario.getPessoaFisica().getCertificadoEletronico().getDataFim();
-            }
-            this.termo = usuario.getPessoaFisica().getTermoAdesao().getModeloDocumento();
-            this.urlTermoAdesao = termoAdesaoService.buildUrlDownload(
-                getHttpServletRequest().getContextPath(),
-                null,
-                usuario.getPessoaFisica().getTermoAdesao().getUuid().toString()
-            );
-        }
-    }
+	private void refreshInitValues() {
+		UsuarioLogin usuario = Authenticator.getUsuarioLogado();
+		this.nome = usuario.getNomeUsuario();
+		this.podeExibirTermoAdesao = usuario.getPessoaFisica().getTermoAdesao() != null;
+		if (usuario.getPessoaFisica() != null) {
+			this.possuiCertificadoEmitido = usuario.getPessoaFisica().getCertificadoEletronico() != null;
+			this.podeEmitirCertificado = !this.possuiCertificadoEmitido
+					|| !usuario.getPessoaFisica().getCertificadoEletronico().isAtivo();
+			if (this.possuiCertificadoEmitido) {
+				this.dataInicio = usuario.getPessoaFisica().getCertificadoEletronico().getDataInicio();
+				this.dataFim = usuario.getPessoaFisica().getCertificadoEletronico().getDataFim();
+			}
+		}
+		if (isPodeExibirTermoAdesao()) {
+			this.termo = usuario.getPessoaFisica().getTermoAdesao().getModeloDocumento();
+			this.urlTermoAdesao = termoAdesaoService.buildUrlDownload(getHttpServletRequest().getContextPath(), null,
+					usuario.getPessoaFisica().getTermoAdesao().getUuid().toString());
 
-    @ExceptionHandled(successMessage = "Certificado gerado com sucesso")
-    public void gerarCertificado() {
-        certificadoEletronicoService.gerarCertificado(Authenticator.getUsuarioLogado().getPessoaFisica());
-        refreshInitValues();
-    }
+		}
+	}
 
-    private HttpServletRequest getHttpServletRequest() {
-        return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    }
+	@ExceptionHandled(successMessage = "Certificado gerado com sucesso")
+	public void gerarCertificado() {
+		certificadoEletronicoService.gerarCertificado(Authenticator.getUsuarioLogado().getPessoaFisica());
+		refreshInitValues();
+	}
+
+	private HttpServletRequest getHttpServletRequest() {
+		return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	}
 
 }

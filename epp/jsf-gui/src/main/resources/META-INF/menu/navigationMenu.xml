@@ -70,5 +70,4 @@
             <item xsi:type="MenuItem" label="comunicacoes.responder.menuText" url="/Comunicacao/Responder/listView.xhtml"/>
         </item>
     </item>
-    <item xsi:type="MenuItem" label="detalhesUsuario.titlePage" url="/Usuario/detalhes.xhtml"/>
 </menu>
