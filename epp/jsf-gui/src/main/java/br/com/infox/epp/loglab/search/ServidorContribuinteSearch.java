@@ -11,6 +11,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -27,6 +29,10 @@ import br.com.infox.epp.loglab.model.Servidor;
 import br.com.infox.epp.loglab.model.Servidor_;
 import br.com.infox.epp.loglab.vo.PesquisaParticipanteVO;
 import br.com.infox.epp.loglab.vo.ServidorContribuinteVO;
+import br.com.infox.epp.municipio.Estado;
+import br.com.infox.epp.municipio.Estado_;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaFisica_;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -48,9 +54,22 @@ public class ServidorContribuinteSearch extends PersistenceController {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ServidorContribuinteVO> query = cb.createQuery(ServidorContribuinteVO.class);
         Root<ContribuinteSolicitante> contribuinte = query.from(ContribuinteSolicitante.class);
-        query.select(cb.construct(query.getResultType(), contribuinte));
+        Join<ContribuinteSolicitante, Estado> estado = contribuinte.join(ContribuinteSolicitante_.estado, JoinType.LEFT);
+
+        query.select(cb.construct(query.getResultType(), contribuinte.get(ContribuinteSolicitante_.id),
+                contribuinte.get(ContribuinteSolicitante_.pessoaFisica).get(PessoaFisica_.idPessoa),
+                contribuinte.get(ContribuinteSolicitante_.cpf), contribuinte.get(ContribuinteSolicitante_.nomeCompleto),
+                contribuinte.get(ContribuinteSolicitante_.dataNascimento),
+                contribuinte.get(ContribuinteSolicitante_.sexo), contribuinte.get(ContribuinteSolicitante_.nomeMae),
+                contribuinte.get(ContribuinteSolicitante_.email), contribuinte.get(ContribuinteSolicitante_.telefone),
+                estado.get(Estado_.codigo), contribuinte.get(ContribuinteSolicitante_.cidade),
+                contribuinte.get(ContribuinteSolicitante_.logradouro),
+                contribuinte.get(ContribuinteSolicitante_.bairro),
+                contribuinte.get(ContribuinteSolicitante_.complemento),
+                contribuinte.get(ContribuinteSolicitante_.numero), contribuinte.get(ContribuinteSolicitante_.cep)));
 
         Predicate where = cb.conjunction();
+
         if (!StringUtil.isEmpty(pesquisaParticipanteVO.getCpf())) {
             where = cb.and(where,
                     cb.equal(contribuinte.get(ContribuinteSolicitante_.cpf), pesquisaParticipanteVO.getCpf()));
@@ -88,7 +107,18 @@ public class ServidorContribuinteSearch extends PersistenceController {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ServidorContribuinteVO> query = cb.createQuery(ServidorContribuinteVO.class);
         Root<Servidor> servidor = query.from(Servidor.class);
-        query.select(cb.construct(query.getResultType(), servidor));
+        query.select(cb.construct(query.getResultType(), servidor.get(Servidor_.id),
+                servidor.get(Servidor_.pessoaFisica).get(PessoaFisica_.idPessoa), servidor.get(Servidor_.cpf),
+                servidor.get(Servidor_.nomeCompleto), servidor.get(Servidor_.dataNascimento),
+                servidor.get(Servidor_.matricula), servidor.get(Servidor_.mae), servidor.get(Servidor_.email),
+                servidor.get(Servidor_.celular), servidor.get(Servidor_.dataNomeacaoContratacao),
+                servidor.get(Servidor_.dataPosse), servidor.get(Servidor_.dataExercicio),
+                servidor.get(Servidor_.situacao), servidor.get(Servidor_.secretaria),
+                servidor.get(Servidor_.departamento), servidor.get(Servidor_.subFolha), servidor.get(Servidor_.jornada),
+                servidor.get(Servidor_.ocupacaoCarreira), servidor.get(Servidor_.cargoCarreira),
+                servidor.get(Servidor_.ocupacaoComissao), servidor.get(Servidor_.cargoComissao),
+                servidor.get(Servidor_.pai), servidor.get(Servidor_.numeroRg), servidor.get(Servidor_.dataEmissaoRg),
+                servidor.get(Servidor_.orgaoEmissorRG)));
         query.where(cb.equal(servidor.get(Servidor_.cpf), cpf));
 
         try {

@@ -3,11 +3,8 @@ package br.com.infox.epp.loglab.vo;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
-import br.com.infox.epp.loglab.model.ContribuinteSolicitante;
-import br.com.infox.epp.loglab.model.Servidor;
 import br.com.infox.epp.pessoa.annotation.Cpf;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -62,59 +59,73 @@ public class ServidorContribuinteVO {
     private Date dataEmissaoRg;
     private String orgaoEmissorRG;
 
-    public ServidorContribuinteVO(ContribuinteSolicitante contribuinte) {
-        this.id = contribuinte.getId();
-        if(contribuinte.getPessoaFisica() != null) {
-            this.idPessoaFisica = contribuinte.getPessoaFisica().getIdPessoa();
-        }
-        this.bairro = contribuinte.getBairro();
-        this.cep = contribuinte.getCep();
-        this.cidade = contribuinte.getCidade();
-        this.complemento = contribuinte.getComplemento();
-        this.cpf = contribuinte.getCpf();
-        this.dataNascimento = contribuinte.getDataNascimento();
-        this.email = contribuinte.getEmail();
-        if(contribuinte.getEstado() != null) {
-            this.codEstado = contribuinte.getEstado().getCodigo();
-        }
-        this.logradouro = contribuinte.getLogradouro();
-        this.nomeCompleto = contribuinte.getNomeCompleto();
-        this.nomeMae = contribuinte.getNomeMae();
-        this.numero = contribuinte.getNumero();
-        this.sexo = contribuinte.getSexo();
-        this.celular = contribuinte.getTelefone();
+    /**
+     * Construtor para Contribuinte
+     */
+    public ServidorContribuinteVO(Long id, Integer idPessoaFisica, String cpf, String nomeCompleto, Date dataNascimento,
+            String sexo, String nomeMae, String email, String celular, String codEstado, String cidade,
+            String logradouro, String bairro, String complemento, String numero, String cep) {
+        this.id = id;
+        this.idPessoaFisica = idPessoaFisica;
+        this.cpf = cpf;
+        this.nomeCompleto = nomeCompleto;
+        this.sexo = sexo;
+        this.dataNascimento = dataNascimento;
+        this.nomeMae = nomeMae;
+        this.email = email;
+        this.celular = celular;
+        this.codEstado = codEstado;
+        this.cidade = cidade;
+        this.logradouro = logradouro;
+        this.bairro = bairro;
+        this.complemento = complemento;
+        this.numero = numero;
+        this.cep = cep;
         this.tipoParticipante = TipoParticipanteEnum.CO;
     }
 
-    public ServidorContribuinteVO(Servidor servidor) {
-        this.id = servidor.getId();
-        this.cargoCarreira = servidor.getCargoCarreira();
-        this.cargoComissao = servidor.getCargoComissao();
-        this.celular = servidor.getCelular();
-        this.cpf = servidor.getCpf();
-        this.dataEmissaoRg = servidor.getDataEmissaoRg();
-        this.dataExercicio = servidor.getDataExercicio();
-        this.dataNascimento = servidor.getDataNascimento();
-        this.dataNomeacao = servidor.getDataNomeacaoContratacao();
-        this.dataPosse = servidor.getDataPosse();
-        this.localTrabalho = servidor.getDepartamento();
-        this.email = servidor.getEmail();
-        this.jornada = servidor.getJornada();
-        this.nomeMae = servidor.getMae();
-        this.matricula = servidor.getMatricula();
-        this.nomeCompleto = servidor.getNomeCompleto();
-        this.numeroRg = servidor.getNumeroRg();
-        this.ocupacaoCarreira = servidor.getOcupacaoCarreira();
-        this.ocupacaoComissao = servidor.getOcupacaoComissao();
-        this.orgaoEmissorRG = servidor.getOrgaoEmissorRG();
-        this.nomePai = servidor.getPai();
-        if(servidor.getPessoaFisica() != null) {
-            this.idPessoaFisica = servidor.getPessoaFisica().getIdPessoa();
-        }
-        this.orgao = servidor.getSecretaria();
-        this.situacao = servidor.getSituacao();
-        this.subFolha = servidor.getSubFolha();
+    /**
+     * Construtor para Servidor
+     */
+    public ServidorContribuinteVO(Long id, Integer idPessoaFisica, String cpf, String nomeCompleto, Date dataNascimento,
+            String matricula, String nomeMae, String email, String celular, Date dataNomeacao, Date dataPosse,
+            Date dataExercicio, String situacao, String orgao, String localTrabalho, String subFolha, String jornada,
+            String ocupacaoCarreira, String cargoCarreira, String ocupacaoComissao, String cargoComissao,
+            String nomePai, String numeroRg, Date dataEmissaoRg, String orgaoEmissorRG) {
+        this.id = id;
+        this.idPessoaFisica = idPessoaFisica;
+        this.cpf = cpf;
+        this.matricula = matricula;
+        this.nomeCompleto = nomeCompleto;
+        this.dataNascimento = dataNascimento;
+        this.nomeMae = nomeMae;
+        this.email = email;
+        this.celular = celular;
+        this.dataNomeacao = dataNomeacao;
+        this.dataPosse = dataPosse;
+        this.dataExercicio = dataExercicio;
+        this.situacao = situacao;
+        this.orgao = orgao;
+        this.localTrabalho = localTrabalho;
+        this.subFolha = subFolha;
+        this.jornada = jornada;
+        this.ocupacaoCarreira = ocupacaoCarreira;
+        this.cargoCarreira = cargoCarreira;
+        this.ocupacaoComissao = ocupacaoComissao;
+        this.cargoComissao = cargoComissao;
+        this.nomePai = nomePai;
+        this.numeroRg = numeroRg;
+        this.dataEmissaoRg = dataEmissaoRg;
+        this.orgaoEmissorRG = orgaoEmissorRG;
         this.tipoParticipante = TipoParticipanteEnum.SE;
+    }
+
+    /**
+     * Construtor com dados básicos de Pessoa Física para Contribuinte
+     */
+    public ServidorContribuinteVO(Integer idPessoaFisica, String cpf, String nomeCompleto, Date dataNascimento) {
+        this(null, idPessoaFisica, cpf, nomeCompleto, dataNascimento, null, null, null, null, null, null, null, null,
+                null, null, null);
     }
 
     @Override
