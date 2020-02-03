@@ -41,6 +41,8 @@ import br.com.infox.epp.entrega.EntregaResponsavelService;
 import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
 import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
 import br.com.infox.epp.entrega.documentos.Entrega;
+import br.com.infox.epp.loglab.dto.ParticipanteProcessoLogLabDTO;
+import br.com.infox.epp.loglab.search.ParticipanteProcessoLoglabSearch;
 import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacaoSearch;
@@ -131,6 +133,8 @@ public class BpmExpressionService {
     protected PessoaFisicaDAO pessoaFisicaDAO;
     @Inject
     protected VariavelProcessoService  variavelProcessoService;
+    @Inject
+    protected ParticipanteProcessoLoglabSearch participanteProcessoLoglabSearch;
 
     @External(tooltip = "Retorna a prioridade do processo atual", expressionType = ExpressionType.GERAL)
     public String getPrioridadeProcessoAtual(){
@@ -664,11 +668,18 @@ public class BpmExpressionService {
         return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.GATEWAY);
     }
 
-        protected ExecutionContext getExecutionContext() {
-                ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
-        if (executionContext == null) {
-            throw new BusinessRollbackException("O contexto de execução BPM não está disponível");
-        }
-                return executionContext;
-        }
+    protected ExecutionContext getExecutionContext() {
+            ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+    if (executionContext == null) {
+        throw new BusinessRollbackException("O contexto de execução BPM não está disponível");
+    }
+            return executionContext;
+    }
+
+    @External(expressionType = ExpressionType.GERAL, tooltip = "process.events.expression.getListaParticipantesProcessoByTipoParte.tooltip", example = "#{bpmExpressionService.getListaParticipantesProcessoByTipoParte(data)}",
+            value = {@Parameter(defaultValue = "codTipoParte", label = "process.events.expression.getListaParticipantesProcessoByTipoParte.codTipoParte.param.label",
+                    tooltip = "process.events.expression.getListaParticipantesProcessoByTipoParte.codTipoParte.param.tooltip", selectable = true)})
+    public List<ParticipanteProcessoLogLabDTO> getListaParticipantesProcessoByTipoParte(String codTipoParte){
+        return participanteProcessoLoglabSearch.getListaParticipanteProcessoLoglabDTOByCodTipoParteAndIdProcesso(getIdProcessoAtual(), codTipoParte);
+    }
 }
