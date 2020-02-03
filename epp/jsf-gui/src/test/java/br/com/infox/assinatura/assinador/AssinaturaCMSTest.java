@@ -26,7 +26,7 @@ import lombok.AllArgsConstructor;
 
 @RunWith(Parameterized.class)
 @AllArgsConstructor
-public class TesteAssinaturaCMS {
+public class AssinaturaCMSTest {
 	private static final String BASE_PATH = "certificados";
 	private static final String PATH_EXPIRADOS = "expirados";
 	private static final String PATH_VALIDOS = "validos";
