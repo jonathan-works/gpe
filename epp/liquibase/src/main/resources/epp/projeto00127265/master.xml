@@ -13,5 +13,6 @@
     <include file="epp/projeto00127265/007-AddColunaPessoaFisicaServidor.xml" />
     <include file="epp/projeto00127265/008-AddColunaPessoaFisicaContribuinte.xml" />
     <include file="epp/projeto00127265/009-RenomeiaColunaTelefoneFixoEmpresa.xml" />
+    <include file="epp/projeto00127265/010-MigraIdPessoaFisicaEmContribuinteServidor.xml" />
 
 </databaseChangeLog>
