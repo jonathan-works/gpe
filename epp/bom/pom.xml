@@ -11,7 +11,7 @@
 
     <groupId>br.com.infox.epp</groupId>
     <artifactId>bom</artifactId>
-    <version>3.2.27-SNAPSHOT</version>
+    <version>3.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>epp-bom</name>
     <description>E-PP Bill of material</description>

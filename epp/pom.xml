@@ -10,7 +10,7 @@
 
     <groupId>br.com.infox.epp</groupId>
     <artifactId>epp-parent</artifactId>
-    <version>3.2.27-SNAPSHOT</version>
+    <version>3.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>epp-parent</name>
 
