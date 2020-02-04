@@ -58,7 +58,8 @@ public class DetalheUsuarioView implements Serializable {
     private void refreshInitValues() {
         UsuarioLogin usuario = Authenticator.getUsuarioLogado();
         this.nome = usuario.getNomeUsuario();
-        this.podeExibirTermoAdesao = usuario.getPessoaFisica().getTermoAdesao() != null;
+        this.podeExibirTermoAdesao = usuario.getPessoaFisica() != null
+                && usuario.getPessoaFisica().getTermoAdesao() != null;
         if (usuario.getPessoaFisica() != null) {
             this.possuiCertificadoEmitido = usuario.getPessoaFisica().getCertificadoEletronico() != null;
             this.podeEmitirCertificado = !this.possuiCertificadoEmitido
