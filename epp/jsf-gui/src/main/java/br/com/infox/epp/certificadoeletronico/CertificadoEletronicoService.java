@@ -40,6 +40,10 @@ public class CertificadoEletronicoService extends PersistenceController {
     private Dao<PessoaFisica, Integer> pessoaFisicaDao;
 
     @Inject
+    @GenericDao
+    private Dao<UsuarioLogin, Integer> usuarioLoginDao;
+
+    @Inject
     private ParametroManager parametroManager;
 
     @Override
@@ -61,8 +65,10 @@ public class CertificadoEletronicoService extends PersistenceController {
         Parametro parametro = getParametroCertificadoRaiz();
         parametro.setValorVariavel(idCertificadoEletronicoRaiz.toString());
         parametroManager.persist(parametro);
-        for (PessoaFisica pessoaFisica : pessoaFisicaDao.findAll()) {
-            gerarCertificado(pessoaFisica);
+        for (UsuarioLogin usuarioLogin : usuarioLoginDao.findAll()) {
+            if(usuarioLogin.getPessoaFisica() != null) {
+                gerarCertificado(usuarioLogin.getPessoaFisica());
+            }
         }
         parametroManager.flush();
     }
