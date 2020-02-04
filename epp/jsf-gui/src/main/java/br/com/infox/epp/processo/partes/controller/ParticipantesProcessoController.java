@@ -35,6 +35,7 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.jsf.util.JsfUtil;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.security.SecurityUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -237,6 +238,9 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     @Override
     @ExceptionHandled
     public void includeParticipanteProcesso() {
+        if(participanteProcessoVO.getServidorContribuinteVO() == null && participanteProcessoVO.getEmpresaVO() == null) {
+            throw new BusinessException("É necessário inserir os dados de uma pessoa física ou jurídica");
+        }
         ParticipanteProcesso participantePersist = participanteProcessoLoglabService.gravarParticipanteProcesso(participanteProcessoVO);
         afterSaveParticipante(participantePersist);
         participanteProcessoTree.clearTree();

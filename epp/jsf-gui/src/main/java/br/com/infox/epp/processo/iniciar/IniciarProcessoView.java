@@ -366,31 +366,35 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
 
     public void adicionarParticipante() {
-        iniciarProcessoParticipanteVO.generateId();
-        if (!podeAdicionarParticipante(iniciarProcessoParticipanteVO)) {
-            FacesMessages.instance().add("Não pode adicionar a mesma pessoa com o mesmo tipo de parte e mesmo participante superior");
+        if(servidorContribuinteVO == null && empresaVO == null) {
+            FacesMessages.instance().add("É necessário inserir os dados de uma pessoa física ou jurídica");
         } else {
-            if(iniciarProcessoParticipanteVO.getTipoPessoa().equals(TipoPessoaEnum.F)) {
-                iniciarProcessoParticipanteVO.setCodigo(servidorContribuinteVO.getCpf());
-                iniciarProcessoParticipanteVO.setEmail(servidorContribuinteVO.getEmail());
-                iniciarProcessoParticipanteVO.setDataNascimento(servidorContribuinteVO.getDataNascimento());
-                iniciarProcessoParticipanteVO.setNome(servidorContribuinteVO.getNomeCompleto());
-                mapServidorContribuinteVO.put(iniciarProcessoParticipanteVO.getId(), servidorContribuinteVO);
+            iniciarProcessoParticipanteVO.generateId();
+            if (!podeAdicionarParticipante(iniciarProcessoParticipanteVO)) {
+                FacesMessages.instance().add("Não pode adicionar a mesma pessoa com o mesmo tipo de parte e mesmo participante superior");
             } else {
-                iniciarProcessoParticipanteVO.setCodigo(empresaVO.getCnpj());
-                iniciarProcessoParticipanteVO.setRazaoSocial(empresaVO.getRazaoSocial());
-                iniciarProcessoParticipanteVO.setNome(empresaVO.getNomeFantasia());
-                mapEmpresaVO.put(iniciarProcessoParticipanteVO.getId(), empresaVO);
-            }
-            iniciarProcessoParticipanteVO.adicionar();
-            if (iniciarProcessoParticipanteVO.getParent() == null) {
-                root.getChildren().add(iniciarProcessoParticipanteVO);
-            }
-            participanteProcessoList.add(iniciarProcessoParticipanteVO);
-            Collections.sort(participanteProcessoList);
+                if(iniciarProcessoParticipanteVO.getTipoPessoa().equals(TipoPessoaEnum.F)) {
+                    iniciarProcessoParticipanteVO.setCodigo(servidorContribuinteVO.getCpf());
+                    iniciarProcessoParticipanteVO.setEmail(servidorContribuinteVO.getEmail());
+                    iniciarProcessoParticipanteVO.setDataNascimento(servidorContribuinteVO.getDataNascimento());
+                    iniciarProcessoParticipanteVO.setNome(servidorContribuinteVO.getNomeCompleto());
+                    mapServidorContribuinteVO.put(iniciarProcessoParticipanteVO.getId(), servidorContribuinteVO);
+                } else {
+                    iniciarProcessoParticipanteVO.setCodigo(empresaVO.getCnpj());
+                    iniciarProcessoParticipanteVO.setRazaoSocial(empresaVO.getRazaoSocial());
+                    iniciarProcessoParticipanteVO.setNome(empresaVO.getNomeFantasia());
+                    mapEmpresaVO.put(iniciarProcessoParticipanteVO.getId(), empresaVO);
+                }
+                iniciarProcessoParticipanteVO.adicionar();
+                if (iniciarProcessoParticipanteVO.getParent() == null) {
+                    root.getChildren().add(iniciarProcessoParticipanteVO);
+                }
+                participanteProcessoList.add(iniciarProcessoParticipanteVO);
+                Collections.sort(participanteProcessoList);
 
 
-            limparDadosParticipante();
+                limparDadosParticipante();
+            }
         }
     }
 
