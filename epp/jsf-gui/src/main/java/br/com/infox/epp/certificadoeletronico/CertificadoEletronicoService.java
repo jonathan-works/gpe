@@ -48,7 +48,7 @@ public class CertificadoEletronicoService extends PersistenceController {
     }
 
     public boolean podeEmitirCertificado(PessoaFisica pf) {
-        return pf != null && (
+        return existeCertificadoEletronicoBinRaiz() && pf != null && (
             pf.getCertificadoEletronico() == null // Não possui certificado
             || !pf.getCertificadoEletronico().isAtivo() // Certificado inativo
             || new Date().after(pf.getCertificadoEletronico().getDataFim()) // Certificado expirado
