@@ -83,7 +83,7 @@ public class DocumentoVariavelController implements Serializable, AssinaturaCall
             }
         }
         if (pastas.size() == 1) {
-        	pasta = pastas.get(0);
+            pasta = pastas.get(0);
         }
     }
 
