@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.el.MethodExpression;
+import javax.faces.application.ResourceDependencies;
+import javax.faces.application.ResourceDependency;
 import javax.faces.component.FacesComponent;
 import javax.faces.component.behavior.ClientBehaviorHolder;
 
@@ -13,6 +15,12 @@ import br.com.infox.epp.assinador.view.AssinaturaCallback;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @FacesComponent(Assinador.COMPONENT_TYPE)
+@ResourceDependencies({ 
+    @ResourceDependency(library = "js", name = "namespace.js"),
+    @ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
+    @ResourceDependency(library = "primefaces", name = "jquery/jquery-plugins.js"),
+    @ResourceDependency(library = "components/infox/assinador/js", name = "assinador.js")
+})
 public class Assinador extends javax.faces.component.UICommand
         implements ClientBehaviorHolder, AssinadorEventSource {
 
@@ -238,7 +246,7 @@ public class Assinador extends javax.faces.component.UICommand
     }
 
     public String getTextoConfirmacaoAssinaturaEletronica() {
-        return (java.lang.String) getStateHelper().eval(PropertyKeys.textoConfirmacaoAssinaturaEletronica, "Deseja realmente assinar eletrônicamente este(s) documento(s)?");
+        return (java.lang.String) getStateHelper().eval(PropertyKeys.textoConfirmacaoAssinaturaEletronica, "Digite sua senha e confirme para assinar eletrônicamente.");
     }
 
 

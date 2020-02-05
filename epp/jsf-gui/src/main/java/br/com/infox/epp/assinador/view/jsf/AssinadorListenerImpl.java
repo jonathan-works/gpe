@@ -8,10 +8,8 @@ import java.security.cert.X509Certificate;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.validation.ValidationException;
 
 import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.assinatura.PoliticaAssinatura;
@@ -31,7 +29,6 @@ import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronico;
 import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronicoBin;
 import br.com.infox.epp.login.LoginService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.seam.exception.BusinessRollbackException;
 
 public class AssinadorListenerImpl implements AssinadorListener, Serializable {
 

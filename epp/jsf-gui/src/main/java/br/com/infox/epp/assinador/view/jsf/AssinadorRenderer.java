@@ -20,6 +20,9 @@ import javax.faces.render.FacesRenderer;
 import javax.faces.render.Renderer;
 import javax.ws.rs.core.UriBuilder;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.componentes.util.ComponentUtil;
 import br.com.infox.core.messages.InfoxMessages;
@@ -304,59 +307,27 @@ public class AssinadorRenderer extends Renderer {
                     }
                     execute = sb.toString().trim();
                 }
-
-                String onclick=AjaxRequestBuilderFactory.create(context)
-                        .from(button)
-                        .behavior("assinaturaEletronicaClick")
-                        .execute(execute)
-                        .render(render)
-                        .preventDefault()
-                        .onbegin(button.getOnbegin())
-                        .oncomplete(button.getOncomplete())
-                        .build();
-                if (onclick != null) {
-                	StringBuilder reqBuilder = new StringBuilder();
-                	reqBuilder.append("passwordPrompt('");
-                	reqBuilder.append(button.getTextoConfirmacaoAssinaturaEletronica());
-                	reqBuilder.append("','");
-                	reqBuilder.append("Confirmar");
-                	reqBuilder.append("',");
-                	reqBuilder.append("function(password){ ");
-					reqBuilder.append("jsf.ajax.request('");
-					reqBuilder.append(button.getClientId(context));
-					reqBuilder.append("', null, {");
-					reqBuilder.append("execute:'");
-					reqBuilder.append(execute);
-					reqBuilder.append("',");
-					reqBuilder.append("render:'");
-					reqBuilder.append(render);
-					reqBuilder.append("',");
-					reqBuilder.append("params: password,");
-					reqBuilder.append("onevent:function(event) {");
-					reqBuilder.append("if (event.type === 'event') {");
-					reqBuilder.append("switch(event.status) {");
-					reqBuilder.append("case 'begin':");
-					reqBuilder.append(button.getOnbegin());
-					reqBuilder.append("break;");
-					reqBuilder.append("case 'success':");
-					reqBuilder.append("break;");
-					reqBuilder.append("case 'complete':");
-					reqBuilder.append(button.getOncomplete());
-					reqBuilder.append("break;");
-					reqBuilder.append("}");
-					reqBuilder.append("}");
-					reqBuilder.append("},");
-					reqBuilder.append("\"javax.faces.behavior.event\":\"assinaturaEletronicaClick\"");
-					reqBuilder.append("});");
-					reqBuilder.append("});event.preventDefault();return false;");
-					String clickFun = reqBuilder.toString();
-                	System.out.println(clickFun);
-//                	clickFun = String.format("if(confirm('%s')){%s}else{return false}", button.getTextoConfirmacaoAssinaturaEletronica(), onclick);
-                    writer.writeAttribute("onclick",
-                		clickFun,
-                        null
-                    );
-                }
+                
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("mensagem", button.getTextoConfirmacaoAssinaturaEletronica());
+                jsonObject.addProperty("labelConfirmBtn", "Confirmar");
+                jsonObject.addProperty("labelCancelBtn", "Cancelar");
+                jsonObject.addProperty("source", button.getClientId(context));
+                jsonObject.addProperty("execute", execute);
+                jsonObject.addProperty("render", render);
+                jsonObject.addProperty("onbegin", button.getOnbegin());
+                jsonObject.addProperty("oncomplete", button.getOncomplete());
+                String jsonArgs = new Gson().toJson(jsonObject);
+                
+                StringBuilder assinarEltronicamentFunc = new StringBuilder();
+                assinarEltronicamentFunc.append("invoke(['infox.Assinador'], function(assinador) {");
+                assinarEltronicamentFunc.append("assinador.assinarEletronicamente(");
+                assinarEltronicamentFunc.append("JSON.parse('").append(jsonArgs).append("')");
+                assinarEltronicamentFunc.append(");");
+                assinarEltronicamentFunc.append("});");
+                assinarEltronicamentFunc.append("event.preventDefault();return false;");
+                String onclick = assinarEltronicamentFunc.toString();
+				writer.writeAttribute("onclick", onclick, null);
             } else {
                 writer.writeAttribute("disabled", "disabled", "disabled");
             }
