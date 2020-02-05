@@ -19,9 +19,12 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.view.AssinaturaCallback;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
@@ -49,6 +52,8 @@ public class DocumentoVariavelController implements Serializable, AssinaturaCall
     private AssinadorService assinadorService;
     @Inject
     private InfoxMessages infoxMessages;
+    @Inject
+    private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 
     private Processo processo;
     private List<Pasta> pastas;
@@ -83,7 +88,13 @@ public class DocumentoVariavelController implements Serializable, AssinaturaCall
     }
 
     public AssinavelProvider getAssinavelProvider() {
-        return new AssinavelDocumentoBinProvider(TaskInstanceHome.instance().getVariaveisDocumento().get(formField.getId()).getDocumentoBin());
+        ClassificacaoDocumento classificacao = (ClassificacaoDocumento) formField.getProperties().get("classificacaoDocumento");
+
+        DocumentoComRegraAssinatura documentoComRegraAssinatura = new AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura(
+            classificacaoDocumentoPapelManager.getTipoMeioAssinaturaUsuarioLogadoByClassificacaoDocumento(classificacao),
+            TaskInstanceHome.instance().getVariaveisDocumento().get(formField.getId()).getDocumentoBin()
+        );
+        return new AssinavelDocumentoBinProvider(documentoComRegraAssinatura);
     }
 
     @Override

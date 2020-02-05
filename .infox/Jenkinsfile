@@ -9,6 +9,11 @@ pipeline {
     environment {
         projectName = 'ePP'
         trunkBranchName = 'master'
+        telegramStagingChatId = credentials('infox-epp-sqa-chat-id')
+        telegramApiKey = credentials('telegram-api-key')
+    }
+    options {
+        buildDiscarder logRotator(artifactNumToKeepStr: '2')
     }
     stages {
 
@@ -19,8 +24,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
-                    sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
+                    sh "mvn -Dmaven.repo.local=${pwd()}/.git/mavenRepository -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
+                    sh "mvn -Dmaven.repo.local=${pwd()}/.git/mavenRepository -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
                 }
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*.war', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*liquibase*.tar.gz', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true

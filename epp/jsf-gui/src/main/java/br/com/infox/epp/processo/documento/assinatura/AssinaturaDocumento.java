@@ -36,6 +36,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.util.Beans;
@@ -51,11 +52,11 @@ import br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery;
 
 @Entity
 @Table(name = TABLE_NAME)
-@NamedQueries({ 
-	@NamedQuery(name = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO, query = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO_QUERY) 
+@NamedQueries({
+	@NamedQuery(name = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO, query = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO_QUERY)
 })
 public class AssinaturaDocumento implements Serializable, Assinatura {
-    
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -63,7 +64,7 @@ public class AssinaturaDocumento implements Serializable, Assinatura {
     @GeneratedValue(generator = "AssinaturaDocumentoGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = COL_ID_ASSINATURA, unique = true, nullable = false)
     private Integer idAssinatura;
-	
+
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_pessoa_fisica", nullable = false)
@@ -78,39 +79,56 @@ public class AssinaturaDocumento implements Serializable, Assinatura {
 	@Size(max = NOME_ATRIBUTO)
 	@Column(name = COL_NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
     private String nomeUsuario;
-	
+
 	@NotNull
 	@Size(max = NOME_PADRAO)
 	@Column(name = "nm_usuario_perfil", nullable = false, length = NOME_PADRAO)
     private String nomeUsuarioPerfil;
-	
+
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
     @Column(name = COL_DATA_ASSINATURA, nullable = false)
     private Date dataAssinatura;
-	
+
 	@NotNull
 	@Column(name = COL_SIGNATURE, nullable = false)
     private String signature;
-	
+
 	@NotNull
 	@Column(name = COL_CERT_CHAIN, nullable = false)
     private String certChain;
-	
+
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_documento_bin", nullable = false)
     private DocumentoBin documentoBin;
-	
+
+    @NotNull
+    @Column(name = "ds_ip")
+    private String ip;
+
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_localizacao")
+	private Localizacao localizacao;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tp_assinatura")
 	private TipoAssinaturaEnum tipoAssinatura;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tp_signature")
 	private TipoAssinatura signatureType;
 
-	public AssinaturaDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature, TipoAssinatura signatureType) throws CertificadoException {
+	public AssinaturaDocumento(
+        DocumentoBin documentoBin,
+        UsuarioPerfil usuarioPerfil,
+        String certChain,
+        String signature,
+        TipoAssinatura
+        signatureType,
+        String ip
+    ) throws CertificadoException {
         this.documentoBin=documentoBin;
         this.pessoaFisica = usuarioPerfil.getUsuarioLogin().getPessoaFisica();
         this.nomeUsuario = CertificadoFactory.createCertificado(certChain).getNome();
@@ -120,6 +138,8 @@ public class AssinaturaDocumento implements Serializable, Assinatura {
         this.certChain = certChain;
         this.signatureType = signatureType;
         this.dataAssinatura = new Date();
+        this.ip = ip;
+        this.localizacao = usuarioPerfil.getLocalizacao();
         List<Documento> documentos = Beans.getReference(DocumentoManager.class).getDocumentosFromDocumentoBin(documentoBin);
         if(documentos != null && !documentos.isEmpty()){
         	List<ClassificacaoDocumentoPapel> cdps = documentos.get(0).getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
@@ -131,7 +151,7 @@ public class AssinaturaDocumento implements Serializable, Assinatura {
             }
         }
     }
-    
+
     public AssinaturaDocumento() {
     }
 
@@ -212,24 +232,24 @@ public class AssinaturaDocumento implements Serializable, Assinatura {
     public TipoAssinaturaEnum getTipoAssinatura() {
 		return tipoAssinatura;
 	}
-    
+
     public void setTipoAssinatura(TipoAssinaturaEnum tipoAssinatura) {
 		this.tipoAssinatura = tipoAssinatura;
 	}
-    
+
     public TipoAssinatura getSignatureType() {
     	return signatureType;
     }
-    
+
     public void setSignatureType(TipoAssinatura signatureType) {
     	this.signatureType = signatureType;
     }
-    
+
     @Override
     public String toString() {
     	return MessageFormat.format("{0}: {1}", nomeUsuarioPerfil, nomeUsuario);
     }
-    
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -255,5 +275,5 @@ public class AssinaturaDocumento implements Serializable, Assinatura {
 			return false;
 		return true;
 	}
-    
+
 }

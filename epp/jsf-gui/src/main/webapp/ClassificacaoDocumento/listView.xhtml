@@ -127,16 +127,28 @@
             <s:div id="divAssociarPapel">
                 <wi:dataForm formId="classificacaoDocumentoPapelForm"
                     formTitle="#{infoxMessages['form.title']}">
+                    <wi:outputText
+                        id="papelInfo"
+                        label="#{infoxMessages['tipoProcessoDocumentoPapel.papel']}"
+                        value="#{classificacaoDocumentoPapelCrudAction.instance.papel}"
+                        rendered="#{not empty classificacaoDocumentoPapelCrudAction.instance.id}"
+                    />
                     <wi:selectOneMenuEntity id="papel"
                         label="#{infoxMessages['tipoProcessoDocumentoPapel.papel']}"
                         items="#{classificacaoDocumentoPapelCrudAction.papelItems()}"
                         value="#{classificacaoDocumentoPapelCrudAction.instance.papel}"
+                        rendered="#{empty classificacaoDocumentoPapelCrudAction.instance.id}"
                         showLabelSelecione="true" required="true" />
                     <wi:selectOneMenuEnum id="tipoAssinaturaCombo"
                         label="#{infoxMessages['classificacaoDocumento.tipoAssinatura']}"
                         items="#{classificacaoDocumentoFacade.getTipoAssinaturaEnumValues()}"
                         value="#{classificacaoDocumentoPapelCrudAction.instance.tipoAssinatura}"
                         required="true" showLabelSelecione="true" />
+                    <wi:selectOneMenuEnum id="tiposMeioAssinatura"
+                        label="#{infoxMessages['classificacaoDocumento.tipoMeioAssinatura']}"
+                        items="#{classificacaoDocumentoPapelCrudAction.tiposMeioAssinatura}"
+                        value="#{classificacaoDocumentoPapelCrudAction.instance.tipoMeioAssinatura}"
+                        showLabelSelecione="true" />
                     <wi:selectBooleanCheckbox
 		                label="#{infoxMessages['tipoProcessoDocumentoPapel.podeRedigir']}"
 		                id="podeRedigir"
@@ -153,6 +165,12 @@
                         <wi:commandButtonPersist
                             home="#{classificacaoDocumentoPapelCrudAction}"
                             persistAction="classificacaoDocumentoPapelCrudAction.save()" />
+                        <wi:commandButtonUpdate
+                            home="#{classificacaoDocumentoPapelCrudAction}"
+                        />
+                        <wi:commandButtonNew
+                            home="#{classificacaoDocumentoPapelCrudAction}"
+                        />
                     </ui:define>
                 </wi:dataForm>
                 
@@ -170,6 +188,9 @@
                     <wi:columnEnum columnId="tipoAssinatura"
                         columnHeader="#{infoxMessages['classificacaoDocumento.tipoAssinatura']}"
                         value="#{row.tipoAssinatura}" />
+                    <wi:columnOutputText columnId="tipoMeioAssinatura"
+                        columnHeader="#{infoxMessages['classificacaoDocumento.tipoMeioAssinatura']}"
+                        value="#{empty row.tipoMeioAssinatura ? '-' : row.tipoMeioAssinatura.label}" />
                     <wi:columnOutputText colummId="podeRedigir"
                     	columnHeader="#{infoxMessages['tipoProcessoDocumentoPapel.podeRedigir']}"
                     	value="#{row.podeRedigir ? 'Sim' : 'Não'}"
@@ -180,6 +201,13 @@
                     	hideOrder="true"/>
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
+                        <wi:toolBar
+                            url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                            title="Remover registro"
+                            action="classificacaoDocumentoPapelCrudAction.editar(row)"
+                            render="classificacaoDocumentoPapelForm, divAssociarPapel, pageBodyDialogMessage"
+                            execute="@this"
+                            id="editButton" />
                         <wi:toolBar
                             url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                             title="Remover registro"

@@ -9,11 +9,17 @@ import java.util.Iterator;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import br.com.infox.epp.certificadoeletronico.CertificadoEletronicoService;
+import br.com.infox.epp.certificadoeletronico.builder.CertUtil;
+import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronicoBin;
+
 @Stateless
 public class TrustStoreService {
 
 	@Inject
 	private TrustStoreProvider trustStoreProvider;
+	@Inject
+	private CertificadoEletronicoService certificadoEletronicoService;
 
 	private static KeyStore keyStore;
 
@@ -39,6 +45,10 @@ public class TrustStoreService {
 						throw new RuntimeException(e);
 					}
 				}
+
+				CertificadoEletronicoBin certificadoEletronicoBinRaiz = certificadoEletronicoService.getCertificadoEletronicoBinRaiz();
+	            X509Certificate certificate = CertUtil.getCertificate(certificadoEletronicoBinRaiz.getCrt());
+	            keyStore.setCertificateEntry(certificate.getSubjectDN().getName(), certificate);
 			} catch (Exception e) {
 				keyStore = null;
 				throw new RuntimeException(e);

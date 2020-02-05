@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="heliolima"
+        dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_servidor">
+            <column name="nr_matricula" type="varchar(256)" />
+            <column name="tp_sexo" type="char(1)" />
+            <column name="dt_nascimento" type="timestamp" />
+            <column name="dt_nomeacao_contratacao" type="timestamp" />
+            <column name="dt_posse" type="timestamp" />
+            <column name="dt_exercicio" type="timestamp" />
+            <column name="ds_subfolha" type="varchar(256)" />
+            <column name="ds_jornada" type="varchar(256)" />
+            <column name="ds_ocupacao_carreira" type="varchar(256)" />
+            <column name="ds_cargo_carreira" type="varchar(256)" />
+            <column name="ds_ocupacao_comissao" type="varchar(256)" />
+            <column name="ds_cargo_comissao" type="varchar(256)" />
+            <column name="nr_rg" type="varchar(20)" />
+            <column name="ds_orgao_rg" type="varchar(256)" />
+            <column name="dt_emissao_rg" type="timestamp" />
+            <column name="nm_mae" type="varchar(256)" />
+            <column name="nm_pai" type="varchar(256)" />
+            <column name="nr_celular" type="varchar(25)" />
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

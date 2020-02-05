@@ -2,8 +2,10 @@ package br.com.infox.epp.processo.iniciar;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -18,6 +20,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import br.com.infox.core.exception.EppConfigurationException;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -26,9 +29,17 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
+import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
+import br.com.infox.epp.loglab.search.EmpresaSearch;
+import br.com.infox.epp.loglab.search.ServidorContribuinteSearch;
+import br.com.infox.epp.loglab.service.ParticipanteProcessoLoglabService;
+import br.com.infox.epp.loglab.vo.EmpresaVO;
+import br.com.infox.epp.loglab.vo.PesquisaParticipanteVO;
+import br.com.infox.epp.loglab.vo.ServidorContribuinteVO;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
+import br.com.infox.epp.municipio.EstadoSearch;
 import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -47,14 +58,17 @@ import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.epp.tipoParte.TipoParteSearch;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessException;
+import lombok.Getter;
+import lombok.Setter;
 
 @Named
 @ViewScoped
 public class IniciarProcessoView extends AbstractIniciarProcesso {
 
-	private static final long serialVersionUID = 1L;
-	
+    private static final long serialVersionUID = 1L;
+
     @Inject
     private NatCatFluxoLocalizacaoDAO natCatFluxoLocalizacaoDAO;
     @Inject
@@ -71,17 +85,57 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private ProcessoSearch processoSearch;
     @Inject
     private StatusProcessoSearch statusProcessoSearch;
+    @Inject
+    private EstadoSearch estadoSearch;
+    @Inject
+    private ServidorContribuinteSearch servidorContribuinteSearch;
+    @Inject
+    private EmpresaSearch empresaSearch;
+    @Inject
+    private ParticipanteProcessoLoglabService participanteProcessoLoglabService;
 
+    @Getter
     private List<Processo> processosCriados;
+    @Getter
     private List<NaturezaCategoriaFluxoItem> naturezaCategoriaFluxoItemList;
+    @Getter
     private List<TipoParte> tipoParteList;
+    @Getter
     private TreeNode root = new DefaultTreeNode("Root", null);
+    @Getter
     private List<IniciarProcessoParticipanteVO> participanteProcessoList;
-    
+
+    @Getter
+    @Setter
     private NaturezaCategoriaFluxoItem naturezaCategoriaFluxoItem;
+    @Getter
+    @Setter
     private Processo processo;
+    @Getter
+    @Setter
     private IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO;
-    
+
+    @Getter
+    @Setter
+    private EmpresaVO empresaVO;
+
+    @Getter
+    private List<EmpresaVO> empresaList;
+
+    @Getter
+    @Setter
+    private ServidorContribuinteVO servidorContribuinteVO;
+
+    @Getter
+    private List<ServidorContribuinteVO> servidorContribuinteList;
+
+    @Getter
+    @Setter
+    private PesquisaParticipanteVO pesquisaParticipanteVO;
+
+    private Map<String, ServidorContribuinteVO> mapServidorContribuinteVO;
+    private Map<String, EmpresaVO> mapEmpresaVO;
+
     @PostConstruct
     private void init() {
         Localizacao localizacao = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao();
@@ -91,11 +145,40 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         Papel papel = Authenticator.getPapelAtual();
         UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
         createProcesso(Authenticator.getUsuarioPerfilAtual().getLocalizacao(), usuarioLogin);
-        iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         naturezaCategoriaFluxoItemList = natCatFluxoLocalizacaoDAO.listByLocalizacaoAndPapel(localizacao, papel);
         tipoParteList = tipoParteSearch.findAll();
         processosCriados = processoSearch.getProcessosNaoIniciados(Authenticator.getUsuarioLogado());
         participanteProcessoList = new ArrayList<>();
+        mapServidorContribuinteVO = new HashMap<>();
+        mapEmpresaVO = new HashMap<>();
+
+        limparDadosParticipante();
+    }
+
+    public void limparDadosParticipante() {
+        TipoPessoaEnum tipoPessoa = iniciarProcessoParticipanteVO != null ? iniciarProcessoParticipanteVO.getTipoPessoa() : TipoPessoaEnum.F;
+        iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
+        iniciarProcessoParticipanteVO.setTipoPessoa(tipoPessoa);
+        empresaVO = null;
+        empresaList = null;
+        pesquisaParticipanteVO = new PesquisaParticipanteVO();
+        pesquisaParticipanteVO.setTipoParticipante(TipoParticipanteEnum.CO);
+        limparServidorContribuinte();
+    }
+
+    public void limparServidorContribuinte() {
+        servidorContribuinteVO = null;
+        servidorContribuinteList = null;
+        limparCamposPesquisa();
+    }
+
+    public void limparCamposPesquisa() {
+        pesquisaParticipanteVO.setCpf(null);
+        pesquisaParticipanteVO.setMatricula(null);
+        pesquisaParticipanteVO.setNomeCompleto(null);
+        pesquisaParticipanteVO.setNomeFantasia(null);
+        pesquisaParticipanteVO.setRazaoSocial(null);
+        pesquisaParticipanteVO.setCnpj(null);
     }
 
     private void createProcesso(Localizacao localizacao, UsuarioLogin usuarioLogin) {
@@ -106,13 +189,13 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         processo.setProcessoRoot(processo);
         processo.setDataInicio(DateTime.now().toDate());
     }
-    
+
     @ExceptionHandled
     public void removerProcesso(Processo processo) {
         processoManager.removerProcessoNaoIniciado(processo);
         processosCriados.remove(processo);
     }
-    
+
     @ExceptionHandled
     public String iniciar(Processo processo) {
         String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
@@ -152,24 +235,25 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
         ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
         Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
+        participanteProcessoLoglabService.persistenciaIniciarProcessoView(processo, metadados,
+                participantes, new ArrayList<>(mapServidorContribuinteVO.values()),
+                new ArrayList<>(mapEmpresaVO.values()));
         if (hasStartTaskForm(startTask)) {
-            processoManager.gravarProcessoMetadadoParticipantePasta(processo, metadados, participantes);
             jsfUtil.addFlashParam("processo", processo);
             return "/Processo/startTaskForm.seam";
         } else {
-            processoManager.gravarProcessoMetadadoParticipantePasta(processo, metadados, participantes);
             iniciarProcesso(processo);
             return "/Painel/list.seam?faces-redirect=true";
         }
     }
-    
+
     private boolean hasStartTaskForm(Task startTask) {
-        return startTask.getTaskController() != null 
+        return startTask.getTaskController() != null
                 && startTask.getTaskController().getVariableAccesses() != null
                 && !startTask.getTaskController().getVariableAccesses().isEmpty()
                 && !containsOnlyParameterVariable(startTask);
     }
-    
+
     private boolean containsOnlyParameterVariable(Task startTask) {
         List<VariableAccess> variableAccesses = startTask.getTaskController().getVariableAccesses();
         for (VariableAccess variableAccess : variableAccesses) {
@@ -179,20 +263,84 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         }
         return true;
     }
-    
+
     public void onSelectNaturezaCategoriaFluxoItem() {
         if (naturezaCategoriaFluxoItem != null) {
             processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoItem.getNaturezaCategoriaFluxo());
         }
     }
-    
+
     public void onChangeTipoPessoa() {
-        TipoPessoaEnum tipoPessoa = iniciarProcessoParticipanteVO.getTipoPessoa();
-        iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
-        iniciarProcessoParticipanteVO.setTipoPessoa(tipoPessoa);
+        limparDadosParticipante();
     }
-    
+
+    public void buscarServidorContribuinte() {
+        if (StringUtil.isEmpty(pesquisaParticipanteVO.getCpf())
+                && StringUtil.isEmpty(pesquisaParticipanteVO.getNomeCompleto())
+                && StringUtil.isEmpty(pesquisaParticipanteVO.getMatricula())) {
+            FacesMessages.instance().add("Por favor, preencha pelo menos um campo de busca.");
+        } else {
+            servidorContribuinteList = servidorContribuinteSearch.pesquisaServidorContribuinte(pesquisaParticipanteVO);
+
+            if(servidorContribuinteList != null && servidorContribuinteList.size() > 0) {
+                if(servidorContribuinteList.size() == 1) {
+                    servidorContribuinteVO = servidorContribuinteList.get(0);
+                    onChangeParticipanteCpf();
+                    servidorContribuinteList = null;
+                } else {
+                    JsfUtil.instance().execute("PF('servidorContribuinteDialog').show();");
+                }
+            } else if(pesquisaParticipanteVO.getTipoParticipante().equals(TipoParticipanteEnum.CO)) {
+                servidorContribuinteVO = new ServidorContribuinteVO();
+                servidorContribuinteVO.setTipoParticipante(pesquisaParticipanteVO.getTipoParticipante());
+                servidorContribuinteVO.setCpf(pesquisaParticipanteVO.getCpf());
+                FacesMessages.instance().add("Contribuinte não encontrado. Preencha os dados para adicionar um novo.");
+            } else {
+                FacesMessages.instance().add("Nenhum registro foi encontrado com os dados da busca.");
+            }
+        }
+    }
+
+    public void selecionarServidorContribuinte(ServidorContribuinteVO row) {
+        servidorContribuinteVO = row;
+        onChangeParticipanteCpf();
+        servidorContribuinteList = null;
+        JsfUtil.instance().execute("PF('servidorContribuinteDialog').hide();");
+    }
+
+    public void buscarEmpresa() {
+        if (StringUtil.isEmpty(pesquisaParticipanteVO.getCnpj())
+                && StringUtil.isEmpty(pesquisaParticipanteVO.getNomeFantasia())
+                && StringUtil.isEmpty(pesquisaParticipanteVO.getRazaoSocial())) {
+            FacesMessages.instance().add("Por favor, preencha pelo menos um campo de busca.");
+        } else {
+            empresaList = empresaSearch.pesquisaEmpresaVO(pesquisaParticipanteVO);
+
+            if(empresaList != null && empresaList.size() > 0) {
+                if(empresaList.size() == 1) {
+                    empresaVO = empresaList.get(0);
+                    onChangeParticipanteCnpj();
+                    empresaList = null;
+                } else {
+                    JsfUtil.instance().execute("PF('empresaDialog').show();");
+                }
+            } else {
+                empresaVO = new EmpresaVO();
+                empresaVO.setCnpj(pesquisaParticipanteVO.getCnpj());
+                FacesMessages.instance().add("Registro não encontrado. Preencha os dados para adicionar um novo.");
+            }
+        }
+    }
+
+    public void selecionarEmpresa(EmpresaVO row) {
+        empresaVO = row;
+        onChangeParticipanteCnpj();
+        empresaList = null;
+        JsfUtil.instance().execute("PF('empresaDialog').hide();");
+    }
+
     public void onChangeParticipanteCpf() {
+        iniciarProcessoParticipanteVO.setCodigo(servidorContribuinteVO.getCpf());
         PessoaFisica pessoaFisica = pessoaFisicaDAO.searchByCpf(iniciarProcessoParticipanteVO.getCodigo());
         if (pessoaFisica != null) {
             iniciarProcessoParticipanteVO.loadPessoaFisica(pessoaFisica);
@@ -202,8 +350,9 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             iniciarProcessoParticipanteVO.limparDadosPessoaFisica();
         }
     }
-    
+
     public void onChangeParticipanteCnpj() {
+        iniciarProcessoParticipanteVO.setCodigo(empresaVO.getCnpj());
         PessoaJuridica pessoaJuridica = pessoaJuridicaDAO.searchByCnpj(iniciarProcessoParticipanteVO.getCodigo());
         if (pessoaJuridica != null) {
             iniciarProcessoParticipanteVO.loadPessoaJuridica(pessoaJuridica);
@@ -211,26 +360,44 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             iniciarProcessoParticipanteVO.limparDadosPessoaJuridica();
         }
     }
-    
+
     public void onClickNovoParticipante() {
-        iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
+        limparDadosParticipante();
     }
 
     public void adicionarParticipante() {
-        iniciarProcessoParticipanteVO.generateId();
-        if (!podeAdicionarParticipante(iniciarProcessoParticipanteVO)) {
-            FacesMessages.instance().add("Não pode adicionar a mesma pessoa com o mesmo tipo de parte e mesmo participante superior");
+        if(servidorContribuinteVO == null && empresaVO == null) {
+            FacesMessages.instance().add("É necessário inserir os dados de uma pessoa física ou jurídica");
         } else {
-            iniciarProcessoParticipanteVO.adicionar();
-            if (iniciarProcessoParticipanteVO.getParent() == null) {
-                root.getChildren().add(iniciarProcessoParticipanteVO);
+            iniciarProcessoParticipanteVO.generateId();
+            if (!podeAdicionarParticipante(iniciarProcessoParticipanteVO)) {
+                FacesMessages.instance().add("Não pode adicionar a mesma pessoa com o mesmo tipo de parte e mesmo participante superior");
+            } else {
+                if(iniciarProcessoParticipanteVO.getTipoPessoa().equals(TipoPessoaEnum.F)) {
+                    iniciarProcessoParticipanteVO.setCodigo(servidorContribuinteVO.getCpf());
+                    iniciarProcessoParticipanteVO.setEmail(servidorContribuinteVO.getEmail());
+                    iniciarProcessoParticipanteVO.setDataNascimento(servidorContribuinteVO.getDataNascimento());
+                    iniciarProcessoParticipanteVO.setNome(servidorContribuinteVO.getNomeCompleto());
+                    mapServidorContribuinteVO.put(iniciarProcessoParticipanteVO.getId(), servidorContribuinteVO);
+                } else {
+                    iniciarProcessoParticipanteVO.setCodigo(empresaVO.getCnpj());
+                    iniciarProcessoParticipanteVO.setRazaoSocial(empresaVO.getRazaoSocial());
+                    iniciarProcessoParticipanteVO.setNome(empresaVO.getNomeFantasia());
+                    mapEmpresaVO.put(iniciarProcessoParticipanteVO.getId(), empresaVO);
+                }
+                iniciarProcessoParticipanteVO.adicionar();
+                if (iniciarProcessoParticipanteVO.getParent() == null) {
+                    root.getChildren().add(iniciarProcessoParticipanteVO);
+                }
+                participanteProcessoList.add(iniciarProcessoParticipanteVO);
+                Collections.sort(participanteProcessoList);
+
+
+                limparDadosParticipante();
             }
-            participanteProcessoList.add(iniciarProcessoParticipanteVO);
-            Collections.sort(participanteProcessoList);
-            iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
         }
     }
-    
+
     private boolean podeAdicionarParticipante(IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO) {
         TreeNode parent = iniciarProcessoParticipanteVO.getParent() == null ? root : iniciarProcessoParticipanteVO.getParent();
         return !parent.getChildren().contains(iniciarProcessoParticipanteVO);
@@ -240,7 +407,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         removerParticipante(iniciarProcessoParticipanteVO, null);
         Collections.sort(participanteProcessoList);
     }
-    
+
     private void removerParticipante(IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO, Iterator<TreeNode> iterator) {
         if (!iniciarProcessoParticipanteVO.isLeaf()) {
             Iterator<TreeNode> iteratorList = iniciarProcessoParticipanteVO.getChildren().iterator();
@@ -256,49 +423,17 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             iniciarProcessoParticipanteVO.getParent().getChildren().remove(iniciarProcessoParticipanteVO);
         }
         participanteProcessoList.remove(iniciarProcessoParticipanteVO);
-    }
-    
-    public List<Processo> getProcessosCriados() {
-        return processosCriados;
-    }
-
-    public List<NaturezaCategoriaFluxoItem> getNaturezaCategoriaFluxoItemList() {
-        return naturezaCategoriaFluxoItemList;
-    }
-    
-    public List<TipoParte> getTipoParteList() {
-        return tipoParteList;
-    }
-    
-    public List<IniciarProcessoParticipanteVO> getParticipanteProcessoList() {
-        return participanteProcessoList;
+        if(mapServidorContribuinteVO.containsKey(iniciarProcessoParticipanteVO.getId())) {
+            mapServidorContribuinteVO.remove(iniciarProcessoParticipanteVO.getId());
+        }
+        if(mapEmpresaVO.containsKey(iniciarProcessoParticipanteVO.getId())) {
+            mapEmpresaVO.remove(iniciarProcessoParticipanteVO.getId());
+        }
     }
 
-    public TreeNode getRoot() {
-        return root;
+    public List<String> getListCodEstado() {
+        return estadoSearch.getListCodEstado();
     }
 
-    public IniciarProcessoParticipanteVO getIniciarProcessoParticipanteVO() {
-        return iniciarProcessoParticipanteVO;
-    }
 
-    public void setIniciarProcessoParticipanteVO(IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO) {
-        this.iniciarProcessoParticipanteVO = iniciarProcessoParticipanteVO;
-    }
-
-    public NaturezaCategoriaFluxoItem getNaturezaCategoriaFluxoItem() {
-        return naturezaCategoriaFluxoItem;
-    }
-
-    public void setNaturezaCategoriaFluxoItem(NaturezaCategoriaFluxoItem naturezaCategoriaFluxoItem) {
-        this.naturezaCategoriaFluxoItem = naturezaCategoriaFluxoItem;
-    }
-
-    public Processo getProcesso() {
-        return processo;
-    }
-
-    public void setProcesso(Processo processo) {
-        this.processo = processo;
-    }
 }

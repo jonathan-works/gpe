@@ -33,6 +33,7 @@ import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.seam.exception.BusinessException;
+import lombok.Getter;
 
 @Named
 @ViewScoped
@@ -44,6 +45,7 @@ public class TermoAdesaoViewController implements Serializable, AssinaturaCallba
     @Inject private AuthenticatorService authenticatorService;
     @Inject private InfoxMessages infoxMessages;
 
+    @Getter
     private PessoaFisica pessoaFisica;
     private String urlTermoAdesao;
     private DocumentoBin termoAdesao;
@@ -164,7 +166,9 @@ public class TermoAdesaoViewController implements Serializable, AssinaturaCallba
     }
 
     public AssinavelProvider getAssinavelProvider() {
-        return new AssinavelDocumentoBinProvider(getTermoAdesao());
+        return new AssinavelDocumentoBinProvider(
+            new AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura(null, getTermoAdesao())
+        );
     }
 
 }

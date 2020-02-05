@@ -1,5 +1,8 @@
 package br.com.infox.epp.loglab.model;
 
+import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.ID_VARIAVEL;
+import static javax.persistence.FetchType.LAZY;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,6 +30,7 @@ import br.com.infox.core.persistence.SchemaSingleTableEntityPersister;
 import br.com.infox.epp.loglab.contribuinte.type.ContribuinteEnum;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.pessoa.annotation.Cpf;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,52 +56,55 @@ public class ContribuinteSolicitante implements Serializable {
     @Column(name = "id_contribuinte", nullable = false, unique = true)
     private Long id;
 
-	@Enumerated(EnumType.STRING)
-    @Column(name = "tp_contribuinte", nullable = false)
-	private ContribuinteEnum tipoContribuinte;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "id_pessoa_fisica", nullable = false)
+    @NotNull
+    private PessoaFisica pessoaFisica;
 
-	@NotNull
-	@Cpf
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_contribuinte", nullable = false)
+    private ContribuinteEnum tipoContribuinte;
+
+    @NotNull
+    @Cpf
     @Column(name = "nr_cpf", nullable = false)
-	private String cpf;
+    private String cpf;
 
     @Column(name = "nr_matricula", nullable = true)
-	private String matricula;
+    private String matricula;
 
-	@NotNull
-	@Size(min = 6, max = 256)
+    @NotNull
+    @Size(min = 6, max = 256)
     @Column(name = "nm_contribuinte", nullable = false)
-	private String nomeCompleto;
+    private String nomeCompleto;
 
-	@NotNull
+    @NotNull
     @Column(name = "tp_sexo", nullable = false)
-	private String sexo;
+    private String sexo;
 
-	@NotNull
+    @NotNull
     @Column(name = "dt_nascimento", nullable = false)
-	@Temporal(TemporalType.DATE)
-	private Date dataNascimento;
+    @Temporal(TemporalType.DATE)
+    private Date dataNascimento;
 
-	@NotNull
-	@Size(min = 3, max = 20)
-    @Column(name = "nr_rg", nullable = false)
+    @Size(min = 3, max = 20)
+    @Column(name = "nr_rg", nullable = true)
     private String numeroRg;
 
-	@NotNull
-	@Size(min = 3, max = 256)
-    @Column(name = "ds_emissor_rg", nullable = false)
+    @Size(min = 3, max = 256)
+    @Column(name = "ds_emissor_rg", nullable = true)
     private String emissorRg;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_estado_rg", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_estado_rg", nullable = true)
     private Estado estadoRg;
 
-	@NotNull
-	@Size(min = 6, max = 256)
+    @NotNull
+    @Size(min = 6, max = 256)
     @Column(name = "nm_mae_contribuinte", nullable = false)
-	private String nomeMae;
+    private String nomeMae;
 
-	@NotNull
+    @NotNull
     @Column(name = "ds_email", nullable = false)
     private String email;
 
@@ -104,10 +112,14 @@ public class ContribuinteSolicitante implements Serializable {
     private String telefone;
 
     @Column(name = "ds_cidade", nullable = true)
-	private String cidade;
+    private String cidade;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_estado", nullable = true)
+    private Estado estado;
 
     @Column(name = "ds_logradouro", nullable = true)
-	private String logradouro;
+    private String logradouro;
 
     @Column(name = "ds_bairro", nullable = true)
     private String bairro;
@@ -116,10 +128,10 @@ public class ContribuinteSolicitante implements Serializable {
     private String complemento;
 
     @Column(name = "nr_residencia", nullable = true)
-	private String numero;
+    private String numero;
 
     @Column(name = "nr_cep", nullable = true)
-	private String cep;
+    private String cep;
 
     @Override
     public String toString() {

@@ -57,9 +57,11 @@ public class ETurmalinaService implements Serializable{
                 List<DadosServidorResponseBean> dadosRetorno = gson.fromJson(retornoWs.getRetorno(), DadosServidorResponseBean.getListType());
 
                 for (DadosServidorResponseBean dadosServidorResponse : dadosRetorno) {
-                    if (dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCÍCIO")
-                     || dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCICIO")){
-                        servidoresEmExercicioList.add(dadosServidorResponse);
+                    if(dadosServidorResponse.getStatus() != null) {
+                        if (dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCÍCIO")
+                                || dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCICIO")){
+                            servidoresEmExercicioList.add(dadosServidorResponse);
+                        }
                     }
                 }
             }

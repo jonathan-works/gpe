@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -14,6 +15,9 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
+import edu.emory.mathcs.backport.java.util.Arrays;
+import lombok.Getter;
 
 @Named
 @ViewScoped
@@ -26,9 +30,46 @@ public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<Cl
     @Inject
     private PapelManager papelManager;
 
+    @Getter
+    private List<TipoMeioAssinaturaEnum> tiposMeioAssinatura;
+
+    private ClassificacaoDocumento classificacaoDocumento;
+
+
+    @SuppressWarnings("unchecked")
+    @PostConstruct
+    private void inicialize() {
+        this.tiposMeioAssinatura = Arrays.asList(TipoMeioAssinaturaEnum.values());
+    }
+
+    public void editar(ClassificacaoDocumentoPapel classificacaoDocumentoPapel) {
+        setId(classificacaoDocumentoPapel.getId(), false);
+    }
+
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        getInstance().setClassificacaoDocumento(classificacaoDocumento);
+    }
+
+    @Override
+    protected void afterSave(String ret) {
+        super.afterSave(ret);
+        newInstance();
+        getInstance().setClassificacaoDocumento(classificacaoDocumento);
+    }
+
+    @Override
+    public String remove(ClassificacaoDocumentoPapel obj) {
+        String remove = super.remove(obj);
+        newInstance();
+        return remove;
+    }
+
     public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         newInstance();
         getInstance().setClassificacaoDocumento(classificacaoDocumento);
+        this.classificacaoDocumento = classificacaoDocumento;
     }
 
     public List<Papel> papelItems() {

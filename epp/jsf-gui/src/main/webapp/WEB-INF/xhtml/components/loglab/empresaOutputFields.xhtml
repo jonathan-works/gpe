@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="viewObject" value="#{viewObject}" />
+    
+    <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+    
+    <p:outputPanel id="#{identificador}"
+                   styleClass="#{identificador}"
+                   rendered="#{rendered}">
+        <p:outputPanel id="#{identificador}ContribuintePanel"
+                       styleClass="#{identificador}ContribuintePanel"
+                       rendered="#{!empty viewObject}">
+            <fieldset id="#{identificador}ContribuinteFieldset" style="margin-top: 1.5em;">
+                <legend class="name">#{infoxMessages['empresa.dadosEmpresa']}</legend>
+                
+                <wi:field id="#{identificador}CnpjOutput"
+                          rendered="#{!empty viewObject.idPessoaFisica}"
+                          label="#{infoxMessages['empresa.cnpj']}">
+                    <p:outputLabel id="#{identificador}CnpjOutputInput"
+                                   value="#{viewObject.cnpj}">
+                        <f:converter converterId="cnpjConverter"/>
+                    </p:outputLabel>
+                </wi:field>
+                <wi:field id="#{identificador}TipoEmpresa"
+                          label="#{infoxMessages['empresa.tipoEmpresa']}">
+                    <p:outputLabel id="#{identificador}TipoEmpresaInput"
+                                   value="#{viewObject.tipoEmpresa}" />
+                </wi:field>
+                <wi:field id="#{identificador}RazaoSocial"
+                          label="#{infoxMessages['empresa.razaoSocial']}">
+                    <p:outputLabel id="#{identificador}RazaoSocialInput"
+                                   value="#{viewObject.razaoSocial}" />
+                </wi:field>
+                <wi:field id="#{identificador}NomeFantasia"
+                          label="#{infoxMessages['empresa.nomeFantasia']}">
+                    <p:outputLabel id="#{identificador}NomeFantasiaInput"
+                                   value="#{viewObject.nomeFantasia}" />
+                </wi:field>
+                <wi:field id="#{identificador}DataAbertura"
+                          label="#{infoxMessages['empresa.dataAbertura']}">
+                    <p:outputLabel id="#{identificador}DataAberturaInput"
+                                   value="#{viewObject.dataAbertura}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:outputLabel>
+                </wi:field>
+                <wi:field id="#{identificador}TelefoneCelular"
+                          label="#{infoxMessages['empresa.telefoneCelular']}">
+                    <p:outputLabel id="#{identificador}TelefoneCelularInput"
+                                   value="#{viewObject.telefoneCelular}"/>
+                </wi:field>
+                <wi:field id="#{identificador}TelefoneFixo"
+                          label="#{infoxMessages['empresa.telefoneFixo']}">
+                    <p:outputLabel id="#{identificador}TelefoneFixoInput"
+                                   value="#{viewObject.telefoneFixo}"/>
+                </wi:field>
+                <wi:field id="#{identificador}Email"
+                          label="#{infoxMessages['empresa.email']}">
+                    <p:outputLabel id="#{identificador}EmailInput"
+                                   value="#{viewObject.email}"/>
+                </wi:field>
+                <wi:field id="#{identificador}CodEstado"
+                          label="#{infoxMessages['empresa.codEstado']}">
+                    <p:outputLabel id="#{identificador}CodEstadoInput"
+                                   value="#{viewObject.codEstado}"/>
+                </wi:field>
+                <wi:field id="#{identificador}Cidade"
+                          label="#{infoxMessages['empresa.cidade']}">
+                    <p:outputLabel id="#{identificador}CidadeInput"
+                                   value="#{viewObject.cidade}" />
+                </wi:field>
+                <wi:field id="#{identificador}Logradouro"
+                          label="#{infoxMessages['empresa.logradouro']}">
+                    <p:outputLabel id="#{identificador}LogradouroInput"
+                                   value="#{viewObject.logradouro}" />
+                </wi:field>
+                <wi:field id="#{identificador}Bairro"
+                          label="#{infoxMessages['empresa.bairro']}">
+                    <p:outputLabel id="#{identificador}BairroInput"
+                                   value="#{viewObject.bairro}" />
+                </wi:field>
+                <wi:field id="#{identificador}Complemento"
+                          label="#{infoxMessages['empresa.complemento']}">
+                    <p:outputLabel id="#{identificador}complementoInput"
+                                   value="#{viewObject.complemento}" />
+                </wi:field>
+                <wi:field id="#{identificador}Numero"
+                          label="#{infoxMessages['empresa.numero']}">
+                    <p:outputLabel id="#{identificador}NumeroInput"
+                                   value="#{viewObject.numero}" />
+                </wi:field>
+                <wi:field id="#{identificador}Cep"
+                          label="#{infoxMessages['empresa.cep']}">
+                    <p:outputLabel id="#{identificador}CepInput"
+                                   value="#{viewObject.cep}"/>
+                </wi:field>
+            </fieldset>
+        </p:outputPanel>
+        
+        <ui:insert />
+    </p:outputPanel>
+</ui:composition>

@@ -11,7 +11,7 @@
 
     <groupId>br.com.infox.epp</groupId>
     <artifactId>bom</artifactId>
-    <version>3.2.27-SNAPSHOT</version>
+    <version>3.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>epp-bom</name>
     <description>E-PP Bill of material</description>
@@ -331,80 +331,21 @@
                 <version>${quartz.version}</version>
             </dependency>
             <dependency>
-				<groupId>br.com.infox.certificadoDigital</groupId>
-				<artifactId>certificado-digital</artifactId>
-				<version>${version.certificado-digital}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.apache.cxf</groupId>
-						<artifactId>cxf-rt-rs-client</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.cxf</groupId>
-						<artifactId>cxf-rt-transports-http-hc</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>com.fasterxml.jackson.jaxrs</groupId>
-						<artifactId>jackson-jaxrs-json-provider</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.bouncycastle</groupId>
-						<artifactId>bcprov-jdk15</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.bouncycastle</groupId>
-						<artifactId>bcmail-jdk15</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-lang3</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.pivot</groupId>
-						<artifactId>pivot-core</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>com.google.code.gson</groupId>
-						<artifactId>gson</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.httpcomponents</groupId>
-						<artifactId>httpclient</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>br.com.infox</groupId>
-						<artifactId>infox-core</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>commons-io</groupId>
-						<artifactId>commons-io</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>commons-codec</groupId>
-						<artifactId>commons-codec</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.pivot</groupId>
-						<artifactId>pivot-wtk</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>javax.validation</groupId>
-						<artifactId>validation-api</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.pivot</groupId>
-						<artifactId>pivot-charts</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.pivot</groupId>
-						<artifactId>pivot-wtk-terra</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.pivot</groupId>
-						<artifactId>pivot-web</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
+            	<groupId>br.com.infox.cms</groupId>
+            	<artifactId>certificado-digital-rest-api</artifactId>
+            	<version>1.0</version>
+        	</dependency>
+            <dependency>
+            	<groupId>br.com.infox.cms</groupId>
+            	<artifactId>assinador-cms-api</artifactId>
+            	<version>1.0</version>
+        	</dependency>
+            <dependency>
+            	<groupId>br.com.infox.cms</groupId>
+            	<artifactId>assinador-cms</artifactId>
+            	<version>1.0.0</version>
+            	<scope>runtime</scope>
+        	</dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-highlighter</artifactId>

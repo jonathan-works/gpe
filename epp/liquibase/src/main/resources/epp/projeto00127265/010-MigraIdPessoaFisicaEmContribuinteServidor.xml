@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="heliolima"
+        dbms="oracle, mssql, postgresql">
+        <sqlFile encoding="UTF-8" dbms="oracle"
+            relativeToChangelogFile="true"
+            path="scripts/migra-pessoa-fisica-id-contribuinte-oracle.sql" />
+        <sqlFile encoding="UTF-8" dbms="oracle"
+            relativeToChangelogFile="true"
+            path="scripts/migra-pessoa-fisica-id-servidor-oracle.sql" />
+        <sqlFile encoding="UTF-8" dbms="mssql"
+            relativeToChangelogFile="true"
+            path="scripts/migra-pessoa-fisica-id-contribuinte-mssql.sql" />
+        <sqlFile encoding="UTF-8" dbms="mssql"
+            relativeToChangelogFile="true"
+            path="scripts/migra-pessoa-fisica-id-servidor-mssql.sql" />
+        <sqlFile encoding="UTF-8" dbms="postgresql"
+            relativeToChangelogFile="true"
+            path="scripts/migra-pessoa-fisica-id-contribuinte-postgresql.sql" />
+        <sqlFile encoding="UTF-8" dbms="postgresql"
+            relativeToChangelogFile="true"
+            path="scripts/migra-pessoa-fisica-id-servidor-postgresql.sql" />
+    </changeSet>
+
+</databaseChangeLog>

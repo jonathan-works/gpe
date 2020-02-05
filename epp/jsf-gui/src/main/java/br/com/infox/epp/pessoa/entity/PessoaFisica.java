@@ -30,19 +30,22 @@ import javax.validation.constraints.Size;
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronico;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.hibernate.util.HibernateUtil;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
 @PrimaryKeyJoinColumn(name = "id_pessoa_fisica", columnDefinition = "integer")
-@NamedQueries({ 
+@NamedQueries({
 	@NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY)
 })
 public class PessoaFisica extends Pessoa {
-	
+
     public static final String EVENT_LOAD = "evtCarregarPessoaFisica";
     public static final String TABLE_NAME = "tb_pessoa_fisica";
     private static final long serialVersionUID = 1L;
@@ -51,29 +54,34 @@ public class PessoaFisica extends Pessoa {
     @Size(max = LengthConstants.NUMERO_CPF)
     @Column(name = "nr_cpf", nullable = false, unique = true)
     private String cpf;
-    
+
     @Column(name = "dt_nascimento", nullable = true)
     private Date dataNascimento;
-    
+
     @Basic(fetch = LAZY)
     @Column(name = "ds_cert_chain")
     private String certChain;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_certificado_eletronico")
+    @Getter @Setter
+    private CertificadoEletronico certificadoEletronico;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_documento_bin", nullable = false)
     private DocumentoBin termoAdesao;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "st_estado_civil")
     private EstadoCivilEnum estadoCivil;
-    
+
     @OneToOne(fetch = LAZY, mappedBy = "pessoaFisica")
     private UsuarioLogin usuarioLogin;
-    
+
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
     }
-    
+
     public PessoaFisica(final String cpf, final String nome,
             final Date dataNascimento, final boolean ativo) {
         setTipoPessoa(TipoPessoaEnum.F);
@@ -82,7 +90,7 @@ public class PessoaFisica extends Pessoa {
         setNome(nome);
         setAtivo(ativo);
     }
-    
+
     @PrePersist
     @PreUpdate
     private void prePersistOrUpdate(){
@@ -116,7 +124,7 @@ public class PessoaFisica extends Pessoa {
     }
 
     public DocumentoBin getTermoAdesao() {
-        return termoAdesao;   
+        return termoAdesao;
     }
 
     public void setTermoAdesao(DocumentoBin termoAdesao) {
@@ -130,7 +138,7 @@ public class PessoaFisica extends Pessoa {
 	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
 		this.estadoCivil = estadoCivil;
 	}
-	
+
 	public UsuarioLogin getUsuarioLogin() {
 		return usuarioLogin;
 	}
@@ -180,7 +188,7 @@ public class PessoaFisica extends Pessoa {
     public String getCodigo() {
         return getCpf();
     }
-    
+
     public boolean checkCertChain(String certChain) {
         if (certChain == null) {
             throw new IllegalArgumentException("O parâmetro não deve ser nulo");

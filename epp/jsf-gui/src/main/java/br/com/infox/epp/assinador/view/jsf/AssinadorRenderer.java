@@ -60,6 +60,9 @@ public class AssinadorRenderer extends Renderer {
                 case "click":
                     signEvent = new AssinadorClickEvent(component);
                     break;
+                case "assinaturaEletronicaClick":
+                    signEvent = new AssinadorEletronicoClickEvent(component);
+                    break;
 
                 default:
                     break;
@@ -104,11 +107,11 @@ public class AssinadorRenderer extends Renderer {
     @Override
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
         Assinador button = (Assinador) component;
-        
+
         encodeMarkup(context, button);
         encodeScript(context, button);
     }
-    
+
     private String createSignBehavior(final FacesContext context, final Assinador button){
         ComponentUtil componentUtil = new ComponentUtil();
         String render = button.getRender();
@@ -151,7 +154,7 @@ public class AssinadorRenderer extends Renderer {
                 .oncomplete(button.getOncomplete())
                 .behavior("sign").build();
     }
-    
+
     private String createCompletedBehavior(final FacesContext context, final Assinador button) {
         return AjaxRequestBuilderFactory.create(context).from(button).execute("").render("")
         .oncomplete(button.getOncomplete())
@@ -167,7 +170,7 @@ public class AssinadorRenderer extends Renderer {
     private <T> T jndi(Class<T> type, Annotation... annotations){
         return Beans.getReference(type, annotations);
     }
-    
+
     protected void encodeScript(FacesContext context, Assinador button) throws IOException {
         if (SignPhase.BEFORE_CLICK.equals( button.getCurrentPhase()))
             return;
@@ -202,7 +205,7 @@ public class AssinadorRenderer extends Renderer {
 
     private void createTimeoutFunction(FacesContext context, String innerFunction, Number timeout) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
-        
+
         writer.write(" setTimeout(function() { ");
         writer.write(innerFunction);
         writer.write(" }, " + timeout + " );");
@@ -215,13 +218,13 @@ public class AssinadorRenderer extends Renderer {
         Object value = button.getValue();
         boolean disabled = button.isDisabled() || !SignPhase.BEFORE_CLICK.equals(button.getCurrentPhase());
         StringBuilder styleClass = new StringBuilder("buttons");
-        
+
         if (disabled){
             styleClass.append(" is-disabled ");
         }
         if (is(button.getStyleClass()).notEmpty())
             styleClass.append(" ").append(button.getStyleClass()).append(" ");
-        
+
         writer.startElement("button", button);
         writer.writeAttribute("id", clientId, "id");
         writer.writeAttribute("name", clientId, "name");
@@ -250,5 +253,82 @@ public class AssinadorRenderer extends Renderer {
         writer.endElement("span");
 
         writer.endElement("button");
+
+        //--Assinatura eletrônica
+
+        if(button.getRenderedAssinaturaEletronica()) {
+            writer.startElement("button", button);
+            writer.writeAttribute("id", clientId.concat("_assinaturaEletronica"), "id");
+            writer.writeAttribute("name", clientId.concat("_assinaturaEletronica"), "name");
+            writer.writeAttribute("type", "button", "type");
+            writer.writeAttribute("class", styleClass.toString(), "styleClass");
+            if (!disabled){
+
+                ComponentUtil componentUtil = new ComponentUtil();
+                String render = button.getRender();
+                if (render != null && !render.isEmpty()) {
+                    StringBuilder sb = new StringBuilder();
+                    String[] ids;
+                    if (render.contains(",")) {
+                        ids = render.split(",");
+                    } else {
+                        ids = render.split(" ");
+                    }
+                    for (String id : ids) {
+                        id = id.trim();
+                        UIComponent c = componentUtil.findComponentFor(button, id);
+                        if (c != null) {
+                            sb.append(" ").append(c.getClientId()).append(" ");
+                        }
+                    }
+                    render = sb.toString().trim();
+                }
+                String execute = button.getExecute();
+                if (execute != null && !execute.isEmpty()) {
+                    StringBuilder sb = new StringBuilder();
+                    String[] ids;
+                    if (execute.contains(",")) {
+                        ids = execute.split(",");
+                    } else {
+                        ids = execute.split(" ");
+                    }
+                    for (String id : ids) {
+                        id = id.trim();
+                        UIComponent c = componentUtil.findComponentFor(button, id);
+                        if (c != null) {
+                            sb.append(" ").append(c.getClientId()).append(" ");
+                        }
+                    }
+                    execute = sb.toString().trim();
+                }
+
+                String onclick=AjaxRequestBuilderFactory.create(context)
+                        .from(button)
+                        .behavior("assinaturaEletronicaClick")
+                        .execute(execute)
+                        .render(render)
+                        .preventDefault()
+                        .onbegin(button.getOnbegin())
+                        .oncomplete(button.getOncomplete())
+                        .build();
+                if (onclick != null) {
+                    writer.writeAttribute("onclick",
+                        String.format("if(confirm('%s')){%s}else{return false}", button.getTextoConfirmacaoAssinaturaEletronica(), onclick),
+                        null
+                    );
+                }
+            } else {
+                writer.writeAttribute("disabled", "disabled", "disabled");
+            }
+
+            //text
+            writer.startElement("span", null);
+
+            writer.writeText(button.getLabelAssinaturaEletronica(), "value");
+
+            writer.endElement("span");
+
+            writer.endElement("button");
+        }
     }
 }

@@ -43,6 +43,11 @@ public enum Parametros {
     HAS_CONSULTA_EXTERNA_PADRAO("ativaConsultaExternaPadrao"),
     CODIGO_UF_SISTEMA("codigoUnidadeFederativaSistema"),
     INTERVALO_ATUALIZACAO_PAINEL("sistema", "intervaloAtualizacaoPainel", false),
+    TEXTO_RODAPE_DOCUMENTO(
+            new ParametroDefinition<String>("sistema", "textoRodapeDocumento", FieldType.TEXT)),
+    INFO_CERT_ELETRONICO_RAIZ(
+        new ParametroDefinition<String>("sistema", "infoCertificadoEletronicoRaiz", FieldType.TEXT)),
+    CERT_ELETRONICO_RAIZ("sistema", "idCertificadoEletronicoRaiz", true),
     EPP_API_RSA_PRIVATE_KEY("controleAcesso","eppApiPrivateKey", FieldType.TEXT),
     EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey", FieldType.TEXT),
     ATIVAR_MASSIVE_REINDEX("ativarMassiveReindex"),

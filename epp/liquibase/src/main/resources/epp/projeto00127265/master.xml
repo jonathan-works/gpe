@@ -1,0 +1,18 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+    <include file="epp/projeto00127265/001-AddColunasServidor.xml" />
+    <include file="epp/projeto00127265/002-TabelaEmpresa.xml" />
+    <include file="epp/projeto00127265/003-AddColunasContrubuinte.xml" />
+    <include file="epp/projeto00127265/004-AddColunasSituacaoServidor.xml" />
+    <include file="epp/projeto00127265/005-RetirarObrigatoriedadeCargoFuncaoServidor.xml" />
+    <include file="epp/projeto00127265/006-RetirarObrigatoriedadeTabelaContribuinte.xml" />
+    <include file="epp/projeto00127265/007-AddColunaPessoaFisicaServidor.xml" />
+    <include file="epp/projeto00127265/008-AddColunaPessoaFisicaContribuinte.xml" />
+    <include file="epp/projeto00127265/009-RenomeiaColunaTelefoneFixoEmpresa.xml" />
+    <include file="epp/projeto00127265/010-MigraIdPessoaFisicaEmContribuinteServidor.xml" />
+
+</databaseChangeLog>

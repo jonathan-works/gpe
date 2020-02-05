@@ -3,27 +3,22 @@ package br.com.infox.epp.assinador.assinavel;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+@AllArgsConstructor @Getter
 public class AssinavelSourceUUIDImpl implements AssinavelSourceUUID{
+    private final UUID UUIDAssinavel;
     private final byte[] data;
-    private final UUID uuid;
-    
-    public AssinavelSourceUUIDImpl(UUID uuid, String texto) {
-        this(uuid, texto.getBytes(StandardCharsets.UTF_8));
+    private final TipoMeioAssinaturaEnum tipoMeioAssinatura;
+
+    public AssinavelSourceUUIDImpl(UUID uuid, String texto, TipoMeioAssinaturaEnum tipo) {
+        this(uuid, texto.getBytes(StandardCharsets.UTF_8), tipo);
     }
-    
-    public AssinavelSourceUUIDImpl(UUID uuid, byte[] data){
-        this.uuid = uuid;
-        this.data = data;
-    }
-    
+
     @Override
     public byte[] dataToSign(TipoSignedData tipoHash) {
         return tipoHash.dataToSign(data);
     }
 
-    @Override
-    public UUID getUUIDAssinavel() {
-        return uuid;
-    }
-    
 }

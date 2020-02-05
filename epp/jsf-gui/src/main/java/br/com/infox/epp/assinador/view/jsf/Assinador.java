@@ -10,6 +10,7 @@ import javax.faces.component.behavior.ClientBehaviorHolder;
 import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.view.AssinaturaCallback;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @FacesComponent(Assinador.COMPONENT_TYPE)
 public class Assinador extends javax.faces.component.UICommand
@@ -21,7 +22,7 @@ public class Assinador extends javax.faces.component.UICommand
     static final String RENDERER_TYPE = "br.com.infox.epp.assinador.view.jsf.AssinadorRenderer";
 
     private enum PropertyKeys {
-        assinavelProvider, callbackHandler, tokenField, execute, render, disabled, onbegin, oncomplete, value, signAction, timeout, style, styleClass, onclick, token, status, currentPhase;
+        textoConfirmacaoAssinaturaEletronica, labelAssinaturaEletronica, renderedAssinaturaEletronica, pessoaAssinatura, assinavelProvider, callbackHandler, tokenField, execute, render, disabled, onbegin, oncomplete, value, signAction, timeout, style, styleClass, onclick, token, status, currentPhase;
 
         String toString;
 
@@ -63,28 +64,28 @@ public class Assinador extends javax.faces.component.UICommand
     public String getTokenField() {
         return (String) getStateHelper().eval(PropertyKeys.tokenField, null);
     }
-    
+
     public void setTokenField(String _tokenField) {
         getStateHelper().put(PropertyKeys.tokenField, _tokenField);
     }
     SignPhase getCurrentPhase() {
         return (SignPhase) getStateHelper().eval(PropertyKeys.currentPhase, SignPhase.BEFORE_CLICK);
     }
-    
+
     void setCurrentPhase(SignPhase _currentPhase) {
         getStateHelper().put(PropertyKeys.currentPhase, _currentPhase);
     }
     String getToken() {
         return (String) getStateHelper().eval(PropertyKeys.token, null);
     }
-    
+
     void setToken(String _token) {
         getStateHelper().put(PropertyKeys.token, _token);
     }
     StatusToken getStatus() {
         return (StatusToken) getStateHelper().eval(PropertyKeys.status, null);
     }
-    
+
     void setStatus(StatusToken _status) {
         getStateHelper().put(PropertyKeys.status, _status);
     }
@@ -208,6 +209,38 @@ public class Assinador extends javax.faces.component.UICommand
     public void setStyle(java.lang.String style) {
         getStateHelper().put(PropertyKeys.style, style);
     }
+
+    public void setRenderedAssinaturaEletronica(java.lang.Boolean value) {
+        getStateHelper().put(PropertyKeys.renderedAssinaturaEletronica, value);
+    }
+
+    public Boolean getRenderedAssinaturaEletronica() {
+        return (java.lang.Boolean) getStateHelper().eval(PropertyKeys.renderedAssinaturaEletronica, true);
+    }
+    public void setPessoaAssinatura(PessoaFisica value) {
+    	getStateHelper().put(PropertyKeys.pessoaAssinatura, value);
+    }
+    
+    public PessoaFisica getPessoaAssinatura() {
+    	return (PessoaFisica) getStateHelper().eval(PropertyKeys.pessoaAssinatura, true);
+    }
+
+    public void setLabelAssinaturaEletronica(java.lang.String value) {
+        getStateHelper().put(PropertyKeys.labelAssinaturaEletronica, value);
+    }
+
+    public String getLabelAssinaturaEletronica() {
+        return (java.lang.String) getStateHelper().eval(PropertyKeys.labelAssinaturaEletronica, "Assinatura Eletrônica");
+    }
+
+    public void setTextoConfirmacaoAssinaturaEletronica(java.lang.String value) {
+        getStateHelper().put(PropertyKeys.textoConfirmacaoAssinaturaEletronica, value);
+    }
+
+    public String getTextoConfirmacaoAssinaturaEletronica() {
+        return (java.lang.String) getStateHelper().eval(PropertyKeys.textoConfirmacaoAssinaturaEletronica, "Deseja realmente assinar eletrônicamente este(s) documento(s)?");
+    }
+
 
     /**
      * <p>

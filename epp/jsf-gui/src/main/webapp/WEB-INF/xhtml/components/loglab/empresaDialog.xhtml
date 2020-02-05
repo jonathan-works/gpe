@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="view" value="#{view}" />
+    <ui:param name="list" value="#{list}" />
+
+    <p:dialog id="#{id}"
+              widgetVar="#{id}"
+              header="#{infoxMessages['empresa.titleDialog']}"
+              modal="true"
+              width="90%"
+              appendToBody="true"
+              position="top"
+              closable="true"
+              resizable="false"
+              draggable="true"
+              responsive="true">
+
+        <p:ajax event="close"
+                onclick="PF('#{id}').hide();"
+                process="@this"
+                resetValues="true"
+                update="@form" />
+
+        <p:dataGrid id="#{id}DataGrid"
+                    value="#{list}"
+                    var="row"
+                    layout="grid"
+                    paginator="true"
+                    rows="2"
+                    columns="1"
+                    emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+            
+            <h:panelGrid columns="5" style="border-bottom: solid 1px #DDD;" width="100%" styleClass="p-grid">
+                <h:panelGrid columns="1" width="25px">
+                    <h:commandButton id="#{id}SelecionarBtn"
+                                     action="#{view.selecionarEmpresa(row)}"
+                                     value="#{infoxMessages['empresa.selecionar']}"
+                                     styleClass="buttons buttons-primary" >
+                        <p:ajax process="#{id}DataGrid"
+                                update="@(.#{id}) @(.#{paginaPrincipal}) :pageBodyDialogMessage"
+                                onstart="infox.showLoading();"
+                                oncomplete="infox.hideLoading();"/>
+                    </h:commandButton>  
+                </h:panelGrid>
+                <h:panelGrid columns="4" width="100%">
+                    <wi:dialogOutput label="#{infoxMessages['empresa.cnpj']}"
+                                     value="#{row.cnpj}">
+                        <f:converter converterId="cnpjConverter"/>
+                    </wi:dialogOutput>
+                    
+                    <wi:dialogOutput label="#{infoxMessages['empresa.razaoSocial']}"
+                                     value="#{row.razaoSocial}"/>
+                    
+                    <wi:dialogOutput label="#{infoxMessages['empresa.nomeFantasia']}"
+                                     value="#{row.nomeFantasia}"/>
+                    
+                    <wi:dialogOutput label="#{infoxMessages['empresa.tipoEmpresa']}"
+                                     value="#{row.tipoEmpresa}"/>
+                    
+                    <wi:dialogOutput label="#{infoxMessages['empresa.dataAbertura']}"
+                                     value="#{row.dataAbertura}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </wi:dialogOutput>
+                    
+                    <wi:dialogOutput label="#{infoxMessages['empresa.telefoneCelular']}"
+                                     value="#{row.telefoneCelular}"/>
+                    
+                    <wi:dialogOutput label="#{infoxMessages['empresa.telefoneFixo']}"
+                                     value="#{row.telefoneFixo}"/>
+                    
+                    <wi:dialogOutput label="#{infoxMessages['empresa.email']}"
+                                     value="#{row.email}"/>
+                    
+                    <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.codEstado']}"
+                                     value="#{row.codEstado}"/>
+                
+                    <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cidade']}"
+                                     value="#{row.cidade}"/>
+                
+                    <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.logradouro']}"
+                                     value="#{row.logradouro}"/>
+                
+                    <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.bairro']}"
+                                     value="#{row.bairro}"/>
+                
+                    <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.complemento']}"
+                                     value="#{row.complemento}"/>
+                
+                    <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.numero']}"
+                                     value="#{row.numero}"/>
+                
+                    <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cep']}"
+                                     value="#{row.cep}"/>
+                </h:panelGrid>
+            </h:panelGrid>
+        </p:dataGrid>
+    </p:dialog>
+</ui:composition>

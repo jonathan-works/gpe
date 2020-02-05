@@ -24,10 +24,13 @@ import br.com.infox.epp.documento.domain.RegraAssinatura;
 import br.com.infox.epp.documento.query.ClassificacaoDocumentoPapelQuery;
 import br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = ClassificacaoDocumentoPapel.TABLE_NAME)
-@NamedQueries(value = { 
+@NamedQueries(value = {
 	@NamedQuery(name = ClassificacaoDocumentoQuery.ASSINATURA_OBRIGATORIA, query = ClassificacaoDocumentoQuery.ASSINATURA_OBRIGATORIA_QUERY),
 	@NamedQuery(name = ClassificacaoDocumentoPapelQuery.PAPEL_PODE_ASSINAR_CLASSIFICACAO, query = ClassificacaoDocumentoPapelQuery.PAPEL_PODE_ASSINAR_CLASSIFICACAO_QUERY),
 	@NamedQuery(name = ClassificacaoDocumentoPapelQuery.GET_BY_PAPEL_AND_CLASSIFICACAO, query = ClassificacaoDocumentoPapelQuery.GET_BY_PAPEL_AND_CLASSIFICACAO_QUERY),
@@ -35,7 +38,7 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 })
 @Cacheable
 public class ClassificacaoDocumentoPapel implements Serializable, RegraAssinatura {
-    
+
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_classificacao_doc_papel";
 
@@ -44,21 +47,26 @@ public class ClassificacaoDocumentoPapel implements Serializable, RegraAssinatur
     @GeneratedValue(generator = "ClassificacaoPapelGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_classificacao_doc_papel", nullable = false, unique = true)
     private Integer id;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_classificacao_documento", nullable = false)
     private ClassificacaoDocumento classificacaoDocumento;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_papel", nullable = false)
     private Papel papel;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "tp_assinatura", nullable=false)
     private TipoAssinaturaEnum tipoAssinatura;
-    
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_meio_assinatura")
+    @Getter @Setter
+    private TipoMeioAssinaturaEnum tipoMeioAssinatura;
+
     @NotNull
     @Column(name = "in_redator", nullable = false)
     private Boolean podeRedigir = Boolean.FALSE;
@@ -66,7 +74,7 @@ public class ClassificacaoDocumentoPapel implements Serializable, RegraAssinatur
     @NotNull
     @Column(name = "in_assinatura_multipla", nullable = false)
     private Boolean assinaturasMultiplas = false;
-    
+
 	public Integer getId() {
 		return id;
 	}
@@ -108,12 +116,12 @@ public class ClassificacaoDocumentoPapel implements Serializable, RegraAssinatur
 	public void setPodeRedigir(Boolean podeRedigir) {
 		this.podeRedigir = podeRedigir;
 	}
-	
+
 	@Override
 	public Boolean getAssinaturasMultiplas() {
         return assinaturasMultiplas;
     }
-	
+
 	public void setAssinaturasMultiplas(Boolean assinaturasMultiplas) {
         this.assinaturasMultiplas = assinaturasMultiplas;
     }

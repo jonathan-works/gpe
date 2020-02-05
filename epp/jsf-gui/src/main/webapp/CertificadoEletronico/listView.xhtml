@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml"
+>
+<ui:define name="body">
+<style>
+.termo-adesao-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+</style>
+
+<infox:tabPanel
+    switchType="ajax"
+    activeTab="#{certificadoEletronicoView.tab}"
+    id="certificadoEletronicoTabs"
+>
+    <h:form>
+        <infox:tabHeaders />
+    </h:form>
+
+    <infox:tab 
+        id="principal"
+        name="tabPrincipal"
+        title="#{infoxMessages['certificadoEletronico.titlePage']}"
+    >
+        <wi:panel id="panelCertEletronico">
+        <h:form>
+            <h:panelGroup rendered="#{not certificadoEletronicoView.exibeBotaoGerarCertificado}">
+                <wi:outputText
+                    id="dataInicio"
+                    value="#{certificadoEletronicoView.dataInicio}"
+                    label="#{infoxMessages['detalhesUsuario.dataInicio']}"
+                />
+                <wi:outputText
+                    id="dataFim"
+                    value="#{certificadoEletronicoView.dataFim}"
+                    label="#{infoxMessages['detalhesUsuario.dataFim']}"
+                />
+            </h:panelGroup>
+            <h:panelGroup rendered="#{certificadoEletronicoView.exibeBotaoGerarCertificado}">
+                <p:commandButton
+                    action="#{certificadoEletronicoView.gerarCertificadoRaiz}"
+                    ajax="true"
+                    partialSubmit="true"
+                    onclick="showLoading()"
+                    oncomplete="hideLoading()"
+                    value="Gerar certificado raiz"
+                    update="@(.form) :pageBodyDialogMessage"
+                    styleClass="buttons buttons-primary"
+                />
+            </h:panelGroup>
+        </h:form>
+        </wi:panel>
+    </infox:tab>
+</infox:tabPanel>
+    
+</ui:define>
+</ui:composition>
