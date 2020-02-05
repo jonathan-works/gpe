@@ -8,7 +8,10 @@ import java.security.cert.X509Certificate;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.validation.ValidationException;
 
 import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.assinatura.PoliticaAssinatura;
@@ -26,6 +29,7 @@ import br.com.infox.epp.certificadoeletronico.CertificadoEletronicoService;
 import br.com.infox.epp.certificadoeletronico.builder.CertUtil;
 import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronico;
 import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronicoBin;
+import br.com.infox.epp.login.LoginService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
@@ -82,18 +86,28 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
 
     public void clickAssinaturaEletronicaEvent(AssinadorEletronicoClickEvent evt) {
         Assinador button = (Assinador) evt.getComponent();
-        Assinador componente = (Assinador)evt.getComponent();
+        
         //Idealmente viria do componente, atribuindo o padrão
-        PoliticaAssinatura politicaDeAssinatura = PoliticaAssinaturaFactory.getDefault().fromOID(PoliticaAssinatura.AD_RB_CMS_V_2_1);
+        
         PessoaFisica pfComponente = button.getPessoaAssinatura();
         PessoaFisica pfAutenticada = Optional.ofNullable(Authenticator.getUsuarioPerfilAtual()).map(UsuarioPerfil::getUsuarioLogin).map(UsuarioLogin::getPessoaFisica).orElse(null);
         if(pfComponente == null && pfAutenticada == null) {
-            throw new BusinessRollbackException("Pessoa não encontrada.");
+        	String msg = "Pessoa não encontrada.";
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+        	return;
         }
-        
-        CertificadoEletronico certificadoEletronicoUsuarioLogado = Optional.ofNullable(pfComponente).orElse(pfAutenticada).getCertificadoEletronico();
+        PessoaFisica pessoaAssinante = Optional.ofNullable(pfComponente).orElse(pfAutenticada);
+        if (!autenticar(pessoaAssinante, evt.getPassword())) {
+        	String msg = "Falha de autenticação";
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+        	return;
+        }
+        PoliticaAssinatura politicaDeAssinatura = PoliticaAssinaturaFactory.getDefault().fromOID(PoliticaAssinatura.AD_RB_CMS_V_2_1);
+		CertificadoEletronico certificadoEletronicoUsuarioLogado = pessoaAssinante.getCertificadoEletronico();
         if(certificadoEletronicoUsuarioLogado == null) {
-            throw new BusinessRollbackException("Usuário não possui certificado");
+        	String msg = "Usuário não possui certificado";
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+        	return;
         }
         CertificadoEletronicoService certificadoEletronicoService = null;
         AssinadorService assinadorService = null;
@@ -111,7 +125,7 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
             assinador.setContentHashed(true);
             assinador.setPoliticaAssinatura(politicaDeAssinatura);
 
-            AssinavelProvider assinavelProvider = componente.getAssinavelProvider();
+            AssinavelProvider assinavelProvider = button.getAssinavelProvider();
             assinadorService = Beans.getReference(AssinadorService.class);
             String token = assinadorService.criarListaAssinaveisAssinaturaEletronica(assinavelProvider);
             for (UUID uuidAssinavel : assinadorService.listarAssinaveis(token)) {
@@ -119,7 +133,7 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
                 SimpleSignableIO dataIO = new SimpleSignableIO(dataToSign, true, false).signWith(assinador);
                 assinadorService.setAssinaturaAssinavel(token, uuidAssinavel, dataIO.getSignature());
             }
-            Beans.getReference(AssinadorController.class).assinaturasRecebidas(token, componente.getCallbackHandler());
+            Beans.getReference(AssinadorController.class).assinaturasRecebidas(token, button.getCallbackHandler());
 
             button.setStatus(null);
             button.setToken(null);
@@ -134,7 +148,20 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
         }
     }
 
-    private void clickEvent(AssinadorClickEvent evt) {
+    private boolean autenticar(PessoaFisica pessoaAssinante, String password) {
+    	LoginService loginService = null;
+    	try {
+    		loginService = Beans.getReference(LoginService.class);
+    		String usuario = Optional.ofNullable(pessoaAssinante).map(PessoaFisica::getUsuarioLogin).map(UsuarioLogin::getLogin).orElse(null);
+    		return loginService.autenticar(usuario, password);
+    	} finally {
+    		if (loginService != null) {
+    			Beans.destroy(loginService);
+    		}
+    	}
+	}
+
+	private void clickEvent(AssinadorClickEvent evt) {
         Assinador button = (Assinador) evt.getComponent();
         String tokenValue = jndi(AssinadorController.class).criarGrupoAssinatura(button.getAssinavelProvider());
         button.setToken(tokenValue);

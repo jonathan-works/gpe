@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.component.behavior.ClientBehavior;
 import javax.faces.component.behavior.ClientBehaviorHolder;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
@@ -60,10 +61,12 @@ public class AssinadorRenderer extends Renderer {
                 case "click":
                     signEvent = new AssinadorClickEvent(component);
                     break;
-                case "assinaturaEletronicaClick":
-                    signEvent = new AssinadorEletronicoClickEvent(component);
+                case "assinaturaEletronicaClick":{
+                	final ExternalContext externalContext = context.getExternalContext();
+                    Map<String, String> requestParameterMap = externalContext.getRequestParameterMap();
+                    signEvent = new AssinadorEletronicoClickEvent(component, requestParameterMap.getOrDefault("params", ""));
                     break;
-
+                }
                 default:
                     break;
                 }
@@ -312,8 +315,45 @@ public class AssinadorRenderer extends Renderer {
                         .oncomplete(button.getOncomplete())
                         .build();
                 if (onclick != null) {
+                	StringBuilder reqBuilder = new StringBuilder();
+                	reqBuilder.append("passwordPrompt('");
+                	reqBuilder.append(button.getTextoConfirmacaoAssinaturaEletronica());
+                	reqBuilder.append("','");
+                	reqBuilder.append("Confirmar");
+                	reqBuilder.append("',");
+                	reqBuilder.append("function(password){ ");
+					reqBuilder.append("jsf.ajax.request('");
+					reqBuilder.append(button.getClientId(context));
+					reqBuilder.append("', null, {");
+					reqBuilder.append("execute:'");
+					reqBuilder.append(execute);
+					reqBuilder.append("',");
+					reqBuilder.append("render:'");
+					reqBuilder.append(render);
+					reqBuilder.append("',");
+					reqBuilder.append("params: password,");
+					reqBuilder.append("onevent:function(event) {");
+					reqBuilder.append("if (event.type === 'event') {");
+					reqBuilder.append("switch(event.status) {");
+					reqBuilder.append("case 'begin':");
+					reqBuilder.append(button.getOnbegin());
+					reqBuilder.append("break;");
+					reqBuilder.append("case 'success':");
+					reqBuilder.append("break;");
+					reqBuilder.append("case 'complete':");
+					reqBuilder.append(button.getOncomplete());
+					reqBuilder.append("break;");
+					reqBuilder.append("}");
+					reqBuilder.append("}");
+					reqBuilder.append("},");
+					reqBuilder.append("\"javax.faces.behavior.event\":\"assinaturaEletronicaClick\"");
+					reqBuilder.append("});");
+					reqBuilder.append("});event.preventDefault();return false;");
+					String clickFun = reqBuilder.toString();
+                	System.out.println(clickFun);
+//                	clickFun = String.format("if(confirm('%s')){%s}else{return false}", button.getTextoConfirmacaoAssinaturaEletronica(), onclick);
                     writer.writeAttribute("onclick",
-                        String.format("if(confirm('%s')){%s}else{return false}", button.getTextoConfirmacaoAssinaturaEletronica(), onclick),
+                		clickFun,
                         null
                     );
                 }

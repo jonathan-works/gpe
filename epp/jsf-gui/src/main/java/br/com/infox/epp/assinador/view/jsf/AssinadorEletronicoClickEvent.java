@@ -4,9 +4,16 @@ import javax.faces.component.UIComponent;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.FacesListener;
 
+import lombok.Getter;
+
 class AssinadorEletronicoClickEvent extends FacesEvent implements AssinadorEvent {
-    public AssinadorEletronicoClickEvent(UIComponent component) {
+	
+	@Getter
+    private String password;
+
+	public AssinadorEletronicoClickEvent(UIComponent component, String password) {
         super(component);
+        this.password = password;
     }
 
     private static final long serialVersionUID = 1L;

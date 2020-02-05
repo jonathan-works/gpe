@@ -222,7 +222,7 @@ public class Assinador extends javax.faces.component.UICommand
     }
     
     public PessoaFisica getPessoaAssinatura() {
-    	return (PessoaFisica) getStateHelper().eval(PropertyKeys.pessoaAssinatura, true);
+    	return (PessoaFisica) getStateHelper().eval(PropertyKeys.pessoaAssinatura);
     }
 
     public void setLabelAssinaturaEletronica(java.lang.String value) {
