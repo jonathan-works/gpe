@@ -56,6 +56,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.cdi.util.Beans;
+import br.com.infox.epp.documento.domain.RegraAssinaturaService;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -69,6 +70,7 @@ import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -164,6 +166,8 @@ public class TaskInstanceHome implements Serializable {
     private ModeloDocumentoSearch modeloDocumentoSearch;
     @Inject
     private ActionMessagesService actionMessagesService;
+    @Inject
+    private RegraAssinaturaService regraAssinaturaService;
 
     private TaskInstance taskInstance;
     private Map<String, Object> mapaDeVariaveis;
@@ -587,9 +591,9 @@ public class TaskInstanceHome implements Serializable {
             Documento documento = documentoManager.find(idDocumento);
             Papel papelAtual = Authenticator.getPapelAtual();
             if (documento != null) {
-                boolean papelPermiteAssinaturaMultipla = documento.papelPermiteAssinaturaMultipla(papelAtual);
-                return (papelPermiteAssinaturaMultipla && !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado())) ||
-                        (!papelPermiteAssinaturaMultipla && documento.isDocumentoAssinavel(papelAtual) && !documento.isDocumentoAssinado(papelAtual));
+                PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+                return pessoaFisica != null
+                        && regraAssinaturaService.permiteAssinaturaPor(documento, pessoaFisica, papelAtual);
             }
         }
         return false;
