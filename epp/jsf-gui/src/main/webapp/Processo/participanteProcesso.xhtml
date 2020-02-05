@@ -24,10 +24,10 @@
                     <a:ajax event="change" render="loadedByParticipante" immediate="true"
                         limitRender="true" execute="@this"/>
                 </wi:selectOneRadioEnum>
-    
+
                 <p:outputPanel id="loadedByParticipante"
                         rendered="#{not empty participantesProcessoController.tipoPessoa}">
-    
+
                     <wi:servidorContribuinteFields
                         identificador="servContrParticipante"
                         rendered="#{participantesProcessoController.tipoPessoa eq 'F'}"
@@ -37,7 +37,7 @@
                         searchObject="#{participantesProcessoController.pesquisaParticipanteVO}"
                         codEstadoList="#{participantesProcessoController.getListCodEstado()}">
                     </wi:servidorContribuinteFields>
-    
+
                     <wi:empresaFields
                         identificador="empresaParticipante"
                         rendered="#{participantesProcessoController.tipoPessoa eq 'J'}"
@@ -48,9 +48,9 @@
                         codEstadoList="#{participantesProcessoController.getListCodEstado()}">
                     </wi:empresaFields>
                 </p:outputPanel>
-    
-    
-    
+
+
+
                 <p:outputPanel id="partePanel">
                     <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
                         <legend class="name">#{infoxMessages['participanteProcesso.dadosParticipante']}</legend>
@@ -59,17 +59,17 @@
                         value="#{participantesProcessoController.tipoParte}"
                         label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
                         required="true" showLabelSelecione="true" />
-    
+
                     <wi:tree id="participanteSuperior"
                         label="#{infoxMessages['participanteProcesso.superior']}"
                         assignTo="participantesProcessoController.participantePai"
                         tree="#{participanteProcessoTree}" />
-    
+
                     <wi:inputDate id="dataInicio"
                         value="#{participantesProcessoController.participanteProcessoVO.dataInicio}"
                         label="#{infoxMessages['participanteProcesso.dataInicioParticipacao']}"
                         required="false" />
-    
+
                     <wi:inputDate id="dataFim"
                         value="#{participantesProcessoController.participanteProcessoVO.dataFim}"
                         label="#{infoxMessages['participanteProcesso.dataFimParticipacao']}"
