@@ -39,7 +39,7 @@
                     rows="2"
                     columns="1"
                     emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
-            
+
             <h:panelGrid columns="5" style="border-bottom: solid 1px #DDD;" width="100%" styleClass="p-grid">
                 <h:panelGrid columns="1" width="25px">
                     <h:commandButton id="#{id}SelecionarBtn"
@@ -57,128 +57,128 @@
                                      value="#{row.cpf}">
                         <f:converter converterId="cpfConverter"/>
                     </wi:dialogOutput>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.nomeCompleto']}"
                                      value="#{row.nomeCompleto}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.matricula']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.matricula}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.sexo']}"
                                      rendered="#{row.tipoParticipante eq 'CO'}"
                                      value="#{row.sexo}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.dataNascimento']}"
                                      value="#{row.dataNascimento}">
                         <f:convertDateTime pattern="dd/MM/yyyy"/>
                     </wi:dialogOutput>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.nomeMae']}"
                                      value="#{row.nomeMae}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.email']}"
                                      value="#{row.email}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.celular']}"
                                      value="#{row.celular}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.codEstado']}"
                                      rendered="#{row.tipoParticipante eq 'CO'}"
                                      value="#{row.codEstado}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cidade']}"
                                      rendered="#{row.tipoParticipante eq 'CO'}"
                                      value="#{row.cidade}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.logradouro']}"
                                      rendered="#{row.tipoParticipante eq 'CO'}"
                                      value="#{row.logradouro}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.bairro']}"
                                      rendered="#{row.tipoParticipante eq 'CO'}"
                                      value="#{row.bairro}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.complemento']}"
                                      rendered="#{row.tipoParticipante eq 'CO'}"
                                      value="#{row.complemento}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.numero']}"
                                      rendered="#{row.tipoParticipante eq 'CO'}"
                                      value="#{row.numero}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cep']}"
                                      rendered="#{row.tipoParticipante eq 'CO'}"
                                      value="#{row.cep}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.dataNomeacao']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.dataNomeacao}">
                         <f:convertDateTime pattern="dd/MM/yyyy"/>
                     </wi:dialogOutput>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.dataPosse']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.dataPosse}">
                         <f:convertDateTime pattern="dd/MM/yyyy"/>
                     </wi:dialogOutput>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.dataExercicio']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.dataExercicio}">
                         <f:convertDateTime pattern="dd/MM/yyyy"/>
                     </wi:dialogOutput>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.situacao']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.situacao}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.orgao']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.orgao}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.localTrabalho']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.localTrabalho}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.subFolha']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.subFolha}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.jornada']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.jornada}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.ocupacaoCarreira']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.ocupacaoCarreira}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cargoCarreira']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.cargoCarreira}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.ocupacaoComissao']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.ocupacaoComissao}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cargoComissao']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.cargoComissao}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.nomePai']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.nomePai}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.numeroRg']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.numeroRg}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.dataEmissaoRg']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.dataEmissaoRg}">
                         <f:convertDateTime pattern="dd/MM/yyyy"/>
                     </wi:dialogOutput>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.orgaoEmissorRG']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.orgaoEmissorRG}"/>
