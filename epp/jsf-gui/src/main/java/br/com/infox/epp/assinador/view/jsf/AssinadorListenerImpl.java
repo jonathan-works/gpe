@@ -83,28 +83,28 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
 
     public void clickAssinaturaEletronicaEvent(AssinadorEletronicoClickEvent evt) {
         Assinador button = (Assinador) evt.getComponent();
-        
+
         //Idealmente viria do componente, atribuindo o padrão
-        
+
         PessoaFisica pfComponente = button.getPessoaAssinatura();
         PessoaFisica pfAutenticada = Optional.ofNullable(Authenticator.getUsuarioPerfilAtual()).map(UsuarioPerfil::getUsuarioLogin).map(UsuarioLogin::getPessoaFisica).orElse(null);
         if(pfComponente == null && pfAutenticada == null) {
-        	String msg = "Pessoa não encontrada.";
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
-        	return;
+            String msg = "Pessoa não encontrada.";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+            return;
         }
         PessoaFisica pessoaAssinante = Optional.ofNullable(pfComponente).orElse(pfAutenticada);
         if (!autenticar(pessoaAssinante, evt.getPassword())) {
-        	String msg = "Falha de autenticação";
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
-        	return;
+            String msg = "Falha de autenticação";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+            return;
         }
         PoliticaAssinatura politicaDeAssinatura = PoliticaAssinaturaFactory.getDefault().fromOID(PoliticaAssinatura.AD_RB_CMS_V_2_1);
-		CertificadoEletronico certificadoEletronicoUsuarioLogado = pessoaAssinante.getCertificadoEletronico();
+        CertificadoEletronico certificadoEletronicoUsuarioLogado = pessoaAssinante.getCertificadoEletronico();
         if(certificadoEletronicoUsuarioLogado == null) {
-        	String msg = "Usuário não possui certificado";
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
-        	return;
+            String msg = "Usuário não possui certificado";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+            return;
         }
         CertificadoEletronicoService certificadoEletronicoService = null;
         AssinadorService assinadorService = null;
@@ -146,19 +146,19 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
     }
 
     private boolean autenticar(PessoaFisica pessoaAssinante, String password) {
-    	LoginService loginService = null;
-    	try {
-    		loginService = Beans.getReference(LoginService.class);
-    		String usuario = Optional.ofNullable(pessoaAssinante).map(PessoaFisica::getUsuarioLogin).map(UsuarioLogin::getLogin).orElse(null);
-    		return loginService.autenticar(usuario, password);
-    	} finally {
-    		if (loginService != null) {
-    			Beans.destroy(loginService);
-    		}
-    	}
-	}
+        LoginService loginService = null;
+        try {
+            loginService = Beans.getReference(LoginService.class);
+            String usuario = Optional.ofNullable(pessoaAssinante).map(PessoaFisica::getUsuarioLogin).map(UsuarioLogin::getLogin).orElse(null);
+            return loginService.autenticar(usuario, password);
+        } finally {
+            if (loginService != null) {
+                Beans.destroy(loginService);
+            }
+        }
+    }
 
-	private void clickEvent(AssinadorClickEvent evt) {
+    private void clickEvent(AssinadorClickEvent evt) {
         Assinador button = (Assinador) evt.getComponent();
         String tokenValue = jndi(AssinadorController.class).criarGrupoAssinatura(button.getAssinavelProvider());
         button.setToken(tokenValue);

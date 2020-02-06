@@ -65,7 +65,7 @@ public class AssinadorRenderer extends Renderer {
                     signEvent = new AssinadorClickEvent(component);
                     break;
                 case "assinaturaEletronicaClick":{
-                	final ExternalContext externalContext = context.getExternalContext();
+                    final ExternalContext externalContext = context.getExternalContext();
                     Map<String, String> requestParameterMap = externalContext.getRequestParameterMap();
                     signEvent = new AssinadorEletronicoClickEvent(component, requestParameterMap.getOrDefault("params", ""));
                     break;

@@ -8,31 +8,31 @@ import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 
 public interface AssinadorGroupService {
 
-	public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider);
+    public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider);
 
-	public void validarToken(String token);
-	
-	public void validarNovoToken(String token);
+    public void validarToken(String token);
 
-	public boolean isTokenExpired(String token);
+    public void validarNovoToken(String token);
 
-	public StatusToken getStatus(String token);
+    public boolean isTokenExpired(String token);
 
-	public List<UUID> getAssinaveis(String token);
+    public StatusToken getStatus(String token);
 
-	public byte[] getSha256(String token, UUID uuidAssinavel);
+    public List<UUID> getAssinaveis(String token);
 
-	public void apagarGrupo(String token);
+    public byte[] getSha256(String token, UUID uuidAssinavel);
 
-	public void cancelar(String token);
+    public void apagarGrupo(String token);
 
-	public void erroProcessamento(String token, UUID uuidAssinavel, String codigoErro, String mensagem);
+    public void cancelar(String token);
 
-	public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuidAssinavel,
-			DadosAssinaturaLegada dadosAssinaturaLegada);
+    public void erroProcessamento(String token, UUID uuidAssinavel, String codigoErro, String mensagem);
 
-	public List<DadosAssinatura> getDadosAssinatura(String token);
+    public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuidAssinavel,
+            DadosAssinaturaLegada dadosAssinaturaLegada);
 
-	public DadosAssinatura getDadosAssinatura(String token, UUID uuidAssinavel);
+    public List<DadosAssinatura> getDadosAssinatura(String token);
+
+    public DadosAssinatura getDadosAssinatura(String token, UUID uuidAssinavel);
 
 }
