@@ -35,18 +35,18 @@
                         value="#{bean.entity.codigoDocumento}"
                         label="#{infoxMessages['tipoProcessoDocumento.codigoDocumento']}"
                         maxlength="30" />
-                        
+
                     <wi:inputText id="descricao"
                         label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                         value="#{bean.entity.descricao}"
                         maxlength="100" />
-                        
+
                     <wi:selectOneMenuEnum id="usoTipoDocumento"
                         label="#{infoxMessages['tipoProcessoDocumento.uso']}"
                         items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
                         value="#{bean.entity.inTipoDocumento}"
                         noSelectionLabel="#{infoxMessages['crud.select.all']}" />
-                        
+
                     <wi:selectSituacaoOneMenu id="ativo"
                         label="#{infoxMessages['field.situacao']}"
                         value="#{bean.entity.ativo}" />
@@ -102,13 +102,13 @@
                 value="#{classificacaoDocumentoCrudAction.instance.publico}" />
             <s:div id="tipoDocumentoDiv" style="display: inline-block;">
                 <wi:selectOneMenuEntity id="tipoDocumento"
-    				label="#{infoxMessages['tipoModeloDocumento.tableTitle']}"
-    				items="#{classificacaoDocumentoCrudAction.tiposModeloDocumento}"
-    				rendered="#{classificacaoDocumentoCrudAction.canShowSelectTipoDocumento()}"
-    				value="#{classificacaoDocumentoCrudAction.instance.tipoModeloDocumento}"
-    				showLabelSelecione="true" />
+            label="#{infoxMessages['tipoModeloDocumento.tableTitle']}"
+            items="#{classificacaoDocumentoCrudAction.tiposModeloDocumento}"
+            rendered="#{classificacaoDocumentoCrudAction.canShowSelectTipoDocumento()}"
+            value="#{classificacaoDocumentoCrudAction.instance.tipoModeloDocumento}"
+            showLabelSelecione="true" />
             </s:div>
-			<wi:selectSituacaoRadio id="ativo"
+      <wi:selectSituacaoRadio id="ativo"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{classificacaoDocumentoCrudAction.instance.ativo}" />
             <wi:inputTextarea id="tipoProcessoDocumentoObservacao"
@@ -150,17 +150,17 @@
                         value="#{classificacaoDocumentoPapelCrudAction.instance.tipoMeioAssinatura}"
                         showLabelSelecione="true" />
                     <wi:selectBooleanCheckbox
-		                label="#{infoxMessages['tipoProcessoDocumentoPapel.podeRedigir']}"
-		                id="podeRedigir"
-		                value="#{classificacaoDocumentoPapelCrudAction.instance.podeRedigir}">
-		                <a:ajax event="change" execute="@this" limitRender="true" />
-		            </wi:selectBooleanCheckbox>
-		            <wi:selectBooleanCheckbox
-		                label="#{infoxMessages['tipoProcessoDocumentoPapel.assinaturaMultipla']}"
-		                id="assinaturaMultipla"
-		                value="#{classificacaoDocumentoPapelCrudAction.instance.assinaturasMultiplas}">
-		                <a:ajax event="change" execute="@this" limitRender="true" />
-		            </wi:selectBooleanCheckbox>
+                    label="#{infoxMessages['tipoProcessoDocumentoPapel.podeRedigir']}"
+                    id="podeRedigir"
+                    value="#{classificacaoDocumentoPapelCrudAction.instance.podeRedigir}">
+                    <a:ajax event="change" execute="@this" limitRender="true" />
+                </wi:selectBooleanCheckbox>
+                <wi:selectBooleanCheckbox
+                    label="#{infoxMessages['tipoProcessoDocumentoPapel.assinaturaMultipla']}"
+                    id="assinaturaMultipla"
+                    value="#{classificacaoDocumentoPapelCrudAction.instance.assinaturasMultiplas}">
+                    <a:ajax event="change" execute="@this" limitRender="true" />
+                </wi:selectBooleanCheckbox>
                     <ui:define name="buttons">
                         <wi:commandButtonPersist
                             home="#{classificacaoDocumentoPapelCrudAction}"
@@ -173,7 +173,7 @@
                         />
                     </ui:define>
                 </wi:dataForm>
-                
+
                 <wi:dataTable
                     values="#{classificacaoDocumentoPapelList.list(15)}"
                     bean="#{classificacaoDocumentoPapelList}"
@@ -192,13 +192,13 @@
                         columnHeader="#{infoxMessages['classificacaoDocumento.tipoMeioAssinatura']}"
                         value="#{empty row.tipoMeioAssinatura ? '-' : row.tipoMeioAssinatura.label}" />
                     <wi:columnOutputText colummId="podeRedigir"
-                    	columnHeader="#{infoxMessages['tipoProcessoDocumentoPapel.podeRedigir']}"
-                    	value="#{row.podeRedigir ? 'Sim' : 'Não'}"
-                    	hideOrder="true"/>
+                      columnHeader="#{infoxMessages['tipoProcessoDocumentoPapel.podeRedigir']}"
+                      value="#{row.podeRedigir ? 'Sim' : 'Não'}"
+                      hideOrder="true"/>
                     <wi:columnOutputText colummId="assinaturaMultipla"
-                    	columnHeader="#{infoxMessages['tipoProcessoDocumentoPapel.assinaturaMultipla']}"
-                    	value="#{row.assinaturasMultiplas ? 'Sim' : 'Não'}"
-                    	hideOrder="true"/>
+                      columnHeader="#{infoxMessages['tipoProcessoDocumentoPapel.assinaturaMultipla']}"
+                      value="#{row.assinaturasMultiplas ? 'Sim' : 'Não'}"
+                      hideOrder="true"/>
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBar
@@ -220,7 +220,7 @@
                 </wi:dataTable>
             </s:div>
         </infox:tab>
-        
+
         <infox:tab status=":status" id="extensoesTab"
             rendered="#{home.managed and home.instance.canDoUpload()}" name="extensoesTab"
             title="#{infoxMessages['tipoProcessoDocumento.extensoesTab']}"
@@ -257,7 +257,7 @@
                         value="#{extensaoArquivoCrudAction.instance.tamanhoPorPagina}"
                         required="true"
                         label="#{infoxMessages['tipoProcessoDocumento.tamanhoPorPagina']}"
-                        maxlength="30" 
+                        maxlength="30"
                         rendered="#{extensaoArquivoCrudAction.instance.paginavel}"/>
                 </s:div>
                 <ui:define name="buttons">
@@ -294,11 +294,11 @@
                         columnHeader="#{infoxMessages['extensaoArquivo.tamanho']}"
                         value="#{row.tamanho}" />
                     <wi:columnBoolean columnId="paginavel"
-                    	columnHeader="#{infoxMessages['extensaoArquivo.paginavel']}"
-                    	value="#{row.paginavel}" />
+                      columnHeader="#{infoxMessages['extensaoArquivo.paginavel']}"
+                      value="#{row.paginavel}" />
                     <wi:columnOutputText columnId="tamanhoPorPagina"
-                    	columnHeader="#{infoxMessages['extensaoArquivo.tamanhoPorPagina']}"
-                    	value="#{row.tamanhoPorPagina}" />
+                      columnHeader="#{infoxMessages['extensaoArquivo.tamanhoPorPagina']}"
+                      value="#{row.tamanhoPorPagina}" />
                 </wi:dataTable>
             </s:div>
         </infox:tab>
