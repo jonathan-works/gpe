@@ -27,6 +27,7 @@ import br.com.infox.epp.certificadoeletronico.CertificadoEletronicoService;
 import br.com.infox.epp.certificadoeletronico.builder.CertUtil;
 import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronico;
 import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronicoBin;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 import br.com.infox.epp.login.LoginService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
@@ -124,7 +125,7 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
 
             AssinavelProvider assinavelProvider = button.getAssinavelProvider();
             assinadorService = Beans.getReference(AssinadorService.class);
-            String token = assinadorService.criarListaAssinaveisAssinaturaEletronica(assinavelProvider);
+            String token = assinadorService.criarListaAssinaveis(assinavelProvider, TipoMeioAssinaturaEnum.E);
             for (UUID uuidAssinavel : assinadorService.listarAssinaveis(token)) {
                 byte[] dataToSign = assinadorService.getSha256(token, uuidAssinavel);
                 SimpleSignableIO dataIO = new SimpleSignableIO(dataToSign, true, false).signWith(assinador);

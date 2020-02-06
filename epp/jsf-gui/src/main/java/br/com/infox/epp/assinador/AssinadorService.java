@@ -28,6 +28,7 @@ import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelSource;
 import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -65,11 +66,10 @@ public class AssinadorService implements Serializable {
     private ValidadorAssinatura validadorAssinatura;
 
     public String criarListaAssinaveis(AssinavelProvider assinavelProvider) {
-        return groupService.createNewGroupWithAssinavelProvider(assinavelProvider);
+        return criarListaAssinaveis(assinavelProvider, TipoMeioAssinaturaEnum.T);
     }
-
-    public String criarListaAssinaveisAssinaturaEletronica(AssinavelProvider assinavelProvider) {
-        return groupService.createNewGroupWithAssinavelProvider(assinavelProvider);
+    public String criarListaAssinaveis(AssinavelProvider assinavelProvider, TipoMeioAssinaturaEnum tipoAssinatura) {
+        return groupService.createNewGroupWithAssinavelProvider(assinavelProvider, tipoAssinatura);
     }
 
     public DadosAssinaturaLegada getDadosAssinaturaLegada(byte[] signature) {

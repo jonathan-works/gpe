@@ -25,6 +25,7 @@ import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 import br.com.infox.util.time.DateRange;
 
 @Stateless
@@ -77,13 +78,16 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
     }
 
     @Override
-    public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider) {
+    public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider, TipoMeioAssinaturaEnum meioAssinatura) {
         CertificateSignatureGroup certificateSignatureGroup = createNewGroup();
+        TipoMeioAssinaturaEnum tipoMeioAssinatura = meioAssinatura != null ? meioAssinatura : TipoMeioAssinaturaEnum.T;
 
         Iterator<? extends AssinavelSource> it = assinavelProvider.getAssinaveis().iterator();
         while(it.hasNext()) {
             AssinavelSource source = it.next();
-            newCertificateSignature(certificateSignatureGroup, source);
+            if(source.getTipoMeioAssinatura() == null || source.getTipoMeioAssinatura().equals(tipoMeioAssinatura)) {
+                newCertificateSignature(certificateSignatureGroup, source);
+            }
         }
         getEntityManager().flush();
 

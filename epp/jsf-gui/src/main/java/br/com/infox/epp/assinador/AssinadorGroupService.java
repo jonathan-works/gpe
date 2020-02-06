@@ -5,10 +5,15 @@ import java.util.UUID;
 
 import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 
 public interface AssinadorGroupService {
 
-    public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider);
+    default String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider) {
+        return createNewGroupWithAssinavelProvider(assinavelProvider, TipoMeioAssinaturaEnum.T);
+    }
+
+    public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider, TipoMeioAssinaturaEnum meioAssinatura);
 
     public void validarToken(String token);
 

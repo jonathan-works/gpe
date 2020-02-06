@@ -73,7 +73,7 @@ public class AssinadorController implements Serializable, AssinaturaCallback {
     }
 
     public String criarGrupoAssinatura(AssinavelProvider assinavelProvider) {
-        token = assinadorService.criarListaAssinaveis(assinavelProvider);
+        token = assinadorService.criarListaAssinaveis(assinavelProvider, TipoMeioAssinaturaEnum.T);
         return token;
     }
 
