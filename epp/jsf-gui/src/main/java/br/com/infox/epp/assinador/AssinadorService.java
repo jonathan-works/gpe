@@ -160,7 +160,11 @@ public class AssinadorService implements Serializable {
                             assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(),
                                             TipoAssinatura.PKCS7, dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData());
                     } catch (DAOException | CertificadoException | AssinaturaException e) {
-                            throw new RuntimeException("Erro ao assinar documento", e);
+                        String msgErro = "Erro ao assinar documento";
+                        if(e instanceof AssinaturaException) {
+                            msgErro = e.getMessage();
+                        }
+                        throw new RuntimeException(msgErro, e);
                     }
         }
         else {
