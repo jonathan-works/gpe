@@ -246,7 +246,7 @@ public class Assinador extends javax.faces.component.UICommand
     }
 
     public String getTextoConfirmacaoAssinaturaEletronica() {
-        return (java.lang.String) getStateHelper().eval(PropertyKeys.textoConfirmacaoAssinaturaEletronica, "Digite sua senha e confirme para assinar eletrônicamente.");
+        return (java.lang.String) getStateHelper().eval(PropertyKeys.textoConfirmacaoAssinaturaEletronica, "Digite sua senha e confirme para assinar eletronicamente.");
     }
 
 
