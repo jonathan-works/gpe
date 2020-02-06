@@ -15,7 +15,7 @@ import br.com.infox.epp.assinador.view.AssinaturaCallback;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @FacesComponent(Assinador.COMPONENT_TYPE)
-@ResourceDependencies({ 
+@ResourceDependencies({
     @ResourceDependency(library = "js", name = "namespace.js"),
     @ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
     @ResourceDependency(library = "primefaces", name = "jquery/jquery-plugins.js"),
@@ -226,11 +226,11 @@ public class Assinador extends javax.faces.component.UICommand
         return (java.lang.Boolean) getStateHelper().eval(PropertyKeys.renderedAssinaturaEletronica, true);
     }
     public void setPessoaAssinatura(PessoaFisica value) {
-    	getStateHelper().put(PropertyKeys.pessoaAssinatura, value);
+        getStateHelper().put(PropertyKeys.pessoaAssinatura, value);
     }
-    
+
     public PessoaFisica getPessoaAssinatura() {
-    	return (PessoaFisica) getStateHelper().eval(PropertyKeys.pessoaAssinatura);
+        return (PessoaFisica) getStateHelper().eval(PropertyKeys.pessoaAssinatura);
     }
 
     public void setLabelAssinaturaEletronica(java.lang.String value) {
