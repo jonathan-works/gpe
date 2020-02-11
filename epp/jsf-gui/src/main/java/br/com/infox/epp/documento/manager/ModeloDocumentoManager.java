@@ -1,9 +1,16 @@
 package br.com.infox.epp.documento.manager;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +23,7 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.entity.Papel;
@@ -28,6 +36,7 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.type.Expression;
 import br.com.infox.epp.documento.type.ExpressionResolver;
+import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -250,4 +259,66 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     public List<ModeloDocumento> getModeloDocumentoByPapel(Papel papel) {
         return getDao().getModeloDocumentoByPapel(papel);
     }
+    
+    public String resolverModeloComContexto(Integer idProcesso, String codigoModelo, Object contexto) {
+        if (contexto == null)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        if (contexto instanceof Iterable) {
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            Iterable<? extends Object> iterable = (Iterable)contexto;
+            sb.append(resolveModelo(idProcesso, codigoModelo, iterable));
+        } else {
+            sb.append( resolveModelo(idProcesso, codigoModelo, contexto) );
+        }
+        return sb.toString();
+    }
+    private String resolveModelo(Integer idProcesso, String codigoModelo, Iterable<? extends Object> iterable) {
+        StringBuilder sb = new StringBuilder();
+        for (Iterator<? extends Object> it = iterable.iterator(); it.hasNext();) {
+            sb.append( resolveModelo(idProcesso, codigoModelo, it.next()) );
+        }
+        return sb.toString();
+    }
+    
+    private String resolveModelo(Integer idProcesso, String codigoModelo, Object object) {
+    	final ExecutionContext newExecContext = new ExecutionContext(ExecutionContext.currentExecutionContext());
+    	try {
+    		ExecutionContext.pushCurrentContext(newExecContext);
+    		newExecContext.getContextInstance().addVariables(objectToMap(object));
+    		ExpressionResolver resolver = ExpressionResolverChainBuilder.defaultExpressionResolverChain(idProcesso, newExecContext);
+    		return getConteudo(codigoModelo, resolver);
+    	} finally {
+    		ExecutionContext.popCurrentContext(newExecContext);
+    	}
+    }
+    
+    private static Map<String, Object> objectToMap(Object object){
+        if (object instanceof Map) {
+            HashMap<String, Object> map = new HashMap<>();
+            @SuppressWarnings("unchecked")
+            Map<Object, Object> originalMap = (Map<Object,Object>)object;
+            for (Entry<Object,Object> entry : originalMap.entrySet()) {
+                String key = entry.getKey().toString();
+                Object value = entry.getValue();
+                map.put(key, value);
+                map.put(MessageFormat.format("#'{'{0}'}'", key), value);
+            }
+            return map;
+        }
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            for (PropertyDescriptor propertyDescriptor : Introspector.getBeanInfo(object.getClass(), Object.class)
+                    .getPropertyDescriptors()) {
+                String key = propertyDescriptor.getName();
+                Object value = propertyDescriptor.getReadMethod().invoke(object);
+                map.put(MessageFormat.format("#'{'{0}'}'", key), value);
+                map.put(key, value);
+            }
+            return map;
+        } catch (IntrospectionException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+    
 }
