@@ -95,7 +95,7 @@ public class CertificadoEletronicoService extends PersistenceController {
             pf.getUsuarioLogin().getSenha()
         )).gerar();
 
-        PessoaFisica pessoaFisica = getPessoaFisicaLogada();
+        PessoaFisica pessoaFisica = pf;
         certificadoDTO.setIdPessoaFisica(pessoaFisica.getIdPessoa());
         certificadoDTO.setIdCertificadoEletronicoPai(certificadoEletronicoBinRaiz.getId());
         persist(certificadoDTO);

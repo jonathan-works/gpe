@@ -156,8 +156,14 @@
         </fieldset>
 
         <p:dialog id="novoParticipanteDialog" header="#{infoxMessages['participanteProcesso.novoParticipante']}"
-            widgetVar="dialogAdicionarParticipante" fitViewport="true" responsive="true" position="top"
-            modal="true" closeOnEscape="true" width="95%" height="95%" >
+            widgetVar="dialogAdicionarParticipante"  fitViewport="true" responsive="true" position="center center"
+            modal="true" closeOnEscape="false" width="95%" height="95%" >
+
+            <f:facet name="footer">
+                <div>
+                     <p:commandButton value="#{infoxMessages['button.add']}" onclick="adicionarParticipante()" styleClass="buttons" />
+                </div>
+            </f:facet>
 
             <h:form id="novoParticipanteFormDialog"
                     styleClass="novoParticipanteFormDialog">
@@ -213,12 +219,10 @@
                     </fieldset>
                 </p:outputPanel>
 
-                <div>
-                     <h:commandButton value="#{infoxMessages['button.add']}" action="#{iniciarProcessoView.adicionarParticipante}" styleClass="buttons">
-                         <p:ajax process="@form" update="@form:loadedByParticipante :pageBodyDialogMessage :iniciarProcessoForm:participanteList partePanel"
-                             partialSubmit="true" />
-                     </h:commandButton>
-                </div>
+                <p:remoteCommand
+                    action="#{iniciarProcessoView.adicionarParticipante}"
+                    name="adicionarParticipante" process="@form" partialSubmit="true" update="@form:loadedByParticipante :pageBodyDialogMessage :iniciarProcessoForm:participanteList partePanel">
+                </p:remoteCommand>
 
             </h:form>
         </p:dialog>

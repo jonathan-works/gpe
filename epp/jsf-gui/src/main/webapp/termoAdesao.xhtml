@@ -6,7 +6,7 @@
     xmlns:i="http://java.sun.com/jsf/composite/infox"
     template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
     <ui:define name="title">#{infoxMessages['termoAdesao.titlePage']}</ui:define>
-    
+
     <ui:define name="baseBody">
         <style>
 html,body {
@@ -52,7 +52,7 @@ html,body {
                             onbegin="infox.showLoading();"
                             oncomplete="infox.hideLoading();"
                             pessoaAssinatura="#{termoAdesaoViewController.pessoaFisica}"
-                            labelAssinaturaEletronica="Assinar termo de adesão eletrônicamente"
+                            labelAssinaturaEletronica="Assinar termo de adesão eletronicamente"
                             value="#{infoxMessages['login.assinarTermoAdesao']}">
                         </wi:assinador>
                     </h:form>

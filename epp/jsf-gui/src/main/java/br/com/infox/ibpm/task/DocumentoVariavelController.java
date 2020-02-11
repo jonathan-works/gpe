@@ -83,12 +83,12 @@ public class DocumentoVariavelController implements Serializable, AssinaturaCall
             }
         }
         if (pastas.size() == 1) {
-        	pasta = pastas.get(0);
+            pasta = pastas.get(0);
         }
     }
 
     public AssinavelProvider getAssinavelProvider() {
-        ClassificacaoDocumento classificacao = (ClassificacaoDocumento) formField.getProperties().get("classificacaoDocumento");
+        ClassificacaoDocumento classificacao = TaskInstanceHome.instance().getVariaveisDocumento().get(formField.getId()).getClassificacaoDocumento();
 
         DocumentoComRegraAssinatura documentoComRegraAssinatura = new AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura(
             classificacaoDocumentoPapelManager.getTipoMeioAssinaturaUsuarioLogadoByClassificacaoDocumento(classificacao),

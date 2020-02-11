@@ -15,8 +15,9 @@
               header="#{infoxMessages['empresa.titleDialog']}"
               modal="true"
               width="90%"
-              appendToBody="true"
-              position="top"
+              height="90%"
+              fitViewport="true"
+              position="center center"
               closable="true"
               resizable="false"
               draggable="true"
@@ -36,7 +37,7 @@
                     rows="2"
                     columns="1"
                     emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
-            
+
             <h:panelGrid columns="5" style="border-bottom: solid 1px #DDD;" width="100%" styleClass="p-grid">
                 <h:panelGrid columns="1" width="25px">
                     <h:commandButton id="#{id}SelecionarBtn"
@@ -47,55 +48,55 @@
                                 update="@(.#{id}) @(.#{paginaPrincipal}) :pageBodyDialogMessage"
                                 onstart="infox.showLoading();"
                                 oncomplete="infox.hideLoading();"/>
-                    </h:commandButton>  
+                    </h:commandButton>
                 </h:panelGrid>
                 <h:panelGrid columns="4" width="100%">
                     <wi:dialogOutput label="#{infoxMessages['empresa.cnpj']}"
                                      value="#{row.cnpj}">
                         <f:converter converterId="cnpjConverter"/>
                     </wi:dialogOutput>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['empresa.razaoSocial']}"
                                      value="#{row.razaoSocial}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['empresa.nomeFantasia']}"
                                      value="#{row.nomeFantasia}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['empresa.tipoEmpresa']}"
                                      value="#{row.tipoEmpresa}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['empresa.dataAbertura']}"
                                      value="#{row.dataAbertura}">
                         <f:convertDateTime pattern="dd/MM/yyyy"/>
                     </wi:dialogOutput>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['empresa.telefoneCelular']}"
                                      value="#{row.telefoneCelular}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['empresa.telefoneFixo']}"
                                      value="#{row.telefoneFixo}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['empresa.email']}"
                                      value="#{row.email}"/>
-                    
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.codEstado']}"
                                      value="#{row.codEstado}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cidade']}"
                                      value="#{row.cidade}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.logradouro']}"
                                      value="#{row.logradouro}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.bairro']}"
                                      value="#{row.bairro}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.complemento']}"
                                      value="#{row.complemento}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.numero']}"
                                      value="#{row.numero}"/>
-                
+
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.cep']}"
                                      value="#{row.cep}"/>
                 </h:panelGrid>

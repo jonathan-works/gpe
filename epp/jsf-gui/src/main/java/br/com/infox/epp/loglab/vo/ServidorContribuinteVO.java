@@ -3,6 +3,7 @@ package br.com.infox.epp.loglab.vo;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
 import br.com.infox.epp.pessoa.annotation.Cpf;
@@ -30,6 +31,7 @@ public class ServidorContribuinteVO {
     private String nomeCompleto;
     private String sexo;
     private Date dataNascimento;
+    @Size(min = 6, max = 256)
     private String nomeMae;
     @NotNull
     private String email;

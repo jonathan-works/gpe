@@ -5,34 +5,39 @@ import java.util.UUID;
 
 import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 
 public interface AssinadorGroupService {
 
-	public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider);
+    default String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider) {
+        return createNewGroupWithAssinavelProvider(assinavelProvider, TipoMeioAssinaturaEnum.T);
+    }
 
-	public void validarToken(String token);
-	
-	public void validarNovoToken(String token);
+    public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider, TipoMeioAssinaturaEnum meioAssinatura);
 
-	public boolean isTokenExpired(String token);
+    public void validarToken(String token);
 
-	public StatusToken getStatus(String token);
+    public void validarNovoToken(String token);
 
-	public List<UUID> getAssinaveis(String token);
+    public boolean isTokenExpired(String token);
 
-	public byte[] getSha256(String token, UUID uuidAssinavel);
+    public StatusToken getStatus(String token);
 
-	public void apagarGrupo(String token);
+    public List<UUID> getAssinaveis(String token);
 
-	public void cancelar(String token);
+    public byte[] getSha256(String token, UUID uuidAssinavel);
 
-	public void erroProcessamento(String token, UUID uuidAssinavel, String codigoErro, String mensagem);
+    public void apagarGrupo(String token);
 
-	public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuidAssinavel,
-			DadosAssinaturaLegada dadosAssinaturaLegada);
+    public void cancelar(String token);
 
-	public List<DadosAssinatura> getDadosAssinatura(String token);
+    public void erroProcessamento(String token, UUID uuidAssinavel, String codigoErro, String mensagem);
 
-	public DadosAssinatura getDadosAssinatura(String token, UUID uuidAssinavel);
+    public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuidAssinavel,
+            DadosAssinaturaLegada dadosAssinaturaLegada);
+
+    public List<DadosAssinatura> getDadosAssinatura(String token);
+
+    public DadosAssinatura getDadosAssinatura(String token, UUID uuidAssinavel);
 
 }

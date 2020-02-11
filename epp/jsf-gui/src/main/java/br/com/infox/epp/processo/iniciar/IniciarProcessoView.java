@@ -392,6 +392,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
                 participanteProcessoList.add(iniciarProcessoParticipanteVO);
                 Collections.sort(participanteProcessoList);
 
+                FacesMessages.instance().add("Participante adicionado à lista.");
 
                 limparDadosParticipante();
             }

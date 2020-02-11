@@ -25,311 +25,315 @@ import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 import br.com.infox.util.time.DateRange;
 
 @Stateless
 public class CertificateSignatureGroupService implements AssinadorGroupService, Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Inject
-	private CertificateSignatureGroupSearch certificateSignatureGroupSearch;
-	@Inject
-	private CertificateSignatureSearch certificateSignatureSearch;
-	@Inject
-	private CertificateSignatureService certificateSignatureService;
-	@Inject
-	private TokenAssinaturaService tokenAssinaturaService;
+    @Inject
+    private CertificateSignatureGroupSearch certificateSignatureGroupSearch;
+    @Inject
+    private CertificateSignatureSearch certificateSignatureSearch;
+    @Inject
+    private CertificateSignatureService certificateSignatureService;
+    @Inject
+    private TokenAssinaturaService tokenAssinaturaService;
 
-	private static final int TOKEN_LIFESPAN = 8;
+    private static final int TOKEN_LIFESPAN = 8;
 
-	protected EntityManager getEntityManager() {
-		return EntityManagerProducer.getEntityManager();
-	}
+    protected EntityManager getEntityManager() {
+        return EntityManagerProducer.getEntityManager();
+    }
 
-	private CertificateSignatureGroup createNewGroup() {
-		String uuid = UUID.randomUUID().toString();
-		CertificateSignatureGroup certificateSignatureGroup = new CertificateSignatureGroup();
-		certificateSignatureGroup.setToken(uuid);
-		certificateSignatureGroup.setStatus(CertificateSignatureGroupStatus.W);
-		certificateSignatureGroup.setDataCriacao(new Date());
-		
-		getEntityManager().persist(certificateSignatureGroup);
-		
-		return certificateSignatureGroup;
-	}
-	
-	private CertificateSignature newCertificateSignature(CertificateSignatureGroup certificateSignatureGroup, AssinavelSource assinavelSource) {
-		CertificateSignature certificateSignature = new CertificateSignature();
-		certificateSignature.setCertificateSignatureGroup(certificateSignatureGroup);
-		certificateSignature.setUuid(UUID.randomUUID().toString());
-		certificateSignature.setStatus(certificateSignatureGroup.getStatus());
-		certificateSignature.setSha256(assinavelSource.dataToSign(TipoSignedData.SHA256));
-		certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
-		
-		if(assinavelSource instanceof AssinavelSourceUUID) {
-			certificateSignature.setUuidDocumentoBin(((AssinavelSourceUUID)assinavelSource).getUUIDAssinavel());
-		}
-		
-		getEntityManager().persist(certificateSignature);
-		
-		return certificateSignature;
-	}
+    private CertificateSignatureGroup createNewGroup() {
+        String uuid = UUID.randomUUID().toString();
+        CertificateSignatureGroup certificateSignatureGroup = new CertificateSignatureGroup();
+        certificateSignatureGroup.setToken(uuid);
+        certificateSignatureGroup.setStatus(CertificateSignatureGroupStatus.W);
+        certificateSignatureGroup.setDataCriacao(new Date());
 
-	@Override
-	public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider) {
-		CertificateSignatureGroup certificateSignatureGroup = createNewGroup();
-		
-		Iterator<? extends AssinavelSource> it = assinavelProvider.getAssinaveis().iterator();
-		while(it.hasNext()) {
-			AssinavelSource source = it.next();
-			newCertificateSignature(certificateSignatureGroup, source);
-		}
-		getEntityManager().flush();
-		
-		return certificateSignatureGroup.getToken();		
-	}
-	
-	@Override
-	public void validarToken(String token) {
-		CertificateSignatureGroup group = findByToken(token);
-		if (group == null) {
-			throw new ValidationException("Token inválido");
-		}
+        getEntityManager().persist(certificateSignatureGroup);
 
-		CertificateSignatureGroupStatus status = group.getStatus();
+        return certificateSignatureGroup;
+    }
 
-		// Status válido
-		if (status == CertificateSignatureGroupStatus.S) {
-			return;
-		}
+    private CertificateSignature newCertificateSignature(CertificateSignatureGroup certificateSignatureGroup, AssinavelSource assinavelSource) {
+        CertificateSignature certificateSignature = new CertificateSignature();
+        certificateSignature.setCertificateSignatureGroup(certificateSignatureGroup);
+        certificateSignature.setUuid(UUID.randomUUID().toString());
+        certificateSignature.setStatus(certificateSignatureGroup.getStatus());
+        certificateSignature.setSha256(assinavelSource.dataToSign(TipoSignedData.SHA256));
+        certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
 
-		switch (group.getStatus()) {
-		case X:
-			throw new ValidationException("Token expirado");
-		case W:
-			throw new ValidationException("Token não assinado");
-		case E:
-			throw new ValidationException("Erro na assinatura do token");
-		default:
-			throw new ValidationException("Token com status desconhecido");
-		}
-	}
-	
-	@Override
-	public void validarNovoToken(String token) {
-		CertificateSignatureGroup group = findByToken(token);
-		if (group == null) {
-			throw new ValidationException("Token inválido");
-		}
+        if(assinavelSource instanceof AssinavelSourceUUID) {
+            certificateSignature.setUuidDocumentoBin(((AssinavelSourceUUID)assinavelSource).getUUIDAssinavel());
+        }
 
-		CertificateSignatureGroupStatus status = group.getStatus();
+        getEntityManager().persist(certificateSignature);
 
-		// Status válido
-		if (status == CertificateSignatureGroupStatus.W) {
-			return;
-		}
+        return certificateSignature;
+    }
 
-		switch (group.getStatus()) {
-		case X:
-			throw new ValidationException("Token expirado");
-		case S:
-		case E:
-			throw new ValidationException("Token já processado");
-		default:
-			throw new ValidationException("Token com status desconhecido");
-		}
-	}
+    @Override
+    public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider, TipoMeioAssinaturaEnum meioAssinatura) {
+        CertificateSignatureGroup certificateSignatureGroup = createNewGroup();
+        TipoMeioAssinaturaEnum tipoMeioAssinatura = meioAssinatura != null ? meioAssinatura : TipoMeioAssinaturaEnum.T;
 
-	private boolean isTokenExpired(CertificateSignatureGroup group) {
-		return new DateRange(group.getDataCriacao(), new Date()).get(DateRange.MINUTES) > TOKEN_LIFESPAN;
-	}
+        Iterator<? extends AssinavelSource> it = assinavelProvider.getAssinaveis().iterator();
+        while(it.hasNext()) {
+            AssinavelSource source = it.next();
+            if(source.getTipoMeioAssinatura() == null || source.getTipoMeioAssinatura().equals(tipoMeioAssinatura)) {
+                newCertificateSignature(certificateSignatureGroup, source);
+            }
+        }
+        getEntityManager().flush();
 
-	public boolean isTokenExpired(String token) {
-		return isTokenExpired(findByToken(token));
-	}
-	
-	private StatusToken getStatusToken(CertificateSignatureGroupStatus status) {
-		switch (status) {
-		case X:
-			return StatusToken.EXPIRADO;
-		case S:
-			return StatusToken.SUCESSO;
-		case E:
-			return StatusToken.ERRO;
-		case W:
-			return StatusToken.AGUARDANDO_ASSINATURA;
-		default:
-			return null;
-		}		
-	}
-	
-	public StatusToken getStatus(String token) {
-		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
-		getEntityManager().refresh(certificateSignatureGroup);
-		return getStatusToken(certificateSignatureGroup.getStatus());
-	}
+        return certificateSignatureGroup.getToken();
+    }
 
-	/**
-	 * Retorna uma lista contendo os UUIDs dos documentos desse grupo
-	 */
-	public List<UUID> getAssinaveis(String token) {
-		CertificateSignatureGroup group = findByToken(token);
-		List<UUID> retorno = new ArrayList<>();
-		for (CertificateSignature certificateSignature : group.getCertificateSignatureList()) {
-			retorno.add(UUID.fromString(certificateSignature.getUuid()));
-		}
-		return retorno;
-	}
-	
-	private void refresh(CertificateSignatureGroup group) {
-		getEntityManager().refresh(group);
-		List<CertificateSignature> certificateSignatures = group.getCertificateSignatureList();
-		if(certificateSignatures != null) {
-			for(CertificateSignature cs : certificateSignatures) {
-				getEntityManager().refresh(cs);
-			}
-		}
-	}
+    @Override
+    public void validarToken(String token) {
+        CertificateSignatureGroup group = findByToken(token);
+        if (group == null) {
+            throw new ValidationException("Token inválido");
+        }
 
-	private CertificateSignatureGroup findByToken(String token) {
-		CertificateSignatureGroup group = certificateSignatureGroupSearch.findByToken(token);
-		refresh(group);
-		
-		if (group.getStatus() == CertificateSignatureGroupStatus.W && isTokenExpired(group)) {
-			tokenAssinaturaService.expirarToken(token);
-		}
+        CertificateSignatureGroupStatus status = group.getStatus();
 
-		return group;
-	}
+        // Status válido
+        if (status == CertificateSignatureGroupStatus.S) {
+            return;
+        }
 
-	private void setStatus(String token, CertificateSignatureGroupStatus status) {
-		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
-		certificateSignatureGroup.setStatus(status);
+        switch (group.getStatus()) {
+        case X:
+            throw new ValidationException("Token expirado");
+        case W:
+            throw new ValidationException("Token não assinado");
+        case E:
+            throw new ValidationException("Erro na assinatura do token");
+        default:
+            throw new ValidationException("Token com status desconhecido");
+        }
+    }
 
-		getEntityManager().persist(certificateSignatureGroup);
-		getEntityManager().flush();
-	}
+    @Override
+    public void validarNovoToken(String token) {
+        CertificateSignatureGroup group = findByToken(token);
+        if (group == null) {
+            throw new ValidationException("Token inválido");
+        }
 
-	public void apagarGrupo(String token) {
-		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
+        CertificateSignatureGroupStatus status = group.getStatus();
 
-		for (CertificateSignature certificateSignature : certificateSignatureGroup.getCertificateSignatureList()) {
-			getEntityManager().remove(certificateSignature);
-		}
+        // Status válido
+        if (status == CertificateSignatureGroupStatus.W) {
+            return;
+        }
 
-		getEntityManager().remove(certificateSignatureGroup);
-		getEntityManager().flush();
-	}
+        switch (group.getStatus()) {
+        case X:
+            throw new ValidationException("Token expirado");
+        case S:
+        case E:
+            throw new ValidationException("Token já processado");
+        default:
+            throw new ValidationException("Token com status desconhecido");
+        }
+    }
 
-	public void cancelar(String token) {
-		erroProcessamento(token, "Operação cancelada pelo assinador");
-	}
+    private boolean isTokenExpired(CertificateSignatureGroup group) {
+        return new DateRange(group.getDataCriacao(), new Date()).get(DateRange.MINUTES) > TOKEN_LIFESPAN;
+    }
 
-	public void erroProcessamento(String token, String mensagem) {
-		setStatus(token, CertificateSignatureGroupStatus.E);
-	}
+    public boolean isTokenExpired(String token) {
+        return isTokenExpired(findByToken(token));
+    }
 
-	private CertificateSignature findCertificateSignature(String tokenGrupo, UUID uuidAssinavel) {
-		try {
-			return certificateSignatureService.findByTokenAndUUID(tokenGrupo, uuidAssinavel.toString());
-		} catch (NoResultException e) {
-			throw new ValidationException("CertificateSignature não encontrado");
-		}
-	}
+    private StatusToken getStatusToken(CertificateSignatureGroupStatus status) {
+        switch (status) {
+        case X:
+            return StatusToken.EXPIRADO;
+        case S:
+            return StatusToken.SUCESSO;
+        case E:
+            return StatusToken.ERRO;
+        case W:
+            return StatusToken.AGUARDANDO_ASSINATURA;
+        default:
+            return null;
+        }
+    }
 
-	private boolean isFinalizado(String token) {
-		return !certificateSignatureSearch.possuiAguardando(token);
-	}
+    public StatusToken getStatus(String token) {
+        CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
+        getEntityManager().refresh(certificateSignatureGroup);
+        return getStatusToken(certificateSignatureGroup.getStatus());
+    }
 
-	private boolean isSucesso(String token) {
-		return !certificateSignatureSearch.possuiStatusDiferente(token, CertificateSignatureGroupStatus.S);
-	}
-	
-	private void atualizarStatusGrupo(String token) {
-		StatusToken statusAtual = getStatus(token);
-		if (statusAtual != StatusToken.AGUARDANDO_ASSINATURA) {
-			throw new RuntimeException("Não foi possível atualizar grupo com token " + token + ": Status diferente de " + StatusToken.AGUARDANDO_ASSINATURA);
-		}
-		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
-		
-		if(isSucesso(token)) {
-			certificateSignatureGroup.setStatus(CertificateSignatureGroupStatus.S);			
-		}
-		else if(certificateSignatureSearch.possuiStatus(token, CertificateSignatureGroupStatus.E)) {
-			certificateSignatureGroup.setStatus(CertificateSignatureGroupStatus.E);			
-		}
-		else {
-			certificateSignatureGroup.setStatus(CertificateSignatureGroupStatus.U);						
-		}
-		
-		getEntityManager().flush();
-	}
+    /**
+     * Retorna uma lista contendo os UUIDs dos documentos desse grupo
+     */
+    public List<UUID> getAssinaveis(String token) {
+        CertificateSignatureGroup group = findByToken(token);
+        List<UUID> retorno = new ArrayList<>();
+        for (CertificateSignature certificateSignature : group.getCertificateSignatureList()) {
+            retorno.add(UUID.fromString(certificateSignature.getUuid()));
+        }
+        return retorno;
+    }
 
-	private void atualizarCertificateSignature(CertificateSignature certificateSignature) {
-		getEntityManager().flush();
+    private void refresh(CertificateSignatureGroup group) {
+        getEntityManager().refresh(group);
+        List<CertificateSignature> certificateSignatures = group.getCertificateSignatureList();
+        if(certificateSignatures != null) {
+            for(CertificateSignature cs : certificateSignatures) {
+                getEntityManager().refresh(cs);
+            }
+        }
+    }
 
-		String token = certificateSignature.getCertificateSignatureGroup().getToken();
-		if (isFinalizado(token)) {
-			atualizarStatusGrupo(token);
-		}
-	}
-	
-	@Override
-	public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuidAssinavel,
-			DadosAssinaturaLegada dadosAssinaturaLegada) {
-		CertificateSignature certificateSignature = findCertificateSignature(tokenGrupo, uuidAssinavel);
-		if (certificateSignature.getStatus() != CertificateSignatureGroupStatus.W) {
-			throw new ValidationException("Assinatura já processada com status " + certificateSignature.getStatus());
-		}
+    private CertificateSignatureGroup findByToken(String token) {
+        CertificateSignatureGroup group = certificateSignatureGroupSearch.findByToken(token);
+        refresh(group);
 
-		certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
-		certificateSignature.setCertificateChain(dadosAssinaturaLegada.getCertChainBase64());
-		certificateSignature.setSignature(dadosAssinaturaLegada.getSignature());
-		certificateSignature.setStatus(CertificateSignatureGroupStatus.S);
+        if (group.getStatus() == CertificateSignatureGroupStatus.W && isTokenExpired(group)) {
+            tokenAssinaturaService.expirarToken(token);
+        }
 
-		atualizarCertificateSignature(certificateSignature);
-	}
+        return group;
+    }
 
-	@Override
-	public byte[] getSha256(String token, UUID uuidAssinavel) {
-		CertificateSignature certificateSignature = findCertificateSignature(token, uuidAssinavel);
-		return certificateSignature.getSha256();
-	}
+    private void setStatus(String token, CertificateSignatureGroupStatus status) {
+        CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
+        certificateSignatureGroup.setStatus(status);
 
-	@Override
-	public void erroProcessamento(String token, UUID uuidAssinavel, String codigoErro, String mensagem) {
-		CertificateSignature certificateSignature = findCertificateSignature(token, uuidAssinavel);
-		certificateSignature.setStatus(CertificateSignatureGroupStatus.E);
-		certificateSignature.setCodigoErro(codigoErro);
-		certificateSignature.setMensagemErro(mensagem);
-		atualizarCertificateSignature(certificateSignature);		
-	}
-	
-	private DadosAssinatura toDadosAssinatura(CertificateSignature cs) {
-		UUID uuid = UUID.fromString(cs.getUuid());
-		StatusToken status = getStatusToken(cs.getStatus());
-		UUID uuidDocumentoBin = cs.getUuidDocumentoBin();
-		byte[] signature = cs.getSignature() == null ? null : Base64.decode(cs.getSignature());
-		byte[] certChain = cs.getCertificateChain() == null ? null : Base64.decode(cs.getCertificateChain());
-		
-		return new DadosAssinatura(uuid, status, cs.getCodigoErro(), cs.getMensagemErro(), cs.getSignatureType(), uuidDocumentoBin, signature, certChain, cs.getSha256(), TipoSignedData.SHA256);
-	}
+        getEntityManager().persist(certificateSignatureGroup);
+        getEntityManager().flush();
+    }
 
-	@Override
-	public List<DadosAssinatura> getDadosAssinatura(String token) {
-		CertificateSignatureGroup group = findByToken(token);
-		List<DadosAssinatura> retorno = new ArrayList<>();
-		for (CertificateSignature certificateSignature : group.getCertificateSignatureList()) {
-			retorno.add(toDadosAssinatura(certificateSignature));
-		}
-		return retorno;
-	}
+    public void apagarGrupo(String token) {
+        CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
 
-	@Override
-	public DadosAssinatura getDadosAssinatura(String token, UUID uuidAssinavel) {		
-		CertificateSignature certificateSignature = findCertificateSignature(token, uuidAssinavel);
-		return toDadosAssinatura(certificateSignature);
-	}
+        for (CertificateSignature certificateSignature : certificateSignatureGroup.getCertificateSignatureList()) {
+            getEntityManager().remove(certificateSignature);
+        }
+
+        getEntityManager().remove(certificateSignatureGroup);
+        getEntityManager().flush();
+    }
+
+    public void cancelar(String token) {
+        erroProcessamento(token, "Operação cancelada pelo assinador");
+    }
+
+    public void erroProcessamento(String token, String mensagem) {
+        setStatus(token, CertificateSignatureGroupStatus.E);
+    }
+
+    private CertificateSignature findCertificateSignature(String tokenGrupo, UUID uuidAssinavel) {
+        try {
+            return certificateSignatureService.findByTokenAndUUID(tokenGrupo, uuidAssinavel.toString());
+        } catch (NoResultException e) {
+            throw new ValidationException("CertificateSignature não encontrado");
+        }
+    }
+
+    private boolean isFinalizado(String token) {
+        return !certificateSignatureSearch.possuiAguardando(token);
+    }
+
+    private boolean isSucesso(String token) {
+        return !certificateSignatureSearch.possuiStatusDiferente(token, CertificateSignatureGroupStatus.S);
+    }
+
+    private void atualizarStatusGrupo(String token) {
+        StatusToken statusAtual = getStatus(token);
+        if (statusAtual != StatusToken.AGUARDANDO_ASSINATURA) {
+            throw new RuntimeException("Não foi possível atualizar grupo com token " + token + ": Status diferente de " + StatusToken.AGUARDANDO_ASSINATURA);
+        }
+        CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
+
+        if(isSucesso(token)) {
+            certificateSignatureGroup.setStatus(CertificateSignatureGroupStatus.S);
+        }
+        else if(certificateSignatureSearch.possuiStatus(token, CertificateSignatureGroupStatus.E)) {
+            certificateSignatureGroup.setStatus(CertificateSignatureGroupStatus.E);
+        }
+        else {
+            certificateSignatureGroup.setStatus(CertificateSignatureGroupStatus.U);
+        }
+
+        getEntityManager().flush();
+    }
+
+    private void atualizarCertificateSignature(CertificateSignature certificateSignature) {
+        getEntityManager().flush();
+
+        String token = certificateSignature.getCertificateSignatureGroup().getToken();
+        if (isFinalizado(token)) {
+            atualizarStatusGrupo(token);
+        }
+    }
+
+    @Override
+    public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuidAssinavel,
+            DadosAssinaturaLegada dadosAssinaturaLegada) {
+        CertificateSignature certificateSignature = findCertificateSignature(tokenGrupo, uuidAssinavel);
+        if (certificateSignature.getStatus() != CertificateSignatureGroupStatus.W) {
+            throw new ValidationException("Assinatura já processada com status " + certificateSignature.getStatus());
+        }
+
+        certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
+        certificateSignature.setCertificateChain(dadosAssinaturaLegada.getCertChainBase64());
+        certificateSignature.setSignature(dadosAssinaturaLegada.getSignature());
+        certificateSignature.setStatus(CertificateSignatureGroupStatus.S);
+
+        atualizarCertificateSignature(certificateSignature);
+    }
+
+    @Override
+    public byte[] getSha256(String token, UUID uuidAssinavel) {
+        CertificateSignature certificateSignature = findCertificateSignature(token, uuidAssinavel);
+        return certificateSignature.getSha256();
+    }
+
+    @Override
+    public void erroProcessamento(String token, UUID uuidAssinavel, String codigoErro, String mensagem) {
+        CertificateSignature certificateSignature = findCertificateSignature(token, uuidAssinavel);
+        certificateSignature.setStatus(CertificateSignatureGroupStatus.E);
+        certificateSignature.setCodigoErro(codigoErro);
+        certificateSignature.setMensagemErro(mensagem);
+        atualizarCertificateSignature(certificateSignature);
+    }
+
+    private DadosAssinatura toDadosAssinatura(CertificateSignature cs) {
+        UUID uuid = UUID.fromString(cs.getUuid());
+        StatusToken status = getStatusToken(cs.getStatus());
+        UUID uuidDocumentoBin = cs.getUuidDocumentoBin();
+        byte[] signature = cs.getSignature() == null ? null : Base64.decode(cs.getSignature());
+        byte[] certChain = cs.getCertificateChain() == null ? null : Base64.decode(cs.getCertificateChain());
+
+        return new DadosAssinatura(uuid, status, cs.getCodigoErro(), cs.getMensagemErro(), cs.getSignatureType(), uuidDocumentoBin, signature, certChain, cs.getSha256(), TipoSignedData.SHA256);
+    }
+
+    @Override
+    public List<DadosAssinatura> getDadosAssinatura(String token) {
+        CertificateSignatureGroup group = findByToken(token);
+        List<DadosAssinatura> retorno = new ArrayList<>();
+        for (CertificateSignature certificateSignature : group.getCertificateSignatureList()) {
+            retorno.add(toDadosAssinatura(certificateSignature));
+        }
+        return retorno;
+    }
+
+    @Override
+    public DadosAssinatura getDadosAssinatura(String token, UUID uuidAssinavel) {
+        CertificateSignature certificateSignature = findCertificateSignature(token, uuidAssinavel);
+        return toDadosAssinatura(certificateSignature);
+    }
 
 }
