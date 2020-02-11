@@ -10,12 +10,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.annotation.Ignore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,6 +49,10 @@ public class HistoricoMetadadoProcesso implements Serializable {
 	
 	@Column(name = "id_processo", nullable = true)
 	private Long idProcesso;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_processo", nullable = false, updatable=false, insertable=false)
+	private Processo processo;
 	
 	@Column(name = "in_visivel", nullable = true)
 	private Boolean visivel;
