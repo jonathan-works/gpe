@@ -20,60 +20,59 @@ import lombok.Setter;
 @EqualsAndHashCode(of="id")
 public class ContribuinteSolicitanteVO {
 
-    private Long id;
+	private Long id;
 
-    private ContribuinteEnum tipoContribuinte;
+	@NotNull
+	private ContribuinteEnum tipoContribuinte;
 
-    @NotNull
-    @Cpf
-    private String cpf;
+	@NotNull
+	@Cpf
+	private String cpf;
 
-    private String matricula;
+	private String matricula;
 
-    @Size(min = 6, max = 256)
-    private String nomeCompleto;
+	@NotNull
+	@Size(min = 6, max = 256)
+	private String nomeCompleto;
 
-    private String sexo;
+	@NotNull
+	private String sexo;
 
-    private Date dataNascimento;
+	@NotNull
+	private Date dataNascimento;
 
-    @Size(min = 3, max = 20)
+	@NotNull
+	@Size(min = 3, max = 20)
     private String numeroRg;
 
-    @Size(min = 3, max = 256)
+	@NotNull
+	@Size(min = 3, max = 256)
     private String emissorRg;
 
+    @NotNull
     private Long idEstadoRg;
 
     private String cdEstadoRg;
 
-    @Size(min = 6, max = 256)
-    private String nomeMae;
+	@NotNull
+	@Size(min = 6, max = 256)
+	private String nomeMae;
 
-    @NotNull
+	@NotNull
     private String email;
 
     private String telefone;
 
-    @Size(min = 3, max = 100)
-    private String cidade;
+	private String cidade;
 
-    private Long idEstado;
+	private String logradouro;
 
-    private String cdEstado;
+	private String bairro;
 
-    @Size(min = 3, max = 256)
-    private String logradouro;
+	private String complemento;
 
-    @Size(min = 3, max = 256)
-    private String bairro;
+	private String numero;
 
-    @Size(min = 3, max = 256)
-    private String complemento;
-
-    @Size(min = 3, max = 20)
-    private String numero;
-
-    private String cep;
+	private String cep;
 
 }
