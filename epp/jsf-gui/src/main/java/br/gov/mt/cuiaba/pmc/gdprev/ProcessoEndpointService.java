@@ -26,6 +26,8 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 @Stateless
 public class ProcessoEndpointService {
 
+    public static final String RECURSO_ACESSO_WS = "acessaWSProcessoSoap";
+
     private <T> void with(Class<T> type, Consumer<T> consumer) {
         T service = null;
         try {
@@ -85,6 +87,7 @@ public class ProcessoEndpointService {
 
     public void autenticar(String username, String password) {
         with(LoginService.class, loginService->{
+            //TODO: checar se usuário possui recurso
             if (!loginService.autenticar(username, password)) {
                 throw new WebServiceException(Status.UNAUTHORIZED.getStatusCode(), "HTTP"+Status.UNAUTHORIZED.getStatusCode(), "Não autorizado");
             }
