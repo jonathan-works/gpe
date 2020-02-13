@@ -96,6 +96,7 @@ import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.metadado.auditoria.HistoricoMetadadoProcesso;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
@@ -217,7 +218,10 @@ public class Processo implements Serializable, Recursive<Processo> {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo")
     private List<ProcessoJbpm> processInstances = new ArrayList<>();
-    
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo")
+    private List<HistoricoMetadadoProcesso> historicoMetadadoProcessoList = new ArrayList<>();
+
     @Column(name = "ds_caminho_completo", nullable = false, unique = true)
     private String caminhoCompleto;
 
