@@ -3,22 +3,28 @@ package br.gov.mt.cuiaba.pmc.gdprev;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.NoResultException;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Categoria_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -28,6 +34,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza_;
 import br.com.infox.epp.loglab.model.Servidor;
+import br.com.infox.epp.loglab.model.Servidor_;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaFisica_;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -36,8 +43,8 @@ import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.Pasta_;
 import br.com.infox.epp.processo.entity.Processo_;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
+import br.com.infox.epp.processo.metadado.auditoria.HistoricoMetadadoProcesso;
+import br.com.infox.epp.processo.metadado.auditoria.HistoricoMetadadoProcesso_;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
@@ -47,32 +54,85 @@ import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso_;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ProcessoEndpointSearch extends PersistenceController {
 
-    private static final String CODIGO_STATUS_ARQUIVADO = "arquivado";
-    private static final String CODIGO_STATUS_DESARQUIVADO = "desarquivado";
+    //TODO: verificar com a Loglab quais os códigos
+    private static final String CODIGO_STATUS_ARQUIVADO = "CD005";
+    private static final String CODIGO_STATUS_DESARQUIVADO = "CD017";
     private static final String CODIGO_TIPO_PARTE_INTERESSADO = "interessadoServidor";
 
     public List<DocumentoBin> getListaDocumentoBinByNrProcesso(String numeroDoProcesso) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<DocumentoBin> documentosQuery = cb.createQuery(DocumentoBin.class);
         Root<DocumentoBin> docBin = documentosQuery.from(DocumentoBin.class);
-        Join<?, Pasta> pasta = docBin.join(DocumentoBin_.documentoList, JoinType.INNER)
-            .join(Documento_.pasta, JoinType.INNER);
+        ListJoin<?, br.com.infox.epp.processo.documento.entity.Documento> doc = docBin.join(DocumentoBin_.documentoList, JoinType.INNER);
+        Join<?, Pasta> pasta = doc.join(Documento_.pasta, JoinType.INNER);
         documentosQuery.select(docBin);
         documentosQuery.groupBy(docBin);
         documentosQuery.where(
-            cb.equal(pasta.join(Pasta_.processo, JoinType.INNER).get(Processo_.numeroProcesso), numeroDoProcesso)
+            cb.equal(pasta.join(Pasta_.processo, JoinType.INNER).get(Processo_.numeroProcesso), numeroDoProcesso),
+            cb.isFalse(doc.get(Documento_.excluido))
         );
         List<DocumentoBin> documentos = getEntityManager().createQuery(documentosQuery).getResultList();
         return documentos;
     }
 
-    public List<Processo> getListaProcesso(){
-        return getListaProcesso(null);
+    public List<Processo> getListaProcesso(Date dataAlteracao){
+        Set<Processo> processos = new HashSet<>();
+        processos.addAll(getListaProcessoByDataAlteracao(dataAlteracao));
+        processos.addAll(getListaProcessoByDataEncerramento(dataAlteracao));
+        return new ArrayList<>(processos);
     }
 
-    public List<Processo> getListaProcesso(Date dataAlteracao){
+    private List<Processo> getListaProcessoByDataAlteracao(Date dataAlteracao){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<br.com.infox.epp.processo.entity.Processo> prc = cq.from(br.com.infox.epp.processo.entity.Processo.class);
+        Join<?, NaturezaCategoriaFluxo> ncf = prc.join(Processo_.naturezaCategoriaFluxo, JoinType.LEFT);
+        Join<?, Natureza> natureza = ncf.join(NaturezaCategoriaFluxo_.natureza);
+        Join<?, Categoria> categoria = ncf.join(NaturezaCategoriaFluxo_.categoria);
+        Join<?, Fluxo> fluxo = ncf.join(NaturezaCategoriaFluxo_.fluxo);
+        ListJoin<?, HistoricoMetadadoProcesso> hist = prc.join(Processo_.historicoMetadadoProcessoList, JoinType.LEFT);
+        Root<StatusProcesso> sp = cq.from(StatusProcesso.class);
+        Expression<Integer> idProcesso = prc.get(Processo_.idProcesso);
+        Expression<String> nrProcesso = prc.get(Processo_.numeroProcesso);
+
+        Expression<String> nmNatureza = natureza.get(Natureza_.natureza);
+        Path<String> nmFluxo = fluxo.get(Fluxo_.fluxo);
+        Path<String> nmCategoria = categoria.get(Categoria_.categoria);
+
+        Expression<Date> dtCriacao = prc.get(Processo_.dataInicio);
+        Expression<Date> dtEncerramento = hist.get(HistoricoMetadadoProcesso_.dataRegistro);
+        Expression<String> situacaoExp = hist.get(HistoricoMetadadoProcesso_.descricao);
+        cq.multiselect(idProcesso,nrProcesso, nmNatureza, nmCategoria, nmFluxo,dtCriacao,dtEncerramento, situacaoExp).distinct(true);
+
+        Predicate historico = pradicateHistoricoMetadadoProcesso(dataAlteracao, cb, hist, sp);
+
+        cq.where(historico);
+
+        cq.groupBy(idProcesso,nrProcesso, nmNatureza, nmCategoria, nmFluxo,dtCriacao,dtEncerramento, situacaoExp);
+        cq.orderBy(cb.desc(dtEncerramento));
+        List<Tuple> resultList = getEntityManager().createQuery(cq).getResultList();
+        List<Processo> processos = new ArrayList<>();
+        for (Tuple tuple : resultList) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Integer id = tuple.get(idProcesso);
+            String numero = tuple.get(nrProcesso);
+            String nomeNatureza = tuple.get(nmNatureza);
+            String nomeCategoria = tuple.get(nmCategoria);
+            String nomeFluxo = tuple.get(nmFluxo);
+            String dataCriacao = Optional.ofNullable(tuple.get(dtCriacao)).map(sdf::format).orElse(null);
+            String dataEncerramento = Optional.ofNullable(tuple.get(dtEncerramento)).map(sdf::format).orElse(null);
+            List<Interessado> servidores = recuperarInteressados(id);
+            String situacao = Optional.ofNullable(tuple.get(situacaoExp)).orElse("");
+            processos.add(new Processo(numero, nomeNatureza, nomeCategoria, nomeFluxo, situacao, servidores, dataCriacao, dataEncerramento));
+        }
+
+        return processos;
+    }
+
+    private List<Processo> getListaProcessoByDataEncerramento(Date dataAlteracao){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<br.com.infox.epp.processo.entity.Processo> prc = cq.from(br.com.infox.epp.processo.entity.Processo.class);
@@ -88,15 +148,14 @@ public class ProcessoEndpointSearch extends PersistenceController {
         Path<String> nmCategoria = categoria.get(Categoria_.categoria);
 
         Expression<Date> dtCriacao = prc.get(Processo_.dataInicio);
-        //TODO: A data de encerramento deve ser igual à data de arquivamento quando houver, senão deve ser a data de fim
         Expression<Date> dtEncerramento = prc.get(Processo_.dataFim);
-        cq.multiselect(idProcesso,nrProcesso, nmNatureza, nmCategoria, nmFluxo,dtCriacao,dtEncerramento);
-        //TODO: Adicionar filtro para recuperar apenas processos que foram arquivados, ou desarquivados na data da alteração
+        cq.multiselect(idProcesso,nrProcesso, nmNatureza, nmCategoria, nmFluxo,dtCriacao,dtEncerramento).distinct(true);
 
-
-
+        cq.where(cb.between(prc.get(Processo_.dataFim), DateUtil.getBeginningOfDay(dataAlteracao),
+                DateUtil.getEndOfDay(dataAlteracao)));
 
         cq.groupBy(idProcesso,nrProcesso, nmNatureza, nmCategoria, nmFluxo,dtCriacao,dtEncerramento);
+        cq.orderBy(cb.desc(dtEncerramento));
         List<Tuple> resultList = getEntityManager().createQuery(cq).getResultList();
         List<Processo> processos = new ArrayList<>();
         for (Tuple tuple : resultList) {
@@ -109,29 +168,25 @@ public class ProcessoEndpointSearch extends PersistenceController {
             String dataCriacao = Optional.ofNullable(tuple.get(dtCriacao)).map(sdf::format).orElse(null);
             String dataEncerramento = Optional.ofNullable(tuple.get(dtEncerramento)).map(sdf::format).orElse(null);
             List<Interessado> servidores = recuperarInteressados(id);
-            String situacao = recuperarSituacaoProcesso(id);
+            String situacao = "Encerrado";
             processos.add(new Processo(numero, nomeNatureza, nomeCategoria, nomeFluxo, situacao, servidores, dataCriacao, dataEncerramento));
         }
 
         return processos;
     }
 
-    private String recuperarSituacaoProcesso(Integer idProcesso) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Situacao> cq = cb.createQuery(Situacao.class);
-        Root<MetadadoProcesso> mp = cq.from(MetadadoProcesso.class);
-        Root<StatusProcesso> sp = cq.from(StatusProcesso.class);
-        cq.where(
-            cb.equal(mp.get(MetadadoProcesso_.metadadoType), cb.literal(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType())),
-            cb.equal(sp.get(StatusProcesso_.idStatusProcesso).as(String.class), mp.get(MetadadoProcesso_.valor)),
-            cb.equal(mp.get(MetadadoProcesso_.processo).get(Processo_.idProcesso), idProcesso),
-            sp.get(StatusProcesso_.nome).in(CODIGO_STATUS_ARQUIVADO, CODIGO_STATUS_DESARQUIVADO)
-        );
-        cq.select(cb.construct(Situacao.class, sp.get(StatusProcesso_.nome), sp.get(StatusProcesso_.descricao)));
-        getEntityManager().createQuery(cq).getResultList().stream().findFirst().orElse(null);
-        //TODO: Utilizar lógica que discrimina o estado de um processo como arquivado ou desarquivado.
-        // Aguardando definição da Loglab
-        return "ARQUIVADO"; // ou "DESARQUIVADO";
+    private Predicate pradicateHistoricoMetadadoProcesso(Date dataAlteracao, CriteriaBuilder cb,
+            ListJoin<?, HistoricoMetadadoProcesso> hist, Root<StatusProcesso> sp) {
+        Predicate historico = cb.and(
+                cb.equal(hist.get(HistoricoMetadadoProcesso_.nome),
+                        cb.literal(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType())),
+                cb.equal(sp.get(StatusProcesso_.idStatusProcesso).as(String.class),
+                        hist.get(HistoricoMetadadoProcesso_.valor)),
+                sp.get(StatusProcesso_.nome).in(CODIGO_STATUS_ARQUIVADO, CODIGO_STATUS_DESARQUIVADO),
+                hist.get(HistoricoMetadadoProcesso_.acao).in("Insert", "Update"),
+                cb.between(hist.get(HistoricoMetadadoProcesso_.dataRegistro), DateUtil.getBeginningOfDay(dataAlteracao),
+                        DateUtil.getEndOfDay(dataAlteracao)));
+        return historico;
     }
 
     private List<Interessado> recuperarInteressados(Integer idProcesso) {
@@ -145,6 +200,23 @@ public class ProcessoEndpointSearch extends PersistenceController {
                 partProcesso.get(ParticipanteProcesso_.nome)));
         cq.where(cb.equal(partProcesso.get(ParticipanteProcesso_.processo).get(Processo_.idProcesso), idProcesso),
                 cb.equal(tipoParte.get(TipoParte_.identificador), CODIGO_TIPO_PARTE_INTERESSADO));
-        return getEntityManager().createQuery(cq).getResultList();
+        List<Interessado> resultList = getEntityManager().createQuery(cq).getResultList();
+        for (Interessado interessado : resultList) {
+            interessado.setMatricula(getMatriculaServidorByCpf(interessado.getCpf()));
+        }
+        return resultList;
+    }
+
+    private String getMatriculaServidorByCpf(String cpf) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<String> cq = cb.createQuery(String.class);
+        Root<Servidor> servidor = cq.from(Servidor.class);
+        cq.select(cb.coalesce(servidor.get(Servidor_.matricula), cb.literal("")));
+        cq.where(cb.equal(servidor.get(Servidor_.cpf), cpf));
+        try {
+            return getEntityManager().createQuery(cq).getSingleResult();
+        }catch (NoResultException e) {
+            return "";
+        }
     }
 }

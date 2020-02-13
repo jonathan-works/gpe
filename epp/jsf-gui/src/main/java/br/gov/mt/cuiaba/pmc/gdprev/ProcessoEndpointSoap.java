@@ -11,6 +11,7 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.soap.MTOM;
 
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @WebService(name = "ProcessoEndpoint")
@@ -40,7 +41,7 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
     @Override
     public Processos consultarProcessos(String username, String password, String dataAlteracao) {
         processoEndpointService.autenticar(username, password);
-        List<Processo> processos = processoEndpointSearch.getListaProcesso();
+        List<Processo> processos = processoEndpointSearch.getListaProcesso(DateUtil.parseDate(dataAlteracao, "dd/MM/yyyy"));
         return new Processos(processos);
     }
 
