@@ -114,15 +114,15 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     @NamedNativeQuery(name = REMOVER_JBPM_LOG, query = REMOVER_JBPM_LOG_QUERY),
     @NamedNativeQuery(name = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, query = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY),
     @NamedNativeQuery(name = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO, query = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY,
-    				  resultClass = Processo.class)
+                      resultClass = Processo.class)
 })
 @NamedQueries(value = {
     @NamedQuery(name = PROCESSO_BY_NUMERO, query = PROCESSO_BY_NUMERO_QUERY),
     @NamedQuery(name = NUMERO_PROCESSO_BY_ID_JBPM, query = NUMERO_PROCESSO_BY_ID_JBPM_QUERY),
     @NamedQuery(name = LIST_ALL_NOT_ENDED, query = LIST_ALL_NOT_ENDED_QUERY),
     @NamedQuery(name = PROCESSO_EPA_BY_ID_JBPM, query = PROCESSO_EPA_BY_ID_JBPM_QUERY,
-    		    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
-    					 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.processo.entity.Processo")}),
+                hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+                         @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.processo.entity.Processo")}),
     @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO, query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
     @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO, query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
     @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
@@ -143,313 +143,313 @@ public class Processo implements Serializable, Recursive<Processo> {
     @NotNull
     @Column(name = ID_PROCESSO, unique = true, nullable = false)
     private Integer idProcesso;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_USUARIO_CADASTRO_PROCESSO)
     private UsuarioLogin usuarioCadastro;
-    
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "id_processo_pai", nullable = true)
     private Processo processoPai;
-    
+
     @OneToMany(mappedBy = "processoPai", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
     private List<Processo> processosFilhos;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_localizacao", nullable = false)
     private Localizacao localizacao;
-    
+
     @NotNull
     @Size(max = NUMERACAO_PROCESSO)
     @Column(name = NUMERO_PROCESSO, nullable = false, length = NUMERACAO_PROCESSO)
     private String numeroProcesso;
-    
+
     @Column(name = "nr_tempo_gasto")
     private Integer tempoGasto;
-    
+
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "id_prioridade_processo", nullable = true)
     private PrioridadeProcesso prioridadeProcesso;
-    
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "st_prazo", nullable = false)
     private SituacaoPrazoEnum situacaoPrazo;
-    
+
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DATA_INICIO, nullable = false)
     private Date dataInicio;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DATA_FIM)
     private Date dataFim;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_CAIXA)
     private Caixa caixa;
 
     @Column(name = ID_JBPM)
     private Long idJbpm;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_natureza_categoria_fluxo", nullable = false)
     private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
-    
+
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY)
     private List<ProcessoTarefa> processoTarefaList = new ArrayList<ProcessoTarefa>(0);
-    
+
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
     @OrderBy(value = "ds_caminho_absoluto")
     private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<MetadadoProcesso> metadadoProcessoList = new ArrayList<>();
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<Pasta> pastaList = new ArrayList<>();
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_processo_root")
     private Processo processoRoot;
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo")
     private List<ProcessoJbpm> processInstances = new ArrayList<>();
     
     @Column(name = "ds_caminho_completo", nullable = false, unique = true)
     private String caminhoCompleto;
-    
+
     @PrePersist
     private void prePersist() {
-    	if (idProcesso == null) {
-    		Integer generatedId = CustomIdGenerator.create(ProcessoQuery.SEQUENCE_PROCESSO).nextValue().intValue();
-    		setIdProcesso(generatedId);
-    		setNumeroProcesso(getIdProcesso().toString());
-    	}
-    	preencherProcessoRoot();
-    	RecursiveManager.refactor(this);
+        if (idProcesso == null) {
+            Integer generatedId = CustomIdGenerator.create(ProcessoQuery.SEQUENCE_PROCESSO).nextValue().intValue();
+            setIdProcesso(generatedId);
+            setNumeroProcesso(getIdProcesso().toString());
+        }
+        preencherProcessoRoot();
+        RecursiveManager.refactor(this);
     }
-    
+
     @PreUpdate
     private void preUpdate() {
-    	preencherProcessoRoot();
+        preencherProcessoRoot();
     }
 
-	private void preencherProcessoRoot() {
-		Processo processoRoot = getProcessoRoot();
-		if ((processoRoot == null || this.equals(processoRoot)) && getProcessoPai() != null) {
-			this.processoPai = Beans.getReference(EntityManager.class).merge(getProcessoPai());
-			Processo processo = this;
-			while (processo.getProcessoPai() != null) {
-				processo = processo.getProcessoPai();
-			}
-    		setProcessoRoot(processo);
-    	} else if (processoRoot == null) {
-    		setProcessoRoot(this);
-    	}
-	}
-	
+    private void preencherProcessoRoot() {
+        Processo processoRoot = getProcessoRoot();
+        if ((processoRoot == null || this.equals(processoRoot)) && getProcessoPai() != null) {
+            this.processoPai = Beans.getReference(EntityManager.class).merge(getProcessoPai());
+            Processo processo = this;
+            while (processo.getProcessoPai() != null) {
+                processo = processo.getProcessoPai();
+            }
+            setProcessoRoot(processo);
+        } else if (processoRoot == null) {
+            setProcessoRoot(this);
+        }
+    }
+
     public Processo getProcessoRoot() {
-		return processoRoot;
-	}
+        return processoRoot;
+    }
 
-	public void setProcessoRoot(Processo processoRoot) {
-		this.processoRoot = processoRoot;
-	}
-
-
-	public List<Processo> getFilhos() {
-		return processosFilhos;
-	}
+    public void setProcessoRoot(Processo processoRoot) {
+        this.processoRoot = processoRoot;
+    }
 
 
-	public void setFilhos(List<Processo> filhos) {
-		this.processosFilhos = filhos;
-	}
+    public List<Processo> getFilhos() {
+        return processosFilhos;
+    }
 
 
-	public Integer getIdProcesso() {
-		return idProcesso;
-	}
+    public void setFilhos(List<Processo> filhos) {
+        this.processosFilhos = filhos;
+    }
 
-	public void setIdProcesso(Integer idProcesso) {
-		this.idProcesso = idProcesso;
-	}
 
-	public UsuarioLogin getUsuarioCadastro() {
-		return usuarioCadastro;
-	}
+    public Integer getIdProcesso() {
+        return idProcesso;
+    }
 
-	public void setUsuarioCadastro(UsuarioLogin usuarioCadastro) {
-		this.usuarioCadastro = usuarioCadastro;
-	}
+    public void setIdProcesso(Integer idProcesso) {
+        this.idProcesso = idProcesso;
+    }
 
-	public Processo getProcessoPai() {
-		return processoPai;
-	}
+    public UsuarioLogin getUsuarioCadastro() {
+        return usuarioCadastro;
+    }
 
-	public void setProcessoPai(Processo processoPai) {
-		this.processoPai = processoPai;
-	}
+    public void setUsuarioCadastro(UsuarioLogin usuarioCadastro) {
+        this.usuarioCadastro = usuarioCadastro;
+    }
 
-	public Localizacao getLocalizacao() {
-		return localizacao;
-	}
+    public Processo getProcessoPai() {
+        return processoPai;
+    }
 
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
+    public void setProcessoPai(Processo processoPai) {
+        this.processoPai = processoPai;
+    }
 
-	public String getNumeroProcesso() {
-		return numeroProcesso;
-	}
-	
-	public String getNumeroProcessoRoot() {
-		return getProcessoRoot().getNumeroProcesso();
-	}
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
 
-	public void setNumeroProcesso(String numeroProcesso) {
-		this.numeroProcesso = numeroProcesso;
-	}
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
 
-	public Integer getTempoGasto() {
-		return tempoGasto;
-	}
+    public String getNumeroProcesso() {
+        return numeroProcesso;
+    }
 
-	public void setTempoGasto(Integer tempoGasto) {
-		this.tempoGasto = tempoGasto;
-	}
+    public String getNumeroProcessoRoot() {
+        return getProcessoRoot().getNumeroProcesso();
+    }
 
-	public Float getPorcentagem(){
-		return getTempoGasto().floatValue()/getNaturezaCategoriaFluxo().getFluxo().getQtPrazo();
-	}
-	
-	public PrioridadeProcesso getPrioridadeProcesso() {
-		return prioridadeProcesso;
-	}
+    public void setNumeroProcesso(String numeroProcesso) {
+        this.numeroProcesso = numeroProcesso;
+    }
 
-	public void setPrioridadeProcesso(PrioridadeProcesso prioridadeProcesso) {
-		this.prioridadeProcesso = prioridadeProcesso;
-	}
+    public Integer getTempoGasto() {
+        return tempoGasto;
+    }
 
-	public SituacaoPrazoEnum getSituacaoPrazo() {
-		return situacaoPrazo;
-	}
+    public void setTempoGasto(Integer tempoGasto) {
+        this.tempoGasto = tempoGasto;
+    }
 
-	public void setSituacaoPrazo(SituacaoPrazoEnum situacaoPrazo) {
-		this.situacaoPrazo = situacaoPrazo;
-	}
+    public Float getPorcentagem(){
+        return getTempoGasto().floatValue()/getNaturezaCategoriaFluxo().getFluxo().getQtPrazo();
+    }
 
-	public Date getDataInicio() {
-		return dataInicio;
-	}
+    public PrioridadeProcesso getPrioridadeProcesso() {
+        return prioridadeProcesso;
+    }
 
-	public void setDataInicio(Date dataInicio) {
-		this.dataInicio = dataInicio;
-	}
+    public void setPrioridadeProcesso(PrioridadeProcesso prioridadeProcesso) {
+        this.prioridadeProcesso = prioridadeProcesso;
+    }
 
-	public Date getDataFim() {
-		return dataFim;
-	}
+    public SituacaoPrazoEnum getSituacaoPrazo() {
+        return situacaoPrazo;
+    }
 
-	public void setDataFim(Date dataFim) {
-		this.dataFim = dataFim;
-	}
+    public void setSituacaoPrazo(SituacaoPrazoEnum situacaoPrazo) {
+        this.situacaoPrazo = situacaoPrazo;
+    }
 
-	public Caixa getCaixa() {
-		return caixa;
-	}
+    public Date getDataInicio() {
+        return dataInicio;
+    }
 
-	public void setCaixa(Caixa caixa) {
-		this.caixa = caixa;
-	}
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
 
-	public Long getIdJbpm() {
-		return idJbpm;
-	}
+    public Date getDataFim() {
+        return dataFim;
+    }
 
-	public void setIdJbpm(Long idJbpm) {
-		this.idJbpm = idJbpm;
-	}
+    public void setDataFim(Date dataFim) {
+        this.dataFim = dataFim;
+    }
 
-	public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
-		return naturezaCategoriaFluxo;
-	}
+    public Caixa getCaixa() {
+        return caixa;
+    }
 
-	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
-		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
-	}
+    public void setCaixa(Caixa caixa) {
+        this.caixa = caixa;
+    }
 
-	public List<ProcessoTarefa> getProcessoTarefaList() {
-		return processoTarefaList;
-	}
+    public Long getIdJbpm() {
+        return idJbpm;
+    }
 
-	public void setProcessoTarefaList(List<ProcessoTarefa> processoTarefaList) {
-		this.processoTarefaList = processoTarefaList;
-	}
+    public void setIdJbpm(Long idJbpm) {
+        this.idJbpm = idJbpm;
+    }
 
-	public List<ParticipanteProcesso> getParticipantes() {
-		return participantes;
-	}
+    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
+        return naturezaCategoriaFluxo;
+    }
 
-	public void setParticipantes(List<ParticipanteProcesso> participantes) {
-		this.participantes = participantes;
-	}
-	
-	public List<MetadadoProcesso> getMetadadoProcessoList() {
-		return metadadoProcessoList;
-	}
+    public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
+        this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
+    }
 
-	public void setMetadadoProcessoList(List<MetadadoProcesso> metadadoProcessoList) {
-		this.metadadoProcessoList = metadadoProcessoList;
-	}
-	
-	public List<Pasta> getPastaList() {
-		return pastaList;
-	}
+    public List<ProcessoTarefa> getProcessoTarefaList() {
+        return processoTarefaList;
+    }
 
-	public void setPastaList(List<Pasta> pastaList) {
-		this.pastaList = pastaList;
-	}
-	
-	
-	public String getCaminhoCompleto() {
+    public void setProcessoTarefaList(List<ProcessoTarefa> processoTarefaList) {
+        this.processoTarefaList = processoTarefaList;
+    }
+
+    public List<ParticipanteProcesso> getParticipantes() {
+        return participantes;
+    }
+
+    public void setParticipantes(List<ParticipanteProcesso> participantes) {
+        this.participantes = participantes;
+    }
+
+    public List<MetadadoProcesso> getMetadadoProcessoList() {
+        return metadadoProcessoList;
+    }
+
+    public void setMetadadoProcessoList(List<MetadadoProcesso> metadadoProcessoList) {
+        this.metadadoProcessoList = metadadoProcessoList;
+    }
+
+    public List<Pasta> getPastaList() {
+        return pastaList;
+    }
+
+    public void setPastaList(List<Pasta> pastaList) {
+        this.pastaList = pastaList;
+    }
+
+
+    public String getCaminhoCompleto() {
         return caminhoCompleto;
     }
-	
-	public void setCaminhoCompleto(String caminhoCompleto) {
+
+    public void setCaminhoCompleto(String caminhoCompleto) {
         this.caminhoCompleto = caminhoCompleto;
     }
-	
+
     public boolean hasPartes(){
-    	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
+        return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
-	
-	@Transient
-	public boolean isFinalizado() {
-		return getDataFim() != null;
-	}
-	
-	@Transient
-	public MetadadoProcesso removerMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {
-	    MetadadoProcesso metadado = getMetadado(metadadoProcessoDefinition);
-	    getMetadadoProcessoList().remove(metadado);
-	    return metadado;
-	}
-	
-	@Transient
-	public MetadadoProcesso getMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {
-		for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
-			if (metadadoProcessoDefinition.getMetadadoType().equals(metadadoProcesso.getMetadadoType())) {
-				return metadadoProcesso;
-			}
-		}
-		return null;
-	}
-	
-	@Transient
+
+    @Transient
+    public boolean isFinalizado() {
+        return getDataFim() != null;
+    }
+
+    @Transient
+    public MetadadoProcesso removerMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {
+        MetadadoProcesso metadado = getMetadado(metadadoProcessoDefinition);
+        getMetadadoProcessoList().remove(metadado);
+        return metadado;
+    }
+
+    @Transient
+    public MetadadoProcesso getMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {
+        for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
+            if (metadadoProcessoDefinition.getMetadadoType().equals(metadadoProcesso.getMetadadoType())) {
+                return metadadoProcesso;
+            }
+        }
+        return null;
+    }
+
+    @Transient
     public MetadadoProcesso getMetadado(String metadadoType) {
         for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
             if (metadadoProcesso.getMetadadoType().equalsIgnoreCase(metadadoType)) {
@@ -458,19 +458,19 @@ public class Processo implements Serializable, Recursive<Processo> {
         }
         return null;
     }
-	
-	@Transient
-	public List<MetadadoProcesso> getMetadadoList(MetadadoProcessoDefinition metadadoProcessoDefinition){
-		List<MetadadoProcesso> metadadoList = new ArrayList<MetadadoProcesso>();
-		for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
-			if (metadadoProcessoDefinition.getMetadadoType().equals(metadadoProcesso.getMetadadoType())){
-				metadadoList.add(metadadoProcesso);
-			}
-		}
-		return metadadoList;
-	}
-	
-	@Transient
+
+    @Transient
+    public List<MetadadoProcesso> getMetadadoList(MetadadoProcessoDefinition metadadoProcessoDefinition){
+        List<MetadadoProcesso> metadadoList = new ArrayList<MetadadoProcesso>();
+        for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
+            if (metadadoProcessoDefinition.getMetadadoType().equals(metadadoProcesso.getMetadadoType())){
+                metadadoList.add(metadadoProcesso);
+            }
+        }
+        return metadadoList;
+    }
+
+    @Transient
     public List<MetadadoProcesso> getMetadadoList(String metadadoType){
         List<MetadadoProcesso> metadadoList = new ArrayList<>();
         for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
@@ -480,37 +480,37 @@ public class Processo implements Serializable, Recursive<Processo> {
         }
         return metadadoList;
     }
-	
-	@Override
+
+    @Override
     public String toString() {
         return numeroProcesso;
     }
 
     @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((getIdProcesso() == null) ? 0 : getIdProcesso().hashCode());
-		return result;
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((getIdProcesso() == null) ? 0 : getIdProcesso().hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof Processo))
-			return false;
-		Processo other = (Processo) obj;
-		if (getIdProcesso() == null) {
-			if (other.getIdProcesso() != null)
-				return false;
-		} else if (!getIdProcesso().equals(other.getIdProcesso()))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Processo))
+            return false;
+        Processo other = (Processo) obj;
+        if (getIdProcesso() == null) {
+            if (other.getIdProcesso() != null)
+                return false;
+        } else if (!getIdProcesso().equals(other.getIdProcesso()))
+            return false;
+        return true;
+    }
 
     @Override
     @Transient
