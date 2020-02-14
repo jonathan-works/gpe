@@ -30,28 +30,48 @@ public class DateUtil {
 
     public static final int QUANTIDADE_DIAS_SEMANA = 7;
     public static final int QUANTIDADE_MESES_ANO = 12;
-    
+
     private static DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     public DateUtil() {
 
     }
-    
+
     /**
-	 * Converte uma instância de Date para uma String. 
-	 * 
-	 * @param data
-	 * @return String no formato dd/MM/yyyy
-	 */
-	public static String formatarData(Date data) {
-		try {
-			return formatter.format(data);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}		
-	}
-	
+     * Converte uma instância de Date para uma String.
+     *
+     * @param data
+     * @return String no formato dd/MM/yyyy
+     */
+    public static String formatarData(Date data) {
+        try {
+            return formatter.format(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Converte uma instância de Date para uma String no formato informado.
+     *
+     * @param data
+     * @param formato
+     * @return String no formato informado
+     */
+    public static String formatarData(Date data, String formato) {
+        try {
+            if(StringUtil.isEmpty(formato)) {
+                formato = "dd/MM/yyyy";
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat(formato);
+            return sdf.format(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * Converte uma instância de Date para uma String em formato por extenso.
      *
