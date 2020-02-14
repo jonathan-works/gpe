@@ -2,6 +2,7 @@ package br.gov.mt.cuiaba.pmc.gdprev;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -23,8 +24,18 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.jbpm.taskmgmt.exe.TaskInstance;
+
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao_;
+import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.Papel_;
+import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.access.entity.PerfilTemplate_;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Categoria_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -42,6 +53,8 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
 import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.Pasta_;
+import br.com.infox.epp.processo.entity.ProcessoJbpm;
+import br.com.infox.epp.processo.entity.ProcessoJbpm_;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.metadado.auditoria.HistoricoMetadadoProcesso;
 import br.com.infox.epp.processo.metadado.auditoria.HistoricoMetadadoProcesso_;
@@ -52,6 +65,8 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso_;
+import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
+import br.com.infox.ibpm.task.entity.UsuarioTaskInstance_;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -217,6 +232,77 @@ public class ProcessoEndpointSearch extends PersistenceController {
             return getEntityManager().createQuery(cq).getSingleResult();
         }catch (NoResultException e) {
             return "";
+        }
+    }
+
+    public List<MovimentacaoGroup> getListaMovimentacaoGroupByIdProcesso(Integer idProcesso) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Movimentacao> cq = cb.createQuery(Movimentacao.class);
+
+        Root<ProcessoJbpm> prcJbpm = cq.from(ProcessoJbpm.class);
+        Root<TaskInstance> ti = cq.from(TaskInstance.class);
+        Root<UsuarioTaskInstance> uti = cq.from(UsuarioTaskInstance.class);
+        Join<?, br.com.infox.epp.processo.entity.Processo> prc = prcJbpm.join(ProcessoJbpm_.processo);
+        Join<?, Localizacao> local = uti.join(UsuarioTaskInstance_.localizacaoExterna);
+        Join<?, UsuarioLogin> usuLogin = uti.join(UsuarioTaskInstance_.usuario);
+        Join<?, Papel> papel = uti.join(UsuarioTaskInstance_.papel);
+//        Join<?, br.com.infox.epp.processo.entity.Processo> prcRoot = prc.join(Processo_.processoRoot);
+        cq.select(cb.construct(cq.getResultType(), ti.get("id"), ti.get("name"), ti.get("create"), ti.get("start"),
+                ti.get("end"), local.get(Localizacao_.idLocalizacao), local.get(Localizacao_.localizacao),
+                usuLogin.get(UsuarioLogin_.idUsuarioLogin), usuLogin.get(UsuarioLogin_.nomeUsuario),
+                papel.get(Papel_.idPapel), papel.get(Papel_.nome)));
+        cq.where(cb.equal(prc.get(Processo_.processoRoot).get(Processo_.idProcesso), idProcesso),
+                cb.equal(prcJbpm.get(ProcessoJbpm_.processInstance), ti.get("processInstance")),
+                cb.equal(uti.get(UsuarioTaskInstance_.idTaskInstance), ti.get("id")));
+        cq.orderBy(cb.asc(ti.get("create")));
+        List<Movimentacao> resultList = getEntityManager().createQuery(cq).getResultList();
+
+        List<MovimentacaoGroup> groups = new ArrayList<>();
+        Integer idCurrLog = null;
+        MovimentacaoGroup currGroup = new MovimentacaoGroup();
+
+        for (Movimentacao mov : resultList) {
+            if(!mov.getIdLocalizacao().equals(idCurrLog)) {
+                currGroup = new MovimentacaoGroup();
+                idCurrLog = mov.getIdLocalizacao();
+                groups.add(currGroup);
+            }
+            currGroup.add(mov);
+        }
+
+        groups.sort(Comparator.comparing(MovimentacaoGroup::getStart));
+        return groups;
+    }
+
+    public List<DocumentoBin> getListaDocumentoBinByIdProcessoAndLocalizacaoAndDtInclusao(Integer idProcesso,
+            Integer idLocalizacao, Date dtStart, Date dtEnd) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<DocumentoBin> documentosQuery = cb.createQuery(DocumentoBin.class);
+        Root<DocumentoBin> docBin = documentosQuery.from(DocumentoBin.class);
+        ListJoin<?, br.com.infox.epp.processo.documento.entity.Documento> doc = docBin.join(DocumentoBin_.documentoList,
+                JoinType.INNER);
+        Join<?, Pasta> pasta = doc.join(Documento_.pasta, JoinType.INNER);
+        documentosQuery.select(docBin);
+        documentosQuery.groupBy(docBin);
+        documentosQuery.where(cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
+                cb.isFalse(doc.get(Documento_.excluido)), cb.between(doc.get(Documento_.dataInclusao), dtStart, dtEnd),
+                cb.equal(doc.get(Documento_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao));
+        List<DocumentoBin> documentos = getEntityManager().createQuery(documentosQuery).getResultList();
+        return documentos;
+    }
+
+    public ProcessoDTO getProcessoDTOByNrProcesso(String nrProcesso) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ProcessoDTO> cq = cb.createQuery(ProcessoDTO.class);
+        Root<br.com.infox.epp.processo.entity.Processo> processo = cq
+                .from(br.com.infox.epp.processo.entity.Processo.class);
+        cq.select(cb.construct(cq.getResultType(), processo.get(Processo_.idProcesso),
+                processo.get(Processo_.numeroProcesso)));
+        cq.where(cb.equal(processo.get(Processo_.numeroProcesso), nrProcesso));
+        try {
+            return getEntityManager().createQuery(cq).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
         }
     }
 }

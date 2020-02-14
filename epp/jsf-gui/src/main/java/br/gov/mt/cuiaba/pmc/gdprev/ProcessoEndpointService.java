@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.ws.Holder;
 
@@ -28,13 +29,18 @@ import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.cdi.util.Beans;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.login.LoginService;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.system.Parametros;
 
 @Stateless
 public class ProcessoEndpointService {
 
     public static final String RECURSO_ACESSO_WS = "acessaWSProcessoSoap";
+
+    @Inject
+    private ProcessoEndpointSearch processoEndpointSearch;
 
     private <T> void with(Class<T> type, Consumer<T> consumer) {
         T service = null;
@@ -52,38 +58,46 @@ public class ProcessoEndpointService {
         }
     }
 
-    public byte[] gerarPDFProcesso(String numeroDoProcesso, List<DocumentoBin> documentos) {
+    public byte[] gerarPDFProcesso(ProcessoDTO processoDTO, List<MovimentacaoGroup> groups) {
         Holder<byte[]> dataHolder = new Holder<>();
         with(PdfManager.class, pdfManager->
             with(FileDownloader.class, fileDownloader->
-                dataHolder.value = gerarPDFProcesso(pdfManager, fileDownloader, numeroDoProcesso, documentos)
+                dataHolder.value = gerarPDFProcesso(pdfManager, fileDownloader, processoDTO, groups)
             )
         );
         byte[] data = dataHolder.value;
         return data;
     }
 
-    private byte[] gerarPDFProcesso(PdfManager pdfManager, FileDownloader fileDownloader, String numeroDoProcesso,
-            List<DocumentoBin> documentos) {
+    private byte[] gerarPDFProcesso(PdfManager pdfManager, FileDownloader fileDownloader, ProcessoDTO processoDTO,
+            List<MovimentacaoGroup> groups) {
         ByteArrayOutputStream pdf = new ByteArrayOutputStream();
         try {
             com.lowagie.text.Document pdfDocument = new com.lowagie.text.Document();
             PdfCopy copy = new PdfCopy(pdfDocument, pdf);
             pdfDocument.open();
 
-            String htmlFolhaRosto = "Processo Nr. "+numeroDoProcesso + "Não há documentos";
-            if (!documentos.isEmpty()) {
-                htmlFolhaRosto="Processo Nr. "+numeroDoProcesso + "possui "+documentos.size()
-                        + " documento(s)";
-            }
+            String htmlFolhaRosto = resolverModeloComContexto(processoDTO.getId(), Parametros.FOLHA_ROSTO_PROCESSO.getValue());
             try(ByteArrayOutputStream pagRosto = new ByteArrayOutputStream()){
                 pdfManager.convertHtmlToPdf(htmlFolhaRosto, pagRosto);
                 copy = pdfManager.copyPdf(copy, pagRosto.toByteArray());
             }
 
-            for (DocumentoBin documentoBin : documentos) {
-                copy = pdfManager.copyPdf(copy, fileDownloader.getData(documentoBin, false));
+            for (MovimentacaoGroup group : groups) {
+                List<DocumentoBin> documentos = processoEndpointSearch
+                        .getListaDocumentoBinByIdProcessoAndLocalizacaoAndDtInclusao(processoDTO.getId(),
+                                group.getIdLocalizacao(), group.getStart(), group.getEnd());
+                String htmlFolhaRostoGroup = resolverModeloComContexto(processoDTO.getId(), Parametros.FOLHA_ROSTO_MOVIMENTACOES.getValue(), group);
+                try(ByteArrayOutputStream pagRosto = new ByteArrayOutputStream()){
+                    pdfManager.convertHtmlToPdf(htmlFolhaRostoGroup, pagRosto);
+                    copy = pdfManager.copyPdf(copy, pagRosto.toByteArray());
+                }
+
+                for (DocumentoBin documentoBin : documentos) {
+                    copy = pdfManager.copyPdf(copy, fileDownloader.getData(documentoBin, false));
+                }
             }
+
             pdfDocument.addTitle("numeroDoProcesso");
             pdfDocument.close();
         } catch (DocumentException | IOException e) {
@@ -122,4 +136,15 @@ public class ProcessoEndpointService {
 		});
 		return resultado.value;
 	}
+    private String resolverModeloComContexto(Integer idProcesso, String codigoModelo) {
+        return resolverModeloComContexto(idProcesso, codigoModelo, null);
+    }
+
+    private String resolverModeloComContexto(Integer idProcesso, String codigoModelo, Object contexto) {
+        Holder<String> modeloHolder = new Holder<>();
+        with(ModeloDocumentoManager.class, modeloDocumentoManager -> modeloHolder.value = modeloDocumentoManager
+                .resolverModeloComContexto(idProcesso, codigoModelo, contexto));
+        return modeloHolder.value;
+    }
+
 }

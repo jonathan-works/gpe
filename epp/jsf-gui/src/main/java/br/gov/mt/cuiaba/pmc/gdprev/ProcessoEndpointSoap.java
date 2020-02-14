@@ -8,13 +8,11 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import javax.mail.util.ByteArrayDataSource;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.soap.MTOM;
 
 import br.com.infox.core.util.DateUtil;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @WebService(name = "ProcessoEndpoint")
 public class ProcessoEndpointSoap implements ProcessoEndpoint {
@@ -32,13 +30,19 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
     @MTOM(enabled = true, threshold = 10240)
     public Documento recuperarProcessoEmDocumento(String username, String password, String numeroDoProcesso) {
     	try {
-	        processoEndpointService.autenticar(username, password);
-	        List<DocumentoBin> documentos = processoEndpointSearch.getListaDocumentoBinByNrProcesso(numeroDoProcesso);
-	
-	        byte[] data = processoEndpointService.gerarPDFProcesso(numeroDoProcesso, documentos);
-	        DataSource ds = new ByteArrayDataSource(data, "application/pdf");
-	        DataHandler dataHandler = new DataHandler(ds);
-	        return new Documento(dataHandler);
+    		processoEndpointService.autenticar(username, password);
+            ProcessoDTO processoDTO = processoEndpointSearch.getProcessoDTOByNrProcesso(numeroDoProcesso);
+            if (processoDTO == null) {
+                throw new WebServiceException(Status.NOT_FOUND.getStatusCode(), "HTTP" + Status.NOT_FOUND.getStatusCode(),
+                        "Processo não encontrado");
+            }
+            List<MovimentacaoGroup> groups = processoEndpointSearch
+                    .getListaMovimentacaoGroupByIdProcesso(processoDTO.getId());
+
+            byte[] data = processoEndpointService.gerarPDFProcesso(processoDTO, groups);
+            DataSource ds = new ByteArrayDataSource(data, "application/pdf");
+            DataHandler dataHandler = new DataHandler(ds);
+            return new Documento(dataHandler);
     	} catch(WebServiceException e) {
     		throw e;
     	} catch(Throwable e) {
