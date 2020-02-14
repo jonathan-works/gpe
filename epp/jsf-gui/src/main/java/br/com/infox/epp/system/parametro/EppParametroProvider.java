@@ -42,7 +42,14 @@ public class EppParametroProvider implements ParametroProvider {
         initParametrosExecFluxo();
         initParametrosSistema();
         initParametrsoLog();
+        initParametrosWSProcesso();
         create("consultaExterna", "ativaConsultaExternaPadrao", FieldType.BOOLEAN);
+    }
+
+    private void initParametrosWSProcesso() {
+        final String grupo = "wsProcesso";
+        create(grupo, "folhaRostoProcesso", ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.codigo);
+        create(grupo, "folhaRostoMovimentacoes", ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.codigo);
     }
 
     private void initParametrosControleAcesso() {
