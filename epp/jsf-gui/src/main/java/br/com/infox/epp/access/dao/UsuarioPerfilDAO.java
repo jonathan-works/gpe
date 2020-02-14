@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -16,6 +18,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.entity.UsuarioPerfil_;
 import br.com.infox.epp.access.query.UsuarioPerfilQuery;
@@ -62,6 +65,19 @@ public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
         final Map<String,Object> params = new HashMap<>();
         params.put(UsuarioPerfilQuery.PARAM_USUARIO_LOGIN, usuarioLogin);
         return getNamedResultList(UsuarioPerfilQuery.LIST_BY_USUARIO_LOGIN, params);
+    }
+    
+    public List<UsuarioPerfil> listByLogin(String login) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<UsuarioPerfil> cq = cb.createQuery(UsuarioPerfil.class);
+    	Root<UsuarioPerfil> up = cq.from(UsuarioPerfil.class);
+    	Join<?, UsuarioLogin> ul = up.join(UsuarioPerfil_.usuarioLogin, JoinType.INNER);
+    	cq.select(up);
+    	cq.where(
+			cb.equal(ul.get(UsuarioLogin_.login), login),
+			cb.isTrue(up.get(UsuarioPerfil_.ativo))
+		);
+    	return getEntityManager().createQuery(cq).getResultList();
     }
     
     public boolean existeUsuarioPerfil(UsuarioLogin usuarioLogin, String descricaoPerfil, boolean ativo) {
