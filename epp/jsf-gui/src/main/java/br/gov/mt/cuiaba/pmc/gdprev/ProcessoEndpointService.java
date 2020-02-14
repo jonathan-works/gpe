@@ -2,7 +2,9 @@ package br.gov.mt.cuiaba.pmc.gdprev;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,12 +15,18 @@ import javax.xml.ws.Holder;
 
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.contexts.Lifecycle;
+import org.jboss.seam.security.Identity;
+import org.jboss.seam.security.management.IdentityManager;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfCopy;
 
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.pdf.PdfManager;
+import br.com.infox.epp.access.api.RolesMap;
+import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.login.LoginService;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -87,10 +95,31 @@ public class ProcessoEndpointService {
 
     public void autenticar(String username, String password) {
         with(LoginService.class, loginService->{
-            //TODO: checar se usuário possui recurso
-            if (!loginService.autenticar(username, password)) {
+            if (loginService.autenticar(username, password)) {
+            	if (!podeAcessarWSSoap(username)) {
+            		throw new WebServiceException(Status.FORBIDDEN.getStatusCode(), "HTTP"+Status.FORBIDDEN.getStatusCode(), "Recurso não disponível");
+            	}
+			} else {
                 throw new WebServiceException(Status.UNAUTHORIZED.getStatusCode(), "HTTP"+Status.UNAUTHORIZED.getStatusCode(), "Não autorizado");
             }
         });
     }
+    private static final String RECURSO="acessaWSProcessoSoap";
+	private boolean podeAcessarWSSoap(String username) {
+		Holder<Boolean> resultado = new Holder<>(Boolean.FALSE);
+		with(AuthenticatorService.class, authenticatorService->{
+			with(UsuarioPerfilDAO.class, usuarioPerfilDAO->{
+				authenticatorService.autenticaManualmenteNoSeamSecurity(username, IdentityManager.instance());
+				Set<String> roleSet = new HashSet<>();
+				for (UsuarioPerfil usuarioPerfil : usuarioPerfilDAO.listByLogin(username)) {
+					roleSet.addAll(RolesMap.instance().getChildrenRoles(usuarioPerfil.getPerfilTemplate().getPapel().getIdentificador()));
+				}
+				for (String role : roleSet) {
+					Identity.instance().addRole(role);
+				}
+				resultado.value = Identity.instance().hasPermission(RECURSO, "access");
+			});
+		});
+		return resultado.value;
+	}
 }
