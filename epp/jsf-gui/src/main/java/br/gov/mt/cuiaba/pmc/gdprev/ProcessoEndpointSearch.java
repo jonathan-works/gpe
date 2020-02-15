@@ -284,9 +284,12 @@ public class ProcessoEndpointSearch extends PersistenceController {
         Join<?, Pasta> pasta = doc.join(Documento_.pasta, JoinType.INNER);
         documentosQuery.select(docBin);
         documentosQuery.groupBy(docBin);
-        documentosQuery.where(cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
+        documentosQuery.where(
+        		cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
                 cb.isFalse(doc.get(Documento_.excluido)), cb.between(doc.get(Documento_.dataInclusao), dtStart, dtEnd),
-                cb.equal(doc.get(Documento_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao));
+                cb.equal(doc.get(Documento_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao),
+                cb.isTrue(docBin.get(DocumentoBin_.suficientementeAssinado))
+                );
         List<DocumentoBin> documentos = getEntityManager().createQuery(documentosQuery).getResultList();
         return documentos;
     }
