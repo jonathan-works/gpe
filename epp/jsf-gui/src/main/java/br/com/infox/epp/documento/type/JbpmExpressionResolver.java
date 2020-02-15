@@ -85,6 +85,9 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 		do {
 			VariableInfo variableInfo = getVariableInfo(realVariableName, processInstance.getProcessDefinition().getId());
 			value = processInstance.getContextInstance().getVariable(realVariableName);
+			if (value == null) {
+				value = processInstance.getContextInstance().getTransientVariables().get(realVariableName);
+			}
 			if (variableInfo == null && value != null) {
 				resolveAsJavaType(expression, value);
 			} else if (variableInfo != null && value != null) {

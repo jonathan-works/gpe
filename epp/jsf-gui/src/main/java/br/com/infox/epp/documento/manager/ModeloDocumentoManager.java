@@ -5,7 +5,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,7 +27,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
-import org.jbpm.graph.exe.Token;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.manager.Manager;
@@ -268,8 +266,6 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     }
 
     public String resolverModeloComContexto(Integer idProcesso, String codigoModelo, Object contexto) {
-        if (contexto == null)
-            return "";
         StringBuilder sb = new StringBuilder();
         if (contexto instanceof Iterable) {
             @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -312,6 +308,9 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     }
 
     private static Map<String, Object> objectToMap(Object object){
+    	if (object == null) {
+    		return new HashMap<>();
+    	}
         if (object instanceof Map) {
             HashMap<String, Object> map = new HashMap<>();
             @SuppressWarnings("unchecked")
@@ -320,7 +319,6 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 String key = entry.getKey().toString();
                 Object value = entry.getValue();
                 map.put(key, value);
-                map.put(MessageFormat.format("#'{'{0}'}'", key), value);
             }
             return map;
         }
@@ -330,9 +328,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                     .getPropertyDescriptors()) {
                 String key = propertyDescriptor.getName();
                 Method method = propertyDescriptor.getReadMethod();
-                method.setAccessible(true);
                 Object value = method.invoke(object);
-                map.put(MessageFormat.format("#'{'{0}'}'", key), value);
                 map.put(key, value);
             }
             return map;
