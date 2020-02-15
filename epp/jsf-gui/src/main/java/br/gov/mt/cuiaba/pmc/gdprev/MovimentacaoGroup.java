@@ -4,33 +4,36 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
+import java.util.Optional;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-@Data
+@Data @NoArgsConstructor @AllArgsConstructor
 @EqualsAndHashCode(of = "movimentacoes")
-class MovimentacaoGroup {
+public class MovimentacaoGroup {
 
-    private Date start;
-    private Date end;
-    private Integer idLocalizacao;
-    private String dsLocalizacao;
+    private Movimentacao first;
+    private Movimentacao last;
     private List<Movimentacao> movimentacoes = new ArrayList<>();
 
     public void add(Movimentacao movimentacao) {
         movimentacoes.add(movimentacao);
-        start = movimentacoes.stream().map(Movimentacao::getCreate).filter(Objects::nonNull)
-                .min(Comparator.comparing(Function.identity())).orElse(null);
-        if (movimentacoes.stream().map(Movimentacao::getEnd).anyMatch(Objects::isNull)) {
-            end = new Date();
-        } else {
-            end = movimentacoes.stream().map(Movimentacao::getEnd).filter(Objects::nonNull)
-                    .max(Comparator.comparing(Function.identity())).orElse(null);
-        }
-        idLocalizacao = movimentacao.getIdLocalizacao();
-        dsLocalizacao = movimentacao.getDsLocalizacao();
+        first = movimentacoes.stream().min(Comparator.nullsLast(Comparator.comparing(Movimentacao::getCreate))).orElse(null);
+        last = movimentacoes.stream().max(Comparator.nullsLast(Comparator.comparing(Movimentacao::getEnd))).orElse(null);
     }
+
+	public Date getEnd() {
+		return Optional.ofNullable(last).map(Movimentacao::getEnd).orElseGet(Date::new);
+	}
+
+	public Integer getIdLocalizacao() {
+		return Optional.ofNullable(first).map(Movimentacao::getIdLocalizacao).orElse(null);
+	}
+
+	public Date getStart() {
+		return Optional.ofNullable(first).map(Movimentacao::getCreate).orElseGet(Date::new);
+	}
 }
