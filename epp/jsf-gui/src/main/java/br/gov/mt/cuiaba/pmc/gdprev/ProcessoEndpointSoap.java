@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.soap.MTOM;
 
+import org.jboss.seam.contexts.Lifecycle;
+
 import br.com.infox.core.util.DateUtil;
 
 @WebService(name = "ProcessoEndpoint")
@@ -30,6 +32,7 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
     @MTOM(enabled = true, threshold = 10240)
     public Documento recuperarProcessoEmDocumento(String username, String password, String numeroDoProcesso) {
     	try {
+    		Lifecycle.beginCall();
     		processoEndpointService.autenticar(username, password);
             ProcessoDTO processoDTO = processoEndpointSearch.getProcessoDTOByNrProcesso(numeroDoProcesso);
             if (processoDTO == null) {
@@ -48,12 +51,15 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
     	} catch(Throwable e) {
     		final Status status = Status.INTERNAL_SERVER_ERROR;
 			throw new WebServiceException(status.getStatusCode(), "HTTP"+status.getStatusCode(), "Erro Inesperado");
+    	} finally {
+    		Lifecycle.endCall();
     	}
     }
 
     @Override
     public Processos consultarProcessos(String username, String password, String dataAlteracao) {
     	try {
+    		Lifecycle.beginCall();
 	        processoEndpointService.autenticar(username, password);
 	        List<Processo> processos = processoEndpointSearch.getListaProcesso(DateUtil.parseDate(dataAlteracao, "dd/MM/yyyy"));
 	        return new Processos(processos);
@@ -62,6 +68,8 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
     	} catch(Throwable e) {
     		final Status status = Status.INTERNAL_SERVER_ERROR;
 			throw new WebServiceException(status.getStatusCode(), "HTTP"+status.getStatusCode(), "Erro Inesperado");
+    	} finally {
+    		Lifecycle.endCall();
     	}
     }
 
