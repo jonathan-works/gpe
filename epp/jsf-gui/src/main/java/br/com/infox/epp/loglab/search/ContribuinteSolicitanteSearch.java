@@ -52,7 +52,7 @@ public class ContribuinteSolicitanteSearch {
         Date dataNascimento = DateUtil.parseDate(dadosServidorResponseBean.getServidorDataNascimento(), "dd/MM/yyyy");
         contribuinteSolicitante.setDataNascimento(dataNascimento);
         contribuinteSolicitante.setNumeroRg(dadosServidorResponseBean.getServidorRG());
-        contribuinteSolicitante.setEmissorRg(dadosServidorResponseBean.getServidorRGEmissao());
+        contribuinteSolicitante.setEmissorRg(dadosServidorResponseBean.getServidorRGOrgao());
         Estado estado = estadoSearch.retrieveEstadoByCodigo(dadosServidorResponseBean.getServidorRGOrgao());
         contribuinteSolicitante.setIdEstadoRg(estado != null ? estado.getId() : null);
         contribuinteSolicitante.setCdEstadoRg(estado != null ? estado.getCodigo() : null);
