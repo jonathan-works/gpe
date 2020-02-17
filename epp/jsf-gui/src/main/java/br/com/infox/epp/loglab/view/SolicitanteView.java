@@ -56,7 +56,7 @@ public class SolicitanteView implements Serializable {
 
     public void consultarTurmalina() {
         if (numeroCpf != null) {
-            contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
+            contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula, ContribuinteEnum.SO);
             JsfUtil.instance().execute("PF('listaContribuintesDialog').show();");
         }
     }
@@ -74,7 +74,9 @@ public class SolicitanteView implements Serializable {
 
     @ExceptionHandled(MethodType.UPDATE)
     public void atualizar() {
-    	contribuinteSolicitanteService.gravar(solicitanteVO);
+        preencherTipoContribuinte();
+        alterarEstado();
+        contribuinteSolicitanteService.gravar(solicitanteVO);
     }
 
     public List<Estado> getEstadosList() {

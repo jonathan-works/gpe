@@ -58,7 +58,7 @@ public class ContribuinteView implements Serializable {
 
     public void consultarTurmalina() {
         if (numeroCpf != null) {
-            contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
+            contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula, ContribuinteEnum.CO);
             JsfUtil.instance().execute("PF('listaContribuintesDialog').show();");
         }
     }
