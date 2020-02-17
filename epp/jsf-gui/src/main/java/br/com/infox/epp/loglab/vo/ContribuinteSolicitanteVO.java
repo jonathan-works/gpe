@@ -20,33 +20,33 @@ import lombok.Setter;
 @EqualsAndHashCode(of="id")
 public class ContribuinteSolicitanteVO {
 
-	private Long id;
+    private Long id;
 
-	@NotNull
-	private ContribuinteEnum tipoContribuinte;
+    @NotNull
+    private ContribuinteEnum tipoContribuinte;
 
-	@NotNull
-	@Cpf
-	private String cpf;
+    @NotNull
+    @Cpf
+    private String cpf;
 
-	private String matricula;
+    private String matricula;
 
-	@NotNull
-	@Size(min = 6, max = 256)
-	private String nomeCompleto;
+    @NotNull
+    @Size(min = 6, max = 256)
+    private String nomeCompleto;
 
-	@NotNull
-	private String sexo;
+    @NotNull
+    private String sexo;
 
-	@NotNull
-	private Date dataNascimento;
+    @NotNull
+    private Date dataNascimento;
 
-	@NotNull
-	@Size(min = 3, max = 20)
+    @NotNull
+    @Size(min = 3, max = 20)
     private String numeroRg;
 
-	@NotNull
-	@Size(min = 3, max = 256)
+    @NotNull
+    @Size(min = 3, max = 256)
     private String emissorRg;
 
     @NotNull
@@ -54,25 +54,25 @@ public class ContribuinteSolicitanteVO {
 
     private String cdEstadoRg;
 
-	@NotNull
-	@Size(min = 6, max = 256)
-	private String nomeMae;
+    @NotNull
+    @Size(min = 6, max = 256)
+    private String nomeMae;
 
-	@NotNull
+    @NotNull
     private String email;
 
     private String telefone;
 
-	private String cidade;
+    private String cidade;
 
-	private String logradouro;
+    private String logradouro;
 
-	private String bairro;
+    private String bairro;
 
-	private String complemento;
+    private String complemento;
 
-	private String numero;
+    private String numero;
 
-	private String cep;
+    private String cep;
 
 }

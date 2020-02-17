@@ -20,10 +20,10 @@ public class ContribuinteSolicitanteSearch {
 
     @Inject
     private ETurmalinaService eTurmalinaService;
-    
+
     @Inject
     private EstadoSearch estadoSearch;
-    
+
     @Inject
     private UsuarioSearch usuarioSearch;
 
@@ -39,7 +39,7 @@ public class ContribuinteSolicitanteSearch {
 
         return contribuinteSolicitanteList;
     }
-    
+
     public boolean isExisteUsuarioContribuinteSolicitante(String numeroCpf){
         return usuarioSearch.isExisteUsuarioByNumeroCpf(numeroCpf);
     }
@@ -50,7 +50,7 @@ public class ContribuinteSolicitanteSearch {
         contribuinteSolicitante.setCpf(dadosServidorResponseBean.getCpf());
         contribuinteSolicitante.setMatricula(dadosServidorResponseBean.getMatricula());
         contribuinteSolicitante.setNomeCompleto(dadosServidorResponseBean.getNome());
-        Date dataNascimento = DateUtil.parseDate(dadosServidorResponseBean.getServidorDataNascimento(), "dd/MM/yyyy"); 
+        Date dataNascimento = DateUtil.parseDate(dadosServidorResponseBean.getServidorDataNascimento(), "dd/MM/yyyy");
         contribuinteSolicitante.setDataNascimento(dataNascimento);
         contribuinteSolicitante.setNumeroRg(dadosServidorResponseBean.getServidorRG());
         contribuinteSolicitante.setEmissorRg(dadosServidorResponseBean.getServidorRGEmissao());

@@ -51,25 +51,25 @@ public class SolicitanteView implements Serializable {
 
     @PostConstruct
     protected void init() {
-    	limpar();
-	}
+        limpar();
+    }
 
     public void consultarTurmalina() {
-    	if (numeroCpf != null) {
-    		contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
+        if (numeroCpf != null) {
+            contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
             JsfUtil.instance().execute("PF('listaContribuintesDialog').show();");
-    	}
+        }
     }
 
     public void novo() {
-    	limpar();
+        limpar();
     }
 
     @ExceptionHandled(MethodType.PERSIST)
     public void gravar() {
-    	preencherTipoContribuinte();
-    	alterarEstado();
-    	contribuinteSolicitanteService.gravar(solicitanteVO);
+        preencherTipoContribuinte();
+        alterarEstado();
+        contribuinteSolicitanteService.gravar(solicitanteVO);
     }
 
     @ExceptionHandled(MethodType.UPDATE)
@@ -83,27 +83,27 @@ public class SolicitanteView implements Serializable {
     }
 
     private void preencherTipoContribuinte() {
-    	if (solicitanteVO == null) return;
+        if (solicitanteVO == null) return;
 
-    	if (solicitanteVO.getTipoContribuinte() == null) {
-        	solicitanteVO.setTipoContribuinte(ContribuinteEnum.SO);
+        if (solicitanteVO.getTipoContribuinte() == null) {
+            solicitanteVO.setTipoContribuinte(ContribuinteEnum.SO);
         }
     }
 
     private void alterarEstado() {
         if(estado != null) {
-        	solicitanteVO.setIdEstadoRg(estado.getId());
+            solicitanteVO.setIdEstadoRg(estado.getId());
         } else {
-        	solicitanteVO.setIdEstadoRg(null);
+            solicitanteVO.setIdEstadoRg(null);
         }
     }
 
     public void limpar() {
-    	solicitanteVO = null;
-    	estado = null;
-    	numeroCpf = null;
-    	numeroMatricula = null;
-    	contribuinteSolicitanteList = null;
+        solicitanteVO = null;
+        estado = null;
+        numeroCpf = null;
+        numeroMatricula = null;
+        contribuinteSolicitanteList = null;
     }
 
 }

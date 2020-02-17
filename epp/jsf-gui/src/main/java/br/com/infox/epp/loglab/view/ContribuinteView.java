@@ -47,22 +47,22 @@ public class ContribuinteView implements Serializable {
     @Getter
     @Setter
     private List<ContribuinteSolicitanteVO> contribuinteSolicitanteList;
-    
+
     @Inject
     private ContribuinteService contribuinteService;
 
     @PostConstruct
     protected void init() {
-    	limpar();
-	}
+        limpar();
+    }
 
     public void consultarTurmalina() {
-    	if (numeroCpf != null) {
-    		contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
+        if (numeroCpf != null) {
+            contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula);
             JsfUtil.instance().execute("PF('listaContribuintesDialog').show();");
-    	}
+        }
     }
-    
+
     @ExceptionHandled
     public void criarSolicitacaoCadastro() {
         preencherTipoContribuinte();
@@ -78,11 +78,11 @@ public class ContribuinteView implements Serializable {
     }
 
     public void limpar() {
-    	contribuinteVO = null;
-    	estado = null;
-    	numeroCpf = null;
-    	numeroMatricula = null;
-    	contribuinteSolicitanteList = null;
+        contribuinteVO = null;
+        estado = null;
+        numeroCpf = null;
+        numeroMatricula = null;
+        contribuinteSolicitanteList = null;
     }
 
     private void preencherTipoContribuinte() {
