@@ -46,7 +46,6 @@ public class ContribuinteSolicitanteSearch {
 
     private ContribuinteSolicitanteVO convertDadosServidorResponse(DadosServidorResponseBean dadosServidorResponseBean) {
         ContribuinteSolicitanteVO contribuinteSolicitante = new ContribuinteSolicitanteVO();
-        contribuinteSolicitante.setId(Long.valueOf(dadosServidorResponseBean.getMatricula(),Character.MAX_RADIX));
         contribuinteSolicitante.setCpf(dadosServidorResponseBean.getCpf());
         contribuinteSolicitante.setMatricula(dadosServidorResponseBean.getMatricula());
         contribuinteSolicitante.setNomeCompleto(dadosServidorResponseBean.getNome());
