@@ -84,6 +84,18 @@
                                         >
                                         <p:confirm header="#{infoxMessages['certificadoEletronico.reemitirCertificado']}" message="#{infoxMessages['certificadoEletronico.confirmReemitir']}"  />
                                     </p:commandButton>
+                                        <wi:assinador id="testeAssinatura"
+                                            callbackHandler="#{certificadoEletronicoView}"
+                                            assinavelProvider="#{certificadoEletronicoView.assinavelProvider}"
+                                            execute="@this" styleClass="buttons-primary"
+                                            render="certificadosDataTable :pageBodyDialogMessage"
+                                            onbegin="infox.showLoading();"
+                                            oncomplete="infox.hideLoading();"
+                                            cpfPessoaAssinatura="#{row.cpfPessoa}"
+                                            autenticarComUsuarioAtual="true"
+                                            labelAssinaturaEletronica="#{infoxMessages['certificadoEletronico.testar']}"
+                                            >
+                                        </wi:assinador>
                                 </p:column>
                                 <p:column
                                     headerText="#{infoxMessages['certificadoEletronico.nomePessoa']}">

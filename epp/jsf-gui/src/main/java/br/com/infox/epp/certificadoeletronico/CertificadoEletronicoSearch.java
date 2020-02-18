@@ -28,7 +28,7 @@ public class CertificadoEletronicoSearch extends PersistenceController {
         Join<?, PessoaFisica> pf = ce.join(CertificadoEletronico_.pessoaFisica);
 
         cq.select(cb.construct(cq.getResultType(), ce.get(CertificadoEletronico_.id), pf.get(PessoaFisica_.idPessoa),
-                pf.get(PessoaFisica_.nome), ce.get(CertificadoEletronico_.dataInicio),
+                pf.get(PessoaFisica_.nome), pf.get(PessoaFisica_.cpf), ce.get(CertificadoEletronico_.dataInicio),
                 ce.get(CertificadoEletronico_.dataFim), ce.get(CertificadoEletronico_.dataCadastro)));
         cq.orderBy(cb.asc(pf.get(PessoaFisica_.nome)));
         return getEntityManager().createQuery(cq).getResultList();

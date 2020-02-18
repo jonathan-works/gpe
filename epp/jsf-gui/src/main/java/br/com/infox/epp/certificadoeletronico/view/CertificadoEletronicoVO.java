@@ -17,6 +17,7 @@ public class CertificadoEletronicoVO {
     private Long id;
     private Integer idPessoa;
     private String nmPessoa;
+    private String cpfPessoa;
     private Date dataInicio;
     private Date dataFim;
     private Date dataCadastro;
