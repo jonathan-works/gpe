@@ -11,6 +11,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang3.StringUtils;
+
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.loglab.dto.ParticipanteProcessoLogLabDTO;
@@ -21,7 +23,8 @@ import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
-import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.jsf.converter.CnpjConverter;
+import br.com.infox.jsf.converter.CpfConverter;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -39,10 +42,23 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
 
         List<ParticipanteProcessoLogLabDTO> listaDTO = new ArrayList<>();
         for (ParticipanteProcesso participante : listaParticipante) {
-            if (participante.getPessoa().getCodigo().length() == 14) {
-                listaDTO.add(participanteDTOEmpresa(participante.getPessoa().getCodigo()));
-            } else if (participante.getPessoa().getCodigo().length() == 11) {
-                listaDTO.add(participanteDTOServidorContribuinte(participante.getPessoa().getCodigo()));
+            String codigo = participante.getPessoa().getCodigo();
+			if (codigo.length() == 14) {
+                ParticipanteProcessoLogLabDTO dto = participanteDTOEmpresa(codigo);
+                if (StringUtils.isBlank(dto.getCnpj())) {
+                	dto.setCpf(CnpjConverter.format(codigo));
+                	dto.setNome(participante.getNome());
+                	dto.setNomeFantasia(participante.getNome());
+                }
+				listaDTO.add(dto);
+            } else if (codigo.length() == 11) {
+                ParticipanteProcessoLogLabDTO dto = participanteDTOServidorContribuinte(codigo);
+                if (StringUtils.isBlank(dto.getCpf())) {
+                	dto.setCpf(CpfConverter.format(codigo));
+                	dto.setNome(participante.getNome());
+                }
+                dto.setTipoPessoa(TipoPessoaEnum.F);
+				listaDTO.add(dto);
             }
         }
 
@@ -55,7 +71,7 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
         ServidorContribuinteVO servidorVO = servidorContribuinteSearch.getServidorByCPF(cpf);
         if (servidorVO != null) {
             participanteDTO.setNome(servidorVO.getNomeCompleto());
-            participanteDTO.setCpf(servidorVO.getCpf());
+            participanteDTO.setCpf(CpfConverter.format(servidorVO.getCpf()));
             participanteDTO.setMatricula(servidorVO.getMatricula());
             participanteDTO.setCargo(!StringUtil.isEmpty(servidorVO.getCargoCarreira()) ? servidorVO.getCargoCarreira()
                     : servidorVO.getCargoComissao());
@@ -67,9 +83,7 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
             ServidorContribuinteVO contribuinte = servidorContribuinteSearch.getContribuinteByCPF(cpf);
             if (contribuinte != null) {
                 participanteDTO.setNome(contribuinte.getNomeCompleto());
-                participanteDTO.setCpf(contribuinte.getCpf());
-            } else {
-                throw new BusinessException("Pessoa não encontrada com o CPF: " + cpf);
+                participanteDTO.setCpf(CpfConverter.format(contribuinte.getCpf()));
             }
         }
         return participanteDTO;
@@ -77,13 +91,13 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
 
     private ParticipanteProcessoLogLabDTO participanteDTOEmpresa(String cnpj) {
         EmpresaVO empresaVO = empresaSearch.getEmpresaVOByCnpj(cnpj);
-        if (empresaVO == null) {
-            throw new BusinessException("Empresa não encontrada com o CNPJ: " + cnpj);
-        }
         ParticipanteProcessoLogLabDTO participanteDTO = new ParticipanteProcessoLogLabDTO();
+        if (empresaVO == null) {
+            return participanteDTO;
+        }
         participanteDTO.setTipoPessoa(TipoPessoaEnum.J);
         participanteDTO.setNomeFantasia(empresaVO.getNomeFantasia());
-        participanteDTO.setCnpj(empresaVO.getCnpj());
+        participanteDTO.setCnpj(CnpjConverter.format(empresaVO.getCnpj()));
         participanteDTO.setRazaoSocial(empresaVO.getRazaoSocial());
         return participanteDTO;
     }

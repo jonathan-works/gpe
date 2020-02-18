@@ -47,6 +47,9 @@ public class EppJbpmVariableResolver extends JbpmVariableResolver {
         if (object == null) {
         	object = resolveCustomVariable(name);
         }
+        if ("origemProcesso".equals(name)) {
+        	object = processo.getLocalizacao().getCaminhoCompletoFormatado().split(":")[0];
+        }
         
         return object;
     }

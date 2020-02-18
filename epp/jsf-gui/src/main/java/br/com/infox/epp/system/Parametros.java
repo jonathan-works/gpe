@@ -31,7 +31,7 @@ public enum Parametros {
     RICHFACES_FILE_UPLOAD_MAX_FILES_QUANTITY("richFileUploadMaxFilesQuantity"),
     WEB_SERVICE_TOKEN("webserviceToken"),
     DS_URL_SERVICO_ETURMALINA(
-    		new ParametroDefinition<String>("eTurmalina", "dsUrlServicoETurmalina", FieldType.STRING)),
+            new ParametroDefinition<String>("eTurmalina", "dsUrlServicoETurmalina", FieldType.STRING)),
     DS_LOGIN_USUARIO_ETURMALINA(
             new ParametroDefinition<String>("eTurmalina", "dsLoginUsuarioETurmalina", FieldType.STRING)),
     DS_SENHA_USUARIO_ETURMALINA(
@@ -60,6 +60,8 @@ public enum Parametros {
     NAO_EXECUTAR_QUARTZ("naoExecutarQuartz"),
     VALIDA_CPF_ASSINATURA("digital-signature","validaCpfAssinatura", FieldType.BOOLEAN),
     VALIDA_ASSINATURA("digital-signature","validacaoAssinatura", FieldType.BOOLEAN),
+    FOLHA_ROSTO_PROCESSO("folhaRostoProcesso"),
+    FOLHA_ROSTO_MOVIMENTACOES("folhaRostoMovimentacoes"),
     ;
 
     private final String label;
@@ -95,17 +97,17 @@ public enum Parametros {
     }
 
     public <T> T getValue(Class<T> clazz) {
-    	String valueString = (String) Contexts.getApplicationContext().get(this.label);
-    	if ( !StringUtil.isEmpty(valueString) ) {
-    		Object newInstance = ReflectionsUtil.newInstance(clazz, String.class, valueString.trim());
-    		return clazz.cast(newInstance);
-    	} else {
-    		return null;
-    	}
+        String valueString = (String) Contexts.getApplicationContext().get(this.label);
+        if ( !StringUtil.isEmpty(valueString) ) {
+            Object newInstance = ReflectionsUtil.newInstance(clazz, String.class, valueString.trim());
+            return clazz.cast(newInstance);
+        } else {
+            return null;
+        }
     }
 
     public <T> T getValueOrDefault(Class<T> clazz, T defaultValue) {
-    	T objectT = getValue(clazz);
+        T objectT = getValue(clazz);
         return null == objectT ? defaultValue : objectT ;
     }
 

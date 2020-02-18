@@ -32,6 +32,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.documento.publicacao.LocalPublicacao;
 import br.com.infox.epp.documento.publicacao.LocalPublicacaoSearch;
@@ -135,6 +136,8 @@ public class BpmExpressionService {
     protected VariavelProcessoService  variavelProcessoService;
     @Inject
     protected ParticipanteProcessoLoglabSearch participanteProcessoLoglabSearch;
+    @Inject
+    protected ModeloDocumentoManager modeloDocumentoManager;
 
     @External(tooltip = "Retorna a prioridade do processo atual", expressionType = ExpressionType.GERAL)
     public String getPrioridadeProcessoAtual(){
@@ -676,10 +679,32 @@ public class BpmExpressionService {
             return executionContext;
     }
 
+    @External(tooltip = "process.modelo.expression.resolverComContexto.tooltip", expressionType = ExpressionType.GERAL,
+        value={
+            @Parameter(selectable = true, defaultValue = "'codModelo001'",
+                    label = "process.modelo.expression.resolverComContexto.codigoModelo.label",
+                    tooltip = "process.modelo.expression.resolverComContexto.codigoModelo.tooltip"),
+            @Parameter(selectable = true, defaultValue = "objeto",
+                label = "process.modelo.expression.resolverComContexto.contexto.label",
+                tooltip = "process.modelo.expression.resolverComContexto.contexto.tooltip")
+    })
+    public String resolverModeloComContexto(String codigoModelo, Object contexto) {
+        return modeloDocumentoManager.resolverModeloComContexto(getIdProcessoAtual(), codigoModelo, contexto);
+    }
+
     @External(expressionType = ExpressionType.GERAL, tooltip = "process.events.expression.getListaParticipantesProcessoByTipoParte.tooltip", example = "#{bpmExpressionService.getListaParticipantesProcessoByTipoParte(data)}",
             value = {@Parameter(defaultValue = "codTipoParte", label = "process.events.expression.getListaParticipantesProcessoByTipoParte.codTipoParte.param.label",
                     tooltip = "process.events.expression.getListaParticipantesProcessoByTipoParte.codTipoParte.param.tooltip", selectable = true)})
     public List<ParticipanteProcessoLogLabDTO> getListaParticipantesProcessoByTipoParte(String codTipoParte){
         return participanteProcessoLoglabSearch.getListaParticipanteProcessoLoglabDTOByCodTipoParteAndIdProcesso(getIdProcessoAtual(), codTipoParte);
+    }
+
+    @External(expressionType = ExpressionType.GERAL, tooltip = "process.events.expression.formataData.tooltip", example = "#{bpmExpressionService.formataDataComFormato(data, 'dd/MM/yyyy')}",
+            value = {@Parameter(defaultValue = "data", label = "process.events.expression.formataData.param.label",
+                    tooltip = "process.events.expression.formataDataComFormato.param.tooltip", selectable = true),
+                    @Parameter(defaultValue = "formato", label = "process.events.expression.formataData.formato.label",
+                    tooltip = "process.events.expression.formataDataComFormato.formato.tooltip", selectable = true)})
+    public String formatarData(Date data, String formato) {
+        return DateUtil.formatarData(data, formato);
     }
 }
