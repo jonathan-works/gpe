@@ -17,11 +17,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of="id")
+@EqualsAndHashCode(of="matricula")
 public class ContribuinteSolicitanteVO {
 
     private Long id;
 
+    @NotNull
     private ContribuinteEnum tipoContribuinte;
 
     @NotNull
@@ -30,23 +31,30 @@ public class ContribuinteSolicitanteVO {
 
     private String matricula;
 
+    @NotNull
     @Size(min = 6, max = 256)
     private String nomeCompleto;
 
+    @NotNull
     private String sexo;
 
+    @NotNull
     private Date dataNascimento;
 
+    @NotNull
     @Size(min = 3, max = 20)
     private String numeroRg;
 
+    @NotNull
     @Size(min = 3, max = 256)
     private String emissorRg;
 
+    @NotNull
     private Long idEstadoRg;
 
     private String cdEstadoRg;
 
+    @NotNull
     @Size(min = 6, max = 256)
     private String nomeMae;
 
@@ -55,23 +63,14 @@ public class ContribuinteSolicitanteVO {
 
     private String telefone;
 
-    @Size(min = 3, max = 100)
     private String cidade;
 
-    private Long idEstado;
-
-    private String cdEstado;
-
-    @Size(min = 3, max = 256)
     private String logradouro;
 
-    @Size(min = 3, max = 256)
     private String bairro;
 
-    @Size(min = 3, max = 256)
     private String complemento;
 
-    @Size(min = 3, max = 20)
     private String numero;
 
     private String cep;

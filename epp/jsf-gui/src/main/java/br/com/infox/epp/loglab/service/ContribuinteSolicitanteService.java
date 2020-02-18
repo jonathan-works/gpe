@@ -1,6 +1,8 @@
 package br.com.infox.epp.loglab.service;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import br.com.infox.cdi.dao.Dao;
@@ -10,95 +12,100 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.loglab.model.ContribuinteSolicitante;
-import br.com.infox.epp.loglab.search.ContribuinteSolicitanteSearch;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.pessoa.manager.PessoaService;
+import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
-import br.com.infox.seam.exception.ValidationException;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ContribuinteSolicitanteService extends PersistenceController {
 
-	@Inject
-	@GenericDao
-	private Dao<ContribuinteSolicitante, Long> contribuinteSolicitanteDAO;
+    @Inject
+    @GenericDao
+    private Dao<ContribuinteSolicitante, Long> contribuinteSolicitanteDAO;
 
-	@Inject
-	private PessoaService pessoaService;
-	@Inject
-	private UsuarioLoginManager usuarioLoginManager;
-	@Inject
-    private ContribuinteSolicitanteSearch contribuinteSolicitanteSearch;
+    @Inject
+    private PessoaFisicaManager pessoaFisicaManager;
+    @Inject
+    private UsuarioLoginManager usuarioLoginManager;
 
-	public ContribuinteSolicitanteVO gravar(ContribuinteSolicitanteVO vo) {
-		ContribuinteSolicitante solicitante = solicitanteFromContribuinteSolicitanteVO(vo);
-		if (solicitante.getId() == null) {
-	        if (contribuinteSolicitanteSearch.isExisteUsuarioContribuinteSolicitante(vo.getCpf())) {
-	            throw new ValidationException("Já existe um usuário cadastrado para este CPF.");
-	        }
+    public ContribuinteSolicitanteVO gravar(ContribuinteSolicitanteVO vo) {
+        ContribuinteSolicitante solicitante = solicitanteFromContribuinteSolicitanteVO(vo);
 
-	        contribuinteSolicitanteDAO.persist(solicitante);
-			if (solicitante.getId() != null) {
-				vo.setId(solicitante.getId());
+        PessoaFisica pf = salvarPessoaFisica(vo);
+        solicitante.setPessoaFisica(pf);
+        salvarUsuarioLogin(vo, pf);
+        if (solicitante.getId() == null) {
+            solicitante = contribuinteSolicitanteDAO.persist(solicitante);
+            if (solicitante.getId() != null) {
+                vo.setId(solicitante.getId());
+            }
+        } else {
+            contribuinteSolicitanteDAO.update(solicitante);
+        }
+        return vo;
+    }
 
-				PessoaFisica pessoaFisica = pessoaFisicaFromContribuinteSolicitanteVO(vo);
-				pessoaService.persist(pessoaFisica);
-				if (pessoaFisica.getIdPessoa() != null) {
-					UsuarioLogin usuarioLogin = usuarioLoginFromContribuinteSolicitanteVO(vo, pessoaFisica);
-					usuarioLoginManager.persist(usuarioLogin, Boolean.TRUE);
-				}
-			}
-		} else {
-			contribuinteSolicitanteDAO.update(solicitante);
-		}
-		return vo;
-	}
+    private void salvarUsuarioLogin(ContribuinteSolicitanteVO vo, PessoaFisica pf) {
+        UsuarioLogin usuLogin = usuarioLoginManager.getUsuarioLoginByPessoaFisica(pf);
+        if(usuLogin == null) {
+            usuLogin = new UsuarioLogin();
+            usuLogin.setLogin(vo.getCpf());
+            usuLogin.setAtivo(Boolean.TRUE);
+            usuLogin.setTipoUsuario(UsuarioEnum.H);
+            usuLogin.setPessoaFisica(pf);
+        }
+        usuLogin.setNomeUsuario(vo.getNomeCompleto());
+        usuLogin.setEmail(vo.getEmail());
+        if (usuLogin.getIdUsuarioLogin() != null) {
+            usuLogin = usuarioLoginManager.update(usuLogin);
+        } else {
+            usuLogin = usuarioLoginManager.persist(usuLogin);
+        }
+    }
 
-	private ContribuinteSolicitante solicitanteFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo) {
-		ContribuinteSolicitante solicitante = new ContribuinteSolicitante();
-		solicitante.setId(vo.getId());
-		solicitante.setTipoContribuinte(vo.getTipoContribuinte());
-		solicitante.setCpf(vo.getCpf());
-		solicitante.setMatricula(vo.getMatricula());
-		solicitante.setNomeCompleto(vo.getNomeCompleto());
-		solicitante.setSexo(vo.getSexo());
-		solicitante.setDataNascimento(vo.getDataNascimento());
-		solicitante.setNumeroRg(vo.getNumeroRg());
-		solicitante.setEmissorRg(vo.getEmissorRg());
-		solicitante.setEstadoRg(getEntityManager().getReference(Estado.class, vo.getIdEstadoRg()));
-		solicitante.setNomeMae(vo.getNomeMae());
-		solicitante.setEmail(vo.getEmail());
-		solicitante.setTelefone(vo.getTelefone());
-		solicitante.setCidade(vo.getCidade());
-		solicitante.setLogradouro(vo.getLogradouro());
-		solicitante.setBairro(vo.getBairro());
-		solicitante.setComplemento(vo.getComplemento());
-		solicitante.setNumero(vo.getNumero());
-		solicitante.setCep(vo.getCep());
-		return solicitante;
-	}
+    private PessoaFisica salvarPessoaFisica(ContribuinteSolicitanteVO vo) {
+        PessoaFisica pf = pessoaFisicaManager.getByCpf(vo.getCpf());
+        if(pf == null) {
+            pf = new PessoaFisica();
+        }
+        pf.setTipoPessoa(TipoPessoaEnum.F);
+        pf.setNome(vo.getNomeCompleto());
+        pf.setAtivo(Boolean.TRUE);
+        pf.setCpf(vo.getCpf());
+        pf.setDataNascimento(vo.getDataNascimento());
+        if(pf.getIdPessoa() != null) {
+            pf = pessoaFisicaManager.update(pf);
+        } else {
+            pf = pessoaFisicaManager.persist(pf);
+        }
+        return pf;
+    }
 
-	private PessoaFisica pessoaFisicaFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo) {
-		PessoaFisica pessoaFisica = new PessoaFisica();
-		pessoaFisica.setTipoPessoa(TipoPessoaEnum.F);
-		pessoaFisica.setNome(vo.getNomeCompleto());
-		pessoaFisica.setAtivo(Boolean.TRUE);
-		pessoaFisica.setCpf(vo.getCpf());
-		pessoaFisica.setDataNascimento(vo.getDataNascimento());
-		return pessoaFisica;
-	}
-
-	private UsuarioLogin usuarioLoginFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo, PessoaFisica pessoaFisica) {
-		UsuarioLogin usuarioLogin = new UsuarioLogin();
-		usuarioLogin.setLogin(vo.getCpf());
-		usuarioLogin.setNomeUsuario(vo.getNomeCompleto());
-		usuarioLogin.setEmail(vo.getEmail());
-		usuarioLogin.setAtivo(Boolean.TRUE);
-		usuarioLogin.setTipoUsuario(UsuarioEnum.H);
-		usuarioLogin.setPessoaFisica(pessoaFisica);
-		return usuarioLogin;
-	}
+    private ContribuinteSolicitante solicitanteFromContribuinteSolicitanteVO(ContribuinteSolicitanteVO vo) {
+        ContribuinteSolicitante solicitante = new ContribuinteSolicitante();
+        solicitante.setId(vo.getId());
+        solicitante.setTipoContribuinte(vo.getTipoContribuinte());
+        solicitante.setCpf(vo.getCpf());
+        solicitante.setMatricula(vo.getMatricula());
+        solicitante.setNomeCompleto(vo.getNomeCompleto());
+        solicitante.setSexo(vo.getSexo());
+        solicitante.setDataNascimento(vo.getDataNascimento());
+        solicitante.setNumeroRg(vo.getNumeroRg());
+        solicitante.setEmissorRg(vo.getEmissorRg());
+        solicitante.setEstadoRg(getEntityManager().getReference(Estado.class, vo.getIdEstadoRg()));
+        solicitante.setNomeMae(vo.getNomeMae());
+        solicitante.setEmail(vo.getEmail());
+        solicitante.setTelefone(vo.getTelefone());
+        solicitante.setCidade(vo.getCidade());
+        solicitante.setLogradouro(vo.getLogradouro());
+        solicitante.setBairro(vo.getBairro());
+        solicitante.setComplemento(vo.getComplemento());
+        solicitante.setNumero(vo.getNumero());
+        solicitante.setCep(vo.getCep());
+        return solicitante;
+    }
 
 }
