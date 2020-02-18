@@ -16,6 +16,7 @@ import br.com.infox.assinatura.PoliticaAssinatura;
 import br.com.infox.assinatura.PoliticaAssinaturaFactory;
 import br.com.infox.assinatura.assinador.impl.AssinadorFactory;
 import br.com.infox.assinatura.assinador.signable.SimpleSignableIO;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -30,6 +31,8 @@ import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronicoBin;
 import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 import br.com.infox.epp.login.LoginService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 public class AssinadorListenerImpl implements AssinadorListener, Serializable {
 
@@ -87,29 +90,41 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
 
         //Idealmente viria do componente, atribuindo o padrão
 
-        PessoaFisica pfComponente = button.getPessoaAssinatura();
-        PessoaFisica pfAutenticada = Optional.ofNullable(Authenticator.getUsuarioPerfilAtual()).map(UsuarioPerfil::getUsuarioLogin).map(UsuarioLogin::getPessoaFisica).orElse(null);
-        if(pfComponente == null && pfAutenticada == null) {
-            String msg = "Pessoa não encontrada.";
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
-            return;
-        }
-        PessoaFisica pessoaAssinante = Optional.ofNullable(pfComponente).orElse(pfAutenticada);
-        if (!autenticar(pessoaAssinante, evt.getPassword())) {
-            String msg = "Falha de autenticação";
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
-            return;
-        }
-        PoliticaAssinatura politicaDeAssinatura = PoliticaAssinaturaFactory.getDefault().fromOID(PoliticaAssinatura.AD_RB_CMS_V_2_1);
-        CertificadoEletronico certificadoEletronicoUsuarioLogado = pessoaAssinante.getCertificadoEletronico();
-        if(certificadoEletronicoUsuarioLogado == null) {
-            String msg = "Usuário não possui certificado";
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
-            return;
-        }
         CertificadoEletronicoService certificadoEletronicoService = null;
         AssinadorService assinadorService = null;
+        PessoaFisicaManager pessoaFisicaManager = null;
         try {
+            pessoaFisicaManager = Beans.getReference(PessoaFisicaManager.class);
+            PessoaFisica pfComponente = button.getPessoaAssinatura();
+            String cpfPessoaAssinatura = button.getCpfPessoaAssinatura();
+            Boolean autenticarComUsuarioAtual = button.getAutenticarComUsuarioAtual();
+            PessoaFisica pfAutenticada = Optional.ofNullable(Authenticator.getUsuarioPerfilAtual()).map(UsuarioPerfil::getUsuarioLogin).map(UsuarioLogin::getPessoaFisica).orElse(null);
+            if(pfComponente == null && pfAutenticada == null && StringUtil.isEmpty(cpfPessoaAssinatura)) {
+                String msg = "Pessoa não encontrada.";
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+                return;
+            }
+
+            if(pfComponente == null && !StringUtil.isEmpty(cpfPessoaAssinatura)) {
+                pfComponente = pessoaFisicaManager.getByCpf(cpfPessoaAssinatura);
+            }
+
+            PessoaFisica pessoaAssinante = Optional.ofNullable(pfComponente).orElse(pfAutenticada);
+            if(Boolean.FALSE.equals(autenticarComUsuarioAtual)) {
+                pfAutenticada = pessoaAssinante;
+            }
+            if (!autenticar(pfAutenticada, evt.getPassword())) {
+                String msg = "Falha de autenticação";
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+                return;
+            }
+            PoliticaAssinatura politicaDeAssinatura = PoliticaAssinaturaFactory.getDefault().fromOID(PoliticaAssinatura.AD_RB_CMS_V_2_1);
+            CertificadoEletronico certificadoEletronicoUsuarioLogado = pessoaAssinante.getCertificadoEletronico();
+            if(certificadoEletronicoUsuarioLogado == null) {
+                String msg = "Usuário não possui certificado";
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+                return;
+            }
             certificadoEletronicoService = Beans.getReference(CertificadoEletronicoService.class);
             CertificadoEletronicoBin certificadoEletronicoBinRaiz = certificadoEletronicoService.getCertificadoEletronicoBinRaiz();
             CertificadoEletronicoBin certificadoEletronicoBinUsuarioLogado = certificadoEletronicoService.getCertificadoEletronicoBin(certificadoEletronicoUsuarioLogado.getId());
@@ -136,12 +151,17 @@ public class AssinadorListenerImpl implements AssinadorListener, Serializable {
             button.setStatus(null);
             button.setToken(null);
             button.setCurrentPhase(null);
+        }catch (BusinessRollbackException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage()));
         } finally {
             if (certificadoEletronicoService != null) {
                 Beans.destroy(certificadoEletronicoService);
             }
             if (assinadorService != null) {
                 Beans.destroy(assinadorService);
+            }
+            if (pessoaFisicaManager != null) {
+                Beans.destroy(pessoaFisicaManager);
             }
         }
     }

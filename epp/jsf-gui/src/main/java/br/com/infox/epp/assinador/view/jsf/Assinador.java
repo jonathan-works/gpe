@@ -30,7 +30,9 @@ public class Assinador extends javax.faces.component.UICommand
     static final String RENDERER_TYPE = "br.com.infox.epp.assinador.view.jsf.AssinadorRenderer";
 
     private enum PropertyKeys {
-        textoConfirmacaoAssinaturaEletronica, labelAssinaturaEletronica, renderedAssinaturaEletronica, pessoaAssinatura, assinavelProvider, callbackHandler, tokenField, execute, render, disabled, onbegin, oncomplete, value, signAction, timeout, style, styleClass, onclick, token, status, currentPhase;
+        textoConfirmacaoAssinaturaEletronica, labelAssinaturaEletronica, renderedAssinaturaEletronica, pessoaAssinatura,
+        cpfPessoaAssinatura, autenticarComUsuarioAtual, assinavelProvider, callbackHandler, tokenField, execute, render, disabled, onbegin,
+        oncomplete, value, signAction, timeout, style, styleClass, onclick, token, status, currentPhase;
 
         String toString;
 
@@ -247,6 +249,22 @@ public class Assinador extends javax.faces.component.UICommand
 
     public String getTextoConfirmacaoAssinaturaEletronica() {
         return (java.lang.String) getStateHelper().eval(PropertyKeys.textoConfirmacaoAssinaturaEletronica, "Digite sua senha e confirme para assinar eletronicamente.");
+    }
+
+    public void setCpfPessoaAssinatura(java.lang.String value) {
+        getStateHelper().put(PropertyKeys.cpfPessoaAssinatura, value);
+    }
+
+    public String getCpfPessoaAssinatura() {
+        return (java.lang.String) getStateHelper().eval(PropertyKeys.cpfPessoaAssinatura, null);
+    }
+
+    public void setAutenticarComUsuarioAtual(java.lang.Boolean value) {
+        getStateHelper().put(PropertyKeys.autenticarComUsuarioAtual, value);
+    }
+
+    public Boolean getAutenticarComUsuarioAtual() {
+        return (java.lang.Boolean) getStateHelper().eval(PropertyKeys.autenticarComUsuarioAtual, false);
     }
 
 
