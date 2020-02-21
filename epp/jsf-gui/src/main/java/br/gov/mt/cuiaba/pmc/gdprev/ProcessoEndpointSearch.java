@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -32,8 +34,6 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.Papel_;
-import br.com.infox.epp.access.entity.PerfilTemplate;
-import br.com.infox.epp.access.entity.PerfilTemplate_;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -73,9 +73,29 @@ import br.com.infox.ibpm.task.entity.UsuarioTaskInstance_;
 public class ProcessoEndpointSearch extends PersistenceController {
 
     //TODO: verificar com a Loglab quais os códigos
-    private static final String CODIGO_STATUS_ARQUIVADO = "CD005";
-    private static final String CODIGO_STATUS_DESARQUIVADO = "CD017";
-    private static final String CODIGO_TIPO_PARTE_INTERESSADO = "interessadoServidor";
+    private static final Object[] CODIGO_STATUS_ARQUIVADO = {"Processo Arquivado"};
+    private static final Object[] CODIGO_STATUS_DESARQUIVADO = {"Processo Desarquivado"};
+	private static final Object[] CODIGOS_FLUXOS_CONSULTA = { "P01-SME", "P01-SMS", "P02-SME", "P02-SMGE", "P02-SMS",
+			"P03-SME", "P03-SMS", "P04-SME", "P04-SMS", "P05-SME", "P05-SMS", "P06-SME", "P06-SMS", "P07-SME",
+			"P07-SMGE", "P07-SMS", "P08-SME", "P08-SMS", "P09-SME", "P09-SMS", "P10-SME", "P10-SMGE", "P10-SMS",
+			"P11-SME", "P11-SMS", "P12-SME", "P12-SMGE", "P12-SMS", "P13-SME", "P13-SMGE", "P13-SMS", "P14-SME",
+			"P14-SMGE", "P14-SMS", "P15-SME", "P15-SMGE", "P15-SMS", "P16-SME", "P16-SMGE", "P16-SMS", "P17-SME",
+			"P17-SMGE", "P17-SMS", "P18-SMGE", "P18-SMS", "P19-SME", "P19-SMS", "P20-SME", "P20-SMS", "P21-SME",
+			"P21-SMS", "P22-SME", "P22-SMGE", "P22-SMS", "P23-SME", "P23-SMGE", "P23-SMS", "P24-SME", "P24-SMGE",
+			"P24-SMS", "P25-SME", "P25-SMGE", "P25-SMS", "P26-SME", "P26-SMS", "P27-SME", "P27-SMS", "P28-SME",
+			"P28-SMS", "P29-SME", "P29-SMGE", "P29-SMS", "P30-SME", "P30-SMGE", "P30-SMS", "P31-SME", "P31-SMGE",
+			"P31-SMS", "P32-SME", "P32-SMGE", "P32-SMS", "P33-SMS", "P34-SMGE", "P34-SMS", "P35-SMGE", "P35-SMS",
+			"P36-SMGE", "P36-SMS", "P37-SMGE", "P37-SMS", "P38-SMGE", "P38-SMS", "P39-SMGE", "P39-SMS", "P40-SMGE",
+			"P40-SMS", "P41-SMGE", "P41-SMS", "P42-SMGE", "P42-SMS", "P43-SMGE", "P43-SMS", "P44-SMGE", "P44-SMS",
+			"P45-SMS", "P46-SMGE", "P46-SMS", "P47-SMS", "P48-SMGE", "P48-SMS", "P49-SMS", "P50-SMGE", "P50-SMS",
+			"P51-SMGE", "P51-SMS", "P52-SMGE", "P52-SMS", "P53-SMGE", "P53-SMS", "P54-SMGE", "P54-SMS", "P55-SMGE",
+			"P55-SMS", "P56-SMGE", "P56-SMS", "P57-SMGE", "P57-SMS", "P58-SMGE", "P58-SMS", "P59-SMGE", "P59-SMS",
+			"P60-SMGE", "P60-SMS", "P61-SMGE", "P61-SMS", "P62-SMGE", "P62-SMS", "P63-SMGE", "P63-SMS", "P64-SMGE",
+			"P64-SMS", "P65-SMS", "P66-SMGE", "P66-SMS", "P67-SMS", "P68-SMGE", "P68-SMS", "P69-SMS", "P70-SMGE",
+			"P70-SMS", "P71-SMGE", "P71-SMS", "P74-SMGE", "P75-SMGE", "P76-SMGE", "P77-SMGE", "P78-SMGE", "P79-SMGE",
+			"P80-SMGE", "P81-SMGE", "P82-SMGE", "P83-SMGE", "P84-SMGE", "P85-SMGE", "P88-SMGE", "P89-SMGE", "P90-SMGE",
+			"P91-SMGE", "P92-SMGE", "P93-SMGE", "P94-SMGE" }; 
+    private static final Object[] CODIGO_TIPO_PARTE_INTERESSADO = {"interessadoServidor"};
 
     public List<DocumentoBin> getListaDocumentoBinByNrProcesso(String numeroDoProcesso) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -124,7 +144,7 @@ public class ProcessoEndpointSearch extends PersistenceController {
 
         Predicate historico = pradicateHistoricoMetadadoProcesso(dataAlteracao, cb, hist, sp);
 
-        cq.where(historico);
+        cq.where(historico, fluxo.get(Fluxo_.codFluxo).in(CODIGOS_FLUXOS_CONSULTA));
 
         cq.groupBy(idProcesso,nrProcesso, nmNatureza, nmCategoria, nmFluxo,dtCriacao,dtEncerramento, situacaoExp);
         cq.orderBy(cb.desc(dtEncerramento));
@@ -141,6 +161,11 @@ public class ProcessoEndpointSearch extends PersistenceController {
             String dataEncerramento = Optional.ofNullable(tuple.get(dtEncerramento)).map(sdf::format).orElse(null);
             List<Interessado> servidores = recuperarInteressados(id);
             String situacao = Optional.ofNullable(tuple.get(situacaoExp)).orElse("");
+            if (Stream.of(CODIGO_STATUS_ARQUIVADO).anyMatch(java.util.function.Predicate.isEqual(situacao))) {
+            	situacao = "ARQUIVADO";
+            } else if (Stream.of(CODIGO_STATUS_DESARQUIVADO).anyMatch(java.util.function.Predicate.isEqual(situacao))) {
+            	situacao = "DESARQUIVADO";
+            }
             processos.add(new Processo(numero, nomeNatureza, nomeCategoria, nomeFluxo, situacao, servidores, dataCriacao, dataEncerramento));
         }
 
@@ -192,12 +217,17 @@ public class ProcessoEndpointSearch extends PersistenceController {
 
     private Predicate pradicateHistoricoMetadadoProcesso(Date dataAlteracao, CriteriaBuilder cb,
             ListJoin<?, HistoricoMetadadoProcesso> hist, Root<StatusProcesso> sp) {
+    	;
         Predicate historico = cb.and(
                 cb.equal(hist.get(HistoricoMetadadoProcesso_.nome),
                         cb.literal(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType())),
                 cb.equal(sp.get(StatusProcesso_.idStatusProcesso).as(String.class),
                         hist.get(HistoricoMetadadoProcesso_.valor)),
-                sp.get(StatusProcesso_.nome).in(CODIGO_STATUS_ARQUIVADO, CODIGO_STATUS_DESARQUIVADO),
+                
+                sp.get(StatusProcesso_.nome).in(Stream.of(
+                	Stream.of(CODIGO_STATUS_ARQUIVADO),
+                    Stream.of(CODIGO_STATUS_DESARQUIVADO)
+                ).flatMap(Function.identity()).toArray(Object[]::new)),
                 hist.get(HistoricoMetadadoProcesso_.acao).in("Insert", "Update"),
                 cb.between(hist.get(HistoricoMetadadoProcesso_.dataRegistro), DateUtil.getBeginningOfDay(dataAlteracao),
                         DateUtil.getEndOfDay(dataAlteracao)));
@@ -214,7 +244,7 @@ public class ProcessoEndpointSearch extends PersistenceController {
         cq.select(cb.construct(Interessado.class, pessoaFisica.get(PessoaFisica_.cpf), cb.literal(""),
                 partProcesso.get(ParticipanteProcesso_.nome)));
         cq.where(cb.equal(partProcesso.get(ParticipanteProcesso_.processo).get(Processo_.idProcesso), idProcesso),
-                cb.equal(tipoParte.get(TipoParte_.identificador), CODIGO_TIPO_PARTE_INTERESSADO));
+                tipoParte.get(TipoParte_.identificador).in(CODIGO_TIPO_PARTE_INTERESSADO));
         List<Interessado> resultList = getEntityManager().createQuery(cq).getResultList();
         for (Interessado interessado : resultList) {
             interessado.setMatricula(getMatriculaServidorByCpf(interessado.getCpf()));
