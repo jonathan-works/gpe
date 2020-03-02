@@ -10,12 +10,10 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.loglab.model.Servidor;
-import br.com.infox.epp.loglab.search.ServidorSearch;
 import br.com.infox.epp.loglab.vo.ServidorVO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.pessoa.manager.PessoaService;
+import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
-import br.com.infox.seam.exception.ValidationException;
 
 @Stateless
 public class ServidorService extends PersistenceController {
@@ -24,35 +22,63 @@ public class ServidorService extends PersistenceController {
 	@GenericDao
 	private Dao<Servidor, Long> servidorDAO;
 
-	@Inject
-	private PessoaService pessoaService;
+    @Inject
+    private PessoaFisicaManager pessoaFisicaManager;
     @Inject
     private UsuarioLoginManager usuarioLoginManager;
-    @Inject
-    private ServidorSearch servidorSearch;
 
-	public void gravar(ServidorVO servidorVO) {
-		Servidor servidor = servidorFromServidorVO(servidorVO);
-		if (servidor.getId() == null) {
-		    if (servidorSearch.isExisteUsuarioServidor(servidorVO.getCpf())) {
-		        throw new ValidationException("Já existe um usuário cadastrado para este CPF.");
-		    }
+    public ServidorVO gravar(ServidorVO vo) {
+        Servidor servidor = servidorFromServidorVO(vo);
 
-            servidorDAO.persist(servidor);
+        PessoaFisica pf = salvarPessoaFisica(vo);
+        servidor.setPessoaFisica(pf);
+        salvarUsuarioLogin(vo, pf);
+        if (servidor.getId() == null) {
+            servidor = servidorDAO.persist(servidor);
             if (servidor.getId() != null) {
-                servidorVO.setId(servidor.getId());
-
-				PessoaFisica pessoaFisica = pessoaFisicaFromServidorVO(servidorVO);
-				pessoaService.persist(pessoaFisica);
-				if (pessoaFisica.getIdPessoa() != null) {
-					UsuarioLogin usuarioLogin = usuarioLoginFromServidorVO(servidorVO, pessoaFisica);
-					usuarioLoginManager.persist(usuarioLogin, Boolean.TRUE);
-				}
+                vo.setId(servidor.getId());
             }
         } else {
             servidorDAO.update(servidor);
         }
+        return vo;
+    }
+
+	private PessoaFisica salvarPessoaFisica(ServidorVO vo) {
+        PessoaFisica pf = pessoaFisicaManager.getByCpf(vo.getCpf());
+        if (pf == null) {
+            pf = new PessoaFisica();
+        }
+        pf.setTipoPessoa(TipoPessoaEnum.F);
+        pf.setNome(vo.getNomeCompleto());
+        pf.setAtivo(Boolean.TRUE);
+        pf.setCpf(vo.getCpf());
+        if (pf.getIdPessoa() != null) {
+            pf = pessoaFisicaManager.update(pf);
+        } else {
+            pf = pessoaFisicaManager.persist(pf);
+        }
+        return pf;
 	}
+
+    private UsuarioLogin salvarUsuarioLogin(ServidorVO vo, PessoaFisica pf) {
+        UsuarioLogin ul = usuarioLoginManager.getUsuarioLoginByPessoaFisica(pf);
+        if (ul == null) {
+            ul = new UsuarioLogin();
+            ul.setLogin(vo.getCpf());
+            ul.setAtivo(Boolean.TRUE);
+            ul.setTipoUsuario(UsuarioEnum.H);
+            ul.setPessoaFisica(pf);
+        }
+        ul.setNomeUsuario(vo.getNomeCompleto());
+        ul.setEmail(vo.getEmail());
+        if (ul.getIdUsuarioLogin() != null) {
+            ul = usuarioLoginManager.update(ul);
+        } else {
+            ul = usuarioLoginManager.persist(ul);
+        }
+        return ul;
+    }
 
 	private Servidor servidorFromServidorVO(ServidorVO vo) {
 		Servidor servidor = new Servidor();
@@ -67,23 +93,4 @@ public class ServidorService extends PersistenceController {
 		return servidor;
 	}
 
-	private PessoaFisica pessoaFisicaFromServidorVO(ServidorVO vo) {
-		PessoaFisica pessoaFisica = new PessoaFisica();
-		pessoaFisica.setTipoPessoa(TipoPessoaEnum.F);
-		pessoaFisica.setNome(vo.getNomeCompleto());
-		pessoaFisica.setAtivo(Boolean.TRUE);
-		pessoaFisica.setCpf(vo.getCpf());
-		return pessoaFisica;
-	}
-
-    private UsuarioLogin usuarioLoginFromServidorVO(ServidorVO vo, PessoaFisica pessoaFisica) {
-        UsuarioLogin usuarioLogin = new UsuarioLogin();
-        usuarioLogin.setLogin(vo.getCpf());
-        usuarioLogin.setNomeUsuario(vo.getNomeCompleto());
-        usuarioLogin.setEmail(vo.getEmail());
-        usuarioLogin.setAtivo(Boolean.TRUE);
-        usuarioLogin.setTipoUsuario(UsuarioEnum.H);
-		usuarioLogin.setPessoaFisica(pessoaFisica);
-        return usuarioLogin;
-    }
 }

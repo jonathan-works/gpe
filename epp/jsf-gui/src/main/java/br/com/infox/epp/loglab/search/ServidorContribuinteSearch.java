@@ -196,13 +196,16 @@ public class ServidorContribuinteSearch extends PersistenceController {
         servidor.setOrgao(dadosServidorResponseBean.getOrgao());
         servidor.setSituacao(dadosServidorResponseBean.getSituacao());
         servidor.setSubFolha(dadosServidorResponseBean.getSubFolha());
+        servidor.setEmail(dadosServidorResponseBean.getServidorEmail());
         servidor.setTipoParticipante(TipoParticipanteEnum.SE);
 
         ServidorContribuinteVO servidorByCpf = getServidorByCPF(dadosServidorResponseBean.getCpf());
-        if(servidorByCpf != null) {
+        if (servidorByCpf != null) {
             servidor.setId(servidorByCpf.getId());
             servidor.setCelular(servidorByCpf.getCelular());
-            servidor.setEmail(servidorByCpf.getEmail());
+            if (StringUtil.isEmpty(dadosServidorResponseBean.getServidorEmail())) {
+                servidor.setEmail(servidorByCpf.getEmail());
+            }
             servidor.setIdPessoaFisica(servidorByCpf.getIdPessoaFisica());
         }
         return servidor;

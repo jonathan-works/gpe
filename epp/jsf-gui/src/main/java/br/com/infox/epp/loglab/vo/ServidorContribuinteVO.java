@@ -7,6 +7,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
 import br.com.infox.epp.pessoa.annotation.Cpf;
+import br.com.infox.epp.pessoa.type.TipoGeneroEnum;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,13 +24,12 @@ public class ServidorContribuinteVO {
     private Long id;
     private Integer idPessoaFisica;
     private TipoParticipanteEnum tipoParticipante;
-
     @NotNull
     @Cpf
     private String cpf;
     private String matricula;
     private String nomeCompleto;
-    private String sexo;
+    private TipoGeneroEnum sexo;
     private Date dataNascimento;
     @Size(min = 6, max = 256)
     private String nomeMae;
@@ -43,7 +43,6 @@ public class ServidorContribuinteVO {
     private String complemento;
     private String numero;
     private String cep;
-
     private Date dataNomeacao;
     private Date dataPosse;
     private Date dataExercicio;
@@ -65,7 +64,7 @@ public class ServidorContribuinteVO {
      * Construtor para Contribuinte
      */
     public ServidorContribuinteVO(Long id, Integer idPessoaFisica, String cpf, String nomeCompleto, Date dataNascimento,
-            String sexo, String nomeMae, String email, String celular, String codEstado, String cidade,
+            TipoGeneroEnum sexo, String nomeMae, String email, String celular, String codEstado, String cidade,
             String logradouro, String bairro, String complemento, String numero, String cep) {
         this.id = id;
         this.idPessoaFisica = idPessoaFisica;

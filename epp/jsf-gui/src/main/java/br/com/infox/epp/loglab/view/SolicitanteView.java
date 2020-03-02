@@ -33,12 +33,12 @@ public class SolicitanteView implements Serializable {
     @Inject
     private EstadoSearch estadoSearch;
 
+    @Setter
+    private Estado estado;
+
     @Getter
     @Setter
     private ContribuinteSolicitanteVO solicitanteVO;
-    @Getter
-    @Setter
-    private Estado estado;
     @Getter
     @Setter
     private String numeroCpf;
@@ -93,7 +93,7 @@ public class SolicitanteView implements Serializable {
     }
 
     private void alterarEstado() {
-        if(estado != null) {
+        if (estado != null) {
             solicitanteVO.setIdEstadoRg(estado.getId());
         } else {
             solicitanteVO.setIdEstadoRg(null);
@@ -107,5 +107,12 @@ public class SolicitanteView implements Serializable {
         numeroMatricula = null;
         contribuinteSolicitanteList = null;
     }
+
+    public Estado getEstado() {
+        if (estado == null && solicitanteVO != null && solicitanteVO.getIdEstadoRg() != null) {
+            return estadoSearch.find(solicitanteVO.getIdEstadoRg());
+        }
+        return estado;
+	}
 
 }
