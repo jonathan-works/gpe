@@ -221,6 +221,11 @@ public class AssinadorRenderer extends Renderer {
 
     protected void encodeMarkup(FacesContext context, Assinador button) throws IOException {
 
+        ResponseWriter writer = context.getResponseWriter();
+        String clientId = button.getClientId(context);
+
+        writer.startElement("div", button);
+        writer.writeAttribute("id", clientId, "id");
         if(podeExibirAssinadorToken(button)) {
             createAssinadorToken(context, button);
         }
@@ -228,6 +233,7 @@ public class AssinadorRenderer extends Renderer {
         if(podeExibirAssinadorEletronico(button)) {
             createAssinadorEletronico(context, button);
         }
+        writer.endElement("div");
     }
 
     private void createAssinadorToken(FacesContext context, Assinador button) throws IOException {
@@ -246,8 +252,8 @@ public class AssinadorRenderer extends Renderer {
             styleClass.append(" ").append(button.getStyleClass()).append(" ");
 
         writer.startElement("button", button);
-        writer.writeAttribute("id", clientId, "id");
-        writer.writeAttribute("name", clientId, "name");
+        writer.writeAttribute("id", clientId.concat("_token"), "id");
+        writer.writeAttribute("name", clientId.concat("_token"), "name");
         writer.writeAttribute("type", "button", "type");
         writer.writeAttribute("class", styleClass.toString(), "styleClass");
         if (!disabled){

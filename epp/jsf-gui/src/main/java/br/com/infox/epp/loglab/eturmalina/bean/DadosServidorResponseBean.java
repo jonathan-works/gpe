@@ -1,14 +1,14 @@
 package br.com.infox.epp.loglab.eturmalina.bean;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.lang.reflect.Type;
 import java.util.List;
 
 import com.google.gson.reflect.TypeToken;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -38,8 +38,19 @@ public class DadosServidorResponseBean {
     private String ServidorDataNascimento;
     private String ServidorRGEmissao;
     private String ServidorRGOrgao;
+    private String ServidorCidadeNome;
+    private String ServidorLogrTipoDesc;
+    private String ServidorLogradouro;
+    private String ServidorBairroNome;
+    private String ServidorEndComplemento;
+    private String ServidorEndNumero;
+    private String ServidorCEP;
+    private String ServidorSexo;
+    private String ServidorEmail;
+    private String ServidorTelefoneCelular;
 
     public static Type getListType(){
         return new TypeToken<List<DadosServidorResponseBean>>(){}.getType();
     }
+
 }

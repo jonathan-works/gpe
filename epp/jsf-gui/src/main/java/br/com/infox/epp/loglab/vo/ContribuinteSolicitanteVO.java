@@ -7,6 +7,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.epp.loglab.contribuinte.type.ContribuinteEnum;
 import br.com.infox.epp.pessoa.annotation.Cpf;
+import br.com.infox.epp.pessoa.type.TipoGeneroEnum;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,7 +37,7 @@ public class ContribuinteSolicitanteVO {
     private String nomeCompleto;
 
     @NotNull
-    private String sexo;
+    private TipoGeneroEnum sexo;
 
     @NotNull
     private Date dataNascimento;

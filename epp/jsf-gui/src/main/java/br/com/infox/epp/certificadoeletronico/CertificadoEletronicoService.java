@@ -178,4 +178,26 @@ public class CertificadoEletronicoService extends PersistenceController {
         return novoCertificadoEletronico.getId();
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void reemitirCertificadoEletronico(Integer idPessoaFisica) {
+        PessoaFisica pessoaFisica = pessoaFisicaDao.findById(idPessoaFisica);
+        CertificadoEletronico certificadoEletronicoToDelete = pessoaFisica.getCertificadoEletronico();
+
+        gerarCertificado(pessoaFisica);
+
+        remove(certificadoEletronicoToDelete);
+
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void remove(CertificadoEletronico certificadoEletronico) {
+        if(certificadoEletronico != null) {
+            CertificadoEletronicoBin certificadoEletronicoBin = getEntityManagerBin().find(CertificadoEletronicoBin.class, certificadoEletronico.getId());
+            if(certificadoEletronicoBin != null) {
+                getEntityManagerBin().remove(certificadoEletronicoBin);
+            }
+            certificadoEletronicoDao.remove(certificadoEletronico);
+        }
+    }
+
 }

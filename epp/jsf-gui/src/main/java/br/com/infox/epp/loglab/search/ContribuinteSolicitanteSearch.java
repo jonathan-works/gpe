@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.loglab.contribuinte.type.ContribuinteEnum;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorBean;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorResponseBean;
@@ -24,6 +25,7 @@ import br.com.infox.epp.loglab.model.ContribuinteSolicitante_;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
+import br.com.infox.epp.pessoa.type.TipoGeneroEnum;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -68,26 +70,53 @@ public class ContribuinteSolicitanteSearch extends PersistenceController {
         contribuinteSolicitante.setIdEstadoRg(estado != null ? estado.getId() : null);
         contribuinteSolicitante.setCdEstadoRg(estado != null ? estado.getCodigo() : null);
         contribuinteSolicitante.setNomeMae(dadosServidorResponseBean.getServidorFiliacaoMae());
-        contribuinteSolicitante.setCidade(null);
-        contribuinteSolicitante.setLogradouro(null);
-        contribuinteSolicitante.setBairro(null);
-        contribuinteSolicitante.setComplemento(null);
-        contribuinteSolicitante.setNumero(null);
-        contribuinteSolicitante.setCep(null);
+        contribuinteSolicitante.setCidade(dadosServidorResponseBean.getServidorCidadeNome());
+        String logradouro = dadosServidorResponseBean.getServidorLogrTipoDesc() + " " + dadosServidorResponseBean.getServidorLogradouro();
+        contribuinteSolicitante.setLogradouro(logradouro);
+        contribuinteSolicitante.setBairro(dadosServidorResponseBean.getServidorBairroNome());
+        contribuinteSolicitante.setComplemento(dadosServidorResponseBean.getServidorEndComplemento());
+        contribuinteSolicitante.setNumero(dadosServidorResponseBean.getServidorEndNumero());
+        contribuinteSolicitante.setCep(dadosServidorResponseBean.getServidorCEP());
+        TipoGeneroEnum tipoGeneroEnum = TipoGeneroEnum.safeValueOf(dadosServidorResponseBean.getServidorSexo().trim());
+        contribuinteSolicitante.setSexo(tipoGeneroEnum);
+        contribuinteSolicitante.setEmail(dadosServidorResponseBean.getServidorEmail());
+        contribuinteSolicitante.setTelefone(dadosServidorResponseBean.getServidorTelefoneCelular());
 
         ContribuinteSolicitante contrSolic = getContribuinteSolicitanteByMatriculaAndTipoContribuinte(
                 dadosServidorResponseBean.getMatricula(), tipoContribuinte);
-        if(contrSolic != null) {
+        if (contrSolic != null) {
             contribuinteSolicitante.setId(contrSolic.getId());
-            contribuinteSolicitante.setCidade(contrSolic.getCidade());
-            contribuinteSolicitante.setLogradouro(contrSolic.getLogradouro());
-            contribuinteSolicitante.setBairro(contrSolic.getBairro());
-            contribuinteSolicitante.setComplemento(contrSolic.getComplemento());
-            contribuinteSolicitante.setNumero(contrSolic.getNumero());
-            contribuinteSolicitante.setCep(contrSolic.getCep());
-            contribuinteSolicitante.setSexo(contrSolic.getSexo());
-            contribuinteSolicitante.setEmail(contrSolic.getEmail());
-            contribuinteSolicitante.setTelefone(contrSolic.getTelefone());
+            if (estado == null) {
+                contribuinteSolicitante.setIdEstadoRg(contrSolic.getEstadoRg().getId());
+                contribuinteSolicitante.setCdEstadoRg(contrSolic.getEstadoRg().getCodigo());
+            }
+            if (StringUtil.isEmpty(dadosServidorResponseBean.getServidorCidadeNome())) {
+                contribuinteSolicitante.setCidade(contrSolic.getCidade());
+            }
+            if (StringUtil.isEmpty(logradouro)) {
+                contribuinteSolicitante.setLogradouro(contrSolic.getLogradouro());
+            }
+            if (StringUtil.isEmpty(dadosServidorResponseBean.getServidorBairroNome())) {
+                contribuinteSolicitante.setBairro(contrSolic.getBairro());
+            }
+            if (StringUtil.isEmpty(dadosServidorResponseBean.getServidorEndComplemento())) {
+                contribuinteSolicitante.setComplemento(contrSolic.getComplemento());
+            }
+            if (StringUtil.isEmpty(dadosServidorResponseBean.getServidorEndNumero())) {
+                contribuinteSolicitante.setNumero(contrSolic.getNumero());
+            }
+            if (StringUtil.isEmpty(dadosServidorResponseBean.getServidorCEP())) {
+                contribuinteSolicitante.setCep(contrSolic.getCep());
+            }
+            if (tipoGeneroEnum == null) {
+                contribuinteSolicitante.setSexo(contrSolic.getSexo());
+            }
+            if (StringUtil.isEmpty(dadosServidorResponseBean.getServidorEmail())) {
+                contribuinteSolicitante.setEmail(contrSolic.getEmail());
+            }
+            if (StringUtil.isEmpty(dadosServidorResponseBean.getServidorTelefoneCelular())) {
+                contribuinteSolicitante.setTelefone(contrSolic.getTelefone());
+            }
         }
 
         return contribuinteSolicitante;
@@ -110,4 +139,5 @@ public class ContribuinteSolicitanteSearch extends PersistenceController {
             return null;
         }
     }
+
 }
