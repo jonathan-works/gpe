@@ -66,7 +66,7 @@ public class ContribuinteSolicitanteSearch extends PersistenceController {
         contribuinteSolicitante.setDataNascimento(dataNascimento);
         contribuinteSolicitante.setNumeroRg(dadosServidorResponseBean.getServidorRG());
         contribuinteSolicitante.setEmissorRg(dadosServidorResponseBean.getServidorRGOrgao());
-        Estado estado = estadoSearch.retrieveEstadoByCodigo(dadosServidorResponseBean.getServidorRGOrgao());
+        Estado estado = estadoSearch.retrieveEstadoByCodigo(dadosServidorResponseBean.getServidorRGUF());
         contribuinteSolicitante.setIdEstadoRg(estado != null ? estado.getId() : null);
         contribuinteSolicitante.setCdEstadoRg(estado != null ? estado.getCodigo() : null);
         contribuinteSolicitante.setNomeMae(dadosServidorResponseBean.getServidorFiliacaoMae());

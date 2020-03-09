@@ -38,16 +38,17 @@ public class DadosServidorResponseBean {
     private String ServidorDataNascimento;
     private String ServidorRGEmissao;
     private String ServidorRGOrgao;
+    private String ServidorSexo;
+    private String ServidorRGUF;
+    private String ServidorTelefoneCelular;
     private String ServidorCidadeNome;
-    private String ServidorLogrTipoDesc;
     private String ServidorLogradouro;
     private String ServidorBairroNome;
     private String ServidorEndComplemento;
     private String ServidorEndNumero;
     private String ServidorCEP;
-    private String ServidorSexo;
     private String ServidorEmail;
-    private String ServidorTelefoneCelular;
+    private String ServidorLogrTipoDesc;
 
     public static Type getListType(){
         return new TypeToken<List<DadosServidorResponseBean>>(){}.getType();

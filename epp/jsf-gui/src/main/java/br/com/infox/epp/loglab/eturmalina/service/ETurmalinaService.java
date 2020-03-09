@@ -20,6 +20,8 @@ import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorBean;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorResponseBean;
 import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRH;
 import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRHGETDADOSSERVIDOR;
+import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRHGETDADOSSERVIDORMATRICULA;
+import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse;
 import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRHGETDADOSSERVIDORResponse;
 import br.com.infox.epp.loglab.eturmalina.ws.WSIntegracaoRHSoapPort;
 import br.com.infox.epp.system.Parametros;
@@ -31,56 +33,102 @@ public class ETurmalinaService implements Serializable{
 	private static final long serialVersionUID = 1L;
 
     public List<DadosServidorResponseBean> getDadosServidor(DadosServidorBean dadosServidor) {
-    	validarParametros();
-        try {
-            WSIntegracaoRHGETDADOSSERVIDOR request = criarDadosServidor(dadosServidor);
-            URL url = new URL(Parametros.DS_URL_SERVICO_ETURMALINA.getValue());
-            WSIntegracaoRH wsIntegracao = new WSIntegracaoRH(url);
-            WSIntegracaoRHSoapPort service = wsIntegracao.getWSIntegracaoRHSoapPort();
-            WSIntegracaoRHGETDADOSSERVIDORResponse response;
-            response = service.getdadosservidor(request);
+        List<DadosServidorResponseBean> dadosResponseList = new ArrayList<>();
+        if (StringUtil.isEmpty(dadosServidor.getMatricula()) && !StringUtil.isEmpty(dadosServidor.getMatricula())) {
+            WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse response = getServidorMatriculaResponse(dadosServidor);
+            dadosResponseList.add(getServidorEmExercicio(response));
+        } else {
+            WSIntegracaoRHGETDADOSSERVIDORResponse response = getServidorResponse(dadosServidor);
+            dadosResponseList.addAll(getServidoresEmExercicio(response));
+        }
+        return dadosResponseList;
+    }
 
-            List<DadosServidorResponseBean> dadosResponseList = getServidoresEmExercicio(response);
-            return dadosResponseList;
-		} catch (MalformedURLException m) {
-            throw new EppConfigurationException("URL inválida.");
-		} catch (WebServiceException we) {
-            throw new EppConfigurationException("Falha ao tentar acessar serviço de consulta do e-TURMALINA.");
-		}
+    private WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse getServidorMatriculaResponse(DadosServidorBean dadosServidor) {
+        WSIntegracaoRHGETDADOSSERVIDORMATRICULA request = (WSIntegracaoRHGETDADOSSERVIDORMATRICULA) criarDadosServidor(dadosServidor,
+                WSIntegracaoRHGETDADOSSERVIDORMATRICULA.class);
+        WSIntegracaoRHSoapPort service = inicializarServico(dadosServidor);
+        WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse response = service.getdadosservidormatricula(request);
+        return response;
+    }
+
+    private WSIntegracaoRHGETDADOSSERVIDORResponse getServidorResponse(DadosServidorBean dadosServidor) {
+        WSIntegracaoRHGETDADOSSERVIDOR request = (WSIntegracaoRHGETDADOSSERVIDOR) criarDadosServidor(dadosServidor,
+                WSIntegracaoRHGETDADOSSERVIDOR.class);
+        WSIntegracaoRHSoapPort service = inicializarServico(dadosServidor);
+        WSIntegracaoRHGETDADOSSERVIDORResponse response = service.getdadosservidor(request);
+        return response;
     }
 
     private List<DadosServidorResponseBean> getServidoresEmExercicio(WSIntegracaoRHGETDADOSSERVIDORResponse retornoWs) {
         List<DadosServidorResponseBean> servidoresEmExercicioList = new ArrayList<DadosServidorResponseBean>();
         try {
-            if (retornoWs.getRetorno() != null){
+            if (!StringUtil.isEmpty(retornoWs.getRetorno())){
                 Gson gson = new Gson();
                 List<DadosServidorResponseBean> dadosRetorno = gson.fromJson(retornoWs.getRetorno(), DadosServidorResponseBean.getListType());
-
                 for (DadosServidorResponseBean dadosServidorResponse : dadosRetorno) {
-                    if(dadosServidorResponse.getStatus() != null) {
-                        if (dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCÍCIO")
-                                || dadosServidorResponse.getStatus().equalsIgnoreCase("EM EXERCICIO")){
+                    if (servidorEmExercicio(dadosServidorResponse.getStatus().trim())) {
+                        if (!StringUtil.isEmpty(dadosServidorResponse.getMatricula())) {
+                            DadosServidorBean dadosServidor = new DadosServidorBean(dadosServidorResponse.getCpf(), dadosServidorResponse.getMatricula());
+                            WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse response = getServidorMatriculaResponse(dadosServidor);
+                            DadosServidorResponseBean dadosServidorResponseBean = getServidorEmExercicio(response);
+                            if (dadosServidorResponseBean != null)
+                                servidoresEmExercicioList.add(dadosServidorResponseBean);
+                        } else {
                             servidoresEmExercicioList.add(dadosServidorResponse);
                         }
                     }
                 }
             }
-        }catch (JsonSyntaxException e) {
+        } catch (JsonSyntaxException e) {
             return servidoresEmExercicioList;
         }
         return servidoresEmExercicioList;
     }
 
-	private WSIntegracaoRHGETDADOSSERVIDOR criarDadosServidor(DadosServidorBean dadosServidor) {
-	    WSIntegracaoRHGETDADOSSERVIDOR request = new WSIntegracaoRHGETDADOSSERVIDOR();
-	    request.setUsuario(Parametros.DS_LOGIN_USUARIO_ETURMALINA.getValue());
-	    request.setSenha(Parametros.DS_SENHA_USUARIO_ETURMALINA.getValue());
-	    request.setCpf(dadosServidor.getCpf());
-        request.setMatricula(dadosServidor.getMatricula());
-        request.setDatainicio("");
-        request.setDatafim("");
-        return request;
+    private DadosServidorResponseBean getServidorEmExercicio(WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse retornoWs) {
+        DadosServidorResponseBean dadosServidorResponseBean = null;
+        try {
+            if (!StringUtil.isEmpty(retornoWs.getRetorno())) {
+                Gson gson = new Gson();
+                List<DadosServidorResponseBean> dadosRetorno = gson.fromJson(retornoWs.getRetorno(), DadosServidorResponseBean.getListType());
+                DadosServidorResponseBean dadosServidorResponse = dadosRetorno.stream().findFirst().orElse(null);
+                if (dadosServidorResponse != null) {
+                    if (servidorEmExercicio(dadosServidorResponse.getStatus().trim())) {
+                        dadosServidorResponseBean = dadosServidorResponse;
+                    }
+                }
+            }
+        } catch (JsonSyntaxException e) {
+            return dadosServidorResponseBean;
+        }
+        return dadosServidorResponseBean;
+    }
+
+	private <T> Object criarDadosServidor(DadosServidorBean dadosServidor, Class<T> classe) {
+	    if (WSIntegracaoRHGETDADOSSERVIDORMATRICULA.class.getName().equals(classe.getName())) {
+            WSIntegracaoRHGETDADOSSERVIDORMATRICULA request = new WSIntegracaoRHGETDADOSSERVIDORMATRICULA();
+            request.setUsuario(Parametros.DS_LOGIN_USUARIO_ETURMALINA.getValue());
+            request.setSenha(Parametros.DS_SENHA_USUARIO_ETURMALINA.getValue());
+            request.setMatricula(dadosServidor.getMatricula());
+            return request;
+	    } else {
+            WSIntegracaoRHGETDADOSSERVIDOR request = new WSIntegracaoRHGETDADOSSERVIDOR();
+            request.setUsuario(Parametros.DS_LOGIN_USUARIO_ETURMALINA.getValue());
+            request.setSenha(Parametros.DS_SENHA_USUARIO_ETURMALINA.getValue());
+            request.setCpf(dadosServidor.getCpf());
+            request.setMatricula(dadosServidor.getMatricula());
+            request.setDatainicio("");
+            request.setDatafim("");
+            return request;
+	    }
 	}
+
+    private boolean servidorEmExercicio(String status) {
+        if (StringUtil.isEmpty(status))
+            return Boolean.FALSE;
+        return "EM EXERCÍCIO".equalsIgnoreCase(status)  || "EM EXERCICIO".equalsIgnoreCase(status);
+    }
 
 	private void validarParametros( ) {
 		String msg = "O parâmetro '%s' não foi preenchido.";
@@ -96,5 +144,19 @@ public class ETurmalinaService implements Serializable{
     		throw new EppConfigurationException(String.format(msg, Parametros.DS_URL_SERVICO_ETURMALINA.getParametroDefinition().getNome()));
     	}
 	}
+
+    private WSIntegracaoRHSoapPort inicializarServico(DadosServidorBean dadosServidor) {
+        validarParametros();
+        try {
+            URL url = new URL(Parametros.DS_URL_SERVICO_ETURMALINA.getValue());
+            WSIntegracaoRH wsIntegracao = new WSIntegracaoRH(url);
+            WSIntegracaoRHSoapPort service = wsIntegracao.getWSIntegracaoRHSoapPort();
+            return service;
+        } catch (MalformedURLException m) {
+            throw new EppConfigurationException("URL inválida.");
+        } catch (WebServiceException we) {
+            throw new EppConfigurationException("Falha ao tentar acessar serviço de consulta do e-TURMALINA.");
+        }
+    }
 
 }
