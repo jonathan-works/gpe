@@ -6,7 +6,7 @@
       <repositories>
         <repository>
           <id>3rdparty</id>
-          <url>http://ci.infox.intranet:8081/nexus/content/groups/non-local/</url>
+          <url>${env.NEXUS_BASE_URL}/repository/infox-maven-allgroup/</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -32,13 +32,13 @@
           </snapshots>
           <id>nexus-plugin-releases</id>
           <name>repo</name>
-          <url>http://ci.infox.intranet:8081/nexus/content/groups/non-local/</url>
+          <url>${env.NEXUS_BASE_URL}/repository/infox-maven-allgroup/</url>
         </pluginRepository>
         <pluginRepository>
           <snapshots/>
           <id>nexus-plugin-snapshots</id>
           <name>repo</name>
-          <url>http://ci.infox.intranet:8081/nexus/content/groups/non-local/</url>
+          <url>${env.NEXUS_BASE_URL}/repository/infox-maven-allgroup/</url>
         </pluginRepository>
       </pluginRepositories>
       <properties>

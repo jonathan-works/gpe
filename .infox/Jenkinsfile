@@ -25,11 +25,9 @@ pipeline {
                     sh "mvn -s .infox/settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
                     sh "mvn -s .infox/settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
                 }
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*.war', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*liquibase*.tar.gz', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
             }
             post {
-                always {
+                success {
                     junit testResults: '**/target/surefire-reports/TEST-*.xml'
 
                     recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
@@ -37,6 +35,11 @@ pipeline {
                     // recordIssues enabledForFailure: true, tool: spotBugs()
                     recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
                     recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*.war', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*liquibase*.tar.gz', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
+                    deleteDir()
+                }
+                failure {
                     deleteDir()
                 }
             }
@@ -45,3 +48,4 @@ pipeline {
     }
 
 }
+
