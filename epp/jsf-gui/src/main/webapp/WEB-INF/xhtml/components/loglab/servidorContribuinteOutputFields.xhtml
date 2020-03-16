@@ -8,9 +8,9 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <ui:param name="searchObject" value="#{searchObject}" />
-    
+
     <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
-    
+
     <p:outputPanel id="#{identificador}"
                    styleClass="#{identificador}"
                    rendered="#{rendered}">
@@ -19,7 +19,7 @@
                        rendered="#{searchObject.tipoParticipante eq 'CO'}">
             <fieldset id="#{identificador}ContribuinteFieldset" style="margin-top: 1.5em;">
                 <legend class="name">#{infoxMessages['servidorContribuinte.dadosContribuinte']}</legend>
-                
+
                 <wi:field id="#{identificador}TipoParticipanteContribuinteOutput"
                           label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
                     <p:outputLabel id="#{identificador}TipoParticipanteContribuinteOutputInput"
@@ -61,7 +61,7 @@
                 </wi:field>
                 <wi:field id="#{identificador}CelularContribuinteOutput"
                           label="#{infoxMessages['servidorContribuinte.celular']}">
-                    <p:inputMask id="#{identificador}CelularContribuinteOutputInput"
+                    <p:outputLabel id="#{identificador}CelularContribuinteOutputInput"
                                  value="#{viewObject.celular}"/>
                 </wi:field>
                 <wi:field id="#{identificador}CodEstadoOutput"
@@ -101,13 +101,13 @@
                 </wi:field>
             </fieldset>
         </p:outputPanel>
-            
+
         <p:outputPanel id="#{identificador}ServidorPanel"
                        styleClass="#{identificador}ServidorPanel"
                        rendered="#{searchObject.tipoParticipante eq 'SE'}">
             <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
                 <legend class="name">#{infoxMessages['servidorContribuinte.dadosServidor']}</legend>
-                
+
                 <wi:field id="#{identificador}TipoParticipanteServidorOutput"
                           label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
                     <p:outputLabel id="#{identificador}TipoParticipanteServidorOutputInput"
@@ -240,7 +240,7 @@
                 </wi:field>
             </fieldset>
         </p:outputPanel>
-        
+
         <ui:insert />
     </p:outputPanel>
 </ui:composition>
