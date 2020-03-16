@@ -137,8 +137,7 @@
                 <wi:field id="#{identificador}TelefoneCelular"
                           required="true"
                           label="#{infoxMessages['empresa.telefoneCelular']}">
-                    <p:inputMask id="#{identificador}TelefoneCelularInput"
-                                 mask="(99) 99999999?9"
+                    <p:inputText id="#{identificador}TelefoneCelularInput"
                                  size="22"
                                  required="true"
                                  value="#{viewObject.telefoneCelular}"/>
@@ -146,8 +145,7 @@
 
                 <wi:field id="#{identificador}TelefoneFixo"
                           label="#{infoxMessages['empresa.telefoneFixo']}">
-                    <p:inputMask id="#{identificador}TelefoneFixoInput"
-                                 mask="(99) 99999999?9"
+                    <p:inputText id="#{identificador}TelefoneFixoInput"
                                  size="22"
                                  value="#{viewObject.telefoneFixo}"/>
                 </wi:field>

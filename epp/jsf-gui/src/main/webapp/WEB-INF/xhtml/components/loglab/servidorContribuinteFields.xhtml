@@ -11,10 +11,10 @@
     <ui:param name="searchObject" value="#{searchObject}" />
     <ui:param name="viewObject" value="#{viewObject}" />
     <ui:param name="codEstadoList" value="#{codEstadoList}" />
-    
+
     <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
     <ui:param name="showPesquisa" value="#{empty showPesquisa ? true : showPesquisa}" />
-    
+
     <p:outputPanel id="#{identificador}"
                    styleClass="#{identificador}"
                    rendered="#{rendered}">
@@ -38,7 +38,7 @@
                                 oncomplete="infox.hideLoading();"/>
                     </p:selectOneRadio>
                 </wi:field>
-                
+
                 <wi:field id="#{identificador}BuscaCpf"
                           label="#{infoxMessages['servidorContribuinte.cpf']}">
                     <p:inputMask id="#{identificador}BuscaCpfInput"
@@ -48,7 +48,7 @@
                         <f:converter converterId="cpfConverter" />
                     </p:inputMask>
                 </wi:field>
-                    
+
                 <wi:field id="#{identificador}BuscaNomeCompleto"
                           rendered="#{searchObject.tipoParticipante eq 'CO'}"
                           label="#{infoxMessages['servidorContribuinte.nomeCompleto']}">
@@ -57,7 +57,7 @@
                                  maxlength="256"
                                  value="#{searchObject.nomeCompleto}" />
                 </wi:field>
-                
+
                 <wi:field id="#{identificador}BuscaMatricula"
                           rendered="#{searchObject.tipoParticipante eq 'SE'}"
                           label="#{infoxMessages['servidorContribuinte.matricula']}">
@@ -66,7 +66,7 @@
                                  maxlength="256"
                                  value="#{searchObject.matricula}" />
                 </wi:field>
-                
+
                 <h:commandButton id="#{identificador}BuscarBtn"
                                  action="#{view.buscarServidorContribuinte()}"
                                  value="#{infoxMessages['servidorContribuinte.buscar']}"
@@ -75,11 +75,11 @@
                             update="@(.#{identificador}) @(.#{listDialog}) :pageBodyDialogMessage"
                             onstart="infox.showLoading();"
                             oncomplete="infox.hideLoading();"/>
-                </h:commandButton>    
+                </h:commandButton>
             </fieldset>
         </p:outputPanel>
-        
-        
+
+
         <p:outputPanel rendered="#{!empty viewObject}">
             <p:outputPanel id="#{identificador}ContribuintePanel"
                            styleClass="#{identificador}ContribuintePanel"
@@ -91,7 +91,7 @@
                         <p:outputLabel id="#{identificador}TipoParticipanteContribuinteOutputInput"
                                        value="#{viewObject.tipoParticipante.label}" />
                     </wi:field>
-                    
+
                     <wi:field id="#{identificador}CpfContribuinte"
                               required="true"
                               rendered="#{empty viewObject.idPessoaFisica}"
@@ -105,7 +105,7 @@
                             <f:converter converterId="cpfConverter" />
                         </p:inputMask>
                     </wi:field>
-                    
+
                     <wi:field id="#{identificador}CpfContribuinteOutput"
                               rendered="#{!empty viewObject.idPessoaFisica}"
                               label="#{infoxMessages['servidorContribuinte.cpf']}">
@@ -114,7 +114,7 @@
                             <f:converter converterId="cpfConverter"/>
                         </p:outputLabel>
                     </wi:field>
-                    
+
                     <wi:field id="#{identificador}NomeCompleto"
                               required="true"
                               label="#{infoxMessages['servidorContribuinte.nomeCompleto']}">
@@ -124,7 +124,7 @@
                                      maxlength="256"
                                      value="#{viewObject.nomeCompleto}" />
                     </wi:field>
-            
+
                     <wi:field id="#{identificador}Sexo"
                               required="true"
                               label="#{infoxMessages['servidorContribuinte.sexo']}">
@@ -137,7 +137,7 @@
                             <f:selectItems value="#{selectItemFunctions.createFromString('M:Masculino,F:Feminino')}" />
                         </h:selectOneMenu>
                     </wi:field>
-                    
+
                     <wi:field id="#{identificador}DataNascimento"
                               required="true"
                               label="#{infoxMessages['servidorContribuinte.dataNascimento']}">
@@ -154,7 +154,7 @@
                             <p:ajax event="blur" process="@this" />
                         </p:calendar>
                     </wi:field>
-            
+
                     <wi:field id="#{identificador}NomeMae"
                               required="true"
                               label="#{infoxMessages['servidorContribuinte.nomeMae']}">
@@ -164,7 +164,7 @@
                                      maxlength="256"
                                      value="#{viewObject.nomeMae}" />
                     </wi:field>
-                
+
                     <wi:field id="#{identificador}EmailContribuinte"
                               required="true"
                               label="#{infoxMessages['servidorContribuinte.email']}">
@@ -176,17 +176,16 @@
                             <f:validator validatorId="emailValidator" />
                         </p:inputText>
                     </wi:field>
-                    
+
                     <wi:field id="#{identificador}CelularContribuinte"
                               required="true"
                               label="#{infoxMessages['servidorContribuinte.celular']}">
-                        <p:inputMask id="#{identificador}CelularContribuinteInput"
-                                     mask="(99) 99999999?9"
+                        <p:inputText id="#{identificador}CelularContribuinteInput"
                                      size="22"
                                      required="true"
                                      value="#{viewObject.celular}"/>
                     </wi:field>
-                    
+
                     <wi:field id="#{identificador}CodEstado"
                               label="#{infoxMessages['servidorContribuinte.codEstado']}">
                         <h:selectOneMenu id="#{identificador}CodEstadoInput"
@@ -199,7 +198,7 @@
                             <f:converter converterId="br.com.infox.jsf.converter.SelectItemConverter" />
                         </h:selectOneMenu>
                     </wi:field>
-            
+
                     <wi:field id="#{identificador}Cidade"
                               label="#{infoxMessages['servidorContribuinte.cidade']}">
                         <p:inputText id="#{identificador}CidadeInput"
@@ -207,7 +206,7 @@
                                      maxlength="100"
                                      value="#{viewObject.cidade}" />
                     </wi:field>
-            
+
                     <wi:field id="#{identificador}Logradouro"
                               label="#{infoxMessages['servidorContribuinte.logradouro']}">
                         <p:inputText id="#{identificador}LogradouroInput"
@@ -215,7 +214,7 @@
                                      maxlength="256"
                                      value="#{viewObject.logradouro}" />
                     </wi:field>
-            
+
                     <wi:field id="#{identificador}Bairro"
                               label="#{infoxMessages['servidorContribuinte.bairro']}">
                         <p:inputText id="#{identificador}BairroInput"
@@ -223,7 +222,7 @@
                                      maxlength="256"
                                      value="#{viewObject.bairro}" />
                     </wi:field>
-            
+
                     <wi:field id="#{identificador}Complemento"
                               label="#{infoxMessages['servidorContribuinte.complemento']}">
                         <p:inputText id="#{identificador}ComplementoInput"
@@ -231,7 +230,7 @@
                                      maxlength="256"
                                      value="#{viewObject.complemento}" />
                     </wi:field>
-            
+
                     <wi:field id="#{identificador}Numero"
                               label="#{infoxMessages['servidorContribuinte.numero']}">
                         <p:inputText id="#{identificador}NumeroInput"
@@ -239,7 +238,7 @@
                                      maxlength="20"
                                      value="#{viewObject.numero}" />
                     </wi:field>
-                    
+
                     <wi:field id="#{identificador}Cep"
                               label="#{infoxMessages['servidorContribuinte.cep']}">
                         <p:inputMask id="#{identificador}CepInput"
@@ -249,14 +248,14 @@
                     </wi:field>
                 </fieldset>
             </p:outputPanel>
-            
+
             <p:outputPanel id="#{identificador}ServidorPanel"
                            styleClass="#{identificador}ServidorPanel"
-                           rendered="#{searchObject.tipoParticipante eq 'SE' 
+                           rendered="#{searchObject.tipoParticipante eq 'SE'
                                         and !empty viewObject.cpf}">
                 <fieldset id="#{identificador}ServidorFieldset" style="margin-top: 1em;">
                     <legend class="name">#{infoxMessages['servidorContribuinte.dadosServidor']}</legend>
-                    
+
                     <wi:field id="#{identificador}TipoParticipanteServidorOutput"
                               label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
                         <p:outputLabel id="#{identificador}TipoParticipanteServidorOutputInput"
@@ -279,7 +278,7 @@
                         <p:outputLabel id="#{identificador}NomeCompletoServidorOutputInput"
                                        value="#{viewObject.nomeCompleto}" />
                     </wi:field>
-            
+
                     <wi:field id="#{identificador}EmailServidor"
                               required="true"
                               label="#{infoxMessages['servidorContribuinte.email']}">
@@ -291,17 +290,16 @@
                             <f:validator validatorId="emailValidator" />
                         </p:inputText>
                     </wi:field>
-                    
+
                     <wi:field id="#{identificador}CelularServidor"
                               required="true"
                               label="#{infoxMessages['servidorContribuinte.celular']}">
-                        <p:inputMask id="#{identificador}CelularServidorInput"
-                                     mask="(99) 99999999?9"
+                        <p:inputText id="#{identificador}CelularServidorInput"
                                      size="22"
                                      required="true"
                                      value="#{viewObject.celular}"/>
                     </wi:field>
-                    
+
                     <wi:field id="#{identificador}DataNascimentoServidorOutput"
                               label="#{infoxMessages['servidorContribuinte.dataNascimento']}">
                         <p:outputLabel id="#{identificador}DataNascimentoServidorOutputInput"
@@ -405,7 +403,7 @@
                 </fieldset>
             </p:outputPanel>
         </p:outputPanel>
-        
+
         <ui:insert />
     </p:outputPanel>
 </ui:composition>
