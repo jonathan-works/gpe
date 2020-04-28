@@ -16,14 +16,29 @@ pipeline {
     stages {
 
         stage('Compilação, testes unitários, package e deploy para o nexus') {
-            agent any
+            agent {
+                kubernetes {
+                    yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    some-label: assinador-cms
+spec:
+  limits:
+  - default:
+      memory: 1536Mi
+      cpu: 1
+"""
+                }
+            }
             tools {
                 maven 'Maven'
             }
             steps {
                 script {
-                    sh "mvn -s .infox/settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
-                    sh "mvn -s .infox/settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
+                    sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
+                    sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
                 }
             }
             post {
