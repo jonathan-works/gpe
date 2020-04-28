@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
 
 import com.google.gson.Gson;
@@ -148,9 +149,12 @@ public class ETurmalinaService implements Serializable{
     private WSIntegracaoRHSoapPort inicializarServico(DadosServidorBean dadosServidor) {
         validarParametros();
         try {
-            URL url = new URL(Parametros.DS_URL_SERVICO_ETURMALINA.getValue());
+            String parameterUrl = Parametros.DS_URL_SERVICO_ETURMALINA.getValue();
+			URL url = new URL(parameterUrl);
             WSIntegracaoRH wsIntegracao = new WSIntegracaoRH(url);
             WSIntegracaoRHSoapPort service = wsIntegracao.getWSIntegracaoRHSoapPort();
+            BindingProvider bp = (BindingProvider) service;
+    		bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, parameterUrl);
             return service;
         } catch (MalformedURLException m) {
             throw new EppConfigurationException("URL inválida.");
