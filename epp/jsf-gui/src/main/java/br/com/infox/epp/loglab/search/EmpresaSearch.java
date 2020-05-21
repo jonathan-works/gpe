@@ -10,6 +10,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -19,6 +21,7 @@ import br.com.infox.epp.loglab.model.Empresa;
 import br.com.infox.epp.loglab.model.Empresa_;
 import br.com.infox.epp.loglab.vo.EmpresaVO;
 import br.com.infox.epp.loglab.vo.PesquisaParticipanteVO;
+import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.Estado_;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica_;
@@ -58,12 +61,13 @@ public class EmpresaSearch extends PersistenceController {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<EmpresaVO> query = cb.createQuery(EmpresaVO.class);
         Root<Empresa> empresa = query.from(Empresa.class);
+        Join<?, Estado> estado = empresa.join(Empresa_.estado, JoinType.LEFT);
         query.select(cb.construct(query.getResultType(), empresa.get(Empresa_.id),
                 empresa.get(Empresa_.pessoaJuridica).get(PessoaJuridica_.idPessoa), empresa.get(Empresa_.cnpj),
                 empresa.get(Empresa_.tipoEmpresa), empresa.get(Empresa_.razaoSocial),
                 empresa.get(Empresa_.nomeFantasia), empresa.get(Empresa_.dataAbertura),
                 empresa.get(Empresa_.telefoneCelular), empresa.get(Empresa_.telefoneFixo), empresa.get(Empresa_.email),
-                empresa.get(Empresa_.estado).get(Estado_.codigo), empresa.get(Empresa_.cidade),
+                estado.get(Estado_.codigo), empresa.get(Empresa_.cidade),
                 empresa.get(Empresa_.logradouro), empresa.get(Empresa_.bairro), empresa.get(Empresa_.complemento),
                 empresa.get(Empresa_.numeroResidencia), empresa.get(Empresa_.cep)));
 
