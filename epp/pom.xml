@@ -8,7 +8,7 @@
         <version>0.0.1</version>
     </parent>
 
-    <groupId>br.com.infox.epp</groupId>
+    <groupId>br.com.loglabdigital.epp</groupId>
     <artifactId>epp-parent</artifactId>
     <version>3.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>

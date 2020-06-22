@@ -71,15 +71,16 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	private List<ModeloPastaRestricao> restricoes;
 	private ModeloPastaRestricao restricaoInstance;
 	private Boolean semModelo = true;
-	private ModeloPasta modeloPadrao;
 	
 	private Papel alvoRestricaoPapel;
 	private Localizacao alvoRestricaoLocalizacao;
 	private Boolean alvoRestricaoParticipante;
 	
 	public void init() {
+		Fluxo fluxo = getFluxo();
+		semModelo = modeloPadrao(fluxo) == null;
 		newRestricaoInstance();
-		setFluxo(fluxoController.getFluxo());
+		initModeloPastaList(fluxo);
 		newInstance();
 		// Isto está aqui para evitar erro ao editar uma restrição do tipo localização na primeira vez que entra na tela,
 		// causado pela injeção a este componente que
@@ -113,14 +114,14 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	public void persist() {
 		try {
 			if (prePersist()) {
-				persistNovoModeloPasta();
 				if (getInstance().getPadrao()) {
+					ModeloPasta modeloPadrao = modeloPadrao(getFluxo());
 				    if (modeloPadrao != null) {
 				        modeloPadrao.setPadrao(false);
 				        modeloPastaManager.update(modeloPadrao);
 				    }
-				    modeloPadrao = getInstance();
 				}
+				persistNovoModeloPasta();
 				getFluxo().getModeloPastaList().add(getInstance());
 				initModeloPastaList(getFluxo());
 				newInstance();
@@ -141,6 +142,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	public void update() {
 		try {
 			updateModeloPasta();
+			ModeloPasta modeloPadrao = modeloPadrao(getFluxo());
 			if (getInstance().getPadrao() && !getInstance().equals(modeloPadrao)) {
 			    modeloPadrao.setPadrao(false);
 			    modeloPastaManager.update(modeloPadrao);
@@ -160,6 +162,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	public void removeModeloPasta(ModeloPasta modelo) {
 		try {
 			modeloPastaManager.deleteComRestricoes(modelo);
+			ModeloPasta modeloPadrao = modeloPadrao(getFluxo());
 			if (modelo.equals(modeloPadrao)) {
 			    modeloPadrao = null;
 			}
@@ -404,14 +407,23 @@ public class ModeloPastaRestricaoAction implements Serializable {
 
 	public void setFluxo(Fluxo fluxo) {
 		fluxoController.setFluxo(fluxo);
-		initModeloPastaList(fluxo);
 	}
 
 	protected void initModeloPastaList(Fluxo fluxo) {
 		modeloPastaList.getEntity().setFluxo(fluxo);
 		listModeloPastas = modeloPastaManager.getByFluxo(fluxo);
+		//modeloPastaList.refresh();
 		semModelo = listModeloPastas == null || listModeloPastas.isEmpty();
-		if (!semModelo) {
+	}
+
+	public boolean isSemModelo() {
+	    return semModelo;
+	}
+	
+	public ModeloPasta modeloPadrao(Fluxo fluxo) {
+		ModeloPasta modeloPadrao = null;
+		listModeloPastas = modeloPastaManager.getByFluxo(fluxo);
+		if (listModeloPastas != null && !listModeloPastas.isEmpty()) {
     		for (ModeloPasta modeloPasta : listModeloPastas) {
                 if (modeloPasta.getPadrao()) {
                     modeloPadrao = modeloPasta;
@@ -419,9 +431,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
                 }
     		}
         }
+		return modeloPadrao;
 	}
-
-	public boolean isSemModelo() {
-	    return semModelo;
-	}
+	
 }
