@@ -90,8 +90,8 @@ public class CertificadosDownloader {
             DownloaderCollector collector = new DownloaderCollector();
             execute(collector);
             return collector.getLoadedCertificates();
-        } catch (Exception e) {
-            LOG.error(e);
+        } catch (Throwable e) {
+            LOG.error("Tratamento de erro no download das cadeias validadoras de certificados ICP-Brasil", e);
         }
 
         return Collections.emptyList();
@@ -100,8 +100,8 @@ public class CertificadosDownloader {
     public void saveTo(final Path outputFolder){
         try {
             execute(new DownloaderCopier(outputFolder));
-        } catch (Exception e) {
-            LOG.error(e);
+        } catch (Throwable e) {
+            LOG.error("Tratamento de erro no download das cadeias validadoras de certificados ICP-Brasil", e);
         }
     }
     
@@ -200,9 +200,10 @@ class DownloaderCopier implements DownloaderAction {
 
     @Override
     public void execute(Path fsPath) throws IOException {
-        FileSystem fs = FileSystems.newFileSystem(fsPath, ClassLoader.getSystemClassLoader());
-        Path root = fs.getPath("/");
-        Files.walkFileTree(root, new FileCopier(outputFolder));
+        try(FileSystem fs = FileSystems.newFileSystem(fsPath, ClassLoader.getSystemClassLoader())){
+	        Path root = fs.getPath("/");
+	        Files.walkFileTree(root, new FileCopier(outputFolder));
+        }
     }
 
 }

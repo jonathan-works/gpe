@@ -16,7 +16,7 @@ import br.com.infox.epp.certificadoeletronico.builder.RootCertBuilder;
 
 public class EmissaoCertificadoTest {
 
-	@Test
+//	@Test
 	public void testeConteudoCertificado() throws CertificadoException {
 		CertificadoDTO raiz = new RootCertBuilder("CN=Infox, O=Infox, C=BR, ST=SE").gerar();
 		String paramNome = "Usuário anônimo".toUpperCase();
