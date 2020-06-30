@@ -8,6 +8,10 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jbpm.graph.exe.ProcessInstance;
 
@@ -17,7 +21,9 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.processo.dao.ProcessoSearch;
 import br.com.infox.epp.processo.dao.ProcessoSearch.ValorMetadado;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
@@ -45,16 +51,23 @@ public class ProcessoService extends PersistenceController {
 		return isTipoProcesso(TipoProcesso.COMUNICACAO.toString(), processo);
 	}
 	
-	public boolean isTipoProcesso(String tipoProcesso, Processo processo){
-		getEntityManager().refresh(processo);
-		TipoProcesso byName = TipoProcesso.getByName(tipoProcesso);
-		MetadadoProcesso metadadoTipoProcesso = processo.getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
-		if(metadadoTipoProcesso != null){
-		    TipoProcesso tpProcesso = metadadoTipoProcesso.getValue();
-		    return byName.equals(tpProcesso);
-		}
-		return false; 
-	}
+    public boolean isTipoProcesso(String tipoProcesso, Processo processo) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<String> query = cb.createQuery(String.class);
+        Root<MetadadoProcesso> metadadoTipo = query.from(MetadadoProcesso.class);
+        query.select(metadadoTipo.get(MetadadoProcesso_.valor));
+        query.where(
+            cb.equal(metadadoTipo.get(MetadadoProcesso_.metadadoType), EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType()),
+            cb.equal(metadadoTipo.get(MetadadoProcesso_.processo).get(Processo_.idProcesso), processo.getIdProcesso())
+        );
+
+        try {
+            String valorMetadadoTipo = getEntityManager().createQuery(query).getSingleResult();
+            return TipoProcesso.getByName(tipoProcesso).equals(TipoProcesso.getByName(valorMetadadoTipo));
+        } catch (NoResultException e) {
+            return false;
+        }
+    }
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public ProcessInstance iniciarProcessoRemoverMetadadoStatus(Processo processo, Map<String, Object> variables) {
