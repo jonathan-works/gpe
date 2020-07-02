@@ -27,41 +27,61 @@ pipeline {
         buildDiscarder logRotator(artifactNumToKeepStr: '2')
     }
     stages {
-
         stage('Compilação, testes unitários, package e deploy para o nexus') {
             agent any
             tools {
                 maven 'Maven'
             }
-            steps {
-                script {
-                    def epochSeconds=sh(script:'git log -n 1 --format=\'%ct\'', returnStdout: true)
-                    buildParams['maven'] = readMavenModel('epp/bom/pom.xml')
-                    buildParams['baseVersion'] = (buildParams.maven.version ?: buildParams.maven.parent.version)
-                    def currentVersion = (buildParams.baseVersion =~ /\d+\.\d+\.\d+/)[0]
-                    buildParams['version'] = "${currentVersion}-a$epochSeconds".trim()
-                }
-                sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e dependency:purge-local-repository clean verify"
-                sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
-            }
-            post {
-                success {
-                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
-
-                    recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
-                    recordIssues enabledForFailure: true, tool: checkStyle()
-                    recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
-                    recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
-                    script {
-                        nexusPublish('infox-maven-stagingarea', buildParams.baseVersion, buildParams.version)
+            stages {
+                stage('Preparação de versão') {
+                    steps {
+                        script {
+                            def epochSeconds=sh(script:'git log -n 1 --format=\'%ct\'', returnStdout: true)
+                            buildParams['maven'] = readMavenModel('epp/bom/pom.xml')
+                            buildParams['baseVersion'] = (buildParams.maven.version ?: buildParams.maven.parent.version)
+                            def currentVersion = (buildParams.baseVersion =~ /\d+\.\d+\.\d+/)[0]
+                            buildParams['version'] = "${currentVersion}-a$epochSeconds".trim()
+                        }
                     }
                 }
+                stage('Compilação, testes unitários') {
+                    steps {
+                        sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e dependency:purge-local-repository clean verify"
+                    }
+                    post {
+                        success {
+                            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+
+                            recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
+                        }
+                    }
+                }
+                stage('Validações pós compilação') {
+                    steps {
+                        sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
+                    }
+                    post {
+                        success {
+                            recordIssues enabledForFailure: true, tool: checkStyle()
+                            recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
+                            recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
+                        }
+                    }
+                }
+                stage('Publicação no nexus') {
+                    steps {
+                        script {
+                            nexusPublish('infox-maven-stagingarea', buildParams.baseVersion, buildParams.version)
+                        }
+                    }
+                }
+            }
+            post {
                 always {
                     deleteDir()
                 }
             }
         }
-
     }
 
 }
