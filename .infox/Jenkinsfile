@@ -1,4 +1,18 @@
 #!/usr/bin/env groovy
+def buildParams = [:]
+
+void nexusPublish(String repository, String version, String uploadVersion) {
+    def protocol = ("${env.NEXUS_BASE_URL}" =~ /^(?:(https?):\/\/)?(.*)$/)[0][1] ?: 'http'
+    def urlWithoutProtocol = ("${env.NEXUS_BASE_URL}" =~ /^(?:(https?):\/\/)?(.*)$/)[0][2]
+    nexusArtifactUploader credentialsId: 'nexus-credentials', groupId: 'br.com.loglabdigital',
+        nexusUrl: urlWithoutProtocol, nexusVersion: 'nexus3', protocol: protocol,
+        repository: repository, version: uploadVersion,
+        artifacts: [
+            [artifactId: 'epp', file: "epp/jsf-gui/target//epp-${version}.war", type: 'war'],
+            [artifactId: 'liquibase-epp', file:"epp/liquibase/target/liquibase-epp-${version}.tar.gz", type:'tar.gz']
+        ]
+}
+
 pipeline {
     agent none
 
@@ -8,7 +22,6 @@ pipeline {
 
     environment {
         projectName = 'ePP'
-        trunkBranchName = 'master'
     }
     options {
         buildDiscarder logRotator(artifactNumToKeepStr: '2')
@@ -16,45 +29,34 @@ pipeline {
     stages {
 
         stage('Compilação, testes unitários, package e deploy para o nexus') {
-            agent {
-                kubernetes {
-                    yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    some-label: assinador-cms
-spec:
-  limits:
-  - default:
-      memory: 1536Mi
-      cpu: 1
-"""
-                }
-            }
+            agent any
             tools {
                 maven 'Maven'
             }
             steps {
                 script {
-                    sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e clean verify"
-                    sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
+                    def epochSeconds=sh(script:'git log -n 1 --format=\'%ct\'', returnStdout: true)
+                    buildParams['maven'] = readMavenModel('epp/bom/pom.xml')
+                    buildParams['baseVersion'] = (buildParams.maven.version ?: buildParams.maven.parent.version)
+                    def currentVersion = (buildParams.baseVersion =~ /\d+\.\d+\.\d+/)[0]
+                    buildParams['version'] = "${currentVersion}-a$epochSeconds".trim()
                 }
+                sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e dependency:purge-local-repository clean verify"
+                sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
             }
             post {
                 success {
-                    junit testResults: '**/target/surefire-reports/TEST-*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
 
                     recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
                     recordIssues enabledForFailure: true, tool: checkStyle()
-                    // recordIssues enabledForFailure: true, tool: spotBugs()
                     recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
                     recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
-                    archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*.war', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
-                    archiveArtifacts allowEmptyArchive: true, artifacts: 'epp/**/target/*liquibase*.tar.gz', caseSensitive: false, defaultExcludes: false, fingerprint: true, onlyIfSuccessful: true
-                    deleteDir()
+                    script {
+                        nexusPublish('infox-maven-stagingarea', buildParams.baseVersion, buildParams.version)
+                    }
                 }
-                failure {
+                always {
                     deleteDir()
                 }
             }
