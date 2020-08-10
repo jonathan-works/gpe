@@ -6,21 +6,30 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.loglab.vo.PesquisaRequerenteVO;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.util.time.Periodo;
+import lombok.Getter;
+import lombok.Setter;
 
 public class FiltrosBeanList implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Fluxo Fluxo;
-	private String numeroProcesso; 
+	private String numeroProcesso;
 	private Periodo dataInicio;
 	private Periodo dataFim;
 	private Natureza natureza;
 	private Categoria categoria;
 	private StatusProcesso statusProcesso;
 	private UsuarioLogin usuarioLogin;
+	@Setter
+	@Getter
+	private String cpf;
+	@Setter
+	@Getter
+	private PesquisaRequerenteVO requerente;
 
 	public Fluxo getFluxo() {
 		return Fluxo;
@@ -85,7 +94,7 @@ public class FiltrosBeanList implements Serializable {
 	public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
 		this.usuarioLogin = usuarioLogin;
 	}
-	
+
 	public void clear() {
 	    setDataInicio(new Periodo());
         setDataFim(new Periodo());
@@ -93,6 +102,8 @@ public class FiltrosBeanList implements Serializable {
         setNatureza(null);
         setStatusProcesso(null);
         setNumeroProcesso(null);
+        setCpf(null);
+        setRequerente(null);
 	}
 
 }

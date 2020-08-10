@@ -25,6 +25,7 @@ import com.google.common.base.Strings;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.util.ObjectUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
@@ -37,17 +38,27 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza_;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.loglab.vo.PesquisaRequerenteVO;
+import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaFisica_;
+import br.com.infox.epp.pessoa.entity.PessoaJuridica;
+import br.com.infox.epp.pessoa.entity.PessoaJuridica_;
+import br.com.infox.epp.pessoa.entity.Pessoa_;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoDynamicColumnsController;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso_;
 import br.com.infox.epp.system.Parametros;
+import br.gov.mt.cuiaba.pmc.gdprev.ParticipanteProcessoConsulta;
+import br.gov.mt.cuiaba.pmc.gdprev.ParticipanteProcessoConsulta_;
 
 @Named
 @ViewScoped
@@ -70,11 +81,13 @@ public class ProcessoEpaList extends EntityList<Processo> {
     		+ "and mp.valor = cast(#{processoEpaList.filtros.statusProcesso.idStatusProcesso} as string) "
     		+ "and mp.metadadoType = '" + EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType() + "'"
     		+ ")";
-    
     private static final String R12 = " o.numeroProcesso = #{processoEpaList.filtros.numeroProcesso} ";
-    
     private static final String R13 = " o.usuarioCadastro = #{processoEpaList.filtros.usuarioLogin} ";
-    
+    private static final String R14 = " exists (select 1 from ParticipanteProcessoConsulta ppc "
+            + "where ppc.participanteProcesso.processo = o and ppc.pessoaFisica.cpf = #{processoEpaList.filtros.cpf}) ";
+    private static final String R15 = " exists (select 1 from ParticipanteProcessoConsulta ppc "
+            + "where ppc.participanteProcesso.processo = o and ppc.participanteProcesso.pessoa.idPessoa = #{processoEpaList.filtros.requerente.idPessoa}) ";
+
     private static final String FILTRO_PARTICIPANTE_PROCESSO = "and exists (select 1 from ParticipanteProcesso pp "
             + "where pp.processo = o and pp.pessoa.idPessoa = %d ) " ;
 
@@ -82,9 +95,9 @@ public class ProcessoEpaList extends EntityList<Processo> {
     protected ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
     @Inject
     private FluxoManager fluxoManager;
-    
-    protected FiltrosBeanList filtros = new FiltrosBeanList();;
-    
+
+    protected FiltrosBeanList filtros = new FiltrosBeanList();
+
     @Override
     @PostConstruct
     public void init() {
@@ -96,7 +109,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
         }
         consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
     }
-    
+
     @Override
     protected void addSearchFields() {
         addSearchField("numeroProcesso", SearchCriteria.IGUAL, R12);
@@ -109,8 +122,10 @@ public class ProcessoEpaList extends EntityList<Processo> {
         addSearchField("natureza", SearchCriteria.IGUAL, R6);
         addSearchField("categoria", SearchCriteria.IGUAL, R7);
         addSearchField("statusProcesso", SearchCriteria.IGUAL, R11);
+        addSearchField("cpf", SearchCriteria.IGUAL, R14);
+        addSearchField("requerente", SearchCriteria.IGUAL, R15);
     }
-    
+
     @Override
     public void newInstance() {
     	filtros.setFluxo(null);
@@ -156,22 +171,44 @@ public class ProcessoEpaList extends EntityList<Processo> {
         MetadadoProcesso mp = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO);
         return mp != null ? (StatusProcesso) mp.getValue() : null;
     }
-    
+
     public void onSelectFluxo() {
         filtros.clear();
         consultaProcessoDynamicColumnsController.setFluxo(filtros.getFluxo());
         setEntity(new Processo());
     }
-    
+
 	public void search() {
-		if (filtros.getFluxo() == null && !Strings.isNullOrEmpty(filtros.getNumeroProcesso())) {
+		if (filtros.getFluxo() == null && (!Strings.isNullOrEmpty(filtros.getNumeroProcesso()) || !Strings.isNullOrEmpty(filtros.getCpf()) || !ObjectUtil.isEmpty(filtros.getRequerente()))) {
 			List<Processo> results = getResultList();
 			if (!results.isEmpty()) {
 				consultaProcessoDynamicColumnsController.setFluxo(results.get(0).getNaturezaCategoriaFluxo().getFluxo());
 			}
 		}
 	}
-	
+
+    public List<PesquisaRequerenteVO> getRequerentes(String search) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<PesquisaRequerenteVO> query = cb.createQuery(PesquisaRequerenteVO.class);
+        Root<ParticipanteProcessoConsulta> participanteProcConsulta = query.from(ParticipanteProcessoConsulta.class);
+        Join<?, ParticipanteProcesso> participanteProcesso = participanteProcConsulta.join(ParticipanteProcessoConsulta_.participanteProcesso, JoinType.INNER);
+        Join<?, Pessoa> pessoa = participanteProcesso.join(ParticipanteProcesso_.pessoa, JoinType.INNER);
+        Join<?, PessoaFisica> pessoaFisica = participanteProcConsulta.join(ParticipanteProcessoConsulta_.pessoaFisica, JoinType.LEFT);
+        Join<?, PessoaJuridica> pessoaJuridica = participanteProcConsulta.join(ParticipanteProcessoConsulta_.pessoaJuridica, JoinType.LEFT);
+        query.select(cb.construct(PesquisaRequerenteVO.class,
+           pessoa.get(Pessoa_.idPessoa),
+           pessoaFisica.get(PessoaFisica_.cpf),
+           pessoaJuridica.get(PessoaJuridica_.cnpj),
+           participanteProcesso.get(ParticipanteProcesso_.nome)
+        ));
+        query.distinct(true);
+        if (!Strings.isNullOrEmpty(search)) {
+            query.where(cb.like(cb.lower(participanteProcesso.get(ParticipanteProcesso_.nome)), "%" + search.toLowerCase() + "%"));
+        }
+        query.orderBy(cb.asc(participanteProcesso.get(ParticipanteProcesso_.nome)));
+        return getEntityManager().createQuery(query).getResultList();
+    }
+
 	public List<Categoria> getCategorias(String search) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Categoria> query = cb.createQuery(Categoria.class);
@@ -187,7 +224,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
 		query.orderBy(cb.asc(categoria.get(Categoria_.categoria)));
 		return getEntityManager().createQuery(query).getResultList();
 	}
-	
+
 	public List<Natureza> getNaturezas(String search) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Natureza> query = cb.createQuery(Natureza.class);
@@ -203,10 +240,10 @@ public class ProcessoEpaList extends EntityList<Processo> {
 		query.orderBy(cb.asc(natureza.get(Natureza_.natureza)));
 		return getEntityManager().createQuery(query).getResultList();
 	}
-	
+
 	public List<StatusProcesso> getStatusProcessos(String search) {
 		List<String> idsStatus = getListaIds(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType());
-		List<StatusProcesso> statusProcessos = getValoresMetadados(StatusProcesso.class, StatusProcesso_.idStatusProcesso, StatusProcesso_.nome, 
+		List<StatusProcesso> statusProcessos = getValoresMetadados(StatusProcesso.class, StatusProcesso_.idStatusProcesso, StatusProcesso_.nome,
 				idsStatus, search);
 		Collections.sort(statusProcessos, new Comparator<StatusProcesso>() {
 			@Override
@@ -216,7 +253,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
 		});
 		return statusProcessos;
 	}
-	
+
 	private List<String> getListaIds(String metadadoType) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<String> query = cb.createQuery(String.class);
@@ -229,15 +266,15 @@ public class ProcessoEpaList extends EntityList<Processo> {
 				cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), filtros.getFluxo()));
 		return getEntityManager().createQuery(query).getResultList();
 	}
-	
-	private <T> List<T> getValoresMetadados(Class<T> rootClass, SingularAttribute<? super T, Integer> id, SingularAttribute<? super T, String> nome, 
+
+	private <T> List<T> getValoresMetadados(Class<T> rootClass, SingularAttribute<? super T, Integer> id, SingularAttribute<? super T, String> nome,
 			List<String> entityIds, String search) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<T> query = cb.createQuery(rootClass);
 		Root<T> root = query.from(rootClass);
 		String pattern = !Strings.isNullOrEmpty(search) ? "%" + search.toLowerCase() + "%" : null;
 		List<T> results = new ArrayList<>();
-		
+
 		for (String entityId : entityIds) {
 			query.where(cb.equal(root.get(id), Integer.valueOf(entityId)));
 			if (pattern != null) {
@@ -248,7 +285,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
 			} catch (NoResultException e) {
 			}
 		}
-		
+
 		return results;
 	}
 
@@ -259,5 +296,5 @@ public class ProcessoEpaList extends EntityList<Processo> {
 	public void setFiltros(FiltrosBeanList filtros) {
 		this.filtros = filtros;
 	}
-	
+
 }
