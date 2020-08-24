@@ -21,8 +21,30 @@ public class MovimentacaoGroup {
 
     public void add(Movimentacao movimentacao) {
         movimentacoes.add(movimentacao);
-        first = movimentacoes.stream().min(Comparator.nullsLast(Comparator.comparing(Movimentacao::getCreate))).orElse(null);
-        last = movimentacoes.stream().max(Comparator.nullsLast(Comparator.comparing(Movimentacao::getEnd))).orElse(null);
+        
+        if(first != null) {
+            if(first.getCreate().after(movimentacao.getCreate())) {
+                first = movimentacao;
+            }
+        }else {
+            first = movimentacao;
+        }
+        
+        if(last != null) {
+            if(last.getEnd() != null && movimentacao.getEnd() != null) {
+                if(last.getEnd().before(movimentacao.getEnd())) {
+                    last = movimentacao;
+                }
+            } else if(last.getEnd() == null && movimentacao.getEnd() == null) {
+                if(last.getCreate().before(movimentacao.getCreate())) {
+                    last = movimentacao;
+                }
+            } else if(movimentacao.getEnd() == null) {
+                last = movimentacao;
+            }
+        }else {
+            last = movimentacao;
+        }
     }
 
 	public Date getEnd() {
