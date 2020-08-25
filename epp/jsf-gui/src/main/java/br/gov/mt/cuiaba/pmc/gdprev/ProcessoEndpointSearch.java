@@ -1,11 +1,7 @@
 package br.gov.mt.cuiaba.pmc.gdprev;
 
-import static br.com.infox.core.util.ObjectUtil.is;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -310,24 +306,6 @@ public class ProcessoEndpointSearch extends PersistenceController {
 
     public List<DocumentoBin> getListaDocumentoBinByIdProcessoAndLocalizacaoAndDtInclusao(Integer idProcesso,
             Integer idLocalizacao, Date dtStart, Date dtEnd) {
-//        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-//        CriteriaQuery<DocumentoBin> documentosQuery = cb.createQuery(DocumentoBin.class);
-//        Root<DocumentoBin> docBin = documentosQuery.from(DocumentoBin.class);
-//        ListJoin<?, br.com.infox.epp.processo.documento.entity.Documento> doc = docBin.join(DocumentoBin_.documentoList,
-//                JoinType.INNER);
-//        Join<?, Pasta> pasta = doc.join(Documento_.pasta, JoinType.INNER);
-//        documentosQuery.select(docBin);
-//        documentosQuery.groupBy(docBin);
-//        documentosQuery.where(
-//        		cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
-//                cb.isFalse(doc.get(Documento_.excluido)), cb.between(doc.get(Documento_.dataInclusao), dtStart, dtEnd),
-//                cb.equal(doc.get(Documento_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao),
-//                cb.isTrue(docBin.get(DocumentoBin_.suficientementeAssinado))
-//                );
-//        List<DocumentoBin> documentos = getEntityManager().createQuery(documentosQuery).getResultList();
-//        return documentos;
-
-        
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Integer> idsDocumentosQuery = cb.createQuery(Integer.class);
         Root<DocumentoBin> docBin = idsDocumentosQuery.from(DocumentoBin.class);
@@ -337,10 +315,12 @@ public class ProcessoEndpointSearch extends PersistenceController {
         idsDocumentosQuery.select(docBin.get(DocumentoBin_.id));
         idsDocumentosQuery.groupBy(docBin.get(DocumentoBin_.id));
         
-        idsDocumentosQuery.where(cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
+        idsDocumentosQuery.where(
+                cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
                 cb.isFalse(doc.get(Documento_.excluido)), cb.between(doc.get(Documento_.dataInclusao), dtStart, dtEnd),
-                cb.equal(doc.get(Documento_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao));
-        
+                cb.equal(doc.get(Documento_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao),
+                cb.isTrue(docBin.get(DocumentoBin_.suficientementeAssinado))
+                );
         List<Integer> ids = getEntityManager().createQuery(idsDocumentosQuery).getResultList();
         
         List<DocumentoBin> documentos = new ArrayList<DocumentoBin>();
@@ -353,7 +333,7 @@ public class ProcessoEndpointSearch extends PersistenceController {
             
             documentos = getEntityManager().createQuery(documentosQuery).getResultList();
         }
-            
+        
         return documentos;
     }
 
