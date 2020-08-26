@@ -25,6 +25,7 @@ import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -306,35 +307,29 @@ public class ProcessoEndpointSearch extends PersistenceController {
 
     public List<DocumentoBin> getListaDocumentoBinByIdProcessoAndLocalizacaoAndDtInclusao(Integer idProcesso,
             Integer idLocalizacao, Date dtStart, Date dtEnd) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Integer> idsDocumentosQuery = cb.createQuery(Integer.class);
-        Root<DocumentoBin> docBin = idsDocumentosQuery.from(DocumentoBin.class);
-        ListJoin<?, br.com.infox.epp.processo.documento.entity.Documento> doc = docBin.join(DocumentoBin_.documentoList,
-                JoinType.INNER);
-        Join<?, Pasta> pasta = doc.join(Documento_.pasta, JoinType.INNER);
-        idsDocumentosQuery.select(docBin.get(DocumentoBin_.id));
-        idsDocumentosQuery.groupBy(docBin.get(DocumentoBin_.id));
-        
-        idsDocumentosQuery.where(
-                cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
-                cb.isFalse(doc.get(Documento_.excluido)), cb.between(doc.get(Documento_.dataInclusao), dtStart, dtEnd),
-                cb.equal(doc.get(Documento_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao),
-                cb.isTrue(docBin.get(DocumentoBin_.suficientementeAssinado))
-                );
-        List<Integer> ids = getEntityManager().createQuery(idsDocumentosQuery).getResultList();
-        
-        List<DocumentoBin> documentos = new ArrayList<DocumentoBin>();
-        
-        if (ids != null && ids.size() > 0) {
-            CriteriaQuery<DocumentoBin> documentosQuery = cb.createQuery(DocumentoBin.class);
-            Root<DocumentoBin> documentoBin = documentosQuery.from(DocumentoBin.class);
-            Predicate idInCollection = documentoBin.get(DocumentoBin_.id).in(ids);
-            documentosQuery = documentosQuery.where(idInCollection);
-            
-            documentos = getEntityManager().createQuery(documentosQuery).getResultList();
-        }
-        
-        return documentos;
+      CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+      CriteriaQuery<DocumentoBin> documentosQuery = cb.createQuery(DocumentoBin.class);
+      Root<DocumentoBin> docBin = documentosQuery.from(DocumentoBin.class);
+      
+      Subquery<Integer> subqueryDocumentos = documentosQuery.subquery(Integer.class);
+      Root<DocumentoBin> subDocBin = subqueryDocumentos.from(DocumentoBin.class);
+      ListJoin<?, br.com.infox.epp.processo.documento.entity.Documento> doc = subDocBin.join(DocumentoBin_.documentoList,
+              JoinType.INNER);
+      Join<?, Pasta> pasta = doc.join(Documento_.pasta, JoinType.INNER);
+      subqueryDocumentos.select(subDocBin.get(DocumentoBin_.id));
+      subqueryDocumentos.groupBy(subDocBin.get(DocumentoBin_.id));
+      subqueryDocumentos.where(
+              cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
+              cb.isFalse(doc.get(Documento_.excluido)), cb.between(doc.get(Documento_.dataInclusao), dtStart, dtEnd),
+              cb.equal(doc.get(Documento_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao),
+              cb.isTrue(subDocBin.get(DocumentoBin_.suficientementeAssinado))
+              );
+      
+      documentosQuery.select(docBin);
+      documentosQuery.where(docBin.get(DocumentoBin_.id).in(subqueryDocumentos));
+      
+      List<DocumentoBin> documentos = getEntityManager().createQuery(documentosQuery).getResultList();
+      return documentos;
     }
 
     public ProcessoDTO getProcessoDTOByNrProcesso(String nrProcesso) {
