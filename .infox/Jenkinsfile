@@ -1,9 +1,30 @@
 #!/usr/bin/env groovy
+
+// Mapa de variáveis para armazenar informações persistentes entre diversas fases do pipeline
 def buildParams = [:]
 
+/**
+  * Esta função tem como objetivo definir o procedimento de envio do war do a aplicação web e tar.gz do liquibase para o nexus
+  * repository    : Deve ser o nome do repositório no nexus que irá armazenar os artefatos
+  * version       : é a versão declarada no pom do projeto
+  * uploadVersion : é a versão ajustada para o armazenamento do artefato
+  */
 void nexusPublish(String repository, String version, String uploadVersion) {
+    // Utiliza de regex para extrair trecho do protocolo da URL declarada em variável de ambiente da URL do nexus, utilizando http quando não ouver retorno
     def protocol = ("${env.NEXUS_BASE_URL}" =~ /^(?:(https?):\/\/)?(.*)$/)[0][1] ?: 'http'
+    // Utiliza de regex para extrair url sem a parte do protocolo da URL declarada em variável de ambiente da URL do nexus, utilizando http quando não ouver retorno
     def urlWithoutProtocol = ("${env.NEXUS_BASE_URL}" =~ /^(?:(https?):\/\/)?(.*)$/)[0][2]
+    /**
+      * Invocação de função para realizar o upload de artefatos no nexus. Define diversos parâmetros
+      * credentialsId : Parâmetro que indica o nome da credencial que mantém o usuário e senha que tenha permissão de upload no nexus
+      * groupId       : Declara nome/namespace que irá servir como agrupamento dos artefatos desse projeto
+      * nexusUrl      : Recebe a URL do nexus sem protocolo definido
+      * nexusVersion  : Indica versão do nexus que está hospedado no url definido
+      * protocol      : Protocolo usado para conectar ao nexus (https, http)
+      * repository    : identificador do repositórrio que irá armazenar os artefatos
+      * version       : versão que será atribuída aos artefatos para recuperação futura dos mesmos
+      * artifacts     : Lista de artefatos que serão enviados para o nexus
+      */
     nexusArtifactUploader credentialsId: 'nexus-credentials', groupId: env.groupIdDoProjeto,
         nexusUrl: urlWithoutProtocol, nexusVersion: 'nexus3', protocol: protocol,
         repository: repository, version: uploadVersion,
@@ -23,6 +44,9 @@ pipeline {
     environment {
         projectName = 'ePP Loglab'
         groupIdDoProjeto = 'br.com.loglabdigital'
+        
+        telegramStagingChatId = credentials('infox-epp-sqa-chat-id')
+        telegramApiKey = credentials('telegram-api-key')
     }
     options {
         buildDiscarder logRotator(artifactNumToKeepStr: '2')
@@ -37,34 +61,45 @@ pipeline {
                 stage('Preparação de versão') {
                     steps {
                         script {
+                            //Recupera o tempo em segundos do commit que originou o build
                             def epochSeconds=sh(script:'git log -n 1 --format=\'%ct\'', returnStdout: true)
+                            //Recupera objeto que contém os detalhes descritos no pom do projeto e armazena no mapa de variáveis
                             buildParams['maven'] = readMavenModel('epp/bom/pom.xml')
+                            // Armazena a variável definida no maven como uma 'versão base' no mapa de variáveis
                             buildParams['baseVersion'] = (buildParams.maven.version ?: buildParams.maven.parent.version)
+                            // Trata a versão definida no pom do maven para um formato [major].[minor].[patch]
                             def currentVersion = (buildParams.baseVersion =~ /\d+\.\d+\.\d+/)[0]
+                            // Define versão no mapa de variáveis para ser algo no formato da versão declarada para se tornar algo do tipo 3.3.0-a1599076363
                             buildParams['version'] = "${currentVersion}-a$epochSeconds".trim()
                         }
                     }
                 }
                 stage('Compilação, testes unitários') {
                     steps {
+                        // Executa build do projeto da loglab utilizando o repositório local fazendo verificações de testes unitários
                         sh "mvn -s settings.xml -Pbuild:all -Dgit-commit-id-plugin.useGitNative=true -Dmaven.test.failure.ignore -Dsurefire.useFile=false --batch-mode -V -U -e dependency:purge-local-repository clean verify"
                     }
                     post {
                         success {
+                            // Registra relatório de testes no build do Jenkins
                             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
-
+                            // Registra relatório de problemas encontrados no console do maven, no java ou javadocs
                             recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
                         }
                     }
                 }
                 stage('Validações pós compilação') {
                     steps {
+                        // Executa verificação de formatação de código (checkstyle:checkstyle), inspeção de erros (pmd:pmd) e verificação de código duplicado (pmd:cpd)
                         sh "mvn -s settings.xml -Pbuild:all --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd"
                     }
                     post {
                         success {
+                            // Registra relatório com problemas encontrados na formatação de código
                             recordIssues enabledForFailure: true, tool: checkStyle()
+                            // Registra relatório com problemas encontrados sobre código duplicado
                             recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
+                            // Registra relatório com problemas encontrados
                             recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
                         }
                     }
@@ -72,34 +107,15 @@ pipeline {
                 stage('Publicação no nexus') {
                     steps {
                         script {
+                            //Verifica qual o repositório de destino com base no nome da branch do projeto em trabalho
                             def nomeDoRepositorio = 'infox-maven-stagingarea';
-                            def tipoDeBranch='';
                             if ("${BRANCH_NAME}".startsWith("projeto")) {
-                               nomeDoRepositorio = 'infox_maven_evo_qa'
-                               tipoDeBranch = 'evolução';
+                               nomeDoRepositorio = 'infox-maven-evo-qa'
                             } else if ("${BRANCH_NAME}".startsWith("incidente")) {
-                               nomeDoRepositorio = 'infox_maven_man_qa'
-                               tipoDeBranch = 'manutenção';
+                               nomeDoRepositorio = 'infox-maven-man-qa'
                             }
+                            // Invoca o envio de versão para o nexus indicando a versão 'alfa' como versão de destino
                             nexusPublish(nomeDoRepositorio, buildParams.baseVersion, buildParams.version)
-                            mail to: 'chamado@infox.com.br', cc: 'laercio@infox.com.br,jonatha@infox.com.br',
-                                subject: "Enviar para QA versão de ${tipoDeBranch} ${buildParams.version} do projeto ${env.projectName}",
-                                body: """Implantar em ambiente de ${tipoDeBranch} projeto com as seguintes informações
-                                
-                                Repositório = ${nomeDoRepositorio}
-                                
-                                WAR
-                                Group = ${groupIdDoProjeto}
-                                Name = epp
-                                Version = ${buildParams.version}
-                                extension = war
-
-                                LIQUIBASE
-                                Group = ${groupIdDoProjeto}
-                                Name = liquibase-epp
-                                Version = ${buildParams.version}
-                                extension = tar.gz
-                                """
                         }
                     }
                 }
@@ -107,6 +123,49 @@ pipeline {
             post {
                 always {
                     deleteDir()
+                }
+            }
+        }
+        stage('Confirmar envio para QA') {
+            steps {
+                script {
+                    // Define variáveis que serão utilizadas nas notificações
+                    def nomeDoRepositorio = 'infox-maven-stagingarea';
+                    def tipoDeBranch='';
+                    if ("${BRANCH_NAME}".startsWith("projeto")) {
+                        nomeDoRepositorio = 'infox-maven-evo-qa-implantacao'
+                        tipoDeBranch = 'evolução';
+                    } else if ("${BRANCH_NAME}".startsWith("incidente")) {
+                        nomeDoRepositorio = 'infox-maven-man-qa-implantacao'
+                        tipoDeBranch = 'manutenção';
+                    }
+                    // Notifica no chat que estamos aguardando o build
+                    telegram {
+                        apiKey(telegramApiKey)
+                        chatId(telegramStagingChatId)
+                        sendMessage("Aguardando aprovação de envio de branch ${BRANCH_NAME} do projeto ${env.projectName} para testes em QA de ${tipoDeBranch}. <a href='${env.RUN_DISPLAY_URL}'>Clique aqui para acessar e confirmar</a>")
+                    }
+                    // Rotina que solicita uma confirmação para prosseguir
+                    input('Confirmar envio para servidor de QA')
+                    // Envio de e-mail caso o input seja processado com ação de prosseguir
+                    mail to: 'chamado@infox.com.br', cc: 'projetos-loglab@infox.com.br',
+                        subject: "Enviar para QA versão de ${tipoDeBranch} ${buildParams.version} do projeto ${env.projectName}",
+                        body: """Implantar em ambiente de ${tipoDeBranch} projeto com as seguintes informações
+                        
+                        Repositório = ${nomeDoRepositorio}
+                        
+                        WAR
+                        Group = ${groupIdDoProjeto}
+                        Name = epp
+                        Version = ${buildParams.version}
+                        extension = war
+
+                        LIQUIBASE
+                        Group = ${groupIdDoProjeto}
+                        Name = liquibase-epp
+                        Version = ${buildParams.version}
+                        extension = tar.gz
+                        """
                 }
             }
         }
