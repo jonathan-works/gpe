@@ -4,7 +4,7 @@ def buildParams = [:]
 void nexusPublish(String repository, String version, String uploadVersion) {
     def protocol = ("${env.NEXUS_BASE_URL}" =~ /^(?:(https?):\/\/)?(.*)$/)[0][1] ?: 'http'
     def urlWithoutProtocol = ("${env.NEXUS_BASE_URL}" =~ /^(?:(https?):\/\/)?(.*)$/)[0][2]
-    nexusArtifactUploader credentialsId: 'nexus-credentials', groupId: 'br.com.loglabdigital',
+    nexusArtifactUploader credentialsId: 'nexus-credentials', groupId: env.groupIdDoProjeto,
         nexusUrl: urlWithoutProtocol, nexusVersion: 'nexus3', protocol: protocol,
         repository: repository, version: uploadVersion,
         artifacts: [
@@ -21,7 +21,8 @@ pipeline {
     }
 
     environment {
-        projectName = 'ePP'
+        projectName = 'ePP Loglab'
+        groupIdDoProjeto = 'br.com.loglabdigital'
     }
     options {
         buildDiscarder logRotator(artifactNumToKeepStr: '2')
@@ -71,7 +72,34 @@ pipeline {
                 stage('Publicação no nexus') {
                     steps {
                         script {
-                            nexusPublish('infox-maven-stagingarea', buildParams.baseVersion, buildParams.version)
+                            def nomeDoRepositorio = 'infox-maven-stagingarea';
+                            def tipoDeBranch='';
+                            if ("${BRANCH_NAME}".startsWith("projeto")) {
+                               nomeDoRepositorio = 'infox_maven_evo_qa'
+                               tipoDeBranch = 'evolução';
+                            } else if ("${BRANCH_NAME}".startsWith("incidente")) {
+                               nomeDoRepositorio = 'infox_maven_man_qa'
+                               tipoDeBranch = 'manutenção';
+                            }
+                            nexusPublish(nomeDoRepositorio, buildParams.baseVersion, buildParams.version)
+                            mail to: 'chamado@infox.com.br', cc: 'laercio@infox.com.br,jonatha@infox.com.br',
+                                subject: "Enviar para QA versão de ${tipoDeBranch} ${buildParams.version} do projeto ${env.projectName}",
+                                body: """Implantar em ambiente de ${tipoDeBranch} projeto com as seguintes informações
+                                
+                                Repositório = ${nomeDoRepositorio}
+                                
+                                WAR
+                                Group = ${groupIdDoProjeto}
+                                Name = epp
+                                Version = ${buildParams.version}
+                                extension = war
+
+                                LIQUIBASE
+                                Group = ${groupIdDoProjeto}
+                                Name = liquibase-epp
+                                Version = ${buildParams.version}
+                                extension = tar.gz
+                                """
                         }
                     }
                 }
