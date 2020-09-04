@@ -130,13 +130,13 @@ pipeline {
             steps {
                 script {
                     // Define variáveis que serão utilizadas nas notificações
-                    def nomeDoRepositorio = 'infox-maven-stagingarea';
                     def tipoDeBranch='';
+                    def tipoDeRepositorio = '';
                     if ("${BRANCH_NAME}".startsWith("projeto")) {
-                        nomeDoRepositorio = 'infox-maven-evo-qa-implantacao'
+                        tipoDeRepositorio = 'evo-qa'
                         tipoDeBranch = 'evolução';
                     } else if ("${BRANCH_NAME}".startsWith("incidente")) {
-                        nomeDoRepositorio = 'infox-maven-man-qa-implantacao'
+                        tipoDeRepositorio = 'man-qa'
                         tipoDeBranch = 'manutenção';
                     }
                     // Notifica no chat que estamos aguardando o build
@@ -147,25 +147,19 @@ pipeline {
                     }
                     // Rotina que solicita uma confirmação para prosseguir
                     input('Confirmar envio para servidor de QA')
-                    // Envio de e-mail caso o input seja processado com ação de prosseguir
-                    mail to: 'chamado@infox.com.br', cc: 'projetos-loglab@infox.com.br',
-                        subject: "Enviar para QA versão de ${tipoDeBranch} ${buildParams.version} do projeto ${env.projectName}",
-                        body: """Implantar em ambiente de ${tipoDeBranch} projeto com as seguintes informações
-                        
-                        Repositório = ${nomeDoRepositorio}
-                        
-                        WAR
-                        Group = ${groupIdDoProjeto}
-                        Name = epp
-                        Version = ${buildParams.version}
-                        extension = war
-
-                        LIQUIBASE
-                        Group = ${groupIdDoProjeto}
-                        Name = liquibase-epp
-                        Version = ${buildParams.version}
-                        extension = tar.gz
-                        """
+                    // Notifica jenkins da infra que deve subir o ambiente
+                    withCredentials([usernamePassword(credentialsId: 'jenkins-da-infra', passwordVariable: 'passInternal', usernameVariable: 'userInternal')]) {
+                        jenkinsInfra db: 'postgres',
+                            as: 'jboss-6.4',
+                            deployId: 'loglab',
+                            repositorio: tipoDeRepositorio,
+                            contexto: 'epp',
+                            group: groupIdDoProjeto,
+                            version: buildParams.version,
+                            liquibase: 'liquibase-epp',
+                            username:userInternal,
+                            password:passInternal
+                    }
                 }
             }
         }
