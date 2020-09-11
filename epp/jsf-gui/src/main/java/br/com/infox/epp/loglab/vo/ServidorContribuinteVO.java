@@ -59,6 +59,7 @@ public class ServidorContribuinteVO {
     private String numeroRg;
     private Date dataEmissaoRg;
     private String orgaoEmissorRG;
+    private String status;
 
     /**
      * Construtor para Contribuinte

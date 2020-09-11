@@ -44,7 +44,8 @@ public class ContribuinteSolicitanteSearch extends PersistenceController {
         List<ContribuinteSolicitanteVO> contribuinteSolicitanteList = new ArrayList<ContribuinteSolicitanteVO>();
         DadosServidorBean dadosServidor = new DadosServidorBean(numeroCpf, numeroMatricula);
 
-        List<DadosServidorResponseBean> dadosServidores = eTurmalinaService.getDadosServidor(dadosServidor);
+        Boolean emExercicio = tipoContribuinte.equals(ContribuinteEnum.CO)? Boolean.FALSE : Boolean.TRUE;
+        List<DadosServidorResponseBean> dadosServidores = eTurmalinaService.getDadosServidor(dadosServidor, emExercicio);
         for (DadosServidorResponseBean dadosServidorResponseBean : dadosServidores) {
             ContribuinteSolicitanteVO contribuinteSolicitante = convertDadosServidorResponse(dadosServidorResponseBean, tipoContribuinte);
             contribuinteSolicitanteList.add(contribuinteSolicitante);
@@ -81,6 +82,7 @@ public class ContribuinteSolicitanteSearch extends PersistenceController {
         contribuinteSolicitante.setSexo(tipoGeneroEnum);
         contribuinteSolicitante.setEmail(dadosServidorResponseBean.getServidorEmail());
         contribuinteSolicitante.setTelefone(dadosServidorResponseBean.getServidorTelefoneCelular());
+        contribuinteSolicitante.setStatus(dadosServidorResponseBean.getStatus());
 
         ContribuinteSolicitante contrSolic = getContribuinteSolicitanteByMatriculaAndTipoContribuinte(
                 dadosServidorResponseBean.getMatricula(), tipoContribuinte);

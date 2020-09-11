@@ -7,13 +7,13 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
-    
+
     <p:outputPanel rendered="#{rendered}">
         <h:outputText value="#{label}: "
                       style="font-weight: bold;"
                       escape="false"/>
         <div style="clear: both;" />
-        <h:outputText value="#{empty value ? 'Não informado' : value}">
+        <h:outputText value="#{empty value ? 'Não informado' : value}" style="#{style}">
             <ui:insert />
         </h:outputText>
     </p:outputPanel>

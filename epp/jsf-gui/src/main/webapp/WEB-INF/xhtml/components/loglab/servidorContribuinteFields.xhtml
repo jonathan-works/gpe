@@ -400,6 +400,13 @@
                         <p:outputLabel id="#{identificador}OrgaoEmissorRGInput"
                                        value="#{empty viewObject.orgaoEmissorRG ? 'Não informado' : viewObject.orgaoEmissorRG}"/>
                     </wi:field>
+                    <wi:field id="#{identificador}Status"
+                              label="#{infoxMessages['servidorContribuinte.status']}"
+                              rendered="#{viewObject.status ne 'EM EXERCÍCIO' and viewObject.status ne 'EM EXERCICIO'}">
+                        <p:outputLabel id="#{identificador}StatusInput"
+                                       value="#{viewObject.status}"
+                                       style="font-weight: bold; color: #ff0000;"/>
+                    </wi:field>
                 </fieldset>
             </p:outputPanel>
         </p:outputPanel>

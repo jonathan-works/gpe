@@ -46,6 +46,8 @@ public class ContribuinteService extends PersistenceController implements Serial
     private static final String VARIAVEL_COMPLEMENTO_ENDERECO_CONTRIBUINTE = "complementoEnderecoContribuinte";
     private static final String VARIAVEL_NUMERO_ENDERECO_CONTRIBUINTE = "numeroEnderecoContribuinte";
     private static final String VARIAVEL_CEP_ENDERECO_CONTRIBUINTE = "cepEnderecoContribuinte";
+    private static final String VARIAVEL_STATUS_CONTRIBUINTE = "statusContribuinte";
+
 
     @Inject
     private SignalService signalService;
@@ -98,6 +100,7 @@ public class ContribuinteService extends PersistenceController implements Serial
         params.add(new SignalParam(VARIAVEL_COMPLEMENTO_ENDERECO_CONTRIBUINTE, contribuinteVO.getComplemento(), Type.VARIABLE));
         params.add(new SignalParam(VARIAVEL_NUMERO_ENDERECO_CONTRIBUINTE, contribuinteVO.getNumero(), Type.VARIABLE));
         params.add(new SignalParam(VARIAVEL_CEP_ENDERECO_CONTRIBUINTE, contribuinteVO.getCep(), Type.VARIABLE));
+        params.add(new SignalParam(VARIAVEL_STATUS_CONTRIBUINTE, contribuinteVO.getStatus(), Type.VARIABLE));
 
         return params;
     }
