@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -29,6 +30,7 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
 import br.com.infox.epp.loglab.search.EmpresaSearch;
 import br.com.infox.epp.loglab.search.ServidorContribuinteSearch;
@@ -99,12 +101,17 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     @Getter
     private List<NaturezaCategoriaFluxoItem> naturezaCategoriaFluxoItemList;
     @Getter
+    private List<NaturezaCategoriaFluxoItem> naturezaCategoriaFluxoItemListAll;
+    @Getter
     private List<TipoParte> tipoParteList;
     @Getter
     private TreeNode root = new DefaultTreeNode("Root", null);
     @Getter
     private List<IniciarProcessoParticipanteVO> participanteProcessoList;
 
+    @Getter
+    @Setter
+    private Fluxo Fluxo;
     @Getter
     @Setter
     private NaturezaCategoriaFluxoItem naturezaCategoriaFluxoItem;
@@ -145,7 +152,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         Papel papel = Authenticator.getPapelAtual();
         UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
         createProcesso(Authenticator.getUsuarioPerfilAtual().getLocalizacao(), usuarioLogin);
-        naturezaCategoriaFluxoItemList = natCatFluxoLocalizacaoDAO.listByLocalizacaoAndPapel(localizacao, papel);
+        naturezaCategoriaFluxoItemList = getNaturezaCategoriaFluxos(localizacao, papel);
         tipoParteList = tipoParteSearch.findAll();
         processosCriados = processoSearch.getProcessosNaoIniciados(Authenticator.getUsuarioLogado());
         participanteProcessoList = new ArrayList<>();
@@ -262,6 +269,23 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             }
         }
         return true;
+    }
+
+    private List<NaturezaCategoriaFluxoItem> getNaturezaCategoriaFluxos(Localizacao localizacao, Papel papel) {
+        naturezaCategoriaFluxoItemListAll = natCatFluxoLocalizacaoDAO.listByLocalizacaoAndPapel(localizacao, papel);
+        return naturezaCategoriaFluxoItemListAll;
+    }
+
+    public void onSelectFluxo() {
+        if (getFluxo() != null) {
+            naturezaCategoriaFluxoItemList = naturezaCategoriaFluxoItemListAll.stream().
+                    filter(nat -> nat.getNaturezaCategoriaFluxo().getFluxo() == getFluxo()).collect(Collectors.toList());
+        }
+    }
+
+    public void unSelectFluxo() {
+        setFluxo(null);
+        naturezaCategoriaFluxoItemList = naturezaCategoriaFluxoItemListAll;
     }
 
     public void onSelectNaturezaCategoriaFluxoItem() {
@@ -435,6 +459,5 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     public List<String> getListCodEstado() {
         return estadoSearch.getListCodEstado();
     }
-
 
 }

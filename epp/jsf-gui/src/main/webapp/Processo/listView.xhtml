@@ -74,9 +74,34 @@
             <legend class="name">#{infoxMessages['processo.novoProcesso']}</legend>
 
             <h:form id="iniciarProcessoForm">
+				<p:outputPanel style="text-align: left;" styleClass="fluxoFilter">
+					<div style="margin-bottom: 1em;">
+						<div class="property-field-edit-name">
+							<h:outputLabel id="fluxoLabel" for="fluxo">
+								<h:outputText value="#{infoxMessages['naturezaCategoriaFluxo.fluxoFilter']}" />
+							</h:outputLabel>
+						</div>
+						<p:autoComplete id="fluxo" value="#{iniciarProcessoView.fluxo}" scrollHeight="300"
+							completeMethod="#{consultaProcessoDynamicColumnsController.getFluxos}"
+							forceSelection="true" var="item" itemLabel="#{item.fluxo}" itemValue="#{item}"
+							converter="br.com.infox.jsf.converter.EntityConverter" minQueryLength="3" dropdown="true">
+							<p:ajax event="itemSelect" process="@this" update="natCatProcessoList"
+								listener="#{iniciarProcessoView.onSelectFluxo()}"
+								onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+						</p:autoComplete>
+						<h:commandButton id="fluxoClearBtn"
+							value="#{infoxMessages['button.limpar']}"
+							action="#{iniciarProcessoView.unSelectFluxo()}"
+							onstart="infox.showLoading();" oncomplete="infox.hideLoading();"
+							styleClass="buttons" process="@this"
+							update="@(.fluxoFilter), natCatProcessoList"
+							style="margin-left:1em;" />
+					</div>
+				</p:outputPanel>
+
                 <p:dataTable id="natCatProcessoList" var="row" value="#{iniciarProcessoView.naturezaCategoriaFluxoItemList}"
                     selection="#{iniciarProcessoView.naturezaCategoriaFluxoItem}" rowKey="#{row.id}" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
-                    responsive="true" rows="10" paginator="#{iniciarProcessoView.naturezaCategoriaFluxoItemList.size() gt 10}">
+                    responsive="true" rows="10" paginator="true" paginatorAlwaysVisible="false">
 
                     <p:column selectionMode="single" style="width:16px; text-align:center"/>
 
