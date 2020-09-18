@@ -5,24 +5,21 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:s="http://jboss.org/schema/seam/taglib">
-	
+
 	<p:panel header="#{infoxMessages['acaoProcesso.menuText']}" id="movimentacoesPanel">
 		<p:dataTable var="row" value="#{processoHandler.movimentacoes}" rowIndexVar="key">
 			<p:column headerText="#{infoxMessages['fluxo.tarefa']}">
 				<h:outputText value="#{row.tarefa.tarefa}" />
 			</p:column>
-			<p:column headerText="#{infoxMessages['localizacao.localizacao']} / #{infoxMessages['usuario.usuario']}">
+			<p:column headerText="#{infoxMessages['fluxo.movimentacao.setor']} / #{infoxMessages['usuario.usuario']}">
 				<div>
-					<h:outputText value="#{row.localizacaoExterna}" />
+					<h:outputText value="#{row.taskInstance.swimlaneInstance.name}" />
 					/
-					<h:outputText value="#{row.localizacao}" />
-				</div>
-				<div>
 					<h:outputText value="#{row.usuario}" />
 					<h:form>
 						<a:commandLink action="#{taskInstanceHome.removeUsuario(row.taskInstance)}" execute="@this"
 							render="movimentacoesPanel pageBodyDialogMessage" limitRender="true"
-							onclick="return confirm('#{infoxMessages['movimentar.confirmLiberarTarefa']}');" 
+							onclick="return confirm('#{infoxMessages['movimentar.confirmLiberarTarefa']}');"
 							oncomplete="#{taskInstanceHome.currentTaskInstance eq row.taskInstance ? 'close()' : ''}"
 							rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty row.usuario and empty row.dataFim)}">
 							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/unlocked.gif')}" title="#{infoxMessages['movimentar.liberarTarefa']}" />
