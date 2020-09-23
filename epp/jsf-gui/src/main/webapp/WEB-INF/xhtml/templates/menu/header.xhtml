@@ -13,7 +13,7 @@
             </c:if>
 
             <h:graphicImage title="Logo" styleClass="epp-new-layout-header--logo"
-            	url="#{layoutController.getResourceUrl('LOGO_LOGIN')}" />
+               url="#{layoutController.getResourceUrl('LOGO_TOPO')}" />
         </div>
 
         <infox:div id="epp-new-layout-header-user-epp-new-menu" rendered="#{identity.loggedIn}"
@@ -96,7 +96,7 @@
                         <div class="epp-new-menu-itm-perfil--flexbox">
                             <div><h:outputText styleClass="text-bold" value="Perfil" /></div>
                             <div>
-                            <p:commandLink 
+                            <p:commandLink
                                 action="/Usuario/detalhes.xhtml"
                                 styleClass="epp-new-menu-itm-action epp-new-menu-item-action-lnk"
                                 value="#{infoxMessages['detalhesUsuario.titlePage']}"
