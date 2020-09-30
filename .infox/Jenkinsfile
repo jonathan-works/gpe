@@ -138,7 +138,7 @@ pipeline {
                         tipoDeRepositorio = 'evo-qa'
                         tipoDeBranch = 'evolução';
                     } else if ("${BRANCH_NAME}".startsWith("incidente")) {
-                        deployIdDoProjeto = 'loglab-qa-man'
+                        deployIdDoProjeto = 'loglab-qa-sup'
                         tipoDeRepositorio = 'man-qa'
                         tipoDeBranch = 'manutenção';
                     }
@@ -167,6 +167,5 @@ pipeline {
             }
         }
     }
-
 }
 
