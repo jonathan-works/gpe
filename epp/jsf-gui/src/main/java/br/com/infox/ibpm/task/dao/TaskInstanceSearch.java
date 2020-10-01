@@ -19,10 +19,14 @@ import br.com.infox.core.persistence.PersistenceController;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class TaskInstanceSearch extends PersistenceController {
-    
+
     @Inject @GenericDao
-    private Dao<TaskInstance, Long> dao; 
-    
+    private Dao<TaskInstance, Long> dao;
+
+    public TaskInstance getTaskInstance(Long idTaskInstance) {
+        return getEntityManager().find(TaskInstance.class, idTaskInstance);
+    }
+
     public String getAssignee(Long idTaskInstance) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<String> cq = cb.createQuery(String.class);
@@ -31,7 +35,7 @@ public class TaskInstanceSearch extends PersistenceController {
         cq.where(cb.equal(taskInstance.<Long>get("id"), cb.literal(idTaskInstance)));
         return dao.getSingleResult(getEntityManager().createQuery(cq));
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TaskInstance findTaskInstanceByTokenId(Long tokenId) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -46,5 +50,5 @@ public class TaskInstanceSearch extends PersistenceController {
         );
         return dao.getSingleResult(getEntityManager().createQuery(cq).setHint(QueryHints.CACHEABLE, false));
     }
-    
+
 }

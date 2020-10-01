@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -20,6 +21,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 
 import org.jboss.seam.security.Identity;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import com.google.common.base.Strings;
 
@@ -38,6 +40,8 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza_;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.loglab.dto.ProcessoTarefaLogLabDTO;
+import br.com.infox.epp.loglab.dto.SetorUsuarioTarefaLogLabDTO;
 import br.com.infox.epp.loglab.vo.PesquisaRequerenteVO;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -57,6 +61,11 @@ import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso_;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.epp.tarefa.dao.ProcessoTarefaDAO;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.ibpm.task.dao.TaskInstanceSearch;
+import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
+import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.gov.mt.cuiaba.pmc.gdprev.ParticipanteProcessoConsulta;
 import br.gov.mt.cuiaba.pmc.gdprev.ParticipanteProcessoConsulta_;
 
@@ -95,6 +104,12 @@ public class ProcessoEpaList extends EntityList<Processo> {
     protected ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
     @Inject
     private FluxoManager fluxoManager;
+    @Inject
+    private ProcessoTarefaDAO processoTarefaDAO;
+    @Inject
+    private TaskInstanceSearch taskInstanceSearch;
+    @Inject
+    private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
 
     protected FiltrosBeanList filtros = new FiltrosBeanList();
 
@@ -186,6 +201,44 @@ public class ProcessoEpaList extends EntityList<Processo> {
 			}
 		}
 	}
+
+    private List<ProcessoTarefa> getListProcessoTarefaAberto(Processo processo) {
+        if (!ObjectUtil.isEmpty(processo))
+            return processoTarefaDAO.getByProcesso(processo).stream().filter(t -> ObjectUtil.isEmpty(t.getDataFim())).collect(Collectors.toList());
+        return null;
+    }
+
+    public List<ProcessoTarefaLogLabDTO> getProcessoTarefasAberto(Processo processo) {
+        List<ProcessoTarefaLogLabDTO> results = new ArrayList<>();
+        if (!ObjectUtil.isEmpty(processo)) {
+            for (ProcessoTarefa tarefa : getListProcessoTarefaAberto(processo)) {
+                String assignee = taskInstanceSearch.getAssignee(tarefa.getTaskInstance());
+                results.add(new ProcessoTarefaLogLabDTO(
+                        tarefa.getTaskInstance(),
+                        tarefa.getProcesso().getIdProcesso(),
+                        tarefa.getTarefa().getTarefa(),
+                        assignee
+                ));
+            }
+        }
+        return results.stream().sorted((t1, t2) -> t1.getDescricao().compareTo(t2.getDescricao())).collect(Collectors.toList());
+    }
+
+    public List<SetorUsuarioTarefaLogLabDTO> getSetorUsuarioTarefasAberto(Processo processo) {
+        List<SetorUsuarioTarefaLogLabDTO> results = new ArrayList<>();
+        if (!ObjectUtil.isEmpty(processo)) {
+            for (ProcessoTarefa tarefa : getListProcessoTarefaAberto(processo)) {
+                TaskInstance taskInstance = taskInstanceSearch.getTaskInstance(tarefa.getTaskInstance());
+                UsuarioTaskInstance usuarioTaskInstance = usuarioTaskInstanceManager.find(tarefa.getTaskInstance());
+
+                results.add(new SetorUsuarioTarefaLogLabDTO(
+                        taskInstance.getSwimlaneInstance().getName(),
+                        !ObjectUtil.isEmpty(usuarioTaskInstance) ? usuarioTaskInstance.getUsuario().getNomeUsuario() : null
+                ));
+            }
+        }
+        return results.stream().distinct().sorted((su1, su2) -> (su1.getSwimlane().compareTo(su2.getSwimlane()))).collect(Collectors.toList());
+    }
 
     public List<PesquisaRequerenteVO> getRequerentes(String search) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
