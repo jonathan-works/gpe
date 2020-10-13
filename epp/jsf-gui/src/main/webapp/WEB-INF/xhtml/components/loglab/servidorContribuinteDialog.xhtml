@@ -183,6 +183,12 @@
                     <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.orgaoEmissorRG']}"
                                      rendered="#{row.tipoParticipante eq 'SE'}"
                                      value="#{row.orgaoEmissorRG}"/>
+
+                    <wi:dialogOutput label="#{infoxMessages['servidorContribuinte.status']}"
+                                     rendered="#{row.status ne 'EM EXERCÍCIO' and row.status ne 'EM EXERCICIO'}"
+                                     value="#{row.status}"
+                                     style="font-weight: bold; color: #ff0000;"/>
+
                 </h:panelGrid>
             </h:panelGrid>
         </p:dataGrid>

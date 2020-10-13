@@ -34,7 +34,7 @@ public class ServidorSearch extends PersistenceController {
         List<ServidorVO> servidorList = new ArrayList<ServidorVO>();
         DadosServidorBean dadosServidor = new DadosServidorBean(numeroCpf);
 
-        List<DadosServidorResponseBean> dadosServidores = eTurmalinaService.getDadosServidor(dadosServidor);
+        List<DadosServidorResponseBean> dadosServidores = eTurmalinaService.getDadosServidor(dadosServidor, Boolean.TRUE);
         for (DadosServidorResponseBean dadosServidorResponseBean : dadosServidores) {
             ServidorVO servidor = convertDadosServidorResponse(dadosServidorResponseBean);
             servidorList.add(servidor);

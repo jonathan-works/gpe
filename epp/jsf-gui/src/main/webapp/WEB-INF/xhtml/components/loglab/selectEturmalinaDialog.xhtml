@@ -39,7 +39,7 @@
                          rows="10"
                          rowKey="#{row}"
                          emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
-                
+
                 <p:ajax event="rowSelectRadio" process="@this" onstart="showLoading()" oncomplete="hideLoading()" />
                 <p:column selectionMode="single" style="width:16px;text-align:center"/>
 
@@ -90,7 +90,7 @@
                 <p:column headerText="#{infoxMessages['contribuinte.nomeCompleto']}">
                     <h:outputText value="#{!empty row.nomeCompleto ?  row.nomeCompleto : 'Não fornecido'}" />
                 </p:column>
-                
+
                 <p:column headerText="#{infoxMessages['contribuinte.nomeMae']}">
                     <h:outputText value="#{!empty row.nomeMae ?  row.nomeMae : 'Não fornecido'}" />
                 </p:column>
@@ -109,6 +109,10 @@
 
                 <p:column headerText="#{infoxMessages['registroGeral.titulo']} - #{infoxMessages['registroGeral.uf']}">
                     <h:outputText value="#{!empty row.cdEstadoRg ?  row.cdEstadoRg : 'Não fornecido'}" />
+                </p:column>
+
+                <p:column headerText="#{infoxMessages['contribuinte.status']}">
+                    <h:outputText value="#{row.status}" style="#{row.status ne 'EM EXERCÍCIO' and row.status ne 'EM EXERCICIO' ? 'font-weight: bold; color: #ff0000;' : ''}"/>
                 </p:column>
             </p:dataTable>
         </p:outputPanel>

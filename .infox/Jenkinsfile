@@ -132,13 +132,10 @@ pipeline {
                     // Define variáveis que serão utilizadas nas notificações
                     def tipoDeBranch='';
                     def tipoDeRepositorio = '';
-                    def deployIdDoProjeto = '';
                     if ("${BRANCH_NAME}".startsWith("projeto")) {
-                        deployIdDoProjeto = 'loglab-qa-evo'
                         tipoDeRepositorio = 'evo-qa'
                         tipoDeBranch = 'evolução';
                     } else if ("${BRANCH_NAME}".startsWith("incidente")) {
-                        deployIdDoProjeto = 'loglab-qa-sup'
                         tipoDeRepositorio = 'man-qa'
                         tipoDeBranch = 'manutenção';
                     }
@@ -154,7 +151,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'jenkins-da-infra', passwordVariable: 'passInternal', usernameVariable: 'userInternal')]) {
                         jenkinsInfra db: 'postgres',
                             as: 'jboss-6.4',
-                            deployId: deployIdDoProjeto,
+                            deployId: 'loglab',
                             repositorio: tipoDeRepositorio,
                             contexto: 'epp',
                             group: groupIdDoProjeto,
@@ -167,5 +164,6 @@ pipeline {
             }
         }
     }
+
 }
 

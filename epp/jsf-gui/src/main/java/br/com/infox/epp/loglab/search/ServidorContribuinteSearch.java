@@ -161,10 +161,9 @@ public class ServidorContribuinteSearch extends PersistenceController {
 
     public List<ServidorContribuinteVO> pesquisaServidorETurmalina(PesquisaParticipanteVO pesquisaParticipanteVO) {
         List<ServidorContribuinteVO> servidorList = new ArrayList<>();
-        DadosServidorBean dadosServidor = new DadosServidorBean(pesquisaParticipanteVO.getCpf(),
-                pesquisaParticipanteVO.getMatricula());
+        DadosServidorBean dadosServidor = new DadosServidorBean(pesquisaParticipanteVO.getCpf(), pesquisaParticipanteVO.getMatricula());
 
-        List<DadosServidorResponseBean> dadosServidores = eTurmalinaService.getDadosServidor(dadosServidor);
+        List<DadosServidorResponseBean> dadosServidores = eTurmalinaService.getDadosServidor(dadosServidor, Boolean.FALSE);
         for (DadosServidorResponseBean dadosServidorResponseBean : dadosServidores) {
             ServidorContribuinteVO servidor = convertDadosServidorResponse(dadosServidorResponseBean);
             servidorList.add(servidor);
@@ -198,6 +197,7 @@ public class ServidorContribuinteSearch extends PersistenceController {
         servidor.setSubFolha(dadosServidorResponseBean.getSubFolha());
         servidor.setEmail(dadosServidorResponseBean.getServidorEmail());
         servidor.setTipoParticipante(TipoParticipanteEnum.SE);
+        servidor.setStatus(dadosServidorResponseBean.getStatus());
 
         ServidorContribuinteVO servidorByCpf = getServidorByCPF(dadosServidorResponseBean.getCpf());
         if (servidorByCpf != null) {

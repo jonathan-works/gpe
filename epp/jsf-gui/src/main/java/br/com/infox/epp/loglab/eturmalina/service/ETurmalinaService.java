@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.core.exception.EppConfigurationException;
+import br.com.infox.core.util.ObjectUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorBean;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorResponseBean;
@@ -33,14 +34,14 @@ public class ETurmalinaService implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-    public List<DadosServidorResponseBean> getDadosServidor(DadosServidorBean dadosServidor) {
+    public List<DadosServidorResponseBean> getDadosServidor(DadosServidorBean dadosServidor, Boolean emExercicio) {
         List<DadosServidorResponseBean> dadosResponseList = new ArrayList<>();
         if (StringUtil.isEmpty(dadosServidor.getMatricula()) && !StringUtil.isEmpty(dadosServidor.getMatricula())) {
             WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse response = getServidorMatriculaResponse(dadosServidor);
-            dadosResponseList.add(getServidorEmExercicio(response));
+            dadosResponseList.add(emExercicio ? getServidorEmExercicio(response) : getServidor(response));
         } else {
             WSIntegracaoRHGETDADOSSERVIDORResponse response = getServidorResponse(dadosServidor);
-            dadosResponseList.addAll(getServidoresEmExercicio(response));
+            dadosResponseList.addAll(emExercicio ? getServidoresEmExercicio(response) : getServidores(response));
         }
         return dadosResponseList;
     }
@@ -61,47 +62,65 @@ public class ETurmalinaService implements Serializable{
         return response;
     }
 
-    private List<DadosServidorResponseBean> getServidoresEmExercicio(WSIntegracaoRHGETDADOSSERVIDORResponse retornoWs) {
-        List<DadosServidorResponseBean> servidoresEmExercicioList = new ArrayList<DadosServidorResponseBean>();
+    private List<DadosServidorResponseBean> getServidores(WSIntegracaoRHGETDADOSSERVIDORResponse retornoWs) {
+        List<DadosServidorResponseBean> servidoresList = new ArrayList<DadosServidorResponseBean>();
         try {
-            if (!StringUtil.isEmpty(retornoWs.getRetorno())){
+            if (!StringUtil.isEmpty(retornoWs.getRetorno())) {
                 Gson gson = new Gson();
                 List<DadosServidorResponseBean> dadosRetorno = gson.fromJson(retornoWs.getRetorno(), DadosServidorResponseBean.getListType());
                 for (DadosServidorResponseBean dadosServidorResponse : dadosRetorno) {
-                    if (servidorEmExercicio(dadosServidorResponse.getStatus().trim())) {
-                        if (!StringUtil.isEmpty(dadosServidorResponse.getMatricula())) {
-                            DadosServidorBean dadosServidor = new DadosServidorBean(dadosServidorResponse.getCpf(), dadosServidorResponse.getMatricula());
-                            WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse response = getServidorMatriculaResponse(dadosServidor);
-                            DadosServidorResponseBean dadosServidorResponseBean = getServidorEmExercicio(response);
-                            if (dadosServidorResponseBean != null)
-                                servidoresEmExercicioList.add(dadosServidorResponseBean);
-                        } else {
-                            servidoresEmExercicioList.add(dadosServidorResponse);
-                        }
+                    if (!StringUtil.isEmpty(dadosServidorResponse.getMatricula())) {
+                        DadosServidorBean dadosServidor = new DadosServidorBean(dadosServidorResponse.getCpf(), dadosServidorResponse.getMatricula());
+                        WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse response = getServidorMatriculaResponse(dadosServidor);
+                        DadosServidorResponseBean dadosServidorResponseBean = getServidor(response);
+                        if (dadosServidorResponseBean != null)
+                            servidoresList.add(dadosServidorResponseBean);
+                    } else {
+                        servidoresList.add(dadosServidorResponse);
                     }
                 }
             }
         } catch (JsonSyntaxException e) {
-            return servidoresEmExercicioList;
+            return servidoresList;
+        }
+        return servidoresList;
+    }
+
+    private List<DadosServidorResponseBean> getServidoresEmExercicio(WSIntegracaoRHGETDADOSSERVIDORResponse retornoWs) {
+        List<DadosServidorResponseBean> servidoresEmExercicioList = new ArrayList<DadosServidorResponseBean>();
+
+        List<DadosServidorResponseBean> dadosRetorno = getServidores(retornoWs);
+        if (!ObjectUtil.isEmpty(dadosRetorno)) {
+            for (DadosServidorResponseBean dadosServidorResponse : dadosRetorno) {
+                if (servidorEmExercicio(dadosServidorResponse.getStatus().trim())) {
+                    servidoresEmExercicioList.add(dadosServidorResponse);
+                }
+            }
         }
         return servidoresEmExercicioList;
     }
 
-    private DadosServidorResponseBean getServidorEmExercicio(WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse retornoWs) {
+    private DadosServidorResponseBean getServidor(WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse retornoWs) {
         DadosServidorResponseBean dadosServidorResponseBean = null;
         try {
             if (!StringUtil.isEmpty(retornoWs.getRetorno())) {
                 Gson gson = new Gson();
                 List<DadosServidorResponseBean> dadosRetorno = gson.fromJson(retornoWs.getRetorno(), DadosServidorResponseBean.getListType());
                 DadosServidorResponseBean dadosServidorResponse = dadosRetorno.stream().findFirst().orElse(null);
-                if (dadosServidorResponse != null) {
-                    if (servidorEmExercicio(dadosServidorResponse.getStatus().trim())) {
-                        dadosServidorResponseBean = dadosServidorResponse;
-                    }
-                }
+                if (dadosServidorResponse != null)
+                    dadosServidorResponseBean = dadosServidorResponse;
             }
         } catch (JsonSyntaxException e) {
             return dadosServidorResponseBean;
+        }
+        return dadosServidorResponseBean;
+    }
+
+    private DadosServidorResponseBean getServidorEmExercicio(WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse retornoWs) {
+        DadosServidorResponseBean dadosServidorResponseBean = getServidor(retornoWs);
+        if (!ObjectUtil.isEmpty(dadosServidorResponseBean)) {
+            if (servidorEmExercicio(dadosServidorResponseBean.getStatus().trim()))
+                return dadosServidorResponseBean;
         }
         return dadosServidorResponseBean;
     }
@@ -125,7 +144,7 @@ public class ETurmalinaService implements Serializable{
 	    }
 	}
 
-    private boolean servidorEmExercicio(String status) {
+    public boolean servidorEmExercicio(String status) {
         if (StringUtil.isEmpty(status))
             return Boolean.FALSE;
         return "EM EXERCÍCIO".equalsIgnoreCase(status)  || "EM EXERCICIO".equalsIgnoreCase(status);

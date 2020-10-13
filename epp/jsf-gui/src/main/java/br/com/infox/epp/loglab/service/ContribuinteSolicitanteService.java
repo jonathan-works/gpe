@@ -11,6 +11,7 @@ import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
+import br.com.infox.epp.loglab.eturmalina.service.ETurmalinaService;
 import br.com.infox.epp.loglab.model.ContribuinteSolicitante;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
@@ -30,6 +31,8 @@ public class ContribuinteSolicitanteService extends PersistenceController {
     private PessoaFisicaManager pessoaFisicaManager;
     @Inject
     private UsuarioLoginManager usuarioLoginManager;
+    @Inject
+    private ETurmalinaService eTurmalinaService;
 
     public ContribuinteSolicitanteVO gravar(ContribuinteSolicitanteVO vo) {
         ContribuinteSolicitante solicitante = solicitanteFromContribuinteSolicitanteVO(vo);
@@ -53,7 +56,7 @@ public class ContribuinteSolicitanteService extends PersistenceController {
         if(usuLogin == null) {
             usuLogin = new UsuarioLogin();
             usuLogin.setLogin(vo.getCpf());
-            usuLogin.setAtivo(Boolean.TRUE);
+            usuLogin.setAtivo(eTurmalinaService.servidorEmExercicio(vo.getStatus()) ? Boolean.TRUE : Boolean.FALSE);
             usuLogin.setTipoUsuario(UsuarioEnum.H);
             usuLogin.setPessoaFisica(pf);
         }

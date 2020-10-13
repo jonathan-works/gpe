@@ -76,4 +76,6 @@ public class ContribuinteSolicitanteVO {
 
     private String cep;
 
+    private String status;
+
 }
