@@ -144,6 +144,40 @@
                         </a:commandLink>
                     </ui:define>
 					<infox:dynamicColumns columns="#{consultaProcessoDynamicColumnsController.dynamicColumns}" />
+
+					<wi:column columnId="processoTarefa" columnHeader="#{infoxMessages['consultaProcesso.tarefa']}">
+					    <ui:repeat var="tarefa" value="#{processoEpaList.getProcessoTarefasAberto(row)}">
+					        <div align="center">
+					            <p:commandLink
+					            	rendered="#{tarefa.assignee eq authenticator.getUsuarioLogado().login and authenticator.perfilTemplateAtualPossuiLocalizacao()}"
+					            	value="#{tarefa.descricao}"
+					            	title="#{infoxMessages['painel.movimentarUnassigned.tooltip']}"
+					            	partialSubmit="true"
+					            	process="@this"
+					            	onstart="infox.showLoading();"
+					            	oncomplete="infox.hideLoading();"
+					            	style="display: block; text-decoration:none;"
+					            	onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{tarefa.idProcesso}&amp;idTaskInstance=#{tarefa.idTaskInstance}', '#{tarefa.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+					            	<f:param name="idProcesso" value="#{tarefa.idProcesso}" />
+					            	<f:param name="idTaskInstance" value="#{tarefa.idTaskInstance}" />
+					            </p:commandLink>
+
+					            <h:outputText
+					                rendered="#{tarefa.assignee ne authenticator.getUsuarioLogado().login or not authenticator.perfilTemplateAtualPossuiLocalizacao()}"
+					            	value="#{tarefa.descricao}" />
+					        </div>
+					    </ui:repeat>
+					</wi:column>
+
+					<wi:column columnId="setorTarefa" columnHeader="#{infoxMessages['consultaProcesso.setor']}">
+					    <ui:repeat var="setor" value="#{processoEpaList.getSetorUsuarioTarefasAberto(row)}">
+					        <div align="center">
+								<h:outputText value="#{setor.swimlane}" />
+								/
+								<h:outputText value="#{setor.usuario}" />
+					        </div>
+					    </ui:repeat>
+					</wi:column>
                 </wi:dataTable>
                 #{consultaProcessoDynamicColumnsController.clearMensagensValidacao()}
             </wi:panel>
