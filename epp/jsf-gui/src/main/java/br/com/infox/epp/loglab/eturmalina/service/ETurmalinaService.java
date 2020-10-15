@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.core.exception.EppConfigurationException;
+import br.com.infox.core.util.ExceptionUtil;
 import br.com.infox.core.util.ObjectUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.loglab.eturmalina.bean.DadosServidorBean;
@@ -36,7 +37,7 @@ public class ETurmalinaService implements Serializable{
 
     public List<DadosServidorResponseBean> getDadosServidor(DadosServidorBean dadosServidor, Boolean emExercicio) {
         List<DadosServidorResponseBean> dadosResponseList = new ArrayList<>();
-        if (StringUtil.isEmpty(dadosServidor.getMatricula()) && !StringUtil.isEmpty(dadosServidor.getMatricula())) {
+        if (StringUtil.isEmpty(dadosServidor.getCpf()) && !StringUtil.isEmpty(dadosServidor.getMatricula())) {
             WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse response = getServidorMatriculaResponse(dadosServidor);
             dadosResponseList.add(emExercicio ? getServidorEmExercicio(response) : getServidor(response));
         } else {
@@ -175,10 +176,14 @@ public class ETurmalinaService implements Serializable{
             BindingProvider bp = (BindingProvider) service;
     		bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, parameterUrl);
             return service;
-        } catch (MalformedURLException m) {
-            throw new EppConfigurationException("URL inválida.");
-        } catch (WebServiceException we) {
-            throw new EppConfigurationException("Falha ao tentar acessar serviço de consulta do e-TURMALINA.");
+        } catch (Exception e) {
+            if (ExceptionUtil.findException(e, MalformedURLException.class) != null) {
+                throw new EppConfigurationException("URL inválida");
+            } else if (ExceptionUtil.findException(e, WebServiceException.class) != null) {
+                throw new EppConfigurationException("Falha ao tentar acessar serviço de consulta do e-TURMALINA.");
+            } else {
+                throw new EppConfigurationException("Não foi possível realizar consulta no serviço do e-TURMALINA.");
+            }
         }
     }
 
