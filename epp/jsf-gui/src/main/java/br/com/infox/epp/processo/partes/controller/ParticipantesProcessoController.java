@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.partes.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,6 +30,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoDAO;
 import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoService;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
@@ -65,6 +67,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     private EstadoSearch estadoSearch;
     @Inject
     private ParticipanteProcessoLoglabService participanteProcessoLoglabService;
+    @Inject
+    private ParticipanteProcessoDAO participanteProcessoDAO;
 
     protected List<TipoParte> tipoPartes;
 
@@ -145,7 +149,9 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
 
     public List<ParticipanteProcesso> getParticipantes() {
         if (getProcesso() != null) {
-            return getProcesso().getParticipantes();
+            Processo processo = getProcesso();
+            processo.getParticipantes().addAll(participanteProcessoDAO.getParticipantesNaoCaregados(processo, processo.getParticipantes()));
+            return processo.getParticipantes().stream().sorted((o1, o2) -> (o1.getCaminhoAbsoluto().compareToIgnoreCase(o2.getCaminhoAbsoluto()))).collect(Collectors.toList());
         }
         return null;
     }
@@ -361,4 +367,5 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
             participanteProcessoVO.getEmpresaVO().setRazaoSocial(pessoaJuridica.getRazaoSocial());
         }
     }
+
 }

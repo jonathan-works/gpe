@@ -35,6 +35,7 @@ import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.omnifaces.util.Utils;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.pessoa.entity.Pessoa;
@@ -55,31 +56,31 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "participanteProcessoDAO";
-    
+
     @Inject
     private HistoricoParticipanteProcessoManager historicoParticipanteProcessoManager;
-    
+
     public void lockPessimistic(Processo processo){
     	if (!getEntityManager().contains(processo)){
     		processo = getEntityManager().merge(processo);
     	}
     	getEntityManager().lock(processo, LockModeType.PESSIMISTIC_READ);
     }
-    
+
     public ParticipanteProcesso getParticipanteProcessoByPessoaProcesso(Pessoa pessoa, Processo processo){
     	Map<String, Object> params = new HashMap<>();
     	params.put(PARAM_PESSOA, pessoa);
     	params.put(PARAM_PROCESSO, processo);
     	return getNamedSingleResult(PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, params);
     }
-    
+
     public List<ParticipanteProcesso> getParticipantesByPessoaProcesso(Pessoa pessoa, Processo processo){
     	Map<String, Object> params = new HashMap<>();
     	params.put(PARAM_PESSOA, pessoa);
     	params.put(PARAM_PROCESSO, processo);
     	return getNamedResultList(PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, params);
     }
-    
+
     public List<Pessoa> getPessoasFisicasParticipantesProcesso(Processo processo){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Pessoa> query = cb.createQuery(Pessoa.class);
@@ -114,7 +115,7 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
-    public boolean existeParticipanteByPessoaProcessoPaiTipo(Pessoa pessoa, 
+    public boolean existeParticipanteByPessoaProcessoPaiTipo(Pessoa pessoa,
     		Processo processo, ParticipanteProcesso pai, TipoParte tipo){
     	Map<String, Object> params = new HashMap<>(4);
     	params.put(PARAM_PESSOA, pessoa);
@@ -127,13 +128,13 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
         	return (Long) getNamedSingleResult(EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO, params) > 0;
     	}
     }
-    
+
     public List<ParticipanteProcesso> getParticipantesProcesso(Processo processo) {
     	Map<String, Object> params = new HashMap<>();
     	params.put(PARAM_PROCESSO, processo);
     	return getNamedResultList(PARTICIPANTES_PROCESSO, params);
     }
-    
+
     public List<ParticipanteProcesso> getParticipantesProcessoRaiz(Processo processo) {
     	Map<String, Object> params = new HashMap<>();
     	params.put(PARAM_PROCESSO, processo);
@@ -147,8 +148,8 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
         params.put(PARAM_PESSOA_PARTICIPANTE_FILHO, pessoaParticipanteFilho);
         return getNamedResultList(PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO, params);
     }
-    
-    
+
+
     public List<ParticipanteProcesso> getParticipantesProcessosByPartialName(String typedName, int maxResult) {
     	Map<String, Object> params = new HashMap<>();
     	params.put(PARAM_TYPED_NAME, typedName);
@@ -174,7 +175,7 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 		query.where(predicate);
 		query.orderBy(cb.asc(participante.get(ParticipanteProcesso_.nome)));
 		query.select(participante);
-		
+
 		return getEntityManager().createQuery(query).getResultList();
 	}
 
@@ -190,10 +191,22 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 		params.put(PARAM_PROCESSO, idProcesso);
 		return getNamedResultList(PARTICIPANTE_BY_PESSOA_FETCH, params);
 	}
-	
+
 	public void inverterSituacao(ParticipanteProcesso instance, String motivo) {
 		historicoParticipanteProcessoManager.createHistorico(instance, motivo);
 		instance.setAtivo(!instance.getAtivo());
 		update(instance);
 	}
+
+    public List<ParticipanteProcesso> getParticipantesNaoCaregados(Processo processo, List<ParticipanteProcesso> participantes) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ParticipanteProcesso> query = cb.createQuery(ParticipanteProcesso.class);
+        Root<ParticipanteProcesso> participante = query.from(ParticipanteProcesso.class);
+        query.where(cb.equal(participante.get(ParticipanteProcesso_.processo), processo));
+        if (!Utils.isEmpty(participantes))
+            query.where(query.getRestriction(), cb.not(participante.in(participantes)));
+        query.orderBy(cb.asc(participante.get(ParticipanteProcesso_.caminhoAbsoluto)));
+        return getEntityManager().createQuery(query).getResultList();
+    }
+
 }
