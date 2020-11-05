@@ -29,6 +29,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
+import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
@@ -77,6 +78,8 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private PessoaFisicaDAO pessoaFisicaDAO;
     @Inject
     private PessoaJuridicaDAO pessoaJuridicaDAO;
+    @Inject
+    private FluxoDAO fluxoDAO;
     @Inject
     private MeioContatoManager meioContatoManager;
     @Inject
@@ -140,16 +143,18 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     @Setter
     private PesquisaParticipanteVO pesquisaParticipanteVO;
 
+    private Localizacao localizacao;
+    private Papel papel;
     private Map<String, ServidorContribuinteVO> mapServidorContribuinteVO;
     private Map<String, EmpresaVO> mapEmpresaVO;
 
     @PostConstruct
     private void init() {
-        Localizacao localizacao = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao();
+        localizacao = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao();
         if (localizacao == null) {
             throw new EppConfigurationException("Usuário não possui localização abaixo de estrutura");
         }
-        Papel papel = Authenticator.getPapelAtual();
+        papel = Authenticator.getPapelAtual();
         UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
         createProcesso(Authenticator.getUsuarioPerfilAtual().getLocalizacao(), usuarioLogin);
         naturezaCategoriaFluxoItemList = getNaturezaCategoriaFluxos(localizacao, papel);
@@ -458,6 +463,13 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
 
     public List<String> getListCodEstado() {
         return estadoSearch.getListCodEstado();
+    }
+
+    public List<Fluxo> getCompleteFluxo(String search) {
+        if (!StringUtil.isEmpty(search)) {
+            return fluxoDAO.getFluxosByLocalizacaoAndPapel(localizacao, papel, search);
+        }
+        return null;
     }
 
 }
