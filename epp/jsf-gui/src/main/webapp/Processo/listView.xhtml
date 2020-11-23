@@ -81,11 +81,11 @@
 								<h:outputText value="#{infoxMessages['naturezaCategoriaFluxo.fluxoFilter']}" />
 							</h:outputLabel>
 						</div>
-						<p:autoComplete id="fluxo" value="#{iniciarProcessoView.fluxo}" scrollHeight="300"
-							completeMethod="#{consultaProcessoDynamicColumnsController.getFluxos}"
+						<p:autoComplete id="fluxo" value="#{iniciarProcessoView.fluxo}" scrollHeight="500"
+							completeMethod="#{iniciarProcessoView.getCompleteFluxo}"
 							forceSelection="true" var="item" itemLabel="#{item.fluxo}" itemValue="#{item}"
 							converter="br.com.infox.jsf.converter.EntityConverter" minQueryLength="3" dropdown="true">
-							<p:ajax event="itemSelect" process="@this" update="natCatProcessoList"
+							<p:ajax event="itemSelect" process="@this" update="@this natCatProcessoList"
 								listener="#{iniciarProcessoView.onSelectFluxo()}"
 								onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
 						</p:autoComplete>

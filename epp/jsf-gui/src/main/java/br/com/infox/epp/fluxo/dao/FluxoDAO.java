@@ -30,8 +30,16 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao_;
+import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.Papel_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.FluxoPapel;
+import br.com.infox.epp.fluxo.entity.FluxoPapel_;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
+import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
+import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao_;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
@@ -50,26 +58,26 @@ public class FluxoDAO extends DAO<Fluxo> {
     public List<Fluxo> getFluxosAtivosList() {
         return getNamedResultList(LIST_ATIVOS, null);
     }
-    
+
     public List<Fluxo> getFluxosPrimariosAtivos() {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
-        
+
         Subquery<Integer> sq = cq.subquery(Integer.class);
         Root<NaturezaCategoriaFluxo> ncf = sq.from(NaturezaCategoriaFluxo.class);
         Join<NaturezaCategoriaFluxo, Fluxo> fluxo = ncf.join(NaturezaCategoriaFluxo_.fluxo);
         Path<Natureza> natureza = ncf.join(NaturezaCategoriaFluxo_.natureza);
-        
+
         sq.select(fluxo.get(Fluxo_.idFluxo));
         sq.distinct(true);
         sq.where(
         		cb.equal(fluxo.get(Fluxo_.ativo), true),
         		cb.equal(natureza.get(Natureza_.primaria), true)
 		);
-        
+
         Root<Fluxo> fluxo2 = cq.from(Fluxo.class);
         cq.where(cb.in(fluxo2.get(Fluxo_.idFluxo)).value(sq));
-        
+
         return getEntityManager().createQuery(cq).getResultList();
     }
 
@@ -93,6 +101,29 @@ public class FluxoDAO extends DAO<Fluxo> {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
+    public List<Fluxo> getFluxosByLocalizacaoAndPapel(Localizacao localizacao, Papel papel, String search) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
+        Root<Fluxo> fluxo = cq.from(Fluxo.class);
+        Join<Fluxo, FluxoPapel> fluxoPapel = fluxo.join(Fluxo_.fluxoPapelList, JoinType.INNER);
+
+        Subquery<Integer> sq = cq.subquery(Integer.class);
+        Root<NatCatFluxoLocalizacao> ncfl = sq.from(NatCatFluxoLocalizacao.class);
+        sq.select(cb.literal(1));
+        sq.where(
+           cb.equal(ncfl.get(NatCatFluxoLocalizacao_.naturezaCategoriaFluxo).get(NaturezaCategoriaFluxo_.fluxo), fluxo),
+           cb.equal(ncfl.get(NatCatFluxoLocalizacao_.localizacao).get(Localizacao_.idLocalizacao), localizacao.getIdLocalizacao())
+        );
+
+        cq.where(
+           cb.like(cb.lower(fluxo.get(Fluxo_.fluxo)), "%" + search.toLowerCase() + "%"),
+           cb.equal(fluxoPapel.get(FluxoPapel_.papel).get(Papel_.idPapel), papel.getIdPapel()),
+           cb.exists(sq)
+        );
+        cq.orderBy(cb.asc(fluxo.get(Fluxo_.fluxo)));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+
     public Long quantidadeProcessosAtrasados(Fluxo fluxo) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put(PARAM_FLUXO, fluxo);
@@ -104,7 +135,7 @@ public class FluxoDAO extends DAO<Fluxo> {
         parameters.put(PARAM_DESCRICAO, descricao);
         return getNamedSingleResult(FLUXO_BY_DESCRICACAO, parameters);
     }
-    
+
     public Fluxo getFluxoByCodigo(String codigo) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_CODIGO, codigo);
