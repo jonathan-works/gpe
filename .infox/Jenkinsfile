@@ -96,7 +96,7 @@ pipeline {
                     post {
                         success {
                             // Registra relatório com problemas encontrados na formatação de código
-                            recordIssues enabledForFailure: true, tool: checkStyle()
+                            recordIssues enabledForFailure: true, blameDisabled: true, forensicsDisabled: true, tool: checkStyle()
                             // Registra relatório com problemas encontrados sobre código duplicado
                             recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
                             // Registra relatório com problemas encontrados

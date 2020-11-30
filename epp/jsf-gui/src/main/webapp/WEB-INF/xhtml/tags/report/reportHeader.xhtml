@@ -14,9 +14,7 @@
          spacingAfter="#{wi:get(spacingAfter, '30')}">
 			<p:cell
              borderWidth="0"
-             verticalAlignment="left">
-                <p:image value="#{layoutController.getResourceAsURL('LOGO_LOGIN')}" />
-			</p:cell>
+             verticalAlignment="left" />
 			<p:cell
              borderWidth="0"
              verticalAlignment="bottom"
@@ -44,20 +42,20 @@
 						<p:font
                          size="12">
 			 				<p:paragraph
-                             alignment="center">       
+                             alignment="center">
 							       <p:text
                                  value="#{subtitle}" />
-							</p:paragraph>    
+							</p:paragraph>
 						</p:font>
 						<p:paragraph
-                         alignment="center">    
+                         alignment="center">
 							<p:font
                              size="10">
 							    <p:text
                                  value="#{nameReport}" />
 							</p:font>
 						</p:paragraph>
-					</p:cell>	 
+					</p:cell>
 			    </p:table>
 			</p:cell>
 			<p:cell
@@ -68,7 +66,7 @@
                     <p:font
                      size="7">
 	                    <p:text
-                         value="Emitido em: " />  
+                         value="Emitido em: " />
 	                    <p:text
                          value="#{currentTime}">
 							<s:convertDateTime
@@ -89,6 +87,6 @@
              borderWidthBottom="0"
              borderWidthLeft="0"
              borderWidthRight="0">
-		</p:cell>	 
+		</p:cell>
     </p:table>
 </ui:composition>
