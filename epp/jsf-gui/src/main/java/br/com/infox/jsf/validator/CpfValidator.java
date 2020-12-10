@@ -10,19 +10,24 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+import br.com.infox.core.util.StringUtil;
+
 @FacesValidator("cpfValidator")
 public class CpfValidator implements Validator {
-    
+
+    @Override
     public void validate(FacesContext context, UIComponent component, Object value) {
         try {
             String cpfValue = (String) value;
-            cpfValue = cpfValue.replaceAll("\\.", "");
-            cpfValue = cpfValue.replaceAll("-", "");
-            cpfValue = cpfValue.replaceAll("_", "");
-            Pattern p = Pattern.compile("^[0-9]{11}$");
-            Matcher m = p.matcher(cpfValue);
-            if (!m.matches() || !validarCpf(cpfValue)) {
-                throw new ValidatorException(new FacesMessage("CPF inválido"));
+            if (!StringUtil.isEmpty(cpfValue)) {
+                cpfValue = cpfValue.replaceAll("\\.", "");
+                cpfValue = cpfValue.replaceAll("-", "");
+                cpfValue = cpfValue.replaceAll("_", "");
+                Pattern p = Pattern.compile("^[0-9]{11}$");
+                Matcher m = p.matcher(cpfValue);
+                if (!m.matches() || !validarCpf(cpfValue)) {
+                    throw new ValidatorException(new FacesMessage("CPF inválido"));
+                }
             }
         } catch (Exception e) {
             throw new ValidatorException(new FacesMessage("CPF inválido"), e);
