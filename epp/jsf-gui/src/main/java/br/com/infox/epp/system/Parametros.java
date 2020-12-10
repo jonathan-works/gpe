@@ -46,7 +46,7 @@ public enum Parametros {
     TEXTO_RODAPE_DOCUMENTO(
             new ParametroDefinition<String>("sistema", "textoRodapeDocumento", FieldType.TEXT)),
     INFO_CERT_ELETRONICO_RAIZ(
-        new ParametroDefinition<String>("sistema", "infoCertificadoEletronicoRaiz", FieldType.TEXT)),
+            new ParametroDefinition<String>("sistema", "infoCertificadoEletronicoRaiz", FieldType.TEXT)),
     CERT_ELETRONICO_RAIZ("sistema", "idCertificadoEletronicoRaiz", true),
     EPP_API_RSA_PRIVATE_KEY("controleAcesso","eppApiPrivateKey", FieldType.TEXT),
     EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey", FieldType.TEXT),
@@ -62,6 +62,8 @@ public enum Parametros {
     VALIDA_ASSINATURA("digital-signature","validacaoAssinatura", FieldType.BOOLEAN),
     FOLHA_ROSTO_PROCESSO("folhaRostoProcesso"),
     FOLHA_ROSTO_MOVIMENTACOES("folhaRostoMovimentacoes"),
+    URL_WS_VIDA_FUNCIONAL_GDPREV("gdprev", "urlWSVidaFuncionalGDPrev", FieldType.STRING),
+    TOKEN_WS_VIDA_FUNCIONAL_GDPREV("gdprev", "tokenWSVidaFuncionalGDPrev", FieldType.STRING),
     ;
 
     private final String label;
