@@ -48,4 +48,14 @@
             <column name="in_ativo" valueBoolean="true" />
         </insert>
     </changeSet>
+
+    <changeSet author="gabriel" id="5" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="loginUsuarioInclusaoDocGDPrev" />
+            <column name="ds_variavel" value="parametro.loginUsuarioInclusaoDocGDPrev.descricao" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
 </databaseChangeLog>

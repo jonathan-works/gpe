@@ -1,6 +1,7 @@
 package br.com.infox.epp.system;
 
 import static br.com.infox.epp.FieldType.SELECT_ONE;
+import static br.com.infox.epp.Filter.equal;
 import static br.com.infox.epp.Filter.isTrue;
 
 import org.jboss.seam.contexts.Contexts;
@@ -8,6 +9,8 @@ import org.jboss.seam.contexts.Contexts;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.FieldType;
+import br.com.infox.epp.access.entity.UsuarioLogin_;
+import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
@@ -69,7 +72,9 @@ public enum Parametros {
     CLASSIFICACAO_DOC_PDF_GDPREV(new ParametroDefinition<>("gdprev", "codigoClassificacaoDocPdfGDPrev", FieldType.SELECT_ONE,
             ClassificacaoDocumento_.descricao, ClassificacaoDocumento_.codigoDocumento).addFilter(isTrue(ClassificacaoDocumento_.ativo))),
     TIPO_PARTE_SERVIDOR(new ParametroDefinition<>("gdprev", "codigoTipoParteServidor", FieldType.SELECT_ONE,
-            TipoParte_.descricao, TipoParte_.identificador))
+            TipoParte_.descricao, TipoParte_.identificador)),
+    USUARIO_INCLUSAO_DOC_GDPREV(new ParametroDefinition<>("gdprev", "loginUsuarioInclusaoDocGDPrev", FieldType.SELECT_ONE,
+            UsuarioLogin_.nomeUsuario, UsuarioLogin_.login).addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S)))
     ;
 
     private final String label;
