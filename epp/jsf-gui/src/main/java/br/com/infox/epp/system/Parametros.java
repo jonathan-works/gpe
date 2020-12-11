@@ -8,7 +8,9 @@ import org.jboss.seam.contexts.Contexts;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.FieldType;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
+import br.com.infox.epp.processo.partes.entity.TipoParte_;
 import br.com.infox.epp.system.parametro.ParametroDefinition;
 
 public enum Parametros {
@@ -64,6 +66,10 @@ public enum Parametros {
     FOLHA_ROSTO_MOVIMENTACOES("folhaRostoMovimentacoes"),
     URL_WS_VIDA_FUNCIONAL_GDPREV("gdprev", "urlWSVidaFuncionalGDPrev", FieldType.STRING),
     TOKEN_WS_VIDA_FUNCIONAL_GDPREV("gdprev", "tokenWSVidaFuncionalGDPrev", FieldType.STRING),
+    CLASSIFICACAO_DOC_PDF_GDPREV(new ParametroDefinition<>("gdprev", "codigoClassificacaoDocPdfGDPrev", FieldType.SELECT_ONE,
+            ClassificacaoDocumento_.descricao, ClassificacaoDocumento_.codigoDocumento).addFilter(isTrue(ClassificacaoDocumento_.ativo))),
+    TIPO_PARTE_SERVIDOR(new ParametroDefinition<>("gdprev", "codigoTipoParteServidor", FieldType.SELECT_ONE,
+            TipoParte_.descricao, TipoParte_.identificador))
     ;
 
     private final String label;

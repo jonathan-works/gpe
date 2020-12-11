@@ -28,4 +28,24 @@
             <column name="in_ativo" valueBoolean="true" />
         </insert>
     </changeSet>
+
+    <changeSet author="gabriel" id="3" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="codigoClassificacaoDocPdfGDPrev" />
+            <column name="ds_variavel" value="parametro.codigoClassificacaoDocPdfGDPrev.descricao" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="gabriel" id="4" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="codigoTipoParteServidor" />
+            <column name="ds_variavel" value="parametro.codigoTipoParteServidor.descricao" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
 </databaseChangeLog>
