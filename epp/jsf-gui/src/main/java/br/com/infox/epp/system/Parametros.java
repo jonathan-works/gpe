@@ -74,7 +74,8 @@ public enum Parametros {
     TIPO_PARTE_SERVIDOR(new ParametroDefinition<>("gdprev", "codigoTipoParteServidor", FieldType.SELECT_ONE,
             TipoParte_.descricao, TipoParte_.identificador)),
     USUARIO_INCLUSAO_DOC_GDPREV(new ParametroDefinition<>("gdprev", "loginUsuarioInclusaoDocGDPrev", FieldType.SELECT_ONE,
-            UsuarioLogin_.nomeUsuario, UsuarioLogin_.login).addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S)))
+            UsuarioLogin_.nomeUsuario, UsuarioLogin_.login).addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S))),
+    EXIBIR_AVISO_INCONSISTENCIA_PARTICIPANTE("gdprev", "exibirAvisoInconsistenciaParticipante", FieldType.BOOLEAN),
     ;
 
     private final String label;

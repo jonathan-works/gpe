@@ -69,12 +69,21 @@ public class VidaFuncionalGDPrevTaskPageController extends AbstractTaskPageContr
     private int progressoDownload;
     private DocumentoVidaFuncionalDTO documentoEmDownload;
     private DocumentoVidaFuncionalDTO documentoSelecionadoParaDownload;
+    private boolean exibirAvisoInconsistenciaParticipante;
 
     @PostConstruct
     private void init() {
         this.label = TASKPAGE_NAME;
         this.filtroVidaFuncionalGDPrev = new FiltroVidaFuncionalGDPrev();
         this.vidaFuncionalGDPrevDataModel.setIdProcesso(getProcesso().getIdProcesso());
+
+        String valorParametroAvisoInconsistenciaParticipante = Parametros.EXIBIR_AVISO_INCONSISTENCIA_PARTICIPANTE.getValue();
+        if (StringUtil.isEmpty(valorParametroAvisoInconsistenciaParticipante)) {
+            this.exibirAvisoInconsistenciaParticipante = true;
+        } else {
+            this.exibirAvisoInconsistenciaParticipante = Boolean.parseBoolean(valorParametroAvisoInconsistenciaParticipante);
+        }
+
         configurarLabelTaskPage();
         buscarTipoParteInteressadoServidor();
         buscarParticipanteInteressadoServidor();
@@ -123,7 +132,7 @@ public class VidaFuncionalGDPrevTaskPageController extends AbstractTaskPageContr
     }
 
     public String getAvisoErroInteressadoServidor() {
-        if (cpfInteressadoServidor != null) {
+        if (cpfInteressadoServidor != null || !exibirAvisoInconsistenciaParticipante) {
             return null;
         }
         if (semInteressadoServidor) {

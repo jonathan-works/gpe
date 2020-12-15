@@ -58,4 +58,15 @@
             <column name="in_ativo" valueBoolean="true" />
         </insert>
     </changeSet>
+
+    <changeSet author="gabriel" id="6" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="exibirAvisoInconsistenciaParticipante" />
+            <column name="ds_variavel" value="parametro.exibirAvisoInconsistenciaParticipante.descricao" />
+            <column name="vl_variavel" value="true" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
 </databaseChangeLog>
