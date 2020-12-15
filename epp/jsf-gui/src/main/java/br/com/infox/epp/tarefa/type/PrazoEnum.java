@@ -25,14 +25,26 @@ public enum PrazoEnum implements Displayable {
             result = MessageFormat.format("-", tempo);
         } else {
             switch (tipoPrazo) {
-                case H: {
+                case H:
                     result = MessageFormat.format("{0}h {1}m", tempo / 60, tempo % 60);
-                }
-                break;
+                    break;
                 case D:
                     result = MessageFormat.format("{0}d", tempo);
-                break;
+                    break;
             }
+        }
+        return result;
+    }
+
+    public static Integer calcPrazo(Integer prazo, PrazoEnum tipoPrazo) {
+        Integer result = 0;
+        switch (tipoPrazo) {
+            case H:
+                result = prazo*60;
+                break;
+            default:
+                result = prazo;
+                break;
         }
         return result;
     }
