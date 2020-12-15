@@ -48,6 +48,9 @@ public class VidaFuncionalGDPrevService {
         if (usuario == null) {
             throw new EppConfigurationException(String.format("O usuário com login '%s' não existe", loginUsuario));
         }
+        if (!usuario.isUsuarioSistema()) {
+            throw new EppConfigurationException(String.format("O usuário com login '%s' não é usuário de sistema", loginUsuario));
+        }
 
         DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin(documentoVidaFuncionalDTO.getDescricao(), pdf, "pdf");
         documentoBin.setIdDocumentoExterno(vidaFuncionalGDPrevSearch.gerarIdentificacaoVidaFuncionalGDPrev(documentoVidaFuncionalDTO.getId()));
