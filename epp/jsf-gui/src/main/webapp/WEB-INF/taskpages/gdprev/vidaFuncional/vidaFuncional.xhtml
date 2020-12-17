@@ -83,19 +83,19 @@
                         <h:outputText value="#{infoxMessages['vidaFuncionalGDPrev.arquivoJaBaixado']}" rendered="#{row.baixado}" />
                     </p:column>
 
-                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.cpf']}" style="text-align: center; width: 10%">
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.cpf']}" style="text-align: center;">
                         <h:outputText value="#{row.cpfServidor}" />
                     </p:column>
 
-                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.matricula']}" style="text-align: center; width: 10%">
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.matricula']}" style="text-align: center;">
                         <h:outputText value="#{row.matriculaServidor}" />
                     </p:column>
 
-                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.nome']}" style="width: 20%">
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.nome']}">
                         <h:outputText value="#{row.nomeServidor}" />
                     </p:column>
 
-                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.data']}" style="text-align: center; width: 10%">
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.data']}" style="text-align: center;">
                         <h:outputText value="#{row.data}">
                             <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
@@ -105,7 +105,7 @@
                         <h:outputText value="#{row.fonte}" />
                     </p:column>
 
-                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.descricao']}" style="width: 30%">
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.descricao']}">
                         <h:outputText value="#{row.descricao}" />
                     </p:column>
 
