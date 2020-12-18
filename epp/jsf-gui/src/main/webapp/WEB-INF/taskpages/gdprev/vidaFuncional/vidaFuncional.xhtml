@@ -117,6 +117,10 @@
         </p:outputPanel>
     </p:panel>
 
+    <h:form>
+        <ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml" />
+    </h:form>
+
     <p:dialog header="#{infoxMessages['vidaFuncionalGDPrev.progressoDownload']}" appendTo="@(body)"
         modal="true" resizable="false" fitViewport="true" closable="false"
         height="250" width="400" responsive="true" widgetVar="dialogProgressoDownload" draggable="false">
