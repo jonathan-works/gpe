@@ -1,6 +1,7 @@
 package br.com.infox.epp.system;
 
 import static br.com.infox.epp.FieldType.SELECT_ONE;
+import static br.com.infox.epp.Filter.equal;
 import static br.com.infox.epp.Filter.isTrue;
 
 import org.jboss.seam.contexts.Contexts;
@@ -8,7 +9,11 @@ import org.jboss.seam.contexts.Contexts;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.FieldType;
+import br.com.infox.epp.access.entity.UsuarioLogin_;
+import br.com.infox.epp.access.type.UsuarioEnum;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
+import br.com.infox.epp.processo.partes.entity.TipoParte_;
 import br.com.infox.epp.system.parametro.ParametroDefinition;
 
 public enum Parametros {
@@ -46,7 +51,7 @@ public enum Parametros {
     TEXTO_RODAPE_DOCUMENTO(
             new ParametroDefinition<String>("sistema", "textoRodapeDocumento", FieldType.TEXT)),
     INFO_CERT_ELETRONICO_RAIZ(
-        new ParametroDefinition<String>("sistema", "infoCertificadoEletronicoRaiz", FieldType.TEXT)),
+            new ParametroDefinition<String>("sistema", "infoCertificadoEletronicoRaiz", FieldType.TEXT)),
     CERT_ELETRONICO_RAIZ("sistema", "idCertificadoEletronicoRaiz", true),
     EPP_API_RSA_PRIVATE_KEY("controleAcesso","eppApiPrivateKey", FieldType.TEXT),
     EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey", FieldType.TEXT),
@@ -62,6 +67,15 @@ public enum Parametros {
     VALIDA_ASSINATURA("digital-signature","validacaoAssinatura", FieldType.BOOLEAN),
     FOLHA_ROSTO_PROCESSO("folhaRostoProcesso"),
     FOLHA_ROSTO_MOVIMENTACOES("folhaRostoMovimentacoes"),
+    URL_WS_VIDA_FUNCIONAL_GDPREV("gdprev", "urlWSVidaFuncionalGDPrev", FieldType.STRING),
+    TOKEN_WS_VIDA_FUNCIONAL_GDPREV("gdprev", "tokenWSVidaFuncionalGDPrev", FieldType.STRING),
+    CLASSIFICACAO_DOC_PDF_GDPREV(new ParametroDefinition<>("gdprev", "codigoClassificacaoDocPdfGDPrev", FieldType.SELECT_ONE,
+            ClassificacaoDocumento_.descricao, ClassificacaoDocumento_.codigoDocumento).addFilter(isTrue(ClassificacaoDocumento_.ativo))),
+    TIPO_PARTE_SERVIDOR(new ParametroDefinition<>("gdprev", "codigoTipoParteServidor", FieldType.SELECT_ONE,
+            TipoParte_.descricao, TipoParte_.identificador)),
+    USUARIO_INCLUSAO_DOC_GDPREV(new ParametroDefinition<>("gdprev", "loginUsuarioInclusaoDocGDPrev", FieldType.SELECT_ONE,
+            UsuarioLogin_.nomeUsuario, UsuarioLogin_.login).addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S))),
+    EXIBIR_AVISO_INCONSISTENCIA_PARTICIPANTE("gdprev", "exibirAvisoInconsistenciaParticipante", FieldType.BOOLEAN),
     ;
 
     private final String label;

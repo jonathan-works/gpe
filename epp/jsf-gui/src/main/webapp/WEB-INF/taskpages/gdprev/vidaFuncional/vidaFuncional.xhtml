@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:i="http://java.sun.com/jsf/composite/infox">
+
+    <h:form>
+        <p:poll autoStart="false" interval="2" process="@this" update="@(.dialogProgressoDownloadContent) :pageBodyDialogMessage"
+            listener="#{vidaFuncionalGDPrevTaskPageController.verificarTerminoDownload}" widgetVar="pollProgressoDownload" />
+
+        <p:confirmDialog header="#{infoxMessages['vidaFuncionalGDPrev.aviso']}" message="#{infoxMessages['vidaFuncionalGDPrev.avisoArquivoOutroParticipante']}"
+            widgetVar="confirmDialogArquivoOutroParticipante" closable="false">
+
+            <p:commandButton value="#{infoxMessages['crud.yes']}" styleClass="buttons" process="@this" update=":pageBodyDialogMessage"
+                onstart="infox.showLoading()" action="#{vidaFuncionalGDPrevTaskPageController.baixarDocumentoConfirmado}"
+                oncomplete="PF('confirmDialogArquivoOutroParticipante').hide(); PF('dialogProgressoDownload').show(); PF('pollProgressoDownload').start(); infox.hideLoading();"/>
+
+            <p:commandButton value="#{infoxMessages['crud.no']}" styleClass="buttons" process="@this" update=":pageBodyDialogMessage"
+                onstart="infox.showLoading()" oncomplete="PF('confirmDialogArquivoOutroParticipante').hide(); infox.hideLoading()"
+                action="#{vidaFuncionalGDPrevTaskPageController.removerSelecaoDocumento}"/>
+        </p:confirmDialog>
+    </h:form>
+
+    <p:panel header="#{vidaFuncionalGDPrevTaskPageController.label}">
+        <p:outputPanel layout="block" style="margin-bottom: 10px; background-color: #FFE399; padding: 10px"
+            rendered="#{not empty vidaFuncionalGDPrevTaskPageController.avisoErroInteressadoServidor}">
+            <h:outputText value="#{vidaFuncionalGDPrevTaskPageController.avisoErroInteressadoServidor}" />
+        </p:outputPanel>
+
+        <fieldset>
+            <legend>#{infoxMessages['vidaFuncionalGDPrev.buscar']}</legend>
+            <h:form>
+                <wi:field id="nome" label="#{infoxMessages['vidaFuncionalGDPrev.nome']}">
+                    <h:inputText id="nomeInput" value="#{vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.nome}" />
+                </wi:field>
+
+                <wi:inputCpf id="cpf" label="#{infoxMessages['vidaFuncionalGDPrev.cpf']}"
+                    value="#{vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.cpf}"/>
+
+                <wi:inputNumber id="matricula" label="#{infoxMessages['vidaFuncionalGDPrev.matricula']}"
+                    onkeyup="onlyPositiveNumber(this)"
+                    value="#{vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.matricula}"/>
+
+                <div>
+                    <p:commandButton value="#{infoxMessages['vidaFuncionalGDPrev.buscar']}" process="@form"
+                        update="@form @(.vidaFuncionalTable) :pageBodyDialogMessage"
+                        action="#{vidaFuncionalGDPrevTaskPageController.buscarDocumentos}" styleClass="buttons"
+                        onstart="infox.showLoading()" oncomplete="infox.hideLoading()"/>
+                </div>
+            </h:form>
+        </fieldset>
+
+        <p:outputPanel styleClass="vidaFuncionalTable" layout="block" style="margin-top: 10px">
+            <h:form>
+                <p:dataTable var="row" lazy="true" value="#{vidaFuncionalGDPrevDataModel}" binding="#{vidaFuncionalGDPrevDataModel.dataTable}"
+                    paginator="true" paginatorAlwaysVisible="true" paginatorPosition="both" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
+                    rows="20" rendered="#{not vidaFuncionalGDPrevDataModel.filtroVidaFuncionalGDPrev.isEmpty()}">
+
+                    <p:ajax event="page" onstart="infox.showLoading()" oncomplete="infox.hideLoading()" />
+
+                    <p:column style="width: 75px; text-align: center">
+                        <ui:fragment rendered="#{not row.baixado}">
+                            <p:commandButton value="#{infoxMessages['vidaFuncionalGDPrev.baixar']}" process="@this"
+                                update=":pageBodyDialogMessage" styleClass="buttons"
+                                action="#{vidaFuncionalGDPrevTaskPageController.baixarDocumento(row)}"
+                                onstart="infox.showLoading()" rendered="#{not vidaFuncionalGDPrevTaskPageController.isDownloadExigeConfirmacao(row)}"
+                                oncomplete="PF('dialogProgressoDownload').show(); PF('pollProgressoDownload').start(); infox.hideLoading();"/>
+
+                            <p:commandButton value="#{infoxMessages['vidaFuncionalGDPrev.baixar']}" process="@this"
+                                update=":pageBodyDialogMessage" styleClass="buttons"
+                                action="#{vidaFuncionalGDPrevTaskPageController.selecionarDocumento(row)}"
+                                onstart="infox.showLoading()" rendered="#{vidaFuncionalGDPrevTaskPageController.isDownloadExigeConfirmacao(row)}"
+                                oncomplete="PF('confirmDialogArquivoOutroParticipante').show(); infox.hideLoading();"/>
+                        </ui:fragment>
+
+                        <h:outputText value="#{infoxMessages['vidaFuncionalGDPrev.arquivoJaBaixado']}" rendered="#{row.baixado}" />
+                    </p:column>
+
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.cpf']}" style="text-align: center;">
+                        <h:outputText value="#{row.cpfServidor}" />
+                    </p:column>
+
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.matricula']}" style="text-align: center;">
+                        <h:outputText value="#{row.matriculaServidor}" />
+                    </p:column>
+
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.nome']}">
+                        <h:outputText value="#{row.nomeServidor}" />
+                    </p:column>
+
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.data']}" style="text-align: center;">
+                        <h:outputText value="#{row.data}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.fonte']}">
+                        <h:outputText value="#{row.fonte}" />
+                    </p:column>
+
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.descricao']}">
+                        <h:outputText value="#{row.descricao}" />
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <i:datatableRowCount rowCount="#{vidaFuncionalGDPrevDataModel.rowCount}" />
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+        </p:outputPanel>
+    </p:panel>
+
+    <h:form>
+        <ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml" />
+    </h:form>
+
+    <p:dialog header="#{infoxMessages['vidaFuncionalGDPrev.progressoDownload']}" appendTo="@(body)"
+        modal="true" resizable="false" fitViewport="true" closable="false"
+        height="250" width="400" responsive="true" widgetVar="dialogProgressoDownload" draggable="false">
+
+        <p:outputPanel layout="block" styleClass="dialogProgressoDownloadContent">
+            <p:progressBar ajax="false" value="#{vidaFuncionalGDPrevTaskPageController.progressoDownload}" labelTemplate="{value}%"/>
+        </p:outputPanel>
+
+    </p:dialog>
+</ui:composition>
