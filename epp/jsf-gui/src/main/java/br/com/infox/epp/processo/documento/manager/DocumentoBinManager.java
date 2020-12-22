@@ -189,7 +189,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         			right = top;
         			top = tempRight;
         		}
-        		if(bottom) {
+        		if(!bottom) {
         		    image.setAbsolutePosition(0, 0);
                     content.addImage(image);
                     ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, codPhrase, 52, 12, 0);
