@@ -368,13 +368,13 @@ public class AssinadorRenderer extends Renderer {
     }
 
     private boolean podeExibirAssinadorToken(Assinador button) {
-        return button.getAssinavelProvider().getAssinaveis().stream().map(AssinavelSource::getTipoMeioAssinatura)
+        return button.getAssinavelProvider() != null && button.getAssinavelProvider().getAssinaveis().stream().map(AssinavelSource::getTipoMeioAssinatura)
                 .anyMatch(tipo -> tipo == null || TipoMeioAssinaturaEnum.T.equals(tipo));
     }
 
     private boolean podeExibirAssinadorEletronico(Assinador button) {
         return button.getRenderedAssinaturaEletronica()
-                && button.getAssinavelProvider().getAssinaveis().stream().map(AssinavelSource::getTipoMeioAssinatura)
+                && button.getAssinavelProvider() != null && button.getAssinavelProvider().getAssinaveis().stream().map(AssinavelSource::getTipoMeioAssinatura)
                         .anyMatch(tipo -> tipo == null || TipoMeioAssinaturaEnum.E.equals(tipo));
     }
 }
