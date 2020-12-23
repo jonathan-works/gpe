@@ -41,7 +41,6 @@ public class EppParametroProvider implements ParametroProvider {
         initParametrosAnaliseDocumento();
         initParametrosExecFluxo();
         initParametrosSistema();
-        initParametrsoLog();
         initParametrosWSProcesso();
         create("consultaExterna", "ativaConsultaExternaPadrao", FieldType.BOOLEAN);
     }
@@ -109,13 +108,6 @@ public class EppParametroProvider implements ParametroProvider {
         create(NOME_GRUPO_SISTEMA, "tituloModeloEmailMudancaSenhaComLogin", ModeloDocumento_.tituloModeloDocumento,
                 ModeloDocumento_.tituloModeloDocumento).addFilter(isTrue(ModeloDocumento_.ativo));
         create(NOME_GRUPO_SISTEMA, Parametros.CODIGO_UF_SISTEMA.getLabel(), FieldType.STRING);
-    }
-
-    private void initParametrsoLog() {
-        create("envioLog", "codigoClienteEnvioLog", FieldType.STRING);
-        create("envioLog", "passwordClienteEnvioLog", FieldType.STRING);
-        create("envioLog", "ativarServicoEnvioLogAutomatico", FieldType.BOOLEAN);
-        create("envioLog", "urlServicoEnvioLogErro", FieldType.STRING);
     }
 
     public <T> ParametroDefinition<T> create(String grupo, String nome, SingularAttribute<T, ?> keyAttribute,
