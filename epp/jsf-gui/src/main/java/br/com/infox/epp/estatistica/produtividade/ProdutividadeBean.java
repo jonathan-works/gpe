@@ -21,19 +21,19 @@ public class ProdutividadeBean implements Serializable {
             String papel, String usuario, String tarefa,
             Double mediaTempoGasto, Integer minimoTempoGasto,
             Integer maximoTempoGasto, Long quantidadeTarefas, PrazoEnum tipoPrazo) {
-       
+
         this.localizacao = localizacao;
         this.papel = papel;
         this.usuario = usuario;
         this.tarefa = tarefa;
         this.quantidadeTarefas = quantidadeTarefas;
-        
+
         this.maximoTempoGasto = PrazoEnum.formatTempo(maximoTempoGasto, tipoPrazo);
         this.mediaTempoGasto = PrazoEnum.formatTempo(mediaTempoGasto.intValue(), tipoPrazo);
         this.minimoTempoGasto = PrazoEnum.formatTempo(minimoTempoGasto, tipoPrazo);
-        
+
         if (prazo != null) {
-            prazo *= 60;
+            prazo = PrazoEnum.calcPrazo(prazo, tipoPrazo);
         }
         this.tempoPrevisto = PrazoEnum.formatTempo(prazo, tipoPrazo);
     }
