@@ -11,13 +11,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-	<ui:define name="title">Consulta Log de Erro</ui:define>
-
+	<ui:define name="title">#{infoxMessages['consultaEntidadeLogErro.titulo']}</ui:define>
 	<ui:define name="body">
-	
-		<wi:panel id="logErroPanel" styleClass="content-block">
+		<wi:panel id="logErroPanel" styleClass="content-block" style="margin-right: -10px;">
 
-			<wi:dataTable values="#{consultaLogErroList.list(15)}" bean="#{consultaLogErroList}" tableTitle="Log de Erro"
+			<wi:dataTable values="#{consultaLogErroList.list(15)}" bean="#{consultaLogErroList}" tableTitle="#{infoxMessages['consultaEntidadeLogErroGrid.titulo']}"
 				id="consultaLogErroListTable">
 				
 				<ui:define name="searchForm">
@@ -25,50 +23,31 @@
 					<wi:searchForm formId="pesquisarLogErroForm" formTitle="#{infoxMessages['searchForm.title']}" 
 						searchAction="#{bean.refresh()}">
 						
-						<wi:inputText id="codigo" value="#{bean.codigo}" label="Código" />
+						<wi:inputText id="codigo" value="#{bean.codigo}" label="#{infoxMessages['consultaEntidadeLogErro.codigo']}" />
 						
-						<wi:inputText id="instancia" value="#{bean.instancia}" label="Instância" />
+						<wi:inputText id="instancia" value="#{bean.instancia}" label="#{infoxMessages['consultaEntidadeLogErro.instancia']}" />
 						
-						<wi:inputDataPeriodo id="periodo" label="Data da Ocorrência" valueDateFrom="#{bean.dataInicio}"
+						<wi:inputDataPeriodo id="periodo" label="#{infoxMessages['consultaEntidadeLogErro.dataOcorrencia']}" valueDateFrom="#{bean.dataInicio}"
 							valueDateTo="#{bean.dataFim}" validatePastDateFrom="true" validatePastDateTo="true" 
 							pattern="dd/MM/yyyy HH:mm" maskDate="99/99/9999 99:99"/>
 							
-						<wi:selectOneMenuEnum id="status" items="#{bean.statusList}"
-							value="#{bean.status}" label="Status do Envio" noSelectionLabel="#{infoxMessages['crud.select.all']}" />
-
 					</wi:searchForm>
 					
 				</ui:define>
 
 				<ui:define name="headerToolBar">
-					<h:form>
-						<a:commandLink rendered="#{row.status ne 'ENVIADO'}" render="consultaLogErroListTable, pageBodyDialogMessage" 
-							execute="@this"	action="#{consultaLogErroList.sendAll}">
-							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}" title="Enviar Todos"/>
-						</a:commandLink>
-					</h:form>
 				</ui:define>
 				
 				<ui:define name="toolBar">
-					<h:form>
-						<a:commandLink rendered="#{row.status ne 'ENVIADO'}" render="consultaLogErroListTable, pageBodyDialogMessage" 
-							execute="@this"	action="#{consultaLogErroList.send(row)}">
-							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}" title="Enviar"/>
-						</a:commandLink>
-					</h:form>
 				</ui:define>
 
-				<wi:columnOutputText columnId="codigo" columnHeader="Codigo" value="#{row.codigo}" />
+				<wi:columnOutputText columnId="codigo" columnHeader="#{infoxMessages['consultaEntidadeLogErro.codigo']}" value="#{row.codigo}" />
 					
-				<wi:columnOutputText columnId="instancia" columnHeader="Instância" value="#{row.instancia}" />
+				<wi:columnOutputText columnId="instancia" columnHeader="#{infoxMessages['consultaEntidadeLogErro.instancia']}" value="#{row.instancia}" />
 					
-				<wi:columnDateTime columnId="data" columnHeader="Data" value="#{row.data}" pattern="dd/MM/yyyy kk:mm" />
+				<wi:columnDateTime columnId="data" columnHeader="#{infoxMessages['consultaEntidadeLogErro.data']}" value="#{row.data}" pattern="dd/MM/yyyy kk:mm" />
 				
-				<wi:columnDateTime columnId="dataEnvio" columnHeader="Data do Envio" value="#{row.dataEnvio}" pattern="dd/MM/yyyy kk:mm" />
-					
-				<wi:columnOutputText columnId="status" columnHeader="Status do Envio" value="#{row.status.label}" />
-				
-				<wi:column columnId="stackTrace" columnHeader="StackTrace" hideOrder="true" styleColumn="width: 30%">
+				<wi:column columnId="stackTrace" columnHeader="#{infoxMessages['consultaEntidadeLogErro.stackTrace']}" hideOrder="true" styleColumn="width: 30%">
 					<h:outputText value="#{row.stacktrace.length() > 200 ? row.stacktrace.substring(0, 199).concat(' ...') : row.stacktrace}" />
 					<h:form style="display: inline-block;">
 						<a:commandLink oncomplete="#{rich:component('stacktraceModal')}.show();"
