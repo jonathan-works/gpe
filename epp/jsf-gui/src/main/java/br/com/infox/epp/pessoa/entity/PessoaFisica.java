@@ -34,7 +34,6 @@ import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronico;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.hibernate.util.HibernateUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -150,37 +149,6 @@ public class PessoaFisica extends Pessoa {
     @Transient
     public String getDataFormatada() {
         return dataNascimento == null ? "" : DateFormat.getDateInstance().format(dataNascimento);
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getCpf() == null) ? 0 : getCpf().hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        obj = HibernateUtil.removeProxy(obj);
-        if (!(obj instanceof PessoaFisica)) {
-            return false;
-        }
-        PessoaFisica other = (PessoaFisica) obj;
-        if (getCpf() == null) {
-            if (other.getCpf() != null) {
-                return false;
-            }
-        } else if (!getCpf().equals(other.getCpf())) {
-            return false;
-        }
-        return true;
     }
 
     @Override

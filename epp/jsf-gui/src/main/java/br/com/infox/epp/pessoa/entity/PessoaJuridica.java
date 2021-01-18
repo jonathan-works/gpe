@@ -3,8 +3,6 @@ package br.com.infox.epp.pessoa.entity;
 import static br.com.infox.epp.pessoa.query.PessoaJuridicaQuery.SEARCH_BY_CNPJ;
 import static br.com.infox.epp.pessoa.query.PessoaJuridicaQuery.SEARCH_BY_CNPJ_QUERY;
 
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -17,7 +15,6 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
-import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
 @Table(name = PessoaJuridica.TABLE_NAME)
@@ -65,33 +62,6 @@ public class PessoaJuridica extends Pessoa {
 
     public void setRazaoSocial(String razaoSocial) {
         this.razaoSocial = razaoSocial;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((cnpj == null) ? 0 : cnpj.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        obj = HibernateUtil.removeProxy(obj);
-        if (!(obj instanceof PessoaJuridica)) {
-            return false;
-        }
-        PessoaJuridica other = (PessoaJuridica) obj;
-        if (!Objects.equals(cnpj, other.cnpj)) {
-            return false;
-        }
-        return true;
     }
 
     @Override
