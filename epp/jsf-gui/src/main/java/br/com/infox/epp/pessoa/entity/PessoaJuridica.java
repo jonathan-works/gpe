@@ -3,6 +3,8 @@ package br.com.infox.epp.pessoa.entity;
 import static br.com.infox.epp.pessoa.query.PessoaJuridicaQuery.SEARCH_BY_CNPJ;
 import static br.com.infox.epp.pessoa.query.PessoaJuridicaQuery.SEARCH_BY_CNPJ_QUERY;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -31,7 +33,7 @@ public class PessoaJuridica extends Pessoa {
     @Size(max = LengthConstants.NUMERO_RAZAO_SOCIAL)
     @Column(name = "nr_cnpj", nullable = false, unique = true, length = LengthConstants.NUMERO_RAZAO_SOCIAL)
     private String cnpj;
-    
+
     @NotNull
     @Size(max = LengthConstants.NOME_PADRAO)
     @Column(name = "nm_razao_social", nullable = false, length = LengthConstants.NOME_PADRAO)
@@ -40,7 +42,7 @@ public class PessoaJuridica extends Pessoa {
     public PessoaJuridica() {
         setTipoPessoa(TipoPessoaEnum.J);
     }
-    
+
     public PessoaJuridica(String cnpj, String razaoSocial, String nome, Boolean ativo) {
         super();
         setNome(nome);
@@ -81,16 +83,12 @@ public class PessoaJuridica extends Pessoa {
         if (obj == null) {
             return false;
         }
-        obj = HibernateUtil.removeProxy(obj);        
+        obj = HibernateUtil.removeProxy(obj);
         if (!(obj instanceof PessoaJuridica)) {
             return false;
         }
         PessoaJuridica other = (PessoaJuridica) obj;
-        if (cnpj == null) {
-            if (other.cnpj != null) {
-                return false;
-            }
-        } else if (!cnpj.equals(other.cnpj)) {
+        if (!Objects.equals(cnpj, other.cnpj)) {
             return false;
         }
         return true;

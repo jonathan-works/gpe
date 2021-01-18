@@ -42,7 +42,7 @@ import lombok.Setter;
 @Table(name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
 @PrimaryKeyJoinColumn(name = "id_pessoa_fisica", columnDefinition = "integer")
 @NamedQueries({
-	@NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY)
+    @NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY)
 })
 public class PessoaFisica extends Pessoa {
 
@@ -94,9 +94,9 @@ public class PessoaFisica extends Pessoa {
     @PrePersist
     @PreUpdate
     private void prePersistOrUpdate(){
-    	if (estadoCivil == null){
-    		estadoCivil = EstadoCivilEnum.N;
-    	}
+        if (estadoCivil == null){
+            estadoCivil = EstadoCivilEnum.N;
+        }
     }
 
     public String getCpf() {
@@ -131,23 +131,23 @@ public class PessoaFisica extends Pessoa {
         this.termoAdesao = termoAdesao;
     }
 
-	public EstadoCivilEnum getEstadoCivil() {
-		return estadoCivil;
-	}
+    public EstadoCivilEnum getEstadoCivil() {
+        return estadoCivil;
+    }
 
-	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
-		this.estadoCivil = estadoCivil;
-	}
+    public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
+        this.estadoCivil = estadoCivil;
+    }
 
-	public UsuarioLogin getUsuarioLogin() {
-		return usuarioLogin;
-	}
+    public UsuarioLogin getUsuarioLogin() {
+        return usuarioLogin;
+    }
 
-	public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
-		this.usuarioLogin = usuarioLogin;
-	}
+    public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
+        this.usuarioLogin = usuarioLogin;
+    }
 
-	@Transient
+    @Transient
     public String getDataFormatada() {
         return dataNascimento == null ? "" : DateFormat.getDateInstance().format(dataNascimento);
     }
