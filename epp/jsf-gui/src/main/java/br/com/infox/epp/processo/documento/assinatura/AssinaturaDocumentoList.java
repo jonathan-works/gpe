@@ -9,6 +9,7 @@ import javax.inject.Named;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
 
 @Named
@@ -19,14 +20,14 @@ public class AssinaturaDocumentoList extends EntityList<AssinaturaDocumento> {
     private static final String DEFAULT_EJBQL = "select o from AssinaturaDocumento o";
     private static final long serialVersionUID = 1L;
     private static final Map<String, String> ORDER_MAP;
-    
+
     static{
         Map<String, String> order = new HashMap<>();
         order.put("dataAssinatura", "o."+AssinaturaDocumento_.dataAssinatura.getName());
         order.put("nomeArquivo", "o."+AssinaturaDocumento_.documentoBin.getName()+"."+DocumentoBin_.nomeArquivo.getName());
         ORDER_MAP = Collections.unmodifiableMap(order);
     }
-    
+
     @Override
     protected void addSearchFields() {
         addSearchField("pessoaFisica", SearchCriteria.IGUAL);
@@ -48,4 +49,11 @@ public class AssinaturaDocumentoList extends EntityList<AssinaturaDocumento> {
         return ORDER_MAP;
     }
 
+    public void setFiltroPessoaFisica(Integer idPessoaFisica) {
+        if (idPessoaFisica != null) {
+            getEntity().setPessoaFisica(getEntityManager().find(PessoaFisica.class, idPessoaFisica));
+        } else {
+            getEntity().setPessoaFisica(null);
+        }
+    }
 }

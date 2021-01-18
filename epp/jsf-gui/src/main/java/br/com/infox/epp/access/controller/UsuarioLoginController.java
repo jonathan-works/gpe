@@ -83,7 +83,11 @@ public class UsuarioLoginController extends AbstractController {
     }
 
     public void onClickAssinaturaTab() {
-        assinaturaDocumentoList.getEntity().setPessoaFisica(getInstance().getPessoaFisica());
+        if (getInstance().getPessoaFisica() != null) {
+            assinaturaDocumentoList.setFiltroPessoaFisica(getInstance().getPessoaFisica().getIdPessoa());
+        } else {
+            assinaturaDocumentoList.setFiltroPessoaFisica(null);
+        }
     }
 
     public UsuarioLogin getInstance() {
