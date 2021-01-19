@@ -452,12 +452,17 @@
       title="#{infoxMessages['usuario.assinaturaDocumento']}"
       name="usuarioAssinaturaDocumento"
       action="#{usuarioLoginController.onClickAssinaturaTab()}">
+
+      <h:outputText value="O usuário não possui pessoa física associada." style="font-weight'': bolder; font-size: 1.5em;"
+        rendered="#{empty usuarioLoginController.instance.pessoaFisica}"/>
+
       <wi:dataTable
         values="#{assinaturaDocumentoList.list(15)}"
         bean="#{assinaturaDocumentoList}"
         tableTitle="#{infoxMessages['assinaturaDocumentoList.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
         id="assinaturaDocumentoList"
         rowId="#{row.idAssinatura}"
+        showGrid="#{not empty usuarioLoginController.instance.pessoaFisica}"
         panelStyleClass="full-sized short-margin-top">
         <ui:define name="headerToolBar"></ui:define>
         <ui:define name="toolBar">
