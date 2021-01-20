@@ -76,7 +76,7 @@ public enum Parametros {
     USUARIO_INCLUSAO_DOC_GDPREV(new ParametroDefinition<>("gdprev", "loginUsuarioInclusaoDocGDPrev", FieldType.SELECT_ONE,
             UsuarioLogin_.nomeUsuario, UsuarioLogin_.login).addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S))),
     EXIBIR_AVISO_INCONSISTENCIA_PARTICIPANTE("gdprev", "exibirAvisoInconsistenciaParticipante", FieldType.BOOLEAN),
-    ;
+    URL_ACESSO_PROCESSOS_LEGADOS("sistema", "urlAcessoProcessosLegados", FieldType.STRING);
 
     private final String label;
     private final ParametroDefinition<?> parametroDefinition;

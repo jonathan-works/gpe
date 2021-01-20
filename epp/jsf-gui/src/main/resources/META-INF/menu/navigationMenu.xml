@@ -6,6 +6,7 @@
     <item xsi:type="Submenu" label="menu.processo">
         <item xsi:type="MenuItem" label="processo.iniciarMenuText" url="/Processo/listView.xhtml"/>
         <item xsi:type="MenuItem" label="processo.consultarMenuText" url="/Processo/Consulta/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="processo.processosLegadosMenuText" url="/Processo/ProcessoLegado/listView.xhtml"/>
     </item>
     <item xsi:type="Submenu" label="menu.administracao">
         <item xsi:type="Submenu" label="menu.contAcesso">
@@ -54,7 +55,7 @@
         <item xsi:type="MenuItem" label="quartzJobsInfo.menuText" url="/quartzJobsInfo.xhtml"/>
         <item xsi:type="MenuItem" label="layout.menuText" url="/layout.xhtml"/>
         <item xsi:type="MenuItem" label="meioExpedicao.menuText" url="/MeioExpedicao/listView.xhtml"/>
-    	<item xsi:type="MenuItem" label="certificadoEletronico.titlePage" url="/CertificadoEletronico/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="certificadoEletronico.titlePage" url="/CertificadoEletronico/listView.xhtml"/>
     </item>
     <item xsi:type="Submenu" label="menu.controle">
         <item xsi:type="MenuItem" label="bam.menuText" url="/BAM/listView.xhtml"/>

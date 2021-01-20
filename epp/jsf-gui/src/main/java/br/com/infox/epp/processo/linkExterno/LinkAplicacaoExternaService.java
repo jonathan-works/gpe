@@ -33,11 +33,11 @@ import br.com.infox.security.rsa.RSAUtil;
 public class LinkAplicacaoExternaService {
 
     private static final LogProvider LOG = Logging.getLogProvider(LinkAplicacaoExternaService.class);
-    
-	@Inject
+
+    @Inject
     @GenericDao
     private Dao<LinkAplicacaoExterna, Integer> dao;
-    
+
     public LinkAplicacaoExterna findById(Integer id) {
         return dao.findById(id);
     }
@@ -57,21 +57,25 @@ public class LinkAplicacaoExternaService {
         entity.setAtivo(Boolean.FALSE);
         dao.update(entity);
     }
-    
+
     String appendQueriesToUrl(String urlString, Collection<Entry<String,String>> queries){
         return new UrlBuilder(urlString).queries(queries).build();
     }
-    
+
     public String appendJWTTokenToUrlQuery(LinkAplicacaoExterna linkAplicacaoExterna, Collection<Entry<JWTClaim,Object>> claims){
+        return appendJWTTokenToUrlQuery(linkAplicacaoExterna.getUrl(), claims);
+    }
+
+    public String appendJWTTokenToUrlQuery(String url, Collection<Entry<JWTClaim,Object>> claims){
         try {
-        	String jwtToken = generateTokenFor(claims);
-        	return new UrlBuilder(linkAplicacaoExterna.getUrl()).query("epp.auth.jwt", jwtToken).build();
+            String jwtToken = generateTokenFor(claims);
+            return new UrlBuilder(url).query("epp.auth.jwt", jwtToken).build();
         } catch (SystemException e){
-        	if (e.getErrorCode() instanceof RSAErrorCodes){
-        		LOG.warn("Erro ao gerar token JWT", e);
-        		return new UrlBuilder(linkAplicacaoExterna.getUrl()).build();
-        	}
-        	throw e;
+            if (e.getErrorCode() instanceof RSAErrorCodes){
+                LOG.warn("Erro ao gerar token JWT", e);
+                return new UrlBuilder(url).build();
+            }
+            throw e;
         }
     }
 
@@ -83,11 +87,11 @@ public class LinkAplicacaoExternaService {
         }
         return RSAUtil.getPrivateKeyFromBase64(base64RsaKey).getEncoded();
     }
-    
+
     String generateTokenFor(Collection<Entry<JWTClaim, Object>> claims) {
         JWTBuilder jwtBuilder = JWT.builder();
         DateTime issuedDate = new DateTime();
-        
+
         jwtBuilder.addClaim(JWTRegisteredClaims.ISSUER, Beans.getReference(PathResolver.class).getUrlProject());
         String string = "uid";
         jwtBuilder.addClaim(JWTRegisteredClaims.JWT_ID, string);
@@ -100,5 +104,5 @@ public class LinkAplicacaoExternaService {
         }
         return jwtBuilder.build();
     }
-    
+
 }
