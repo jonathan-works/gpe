@@ -51,6 +51,7 @@ import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.assinador.AssinadorService;
@@ -438,7 +439,10 @@ public class TaskInstanceHome implements Serializable {
             documento = new Documento();
             documento.setDocumentoBin(new DocumentoBin());
         } else {
-            if (documento.getClassificacaoDocumento() != null) {
+            if (documento.getClassificacaoDocumento() != null
+                    && documento.getDocumentoBin() != null
+                    && !StringUtil.isEmpty(documento.getDocumentoBin().getModeloDocumento())
+            ){
                 createVariableEditor(documento, variableAccess);
             }
         }
