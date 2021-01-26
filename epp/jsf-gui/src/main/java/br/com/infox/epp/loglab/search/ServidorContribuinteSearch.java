@@ -177,11 +177,11 @@ public class ServidorContribuinteSearch extends PersistenceController {
         servidor.setCargoCarreira(dadosServidorResponseBean.getCargoCarreira());
         servidor.setCargoComissao(dadosServidorResponseBean.getCargoComissao());
         servidor.setCpf(dadosServidorResponseBean.getCpf());
-        servidor.setDataEmissaoRg(DateUtil.parseDate(dadosServidorResponseBean.getServidorRGEmissao(), "dd-MM-yyyy"));
-        servidor.setDataExercicio(DateUtil.parseDate(dadosServidorResponseBean.getDataExercicio(), "dd-MM-yyyy"));
-        servidor.setDataNascimento(DateUtil.parseDate(dadosServidorResponseBean.getServidorDataNascimento(), "dd-MM-yyyy"));
-        servidor.setDataNomeacao(DateUtil.parseDate(dadosServidorResponseBean.getDataNomeacaoContratacao(), "dd-MM-yyyy"));
-        servidor.setDataPosse(DateUtil.parseDate(dadosServidorResponseBean.getDataPosse(), "dd-MM-yyyy"));
+        servidor.setDataEmissaoRg(DateUtil.parseDate(dadosServidorResponseBean.getServidorRGEmissao(), "dd/MM/yyyy"));
+        servidor.setDataExercicio(DateUtil.parseDate(dadosServidorResponseBean.getDataExercicio(), "dd/MM/yyyy"));
+        servidor.setDataNascimento(DateUtil.parseDate(dadosServidorResponseBean.getServidorDataNascimento(), "dd/MM/yyyy"));
+        servidor.setDataNomeacao(DateUtil.parseDate(dadosServidorResponseBean.getDataNomeacaoContratacao(), "dd/MM/yyyy"));
+        servidor.setDataPosse(DateUtil.parseDate(dadosServidorResponseBean.getDataPosse(), "dd/MM/yyyy"));
         servidor.setLocalTrabalho(dadosServidorResponseBean.getLocalTrabalho());
         servidor.setJornada(dadosServidorResponseBean.getJornada());
         servidor.setNomeMae(dadosServidorResponseBean.getServidorFiliacaoMae());
