@@ -330,11 +330,11 @@ public class Processo implements Serializable, Recursive<Processo> {
 
     public Float getPorcentagem(){
         float tGastoFloat = Optional.ofNullable(getTempoGasto()).map(Integer::floatValue).orElse(0f);
-        Integer qtPrazo = Optional.ofNullable(getNaturezaCategoriaFluxo())
+        return Optional.ofNullable(getNaturezaCategoriaFluxo())
                 .map(NaturezaCategoriaFluxo::getFluxo)
                 .map(Fluxo::getQtPrazo)
-                .orElse(1);
-        return tGastoFloat/qtPrazo;
+                .map(qtPrazo-> tGastoFloat/qtPrazo)
+                .orElse(0f);
     }
 
     public PrioridadeProcesso getPrioridadeProcesso() {
