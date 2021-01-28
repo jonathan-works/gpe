@@ -28,7 +28,7 @@ public class SecurityUtil implements Serializable {
     public static final String NAME = "security";
     public static final String PAGES_PREFIX = "/pages";
     private static final LogProvider LOG = Logging.getLogProvider(SecurityUtil.class);
-    
+
     private Map<String, Boolean> permissions = new ConcurrentHashMap<>();
 
     public boolean checkPage(String page) {
@@ -44,25 +44,25 @@ public class SecurityUtil implements Serializable {
         }
         boolean hasPermission = permissions.get(page);
         if (!hasPermission) {
-            LOG.info(MessageFormat.format("Bloqueado o acesso do perfil ''{0}'' para o recurso ''{1}''.", getIdentificadorPapelAtual(), page));
+            LOG.debug(MessageFormat.format("Bloqueado o acesso do perfil ''{0}'' para o recurso ''{1}''.", getIdentificadorPapelAtual(), page));
         }
         return hasPermission;
     }
-    
+
     public boolean isPermitted(String resource) {
         return checkPage(resource);
     }
-    
+
     public boolean checkPage() {
         HttpServletRequest request = ServletContexts.instance().getRequest();
         String servletPath = request.getServletPath();
         return checkPage(PAGES_PREFIX + servletPath);
     }
-    
+
     public boolean hasRole(String roleName) {
-    	return isSessionContextActive() && Identity.instance().hasRole(roleName);
+        return isSessionContextActive() && Identity.instance().hasRole(roleName);
     }
-    
+
     public void clearPermissionCache() {
         permissions = new HashMap<>();
     }
@@ -70,16 +70,16 @@ public class SecurityUtil implements Serializable {
     public boolean isLoggedIn() {
         return isSessionContextActive() && Identity.instance().isLoggedIn();
     }
-    
+
     protected String getIdentificadorPapelAtual() {
         Papel papelAtual = Authenticator.getPapelAtual();
         return papelAtual != null ? papelAtual.getIdentificador() : "";
     }
-    
+
     public boolean isSessionContextActive() {
         return Beans.isActive(SessionScoped.class);
     }
-    
+
     public static SecurityUtil instance() {
         return Beans.getReference(SecurityUtil.class);
     }
