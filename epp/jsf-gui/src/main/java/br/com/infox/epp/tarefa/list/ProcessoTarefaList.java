@@ -3,6 +3,7 @@ package br.com.infox.epp.tarefa.list;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -53,7 +54,7 @@ public class ProcessoTarefaList extends EntityList<ProcessoTarefa> {
     }
 
     public String rowClasses() {
-        List<Object> classes = new ArrayList<Object>();
+        List<Object> classes = new ArrayList<>();
         for (ProcessoTarefa row : list(LIMITE_PADRAO)) {
             if (row.getPorcentagem() != null
                     && row.getPorcentagem() > PORCENTAGEM) {
@@ -64,10 +65,10 @@ public class ProcessoTarefaList extends EntityList<ProcessoTarefa> {
         }
         return StringUtil.concatList(classes, ",");
     }
-    
+
     public MeterGaugeChartModel getMeterTempoGastoDesdeInicioProcesso(){
         MeterGaugeChartModel gauge = new MeterGaugeChartModel();
-        gauge.setValue(getEntity().getProcesso().getTempoGasto());
+        gauge.setValue(Optional.ofNullable(getEntity().getProcesso().getTempoGasto()).orElse(0));
         gauge.setMin(0);
         Fluxo fluxo = getEntity().getProcesso().getNaturezaCategoriaFluxo().getFluxo();
         gauge.setMax(fluxo.getQtPrazo());
@@ -76,5 +77,5 @@ public class ProcessoTarefaList extends EntityList<ProcessoTarefa> {
         gauge.setShowTickLabels(true);
         return gauge;
     }
-    
+
 }

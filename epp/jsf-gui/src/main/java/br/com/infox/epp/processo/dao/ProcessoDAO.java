@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.dao;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY1;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY2;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY3;
@@ -28,7 +27,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_JBPM_LOG;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TIPO_PROCESSO_PARAM;
 
@@ -36,11 +34,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -58,15 +63,19 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicaoSearch;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.query.ProcessoQuery;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa_;
+import br.com.infox.epp.tarefa.entity.Tarefa;
+import br.com.infox.epp.tarefa.entity.Tarefa_;
+import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 @Stateless
 @AutoCreate
@@ -75,7 +84,6 @@ public class ProcessoDAO extends DAO<Processo> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDAO";
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDAO.class);
 
     @Inject
     private FluxoDAO fluxoDAO;
@@ -186,15 +194,31 @@ public class ProcessoDAO extends DAO<Processo> {
         return (pe != null) && (pe.hasPartes());
     }
 
-    @SuppressWarnings(UNCHECKED)
     public Map<String, Object> getTempoGasto(Processo processo) {
-        Query q = getEntityManager().createQuery(TEMPO_GASTO_PROCESSO_EPP_QUERY).setParameter("idProcesso", processo.getIdProcesso());
-        Map<String, Object> result = null;
-        try {
-            result = (Map<String, Object>) q.getSingleResult();
-        } catch (NoResultException e) {
-            LOG.info(".getTempoGasto()", e);
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Tuple> criteriaQuery = cb.createTupleQuery();
+        Root<ProcessoTarefa> pt = criteriaQuery.from(ProcessoTarefa.class);
+        Join<?, Tarefa> tarefa = pt.join(ProcessoTarefa_.tarefa, JoinType.INNER);
+        Path<PrazoEnum> selectionTipoPrazo = tarefa.get(Tarefa_.tipoPrazo);
+        Expression<Long> selectionSumTempoPrazo = cb.sumAsLong(pt.get(ProcessoTarefa_.tempoGasto));
+        criteriaQuery.multiselect(selectionTipoPrazo, selectionSumTempoPrazo);
+        criteriaQuery.groupBy(selectionTipoPrazo);
+        criteriaQuery.where(cb.equal(pt.get(ProcessoTarefa_.processo).get(Processo_.idProcesso), processo.getIdProcesso()));
+        List<Tuple> queryResult = getEntityManager().createQuery(criteriaQuery).getResultList();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("horas", 0);
+        result.put("dias", 0);
+        for (Tuple map : queryResult) {
+            PrazoEnum tipoPrazo = map.get(selectionTipoPrazo);
+            long sumTempoPrazo = Optional.ofNullable(map.get(selectionSumTempoPrazo)).orElse(0l);
+            if (PrazoEnum.D.equals(tipoPrazo)) {
+                result.put("dias", sumTempoPrazo);
+            } else if (PrazoEnum.H.equals(tipoPrazo)) {
+                result.put("horas", (sumTempoPrazo/60));
+            }
         }
+
         return result;
     }
 
