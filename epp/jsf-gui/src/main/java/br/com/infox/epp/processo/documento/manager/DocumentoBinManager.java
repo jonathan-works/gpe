@@ -171,7 +171,14 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         	final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
         	final Font font = new Font(Font.TIMES_ROMAN, 8);
 
-        	final Phrase phrase = new Paragraph(textoAssinatura, font);
+        	Phrase phrase;
+			if (!textoAssinatura.isEmpty()) {
+				phrase = new Paragraph(textoAssinatura, font);
+			} else {
+				phrase = null;
+			}
+			
+			Phrase codPhrase;
 
         	for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
         		int rotation = pdfReader.getPageRotation(page);
@@ -188,16 +195,21 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         		
         		
         		if(PosicaoTextoAssinaturaDocumentoEnum.RODAPE_HORIZONTAL.equals(posicaoAssinatura)) {
+        			codPhrase = new Phrase(getTextoCodigoSomente(uuid), font);
         			image.setAbsolutePosition(0, 0);
                     content.addImage(image);
-                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, phrase, 52, 37, 0);
+                    if (phrase != null) {
+                    	ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, phrase, 52, 37, 0);
+					}
                     ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, new Phrase(TEXTO_AUTENTICIDADE_DOCUMENTO, font), 52, 25, 0);
-                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, new Phrase(getTextoCodigoSomente(uuid), font), 52, 12, 0);
+                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, new Phrase(codPhrase), 52, 12, 0);
         		} else {
-        			Phrase codPhrase = new Phrase(getTextoCodigo(uuid), font);
+        			codPhrase = new Phrase(getTextoCodigo(uuid), font);
 					image.setAbsolutePosition(right - 65, top - 70);
                     content.addImage(image);
-                    ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
+                    if (phrase != null) {
+                    	ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
+                    }
                     ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 35, top - 70, -90);
         		}
         	}
@@ -255,14 +267,19 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                 )
             );
         }
-        
-        Documento doc = documento.getDocumentoList().isEmpty()? null : documento.getDocumentoList().get(0);
-        if(doc != null && doc.getPasta().getProcesso() != null) {
-        	assinadores.append(", Nº do processo ").append(doc.getPasta().getProcesso().getNumeroProcesso());
-        }
 
-        return Parametros.TEXTO_RODAPE_DOCUMENTO.getValue()
-            .replaceAll("\\$\\{assinadores\\}", assinadores.toString());
+        if(assinadores.length() > 0) {
+	        Documento doc = documento.getDocumentoList().isEmpty()? null : documento.getDocumentoList().get(0);
+	        if(doc != null && doc.getPasta().getProcesso() != null) {
+	        	assinadores.append(", Nº do processo ").append(doc.getPasta().getProcesso().getNumeroProcesso());
+	        }
+	
+	        return Parametros.TEXTO_RODAPE_DOCUMENTO.getValue()
+	            .replaceAll("\\$\\{assinadores\\}", assinadores.toString());
+        } else {
+        	return "";
+        }
+        
     }
 
 	@Override
