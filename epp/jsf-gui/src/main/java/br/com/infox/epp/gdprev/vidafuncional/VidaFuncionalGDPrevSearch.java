@@ -216,6 +216,9 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
             try {
                 ContentType contentType = ContentType.parse(entity.getContentType().getValue());
                 charset = contentType.getCharset();
+                if (charset == null) {
+                    charset = StandardCharsets.UTF_8;
+                }
             } catch (ParseException | UnsupportedCharsetException e) {
                 LOG.warn(String.format("Não foi possível extrair o charset do header Content-Type: %s", entity.getContentType().getValue()), e);
             }
