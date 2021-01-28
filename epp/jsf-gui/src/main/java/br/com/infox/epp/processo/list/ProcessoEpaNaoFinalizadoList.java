@@ -125,7 +125,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
             Root<Processo> processo = cq.from(Processo.class);
             From<?, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
 
-            Predicate restrictions = cb.and();
+            Predicate restrictions = processo.get(Processo_.dataFim).isNull();
             if (getFluxo() != null) {
                 restrictions = cb.and(restrictions,cb.equal(natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo), getFluxo()));
             }
