@@ -86,7 +86,7 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
     private static final String FIELD_DATA = "data";
     private static final String FIELD_CPF_SERVIDOR = "campo->CPF do Servidor";
 
-    private static final String CONSULTA_DOCUMENTOS_PATH = "cuiaba/search";
+    private static final String CONSULTA_DOCUMENTOS_PATH = "cuiaba/search/index";
     private static final String DOWNLOAD_PDF_PATH = "geracaopdf/download/";
 
     private static final String PARAM_PAGINA = FIELD_PAGINA;
