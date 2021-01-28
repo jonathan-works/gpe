@@ -58,6 +58,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -93,6 +94,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.Pasta;
@@ -327,7 +329,12 @@ public class Processo implements Serializable, Recursive<Processo> {
     }
 
     public Float getPorcentagem(){
-        return getTempoGasto().floatValue()/getNaturezaCategoriaFluxo().getFluxo().getQtPrazo();
+        float tGastoFloat = Optional.ofNullable(getTempoGasto()).map(Integer::floatValue).orElse(0f);
+        Integer qtPrazo = Optional.ofNullable(getNaturezaCategoriaFluxo())
+                .map(NaturezaCategoriaFluxo::getFluxo)
+                .map(Fluxo::getQtPrazo)
+                .orElse(1);
+        return tGastoFloat/qtPrazo;
     }
 
     public PrioridadeProcesso getPrioridadeProcesso() {
