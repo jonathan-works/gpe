@@ -47,14 +47,14 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     private static final String DEFAULT_EJBQL = "select o from Processo o "
             + "inner join o.naturezaCategoriaFluxo ncf "
             + "where o.dataFim is null";
-    
+
     private static final String DEFAULT_ORDER = "o.idProcesso";
     private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
     private static final String R2 = "o.situacaoPrazo = #{processoEpaNaoFinalizadoList.situacaoPrazo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
 
     private static final Map<String, String> CUSTOM_ORDER_MAP;
-    
+
     static {
         Map<String,String> map = new HashMap<>();
         map.put("fluxo", "ncf.fluxo");
@@ -107,7 +107,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     }
 
     public MeterGaugeChartModel getMeterMediaTempoGastoDesdeInicioProcesso(){
-    	MeterGaugeChartModel gauge = new MeterGaugeChartModel();
+        MeterGaugeChartModel gauge = new MeterGaugeChartModel();
         gauge.setGaugeLabel(InfoxMessages.getInstance().get("bam.medidorProcSel"));
         gauge.setGaugeLabelPosition("top");
         gauge.setMin(0);
@@ -116,29 +116,29 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
         gauge.setShowTickLabels(true);
         return gauge;
     }
-    
+
     public double getMediaTempoGastoDesdeInicioProcesso() {
-    	Double result = null;
-    	if(getFluxo() != null) {
-    		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-    		CriteriaQuery<Double> cq = cb.createQuery(Double.class);
-    		Root<Processo> processo = cq.from(Processo.class);
-    		From<?, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-    		
-    		Predicate restrictions = cb.and();
-    		if (getFluxo() != null) {
-    			restrictions = cb.and(restrictions,cb.equal(natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo), getFluxo()));
-    		}
-    		if (getSituacaoPrazo() != null) {
-    			restrictions = cb.and(restrictions,cb.equal(processo.get(Processo_.situacaoPrazo), getSituacaoPrazo()));
-    		}
-    		cq = cq.select(cb.avg(processo.get(Processo_.tempoGasto))).where(restrictions);
-    		
+        Double result = null;
+        if(getFluxo() != null) {
+            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Double> cq = cb.createQuery(Double.class);
+            Root<Processo> processo = cq.from(Processo.class);
+            From<?, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+
+            Predicate restrictions = cb.and();
+            if (getFluxo() != null) {
+                restrictions = cb.and(restrictions,cb.equal(natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo), getFluxo()));
+            }
+            if (getSituacaoPrazo() != null) {
+                restrictions = cb.and(restrictions,cb.equal(processo.get(Processo_.situacaoPrazo), getSituacaoPrazo()));
+            }
+            cq = cq.select(cb.avg(processo.get(Processo_.tempoGasto))).where(restrictions);
+
             TypedQuery<Double> query = getEntityManager().createQuery(cq);
-            
+
             result=CollectionUtil.firstOrNull(query.getResultList());
         }
-    	return ObjectUtils.defaultIfNull(result, 0.0);
+        return ObjectUtils.defaultIfNull(result, 0.0);
     }
 
     public List<SituacaoPrazoEnum> getTiposSituacaoPrazo() {
@@ -147,23 +147,23 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
 
     public List<Fluxo> getFluxoList() {
         if (updateFluxoList) {
-        	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        	CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
-        	Root<Fluxo> fluxo = cq.from(Fluxo.class);
-        	
-        	Subquery<Integer> sq = cq.subquery(Integer.class);
-        	Root<Processo> processo = sq.from(Processo.class);
-        	From<?, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-        	
-        	sq = sq.select(
-    			cb.literal(1)
-			).where(
-    			cb.equal(natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo), fluxo),
-				processo.get(Processo_.dataFim).isNull()
-			);
-        	
-        	cq=cq.select(fluxo).where(cb.exists(sq)).orderBy(cb.asc(fluxo.get(Fluxo_.fluxo)));
-        	fluxoList = getEntityManager().createQuery(cq).getResultList();
+            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
+            Root<Fluxo> fluxo = cq.from(Fluxo.class);
+
+            Subquery<Integer> sq = cq.subquery(Integer.class);
+            Root<Processo> processo = sq.from(Processo.class);
+            From<?, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+
+            sq = sq.select(
+                cb.literal(1)
+            ).where(
+                cb.equal(natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo), fluxo),
+                processo.get(Processo_.dataFim).isNull()
+            );
+
+            cq=cq.select(fluxo).where(cb.exists(sq)).orderBy(cb.asc(fluxo.get(Fluxo_.fluxo)));
+            fluxoList = getEntityManager().createQuery(cq).getResultList();
         }
         return fluxoList;
     }
@@ -178,7 +178,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
         if (metadadoProcesso == null) {
             return MessageFormat.format("{0}/{1}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria());
         } else {
-        	Item item = metadadoProcesso.getValue();
+            Item item = metadadoProcesso.getValue();
             return MessageFormat.format("{0}/{1}/{2}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria(), item.getDescricaoItem());
         }
     }

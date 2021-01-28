@@ -107,33 +107,33 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 @Entity
 @Table(name = TABLE_PROCESSO)
 @NamedNativeQueries(value = {
-    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS1, query = ATUALIZAR_PROCESSOS_QUERY1),
-    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS2, query = ATUALIZAR_PROCESSOS_QUERY2),
-    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS3, query = ATUALIZAR_PROCESSOS_QUERY3),
-    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS4, query = ATUALIZAR_PROCESSOS_QUERY4),
-    @NamedNativeQuery(name = REMOVER_PROCESSO_JBMP, query = REMOVER_PROCESSO_JBMP_QUERY),
-    @NamedNativeQuery(name = REMOVER_JBPM_LOG, query = REMOVER_JBPM_LOG_QUERY),
-    @NamedNativeQuery(name = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, query = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY),
-    @NamedNativeQuery(name = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO, query = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY,
-                      resultClass = Processo.class)
+        @NamedNativeQuery(name = ATUALIZAR_PROCESSOS1, query = ATUALIZAR_PROCESSOS_QUERY1),
+        @NamedNativeQuery(name = ATUALIZAR_PROCESSOS2, query = ATUALIZAR_PROCESSOS_QUERY2),
+        @NamedNativeQuery(name = ATUALIZAR_PROCESSOS3, query = ATUALIZAR_PROCESSOS_QUERY3),
+        @NamedNativeQuery(name = ATUALIZAR_PROCESSOS4, query = ATUALIZAR_PROCESSOS_QUERY4),
+        @NamedNativeQuery(name = REMOVER_PROCESSO_JBMP, query = REMOVER_PROCESSO_JBMP_QUERY),
+        @NamedNativeQuery(name = REMOVER_JBPM_LOG, query = REMOVER_JBPM_LOG_QUERY),
+        @NamedNativeQuery(name = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, query = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY),
+        @NamedNativeQuery(name = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO, query = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY,
+        resultClass = Processo.class)
 })
 @NamedQueries(value = {
-    @NamedQuery(name = PROCESSO_BY_NUMERO, query = PROCESSO_BY_NUMERO_QUERY),
-    @NamedQuery(name = NUMERO_PROCESSO_BY_ID_JBPM, query = NUMERO_PROCESSO_BY_ID_JBPM_QUERY),
-    @NamedQuery(name = LIST_ALL_NOT_ENDED, query = LIST_ALL_NOT_ENDED_QUERY),
-    @NamedQuery(name = PROCESSO_EPA_BY_ID_JBPM, query = PROCESSO_EPA_BY_ID_JBPM_QUERY,
-                hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
-                         @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.processo.entity.Processo")}),
-    @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO, query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
-    @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO, query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
-    @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
-    @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
-    @NamedQuery(name = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO, query = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY),
-    @NamedQuery(name = PROCESSOS_FILHO_BY_TIPO, query = PROCESSOS_FILHO_BY_TIPO_QUERY),
-    @NamedQuery(name = GET_PROCESSO_BY_NUMERO_PROCESSO, query = GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY),
-    @NamedQuery(name = PROCESSOS_BY_ID_CAIXA, query = PROCESSOS_BY_ID_CAIXA_QUERY),
-    @NamedQuery(name = LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA, query = LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA_QUERY),
-    @NamedQuery(name = LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, query = LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO_QUERY)
+        @NamedQuery(name = PROCESSO_BY_NUMERO, query = PROCESSO_BY_NUMERO_QUERY),
+        @NamedQuery(name = NUMERO_PROCESSO_BY_ID_JBPM, query = NUMERO_PROCESSO_BY_ID_JBPM_QUERY),
+        @NamedQuery(name = LIST_ALL_NOT_ENDED, query = LIST_ALL_NOT_ENDED_QUERY),
+        @NamedQuery(name = PROCESSO_EPA_BY_ID_JBPM, query = PROCESSO_EPA_BY_ID_JBPM_QUERY,
+        hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+                @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.processo.entity.Processo")}),
+        @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO, query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
+        @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO, query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
+        @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
+        @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
+        @NamedQuery(name = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO, query = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY),
+        @NamedQuery(name = PROCESSOS_FILHO_BY_TIPO, query = PROCESSOS_FILHO_BY_TIPO_QUERY),
+        @NamedQuery(name = GET_PROCESSO_BY_NUMERO_PROCESSO, query = GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY),
+        @NamedQuery(name = PROCESSOS_BY_ID_CAIXA, query = PROCESSOS_BY_ID_CAIXA_QUERY),
+        @NamedQuery(name = LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA, query = LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA_QUERY),
+        @NamedQuery(name = LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, query = LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO_QUERY)
 })
 @Cacheable
 public class Processo implements Serializable, Recursive<Processo> {
@@ -200,7 +200,7 @@ public class Processo implements Serializable, Recursive<Processo> {
     private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
 
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY)
-    private List<ProcessoTarefa> processoTarefaList = new ArrayList<ProcessoTarefa>(0);
+    private List<ProcessoTarefa> processoTarefaList = new ArrayList<>(0);
 
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
     @OrderBy(value = "ds_caminho_absoluto")
@@ -465,7 +465,7 @@ public class Processo implements Serializable, Recursive<Processo> {
 
     @Transient
     public List<MetadadoProcesso> getMetadadoList(MetadadoProcessoDefinition metadadoProcessoDefinition){
-        List<MetadadoProcesso> metadadoList = new ArrayList<MetadadoProcesso>();
+        List<MetadadoProcesso> metadadoList = new ArrayList<>();
         for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
             if (metadadoProcessoDefinition.getMetadadoType().equals(metadadoProcesso.getMetadadoType())){
                 metadadoList.add(metadadoProcesso);
