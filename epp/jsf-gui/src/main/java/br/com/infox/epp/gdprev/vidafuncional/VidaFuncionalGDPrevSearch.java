@@ -48,6 +48,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.messages.InfoxMessages;
@@ -207,6 +208,8 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
                     .build();
         } catch (UnsupportedOperationException | IOException e) {
             throw new BusinessRollbackException("Erro no processamento da resposta", e);
+        } catch (JsonSyntaxException e) {
+            throw new BusinessRollbackException("O serviço retornou uma resposta inesperada. Por favor tente novamente ou contate o administrador do sistema.", e);
         }
     }
 
