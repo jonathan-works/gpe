@@ -142,11 +142,11 @@ public class BamAction extends AbstractController {
 
     private void corrigirSituacaoPrazoProcesso(Processo processo, Float porcentagem) throws DAOException {
         if (porcentagem <= 100) {
+            processoManager.refresh(processo);
             SituacaoPrazoEnum situacaoProcesso = SituacaoPrazoEnum.SAT;
             for (ProcessoTarefa tarefa : processo.getProcessoTarefaList()) {
                 if (tarefa.getPorcentagem() > 100) {
                     situacaoProcesso = SituacaoPrazoEnum.TAT;
-                    processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
                     break;
                 }
             }
