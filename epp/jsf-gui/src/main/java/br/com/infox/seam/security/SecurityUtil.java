@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.web.ServletContexts;
 
+import br.com.infox.epp.access.DeveAssinarTermoAdesaoException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.cdi.util.Beans;
@@ -35,14 +36,10 @@ public class SecurityUtil implements Serializable {
         if ( !isSessionContextActive() ) {
             return false;
         }
-        if (!permissions.containsKey(page)) {
-            try {
-                permissions.put(page, Identity.instance().hasPermission(page, "access") && !Authenticator.instance().hasToSignTermoAdesao());
-            } catch (LoginException e) {
-                throw new RuntimeException(e);
-            }
+        if (hasToSignTermoAdesao()) {
+            throw new DeveAssinarTermoAdesaoException();
         }
-        boolean hasPermission = permissions.get(page);
+        boolean hasPermission = permissions.computeIfAbsent(page, resource-> Identity.instance().hasPermission(resource, "access"));
         if (!hasPermission) {
             LOG.debug(MessageFormat.format("Bloqueado o acesso do perfil ''{0}'' para o recurso ''{1}''.", getIdentificadorPapelAtual(), page));
         }
@@ -82,5 +79,15 @@ public class SecurityUtil implements Serializable {
 
     public static SecurityUtil instance() {
         return Beans.getReference(SecurityUtil.class);
+    }
+
+    private Boolean hasToSignTermoAdesao() {
+        boolean hasToSignTermoAdesao = true;
+        try {
+            hasToSignTermoAdesao = Authenticator.instance().hasToSignTermoAdesao();
+        } catch (LoginException e) {
+            // Implica não ter PF associada a usuário logado
+        }
+        return hasToSignTermoAdesao;
     }
 }
