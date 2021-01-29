@@ -31,6 +31,7 @@ public class PapelList extends EntityList<Papel> {
     protected void addSearchFields() {
         addSearchField("nome", SearchCriteria.CONTENDO, R1);
         addSearchField("identificador", SearchCriteria.CONTENDO, R2);
+        addSearchField("termoAdesao", SearchCriteria.IGUAL);
     }
 
     @Override
@@ -57,5 +58,5 @@ public class PapelList extends EntityList<Papel> {
     public String getDownloadXlsName() {
         return DOWNLOAD_XLS_NAME;
     }
-    
+
 }
