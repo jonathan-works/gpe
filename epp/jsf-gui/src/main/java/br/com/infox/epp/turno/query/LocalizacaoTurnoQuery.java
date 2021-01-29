@@ -45,22 +45,7 @@ public interface LocalizacaoTurnoQuery {
 
     String LOCALIZACAO_TURNO_BY_TAREFA_HORARIO = "localizacaoTurnoByTarefaHorario";
     String LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY = "select lt from LocalizacaoTurno lt "
-            + "where (:"
-            + QUERY_PARAM_HORA_INICIO
-            + " between lt.horaInicio and lt.horaFim or "
-            + "       :"
-            + QUERY_PARAM_HORA_FIM
-            + " between lt.horaInicio and lt.horaFim) and"
-            + "   lt.diaSemana = :"
-            + QUERY_PARAM_DIA_SEMANA
-            + " and "
-            + "   not exists(from CalendarioEventos cal "
-            + "              where cal.localizacao = lt.localizacao "
-            + "              and (:" + QUERY_PARAM_DATA + " between cal.dataInicio and cal.dataFim)) and "
-            + " exists (select 1 from UsuarioTaskInstance uti, ProcessoJbpm pjbpm inner join pjbpm.taskInstances taskInstance where "
-                    + " taskInstance.id = uti.idTaskInstance"
-                    + " and uti.localizacao = lt.localizacao"
-                    + " and pjbpm.processo.idProcesso = :"+ QUERY_PARAM_IDPROCESSO + ")";
+            + "where 1=0";
 
     String LOCALIZACAO_TURNO_BY_TAREFA = "localizacaoTurnoByTarefa";
     String LOCALIZACAO_TURNO_BY_TAREFA_BASE_QUERY = "from LocalizacaoTurno lt "
