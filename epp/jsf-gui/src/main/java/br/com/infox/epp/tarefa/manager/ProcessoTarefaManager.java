@@ -96,7 +96,12 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
             int porcentagem = 0;
             int tempoGasto = (int) (processoTarefa.getTempoGasto() + incrementoTempoGasto);
             if (prazo != null && prazo.compareTo(0) > 0) {
-                porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / (prazo * 60);
+                int divisor = prazo;
+                if (PrazoEnum.H.equals(processoTarefa.getTarefa().getTipoPrazo())) {
+                    divisor *= 60;
+                }
+                porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / divisor;
+
             }
 
             Processo processo = processoTarefa.getProcesso();
