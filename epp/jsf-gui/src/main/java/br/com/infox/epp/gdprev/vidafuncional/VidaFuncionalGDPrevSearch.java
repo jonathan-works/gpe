@@ -48,6 +48,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.messages.InfoxMessages;
@@ -86,7 +87,7 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
     private static final String FIELD_DATA = "data";
     private static final String FIELD_CPF_SERVIDOR = "campo->CPF do Servidor";
 
-    private static final String CONSULTA_DOCUMENTOS_PATH = "cuiaba/search";
+    private static final String CONSULTA_DOCUMENTOS_PATH = "cuiaba/search/index";
     private static final String DOWNLOAD_PDF_PATH = "geracaopdf/download/";
 
     private static final String PARAM_PAGINA = FIELD_PAGINA;
@@ -207,6 +208,8 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
                     .build();
         } catch (UnsupportedOperationException | IOException e) {
             throw new BusinessRollbackException("Erro no processamento da resposta", e);
+        } catch (JsonSyntaxException e) {
+            throw new BusinessRollbackException("O serviço retornou uma resposta inesperada. Por favor tente novamente ou contate o administrador do sistema.", e);
         }
     }
 
@@ -216,6 +219,9 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
             try {
                 ContentType contentType = ContentType.parse(entity.getContentType().getValue());
                 charset = contentType.getCharset();
+                if (charset == null) {
+                    charset = StandardCharsets.UTF_8;
+                }
             } catch (ParseException | UnsupportedCharsetException e) {
                 LOG.warn(String.format("Não foi possível extrair o charset do header Content-Type: %s", entity.getContentType().getValue()), e);
             }
