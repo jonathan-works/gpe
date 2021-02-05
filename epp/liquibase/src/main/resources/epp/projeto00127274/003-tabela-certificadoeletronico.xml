@@ -70,6 +70,11 @@
     </changeSet>
 
     <changeSet author="marcone" id="4" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'idCertificadoEletronicoRaiz'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="idCertificadoEletronicoRaiz" />
@@ -80,6 +85,11 @@
         </insert>
     </changeSet>
     <changeSet author="marcone" id="5" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'infoCertificadoEletronicoRaiz'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="infoCertificadoEletronicoRaiz" />

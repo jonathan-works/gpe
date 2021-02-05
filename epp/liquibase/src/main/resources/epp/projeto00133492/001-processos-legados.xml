@@ -14,6 +14,11 @@
     <property name="nextValueForSqRecurso" value="next value for sq_tb_recurso" dbms="mssql" />
 
     <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'urlAcessoProcessosLegados'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="urlAcessoProcessosLegados" />
