@@ -10,6 +10,11 @@
     <property name="nextValueForSqParametro" value="next value for sq_tb_parametro" dbms="mssql" />
 
     <changeSet author="jonathamoreira" id="1" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'dsUrlServicoETurmalina'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="dsUrlServicoETurmalina" />

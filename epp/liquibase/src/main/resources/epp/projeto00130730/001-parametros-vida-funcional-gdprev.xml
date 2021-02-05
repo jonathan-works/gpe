@@ -10,6 +10,11 @@
     <property name="nextValueForSqParametro" value="next value for sq_tb_parametro" dbms="mssql" />
 
     <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'urlWSVidaFuncionalGDPrev'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="urlWSVidaFuncionalGDPrev" />
@@ -20,6 +25,11 @@
     </changeSet>
 
     <changeSet author="gabriel" id="2" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'tokenWSVidaFuncionalGDPrev'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="tokenWSVidaFuncionalGDPrev" />
@@ -30,6 +40,11 @@
     </changeSet>
 
     <changeSet author="gabriel" id="3" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">                                                                            
+            <sqlCheck expectedResult="0">                                                                            
+                select count(*) from tb_parametro where nm_variavel = 'codigoClassificacaoDocPdfGDPrev'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="codigoClassificacaoDocPdfGDPrev" />
@@ -40,6 +55,11 @@
     </changeSet>
 
     <changeSet author="gabriel" id="4" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'codigoTipoParteServidor'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="codigoTipoParteServidor" />
@@ -50,6 +70,11 @@
     </changeSet>
 
     <changeSet author="gabriel" id="5" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'loginUsuarioInclusaoDocGDPrev'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="loginUsuarioInclusaoDocGDPrev" />
@@ -60,6 +85,11 @@
     </changeSet>
 
     <changeSet author="gabriel" id="6" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'exibirAvisoInconsistenciaParticipante'
+            </sqlCheck>
+        </preConditions>
         <insert tableName="tb_parametro">
             <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
             <column name="nm_variavel" value="exibirAvisoInconsistenciaParticipante" />
