@@ -6,9 +6,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     login-required="true">
 
-	<action execute="#{bamAction.updateBAM()}"/>
-	<navigation>
-		<redirect view-id="/login.xhtml"/>
-	</navigation>
-	
+    <restrict>#{security.hasRole('admin')}</restrict>
+    <action execute="#{bamAction.updateBAM()}"/>
+    <navigation>
+        <redirect view-id="/login.xhtml"/>
+    </navigation>
+
 </page>

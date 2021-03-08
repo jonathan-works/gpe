@@ -22,42 +22,46 @@
             <message>Não encontrado.</message>
         </redirect>
     </exception>
-    
+
     <exception class="javax.persistence.OptimisticLockException">
         <end-conversation/>
         <redirect view-id="/error.xhtml">
             <message>Algum usuário alterou o mesmo dado, por favor tente novamente.</message>
         </redirect>
     </exception>
-    
+
     <exception class="org.jboss.seam.security.AuthorizationException" log="false">
         <redirect view-id="/home.xhtml">
             <message>Sem permissão para acessar a página.</message>
         </redirect>
     </exception>
-    
+
     <exception class="org.jboss.seam.security.NotLoggedInException" log="false">
         <redirect view-id="/login.xhtml">
             <message>Por favor, identifique-se.</message>
         </redirect>
     </exception>
-    
+
+    <exception class="br.com.infox.epp.access.DeveAssinarTermoAdesaoException" log="false">
+        <redirect view-id="/termoAdesao.xhtml" />
+    </exception>
+
     <exception class="org.jboss.seam.web.FileUploadException">
         <redirect view-id="/error.xhtml">
             <message>O tamanho do arquivo não pode ser maior que 2 MB.</message>
         </redirect>
     </exception>
-    
+
     <exception class="javax.faces.application.ViewExpiredException" log="false">
         <redirect view-id="/error.xhtml">
             <message>Sua sessão expirou, por favor tente novamente.</message>
         </redirect>
     </exception>
-     
+
     <exception class="javax.security.auth.login.LoginException" log="false">
         <redirect view-id="/login.xhtml" />
     </exception>
-    
+
     <exception class="br.com.infox.core.exception.EppSystemException">
         <redirect>
             <message severity="ERROR"></message>
@@ -71,8 +75,8 @@
 
     <exception log="false" >
         <redirect view-id="/errorUnexpected.xhtml">
-			<message>Erro inesperado, por favor tente novamente.</message>
+            <message>Erro inesperado, por favor tente novamente.</message>
         </redirect>
     </exception>
-    
+
 </pages>

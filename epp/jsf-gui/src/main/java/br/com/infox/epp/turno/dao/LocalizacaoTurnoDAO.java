@@ -41,9 +41,13 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
     private static final long serialVersionUID = 4917008814431859631L;
     public static final String NAME = "localizacaoTurnoDAO";
 
+    @Deprecated
+    /**
+     * @deprecated A ser removido em major release
+     */
     public LocalizacaoTurno getTurnoTarefa(Integer idProcesso,
             Date dataAnterior, Date dataAtual, DiaSemanaEnum diaSemana) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_IDPROCESSO, idProcesso);
         parameters.put(QUERY_PARAM_HORA_INICIO, new Time(dataAnterior.getTime()));
         parameters.put(QUERY_PARAM_HORA_FIM, new Time(dataAtual.getTime()));
@@ -55,7 +59,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
 
     public List<LocalizacaoTurno> getTurnosTarefa(final long idTaskInstance,
             final DiaSemanaEnum diaSemana, final Date dataAtual) {
-        final Map<String, Object> parameters = new HashMap<String, Object>();
+        final Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_ID_TASK_INSTANCE, idTaskInstance);
         parameters.put(QUERY_PARAM_DIA_SEMANA, diaSemana);
 
@@ -65,7 +69,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
 
     public Long countTurnoTarefaDia(ProcessoTarefa pt, Date data,
             DiaSemanaEnum diaSemana) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_ID_TASK_INSTANCE, pt.getTaskInstance());
         parameters.put(QUERY_PARAM_DIA_SEMANA, diaSemana);
 
@@ -74,14 +78,14 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
     }
 
     public List<LocalizacaoTurno> listByLocalizacao(Localizacao localizacao) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_LOCALIZACAO, localizacao);
         return getNamedResultList(LIST_BY_LOCALIZACAO, parameters);
     }
 
     public List<LocalizacaoTurno> listByHoraInicioFim(Localizacao l,
             Time horaInicio, Time horaFim) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);
         parameters.put(QUERY_PARAM_HORA_INICIO, horaInicio);
         parameters.put(QUERY_PARAM_HORA_FIM, horaFim);
@@ -90,7 +94,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
 
     public Integer countByHoraInicioFim(Localizacao l, Time horaInicio,
             Time horaFim) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);
         parameters.put(QUERY_PARAM_HORA_INICIO, horaInicio);
         parameters.put(QUERY_PARAM_HORA_FIM, horaFim);
@@ -98,7 +102,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
     }
 
     public void removerTurnosAnteriores(Localizacao localizacao) throws DAOException {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_LOCALIZACAO, localizacao);
         executeNamedQueryUpdate(DELETE_TURNOS_ANTERIORES, parameters);
     }

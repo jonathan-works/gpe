@@ -95,12 +95,17 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
             Integer prazo = processoTarefa.getTarefa().getPrazo();
             int porcentagem = 0;
             int tempoGasto = (int) (processoTarefa.getTempoGasto() + incrementoTempoGasto);
-            if (prazo != null && prazo.compareTo(Integer.valueOf(0)) > 0) {
-                porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / (prazo * 60);
+            if (prazo != null && prazo.compareTo(0) > 0) {
+                int divisor = prazo;
+                if (PrazoEnum.H.equals(processoTarefa.getTarefa().getTipoPrazo())) {
+                    divisor *= 60;
+                }
+                porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / divisor;
+
             }
 
             Processo processo = processoTarefa.getProcesso();
-            if (porcentagem > PORCENTAGEM_MAXIMA) {
+            if (porcentagem > PORCENTAGEM_MAXIMA && !SituacaoPrazoEnum.PAT.equals(processo.getSituacaoPrazo())) {
                 processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
             }
 
@@ -132,7 +137,7 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     public List<ProcessoTarefa> getByProcesso(Processo processo) {
         return getDao().getByProcesso(processo);
     }
-    
+
 
     /**
      * Calcula o tempo a incrementar no {@link ProcessoTarefa} de acordo com
@@ -283,7 +288,7 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     public ProcessoTarefa getProcessoTarefaAberto(Processo processo, Integer idTarefa) {
         return getDao().getProcessoTarefaAberto(processo, idTarefa);
     }
-    
+
     public ProcessoTarefa getUltimoProcessoTarefa(Processo processo) {
         return getDao().getUltimoProcessoTarefa(processo);
     }

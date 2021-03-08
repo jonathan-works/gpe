@@ -43,6 +43,10 @@
             value="#{papelList.entity.identificador}"
             maxlength="100"
           />
+          <wi:selectBooleanMenu
+            id="termoAdesao"
+            label="#{infoxMessages['papel.form.termoAdesao']}"
+            value="#{papelList.entity.termoAdesao}" />
         </wi:searchForm>
       </ui:define>
       <wi:columnOutputText
@@ -55,6 +59,10 @@
         columnHeader="#{infoxMessages['papel.identificador']}"
         value="#{row.identificador}"
       />
+      <wi:columnBoolean
+        columnId="termoAdesao"
+        columnHeader="#{infoxMessages['papel.form.termoAdesao']}"
+        value="#{row.termoAdesao}" />
       <ui:define name="toolBar">
         <wi:toolBarEdit id="papelListedit" />
         <wi:toolBarRemove />

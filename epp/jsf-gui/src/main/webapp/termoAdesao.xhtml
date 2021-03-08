@@ -57,10 +57,10 @@ html,body {
                         </wi:assinador>
                     </h:form>
                 </p:outputPanel>
-                <button onclick="infox.redirect({url:window.document.referrer})"
-                    class="buttons">
-                    <h:outputText value="#{infoxMessages['page.return']}" />
-                </button>
+                <h:form>
+                    <p:commandButton process="@this" action="#{authenticator.unAuthenticate()}"
+                        onstart="infox.showLoading();" styleClass="buttons" value="#{infoxMessages['page.return']}" />
+                </h:form>
             </p:outputPanel>
         </p:outputPanel>
         <wi:messages />

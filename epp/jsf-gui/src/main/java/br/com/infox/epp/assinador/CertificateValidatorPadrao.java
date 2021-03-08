@@ -1,6 +1,9 @@
 package br.com.infox.epp.assinador;
 
 import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertPath;
 import java.security.cert.CertPathValidator;
 import java.security.cert.CertPathValidatorException;
@@ -13,39 +16,54 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import br.com.infox.epp.cdi.util.Beans;
-
 public class CertificateValidatorPadrao implements CertificateValidator {
 
-	@Inject
-	private CertPathValidator certPathValidator;
-	@Inject
-	private CertificateFactory certificateFactory;
-	
-	/**
-	 * É necessário habilitar esse property para que seja habilitado o DistributionPointFetcher utilizado para checar CRLs
-	 */
-	static {
-		System.setProperty("com.sun.security.enableCRLDP", "true");		
-	}
-	
-	@Override
-	public boolean validarCertificado(List<X509Certificate> certChain) throws CertPathValidatorException {
-		PKIXParameters params = Beans.getReference(PKIXParameters.class);
-		CertPath certPath;
-		try {
-			certPath = certificateFactory.generateCertPath(certChain);
-		} catch (CertificateException e) {
-			throw new RuntimeException(e);
-		}
-		
-		PKIXCertPathValidatorResult resultado;
-		try {
-			resultado = (PKIXCertPathValidatorResult)certPathValidator.validate(certPath, params);
-		} catch (InvalidAlgorithmParameterException e) {
-			throw new RuntimeException(e);
-		}
-		return resultado != null;
-	}
+    private static final String CERTIFICATE_FACTORY_TYPE_NAME = "X.509";
+    private static final String CERT_PATH_VALIDATOR_ALGORITHM_NAME = "PKIX";
+
+    /**
+     * É necessário habilitar esse property para que seja habilitado o DistributionPointFetcher utilizado para checar CRLs
+     */
+    static {
+        System.setProperty("com.sun.security.enableCRLDP", "true");
+    }
+
+    @Inject
+    private TrustStoreService trustStoreService;
+
+    @Override
+    public boolean validarCertificado(List<X509Certificate> certChain) throws CertPathValidatorException {
+        CertPath certPath;
+        try {
+            certPath = createCertificateFactory().generateCertPath(certChain);
+        } catch (CertificateException e) {
+            throw new RuntimeException(e);
+        }
+
+        PKIXCertPathValidatorResult resultado;
+        try {
+            resultado = (PKIXCertPathValidatorResult)createCertPathValidator().validate(certPath, createPKIXParameters());
+        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | KeyStoreException e) {
+            throw new RuntimeException(e);
+        }
+        return resultado != null;
+    }
+
+    private CertPathValidator createCertPathValidator() throws NoSuchAlgorithmException {
+        CertPathValidator certPathValidator = CertPathValidator.getInstance(CERT_PATH_VALIDATOR_ALGORITHM_NAME);
+
+        return certPathValidator;
+    }
+
+    private PKIXParameters createPKIXParameters() throws KeyStoreException, InvalidAlgorithmParameterException {
+        KeyStore keyStore = trustStoreService.getTrustStore();
+        PKIXParameters params = new PKIXParameters(keyStore);
+        params.setRevocationEnabled(true);
+        return params;
+    }
+    private CertificateFactory createCertificateFactory() throws CertificateException {
+        CertificateFactory certificateFactory = CertificateFactory.getInstance(CERTIFICATE_FACTORY_TYPE_NAME);
+        return certificateFactory;
+    }
 
 }

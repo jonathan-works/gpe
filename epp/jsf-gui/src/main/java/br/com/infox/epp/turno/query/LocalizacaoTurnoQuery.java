@@ -2,7 +2,6 @@ package br.com.infox.epp.turno.query;
 
 public interface LocalizacaoTurnoQuery {
 
-    String AND = " and ";
     String QUERY_PARAM_LOCALIZACAO = "localizacao";
     String QUERY_PARAM_HORA_INICIO = "horaInicio";
     String QUERY_PARAM_HORA_FIM = "horaFim";
@@ -23,7 +22,7 @@ public interface LocalizacaoTurnoQuery {
             + QUERY_PARAM_LOCALIZACAO
             + " and ((o.horaInicio >= :"
             + QUERY_PARAM_HORA_INICIO
-            + AND
+            + " and "
             + "o.horaInicio <= :"
             + QUERY_PARAM_HORA_FIM
             + ") or (o.horaFim >= :"
@@ -36,7 +35,7 @@ public interface LocalizacaoTurnoQuery {
             + QUERY_PARAM_LOCALIZACAO
             + " and ((o.horaInicio >= :"
             + QUERY_PARAM_HORA_INICIO
-            + AND
+            + " and "
             + "o.horaInicio <= :"
             + QUERY_PARAM_HORA_FIM
             + ") or (o.horaFim >= :"
@@ -46,27 +45,10 @@ public interface LocalizacaoTurnoQuery {
 
     String LOCALIZACAO_TURNO_BY_TAREFA_HORARIO = "localizacaoTurnoByTarefaHorario";
     String LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY = "select lt from LocalizacaoTurno lt "
-            + "where (:"
-            + QUERY_PARAM_HORA_INICIO
-            + " between lt.horaInicio and lt.horaFim or "
-            + "       :"
-            + QUERY_PARAM_HORA_FIM
-            + " between lt.horaInicio and lt.horaFim) and"
-            + "   lt.diaSemana = :"
-            + QUERY_PARAM_DIA_SEMANA
-            + AND
-            + "   not exists(from CalendarioEventos cal "
-            + "              where cal.localizacao = lt.localizacao "
-            + "              and (:" + QUERY_PARAM_DATA + " between cal.dataInicio and cal.dataFim)) and "
-            + "   exists (select 1 from ProcessoLocalizacaoIbpm pli where "
-            + "                  pli.processo.idProcesso = :"
-            + QUERY_PARAM_IDPROCESSO
-            + AND
-            + "                  pli.localizacao = lt.localizacao and "
-            + "                  pli.contabilizar = true)";
+            + "where 1=0";
 
     String LOCALIZACAO_TURNO_BY_TAREFA = "localizacaoTurnoByTarefa";
-    String LOCALIZACAO_TURNO_BY_TAREFA_QUERY = "select lt from LocalizacaoTurno lt "
+    String LOCALIZACAO_TURNO_BY_TAREFA_BASE_QUERY = "from LocalizacaoTurno lt "
             + "where lt.diaSemana = :"
             + QUERY_PARAM_DIA_SEMANA
             + "  and not exists(from CalendarioEventos cal "
@@ -75,22 +57,12 @@ public interface LocalizacaoTurnoQuery {
             + "  and exists (select 1 from UsuarioTaskInstance uti where "
             + "                  uti.idTaskInstance = :"
             + QUERY_PARAM_ID_TASK_INSTANCE
-            + "                 and uti.localizacao = lt.localizacao)"
-            + "order by lt.horaInicio";
+            + "                 and uti.localizacao = lt.localizacao)";
+
+    String LOCALIZACAO_TURNO_BY_TAREFA_QUERY = "select lt "+LOCALIZACAO_TURNO_BY_TAREFA_BASE_QUERY + "order by lt.horaInicio";
 
     String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA = "localizacaoTurnoByTarefaDia";
-    String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY = "select count(lt) from LocalizacaoTurno lt "
-            + "where lt.diaSemana = :" + QUERY_PARAM_DIA_SEMANA
-            + "  and not exists(from CalendarioEventos cal "
-            + "              where cal.localizacao = lt.localizacao "
-            + "                   and (:" + QUERY_PARAM_DATA + " between cal.dataInicio and cal.dataFim))"
-            + " and "
-            + "   exists (select o from ProcessoLocalizacaoIbpm o where "
-            + " 	 			   o.idTaskInstance = :"
-            + QUERY_PARAM_ID_TASK_INSTANCE
-            + AND
-            + "				   o.localizacao = lt.localizacao and	"
-            + "	 			   o.contabilizar = true)";
+    String COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY = "select count(lt) "+LOCALIZACAO_TURNO_BY_TAREFA_BASE_QUERY;
 
     String DELETE_TURNOS_ANTERIORES = "deleteTurnosAnteriores";
     String DELETE_TURNOS_ANTERIORES_QUERY = "delete from LocalizacaoTurno o where o.localizacao = :"

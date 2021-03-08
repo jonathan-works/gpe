@@ -27,7 +27,7 @@ import br.com.infox.seam.util.ComponentUtil;
 
 /**
  * Classe Action para o BAM
- * 
+ *
  * @author tassio
  */
 @Name(BamAction.NAME)
@@ -56,7 +56,7 @@ public class BamAction extends AbstractController {
     public List<Fluxo> getFluxoSuggest(Object suggest) {
         String prefix = (String) suggest;
         List<Fluxo> fluxoList = getFluxosAtivosList();
-        List<Fluxo> result = new ArrayList<Fluxo>();
+        List<Fluxo> result = new ArrayList<>();
         for (Fluxo fluxo : fluxoList) {
             if (fluxo.getFluxo().startsWith(prefix)) {
                 result.add(fluxo);
@@ -74,7 +74,7 @@ public class BamAction extends AbstractController {
     }
 
     public TaskInstance getTaskInstance(Long idTaskInstance) {
-    	return EntityManagerProducer.getEntityManager().find(TaskInstance.class, idTaskInstance);
+        return EntityManagerProducer.getEntityManager().find(TaskInstance.class, idTaskInstance);
     }
 
     public void forceUpdateTarefasFinalizadas() {
@@ -89,7 +89,7 @@ public class BamAction extends AbstractController {
             }
         }
         try {
-        	processoManager.updateTempoGastoProcessoEpa();
+            processoManager.updateTempoGastoProcessoEpa();
             for (Processo processo : processoManager.listAllNotEnded()) {
                 corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
             }
@@ -105,7 +105,7 @@ public class BamAction extends AbstractController {
             pt.setTempoGasto(0);
             try {
                 processoTarefaManager.updateTempoGasto(fireTime, pt);
-                corrigirSituacaoPrazoProcesso(pt.getProcesso(), pt.getPorcentagem());
+                corrigirSituacaoPrazoProcesso(pt.getProcesso(), pt.getProcesso().getPorcentagem());
             } catch (DAOException e) {
                 instance().add(Severity.ERROR, "forceUpdate(H)", e);
             }
@@ -114,13 +114,13 @@ public class BamAction extends AbstractController {
             pt.setUltimoDisparo(pt.getDataInicio());
             try {
                 processoTarefaManager.updateTempoGasto(fireTime, pt);
-                corrigirSituacaoPrazoProcesso(pt.getProcesso(), pt.getPorcentagem());
+                corrigirSituacaoPrazoProcesso(pt.getProcesso(), pt.getProcesso().getPorcentagem());
             } catch (DAOException e) {
                 instance().add(Severity.ERROR, "forceUpdate(D)", e);
             }
         }
         try {
-        	processoManager.updateTempoGastoProcessoEpa();
+            processoManager.updateTempoGastoProcessoEpa();
             for (Processo processo : processoManager.listAllNotEnded()) {
                 corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
             }
@@ -129,6 +129,7 @@ public class BamAction extends AbstractController {
         }
     }
 
+    @Override
     public void onClickSearchTab() {
         ProcessoTarefaList instance = ComponentUtil.getComponent(ProcessoTarefaList.NAME);
         instance.newInstance();
@@ -140,22 +141,17 @@ public class BamAction extends AbstractController {
     }
 
     private void corrigirSituacaoPrazoProcesso(Processo processo, Float porcentagem) throws DAOException {
-        if (porcentagem != null && porcentagem > 100) {
-            return;
-        }
-        
-        if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.TAT) {
-        	processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-        } else if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.PAT) {
-        	processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        if (porcentagem <= 100) {
+            processoManager.refresh(processo);
+            SituacaoPrazoEnum situacaoProcesso = SituacaoPrazoEnum.SAT;
             for (ProcessoTarefa tarefa : processo.getProcessoTarefaList()) {
                 if (tarefa.getPorcentagem() > 100) {
-                	processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
+                    situacaoProcesso = SituacaoPrazoEnum.TAT;
                     break;
                 }
             }
+            processo.setSituacaoPrazo(situacaoProcesso);
+            processoManager.update(processo);
         }
-
-        processoManager.update(processo);
     }
 }
