@@ -52,7 +52,7 @@
                tree="#{localizacaoTree}"
                icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
                iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
-               label="#{infoxMessages['perfil.localizacao']}" 
+               label="#{infoxMessages['perfil.localizacao']}"
                styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
           <wi:tree id="papel"
                assignTo="usuarioLoginList.papel"
@@ -116,47 +116,47 @@
         value="#{row.ativo}" />
     </wi:dataTable>
   </ui:define>
-	<ui:define name="form">
-		<wi:dataForm formId="usuarioForm"
-			formTitle="#{infoxMessages['form.title']}"
-			home="#{usuarioLoginCrudAction}"
-			newInstanceAction="usuarioLoginController.newInstance()">
-			
-			<wi:inputText id="nomeUsuario"
-				label="#{infoxMessages['usuario.nome']}"
-				value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
-				required="true" maxlength="150" />
-				
-			<wi:inputText id="email"
-				label="#{infoxMessages['usuarioLogin.email']}"
-				value="#{usuarioLoginCrudAction.instance.email}" required="true"
-				maxlength="100">
-				<f:validator validatorId="emailValidator" />
-			</wi:inputText>
-			
-			<wi:inputText id="login"
-				label="#{infoxMessages['usuarioLogin.login']}"
-				value="#{usuarioLoginCrudAction.instance.login}" required="true"
-				maxlength="15" 
-				readonly="#{not usuarioLoginCrudAction.podeEditarLogin}"/>
-			
-			<wi:selectOneMenuEnum id="tipoUsuario"
-				label="#{infoxMessages['usuario.tipoLogin']}"
-				items="#{usuarioLoginCrudAction.tiposDeUsuario}"
-				value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
-				showLabelSelecione="true" required="true"/>
-			
-			<wi:selectSituacaoRadio id="ativo"
-				label="#{infoxMessages['field.situacao']}"
-				value="#{usuarioLoginCrudAction.instance.ativo}" />
-				
-			<ui:include
-				src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
-				<ui:param name="id" value="usuarioProvisorio" />
-			</ui:include>
-		</wi:dataForm>
-	</ui:define>
-	<ui:define name="tabs">
+    <ui:define name="form">
+        <wi:dataForm formId="usuarioForm"
+            formTitle="#{infoxMessages['form.title']}"
+            home="#{usuarioLoginCrudAction}"
+            newInstanceAction="usuarioLoginController.newInstance()">
+
+            <wi:inputText id="nomeUsuario"
+                label="#{infoxMessages['usuario.nome']}"
+                value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
+                required="true" maxlength="150" />
+
+            <wi:inputText id="email"
+                label="#{infoxMessages['usuarioLogin.email']}"
+                value="#{usuarioLoginCrudAction.instance.email}" required="true"
+                maxlength="100">
+                <f:validator validatorId="emailValidator" />
+            </wi:inputText>
+
+            <wi:inputText id="login"
+                label="#{infoxMessages['usuarioLogin.login']}"
+                value="#{usuarioLoginCrudAction.instance.login}" required="true"
+                maxlength="15"
+                readonly="#{not usuarioLoginCrudAction.podeEditarLogin}"/>
+
+            <wi:selectOneMenuEnum id="tipoUsuario"
+                label="#{infoxMessages['usuario.tipoLogin']}"
+                items="#{usuarioLoginCrudAction.tiposDeUsuario}"
+                value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
+                showLabelSelecione="true" required="true"/>
+
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{usuarioLoginCrudAction.instance.ativo}" />
+
+            <ui:include
+                src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
+                <ui:param name="id" value="usuarioProvisorio" />
+            </ui:include>
+        </wi:dataForm>
+    </ui:define>
+    <ui:define name="tabs">
     <infox:tab
       id="usuarioPessoaFisica"
       rendered="#{usuarioLoginCrudAction.isManaged() and usuarioLoginCrudAction.instance.humano}"
@@ -195,11 +195,11 @@
             required="#{dataNascimentoObrigatoria}" />
         </s:div>
         <ui:define name="buttons">
-     				<wi:commandButton id="gravarPessoaFisicaUsuario"
-				        action="#{usuarioLoginController.onGravarPessoaFisica()}"
-				        actionListener="#{usuarioPessoaFisicaCrudAction.gravarUsuarioPessoaFisica()}"
-				        reRender="usuarioPessoaFisica pageBodyDialogMessage"
-				        value="#{usuarioPessoaFisicaCrudAction.managed ? messages['crud.update'] : messages['crud.persist']}" />
+                     <wi:commandButton id="gravarPessoaFisicaUsuario"
+                        action="#{usuarioLoginController.onGravarPessoaFisica()}"
+                        actionListener="#{usuarioPessoaFisicaCrudAction.gravarUsuarioPessoaFisica()}"
+                        reRender="usuarioPessoaFisica pageBodyDialogMessage"
+                        value="#{usuarioPessoaFisicaCrudAction.managed ? messages['crud.update'] : messages['crud.persist']}" />
         </ui:define>
       </wi:dataForm>
       <wi:dataTable
@@ -242,7 +242,7 @@
           value="#{row.dataNascimento}" />
       </wi:dataTable>
       <wi:dataTable
-      	bean="#{meioContatoList}"
+          bean="#{meioContatoList}"
         values="#{meioContatoList.list(20)}"
         tableTitle="#{infoxMessages['meioContato.title']}"
         id="meioContatoList"
@@ -264,7 +264,7 @@
           value="#{row.meioContato}" />
       </wi:dataTable>
       <wi:dataTable
-      	bean="#{pessoaDocumentoList}"
+          bean="#{pessoaDocumentoList}"
         values="#{pessoaDocumentoList.list(20)}"
         tableTitle="#{infoxMessages['pessoaDocumento.title']}"
         id="pessoaDocumentoList"
@@ -295,9 +295,9 @@
       </wi:dataTable>
       <ui:include src="dadosPersonalizadosDaPessoa.xhtml"/>
     </infox:tab>
-    
+
     <ui:include src="abasPersonalizadasUsuario.xhtml"/>
-    
+
     <infox:tab
       id="usuarioPerfil"
       rendered="#{usuarioLoginCrudAction.isManaged()}"
@@ -314,7 +314,7 @@
             icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
             iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
             clearRender="@this"
-            label="#{infoxMessages['perfilTemplate.localizacao']}" 
+            label="#{infoxMessages['perfilTemplate.localizacao']}"
             render="perfisPermitidos"
             required="true" />
         <wi:selectOneMenuEntity id="perfisPermitidos"
@@ -322,7 +322,7 @@
             label="#{infoxMessages['usuarioPerfil.perfil']}"
             items="#{usuarioPerfilCrudAction.perfisPermitidos}"
             showLabelSelecione="true"
-            disabled="#{empty usuarioPerfilCrudAction.instance.localizacao}" 
+            disabled="#{empty usuarioPerfilCrudAction.instance.localizacao}"
             required="true" />
         <wi:selectBooleanCheckbox
           id="responsavelLocalizacao"
@@ -356,7 +356,7 @@
               onclick="return confirm(\'#{infoxMessages['crud.confirmRemove']}\');"
               id="removeButton" />
           </ui:define>
-          <wi:columnOutputText 
+          <wi:columnOutputText
             columnId="localizacao"
             columnHeader="#{infoxMessages['usuarioPerfil.localizacao']}"
             value="#{row.localizacao}"/>
@@ -368,7 +368,7 @@
             columnId="responsavelLocalizacao"
             columnHeader="#{infoxMessages['perfil.responsavelLocalizacao']}"
             value="#{row.responsavelLocalizacao}" />
-            
+
         </wi:dataTable>
       </s:div>
     </infox:tab>
@@ -452,12 +452,17 @@
       title="#{infoxMessages['usuario.assinaturaDocumento']}"
       name="usuarioAssinaturaDocumento"
       action="#{usuarioLoginController.onClickAssinaturaTab()}">
+
+      <h:outputText value="O usuário não possui pessoa física associada." style="font-weight'': bolder; font-size: 1.5em;"
+        rendered="#{empty usuarioLoginController.instance.pessoaFisica}"/>
+
       <wi:dataTable
         values="#{assinaturaDocumentoList.list(15)}"
         bean="#{assinaturaDocumentoList}"
         tableTitle="#{infoxMessages['assinaturaDocumentoList.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
         id="assinaturaDocumentoList"
         rowId="#{row.idAssinatura}"
+        showGrid="#{not empty usuarioLoginController.instance.pessoaFisica}"
         panelStyleClass="full-sized short-margin-top">
         <ui:define name="headerToolBar"></ui:define>
         <ui:define name="toolBar">
@@ -487,10 +492,10 @@
           value="#{row.documentoBin.nomeArquivo}" />
       </wi:dataTable>
     </infox:tab>
-    
+
     <c:forEach var="tab" items="#{extensaoCrudUsuario.tabs}">
-    	<ui:include src="#{tab}" />
+        <ui:include src="#{tab}" />
     </c:forEach>
-    
+
   </ui:define>
 </ui:composition>

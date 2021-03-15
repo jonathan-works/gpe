@@ -37,29 +37,29 @@ public abstract class Pessoa implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_pessoa";
 
-    @Id 
-    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "PessoaGenerator", sequenceName = "sq_tb_pessoa") 
-    @GeneratedValue(generator = "PessoaGenerator", strategy = GenerationType.SEQUENCE) 
-    @Column(name = "id_pessoa", unique = true, nullable = false) 
+    @Id
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "PessoaGenerator", sequenceName = "sq_tb_pessoa")
+    @GeneratedValue(generator = "PessoaGenerator", strategy = GenerationType.SEQUENCE)
+    @Column(name = "id_pessoa", unique = true, nullable = false)
     private Integer idPessoa;
 
-    @Enumerated(EnumType.STRING) 
-    @Column(name = "tp_pessoa", nullable = false, columnDefinition = "varchar(1)", length = LengthConstants.FLAG) 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_pessoa", nullable = false, columnDefinition = "varchar(1)", length = LengthConstants.FLAG)
     private TipoPessoaEnum tipoPessoa;
 
-    @NotNull @Size(max = LengthConstants.NOME_ATRIBUTO) 
-    @Column(name = "nm_pessoa", nullable = false, length = LengthConstants.NOME_ATRIBUTO) 
+    @NotNull @Size(max = LengthConstants.NOME_ATRIBUTO)
+    @Column(name = "nm_pessoa", nullable = false, length = LengthConstants.NOME_ATRIBUTO)
     private String nome;
 
-    @Column(name = "in_ativo", nullable = false) 
+    @Column(name = "in_ativo", nullable = false)
     private Boolean ativo = Boolean.TRUE;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pessoa") 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pessoa")
     private List<MeioContato> meioContatoList = new ArrayList<>();
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pessoa")
     private List<PessoaDocumento> pessoaDocumentoList = new ArrayList<>();
-    
+
     public Integer getIdPessoa() {
         return idPessoa;
     }
@@ -169,12 +169,12 @@ public abstract class Pessoa implements Serializable {
         return getMeioContato(TipoMeioContatoEnum.TM);
     }
 
-	public List<PessoaDocumento> getPessoaDocumentoList() {
-		return pessoaDocumentoList;
-	}
+    public List<PessoaDocumento> getPessoaDocumentoList() {
+        return pessoaDocumentoList;
+    }
 
-	public void setPessoaDocumentoList(List<PessoaDocumento> pessoaDocumentoList) {
-		this.pessoaDocumentoList = pessoaDocumentoList;
-	}
+    public void setPessoaDocumentoList(List<PessoaDocumento> pessoaDocumentoList) {
+        this.pessoaDocumentoList = pessoaDocumentoList;
+    }
 
 }

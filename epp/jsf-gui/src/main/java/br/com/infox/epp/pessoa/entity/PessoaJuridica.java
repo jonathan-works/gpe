@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
-import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
 @Table(name = PessoaJuridica.TABLE_NAME)
@@ -31,7 +30,7 @@ public class PessoaJuridica extends Pessoa {
     @Size(max = LengthConstants.NUMERO_RAZAO_SOCIAL)
     @Column(name = "nr_cnpj", nullable = false, unique = true, length = LengthConstants.NUMERO_RAZAO_SOCIAL)
     private String cnpj;
-    
+
     @NotNull
     @Size(max = LengthConstants.NOME_PADRAO)
     @Column(name = "nm_razao_social", nullable = false, length = LengthConstants.NOME_PADRAO)
@@ -40,7 +39,7 @@ public class PessoaJuridica extends Pessoa {
     public PessoaJuridica() {
         setTipoPessoa(TipoPessoaEnum.J);
     }
-    
+
     public PessoaJuridica(String cnpj, String razaoSocial, String nome, Boolean ativo) {
         super();
         setNome(nome);
@@ -63,37 +62,6 @@ public class PessoaJuridica extends Pessoa {
 
     public void setRazaoSocial(String razaoSocial) {
         this.razaoSocial = razaoSocial;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((cnpj == null) ? 0 : cnpj.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        obj = HibernateUtil.removeProxy(obj);        
-        if (!(obj instanceof PessoaJuridica)) {
-            return false;
-        }
-        PessoaJuridica other = (PessoaJuridica) obj;
-        if (cnpj == null) {
-            if (other.cnpj != null) {
-                return false;
-            }
-        } else if (!cnpj.equals(other.cnpj)) {
-            return false;
-        }
-        return true;
     }
 
     @Override

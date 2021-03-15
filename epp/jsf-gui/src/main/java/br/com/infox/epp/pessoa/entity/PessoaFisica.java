@@ -34,7 +34,6 @@ import br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronico;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.hibernate.util.HibernateUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,7 +41,7 @@ import lombok.Setter;
 @Table(name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
 @PrimaryKeyJoinColumn(name = "id_pessoa_fisica", columnDefinition = "integer")
 @NamedQueries({
-	@NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY)
+    @NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY)
 })
 public class PessoaFisica extends Pessoa {
 
@@ -94,9 +93,9 @@ public class PessoaFisica extends Pessoa {
     @PrePersist
     @PreUpdate
     private void prePersistOrUpdate(){
-    	if (estadoCivil == null){
-    		estadoCivil = EstadoCivilEnum.N;
-    	}
+        if (estadoCivil == null){
+            estadoCivil = EstadoCivilEnum.N;
+        }
     }
 
     public String getCpf() {
@@ -131,56 +130,25 @@ public class PessoaFisica extends Pessoa {
         this.termoAdesao = termoAdesao;
     }
 
-	public EstadoCivilEnum getEstadoCivil() {
-		return estadoCivil;
-	}
+    public EstadoCivilEnum getEstadoCivil() {
+        return estadoCivil;
+    }
 
-	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
-		this.estadoCivil = estadoCivil;
-	}
+    public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
+        this.estadoCivil = estadoCivil;
+    }
 
-	public UsuarioLogin getUsuarioLogin() {
-		return usuarioLogin;
-	}
+    public UsuarioLogin getUsuarioLogin() {
+        return usuarioLogin;
+    }
 
-	public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
-		this.usuarioLogin = usuarioLogin;
-	}
+    public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
+        this.usuarioLogin = usuarioLogin;
+    }
 
-	@Transient
+    @Transient
     public String getDataFormatada() {
         return dataNascimento == null ? "" : DateFormat.getDateInstance().format(dataNascimento);
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getCpf() == null) ? 0 : getCpf().hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        obj = HibernateUtil.removeProxy(obj);
-        if (!(obj instanceof PessoaFisica)) {
-            return false;
-        }
-        PessoaFisica other = (PessoaFisica) obj;
-        if (getCpf() == null) {
-            if (other.getCpf() != null) {
-                return false;
-            }
-        } else if (!getCpf().equals(other.getCpf())) {
-            return false;
-        }
-        return true;
     }
 
     @Override
