@@ -47,7 +47,11 @@
                 <wi:inputNumber id="matricula" label="#{infoxMessages['vidaFuncionalGDPrev.matricula']}"
                     onkeyup="onlyPositiveNumber(this)"
                     value="#{vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.matricula}"/>
-
+				
+				<wi:field id="nomeDocumento" label="#{infoxMessages['vidaFuncionalGDPrev.documentoNome']}">
+                    <h:inputText id="nomeDocumentoInput" value="#{vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.nomeDocumento}" />
+                </wi:field>
+                
                 <div>
                     <p:commandButton value="#{infoxMessages['vidaFuncionalGDPrev.buscar']}" process="@form"
                         update="@form @(.vidaFuncionalTable) :pageBodyDialogMessage"

@@ -14,8 +14,9 @@ public class FiltroVidaFuncionalGDPrev implements Serializable {
     private String nome;
     private String cpf;
     private Integer matricula;
+    private String nomeDocumento;
 
     public boolean isEmpty() {
-        return StringUtil.isEmpty(getNome()) && StringUtil.isEmpty(getCpf()) && getMatricula() == null;
+        return StringUtil.isEmpty(getNome()) && StringUtil.isEmpty(getCpf()) && getMatricula() == null && StringUtil.isEmpty(getNomeDocumento());
     }
 }
