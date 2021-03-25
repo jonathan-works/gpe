@@ -48,6 +48,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
+import br.com.infox.epp.documento.type.PosicaoTextoAssinaturaDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -241,5 +242,13 @@ public class DocumentoDAO extends DAO<Documento> {
         Join<Documento, Pasta> pasta = from.join(Documento_.pasta, JoinType.INNER);
         
         return null;
+    }
+    
+    public PosicaoTextoAssinaturaDocumentoEnum getPosicaoTextoAssinaturaDocumento(DocumentoBin documentoBin) {
+    	List<Documento> documentoList = getDocumentosFromDocumentoBin(documentoBin);
+		if (!documentoList.isEmpty()) {
+			return documentoList.get(0).getClassificacaoDocumento().getPosicaoTextoAssinaturaDocumentoEnum();
+		}
+		return null;
     }
 }

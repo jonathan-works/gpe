@@ -94,6 +94,10 @@
                 required="true" showLabelSelecione="true" >
                 <f:ajax event="change" execute="@this" render=":defaultTabPanel:classificacaoDocumentoForm:tipoDocumentoDiv" />
             </wi:selectOneMenuEnum>
+            <wi:selectOneMenuEnum id="posicaoAssinatura"
+                label="#{infoxMessages['tipoProcessoDocumento.posicaoAssinatura']}"
+                items="#{classificacaoDocumentoFacade.getPosicaoTextoAssinaturaDocumentoEnumValues()}"
+                value="#{classificacaoDocumentoCrudAction.instance.posicaoTextoAssinaturaDocumentoEnum}" showLabelSelecione="true" />
             <wi:selectBooleanRadio id="sistema"
                 label="#{infoxMessages['tipoProcessoDocumento.sistema']}"
                 value="#{classificacaoDocumentoCrudAction.instance.sistema}" />

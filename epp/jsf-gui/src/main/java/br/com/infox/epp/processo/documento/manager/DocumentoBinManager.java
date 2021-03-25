@@ -37,6 +37,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
+import br.com.infox.epp.documento.type.PosicaoTextoAssinaturaDocumentoEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
@@ -56,6 +57,7 @@ import net.glxn.qrgen.image.ImageType;
 public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> {
 
 	private static final long serialVersionUID = 1L;
+	private static final String TEXTO_AUTENTICIDADE_DOCUMENTO = "A autenticidade do documento pode ser conferida neste link: ";
 	public static final String NAME = "documentoBinManager";
 
 	@In
@@ -150,22 +152,17 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 	}
 
-    public byte[] writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode) {
+    public byte[] writeMargemDocumento(byte[] pdf, String textoAssinatura, UUID uuid, final byte[] qrcode, PosicaoTextoAssinaturaDocumentoEnum posicaoAssinatura) {
         try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
-            writeMargemDocumento(pdf, textoAssinatura, textoCodigo, qrcode, outStream);
+            writeMargemDocumento(pdf, textoAssinatura, uuid, qrcode, outStream, posicaoAssinatura);
             return outStream.toByteArray();
         } catch (IOException e) {
         	throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
         }
     }
 
-    public void writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode,
-            OutputStream outStream) {
-        writeMargemDocumento(pdf,  textoAssinatura, textoCodigo, qrcode, outStream, true);
-    }
-
-	public void writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode,
-			OutputStream outStream, boolean bottom) {
+	public void writeMargemDocumento(byte[] pdf, String textoAssinatura, UUID uuid, final byte[] qrcode,
+			OutputStream outStream, PosicaoTextoAssinaturaDocumentoEnum posicaoAssinatura) {
     	if(InfoxPdfReader.isCriptografado(pdf)) {
             throw new MargemPdfException("Documento somente leitura, não é possível gravar");
     	}
@@ -175,7 +172,6 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         	final Font font = new Font(Font.TIMES_ROMAN, 8);
 
         	final Phrase phrase = new Paragraph(textoAssinatura, font);
-        	final Phrase codPhrase = new Phrase(textoCodigo, font);
 
         	for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
         		int rotation = pdfReader.getPageRotation(page);
@@ -189,19 +185,17 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         			right = top;
         			top = tempRight;
         		}
-        		if(!bottom) {
-        		    image.setAbsolutePosition(0, 0);
+        		
+        		
+        		if(PosicaoTextoAssinaturaDocumentoEnum.RODAPE_HORIZONTAL.equals(posicaoAssinatura)) {
+        			image.setAbsolutePosition(0, 0);
                     content.addImage(image);
-                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, codPhrase, 52, 12, 0);
-                    ColumnText ct = new ColumnText(content);
-            		float bottm = pdfReader.getCropBox(page).getBottom();
-            		ct.setAlignment(Element.ALIGN_JUSTIFIED);
-					ct.setSimpleColumn(52, bottm+58, right - 10, bottm+20);
-            		ct.addElement(phrase);
-            		ct.go();
-//                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, phrase, 52, 25, 0);
+                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, phrase, 52, 37, 0);
+                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, new Phrase(TEXTO_AUTENTICIDADE_DOCUMENTO, font), 52, 25, 0);
+                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, new Phrase(getTextoCodigoSomente(uuid), font), 52, 12, 0);
         		} else {
-        		    image.setAbsolutePosition(right - 65, top - 70);
+        			Phrase codPhrase = new Phrase(getTextoCodigo(uuid), font);
+					image.setAbsolutePosition(right - 65, top - 70);
                     content.addImage(image);
                     ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
                     ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 35, top - 70, -90);
@@ -220,7 +214,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
     public void writeMargemDocumento(final DocumentoBin documento, final byte[] pdf, final OutputStream outStream) {
         try {
-            outStream.write(writeMargemDocumento(pdf, getTextoAssinatura(documento), getTextoCodigo(documento.getUuid()), getQrCodeSignatureImage(documento)));
+            outStream.write(writeMargemDocumento(pdf, getTextoAssinatura(documento), documento.getUuid(), getQrCodeSignatureImage(documento), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento)));
             outStream.flush();
         } catch (IOException e) {
             throw new BusinessException("Erro ao gravar a margem do PDF", e);
@@ -233,12 +227,17 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         }
 
 	public String getTextoCodigo(final UUID uuid) {
-        final StringBuilder sb = new StringBuilder("A autenticidade do documento pode ser conferida neste link: ");
+        final StringBuilder sb = new StringBuilder(TEXTO_AUTENTICIDADE_DOCUMENTO);
+		sb.append(getTextoCodigoSomente(uuid));
+        return sb.toString();
+    }
+	
+	public String getTextoCodigoSomente(final UUID uuid) {
+        final StringBuilder sb = new StringBuilder();
 		sb.append(getUrlValidacaoDocumento());
 		sb.append("?cod=");
 		sb.append(uuid);
-		String string = sb.toString();
-        return string;
+        return sb.toString();
     }
 
     public String getTextoAssinatura(final DocumentoBin documento) {
