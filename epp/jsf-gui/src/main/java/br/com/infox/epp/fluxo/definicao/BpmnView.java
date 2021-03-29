@@ -22,6 +22,7 @@ import br.com.infox.epp.fluxo.definicao.modeler.BpmnJpdlService;
 import br.com.infox.epp.fluxo.definicao.modeler.EppBpmn;
 import br.com.infox.epp.fluxo.entity.DefinicaoProcesso;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
+import br.com.infox.ibpm.process.definition.fitter.TaskFitter;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -35,6 +36,8 @@ public class BpmnView implements Serializable {
 	private BpmnJpdlService bpmnJpdlService;
 	@Inject
 	private DefinicaoProcessoController definicaoProcessoController;
+	@Inject
+    private TaskFitter taskFitter;
 	
 	private String bpmnInformation;
 	private String elementKey;
@@ -52,7 +55,7 @@ public class BpmnView implements Serializable {
 		String newBpmnXml = bpmnInfo.get("bpmn").getAsString();
 		newBpmnXml = EppBpmn.convertToString(EppBpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8))));
 		
-		if (!newProcessDefinitionXml.equals(definicaoProcesso.getXml()) || !newBpmnXml.equals(definicaoProcesso.getBpmn())) {
+		if (!newProcessDefinitionXml.equals(definicaoProcesso.getXml()) || !newBpmnXml.equals(definicaoProcesso.getBpmn()) || !taskFitter.getTarefasModificadas().isEmpty()) {
 			try {
 				definicaoProcessoController.setDefinicaoProcesso(
 			        bpmnJpdlService.atualizarDefinicao(definicaoProcesso, newProcessDefinitionXml, newBpmnXml, bpmnInfo.get("svg").getAsString())
