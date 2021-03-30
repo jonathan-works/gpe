@@ -95,6 +95,7 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
     private static final String FILTRO_CPF = "cpf";
     private static final String FILTRO_MATRICULA = "matricula";
     private static final String FILTRO_NOME = "nome";
+    private static final String FILTRO_TEMPORALIDADE = "temporalidade";
 
     @Inject
     private ParametroManager parametroManager;
@@ -119,6 +120,9 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
             }
             if (filtros.getMatricula() != null) {
                 uriBuilder.addParameter(FILTRO_MATRICULA, filtros.getMatricula().toString());
+            }
+            if (!StringUtil.isEmpty(filtros.getNomeDocumento())) {
+                uriBuilder.addParameter(FILTRO_TEMPORALIDADE, filtros.getNomeDocumento());
             }
 
             HttpUriRequest request = new HttpGet(uriBuilder.build());
