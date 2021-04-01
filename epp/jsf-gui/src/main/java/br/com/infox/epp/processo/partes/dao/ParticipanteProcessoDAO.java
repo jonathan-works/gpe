@@ -35,7 +35,6 @@ import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.omnifaces.util.Utils;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.pessoa.entity.Pessoa;
@@ -203,7 +202,7 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
         CriteriaQuery<ParticipanteProcesso> query = cb.createQuery(ParticipanteProcesso.class);
         Root<ParticipanteProcesso> participante = query.from(ParticipanteProcesso.class);
         query.where(cb.equal(participante.get(ParticipanteProcesso_.processo), processo));
-        if (!Utils.isEmpty(participantes))
+        if (participantes != null && !participantes.isEmpty())
             query.where(query.getRestriction(), cb.not(participante.in(participantes)));
         query.orderBy(cb.asc(participante.get(ParticipanteProcesso_.caminhoAbsoluto)));
         return getEntityManager().createQuery(query).getResultList();
