@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -34,6 +35,7 @@ import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.Estado_;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaFisica_;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -127,6 +129,8 @@ public class ServidorContribuinteSearch extends PersistenceController {
 
         try {
             return getEntityManager().createQuery(query).getSingleResult();
+        } catch (NonUniqueResultException  e) {
+            throw new BusinessRollbackException(String.format("Mais de um servidor encontrado para o cpf %s", cpf), e);
         } catch (NoResultException e) {
             return null;
         }
@@ -136,10 +140,11 @@ public class ServidorContribuinteSearch extends PersistenceController {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ServidorContribuinteVO> query = cb.createQuery(ServidorContribuinteVO.class);
         Root<ContribuinteSolicitante> contribuinte = query.from(ContribuinteSolicitante.class);
+        Join<ContribuinteSolicitante, PessoaFisica> pessoaFisica = contribuinte.join(ContribuinteSolicitante_.pessoaFisica);
         Join<ContribuinteSolicitante, Estado> estado = contribuinte.join(ContribuinteSolicitante_.estado, JoinType.LEFT);
 
         query.select(cb.construct(query.getResultType(), contribuinte.get(ContribuinteSolicitante_.id),
-                contribuinte.get(ContribuinteSolicitante_.pessoaFisica).get(PessoaFisica_.idPessoa),
+                pessoaFisica.get(PessoaFisica_.idPessoa),
                 contribuinte.get(ContribuinteSolicitante_.cpf), contribuinte.get(ContribuinteSolicitante_.nomeCompleto),
                 contribuinte.get(ContribuinteSolicitante_.dataNascimento),
                 contribuinte.get(ContribuinteSolicitante_.sexo), contribuinte.get(ContribuinteSolicitante_.nomeMae),
@@ -154,6 +159,8 @@ public class ServidorContribuinteSearch extends PersistenceController {
 
         try {
             return getEntityManager().createQuery(query).getSingleResult();
+        } catch (NonUniqueResultException  e) {
+            throw new BusinessRollbackException(String.format("Mais de um contribuiente encontrado para o cpf %s", cpf), e);
         } catch (NoResultException e) {
             return null;
         }

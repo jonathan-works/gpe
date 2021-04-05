@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
@@ -20,6 +21,8 @@ import br.com.infox.epp.loglab.eturmalina.service.ETurmalinaService;
 import br.com.infox.epp.loglab.model.Servidor;
 import br.com.infox.epp.loglab.model.Servidor_;
 import br.com.infox.epp.loglab.vo.ServidorVO;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaFisica_;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -27,8 +30,6 @@ public class ServidorSearch extends PersistenceController {
 
     @Inject
     private ETurmalinaService eTurmalinaService;
-    @Inject
-    private UsuarioSearch usuarioSearch;
 
     public List<ServidorVO> getDadosServidor(String numeroCpf){
         List<ServidorVO> servidorList = new ArrayList<ServidorVO>();
@@ -44,7 +45,7 @@ public class ServidorSearch extends PersistenceController {
     }
 
     public boolean isExisteUsuarioServidor(String numeroCpf){
-        return usuarioSearch.isExisteUsuarioByNumeroCpf(numeroCpf);
+        return getServidorByCpf(numeroCpf) != null;
     }
 
     private ServidorVO convertDadosServidorResponse(DadosServidorResponseBean dadosServidorResponseBean) {
@@ -73,10 +74,16 @@ public class ServidorSearch extends PersistenceController {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Servidor> query = cb.createQuery(Servidor.class);
         Root<Servidor> sv = query.from(Servidor.class);
+        Join<Servidor, PessoaFisica> pessoaFisica = sv.join(Servidor_.pessoaFisica);
 
         query.select(sv);
 
-        query.where(cb.equal(sv.get(Servidor_.cpf), cpf));
+        query.where(
+            cb.or(
+                cb.equal(sv.get(Servidor_.cpf), cpf),
+                cb.equal(pessoaFisica.get(PessoaFisica_.cpf), cpf)
+            )
+        );
 
         try {
             return getEntityManager().createQuery(query).getSingleResult();

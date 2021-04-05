@@ -56,6 +56,7 @@ public class ContribuinteView implements Serializable {
         limpar();
     }
 
+    @ExceptionHandled
     public void consultarTurmalina() {
         if (numeroCpf != null) {
             contribuinteSolicitanteList = contribuinteSolicitanteSearch.getDadosContribuinteSolicitante(numeroCpf, numeroMatricula, ContribuinteEnum.CO);
