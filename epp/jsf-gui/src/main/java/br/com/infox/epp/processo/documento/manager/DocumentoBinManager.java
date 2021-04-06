@@ -256,6 +256,11 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                 )
             );
         }
+        
+        Documento doc = documento.getDocumentoList() == null? null : documento.getDocumentoList().get(0);
+        if(doc != null && doc.getPasta().getProcesso() != null) {
+        	assinadores.append(", Nº do processo ").append(doc.getPasta().getProcesso().getNumeroProcesso());
+        }
 
         return Parametros.TEXTO_RODAPE_DOCUMENTO.getValue()
             .replaceAll("\\$\\{assinadores\\}", assinadores.toString());
