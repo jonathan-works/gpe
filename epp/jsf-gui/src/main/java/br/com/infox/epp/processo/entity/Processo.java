@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.entity;
 
 import static br.com.infox.constants.LengthConstants.NUMERACAO_PROCESSO;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_MINIMA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS1;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS2;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS3;
@@ -167,6 +168,10 @@ public class Processo implements Serializable, Recursive<Processo> {
     @Size(max = NUMERACAO_PROCESSO)
     @Column(name = NUMERO_PROCESSO, nullable = false, length = NUMERACAO_PROCESSO)
     private String numeroProcesso;
+    
+    @Size(max = DESCRICAO_MINIMA)
+    @Column(name = "ds_senha_acesso_documento", length = DESCRICAO_MINIMA)
+    private String senhaAcessoDocumento;
 
     @Column(name = "nr_tempo_gasto")
     private Integer tempoGasto;
