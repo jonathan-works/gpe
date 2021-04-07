@@ -257,7 +257,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
             );
         }
         
-        Documento doc = documento.getDocumentoList() == null? null : documento.getDocumentoList().get(0);
+        Documento doc = documento.getDocumentoList().isEmpty()? null : documento.getDocumentoList().get(0);
         if(doc != null && doc.getPasta().getProcesso() != null) {
         	assinadores.append(", Nº do processo ").append(doc.getPasta().getProcesso().getNumeroProcesso());
         }
