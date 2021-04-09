@@ -74,7 +74,7 @@
 	                    tableTitle="#{infoxMessages['consultaExternaPorPartes.tableTitle']}"
 	                    id="consultaProcessoExternoPorPartes"
 	                    rowId="#{row.idProcesso}"
-	                    showGrid="#{consultaProcessoExternoPorPartes.exibirTable and not empty consultaProcessoExternoPorPartes.fluxo and not empty consultaProcessoExternoPorPartes.nomePartes}">
+	                    showGrid="#{consultaProcessoExternoPorPartes.exibirTable and not empty consultaProcessoExternoPorPartes.fluxo and (not empty consultaProcessoExternoPorPartes.nomePartes or not empty consultaProcessoExternoPorPartes.cpf)}">
 	
 	                    <ui:define name="headerToolBar" />
 	
@@ -100,7 +100,11 @@
 	                                label="#{infoxMessages['processoEpp.nome']}"
 	                                value="#{consultaProcessoExternoPorPartes.nomePartes}"
 	                                minlength="1" rendered="#{not empty consultaProcessoExternoPorPartes.fluxo}" />
-	                        </wi:searchForm>
+								<wi:inputCpf id="cpf"
+									value="#{consultaProcessoExternoPorPartes.cpf}"
+									rendered="#{not empty consultaProcessoExternoPorPartes.fluxo}"
+									label="#{infoxMessages['pessoaFisica.cpf']}"  />
+							</wi:searchForm>
 	                    </ui:define>
 	
 	                    <ui:define name="toolBar">
