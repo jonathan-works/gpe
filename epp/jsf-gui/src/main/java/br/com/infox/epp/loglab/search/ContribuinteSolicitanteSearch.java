@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
@@ -25,6 +26,8 @@ import br.com.infox.epp.loglab.model.ContribuinteSolicitante_;
 import br.com.infox.epp.loglab.vo.ContribuinteSolicitanteVO;
 import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.EstadoSearch;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaFisica_;
 import br.com.infox.epp.pessoa.type.TipoGeneroEnum;
 
 @Stateless
@@ -36,9 +39,6 @@ public class ContribuinteSolicitanteSearch extends PersistenceController {
 
     @Inject
     private EstadoSearch estadoSearch;
-
-    @Inject
-    private UsuarioSearch usuarioSearch;
 
     public List<ContribuinteSolicitanteVO> getDadosContribuinteSolicitante(String numeroCpf, String numeroMatricula, ContribuinteEnum tipoContribuinte){
         List<ContribuinteSolicitanteVO> contribuinteSolicitanteList = new ArrayList<ContribuinteSolicitanteVO>();
@@ -55,7 +55,7 @@ public class ContribuinteSolicitanteSearch extends PersistenceController {
     }
 
     public boolean isExisteUsuarioContribuinteSolicitante(String numeroCpf){
-        return usuarioSearch.isExisteUsuarioByNumeroCpf(numeroCpf);
+        return getContribuinteSolicitanteByCpfAndTipoContribuinte(numeroCpf, null) != null;
     }
 
     private ContribuinteSolicitanteVO convertDadosServidorResponse(DadosServidorResponseBean dadosServidorResponseBean, ContribuinteEnum tipoContribuinte) {
@@ -86,6 +86,12 @@ public class ContribuinteSolicitanteSearch extends PersistenceController {
 
         ContribuinteSolicitante contrSolic = getContribuinteSolicitanteByMatriculaAndTipoContribuinte(
                 dadosServidorResponseBean.getMatricula(), tipoContribuinte);
+
+        if(contrSolic == null) {
+            contrSolic = getContribuinteSolicitanteByCpfAndTipoContribuinte(
+                    dadosServidorResponseBean.getCpf(), tipoContribuinte);
+        }
+
         if (contrSolic != null) {
             contribuinteSolicitante.setId(contrSolic.getId());
             if (estado == null) {
@@ -134,6 +140,41 @@ public class ContribuinteSolicitanteSearch extends PersistenceController {
 
         query.where(cb.equal(contrSolic.get(ContribuinteSolicitante_.matricula), matricula),
                 cb.equal(contrSolic.get(ContribuinteSolicitante_.tipoContribuinte), tipoContribuinte));
+
+        try {
+            return getEntityManager().createQuery(query).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public ContribuinteSolicitante getContribuinteSolicitanteByCpfAndTipoContribuinte(
+        String numeroCpf,
+        ContribuinteEnum tipoContribuinte
+    ){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ContribuinteSolicitante> query = cb.createQuery(ContribuinteSolicitante.class);
+        Root<ContribuinteSolicitante> contrSolic = query.from(ContribuinteSolicitante.class);
+        Join<ContribuinteSolicitante, PessoaFisica> pessoaFisica = contrSolic.join(ContribuinteSolicitante_.pessoaFisica);
+
+        query.select(contrSolic);
+
+        query.where(
+            cb.or(
+                cb.equal(contrSolic.get(ContribuinteSolicitante_.cpf), numeroCpf),
+                cb.equal(pessoaFisica.get(PessoaFisica_.cpf), numeroCpf)
+            )
+        );
+
+        if(tipoContribuinte != null) {
+            query.where(
+                query.getRestriction(),
+                cb.equal(
+                    contrSolic.get(ContribuinteSolicitante_.tipoContribuinte),
+                    tipoContribuinte
+                )
+            );
+        }
 
         try {
             return getEntityManager().createQuery(query).getSingleResult();
