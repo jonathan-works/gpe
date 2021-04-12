@@ -32,6 +32,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.util.Beans;
+import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
@@ -66,6 +67,8 @@ public class FileDownloader implements Serializable {
     private DocumentoManager documentoManager;
     @Inject
     private PathResolver pathResolver;
+    @Inject
+    private DocumentoDAO documentoDAO;
     
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)
@@ -303,7 +306,7 @@ public class FileDownloader implements Serializable {
     	byte[] originalData = getOriginalData(documento);
     	
     	if (gerarMargens && podeExibirMargem(documento)) {
-    		documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento), outputStream);
+    		documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento));
     	}
     	else {
     		try {

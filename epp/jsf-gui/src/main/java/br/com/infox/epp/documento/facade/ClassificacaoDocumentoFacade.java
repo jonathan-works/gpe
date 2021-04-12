@@ -15,6 +15,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.ClassificacaoDocumentoSearch;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
+import br.com.infox.epp.documento.type.PosicaoTextoAssinaturaDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
@@ -45,6 +46,10 @@ public class ClassificacaoDocumentoFacade {
     
     public TipoAssinaturaEnum[] getTipoAssinaturaEnumValues() {
         return TipoAssinaturaEnum.values();
+    }
+    
+    public PosicaoTextoAssinaturaDocumentoEnum[] getPosicaoTextoAssinaturaDocumentoEnumValues() {
+    	return PosicaoTextoAssinaturaDocumentoEnum.values();
     }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo) {
