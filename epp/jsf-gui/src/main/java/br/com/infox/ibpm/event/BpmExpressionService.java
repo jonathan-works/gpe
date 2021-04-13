@@ -707,4 +707,11 @@ public class BpmExpressionService {
     public String formatarData(Date data, String formato) {
         return DateUtil.formatarData(data, formato);
     }
+    
+    @External(tooltip = "Retorna a senha de acesso ao processo atual", expressionType = ExpressionType.GERAL)
+    public String getSenhaAcessoProcesso() {
+        return getProcessoAtual().getSenhaAcesso();
+    }
+    
+    
 }

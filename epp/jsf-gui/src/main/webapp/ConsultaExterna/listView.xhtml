@@ -55,7 +55,9 @@
 
                     <ui:define name="toolBar">
                         <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
-                            title="#{infoxMessages['button.selecionar']}" action="#{consultaExternaController.selectProcesso(row)}"/>
+                        	onclick="infox.showLoading();"
+							oncomplete="#{rich:component('acessarProcessoPopUpPanel')}.show();infox.hideLoading();"
+                            title="#{infoxMessages['button.selecionar']}" action="#{consultaExternaController.prepararAbrirProcesso(row)}" />
                     </ui:define>
 
                     <infox:dynamicColumns columns="#{consultaProcessoDynamicColumnsController.dynamicColumns}" />
@@ -108,9 +110,13 @@
 	                    </ui:define>
 	
 	                    <ui:define name="toolBar">
-	                        <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}" 
-	                            action="#{consultaExternaController.selectProcesso(row)}"/>
-	                    </ui:define>
+							<wi:toolBar
+								url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+								onclick="infox.showLoading();"
+								oncomplete="#{rich:component('acessarProcessoPopUpPanel')}.show();infox.hideLoading();"
+								title="#{infoxMessages['button.selecionar']}"
+								action="#{consultaExternaController.prepararAbrirProcesso(row)}" />
+						</ui:define>
 	
 	                    <infox:dynamicColumns columns="#{consultaProcessoDynamicColumnsController.dynamicColumns}" />
 	                </wi:dataTable>
@@ -223,6 +229,23 @@
                     </p:outputPanel>
                 </h:form>
             </infox:tab>
-        </infox:tabPanel>
+		</infox:tabPanel>
+		
+		<rich:popupPanel id="acessarProcessoPopUpPanel" autosized="true"
+				modal="true" maxHeight="600" header="Senha de acesso ao processo">
+				<h:form>
+					<wi:inputText id="senhaProcesso"
+                                label="" 
+                                length="15"
+                                value="#{consultaExternaController.senhaAcessoProcesso}" />
+                                
+					<a:commandButton id="acessarButton" styleClass="buttons"
+						action="#{consultaExternaController.selectProcesso()}"
+						onclick="infox.showLoading();" execute="@form"
+						render="pageBodyDialogMessage :consultaExternaTabPanel" 
+						oncomplete="infox.hideLoading(); #{rich:component('acessarProcessoPopUpPanel')}.hide();"
+						value="Acessar processo" />
+				</h:form>
+			</rich:popupPanel>
     </ui:define>
 </ui:composition>

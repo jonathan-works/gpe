@@ -8,6 +8,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.cdi.seam.ContextDependency;
@@ -33,6 +34,8 @@ public class ConsultaExternaController extends AbstractController {
     private ServicoCaptchaSessao servicoCaptcha;
 
     private Processo processo;
+    private Processo processoSelecionado;
+    private String senhaAcessoProcesso;
     
     private boolean mostrarCaptcha = true;
     
@@ -43,14 +46,40 @@ public class ConsultaExternaController extends AbstractController {
 	public void setProcesso(Processo processo) {
 		this.processo = processo;
 	}
+	
+	public Processo getProcessoSelecionado() {
+		return processoSelecionado;
+	}
 
-	public void selectProcesso(Processo processo) {
-        mostrarCaptcha = servicoCaptcha.isMostrarCaptcha();
-        if(!mostrarCaptcha) {
-    		servicoCaptcha.telaMostrada();        	
-        }
-        setTab(TAB_VIEW);
-        setProcesso(processo);
+	public void setProcessoSelecionado(Processo processoSelecionado) {
+		this.processoSelecionado = processoSelecionado;
+	}
+	
+	public String getSenhaAcessoProcesso() {
+		return senhaAcessoProcesso;
+	}
+
+	public void setSenhaAcessoProcesso(String senhaAcessoProcesso) {
+		this.senhaAcessoProcesso = senhaAcessoProcesso;
+	}
+
+	public void prepararAbrirProcesso(Processo processo) {
+		senhaAcessoProcesso = "";
+		setProcessoSelecionado(processo);
+	}
+
+	public void selectProcesso() {
+		if(senhaAcessoProcesso != null && senhaAcessoProcesso.equals(processoSelecionado.getSenhaAcesso())) {
+	        mostrarCaptcha = servicoCaptcha.isMostrarCaptcha();
+	        if(!mostrarCaptcha) {
+	    		servicoCaptcha.telaMostrada();        	
+	        }
+	        setTab(TAB_VIEW);
+	        setProcesso(processoSelecionado);
+		} else {
+			senhaAcessoProcesso = "";
+			FacesMessages.instance().add("Senha de acesso ao documento está incorreta");
+		}
     }
 
     public List<Documento> getAnexosPublicos(ProcessoTarefa processoTarefa) {
