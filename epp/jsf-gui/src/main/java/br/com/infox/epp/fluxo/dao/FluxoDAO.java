@@ -14,6 +14,7 @@ import static br.com.infox.epp.fluxo.query.FluxoQuery.PARAM_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.PARAM_NOME;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-
+import org.jbpm.taskmgmt.def.Task;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Localizacao_;
@@ -176,5 +177,31 @@ public class FluxoDAO extends DAO<Fluxo> {
         cq.where(cb.equal(f.get(Fluxo_.idFluxo), fluxo.getIdFluxo()),
                 cb.isNull(p.get(Processo_.dataFim)));
         return getEntityManager().createQuery(cq).getSingleResult();
+    }
+    
+    public List<Task> getListaTaskByFluxo(Fluxo fluxo){
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Task> cq = cb.createQuery(Task.class);
+        Root<Task> taskRoot = cq.from(Task.class);
+        cq.select(taskRoot);
+        
+        List<Task> listaTarefa = getEntityManager().createQuery(cq).getResultList();
+        Iterator<Task> iteratorTask = listaTarefa.iterator(); 
+        while(iteratorTask.hasNext()) {
+        	Task taskIt = iteratorTask.next();
+        	if(!taskIt.getProcessDefinition().getName().equals(fluxo.getFluxo())) {
+        		iteratorTask.remove();
+        	} else {
+        		for(Task task : listaTarefa) {
+        			if(task.getProcessDefinition().getName().equals(taskIt.getProcessDefinition().getName()) && task.getProcessDefinition().getVersion() > taskIt.getProcessDefinition().getVersion()) {
+        				iteratorTask.remove();
+        				break;
+        			}
+        		}
+        	}
+        }
+        
+        
+        return listaTarefa;
     }
 }

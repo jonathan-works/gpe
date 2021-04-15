@@ -10,14 +10,15 @@
 
 	<wi:dataReport subtitle="Produtividade"
 				   title="#{nomeSistema}"
-				   columns="9"
-				   widths="2 3 3 3 2 2 2 2 2"
+				   columns="10"
+				   widths="2 3 3 3 3 2 2 2 2 2"
 				   headerText="#{produtividadeAction.criteria}">
 				   
 		<wi:reportColumnHeader title="#{infoxMessages['usuario.usuario']}" />
 		<wi:reportColumnHeader title="#{infoxMessages['produtividade.localizacao']}" />
 		<wi:reportColumnHeader title="#{infoxMessages['produtividade.papel']}" />
 		<wi:reportColumnHeader title="#{infoxMessages['produtividade.tarefa']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['produtividade.fluxo']}" />
 		<wi:reportColumnHeader title="#{infoxMessages['produtividade.quantidade']}" />
 		<wi:reportColumnHeader title="#{infoxMessages['produtividade.tempoMedio']}" />
 		<wi:reportColumnHeader title="#{infoxMessages['produtividade.tempoPrevisto']}" />
@@ -30,6 +31,7 @@
 			<wi:reportColumn value="#{row.localizacao}" />
 			<wi:reportColumn value="#{row.papel}" />
 			<wi:reportColumn value="#{row.tarefa}" />
+			<wi:reportColumn value="#{row.fluxo}" />
 			<wi:reportColumn value="#{row.quantidadeTarefas}" />
 			<wi:reportColumn value="#{row.mediaTempoGasto}"/>
 			<wi:reportColumn value="#{row.tempoPrevisto}" />
