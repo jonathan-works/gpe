@@ -157,6 +157,14 @@
                                 <wi:outputText id="usuarioCadastro"
                                     label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
                                     value="#{controller.processo.usuarioCadastro.nomeUsuario}" />
+                                    
+                                    <wi:outputText id="localizacaoProcesso"
+                                    label="#{infoxMessages['processo.localizacao']}"
+                                    value="#{controller.processo.localizacao.localizacao}" />
+                                    
+                                    <wi:outputText id="statusProcesso"
+                                    label="#{infoxMessages['processo.statusProcesso']}"
+                                    value="#{controller.showStatusProcesso()}" />
                             </h:panelGrid>
                         </rich:collapsiblePanel>
     
