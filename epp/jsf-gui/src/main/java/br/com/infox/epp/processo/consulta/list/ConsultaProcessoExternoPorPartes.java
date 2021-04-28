@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.consulta.list;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoSearch;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 
 @Named
@@ -26,16 +28,31 @@ public class ConsultaProcessoExternoPorPartes extends DataList<Processo> {
 
     @Inject
     private ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
+    @Inject
+    private ParticipanteProcessoSearch participanteProcessoSearch;
     
     private boolean exibirTable = false;
     private Fluxo fluxo;
     private String nomePartes;
+    private String cpf;
     
     @PostConstruct
     @Override
     public void init() {
     	super.init();
     	consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_EXTERNA);
+    }
+    
+    @Override
+    public List<Processo> getResultList() {
+    	if(nomePartes == null) {
+    		return participanteProcessoSearch.getListaProcessoSemSigiloPor(cpf, fluxo);
+    	} if(cpf == null) {
+    		return super.getResultList();
+    	} else {
+    		return unificarListaProcessos(super.getResultList(), participanteProcessoSearch.getListaProcessoSemSigiloPor(cpf, fluxo));
+    	}
+    	
     }
     
     @Override
@@ -57,6 +74,12 @@ public class ConsultaProcessoExternoPorPartes extends DataList<Processo> {
     @Override
     protected String getDefaultWhere() {
     	return "where o.processoPai is null and o.idJbpm is not null and " + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
+    }
+    
+    private List<Processo> unificarListaProcessos(List<Processo> listaProcessoDataList, List<Processo> listaProcessoSearch){
+    	listaProcessoSearch.removeAll(listaProcessoDataList);
+    	listaProcessoDataList.addAll(listaProcessoSearch);
+    	return listaProcessoDataList;
     }
 
     public void exibirTable() {
@@ -80,7 +103,15 @@ public class ConsultaProcessoExternoPorPartes extends DataList<Processo> {
         this.nomePartes = nomePartes;
     }
     
-    public Fluxo getFluxo() {
+    public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public Fluxo getFluxo() {
 		return fluxo;
 	}
     
@@ -88,6 +119,7 @@ public class ConsultaProcessoExternoPorPartes extends DataList<Processo> {
     	if (fluxo == null || !Objects.equals(fluxo, this.fluxo)) {
     		this.fluxo = fluxo;
     		nomePartes = null;
+    		cpf = null;
     		consultaProcessoDynamicColumnsController.setFluxo(fluxo);
     	}
 	}

@@ -224,6 +224,7 @@
     <include file="epp/projeto00130730/master.xml" />
     <include file="epp/projeto00133492/master.xml" />
     <include file="epp/projeto00134556/master.xml" />
+    <include file="epp/projeto00134764/master.xml" />
 
     <!-- Precisa Rodar após todos os scripts -->
     <include file="epp/XXXX-DarPermissaoTabelasOracle.xml"/>

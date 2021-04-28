@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.entity;
 
 import static br.com.infox.constants.LengthConstants.NUMERACAO_PROCESSO;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_MINIMA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS1;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS2;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS3;
@@ -87,6 +88,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.core.persistence.generator.CustomIdGenerator;
@@ -167,6 +170,11 @@ public class Processo implements Serializable, Recursive<Processo> {
     @Size(max = NUMERACAO_PROCESSO)
     @Column(name = NUMERO_PROCESSO, nullable = false, length = NUMERACAO_PROCESSO)
     private String numeroProcesso;
+    
+    @NotNull
+    @Size(max = DESCRICAO_MINIMA)
+    @Column(name = "ds_senha_acesso", nullable = false, length = DESCRICAO_MINIMA)
+    private String senhaAcesso;
 
     @Column(name = "nr_tempo_gasto")
     private Integer tempoGasto;
@@ -234,6 +242,7 @@ public class Processo implements Serializable, Recursive<Processo> {
             setIdProcesso(generatedId);
             setNumeroProcesso(getIdProcesso().toString());
         }
+        setSenhaAcesso(RandomStringUtils.random(15, true, true));
         preencherProcessoRoot();
         RecursiveManager.refactor(this);
     }
@@ -568,5 +577,13 @@ public class Processo implements Serializable, Recursive<Processo> {
     public void setChildList(List<Processo> childList) {
         setFilhos(new ArrayList<>(childList));
     }
+
+	public String getSenhaAcesso() {
+		return senhaAcesso;
+	}
+
+	public void setSenhaAcesso(String senhaAcessoDocumento) {
+		this.senhaAcesso = senhaAcessoDocumento;
+	}
 
 }
