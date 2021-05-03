@@ -107,9 +107,12 @@ public class ProdutividadeAction implements Serializable {
         }
         return fluxos;
     }
-    
+
     public void carregarTarefas() {
-    	listaTarefa = fluxoDAO.getListaTaskByFluxo(fluxo);
+        this.tarefa = null;
+        if(fluxo != null) {
+            listaTarefa = fluxoDAO.getListaTaskByFluxo(fluxo);
+        }
     }
 
     public void clear() {
@@ -270,6 +273,6 @@ public class ProdutividadeAction implements Serializable {
 	public void setListaTarefa(List<Task> listaTarefa) {
 		this.listaTarefa = listaTarefa;
 	}
-    
-    
+
+
 }
