@@ -4,6 +4,7 @@ import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARA
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_DATA_FIM;
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_DATA_INICIO;
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_FLUXO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_TAREFA;
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_START;
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_USUARIO;
 
@@ -30,6 +31,8 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.Papel_;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.processo.entity.Processo;
@@ -60,6 +63,7 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
                 queryBean.papel.get(Papel_.nome),
                 queryBean.usuario.get(UsuarioLogin_.nomeUsuario),
                 queryBean.tarefa.get(Tarefa_.tarefa),
+                queryBean.fluxo.get(Fluxo_.fluxo),
                 cb.avg(queryBean.processoTarefa.get(ProcessoTarefa_.tempoGasto)),
                 cb.min(queryBean.processoTarefa.get(ProcessoTarefa_.tempoGasto)),
                 cb.max(queryBean.processoTarefa.get(ProcessoTarefa_.tempoGasto)),
@@ -96,13 +100,18 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
         Join<UsuarioTaskInstance, UsuarioLogin> usuario = usuarioTaskInstance.join(UsuarioTaskInstance_.usuario, JoinType.INNER);
         Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao, JoinType.INNER);
         Join<ProcessoTarefa, Tarefa> tarefa = processoTarefa.join(ProcessoTarefa_.tarefa, JoinType.INNER);
+        Join<ProcessoTarefa, Processo> processo = processoTarefa.join(ProcessoTarefa_.processo, JoinType.INNER);
+        Join<Processo, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = ncf.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
         
         query.where(cb.equal(processoTarefa.get(ProcessoTarefa_.taskInstance), usuarioTaskInstance.get(UsuarioTaskInstance_.idTaskInstance)));
         
         if (params.containsKey(PARAM_FLUXO)) {
-            Join<ProcessoTarefa, Processo> processo = processoTarefa.join(ProcessoTarefa_.processo, JoinType.INNER);
-            Join<Processo, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-            query.where(query.getRestriction(), cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), params.get(PARAM_FLUXO)));
+            query.where(query.getRestriction(), cb.equal(fluxo, params.get(PARAM_FLUXO)));
+        }
+        
+        if (params.containsKey(PARAM_TAREFA)) {
+            query.where(query.getRestriction(), cb.equal(tarefa.get(Tarefa_.tarefa), params.get(PARAM_TAREFA)));
         }
         
         if (params.containsKey(PARAM_USUARIO)) {
@@ -125,21 +134,24 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
                 papel.get(Papel_.nome),
                 usuario.get(UsuarioLogin_.nomeUsuario),
                 tarefa.get(Tarefa_.tarefa),
+                fluxo.get(Fluxo_.fluxo),
                 tarefa.get(Tarefa_.tipoPrazo)
         );
-        return new QueryBean(tarefa, localizacao, papel, usuario, processoTarefa);
+        return new QueryBean(tarefa, fluxo, localizacao, papel, usuario, processoTarefa);
     }
     
     private static class QueryBean {
         private Path<Tarefa> tarefa;
+        private Path<Fluxo> fluxo;
         private Path<Localizacao> localizacao;
         private Path<Papel> papel;
         private Path<UsuarioLogin> usuario;
         private Path<ProcessoTarefa> processoTarefa;
         
-        public QueryBean(Path<Tarefa> tarefa, Path<Localizacao> localizacao, Path<Papel> papel,
+        public QueryBean(Path<Tarefa> tarefa, Path<Fluxo> fluxo, Path<Localizacao> localizacao, Path<Papel> papel,
                 Path<UsuarioLogin> usuario, Path<ProcessoTarefa> processoTarefa) {
             this.tarefa = tarefa;
+            this.fluxo = fluxo;
             this.localizacao = localizacao;
             this.papel = papel;
             this.usuario = usuario;

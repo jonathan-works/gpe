@@ -23,12 +23,35 @@
                 <wi:searchForm formId="pesquisaFluxoForm"
                     formTitle="#{infoxMessages['searchForm.title']}"
                     clearAction="produtividadeAction.clear">
-                    <wi:selectOneMenuEntity id="comboFluxo"
-                        value="#{produtividadeAction.fluxo}"
-                        label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
-                        items="#{produtividadeAction.fluxoList}"
-                        showLabelSelecione="true" />
-                    <wi:suggest id="suggestUsuario"
+						<wi:selectOneMenuEntity id="comboFluxo"
+							value="#{produtividadeAction.fluxo}"
+							label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
+							items="#{produtividadeAction.fluxoList}"
+							showLabelSelecione="true">
+							<a:ajax execute="@this" render="comboTarefaDiv" listener="#{produtividadeAction.carregarTarefas}" />
+						</wi:selectOneMenuEntity>
+						
+						<s:div id="comboTarefaDiv">
+							<wi:field id="comboTarefa"
+								rendered="#{produtividadeAction.fluxo ne null}"
+								label="#{infoxMessages['tarefa.nome']}">
+								<h:selectOneMenu id="comboTarefaInput"
+									value="#{produtividadeAction.tarefa}"
+									rendered="#{produtividadeAction.fluxo ne null}"
+									hideNoSelectionOption="false"
+									style="width: 255px;"
+									title="#{infoxMessages['tarefa.nome']}">
+									<f:selectItem noSelectionOption="true" itemValue="#{null}"
+										itemLabel="#{messages['crud.select.select']}" />
+									<f:selectItems value="#{produtividadeAction.listaTarefa}"
+										itemValue="#{item}" var="item" itemLabel="#{item.name}" />
+									<f:converter
+										converterId="br.com.infox.jsf.converter.SelectItemConverter" />
+								</h:selectOneMenu>
+							</wi:field>
+						</s:div>
+						
+						<wi:suggest id="suggestUsuario"
                         suggestProvider="#{usuarioSuggestBean}"
                         value="#{produtividadeAction.usuario}"
                         label="#{infoxMessages['usuario.usuario']}" />
@@ -51,6 +74,9 @@
             <wi:columnOutputText columnId="tarefa"
                 columnHeader="#{infoxMessages['produtividade.tarefa']}"
                 value="#{row.tarefa}" />
+                <wi:columnOutputText columnId="fluxo"
+                columnHeader="#{infoxMessages['produtividade.fluxo']}"
+                value="#{row.fluxo}" />
             <wi:columnOutputText columnId="quantidade"
                 columnHeader="#{infoxMessages['produtividade.quantidade']}"
                 value="#{row.quantidadeTarefas}" />

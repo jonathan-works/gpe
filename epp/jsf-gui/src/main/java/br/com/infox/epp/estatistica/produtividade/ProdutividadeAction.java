@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -15,12 +17,14 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.log.Log;
@@ -44,10 +48,14 @@ public class ProdutividadeAction implements Serializable {
     private FluxoManager fluxoManager;
     @In
     private InfoxMessages infoxMessages;
+    @Inject
+    private FluxoDAO fluxoDAO;
 
     private Fluxo fluxo;
+    private Task tarefa;
     private UsuarioLogin usuario;
     private List<Fluxo> fluxos;
+    private List<Task> listaTarefa;
     private Date dataInicio;
     private Date dataFim;
     private List<ProdutividadeBean> produtividades;
@@ -100,9 +108,18 @@ public class ProdutividadeAction implements Serializable {
         return fluxos;
     }
 
+    public void carregarTarefas() {
+        this.tarefa = null;
+        if(fluxo != null) {
+            listaTarefa = fluxoDAO.getListaTaskByFluxo(fluxo);
+        }
+    }
+
     public void clear() {
         this.fluxo = null;
+        this.tarefa = null;
         this.fluxos = null;
+        this.listaTarefa = null;
         this.dataFim = null;
         this.dataInicio = null;
         this.usuario = null;
@@ -224,6 +241,9 @@ public class ProdutividadeAction implements Serializable {
         if (this.fluxo != null) {
             params.put(ProdutividadeQuery.PARAM_FLUXO, this.fluxo);
         }
+        if(this.tarefa != null) {
+        	params.put(ProdutividadeQuery.PARAM_TAREFA, this.tarefa.getName());
+        }
         if (this.dataInicio != null) {
             params.put(ProdutividadeQuery.PARAM_DATA_INICIO, this.dataInicio);
         }
@@ -237,4 +257,22 @@ public class ProdutividadeAction implements Serializable {
         this.produtividades = null;
         this.resultCount = null;
     }
+
+	public Task getTarefa() {
+		return tarefa;
+	}
+
+	public void setTarefa(Task tarefa) {
+		this.tarefa = tarefa;
+	}
+
+	public List<Task> getListaTarefa() {
+		return listaTarefa;
+	}
+
+	public void setListaTarefa(List<Task> listaTarefa) {
+		this.listaTarefa = listaTarefa;
+	}
+
+
 }

@@ -13,12 +13,13 @@ public class ProdutividadeBean implements Serializable {
     private String papel;
     private String usuario;
     private String tarefa;
+    private String fluxo;
     private String mediaTempoGasto;
     private String minimoTempoGasto;
     private String maximoTempoGasto;
 
     public ProdutividadeBean(Integer prazo, String localizacao,
-            String papel, String usuario, String tarefa,
+            String papel, String usuario, String tarefa, String fluxo,
             Double mediaTempoGasto, Integer minimoTempoGasto,
             Integer maximoTempoGasto, Long quantidadeTarefas, PrazoEnum tipoPrazo) {
 
@@ -26,6 +27,7 @@ public class ProdutividadeBean implements Serializable {
         this.papel = papel;
         this.usuario = usuario;
         this.tarefa = tarefa;
+        this.fluxo = fluxo;
         this.quantidadeTarefas = quantidadeTarefas;
 
         this.maximoTempoGasto = PrazoEnum.formatTempo(maximoTempoGasto, tipoPrazo);
@@ -109,4 +111,12 @@ public class ProdutividadeBean implements Serializable {
     public void setMaximoTempoGasto(String maximoTempoGasto) {
         this.maximoTempoGasto = maximoTempoGasto;
     }
+
+	public String getFluxo() {
+		return fluxo;
+	}
+
+	public void setFluxo(String fluxo) {
+		this.fluxo = fluxo;
+	}
 }
