@@ -71,6 +71,9 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
         ServidorContribuinteVO servidorVO = servidorContribuinteSearch.getServidorByCPF(cpf);
         if (servidorVO != null) {
             participanteDTO.setNome(servidorVO.getNomeCompleto());
+            participanteDTO.setDataExercicio(servidorVO.getDataExercicio());
+            participanteDTO.setDataPosse(servidorVO.getDataPosse());
+            participanteDTO.setDataNomeacao(servidorVO.getDataNomeacao());
             participanteDTO.setCpf(CpfConverter.format(servidorVO.getCpf()));
             participanteDTO.setMatricula(servidorVO.getMatricula());
             participanteDTO.setCargo(!StringUtil.isEmpty(servidorVO.getCargoCarreira()) ? servidorVO.getCargoCarreira()
