@@ -39,12 +39,14 @@ public class EmpresaSearch extends PersistenceController {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<EmpresaVO> query = cb.createQuery(EmpresaVO.class);
         Root<Empresa> empresa = query.from(Empresa.class);
+        Join<Empresa, Estado> estado = empresa.join(Empresa_.estado, JoinType.LEFT);
+        Join<Empresa, PessoaJuridica> pessoaJuridica = empresa.join(Empresa_.pessoaJuridica, JoinType.LEFT);
         query.select(cb.construct(query.getResultType(), empresa.get(Empresa_.id),
-                empresa.get(Empresa_.pessoaJuridica).get(PessoaJuridica_.idPessoa), empresa.get(Empresa_.cnpj),
+                pessoaJuridica.get(PessoaJuridica_.idPessoa), empresa.get(Empresa_.cnpj),
                 empresa.get(Empresa_.tipoEmpresa), empresa.get(Empresa_.razaoSocial),
                 empresa.get(Empresa_.nomeFantasia), empresa.get(Empresa_.dataAbertura),
                 empresa.get(Empresa_.telefoneCelular), empresa.get(Empresa_.telefoneFixo), empresa.get(Empresa_.email),
-                empresa.get(Empresa_.estado).get(Estado_.codigo), empresa.get(Empresa_.cidade),
+                estado.get(Estado_.codigo), empresa.get(Empresa_.cidade),
                 empresa.get(Empresa_.logradouro), empresa.get(Empresa_.bairro), empresa.get(Empresa_.complemento),
                 empresa.get(Empresa_.numeroResidencia), empresa.get(Empresa_.cep)));
 

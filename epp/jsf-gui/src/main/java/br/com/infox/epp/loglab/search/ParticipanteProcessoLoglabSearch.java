@@ -49,6 +49,7 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
                 	dto.setCpf(CnpjConverter.format(codigo));
                 	dto.setNome(participante.getNome());
                 	dto.setNomeFantasia(participante.getNome());
+                	dto.setRazaoSocial(participante.getNome());
                 }
 				listaDTO.add(dto);
             } else if (codigo.length() == 11) {
@@ -99,6 +100,7 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
             return participanteDTO;
         }
         participanteDTO.setTipoPessoa(TipoPessoaEnum.J);
+        participanteDTO.setNome(empresaVO.getRazaoSocial());
         participanteDTO.setNomeFantasia(empresaVO.getNomeFantasia());
         participanteDTO.setCnpj(CnpjConverter.format(empresaVO.getCnpj()));
         participanteDTO.setRazaoSocial(empresaVO.getRazaoSocial());
