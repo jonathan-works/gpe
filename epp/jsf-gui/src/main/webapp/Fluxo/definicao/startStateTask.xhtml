@@ -56,7 +56,7 @@
                 <h:form>
                     <p:outputPanel id="varDiv">
                         <h:message for="varName" />
-                        <h:inputText id="varName" value="#{var.name}">
+                        <h:inputText id="varName" value="#{var.name}" maxlength="200">
                             <a:ajax execute="@this" event="change"
                                 render="varDiv, varLabel, pageBodyDialogMessage, resetVariableForm, formVariableType" limitRender="true" />
                             <f:validator validatorId="jsfComponentIdValidator" />
@@ -69,7 +69,8 @@
                 <f:facet name="header">#{infoxMessages['process.task.var.label']}</f:facet>
                 <h:form>
                     <s:div id="varLabel">
-                        <h:inputText value="#{var.label}">
+                        <h:message for="iptLabel" />
+                        <h:inputText id="iptLabel" value="#{var.label}" maxlength="200">
                             <a:ajax execute="@this" limitRender="true" event="change" render="varLabel" />
                         </h:inputText>
                     </s:div>
