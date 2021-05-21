@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.Size;
+
 import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
@@ -45,13 +47,13 @@ public class VariableAccessHandler implements Serializable {
     private boolean numerico;
     private boolean monetario;
     private FragmentConfiguration fragmentConfiguration;
-    
+
     private VariableEditorModeloHandler modeloEditorHandler = new VariableEditorModeloHandler();
     private VariableDataHandler dataHandler = new VariableDataHandler();
     private VariableDominioEnumerationHandler dominioHandler = new VariableDominioEnumerationHandler();
     private VariableMaxMinHandler maxMinHandler = new VariableMaxMinHandler();
     private VariableStringHandler stringHandler = new VariableStringHandler();
-    
+
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
         this.variableAccess = variableAccess;
@@ -66,7 +68,7 @@ public class VariableAccessHandler implements Serializable {
                     getDataHandler().init(this.variableAccess);
                     break;
                 case MONETARY:
-                case INTEGER:	
+                case INTEGER:
                 	getMaxMinHandler().init(this.variableAccess);
                 	break;
                 case STRING:
@@ -111,11 +113,12 @@ public class VariableAccessHandler implements Serializable {
     private boolean isTipoData(VariableType type) {
         return VariableType.DATE.equals(type);
     }
-    
+
     private boolean isTipoFile(VariableType type) {
         return VariableType.FILE.equals(type);
     }
 
+    @Size(max = 200)
     public String getName() {
         return name;
     }
@@ -129,7 +132,7 @@ public class VariableAccessHandler implements Serializable {
             Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getDefinicaoProcesso().getFluxo().getIdFluxo(), this.name, auxiliarName);
             this.name = auxiliarName;
             variableAccess.setVariableName(auxiliarName);
-            
+
             if (isFragment()){
                 setFragmentConfiguration(fragmentConfiguration);
             } else {
@@ -152,7 +155,7 @@ public class VariableAccessHandler implements Serializable {
     	limparConfiguracoes();
         return variableAccess;
     }
-    
+
     @SuppressWarnings("unchecked")
     public void removeTaskAction(String actionName) {
         GraphElement parent = task.getParent();
@@ -231,11 +234,11 @@ public class VariableAccessHandler implements Serializable {
     private boolean isMonetario(VariableType type) {
         return VariableType.MONETARY.equals(type);
     }
-    
+
     private boolean isNumerico(VariableType type) {
         return VariableType.INTEGER.equals(type);
-    }     
-    
+    }
+
     private boolean isTipoFragment(VariableType type) {
         return VariableType.FRAGMENT.equals(type);
     }
@@ -355,7 +358,7 @@ public class VariableAccessHandler implements Serializable {
                     getDataHandler().init(getVariableAccess());
                     break;
                 case MONETARY:
-                case INTEGER:	
+                case INTEGER:
                 	getMaxMinHandler().init(getVariableAccess());
                 	break;
                 case STRING:
@@ -398,6 +401,7 @@ public class VariableAccessHandler implements Serializable {
         variableAccess.setLabel(label.trim());
     }
 
+    @Size(max = 200)
     public String getLabel() {
         return variableAccess.getLabel();
     }
@@ -413,7 +417,7 @@ public class VariableAccessHandler implements Serializable {
     public boolean isData() {
         return isData;
     }
-    
+
     public boolean isFile() {
         return isFile;
     }
@@ -455,12 +459,12 @@ public class VariableAccessHandler implements Serializable {
     public boolean isIniciaVazia() {
 		return access[4];
 	}
-    
+
     public void setIniciaVazia(boolean iniciaVazia) {
 		access[4] = iniciaVazia;
 		variableAccess.setAccess(new Access(getAccess()));
 	}
-    
+
     public boolean podeIniciarVazia() {
     	return isWritable() && type != VariableType.FRAGMENT && type != VariableType.FRAME && type != VariableType.PAGE && type != VariableType.TASK_PAGE;
     }

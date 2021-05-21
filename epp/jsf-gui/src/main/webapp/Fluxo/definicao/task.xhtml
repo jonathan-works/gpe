@@ -83,7 +83,9 @@
                     <s:div id="varDiv">
                         <h:message for="varName" />
                         <h:inputText id="varName" rendered="#{!empty var.name or empty t.previousVariables}"
-                            value="#{var.name}">
+                            value="#{var.name}"
+                            maxlength="200"
+                        >
                             <a:ajax execute="@this" event="change"
                                 render="varDiv, varLabelForm, pageBodyDialogMessage,formVariableType, resetVariableForm" limitRender="true" />
                             <f:validator validatorId="jsfComponentIdValidator" />
@@ -97,13 +99,15 @@
                                     return false;
                             };
                         </h:outputScript>
-                        <rich:autocomplete value="#{var.name}"
+                        <h:message for="varNameAC" />
+                        <rich:autocomplete id="varNameAC" value="#{var.name}"
+                            validator="jsfComponentIdValidator"
                             rendered="#{empty var.name and !empty t.previousVariables}" selectFirst="false"
                             autocompleteList="#{t.previousVariables}" mode="client" minChars="2" styleClass="infox-rf-au"
                             clientFilterFunction="customFilter">
-                            <a:ajax status=":status" listener="#{var.copyVariable()}" event="blur"
+                            <a:ajax status=":status" execute="@this" listener="#{var.copyVariable()}" event="blur"
                                 render="varDiv,writable,varLabelForm,formVariableType,resetVariableForm" limitRender="true" />
-                            <a:ajax status=":status" listener="#{var.copyVariable()}" event="selectitem"
+                            <a:ajax status=":status" execute="@this" listener="#{var.copyVariable()}" event="selectitem"
                                 render="varDiv,writable,varLabelForm,formVariableType,resetVariableForm" limitRender="true" />
                         </rich:autocomplete>
                         <s:div rendered="#{(var.type eq 'TASK_PAGE' and taskpageMapLoader.getTaskpage(var.name) ne null) or (var.type eq 'FRAME' and taskpageMapLoader.getFrame(var.name) ne null)}" style="display: inline-block">
@@ -120,7 +124,8 @@
                 <f:facet name="header">#{infoxMessages['process.task.var.label']}</f:facet>
                 <h:form id="varLabelForm" rendered="#{var.type ne 'PARAMETER'}">
                     <s:div id="varLabel">
-                        <h:inputText value="#{var.label}">
+                        <h:message for="iptVarLabel" />
+                        <h:inputText id="iptVarLabel" value="#{var.label}" maxlength="200">
                             <a:ajax execute="@this" limitRender="true" event="change" render="varLabel" />
                         </h:inputText>
                     </s:div>
