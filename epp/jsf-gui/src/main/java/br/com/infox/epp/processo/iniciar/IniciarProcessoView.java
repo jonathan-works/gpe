@@ -399,17 +399,22 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             FacesMessages.instance().add("É necessário inserir os dados de uma pessoa física ou jurídica");
         } else {
             iniciarProcessoParticipanteVO.generateId();
+            TipoPessoaEnum tipoPessoaParticipante = iniciarProcessoParticipanteVO.getTipoPessoa();
+            String codigoParticipante = (tipoPessoaParticipante.equals(TipoPessoaEnum.F) ? servidorContribuinteVO.getCpf() : empresaVO.getCnpj());
+            iniciarProcessoParticipanteVO.setCodigo(codigoParticipante);
             if (!podeAdicionarParticipante(iniciarProcessoParticipanteVO)) {
+                limparDadosParticipante();
                 FacesMessages.instance().add("Não pode adicionar a mesma pessoa com o mesmo tipo de parte e mesmo participante superior");
+            } else if (!podeAdicionarParticipanteFilho(iniciarProcessoParticipanteVO)) {
+                limparDadosParticipante();
+                FacesMessages.instance().add("Participante não pode ser filho dele mesmo");
             } else {
-                if(iniciarProcessoParticipanteVO.getTipoPessoa().equals(TipoPessoaEnum.F)) {
-                    iniciarProcessoParticipanteVO.setCodigo(servidorContribuinteVO.getCpf());
+                if (tipoPessoaParticipante.equals(TipoPessoaEnum.F)) {
                     iniciarProcessoParticipanteVO.setEmail(servidorContribuinteVO.getEmail());
                     iniciarProcessoParticipanteVO.setDataNascimento(servidorContribuinteVO.getDataNascimento());
                     iniciarProcessoParticipanteVO.setNome(servidorContribuinteVO.getNomeCompleto());
                     mapServidorContribuinteVO.put(iniciarProcessoParticipanteVO.getId(), servidorContribuinteVO);
                 } else {
-                    iniciarProcessoParticipanteVO.setCodigo(empresaVO.getCnpj());
                     iniciarProcessoParticipanteVO.setRazaoSocial(empresaVO.getRazaoSocial());
                     iniciarProcessoParticipanteVO.setNome(empresaVO.getNomeFantasia());
                     mapEmpresaVO.put(iniciarProcessoParticipanteVO.getId(), empresaVO);
@@ -420,9 +425,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
                 }
                 participanteProcessoList.add(iniciarProcessoParticipanteVO);
                 Collections.sort(participanteProcessoList);
-
                 FacesMessages.instance().add("Participante adicionado à lista.");
-
                 limparDadosParticipante();
             }
         }
@@ -431,6 +434,20 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private boolean podeAdicionarParticipante(IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO) {
         TreeNode parent = iniciarProcessoParticipanteVO.getParent() == null ? root : iniciarProcessoParticipanteVO.getParent();
         return !parent.getChildren().contains(iniciarProcessoParticipanteVO);
+    }
+
+    private boolean podeAdicionarParticipanteFilho(IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO) {
+        Boolean result = Boolean.TRUE;
+        if (iniciarProcessoParticipanteVO.getParent() != null) {
+            TreeNode parent = iniciarProcessoParticipanteVO.getParent();
+            result = !((IniciarProcessoParticipanteVO) parent).getCodigo().equals(iniciarProcessoParticipanteVO.getCodigo());
+            if (result && !parent.getChildren().isEmpty()) {
+                result = !(parent.getChildren().stream()
+                        .filter(p -> ((IniciarProcessoParticipanteVO) p).getCodigo().equals(iniciarProcessoParticipanteVO.getCodigo()))
+                        .count() > 0);
+            }
+        }
+        return result;
     }
 
     public void removerParticipante(IniciarProcessoParticipanteVO iniciarProcessoParticipanteVO) {
