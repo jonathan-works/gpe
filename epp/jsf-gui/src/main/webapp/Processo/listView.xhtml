@@ -33,7 +33,7 @@
                             <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                 title="Remover" styleClass="opacityHover"/>
                         </h:commandLink>
-                        <h:commandLink action="#{iniciarProcessoView.iniciar(row)}">
+                        <h:commandLink action="#{iniciarProcessoView.iniciar(row)}" onclick="showLoading()">
                             <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/jbpm/StartState.gif')}"
                                 title="Continuar" styleClass="opacityHover"/>
                         </h:commandLink>
@@ -171,9 +171,9 @@
 
                 <div style="margin-top:1em;">
                     <h:commandButton id="buttonIniciarProcesso" value="#{infoxMessages['processo.iniciarBtn']}"
-                        action="#{iniciarProcessoView.iniciar}" styleClass="buttons">
+                        action="#{iniciarProcessoView.iniciar}" onclick="infox.showLoading();" styleClass="buttons">
                         <p:ajax update="@this :pageBodyDialogMessage" process="@form:natCatProcessoList @this" partialSubmit="true"
-                            onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+                        />
                     </h:commandButton>
                 </div>
 
