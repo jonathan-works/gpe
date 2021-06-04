@@ -266,6 +266,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     public void setParticipantePai(ParticipanteProcesso participantePai) {
         if (participantePai != null && participantePai.getAtivo()){
             participanteProcessoVO.setIdParticipantePai(participantePai.getId());
+        } else {
+            participanteProcessoVO.setIdParticipantePai(null);
         }
     }
 
