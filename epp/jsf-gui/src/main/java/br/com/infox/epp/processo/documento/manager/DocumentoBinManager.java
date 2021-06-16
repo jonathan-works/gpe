@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +18,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
+import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -25,13 +28,17 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.exceptions.BadPasswordException;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 
+import br.com.infox.core.dao.DAO;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
@@ -44,6 +51,8 @@ import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.path.PathResolver;
@@ -68,6 +77,12 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	private DocumentoBinarioManager documentoBinarioManager;
 	@Inject
 	private DocumentoDAO documentoDAO;
+	@Inject
+    private PdfManager pdfManager;
+	@Inject
+    private InfoxMessages infoxMessages;
+	@Inject
+	private DAO<Processo> processoDao;
 
 	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
 		return createProcessoDocumentoBin(documento.getDocumentoBin());
@@ -159,6 +174,57 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         } catch (IOException e) {
         	throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
         }
+    }
+    
+    public DocumentoBin createDocumentoBinResumoDocumentosProcesso(Processo processo) {
+    	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+	    	Document document = new Document();
+	    	PdfCopy copy = new PdfCopy(document, stream);
+	    	document.open();
+	    	PdfReader reader;
+	    	for(Pasta pasta : processo.getPastaList()) {
+	    		for(Documento documento : pasta.getDocumentosList()) {
+	    			reader = new PdfReader(getOriginalData(documento.getDocumentoBin()));
+	    			for(int i = 1; i < reader.getNumberOfPages() + 1; i++) {
+	    				copy.addPage(copy.getImportedPage(reader, i));
+	    			}
+	    			copy.freeReader(reader);
+	    		    reader.close();
+	    		}
+	    	}
+	    	document.close();
+	    	DocumentoBin bin = createProcessoDocumentoBin("Documento do processo " + processo.getNumeroProcesso(), stream.toByteArray(), "pdf");
+	    	bin = createProcessoDocumentoBin(bin);
+	    	atualizarDocumentoBinResumoProcesso(processo, bin);
+	    	return bin;
+    	} catch (DocumentException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		return null;
+    }
+    
+    public byte[] getOriginalData(DocumentoBin documento) {
+        if (documentoBinarioManager.existeBinario(documento.getId())) {
+        	byte[] data = documentoBinarioManager.getData(documento.getId());
+        	documentoBinarioManager.detach(documento.getId());
+            return data; 
+        } else {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            try {
+                String modeloDocumento = documento.isBinario() ? getMensagemDocumentoNulo()
+                        : defaultIfNull(documento.getModeloDocumento(), getMensagemDocumentoNulo());
+                pdfManager.convertHtmlToPdf(modeloDocumento, outputStream);
+                documento.setExtensao("pdf");
+            } catch (DocumentException e) {
+            }
+            return outputStream.toByteArray();
+        }
+	}
+    
+    public String getMensagemDocumentoNulo() {
+        return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
 
 	public void writeMargemDocumento(byte[] pdf, String textoAssinatura, UUID uuid, final byte[] qrcode,
@@ -332,5 +398,15 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 	public Boolean isDocumentoBinAssinadoPorPapel(DocumentoBin bin, Papel papel) {
 	    return getDao().isDocumentoBinAssinadoPorPapel(bin, papel);
+	}
+	
+	public void atualizarDocumentoBinResumoProcesso(Processo processo, DocumentoBin documentoBinResumoProcesso) {
+		if(processo.getDocumentoBinResumoProcesso() != null) {
+			DocumentoBin documentoResumoAntigo = processo.getDocumentoBinResumoProcesso();
+			processo.setDocumentoBinResumoProcesso(null);
+			remove(documentoResumoAntigo);
+		}
+		processo.setDocumentoBinResumoProcesso(documentoBinResumoProcesso);
+		processoDao.update(processo);
 	}
 }

@@ -65,6 +65,17 @@
 		</h:form>
 	</rich:collapsiblePanel>
 	
+	<p:commandButton id="downloadTodosDocsButton" process="@this"
+			value="#{pastaAction.processo.idProcesso}"
+			update="@this" action="#{jsfUtil.applyLastPhaseFlashAction}"
+			onstart="infox.showLoading();"
+			oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(pastaAction.processo)}">
+			<f:setPropertyActionListener value="#{pastaAction.processo.idProcesso}"
+				target="#{flash.idProcesso}" />
+			<f:setPropertyActionListener value="#{true}"
+				target="#{flash.binario}" />
+		</p:commandButton>
+	
 	<div style="margin-top: 5px;" />
 	<s:div id="documentoListDiv" styleClass="documentoListDiv">
 		<wi:dataTable values="#{pastaAction.activeBean.list(15)}"

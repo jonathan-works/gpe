@@ -39,6 +39,8 @@ import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
@@ -69,6 +71,8 @@ public class FileDownloader implements Serializable {
     private PathResolver pathResolver;
     @Inject
     private DocumentoDAO documentoDAO;
+    @Inject
+    private PastaManager pastaManager;
     
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)
@@ -352,6 +356,10 @@ public class FileDownloader implements Serializable {
 
     public String getWindowOpen(DocumentoBin documentoBin) {
         return getWindowOpen(isPdf(documentoBin));
+    }
+    
+    public String getWindowOpen(Processo processo) {
+    	return getWindowOpen(true);
     }
 
     public String getWindowOpenByIdDocumento(Integer idDocumento) {

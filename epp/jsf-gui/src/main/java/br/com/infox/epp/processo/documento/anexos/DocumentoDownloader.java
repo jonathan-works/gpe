@@ -29,6 +29,8 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
@@ -58,6 +60,8 @@ public class DocumentoDownloader implements Serializable {
     private SigiloDocumentoService sigiloDocumentoService;
     @In
     private DocumentoBinManager documentoBinManager;
+    @Inject
+	private ProcessoManager processoManager;
     
     private String mensagemErro;
     
@@ -103,6 +107,12 @@ public class DocumentoDownloader implements Serializable {
     
     public void downloadDocumentoBin(Integer idDocumentoBin) {
     	DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
+    	downloadDocumento(documentoBin);
+    }
+    
+    public void downloadDocumentoResumoProcesso(Integer idProcesso) {
+    	Processo processo = processoManager.find(idProcesso);
+    	DocumentoBin documentoBin = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
     	downloadDocumento(documentoBin);
     }
     
