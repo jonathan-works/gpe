@@ -66,7 +66,7 @@
 	</rich:collapsiblePanel>
 	
 	<p:commandButton id="downloadTodosDocsButton" process="@this"
-			value="#{pastaAction.processo.idProcesso}"
+			value="Download do resumo e dos documentos do processo"
 			update="@this" action="#{jsfUtil.applyLastPhaseFlashAction}"
 			onstart="infox.showLoading();"
 			oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpen(pastaAction.processo)}">

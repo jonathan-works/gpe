@@ -77,9 +77,9 @@ public enum Parametros {
             UsuarioLogin_.nomeUsuario, UsuarioLogin_.login).addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S))),
     EXIBIR_AVISO_INCONSISTENCIA_PARTICIPANTE("gdprev", "exibirAvisoInconsistenciaParticipante", FieldType.BOOLEAN),
     URL_ACESSO_PROCESSOS_LEGADOS("sistema", "urlAcessoProcessosLegados", FieldType.STRING),
-    CD_MODELO_DOCUMENTO_FOLHA_ROSTO_RESUMO_PROCESSO(new ParametroDefinition<>("sistema", "cdModDocFolhaRostoResumoProc", FieldType.SELECT_ONE, ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.tituloModeloDocumento)
+    CD_MODELO_DOCUMENTO_FOLHA_ROSTO_RESUMO_PROCESSO(new ParametroDefinition<>("sistema", "cdModDocFolhaRostoResumoProc", FieldType.SELECT_ONE, ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.codigo)
             .addFilter(isTrue(ModeloDocumento_.ativo))),
-    CD_MODELO_DOCUMENTO_FOLHA_TRAMITACAO_RESUMO_PROCESSO(new ParametroDefinition<>("sistema", "cdModDocFolhaTramResumoProc", FieldType.SELECT_ONE, ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.tituloModeloDocumento)
+    CD_MODELO_DOCUMENTO_FOLHA_TRAMITACAO_RESUMO_PROCESSO(new ParametroDefinition<>("sistema", "cdModDocFolhaTramResumoProc", FieldType.SELECT_ONE, ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.codigo)
     .addFilter(isTrue(ModeloDocumento_.ativo)));
 
     private final String label;
