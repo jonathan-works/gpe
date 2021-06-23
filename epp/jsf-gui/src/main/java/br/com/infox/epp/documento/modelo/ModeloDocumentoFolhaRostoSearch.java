@@ -8,8 +8,11 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.jbpm.graph.exe.ProcessInstance;
+
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.endereco.Endereco;
 import br.com.infox.epp.endereco.PessoaEndereco;
 import br.com.infox.epp.endereco.PessoaEnderecoSearch;
@@ -21,10 +24,13 @@ import br.com.infox.epp.processo.metadado.dao.MetadadoProcessoDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.status.dao.StatusProcessoDao;
+import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ModeloDocumentoFolhaRostoSearch extends PersistenceController {
+	
+	private static final String VARIAVEL_DESCRICAO_GERAL_PROCESSO = "descricaoGeralProcesso";
 	
 	@Inject
     private MetadadoProcessoDAO metadadoProcessoDAO;
@@ -34,18 +40,21 @@ public class ModeloDocumentoFolhaRostoSearch extends PersistenceController {
 	private PessoaEnderecoSearch pessoaEnderecoSearch;
 	@Inject
 	private MeioContatoManager meioContatoManager;
+	@Inject
+	private TaskInstanceManager taskInstanceManager;
 
 	public String gerarTextoModeloDocumento(Processo processo) {
+		ProcessInstance processInstance = getEntityManager().find(ProcessInstance.class, processo.getIdJbpm());
 		StringBuilder sb = new StringBuilder();
-		sb.append("<div style=\"border-style: solid;\">");
+		sb.append("<div style=\"border-style: solid; border-width: thin;\">");
 		sb.append("<center><strong>Dados do processo</strong></center>");
 		sb.append("<table style=\"width: 100%; border: none;\">");
 		sb.append("<tr>");
-		sb.append("<td>");
+		sb.append("<td style=\"width: 75%;\">");
 		sb.append("<strong>Número: </strong>");
 		sb.append(processo.getNumeroProcesso());
 		sb.append("</td>");
-		sb.append("<td>");
+		sb.append("<td style=\"font-size:12px;width: 25%;\">");
 		sb.append("<strong>Data de protocolo: </strong>");
 		sb.append(getDataFormatada(processo.getDataInicio()));
 		sb.append("</td>");
@@ -62,19 +71,31 @@ public class ModeloDocumentoFolhaRostoSearch extends PersistenceController {
 		sb.append(processo.getLocalizacao().getCaminhoCompletoFormatado());
 		sb.append("</td>");
 		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td>");
+		sb.append("<strong>Assunto: </strong>");
+		sb.append(processInstance.getProcessDefinition().getName());
+		sb.append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td>");
+		sb.append("<strong>Subassunto: </strong>");
+		sb.append(taskInstanceManager.getTaskInstanceOpen(processo).getTask().getName());
+		sb.append("</td>");
+		sb.append("</tr>");
 		sb.append("</table>");
 		sb.append("</div>");
 		
 		for(ParticipanteProcesso participanteProcesso : processo.getParticipantes()) {
 			PessoaEndereco pessoaEndereco = pessoaEnderecoSearch.getByPessoa(participanteProcesso.getPessoa());
-			sb.append("<div style=\"border-style: solid; margin-top: 15px;\">");
+			sb.append("<div style=\"border-style: solid; border-width: thin; margin-top: 15px;\">");
 			sb.append("<center><strong>Interessado</strong></center>");
 			sb.append("<table style=\"width: 100%; border: none;\">");
 			sb.append("<tr><td><strong>Nome: </strong>");
 			sb.append(participanteProcesso.getNome());
 			sb.append("</td></tr>");
 			sb.append("<tr><td><strong>CPF / CNPJ: </strong>");
-			sb.append(participanteProcesso.getPessoa().getCodigo());
+			sb.append(participanteProcesso.getPessoa().getCodigoFormatado());
 			sb.append("</td></tr>");
 			
 			if(pessoaEndereco != null) {
@@ -93,24 +114,35 @@ public class ModeloDocumentoFolhaRostoSearch extends PersistenceController {
 				sb.append("</td></tr>");
 				
 				sb.append("<tr>");
-				sb.append("<td><strong>Cidade: </strong>");
+				sb.append("<td style=\"width: 60%;\"><strong>Cidade: </strong>");
 				sb.append(endereco.getMunicipio().getNome());
 				sb.append("</td>");
-				sb.append("<td><strong>UF: </strong>");
+				sb.append("<td style=\"width: 10%;\"><strong>UF: </strong>");
 				sb.append(endereco.getMunicipio().getEstado().getSigla());
 				sb.append("</td>");
-				sb.append("<td><strong>CEP: </strong>");
+				sb.append("<td style=\"width: 20%;\"><strong>CEP: </strong>");
 				sb.append(endereco.getCep());
 				sb.append("</td>");
 				sb.append("</tr>");
 			}
 			
-			sb.append("<tr><td><strong>Telefone(s): </strong>");
-			sb.append(getTelefones(participanteProcesso.getPessoa()));
-			sb.append("</td></tr>");
+			String telefones = getTelefones(participanteProcesso.getPessoa());
+			if(!StringUtil.isEmpty(telefones)) {
+				sb.append("<tr><td><strong>Telefone(s): </strong>");
+				sb.append(telefones);
+				sb.append("</td></tr>");
+			}
 			
 			sb.append("</table>");
 			sb.append("</div>");	
+		}
+		
+		String descricaoProcesso = getDescricaoGeralProcesso(processInstance);
+		if(!StringUtil.isEmpty(descricaoProcesso)) {
+			sb.append("<div style=\"border-style: solid; border-width: thin; margin-top: 15px;\">");
+			sb.append("<center><strong>Descrição do Processo</strong></center>");
+			sb.append(descricaoProcesso);
+			sb.append("</div>");
 		}
 		
     	return sb.toString();
@@ -144,6 +176,13 @@ public class ModeloDocumentoFolhaRostoSearch extends PersistenceController {
 			if(!listaStatusProcesso.isEmpty()) {
 				return statusProcessoDao.find(Integer.valueOf(listaStatusProcesso.get(0).getValor())).getDescricao();
 			}
+		}
+		return "";
+	}
+	
+	private String getDescricaoGeralProcesso(ProcessInstance processInstance) {
+		if(processInstance.getContextInstance().getVariable(VARIAVEL_DESCRICAO_GERAL_PROCESSO) != null && processInstance.getContextInstance().getVariable(VARIAVEL_DESCRICAO_GERAL_PROCESSO) instanceof String) {
+			return processInstance.getContextInstance().getVariable(VARIAVEL_DESCRICAO_GERAL_PROCESSO).toString();
 		}
 		return "";
 	}

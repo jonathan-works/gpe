@@ -13,6 +13,11 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.seam.annotations.AutoCreate;
@@ -61,7 +66,9 @@ import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.entity.Pasta_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
@@ -199,10 +206,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	    	document.open();
 	    	documentoToPdfCopy(copy, getModeloDocumentoToByteArray(modeloDocumentoSearch.getModeloDocumentoByCodigo(Parametros.CD_MODELO_DOCUMENTO_FOLHA_ROSTO_RESUMO_PROCESSO.getValue()), processo));
 	    	documentoToPdfCopy(copy, getModeloDocumentoToByteArray(modeloDocumentoSearch.getModeloDocumentoByCodigo(Parametros.CD_MODELO_DOCUMENTO_FOLHA_TRAMITACAO_RESUMO_PROCESSO.getValue()), processo));
-	    	for(Pasta pasta : processo.getPastaList()) {
-	    		for(Documento documento : pasta.getDocumentosList()) {
-	    			documentoToPdfCopy(copy, getOriginalData(documento.getDocumentoBin()));
-	    		}
+    		for(Documento documento : getListAllDocumentoByProcessoOrderData(processo)) {
+    			documentoToPdfCopy(copy, getOriginalData(documento.getDocumentoBin()));
 	    	}
 	    	document.close();
 	    	DocumentoBin bin = createProcessoDocumentoBin("Documento do processo " + processo.getNumeroProcesso(), stream.toByteArray(), "pdf");
@@ -215,6 +220,17 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 			e1.printStackTrace();
 		}
 		return null;
+    }
+    
+    private List<Documento> getListAllDocumentoByProcessoOrderData(Processo processo) {
+    	EntityManager entityManager = Beans.getReference(EntityManager.class);
+    	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    	CriteriaQuery<Documento> query = cb.createQuery(Documento.class);
+    	Root<Documento> doc = query.from(Documento.class);
+    	Join<Documento, Pasta> pasta = doc.join(Documento_.pasta, JoinType.INNER);
+    	query.where(cb.equal(pasta.get(Pasta_.processo), processo));
+    	query.orderBy(cb.asc(doc.get(Documento_.dataInclusao)));
+    	return entityManager.createQuery(query).getResultList();
     }
     
     private byte[] getModeloDocumentoToByteArray(ModeloDocumento modeloDocumento, Processo processo)
