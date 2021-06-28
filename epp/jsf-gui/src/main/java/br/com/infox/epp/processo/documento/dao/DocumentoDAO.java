@@ -148,6 +148,16 @@ public class DocumentoDAO extends DAO<Documento> {
     	return getEntityManager().createQuery(query).getResultList();
     }
     
+    public List<Documento> getListAllDocumentoByProcessoOrderData(Processo processo) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Documento> query = cb.createQuery(Documento.class);
+    	Root<Documento> doc = query.from(Documento.class);
+    	Join<Documento, Pasta> pasta = doc.join(Documento_.pasta, JoinType.INNER);
+    	query.where(cb.equal(pasta.get(Pasta_.processo), processo));
+    	query.orderBy(cb.asc(doc.get(Documento_.dataInclusao)));
+    	return getEntityManager().createQuery(query).getResultList();
+    }
+    
     public List<Documento> getListDocumentoMinutaByProcesso(Processo processo) {
     	Map<String, Object> params = new HashMap<>(1);
     	params.put(PARAM_PROCESSO, processo);

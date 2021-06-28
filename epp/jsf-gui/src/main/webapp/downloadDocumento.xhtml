@@ -11,6 +11,10 @@
     <c:if test="#{not empty flash.documentoPreview}">
         <f:event listener="#{documentoDownloader.previewDocumento(flash.documentoPreview, flash.fileName)}" type="preRenderView" />
     </c:if>
+    
+    <c:if test="#{not empty flash.idProcesso}">
+        <f:event listener="#{documentoDownloader.downloadDocumentoResumoProcesso(flash.idProcesso)}" type="preRenderView" />
+    </c:if>
 
     <c:if test="#{not empty flash.idDocumentoBin}">
         <f:event listener="#{documentoDownloader.downloadDocumentoBin(flash.idDocumentoBin)}" type="preRenderView" />

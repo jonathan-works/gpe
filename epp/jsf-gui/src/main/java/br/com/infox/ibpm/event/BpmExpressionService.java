@@ -33,6 +33,8 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.modelo.ModeloDocumentoFolhaRostoSearch;
+import br.com.infox.epp.documento.modelo.ModeloDocumentoFolhaTramitacoesSearch;
 import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.documento.publicacao.LocalPublicacao;
 import br.com.infox.epp.documento.publicacao.LocalPublicacaoSearch;
@@ -138,6 +140,18 @@ public class BpmExpressionService {
     protected ParticipanteProcessoLoglabSearch participanteProcessoLoglabSearch;
     @Inject
     protected ModeloDocumentoManager modeloDocumentoManager;
+    @Inject
+    protected ModeloDocumentoFolhaRostoSearch modeloDocumentoFolhaRostoSearch;
+    @Inject
+    protected ModeloDocumentoFolhaTramitacoesSearch modeloDocumentoFolhaTramitacoesSearch;
+    
+    public String getConteudoFolhaDeRostoProcessoParaEditor() {
+    	return modeloDocumentoFolhaRostoSearch.gerarTextoModeloDocumento(getProcessoAtual());
+    }
+    
+    public String getConteudoFolhaTramitacaoProcessoParaEditor() {
+    	return modeloDocumentoFolhaTramitacoesSearch.gerarTextoModeloDocumento(getProcessoAtual());
+    }
 
     @External(tooltip = "Retorna a prioridade do processo atual", expressionType = ExpressionType.GERAL)
     public String getPrioridadeProcessoAtual(){

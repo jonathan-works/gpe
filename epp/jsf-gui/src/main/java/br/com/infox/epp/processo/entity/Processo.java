@@ -100,6 +100,7 @@ import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.metadado.auditoria.HistoricoMetadadoProcesso;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -108,6 +109,8 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.query.ProcessoQuery;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = TABLE_PROCESSO)
@@ -234,6 +237,11 @@ public class Processo implements Serializable, Recursive<Processo> {
 
     @Column(name = "ds_caminho_completo", nullable = false, unique = true)
     private String caminhoCompleto;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_documento_bin_resumo_proc")
+    @Getter @Setter
+    private DocumentoBin documentoBinResumoProcesso;
 
     @PrePersist
     private void prePersist() {
