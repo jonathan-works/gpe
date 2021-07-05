@@ -207,7 +207,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	    	documentoToPdfCopy(copy, getModeloDocumentoToByteArray(modeloDocumentoSearch.getModeloDocumentoByCodigo(Parametros.CD_MODELO_DOCUMENTO_FOLHA_ROSTO_RESUMO_PROCESSO.getValue()), processo));
 	    	documentoToPdfCopy(copy, getModeloDocumentoToByteArray(modeloDocumentoSearch.getModeloDocumentoByCodigo(Parametros.CD_MODELO_DOCUMENTO_FOLHA_TRAMITACAO_RESUMO_PROCESSO.getValue()), processo));
     		for(Documento documento : getListAllDocumentoByProcessoOrderData(processo)) {
-    			documentoToPdfCopy(copy, getOriginalData(documento.getDocumentoBin()));
+    			documentoToPdfCopy(copy, writeMargemDocumento(getOriginalData(documento.getDocumentoBin()), getTextoAssinatura(documento.getDocumentoBin()), documento.getDocumentoBin().getUuid(), getQrCodeSignatureImage(documento.getDocumentoBin()), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento.getDocumentoBin())));
 	    	}
 	    	document.close();
 	    	DocumentoBin bin = createProcessoDocumentoBin("Documento do processo " + processo.getNumeroProcesso(), stream.toByteArray(), "pdf");
