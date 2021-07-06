@@ -40,6 +40,7 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
+import com.lowagie.text.pdf.PdfWriter;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.file.encode.MD5Encoder;
@@ -207,7 +208,14 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	    	documentoToPdfCopy(copy, getModeloDocumentoToByteArray(modeloDocumentoSearch.getModeloDocumentoByCodigo(Parametros.CD_MODELO_DOCUMENTO_FOLHA_ROSTO_RESUMO_PROCESSO.getValue()), processo));
 	    	documentoToPdfCopy(copy, getModeloDocumentoToByteArray(modeloDocumentoSearch.getModeloDocumentoByCodigo(Parametros.CD_MODELO_DOCUMENTO_FOLHA_TRAMITACAO_RESUMO_PROCESSO.getValue()), processo));
     		for(Documento documento : getListAllDocumentoByProcessoOrderData(processo)) {
-    			documentoToPdfCopy(copy, writeMargemDocumento(getOriginalData(documento.getDocumentoBin()), getTextoAssinatura(documento.getDocumentoBin()), documento.getDocumentoBin().getUuid(), getQrCodeSignatureImage(documento.getDocumentoBin()), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento.getDocumentoBin())));
+    			try {
+	    			if(podeExibirMargem(documento.getDocumentoBin())) {
+	    				documentoToPdfCopy(copy, writeMargemDocumento(getOriginalData(documento.getDocumentoBin()), getTextoAssinatura(documento.getDocumentoBin()), documento.getDocumentoBin().getUuid(), getQrCodeSignatureImage(documento.getDocumentoBin()), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento.getDocumentoBin())));
+	    			} else {
+	    				documentoImageToPdfCopy(copy, (getOriginalData(documento.getDocumentoBin())));
+	    			}
+    			} catch (Exception e) {
+				}
 	    	}
 	    	document.close();
 	    	DocumentoBin bin = createProcessoDocumentoBin("Documento do processo " + processo.getNumeroProcesso(), stream.toByteArray(), "pdf");
@@ -220,6 +228,12 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 			e1.printStackTrace();
 		}
 		return null;
+    }
+    
+    private boolean podeExibirMargem(DocumentoBin documento) {
+        return "pdf".equalsIgnoreCase(documento.getExtensao())
+                && (Boolean.TRUE.equals(documento.getSuficientementeAssinado())
+                        || documento.getAssinaturas() != null && !documento.getAssinaturas().isEmpty());
     }
     
     private List<Documento> getListAllDocumentoByProcessoOrderData(Processo processo) {
@@ -248,6 +262,36 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		}
 		copy.freeReader(reader);
 	    reader.close();
+    }
+    
+    private void documentoImageToPdfCopy(PdfCopy copy, byte[] documento) throws IOException, BadPdfFormatException {
+    	Document imageDocument = new Document();
+    	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+    		PdfWriter imageDocumentWriter = PdfWriter.getInstance(imageDocument, stream);
+            imageDocument.open();
+            if (imageDocument.newPage()) {
+
+                Image image = Image.getInstance(documento);
+                
+                float scaler = ((imageDocument.getPageSize().getWidth() - imageDocument.leftMargin()
+                        - imageDocument.rightMargin()) / image.getWidth()) * 100;
+
+                image.scalePercent(scaler);
+                
+                imageDocument.add(image);
+                imageDocument.close();
+                imageDocumentWriter.close();
+
+                PdfReader reader = new PdfReader(stream.toByteArray());
+
+                copy.addPage(copy.getImportedPage(reader, 1));
+                
+                copy.freeReader(reader);
+                reader.close();
+         }
+    	} catch (DocumentException e) {
+			e.printStackTrace();
+		}
     }
     
     public byte[] getOriginalData(DocumentoBin documento) {
