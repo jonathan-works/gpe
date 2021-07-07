@@ -60,11 +60,13 @@ public class ModeloDocumentoFolhaTramitacoesSearch extends PersistenceController
 		sb.append("<div style=\"margin-top: 15px;\">");
 		sb.append("<center><strong>Tramitações</strong></center>");
 		sb.append("<table style=\"width: 100%; border: none;\">");
-		sb.append("<tr><th style=\"border-style: solid; border-width: thin; width: 70%;\">Usuário</th><th style=\"text-align:right;border-style: solid; border-width: thin; width: 30%;\">Data</th><tr>");
+		sb.append("<tr><th style=\"border-style: solid; border-width: thin; width: 40%;\">Usuário</th><th style=\"border-style: solid; border-width: thin; width: 40%;\">Tarefa</th><th style=\"text-align:right;border-style: solid; border-width: thin; width: 20%;\">Data</th><tr>");
 		for(MovimentacoesBean movimentacoesBean : listaMovimentacoes) {
-			sb.append("<tr><td>");
+			sb.append("<tr><td style=\"font-size:13px;\">");
 			sb.append(movimentacoesBean.getUsuario().getNomeUsuario());
-			sb.append("</td><td style=\"text-align:right;\">");
+			sb.append("</td><td style=\"font-size:13px;\">");
+			sb.append(movimentacoesBean.getTarefa().getTarefa());
+			sb.append("</td><td style=\"text-align:right;font-size:12px;\">");
 			sb.append(getDataFormatada(movimentacoesBean.getDataInicio()));
 			sb.append("</td></tr></tr>");
 		}

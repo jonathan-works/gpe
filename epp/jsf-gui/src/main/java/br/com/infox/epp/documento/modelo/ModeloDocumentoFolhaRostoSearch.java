@@ -79,7 +79,7 @@ public class ModeloDocumentoFolhaRostoSearch extends PersistenceController {
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td>");
-		sb.append("<strong>Subassunto: </strong>");
+		sb.append("<strong>Processo se encontra na tarefa: </strong>");
 		sb.append(taskInstanceManager.getTaskInstanceOpen(processo).getTask().getName());
 		sb.append("</td>");
 		sb.append("</tr>");
