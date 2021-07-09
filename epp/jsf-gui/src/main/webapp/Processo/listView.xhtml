@@ -33,10 +33,13 @@
                             <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                 title="Remover" styleClass="opacityHover"/>
                         </h:commandLink>
-                        <h:commandLink action="#{iniciarProcessoView.iniciar(row)}" onclick="showLoading()">
+                        <p:commandLink action="#{iniciarProcessoView.iniciar(row)}" onclick="showLoading()"
+                            update="@this :pageBodyDialogMessage"
+                            oncomplete="if(args &amp;&amp; args.erro){infox.hideLoading()}"
+                        >
                             <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/jbpm/StartState.gif')}"
                                 title="Continuar" styleClass="opacityHover"/>
-                        </h:commandLink>
+                        </p:commandLink>
                     </h:form>
                 </p:column>
 
@@ -170,11 +173,13 @@
                 </p:dataTable>
 
                 <div style="margin-top:1em;">
-                    <h:commandButton id="buttonIniciarProcesso" value="#{infoxMessages['processo.iniciarBtn']}"
-                        action="#{iniciarProcessoView.iniciar}" onclick="infox.showLoading();" styleClass="buttons">
-                        <p:ajax update="@this :pageBodyDialogMessage" process="@form:natCatProcessoList @this" partialSubmit="true"
-                        />
-                    </h:commandButton>
+                    <p:commandButton id="buttonIniciarProcesso" value="#{infoxMessages['processo.iniciarBtn']}"
+                        action="#{iniciarProcessoView.iniciar}" onclick="infox.showLoading();" styleClass="buttons"
+                        oncomplete="if(args &amp;&amp; args.erro){infox.hideLoading()}"
+                        update="@this :pageBodyDialogMessage"
+                        process="@form:natCatProcessoList @this"
+                        partialSubmit="true"
+                    />
                 </div>
 
             </h:form>

@@ -17,6 +17,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
 import org.joda.time.DateTime;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -210,52 +211,62 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
 
     @ExceptionHandled
     public String iniciar(Processo processo) {
-        String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
-        ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
-        Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
-        if (hasStartTaskForm(startTask)) {
-            jsfUtil.addFlashParam("processo", processo);
-            return "/Processo/startTaskForm.seam";
-        } else {
-            iniciarProcesso(processo);
-            return "/Painel/list.seam?faces-redirect=true";
+        try {
+            String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
+            ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
+            Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
+            if (hasStartTaskForm(startTask)) {
+                jsfUtil.addFlashParam("processo", processo);
+                return "/Processo/startTaskForm.seam";
+            } else {
+                iniciarProcesso(processo);
+                return "/Painel/list.seam?faces-redirect=true";
+            }
+        } catch (Exception e) {
+            RequestContext.getCurrentInstance().addCallbackParam("erro", true);
+            throw e;
         }
     }
 
     @ExceptionHandled(createLogErro = true)
     public String iniciar() {
-        if (naturezaCategoriaFluxoItem == null) {
-            throw new BusinessException("Selecione um Agrupamento de Fluxo, por favor!");
-        }
-        processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoItem.getNaturezaCategoriaFluxo());
-        List<ParticipanteProcesso> participantes = new ArrayList<>();
-        if (!root.isLeaf()) {
-            for (TreeNode treeNode : root.getChildren()) {
-                IniciarProcessoParticipanteVO participanteVO = (IniciarProcessoParticipanteVO) treeNode;
-                participantes.addAll(participanteVO.getListParticipantes(processo));
+        try {
+            if (naturezaCategoriaFluxoItem == null) {
+                throw new BusinessException("Selecione um Agrupamento de Fluxo, por favor!");
             }
-        }
-        List<MetadadoProcesso> metadados = new ArrayList<>();
-        MetadadoProcessoProvider processoProvider = new MetadadoProcessoProvider();
-        if (naturezaCategoriaFluxoItem.hasItem()) {
-            MetadadoProcesso item = processoProvider.gerarMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO, naturezaCategoriaFluxoItem.getItem().getIdItem().toString());
-            metadados.add(item);
-        }
-        StatusProcesso statusNaoIniciado = statusProcessoSearch.getStatusByName(StatusProcesso.STATUS_NAO_INICIADO);
-        MetadadoProcesso metatadoStatus = processoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, statusNaoIniciado.getIdStatusProcesso().toString());
-        metadados.add(metatadoStatus);
-        String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
-        ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
-        Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
-        participanteProcessoLoglabService.persistenciaIniciarProcessoView(processo, metadados,
-                participantes, new ArrayList<>(mapServidorContribuinteVO.values()),
-                new ArrayList<>(mapEmpresaVO.values()));
-        if (hasStartTaskForm(startTask)) {
-            jsfUtil.addFlashParam("processo", processo);
-            return "/Processo/startTaskForm.seam";
-        } else {
-            iniciarProcesso(processo);
-            return "/Painel/list.seam?faces-redirect=true";
+            processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoItem.getNaturezaCategoriaFluxo());
+            List<ParticipanteProcesso> participantes = new ArrayList<>();
+            if (!root.isLeaf()) {
+                for (TreeNode treeNode : root.getChildren()) {
+                    IniciarProcessoParticipanteVO participanteVO = (IniciarProcessoParticipanteVO) treeNode;
+                    participantes.addAll(participanteVO.getListParticipantes(processo));
+                }
+            }
+            List<MetadadoProcesso> metadados = new ArrayList<>();
+            MetadadoProcessoProvider processoProvider = new MetadadoProcessoProvider();
+            if (naturezaCategoriaFluxoItem.hasItem()) {
+                MetadadoProcesso item = processoProvider.gerarMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO, naturezaCategoriaFluxoItem.getItem().getIdItem().toString());
+                metadados.add(item);
+            }
+            StatusProcesso statusNaoIniciado = statusProcessoSearch.getStatusByName(StatusProcesso.STATUS_NAO_INICIADO);
+            MetadadoProcesso metatadoStatus = processoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, statusNaoIniciado.getIdStatusProcesso().toString());
+            metadados.add(metatadoStatus);
+            String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
+            ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
+            Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
+            participanteProcessoLoglabService.persistenciaIniciarProcessoView(processo, metadados,
+                    participantes, new ArrayList<>(mapServidorContribuinteVO.values()),
+                    new ArrayList<>(mapEmpresaVO.values()));
+            if (hasStartTaskForm(startTask)) {
+                jsfUtil.addFlashParam("processo", processo);
+                return "/Processo/startTaskForm.seam";
+            } else {
+                iniciarProcesso(processo);
+                return "/Painel/list.seam?faces-redirect=true";
+            }
+        } catch (Exception e) {
+            RequestContext.getCurrentInstance().addCallbackParam("erro", true);
+            throw e;
         }
     }
 
