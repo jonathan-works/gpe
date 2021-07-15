@@ -29,6 +29,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
@@ -64,6 +65,7 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.exception.BusinessRollbackException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -210,7 +212,10 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
 
     @ExceptionHandled
+    @Transactional
     public String iniciar(Processo processo) {
+        Localizacao localizacaoAtual = Authenticator.getLocalizacaoAtual();
+        UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
         try {
             String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
             ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
@@ -224,12 +229,19 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             }
         } catch (Exception e) {
             RequestContext.getCurrentInstance().addCallbackParam("erro", true);
-            throw e;
+            createProcesso(localizacaoAtual, usuarioLogado);
+            if(e instanceof BusinessException || e instanceof BusinessRollbackException) {
+                throw new BusinessRollbackException(e.getMessage(), e);
+            }
+            throw new BusinessRollbackException("Erro inesperado", e);
         }
     }
 
     @ExceptionHandled(createLogErro = true)
+    @Transactional
     public String iniciar() {
+        Localizacao localizacaoAtual = Authenticator.getLocalizacaoAtual();
+        UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
         try {
             if (naturezaCategoriaFluxoItem == null) {
                 throw new BusinessException("Selecione um Agrupamento de Fluxo, por favor!");
@@ -251,22 +263,17 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             StatusProcesso statusNaoIniciado = statusProcessoSearch.getStatusByName(StatusProcesso.STATUS_NAO_INICIADO);
             MetadadoProcesso metatadoStatus = processoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, statusNaoIniciado.getIdStatusProcesso().toString());
             metadados.add(metatadoStatus);
-            String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
-            ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
-            Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
             participanteProcessoLoglabService.persistenciaIniciarProcessoView(processo, metadados,
                     participantes, new ArrayList<>(mapServidorContribuinteVO.values()),
                     new ArrayList<>(mapEmpresaVO.values()));
-            if (hasStartTaskForm(startTask)) {
-                jsfUtil.addFlashParam("processo", processo);
-                return "/Processo/startTaskForm.seam";
-            } else {
-                iniciarProcesso(processo);
-                return "/Painel/list.seam?faces-redirect=true";
-            }
+            return iniciar(processo);
         } catch (Exception e) {
             RequestContext.getCurrentInstance().addCallbackParam("erro", true);
-            throw e;
+            createProcesso(localizacaoAtual, usuarioLogado);
+            if(e instanceof BusinessException || e instanceof BusinessRollbackException) {
+                throw new BusinessRollbackException(e.getMessage(), e);
+            }
+            throw new BusinessRollbackException("Erro inesperado", e);
         }
     }
 
