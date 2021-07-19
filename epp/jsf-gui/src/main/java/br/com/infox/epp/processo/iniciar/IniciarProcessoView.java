@@ -233,7 +233,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             if(e instanceof BusinessException || e instanceof BusinessRollbackException) {
                 throw new BusinessRollbackException(e.getMessage(), e);
             }
-            throw new BusinessRollbackException("Erro inesperado", e);
+            throw new BusinessRollbackException("Erro inesperado, favor entre em contato com o administrador do sistema.", e);
         }
     }
 
@@ -273,7 +273,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             if(e instanceof BusinessException || e instanceof BusinessRollbackException) {
                 throw new BusinessRollbackException(e.getMessage(), e);
             }
-            throw new BusinessRollbackException("Erro inesperado", e);
+            throw new BusinessRollbackException("Erro inesperado, favor entre em contato com o administrador do sistema.", e);
         }
     }
 
