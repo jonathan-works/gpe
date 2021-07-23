@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -25,6 +26,7 @@ import br.com.infox.epp.municipio.Estado;
 import br.com.infox.epp.municipio.Estado_;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica_;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -54,6 +56,8 @@ public class EmpresaSearch extends PersistenceController {
 
         try {
             return getEntityManager().createQuery(query).getSingleResult();
+        } catch (NonUniqueResultException e) {
+            throw new BusinessRollbackException(String.format("CNPJ duplicado: %s", cnpj), e);
         } catch (NoResultException e) {
             return null;
         }
