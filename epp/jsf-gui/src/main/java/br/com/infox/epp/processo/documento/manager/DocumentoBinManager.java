@@ -199,7 +199,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         	throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
         }
     }
-    
+
     public DocumentoBin createDocumentoBinResumoDocumentosProcesso(Processo processo) {
     	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
 	    	Document document = new Document();
@@ -229,13 +229,13 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		}
 		return null;
     }
-    
+
     private boolean podeExibirMargem(DocumentoBin documento) {
         return "pdf".equalsIgnoreCase(documento.getExtensao())
                 && (Boolean.TRUE.equals(documento.getSuficientementeAssinado())
                         || documento.getAssinaturas() != null && !documento.getAssinaturas().isEmpty());
     }
-    
+
     private List<Documento> getListAllDocumentoByProcessoOrderData(Processo processo) {
     	EntityManager entityManager = Beans.getReference(EntityManager.class);
     	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -246,7 +246,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     	query.orderBy(cb.asc(doc.get(Documento_.dataInclusao)));
     	return entityManager.createQuery(query).getResultList();
     }
-    
+
     private byte[] getModeloDocumentoToByteArray(ModeloDocumento modeloDocumento, Processo processo)
             throws DocumentException {
         String documentoAvaliado = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, createExpressionResolver(processo));
@@ -254,7 +254,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         pdfManager.convertHtmlToPdf(documentoAvaliado, outputStream);
         return outputStream.toByteArray();
     }
-    
+
     private void documentoToPdfCopy(PdfCopy copy, byte[] documento) throws IOException, BadPdfFormatException {
     	PdfReader reader = new PdfReader(documento);
 		for(int i = 1; i < reader.getNumberOfPages() + 1; i++) {
@@ -263,7 +263,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		copy.freeReader(reader);
 	    reader.close();
     }
-    
+
     private void documentoImageToPdfCopy(PdfCopy copy, byte[] documento) throws IOException, BadPdfFormatException {
     	Document imageDocument = new Document();
     	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
@@ -272,12 +272,12 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
             if (imageDocument.newPage()) {
 
                 Image image = Image.getInstance(documento);
-                
+
                 float scaler = ((imageDocument.getPageSize().getWidth() - imageDocument.leftMargin()
                         - imageDocument.rightMargin()) / image.getWidth()) * 100;
 
                 image.scalePercent(scaler);
-                
+
                 imageDocument.add(image);
                 imageDocument.close();
                 imageDocumentWriter.close();
@@ -285,7 +285,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                 PdfReader reader = new PdfReader(stream.toByteArray());
 
                 copy.addPage(copy.getImportedPage(reader, 1));
-                
+
                 copy.freeReader(reader);
                 reader.close();
          }
@@ -293,12 +293,12 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 			e.printStackTrace();
 		}
     }
-    
+
     public byte[] getOriginalData(DocumentoBin documento) {
         if (documentoBinarioManager.existeBinario(documento.getId())) {
         	byte[] data = documentoBinarioManager.getData(documento.getId());
         	documentoBinarioManager.detach(documento.getId());
-            return data; 
+            return data;
         } else {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try {
@@ -311,7 +311,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
             return outputStream.toByteArray();
         }
 	}
-    
+
     public String getMensagemDocumentoNulo() {
         return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
@@ -332,7 +332,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 			} else {
 				phrase = null;
 			}
-			
+
 			Phrase codPhrase;
 
         	for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
@@ -347,8 +347,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         			right = top;
         			top = tempRight;
         		}
-        		
-        		
+
+
         		if(PosicaoTextoAssinaturaDocumentoEnum.RODAPE_HORIZONTAL.equals(posicaoAssinatura)) {
         			codPhrase = new Phrase(getTextoCodigoSomente(uuid), font);
         			image.setAbsolutePosition(0, 0);
@@ -398,7 +398,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		sb.append(getTextoCodigoSomente(uuid));
         return sb.toString();
     }
-	
+
 	public String getTextoCodigoSomente(final UUID uuid) {
         final StringBuilder sb = new StringBuilder();
 		sb.append(getUrlValidacaoDocumento());
@@ -428,13 +428,13 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	        if(doc != null && doc.getPasta().getProcesso() != null) {
 	        	assinadores.append(", Nº do processo ").append(doc.getPasta().getProcesso().getNumeroProcesso());
 	        }
-	
+
 	        return Parametros.TEXTO_RODAPE_DOCUMENTO.getValue()
 	            .replaceAll("\\$\\{assinadores\\}", assinadores.toString());
         } else {
         	return "";
         }
-        
+
     }
 
 	@Override
@@ -488,7 +488,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	public Boolean isDocumentoBinAssinadoPorPapel(DocumentoBin bin, Papel papel) {
 	    return getDao().isDocumentoBinAssinadoPorPapel(bin, papel);
 	}
-	
+
 	public void atualizarDocumentoBinResumoProcesso(Processo processo, DocumentoBin documentoBinResumoProcesso) {
 		if(processo.getDocumentoBinResumoProcesso() != null) {
 			DocumentoBin documentoResumoAntigo = processo.getDocumentoBinResumoProcesso();
@@ -498,7 +498,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		processo.setDocumentoBinResumoProcesso(documentoBinResumoProcesso);
 		processoDao.update(processo);
 	}
-	
+
 	private ExpressionResolver createExpressionResolver(Processo processo) {
 		if (processo == null) {
 			throw new BusinessRollbackException("Não existe processo para essa solicitação");
@@ -514,4 +514,10 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 					executionContext);
 		}
 	}
+
+    public void atualizarConteudoDocumentoBin(DocumentoBin documentoBin, String conteudo) {
+        documentoBin.setModeloDocumento(conteudo);
+        documentoBin.setMd5Documento(MD5Encoder.encode(conteudo));
+        update(documentoBin);
+    }
 }
