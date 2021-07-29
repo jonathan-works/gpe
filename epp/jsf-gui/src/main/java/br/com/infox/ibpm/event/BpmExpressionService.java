@@ -18,6 +18,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.assertj.core.util.Strings;
 import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
@@ -32,14 +33,18 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
+import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoFolhaRostoSearch;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoFolhaTramitacoesSearch;
+import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.documento.publicacao.LocalPublicacao;
 import br.com.infox.epp.documento.publicacao.LocalPublicacaoSearch;
 import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
 import br.com.infox.epp.documento.publicacao.PublicacaoDocumentoService;
+import br.com.infox.epp.documento.type.ExpressionResolver;
+import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.entrega.EntregaResponsavelService;
 import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
 import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
@@ -55,6 +60,7 @@ import br.com.infox.epp.processo.documento.action.DocumentoCompartilhamentoServi
 import br.com.infox.epp.processo.documento.action.PastaCompartilhamentoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -94,6 +100,8 @@ public class BpmExpressionService {
     protected SignalService signalService;
     @Inject
     protected DocumentoManager documentoManager;
+    @Inject
+    protected DocumentoBinManager documentoBinManager;
     @Inject
     protected PrazoComunicacaoService prazoComunicacaoService;
     @Inject
@@ -139,16 +147,18 @@ public class BpmExpressionService {
     @Inject
     protected ParticipanteProcessoLoglabSearch participanteProcessoLoglabSearch;
     @Inject
+    protected ModeloDocumentoSearch modeloDocumentoSearch;
+    @Inject
     protected ModeloDocumentoManager modeloDocumentoManager;
     @Inject
     protected ModeloDocumentoFolhaRostoSearch modeloDocumentoFolhaRostoSearch;
     @Inject
     protected ModeloDocumentoFolhaTramitacoesSearch modeloDocumentoFolhaTramitacoesSearch;
-    
+
     public String getConteudoFolhaDeRostoProcessoParaEditor() {
     	return modeloDocumentoFolhaRostoSearch.gerarTextoModeloDocumento(getProcessoAtual());
     }
-    
+
     public String getConteudoFolhaTramitacaoProcessoParaEditor() {
     	return modeloDocumentoFolhaTramitacoesSearch.gerarTextoModeloDocumento(getProcessoAtual());
     }
@@ -721,11 +731,37 @@ public class BpmExpressionService {
     public String formatarData(Date data, String formato) {
         return DateUtil.formatarData(data, formato);
     }
-    
+
     @External(tooltip = "Retorna a senha de acesso ao processo atual", expressionType = ExpressionType.GERAL)
     public String getSenhaAcessoProcesso() {
         return getProcessoAtual().getSenhaAcesso();
     }
-    
-    
+
+    @External(expressionType = ExpressionType.EVENTOS,
+            tooltip = "process.events.expression.alterarConteudoDocumento.tooltip",
+            value = {
+                @Parameter(selectable = true, defaultValue="idDocumento", label = "idDocumento",
+                    tooltip = "process.events.expression.alterarConteudoDocumento.idDocumento.tooltip"
+                ),
+                @Parameter(selectable = true, defaultValue="codigoModeloDocumento", label = "codigoModeloDocumento",
+                    tooltip = "process.events.expression.alterarConteudoDocumento.codigoModeloDocumento.tooltip"
+                )
+            }
+    )
+    public void alterarConteudoDocumento(Integer idDocumento, String codigoModeloDocumento) {
+        if (idDocumento == null || Strings.isNullOrEmpty(codigoModeloDocumento)) {
+            throw new BusinessException("É necessário informar todos os parâmetros.");
+        }
+        Documento documento = documentoManager.find(idDocumento);
+        if (documento == null) {
+            throw new BusinessException("Não foi possível encontrar documento com id '" + idDocumento + "'");
+        }
+        ModeloDocumento modeloDocumento = modeloDocumentoSearch.getModeloDocumentoByCodigo(codigoModeloDocumento);
+        if (modeloDocumento == null) {
+            throw new BusinessException("Não foi possível encontrar modelo de documento com código '" + codigoModeloDocumento + "'");
+        }
+        ExpressionResolver expressionResolver = ExpressionResolverChainBuilder.defaultExpressionResolverChain(getIdProcessoAtual(), getExecutionContext());
+        String conteudo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, expressionResolver);
+        documentoBinManager.atualizarConteudoDocumentoBin(documento.getDocumentoBin(), conteudo);
+   }
 }
