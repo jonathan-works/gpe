@@ -12,33 +12,33 @@
   xmlns:infox="http://www.infox.com.br/jsf"
   xmlns:p="http://primefaces.org/ui"
   template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
-  
+
   <ui:param name="pageTitle" value="#{infoxMessages['painel.titlePage']}"/>
   <ui:define name="title">#{pageTitle}</ui:define>
-  
+
   <ui:define name="body">
     <h:form>
     	<a:poll action="#{painelUsuarioController.atualizarPainelProcessos}" interval="#{painelUsuarioController.pollInterval * 1000}" execute="@this" render="@none" immediate="true" bypassUpdates="true"/>
     </h:form>
     <s:div id="baseBody">
-	  
+
 	    <h:outputScript>
-	      function atualizaPainelFluxo() { 
-	        location = '#{pathResolver.contextPath}/Painel/list.seam'; 
+	      function atualizaPainelFluxo() {
+	        location = '#{pathResolver.contextPath}/Painel/list.seam';
 	      }
 	      function selectFluxoStyle(component) {
 	      	$('.fluxo-sel').removeClass('fluxo-sel');
 	      	$(component).addClass('fluxo-sel');
 	      }
 	    </h:outputScript>
-	    
+
 	    <div class="ui-tabs-panel ui-corner-bottom" style="padding: 0.8em; margin-top: 1em;">
-	    
+
 	    	<rich:panel id="panelFluxos" style="width: 15%; display: inline-block; margin-right: 0.5em; vertical-align: top">
 	    		<f:facet name="header">
 	    			<div style="position:relative;">
 		    			<h:outputText value="#{infoxMessages[painelUsuarioController.localeTitleKey]}"/>
-	    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/filter16x16.png')}" 
+	    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/filter16x16.png')}"
 	    					rendered="#{not painelUsuarioController.showFiltroInfo}"
 	    					styleClass="ui-icone-filtro-global-painel"
 	    					title="#{infoxMessages['painel.adicionarFiltro']}"
@@ -50,7 +50,7 @@
 	    					onclick="#{rich:component('modalFiltrosPainel')}.show()"/>
 	    			</div>
 	    		</f:facet>
-		    	<h:form id="form-fluxo">	
+		    	<h:form id="form-fluxo">
 		    		<a:jsFunction id="selectFluxo" name="selectFluxo" immediate="true" execute="@this" onbegin="infox.showLoading('Buscando Tarefas...');"
 		    			oncomplete="infox.hideLoading();" render="divPainelProcessos" action="#{painelUsuarioController.selectFluxo}" >
 						<a:param name="fluxo" assignTo="#{painelUsuarioController.idProcessDefinition}" />
@@ -58,11 +58,11 @@
 					</a:jsFunction>
 					<s:div rendered="#{painelUsuarioController.showFiltroInfo}"
 						style="border: 1px solid #c0c0c0; padding:0.5em;">
-						<h:outputLabel id="labelFiltroGlobalPainelUsuario" 
-							for="labelNumeroProcessoRootFiltro" 
+						<h:outputLabel id="labelFiltroGlobalPainelUsuario"
+							for="labelNumeroProcessoRootFiltro"
 							value="#{infoxMessages['painel.filtrandoPor']}"/>
 						<div>
-							<h:outputText id="labelNumeroProcessoRootFiltro" 
+							<h:outputText id="labelNumeroProcessoRootFiltro"
 								value="#{infoxMessages['painel.filtroGlobal.numeroProcesso']} "/>
 							<h:outputText id="numeroProcessoFiltrado"
 								value="#{painelUsuarioController.numeroProcesso}"/>
@@ -74,53 +74,53 @@
 			    	</ui:repeat>
 		    	</h:form>
 	    	</rich:panel>
-		    	
-		    <s:div id="divPainelProcessos" style="display: inline-block; width: 83%; vertical-align: top;">	
-		    
+
+		    <s:div id="divPainelProcessos" style="display: inline-block; width: 83%; vertical-align: top;">
+
 	    		<s:div id="tarefasDiv" style="display: inline-block; width: calc(26% - 10px);" rendered="#{painelUsuarioController.showTarefasTree}">
 		           <h:form id="treeProcessoForm"  >
 		               <ui:include src="tarefasTree.xhtml" />
 		           </h:form>
 		     	</s:div>
-		     	
+
 		     	<s:div id="divPainelProcessosInterna" style="display: inline-block; width: #{painelUsuarioController.showTarefasTree ? '74%' : '100%'}; vertical-align: top; margin-left: 0.5em;" >
 					<ui:include src="/Painel/painelProcessos.xhtml" />
-		    		
+
 		    		<s:div rendered="#{painelUsuarioController.showPainelComunicacoesEletronicasComum}" style="display: inline-block; width: 100%; vertical-align: top;">
 		    			<ui:include src="/Painel/painelComunicacaoEletronica.xhtml" />
 		    		</s:div>
-		    		
+
 		    		<s:div rendered="#{painelUsuarioController.showPainelComunicacoesNaoEletronicasComum}" style="display: inline-block; width: 100%; vertical-align: top;">
 		    			<ui:include src="/Painel/painelComunicacaoNaoEletronica.xhtml" />
 		    		</s:div>
-		    		
+
 		    		<s:div rendered="#{painelUsuarioController.showPainelDocumentosComum}" style="display: inline-block; width: 100%; vertical-align: top;">
 		    			<ui:include src="/Painel/painelDocumentos.xhtml" />
 		    		</s:div>
-		    		
+
 			    	<ui:include src="/Painel/abasCustomizadas.xhtml" />
 		    	</s:div>
 		    </s:div>
-		    
+
 		</div>
-		       
+
 	    <rich:popupPanel id="novaCaixaPanel" height="150" left="40" onbeforeshow="infox.util.popupclear();" >
-	      
+
 	      <f:facet name="header">
 	          <h:outputText value="#{infoxMessages['caixa.titleNovaCaixa']}" />
 	      </f:facet>
-	      
+
 	      <f:facet name="controls">
 	      	  <span onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
 	      </f:facet>
-	      
+
 	      <h:form id="modalForm">
-	      
+
 		      <wi:inputText
 		          id="nomeCaixa"
 		          label="#{infoxMessages['caixa.nomeCaixa']}"
 		          required="true" />
-		        
+
 		      <a:commandButton
 		          value="#{infoxMessages['crud.persist']}"
 		          styleClass="buttons"
@@ -131,9 +131,9 @@
 		          render="divPainelProcessos, nomeCaixaDecoration, pageBodyDialogMessage">
 		          <f:attribute name="inputNomeCaixa" value="#{rich:clientId('nomeCaixa')}" />
 		      </a:commandButton>
-	          
+
 	      </h:form>
-	      
+
 	      <h:outputScript>
 		      namespace("infox.util.popupclear",function onpopupshow() {
 			      $("#modalForm .input.text.crud").val(null);
@@ -143,9 +143,10 @@
 				  }
 		      });
 	      </h:outputScript>
-	      
+
 	    </rich:popupPanel>
 	</s:div>
 	<ui:include src="/Painel/filtroPainelModal.xhtml"></ui:include>
+	<ui:include src="/chatMovidesk.xhtml" />
   </ui:define>
 </ui:composition>
