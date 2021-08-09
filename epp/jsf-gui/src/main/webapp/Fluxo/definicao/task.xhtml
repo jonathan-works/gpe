@@ -35,7 +35,7 @@
         </h:form>
     </rich:collapsiblePanel>
     <rich:collapsiblePanel expanded="true" switchType="client" header="#{infoxMessages['process.task.variaveis']}">
-        <rich:dataTable value="#{t.variables}" id="varTable" styleClass="tabelaVariaveis" var="var">
+        <rich:dataTable value="#{t.variables}" id="varTable" styleClass="tabelaVariaveis" var="var" rowKeyVar="index" >
             <rich:column styleClass="dr-table-subheader rich-table-subheader">
                 <f:facet name="header">
                     <h:form>
@@ -291,6 +291,16 @@
                         </div>
                     </h:form>
                 </h:form>
+            </rich:column>
+            <rich:column>
+                <a:commandLink action="#{t.reorderVariable(index, index+1)}" execute="@this" render="varTable pageBodyDialogMessage" rendered="#{index lt (t.variables.size-1) and t.variables.size gt 1}"
+                            limitRender="true">
+                    <wi:icon value="arrow-down" text="#{infoxMessages['process.task.var.moveDown']}" />
+                </a:commandLink>
+                <a:commandLink action="#{t.reorderVariable(index, index-1)}" execute="@this" render="varTable pageBodyDialogMessage" rendered="#{index gt 0 and t.variables.size gt 1}"
+                            limitRender="true">
+                    <wi:icon value="arrow-up" text="#{infoxMessages['process.task.var.moveUp']}" />
+                </a:commandLink>
             </rich:column>
         </rich:dataTable>
     </rich:collapsiblePanel>

@@ -2,6 +2,7 @@ package br.com.infox.ibpm.task.handler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jboss.seam.faces.FacesMessages;
@@ -14,13 +15,18 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import com.google.common.base.Strings;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public class TaskHandler implements Serializable {
+
+    private static final LogProvider LOG = Logging.getLogProvider(TaskHandler.class);
 
     private static final long serialVersionUID = 9033256144150197159L;
     private Task task;
@@ -140,6 +146,17 @@ public class TaskHandler implements Serializable {
             taskController.getVariableAccesses().add(v);
             ProcessBuilder.instance().getTaskFitter().setTypeList(null);
         }
+    }
+
+    public void reorderVariable(int fromIndex, int toIndex) {
+        try {
+            Collections.swap(variables, fromIndex, toIndex);
+            Collections.swap(task.getTaskController().getVariableAccesses(), fromIndex, toIndex);
+        } catch (IndexOutOfBoundsException e) {
+            FacesMessages.instance().add(InfoxMessages.getInstance().get("process.task.var.moveErro"));
+            LOG.error(".reorderVariable", e);;
+        }
+
     }
 
     private boolean checkNullVariables() {
