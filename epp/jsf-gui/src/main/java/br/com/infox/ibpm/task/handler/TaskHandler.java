@@ -2,6 +2,7 @@ package br.com.infox.ibpm.task.handler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jboss.seam.faces.FacesMessages;
@@ -14,13 +15,18 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import com.google.common.base.Strings;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public class TaskHandler implements Serializable {
+
+    private static final LogProvider LOG = Logging.getLogProvider(TaskHandler.class);
 
     private static final long serialVersionUID = 9033256144150197159L;
     private Task task;
@@ -32,17 +38,17 @@ public class TaskHandler implements Serializable {
     public TaskHandler(Task task) {
         this.task = task;
         if (task != null){
-        	// Para as tarefas já existentes
-        	if (task.getTaskController() != null && task.getTaskController().getTaskControllerDelegation() == null) {
-        		Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
-        		delegation.setProcessDefinition(task.getProcessDefinition());
-        		task.getTaskController().setTaskControllerDelegation(delegation);
-        	}
+            // Para as tarefas já existentes
+            if (task.getTaskController() != null && task.getTaskController().getTaskControllerDelegation() == null) {
+                Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
+                delegation.setProcessDefinition(task.getProcessDefinition());
+                task.getTaskController().setTaskControllerDelegation(delegation);
+            }
         }
     }
-    
+
     public boolean isExpressionAssigned(){
-    	return getTask() != null && getTask().getPooledActorsExpression() == null;
+        return getTask() != null && getTask().getPooledActorsExpression() == null;
     }
 
     public Task getTask() {
@@ -54,16 +60,16 @@ public class TaskHandler implements Serializable {
     }
 
     public String getPooledActorsExpression(){
-    	return task == null ? null : task.getPooledActorsExpression();
+        return task == null ? null : task.getPooledActorsExpression();
     }
     public void setPooledActorsExpression(String expression){
-    	if (task != null){
-    		if (!Strings.isNullOrEmpty(expression)) {
-    			task.setPooledActorsExpression(expression);
-    		} else {
-    			task.setPooledActorsExpression(null);
-    		}
-    	}
+        if (task != null){
+            if (!Strings.isNullOrEmpty(expression)) {
+                task.setPooledActorsExpression(expression);
+            } else {
+                task.setPooledActorsExpression(null);
+            }
+        }
     }
 
     public String getSwimlaneName() {
@@ -142,6 +148,17 @@ public class TaskHandler implements Serializable {
         }
     }
 
+    public void reorderVariable(int fromIndex, int toIndex) {
+        try {
+            Collections.swap(variables, fromIndex, toIndex);
+            Collections.swap(task.getTaskController().getVariableAccesses(), fromIndex, toIndex);
+        } catch (IndexOutOfBoundsException e) {
+            FacesMessages.instance().add(InfoxMessages.getInstance().get("process.task.var.moveErro"));
+            LOG.error(".reorderVariable", e);;
+        }
+
+    }
+
     private boolean checkNullVariables() {
         for (VariableAccessHandler vah : variables) {
             if (VariableType.NULL.equals(vah.getType())) {
@@ -211,7 +228,7 @@ public class TaskHandler implements Serializable {
         var.limparConfiguracoes();
         var.setValue(null);
         if (!var.podeIniciarVazia()) {
-        	var.setIniciaVazia(false);
+            var.setIniciaVazia(false);
         }
         if (var.getType().equals(VariableType.PARAMETER)) {
             var.setIniciaVazia(false);
@@ -223,16 +240,16 @@ public class TaskHandler implements Serializable {
     }
 
     public List<String> getTransitions() {
-	    List<String> transitions = new ArrayList<>();
-	    if (this.task.getTaskNode().getLeavingTransitions() != null) {
-	    	List<Transition> leavingTransitions = this.task.getTaskNode().getLeavingTransitions();
-	    	for (Transition leavingTransition : leavingTransitions) {
-		        transitions.add(leavingTransition.getName());
-		    }
-	    }
-	    return transitions;
-	}
-    
+        List<String> transitions = new ArrayList<>();
+        if (this.task.getTaskNode().getLeavingTransitions() != null) {
+            List<Transition> leavingTransitions = this.task.getTaskNode().getLeavingTransitions();
+            for (Transition leavingTransition : leavingTransitions) {
+                transitions.add(leavingTransition.getName());
+            }
+        }
+        return transitions;
+    }
+
     private AssociativeModeloDocumentoList getAssociativeModeloDocumentoList() {
         return Beans.getReference(AssociativeModeloDocumentoList.class);
     }
