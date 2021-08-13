@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.list;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,10 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     private List<Fluxo> fluxoList;
     private SituacaoPrazoEnum situacaoPrazo;
     private boolean updateFluxoList = true;
+    @Getter @Setter
+    private Date dataInicio;
+    @Getter @Setter
+    private Date dataFim;
 
     @In
     private ProcessoTarefaManager processoTarefaManager;
@@ -95,11 +100,14 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     @Override
     public void newInstance() {
         this.situacaoPrazo = null;
+        this.fluxo = null;
+        this.dataFim = null;
+        this.dataInicio = null;
         super.newInstance();
     }
 
     public Fluxo getFluxo() {
-        return ObjectUtils.defaultIfNull(this.fluxo, CollectionUtil.firstOrNull(getFluxoList()));
+        return this.fluxo;
     }
 
     public void setFluxo(Fluxo fluxo) {
@@ -190,4 +198,34 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     public void setSituacaoPrazo(SituacaoPrazoEnum situacaoPrazo) {
         this.situacaoPrazo = situacaoPrazo;
     }
+
+    @Override
+    public List<Processo> getResultList() {
+        setEjbql(getEjbqlRestrictedWithDataTarefa());
+        return super.getResultList();
+    }
+
+    private String getEjbqlRestrictedWithDataTarefa() {
+        if (dataInicio == null
+                && dataFim == null) {
+            return getDefaultEjbql();
+        }
+
+        StringBuilder sb = new StringBuilder(getDefaultEjbql());
+
+        if (dataInicio != null
+                && dataFim != null) {
+            sb.append(" and exists ("
+                    + "select pt.idProcessoTarefa "
+                    + "from ProcessoTarefa pt "
+                    + "where pt.processo = o "
+                    + "      and pt.dataInicio >= #{processoEpaNaoFinalizadoList.dataInicio} "
+                    + "      and pt.dataInicio <= #{processoEpaNaoFinalizadoList.dataFim}"
+                    + ") ");
+        }
+
+        return sb.toString();
+    }
+
+
 }
