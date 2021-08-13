@@ -62,7 +62,21 @@
         <p:chart type="metergauge" model="#{processoEpaNaoFinalizadoList.meterMediaTempoGastoDesdeInicioProcesso}"
              rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}" style="height:175px; width:250px;" />
       </ui:define>
-      <ui:define name="headerToolBar" />
+      <ui:define name="headerToolBar" >
+        <wi:toolBarReport
+          rendered="#{systemFacade.exportarPDF()}"/>
+        <wi:toolBarReportExcel
+          rendered="#{systemFacade.exportarXLS() and not empty bean.template}"
+          action="#{bean.exportarXLS()}"/>
+        <h:form>
+          <h:commandLink action="#{processoEpaNaoFinalizadoList.exportXml()}">
+            <h:graphicImage
+              url="#{layoutController.getResourceUrlByPath('/imagens/xml-file.png')}"
+              title="#{infoxMessages['report.exportXML']}" />
+          </h:commandLink>
+        </h:form>
+      </ui:define>
+
       <ui:define name="toolBar">
         <div class="tbar-div">
           <h:graphicImage

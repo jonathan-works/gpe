@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <wi:dataReport
+        title="#{infoxMessages['reportBam.title']}"
+        subtitle="#{infoxMessages['reportBam.subtitle']}"
+        columns="6" widths="3 5 4 5 4 4">
+
+        <wi:reportColumnHeader
+            title="#{infoxMessages['reportBam.nrProcesso']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['reportBam.tarefa']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['reportBam.fluxo']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['reportBam.departamentoUsuario']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['reportBam.dataInicio']}" />
+        <wi:reportColumnHeader
+            title="#{infoxMessages['reportBam.dataFim']}" />
+
+        <ui:repeat var="row" value="#{processoEpaNaoFinalizadoList.getListaReport(filterIdFluxo, filterDataInicio, filterDataFim, filterSituacaoPrazo)}">
+            <wi:reportColumn value="#{row.nrProcesso}" />
+            <wi:reportColumn value="#{row.tarefa}" />
+            <wi:reportColumn value="#{row.fluxo}" />
+            <wi:reportColumn value="#{row.departamentoUsuario}" />
+            <wi:reportColumnDate value="#{row.dataInicio}" pattern="dd/MM/yyyy kk:mm:ss" />
+            <wi:reportColumnDate value="#{row.dataFim}" pattern="dd/MM/yyyy kk:mm:ss" />
+        </ui:repeat>
+
+    </wi:dataReport>
+
+</ui:composition>
