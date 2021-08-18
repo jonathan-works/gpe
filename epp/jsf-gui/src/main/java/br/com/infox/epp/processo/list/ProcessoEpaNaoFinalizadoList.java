@@ -221,11 +221,11 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     }
 
     public void setDataInicio(Date dataInicio) {
-        this.dataInicio = DateUtil.getBeginningOfDay(dataInicio);;
+        this.dataInicio = DateUtil.getBeginningOfDay(dataInicio);
     }
 
     public void setDataFim(Date dataFim) {
-        this.dataFim = DateUtil.getEndOfDay(dataFim);;
+        this.dataFim = DateUtil.getEndOfDay(dataFim);
     }
 
     private String getEjbqlRestrictedWithDataTarefa() {
@@ -243,7 +243,11 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     }
 
     public List<BamReportVO> getListaReport(Integer filterIdFluxo, Date filterDataInicio, Date filterDataFim, SituacaoPrazoEnum filterSituacaoPrazo) {
-        return bamReportSearch.getResultReport(filterIdFluxo, filterDataInicio, filterDataFim, filterSituacaoPrazo);
+        return bamReportSearch.getResultReport(filterIdFluxo, DateUtil.getBeginningOfDay(filterDataInicio), DateUtil.getEndOfDay(filterDataFim), filterSituacaoPrazo);
+    }
+
+    private List<BamReportVO> getListaReport(Integer filterIdFluxo) {
+        return bamReportSearch.getResultReport(filterIdFluxo, dataInicio, dataFim, situacaoPrazo);
     }
 
     @Override
@@ -263,7 +267,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
             idFluxo = fluxo.getIdFluxo();
         }
 
-        List<BamReportVO> beanList = getListaReport(idFluxo, dataInicio, dataFim, situacaoPrazo);
+        List<BamReportVO> beanList = getListaReport(idFluxo);
         try {
             if (beanList == null || beanList.isEmpty()) {
                 FacesMessages.instance().add(Severity.INFO, InfoxMessages.getInstance().get("entity.noDataAvailable"));
@@ -291,7 +295,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
             idFluxo = fluxo.getIdFluxo();
         }
 
-        List<BamReportVO> beanList = getListaReport(idFluxo, dataInicio, dataFim, situacaoPrazo);
+        List<BamReportVO> beanList = getListaReport(idFluxo);
         BamReportXMLDTO xmlDTO = new BamReportXMLDTO();
         xmlDTO.setProcessos(beanList);
         XmlUtil.downloadXml(xmlDTO, DOWNLOAD_XML_NAME);
