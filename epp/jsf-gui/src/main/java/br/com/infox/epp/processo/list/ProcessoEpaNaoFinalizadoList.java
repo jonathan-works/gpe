@@ -3,10 +3,13 @@ package br.com.infox.epp.processo.list;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,16 +20,19 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.primefaces.model.chart.MeterGaugeChartModel;
 
+import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.CollectionUtil;
+import br.com.infox.core.util.DateUtil;
+import br.com.infox.core.util.ExcelExportUtil;
+import br.com.infox.core.util.XmlUtil;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
@@ -37,10 +43,13 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
-import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
+import br.com.infox.seam.path.PathResolver;
+import lombok.Getter;
 
-@Scope(ScopeType.CONVERSATION)
-@Name(ProcessoEpaNaoFinalizadoList.NAME)
+@Named
+@ViewScoped
 public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
 
     private static final long serialVersionUID = 1L;
@@ -53,6 +62,10 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     private static final String R2 = "o.situacaoPrazo = #{processoEpaNaoFinalizadoList.situacaoPrazo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
 
+    private static final String TEMPLATE = "/BAM/reportBamTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "BAM.xls";
+    private static final String DOWNLOAD_XML_NAME = "BAM.xml";
+    private static final LogProvider LOG = Logging.getLogProvider(ProcessoEpaNaoFinalizadoList.class);
     private static final Map<String, String> CUSTOM_ORDER_MAP;
 
     static {
@@ -67,9 +80,16 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     private List<Fluxo> fluxoList;
     private SituacaoPrazoEnum situacaoPrazo;
     private boolean updateFluxoList = true;
+    @Getter
+    private Date dataInicio;
+    @Getter
+    private Date dataFim;
 
-    @In
-    private ProcessoTarefaManager processoTarefaManager;
+    @Inject
+    private BamReportSearch bamReportSearch;
+
+    @Inject
+    private PathResolver pathResolver;
 
     @Override
     protected void addSearchFields() {
@@ -95,11 +115,14 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     @Override
     public void newInstance() {
         this.situacaoPrazo = null;
+        this.fluxo = null;
+        this.dataFim = null;
+        this.dataInicio = null;
         super.newInstance();
     }
 
     public Fluxo getFluxo() {
-        return ObjectUtils.defaultIfNull(this.fluxo, CollectionUtil.firstOrNull(getFluxoList()));
+        return this.fluxo;
     }
 
     public void setFluxo(Fluxo fluxo) {
@@ -190,4 +213,92 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<Processo> {
     public void setSituacaoPrazo(SituacaoPrazoEnum situacaoPrazo) {
         this.situacaoPrazo = situacaoPrazo;
     }
+
+    @Override
+    public List<Processo> getResultList() {
+        setEjbql(getEjbqlRestrictedWithDataTarefa());
+        return super.getResultList();
+    }
+
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = DateUtil.getBeginningOfDay(dataInicio);
+    }
+
+    public void setDataFim(Date dataFim) {
+        this.dataFim = DateUtil.getEndOfDay(dataFim);
+    }
+
+    private String getEjbqlRestrictedWithDataTarefa() {
+        StringBuilder sb = new StringBuilder(getDefaultEjbql());
+        if (dataInicio != null && dataFim != null) {
+            sb.append(" and exists ("
+                    + " select pt.idProcessoTarefa "
+                    + " from ProcessoTarefa pt "
+                    + " where pt.processo = o "
+                    + "      and pt.dataInicio >= #{processoEpaNaoFinalizadoList.dataInicio} "
+                    + "      and pt.dataInicio <= #{processoEpaNaoFinalizadoList.dataFim} "
+                    + " ) ");
+        }
+        return sb.toString();
+    }
+
+    public List<BamReportVO> getListaReport(Integer filterIdFluxo, Date filterDataInicio, Date filterDataFim, SituacaoPrazoEnum filterSituacaoPrazo) {
+        return bamReportSearch.getResultReport(filterIdFluxo, DateUtil.getBeginningOfDay(filterDataInicio), DateUtil.getEndOfDay(filterDataFim), filterSituacaoPrazo);
+    }
+
+    private List<BamReportVO> getListaReport(Integer filterIdFluxo) {
+        return bamReportSearch.getResultReport(filterIdFluxo, dataInicio, dataFim, situacaoPrazo);
+    }
+
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
+
+    @Override
+    public void exportarXLS() {
+        Integer idFluxo = null;
+        if (fluxo != null) {
+            idFluxo = fluxo.getIdFluxo();
+        }
+
+        List<BamReportVO> beanList = getListaReport(idFluxo);
+        try {
+            if (beanList == null || beanList.isEmpty()) {
+                FacesMessages.instance().add(Severity.INFO, InfoxMessages.getInstance().get("entity.noDataAvailable"));
+            } else {
+                exportarXLS(getTemplate(), beanList);
+            }
+        } catch (ExcelExportException e) {
+            LOG.error(".exportarXLS()", e);
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao exportar arquivo."
+                    + e.getMessage());
+        }
+    }
+
+    private void exportarXLS(String template, List<BamReportVO> beanList) throws ExcelExportException {
+        String urlTemplate = pathResolver.getContextRealPath() + template;
+        Map<String, Object> map = new HashMap<String, Object>();
+        StringBuilder className = new StringBuilder("bamReportVO");
+        map.put(className.toString(), beanList);
+        ExcelExportUtil.downloadXLS(urlTemplate, map, getDownloadXlsName());
+    }
+
+    public void exportXml() {
+        Integer idFluxo = null;
+        if (fluxo != null) {
+            idFluxo = fluxo.getIdFluxo();
+        }
+
+        List<BamReportVO> beanList = getListaReport(idFluxo);
+        BamReportXMLDTO xmlDTO = new BamReportXMLDTO();
+        xmlDTO.setProcessos(beanList);
+        XmlUtil.downloadXml(xmlDTO, DOWNLOAD_XML_NAME);
+    }
+
 }

@@ -12,7 +12,7 @@
   xmlns:i="http://java.sun.com/jsf/composite/infox"
   xmlns:a="http://richfaces.org/a4j"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-  
+
   <ui:define name="title">#{infoxMessages['bam.pageTitle']}</ui:define>
   <ui:param
     name="home"
@@ -37,7 +37,6 @@
       rowId="#{row.idProcesso}"
       toolBarColumnWidth="69px"
       hideOrder="true"
-      showGrid="#{not empty processoEpaNaoFinalizadoList.fluxo}"
     >
       <ui:define name="searchForm">
         <wi:searchForm
@@ -48,7 +47,6 @@
             id="comboFluxo" required="false" converterId="org.jboss.seam.ui.EntityConverter"
             value="#{processoEpaNaoFinalizadoList.fluxo}"
             label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
-            hideNoSelectionLabel="true"
             items="#{processoEpaNaoFinalizadoList.fluxoList}"
           />
           <i:selectOneMenu
@@ -57,11 +55,28 @@
             items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
             value="#{processoEpaNaoFinalizadoList.situacaoPrazo}"
           />
+          <wi:inputDataPeriodo id="periodo" label="#{infoxMessages['bam.inicioTarefa']}" valueDateFrom="#{processoEpaNaoFinalizadoList.dataInicio}"
+                            valueDateTo="#{processoEpaNaoFinalizadoList.dataFim}" validatePastDateFrom="true" validatePastDateTo="true"
+                            pattern="dd/MM/yyyy" maskDate="99/99/9999"/>
         </wi:searchForm>
         <p:chart type="metergauge" model="#{processoEpaNaoFinalizadoList.meterMediaTempoGastoDesdeInicioProcesso}"
              rendered="#{not empty processoEpaNaoFinalizadoList.fluxo}" style="height:175px; width:250px;" />
       </ui:define>
-      <ui:define name="headerToolBar" />
+      <ui:define name="headerToolBar" >
+        <wi:toolBarReport
+          rendered="#{systemFacade.exportarPDF()}"/>
+        <wi:toolBarReportExcel
+          rendered="#{systemFacade.exportarXLS() and not empty bean.template}"
+          action="#{bean.exportarXLS()}"/>
+        <h:form>
+          <h:commandLink action="#{processoEpaNaoFinalizadoList.exportXml()}">
+            <h:graphicImage
+              url="#{layoutController.getResourceUrlByPath('/imagens/xml-file.png')}"
+              title="#{infoxMessages['report.exportXML']}" />
+          </h:commandLink>
+        </h:form>
+      </ui:define>
+
       <ui:define name="toolBar">
         <div class="tbar-div">
           <h:graphicImage
