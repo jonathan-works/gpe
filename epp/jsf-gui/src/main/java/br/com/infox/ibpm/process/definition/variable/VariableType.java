@@ -1,7 +1,7 @@
 package br.com.infox.ibpm.process.definition.variable;
 
 public enum VariableType {
-    
+
     NULL("process.def.var.null", null),
     STRING("process.def.var.string", "/WEB-INF/xhtml/components/form/default.xhtml"),
     TEXT("process.def.var.text", "/WEB-INF/xhtml/components/form/text.xhtml"),
@@ -22,12 +22,12 @@ public enum VariableType {
 
     private String label;
     private String path;
-    
+
     private VariableType(String label, String path) {
         this.label = label;
         this.path = path;
     }
-    
+
     public String getLabel() {
         return label;
     }
@@ -35,5 +35,5 @@ public enum VariableType {
     public String getPath() {
         return path;
     }
-    
+
 }

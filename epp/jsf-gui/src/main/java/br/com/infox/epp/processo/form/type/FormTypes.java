@@ -14,7 +14,7 @@ import br.com.infox.epp.processo.form.type.PrimitiveFormType.TaskPageFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.TextFormType;
 
 public enum FormTypes {
-    
+
     STRING(StringFormType.class),
     TEXT(TextFormType.class),
     INTEGER(IntegerFormType.class),
@@ -30,25 +30,25 @@ public enum FormTypes {
     FRAGMENT(FragmentFormType.class),
     TASK_PAGE(TaskPageFormType.class),
     ENUMERATION_MULTIPLE(EnumerationMultipleFormType.class);
-    
+
     private Class<? extends FormType> formTypeClass;
-    
+
     private FormTypes(Class<? extends FormType> formTypeClass) {
         this.formTypeClass = formTypeClass;
     }
-    
+
     public Class<? extends FormType> getFormTypeClass() {
         return formTypeClass;
     }
-    
+
     public boolean isFileType() {
         return formTypeClass.isAssignableFrom(FileFormType.class);
     }
-    
+
     public boolean isPrimitiveType() {
         return formTypeClass.isAssignableFrom(PrimitiveFormType.class);
     }
-    
+
     public FormType create() {
         try {
             return getFormTypeClass().newInstance();

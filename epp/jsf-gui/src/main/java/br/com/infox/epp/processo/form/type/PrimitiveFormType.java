@@ -73,7 +73,7 @@ public abstract class PrimitiveFormType implements FormType {
         }
         return false;
     }
-    
+
     public static class StringFormType extends PrimitiveFormType {
 
         public StringFormType() {
@@ -140,7 +140,7 @@ public abstract class PrimitiveFormType implements FormType {
             }
         }
 
-        
+
     }
 
     public static class DateFormType extends PrimitiveFormType {
@@ -201,7 +201,7 @@ public abstract class PrimitiveFormType implements FormType {
             return false;
         }
     }
-    
+
 
     public static class PageFormType extends PrimitiveFormType {
 
@@ -244,13 +244,13 @@ public abstract class PrimitiveFormType implements FormType {
         public NumberFormType(String name, String path, ValueType valueType) {
             super(name, path, valueType);
         }
-        
+
         public MaxMinConfig getConfigurator(FormField formField) {
             String configuration = (String) formField.getProperties().get("configuration");
             MaxMinConfig maxMinConfig = VariableMaxMinHandler.fromJson(configuration);
             return maxMinConfig;
         }
-        
+
         @Override
         public boolean isInvalid(FormField formField, FormData formData) {
             return super.isInvalid(formField, formData) || validateMaxMin(formField);
@@ -282,7 +282,7 @@ public abstract class PrimitiveFormType implements FormType {
             }
             return msg != null;
         }
-        
+
     }
-    
+
 }

@@ -43,18 +43,18 @@ import br.com.infox.seam.util.ComponentUtil;
 /**
  * Gera um formulario a partir do controller da tarefa atual (taskInstance) Para
  * a geracao correta o atributo mapped-name deve seguir o padrao:
- * 
+ *
  * tipo:nome_da_variavel
- * 
+ *
  * Onde: - tipo é o nome do componente de formulario para o campo -
  * nome_da_variavel é como sera armazenada no contexto. Serve também para gerar
  * o label (Nome da variavel)
- * 
+ *
  * Esse formulario contem apenas campos que possam ser escritos (access=write),
  * para os outros campos é usada a classe TaskInstanceView
- * 
+ *
  * @author luizruiz
- * 
+ *
  */
 
 @Name(TaskInstanceForm.NAME)
@@ -69,9 +69,9 @@ public class TaskInstanceForm implements Serializable {
     private Form form;
 
     private TaskInstance taskInstance;
-    
+
     private VariableDefinitionService variableDefinitionService = Beans.getReference(VariableDefinitionService.class);
-    
+
     @Unwrap
     public Form getTaskForm() {
         getTaskInstance();
@@ -95,7 +95,7 @@ public class TaskInstanceForm implements Serializable {
 
     /**
      * Adiciona as variaveis da list informada ao form que está sendo criado.
-     * 
+     *
      * @param list - Lista das variavéis que desejam ser adicionadas ao form.
      */
     private void addVariablesToForm(List<VariableAccess> list) {
@@ -123,27 +123,27 @@ public class TaskInstanceForm implements Serializable {
                         setPageProperties(name, ff, "seam", "url");
                         break;
                     case FRAME:
-                    	FrameDefinition frame = variableDefinitionService.getFrame(name);
+                        FrameDefinition frame = variableDefinitionService.getFrame(name);
                         String url = frame.getXhtmlPath();
                         ff.getProperties().put("urlFrame", url);
-                        break; 
+                        break;
                     case MONETARY:
                     case INTEGER:
-                    	if(VariableMaxMinHandler.fromJson(var.getConfiguration()) != null) {
-							ff.getProperties().put("valorMaximo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMaximo());
-							ff.getProperties().put("valorMinimo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMinimo());
-                    	}
-                    	break;
+                        if(VariableMaxMinHandler.fromJson(var.getConfiguration()) != null) {
+                            ff.getProperties().put("valorMaximo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMaximo());
+                            ff.getProperties().put("valorMinimo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMinimo());
+                        }
+                        break;
                     case STRING:
-						if (var.getConfiguration() != null && var.getConfiguration().length() > 0) { 
-							ff.getProperties().put("mascara", VariableStringHandler.fromJson(var.getConfiguration()).getMascara());
-						}
-                    	break;
+                        if (var.getConfiguration() != null && var.getConfiguration().length() > 0) {
+                            ff.getProperties().put("mascara", VariableStringHandler.fromJson(var.getConfiguration()).getMascara());
+                        }
+                        break;
                     case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {
                         DominioVariavelTarefaSearch dominioVariavelTarefaSearch = Beans.getReference(DominioVariavelTarefaSearch.class);;
                         DominioVariavelTarefa dominio = dominioVariavelTarefaSearch.findByCodigo(
-                        		VariableDominioEnumerationHandler.fromJson(var.getConfiguration()).getCodigoDominio());
+                                VariableDominioEnumerationHandler.fromJson(var.getConfiguration()).getCodigoDominio());
                         List<SelectItem> selectItens = new ArrayList<>();
                         if (dominio.isDominioSqlQuery()) {
                             ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
@@ -176,7 +176,7 @@ public class TaskInstanceForm implements Serializable {
                         DocumentoVariavelController documentoVariavelController = Beans.getReference(DocumentoVariavelController.class);
                         documentoVariavelController.init(processo, ff);
                         ff.getProperties().put("documentoVariavelController", documentoVariavelController);
-                    	break;
+                        break;
                     case EDITOR: {
                         ff.getProperties().put("pastaPadrao", var.getConfiguration() == null ? null : VariableEditorModeloHandler.fromJson(var.getConfiguration()).getPasta());
                         ff.getProperties().put("editorId", var.getVariableName() + "-" + taskInstance.getId());
@@ -184,7 +184,7 @@ public class TaskInstanceForm implements Serializable {
                         documentoVariavelController2.init(processo, ff);
                         ff.getProperties().put("documentoVariavelController", documentoVariavelController2);
                     }
-                    	break;
+                        break;
                     default:
                         break;
                     }
@@ -200,7 +200,7 @@ public class TaskInstanceForm implements Serializable {
     }
 
     private void getTaskInstance() {
-    	TaskInstance newInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        TaskInstance newInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (newInstance == null || !newInstance.equals(taskInstance)) {
             form = null;
         }
@@ -217,7 +217,7 @@ public class TaskInstanceForm implements Serializable {
         Integer idProcesso = (Integer) taskInstance.getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
         return getProcessoManager().find(idProcesso);
     }
-    
+
     private ProcessoManager getProcessoManager() {
         return Beans.getReference(ProcessoManager.class);
     }
