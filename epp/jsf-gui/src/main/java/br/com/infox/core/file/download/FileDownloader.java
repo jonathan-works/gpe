@@ -39,7 +39,6 @@ import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -71,8 +70,6 @@ public class FileDownloader implements Serializable {
     private PathResolver pathResolver;
     @Inject
     private DocumentoDAO documentoDAO;
-    @Inject
-    private PastaManager pastaManager;
     
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)
@@ -310,7 +307,7 @@ public class FileDownloader implements Serializable {
     	byte[] originalData = getOriginalData(documento);
     	
     	if (gerarMargens && podeExibirMargem(documento)) {
-    		documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento));
+    		documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento), documentoDAO.getDocumentosFromDocumentoBin(documento).get(0).getExcluido());
     	}
     	else {
     		try {

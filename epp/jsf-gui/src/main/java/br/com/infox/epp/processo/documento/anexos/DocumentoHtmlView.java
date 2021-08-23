@@ -10,6 +10,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -31,6 +32,8 @@ public class DocumentoHtmlView implements Serializable {
     private DocumentoManager documentoManager;
     @Inject
     private DocumentoBinManager documentoBinManager;
+    @Inject
+	private DocumentoDAO documentoDAO;
 
     private Documento viewInstance;
     private DocumentoBin documentoBin;
@@ -65,7 +68,7 @@ public class DocumentoHtmlView implements Serializable {
     }
 
     public String getUuidText(){
-        return documentoBinManager.getTextoCodigo(documentoBin.getUuid());
+        return documentoBinManager.getTextoCodigo(documentoBin.getUuid(), documentoDAO.getDocumentosFromDocumentoBin(documentoBin).get(0).getExcluido());
     }
     
     public String getSignatureText(){

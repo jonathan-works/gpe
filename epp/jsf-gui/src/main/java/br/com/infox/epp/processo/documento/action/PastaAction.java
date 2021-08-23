@@ -22,11 +22,13 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.list.DocumentoCompartilhamentoList;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
+import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoManager;
@@ -64,6 +66,8 @@ public class PastaAction implements Serializable {
     private PastaCompartilhamentoView pastaCompartilhamentoView;
     @Inject
     private DocumentoProcessoAction documentoProcessoAction;
+    @Inject
+	private AssinaturaDocumentoManager assinaturaDocumentoManager;
     
     private DocumentoList documentoList = ComponentUtil.getComponent(DocumentoList.NAME);
 
@@ -405,6 +409,11 @@ public class PastaAction implements Serializable {
             processoVO.setQtdDocumentoCompartilhado(documentoCompartilhamentoList.getResultCount());
         }
         return processoVO.getQtdDocumentoCompartilhado();
+    }
+    
+    public boolean isDocumentoNaoPossuiAssinatura(Documento documento) {
+    	List<AssinaturaDocumento> listaAssinaturaDocumento = assinaturaDocumentoManager.listAssinaturaDocumentoByDocumento(documento);
+    	return listaAssinaturaDocumento != null && listaAssinaturaDocumento.size() == 0;
     }
 
     public DataList<Documento> getActiveBean() {

@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.documento.manager;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
+import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,11 +34,13 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
 import com.lowagie.text.exceptions.BadPasswordException;
 import com.lowagie.text.pdf.BadPdfFormatException;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfCopy;
+import com.lowagie.text.pdf.PdfGState;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
@@ -86,6 +89,7 @@ import net.glxn.qrgen.image.ImageType;
 public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> {
 
 	private static final long serialVersionUID = 1L;
+	private static final String TEXTO_DOCUMENTO_CANCELADO = "Documento cancelado.";
 	private static final String TEXTO_AUTENTICIDADE_DOCUMENTO = "A autenticidade do documento pode ser conferida neste link: ";
 	public static final String NAME = "documentoBinManager";
 
@@ -191,9 +195,9 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 	}
 
-    public byte[] writeMargemDocumento(byte[] pdf, String textoAssinatura, UUID uuid, final byte[] qrcode, PosicaoTextoAssinaturaDocumentoEnum posicaoAssinatura) {
+    public byte[] writeMargemDocumento(byte[] pdf, String textoAssinatura, UUID uuid, final byte[] qrcode, PosicaoTextoAssinaturaDocumentoEnum posicaoAssinatura, boolean cancelado) {
         try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
-            writeMargemDocumento(pdf, textoAssinatura, uuid, qrcode, outStream, posicaoAssinatura);
+            writeMargemDocumento(pdf, textoAssinatura, uuid, qrcode, outStream, posicaoAssinatura, cancelado);
             return outStream.toByteArray();
         } catch (IOException e) {
         	throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
@@ -210,7 +214,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     		for(Documento documento : getListAllDocumentoByProcessoOrderData(processo)) {
     			try {
 	    			if(podeExibirMargem(documento.getDocumentoBin())) {
-	    				documentoToPdfCopy(copy, writeMargemDocumento(getOriginalData(documento.getDocumentoBin()), getTextoAssinatura(documento.getDocumentoBin()), documento.getDocumentoBin().getUuid(), getQrCodeSignatureImage(documento.getDocumentoBin()), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento.getDocumentoBin())));
+	    				documentoToPdfCopy(copy, writeMargemDocumento(getOriginalData(documento.getDocumentoBin()), getTextoAssinatura(documento.getDocumentoBin()), documento.getDocumentoBin().getUuid(), getQrCodeSignatureImage(documento.getDocumentoBin()), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento.getDocumentoBin()), documento.getExcluido()));
 	    			} else {
 	    				documentoImageToPdfCopy(copy, (getOriginalData(documento.getDocumentoBin())));
 	    			}
@@ -317,7 +321,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     }
 
 	public void writeMargemDocumento(byte[] pdf, String textoAssinatura, UUID uuid, final byte[] qrcode,
-			OutputStream outStream, PosicaoTextoAssinaturaDocumentoEnum posicaoAssinatura) {
+			OutputStream outStream, PosicaoTextoAssinaturaDocumentoEnum posicaoAssinatura, boolean cancelado) {
     	if(InfoxPdfReader.isCriptografado(pdf)) {
             throw new MargemPdfException("Documento somente leitura, não é possível gravar");
     	}
@@ -334,7 +338,17 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 			}
 
 			Phrase codPhrase;
-
+			
+			//Variáveis para a parte de cancelamento
+			Font f = new Font(Font.TIMES_ROMAN, 80);
+			f.setColor(Color.RED);
+	        Phrase p = new Phrase("CANCELADO", f);
+	        PdfGState gs1 = new PdfGState();
+	        gs1.setFillOpacity(0.5f);
+	        PdfContentByte over;
+	        Rectangle pagesize;
+	        float x, y;
+			
         	for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
         		int rotation = pdfReader.getPageRotation(page);
         		final PdfContentByte content = stamper.getOverContent(page);
@@ -356,16 +370,31 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                     if (phrase != null) {
                     	ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, phrase, 52, 37, 0);
 					}
-                    ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, new Phrase(TEXTO_AUTENTICIDADE_DOCUMENTO, font), 52, 25, 0);
+                    if(cancelado) {
+                    	ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, new Phrase(TEXTO_DOCUMENTO_CANCELADO + " " + TEXTO_AUTENTICIDADE_DOCUMENTO, font), 52, 25, 0);
+                    } else {
+                    	ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, new Phrase(TEXTO_AUTENTICIDADE_DOCUMENTO, font), 52, 25, 0);
+                    }
                     ColumnText.showTextAligned(content, Element.ALIGN_BOTTOM, new Phrase(codPhrase), 52, 12, 0);
         		} else {
-        			codPhrase = new Phrase(getTextoCodigo(uuid), font);
+        			codPhrase = new Phrase(getTextoCodigo(uuid, cancelado), font);
 					image.setAbsolutePosition(right - 65, top - 70);
                     content.addImage(image);
                     if (phrase != null) {
                     	ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
                     }
                     ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 35, top - 70, -90);
+        		}
+        		
+        		if(cancelado) {
+        	        pagesize = pdfReader.getPageSizeWithRotation(page);
+                    x = (pagesize.getLeft() + pagesize.getRight()) / 2;
+                    y = (pagesize.getTop() + pagesize.getBottom()) / 1.5F;
+                    over = stamper.getOverContent(page);
+                    over.saveState();
+                    over.setGState(gs1);
+                    ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, x, y, 45);
+                    over.restoreState();
         		}
         	}
 
@@ -381,7 +410,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
     public void writeMargemDocumento(final DocumentoBin documento, final byte[] pdf, final OutputStream outStream) {
         try {
-            outStream.write(writeMargemDocumento(pdf, getTextoAssinatura(documento), documento.getUuid(), getQrCodeSignatureImage(documento), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento)));
+            outStream.write(writeMargemDocumento(pdf, getTextoAssinatura(documento), documento.getUuid(), getQrCodeSignatureImage(documento), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento), documentoDAO.getDocumentosFromDocumentoBin(documento).get(0).getExcluido()));
             outStream.flush();
         } catch (IOException e) {
             throw new BusinessException("Erro ao gravar a margem do PDF", e);
@@ -393,8 +422,14 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                     .to(ImageType.GIF).withSize(60, 60).stream().toByteArray();
         }
 
-	public String getTextoCodigo(final UUID uuid) {
-        final StringBuilder sb = new StringBuilder(TEXTO_AUTENTICIDADE_DOCUMENTO);
+	public String getTextoCodigo(final UUID uuid, boolean cancelado) {
+        final StringBuilder sb = new StringBuilder();
+        if(cancelado) {
+        	sb.append(TEXTO_DOCUMENTO_CANCELADO);
+        	sb.append(" ");
+        }
+        
+        sb.append(TEXTO_AUTENTICIDADE_DOCUMENTO);
 		sb.append(getTextoCodigoSomente(uuid));
         return sb.toString();
     }
