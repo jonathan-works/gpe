@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:s="http://jboss.org/schema/seam/taglib"
+   xmlns:p="http://primefaces.org/ui"
+   xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="template"
+        value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+    <ui:param
+     name="decimalPlaces"
+     value="#{empty props.casasDecimais ? 0 : props.casasDecimais}" />
+
+    <s:div id="#{formField.id}" style="display: inline">
+        <s:decorate id="#{formField.id}Decoration" template="#{template}"
+            styleClass="decoration-div inputText-div #{wi:get(decorationClass,'')}"
+            rendered="#{wi:get(rendered, true)}">
+            <ui:define name="label">#{formField.label}</ui:define>
+            <p:inputNumber readonly="#{readonly}" id="#{formField.id}Input" value="#{formField.value}"
+                decimalPlaces="#{decimalPlaces}"
+                disabled="#{formField.properties.readonly}" required="#{formField.properties.required}"
+                inputStyleClass="#{readonly ? 'readOnly' : styleClass } inputText " maxlength="20" />
+        </s:decorate>
+
+    </s:div>
+
+</ui:composition>

@@ -4,6 +4,7 @@ import br.com.infox.epp.processo.form.type.EnumFormType.EnumerationFormType;
 import br.com.infox.epp.processo.form.type.EnumFormType.EnumerationMultipleFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.BooleanFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.DateFormType;
+import br.com.infox.epp.processo.form.type.PrimitiveFormType.DecimalFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.FrameFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.IntegerFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.MonetaryFormType;
@@ -29,7 +30,8 @@ public enum FormTypes {
     FILE(UploadFormType.class),
     FRAGMENT(FragmentFormType.class),
     TASK_PAGE(TaskPageFormType.class),
-    ENUMERATION_MULTIPLE(EnumerationMultipleFormType.class);
+    ENUMERATION_MULTIPLE(EnumerationMultipleFormType.class),
+    DECIMAL(DecimalFormType.class);
 
     private Class<? extends FormType> formTypeClass;
 

@@ -9,6 +9,8 @@ import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.VariableDataHandler;
+import br.com.infox.ibpm.variable.VariableDecimalHandler;
+import br.com.infox.ibpm.variable.VariableDecimalHandler.DecimalConfig;
 import br.com.infox.ibpm.variable.VariableMaxMinHandler;
 import br.com.infox.ibpm.variable.VariableMaxMinHandler.MaxMinConfig;
 import br.com.infox.ibpm.variable.VariableStringHandler;
@@ -177,6 +179,28 @@ public abstract class PrimitiveFormType implements FormType {
             if(maxMinConfig != null){
                 formField.addProperty("valorMinimo", maxMinConfig.getMinimo());
                 formField.addProperty("valorMaximo", maxMinConfig.getMaximo());
+            }
+        }
+    }
+
+    public static class DecimalFormType extends PrimitiveFormType {
+
+        public DecimalFormType() {
+            super("decimal", "/Processo/form/decimal.xhtml", ValueType.DOUBLE);
+        }
+
+        public DecimalConfig getConfigurator(FormField formField) {
+            String configuration = (String) formField.getProperties().get("configuration");
+            DecimalConfig decimalConfig = VariableDecimalHandler.fromJson(configuration);
+            return decimalConfig;
+        }
+
+        @Override
+        public void performValue(FormField formField, FormData formData) {
+            super.performValue(formField, formData);
+            DecimalConfig decimalConfig = getConfigurator(formField);
+            if(decimalConfig != null){
+                formField.addProperty("casasDecimais", decimalConfig.getCasasDecimais());
             }
         }
     }

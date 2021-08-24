@@ -27,6 +27,8 @@ import br.com.infox.epp.fluxo.crud.VariavelClassificacaoDocumentoAction;
 import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
+import lombok.Getter;
+import lombok.Setter;
 
 public class VariableAccessHandler implements Serializable {
 
@@ -46,6 +48,8 @@ public class VariableAccessHandler implements Serializable {
     private boolean fragment;
     private boolean numerico;
     private boolean monetario;
+    @Getter @Setter
+    private boolean decimal;
     private FragmentConfiguration fragmentConfiguration;
 
     private VariableEditorModeloHandler modeloEditorHandler = new VariableEditorModeloHandler();
@@ -53,6 +57,8 @@ public class VariableAccessHandler implements Serializable {
     private VariableDominioEnumerationHandler dominioHandler = new VariableDominioEnumerationHandler();
     private VariableMaxMinHandler maxMinHandler = new VariableMaxMinHandler();
     private VariableStringHandler stringHandler = new VariableStringHandler();
+    @Getter @Setter
+    private VariableDecimalHandler decimalHandler = new VariableDecimalHandler();
 
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -86,6 +92,9 @@ public class VariableAccessHandler implements Serializable {
                 case EDITOR:
                     getModeloEditorHandler().init(this.variableAccess);
                     break;
+                case DECIMAL:
+                    getDecimalHandler().init(this.variableAccess);
+                    break;
                 default:
                     break;
                 }
@@ -104,6 +113,7 @@ public class VariableAccessHandler implements Serializable {
         this.isFile = isTipoFile(this.type);
         this.numerico = isNumerico(type);
         this.monetario = isMonetario(type);
+        this.decimal = isTipoDecimal(type);
     }
 
     private boolean tipoPossuiDominio(VariableType type) {
@@ -229,6 +239,7 @@ public class VariableAccessHandler implements Serializable {
         this.fragment = isTipoFragment(type);
         this.numerico = isNumerico(type);
         this.monetario = isMonetario(type);
+        this.decimal = isTipoDecimal(type);
     }
 
     private boolean isMonetario(VariableType type) {
@@ -241,6 +252,10 @@ public class VariableAccessHandler implements Serializable {
 
     private boolean isTipoFragment(VariableType type) {
         return VariableType.FRAGMENT.equals(type);
+    }
+
+    private boolean isTipoDecimal(VariableType type) {
+        return VariableType.DECIMAL.equals(type);
     }
 
     public boolean isReadable() {
@@ -361,6 +376,9 @@ public class VariableAccessHandler implements Serializable {
                 case INTEGER:
                     getMaxMinHandler().init(getVariableAccess());
                     break;
+                case DECIMAL:
+                    getDecimalHandler().init(getVariableAccess());
+                    break;
                 case STRING:
                     getStringHandler().init(getVariableAccess());
                     break;
@@ -442,6 +460,7 @@ public class VariableAccessHandler implements Serializable {
         getMaxMinHandler().init(getVariableAccess());
         getStringHandler().init(getVariableAccess());
         getDominioHandler().init(getVariableAccess());
+        getDecimalHandler().init(getVariableAccess());
     }
 
     public FragmentConfiguration getFragmentConfiguration() {

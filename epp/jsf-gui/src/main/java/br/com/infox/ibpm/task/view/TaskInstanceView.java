@@ -26,6 +26,7 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
+import br.com.infox.ibpm.variable.VariableDecimalHandler;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
 import br.com.infox.ibpm.variable.components.FrameDefinition;
 import br.com.infox.ibpm.variable.components.VariableDefinitionService;
@@ -161,6 +162,12 @@ public class TaskInstanceView implements Serializable {
                                 map.put("fragmentPath", fragmentConfiguration.getPath());
                             }
                         }
+                        break;
+                        case DECIMAL:
+                            ff.setValue(variable.value);
+                            if(VariableDecimalHandler.fromJson(var.getConfiguration()) != null) {
+                                ff.getProperties().put("casasDecimais", VariableDecimalHandler.fromJson(var.getConfiguration()).getCasasDecimais());
+                            }
                         break;
                         default:
                         {

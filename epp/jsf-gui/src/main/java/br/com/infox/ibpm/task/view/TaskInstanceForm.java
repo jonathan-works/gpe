@@ -29,6 +29,7 @@ import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.VariableDataHandler;
+import br.com.infox.ibpm.variable.VariableDecimalHandler;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
 import br.com.infox.ibpm.variable.VariableMaxMinHandler;
@@ -132,6 +133,11 @@ public class TaskInstanceForm implements Serializable {
                         if(VariableMaxMinHandler.fromJson(var.getConfiguration()) != null) {
                             ff.getProperties().put("valorMaximo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMaximo());
                             ff.getProperties().put("valorMinimo", VariableMaxMinHandler.fromJson(var.getConfiguration()).getMinimo());
+                        }
+                        break;
+                    case DECIMAL:
+                        if(VariableDecimalHandler.fromJson(var.getConfiguration()) != null) {
+                            ff.getProperties().put("casasDecimais", VariableDecimalHandler.fromJson(var.getConfiguration()).getCasasDecimais());
                         }
                         break;
                     case STRING:
