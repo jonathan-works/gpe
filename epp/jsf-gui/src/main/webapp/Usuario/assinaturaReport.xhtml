@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <wi:dataReport
+        title="#{infoxMessages['report.title']}"
+        subtitle="Lista de Assinaturas do Usuário"
+        columns="3"
+        widths="5 5 8"
+        headerText="Usuário: #{flash.nomeUsuario}">
+        <wi:reportColumnHeader title="#{infoxMessages['processoEpp.numeroProcesso']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['assinaturadocumento.dtAssinatura']}"/>
+        <wi:reportColumnHeader title="#{infoxMessages['processoDocumentoBin.nomeArquivo']}" />
+        <ui:repeat
+            var="row"
+            value="#{flash.lista}">
+            <wi:reportColumn value="#{row.nrProcesso}" columnAlign="center" />
+            <wi:reportColumnDate value="#{row.dtAssinatura}" />
+            <wi:reportColumn value="#{row.dsDocumento}" />
+        </ui:repeat>
+    </wi:dataReport>
+
+</ui:composition>

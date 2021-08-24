@@ -233,19 +233,19 @@ public class TaskInstanceHome implements Serializable {
                 loadClassificacaoDocumentoDefault(variableAccess.getVariableName(), documento);
                 if (variableRetriever.isEditor()) {
                     DocumentoBin documentoBin = new DocumentoBin();
-
                     documento.setDocumentoBin(documentoBin);
 
                     if(variableAccess.getConfiguration() != null) {
                         List<String> codigosModelos = VariableEditorModeloHandler.fromJson(variableAccess.getConfiguration()).getCodigosModeloDocumento();
-                        if(codigosModelos != null && codigosModelos.size() == 1) {
+                        if (codigosModelos != null && codigosModelos.size() == 1) {
                             ModeloDocumento modelo = modeloDocumentoSearch.getModeloDocumentoByCodigo(codigosModelos.get(0));
                             documentoBin.setModeloDocumento(evaluateModeloDocumento(modelo));
+                            documento.setDescricao(modelo.getTituloModeloDocumento());
                         }
                     }
                 }
             }
-            if(variableAccess.isWritable())
+            if (variableAccess.isWritable())
                 variaveisDocumento.put(getFieldName(variableRetriever.getName()), documento);
             else
                 variaveisDocumento.put(variableRetriever.getName(), documento);
@@ -464,12 +464,14 @@ public class TaskInstanceHome implements Serializable {
         if (defaultFolder == null) {
             throw new BusinessRollbackException(infoxMessages.get("documento.erro.processSemPasta"));
         }
-        if(documento.getPasta() == null)
+        if (documento.getPasta() == null)
             documento.setPasta(defaultFolder);
         documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
         documento.setIdJbpmTask(getCurrentTaskInstance().getId());
-        String descricao = variableAccess.getLabel();
-        documento.setDescricao(descricao == null ? "-" : descricao);
+        if (StringUtils.isEmpty(documento.getDescricao())) {
+            String descricao = variableAccess.getLabel();
+            documento.setDescricao(descricao == null ? "-" : descricao);
+        }
         documentoManager.persist(documento);
     }
 
@@ -963,8 +965,12 @@ public class TaskInstanceHome implements Serializable {
         if (modeloDocumento != null) {
             String modelo = evaluateModeloDocumento(modeloDocumento);
             variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);
+            String descricao = modeloDocumento.getTituloModeloDocumento();
+            variaveisDocumento.get(id).setDescricao(descricao);
         } else {
             variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento("");
+            variaveisDocumento.get(id).setDescricao("");
+
         }
     }
 
@@ -1140,4 +1146,6 @@ public class TaskInstanceHome implements Serializable {
     public boolean isTransitionValidateForm(String transition) {
         return getTransition(transition).getConfiguration().isValidateForm();
     }
+
+
 }
