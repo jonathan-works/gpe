@@ -17,7 +17,8 @@
         value="#{wi:get(title, messages['report.title'])}" />
     <ui:param name="subtitle"
         value="#{wi:get(subtitle, messages['report.subtitle'])}" />
-    <ui:param name="logoImg" value="#{wi:get(logoImg, '')}" />
+    <ui:param name="showLogoImg" value="#{wi:get(showLogoImg, false)}" />    
+    <ui:param name="logoImg" value="#{wi:get(logoImg, layoutController.getResourceUrlByPath('/imagens/logo_emblema_cuiaba_prefeitura.png'))}" />
 
     <p:document title="#{title}" pageSize="A4"
         margins="#{wi:get(marginLeft,'60')} #{wi:get(marginRight,'30')} #{wi:get(marginTop,'40')} #{wi:get(marginBotton,'30')}"
