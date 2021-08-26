@@ -17,13 +17,29 @@
         value="#{wi:get(title, messages['report.title'])}" />
     <ui:param name="subtitle"
         value="#{wi:get(subtitle, messages['report.subtitle'])}" />
+    <ui:param name="showLogoImg" value="#{wi:get(showLogoImg, false)}" />    
+    <ui:param name="logoImg" value="#{wi:get(logoImg, layoutController.getResourceUrlByPath('/imagens/logo_emblema_cuiaba_prefeitura.png'))}" />
 
     <p:document title="#{title}" pageSize="A4"
         margins="#{wi:get(marginLeft,'60')} #{wi:get(marginRight,'30')} #{wi:get(marginTop,'40')} #{wi:get(marginBotton,'30')}"
         orientation="#{wi:get(orientation, 'portrait')}">
 
         <f:facet name="header">
-            <p:footer borderWidthTop="1" borderColorTop="lightgray"
+			<p:header borderWidthTop="0" borderColorBottom="lightgray"
+				borderWidthBottom="1" alignment="right">
+				<p:paragraph alignment="right">
+					<p:font size="7">
+						<p:text value="Emitido por: " />
+						<p:text value="#{usuarioLogado}" />
+						<p:text value=". Emitido em: " />
+						<p:text value="#{currentTime}">
+							<s:convertDateTime pattern="dd/MM/yyyy / HH:mm" />
+						</p:text>
+					</p:font>
+				</p:paragraph>
+			</p:header>
+
+			<p:footer borderWidthTop="1" borderColorTop="lightgray"
                 borderWidthBottom="0" alignment="center">
                 <p:paragraph spacingAfter="15">
                     <p:pageNumber />
