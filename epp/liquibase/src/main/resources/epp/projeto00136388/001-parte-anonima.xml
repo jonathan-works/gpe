@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="nextValueForSqParametro" value="nextval('sq_tb_parametro')" dbms="postgresql" />
+    <property name="nextValueForSqParametro" value="sq_tb_parametro.nextval" dbms="oracle" />
+    <property name="nextValueForSqParametro" value="next value for sq_tb_parametro" dbms="mssql" />
+
+    <property name="nextValueForSqTipoParte" value="nextval('sq_tipo_parte')" dbms="postgresql" />
+    <property name="nextValueForSqTipoParte" value="sq_tipo_parte.nextval" dbms="oracle" />
+    <property name="nextValueForSqTipoParte" value="next value for sq_tipo_parte" dbms="mssql" />
+
+    <changeSet author="marcone" id="2" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_pessoa_anonima">
+            <column name="id_pessoa_anonima" type="bigint">
+                <constraints
+                    primaryKey="true"
+                    primaryKeyName="pk_pessoa_anonima"
+                    nullable="false"
+                    foreignKeyName="fk_pessoa_anonima1"
+                    referencedTableName="tb_pessoa"
+                    referencedColumnNames="id_pessoa"
+                />
+            </column>
+            <column name="nr_telefone" type="varchar(15)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="marcone" id="3.0" dbms="mssql, postgresql, oracle">
+        <addColumn tableName="tb_fluxo">
+            <column name="in_permite_parte_anonima" type="boolean" defaultValueBoolean="false">
+            <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="marcone" id="3.1" dbms="mssql, postgresql, oracle">
+        <dropDefaultValue tableName="tb_fluxo" columnName="in_permite_parte_anonima"/>
+    </changeSet>
+</databaseChangeLog>

@@ -4,7 +4,7 @@ import br.com.infox.core.type.Displayable;
 
 public enum TipoPessoaEnum implements Displayable {
 
-    F("Física"), J("Jurídica");
+    F("Física"), J("Jurídica"), A("Anônima");
 
     private String label;
 
@@ -15,6 +15,13 @@ public enum TipoPessoaEnum implements Displayable {
     @Override
     public String getLabel() {
         return this.label;
+    }
+
+    public static TipoPessoaEnum[] values(boolean exibeAnonima) {
+        if(exibeAnonima) {
+            return values();
+        }
+        return new TipoPessoaEnum[]{F, J};
     }
 
 }

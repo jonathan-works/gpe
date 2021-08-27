@@ -105,9 +105,9 @@ public abstract class Pessoa implements Serializable {
 
     @Transient
     public String getCodigoFormatado() {
-        if (tipoPessoa == TipoPessoaEnum.F) {
+        if (TipoPessoaEnum.F.equals(tipoPessoa)) {
             return CpfConverter.format(getCodigo());
-        } else if (tipoPessoa == TipoPessoaEnum.J) {
+        } else if (TipoPessoaEnum.J.equals(tipoPessoa)) {
             return CnpjConverter.format(getCodigo());
         }
         return getCodigo();

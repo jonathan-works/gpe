@@ -13,12 +13,12 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class PessoaService {
-    
+
     @Inject
     private PessoaFisicaManager pessoaFisicaManager;
     @Inject
     private PessoaJuridicaManager pessoaJuridicaManager;
-    
+
     public void persist(Pessoa pessoa) {
         if (pessoa == null) {
             throw new IllegalArgumentException("Pessoa cannot be null");
@@ -31,16 +31,17 @@ public class PessoaService {
             throw new IllegalStateException("Tipo de pessoa desconhecido " + pessoa.getTipoPessoa());
         }
     }
-    
+
     public Pessoa getByCodigo(String codigo, TipoPessoaEnum tipoPessoa) {
         if (codigo == null || tipoPessoa == null) {
             throw new IllegalArgumentException("Codigo cannot be null");
         }
         if ( TipoPessoaEnum.F.equals(tipoPessoa) ) {
             return pessoaFisicaManager.getByCpf(codigo);
-        } else {
+        } else if ( TipoPessoaEnum.J.equals(tipoPessoa) ) {
             return pessoaJuridicaManager.getByCnpj(codigo);
         }
+        throw new IllegalStateException("Impossível pesquisar por código para o tipo de pessoa " + tipoPessoa);
     }
 
 }

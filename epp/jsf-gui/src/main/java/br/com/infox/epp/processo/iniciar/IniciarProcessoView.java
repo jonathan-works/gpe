@@ -38,6 +38,7 @@ import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
 import br.com.infox.epp.loglab.search.EmpresaSearch;
 import br.com.infox.epp.loglab.search.ServidorContribuinteSearch;
 import br.com.infox.epp.loglab.service.ParticipanteProcessoLoglabService;
+import br.com.infox.epp.loglab.vo.AnonimoVO;
 import br.com.infox.epp.loglab.vo.EmpresaVO;
 import br.com.infox.epp.loglab.vo.PesquisaParticipanteVO;
 import br.com.infox.epp.loglab.vo.ServidorContribuinteVO;
@@ -140,6 +141,10 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private ServidorContribuinteVO servidorContribuinteVO;
 
     @Getter
+    @Setter
+    private AnonimoVO anonimoVO;
+
+    @Getter
     private List<ServidorContribuinteVO> servidorContribuinteList;
 
     @Getter
@@ -150,6 +155,8 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private Papel papel;
     private Map<String, ServidorContribuinteVO> mapServidorContribuinteVO;
     private Map<String, EmpresaVO> mapEmpresaVO;
+    @Getter
+    private TipoPessoaEnum[] tiposPesssoa;
 
     @PostConstruct
     private void init() {
@@ -170,15 +177,39 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         limparDadosParticipante();
     }
 
+    public void onChangeNaturezaCategoriaFluxoItem() {
+        this.tiposPesssoa = TipoPessoaEnum.values(naturezaCategoriaFluxoItem.getNaturezaCategoriaFluxo().getFluxo().getPermiteParteAnonima());
+
+        limparDadosParticipante();
+        root = new DefaultTreeNode("Root", null);
+        participanteProcessoList.clear();
+        mapServidorContribuinteVO.clear();
+        mapEmpresaVO.clear();
+    }
+
     public void limparDadosParticipante() {
-        TipoPessoaEnum tipoPessoa = iniciarProcessoParticipanteVO != null ? iniciarProcessoParticipanteVO.getTipoPessoa() : TipoPessoaEnum.F;
+        TipoPessoaEnum oldTipoPessoa;
+        if(iniciarProcessoParticipanteVO == null ||
+                (TipoPessoaEnum.A.equals(iniciarProcessoParticipanteVO.getTipoPessoa())
+                    && !naturezaCategoriaFluxoItem.getNaturezaCategoriaFluxo().getFluxo().getPermiteParteAnonima())
+        ){
+            oldTipoPessoa = TipoPessoaEnum.F;
+        } else {
+            oldTipoPessoa = iniciarProcessoParticipanteVO.getTipoPessoa();
+        }
         iniciarProcessoParticipanteVO = new IniciarProcessoParticipanteVO();
-        iniciarProcessoParticipanteVO.setTipoPessoa(tipoPessoa);
+        iniciarProcessoParticipanteVO.setTipoPessoa(oldTipoPessoa);
         empresaVO = null;
         empresaList = null;
         pesquisaParticipanteVO = new PesquisaParticipanteVO();
         pesquisaParticipanteVO.setTipoParticipante(TipoParticipanteEnum.CO);
         limparServidorContribuinte();
+        if(TipoPessoaEnum.A.equals(iniciarProcessoParticipanteVO.getTipoPessoa())) {
+            this.anonimoVO = new AnonimoVO();
+            this.anonimoVO.setTipoParticipante(TipoParticipanteEnum.ANON);
+        } else {
+            this.anonimoVO = null;
+        }
     }
 
     public void limparServidorContribuinte() {
@@ -413,13 +444,23 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
 
     public void adicionarParticipante() {
-        if(servidorContribuinteVO == null && empresaVO == null) {
+        if(servidorContribuinteVO == null && empresaVO == null && anonimoVO == null) {
             FacesMessages.instance().add("É necessário inserir os dados de uma pessoa física ou jurídica");
         } else {
             iniciarProcessoParticipanteVO.generateId();
             TipoPessoaEnum tipoPessoaParticipante = iniciarProcessoParticipanteVO.getTipoPessoa();
-            String codigoParticipante = (tipoPessoaParticipante.equals(TipoPessoaEnum.F) ? servidorContribuinteVO.getCpf() : empresaVO.getCnpj());
-            iniciarProcessoParticipanteVO.setCodigo(codigoParticipante);
+
+            switch (tipoPessoaParticipante) {
+            case F:
+                iniciarProcessoParticipanteVO.setCodigo(servidorContribuinteVO.getCpf());
+                break;
+            case J:
+                iniciarProcessoParticipanteVO.setCodigo(empresaVO.getCnpj());
+                break;
+            default:
+                break;
+            }
+
             if (!podeAdicionarParticipante(iniciarProcessoParticipanteVO)) {
                 limparDadosParticipante();
                 FacesMessages.instance().add("Não pode adicionar a mesma pessoa com o mesmo tipo de parte e mesmo participante superior");
@@ -432,7 +473,10 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
                     iniciarProcessoParticipanteVO.setDataNascimento(servidorContribuinteVO.getDataNascimento());
                     iniciarProcessoParticipanteVO.setNome(servidorContribuinteVO.getNomeCompleto());
                     mapServidorContribuinteVO.put(iniciarProcessoParticipanteVO.getId(), servidorContribuinteVO);
-                } else {
+                } else if (tipoPessoaParticipante.equals(TipoPessoaEnum.A)) {
+                    iniciarProcessoParticipanteVO.setNome(anonimoVO.getNomeDefaultIfNull());
+                    iniciarProcessoParticipanteVO.setTelefone(anonimoVO.getTelefone());
+                } else if (tipoPessoaParticipante.equals(TipoPessoaEnum.J)) {
                     iniciarProcessoParticipanteVO.setRazaoSocial(empresaVO.getRazaoSocial());
                     iniciarProcessoParticipanteVO.setNome(empresaVO.getNomeFantasia());
                     mapEmpresaVO.put(iniciarProcessoParticipanteVO.getId(), empresaVO);

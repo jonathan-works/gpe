@@ -2,7 +2,7 @@ package br.com.infox.epp.fluxo.query;
 
 /**
  * Interface com as queries da entidade Fluxo
- * 
+ *
  * @author tassio
  */
 public interface FluxoQuery {
@@ -20,6 +20,7 @@ public interface FluxoQuery {
     String DATA_INICIO_PUBLICACAO = "dt_inicio_publicacao";
     String DATA_FIM_PUBLICACAO = "dt_fim_publicacao";
     String FLUXO_ATTRIBUTE = "fluxo";
+    String PERMITE_PARTE_ANONIMA = "in_permite_parte_anonima";
 
     String PARAM_FLUXO = "fluxo";
     String PARAM_DESCRICAO = "descricao";
@@ -33,7 +34,7 @@ public interface FluxoQuery {
     String FLUXO_BY_CODIGO = "fluxoByCodigo";
     String FLUXO_BY_CODIGO_QUERY = "select o from Fluxo o where o.codFluxo = :"
             + PARAM_CODIGO;
-    
+
     String FLUXO_BY_NOME = "fluxoByNome";
     String FLUXO_BY_NOME_QUERY = "select o from Fluxo o where o.fluxo = :"
             + PARAM_NOME;

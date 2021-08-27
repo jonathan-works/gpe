@@ -11,6 +11,7 @@ import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
+import br.com.infox.epp.pessoa.entity.PessoaAnonima;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
@@ -19,14 +20,18 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.jsf.converter.CnpjConverter;
 import br.com.infox.jsf.converter.CpfConverter;
+import lombok.Getter;
+import lombok.Setter;
 
 public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Comparable<IniciarProcessoParticipanteVO> {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private String id;
     private TipoPessoaEnum tipoPessoa = TipoPessoaEnum.F;
     private String codigo;
+    @Getter @Setter
+    private String telefone;
     private String nome;
     private String email;
     private String razaoSocial;
@@ -34,16 +39,16 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
     private TipoParte tipoParte;
     private Date dataInicio;
     private Date dataFim;
-    
+
     private int nivel;
     private Pessoa pessoa;
     private MeioContato meioContato;
-    
+
     public IniciarProcessoParticipanteVO() {
         super();
         setData(this);
     }
-    
+
     public List<ParticipanteProcesso> getListParticipantes(Processo processo) {
         List<ParticipanteProcesso> participantes = new ArrayList<>();
         ParticipanteProcesso participante = createParticipanteProcesso(null, processo);
@@ -51,7 +56,7 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
         resolveChildren(participantes, this.getChildren(), participante, processo);
         return participantes;
     }
-    
+
     private void resolveChildren(List<ParticipanteProcesso> participantes, List<TreeNode> children, ParticipanteProcesso participantePai, Processo processo) {
         if (!children.isEmpty()) {
             for (TreeNode treeNode : children) {
@@ -62,7 +67,7 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
             }
         }
     }
-    
+
     private ParticipanteProcesso createParticipanteProcesso(ParticipanteProcesso participantePai, Processo processo) {
         ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
         participanteProcesso.setNome(nome);
@@ -75,7 +80,7 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
         if (TipoPessoaEnum.F.equals(tipoPessoa)) {
             PessoaFisica pessoaFisica = null;
             if (isPessoaLoaded()) {
-                pessoaFisica = (PessoaFisica) pessoa;
+                pessoaFisica = (PessoaFisica) this.pessoa;
                 if (pessoaFisica.getDataNascimento() == null && dataNascimento != null) {
                     pessoaFisica.setDataNascimento(dataNascimento);
                 }
@@ -93,6 +98,15 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
                 pessoaFisica.getMeioContatoList().add(meioContato);
             }
             participanteProcesso.setPessoa(pessoaFisica);
+        } else if (TipoPessoaEnum.A.equals(tipoPessoa)) {
+            PessoaAnonima pessoaAnonima = null;
+            if (!isPessoaLoaded()) {
+                pessoaAnonima = new PessoaAnonima();
+                pessoaAnonima.setTelefone(getTelefone());
+                pessoaAnonima.setNome(getNome());
+                pessoaAnonima.setAtivo(Boolean.TRUE);
+            }
+            participanteProcesso.setPessoa(pessoaAnonima);
         } else if (TipoPessoaEnum.J.equals(tipoPessoa)) {
             PessoaJuridica pessoaJuridica = null;
             if (isPessoaLoaded()) {
@@ -116,7 +130,7 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
         pessoaFisica.setDataNascimento(dataNascimento);
         return pessoaFisica;
     }
-    
+
     private PessoaJuridica createPessoaJuridica() {
         PessoaJuridica pessoaJuridica = new PessoaJuridica();
         pessoaJuridica.setAtivo(true);
@@ -125,13 +139,13 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
         pessoaJuridica.setRazaoSocial(razaoSocial);
         return pessoaJuridica;
     }
-    
+
     public void adicionar() {
         if (getParent() != null) {
             getParent().getChildren().add(this);
         }
     }
-    
+
     public void generateId() {
         if (getParent() != null) {
             id = ((IniciarProcessoParticipanteVO) getParent()).getId();
@@ -142,28 +156,28 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
         }
         id += codigo + tipoParte.getId();
     }
-    
+
     public void loadPessoaFisica(PessoaFisica pessoaFisica) {
         loadPessoa(pessoaFisica);
         this.dataNascimento = pessoaFisica.getDataNascimento();
     }
-    
+
     public void loadPessoaJuridica(PessoaJuridica pessoaJuridica) {
         loadPessoa(pessoaJuridica);
         this.razaoSocial = pessoaJuridica.getRazaoSocial();
     }
-    
+
     public void loadMeioContato(MeioContato meioContato) {
         this.email = meioContato == null ? null : meioContato.getMeioContato();
         this.meioContato = meioContato;
     }
-    
+
     private void loadPessoa(Pessoa pessoa) {
         this.codigo = pessoa.getCodigo();
         this.nome = pessoa.getNome();
         this.pessoa = pessoa;
     }
-    
+
     public void limparDadosPessoaFisica() {
         if (isPessoaLoaded()) {
             this.dataNascimento = null;
@@ -174,19 +188,19 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
         }
         limparDadosPessoa();
     }
-    
+
     public void limparDadosPessoaJuridica() {
         if (isPessoaLoaded()) {
             this.razaoSocial = null;
         }
         limparDadosPessoa();
     }
-    
+
     public void limparDadosPessoa() {
         this.nome = null;
         this.pessoa = null;
     }
-    
+
     public String getId() {
         return id;
     }
@@ -194,75 +208,75 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
     public TipoPessoaEnum getTipoPessoa() {
         return tipoPessoa;
     }
-    
+
     public void setTipoPessoa(TipoPessoaEnum tipoPessoa) {
         this.tipoPessoa = tipoPessoa;
     }
-    
+
     public String getCodigo() {
         return codigo;
     }
-    
+
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
-    
+
     public String getNome() {
         return nome;
     }
-    
+
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
+
     public String getEmail() {
         return email;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getRazaoSocial() {
         return razaoSocial;
     }
-    
+
     public void setRazaoSocial(String razaoSocial) {
         this.razaoSocial = razaoSocial;
     }
-    
+
     public Date getDataNascimento() {
         return dataNascimento;
     }
-    
+
     public void setDataNascimento(Date dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
-    
+
     public TipoParte getTipoParte() {
         return tipoParte;
     }
-    
+
     public void setTipoParte(TipoParte tipoParte) {
         this.tipoParte = tipoParte;
     }
-    
+
     public Date getDataInicio() {
         return dataInicio;
     }
-    
+
     public void setDataInicio(Date dataInicio) {
         this.dataInicio = dataInicio;
     }
-    
+
     public Date getDataFim() {
         return dataFim;
     }
-    
+
     public void setDataFim(Date dataFim) {
         this.dataFim = dataFim;
     }
-    
+
     public Pessoa getPessoa() {
         return pessoa;
     }
@@ -274,11 +288,11 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
     public boolean isPessoaLoaded() {
         return pessoa != null;
     }
-    
+
     public boolean isMeioContatoLoaded() {
         return meioContato != null;
     }
-    
+
     public int getNivel() {
         return nivel;
     }
@@ -320,5 +334,5 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
     public int compareTo(IniciarProcessoParticipanteVO o) {
         return this.getId().compareTo(o.getId());
     }
-    
+
 }

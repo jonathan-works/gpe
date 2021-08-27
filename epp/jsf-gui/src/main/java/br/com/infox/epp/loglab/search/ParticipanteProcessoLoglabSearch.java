@@ -43,23 +43,25 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
         List<ParticipanteProcessoLogLabDTO> listaDTO = new ArrayList<>();
         for (ParticipanteProcesso participante : listaParticipante) {
             String codigo = participante.getPessoa().getCodigo();
-			if (codigo.length() == 14) {
-                ParticipanteProcessoLogLabDTO dto = participanteDTOEmpresa(codigo);
-                if (StringUtils.isBlank(dto.getCnpj())) {
-                	dto.setCpf(CnpjConverter.format(codigo));
-                	dto.setNome(participante.getNome());
-                	dto.setNomeFantasia(participante.getNome());
-                	dto.setRazaoSocial(participante.getNome());
+            if(codigo != null) {
+    			if (codigo.length() == 14) {
+                    ParticipanteProcessoLogLabDTO dto = participanteDTOEmpresa(codigo);
+                    if (StringUtils.isBlank(dto.getCnpj())) {
+                    	dto.setCpf(CnpjConverter.format(codigo));
+                    	dto.setNome(participante.getNome());
+                    	dto.setNomeFantasia(participante.getNome());
+                    	dto.setRazaoSocial(participante.getNome());
+                    }
+    				listaDTO.add(dto);
+                } else if (codigo.length() == 11) {
+                    ParticipanteProcessoLogLabDTO dto = participanteDTOServidorContribuinte(codigo);
+                    if (StringUtils.isBlank(dto.getCpf())) {
+                    	dto.setCpf(CpfConverter.format(codigo));
+                    	dto.setNome(participante.getNome());
+                    }
+                    dto.setTipoPessoa(TipoPessoaEnum.F);
+    				listaDTO.add(dto);
                 }
-				listaDTO.add(dto);
-            } else if (codigo.length() == 11) {
-                ParticipanteProcessoLogLabDTO dto = participanteDTOServidorContribuinte(codigo);
-                if (StringUtils.isBlank(dto.getCpf())) {
-                	dto.setCpf(CpfConverter.format(codigo));
-                	dto.setNome(participante.getNome());
-                }
-                dto.setTipoPessoa(TipoPessoaEnum.F);
-				listaDTO.add(dto);
             }
         }
 

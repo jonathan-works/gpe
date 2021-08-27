@@ -28,6 +28,7 @@ import static br.com.infox.epp.fluxo.query.FluxoQuery.ID_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.ID_USUARIO_PUBLICACAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.PERMITE_PARTE_ANONIMA;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.PRAZO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.PUBLICADO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.SEQUENCE_FLUXO;
@@ -90,59 +91,63 @@ public class Fluxo implements Serializable {
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_FLUXO, unique = true, nullable = false)
     private Integer idFluxo;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_USUARIO_PUBLICACAO)
     private UsuarioLogin usuarioPublicacao;
-    
+
     @Column(name = CODIGO_FLUXO, length = DESCRICAO_PEQUENA, nullable = false)
     @Size(min = FLAG, max = DESCRICAO_PEQUENA)
     @NotNull
     private String codFluxo;
-    
+
     @Column(name = DESCRICAO_FLUXO, nullable = false, length = DESCRICAO_PADRAO, unique = true)
     @Size(min = FLAG, max = DESCRICAO_PADRAO)
     @NotNull
     private String fluxo;
-    
+
     @Column(name = ATIVO, nullable = false)
     @NotNull
     private Boolean ativo;
-    
+
     @Column(name = PRAZO, nullable = true)
     @NotNull
     private Integer qtPrazo;
-    
+
     @Column(name = PUBLICADO, nullable = false)
     @NotNull
     private Boolean publicado;
-    
+
+    @Column(name = PERMITE_PARTE_ANONIMA, nullable = false)
+    @NotNull
+    private Boolean permiteParteAnonima;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DATA_INICIO_PUBLICACAO, nullable = false)
     @NotNull
     private Date dataInicioPublicacao;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DATA_FIM_PUBLICACAO)
     private Date dataFimPublicacao;
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0);
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
-    private List<ModeloPasta> modeloPastaList = new ArrayList<>(0); 
-    
+    private List<ModeloPasta> modeloPastaList = new ArrayList<>(0);
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "fluxo")
     private List<DefinicaoProcesso> definicaoProcesso = new ArrayList<>();
 
-    
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "tb_fluxo_status_processo", 
+    @JoinTable(name = "tb_fluxo_status_processo",
             joinColumns=@JoinColumn(name="id_fluxo", referencedColumnName="id_fluxo"),
             inverseJoinColumns=@JoinColumn(name="id_status_processo", referencedColumnName="id_status_processo"))
     @OrderBy(value = "nm_status_processo")
 	private Set<StatusProcesso> statusProcessos = new HashSet<>(1);
-    
+
     public Fluxo() {
     }
 
@@ -243,6 +248,14 @@ public class Fluxo implements Serializable {
         this.dataFimPublicacao = dataFimPublicacao;
     }
 
+    public Boolean getPermiteParteAnonima() {
+        return permiteParteAnonima;
+    }
+
+    public void setPermiteParteAnonima(Boolean permiteParteAnonima) {
+        this.permiteParteAnonima = permiteParteAnonima;
+    }
+
     @Override
     public String toString() {
         return fluxo;
@@ -285,20 +298,20 @@ public class Fluxo implements Serializable {
     public void setModeloPastaList(List<ModeloPasta> modeloPastaList) {
         this.modeloPastaList = modeloPastaList;
     }
-    
+
     public List<ModeloPasta> getModeloPastaList() {
         return modeloPastaList;
     }
-    
+
     public DefinicaoProcesso getDefinicaoProcesso() {
         return definicaoProcesso.isEmpty() ? null : definicaoProcesso.get(0);
     }
-    
+
     public void setDefinicaoProcesso(DefinicaoProcesso definicaoProcesso) {
         this.definicaoProcesso.clear();
         this.definicaoProcesso.add(definicaoProcesso);
     }
-    
+
     @Transient
     public String getDataInicioFormatada() {
         return DateFormat.getDateInstance().format(dataInicioPublicacao);
@@ -312,7 +325,7 @@ public class Fluxo implements Serializable {
             return "";
         }
     }
-    
+
     public Fluxo makeCopy() {
     	Fluxo fluxo = new Fluxo();
     	fluxo.setAtivo(getAtivo());
