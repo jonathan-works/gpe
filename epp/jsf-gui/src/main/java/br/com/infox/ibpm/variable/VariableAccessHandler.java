@@ -27,11 +27,13 @@ import br.com.infox.epp.fluxo.crud.VariavelClassificacaoDocumentoAction;
 import br.com.infox.epp.fluxo.definicao.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
+import lombok.Getter;
+import lombok.Setter;
 
 public class VariableAccessHandler implements Serializable {
 
     public static final String ACCESS_VARIAVEL_INICIA_VAZIA = "reset";
-	public static final String EVENT_JBPM_VARIABLE_NAME_CHANGED = "jbpmVariableNameChanged";
+    public static final String EVENT_JBPM_VARIABLE_NAME_CHANGED = "jbpmVariableNameChanged";
     private static final String COMMA = ",";
     private static final long serialVersionUID = -4113688503786103974L;
     private VariableAccess variableAccess;
@@ -46,6 +48,8 @@ public class VariableAccessHandler implements Serializable {
     private boolean fragment;
     private boolean numerico;
     private boolean monetario;
+    @Getter @Setter
+    private boolean decimal;
     private FragmentConfiguration fragmentConfiguration;
 
     private VariableEditorModeloHandler modeloEditorHandler = new VariableEditorModeloHandler();
@@ -53,6 +57,8 @@ public class VariableAccessHandler implements Serializable {
     private VariableDominioEnumerationHandler dominioHandler = new VariableDominioEnumerationHandler();
     private VariableMaxMinHandler maxMinHandler = new VariableMaxMinHandler();
     private VariableStringHandler stringHandler = new VariableStringHandler();
+    @Getter @Setter
+    private VariableDecimalHandler decimalHandler = new VariableDecimalHandler();
 
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -69,13 +75,13 @@ public class VariableAccessHandler implements Serializable {
                     break;
                 case MONETARY:
                 case INTEGER:
-                	getMaxMinHandler().init(this.variableAccess);
-                	break;
+                    getMaxMinHandler().init(this.variableAccess);
+                    break;
                 case STRING:
-                	getStringHandler().init(this.variableAccess);
+                    getStringHandler().init(this.variableAccess);
                 case ENUMERATION:
                 case ENUMERATION_MULTIPLE:
-                	getDominioHandler().init(getVariableAccess());
+                    getDominioHandler().init(getVariableAccess());
                     break;
                 case FRAGMENT:
                     if (tokens.length >= 3) {
@@ -84,7 +90,10 @@ public class VariableAccessHandler implements Serializable {
                     break;
                 case FILE:
                 case EDITOR:
-                	getModeloEditorHandler().init(this.variableAccess);
+                    getModeloEditorHandler().init(this.variableAccess);
+                    break;
+                case DECIMAL:
+                    getDecimalHandler().init(this.variableAccess);
                     break;
                 default:
                     break;
@@ -104,6 +113,7 @@ public class VariableAccessHandler implements Serializable {
         this.isFile = isTipoFile(this.type);
         this.numerico = isNumerico(type);
         this.monetario = isMonetario(type);
+        this.decimal = isTipoDecimal(type);
     }
 
     private boolean tipoPossuiDominio(VariableType type) {
@@ -152,7 +162,7 @@ public class VariableAccessHandler implements Serializable {
 
     public VariableAccess update() {
         variableAccess = new VariableAccess(name, getAccess(), format("{0}:{1}", type.name(), name));
-    	limparConfiguracoes();
+        limparConfiguracoes();
         return variableAccess;
     }
 
@@ -229,6 +239,7 @@ public class VariableAccessHandler implements Serializable {
         this.fragment = isTipoFragment(type);
         this.numerico = isNumerico(type);
         this.monetario = isMonetario(type);
+        this.decimal = isTipoDecimal(type);
     }
 
     private boolean isMonetario(VariableType type) {
@@ -241,6 +252,10 @@ public class VariableAccessHandler implements Serializable {
 
     private boolean isTipoFragment(VariableType type) {
         return VariableType.FRAGMENT.equals(type);
+    }
+
+    private boolean isTipoDecimal(VariableType type) {
+        return VariableType.DECIMAL.equals(type);
     }
 
     public boolean isReadable() {
@@ -267,7 +282,7 @@ public class VariableAccessHandler implements Serializable {
             }
             variableAccess.setAccess(new Access(getAccess()));
             if (!writable) {
-            	setIniciaVazia(false);
+                setIniciaVazia(false);
             }
         }
     }
@@ -328,7 +343,7 @@ public class VariableAccessHandler implements Serializable {
             appendPermission(sb, "required");
         }
         if (access[4]) {
-        	appendPermission(sb, ACCESS_VARIAVEL_INICIA_VAZIA);
+            appendPermission(sb, ACCESS_VARIAVEL_INICIA_VAZIA);
         }
         return sb.toString();
     }
@@ -359,21 +374,24 @@ public class VariableAccessHandler implements Serializable {
                     break;
                 case MONETARY:
                 case INTEGER:
-                	getMaxMinHandler().init(getVariableAccess());
-                	break;
+                    getMaxMinHandler().init(getVariableAccess());
+                    break;
+                case DECIMAL:
+                    getDecimalHandler().init(getVariableAccess());
+                    break;
                 case STRING:
-                	getStringHandler().init(getVariableAccess());
-                	break;
+                    getStringHandler().init(getVariableAccess());
+                    break;
                 case ENUMERATION:
                 case ENUMERATION_MULTIPLE:
                     getDominioHandler().init(getVariableAccess());
                     break;
                     case FILE:
                     case EDITOR:
-                    	getModeloEditorHandler().init(getVariableAccess());
-                    	break;
+                        getModeloEditorHandler().init(getVariableAccess());
+                        break;
                 default:
-                	break;
+                    break;
                 }
             }
         }
@@ -434,7 +452,7 @@ public class VariableAccessHandler implements Serializable {
     }
 
     public void limparConfiguracoes() {
-    	getVariableAccess().setConfiguration(null);
+        getVariableAccess().setConfiguration(null);
         getModeloEditorHandler().init(getVariableAccess());
         VariavelClassificacaoDocumentoAction v = Beans.getReference(VariavelClassificacaoDocumentoAction.class);
         v.setCurrentVariable(getVariableAccess());
@@ -442,6 +460,7 @@ public class VariableAccessHandler implements Serializable {
         getMaxMinHandler().init(getVariableAccess());
         getStringHandler().init(getVariableAccess());
         getDominioHandler().init(getVariableAccess());
+        getDecimalHandler().init(getVariableAccess());
     }
 
     public FragmentConfiguration getFragmentConfiguration() {
@@ -457,67 +476,67 @@ public class VariableAccessHandler implements Serializable {
     }
 
     public boolean isIniciaVazia() {
-		return access[4];
-	}
-
-    public void setIniciaVazia(boolean iniciaVazia) {
-		access[4] = iniciaVazia;
-		variableAccess.setAccess(new Access(getAccess()));
-	}
-
-    public boolean podeIniciarVazia() {
-    	return isWritable() && type != VariableType.FRAGMENT && type != VariableType.FRAME && type != VariableType.PAGE && type != VariableType.TASK_PAGE;
+        return access[4];
     }
 
-	public VariableEditorModeloHandler getModeloEditorHandler() {
-		return modeloEditorHandler;
-	}
+    public void setIniciaVazia(boolean iniciaVazia) {
+        access[4] = iniciaVazia;
+        variableAccess.setAccess(new Access(getAccess()));
+    }
 
-	public VariableDataHandler getDataHandler() {
-		return dataHandler;
-	}
+    public boolean podeIniciarVazia() {
+        return isWritable() && type != VariableType.FRAGMENT && type != VariableType.FRAME && type != VariableType.PAGE && type != VariableType.TASK_PAGE;
+    }
 
-	public void setDataHandler(VariableDataHandler dataHandler) {
-		this.dataHandler = dataHandler;
-	}
+    public VariableEditorModeloHandler getModeloEditorHandler() {
+        return modeloEditorHandler;
+    }
 
-	public VariableDominioEnumerationHandler getDominioHandler() {
-		return dominioHandler;
-	}
+    public VariableDataHandler getDataHandler() {
+        return dataHandler;
+    }
 
-	public void setDominioHandler(VariableDominioEnumerationHandler dominioHandler) {
-		this.dominioHandler = dominioHandler;
-	}
+    public void setDataHandler(VariableDataHandler dataHandler) {
+        this.dataHandler = dataHandler;
+    }
 
-	public VariableMaxMinHandler getMaxMinHandler() {
-		return maxMinHandler;
-	}
+    public VariableDominioEnumerationHandler getDominioHandler() {
+        return dominioHandler;
+    }
 
-	public void setMaxMinHandler(VariableMaxMinHandler maxMinHandler) {
-		this.maxMinHandler = maxMinHandler;
-	}
+    public void setDominioHandler(VariableDominioEnumerationHandler dominioHandler) {
+        this.dominioHandler = dominioHandler;
+    }
 
-	public VariableStringHandler getStringHandler() {
-		return stringHandler;
-	}
+    public VariableMaxMinHandler getMaxMinHandler() {
+        return maxMinHandler;
+    }
 
-	public void setStringHandler(VariableStringHandler stringHandler) {
-		this.stringHandler = stringHandler;
-	}
+    public void setMaxMinHandler(VariableMaxMinHandler maxMinHandler) {
+        this.maxMinHandler = maxMinHandler;
+    }
 
-	public boolean isNumerico() {
-		return numerico;
-	}
+    public VariableStringHandler getStringHandler() {
+        return stringHandler;
+    }
 
-	public void setNumerico(boolean numerico) {
-		this.numerico = numerico;
-	}
+    public void setStringHandler(VariableStringHandler stringHandler) {
+        this.stringHandler = stringHandler;
+    }
 
-	public boolean isMonetario() {
-		return monetario;
-	}
+    public boolean isNumerico() {
+        return numerico;
+    }
 
-	public void setMonetario(boolean monetario) {
-		this.monetario = monetario;
-	}
+    public void setNumerico(boolean numerico) {
+        this.numerico = numerico;
+    }
+
+    public boolean isMonetario() {
+        return monetario;
+    }
+
+    public void setMonetario(boolean monetario) {
+        this.monetario = monetario;
+    }
 }

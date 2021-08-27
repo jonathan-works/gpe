@@ -1,7 +1,7 @@
 package br.com.infox.ibpm.process.definition.variable;
 
 public enum VariableType {
-    
+
     NULL("process.def.var.null", null),
     STRING("process.def.var.string", "/WEB-INF/xhtml/components/form/default.xhtml"),
     TEXT("process.def.var.text", "/WEB-INF/xhtml/components/form/text.xhtml"),
@@ -18,16 +18,17 @@ public enum VariableType {
     ENUMERATION("process.def.var.enum", "/WEB-INF/xhtml/components/form/enumeracao.xhtml"),
     ENUMERATION_MULTIPLE("process.def.var.enum_multiple", "/WEB-INF/xhtml/components/form/enumeracao_multipla.xhtml"),
     FRAGMENT("process.def.var.fragment", "/WEB-INF/xhtml/components/form/fragment.xhtml"),
-    PARAMETER("process.def.var.parameter", null);
+    PARAMETER("process.def.var.parameter", null),
+    DECIMAL("process.def.var.decimal", "/WEB-INF/xhtml/components/form/numberDecimal.xhtml");
 
     private String label;
     private String path;
-    
+
     private VariableType(String label, String path) {
         this.label = label;
         this.path = path;
     }
-    
+
     public String getLabel() {
         return label;
     }
@@ -35,5 +36,5 @@ public enum VariableType {
     public String getPath() {
         return path;
     }
-    
+
 }

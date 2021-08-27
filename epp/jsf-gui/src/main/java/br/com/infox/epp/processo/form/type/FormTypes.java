@@ -4,6 +4,7 @@ import br.com.infox.epp.processo.form.type.EnumFormType.EnumerationFormType;
 import br.com.infox.epp.processo.form.type.EnumFormType.EnumerationMultipleFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.BooleanFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.DateFormType;
+import br.com.infox.epp.processo.form.type.PrimitiveFormType.DecimalFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.FrameFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.IntegerFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.MonetaryFormType;
@@ -14,7 +15,7 @@ import br.com.infox.epp.processo.form.type.PrimitiveFormType.TaskPageFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.TextFormType;
 
 public enum FormTypes {
-    
+
     STRING(StringFormType.class),
     TEXT(TextFormType.class),
     INTEGER(IntegerFormType.class),
@@ -29,26 +30,27 @@ public enum FormTypes {
     FILE(UploadFormType.class),
     FRAGMENT(FragmentFormType.class),
     TASK_PAGE(TaskPageFormType.class),
-    ENUMERATION_MULTIPLE(EnumerationMultipleFormType.class);
-    
+    ENUMERATION_MULTIPLE(EnumerationMultipleFormType.class),
+    DECIMAL(DecimalFormType.class);
+
     private Class<? extends FormType> formTypeClass;
-    
+
     private FormTypes(Class<? extends FormType> formTypeClass) {
         this.formTypeClass = formTypeClass;
     }
-    
+
     public Class<? extends FormType> getFormTypeClass() {
         return formTypeClass;
     }
-    
+
     public boolean isFileType() {
         return formTypeClass.isAssignableFrom(FileFormType.class);
     }
-    
+
     public boolean isPrimitiveType() {
         return formTypeClass.isAssignableFrom(PrimitiveFormType.class);
     }
-    
+
     public FormType create() {
         try {
             return getFormTypeClass().newInstance();

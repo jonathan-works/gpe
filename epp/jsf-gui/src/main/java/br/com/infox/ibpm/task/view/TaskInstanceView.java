@@ -26,6 +26,7 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
+import br.com.infox.ibpm.variable.VariableDecimalHandler;
 import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
 import br.com.infox.ibpm.variable.components.FrameDefinition;
 import br.com.infox.ibpm.variable.components.VariableDefinitionService;
@@ -39,25 +40,25 @@ import br.com.infox.seam.util.ComponentUtil;
 /**
  * Gera um formulario a partir do controller da tarefa atual (taskInstance) Para
  * a geracao correta o atributo mapped-name deve seguir o padrao:
- * 
+ *
  * tipo:nome_da_variavel
- * 
+ *
  * Onde: - tipo é o nome do componente de formulario para o campo -
  * nome_da_variavel é como sera armazenada no contexto. Serve também para gerar
  * o label (Nome da variavel)
- * 
+ *
  * Esse formulario contem apenas campos somente leitura (access=read), para os
  * outros campos é usada a classe TaskInstanceForm
- * 
+ *
  * @author luizruiz
- * 
+ *
  */
 
 @Name(TaskInstanceView.NAME)
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
 public class TaskInstanceView implements Serializable {
-	
+
     private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceView.class);
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceView";
@@ -65,7 +66,7 @@ public class TaskInstanceView implements Serializable {
     private Form form;
 
     private TaskInstance taskInstance;
-    
+
     private VariableDefinitionService variableDefinitionService = Beans.getReference(VariableDefinitionService.class);
 
     @Unwrap
@@ -88,7 +89,7 @@ public class TaskInstanceView implements Serializable {
             for (VariableAccess var : list) {
                 final boolean isWritable = var.isWritable();
                 final boolean isReadable = var.isReadable();
-                
+
                 if (isReadable && !isWritable) {
                     Variable variable = new Variable(var, taskInstance);
                     VariableType type = VariableType.valueOf(var.getType());//FIXME ver aqui se esse type estpa certo
@@ -104,11 +105,11 @@ public class TaskInstanceView implements Serializable {
                     } else if (variable.type == VariableType.TASK_PAGE || variable.value == null) {
                         continue;
                     }
-                    
+
                     FormField ff = createFormField(variable);
                     Map<String, Object> properties = ff.getProperties();
                     properties.put("pagePath", variable.type.getPath());
-                    
+
                     switch (variable.type) {
                         case EDITOR:
                         {
@@ -133,14 +134,14 @@ public class TaskInstanceView implements Serializable {
 
                             List<SelectItem> selectItens = new ArrayList<>();
                             if (dominio.isDominioSqlQuery()){
-                            	ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
-                            	selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio(), taskInstance));
+                                ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
+                                selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio(), taskInstance));
                             } else {
-                            	String[] itens = dominio.getDominio().split(";");
-                            	for (String item : itens) {
-                            		String[] pair = item.split("=");
-                            		selectItens.add(new SelectItem(pair[1], pair[0]));
-                            	}
+                                String[] itens = dominio.getDominio().split(";");
+                                for (String item : itens) {
+                                    String[] pair = item.split("=");
+                                    selectItens.add(new SelectItem(pair[1], pair[0]));
+                                }
                             }
                             ff.getProperties().put("items", selectItens);
                         }
@@ -162,13 +163,19 @@ public class TaskInstanceView implements Serializable {
                             }
                         }
                         break;
+                        case DECIMAL:
+                            ff.setValue(variable.value);
+                            if(VariableDecimalHandler.fromJson(var.getConfiguration()) != null) {
+                                ff.getProperties().put("casasDecimais", VariableDecimalHandler.fromJson(var.getConfiguration()).getCasasDecimais());
+                            }
+                        break;
                         default:
                         {
                             ff.setValue(variable.value);
                         }
                         break;
                     }
-                    
+
                     properties.put("readonly", true);
                     form.getFields().add(ff);
                 }
@@ -176,7 +183,7 @@ public class TaskInstanceView implements Serializable {
         }
         return form;
     }
-    
+
     private FormField createFormField(Variable var) {
         FormField ff = new FormField();
         ff.setFormId(form.getFormId());
@@ -187,7 +194,7 @@ public class TaskInstanceView implements Serializable {
         ff.setType(var.type.name());
         return ff;
     }
-    
+
     private void getTaskInstance() {
         TaskInstance newInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (newInstance == null || !newInstance.equals(taskInstance)) {
@@ -199,14 +206,14 @@ public class TaskInstanceView implements Serializable {
     private DocumentoManager documentoManager() {
         return ComponentUtil.getComponent(DocumentoManager.NAME);
     }
-    
+
     private static class Variable {
         VariableAccess variableAccess;
         String name;
         VariableType type;
         Object value;
         String configuration;
-        
+
         public Variable(VariableAccess variableAccess, TaskInstance taskInstance) {
             this.variableAccess = variableAccess;
             String[] tokens = variableAccess.getMappedName().split(":");

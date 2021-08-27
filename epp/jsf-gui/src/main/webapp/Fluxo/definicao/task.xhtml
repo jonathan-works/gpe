@@ -263,6 +263,17 @@
                             </wi:inputNumber>
                         </div>
                     </rich:panel>
+                    <rich:panel id="definicaoDecimal" rendered="#{var.decimal}">
+                        <div id="input">
+                            <wi:inputNumber id="casasDecimais" label="#{infoxMessages['process.def.var.decimal.casas']}" value="#{var.decimalHandler.casasDecimais}" converterId="javax.faces.Integer">
+                                <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, :processDefinition, :pageBodyDialogMessage, varDiv" limitRender="true" />
+                                <f:validator validatorId="numberRangeValidator" />
+                                <f:attribute name="max" value="15" />
+                                <f:attribute name="min" value="0" />
+                            </wi:inputNumber>
+                        </div>
+                    </rich:panel>
                     <rich:panel id="definicaoMascara" rendered="#{var.type eq 'STRING'}">
                         <div id="input">
                             <wi:inputText id="mascaraString" label="Máscara" value="#{var.stringHandler.mascara}">
