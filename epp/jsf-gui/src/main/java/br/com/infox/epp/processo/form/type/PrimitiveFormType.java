@@ -9,6 +9,8 @@ import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.VariableDataHandler;
+import br.com.infox.ibpm.variable.VariableDecimalHandler;
+import br.com.infox.ibpm.variable.VariableDecimalHandler.DecimalConfig;
 import br.com.infox.ibpm.variable.VariableMaxMinHandler;
 import br.com.infox.ibpm.variable.VariableMaxMinHandler.MaxMinConfig;
 import br.com.infox.ibpm.variable.VariableStringHandler;
@@ -73,7 +75,7 @@ public abstract class PrimitiveFormType implements FormType {
         }
         return false;
     }
-    
+
     public static class StringFormType extends PrimitiveFormType {
 
         public StringFormType() {
@@ -140,7 +142,7 @@ public abstract class PrimitiveFormType implements FormType {
             }
         }
 
-        
+
     }
 
     public static class DateFormType extends PrimitiveFormType {
@@ -181,6 +183,28 @@ public abstract class PrimitiveFormType implements FormType {
         }
     }
 
+    public static class DecimalFormType extends PrimitiveFormType {
+
+        public DecimalFormType() {
+            super("decimal", "/Processo/form/decimal.xhtml", ValueType.DOUBLE);
+        }
+
+        public DecimalConfig getConfigurator(FormField formField) {
+            String configuration = (String) formField.getProperties().get("configuration");
+            DecimalConfig decimalConfig = VariableDecimalHandler.fromJson(configuration);
+            return decimalConfig;
+        }
+
+        @Override
+        public void performValue(FormField formField, FormData formData) {
+            super.performValue(formField, formData);
+            DecimalConfig decimalConfig = getConfigurator(formField);
+            if(decimalConfig != null){
+                formField.addProperty("casasDecimais", decimalConfig.getCasasDecimais());
+            }
+        }
+    }
+
     public static class FrameFormType extends PrimitiveFormType {
 
         public FrameFormType() {
@@ -201,7 +225,7 @@ public abstract class PrimitiveFormType implements FormType {
             return false;
         }
     }
-    
+
 
     public static class PageFormType extends PrimitiveFormType {
 
@@ -244,13 +268,13 @@ public abstract class PrimitiveFormType implements FormType {
         public NumberFormType(String name, String path, ValueType valueType) {
             super(name, path, valueType);
         }
-        
+
         public MaxMinConfig getConfigurator(FormField formField) {
             String configuration = (String) formField.getProperties().get("configuration");
             MaxMinConfig maxMinConfig = VariableMaxMinHandler.fromJson(configuration);
             return maxMinConfig;
         }
-        
+
         @Override
         public boolean isInvalid(FormField formField, FormData formData) {
             return super.isInvalid(formField, formData) || validateMaxMin(formField);
@@ -282,7 +306,7 @@ public abstract class PrimitiveFormType implements FormType {
             }
             return msg != null;
         }
-        
+
     }
-    
+
 }
