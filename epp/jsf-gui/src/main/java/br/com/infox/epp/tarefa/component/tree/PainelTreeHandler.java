@@ -19,10 +19,10 @@ import br.com.infox.epp.painel.TaskDefinitionBean;
 public class PainelTreeHandler extends AbstractTreeHandler<TaskDefinitionBean> {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Inject
     private PainelUsuarioController painelUsuarioController;
-    
+
     private List<PainelEntityNode> rootList;
     private FluxoBean fluxoBean;
 
@@ -40,12 +40,12 @@ public class PainelTreeHandler extends AbstractTreeHandler<TaskDefinitionBean> {
     protected String getEventSelected() {
         return "selectedTarefasTree";
     }
-    
+
     public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
     	super.processTreeSelectionChange(ev);
 		painelUsuarioController.onSelectNode();
     }
-    
+
     public List<PainelEntityNode> getTarefasRoots() {
         if (rootList == null) {
             rootList = new ArrayList<>();
@@ -75,5 +75,5 @@ public class PainelTreeHandler extends AbstractTreeHandler<TaskDefinitionBean> {
 	public void setFluxoBean(FluxoBean fluxoBean) {
 		this.fluxoBean = fluxoBean;
 	}
-	
+
 }

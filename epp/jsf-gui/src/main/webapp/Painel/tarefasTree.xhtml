@@ -35,7 +35,7 @@
                     <h:outputText rendered="#{node.entity.quantidade ne 0}" value=" (#{node.entity.quantidade})" />
                     <h:outputText rendered="#{node.entity.quantidadeEmCaixa gt 0}" value=" (Em caixas: #{node.entity.quantidadeEmCaixa})" />
                     <rich:contextMenu mode="ajax" target="taskNode" id="menuTaskNode"
-                        rendered="#{security.checkPage('/pages/Caixa/listView.seam')}"> 
+                        rendered="#{security.checkPage('/pages/Caixa/listView.seam')}">
                         <rich:menuItem
                             label="#{infoxMessages['caixa.menu.novaCaixa']}"
                             icon="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
@@ -76,7 +76,7 @@
                             dropListener="#{painelUsuarioController.moverProcessoParaCaixaDropEventListener}"
                             dropValue="#{node.entity.id}"
                             render="divPainelProcessos, TarefasTree"
-                            limitRender="true" 
+                            limitRender="true"
                             execute="@this"/>
                     </rich:treeNode>
                 </rich:treeModelAdaptor>

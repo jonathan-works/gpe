@@ -8,7 +8,7 @@ import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.painel.caixa.Caixa;
 
 public class TaskBean {
-    
+
     private String idTaskInstance;
     private String taskName;
     private String assignee;
@@ -22,7 +22,7 @@ public class TaskBean {
     private String nomeNatureza;
     private String nomeCategoria;
     private String numeroProcesso;
-    private Integer idProcessoRoot; 
+    private Integer idProcessoRoot;
     private String numeroProcessoRoot;
     private String nomeNaturezaProcessoRoot;
     private String nomeCategoriaProcessoRoot;
@@ -32,12 +32,12 @@ public class TaskBean {
     private Integer pesoPrioridadeProcesso;
     private Date dataInicio;
     private String nomeUsuarioTarefa;
-    
-    
+
+
     public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
-            Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeFluxo, Integer idFluxo, String nomeNatureza, 
-            String nomeCategoria, String numeroProcesso, Integer idProcessoRoot, String numeroProcessoRoot, String nomeUsuarioSolicitante, 
-            Integer idPrioridadeProcesso, String prioridadeProcesso, Integer pesoPrioridadeProcesso, Date dataInicio, 
+            Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeFluxo, Integer idFluxo, String nomeNatureza,
+            String nomeCategoria, String numeroProcesso, Integer idProcessoRoot, String numeroProcessoRoot, String nomeUsuarioSolicitante,
+            Integer idPrioridadeProcesso, String prioridadeProcesso, Integer pesoPrioridadeProcesso, Date dataInicio,
             String nomeNaturezaProcessoRoot, String nomeCategoriaProcessoRoot) {
         this.idTaskInstance = idTaskInstance;
         this.taskName = taskName;
@@ -62,19 +62,19 @@ public class TaskBean {
         this.pesoPrioridadeProcesso = pesoPrioridadeProcesso == null ? -1 : pesoPrioridadeProcesso;
         this.dataInicio = dataInicio;
     }
-    
+
     public String getIdTaskInstance() {
         return idTaskInstance;
     }
-    
+
     public String getTaskName() {
         return taskName;
     }
-    
+
     public String getAssignee() {
         return assignee;
     }
-    
+
     public void setAssignee(String assignee) {
         this.assignee = assignee;
     }
@@ -82,19 +82,19 @@ public class TaskBean {
     public String getIdProcessInstance() {
         return idProcessInstance;
     }
-    
+
     public String getTaskNodeKey() {
         return taskNodeKey;
     }
-    
+
     public Integer getIdProcesso() {
         return idProcesso;
     }
-    
+
     public String getNomeCaixa() {
         return nomeCaixa;
     }
-    
+
     public Integer getIdCaixa() {
         return idCaixa;
     }
@@ -102,7 +102,7 @@ public class TaskBean {
     public String getNomeFluxo() {
         return nomeFluxo;
     }
-    
+
     public Integer getIdFluxo() {
         return idFluxo;
     }
@@ -118,7 +118,7 @@ public class TaskBean {
     public String getNumeroProcesso() {
         return numeroProcesso;
     }
-    
+
     public Integer getIdProcessoRoot() {
         return idProcessoRoot;
     }
@@ -142,7 +142,7 @@ public class TaskBean {
     public Date getDataInicio() {
         return dataInicio;
     }
-    
+
     public Integer getIdPrioridadeProcesso() {
         return idPrioridadeProcesso;
     }
@@ -150,23 +150,23 @@ public class TaskBean {
     public String getPrioridadeProcesso() {
         return prioridadeProcesso;
     }
-    
+
     public Integer getPesoPrioridadeProcesso() {
         return pesoPrioridadeProcesso;
     }
-    
+
     public String getNomeUsuarioTarefa() {
         if (nomeUsuarioTarefa == null && assignee != null && !Authenticator.getUsuarioLogado().getLogin().equals(assignee)) {
             nomeUsuarioTarefa = Beans.getReference(UsuarioLoginDAO.class).getUsuarioLoginByLogin(assignee).getNomeUsuario();
         }
         return nomeUsuarioTarefa;
     }
-    
+
     public void removerCaixa() {
         this.idCaixa = null;
         this.nomeCaixa = null;
     }
-    
+
     public void moverParaCaixa(Caixa caixa) {
         this.idCaixa = caixa.getIdCaixa();
         this.nomeCaixa = caixa.getNomeCaixa();
@@ -208,5 +208,5 @@ public class TaskBean {
             return false;
         return true;
     }
-    
+
 }
