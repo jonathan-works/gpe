@@ -9,8 +9,9 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
-    <rich:panel header="${infoxMessages['painel.tarefas']}" id="TarefasTree" styleClass="tree-tarefas" style="width: 100%; padding-bottom: 110px;">
-        <h:outputText rendered="#{empty painelTreeHandler.tarefasRoots}" value="#{infoxMessages['process.noAvailableProcesses']}"/>
+    <rich:panel header="${infoxMessages['painel.tarefas']} (${painelTreeHandler.fluxoBean.name})" id="TarefasTree" styleClass="tree-tarefas" style="width: 100%; padding-bottom: 110px;">
+        <h:outputText rendered="#{empty painelTreeHandler.tarefasRoots and empty painelTreeHandler.caixasSub}" value="#{infoxMessages['process.noAvailableProcesses']}"/>
+        <h:outputText rendered="#{empty painelTreeHandler.tarefasRoots and not empty painelTreeHandler.caixasSub}" value="#{infoxMessages['process.noAvailableProcessesFluxMain']}"/>
         <rich:tree
             id="selectTarefaTree"
             status=":status"
@@ -80,6 +81,43 @@
                             execute="@this"/>
                     </rich:treeNode>
                 </rich:treeModelAdaptor>
+            </rich:treeModelAdaptor>
+
+            <rich:treeModelAdaptor id="caixasSubTreeModelAdaptor" nodes="#{painelTreeHandler.caixasSub}">
+            	<rich:treeNode
+            		id="caixasSubNode"
+            		iconCollapsed="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+            		iconExpanded="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+            		expanded="#{node.expanded}"
+            		iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+            		iconClass="tarefa-tree-icon"
+            		labelClass="tarefa-tree-lbl"
+            		style="pointer-events: none;">
+            		<h:outputText value="SUB-PROCESSO - #{node.entity.name}"/>
+            		<h:outputText rendered="#{node.entity.quantidade ne 0}" value=" (#{node.entity.quantidade})" />
+            	</rich:treeNode>
+
+            	<rich:treeModelAdaptor id="tarefasSubTreeModelAdaptor" nodes="#{painelTreeHandler.getTarefasSub(node.entity.name)}">
+            		<rich:treeNode
+            			id="tarefasSubNode"
+            			iconCollapsed="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+            			iconExpanded="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+            			conLeaf="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+            			iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+            			iconClass="tarefa-tree-icon"
+            			labelClass="tarefa-tree-lbl">
+            			<h:outputText value="#{node.entity.name}" />
+            			<h:outputText rendered="#{node.entity.quantidade ne 0}" value=" (#{node.entity.quantidade})" />
+            			<h:outputText rendered="#{node.entity.quantidadeEmCaixa gt 0}" value=" (Em caixas: #{node.entity.quantidadeEmCaixa})" />
+            			<rich:contextMenu mode="ajax" target="tarefasSubNode" id="menuTarefasSubNode"
+            				rendered="#{security.checkPage('/pages/Caixa/listView.seam')}">
+            				<rich:menuItem
+            					label="#{infoxMessages['caixa.menu.novaCaixa']}"
+            					icon="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
+            					onclick="#{rich:component('novaCaixaPanel')}.show()" />
+            			</rich:contextMenu>
+            		</rich:treeNode>
+            	</rich:treeModelAdaptor>
             </rich:treeModelAdaptor>
         </rich:tree>
     </rich:panel>

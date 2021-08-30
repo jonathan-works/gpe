@@ -33,9 +33,8 @@ public class TaskBean {
     private Date dataInicio;
     private String nomeUsuarioTarefa;
 
-
     public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
-            Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeFluxo, Integer idFluxo, String nomeNatureza,
+            Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeNatureza,
             String nomeCategoria, String numeroProcesso, Integer idProcessoRoot, String numeroProcessoRoot, String nomeUsuarioSolicitante,
             Integer idPrioridadeProcesso, String prioridadeProcesso, Integer pesoPrioridadeProcesso, Date dataInicio,
             String nomeNaturezaProcessoRoot, String nomeCategoriaProcessoRoot) {
@@ -47,8 +46,6 @@ public class TaskBean {
         this.idProcesso = idProcesso;
         this.nomeCaixa = nomeCaixa;
         this.idCaixa = idCaixa;
-        this.nomeFluxo = nomeFluxo;
-        this.idFluxo = idFluxo;
         this.nomeNatureza = nomeNatureza;
         this.nomeCategoria = nomeCategoria;
         this.numeroProcesso = numeroProcesso;
@@ -160,6 +157,14 @@ public class TaskBean {
             nomeUsuarioTarefa = Beans.getReference(UsuarioLoginDAO.class).getUsuarioLoginByLogin(assignee).getNomeUsuario();
         }
         return nomeUsuarioTarefa;
+    }
+
+    public void setNomeFluxo(String nomeFluxo) {
+        this.nomeFluxo = nomeFluxo;
+    }
+
+    public void setIdFluxo(Integer idFluxo) {
+        this.idFluxo = idFluxo;
     }
 
     public void removerCaixa() {

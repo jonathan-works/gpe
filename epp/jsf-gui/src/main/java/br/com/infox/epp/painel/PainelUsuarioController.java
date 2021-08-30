@@ -274,7 +274,7 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	public boolean canShowProcessoList() {
-	    return getSelected() != null;
+	    return getSelected() != null && getSelected() instanceof TaskDefinitionBean;
 	}
 
 	public boolean hasRecursoPainelComunicacaoEletronica() {
