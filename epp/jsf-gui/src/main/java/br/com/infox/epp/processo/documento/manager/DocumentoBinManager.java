@@ -319,6 +319,44 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     public String getMensagemDocumentoNulo() {
         return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
+    
+    public void writeCancelamentoDocumento(byte[] pdf, OutputStream outStream) {
+    	if(InfoxPdfReader.isCriptografado(pdf)) {
+            throw new MargemPdfException("Documento somente leitura, não é possível gravar");
+    	}
+        try {
+        	final PdfReader pdfReader = new PdfReader(pdf);
+        	final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
+        	
+        	//Variáveis para a parte de cancelamento
+			Font f = new Font(Font.TIMES_ROMAN, 80);
+			f.setColor(Color.RED);
+	        Phrase p = new Phrase("CANCELADO", f);
+	        PdfGState gs1 = new PdfGState();
+	        gs1.setFillOpacity(0.5f);
+	        PdfContentByte over;
+	        Rectangle pagesize;
+	        float x, y;
+	        
+	        for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
+    	        pagesize = pdfReader.getPageSizeWithRotation(page);
+                x = (pagesize.getLeft() + pagesize.getRight()) / 2;
+                y = (pagesize.getTop() + pagesize.getBottom()) / 1.75F;
+                over = stamper.getOverContent(page);
+                over.saveState();
+                over.setGState(gs1);
+                ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, x, y, 45);
+                over.restoreState();
+	        }
+	        
+	        stamper.close();
+        	outStream.flush();
+        } catch (BadPasswordException e) {
+            throw new MargemPdfException("Documento somente leitura, não é possível gravar", e);
+        } catch (IOException | DocumentException e) {
+            throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
+        }
+    }
 
 	public void writeMargemDocumento(byte[] pdf, String textoAssinatura, UUID uuid, final byte[] qrcode,
 			OutputStream outStream, PosicaoTextoAssinaturaDocumentoEnum posicaoAssinatura, boolean cancelado) {
@@ -338,16 +376,6 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 			}
 
 			Phrase codPhrase;
-			
-			//Variáveis para a parte de cancelamento
-			Font f = new Font(Font.TIMES_ROMAN, 80);
-			f.setColor(Color.RED);
-	        Phrase p = new Phrase("CANCELADO", f);
-	        PdfGState gs1 = new PdfGState();
-	        gs1.setFillOpacity(0.5f);
-	        PdfContentByte over;
-	        Rectangle pagesize;
-	        float x, y;
 			
         	for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
         		int rotation = pdfReader.getPageRotation(page);
@@ -384,17 +412,6 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                     	ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
                     }
                     ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 35, top - 70, -90);
-        		}
-        		
-        		if(cancelado) {
-        	        pagesize = pdfReader.getPageSizeWithRotation(page);
-                    x = (pagesize.getLeft() + pagesize.getRight()) / 2;
-                    y = (pagesize.getTop() + pagesize.getBottom()) / 1.5F;
-                    over = stamper.getOverContent(page);
-                    over.saveState();
-                    over.setGState(gs1);
-                    ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, x, y, 45);
-                    over.restoreState();
         		}
         	}
 

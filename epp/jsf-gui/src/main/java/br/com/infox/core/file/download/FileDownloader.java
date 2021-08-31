@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.faces.context.ExternalContext;
@@ -30,6 +31,7 @@ import com.lowagie.text.pdf.PdfReader;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
+import br.com.infox.core.util.CollectionUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
@@ -306,8 +308,16 @@ public class FileDownloader implements Serializable {
     public void export(DocumentoBin documento, OutputStream outputStream, boolean gerarMargens) {
     	byte[] originalData = getOriginalData(documento);
     	
-    	if (gerarMargens && podeExibirMargem(documento)) {
-    		documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento), documentoDAO.getDocumentosFromDocumentoBin(documento).get(0).getExcluido());
+    	if (gerarMargens) {
+    		List<Documento> listaDocumento = documentoDAO.getDocumentosFromDocumentoBin(documento);
+    		boolean documentoCancelado = CollectionUtil.isEmpty(listaDocumento)? false : listaDocumento.get(0).getExcluido();
+    		if(podeExibirMargem(documento)) {
+    			documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento), documentoCancelado);
+    			originalData = ((ByteArrayOutputStream) outputStream).toByteArray();
+    		}
+    		if(documentoCancelado) {
+    			documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
+    		}
     	}
     	else {
     		try {
