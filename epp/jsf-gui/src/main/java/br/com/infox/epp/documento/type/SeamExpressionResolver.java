@@ -1,8 +1,10 @@
 package br.com.infox.epp.documento.type;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -84,6 +86,8 @@ public class SeamExpressionResolver implements ExpressionResolver {
 			expression.setValue(new SimpleDateFormat("dd/MM/yyyy").format(value));
 		} else if (value instanceof Boolean) {
 			expression.setValue((Boolean) value ? "Sim" : "Não");
+		} else if (value instanceof Double) {
+			expression.setValue(String.format(new Locale("pt", "BR"), "%."+ (BigDecimal.valueOf((Double) value).scale()) +"f", value));
 		} else {
 			expression.setValue(value.toString());
 		}
