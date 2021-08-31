@@ -307,20 +307,21 @@ public class FileDownloader implements Serializable {
     
     public void export(DocumentoBin documento, OutputStream outputStream, boolean gerarMargens) {
     	byte[] originalData = getOriginalData(documento);
+    	List<Documento> listaDocumento = documentoDAO.getDocumentosFromDocumentoBin(documento);
+		boolean documentoCancelado = CollectionUtil.isEmpty(listaDocumento)? false : listaDocumento.get(0).getExcluido();
     	
-    	if (gerarMargens) {
-    		List<Documento> listaDocumento = documentoDAO.getDocumentosFromDocumentoBin(documento);
-    		boolean documentoCancelado = CollectionUtil.isEmpty(listaDocumento)? false : listaDocumento.get(0).getExcluido();
-    		if(podeExibirMargem(documento)) {
-    			documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento), documentoCancelado);
-    			originalData = ((ByteArrayOutputStream) outputStream).toByteArray();
-    		}
+    	if (gerarMargens && podeExibirMargem(documento)) {
+			documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento), documentoCancelado);
+			originalData = ((ByteArrayOutputStream) outputStream).toByteArray();
     		if(documentoCancelado) {
     			documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
     		}
     	}
     	else {
     		try {
+    			if(documentoCancelado) {
+        			documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
+        		}
     			outputStream.write(originalData);
     		} catch(IOException e) {
     			throw new RuntimeException("Erro ao gravar no stream", e);

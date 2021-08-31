@@ -194,6 +194,15 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		}
 
 	}
+	
+	public byte[] writeCancelamentoDocumento(byte[] pdf) {
+		try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
+			writeCancelamentoDocumento(pdf, outStream);
+			return outStream.toByteArray();
+		} catch (IOException e) {
+        	throw new MargemPdfException("Erro ao gravar o cancelamento do PDF", e);
+        }
+	}
 
     public byte[] writeMargemDocumento(byte[] pdf, String textoAssinatura, UUID uuid, final byte[] qrcode, PosicaoTextoAssinaturaDocumentoEnum posicaoAssinatura, boolean cancelado) {
         try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
@@ -206,6 +215,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
     public DocumentoBin createDocumentoBinResumoDocumentosProcesso(Processo processo) {
     	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+    		byte[] pdfData;
 	    	Document document = new Document();
 	    	PdfCopy copy = new PdfCopy(document, stream);
 	    	document.open();
@@ -214,7 +224,11 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     		for(Documento documento : getListAllDocumentoByProcessoOrderData(processo)) {
     			try {
 	    			if(podeExibirMargem(documento.getDocumentoBin())) {
-	    				documentoToPdfCopy(copy, writeMargemDocumento(getOriginalData(documento.getDocumentoBin()), getTextoAssinatura(documento.getDocumentoBin()), documento.getDocumentoBin().getUuid(), getQrCodeSignatureImage(documento.getDocumentoBin()), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento.getDocumentoBin()), documento.getExcluido()));
+	    				pdfData = writeMargemDocumento(getOriginalData(documento.getDocumentoBin()), getTextoAssinatura(documento.getDocumentoBin()), documento.getDocumentoBin().getUuid(), getQrCodeSignatureImage(documento.getDocumentoBin()), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento.getDocumentoBin()), documento.getExcluido());
+	    	    		if(documento.getExcluido()) {
+	    	    			pdfData = writeCancelamentoDocumento(pdfData);
+	    	    		}
+	    	    		documentoToPdfCopy(copy, pdfData);
 	    			} else {
 	    				documentoImageToPdfCopy(copy, (getOriginalData(documento.getDocumentoBin())));
 	    			}
@@ -354,7 +368,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         } catch (BadPasswordException e) {
             throw new MargemPdfException("Documento somente leitura, não é possível gravar", e);
         } catch (IOException | DocumentException e) {
-            throw new MargemPdfException("Erro ao gravar a margem do PDF", e);
+            throw new MargemPdfException("Erro ao gravar o cancelamento do PDF", e);
         }
     }
 
