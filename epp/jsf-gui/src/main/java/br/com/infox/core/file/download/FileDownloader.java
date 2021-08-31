@@ -321,8 +321,9 @@ public class FileDownloader implements Serializable {
     		try {
     			if(documentoCancelado) {
         			documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
+        		} else {
+        			outputStream.write(originalData);
         		}
-    			outputStream.write(originalData);
     		} catch(IOException e) {
     			throw new RuntimeException("Erro ao gravar no stream", e);
     		}

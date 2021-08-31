@@ -229,6 +229,9 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	    	    			pdfData = writeCancelamentoDocumento(pdfData);
 	    	    		}
 	    	    		documentoToPdfCopy(copy, pdfData);
+	    			} else if("pdf".equalsIgnoreCase(documento.getDocumentoBin().getExtensao()) && documento.getExcluido()) {
+    	    			pdfData = writeCancelamentoDocumento(getOriginalData(documento.getDocumentoBin()));
+    	    			documentoToPdfCopy(copy, pdfData);
 	    			} else {
 	    				documentoImageToPdfCopy(copy, (getOriginalData(documento.getDocumentoBin())));
 	    			}
