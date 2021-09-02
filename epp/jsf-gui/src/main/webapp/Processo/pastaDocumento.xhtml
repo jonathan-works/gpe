@@ -209,7 +209,7 @@
 					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
 				<h:graphicImage styleClass="opacityHover"
 					url="#{layoutController.getResourceUrlByPath('/imagens/stock_undelete.png')}"
-					rendered="#{row.excluido and pastaAction.canLogicDeleteFromInstance()}"
+					rendered="#{row.excluido and pastaAction.canLogicDeleteFromInstance() and pastaAction.isDocumentoNaoPossuiAssinatura(row)}"
 					title="#{infoxMessages['button.restaurar']}"
 					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
                 
