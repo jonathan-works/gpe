@@ -23,7 +23,7 @@ public class AnonimoVO {
     private TipoParticipanteEnum tipoParticipante;
 
     public String getNomeDefaultIfNull() {
-        return getNome() == null || getNome().trim().length() == 0 ? "Anônimo" : getNome();
+        return getNome() == null || getNome().trim().length() == 0 ? TipoParticipanteEnum.ANON.getLabel() : getNome();
     }
 
     @Override

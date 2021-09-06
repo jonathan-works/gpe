@@ -447,7 +447,6 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         if(servidorContribuinteVO == null && empresaVO == null && anonimoVO == null) {
             FacesMessages.instance().add("É necessário inserir os dados de uma pessoa física ou jurídica");
         } else {
-            iniciarProcessoParticipanteVO.generateId();
             TipoPessoaEnum tipoPessoaParticipante = iniciarProcessoParticipanteVO.getTipoPessoa();
 
             switch (tipoPessoaParticipante) {
@@ -457,9 +456,12 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             case J:
                 iniciarProcessoParticipanteVO.setCodigo(empresaVO.getCnpj());
                 break;
-            default:
+            case A:
+                iniciarProcessoParticipanteVO.setNome(anonimoVO.getNomeDefaultIfNull());
                 break;
             }
+
+            iniciarProcessoParticipanteVO.generateId();
 
             if (!podeAdicionarParticipante(iniciarProcessoParticipanteVO)) {
                 limparDadosParticipante();
@@ -502,10 +504,19 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         Boolean result = Boolean.TRUE;
         if (iniciarProcessoParticipanteVO.getParent() != null) {
             TreeNode parent = iniciarProcessoParticipanteVO.getParent();
-            result = !((IniciarProcessoParticipanteVO) parent).getCodigo().equals(iniciarProcessoParticipanteVO.getCodigo());
+            if(TipoPessoaEnum.A.equals(iniciarProcessoParticipanteVO.getTipoPessoa())) {
+                result = !((IniciarProcessoParticipanteVO) parent).getId().equals(iniciarProcessoParticipanteVO.getId());
+            } else {
+                result = !((IniciarProcessoParticipanteVO) parent).getCodigo().equals(iniciarProcessoParticipanteVO.getCodigo());
+            }
             if (result && !parent.getChildren().isEmpty()) {
                 result = !(parent.getChildren().stream()
-                        .filter(p -> ((IniciarProcessoParticipanteVO) p).getCodigo().equals(iniciarProcessoParticipanteVO.getCodigo()))
+                        .filter(p ->
+                            TipoPessoaEnum.A.equals(iniciarProcessoParticipanteVO.getTipoPessoa()) ?
+                            ((IniciarProcessoParticipanteVO) p).getId().equals(iniciarProcessoParticipanteVO.getId())
+                            :
+                            ((IniciarProcessoParticipanteVO) p).getCodigo().equals(iniciarProcessoParticipanteVO.getCodigo())
+                        )
                         .count() > 0);
             }
         }

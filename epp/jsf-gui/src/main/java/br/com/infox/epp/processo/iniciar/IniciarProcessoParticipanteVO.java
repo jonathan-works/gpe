@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.iniciar;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
@@ -154,7 +156,15 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
             id = "";
             nivel = 1;
         }
-        id += codigo + tipoParte.getId();
+        if(TipoPessoaEnum.A.equals(tipoPessoa)) {
+            if(StringUtil.isEmpty(id) && TipoParticipanteEnum.ANON.getLabel().equals(nome)) {
+                id += codigo + Calendar.getInstance().getTime().getTime() + tipoParte.getId();
+            } else {
+                id += codigo + nome + tipoParte.getId();
+            }
+        } else {
+            id += codigo + tipoParte.getId();
+        }
     }
 
     public void loadPessoaFisica(PessoaFisica pessoaFisica) {
