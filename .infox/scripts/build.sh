@@ -21,11 +21,12 @@ MAVEN_OPTS="$MAVEN_OPTS -Dgit-commit-id-plugin.useGitNative=true"
 URL_NEXUS="https://nexus.k8s.infox.com.br/repository"
 
 #ATUALIZAR VERSÃO SNAPSHOT
-git checkout -q **/pom.xml
-MAVEN_OPTS="$MAVEN_OPTS" mvn -q help:evaluate -Dexpression='project.version' -Doutput="$(pwd)/target/version.txt"
-current_maven_version=$(< target/version.txt)
+find -name pom.xml -not -path */target/*  -not -path .git -exec git checkout -q '{}' \;
+MAVEN_OPTS="$MAVEN_OPTS" mvn -q help:evaluate -Dexpression='project.version' -Doutput="$work_folder/version.txt"
+current_maven_version=$(< $work_folder/version.txt)
 epochSeconds="$(git log -n 1 --format='%ct')"
-named_version="${current_maven_version/-SNAPSHOT/-a$epochSeconds}"
+named_version="${current_maven_version/-SNAPSHOT/}"
+named_version="${named_version}-a$epochSeconds"
 
 # Atualização de versão
 MAVEN_OPTS="$MAVEN_OPTS" mvn -s settings.xml -Pbuild:bom -V -U -e versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion="${named_version}"
@@ -59,9 +60,15 @@ deployFile() {
     if [ ! -z $3 ] ; then
        extraArgs="-Dpackaging=$3"
     fi
-    MAVEN_OPTS="$MAVEN_OPTS" mvn deploy:deploy-file -DrepositoryId='infoxNexus' $extraArgs -Durl="$URL_NEXUS/$nomeDoRepositorio" -DpomFile="$pomPath" -Dfile="$filePath" || {
-        echo "Falha ao tentar fazer upload do artefato $filePath";
-        exit 1;
+    echo "Enviando $2 para $URL_NEXUS/$nomeDoRepositorio"
+    MAVEN_OPTS="$MAVEN_OPTS" mvn -q deploy:deploy-file -DrepositoryId='infoxNexus' $extraArgs -Durl="$URL_NEXUS/$nomeDoRepositorio" -DpomFile="$pomPath" -Dfile="$filePath" || {
+        echo "
++======================================================================
+| Falha ao tentar fazer upload do artefato $filePath. Possíveis causas são:
+| Falha na comunicação com o nexus $URL_NEXUS, por favor verifique se o mesmo está disponível.
+| Não existe um repositório com o nome $nomeDoRepositorio no nexus.
+| Artefato com a identificação única definida pelo POM $pomPath na versão $named_version já está disponibilizado no repositório $URL_NEXUS/$nomeDoRepositorio
++======================================================================";
     }
 }
 
@@ -70,5 +77,5 @@ deployFile 'epp/liquibase/pom.xml' "epp/liquibase/target/liquibase-epp-${named_v
 touch $work_folder/build.txt
 echo "branchName=$branchName
 tipoDoRepositorio=$tipoDoRepositorio
-nomeDoRepositorio=$nomeDoRepositorio
+nomeDoRepositorio=${nomeDoRepositorio}-implantacao
 version=$named_version" > $work_folder/build.txt
