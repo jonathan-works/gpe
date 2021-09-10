@@ -41,9 +41,11 @@ nomeDoRepositorio='infox-maven-stagingarea'
 if [[ $branchName =~ ^projeto ]] ; then
     echo "$branchName PROJETO"
     nomeDoRepositorio='infox-maven-evo-qa'
+    tipoDoRepositorio='qa-evo'
 elif [[ $branchName =~ ^incidente ]] ; then
     echo "$branchName INCIDENTE"
-    nomeDoRepositorio='infox-maven-evo-qa'
+    nomeDoRepositorio='infox-maven-man-qa'
+    tipoDoRepositorio='qa-sup'
 elif [ -z $branchName ] ; then
     echo "Foi possível determinar o nome da branch atual"
 else
@@ -65,3 +67,8 @@ deployFile() {
 
 deployFile 'epp/jsf-gui/pom.xml' "epp/jsf-gui/target/epp-${named_version}.war"
 deployFile 'epp/liquibase/pom.xml' "epp/liquibase/target/liquibase-epp-${named_version}.tar.gz" 'tar.gz'
+touch $work_folder/build.txt
+echo "branchName=$branchName
+tipoDoRepositorio=$tipoDoRepositorio
+nomeDoRepositorio=$nomeDoRepositorio
+version=$named_version" > $work_folder/build.txt
