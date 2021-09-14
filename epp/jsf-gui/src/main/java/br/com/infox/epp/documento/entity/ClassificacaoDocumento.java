@@ -92,7 +92,7 @@ public class ClassificacaoDocumento implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "tp_visibilidade", nullable = false)
     private VisibilidadeEnum visibilidade;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "tp_posicao_texto_assinatura")
     private PosicaoTextoAssinaturaDocumentoEnum posicaoTextoAssinaturaDocumentoEnum;
@@ -113,12 +113,12 @@ public class ClassificacaoDocumento implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "classificacaoDocumento")
     private List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapelList = new ArrayList<>(0);
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = COL_ID_TIPO_MODELO_DOCUMENTO, nullable = false)
     private TipoModeloDocumento tipoModeloDocumento;
-    
-	public ClassificacaoDocumento() {
+
+    public ClassificacaoDocumento() {
         visibilidade = VisibilidadeEnum.A;
     }
 
@@ -227,23 +227,23 @@ public class ClassificacaoDocumento implements Serializable {
     }
 
     public TipoModeloDocumento getTipoModeloDocumento() {
-		return tipoModeloDocumento;
-	}
+        return tipoModeloDocumento;
+    }
 
-	public void setTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
-		this.tipoModeloDocumento = tipoModeloDocumento;
-	}
-	
+    public void setTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
+        this.tipoModeloDocumento = tipoModeloDocumento;
+    }
+
     public PosicaoTextoAssinaturaDocumentoEnum getPosicaoTextoAssinaturaDocumentoEnum() {
-		return posicaoTextoAssinaturaDocumentoEnum;
-	}
+        return posicaoTextoAssinaturaDocumentoEnum;
+    }
 
-	public void setPosicaoTextoAssinaturaDocumentoEnum(
-			PosicaoTextoAssinaturaDocumentoEnum posicaoTextoAssinaturaDocumentoEnum) {
-		this.posicaoTextoAssinaturaDocumentoEnum = posicaoTextoAssinaturaDocumentoEnum;
-	}
+    public void setPosicaoTextoAssinaturaDocumentoEnum(
+            PosicaoTextoAssinaturaDocumentoEnum posicaoTextoAssinaturaDocumentoEnum) {
+        this.posicaoTextoAssinaturaDocumentoEnum = posicaoTextoAssinaturaDocumentoEnum;
+    }
 
-	@Override
+    @Override
     public String toString() {
         return descricao;
     }
@@ -255,10 +255,10 @@ public class ClassificacaoDocumento implements Serializable {
             return accepted;
         }
         for (ExtensaoArquivo ea : getExtensaoArquivosList()) {
-        	String extensao = ea.getExtensao();
-        	if(!extensao.startsWith(".")) {
-        		extensao = "." + extensao;
-        	}
+            String extensao = ea.getExtensao();
+            if(!extensao.startsWith(".")) {
+                extensao = "." + extensao;
+            }
             accepted +=  extensao + ", ";
         }
         return accepted.substring(0, accepted.length() -2);

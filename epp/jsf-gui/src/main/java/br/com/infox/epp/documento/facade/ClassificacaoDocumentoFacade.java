@@ -43,36 +43,36 @@ public class ClassificacaoDocumentoFacade {
     public VisibilidadeEnum[] getVisibilidadeEnumValues() {
         return VisibilidadeEnum.values();
     }
-    
+
     public TipoAssinaturaEnum[] getTipoAssinaturaEnumValues() {
         return TipoAssinaturaEnum.values();
     }
-    
+
     public PosicaoTextoAssinaturaDocumentoEnum[] getPosicaoTextoAssinaturaDocumentoEnumValues() {
-    	return PosicaoTextoAssinaturaDocumentoEnum.values();
+        return PosicaoTextoAssinaturaDocumentoEnum.values();
     }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo) {
         return classificacaoDocumentoManager.getUseableClassificacaoDocumento(isModelo, Authenticator.getPapelAtual());
     }
-    
+
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumentoAnexar(TipoDocumentoEnum tipoDocumento){
         return classificacaoDocumentoManager.getClassificacoesDocumentoAnexarDocumento(tipoDocumento);
     }
-    
+
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(TipoDocumentoEnum tipoDocumento){
         return classificacaoDocumentoManager.getClassificacoesDocumentoCruds(tipoDocumento);
     }
-    
+
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumentoVariavel(List<String> codigos, boolean isModelo) {
-		List<ClassificacaoDocumento> classificacoes = null;
-		if (codigos != null && !codigos.isEmpty()) {
-			classificacoes = classificacaoDocumentoSearch.findByListCodigos(codigos);
-		}
-		if (classificacoes == null || classificacoes.isEmpty()) {
-			classificacoes = getUseableClassificacaoDocumento(isModelo);
-		}
-		return classificacoes;
-	}
-    
+        List<ClassificacaoDocumento> classificacoes = null;
+        if (codigos != null && !codigos.isEmpty()) {
+            classificacoes = classificacaoDocumentoSearch.findByListCodigos(codigos);
+        }
+        if (classificacoes == null || classificacoes.isEmpty()) {
+            classificacoes = getUseableClassificacaoDocumento(isModelo);
+        }
+        return classificacoes;
+    }
+
 }
