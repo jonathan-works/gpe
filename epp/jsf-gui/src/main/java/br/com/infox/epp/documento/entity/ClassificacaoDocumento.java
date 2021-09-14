@@ -34,15 +34,20 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
+import br.com.infox.epp.documento.type.LocalizacaoAssinaturaEletronicaDocumentoEnum;
+import br.com.infox.epp.documento.type.OrientacaoAssinaturaEletronicaDocumentoEnum;
 import br.com.infox.epp.documento.type.PosicaoTextoAssinaturaDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = ClassificacaoDocumento.TABLE_NAME)
@@ -117,6 +122,21 @@ public class ClassificacaoDocumento implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = COL_ID_TIPO_MODELO_DOCUMENTO, nullable = false)
     private TipoModeloDocumento tipoModeloDocumento;
+
+    @Getter @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_posicao_img_assin_eletr")
+    private LocalizacaoAssinaturaEletronicaDocumentoEnum localizacaoAssinaturaEletronicaDocumentoEnum;
+
+    @Getter @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_orientacao_img_assin_eletr")
+    private OrientacaoAssinaturaEletronicaDocumentoEnum orientacaoAssinaturaEletronicaDocumentoEnum;
+
+    @Getter @Setter
+    @Column(name = "nr_pagina_img_assin_eletr")
+    @Min(1)
+    private Integer paginaExibicaoAssinaturaEletronica;
 
     public ClassificacaoDocumento() {
         visibilidade = VisibilidadeEnum.A;
