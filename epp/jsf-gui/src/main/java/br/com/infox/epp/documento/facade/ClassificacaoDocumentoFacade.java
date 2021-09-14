@@ -15,6 +15,8 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.ClassificacaoDocumentoSearch;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
+import br.com.infox.epp.documento.type.LocalizacaoAssinaturaEletronicaDocumentoEnum;
+import br.com.infox.epp.documento.type.OrientacaoAssinaturaEletronicaDocumentoEnum;
 import br.com.infox.epp.documento.type.PosicaoTextoAssinaturaDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
@@ -50,6 +52,14 @@ public class ClassificacaoDocumentoFacade {
 
     public PosicaoTextoAssinaturaDocumentoEnum[] getPosicaoTextoAssinaturaDocumentoEnumValues() {
         return PosicaoTextoAssinaturaDocumentoEnum.values();
+    }
+
+    public OrientacaoAssinaturaEletronicaDocumentoEnum[] getOrientacaoAssinaturaEletronicaDocumentoEnum() {
+        return OrientacaoAssinaturaEletronicaDocumentoEnum.values();
+    }
+
+    public LocalizacaoAssinaturaEletronicaDocumentoEnum[] getLocalizacaoAssinaturaEletronicaDocumentoEnum() {
+        return LocalizacaoAssinaturaEletronicaDocumentoEnum.values();
     }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo) {
