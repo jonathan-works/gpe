@@ -7,6 +7,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
 	xmlns:infox="http://www.infox.com.br/jsf">
 	
 	<s:div id="painelProcessos" rendered="#{painelUsuarioController.showPainelProcessosComum}"
@@ -56,6 +57,90 @@
 								value="#{consultaProcessoList.categoria}" showLabelSelecione="true"
 								inNewLine="true" items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
 						</a:outputPanel>
+                        
+                        
+                        <h:panelGroup
+                            rendered="#{not empty consultaProcessoList.fluxoBean}"
+                         >
+                         <wi:field
+                            id="filtroVariaveisProcesso"
+                            label="Variável do Processo"
+                         >
+                             <h:selectOneMenu
+                                id="filtroVariaveisProcessoInput"
+                                value="#{consultaProcessoList.idTipoFiltroVariavelProcesso}"
+                                onchange="showLoading()"
+                             >
+                                <p:ajax
+                                    listener="#{consultaProcessoList.onChangeTipoFiltroVariavelProcesso}"
+                                    process="@this"
+                                    partialSubmit="true"
+                                    oncomplete="hideLoading()"
+                                    update="filtroVariaveisProcesso @(.valorFiltroVariaveisProcessoContainer)"
+                                >
+                                </p:ajax>
+                                <f:selectItem
+                                    noSelectionOption="true"
+                                    itemValue="#{null}"
+                                    itemLabel="#{messages['crud.select.select']}"
+                                />
+                                <f:selectItems
+                                    value="#{consultaProcessoList.filtrosVariaveisProcesso}"
+                                    var="fvp"
+                                    itemValue="#{fvp.value}"
+                                />
+                             </h:selectOneMenu>
+                         </wi:field>
+                         <p:outputPanel
+                            styleClass="valorFiltroVariaveisProcessoContainer"
+                         >
+                         <h:panelGroup rendered="#{not empty consultaProcessoList.idTipoFiltroVariavelProcesso}">
+                            <c:if test="#{consultaProcessoList.filtroVariavelSelecionado.filtroTexto}">
+                            <wi:field
+                                id="valorFiltroVariaveisProcesso"
+                                label="Valor da Variável do Processo"
+                            >
+                                <h:inputText
+                                    id="valorFiltroVariaveisProcessoInput"
+                                    value="#{consultaProcessoList.valorFiltroVariavelProcesso}"
+                                />
+                            </wi:field>
+                            </c:if>
+                            <c:if test="#{consultaProcessoList.filtroVariavelSelecionado.filtroData}">
+                            <wi:inputDataPeriodo
+                                label="#{infoxMessages['Valor da Variável do Processo']}"
+                                id="valorFiltroVariaveisProcessoPeriodo"
+                                valueDateFrom="#{consultaProcessoList.valorFiltroVariavelProcesso}"
+                                valueDateTo="#{consultaProcessoList.valorFiltroVariavelProcessoComplemento}"
+                                validatePastDateFrom="true"
+                                validatePastDateTo="true"
+                            />
+                            </c:if>
+                            <c:if test="#{consultaProcessoList.filtroVariavelSelecionado.filtroBoleano}">
+                            <wi:selectBooleanRadio
+                                label="#{infoxMessages['Valor da Variável do Processo']}"
+                                id="valorFiltroVariaveisProcessoBoleano"
+                                value="#{consultaProcessoList.valorFiltroVariavelProcesso}"
+                            />
+                            </c:if>
+                            <c:if test="#{consultaProcessoList.filtroVariavelSelecionado.filtroInteiro}">
+                            <wi:inputNumber
+                                id="valorFiltroVariaveisProcessoInteirio"
+                                label="#{infoxMessages['Valor da Variável do Processo']}"
+                                value="#{consultaProcessoList.valorFiltroVariavelProcesso}"
+                            />
+                            </c:if>
+                            <c:if test="#{consultaProcessoList.filtroVariavelSelecionado.filtroNumerico}">
+                            <wi:inputMoney
+                                id="valorFiltroVariaveisProcessoNumerico"
+                                label="#{infoxMessages['Valor da Variável do Processo']}"
+                                value="#{consultaProcessoList.valorFiltroVariavelProcesso}"
+                            />
+                            </c:if>
+                         </h:panelGroup>
+                         </p:outputPanel>
+                         </h:panelGroup>
+                        
 						
 						<ui:include src="/Painel/filtroExtra.xhtml" />
 					</wi:searchForm>

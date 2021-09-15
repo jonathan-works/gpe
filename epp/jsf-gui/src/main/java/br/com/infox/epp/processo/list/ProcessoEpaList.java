@@ -68,6 +68,7 @@ import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.gov.mt.cuiaba.pmc.gdprev.ParticipanteProcessoConsulta;
 import br.gov.mt.cuiaba.pmc.gdprev.ParticipanteProcessoConsulta_;
+import lombok.Getter;
 
 @Named
 @ViewScoped
@@ -116,8 +117,15 @@ public class ProcessoEpaList extends EntityList<Processo> {
     private TaskInstanceSearch taskInstanceSearch;
     @Inject
     private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
+    @Inject
+    private FiltroVariavelProcessoSearch filtroVariavelProcessoSearch;
 
     protected FiltrosBeanList filtros = new FiltrosBeanList();
+
+    @Getter
+    private List<FiltroVariavelProcessoVO> filtrosVariaveisProcesso;
+    @Getter
+    private FiltroVariavelProcessoVO filtroVariavelSelecionado;
 
     @Override
     @PostConstruct
@@ -129,6 +137,14 @@ public class ProcessoEpaList extends EntityList<Processo> {
             onSelectFluxo();
         }
         consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
+    }
+
+    private void initFiltrosFluxo() {
+        if(filtros != null && filtros.getFluxo() != null) {
+            this.filtrosVariaveisProcesso = filtroVariavelProcessoSearch.getFiltros(filtros.getFluxo().getIdFluxo());
+        } else {
+            this.filtrosVariaveisProcesso = Collections.emptyList();
+        }
     }
 
     @Override
@@ -147,19 +163,49 @@ public class ProcessoEpaList extends EntityList<Processo> {
         addSearchField("nomeRequerente", SearchCriteria.CONTENDO, R16);
     }
 
+
+    @Override
+    public List<Processo> getResultList() {
+        setEjbql(getDefaultEjbql());
+        return super.getResultList();
+    }
+
     @Override
     public void newInstance() {
     	filtros.setFluxo(null);
     	onSelectFluxo();
     }
 
+    public void onChangeTipoFiltroVariavelProcesso() {
+        this.filtroVariavelSelecionado = null;
+        getFiltros().setValorFiltroVariavelProcesso(null);
+        getFiltros().setValorFiltroVariavelProcessoComplemento(null);
+        if(getFiltros().getIdTipoFiltroVariavelProcesso() != null) {
+            for (FiltroVariavelProcessoVO filtroVariavelProcessoVO : filtrosVariaveisProcesso) {
+                if(getFiltros().getIdTipoFiltroVariavelProcesso().equals(filtroVariavelProcessoVO.getValue())) {
+                    filtroVariavelSelecionado = filtroVariavelProcessoVO;
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     protected String getDefaultEjbql() {
+        String resultado = DEFAULT_EJBQL;
         PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
         if (pessoaFisica != null && Identity.instance().hasRole(Parametros.PAPEL_USUARIO_EXTERNO.getValue())) {
-            return DEFAULT_EJBQL + String.format(FILTRO_PARTICIPANTE_PROCESSO, pessoaFisica.getIdPessoa());
+            resultado = resultado + String.format(FILTRO_PARTICIPANTE_PROCESSO, pessoaFisica.getIdPessoa());
         }
-        return DEFAULT_EJBQL;
+
+        resultado = filtroVariavelProcessoSearch.getHqlFiltroVariavelProcesso(
+            resultado
+            ,getFiltros().getIdTipoFiltroVariavelProcesso()
+            ,getFiltros().getValorFiltroVariavelProcesso()
+            ,getFiltros().getValorFiltroVariavelProcessoComplemento()
+        );
+
+        return resultado;
     }
 
     @Override
@@ -197,6 +243,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
         filtros.clear();
         consultaProcessoDynamicColumnsController.setFluxo(filtros.getFluxo());
         setEntity(new Processo());
+        initFiltrosFluxo();
     }
 
 	public void search() {

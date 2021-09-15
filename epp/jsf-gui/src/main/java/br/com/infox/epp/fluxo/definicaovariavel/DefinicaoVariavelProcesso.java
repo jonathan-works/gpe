@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,10 +21,12 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "tb_definicao_variavel_processo", uniqueConstraints = { 
-	@UniqueConstraint(columnNames = {"nm_variavel", "id_fluxo"}) 
+@Table(name = "tb_definicao_variavel_processo", uniqueConstraints = {
+	@UniqueConstraint(columnNames = {"nm_variavel", "id_fluxo"})
 })
 public class DefinicaoVariavelProcesso implements Serializable {
 
@@ -53,10 +57,15 @@ public class DefinicaoVariavelProcesso implements Serializable {
     @Column(name = "vl_padrao", length = LengthConstants.DESCRICAO_GRANDE)
     private String valorPadrao;
 
+    @Column(name = "tp_pesquisa")
+    @Getter @Setter
+    @Enumerated(EnumType.STRING)
+    private TipoPesquisaVariavelProcessoEnum tipoPesquisaProcesso;
+
     @Version
     @Column(name = "nr_version", nullable = false)
     private Long version = 0L;
-    
+
     public Long getId() {
         return id;
     }
@@ -88,7 +97,7 @@ public class DefinicaoVariavelProcesso implements Serializable {
     public void setFluxo(Fluxo fluxo) {
         this.fluxo = fluxo;
     }
-	
+
     public String getValorPadrao() {
 		return valorPadrao;
 	}
@@ -100,11 +109,11 @@ public class DefinicaoVariavelProcesso implements Serializable {
 	public Long getVersion() {
 		return version;
 	}
-	
+
 	public void setVersion(Long version) {
 		this.version = version;
 	}
-	
+
 	@Override
     public int hashCode() {
         final int prime = 31;

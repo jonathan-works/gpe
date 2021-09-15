@@ -26,6 +26,7 @@
             </a:commandLink>
         </legend>
         
+            <p:outputPanel styleClass="meuDataSourceContainer">
 	        <p:dataList id="meuDataSource" var="itemLista" type="none" value="#{definicaoVariavelProcessoAction2.variaveis}" styleClass="ifx-data-list ifx-data-list--flexbox" >
 	            <p:outputPanel id="painelDrag">
 	                <div class="item-variavel--flex">
@@ -51,6 +52,7 @@
 	             </p:outputPanel>
 	             <p:draggable for="painelDrag" revert="true" cursor="grab" scope="arrastarNovaVariavel" />
 	        </p:dataList>
+            </p:outputPanel>
 	</fieldset>
 
 	<fieldset style="margin-top: 20px;">
@@ -118,20 +120,46 @@
 			label="#{infoxMessages['definicaoVariavelProcesso.label']}" required="true" />
 		<wi:inputTextarea id="valorPadrao" value="#{definicaoVariavelProcessoAction2.variavel.valorPadrao}"
 			label="Valor" />
+        <p:outputPanel
+            styleClass="utilizarNaPesquisarContainer"
+        >
+        <wi:field
+            id="tipoFiltroPesquisa"
+            label="Tipo do filtro para pesquisa"
+        >
+            <h:selectOneMenu
+                id="tipoFiltroPesquisaInput"
+                value="#{definicaoVariavelProcessoAction2.variavel.tipoPesquisaProcesso}"
+            >
+                <f:selectItem noSelectionOption="true" itemLabel="Nenhum"/>
+                <f:selectItems
+                    value="#{definicaoVariavelProcessoAction2.tiposPesquisaVariavelProcesso}"
+                />
+            </h:selectOneMenu>
+        </wi:field>
+        </p:outputPanel>
 
 		<div />
-		<a:commandButton value="#{infoxMessages['crud.persist']}" action="#{definicaoVariavelProcessoAction2.persist}"
-			render="pageBodyDialogMessage meuDataSource @form" limitRender="true" styleClass="buttons"
-			oncomplete="closeIfPersistOk()" rendered="#{empty definicaoVariavelProcessoAction2.variavel.id}" />
+		<p:commandButton value="#{infoxMessages['crud.persist']}"
+            action="#{definicaoVariavelProcessoAction2.persist}"
+			update="pageBodyDialogMessage @(.meuDataSourceContainer) @form"
+            styleClass="buttons"
+            onclick="showLoading()"
+            oncomplete="closeIfPersistOk(args)"
+            process="@form" partialSubmit="true"
+			rendered="#{empty definicaoVariavelProcessoAction2.variavel.id}" />
 			
-		<a:commandButton value="#{infoxMessages['crud.update']}" action="#{definicaoVariavelProcessoAction2.update}"
-            render="pageBodyDialogMessage meuDataSource"
-            limitRender="true" styleClass="buttons" oncomplete="closeIfPersistOk()" rendered="#{not empty definicaoVariavelProcessoAction2.variavel.id}" />
+		<p:commandButton value="#{infoxMessages['crud.update']}" action="#{definicaoVariavelProcessoAction2.update}"
+            update="pageBodyDialogMessage @(.meuDataSourceContainer) @form"
+            onclick="showLoading()"
+            oncomplete="closeIfPersistOk(args)"
+            process="@form" partialSubmit="true" styleClass="buttons" rendered="#{not empty definicaoVariavelProcessoAction2.variavel.id}" />
 		<script>
-           function closeIfPersistOk() {
-               if (!#{facesContext.validationFailed}) {
+           function closeIfPersistOk(args) {
+               if ((!args || !args.erro) &amp;&amp; !#{facesContext.validationFailed}) {
                    #{rich:component('formDefinicaoVariavelModal')}.hide();
                }
+               hideLoading();
            }
        </script>
 	</h:form>
