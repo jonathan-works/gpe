@@ -476,6 +476,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
                     iniciarProcessoParticipanteVO.setNome(servidorContribuinteVO.getNomeCompleto());
                     mapServidorContribuinteVO.put(iniciarProcessoParticipanteVO.getId(), servidorContribuinteVO);
                 } else if (tipoPessoaParticipante.equals(TipoPessoaEnum.A)) {
+                    iniciarProcessoParticipanteVO.setSelectable(false);
                     iniciarProcessoParticipanteVO.setNome(anonimoVO.getNomeDefaultIfNull());
                     iniciarProcessoParticipanteVO.setTelefone(anonimoVO.getTelefone());
                 } else if (tipoPessoaParticipante.equals(TipoPessoaEnum.J)) {

@@ -54,6 +54,7 @@
       highlightedClass="#{folderSelectable ? '' : 'folderHighlighted'}"
       selectedClass="#{folderSelectable ? '' : 'folderSelected'}"
       type="folder"
+      style="#{cantSelect ? 'pointer-events: none;' : ''}"
       iconExpanded="#{empty icon ? tree.iconFolder : icon}"
       iconLeaf="#{empty iconLeaf ? tree.iconLeaf : iconLeaf}">
       <div>
@@ -77,6 +78,7 @@
     <rich:treeNode
       type="leaf"
       nodeClass=""
+      style="#{cantSelect ? 'pointer-events: none;' : ''}"
       iconCollapsed="#{tree.iconLeaf}"
       iconExpanded="#{tree.iconLeaf}"
       iconLeaf="#{tree.iconLeaf}">
