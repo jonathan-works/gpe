@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                             <p:outputPanel id="divCaptcha">
-	                            <p:outputPanel rendered="#{loginView.mostrarCaptcha}" styleClass="field-block">
+	                            <p:outputPanel rendered="#{loginView.mostrarCaptcha and apiControleAcesso eq 'GOOGLE'}" styleClass="field-block">
 	                                <div class="field">
 	                                    <p:captcha id="captcha" label="Captcha" language="pt_BR"
 	                                        validatorMessage="#{infoxMessages['captcha.incorreto']}"

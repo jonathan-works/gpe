@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="nextValueForSqParametro" value="nextval('sq_tb_parametro')" dbms="postgresql" />
+    <property name="nextValueForSqParametro" value="sq_tb_parametro.nextval" dbms="oracle" />
+    <property name="nextValueForSqParametro" value="next value for sq_tb_parametro" dbms="mssql" />
+
+    <changeSet author="gabriel" id="1" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="apiControleAcesso" />
+            <column name="ds_variavel" value="parametro.apiControleAcesso.descricao" />
+            <column name="vl_variavel" value="GOOGLE" />
+            <column name="in_sistema" valueBoolean="false" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

@@ -20,6 +20,7 @@ import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.ModeloPasta_;
+import br.com.infox.epp.security.ControleAcessoEnum;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.parametro.ParametroDefinition.Precedencia;
 
@@ -108,6 +109,9 @@ public class EppParametroProvider implements ParametroProvider {
         create(NOME_GRUPO_SISTEMA, "tituloModeloEmailMudancaSenhaComLogin", ModeloDocumento_.tituloModeloDocumento,
                 ModeloDocumento_.tituloModeloDocumento).addFilter(isTrue(ModeloDocumento_.ativo));
         create(NOME_GRUPO_SISTEMA, Parametros.CODIGO_UF_SISTEMA.getLabel(), FieldType.STRING);
+
+        ParametroDefinition<Object> controleAcessoEnum = create(NOME_GRUPO_SISTEMA, "apiControleAcesso", FieldType.CHECKBOX_ENUM);
+        controleAcessoEnum.setEnumValues(ControleAcessoEnum.values());
     }
 
     public <T> ParametroDefinition<T> create(String grupo, String nome, SingularAttribute<T, ?> keyAttribute,
