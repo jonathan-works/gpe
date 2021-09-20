@@ -110,7 +110,7 @@ public class EppParametroProvider implements ParametroProvider {
                 ModeloDocumento_.tituloModeloDocumento).addFilter(isTrue(ModeloDocumento_.ativo));
         create(NOME_GRUPO_SISTEMA, Parametros.CODIGO_UF_SISTEMA.getLabel(), FieldType.STRING);
 
-        ParametroDefinition<Object> controleAcessoEnum = create(NOME_GRUPO_SISTEMA, "apiControleAcesso", FieldType.CHECKBOX_ENUM);
+        ParametroDefinition<Object> controleAcessoEnum = create(NOME_GRUPO_SISTEMA, "apiControleAcesso", FieldType.SELECT_ONE_ENUM);
         controleAcessoEnum.setEnumValues(ControleAcessoEnum.values());
     }
 

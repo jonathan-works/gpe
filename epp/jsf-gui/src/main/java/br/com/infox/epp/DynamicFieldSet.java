@@ -22,6 +22,7 @@ import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.component.html.HtmlSelectManyCheckbox;
 import javax.faces.component.html.HtmlSelectOneMenu;
+import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
@@ -123,12 +124,16 @@ public class DynamicFieldSet extends UIComponentBase {
 
     private UIInput createInput(DynamicField formField) {
         switch (formField.getType()) {
+        case RADIO_ENUM:
+            return createRadioEnum(formField);
         case BOOLEAN:
             return createBooleanInput(formField);
         case DATE:
             return createDateInput(formField);
         case SELECT_ONE:
             return createSelectOneInput(formField);
+        case SELECT_ONE_ENUM:
+            return createSelectOneEnumInput(formField);
         case TEXT:
             return createTextInput(formField);
         case STRING:
@@ -147,6 +152,20 @@ public class DynamicFieldSet extends UIComponentBase {
 
     private String resolveInputStyleClass() {
         return STYLE_CLASS + " " + INPUT_STYLE_CLASS;
+    }
+
+    private UIInput createRadioEnum(DynamicField formField) {
+        HtmlSelectOneRadio menu = new HtmlSelectOneRadio();
+        menu.setTitle(formField.getTooltip());
+        menu.setStyleClass(resolveInputStyleClass());
+        for (Enum<? extends Displayable> enumConstant : formField.getEnumValues()) {
+            UISelectItem item = new UISelectItem();
+            item.setItemLabel(((Displayable) enumConstant).getLabel());
+            item.setItemValue(enumConstant);
+            menu.getChildren().add(item);
+        }
+        menu.setValue(formField.getValue());
+        return menu;
     }
 
     private UIInput createCheckboxEnum(DynamicField formField) {
@@ -180,6 +199,27 @@ public class DynamicFieldSet extends UIComponentBase {
         return menu;
     }
 
+    private UIInput createSelectOneEnumInput(DynamicField formField) {
+        HtmlSelectOneMenu menu = new HtmlSelectOneMenu();
+        menu.setTitle(formField.getTooltip());
+        menu.setStyleClass(resolveInputStyleClass());
+
+        menu.setValue(formField.getValue());
+
+        for (Enum<? extends Displayable> enumConstant : formField.getEnumValues()) {
+            UISelectItem item = new UISelectItem();
+            item.setItemLabel(((Displayable) enumConstant).getLabel());
+            item.setItemValue(enumConstant);
+            menu.getChildren().add(item);
+        }
+
+//        String expression = format("#'{'{0}[''{1}'']'.value}'", formField.getPath(), formField.getId());
+//        menu.setValueExpression("value", DynamicFieldSetUtil.createValueExpression(expression, String.class));
+
+
+        return menu;
+    }
+
     private UIInput createTextInput(DynamicField formField) {
         HtmlInputTextarea input = new HtmlInputTextarea();
         input.setStyleClass(resolveInputStyleClass());
@@ -187,7 +227,7 @@ public class DynamicFieldSet extends UIComponentBase {
         input.setReadonly(Boolean.TRUE.equals(formField.get("readonly")));
         return input;
     }
-    
+
     private UIInput createStringInput(DynamicField formField) {
         HtmlInputText input = new HtmlInputText();
         input.setStyleClass(resolveInputStyleClass());
@@ -228,7 +268,7 @@ public class DynamicFieldSet extends UIComponentBase {
         final String labelCssSelector = String.format(".%s",LABEL_STYLE_CLASS);
         final String fieldsetCssSelector = String.format("fieldset.%s", STYLE_CLASS);
         final String groupsCssSelector = fieldsetCssSelector + " " + String.format(".%s", GROUP_STYLE_CLASS);
-        
+
         writer.append("(function(){");
         writer.append("\"use strict\";");
         writer.append("var addToParentInOrder = function(fieldsArray, parentNode){");

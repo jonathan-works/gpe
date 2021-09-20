@@ -23,6 +23,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.type.Displayable;
 import br.com.infox.epp.DynamicField;
 import br.com.infox.epp.DynamicFieldAction;
+import br.com.infox.epp.FieldType;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.system.entity.Parametro;
@@ -94,7 +95,9 @@ public class ParametroView implements Serializable {
 
         if (parametro == null) {
             ff.setValue(null);
-        } else if (definicaoParametro.getEnumValues() == null) {
+        } else if (FieldType.RADIO_ENUM.equals(definicaoParametro.getTipo())
+                || FieldType.SELECT_ONE_ENUM.equals(definicaoParametro.getTipo())
+                || definicaoParametro.getEnumValues() == null) {
             ff.setValue(parametro.getValorVariavel());
         } else {
             Enum<? extends Displayable> enumValue = definicaoParametro.getEnumValues()[0];
@@ -147,7 +150,10 @@ public class ParametroView implements Serializable {
             }
             if (formField.getValue() == null) {
                 parametro.setValorVariavel(null);
-            } else if (formField.getEnumValues() == null) {
+            } else if (FieldType.RADIO_ENUM.equals(formField.getType())
+                || FieldType.SELECT_ONE_ENUM.equals(formField.getType())
+                || formField.getEnumValues() == null
+            ){
                 parametro.setValorVariavel(formField.getValue().toString());
             } else {
                 parametro.setValorVariavel(StringUtils.join((Object[]) formField.getValue(), ','));
