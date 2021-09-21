@@ -13,11 +13,14 @@ import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
 
+import br.com.infox.cdi.dao.Dao;
+import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.loglab.dto.ParticipanteProcessoLogLabDTO;
 import br.com.infox.epp.loglab.vo.EmpresaVO;
 import br.com.infox.epp.loglab.vo.ServidorContribuinteVO;
+import br.com.infox.epp.pessoa.entity.PessoaAnonima;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
@@ -34,6 +37,9 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
     private EmpresaSearch empresaSearch;
     @Inject
     private ServidorContribuinteSearch servidorContribuinteSearch;
+    @Inject
+    @GenericDao
+    private Dao<PessoaAnonima, Integer> pessoaAnonimaDao;
 
     public List<ParticipanteProcessoLogLabDTO> getListaParticipanteProcessoLoglabDTOByCodTipoParteAndIdProcesso(
             Integer idProcesso, String codTipoParte) {
@@ -42,8 +48,14 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
 
         List<ParticipanteProcessoLogLabDTO> listaDTO = new ArrayList<>();
         for (ParticipanteProcesso participante : listaParticipante) {
-            String codigo = participante.getPessoa().getCodigo();
-            if(codigo != null) {
+            if(TipoPessoaEnum.A.equals(participante.getPessoa().getTipoPessoa())) {
+                PessoaAnonima pessoaAnonima = pessoaAnonimaDao.findById(participante.getPessoa().getIdPessoa());
+                ParticipanteProcessoLogLabDTO dto = new ParticipanteProcessoLogLabDTO();
+                dto.setNome(pessoaAnonima.getNome());
+                dto.setTelefoneCelular(pessoaAnonima.getTelefone());
+                listaDTO.add(dto);
+            } else if(participante.getPessoa().getCodigo() != null){
+                String codigo = participante.getPessoa().getCodigo();
     			if (codigo.length() == 14) {
                     ParticipanteProcessoLogLabDTO dto = participanteDTOEmpresa(codigo);
                     if (StringUtils.isBlank(dto.getCnpj())) {
@@ -74,6 +86,9 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
         ServidorContribuinteVO servidorVO = servidorContribuinteSearch.getServidorByCPF(cpf);
         if (servidorVO != null) {
             participanteDTO.setNome(servidorVO.getNomeCompleto());
+            participanteDTO.setEmail(servidorVO.getEmail());
+            participanteDTO.setTelefoneFixo(servidorVO.getTelefone());
+            participanteDTO.setTelefoneCelular(servidorVO.getCelular());
             participanteDTO.setDataExercicio(servidorVO.getDataExercicio());
             participanteDTO.setDataPosse(servidorVO.getDataPosse());
             participanteDTO.setDataNomeacao(servidorVO.getDataNomeacao());
@@ -88,6 +103,9 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
         } else {
             ServidorContribuinteVO contribuinte = servidorContribuinteSearch.getContribuinteByCPF(cpf);
             if (contribuinte != null) {
+                participanteDTO.setEmail(contribuinte.getEmail());
+                participanteDTO.setTelefoneFixo(contribuinte.getTelefone());
+                participanteDTO.setTelefoneCelular(contribuinte.getCelular());
                 participanteDTO.setNome(contribuinte.getNomeCompleto());
                 participanteDTO.setCpf(CpfConverter.format(contribuinte.getCpf()));
             }
@@ -101,6 +119,9 @@ public class ParticipanteProcessoLoglabSearch extends PersistenceController {
         if (empresaVO == null) {
             return participanteDTO;
         }
+        participanteDTO.setEmail(empresaVO.getEmail());
+        participanteDTO.setTelefoneFixo(empresaVO.getTelefoneFixo());
+        participanteDTO.setTelefoneCelular(empresaVO.getTelefoneCelular());
         participanteDTO.setTipoPessoa(TipoPessoaEnum.J);
         participanteDTO.setNome(empresaVO.getRazaoSocial());
         participanteDTO.setNomeFantasia(empresaVO.getNomeFantasia());

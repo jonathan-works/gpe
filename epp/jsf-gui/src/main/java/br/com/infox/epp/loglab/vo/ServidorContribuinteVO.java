@@ -35,6 +35,7 @@ public class ServidorContribuinteVO {
     private String nomeMae;
     @NotNull
     private String email;
+    private String telefone;
     private String celular;
     private String codEstado;
     private String cidade;
@@ -90,7 +91,7 @@ public class ServidorContribuinteVO {
      * Construtor para Servidor
      */
     public ServidorContribuinteVO(Long id, Integer idPessoaFisica, String cpf, String nomeCompleto, Date dataNascimento,
-            String matricula, String nomeMae, String email, String celular, Date dataNomeacao, Date dataPosse,
+            String matricula, String nomeMae, String email, String celular, String telefone, Date dataNomeacao, Date dataPosse,
             Date dataExercicio, String situacao, String orgao, String localTrabalho, String subFolha, String jornada,
             String ocupacaoCarreira, String cargoCarreira, String ocupacaoComissao, String cargoComissao,
             String nomePai, String numeroRg, Date dataEmissaoRg, String orgaoEmissorRG) {
@@ -103,6 +104,7 @@ public class ServidorContribuinteVO {
         this.nomeMae = nomeMae;
         this.email = email;
         this.celular = celular;
+        this.telefone = telefone;
         this.dataNomeacao = dataNomeacao;
         this.dataPosse = dataPosse;
         this.dataExercicio = dataExercicio;
