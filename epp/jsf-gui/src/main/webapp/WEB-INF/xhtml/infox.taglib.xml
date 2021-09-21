@@ -488,6 +488,10 @@ version="2.0">
         <source>components/loglab/servidorContribuinteDialog.xhtml</source>
     </tag>
     <tag>
+        <tag-name>anonimaFields</tag-name>
+        <source>components/loglab/anonimaFields.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>servidorContribuinteFields</tag-name>
         <source>components/loglab/servidorContribuinteFields.xhtml</source>
     </tag>

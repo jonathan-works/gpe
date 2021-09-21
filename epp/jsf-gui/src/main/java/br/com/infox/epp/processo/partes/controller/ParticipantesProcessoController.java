@@ -21,6 +21,7 @@ import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
 import br.com.infox.epp.loglab.search.EmpresaSearch;
 import br.com.infox.epp.loglab.search.ServidorContribuinteSearch;
 import br.com.infox.epp.loglab.service.ParticipanteProcessoLoglabService;
+import br.com.infox.epp.loglab.vo.AnonimoVO;
 import br.com.infox.epp.loglab.vo.EmpresaVO;
 import br.com.infox.epp.loglab.vo.ParticipanteProcessoVO;
 import br.com.infox.epp.loglab.vo.PesquisaParticipanteVO;
@@ -95,10 +96,19 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
         }
     }
 
+    public void onChangeTipoParte() {
+        limparDadosParticipante();
+    }
+
     public void limparDadosParticipante() {
         participanteProcessoVO = new ParticipanteProcessoVO();
         if(getTipoPessoa() != null) {
             participanteProcessoVO.setTipoPessoa(getTipoPessoa());
+        }
+        if(TipoPessoaEnum.A.equals(participanteProcessoVO.getTipoPessoa())) {
+            AnonimoVO anonimoVO = new AnonimoVO();
+            anonimoVO.setTipoParticipante(TipoParticipanteEnum.ANON);
+            participanteProcessoVO.setAnonimoVO(anonimoVO);
         }
         participanteProcessoVO.setIdProcesso(getProcesso().getIdProcesso());
         empresaList = null;
@@ -185,6 +195,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
             return podeInativarPartesFisicas();
         } else if (TipoPessoaEnum.J.name().equals(tipoPessoa)) {
             return podeInativarPartesJuridicas();
+        } else if (TipoPessoaEnum.A.name().equals(tipoPessoa)) {
+            return securityUtil.checkPage(RECURSO_EXCLUIR);
         } else {
             return false;
         }
@@ -216,6 +228,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
             return podeAdicionarPartesFisicas();
         } else if (TipoPessoaEnum.J.name().equals(tipoPessoa)) {
             return podeAdicionarPartesJuridicas();
+        } else if (TipoPessoaEnum.A.name().equals(tipoPessoa)) {
+            return securityUtil.checkPage(RECURSO_ADICIONAR);
         } else {
             return false;
         }
@@ -244,7 +258,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     @Override
     @ExceptionHandled
     public void includeParticipanteProcesso() {
-        if(participanteProcessoVO.getServidorContribuinteVO() == null && participanteProcessoVO.getEmpresaVO() == null) {
+        if(participanteProcessoVO.getServidorContribuinteVO() == null && participanteProcessoVO.getEmpresaVO() == null
+                && participanteProcessoVO.getAnonimoVO() == null) {
             throw new BusinessException("É necessário inserir os dados de uma pessoa física ou jurídica");
         }
         ParticipanteProcesso participantePersist = participanteProcessoLoglabService.gravarParticipanteProcesso(participanteProcessoVO);

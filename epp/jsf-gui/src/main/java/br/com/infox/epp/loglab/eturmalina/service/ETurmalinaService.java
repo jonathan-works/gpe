@@ -39,7 +39,10 @@ public class ETurmalinaService implements Serializable{
         List<DadosServidorResponseBean> dadosResponseList = new ArrayList<>();
         if (StringUtil.isEmpty(dadosServidor.getCpf()) && !StringUtil.isEmpty(dadosServidor.getMatricula())) {
             WSIntegracaoRHGETDADOSSERVIDORMATRICULAResponse response = getServidorMatriculaResponse(dadosServidor);
-            dadosResponseList.add(emExercicio ? getServidorEmExercicio(response) : getServidor(response));
+            DadosServidorResponseBean dsrb = emExercicio ? getServidorEmExercicio(response) : getServidor(response);
+            if(dsrb != null) {
+                dadosResponseList.add(dsrb);
+            }
         } else {
             WSIntegracaoRHGETDADOSSERVIDORResponse response = getServidorResponse(dadosServidor);
             dadosResponseList.addAll(emExercicio ? getServidoresEmExercicio(response) : getServidores(response));

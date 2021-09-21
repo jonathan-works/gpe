@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="view" value="#{view}" />
+    <ui:param name="viewObject" value="#{viewObject}" />
+    <ui:param name="codEstadoList" value="#{codEstadoList}" />
+
+    <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+    <ui:param name="showPesquisa" value="#{empty showPesquisa ? true : showPesquisa}" />
+
+    <p:outputPanel
+        id="#{identificador}AnonimoPanel"
+        styleClass="#{identificador}"
+        rendered="#{rendered}"
+    >
+        <fieldset id="#{identificador}ContribuinteFieldset" style="margin-top: 1.5em;">
+            <legend class="name">#{infoxMessages['cadastroPessoaAnonima.label']}</legend>
+            <wi:field id="#{identificador}TipoParticipanteContribuinteOutput"
+                      label="#{infoxMessages['servidorContribuinte.tipoParticipante']}">
+                <p:outputLabel id="#{identificador}TipoParticipanteContribuinteOutputInput"
+                               value="#{viewObject.tipoParticipante.label}" />
+            </wi:field>
+
+
+            <wi:field id="#{identificador}NomeCompleto"
+                      label="#{infoxMessages['cadastroPessoaAnonima.nome']}">
+                <p:inputText id="#{identificador}NomeCompletoInput"
+                             size="30"
+                             maxlength="150"
+                             value="#{viewObject.nome}" />
+            </wi:field>
+            
+            <wi:field
+                id="#{identificador}Telefone"
+                label="#{infoxMessages['cadastroPessoaAnonima.telefone']}"
+            >
+                <p:inputText
+                    id="#{identificador}TelefoneInput"
+                    size="25"
+                    maxlength="15"
+                    value="#{viewObject.telefone}"
+                />
+            </wi:field>
+
+        </fieldset>
+
+        <ui:insert />
+    </p:outputPanel>
+</ui:composition>

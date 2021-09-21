@@ -18,6 +18,7 @@ import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
+import br.com.infox.epp.pessoa.manager.PessoaAnonimaService;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaService;
@@ -53,7 +54,8 @@ public class ParticipanteProcessoLoglabService extends PersistenceController {
     private PessoaJuridicaManager pessoaJuridicaManager;
     @Inject
     private MeioContatoManager meioContatoManager;
-
+    @Inject
+    private PessoaAnonimaService pessoaAnonimaService;
 
     public void persistenciaIniciarProcessoView(Processo processo,
             List<MetadadoProcesso> metadados, List<ParticipanteProcesso> participantes,
@@ -77,7 +79,7 @@ public class ParticipanteProcessoLoglabService extends PersistenceController {
         ParticipanteProcesso participanteProcesso = participanteProcessoFromParticipanteProcessoVO(participanteProcessoVO);
         participanteProcesso.setTipoParte(tipoParte);
         participanteProcesso.setProcesso(processo);
-        if (participanteProcessoVO.getTipoPessoa() == TipoPessoaEnum.F) {
+        if (TipoPessoaEnum.F.equals(participanteProcessoVO.getTipoPessoa())) {
             PessoaFisica pessoaFisica = servidorContribuinteService.convertPessoaFisicaFromServidorContribuinteVO(participanteProcessoVO.getServidorContribuinteVO());
             if(pessoaFisica.getIdPessoa() == null) {
                 pessoaFisicaManager.persist(pessoaFisica);
@@ -86,7 +88,9 @@ public class ParticipanteProcessoLoglabService extends PersistenceController {
             }
             includeMeioContato(pessoaFisica, participanteProcessoVO.getServidorContribuinteVO().getEmail());
             participanteProcesso.setPessoa(pessoaFisica);
-        } else {
+        } else if (TipoPessoaEnum.A.equals(participanteProcessoVO.getTipoPessoa())) {
+            participanteProcesso.setPessoa(pessoaAnonimaService.insert(participanteProcessoVO.getAnonimoVO()));
+        } else if (TipoPessoaEnum.J.equals(participanteProcessoVO.getTipoPessoa())) {
             PessoaJuridica pessoaJuridica = empresaService.convertPessoaJuridicaFromServidorContribuinteVO(participanteProcessoVO.getEmpresaVO());
             if(pessoaJuridica.getIdPessoa() == null) {
                 pessoaJuridicaManager.persist(pessoaJuridica);
@@ -99,14 +103,13 @@ public class ParticipanteProcessoLoglabService extends PersistenceController {
         participanteProcesso = participanteProcessoManager.persist(participanteProcesso);
         processoManager.update(processo);
 
-        if (participanteProcessoVO.getTipoPessoa() == TipoPessoaEnum.F) {
+        if (TipoPessoaEnum.F.equals(participanteProcessoVO.getTipoPessoa())) {
             servidorContribuinteService.gravar(participanteProcessoVO.getServidorContribuinteVO());
-        } else {
+        } else if (TipoPessoaEnum.J.equals(participanteProcessoVO.getTipoPessoa())) {
             empresaService.gravar(participanteProcessoVO.getEmpresaVO());
         }
 
         return participanteProcesso;
-
     }
 
     private void validaExistenciaParticipante(ParticipanteProcessoVO participanteProcessoVO, Processo processo, TipoParte tipo){
@@ -117,10 +120,12 @@ public class ParticipanteProcessoLoglabService extends PersistenceController {
         if (pai != null && pai.getPessoa().getIdPessoa().equals(participanteProcessoVO.getIdPessoa())) {
             throw new BusinessException("Participante não pode ser filho dele mesmo");
         }
-        Pessoa pessoa = pessoaService.getByCodigo(participanteProcessoVO.getCodigoPessoa(), participanteProcessoVO.getTipoPessoa());
-        boolean existe = participanteProcessoManager.existeParticipanteByPessoaProcessoPaiTipoLock(pessoa, processo, pai, tipo);
-        if (existe) {
-            throw new BusinessException("Participante já cadastrado");
+        if(!TipoPessoaEnum.A.equals(participanteProcessoVO.getTipoPessoa())) {
+            Pessoa pessoa = pessoaService.getByCodigo(participanteProcessoVO.getCodigoPessoa(), participanteProcessoVO.getTipoPessoa());
+            boolean existe = participanteProcessoManager.existeParticipanteByPessoaProcessoPaiTipoLock(pessoa, processo, pai, tipo);
+            if (existe) {
+                throw new BusinessException("Participante já cadastrado");
+            }
         }
     }
 

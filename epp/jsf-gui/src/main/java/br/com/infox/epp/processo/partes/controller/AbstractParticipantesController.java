@@ -115,7 +115,7 @@ public abstract class AbstractParticipantesController implements Serializable {
     }
 
     public TipoPessoaEnum[] getTipoPessoaValues(){
-        return TipoPessoaEnum.values();
+        return TipoPessoaEnum.values(getProcesso().getNaturezaCategoriaFluxo().getFluxo().getPermiteParteAnonima());
     }
 
     public boolean podeAdicionarAlgumTipoDeParte() {

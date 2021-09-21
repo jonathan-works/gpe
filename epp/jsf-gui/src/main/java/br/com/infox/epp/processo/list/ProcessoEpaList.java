@@ -96,6 +96,12 @@ public class ProcessoEpaList extends EntityList<Processo> {
             + "where ppc.participanteProcesso.processo = o and ppc.pessoaFisica.cpf = #{processoEpaList.filtros.cpf}) ";
     private static final String R15 = " exists (select 1 from ParticipanteProcessoConsulta ppc "
             + "where ppc.participanteProcesso.processo = o and ppc.participanteProcesso.pessoa.idPessoa = #{processoEpaList.filtros.requerente.idPessoa}) ";
+    private static final String R16 = " exists (select 1 from ParticipanteProcessoConsulta ppc "
+            + "left join ppc.participanteProcesso pp "
+            + "left join pp.pessoa p "
+            + "where pp.processo = o "
+            + "and (lower(p.nome) like concat('%', lower(#{processoEpaList.filtros.nomeRequerente}), '%')"
+            + ")) ";
 
     private static final String FILTRO_PARTICIPANTE_PROCESSO = "and exists (select 1 from ParticipanteProcesso pp "
             + "where pp.processo = o and pp.pessoa.idPessoa = %d ) " ;
@@ -138,7 +144,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
         addSearchField("categoria", SearchCriteria.IGUAL, R7);
         addSearchField("statusProcesso", SearchCriteria.IGUAL, R11);
         addSearchField("cpf", SearchCriteria.IGUAL, R14);
-        addSearchField("requerente", SearchCriteria.IGUAL, R15);
+        addSearchField("nomeRequerente", SearchCriteria.CONTENDO, R16);
     }
 
     @Override
@@ -194,7 +200,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
     }
 
 	public void search() {
-		if (filtros.getFluxo() == null && (!Strings.isNullOrEmpty(filtros.getNumeroProcesso()) || !Strings.isNullOrEmpty(filtros.getCpf()) || !ObjectUtil.isEmpty(filtros.getRequerente()))) {
+		if (filtros.getFluxo() == null && (!Strings.isNullOrEmpty(filtros.getNumeroProcesso()) || !Strings.isNullOrEmpty(filtros.getCpf()) || !ObjectUtil.isEmpty(filtros.getNomeRequerente()))) {
 			List<Processo> results = getResultList();
 			if (!results.isEmpty()) {
 				consultaProcessoDynamicColumnsController.setFluxo(results.get(0).getNaturezaCategoriaFluxo().getFluxo());

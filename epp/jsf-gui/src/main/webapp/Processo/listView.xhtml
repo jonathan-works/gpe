@@ -106,7 +106,17 @@
                     selection="#{iniciarProcessoView.naturezaCategoriaFluxoItem}" rowKey="#{row.id}" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
                     responsive="true" rows="10" paginator="true" paginatorAlwaysVisible="false">
 
-                    <p:column selectionMode="single" style="width:16px; text-align:center"/>
+                    <p:ajax
+                        event="rowSelectRadio"
+                        listener="#{iniciarProcessoView.onChangeNaturezaCategoriaFluxoItem}"
+                        process="@this"
+                        partialSubmit="true"
+                        onstart="showLoading()"
+                        oncomplete="hideLoading()"
+                        update="@(.participanteListContainer)"
+                    />
+                    
+                    <p:column selectionMode="single" style="width:16px; text-align:center"  />
 
                     <p:column headerText="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}">
                         <h:outputText value="#{row.naturezaCategoriaFluxo.fluxo}" />
@@ -125,8 +135,10 @@
                     </p:column>
                 </p:dataTable>
 
+                <p:outputPanel styleClass="participanteListContainer">
                 <p:dataTable id="participanteList" value="#{iniciarProcessoView.participanteProcessoList}"
                     var="row" emptyMessage="Sem participantes."
+                    rendered="#{not empty iniciarProcessoView.naturezaCategoriaFluxoItem}"
                     headerText="#{infoxMessages['participanteProcesso.participantes']}" responsive="true" style="margin-top: 1.5em;">
 
                     <p:column style="width:30px; text-align:center" >
@@ -175,12 +187,14 @@
                 <div style="margin-top:1em;">
                     <p:commandButton id="buttonIniciarProcesso" value="#{infoxMessages['processo.iniciarBtn']}"
                         action="#{iniciarProcessoView.iniciar}" onclick="infox.showLoading();" styleClass="buttons"
+                        disabled="#{empty iniciarProcessoView.naturezaCategoriaFluxoItem}"
                         oncomplete="if(args &amp;&amp; args.erro){infox.hideLoading()}"
                         update="@this :pageBodyDialogMessage"
                         process="@form:natCatProcessoList @this"
                         partialSubmit="true"
                     />
                 </div>
+                </p:outputPanel>
 
             </h:form>
         </fieldset>
@@ -198,12 +212,24 @@
             <h:form id="novoParticipanteFormDialog"
                     styleClass="novoParticipanteFormDialog">
                 <i:selectOneRadio id="radioTipoPessoa"	label="#{infoxMessages['pessoa.tipoPessoa']}"
-                       items="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa.values()}"
+                       items="#{iniciarProcessoView.tiposPesssoa}"
+                       onchange="showLoading()"
+                       oncomplete="hideLoading()"
                        value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa}"
                        ajax="true" listener="#{iniciarProcessoView.onChangeTipoPessoa}" itemLabel="#{item.label}"
                        render="@form" style="margin-top: 0.8em;"/>
 
                 <p:outputPanel id="loadedByParticipante">
+                    <wi:anonimaFields
+                        identificador="participanteAnonimo"
+                        rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'A'}"
+                        view="#{iniciarProcessoView}"
+                        viewObject="#{iniciarProcessoView.anonimoVO}"
+                        listDialog="servidorContribuinteFormDialog"
+                        searchObject="#{iniciarProcessoView.pesquisaParticipanteVO}"
+                        codEstadoList="#{iniciarProcessoView.getListCodEstado()}">
+                    </wi:anonimaFields>
+                    
                     <wi:servidorContribuinteFields
                         identificador="servContrParticipante"
                         rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}"

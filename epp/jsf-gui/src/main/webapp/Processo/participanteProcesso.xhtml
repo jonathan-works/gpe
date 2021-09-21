@@ -20,13 +20,23 @@
                     label="#{infoxMessages['pessoa.tipoPessoa']}" required="true"
                     items="#{participantesProcessoController.tipoPessoaValues}"
                     value="#{participantesProcessoController.tipoPessoa}"
+                    onchangue="showLoading()"
                     rendered="#{participantesProcessoController.podeAdicionarAmbosTiposDeParte()}">
-                    <a:ajax event="change" render="loadedByParticipante" immediate="true"
-                        limitRender="true" execute="@this"/>
+                    <p:ajax event="change" update="@(.loadedByParticipanteContainer)" oncomplete="hideLoading()"
+                        listener="#{participantesProcessoController.onChangeTipoParte}"
+                        partialSubmit="true" process="@this"/>
                 </wi:selectOneRadioEnum>
 
+                <p:outputPanel styleClass="loadedByParticipanteContainer">
                 <p:outputPanel id="loadedByParticipante"
                         rendered="#{not empty participantesProcessoController.tipoPessoa}">
+                        
+                    <wi:anonimaFields
+                        identificador="participanteAnonimo"
+                        rendered="#{participantesProcessoController.tipoPessoa eq 'A'}"
+                        view="#{participantesProcessoController}"
+                        viewObject="#{participantesProcessoController.participanteProcessoVO.anonimoVO}"
+                    />
 
                     <wi:servidorContribuinteFields
                         identificador="servContrParticipante"
@@ -47,6 +57,7 @@
                         searchObject="#{participantesProcessoController.pesquisaParticipanteVO}"
                         codEstadoList="#{participantesProcessoController.getListCodEstado()}">
                     </wi:empresaFields>
+                </p:outputPanel>
                 </p:outputPanel>
 
 

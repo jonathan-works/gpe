@@ -4,7 +4,7 @@ import br.com.infox.core.type.Displayable;
 
 public enum TipoParticipanteEnum implements Displayable {
 
-    CO("Contribuinte"), SE("Servidor");
+    CO("Contribuinte"), SE("Servidor"), ANON("Anônimo");
 
     private String label;
 

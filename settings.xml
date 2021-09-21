@@ -16,7 +16,7 @@
         </repository>
         <repository>
           <id>primefaces</id>
-          <url>http://repository.primefaces.org/</url>
+          <url>https://repository.primefaces.org/</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -25,7 +25,7 @@
           </snapshots>
         </repository>
         <repository>
-          <id>local</id>
+          <id>local-fs</id>
           <url>file://${project.basedir}/repo</url>
           <releases>
             <enabled>true</enabled>

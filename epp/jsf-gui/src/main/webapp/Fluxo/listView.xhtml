@@ -176,6 +176,12 @@
                 value="#{fluxoCrudAction.instance.dataFimPublicacao}" />
             <wi:outputText id="statusPublicacao" rendered="#{fluxoCrudAction.managed}" label="#{infoxMessages['fluxo.publicado']}"
                 value="#{fluxoCrudAction.instance.publicado ? 'Sim' : 'Não'}" />
+                
+            <wi:selectBooleanRadio id="permiteParteAnonima"
+                label="#{infoxMessages['fluxo.permiteParteAnonima']}"
+                value="#{fluxoCrudAction.instance.permiteParteAnonima}">
+            </wi:selectBooleanRadio>
+                
             <ui:include src="atributos.xhtml" />
             <wi:selectSituacaoRadio
                 id="ativo"

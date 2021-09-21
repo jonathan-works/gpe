@@ -30,7 +30,7 @@
                     id="processoEpaList"
                     rowId="#{row.idProcesso}"
                     hideOrder="true"
-                    showGrid="#{not empty processoEpaList.filtros.fluxo or not empty processoEpaList.filtros.numeroProcesso or not empty processoEpaList.filtros.cpf or not empty processoEpaList.filtros.requerente}"
+                    showGrid="#{not empty processoEpaList.filtros.fluxo or not empty processoEpaList.filtros.numeroProcesso or not empty processoEpaList.filtros.cpf or not empty processoEpaList.filtros.nomeRequerente}"
                     inForm="true">
                     <ui:define name="searchForm">
                         <wi:searchForm
@@ -70,11 +70,15 @@
                             	selector=".inputCpf"
                             	mask="999.999.999-99"/>
                             <div />
-                            <i:autoComplete id="requerente" value="#{processoEpaList.filtros.requerente}" scrollHeight="300"
-                               completeMethod="#{processoEpaList.getRequerentes}" forceSelection="true" label="#{infoxMessages['consultaProcesso.requerente']}"
-                               var="item" itemLabel="#{item.nomeCompleto}" itemValue="#{item}" converter="br.com.infox.jsf.converter.autocomplete"
-                               minQueryLength="3" dropdown="true" />
-							<div />
+                            <wi:field
+                                id="requerente"
+                                label="#{infoxMessages['consultaProcesso.requerente']}"
+                            >
+                                <h:inputText
+                                    id="requerenteInput"
+                                    value="#{processoEpaList.filtros.nomeRequerente}"
+                                />
+                            </wi:field>
 							<i:autoComplete	id="natureza" value="#{processoEpaList.filtros.natureza}" scrollHeight="300"
 								completeMethod="#{processoEpaList.getNaturezas}" forceSelection="true" label="#{infoxMessages['consultaProcesso.natureza']}"
 								var="item" itemLabel="#{item.natureza}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
