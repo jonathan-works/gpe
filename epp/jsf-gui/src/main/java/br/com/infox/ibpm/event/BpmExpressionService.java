@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import javax.ejb.Stateless;
@@ -20,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.assertj.core.util.Strings;
+import org.jbpm.context.exe.VariableInstance;
 import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
@@ -44,6 +46,7 @@ import br.com.infox.epp.documento.publicacao.LocalPublicacao;
 import br.com.infox.epp.documento.publicacao.LocalPublicacaoSearch;
 import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
 import br.com.infox.epp.documento.publicacao.PublicacaoDocumentoService;
+import br.com.infox.epp.documento.service.TaskInstancePermitidaAssinarDocumentoService;
 import br.com.infox.epp.documento.type.ExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.entrega.EntregaResponsavelService;
@@ -155,6 +158,8 @@ public class BpmExpressionService {
     protected ModeloDocumentoFolhaRostoSearch modeloDocumentoFolhaRostoSearch;
     @Inject
     protected ModeloDocumentoFolhaTramitacoesSearch modeloDocumentoFolhaTramitacoesSearch;
+    @Inject
+    protected TaskInstancePermitidaAssinarDocumentoService taskInstancePermitidaAssinarDocumentoService;
 
     public String getConteudoFolhaDeRostoProcessoParaEditor() {
     	return modeloDocumentoFolhaRostoSearch.gerarTextoModeloDocumento(getProcessoAtual());
@@ -731,6 +736,47 @@ public class BpmExpressionService {
                     tooltip = "process.events.expression.formataDataComFormato.formato.tooltip", selectable = true)})
     public String formatarData(Date data, String formato) {
         return DateUtil.formatarData(data, formato);
+    }
+
+    @External(expressionType = ExpressionType.GERAL,
+            tooltip = "process.events.expression.liberarDocumentoParaAssinatura.tooltip"
+    )
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void liberarDocumentoParaAssinatura() {
+        ExecutionContext executionContext = getExecutionContext();
+
+        List<Integer> documentos = new ArrayList<>();
+        for (Entry<String, VariableInstance> entry : executionContext.getTaskInstance().getVariableInstances().entrySet()) {
+            String[] var = entry.getKey().split(":");
+            if("FILE".equals(var[0]) || "EDITOR".equals(var[0])) {
+                documentos.add((Integer) entry.getValue().getValue());
+            }
+        }
+        taskInstancePermitidaAssinarDocumentoService.inserir(executionContext.getTaskInstance().getId(), documentos);
+    }
+
+    @External(expressionType = ExpressionType.GERAL,
+            tooltip = "process.events.expression.removerDocumentoParaAssinatura.tooltip"
+            )
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removerDocumentoParaAssinatura() {
+        taskInstancePermitidaAssinarDocumentoService.remover(getExecutionContext().getTaskInstance().getId());
+    }
+
+    @External(expressionType = ExpressionType.GERAL,
+        tooltip = "process.events.expression.removerDocumentoParaAssinatura.tooltip",
+            value = {
+                @Parameter(
+                    selectable = true,
+                    defaultValue="idDocumento",
+                    label = "idDocumento",
+                    tooltip = "process.events.expression.removerDocumentoParaAssinatura.idDocumento.tooltip"
+                )
+            }
+        )
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removerDocumentoParaAssinatura(Integer idDocumento) {
+        taskInstancePermitidaAssinarDocumentoService.remover(getExecutionContext().getTaskInstance().getId(), idDocumento);
     }
 
     @External(tooltip = "Retorna a senha de acesso ao processo atual", expressionType = ExpressionType.GERAL)
