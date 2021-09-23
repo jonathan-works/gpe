@@ -46,6 +46,60 @@
           </h:form>
         </h:panelGroup>
 
+        <p:outputPanel styleClass="assinaturaEletronicaPanel">
+            <fieldset>
+                <LEGEND>#{infoxMessages['assinaturaEletronica.legend']}</LEGEND>
+
+                <p:outputPanel rendered="#{detalheUsuarioView.podeConfigurarAssinaturaEletronica()}">
+                    <h:form>
+                        <wi:field id="assinaturaEletronicaUpload" required="true"
+                            label="#{infoxMessages['assinaturaEletronica.upload']}"  rendered="#{empty detalheUsuarioView.linkAssinaturaEletronica}">
+                            <rich:fileUpload id="assinaturaEletronicaUploadInput" execute="@this"
+                                status=":status" limitRender="true" required="true"
+                                fileUploadListener="#{detalheUsuarioView.uploadAssinaturaEletronica}"
+                                addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+                                clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+                                clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+                                doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
+                                uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+                                sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+                                maxFilesQuantity="1" listHeight="50px"
+                                immediateUpload="true" noDuplicate="true"
+                                acceptedTypes="jpg, png"
+                                ontyperejected="alert('Extensão inválida');"
+                                onclear="limpaUploadAssinaturaEletronica();" />
+                            <p:remoteCommand name="limpaUploadAssinaturaEletronica" process="@this" update="@(.assinaturaEletronicaPanel)"
+                                actionListener="#{detalheUsuarioView.limpaUploadAssinaturaEletronica()}"
+                                onstart="infox.showLoading();"
+                                oncomplete="infox.hideLoading();" />
+                        </wi:field>
+
+                        <p:outputPanel layout="inline" rendered="#{not empty detalheUsuarioView.linkAssinaturaEletronica}">
+                            <img
+                                src="#{detalheUsuarioView.linkAssinaturaEletronica}" width="300px" height="130px" />
+                        </p:outputPanel>
+
+
+                        <div>
+                            <p:commandButton action="#{detalheUsuarioView.salvarAssinaturaEletronica}"
+                              onclick="infox.showLoading()" rendered="#{empty detalheUsuarioView.linkAssinaturaEletronica}"
+                              oncomplete="infox.hideLoading()" value="#{infoxMessages['assinaturaEletronica.gravar']}"
+                              update="@(.assinaturaEletronicaPanel) :pageBodyDialogMessage"
+                              styleClass="buttons buttons-primary" />
+                            <p:commandButton action="#{detalheUsuarioView.removerAssinaturaEletronica}"
+                              onstart="if (!confirm('#{infoxMessages['assinaturaEletronica.substituir.confirm']}')) return false; infox.showLoading();" rendered="#{not empty detalheUsuarioView.linkAssinaturaEletronica}"
+                              oncomplete="infox.hideLoading();" value="#{infoxMessages['assinaturaEletronica.substituir']}"
+                              update="@(.assinaturaEletronicaPanel) :pageBodyDialogMessage"
+                              styleClass="buttons buttons-primary" />
+                        </div>
+                    </h:form>
+                </p:outputPanel>
+                <p:outputPanel rendered="#{not detalheUsuarioView.podeConfigurarAssinaturaEletronica()}">
+                    <h:outputText value="#{infoxMessages['assinaturaEletronica.naoPodeExibir']}"></h:outputText>
+                </p:outputPanel>
+            </fieldset>
+        </p:outputPanel>
+
         <h:panelGroup
           rendered="#{detalheUsuarioView.podeExibirTermoAdesao}">
           <div>
