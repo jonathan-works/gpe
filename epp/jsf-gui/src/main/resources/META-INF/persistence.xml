@@ -46,6 +46,7 @@
 
   <persistence-unit name="EPABinPersistenceUnit" transaction-type="JTA">
     <provider>org.hibernate.ejb.HibernatePersistenceImpl</provider>
+    <class>br.com.infox.epp.assinaturaeletronica.AssinaturaEletronicaBin</class>
     <class>br.com.infox.epp.certificadoeletronico.entity.CertificadoEletronicoBin</class>
     <class>br.com.infox.epp.layout.entity.Binario</class>
     <class>br.com.infox.epp.documento.entity.DocumentoBinario</class>
