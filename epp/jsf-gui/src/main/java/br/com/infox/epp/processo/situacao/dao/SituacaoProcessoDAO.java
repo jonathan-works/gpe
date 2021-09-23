@@ -64,7 +64,7 @@ import br.com.infox.ibpm.type.PooledActorType;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class SituacaoProcessoDAO extends PersistenceController {
-	
+
 	public List<FluxoBean> getFluxoList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRootFilter) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<FluxoBean> cq = cb.createQuery(FluxoBean.class);
@@ -73,40 +73,40 @@ public class SituacaoProcessoDAO extends PersistenceController {
         Root<Processo> processo = cq.from(Processo.class);
         Root<Fluxo> fluxo = cq.from(Fluxo.class);
         Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
-        Join<ProcessInstance, ProcessDefinition> processDefinition = processInstance.join("processDefinition", JoinType.INNER);
-        Join<Processo, Processo> processoRoot = processo.join(Processo_.processoRoot, JoinType.INNER);
-        
+        Join<Processo, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+
         Selection<String> nomeFluxo =  fluxo.get(Fluxo_.fluxo);
         Selection<String> idFluxo =  fluxo.get(Fluxo_.idFluxo).as(String.class);
         Selection<Long> qtProcessos =  cb.countDistinct(taskInstance.<Long>get("id"));
         Selection<String> expedida = cb.literal(String.valueOf(comunicacoesExpedidas));
         Selection<String> tipo = tipoProcesso == null ? cb.literal("null") : cb.literal(tipoProcesso.value());
         Selection<String> numeroProcessoRoot = numeroProcessoRootFilter == null ? cb.literal("") : cb.literal(numeroProcessoRootFilter);
-        
+
         cq.groupBy(fluxo.get(Fluxo_.fluxo), fluxo.get(Fluxo_.idFluxo));
         cq.orderBy(cb.asc(fluxo.get(Fluxo_.fluxo)));
-        
+
         cq.select(cb.construct(FluxoBean.class, idFluxo, nomeFluxo, qtProcessos, tipo, expedida, numeroProcessoRoot));
-        
+
         cq.where(
                 cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
                 cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
                 cb.equal(variableInstance.<Long>get("value"), processo.get(Processo_.idProcesso)),
-                cb.equal(processDefinition.get("name"), fluxo.get(Fluxo_.fluxo)),
+                cb.equal(fluxo.get(Fluxo_.idFluxo), natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo).get(Fluxo_.idFluxo)),
                 cb.isNull(processInstance.<Date>get("end")),
                 cb.isTrue(taskInstance.<Boolean>get("isOpen")),
                 cb.isFalse(taskInstance.<Boolean>get("isSuspended"))
         );
-        
+
         appendSigiloProcessoFilter(cq, processo);
         appendTipoProcessoFilter(cq, tipoProcesso, processo);
         appendTipoProcessoFilters(cq, tipoProcesso, comunicacoesExpedidas, taskInstance, processo);
         if (!StringUtil.isEmpty(numeroProcessoRootFilter)) {
+            Join<Processo, Processo> processoRoot = processo.join(Processo_.processoRoot, JoinType.INNER);
             appendNumeroProcessoRootFilter(cq, numeroProcessoRootFilter, processoRoot);
         }
         return getEntityManager().createQuery(cq).getResultList();
 	}
-	
+
 	public List<TaskBean> getTaskIntances(FluxoBean fluxoBean) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<TaskBean> cq = cb.createQuery(TaskBean.class);
@@ -115,7 +115,6 @@ public class SituacaoProcessoDAO extends PersistenceController {
         Root<Processo> processo = cq.from(Processo.class);
         Root<Fluxo> fluxo = cq.from(Fluxo.class);
         Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
-        Join<ProcessInstance, ProcessDefinition> processDefinition = processInstance.join("processDefinition", JoinType.INNER);
         Join<Processo, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
         Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
         Join<Task, TaskNode> taskNode = task.join("taskNode", JoinType.INNER);
@@ -128,7 +127,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         Join<NaturezaCategoriaFluxo, Categoria> categoriaRoot = natCatFluxoRoot.join(NaturezaCategoriaFluxo_.categoria, JoinType.INNER);
         Join<Processo, PrioridadeProcesso> prioridadeProcesso = processo.join(Processo_.prioridadeProcesso, JoinType.LEFT);
         Join<Processo, Caixa> caixa = processo.join(Processo_.caixa, JoinType.LEFT);
-        
+
         Selection<String> idTaskInstance = taskInstance.<Long>get("id").as(String.class);
         Selection<String> taskName = task.<String>get("name");
         Selection<String> assignee = taskInstance.<String>get("assignee");
@@ -136,12 +135,10 @@ public class SituacaoProcessoDAO extends PersistenceController {
         Selection<String> taskNodeKey = taskNode.<String>get("key");
         Selection<String> nomeCaixa =  caixa.get(Caixa_.nomeCaixa);
         Selection<Integer> idCaixa =  caixa.get(Caixa_.idCaixa);
-        Selection<String> nomeFluxo =  fluxo.get(Fluxo_.fluxo);
-        Selection<Integer> idFluxo =  fluxo.get(Fluxo_.idFluxo);
-        Selection<String> nomeNatureza = natureza.get(Natureza_.natureza); 
-        Selection<String> nomeCategoria = categoria.get(Categoria_.categoria); 
+        Selection<String> nomeNatureza = natureza.get(Natureza_.natureza);
+        Selection<String> nomeCategoria = categoria.get(Categoria_.categoria);
         Selection<String> numeroProcessoRoot = processoRoot.get(Processo_.numeroProcesso);
-        Selection<String> nomeNaturezaProcessoRoot = naturezaRoot.get(Natureza_.natureza); 
+        Selection<String> nomeNaturezaProcessoRoot = naturezaRoot.get(Natureza_.natureza);
         Selection<String> nomeCategoriaProcessoRoot = categoriaRoot.get(Categoria_.categoria);
         Selection<String> nomeUsuarioSolicitante = usuarioSolicitante.get(UsuarioLogin_.nomeUsuario);
         Selection<Integer> idPrioridadeProcesso = prioridadeProcesso.get(PrioridadeProcesso_.idPrioridade);
@@ -151,14 +148,14 @@ public class SituacaoProcessoDAO extends PersistenceController {
         Selection<Integer> idProcesso = processo.get(Processo_.idProcesso);
         Selection<Integer> idProcessoRoot = processoRoot.get(Processo_.idProcesso);
         Selection<String> numeroProcesso = processo.get(Processo_.numeroProcesso);
-        
+
         cq.select(cb.construct(TaskBean.class, idTaskInstance, taskName, assignee, idProcessInstance, taskNodeKey,
-                idProcesso, nomeCaixa, idCaixa, nomeFluxo, idFluxo, nomeNatureza, nomeCategoria, numeroProcesso, idProcessoRoot,
+                idProcesso, nomeCaixa, idCaixa, nomeNatureza, nomeCategoria, numeroProcesso, idProcessoRoot,
                 numeroProcessoRoot, nomeUsuarioSolicitante, idPrioridadeProcesso, nomePrioridade, pesoPrioridade, dataInicio,
                 nomeNaturezaProcessoRoot, nomeCategoriaProcessoRoot));
 
         cq.where(
-                cb.equal(processDefinition.get("name"), fluxo.get(Fluxo_.fluxo)),
+                cb.equal(fluxo.get(Fluxo_.idFluxo), natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo).get(Fluxo_.idFluxo)),
                 cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
                 cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
                 cb.equal(variableInstance.<Long>get("value"), processo.get(Processo_.idProcesso)),
@@ -167,7 +164,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
                 cb.equal(fluxo.get(Fluxo_.idFluxo).as(String.class), cb.literal(fluxoBean.getProcessDefinitionId())),
                 cb.isFalse(taskInstance.<Boolean>get("isSuspended"))
         );
-        
+
         appendSigiloProcessoFilter(cq, processo);
         appendTipoProcessoFilter(cq, fluxoBean.getTipoProcesso(), processo);
         appendTipoProcessoFilters(cq, fluxoBean.getTipoProcesso(), fluxoBean.getExpedida(), taskInstance, processo);
@@ -175,6 +172,11 @@ public class SituacaoProcessoDAO extends PersistenceController {
             appendNumeroProcessoRootFilter(cq, fluxoBean.getNumeroProcessoRootFilter(), processoRoot);
         }
         List<TaskBean> resultList = getEntityManager().createQuery(cq).getResultList();
+        for(TaskBean taskBean : resultList) {
+            Fluxo fluxoTarefaAtual = getFluxoByIdProcessoAndIdTaskInstance(taskBean.getIdProcesso(), taskBean.getIdTaskInstance());
+            taskBean.setNomeFluxo(fluxoTarefaAtual.getFluxo());
+            taskBean.setIdFluxo(fluxoTarefaAtual.getIdFluxo());
+        }
         return resultList;
     }
 
@@ -183,8 +185,8 @@ public class SituacaoProcessoDAO extends PersistenceController {
         abstractQuery.where(cb.like(processoRoot.get(Processo_.numeroProcesso), cb.literal("%" + numeroProcesso + "%")),
                 abstractQuery.getRestriction());
     }
-    
-    public void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas, 
+
+    public void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas,
             From<?, TaskInstance> taskInstance, From<?, Processo> processo) {
         if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
             if (comunicacoesExpedidas != null && comunicacoesExpedidas) {
@@ -196,7 +198,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
             appendPooledActorFilter(abstractQuery, taskInstance);
         }
     }
-	
+
 	protected void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> existsSigiloProcesso = principalQuery.subquery(Integer.class);
@@ -206,40 +208,40 @@ public class SituacaoProcessoDAO extends PersistenceController {
         whereSigiloProcesso = cb.and(cb.equal(sigiloProcesso.get("ativo"), true), whereSigiloProcesso);
         whereSigiloProcesso = cb.and(cb.isTrue(sigiloProcesso.get(SigiloProcesso_.sigiloso)), whereSigiloProcesso);
         existsSigiloProcesso.where(whereSigiloProcesso);
-        
+
         Subquery<Integer> existsSigiloProcessoPermissao = principalQuery.subquery(Integer.class);
         Root<SigiloProcessoPermissao> sigiloProcessoPermissao = existsSigiloProcessoPermissao.from(SigiloProcessoPermissao.class);
         existsSigiloProcessoPermissao.select(cb.literal(1));
-        
+
         Subquery<Integer> subquery3 = existsSigiloProcessoPermissao.subquery(Integer.class);
         Root<SigiloProcesso> sigiloProcesso2 = subquery3.from(SigiloProcesso.class);
         subquery3.select(sigiloProcesso2.get(SigiloProcesso_.id).as(Integer.class));
         Predicate predicateSubquery3 = cb.equal(sigiloProcesso2.get(SigiloProcesso_.processo).get(Processo_.idProcesso), processo.get(Processo_.idProcesso));
         predicateSubquery3 = cb.and(cb.isTrue(sigiloProcesso2.get(SigiloProcesso_.ativo)) , predicateSubquery3);
         subquery3.where(predicateSubquery3);
-        
+
         Integer idUsuarioLogado = Authenticator.getUsuarioLogado().getIdUsuarioLogin();
         Predicate whereSigiloProcessoPermissao = sigiloProcessoPermissao.get(SigiloProcessoPermissao_.sigiloProcesso).get(SigiloProcesso_.id).in(subquery3);
         whereSigiloProcessoPermissao = cb.and(cb.equal(sigiloProcessoPermissao.get(SigiloProcessoPermissao_.ativo), Boolean.TRUE), whereSigiloProcessoPermissao);
         whereSigiloProcessoPermissao = cb.and(cb.equal(sigiloProcessoPermissao.get(SigiloProcessoPermissao_.usuario).get(UsuarioLogin_.idUsuarioLogin), idUsuarioLogado), whereSigiloProcessoPermissao);
         existsSigiloProcessoPermissao.where(whereSigiloProcessoPermissao);
-        
+
         Predicate predicate = principalQuery.getRestriction();
         predicate = cb.and(cb.or(cb.not(cb.exists(existsSigiloProcesso)), cb.exists(existsSigiloProcessoPermissao)), predicate);
         principalQuery.where(predicate);
     }
-	
+
 	protected void appendDestinoOrDestinatarioFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subqueryDestino = createSubqueryDestino(abstractQuery, processo);
         Subquery<Integer> subqueryPerfilDestino = createSubqueryPerfilDestino(abstractQuery, processo);
         Subquery<Integer> subqueryDestinatario = createSubqueryDestinatario(abstractQuery, processo);
         Predicate predicateQuery = abstractQuery.getRestriction();
-        predicateQuery = 
+        predicateQuery =
                 cb.and(
                         cb.or(
                                 cb.and(
-                                    cb.exists(subqueryDestino), 
+                                    cb.exists(subqueryDestino),
                                     cb.exists(subqueryPerfilDestino)
                                 ),
                                 cb.exists(subqueryDestinatario)
@@ -255,12 +257,12 @@ public class SituacaoProcessoDAO extends PersistenceController {
         Predicate predicate = abstractQuery.getRestriction();
         abstractQuery.where(
                 cb.and(
-                        cb.equal(processo.get(Processo_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao), 
+                        cb.equal(processo.get(Processo_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao),
                         predicate
                 )
         );
 	}
-	
+
 	private Subquery<Integer> createSubqueryPerfilDestino(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
@@ -295,8 +297,8 @@ public class SituacaoProcessoDAO extends PersistenceController {
         subquery.where(predicateSubquery);
 		return subquery;
 	}
-    
-    protected Subquery<Integer> createSubqueryDestinatario(AbstractQuery<?> abstractQuery,  From<?, Processo> processo) { 
+
+    protected Subquery<Integer> createSubqueryDestinatario(AbstractQuery<?> abstractQuery,  From<?, Processo> processo) {
         String metadadoDestinatario = EppMetadadoProvider.PESSOA_DESTINATARIO.getMetadadoType();
         PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
         Integer idPessoaFisica = pessoaFisica == null ? -1 : pessoaFisica.getIdPessoa();
@@ -310,7 +312,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         subquery.where(predicateSubquery);
         return subquery;
     }
-	
+
     protected void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
@@ -331,7 +333,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         }
         abstractQuery.where(predicate);
     }
-    
+
     protected void appendPooledActorFilter(AbstractQuery<?> abstractQuery, From<?, TaskInstance> taskInstance) {
         PerfilTemplate perfilTemplate = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate();
         String login = Authenticator.getUsuarioLogado().getLogin();
@@ -376,9 +378,9 @@ public class SituacaoProcessoDAO extends PersistenceController {
         Root<LongInstance> variableInstance = cq.from(LongInstance.class);
         Root<Processo> processo = cq.from(Processo.class);
         Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
-        
+
         cq.select(cb.count(taskInstance));
-        
+
         cq.where(
                 cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
                 cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
@@ -388,13 +390,13 @@ public class SituacaoProcessoDAO extends PersistenceController {
                 cb.isFalse(taskInstance.<Boolean>get("isSuspended")),
                 cb.equal(taskInstance.<Long>get("id"), cb.literal(idTaskInstance))
         );
-        
+
         appendSigiloProcessoFilter(cq, processo);
         appendTipoProcessoFilter(cq, tipoProcesso, processo);
         appendTipoProcessoFilters(cq, tipoProcesso, comunicacoesExpedidas, taskInstance, processo);
         TypedQuery<Long> query = getEntityManager().createQuery(cq);
         query.setHint("org.hibernate.cacheable", "true");
-        Long count = query.getSingleResult(); 
+        Long count = query.getSingleResult();
         return count > 0;
 	}
 
@@ -405,9 +407,9 @@ public class SituacaoProcessoDAO extends PersistenceController {
         Root<LongInstance> variableInstance = cq.from(LongInstance.class);
         Root<Processo> processo = cq.from(Processo.class);
         Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
-        
+
         cq.select(cb.count(taskInstance));
-        
+
         cq.where(
                 cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
                 cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
@@ -417,22 +419,39 @@ public class SituacaoProcessoDAO extends PersistenceController {
                 cb.isFalse(taskInstance.<Boolean>get("isSuspended")),
                 cb.equal(processo.get(Processo_.idProcesso), cb.literal(idProcesso))
         );
-        
+
         appendSigiloProcessoFilter(cq, processo);
         appendTipoProcessoFilter(cq, tipoProcesso, processo);
         appendTipoProcessoFilters(cq, tipoProcesso, comunicacoesExpedidas, taskInstance, processo);
         TypedQuery<Long> query = getEntityManager().createQuery(cq);
         query.setHint("org.hibernate.cacheable", "true");
-        Long count = query.getSingleResult(); 
+        Long count = query.getSingleResult();
         return count > 0;
 	}
-	
+
     public void appendMandatoryFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
 		appendSigiloProcessoFilter(abstractQuery, processo);
 		appendTipoProcessoFilter(abstractQuery, tipoProcesso, processo);
 	}
-	
-	
+
+    private Fluxo getFluxoByIdProcessoAndIdTaskInstance(Integer idProcesso, String idTaskInstance) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
+        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
+        Root<Fluxo> fluxo = cq.from(Fluxo.class);
+        Root<Processo> processo = cq.from(Processo.class);
+        Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
+        Join<ProcessInstance, ProcessDefinition> processDefinition = processInstance.join("processDefinition", JoinType.INNER);
+
+        cq.select(fluxo);
+        cq.where(
+           cb.equal(processo.get(Processo_.idProcesso), idProcesso),
+           cb.equal(taskInstance.<Long>get("id").as(String.class), idTaskInstance),
+           cb.equal(processDefinition.get("name"), fluxo.get(Fluxo_.fluxo))
+        );
+        return getEntityManager().createQuery(cq).getSingleResult();
+    }
+
 	protected Authenticator getAuthenticator() {
 	    return Authenticator.instance();
 	}

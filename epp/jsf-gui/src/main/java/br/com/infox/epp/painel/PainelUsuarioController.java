@@ -40,7 +40,7 @@ public class PainelUsuarioController implements Serializable {
 	public static final String NUMERO_PROCESSO_FILTERED = "numeroProcessoFiltered";
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Inject
 	private SituacaoProcessoManager situacaoProcessoManager;
 	@Inject
@@ -57,7 +57,7 @@ public class PainelUsuarioController implements Serializable {
 	protected ActionMessagesService actionMessagesService;
 	@Inject
 	private TaskInstanceManager taskInstanceManager;
-	
+
 	private FluxoBean selectedFluxo;
 	protected List<FluxoBean> fluxosDisponiveis;
 	private List<TipoProcesso> tipoProcessoDisponiveis;
@@ -74,22 +74,22 @@ public class PainelUsuarioController implements Serializable {
 		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
 	}
-	
+
 	private String getNumeroProcessoFromSession(){
 		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 		return (String) sessionMap.get(NUMERO_PROCESSO_FILTERED);
 	}
-	
+
 	public void changePerfil() throws IOException{
 		limparFiltros();
 		atualizarPainelProcessos();
 	}
-	
+
 	public void atualizarPainelProcessos() throws IOException {
 	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso());
 	    verificaHouveAlteracao(fluxosDisponiveisTemp);
 	}
-	
+
 	protected void verificaHouveAlteracao(List<? extends FluxoBean> fluxosDisponiveisTemp) throws IOException {
 	    ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 	    if (fluxosDisponiveisTemp.size() != getFluxosDisponiveis().size()) {
@@ -136,24 +136,24 @@ public class PainelUsuarioController implements Serializable {
 		consultaProcessoList.onSelectFluxo(getSelectedFluxo());
 		situacaoProcessoManager.loadTasks(getSelectedFluxo());
 	}
-	
+
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void atribuirTarefa(TaskBean taskBean) {
         taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
         taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
 	}
-	
+
 	@ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void liberarTarefa(TaskBean taskBean) {
 	    taskInstanceManager.removeUsuario(Long.valueOf(taskBean.getIdTaskInstance()));
         taskBean.setAssignee(null);
 
     }
-    
+
 	public void onSelectNode() {
 		consultaProcessoList.onSelectNode(getSelected());
     }
-	
+
 	public String getTaskNodeKey() {
 	    return getSelected().getId().toString();
 	}
@@ -169,13 +169,13 @@ public class PainelUsuarioController implements Serializable {
 			moverProcessosParaCaixa((List<TaskBean>) dragValue, caixa);
 		}
 	}
-	
+
 	private void moverProcessoParaCaixa(TaskBean taskBean, Caixa caixa) {
         caixaManager.moverProcessoParaCaixa(taskBean.getIdProcesso(), caixa);
         getSelected().moverParaCaixa(taskBean, caixa);
         painelTreeHandler.clearTree();
     }
-	
+
 	private void moverProcessosParaCaixa(List<TaskBean> taskBeans, Caixa caixa) {
 	    for (TaskBean taskBean : taskBeans) {
 	        caixaManager.moverProcessoParaCaixa(taskBean.getIdProcesso(), caixa);
@@ -183,7 +183,7 @@ public class PainelUsuarioController implements Serializable {
 	    }
 	    painelTreeHandler.clearTree();
 	}
-	
+
 	@ExceptionHandled(value = MethodType.REMOVE)
 	public void removerCaixa(PainelEntityNode painelEntityNode) {
         Integer idCaixa = (Integer) painelEntityNode.getEntity().getId();
@@ -192,7 +192,7 @@ public class PainelUsuarioController implements Serializable {
         taskDefinitionBean.removerCaixa(idCaixa);
         painelTreeHandler.clearTree();
     }
-	
+
 	@ExceptionHandled(value = MethodType.PERSIST)
 	public void adicionarCaixa(ActionEvent event) {
 	    String inputNomeCaixa = (String) event.getComponent().getAttributes().get("inputNomeCaixa");
@@ -211,7 +211,7 @@ public class PainelUsuarioController implements Serializable {
 		r.setParameter("id", getSelected().getId());
 		r.execute();
 	}
-	
+
 	public PanelDefinition getSelected() {
 		return painelTreeHandler.getSelected();
 	}
@@ -219,14 +219,14 @@ public class PainelUsuarioController implements Serializable {
 	public void refresh() {
 		painelTreeHandler.refresh();
 	}
-	
+
 	public void adicionarFiltroNumeroProcessoRoot(){
 		setSelectedFluxo(null);
 		painelTreeHandler.clearTree();
 		loadFluxosDisponiveis();
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(NUMERO_PROCESSO_FILTERED, getNumeroProcesso());
 	}
-	
+
 	public void limparFiltros(){
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove(NUMERO_PROCESSO_FILTERED);
 		init();
@@ -262,7 +262,7 @@ public class PainelUsuarioController implements Serializable {
 		FluxoBean fluxoBean = null;
 		if (idProcessDefinition != null) {
     		for (FluxoBean fluxoBeanDisponivel : getFluxosDisponiveis()) {
-                if (fluxoBeanDisponivel.getProcessDefinitionId().equals(idProcessDefinition) 
+                if (fluxoBeanDisponivel.getProcessDefinitionId().equals(idProcessDefinition)
                                 && fluxoBeanDisponivel.getExpedida().equals(expedida)){
                     fluxoBean = fluxoBeanDisponivel;
                     break;
@@ -272,11 +272,11 @@ public class PainelUsuarioController implements Serializable {
 		setSelectedFluxo(fluxoBean);
 		onSelectFluxo();
 	}
-	
+
 	public boolean canShowProcessoList() {
-	    return getSelected() != null;
+	    return getSelected() != null && getSelected() instanceof TaskDefinitionBean;
 	}
-	
+
 	public boolean hasRecursoPainelComunicacaoEletronica() {
 		return securityUtil.checkPage("/pages/Painel/Comunicacao/painel.seam");
 	}
@@ -284,11 +284,11 @@ public class PainelUsuarioController implements Serializable {
 	public boolean hasRecursoPainelComunicacaoNaoEletronica() {
 		return hasRecursoPainelComunicacaoEletronica() && hasRecursoPainelComunicacaoExpedida();
 	}
-	
+
 	public boolean hasRecursoPainelComunicacaoRecebida() {
 		return securityUtil.checkPage("/pages/Painel/comunicacoesRecebidas.seam");
 	}
-	
+
 	public boolean hasRecursoPainelComunicacaoExpedida() {
 		return securityUtil.checkPage("/pages/Painel/comunicacoesExpedidas.seam");
 	}
@@ -298,7 +298,7 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	public boolean isShowPainelProcessosComum() {
-		return getSelectedFluxo() != null && getSelectedFluxo().getTipoProcesso() == null && getSelectedFluxo().getProcessDefinitionId() != null 
+		return getSelectedFluxo() != null && getSelectedFluxo().getTipoProcesso() == null && getSelectedFluxo().getProcessDefinitionId() != null
 				&& !getSelectedFluxo().isBpmn20();
 	}
 
@@ -316,15 +316,15 @@ public class PainelUsuarioController implements Serializable {
 		return getSelectedFluxo() != null && TipoProcesso.DOCUMENTO.equals(getSelectedFluxo().getTipoProcesso()) && getSelectedFluxo().getProcessDefinitionId() != null
 				&& !getSelectedFluxo().isBpmn20();
 	}
-	
+
 	public boolean isShowTarefasTree() {
 		return getSelectedFluxo() != null;
 	}
-	
+
 	public boolean isShowFiltroInfo() {
 		return getNumeroProcesso() != null && !getNumeroProcesso().isEmpty();
 	}
-	
+
 	public List<TipoProcesso> getTipoProcessoDisponiveis() {
 		return tipoProcessoDisponiveis;
 	}
@@ -332,15 +332,15 @@ public class PainelUsuarioController implements Serializable {
 	public String getLocaleTitleKey() {
 	    return "painel.fluxos";
 	}
-	
+
 	public boolean isExibirColunasPadrao() {
 		return exibirColunasPadrao;
 	}
-	
+
 	public void setExibirColunasPadrao(boolean exibirColunasPadrao) {
 		this.exibirColunasPadrao = exibirColunasPadrao;
 	}
-	
+
 	public String getNumeroProcesso() {
 		return numeroProcesso;
 	}
@@ -348,7 +348,7 @@ public class PainelUsuarioController implements Serializable {
 	public void setNumeroProcesso(String numeroProcesso) {
 		this.numeroProcesso = numeroProcesso;
 	}
-	
+
 	public Integer getPollInterval() {
 		return pollInterval;
 	}
