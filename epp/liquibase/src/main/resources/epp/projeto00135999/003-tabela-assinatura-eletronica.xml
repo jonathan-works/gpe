@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet id="1" author="heliolima">
+        <createSequence
+            sequenceName="sq_assinatura_eletronica"
+            incrementBy="1"
+            minValue="1"
+            startValue="1"
+        />
+    </changeSet>
+    <changeSet id="2" author="heliolima">
+        <createTable tableName="tb_assinatura_eletronica">
+            <column name="id_assinatura_eletronica" type="bigint">
+                <constraints
+                    nullable="false"
+                    primaryKey="true"
+                    primaryKeyName="pk_assinatura_eletronica"/>
+            </column>
+            <column name="id_pessoa_fisica" type="bigint">
+                <constraints
+                    foreignKeyName="fk_assinatura_eletronica_01"
+                    referencedTableName="tb_pessoa_fisica"
+                    referencedColumnNames="id_pessoa_fisica"
+                    unique="true"
+                    uniqueConstraintName="uk_assinatura_eletronica_01"
+                    nullable="false"
+                />
+            </column>
+            <column name="ds_extensao" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nm_arquivo" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_content_type" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ds_uuid" type="uuid">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_assinatura_eletronica_02"/>
+            </column>
+            <column name="dt_inclusao" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

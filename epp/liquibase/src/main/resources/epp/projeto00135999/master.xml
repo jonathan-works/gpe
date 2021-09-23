@@ -6,5 +6,6 @@
 
     <include file="epp/projeto00135999/001-add-parametro-limitePaginaAssinaturaEletronica.xml" />
     <include file="epp/projeto00135999/002-AddColunasImagemAssinaturaEletronicaClassDocumento.xml" />
+    <include file="epp/projeto00135999/003-tabela-assinatura-eletronica.xml" />
 
 </databaseChangeLog>
