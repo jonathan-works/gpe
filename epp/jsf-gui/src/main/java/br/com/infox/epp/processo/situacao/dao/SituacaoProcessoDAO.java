@@ -59,6 +59,8 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao_;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso_;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.view.ViewSituacaoProcesso;
+import br.com.infox.epp.view.ViewSituacaoProcesso_;
 import br.com.infox.ibpm.type.PooledActorType;
 
 @Stateless
@@ -68,12 +70,13 @@ public class SituacaoProcessoDAO extends PersistenceController {
 	public List<FluxoBean> getFluxoList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRootFilter) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<FluxoBean> cq = cb.createQuery(FluxoBean.class);
-        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
-        Root<LongInstance> variableInstance = cq.from(LongInstance.class);
-        Root<Processo> processo = cq.from(Processo.class);
-        Root<Fluxo> fluxo = cq.from(Fluxo.class);
-        Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
-        Join<Processo, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+
+	    Root<ViewSituacaoProcesso> viewSituacaoProcesso = cq.from(ViewSituacaoProcesso.class);
+	    Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
+        Join<ViewSituacaoProcesso, ProcessInstance> processInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processInstance);
+        Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
+        Join<Processo, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = processo.join(Processo_.naturezaCategoriaFluxo);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
 
         Selection<String> nomeFluxo =  fluxo.get(Fluxo_.fluxo);
         Selection<String> idFluxo =  fluxo.get(Fluxo_.idFluxo).as(String.class);
@@ -88,10 +91,6 @@ public class SituacaoProcessoDAO extends PersistenceController {
         cq.select(cb.construct(FluxoBean.class, idFluxo, nomeFluxo, qtProcessos, tipo, expedida, numeroProcessoRoot));
 
         cq.where(
-                cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
-                cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
-                cb.equal(variableInstance.<Long>get("value"), processo.get(Processo_.idProcesso)),
-                cb.equal(fluxo.get(Fluxo_.idFluxo), natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo).get(Fluxo_.idFluxo)),
                 cb.isNull(processInstance.<Date>get("end")),
                 cb.isTrue(taskInstance.<Boolean>get("isOpen")),
                 cb.isFalse(taskInstance.<Boolean>get("isSuspended"))
@@ -110,23 +109,28 @@ public class SituacaoProcessoDAO extends PersistenceController {
 	public List<TaskBean> getTaskIntances(FluxoBean fluxoBean) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<TaskBean> cq = cb.createQuery(TaskBean.class);
-        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
-        Root<LongInstance> variableInstance = cq.from(LongInstance.class);
-        Root<Processo> processo = cq.from(Processo.class);
-        Root<Fluxo> fluxo = cq.from(Fluxo.class);
-        Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
-        Join<Processo, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+
+        Root<ViewSituacaoProcesso> viewSituacaoProcesso = cq.from(ViewSituacaoProcesso.class);
+
+        Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
+        Join<ViewSituacaoProcesso, ProcessInstance> processInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processInstance);
+        Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
+        Join<ViewSituacaoProcesso, Processo> processoRoot = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processoRoot);
+        Join<ViewSituacaoProcesso, UsuarioLogin> usuarioSolicitante = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioCadastro);
+        Join<ViewSituacaoProcesso, Caixa> caixa = viewSituacaoProcesso.join(ViewSituacaoProcesso_.caixa, JoinType.LEFT);
+        Join<ViewSituacaoProcesso, PrioridadeProcesso> prioridadeProcesso = viewSituacaoProcesso.join(ViewSituacaoProcesso_.prioridadeProcesso, JoinType.LEFT);
+
+        Join<ViewSituacaoProcesso, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.naturezaCategoriaFluxo);
+        Join<NaturezaCategoriaFluxo, Natureza> natureza = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.natureza);
+        Join<NaturezaCategoriaFluxo, Categoria> categoria = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.categoria);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
+
+        Join<ViewSituacaoProcesso, NaturezaCategoriaFluxo> naturezaCategoriaFluxoRoot = viewSituacaoProcesso.join(ViewSituacaoProcesso_.naturezaCategoriaFluxoRoot);
+        Join<NaturezaCategoriaFluxo, Natureza> naturezaRoot = naturezaCategoriaFluxoRoot.join(NaturezaCategoriaFluxo_.natureza);
+        Join<NaturezaCategoriaFluxo, Categoria> categoriaRoot = naturezaCategoriaFluxoRoot.join(NaturezaCategoriaFluxo_.categoria);
+
         Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
         Join<Task, TaskNode> taskNode = task.join("taskNode", JoinType.INNER);
-        Join<NaturezaCategoriaFluxo, Natureza> natureza = natCatFluxo.join(NaturezaCategoriaFluxo_.natureza, JoinType.INNER);
-        Join<NaturezaCategoriaFluxo, Categoria> categoria = natCatFluxo.join(NaturezaCategoriaFluxo_.categoria, JoinType.INNER);
-        Join<Processo, UsuarioLogin> usuarioSolicitante = processo.join(Processo_.usuarioCadastro, JoinType.INNER);
-        Join<Processo, Processo> processoRoot = processo.join(Processo_.processoRoot, JoinType.INNER);
-        Join<Processo, NaturezaCategoriaFluxo> natCatFluxoRoot = processoRoot.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-        Join<NaturezaCategoriaFluxo, Natureza> naturezaRoot = natCatFluxoRoot.join(NaturezaCategoriaFluxo_.natureza, JoinType.INNER);
-        Join<NaturezaCategoriaFluxo, Categoria> categoriaRoot = natCatFluxoRoot.join(NaturezaCategoriaFluxo_.categoria, JoinType.INNER);
-        Join<Processo, PrioridadeProcesso> prioridadeProcesso = processo.join(Processo_.prioridadeProcesso, JoinType.LEFT);
-        Join<Processo, Caixa> caixa = processo.join(Processo_.caixa, JoinType.LEFT);
 
         Selection<String> idTaskInstance = taskInstance.<Long>get("id").as(String.class);
         Selection<String> taskName = task.<String>get("name");
@@ -152,13 +156,9 @@ public class SituacaoProcessoDAO extends PersistenceController {
         cq.select(cb.construct(TaskBean.class, idTaskInstance, taskName, assignee, idProcessInstance, taskNodeKey,
                 idProcesso, nomeCaixa, idCaixa, nomeNatureza, nomeCategoria, numeroProcesso, idProcessoRoot,
                 numeroProcessoRoot, nomeUsuarioSolicitante, idPrioridadeProcesso, nomePrioridade, pesoPrioridade, dataInicio,
-                nomeNaturezaProcessoRoot, nomeCategoriaProcessoRoot));
+                nomeNaturezaProcessoRoot, nomeCategoriaProcessoRoot, viewSituacaoProcesso.get(ViewSituacaoProcesso_.temDocumentoParaAssinar)));
 
         cq.where(
-                cb.equal(fluxo.get(Fluxo_.idFluxo), natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo).get(Fluxo_.idFluxo)),
-                cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
-                cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
-                cb.equal(variableInstance.<Long>get("value"), processo.get(Processo_.idProcesso)),
                 cb.isNull(processInstance.<Date>get("end")),
                 cb.isTrue(taskInstance.<Boolean>get("isOpen")),
                 cb.equal(fluxo.get(Fluxo_.idFluxo).as(String.class), cb.literal(fluxoBean.getProcessDefinitionId())),
@@ -402,18 +402,16 @@ public class SituacaoProcessoDAO extends PersistenceController {
 
 	public boolean canAccessProcesso(Integer idProcesso, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
-        Root<LongInstance> variableInstance = cq.from(LongInstance.class);
-        Root<Processo> processo = cq.from(Processo.class);
-        Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
+
+	    CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<ViewSituacaoProcesso> viewSituacaoProcesso = cq.from(ViewSituacaoProcesso.class);
+        Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
+        Join<ViewSituacaoProcesso, ProcessInstance> processInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processInstance);
+        Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
 
         cq.select(cb.count(taskInstance));
 
         cq.where(
-                cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
-                cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
-                cb.equal(variableInstance.<Long>get("value"), processo.get(Processo_.idProcesso)),
                 cb.isNull(processInstance.<Date>get("end")),
                 cb.isTrue(taskInstance.<Boolean>get("isOpen")),
                 cb.isFalse(taskInstance.<Boolean>get("isSuspended")),

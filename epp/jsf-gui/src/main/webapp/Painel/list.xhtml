@@ -104,6 +104,55 @@
 
 		</div>
 
+	    <rich:popupPanel id="listaDocsParaAssinarPanel" width="550" height="250" onbeforeshow="infox.util.popupclear();" >
+            <f:facet name="header">
+            <h:outputText value="#{infoxMessages['taskInstanceDocumentoParaAssinanuta.title']}" />
+            </f:facet>
+            <f:facet name="controls">
+                <h:graphicImage
+                    styleClass="mp-close"
+                    value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+                    onmouseup="#{rich:component('listaDocsParaAssinarPanel')}.hide();"
+                />
+            </f:facet>
+            <p:outputPanel styleClass="listaDocsParaAssinarPanelContainer">
+            <h:form>
+                <p:dataTable
+                    var="lda"
+                    value="#{painelUsuarioController.listaDocumentosParaAssinar}"
+                    emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}" paginatorAlwaysVisible="false"
+                >
+                    <p:column headerText="#{infoxMessages['documentoProcesso.numeroDocumento']}">
+                        <p:commandLink
+                            process="@this"
+                            update="@this"
+                            action="#{jsfUtil.applyLastPhaseFlashAction}"
+                            onstart="infox.showLoading();"
+                            oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpenByIdDocumentoBin(lda.idDocumentoBin)}"
+                        >
+                            <h:outputText value="#{lda.numeroDocumento}" />
+                            <f:setPropertyActionListener value="#{lda.idDocumentoBin}" target="#{flash.idDocumentoBin}" />
+                            <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
+                        </p:commandLink>
+                    </p:column>
+                    <p:column headerText="#{infoxMessages['documentoProcesso.descricao']}">
+                        <h:outputText value="#{lda.descricao}" />
+                    </p:column>
+                    <p:column headerText="#{infoxMessages['processoDocumento.classificacaoDocumento']}">
+                        <h:outputText value="#{lda.classificacaoDocumento}" />
+                    </p:column>
+                    <p:column headerText="#{infoxMessages['processoDocumento.dataInclusao']}">
+                        <h:outputText
+                            value="#{lda.dataInclusao}">
+                            <s:convertDateTime
+                                pattern="dd/MM/yy" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            </p:outputPanel>
+        </rich:popupPanel>
+        
 	    <rich:popupPanel id="novaCaixaPanel" height="150" left="40" onbeforeshow="infox.util.popupclear();" >
 
 	      <f:facet name="header">
