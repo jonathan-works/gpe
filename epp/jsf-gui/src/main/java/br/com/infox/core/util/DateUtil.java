@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.enterprise.context.RequestScoped;
@@ -277,6 +278,32 @@ public class DateUtil {
         } catch (ParseException e) {
             return null;
         }
+    }
+
+    /**
+     * Converte intervalo entre duas datas para uma String em formato por extenso.
+     * @param dataIni, dataFim
+     * @return String no formato X anos(s), X mes(es) e X dia(s)
+     */
+    public static String formatarIntervaloDataPorExtenso(Date dataIni, Date dataFim) {
+        String msg = "0 ano(s), 0 mes(es) e 0 dia(s)";
+        GregorianCalendar gcIni = new GregorianCalendar();
+        gcIni.setTime(dataIni);
+
+        GregorianCalendar gcFim = new GregorianCalendar();
+        gcFim.setTime(dataFim);
+
+        long dif = gcFim.getTimeInMillis() - gcIni.getTimeInMillis();
+        if (dif > 0) {
+            GregorianCalendar gcDif = new GregorianCalendar();
+            gcDif.setTimeInMillis(dif);
+            long ano = gcFim.get(GregorianCalendar.YEAR) - gcIni.get(GregorianCalendar.YEAR);
+            long mes = gcDif.get(GregorianCalendar.MONTH);
+            long dia = gcDif.get(GregorianCalendar.DAY_OF_MONTH);
+            msg = ano + " ano(s), " + mes + " mes(es) e " + dia + " dia(s) ";
+        }
+
+        return msg;
     }
 
 }
