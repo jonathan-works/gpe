@@ -22,7 +22,8 @@
             selectionType="ajax"
             selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
             render="divPainelProcessosInterna, :pesquisaListForm"
-            var="node">
+            var="node"
+            style="padding-right: calc(26% - 28px);">
             <rich:treeModelAdaptor id="tarefaTreeModelAdaptor" nodes="#{painelTreeHandler.tarefasRoots}">
                 <rich:treeNode
                     id="taskNode"
@@ -92,7 +93,7 @@
             		iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
             		iconClass="tarefa-tree-icon"
             		labelClass="tarefa-tree-lbl"
-            		style="pointer-events: none;">
+            		style="pointer-events: none; color: #FFFFFF; padding-right: calc(26% - 18px); background-color: #{painelTreeHandler.getBackgroundColorSub()}">
             		<h:outputText value="SUB-PROCESSO - #{node.entity.name}"/>
             		<h:outputText rendered="#{node.entity.quantidade ne 0}" value=" (#{node.entity.quantidade})" />
             	</rich:treeNode>
