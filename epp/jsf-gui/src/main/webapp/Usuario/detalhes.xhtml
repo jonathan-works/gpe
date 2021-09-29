@@ -65,8 +65,9 @@
                                 sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
                                 maxFilesQuantity="1" listHeight="50px"
                                 immediateUpload="true" noDuplicate="true"
-                                acceptedTypes="jpg, png"
-                                ontyperejected="alert('Extensão inválida');"
+                                maxFileSize="2097152"
+                                acceptedTypes="jpg, png" onsizerejected="alert('#{infoxMessages['processoDocumento.sizeExceededLabel']}');"
+                                ontyperejected="alert('#{infoxMessages['assinaturaEletronica.extensaoInvalida']}');"
                                 onclear="limpaUploadAssinaturaEletronica();" />
                             <p:remoteCommand name="limpaUploadAssinaturaEletronica" process="@this" update="@(.assinaturaEletronicaPanel)"
                                 actionListener="#{detalheUsuarioView.limpaUploadAssinaturaEletronica()}"
@@ -75,8 +76,11 @@
                         </wi:field>
 
                         <p:outputPanel layout="inline" rendered="#{not empty detalheUsuarioView.linkAssinaturaEletronica}">
-                            <img
-                                src="#{detalheUsuarioView.linkAssinaturaEletronica}" width="300px" height="130px" />
+                            <wi:field id="preview"
+                                label="#{infoxMessages['assinaturaEletronica.preview']}">
+                                <img id="previewOutput"
+                                    src="#{detalheUsuarioView.linkAssinaturaEletronica}" width="250px" height="125px" />
+                            </wi:field>
                         </p:outputPanel>
 
 

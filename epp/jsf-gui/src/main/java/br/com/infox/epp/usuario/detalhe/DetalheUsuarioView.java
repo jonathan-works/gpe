@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.TermoAdesaoService;
 import br.com.infox.epp.access.api.Authenticator;
@@ -26,6 +27,7 @@ import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.certificadoeletronico.CertificadoEletronicoService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -124,12 +126,17 @@ public class DetalheUsuarioView implements Serializable {
             assinaturaEletronicaNovoDTO.setContentType(uploadedFile.getContentType());
             assinaturaEletronicaNovoDTO.setImagem(ArrayUtil.copyOf(uploadedFile.getData()));
         } finally {
-            limpaUploadAssinaturaEletronica();
+            limparUploadFile();
         }
     }
 
     @ExceptionHandled
     public void limpaUploadAssinaturaEletronica() {
+        assinaturaEletronicaNovoDTO = null;
+        limparUploadFile();
+    }
+
+    private void limparUploadFile() {
         if(uploadedFile != null) {
             try {
                 uploadedFile.delete();
@@ -139,13 +146,18 @@ public class DetalheUsuarioView implements Serializable {
         }
     }
 
-    @ExceptionHandled(successMessage = "#{infoxMessages['assinaturaEletronica.assinaturaSalva']}")
+    @ExceptionHandled(successMessage = "#{infoxMessages['assinaturaEletronica.imagemSalva']}")
     public void salvarAssinaturaEletronica() {
+
+        if(assinaturaEletronicaNovoDTO == null) {
+            throw new BusinessException(InfoxMessages.getInstance().get("assinaturaEletronica.obrigatorio"));
+        }
+
         assinaturaEletronicaAtualDTO = assinaturaEletronicaService.salvar(assinaturaEletronicaNovoDTO);
         assinaturaEletronicaNovoDTO = null;
     }
 
-    @ExceptionHandled(successMessage = "#{infoxMessages['assinaturaEletronica.assinaturaRemovida']}")
+    @ExceptionHandled(successMessage = "#{infoxMessages['assinaturaEletronica.imagemRemovida']}")
     public void removerAssinaturaEletronica() {
         assinaturaEletronicaService.remove(assinaturaEletronicaAtualDTO);
         assinaturaEletronicaAtualDTO = null;
