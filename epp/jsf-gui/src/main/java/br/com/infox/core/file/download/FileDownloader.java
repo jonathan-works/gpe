@@ -52,12 +52,12 @@ import br.com.infox.seam.path.PathResolver;
 @Scope(ScopeType.STATELESS)
 public class FileDownloader implements Serializable {
 
-	private static final String EXTENSAO_PADRAO = "pdf";
-	
+    private static final String EXTENSAO_PADRAO = "pdf";
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "fileDownloader";
     private static final LogProvider LOG = Logging.getLogProvider(FileDownloader.class);
-    
+
     @Inject
     private DocumentoBinarioManager documentoBinarioManager;
     @Inject
@@ -72,7 +72,7 @@ public class FileDownloader implements Serializable {
     private PathResolver pathResolver;
     @Inject
     private DocumentoDAO documentoDAO;
-    
+
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)
             return;
@@ -102,7 +102,7 @@ public class FileDownloader implements Serializable {
             FacesMessages.instance().add(String.format("Erro ao descarregar o arquivo: %s", downloadResource.getFileName()));
         }
     }
-    
+
     public static void download(byte[] data, String contentType, String fileName) {
         if (data == null) {
             return;
@@ -121,7 +121,7 @@ public class FileDownloader implements Serializable {
                     + fileName);
         }
     }
-    
+
     public static HttpServletResponse prepareDownloadResponse(String contentType, String fileName) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
@@ -142,7 +142,7 @@ public class FileDownloader implements Serializable {
     }
 
     public boolean isPdf(DocumentoBin documentoBin){
-    	String extensao = getExtensao(documentoBin);
+        String extensao = getExtensao(documentoBin);
         return "pdf".equalsIgnoreCase(extensao);
     }
 
@@ -153,11 +153,11 @@ public class FileDownloader implements Serializable {
     public String getContentType(Documento documento){
         return getContentType(documento.getDocumentoBin());
     }
-    
+
     private String getExtensao(DocumentoBin documentoBin) {
-    	return StringUtils.isEmpty(documentoBin.getExtensao()) ? EXTENSAO_PADRAO : documentoBin.getExtensao();
+        return StringUtils.isEmpty(documentoBin.getExtensao()) ? EXTENSAO_PADRAO : documentoBin.getExtensao();
     }
-    
+
     public String getContentType(DocumentoBin documentoBin){
         return String.format("application/%s", getExtensao(documentoBin));
     }
@@ -165,15 +165,15 @@ public class FileDownloader implements Serializable {
     public void downloadDocumento(DocumentoBin documentoBin, boolean gerarMargens) throws IOException {
         if (documentoBin == null)
             return;
-        downloadDocumento(getData(documentoBin, gerarMargens), getContentType(documentoBin), extractNomeArquivo(documentoBin));    	
+        downloadDocumento(getData(documentoBin, gerarMargens), getContentType(documentoBin), extractNomeArquivo(documentoBin));
     }
-    
+
     public void downloadDocumentoOriginal(DocumentoBin documentoBin) throws IOException {
-    	downloadDocumento(documentoBin, false);
+        downloadDocumento(documentoBin, false);
     }
-    
+
     public void downloadDocumento(DocumentoBin documentoBin) throws IOException {
-    	downloadDocumento(documentoBin, true);
+        downloadDocumento(documentoBin, true);
     }
 
     public void downloadDocumento(Documento documento) throws IOException {
@@ -181,24 +181,24 @@ public class FileDownloader implements Serializable {
             return;
         downloadDocumento(documento.getDocumentoBin());
     }
-    
-    public static interface Exporter {
-    	public void export(OutputStream outputStream) throws IOException;
-    }
-    
-    public static class ByteArrayExporter implements Exporter {
-    	
-    	private byte[] data;
 
-    	public ByteArrayExporter(byte[] data) {
-    		this.data = data;
-		}
-    	
-		@Override
-		public void export(OutputStream outputStream) throws IOException {
-			outputStream.write(data);
-		}
-    	
+    public static interface Exporter {
+        public void export(OutputStream outputStream) throws IOException;
+    }
+
+    public static class ByteArrayExporter implements Exporter {
+
+        private byte[] data;
+
+        public ByteArrayExporter(byte[] data) {
+            this.data = data;
+        }
+
+        @Override
+        public void export(OutputStream outputStream) throws IOException {
+            outputStream.write(data);
+        }
+
     }
 
     public void downloadDocumento(Exporter exporter, String contentType, String fileName) throws IOException{
@@ -209,50 +209,50 @@ public class FileDownloader implements Serializable {
         response.getOutputStream().flush();
         FacesContext.getCurrentInstance().responseComplete();
     }
-    
+
     public void downloadDocumento(byte[] data, String contentType, String fileName) throws IOException{
 //    	Descomentar código que inserir o Title do documento, possibilitando que o nome do arquivo apareça no cabeçalho do pdfViewer.
-    	if(contentType.contains("pdf")){
-    		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    		if(putTitleOfPDF(data,fileName,outputStream))
-    			data = outputStream.toByteArray();
-    	}
+        if(contentType.contains("pdf")){
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            if(putTitleOfPDF(data,fileName,outputStream))
+                data = outputStream.toByteArray();
+        }
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
         response.setContentLength(data.length);
         downloadDocumento(new ByteArrayExporter(data), contentType, fileName);
     }
 
     /**
-     * Método que insere o title de um pdf necessário para o PDFViewer do Chrome. 
+     * Método que insere o title de um pdf necessário para o PDFViewer do Chrome.
      * @param data
      * @param fileName
      * @param bos
      * @return
      */
     private boolean putTitleOfPDF(byte[] data, String fileName, ByteArrayOutputStream bos ) {
-    	Document document = new Document();
-    	try {
-    		PdfReader pdfReader = new PdfReader(data);
-    		PdfCopy copy = null;
-    		copy = new PdfCopy(document, bos);
-    		document.open();
+        Document document = new Document();
+        try {
+            PdfReader pdfReader = new PdfReader(data);
+            PdfCopy copy = null;
+            copy = new PdfCopy(document, bos);
+            document.open();
 
-    		for (int i = 1; i <= pdfReader.getNumberOfPages(); i++) {
-    			copy.addPage(copy.getImportedPage(pdfReader, i));
-    		}
-    		copy.freeReader(pdfReader);
-    		pdfReader.close();
-    		document.addTitle(fileName.substring(0,fileName.lastIndexOf('.')));
-    	}catch (Exception ex) {
-    		return false;
-    	}finally {
-			if(document.isOpen())
-				document.close();
-		}
-    	return true;
-	}
+            for (int i = 1; i <= pdfReader.getNumberOfPages(); i++) {
+                copy.addPage(copy.getImportedPage(pdfReader, i));
+            }
+            copy.freeReader(pdfReader);
+            pdfReader.close();
+            document.addTitle(fileName.substring(0,fileName.lastIndexOf('.')));
+        }catch (Exception ex) {
+            return false;
+        }finally {
+            if(document.isOpen())
+                document.close();
+        }
+        return true;
+    }
 
-	public String getMensagemDocumentoNulo() {
+    public String getMensagemDocumentoNulo() {
         return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
 
@@ -269,25 +269,25 @@ public class FileDownloader implements Serializable {
             nomeArquivo = nomeArquivo+"."+documento.getExtensao();
         return nomeArquivo;
     }
-    
+
     public byte[] getData(DocumentoBin documento) {
-    	return getData(documento, true);
-    }
-        
-    public byte[] getData(DocumentoBin documento, boolean gerarMargens) {
-    	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-    		export(documento, stream);
-    		return stream.toByteArray();
-    	} catch (IOException e) {
-			throw new RuntimeException("Erro ao exportar", e);
-		}
+        return getData(documento, true);
     }
 
-	public byte[] getOriginalData(DocumentoBin documento) {
+    public byte[] getData(DocumentoBin documento, boolean gerarMargens) {
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            export(documento, stream);
+            return stream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao exportar", e);
+        }
+    }
+
+    public byte[] getOriginalData(DocumentoBin documento) {
         if (documentoBinarioManager.existeBinario(documento.getId())) {
-        	byte[] data = documentoBinarioManager.getData(documento.getId());
-        	documentoBinarioManager.detach(documento.getId());
-            return data; 
+            byte[] data = documentoBinarioManager.getData(documento.getId());
+            documentoBinarioManager.detach(documento.getId());
+            return data;
         } else {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try {
@@ -299,37 +299,37 @@ public class FileDownloader implements Serializable {
             }
             return outputStream.toByteArray();
         }
-	}
-    
+    }
+
     public void export(DocumentoBin documento, OutputStream outputStream) {
-    	export(documento, outputStream, true);
+        export(documento, outputStream, true);
     }
-    
+
     public void export(DocumentoBin documento, OutputStream outputStream, boolean gerarMargens) {
-    	byte[] originalData = getOriginalData(documento);
-    	List<Documento> listaDocumento = documentoDAO.getDocumentosFromDocumentoBin(documento);
-		boolean documentoCancelado = CollectionUtil.isEmpty(listaDocumento)? false : listaDocumento.get(0).getExcluido();
-    	
-    	if (gerarMargens && podeExibirMargem(documento)) {
-			documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento), documentoCancelado);
-			originalData = ((ByteArrayOutputStream) outputStream).toByteArray();
-    		if(documentoCancelado) {
-    			documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
-    		}
-    	}
-    	else {
-    		try {
-    			if(documentoCancelado) {
-        			documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
-        		} else {
-        			outputStream.write(originalData);
-        		}
-    		} catch(IOException e) {
-    			throw new RuntimeException("Erro ao gravar no stream", e);
-    		}
-    	}
+        byte[] originalData = getOriginalData(documento);
+        List<Documento> listaDocumento = documentoDAO.getDocumentosFromDocumentoBin(documento);
+        boolean documentoCancelado = CollectionUtil.isEmpty(listaDocumento)? false : listaDocumento.get(0).getExcluido();
+
+        if (gerarMargens && podeExibirMargem(documento)) {
+            documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento), documentoCancelado);
+            originalData = ((ByteArrayOutputStream) outputStream).toByteArray();
+            if(documentoCancelado) {
+                documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
+            }
+        }
+        else {
+            try {
+                if(documentoCancelado) {
+                    documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
+                } else {
+                    outputStream.write(originalData);
+                }
+            } catch(IOException e) {
+                throw new RuntimeException("Erro ao gravar no stream", e);
+            }
+        }
     }
-    
+
     private boolean podeExibirMargem(DocumentoBin documento) {
         return "pdf".equalsIgnoreCase(documento.getExtensao())
                 && (Boolean.TRUE.equals(documento.getSuficientementeAssinado())
@@ -353,8 +353,8 @@ public class FileDownloader implements Serializable {
     }
 
     public void download(DocumentoBin documentoBin) {
-    	byte[] data = getData(documentoBin);
-    	download(data, "application/" + getExtensao(documentoBin), documentoBin.getNomeArquivo());
+        byte[] data = getData(documentoBin);
+        download(data, "application/" + getExtensao(documentoBin), documentoBin.getNomeArquivo());
     }
 
     public String getWindowOpen(Boolean isPdf) {
@@ -366,9 +366,9 @@ public class FileDownloader implements Serializable {
     public String getWindowOpen(DocumentoBin documentoBin) {
         return getWindowOpen(isPdf(documentoBin));
     }
-    
+
     public String getWindowOpen(Processo processo) {
-    	return getWindowOpen(true);
+        return getWindowOpen(true);
     }
 
     public String getWindowOpenByIdDocumento(Integer idDocumento) {
