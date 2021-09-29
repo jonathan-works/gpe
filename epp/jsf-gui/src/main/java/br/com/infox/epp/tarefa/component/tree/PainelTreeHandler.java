@@ -16,6 +16,7 @@ import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.layout.manager.SkinSessaoManager;
 import br.com.infox.epp.painel.CaixaDefinitionBean;
 import br.com.infox.epp.painel.FluxoBean;
 import br.com.infox.epp.painel.PainelUsuarioController;
@@ -30,6 +31,8 @@ public class PainelTreeHandler extends AbstractTreeHandler<TaskDefinitionBean> {
 
     @Inject
     private PainelUsuarioController painelUsuarioController;
+    @Inject
+    private SkinSessaoManager skinSessaoManager;
 
     private List<PainelEntityNode> rootList;
     private List<PainelEntityNode> subCaixaList;
@@ -138,5 +141,25 @@ public class PainelTreeHandler extends AbstractTreeHandler<TaskDefinitionBean> {
 	public void setFluxoBean(FluxoBean fluxoBean) {
 		this.fluxoBean = fluxoBean;
 	}
+
+    public String getBackgroundColorSub() {
+        String codColor = "#006600";
+        if ("vermelho".equals(skinSessaoManager.getSkin())) {
+            codColor = "#990000";
+        } else if ("altoContraste".equals(skinSessaoManager.getSkin())) {
+            codColor = "#FFFFFF";
+        } else if ("branco".equals(skinSessaoManager.getSkin())) {
+            codColor = "#333333";
+        } else if ("branco-vermelho".equals(skinSessaoManager.getSkin())) {
+            codColor = "#995555";
+        } else if ("cinza".equals(skinSessaoManager.getSkin())) {
+            codColor = "#000000";
+        } else if ("azul".equals(skinSessaoManager.getSkin())) {
+            codColor = "#02215D";
+        } else if ("azul-etc".equals(skinSessaoManager.getSkin())) {
+            codColor = "#002DA5";
+        }
+        return codColor;
+    }
 
 }
