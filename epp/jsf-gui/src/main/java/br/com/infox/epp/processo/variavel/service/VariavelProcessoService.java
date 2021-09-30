@@ -1,9 +1,13 @@
 package br.com.infox.epp.processo.variavel.service;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -54,27 +58,27 @@ public class VariavelProcessoService extends PersistenceController {
     private FluxoManager fluxoManager;
     @Inject
     private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
-    
+
     private final LogProvider LOG = Logging.getLogProvider(VariavelProcessoService.class);
 
     public List<VariavelProcesso> getVariaveis(Processo processo, String recursoVariavel, boolean usuarioExterno) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
         Fluxo fluxo = processo.getNaturezaCategoriaFluxo().getFluxo();
         List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxo, recursoVariavel, usuarioExterno);
-        
+
         for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {
         	variaveis.add(getPrimeiraVariavelProcessoAncestral(processo, definicao, null));
         }
 
         return variaveis;
     }
-    
+
     public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome) {
     	Processo processo =  processoManager.find(idProcesso);
     	ProcessoTarefa processoTarefa = processoTarefaManager.getUltimoProcessoTarefa(processo);
     	return getVariavelProcesso(processo, nome, processoTarefa == null? null : processoTarefa.getTaskInstance());
     }
-    
+
     public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome, Long idTaskInstance) {
         Processo processo = processoManager.find(idProcesso);
         return getVariavelProcesso(processo, nome, idTaskInstance);
@@ -92,7 +96,7 @@ public class VariavelProcessoService extends PersistenceController {
     	}
     	if(definicao == null)
     		throw new BusinessException("Não foi possível encontrar a definição da variável " + nome);
-    	
+
         TaskInstance taskInstance = idTaskInstance != null ? getEntityManager().find(TaskInstance.class, idTaskInstance) : null;
         return getPrimeiraVariavelProcessoAncestral(processo, definicao, taskInstance);
     }
@@ -180,6 +184,17 @@ public class VariavelProcessoService extends PersistenceController {
     		return new SimpleDateFormat("dd/MM/yyyy").format(variable);
     	} else if (variable instanceof Boolean) {
     		return (Boolean) variable ? "Sim" : "Não";
+    	} else if (variable instanceof Double) {
+    	    return NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(variable);
+    	} else if (variable instanceof BigDecimal) {
+    	    BigDecimal bd = (BigDecimal) variable;
+    	    DecimalFormat df = null;
+    	    if(bd.scale() > 0) {
+    	        df = new DecimalFormat("#,###.".concat(Strings.repeat("0", bd.scale())));
+    	    } else {
+    	        df = new DecimalFormat("#,###");
+    	    }
+    	    return df.format(bd.doubleValue());
     	}
 		return variable.toString();
 	}
@@ -189,7 +204,7 @@ public class VariavelProcessoService extends PersistenceController {
         Processo processo = processoManager.find(idProcesso);
         List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoSearch
                 .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
-        
+
         for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {
             VariavelProcesso variavel = getPrimeiraVariavelProcessoAncestral(processo, definicao, null);
             if (variavel != null) {
@@ -198,11 +213,11 @@ public class VariavelProcessoService extends PersistenceController {
         }
         return variaveis;
     }
-    
+
     /**
      * Adiciona valor baseado em expressão, de valor padrão configurada na definição do fluxo, ao container de variável
      * de processo
-     * 
+     *
      * @param valorPadrao
      * @param processo
      * @param variavelProcesso
@@ -223,7 +238,7 @@ public class VariavelProcessoService extends PersistenceController {
 
     /**
      * Adiciona valor baseado em metadado de processo ao container de variável de processo
-     * 
+     *
      * @param processo
      * @param variavelProcesso
      * @param metadados

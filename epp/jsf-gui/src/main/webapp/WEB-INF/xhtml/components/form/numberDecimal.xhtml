@@ -22,6 +22,7 @@
             <ui:define name="label">#{label}</ui:define>
             <p:inputNumber readonly="#{readonly}" id="#{id}Input" value="#{value}"
                 decimalPlaces="#{decimalPlaces}" size="#{size}"
+                converter="inputNumberBigDecimalConverter"
                 disabled="#{disabled}" required="#{required}"
                 inputStyleClass="#{readonly ? 'readOnly' : '' } inputText input text crud"
                 onblur="#{onblur}" onchange="#{onchange}"
