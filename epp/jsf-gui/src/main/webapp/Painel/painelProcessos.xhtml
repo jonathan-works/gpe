@@ -7,7 +7,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:p="http://primefaces.org/ui"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:infox="http://www.infox.com.br/jsf">
 	
 	<s:div id="painelProcessos" rendered="#{painelUsuarioController.showPainelProcessosComum}"
@@ -170,6 +170,178 @@
 				</ui:define>
 				
 			</wi:dataTable>
+
+			<h:form>
+				<p:commandButton styleClass="buttons"
+					id="callAssinarDocumentosEmLotePainel" value="Assinar"
+					widgetVar="callAssinarDocumentosEmLotePainelWV"
+					actionListener="#{consultaProcessoList.marcarAssinaveisNaoAssinaveis()}"
+					execute="@form painelProcessos" onclick="infox.showLoading();"
+					oncomplete="#{rich:component('assinarDocumentosPopUpPanel')}.show();infox.hideLoading();"
+					update="@this assinarDocumentosPopUpPanelOutput" />
+			</h:form>
 		</s:div>
 	</s:div>
+
+	<rich:popupPanel id="assinarDocumentosPopUpPanel" autosized="true"
+		modal="true" maxHeight="600"
+		header="#{infoxMessages['anexarDocumentos.titleModalAssinatura']}">
+		<f:facet name="controls">
+			<h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn"
+				styleClass="mp-close"
+				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+				onmouseup="#{rich:component('assinarDocumentosPopUpPanel')}.hide();" />
+		</f:facet>
+
+		<a:outputPanel id="assinarDocumentosPopUpPanelOutput" layout="block">
+
+			<!-- Painel com documentos que são minuta -->
+			<a:outputPanel layout="block"
+				rendered="#{not empty consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoMinuta}">
+				<h:outputLabel
+					value="#{infoxMessages['anexarDocumentos.msgSemPermissaoAssinarMinuta']}"
+					style="font-weight:bold;" />
+				<br />
+				<wi:dataTable id="documentosMinutas" showSearchForm="false"
+					hideOrder="true"
+					values="#{consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoMinuta}"
+					rowId="#{row.id}" showToolbarColumn="false">
+
+					<wi:columnOutputText columnId="classificacao"
+						value="#{row.classificacaoDocumento}"
+						columnHeader="#{infoxMessages['anexarDocumentos.classificacao']}" />
+
+					<wi:columnOutputText columnId="descricao" value="#{row.descricao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.descricao']}" />
+
+					<wi:columnOutputText columnId="data" value="#{row.dataInclusao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.data']}" />
+				</wi:dataTable>
+			</a:outputPanel>
+
+			<!-- Painel com documentos que não serão assinados -->
+			<a:outputPanel layout="block"
+				rendered="#{not empty consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoNaoAssinavel}">
+				<h:outputLabel
+					value="#{infoxMessages['anexarDocumentos.msgSemPermissaoAssinarDocumentos']}"
+					style="font-weight:bold;" />
+				<br />
+				<wi:dataTable id="documentosNaoPodemSerAssinados"
+					showSearchForm="false" hideOrder="true"
+					values="#{consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoNaoAssinavel}"
+					rowId="#{row.id}" showToolbarColumn="false">
+
+					<wi:columnOutputText columnId="classificacao"
+						value="#{row.classificacaoDocumento}"
+						columnHeader="#{infoxMessages['anexarDocumentos.classificacao']}" />
+
+					<wi:columnOutputText columnId="descricao" value="#{row.descricao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.descricao']}" />
+
+					<wi:columnOutputText columnId="data" value="#{row.dataInclusao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.data']}" />
+				</wi:dataTable>
+			</a:outputPanel>
+
+			<br />
+
+			<!-- Painel com documentos a serem assinados -->
+			<a:outputPanel layout="block">
+				<h:outputText
+					value="#{infoxMessages['anexarDocumentos.msgDocumentosNaoSelecionados']}"
+					style="font-weight:bold;  font-size: 1.2em;"
+					rendered="#{empty consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoAssinavel}" />
+
+				<h:outputLabel
+					value="#{infoxMessages['anexarDocumentos.msgDocumentosSeraoAssinados']}"
+					style="font-weight:bold;  font-size: 1.2em;"
+					rendered="#{not empty consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoAssinavel}" />
+				<br />
+				<wi:dataTable id="documentosAptosAssinatura" hideOrder="true"
+					rendered="#{not empty consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoAssinavel}"
+					showSearchForm="false" style="border-width: 1.5em;"
+					values="#{consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoAssinavel}"
+					rowId="#{row.id}" showToolbarColumn="false">
+
+					<wi:columnOutputText columnId="classificacao"
+						value="#{row.classificacaoDocumento}"
+						columnHeader="#{infoxMessages['anexarDocumentos.classificacao']}" />
+
+					<wi:columnOutputText columnId="descricao" value="#{row.descricao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.descricao']}" />
+
+					<wi:columnOutputText columnId="data" value="#{row.dataInclusao}"
+						columnHeader="#{infoxMessages['anexarDocumentos.data']}" />
+				</wi:dataTable>
+			</a:outputPanel>
+
+			<div align="center">
+				<h:form>
+					<wi:assinador id="assinarButton"
+						tokenField="#{consultaProcessoList.tokenAssinatura}"
+						assinavelProvider="#{consultaProcessoList.assinavelProvider}"
+						execute="@this"
+						rendered="#{not empty consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoAssinavel}"
+						render="pageBodyDialogMessage assinarDocumentosPopUpPanelOutput"
+						onbegin="infox.showLoading();"
+						oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos(); postAssinaturaLote();"
+						signAction="#{consultaProcessoList.signDocuments}" />
+
+					<p:remoteCommand name="postAssinaturaLote"
+						action="#{consultaProcessoList.newInstance}"
+						update="painelProcessos" />
+
+					<a:commandButton id="cancelarAssinaturaButton" styleClass="buttons"
+						value="#{infoxMessages['button.cancelar']}"
+						onclick="#{rich:component('assinarDocumentosPopUpPanel')}.hide();" />
+				</h:form>
+			</div>
+
+		</a:outputPanel>
+
+	</rich:popupPanel>
+
+	<script>
+    function checkAllChildrenBoxes(){
+        $('.checkButtonDocumento').prop('checked',$('.checkButtonMarcarTodos').prop('checked'));
+    }
+    
+    function desmarcarMarcarTodos(){
+        $('.checkButtonMarcarTodos').prop('checked',false);
+    }
+    
+    function updateMarcarTodos(checkBox){
+        if(!checkBox.prop('checked')){
+            $('.checkButtonMarcarTodos').prop('checked',false);
+        }else{
+            $('.checkButtonMarcarTodos').prop('checked',isTodosCheckBoxesMarcados());
+        }
+    }
+    function isTodosCheckBoxesMarcados(){
+        checkButtonsArray = $('.checkButtonDocumento');
+        if(!checkButtonsArray)
+            return false;
+
+        for (var i = 0; i &lt; checkButtonsArray.size(); i++) {
+            if(!$(checkButtonsArray[i]).prop('checked'))
+                return false;
+        }
+            return true;
+    }
+    function enableDisableAssinarButton(){
+        checkButtonsArray = $('.checkButtonDocumento');
+        if(!checkButtonsArray){
+        	PF('callAssinarDocumentosEmLotePainelWV').disable();
+            return;
+        }
+
+        for (var i = 0; i &lt; checkButtonsArray.size(); i++) {
+            if($(checkButtonsArray[i]).prop('checked')) {
+            	PF('callAssinarDocumentosEmLotePainelWV').enable();
+            	return;
+            }
+        }
+        PF('callAssinarDocumentosEmLotePainelWV').disable();
+    }
+</script>
 </ui:composition>

@@ -32,6 +32,9 @@ public class TaskBean {
     private Integer pesoPrioridadeProcesso;
     private Date dataInicio;
     private String nomeUsuarioTarefa;
+    private boolean exibirSelecaoAssinaturaLote;
+    private boolean selecaoAssinaturaLote;
+    private boolean assinavelAposSelecionar;
 
     public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
             Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeNatureza,
@@ -167,7 +170,31 @@ public class TaskBean {
         this.idFluxo = idFluxo;
     }
 
-    public void removerCaixa() {
+	public boolean isExibirSelecaoAssinaturaLote() {
+		return exibirSelecaoAssinaturaLote;
+	}
+
+	public void setExibirSelecaoAssinaturaLote(boolean exibirSelecaoAssinaturaLote) {
+		this.exibirSelecaoAssinaturaLote = exibirSelecaoAssinaturaLote;
+	}
+
+	public boolean isSelecaoAssinaturaLote() {
+		return selecaoAssinaturaLote;
+	}
+
+	public void setSelecaoAssinaturaLote(boolean selecaoAssinaturaLote) {
+		this.selecaoAssinaturaLote = selecaoAssinaturaLote;
+	}
+
+	public boolean isAssinavelAposSelecionar() {
+		return assinavelAposSelecionar;
+	}
+
+	public void setAssinavelAposSelecionar(boolean assinavelAposSelecionar) {
+		this.assinavelAposSelecionar = assinavelAposSelecionar;
+	}
+
+	public void removerCaixa() {
         this.idCaixa = null;
         this.nomeCaixa = null;
     }

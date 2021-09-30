@@ -5,6 +5,7 @@
   xmlns:f="http://java.sun.com/jsf/core"
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
+  xmlns:p="http://primefaces.org/ui"
   xmlns:s="http://jboss.org/schema/seam/taglib">
 
   <h:form styleClass="#{painelUsuarioController.taskNodeKey.toUpperCase()}">
@@ -15,6 +16,14 @@
       </rich:dragSource>
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/multipleImages.png')}"
         title="#{infoxMessages['processo.caixa.moverTodosProcessos']}" />
-  </h:form>
+
+
+		<h:selectBooleanCheckbox onclick="checkAllChildrenBoxes(); enableDisableAssinarButton();"
+			rendered="#{consultaProcessoList.showMarcarTodosAssinaveis}"
+			styleClass="checkButtonMarcarTodos">
+			<p:ajax execute="@this" listener="#{consultaProcessoList.marcarTodosAssinaveis}" />
+		</h:selectBooleanCheckbox>
+
+	</h:form>
 
 </ui:composition>
