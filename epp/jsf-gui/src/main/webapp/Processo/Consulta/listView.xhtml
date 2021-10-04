@@ -190,6 +190,19 @@
                                     value="#{processoEpaList.filtros.valorFiltroVariavelProcesso}"
                                 />
                                 </c:if>
+                                <c:if test="#{processoEpaList.filtroVariavelSelecionado.filtroDecimal}">
+                                <wi:field
+                                    id="valorFiltroVariaveisProcessoDecimal"
+                                    label="#{infoxMessages['Valor da Variável do Processo']}"
+                                >
+                                    <h:inputText
+                                        id="valorFiltroVariaveisProcessoDecimalInput"
+                                        onkeyup="onlyDecimal(this)"
+                                        converter="bigDecimalConverter"
+                                        value="#{processoEpaList.filtros.valorFiltroVariavelProcesso}"
+                                    />
+                                </wi:field>
+                                </c:if>
                                 <c:if test="#{processoEpaList.filtroVariavelSelecionado.filtroNumerico}">
                                 <wi:inputMoney
                                     id="valorFiltroVariaveisProcessoNumerico"

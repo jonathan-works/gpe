@@ -1,18 +1,18 @@
 <!--
 # This file specifies how jbpm will store variables into the database.
 #
-# If jbpm needs to determine how to store a variable into the database, 
+# If jbpm needs to determine how to store a variable into the database,
 # the jbpm-types below or scanned in sequence as they are specified here.
-# For each jbpm-type, jbpm will see if the give variable object matches 
+# For each jbpm-type, jbpm will see if the give variable object matches
 # with the matcher bean.  If there is a match, the converter (optional)
-# and the variable instance will be used to store and retrieve 
-# the variable value for the rest of its lifetime till the variable is 
-# deleted. 
+# and the variable instance will be used to store and retrieve
+# the variable value for the rest of its lifetime till the variable is
+# deleted.
 -->
 <jbpm-types>
 
   <list name="jbpm.types" singleton="true">
-  
+
     <!-- EntityTypeJbpm -->
     <jbpm-type>
       <matcher>
@@ -21,7 +21,7 @@
       <converter class="br.com.infox.ibpm.converter.JpaConverter" />
       <variable-instance class="org.jbpm.context.exe.variableinstance.JpaInstance" />
     </jbpm-type>
-  
+
     <!-- java.lang.String -->
     <jbpm-type>
       <matcher>
@@ -31,7 +31,7 @@
       </matcher>
       <variable-instance class="org.jbpm.context.exe.variableinstance.StringInstance" />
     </jbpm-type>
-      
+
     <!-- java.lang.Boolean -->
     <jbpm-type>
       <matcher>
@@ -42,7 +42,7 @@
       <converter class="org.jbpm.context.exe.converter.BooleanToStringConverter" />
       <variable-instance class="org.jbpm.context.exe.variableinstance.StringInstance" />
     </jbpm-type>
-      
+
     <!-- java.lang.Character -->
     <jbpm-type>
       <matcher>
@@ -53,7 +53,7 @@
       <converter class="org.jbpm.context.exe.converter.CharacterToStringConverter" />
       <variable-instance class="org.jbpm.context.exe.variableinstance.StringInstance" />
     </jbpm-type>
-      
+
     <!-- java.lang.Long -->
     <jbpm-type>
       <matcher>
@@ -74,7 +74,7 @@
       <converter class="org.jbpm.context.exe.converter.ByteToLongConverter" />
       <variable-instance class="org.jbpm.context.exe.variableinstance.LongInstance" />
     </jbpm-type>
-  
+
     <!-- java.lang.Short -->
     <jbpm-type>
       <matcher>
@@ -85,7 +85,7 @@
       <converter class="org.jbpm.context.exe.converter.ShortToLongConverter" />
       <variable-instance class="org.jbpm.context.exe.variableinstance.LongInstance" />
     </jbpm-type>
-  
+
     <!-- java.lang.Integer -->
     <jbpm-type>
       <matcher>
@@ -96,7 +96,7 @@
       <converter class="org.jbpm.context.exe.converter.IntegerToLongConverter" />
       <variable-instance class="org.jbpm.context.exe.variableinstance.LongInstance" />
     </jbpm-type>
-  
+
     <!-- java.lang.Double -->
     <jbpm-type>
       <matcher>
@@ -106,7 +106,18 @@
       </matcher>
       <variable-instance class="org.jbpm.context.exe.variableinstance.DoubleInstance" />
     </jbpm-type>
-  
+
+    <!-- java.math.BigDecimal -->
+    <jbpm-type>
+      <matcher>
+        <bean class="org.jbpm.context.exe.matcher.ClassNameMatcher">
+          <field name="className"><string value="java.math.BigDecimal" /></field>
+        </bean>
+      </matcher>
+      <converter class="br.com.infox.ibpm.converter.BigDecimalToStringConverter" />
+      <variable-instance class="org.jbpm.context.exe.variableinstance.StringInstance" />
+    </jbpm-type>
+
     <!-- java.lang.Float -->
     <jbpm-type>
       <matcher>
@@ -117,7 +128,7 @@
       <converter class="org.jbpm.context.exe.converter.FloatToDoubleConverter" />
       <variable-instance class="org.jbpm.context.exe.variableinstance.DoubleInstance" />
     </jbpm-type>
-  
+
     <!-- java.util.Date -->
     <jbpm-type>
       <matcher>
@@ -127,7 +138,7 @@
       </matcher>
       <variable-instance class="org.jbpm.context.exe.variableinstance.DateInstance" />
     </jbpm-type>
-  
+
     <!-- byte[] -->
     <jbpm-type>
       <matcher>
@@ -138,7 +149,7 @@
       <converter class="org.jbpm.context.exe.converter.BytesToByteArrayConverter" />
       <variable-instance class="org.jbpm.context.exe.variableinstance.ByteArrayInstance" />
     </jbpm-type>
-  
+
     <!-- hibernatable long id types -->
     <jbpm-type>
       <matcher>
@@ -146,7 +157,7 @@
       </matcher>
       <variable-instance class="org.jbpm.context.exe.variableinstance.HibernateLongInstance" />
     </jbpm-type>
-  
+
     <!-- hibernatable string id types -->
     <jbpm-type>
       <matcher>
@@ -154,7 +165,7 @@
       </matcher>
       <variable-instance class="org.jbpm.context.exe.variableinstance.HibernateStringInstance" />
     </jbpm-type>
-  
+
     <!-- java.io.Serializable -->
     <jbpm-type>
       <matcher>
@@ -163,7 +174,7 @@
       <converter class="org.jbpm.context.exe.converter.SerializableToByteArrayConverter" />
       <variable-instance class="org.jbpm.context.exe.variableinstance.ByteArrayInstance" />
     </jbpm-type>
-  
+
     <!-- hibernatable ejb3 types -->
     <jbpm-type>
       <matcher>
@@ -171,7 +182,7 @@
       </matcher>
       <variable-instance class="org.jbpm.context.exe.variableinstance.Ejb3Instance" />
     </jbpm-type>
-    
+
   </list>
 
 </jbpm-types>

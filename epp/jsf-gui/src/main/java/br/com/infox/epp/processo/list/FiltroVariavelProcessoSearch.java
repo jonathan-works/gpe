@@ -98,6 +98,16 @@ public class FiltroVariavelProcessoSearch extends PersistenceController {
                     , valorFiltroVariavelProcesso
                 ));
                 break;
+            case M:
+                if(valorFiltroVariavelProcesso == null) {
+                    break;
+                }
+                resultado = resultado.concat(String.format(hqlFiltroBase.concat(" and vi.value = '%s' ")
+                    , "StringInstance"
+                    , definicaoVariavelProcesso.getNome()
+                    , valorFiltroVariavelProcesso.toString().trim()
+                ));
+                break;
             case N:
                 if(valorFiltroVariavelProcesso == null) {
                     break;

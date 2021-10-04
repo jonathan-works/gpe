@@ -31,6 +31,10 @@ public class FiltroVariavelProcessoVO extends SelectItem {
         return TipoPesquisaVariavelProcessoEnum.I.equals(getTipoFiltro());
     }
 
+    public boolean isFiltroDecimal() {
+        return TipoPesquisaVariavelProcessoEnum.M.equals(getTipoFiltro());
+    }
+
     public boolean isFiltroNumerico() {
         return TipoPesquisaVariavelProcessoEnum.N.equals(getTipoFiltro());
     }

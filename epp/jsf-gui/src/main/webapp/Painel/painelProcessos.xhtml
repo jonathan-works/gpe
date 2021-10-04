@@ -130,6 +130,19 @@
                                 value="#{consultaProcessoList.valorFiltroVariavelProcesso}"
                             />
                             </c:if>
+                            <c:if test="#{consultaProcessoList.filtroVariavelSelecionado.filtroDecimal}">
+                                <wi:field
+                                    id="valorFiltroVariaveisProcessoDecimal"
+                                    label="#{infoxMessages['Valor da Variável do Processo']}"
+                                >
+                                    <h:inputText
+                                        id="valorFiltroVariaveisProcessoDecimalInput"
+                                        onkeyup="onlyDecimal(this)"
+                                        converter="bigDecimalConverter"
+                                        value="#{consultaProcessoList.valorFiltroVariavelProcesso}"
+                                    />
+                                </wi:field>
+                            </c:if>
                             <c:if test="#{consultaProcessoList.filtroVariavelSelecionado.filtroNumerico}">
                             <wi:inputMoney
                                 id="valorFiltroVariaveisProcessoNumerico"

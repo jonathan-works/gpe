@@ -4,7 +4,7 @@ function showModal(modalId) {
 
 function hideModal(modalId) {
 	setTimeout('RichFaces.$("' + modalId + '").hide()', 100);
-} 
+}
 
 function setMesmaData(di, df) {
 	if( $(df).val() == "" || $(df).val() == null || $(df).val().startsWith("_") ) {
@@ -13,7 +13,7 @@ function setMesmaData(di, df) {
 	if( $(di).val() == "" || $(di).val() == null || $(di).val().startsWith("_") ) {
 		$(di).val($(df).val());
 	}
-} 
+}
 
 function validarPeriodo(di, df, mesmaData, dataInicio) {
 	if (mesmaData) {
@@ -43,7 +43,7 @@ function validarDataMaxima(data) {
 	if (getDateFirstDayOfMonth(data.value).getTime() > new Date().getTime() ) {
 		alert("A data n\u00E3o pode ser superior que a data atual.");
 		data.value = "";
-	} 
+	}
 }
 
 function toDate(string) {
@@ -79,7 +79,7 @@ function validarDataBaseCalculoRpv(campoData){
 		campoData.focus();
 		return false;
 	}
-	
+
 	if(toDate(campoData.value).getTime() < toDate(dataLimite).getTime()){
 		alert('A data informada n\u00E3o pode ser menor que 01/07/1994.');
 		campoData.value = "";
@@ -129,25 +129,38 @@ function validarDataDMA(dia, mes, ano) {
         if  (dia <= 31)
             return true;
         break
-        case '04':              
+        case '04':
         case '06':
         case '09':
         case '11':
-        if  (dia <= 30) 
+        if  (dia <= 30)
             return true;
         break
         case '02':
                 var bissexto = 0;
-                if ((ano % 4 == 0) || (ano % 100 == 0) || (ano % 400 == 0)) 
-                        bissexto = 1; 
+                if ((ano % 4 == 0) || (ano % 100 == 0) || (ano % 400 == 0))
+                        bissexto = 1;
                 if ((bissexto == 1) && (dia <= 29))
                         return true;
-                if ((bissexto != 1) && (dia <= 28)) 
-                        return true; 
-                break                                           
+                if ((bissexto != 1) && (dia <= 28))
+                        return true;
+                break
     }
     }
     return false;
+}
+
+function onlyDecimal(obj){
+    var valor = obj.value;
+    var signal = valor.indexOf('-') == 0 ? '-' : '';
+    valor = signal + valor.replace(/[^\d,]/g, "").replace(/,(?<=^\d+,\d+,).*/g,"");
+    var valores = valor.split(',');
+    if(valores.length > 1){
+        valor = valores[0].split(/(?=(?:...)*$)/).join('.').concat(',').concat(valores[1]);
+    } else {
+        valor = valores[0].split(/(?=(?:...)*$)/).join('.');
+    }
+    obj.value = valor;
 }
 
 function onlyNumber(obj){
@@ -185,14 +198,14 @@ function formatDecimalNumber (obj, options) {
 	options.symbol = options.symbol || '';
 	options.decimal = options.decimal || ',';
 	options.thousands = options.thousands || '.';
-	
+
 	valor = obj.value;
 	var normalized = valor.replace(/\D/g, '');
 	if (normalized === '') {
 		obj.value = '';
 		return;
 	}
-	
+
 	var result = [];
 	if (normalized.length == 1) {
 		obj.value = options.symbol + '0' + options.decimal + '0' + normalized;
@@ -201,7 +214,7 @@ function formatDecimalNumber (obj, options) {
 		 obj.value = options.symbol + '0' + options.decimal + normalized;
 		 return;
 	}
-	
+
 	var count = 0;
 	var hasDecimal = false;
 	for (var i = normalized.length - 1; i >= 0; i--) {
@@ -236,7 +249,7 @@ function clamp(obj, min, max) {
 
 //Validador de E-Mail
 function validarEmail(obj) {
-	var mail = obj.value;		
+	var mail = obj.value;
 	var er = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
 	if(mail == "")return;
 	if(!er.test(mail)){
@@ -244,7 +257,7 @@ function validarEmail(obj) {
 		obj.value = "";
 		obj.focus();
 	}
-} 
+}
 
 // Validador de CPF
 function validarCpf(obj) {
@@ -348,7 +361,7 @@ function isCnpjValido(cnpj) {
 function counterTextarea(obj, max) {
 	if (!max || max == '') return;
 	typed = obj.nextElementSibling;
-	var maxlength = parseInt(max);					  			
+	var maxlength = parseInt(max);
 	if(obj.value.length > maxlength) {
 		obj.value = obj.value.substring(0, maxlength);
 	}
@@ -358,13 +371,13 @@ var registerCounterTextArea=(function(){
     'use strict';
     var counterTextArea=function(config){
         var maxLength = Number.parseInt(config.maxLength)||Number.MAX_SAFE_INTEGER;
-        
+
         if(config.input.value.length > maxLength) {
             config.input.value = config.input.value.substring(0, maxLength);
         }
-        config.output.innerHTML = "( " + config.input.value.length + " / " + maxLength +" )";  
+        config.output.innerHTML = "( " + config.input.value.length + " / " + maxLength +" )";
     };
-    
+
     return function(config){
         if (!config.input || !config.output)
             return;
@@ -375,4 +388,4 @@ var registerCounterTextArea=(function(){
     };
 })();
 
-PrimeFaces.locales['pt_BR'] = { closeText: 'Fechar', prevText: 'Anterior', nextText: 'Próximo', currentText: 'Começo', monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'], monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun', 'Jul','Ago','Set','Out','Nov','Dez'], dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'], dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'], dayNamesMin: ['D','S','T','Q','Q','S','S'], weekHeader: 'Semana', firstDay: 0, isRTL: false, showMonthAfterYear: false, yearSuffix: '', timeOnlyTitle: 'Só Horas', timeText: 'Tempo', hourText: 'Hora', minuteText: 'Minuto', secondText: 'Segundo', ampm: false, month: 'Mês', week: 'Semana', day: 'Dia', allDayText : 'Todo o Dia' }; 
+PrimeFaces.locales['pt_BR'] = { closeText: 'Fechar', prevText: 'Anterior', nextText: 'Próximo', currentText: 'Começo', monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'], monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun', 'Jul','Ago','Set','Out','Nov','Dez'], dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'], dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'], dayNamesMin: ['D','S','T','Q','Q','S','S'], weekHeader: 'Semana', firstDay: 0, isRTL: false, showMonthAfterYear: false, yearSuffix: '', timeOnlyTitle: 'Só Horas', timeText: 'Tempo', hourText: 'Hora', minuteText: 'Minuto', secondText: 'Segundo', ampm: false, month: 'Mês', week: 'Semana', day: 'Dia', allDayText : 'Todo o Dia' };

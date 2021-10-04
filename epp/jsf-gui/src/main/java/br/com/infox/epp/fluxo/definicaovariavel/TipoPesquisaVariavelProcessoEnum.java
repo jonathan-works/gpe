@@ -5,10 +5,11 @@ import lombok.Getter;
 
 public enum TipoPesquisaVariavelProcessoEnum implements Displayable {
 
-    D("Data"),
-    I("Numérico"),
-    N("Monetário"),
     B("Booleano"),
+    D("Data"),
+    M("Decimal"),
+    N("Monetário"),
+    I("Numérico"),
     T("Texto")
     ;
 
