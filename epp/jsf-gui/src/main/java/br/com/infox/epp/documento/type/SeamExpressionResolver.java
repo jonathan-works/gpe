@@ -1,6 +1,8 @@
 package br.com.infox.epp.documento.type;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,26 +18,28 @@ import org.jbpm.graph.exe.Token;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.cdi.producer.EntityManagerProducer;
 
 public class SeamExpressionResolver implements ExpressionResolver {
-	
+
 	private ExecutionContext executionContext;
-	
+
 	public SeamExpressionResolver() {
 	}
-	
+
 	public SeamExpressionResolver(ExecutionContext executionContext) {
 		this.executionContext = executionContext;
 	}
-	
+
 	public SeamExpressionResolver(TaskInstance taskInstance) {
 	    Token token = getEntityManager().find(Token.class, taskInstance.getToken().getId());
 	    taskInstance = getEntityManager().find(TaskInstance.class, taskInstance.getId());
 	    executionContext = new ExecutionContext(token);
 		executionContext.setTaskInstance(taskInstance);
 	}
-	
+
 	public SeamExpressionResolver(ProcessInstance processInstance) {
 		TypedQuery<TaskInstance> typedQuery = getEntityManager().createNamedQuery("TaskMgmtSession.findOpenTasksOfProcessInstance", TaskInstance.class);
 		List<TaskInstance> list = typedQuery.setMaxResults(1).setParameter("instance", processInstance).getResultList();
@@ -70,7 +74,7 @@ public class SeamExpressionResolver implements ExpressionResolver {
 		Object value = null;
 		if (executionContext != null) {
 		    value = JbpmExpressionEvaluator.evaluate(expression.getExpression(), executionContext);
-		} 
+		}
 		if (value == null){
 		    value = Expressions.instance().createValueExpression(expression.getExpression()).getValue();
 		}
@@ -79,22 +83,32 @@ public class SeamExpressionResolver implements ExpressionResolver {
 		}
 		return expression;
 	}
-	
-	
+
+
 	private void resolveAsJavaType(Expression expression, Object value) {
 		if (value instanceof Date) {
 			expression.setValue(new SimpleDateFormat("dd/MM/yyyy").format(value));
 		} else if (value instanceof Boolean) {
 			expression.setValue((Boolean) value ? "Sim" : "Não");
-		} else if (value instanceof Double) {
-			expression.setValue(String.format(new Locale("pt", "BR"), "%."+ (BigDecimal.valueOf((Double) value).scale()) +"f", value));
-		} else {
+	    } else if (value instanceof Double) {
+	        expression.setValue(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(value));
+	    } else if (value instanceof BigDecimal) {
+	        BigDecimal bd = (BigDecimal) value;
+	        DecimalFormat df = null;
+	        if(bd.scale() > 0) {
+	            df = new DecimalFormat("#,###.".concat(Strings.repeat("0", bd.scale())));
+	        } else {
+	            df = new DecimalFormat("#,###");
+	        }
+	        expression.setValue(df.format(bd.doubleValue()));
+	    } else {
 			expression.setValue(value.toString());
 		}
+
 		expression.setOriginalValue(value);
 		expression.setResolved(true);
 	}
-	
+
 	private EntityManager getEntityManager() {
 	    return EntityManagerProducer.getEntityManager();
 	}

@@ -24,6 +24,12 @@ public class FiltrosBeanList implements Serializable {
 	private Categoria categoria;
 	private StatusProcesso statusProcesso;
 	private UsuarioLogin usuarioLogin;
+	@Getter @Setter
+	private Long idTipoFiltroVariavelProcesso;
+	@Getter @Setter
+	private Object valorFiltroVariavelProcesso;
+	@Getter @Setter
+	private Object valorFiltroVariavelProcessoComplemento;
 	@Setter
 	@Getter
 	private String cpf;
@@ -99,6 +105,9 @@ public class FiltrosBeanList implements Serializable {
 	}
 
 	public void clear() {
+	    setIdTipoFiltroVariavelProcesso(null);
+	    setValorFiltroVariavelProcesso(null);
+	    setValorFiltroVariavelProcessoComplemento(null);
 	    setDataInicio(new Periodo());
         setDataFim(new Periodo());
         setCategoria(null);

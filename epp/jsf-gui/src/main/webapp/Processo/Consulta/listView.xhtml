@@ -119,6 +119,101 @@
                                 rendered="#{not empty processoEpaList.filtros.fluxo}" />
                              <div />
                              <ui:include src="/Processo/Consulta/filtroExtraConsulta.xhtml" />
+                             <h:panelGroup
+                                rendered="#{not empty processoEpaList.filtros.fluxo}"
+                             >
+                             <wi:field
+                                id="filtroVariaveisProcesso"
+                                label="Variável do Processo"
+                             >
+                                 <h:selectOneMenu
+                                    id="filtroVariaveisProcessoInput"
+                                    value="#{processoEpaList.filtros.idTipoFiltroVariavelProcesso}"
+                                    onchange="infox.showLoading()"
+                                 >
+                                    <p:ajax
+                                        listener="#{processoEpaList.onChangeTipoFiltroVariavelProcesso}"
+                                        process="@this"
+                                        partialSubmit="true"
+                                        oncomplete="infox.hideLoading()"
+                                        update="@(.valorFiltroVariaveisProcessoContainer)"
+                                    >
+                                    </p:ajax>
+                                    <f:selectItem
+                                        noSelectionOption="true"
+                                        itemValue="#{null}"
+                                        itemLabel="#{messages['crud.select.select']}"
+                                    />
+                                    <f:selectItems
+                                        value="#{processoEpaList.filtrosVariaveisProcesso}"
+                                        var="fvp"
+                                        itemValue="#{fvp.value}"
+                                    />
+                                 </h:selectOneMenu>
+                             </wi:field>
+                             <p:outputPanel
+                                styleClass="valorFiltroVariaveisProcessoContainer"
+                             >
+                             <h:panelGroup rendered="#{not empty processoEpaList.filtros.idTipoFiltroVariavelProcesso}">
+                                 <c:if test="#{processoEpaList.filtroVariavelSelecionado.filtroTexto}">
+                                 <wi:field
+                                    id="valorFiltroVariaveisProcesso"
+                                    label="Valor da Variável do Processo"
+                                 >
+                                     <h:inputText
+                                        id="valorFiltroVariaveisProcessoInput"
+                                        value="#{processoEpaList.filtros.valorFiltroVariavelProcesso}"
+                                     />
+                                 </wi:field>
+                                 </c:if>
+                                <c:if test="#{processoEpaList.filtroVariavelSelecionado.filtroData}">
+                                <wi:inputDataPeriodo
+                                    label="#{infoxMessages['Valor da Variável do Processo']}"
+                                    id="valorFiltroVariaveisProcessoPeriodo"
+                                    valueDateFrom="#{processoEpaList.filtros.valorFiltroVariavelProcesso}"
+                                    valueDateTo="#{processoEpaList.filtros.valorFiltroVariavelProcessoComplemento}"
+                                    validatePastDateFrom="true"
+                                    validatePastDateTo="true"
+                                />
+                                </c:if>
+                                <c:if test="#{processoEpaList.filtroVariavelSelecionado.filtroBoleano}">
+                                <wi:selectBooleanRadio
+                                    label="#{infoxMessages['Valor da Variável do Processo']}"
+                                    id="valorFiltroVariaveisProcessoBoleano"
+                                    value="#{processoEpaList.filtros.valorFiltroVariavelProcesso}"
+                                />
+                                </c:if>
+                                <c:if test="#{processoEpaList.filtroVariavelSelecionado.filtroInteiro}">
+                                <wi:inputNumber
+                                    id="valorFiltroVariaveisProcessoInteirio"
+                                    label="#{infoxMessages['Valor da Variável do Processo']}"
+                                    value="#{processoEpaList.filtros.valorFiltroVariavelProcesso}"
+                                />
+                                </c:if>
+                                <c:if test="#{processoEpaList.filtroVariavelSelecionado.filtroDecimal}">
+                                <wi:field
+                                    id="valorFiltroVariaveisProcessoDecimal"
+                                    label="#{infoxMessages['Valor da Variável do Processo']}"
+                                >
+                                    <h:inputText
+                                        id="valorFiltroVariaveisProcessoDecimalInput"
+                                        onkeyup="onlyDecimal(this)"
+                                        converter="bigDecimalConverter"
+                                        value="#{processoEpaList.filtros.valorFiltroVariavelProcesso}"
+                                    />
+                                </wi:field>
+                                </c:if>
+                                <c:if test="#{processoEpaList.filtroVariavelSelecionado.filtroNumerico}">
+                                <wi:inputMoney
+                                    id="valorFiltroVariaveisProcessoNumerico"
+                                    label="#{infoxMessages['Valor da Variável do Processo']}"
+                                    value="#{processoEpaList.filtros.valorFiltroVariavelProcesso}"
+                                    converterId="javax.faces.Double"
+                                />
+                                </c:if>
+                             </h:panelGroup>
+                             </p:outputPanel>
+                             </h:panelGroup>
                         </wi:searchForm>
                     </ui:define>
                     <ui:define name="headerToolBar" />
