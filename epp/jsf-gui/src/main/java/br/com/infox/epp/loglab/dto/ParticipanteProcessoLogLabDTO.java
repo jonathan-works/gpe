@@ -19,6 +19,9 @@ public class ParticipanteProcessoLogLabDTO implements Serializable {
     private String cpf;
     private String cnpj;
     private String nome;
+    private String email;
+    private String telefoneFixo;
+    private String telefoneCelular;
     private String nomeFantasia;
     private String razaoSocial;
     private String matricula;

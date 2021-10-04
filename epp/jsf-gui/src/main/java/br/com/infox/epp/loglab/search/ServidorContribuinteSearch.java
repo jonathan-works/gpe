@@ -117,7 +117,7 @@ public class ServidorContribuinteSearch extends PersistenceController {
                 servidor.get(Servidor_.pessoaFisica).get(PessoaFisica_.idPessoa), servidor.get(Servidor_.cpf),
                 servidor.get(Servidor_.nomeCompleto), servidor.get(Servidor_.dataNascimento),
                 servidor.get(Servidor_.matricula), servidor.get(Servidor_.mae), servidor.get(Servidor_.email),
-                servidor.get(Servidor_.celular), servidor.get(Servidor_.dataNomeacaoContratacao),
+                servidor.get(Servidor_.celular), servidor.get(Servidor_.telefone), servidor.get(Servidor_.dataNomeacaoContratacao),
                 servidor.get(Servidor_.dataPosse), servidor.get(Servidor_.dataExercicio),
                 servidor.get(Servidor_.situacao), servidor.get(Servidor_.secretaria),
                 servidor.get(Servidor_.departamento), servidor.get(Servidor_.subFolha), servidor.get(Servidor_.jornada),
