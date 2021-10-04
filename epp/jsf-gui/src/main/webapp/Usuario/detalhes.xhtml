@@ -1,65 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:infox="http://www.infox.com.br/jsf"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
-	<ui:define name="title">xx #{infoxMessages['detalhesUsuario.titlePage']}</ui:define>
+  xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+  <ui:define name="title">xx #{infoxMessages['detalhesUsuario.titlePage']}</ui:define>
 
-	<ui:define name="body">
-		<style>
+  <ui:define name="body">
+    <style>
 .termo-adesao-container {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 </style>
 
-		<wi:panel id="panelImpressaoComunicacoes">
-			<p:outputPanel styleClass="panelImpressaoComunicacoesContainer">
-				<wi:outputText id="nomeUsuario" value="#{detalheUsuarioView.nome}"
-					label="#{infoxMessages['detalhesUsuario.nomeUsuario']}" />
+    <wi:panel id="panelImpressaoComunicacoes">
+      <p:outputPanel styleClass="panelImpressaoComunicacoesContainer">
+        <wi:outputText id="nomeUsuario" value="#{detalheUsuarioView.nome}"
+          label="#{infoxMessages['detalhesUsuario.nomeUsuario']}" />
 
-				<h:panelGroup
-					rendered="#{detalheUsuarioView.possuiCertificadoEmitido}">
-					<wi:outputText id="dataInicio"
-						value="#{detalheUsuarioView.dataInicio}"
-						label="#{infoxMessages['detalhesUsuario.dataInicio']}" />
-					<wi:outputText id="dataFim" value="#{detalheUsuarioView.dataFim}"
-						label="#{infoxMessages['detalhesUsuario.dataFim']}" />
-				</h:panelGroup>
+        <h:panelGroup
+          rendered="#{detalheUsuarioView.possuiCertificadoEmitido}">
+          <wi:outputText id="dataInicio"
+            value="#{detalheUsuarioView.dataInicio}"
+            label="#{infoxMessages['detalhesUsuario.dataInicio']}" />
+          <wi:outputText id="dataFim" value="#{detalheUsuarioView.dataFim}"
+            label="#{infoxMessages['detalhesUsuario.dataFim']}" />
+        </h:panelGroup>
 
-				<h:panelGroup
-					rendered="#{detalheUsuarioView.podeEmitirCertificado}">
-					<h:form>
-						<p:commandButton action="#{detalheUsuarioView.gerarCertificado}"
-							ajax="true" partialSubmit="true" onclick="showLoading()"
-							oncomplete="hideLoading()" value="Gerar certificado"
-							update="@(.panelImpressaoComunicacoesContainer) :pageBodyDialogMessage"
-							styleClass="buttons buttons-primary" />
-					</h:form>
-				</h:panelGroup>
+        <h:panelGroup
+          rendered="#{detalheUsuarioView.podeEmitirCertificado}">
+          <h:form>
+            <p:commandButton action="#{detalheUsuarioView.gerarCertificado}"
+              ajax="true" partialSubmit="true" onclick="showLoading()"
+              oncomplete="hideLoading()" value="Gerar certificado"
+              update="@(.panelImpressaoComunicacoesContainer) :pageBodyDialogMessage"
+              styleClass="buttons buttons-primary" />
+          </h:form>
+        </h:panelGroup>
 
-				<h:panelGroup
-					rendered="#{detalheUsuarioView.podeExibirTermoAdesao}">
-					<div>
-						<h:outputText value="#{infoxMessages['detalhesUsuario.termo']}:"
-							style="font-weight: bold;" />
-					</div>
-					<div class="termo-adesao-container">
-						<object type="application/pdf" class="termo-adesao"
-							data="#{detalheUsuarioView.urlTermoAdesao}" style="height: 500px">
-							<a href="#{detalheUsuarioView.urlTermoAdesao}">Download</a>
-						</object>
-					</div>
-				</h:panelGroup>
-			</p:outputPanel>
-		</wi:panel>
-	</ui:define>
+        <p:outputPanel styleClass="assinaturaEletronicaPanel">
+            <fieldset>
+                <LEGEND>#{infoxMessages['assinaturaEletronica.legend']}</LEGEND>
+
+                <p:outputPanel rendered="#{detalheUsuarioView.podeConfigurarAssinaturaEletronica()}">
+                    <h:form>
+                        <wi:field id="assinaturaEletronicaUpload" required="true"
+                            label="#{infoxMessages['assinaturaEletronica.upload']}"  rendered="#{empty detalheUsuarioView.linkAssinaturaEletronica}">
+                            <rich:fileUpload id="assinaturaEletronicaUploadInput" execute="@this"
+                                status=":status" limitRender="true" required="true"
+                                fileUploadListener="#{detalheUsuarioView.uploadAssinaturaEletronica}"
+                                addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+                                clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+                                clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+                                doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
+                                uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+                                sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+                                maxFilesQuantity="1" listHeight="50px"
+                                immediateUpload="true" noDuplicate="true"
+                                maxFileSize="2097152"
+                                acceptedTypes="jpg, png" onsizerejected="alert('#{infoxMessages['processoDocumento.sizeExceededLabel']}');"
+                                ontyperejected="alert('#{infoxMessages['assinaturaEletronica.extensaoInvalida']}');"
+                                onclear="limpaUploadAssinaturaEletronica();" />
+                            <p:remoteCommand name="limpaUploadAssinaturaEletronica" process="@this" update="@(.assinaturaEletronicaPanel)"
+                                actionListener="#{detalheUsuarioView.limpaUploadAssinaturaEletronica()}"
+                                onstart="infox.showLoading();"
+                                oncomplete="infox.hideLoading();" />
+                        </wi:field>
+
+                        <p:outputPanel layout="inline" rendered="#{not empty detalheUsuarioView.linkAssinaturaEletronica}">
+                            <wi:field id="preview"
+                                label="#{infoxMessages['assinaturaEletronica.preview']}">
+                                <img id="previewOutput"
+                                    src="#{detalheUsuarioView.linkAssinaturaEletronica}" width="250px" height="125px" />
+                            </wi:field>
+                        </p:outputPanel>
+
+
+                        <div>
+                            <p:commandButton action="#{detalheUsuarioView.salvarAssinaturaEletronica}"
+                              onclick="infox.showLoading()" rendered="#{empty detalheUsuarioView.linkAssinaturaEletronica}"
+                              oncomplete="infox.hideLoading()" value="#{infoxMessages['assinaturaEletronica.gravar']}"
+                              update="@(.assinaturaEletronicaPanel) :pageBodyDialogMessage"
+                              styleClass="buttons buttons-primary" />
+                            <p:commandButton action="#{detalheUsuarioView.removerAssinaturaEletronica}"
+                              onstart="if (!confirm('#{infoxMessages['assinaturaEletronica.substituir.confirm']}')) return false; infox.showLoading();" rendered="#{not empty detalheUsuarioView.linkAssinaturaEletronica}"
+                              oncomplete="infox.hideLoading();" value="#{infoxMessages['assinaturaEletronica.substituir']}"
+                              update="@(.assinaturaEletronicaPanel) :pageBodyDialogMessage"
+                              styleClass="buttons buttons-primary" />
+                        </div>
+                    </h:form>
+                </p:outputPanel>
+                <p:outputPanel rendered="#{not detalheUsuarioView.podeConfigurarAssinaturaEletronica()}">
+                    <h:outputText value="#{infoxMessages['assinaturaEletronica.naoPodeExibir']}"></h:outputText>
+                </p:outputPanel>
+            </fieldset>
+        </p:outputPanel>
+
+        <h:panelGroup
+          rendered="#{detalheUsuarioView.podeExibirTermoAdesao}">
+          <div>
+            <h:outputText value="#{infoxMessages['detalhesUsuario.termo']}:"
+              style="font-weight: bold;" />
+          </div>
+          <div class="termo-adesao-container">
+            <object type="application/pdf" class="termo-adesao"
+              data="#{detalheUsuarioView.urlTermoAdesao}" style="height: 500px">
+              <a href="#{detalheUsuarioView.urlTermoAdesao}">Download</a>
+            </object>
+          </div>
+        </h:panelGroup>
+      </p:outputPanel>
+    </wi:panel>
+  </ui:define>
 </ui:composition>

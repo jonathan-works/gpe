@@ -98,6 +98,24 @@
                 label="#{infoxMessages['tipoProcessoDocumento.posicaoAssinatura']}"
                 items="#{classificacaoDocumentoFacade.getPosicaoTextoAssinaturaDocumentoEnumValues()}"
                 value="#{classificacaoDocumentoCrudAction.instance.posicaoTextoAssinaturaDocumentoEnum}" showLabelSelecione="true" />
+            <wi:selectOneMenuEnum id="orientacaoAssinaturaEletronica"
+                label="#{infoxMessages['tipoProcessoDocumento.orientacaoAssinaturaEletronica']}"
+                items="#{classificacaoDocumentoFacade.getOrientacaoAssinaturaEletronicaDocumentoEnum()}"
+                value="#{classificacaoDocumentoCrudAction.instance.orientacaoAssinaturaEletronicaDocumentoEnum}" showLabelSelecione="true" />
+            <wi:selectOneMenuEnum id="localizacaoAssinaturaEletronica"
+                label="#{infoxMessages['tipoProcessoDocumento.localizacaoAssinaturaEletronica']}"
+                items="#{classificacaoDocumentoFacade.getLocalizacaoAssinaturaEletronicaDocumentoEnum()}"
+                value="#{classificacaoDocumentoCrudAction.instance.localizacaoAssinaturaEletronicaDocumentoEnum}" showLabelSelecione="true" >
+                <f:ajax event="change" render=":defaultTabPanel:classificacaoDocumentoForm:paginaExibicaoAssinaturaEletronicaDiv" execute="@this" listener="#{classificacaoDocumentoCrudAction.onChangeLocalizacaoAssinaturaEletronica()}"/>
+            </wi:selectOneMenuEnum>
+            <s:div id="paginaExibicaoAssinaturaEletronicaDiv" style="display: inline-block;">
+            <wi:inputNumber id="paginaExibicaoAssinaturaEletronica"
+                    value="#{classificacaoDocumentoCrudAction.instance.paginaExibicaoAssinaturaEletronica}"
+                    required="true"
+                    rendered="#{classificacaoDocumentoCrudAction.podeExibirNumeroPaginaAssinaturaEletronica}"
+                    label="#{infoxMessages['tipoProcessoDocumento.numeroPaginaAssinaturaEletronica']}"
+                    maxlength="30" />
+            </s:div>
             <wi:selectBooleanRadio id="sistema"
                 label="#{infoxMessages['tipoProcessoDocumento.sistema']}"
                 value="#{classificacaoDocumentoCrudAction.instance.sistema}" />

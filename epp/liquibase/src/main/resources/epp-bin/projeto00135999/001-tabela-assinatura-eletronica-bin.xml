@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet id="1" author="heliolima">
+		<createTable tableName="tb_assinatura_eletronica_bin">
+			<column name="id_assinatura_eletronica_bin" type="bigint">
+                <constraints nullable="false"
+                	primaryKey="true"
+                	primaryKeyName="pk_assinatura_eletronica_bin"/>
+			</column>
+		</createTable>
+	</changeSet>
+    <changeSet id="2" author="heliolima" dbms="mssql">
+        <addColumn tableName="tb_assinatura_eletronica_bin">
+            <column name="ob_imagem" type="IMAGE">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="3" author="heliolima" dbms="postgresql">
+        <addColumn tableName="tb_assinatura_eletronica_bin">
+            <column name="ob_imagem" type="BYTEA">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="4" author="heliolima" dbms="oracle">
+        <addColumn tableName="tb_assinatura_eletronica_bin">
+            <column name="ob_imagem" type="BLOB">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

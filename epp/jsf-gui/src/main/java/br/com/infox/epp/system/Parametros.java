@@ -80,7 +80,9 @@ public enum Parametros {
     CD_MODELO_DOCUMENTO_FOLHA_ROSTO_RESUMO_PROCESSO(new ParametroDefinition<>("sistema", "cdModDocFolhaRostoResumoProc", FieldType.SELECT_ONE, ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.codigo)
             .addFilter(isTrue(ModeloDocumento_.ativo))),
     CD_MODELO_DOCUMENTO_FOLHA_TRAMITACAO_RESUMO_PROCESSO(new ParametroDefinition<>("sistema", "cdModDocFolhaTramResumoProc", FieldType.SELECT_ONE, ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.codigo)
-    .addFilter(isTrue(ModeloDocumento_.ativo)));
+    .addFilter(isTrue(ModeloDocumento_.ativo))),
+    LIMITE_PAGINA_ASSINATURA_ELETRONICA(
+            new ParametroDefinition<String>("assinaturaEletronica", "limitePaginaAssinaturaEletronica", FieldType.STRING));
 
     private final String label;
     private final ParametroDefinition<?> parametroDefinition;
