@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -763,5 +764,27 @@ public class BpmExpressionService {
         ExpressionResolver expressionResolver = ExpressionResolverChainBuilder.defaultExpressionResolverChain(getIdProcessoAtual(), getExecutionContext());
         String conteudo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, expressionResolver);
         documentoBinManager.atualizarConteudoDocumentoBin(documento.getDocumentoBin(), conteudo);
-   }
+    }
+
+    @External(expressionType = ExpressionType.GERAL,
+            tooltip = "process.geral.expression.getIntervaloFormatadoPorExtenso.tooltip",
+            value = {
+                @Parameter(selectable = true, defaultValue="dataIni", label = "dataIni",
+                        tooltip = "process.geral.expression.getIntervaloFormatadoPorExtenso.dataIni.tooltip"
+                ),
+                @Parameter(selectable = true, defaultValue="dataFim", label = "dataFim",
+                        tooltip = "process.geral.expression.getIntervaloFormatadoPorExtenso.dataFim.tooltip"
+                )
+            }
+    )
+    public String getIntervaloFormatadoPorExtenso(Date dataIni, Date dataFim) {
+        if (Objects.isNull(dataIni) || Objects.isNull(dataFim))
+            throw new BusinessException("É necessário informar todos os parâmetros.");
+
+        if (dataIni.after(dataFim))
+            throw new BusinessException("A data inicial não pode ser maior que a data final.");
+
+        return DateUtil.formatarIntervaloDataPorExtenso(dataIni, dataFim);
+    }
+
 }

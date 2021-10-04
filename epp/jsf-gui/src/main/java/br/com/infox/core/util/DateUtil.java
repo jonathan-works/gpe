@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.enterprise.context.RequestScoped;
@@ -88,7 +89,7 @@ public class DateUtil {
             return null;
         }
     }
-    
+
     /**
      * Adiciona/Subtrai dias de uma data
      * @param dias
@@ -101,11 +102,11 @@ public class DateUtil {
 		c.add(Calendar.DAY_OF_MONTH, dias);
 		return c.getTime();
 	}
-    
-    
+
+
     /**
-     * Retorna um {@link java.util.Date} sem a informação da hora. 
-     * É utilizado em comparações de datas que devem desconsiderar o horário. 
+     * Retorna um {@link java.util.Date} sem a informação da hora.
+     * É utilizado em comparações de datas que devem desconsiderar o horário.
      * @param data
      * @return
      */
@@ -120,8 +121,8 @@ public class DateUtil {
 	}
 
     /**
-     * Retorna um {@link java.util.Date} sem a informação da data (setado para 01/01/1970). 
-     * É utilizado em comparações de horas que devem desconsiderar a data. 
+     * Retorna um {@link java.util.Date} sem a informação da data (setado para 01/01/1970).
+     * É utilizado em comparações de horas que devem desconsiderar a data.
      * @param data
      * @return
      */
@@ -131,10 +132,10 @@ public class DateUtil {
 		calendar.set(1970, 0, 1);
 		return new Time(calendar.getTime().getTime());
 	}
-    
+
     /**
      * Retorna a diferencia em dias entre a data inicial e final informadas.
-     * 
+     *
      * @param dataFim - Data final
      * @param dataIni - Data Inicial
      * @return A diferencas em dias das datas informadas.
@@ -146,7 +147,7 @@ public class DateUtil {
 
     /**
      * Metodo retorna um calendar com o horario IGUAL a '23:59:59.999'
-     * 
+     *
      * @param date
      * @return
      */
@@ -161,7 +162,7 @@ public class DateUtil {
     /**
      * Metodo que recebe uma data e retorna essa data com as horas modificadas
      * para '23:59:59.999'
-     * 
+     *
      * @param date
      * @return
      */
@@ -181,7 +182,7 @@ public class DateUtil {
 
     /**
      * Metodo retorna um calendar com o horario IGUAL a '00:00:00'
-     * 
+     *
      * @param date
      * @return
      */
@@ -196,7 +197,7 @@ public class DateUtil {
     /**
      * Metodo que recebe uma data e retorna essa data com as horas modificadas
      * para '00:00:00.000'
-     * 
+     *
      * @param date
      * @return
      */
@@ -210,7 +211,7 @@ public class DateUtil {
     public static DateTime getBeginningOfDay(DateTime data) {
         return data.withTime(0, 0, 0, 0);
     }
-    
+
     @Produces
     @Named("currentDateTime")
     public DateTime currentDateTime(){
@@ -222,12 +223,12 @@ public class DateUtil {
     public Date currentDate(){
     	return new Date();
     }
-    
-    
+
+
     /**
      * Calcula a diferença em minutos entre as datas (Date) informadas nos
      * parametros.
-     * 
+     *
      * @param dataInicial
      * @param dataFim
      * @return diferença em minutos entre as duas datas.
@@ -239,13 +240,13 @@ public class DateUtil {
         return (int) (dataFimMilli - dataInicialMilli)
                 / (MILESIMOS_DO_SEGUNDO * SEGUNDOS_DO_MINUTO);
     }
-    
+
     public static boolean isDataMaiorIgual(Date date1, Date date2) {
         date1 = DateUtil.getBeginningOfDay(date1);
         date2 = DateUtil.getBeginningOfDay(date2);
         return date1.getTime() >= date2.getTime();
     }
-    
+
     public static boolean isDataMenorIgual(Date date1, Date date2) {
         date1 = DateUtil.getBeginningOfDay(date1);
         date2 = DateUtil.getBeginningOfDay(date2);
@@ -265,7 +266,7 @@ public class DateUtil {
         DateTime dateTime = new DateTime(data).withZone(DateTimeZone.UTC);
         return dateTime.withDate(dateTime.getYear(), 12, 31).withTime(23, 59, 59, 999).toDate();
     }
-    
+
     public static Date parseDate(String date, String formato) {
         try {
             if (date == null || date == "") {
@@ -277,6 +278,32 @@ public class DateUtil {
         } catch (ParseException e) {
             return null;
         }
+    }
+
+    /**
+     * Converte intervalo entre duas datas para uma String em formato por extenso.
+     * @param dataIni, dataFim
+     * @return String no formato X anos(s), X mes(es) e X dia(s)
+     */
+    public static String formatarIntervaloDataPorExtenso(Date dataIni, Date dataFim) {
+        String msg = "0 ano(s), 0 mes(es) e 0 dia(s)";
+        GregorianCalendar gcIni = new GregorianCalendar();
+        gcIni.setTime(dataIni);
+
+        GregorianCalendar gcFim = new GregorianCalendar();
+        gcFim.setTime(dataFim);
+
+        long dif = gcFim.getTimeInMillis() - gcIni.getTimeInMillis();
+        if (dif > 0) {
+            GregorianCalendar gcDif = new GregorianCalendar();
+            gcDif.setTimeInMillis(dif);
+            long ano = gcFim.get(GregorianCalendar.YEAR) - gcIni.get(GregorianCalendar.YEAR);
+            long mes = gcDif.get(GregorianCalendar.MONTH);
+            long dia = gcDif.get(GregorianCalendar.DAY_OF_MONTH);
+            msg = ano + " ano(s), " + mes + " mes(es) e " + dia + " dia(s) ";
+        }
+
+        return msg;
     }
 
 }
