@@ -12,6 +12,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.list.BloqueioUsuarioList;
 import br.com.infox.epp.access.list.UsuarioPerfilEntityList;
 import br.com.infox.epp.access.list.UsuarioPessoaFisicaList;
+import br.com.infox.epp.assinaturaeletronica.AssinaturaEletronicaController;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.meiocontato.list.MeioContatoList;
 import br.com.infox.epp.pessoa.documento.list.PessoaDocumentoList;
@@ -44,6 +45,8 @@ public class UsuarioLoginController extends AbstractController {
     private BloqueioUsuarioList bloqueioUsuarioList;
     @Inject
     private AssinaturaDocumentoList assinaturaDocumentoList;
+    @Inject
+    private AssinaturaEletronicaController assinaturaEletronicaController;
 
     @Override
     public void setId(Object id) {
@@ -85,6 +88,7 @@ public class UsuarioLoginController extends AbstractController {
     public void onClickAssinaturaTab() {
         if (getInstance().getPessoaFisica() != null) {
             assinaturaDocumentoList.setFiltroPessoaFisica(getInstance().getPessoaFisica().getIdPessoa());
+            assinaturaEletronicaController.carregarAssinaturaPessoaFisica(getInstance().getPessoaFisica().getIdPessoa());
         } else {
             assinaturaDocumentoList.setFiltroPessoaFisica(null);
         }
@@ -106,6 +110,7 @@ public class UsuarioLoginController extends AbstractController {
         bloqueioUsuarioCrudAction.newInstance();
         bloqueioUsuarioList.newInstance();
         assinaturaDocumentoList.newInstance();
+        assinaturaEletronicaController.newInstance();
     }
 
     public void onGravarPessoaFisica() {

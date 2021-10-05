@@ -98,8 +98,10 @@ public class AssinaturaEletronicaService extends PersistenceController {
             AssinaturaEletronicaBin assinaturaEletronicaBin = assinaturaEletronicaBinSearch.getAssinaturaEletronicaBinById(assinaturaEletronica.getId());
             if(assinaturaEletronicaBin != null) {
                 getEntityManagerBin().remove(assinaturaEletronicaBin);
+                getEntityManagerBin().flush();
             }
             assinaturaEletronicaDao.remove(assinaturaEletronica);
+            assinaturaEletronicaDao.flush();
         }
     }
 
