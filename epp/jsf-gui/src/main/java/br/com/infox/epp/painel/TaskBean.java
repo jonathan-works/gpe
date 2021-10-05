@@ -6,6 +6,8 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.painel.caixa.Caixa;
+import lombok.Getter;
+import lombok.Setter;
 
 public class TaskBean {
 
@@ -32,12 +34,18 @@ public class TaskBean {
     private Integer pesoPrioridadeProcesso;
     private Date dataInicio;
     private String nomeUsuarioTarefa;
+    private boolean exibirSelecaoAssinaturaLote;
+    private boolean selecaoAssinaturaLote;
+    private boolean assinavelAposSelecionar;
+    @Getter @Setter
+    private Boolean hasDocumentoParaAssinar;
+
 
     public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
             Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeNatureza,
             String nomeCategoria, String numeroProcesso, Integer idProcessoRoot, String numeroProcessoRoot, String nomeUsuarioSolicitante,
             Integer idPrioridadeProcesso, String prioridadeProcesso, Integer pesoPrioridadeProcesso, Date dataInicio,
-            String nomeNaturezaProcessoRoot, String nomeCategoriaProcessoRoot) {
+            String nomeNaturezaProcessoRoot, String nomeCategoriaProcessoRoot, Boolean temDocumentoParaAssinar) {
         this.idTaskInstance = idTaskInstance;
         this.taskName = taskName;
         this.assignee = assignee;
@@ -58,6 +66,7 @@ public class TaskBean {
         this.prioridadeProcesso = prioridadeProcesso;
         this.pesoPrioridadeProcesso = pesoPrioridadeProcesso == null ? -1 : pesoPrioridadeProcesso;
         this.dataInicio = dataInicio;
+        this.hasDocumentoParaAssinar = temDocumentoParaAssinar;
     }
 
     public String getIdTaskInstance() {
@@ -167,7 +176,31 @@ public class TaskBean {
         this.idFluxo = idFluxo;
     }
 
-    public void removerCaixa() {
+	public boolean isExibirSelecaoAssinaturaLote() {
+		return exibirSelecaoAssinaturaLote;
+	}
+
+	public void setExibirSelecaoAssinaturaLote(boolean exibirSelecaoAssinaturaLote) {
+		this.exibirSelecaoAssinaturaLote = exibirSelecaoAssinaturaLote;
+	}
+
+	public boolean isSelecaoAssinaturaLote() {
+		return selecaoAssinaturaLote;
+	}
+
+	public void setSelecaoAssinaturaLote(boolean selecaoAssinaturaLote) {
+		this.selecaoAssinaturaLote = selecaoAssinaturaLote;
+	}
+
+	public boolean isAssinavelAposSelecionar() {
+		return assinavelAposSelecionar;
+	}
+
+	public void setAssinavelAposSelecionar(boolean assinavelAposSelecionar) {
+		this.assinavelAposSelecionar = assinavelAposSelecionar;
+	}
+
+	public void removerCaixa() {
         this.idCaixa = null;
         this.nomeCaixa = null;
     }

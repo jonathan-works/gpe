@@ -8,24 +8,41 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.faces.component.html.HtmlSelectBooleanCheckbox;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.ValidationException;
 
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.primefaces.context.RequestContext;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.list.DataList;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.documento.TaskInstanceListagemDocumentoDTO;
+import br.com.infox.epp.documento.TaskInstancePermitidaAssinarDocumentoSearch;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
@@ -37,8 +54,16 @@ import br.com.infox.epp.painel.PanelDefinition;
 import br.com.infox.epp.painel.TaskBean;
 import br.com.infox.epp.processo.list.FiltroVariavelProcessoSearch;
 import br.com.infox.epp.processo.list.FiltroVariavelProcessoVO;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.ApplicationException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,6 +73,8 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
 
     private static final long serialVersionUID = 1L;
 
+    private static final LogProvider LOG = Logging.getLogProvider(ConsultaProcessoList.class);
+    
     private static final String DYNAMIC_COLUMN_EXPRESSION = "#{consultaProcessoList.getVariavelProcesso(row.idProcesso, '%s', row.idTaskInstance).valor}";
 
     private static Comparator<TaskBean> TASK_COMPARATOR = new Comparator<TaskBean>() {
@@ -71,6 +98,14 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     private FluxoManager fluxoManager;
     @Inject
     private PapelManager papelManager;
+    @Inject
+    private TaskInstancePermitidaAssinarDocumentoSearch taskInstancePermitidaAssinarDocumentoSearch;
+    @Inject
+	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
+    @Inject
+	private AssinadorService assinadorService;
+    @Inject
+    private DocumentoBinManager documentoBinManager;
 
     private String numeroProcesso;
     private String numeroProcessoRoot;
@@ -95,6 +130,13 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     private FluxoBean fluxoBean;
     private PanelDefinition panelDefinition;
 
+    @Getter
+    private TaskInstanceListagemDocumentoDTO listagemDocumentoAssinatura;
+    @Getter @Setter
+    private String tokenAssinatura;
+    @Getter @Setter
+    private boolean showMarcarTodosAssinaveis;
+    
     @Inject
     private FiltroVariavelProcessoSearch filtroVariavelProcessoSearch;
 
@@ -205,6 +247,7 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
 
     @Override
     public void newInstance() {
+    	listagemDocumentoAssinatura = new TaskInstanceListagemDocumentoDTO();
         filteredTasks = new ArrayList<>(getTasks());
 
         setValorFiltroVariavelProcesso(null);
@@ -221,7 +264,38 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
         clearExtraFilters();
         setPage(1);
         search();
+        buildExibirSelecaoAssinarDocumentosLote(filteredTasks);
+        RequestContext.getCurrentInstance().execute("enableDisableAssinarButton();");
     }
+    
+    public void buildExibirSelecaoAssinarDocumentosLote(List<TaskBean> listaTaskBean) {
+    	showMarcarTodosAssinaveis = false;
+		for(TaskBean taskBean : listaTaskBean) {
+			taskBean.setExibirSelecaoAssinaturaLote(taskInstancePermitidaAssinarDocumentoSearch.taskPossuiDocumentoParaSerAssinado(taskBean.getIdTaskInstance()));
+			if(!showMarcarTodosAssinaveis && taskBean.isExibirSelecaoAssinaturaLote()) {
+				showMarcarTodosAssinaveis = true;
+			}
+		}
+	}
+    
+    public void marcarAssinaveisNaoAssinaveis() {
+    	List<String> listaIdTaskInstance = new ArrayList<String>();
+    	for(TaskBean taskBean : filteredTasks) {
+    		if(taskBean.isSelecaoAssinaturaLote()) {
+    			listaIdTaskInstance.add(taskBean.getIdTaskInstance());
+    		}
+    	}
+    	listagemDocumentoAssinatura = taskInstancePermitidaAssinarDocumentoSearch.getListaDocumentoDTOParaSeremAssinados(listaIdTaskInstance);
+    }
+    
+	public void marcarTodosAssinaveis(AjaxBehaviorEvent event) {
+		boolean selecionarTodos = ((HtmlSelectBooleanCheckbox)event.getSource()).isSelected();
+		for (TaskBean taskBean : filteredTasks) {
+			if (taskBean.isExibirSelecaoAssinaturaLote()) {
+				taskBean.setSelecaoAssinaturaLote(selecionarTodos);
+			}
+		}
+	}
 
     protected void clearExtraFilters() {}
 
@@ -274,6 +348,63 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
         Object object = JbpmExpressionEvaluator.evaluate("#{"+expression+"}", executionContext);
         return object;
     }
+    
+    public AssinavelProvider getAssinavelProvider() {
+	    List<AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura> lista = new ArrayList<>();
+        for (Documento documento : listagemDocumentoAssinatura.getListaDocumentoAssinavel()) {
+            TipoMeioAssinaturaEnum tma = classificacaoDocumentoPapelManager.getTipoMeioAssinaturaUsuarioLogadoByClassificacaoDocumento(documento.getClassificacaoDocumento());
+			lista.add(new AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura(tma, documento.getDocumentoBin()));
+        }
+
+		return new AssinavelDocumentoBinProvider(lista);
+	}
+    
+    public void signDocuments() {
+		try {
+			List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(tokenAssinatura);
+
+			UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+			for (DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
+				DocumentoBin docBin =  getDocumentoTemporarioByUuid(dadosAssinatura.getUuidDocumentoBin());
+				if (docBin != null) {
+					if (!isAssinadoPor(docBin, usuarioPerfil)) {
+						assinadorService.assinar(dadosAssinatura, usuarioPerfil);
+					}
+				} else {
+					throw new ApplicationException("Documento não localizado!");
+				}
+			}
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("anexarDocumentos.sucessoAssinatura"));
+		}catch(AssinaturaException | ValidationException e){
+			LOG.error("Erro signDocuments ", e);
+			FacesMessages.instance().add(Severity.ERROR,e.getMessage());
+		}catch (Exception e) {
+			LOG.error("Erro signDocuments ", e);
+			FacesMessages.instance().add(Severity.ERROR,
+					InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));
+		}
+	}
+    
+    private DocumentoBin getDocumentoTemporarioByUuid(UUID uuid) {
+		for (Documento documento : listagemDocumentoAssinatura.getListaDocumentoAssinavel()) {
+			UUID wrapperUuid = documento.getDocumentoBin().getUuid();
+			if (uuid.equals(wrapperUuid))
+				return documentoBinManager.getByUUID(wrapperUuid);
+		}
+		return null;
+	}
+    
+    private boolean isAssinadoPor(DocumentoBin docBin, UsuarioPerfil usuarioPerfil) {
+		List<AssinaturaDocumento> assinaturas = docBin.getAssinaturas();
+		if (assinaturas != null) {
+			for (AssinaturaDocumento assinatura : assinaturas) {
+				if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getPapel())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
     @Override
     protected String getDefaultEjbql() {

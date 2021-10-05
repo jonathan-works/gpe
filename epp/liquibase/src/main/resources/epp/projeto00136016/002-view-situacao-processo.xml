@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet
+        id="1"
+        author="marcone"
+		dbms="mssql, postgresql, oracle"
+    >
+        <createIndex tableName="tb_taski_permitida_assinar_doc" indexName="idx_taski_perm_assinar_doc_01">
+            <column name="id_taskinstance" />
+        </createIndex>
+	</changeSet>
+
+    <changeSet
+        id="2"
+        author="marcone"
+		dbms="mssql, postgresql, oracle"
+    >
+        <createView viewName="vs_situacao_processo">
+select ti.id_ as id_taskinstance, pj.id_process_instance as id_processinstace,
+pj.id_processo, pr.nr_processo, pr.id_usuario_cadastro_processo, pr.id_caixa, f.id_fluxo,
+pr.id_processo_root, proot.nr_processo as nr_processo_root,
+pr.id_prioridade_processo,
+pr.id_natureza_categoria_fluxo, proot.id_natureza_categoria_fluxo as id_natureza_categoria_fluxo_root,
+case when exists(select 1 from tb_taski_permitida_assinar_doc tipa where ti.id_= tipa.id_taskinstance) then 1 else 0 end as in_documento_assinar
+FROM tb_processo_jbpm pj
+left join tb_processo pr on (pj.id_processo = pr.id_processo)
+left join tb_processo proot on (pr.id_processo_root = proot.id_processo)
+left join jbpm_processinstance pi on (pj.id_process_instance = pi.id_)
+left join JBPM_PROCESSDEFINITION pd on (pi.processdefinition_ = pd.id_)
+inner join tb_fluxo f on (pd.name_ = f.ds_fluxo)
+inner join jbpm_taskinstance ti on (pj.id_process_instance = ti.procinst_)
+        </createView>
+	</changeSet>
+
+</databaseChangeLog>

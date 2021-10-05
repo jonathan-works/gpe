@@ -5,12 +5,15 @@
   xmlns:f="http://java.sun.com/jsf/core"
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
-  xmlns:s="http://jboss.org/schema/seam/taglib">
+  xmlns:i="http://java.sun.com/jsf/composite/infox"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+                xmlns:p="http://primefaces.org/ui">
 
   <h:form>
     <ui:param name="idProcesso" value="#{row.idProcesso}" />
     <ui:param name="idTaskInstance" value="#{row.idTaskInstance}" />
     <ui:param name="owner" value="#{row.assignee}" />
+    <ui:param name="exibirSelecaoAssinaturaLote" value="#{row.exibirSelecaoAssinaturaLote}" />
     <ui:param name="inTabExpedidas" value="#{painelUsuarioController.selectedFluxo.expedida}" />
     <ui:param name="showMovimentarToolBar" value="#{wi:get(showMovimentarToolBar, true)}" />
 
@@ -59,6 +62,19 @@
 	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/processAssigned.png')}" title="#{infoxMessages['painel.movimentar.tooltipProblemaLocalizacao']}" 
 	rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar and not authenticator.perfilTemplateAtualPossuiLocalizacao()}" style="opacity: 0.4;"/>
 	
+    <p:commandLink
+        action="#{painelUsuarioController.carregarDocumentosParaAssinar(row)}"
+        rendered="#{row.hasDocumentoParaAssinar}"
+        process="@this"
+        partialSubmit="true"
+        update="@(.listaDocsParaAssinarPanelContainer)"
+        onclick="showLoading()"
+        style="opacity: 0.4; color: black;"
+        oncomplete="hideLoading(); #{rich:component('listaDocsParaAssinarPanel')}.show();"
+    >
+        <i:icon value="download" />
+    </p:commandLink>
+	
     <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/role.gif')}"
       rendered="#{(owner ne authenticator.getUsuarioLogado().login and not empty owner and not authenticator.isUsuarioAtualResponsavel()) and showMovimentarToolBar}"
       title="Processo bloqueado pelo servidor #{row.nomeUsuarioTarefa}" />
@@ -73,6 +89,16 @@
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/role.gif')}"
         title="#{infoxMessages['painel.list.liberarTarefaServidor']} #{row.nomeUsuarioTarefa}" />
     </a:commandLink>
-  </h:form>
+
+		<rich:column id="checkboxColumn">
+			<h:selectBooleanCheckbox value="#{row.selecaoAssinaturaLote}"
+				rendered="#{exibirSelecaoAssinaturaLote}" 
+				onclick="updateMarcarTodos($(this)); enableDisableAssinarButton();"
+				styleClass="checkButtonDocumento">
+				<p:ajax execute="@this" />
+			</h:selectBooleanCheckbox>
+		</rich:column>
+
+	</h:form>
 
 </ui:composition>

@@ -22,6 +22,8 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.documento.TaskInstancePermitidaAssinarDocumentoSearch;
+import br.com.infox.epp.documento.service.DocumentoVO;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
@@ -32,6 +34,7 @@ import br.com.infox.epp.tarefa.component.tree.PainelEntityNode;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.seam.security.SecurityUtil;
+import lombok.Getter;
 
 @Named
 @ViewScoped
@@ -57,6 +60,8 @@ public class PainelUsuarioController implements Serializable {
 	protected ActionMessagesService actionMessagesService;
 	@Inject
 	private TaskInstanceManager taskInstanceManager;
+	@Inject
+	private TaskInstancePermitidaAssinarDocumentoSearch taskInstancePermitidaAssinarDocumentoSearch;
 
 	private FluxoBean selectedFluxo;
 	protected List<FluxoBean> fluxosDisponiveis;
@@ -66,6 +71,9 @@ public class PainelUsuarioController implements Serializable {
 	private String numeroProcesso;
 	private String idProcessDefinition;
 	private Integer pollInterval;
+
+	@Getter
+    private List<DocumentoVO> listaDocumentosParaAssinar = new ArrayList<>();
 
 	@PostConstruct
 	protected void init() {
@@ -149,6 +157,11 @@ public class PainelUsuarioController implements Serializable {
         taskBean.setAssignee(null);
 
     }
+
+	@ExceptionHandled(value = MethodType.UNSPECIFIED)
+	public void carregarDocumentosParaAssinar(TaskBean taskBean) {
+	    this.listaDocumentosParaAssinar = taskInstancePermitidaAssinarDocumentoSearch.getListaDocumentosParaAssinar(Long.valueOf(taskBean.getIdTaskInstance()));
+	}
 
 	public void onSelectNode() {
 		consultaProcessoList.onSelectNode(getSelected());
