@@ -465,43 +465,43 @@
         showGrid="#{not empty usuarioLoginController.instance.pessoaFisica}"
         panelStyleClass="full-sized short-margin-top">
         <ui:define name="headerToolBar">
-        	<s:span rendered="#{systemFacade.exportarPDF()}" styleClass="tb-rprt" style="display: inline-block;">
-        		<h:form>
-        			<h:commandLink
-        				action="#{pathResolver.viewIdDirectory.concat('assinaturaReport.xhtml')}"
-        				target="_blank">
-        				<f:setPropertyActionListener
-        					value="#{assinaturaDocumentoList.exportPDF()}"
-        					target="#{flash.lista}" />
-        				<f:setPropertyActionListener
-        					value="#{assinaturaDocumentoList.nomeUsuario}"
-        					target="#{flash.nomeUsuario}" />
-        				<h:graphicImage
-        					url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
-        					title="#{infoxMessages['report.exportPDF']}" />
-        			</h:commandLink>
-        		</h:form>
-        	</s:span>
-        	<wi:toolBarReportExcel
-        		rendered="#{systemFacade.exportarXLS()}"
-        		action="#{assinaturaDocumentoList.exportarXLS()}" />
+          <s:span rendered="#{systemFacade.exportarPDF()}" styleClass="tb-rprt" style="display: inline-block;">
+            <h:form>
+              <h:commandLink
+                action="#{pathResolver.viewIdDirectory.concat('assinaturaReport.xhtml')}"
+                target="_blank">
+                <f:setPropertyActionListener
+                  value="#{assinaturaDocumentoList.exportPDF()}"
+                  target="#{flash.lista}" />
+                <f:setPropertyActionListener
+                  value="#{assinaturaDocumentoList.nomeUsuario}"
+                  target="#{flash.nomeUsuario}" />
+                <h:graphicImage
+                  url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
+                  title="#{infoxMessages['report.exportPDF']}" />
+              </h:commandLink>
+            </h:form>
+          </s:span>
+          <wi:toolBarReportExcel
+            rendered="#{systemFacade.exportarXLS()}"
+            action="#{assinaturaDocumentoList.exportarXLS()}" />
         </ui:define>
         <ui:define name="toolBar">
           <h:form>
-          	<ui:param
-          		name="isModelo"
-          		value="#{empty row.dsExtensao}" />
-          	<a:commandLink execute="@this" render="@this"
-          		rendered="#{not empty row.dsExtensao}"
-          		action="#{jsfUtil.applyLastPhaseFlashAction}"
-          		onclick="infox.showLoading();"
-          		oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpenByIdDocumentoBin(row.idDocumentoBin)}">
-          		<h:graphicImage
-          			title="#{infoxMessages['processoDocumento.visualizar']}"
-          			url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}" />
-          		<f:setPropertyActionListener value="#{row.idDocumentoBin}" target="#{flash.idDocumentoBin}" />
-          		<f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
-          	</a:commandLink>
+            <ui:param
+              name="isModelo"
+              value="#{empty row.dsExtensao}" />
+            <a:commandLink execute="@this" render="@this"
+              rendered="#{not empty row.dsExtensao}"
+              action="#{jsfUtil.applyLastPhaseFlashAction}"
+              onclick="infox.showLoading();"
+              oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpenByIdDocumentoBin(row.idDocumentoBin)}">
+              <h:graphicImage
+                title="#{infoxMessages['processoDocumento.visualizar']}"
+                url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}" />
+              <f:setPropertyActionListener value="#{row.idDocumentoBin}" target="#{flash.idDocumentoBin}" />
+              <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
+            </a:commandLink>
           </h:form>
         </ui:define>
         <wi:columnOutputText
