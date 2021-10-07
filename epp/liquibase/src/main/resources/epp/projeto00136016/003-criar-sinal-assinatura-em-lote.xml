@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="nextValueForSqSignal" value="nextval('sq_signal')" dbms="postgresql" />
+    <property name="nextValueForSqSignal" value="sq_signal.nextval" dbms="oracle" />
+    <property name="nextValueForSqSignal" value="next value for sq_signal" dbms="mssql" />
+
+    <changeSet author="elitonsantos" id="1" dbms="mssql, postgresql, oracle">
+    	<preConditions onFail="MARK_RAN">
+    		<sqlCheck expectedResult="0">SELECT count(*) FROM tb_signal WHERE CD_SIGNAL = 'assinaturaDocumentosEmLote'</sqlCheck>
+    	</preConditions>
+
+        <insert tableName="tb_signal">
+        	<column name="id_signal" valueSequenceNext="sq_signal"></column>
+        	<column name="cd_signal" value="assinaturaDocumentosEmLote"></column>
+        	<column name="nm_signal" value="Assinatura de Documentos em Lote"></column>
+        	<column name="in_ativo" valueBoolean="true"></column>
+        	<column name="in_sistema" valueBoolean="true"></column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
