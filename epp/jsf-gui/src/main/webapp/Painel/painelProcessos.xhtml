@@ -288,6 +288,7 @@
 						signAction="#{consultaProcessoList.signDocuments}" />
 
 					<p:remoteCommand name="postAssinaturaLote"
+						actionListener="#{consultaProcessoList.dispararSinalAssinaturaEmLote}"
 						action="#{consultaProcessoList.newInstance}"
 						update="painelProcessos" />
 

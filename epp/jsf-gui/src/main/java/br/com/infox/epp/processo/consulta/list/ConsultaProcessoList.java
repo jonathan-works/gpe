@@ -61,6 +61,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
+import br.com.infox.ibpm.sinal.SignalService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
@@ -76,6 +77,7 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     private static final LogProvider LOG = Logging.getLogProvider(ConsultaProcessoList.class);
     
     private static final String DYNAMIC_COLUMN_EXPRESSION = "#{consultaProcessoList.getVariavelProcesso(row.idProcesso, '%s', row.idTaskInstance).valor}";
+    public static final String SINAL_ASSINATURA_LOTE_PAINEL_USUARIO = "assinaturaDocumentosEmLote";
 
     private static Comparator<TaskBean> TASK_COMPARATOR = new Comparator<TaskBean>() {
 
@@ -106,6 +108,8 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
 	private AssinadorService assinadorService;
     @Inject
     private DocumentoBinManager documentoBinManager;
+    @Inject
+	private SignalService signalService;
 
     private String numeroProcesso;
     private String numeroProcessoRoot;
@@ -384,6 +388,12 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
 					InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));
 		}
 	}
+    
+    public void dispararSinalAssinaturaEmLote() {
+    	for (TaskBean taskBean : filteredTasks) {
+            signalService.dispatch(taskBean.getIdProcesso(), SINAL_ASSINATURA_LOTE_PAINEL_USUARIO);
+        }
+    }
     
     private DocumentoBin getDocumentoTemporarioByUuid(UUID uuid) {
 		for (Documento documento : listagemDocumentoAssinatura.getListaDocumentoAssinavel()) {
