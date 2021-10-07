@@ -7,7 +7,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
 	<changeSet id="1" author="elitonsantos"
-		dbms="mssql, postgresql, oracle">
+		dbms="postgresql, oracle">
 		<createTable tableName="tb_taski_permitida_assinar_doc">
 			<column name="id_taski_permitida_assinar_doc" type="bigint">
 				<constraints nullable="false" primaryKey="true"
@@ -20,6 +20,28 @@
 					referencedColumnNames="id_documento" nullable="false" />
 			</column>
 			<column name="id_taskinstance" type="bigint">
+				<constraints
+					foreignKeyName="fk_taski_permitida_ass_doc_02"
+					referencedTableName="jbpm_taskinstance" referencedColumnNames="id_"
+					nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+    <changeSet id="1_1" author="marcone"
+		dbms="mssql">
+		<createTable tableName="tb_taski_permitida_assinar_doc">
+			<column name="id_taski_permitida_assinar_doc" type="bigint">
+				<constraints nullable="false" primaryKey="true"
+					primaryKeyName="pk_taski_permitida_assinar_doc" />
+			</column>
+			<column name="id_documento" type="bigint">
+				<constraints
+					foreignKeyName="fk_taski_permitida_ass_doc_01"
+					referencedTableName="tb_documento"
+					referencedColumnNames="id_documento" nullable="false" />
+			</column>
+			<column name="id_taskinstance" type="numeric(19)">
 				<constraints
 					foreignKeyName="fk_taski_permitida_ass_doc_02"
 					referencedTableName="jbpm_taskinstance" referencedColumnNames="id_"
