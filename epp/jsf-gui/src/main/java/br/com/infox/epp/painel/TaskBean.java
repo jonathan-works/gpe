@@ -36,7 +36,6 @@ public class TaskBean {
     private String nomeUsuarioTarefa;
     private boolean exibirSelecaoAssinaturaLote;
     private boolean selecaoAssinaturaLote;
-    private boolean assinavelAposSelecionar;
     @Getter @Setter
     private Boolean hasDocumentoParaAssinar;
 
@@ -190,14 +189,6 @@ public class TaskBean {
 
 	public void setSelecaoAssinaturaLote(boolean selecaoAssinaturaLote) {
 		this.selecaoAssinaturaLote = selecaoAssinaturaLote;
-	}
-
-	public boolean isAssinavelAposSelecionar() {
-		return assinavelAposSelecionar;
-	}
-
-	public void setAssinavelAposSelecionar(boolean assinavelAposSelecionar) {
-		this.assinavelAposSelecionar = assinavelAposSelecionar;
 	}
 
 	public void removerCaixa() {

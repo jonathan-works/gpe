@@ -284,13 +284,9 @@
 						rendered="#{not empty consultaProcessoList.listagemDocumentoAssinatura.listaDocumentoAssinavel}"
 						render="pageBodyDialogMessage assinarDocumentosPopUpPanelOutput"
 						onbegin="infox.showLoading();"
-						oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos(); postAssinaturaLote();"
-						signAction="#{consultaProcessoList.signDocuments}" />
-
-					<p:remoteCommand name="postAssinaturaLote"
-						actionListener="#{consultaProcessoList.dispararSinalAssinaturaEmLote}"
-						action="#{consultaProcessoList.newInstance}"
-						update="painelProcessos" />
+						oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos(); atualizaPainelFluxo();"
+						signAction="#{consultaProcessoList.signDocuments}"
+						callbackHandler="#{consultaProcessoList}" />
 
 					<a:commandButton id="cancelarAssinaturaButton" styleClass="buttons"
 						value="#{infoxMessages['button.cancelar']}"

@@ -101,15 +101,4 @@ public class TaskInstancePermitidaAssinarDocumentoSearch extends PersistenceCont
         return listaDocumento;
 	}
 
-	public boolean taskPossuiDocumentoParaSerAssinado(String idTaskInstance) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<TaskInstancePermitidaAssinarDocumento> taskPermitida = query.from(TaskInstancePermitidaAssinarDocumento.class);
-        Join<TaskInstancePermitidaAssinarDocumento, Documento> documento = taskPermitida.join(TaskInstancePermitidaAssinarDocumento_.documento);
-        Join<Documento, DocumentoBin> documentoBin = documento.join(Documento_.documentoBin);
-        query.where(cb.equal(taskPermitida.get(TaskInstancePermitidaAssinarDocumento_.idTaskInstance), Long.valueOf(idTaskInstance)), cb.isFalse(documentoBin.get(DocumentoBin_.suficientementeAssinado)));
-        query.select(cb.count(taskPermitida));
-        return getEntityManager().createQuery(query).getSingleResult() > 0;
-	}
-
 }
