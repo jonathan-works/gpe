@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.consulta.list;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,6 +26,7 @@ import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.primefaces.context.RequestContext;
 
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.list.DataList;
@@ -38,6 +40,7 @@ import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
+import br.com.infox.epp.assinador.view.AssinaturaCallback;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.TaskInstanceListagemDocumentoDTO;
 import br.com.infox.epp.documento.TaskInstancePermitidaAssinarDocumentoSearch;
@@ -70,7 +73,7 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
-public class ConsultaProcessoList extends DataList<TaskBean> {
+public class ConsultaProcessoList extends DataList<TaskBean> implements Serializable, AssinaturaCallback {
 
     private static final long serialVersionUID = 1L;
 
@@ -275,7 +278,7 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     public void buildExibirSelecaoAssinarDocumentosLote(List<TaskBean> listaTaskBean) {
     	showMarcarTodosAssinaveis = false;
 		for(TaskBean taskBean : listaTaskBean) {
-			taskBean.setExibirSelecaoAssinaturaLote(taskInstancePermitidaAssinarDocumentoSearch.taskPossuiDocumentoParaSerAssinado(taskBean.getIdTaskInstance()));
+			taskBean.setExibirSelecaoAssinaturaLote(!taskInstancePermitidaAssinarDocumentoSearch.getListaDocumentosParaSeremAssinados(taskBean.getIdTaskInstance()).isEmpty());
 			if(!showMarcarTodosAssinaveis && taskBean.isExibirSelecaoAssinaturaLote()) {
 				showMarcarTodosAssinaveis = true;
 			}
@@ -389,7 +392,29 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
 		}
 	}
     
-    public void dispararSinalAssinaturaEmLote() {
+	@Override
+	public void onSuccess(List<DadosAssinatura> dadosAssinatura) {
+		try {
+			if (dadosAssinatura != null) {
+				for (DadosAssinatura dadoAssinatura : dadosAssinatura) {
+					assinadorService.assinar(dadoAssinatura, Authenticator.getUsuarioPerfilAtual());
+				}
+				dispararSinalAssinaturaEmLote();
+				FacesMessages.instance().add(Severity.INFO,	InfoxMessages.getInstance().get("Documentos assinados com sucesso"));
+			} else {
+				FacesMessages.instance().add(Severity.ERROR, InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));
+			}
+		} catch (AssinaturaException e) {
+			FacesMessages.instance().add(Severity.ERROR, InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));
+		}
+	}
+
+	@Override
+	public void onFail(StatusToken statusToken, List<DadosAssinatura> dadosAssinatura) {		
+		FacesMessages.instance().add(Severity.ERROR, InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));
+	}
+    
+    private void dispararSinalAssinaturaEmLote() {
     	for (TaskBean taskBean : filteredTasks) {
             signalService.dispatch(taskBean.getIdProcesso(), SINAL_ASSINATURA_LOTE_PAINEL_USUARIO);
         }
