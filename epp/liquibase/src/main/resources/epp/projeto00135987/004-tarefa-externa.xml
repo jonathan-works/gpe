@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="nextValueForSqRecurso" value="nextval('sq_tb_recurso')" dbms="postgresql" />
+    <property name="nextValueForSqRecurso" value="sq_tb_recurso.nextval" dbms="oracle" />
+    <property name="nextValueForSqRecurso" value="next value for sq_tb_recurso" dbms="mssql" />
+
+    <property name="nextValueForSqParametro" value="nextval('sq_tb_parametro')" dbms="postgresql" />
+    <property name="nextValueForSqParametro" value="sq_tb_parametro.nextval" dbms="oracle" />
+    <property name="nextValueForSqParametro" value="next value for sq_tb_parametro" dbms="mssql" />
+
+    <changeSet author="marcone" id="1" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueComputed="${nextValueForSqRecurso}" />
+            <column name="ds_identificador" value="/pages/TarefaExterna/listView.seam" />
+            <column name="ds_nome" value="Configuração da Tarefa Externa" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marcone" id="2" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'sinalTarefaExterna'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="sinalTarefaExterna" />
+            <column name="ds_variavel" value="parametro.sinalTarefaExterna.descricao" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marcone" id="3" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'modeloDocumentoChaveConsulta'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="modeloDocumentoChaveConsulta" />
+            <column name="ds_variavel" value="parametro.modeloDocumentoChaveConsulta.descricao" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marcone" id="4" dbms="mssql, postgresql, oracle">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from tb_parametro where nm_variavel = 'modeloDocumentoDownloadPDF'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="tb_parametro">
+            <column name="id_parametro" valueComputed="${nextValueForSqParametro}" />
+            <column name="nm_variavel" value="modeloDocumentoDownloadPDF" />
+            <column name="ds_variavel" value="parametro.modeloDocumentoDownloadPDF.descricao" />
+            <column name="in_sistema" valueBoolean="true" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
