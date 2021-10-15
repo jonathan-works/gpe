@@ -25,6 +25,11 @@
 		<component-class>br.com.infox.jsf.workaround.UIDataTableWorkaround</component-class>
 	</component>
 	
+	<component>
+		<component-type>org.jboss.seam.pdf.ui.UIDocument</component-type>
+		<component-class>br.com.infox.jsf.workaround.SeamPdfDocument</component-class>
+	</component>
+	
 	<render-kit>
 		<renderer>
 			<component-family>org.primefaces.component</component-family>

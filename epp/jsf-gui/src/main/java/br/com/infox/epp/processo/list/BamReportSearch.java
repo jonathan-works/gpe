@@ -43,7 +43,7 @@ public class BamReportSearch extends PersistenceController {
             String strDataFim = dateFormat.format(dataFim);
             querySB.append(String.format(" and (pt.dt_inicio between '%s' and '%s') ", strDataInicio, strDataFim));
         }
-        querySB.append(" order by p.id_processo, pt.dt_inicio desc, pt.dt_fim desc ");
+        querySB.append(" order by p.id_processo, pt.dt_inicio asc, pt.dt_fim asc ");
 
         Query createNativeQuery = getEntityManager().createNativeQuery(querySB.toString());
         List<Object[]> resultList = createNativeQuery.getResultList();
