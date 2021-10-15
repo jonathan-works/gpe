@@ -84,8 +84,7 @@ public class TaskInstancePermitidaAssinarDocumentoSearch extends PersistenceCont
         CriteriaQuery<Documento> query = cb.createQuery(Documento.class);
         Root<TaskInstancePermitidaAssinarDocumento> taskPermitida = query.from(TaskInstancePermitidaAssinarDocumento.class);
         Join<TaskInstancePermitidaAssinarDocumento, Documento> documento = taskPermitida.join(TaskInstancePermitidaAssinarDocumento_.documento);
-        Join<Documento, DocumentoBin> documentoBin = documento.join(Documento_.documentoBin);
-        query.where(cb.equal(taskPermitida.get(TaskInstancePermitidaAssinarDocumento_.idTaskInstance), Long.valueOf(idTaskInstance)), cb.isFalse(documentoBin.get(DocumentoBin_.suficientementeAssinado)));
+        query.where(cb.equal(taskPermitida.get(TaskInstancePermitidaAssinarDocumento_.idTaskInstance), Long.valueOf(idTaskInstance)));
         query.select(documento);
 
         List<Documento> listaDocumento = getEntityManager().createQuery(query).getResultList();
