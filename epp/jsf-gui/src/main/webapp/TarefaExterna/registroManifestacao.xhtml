@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['registroManifestacao.titlePage']}</ui:define>
+
+    <ui:define name="body">
+        <p:panel
+            id="panelPrincipal"
+            style="border-width: 1px; border-style: solid; margin-top: 35px"
+            styleClass="content-block"
+            header="#{infoxMessages['registroManifestacao.titlePage']}"
+        >
+            <h:form
+                id="formDadosPessoais"
+            >
+            
+            <wi:field
+                id="tipoManifestacao"
+                label="#{messages['registroManifestacao.tipoManifestacao']}"
+                required="true"
+            >
+                <h:selectOneRadio
+                    id="tipoManifestacaoInput"
+                    value="#{cadastroTarefaExternaView.vo.tipoManifestacao}"
+                    onchange="showLoading()"
+                    required="true"
+                >
+                    <p:ajax
+                        listener="#{cadastroTarefaExternaView.onChangeTipoManifestacao}"
+                        event="change"
+                        process="@this"
+                        partialSubmit="true"
+                        oncomplete="hideLoading()"
+                        update="@(.dadosPessoaisContainer)"
+                    />
+                    <f:selectItem
+                        itemLabel="Anônimo"
+                        itemValue="A"
+                    />
+                    <f:selectItem
+                        itemLabel="Identificado"
+                        itemValue="I"
+                    />
+                </h:selectOneRadio>
+            </wi:field>
+            
+            <p:outputPanel styleClass="dadosPessoaisContainer">
+            <h:panelGroup rendered="#{cadastroTarefaExternaView.vo.tipoManifestacao eq 'I'}">
+            <fieldset style="margin-bottom: 10px;">
+                <legend>#{messages['registroManifestacao.dadosPessoais']}</legend>
+                
+                
+                <wi:field id="numeroCpf" required="true"
+                    label="#{infoxMessages['registroManifestacao.cpf']}">
+                    <p:inputMask id="numeroCpfInput"
+                        mask="999.999.999-99"
+                        size="14"
+                        required="true"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.cpf}">
+                        <f:validator validatorId="cpfValidator" />
+                        <f:converter converterId="cpfConverter" />
+                    </p:inputMask>
+                </wi:field>
+                
+                <wi:field
+                    id="nome"
+                    label="#{messages['registroManifestacao.nome']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="nomeInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.nome}"
+                        required="true"
+                    />
+                </wi:field>
+                
+                <wi:field
+                    id="sexo"
+                    label="#{infoxMessages['registroManifestacao.sexo']}"
+                    required="true"
+                >
+                    <h:selectOneMenu
+                        id="sexoInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.sexo}"
+                        required="true"
+                    >
+                        <f:selectItem
+                            noSelectionOption="true"
+                            itemValue="#{null}"
+                            itemLabel="#{messages['crud.select.select']}"
+                        />
+                        <f:selectItems
+                            value="#{cadastroTarefaExternaView.tiposGenero}"
+                            var="tg"
+                            itemLabel="#{tg.label}"
+                            itemValue="#{tg}"
+                        />
+                    </h:selectOneMenu>
+                </wi:field>
+                    
+                <wi:field
+                    id="cep"
+                    label="#{infoxMessages['registroManifestacao.cep']}"
+                    required="true"
+                >
+                    <p:inputMask
+                        id="cepInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.cep}"
+                        required="true"
+                        size="12"
+                        maxlength="9"
+                        mask="99999-999"
+                    />
+                </wi:field>
+                
+                <wi:field
+                    id="endereco"
+                    label="#{messages['registroManifestacao.endereco']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="enderecoInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.endereco}"
+                        required="true"
+                    />
+                </wi:field>
+                <wi:field
+                    id="numero"
+                    label="#{messages['registroManifestacao.numero']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="numeroInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.numero}"
+                        required="true"
+                    />
+                </wi:field>
+                <wi:field
+                    id="bairro"
+                    label="#{messages['registroManifestacao.bairro']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="bairroInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.bairro}"
+                        required="true"
+                    />
+                </wi:field>
+                <wi:field
+                    id="complemento"
+                    label="#{messages['registroManifestacao.complemento']}"
+                >
+                    <h:inputText
+                        id="complementoInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.complemento}"
+                    />
+                </wi:field>
+                <wi:field
+                    id="uf"
+                    label="#{infoxMessages['registroManifestacao.codEstado']}"
+                    required="true"
+                >
+                    <h:selectOneMenu
+                        id="ufInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.uf}"
+                        required="true"
+                    >
+                        <f:selectItem
+                            noSelectionOption="true"
+                            itemValue="#{null}"
+                            itemLabel="#{messages['crud.select.select']}"
+                        />
+                        <f:selectItems
+                            value="#{cadastroTarefaExternaView.estados}"
+                            var="uf"
+                            itemLabel="#{uf.label}"
+                            itemValue="#{uf}"
+                        />
+                    </h:selectOneMenu>
+                </wi:field>
+                <wi:field
+                    id="municipio"
+                    label="#{messages['registroManifestacao.municipio']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="municipioInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.municipio}"
+                        required="true"
+                    />
+                </wi:field>
+                <p:outputPanel
+                    styleClass="contatosPessoaContainer"
+                >
+                <wi:field
+                    id="telefoneCelular"
+                    label="#{messages['registroManifestacao.telefoneCelular']}"
+                    required="#{cadastroTarefaExternaView.vo.meioResposta eq 'TL'}"
+                >
+                    <h:inputText
+                        id="telefoneCelularInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.telefoneCelular}"
+                        required="#{cadastroTarefaExternaView.vo.meioResposta eq 'TL'}"
+                    />
+                </wi:field>
+                <wi:field
+                    id="telefoneFixo"
+                    label="#{messages['registroManifestacao.telefoneFixo']}"
+                    required="#{cadastroTarefaExternaView.vo.meioResposta eq 'TL'}"
+                >
+                    <h:inputText
+                        id="telefoneFixoInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.telefoneFixo}"
+                        required="#{cadastroTarefaExternaView.vo.meioResposta eq 'TL'}"
+                    />
+                </wi:field>
+                <wi:field
+                    id="emailPessoal"
+                    label="#{messages['registroManifestacao.email']}"
+                    required="#{cadastroTarefaExternaView.vo.meioResposta eq 'EM'}"
+                >
+                    <h:inputText
+                        id="emailPessoalInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.email}"
+                        required="#{cadastroTarefaExternaView.vo.meioResposta eq 'EM'}"
+                    >
+                        <f:validator validatorId="emailValidator" />
+                    </h:inputText>
+                </wi:field>
+                </p:outputPanel>
+            </fieldset>
+            </h:panelGroup>
+            
+            <wi:field
+                id="grupoOuvidoria"
+                label="#{infoxMessages['registroManifestacao.grupoOuvidoria']}"
+                required="true"
+            >
+                <h:selectOneMenu
+                    id="grupoOuvidoriaInput"
+                    value="#{cadastroTarefaExternaView.vo.grupoOuvidoria}"
+                    required="true"
+                >
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems
+                        value="#{cadastroTarefaExternaView.grupoOuvidorias}"
+                        var="go"
+                        itemLabel="#{go.label}"
+                        itemValue="#{go}"
+                    />
+                </h:selectOneMenu>
+            </wi:field>
+            
+            <wi:field
+                id="desejaResposta"
+                label="#{infoxMessages['registroManifestacao.desejaResposta']}"
+            >
+                <h:selectOneRadio
+                    id="desejaRespostaInput"
+                    value="#{cadastroTarefaExternaView.vo.desejaResposta}"
+                    onchange="showLoading()"
+                    required="true"
+                >
+                    <p:ajax
+                        listener="#{cadastroTarefaExternaView.onChangeDesejaResposta}"
+                        event="change"
+                        process="@this"
+                        partialSubmit="true"
+                        oncomplete="hideLoading()"
+                        update="@(.desejaRespostaContainer) @(.contatosPessoaContainer)"
+                    />
+                    <f:selectItem itemValue="true" itemLabel="#{infoxMessages['crud.yes']}"/>
+                    <f:selectItem itemValue="false" itemLabel="#{infoxMessages['crud.no']}"/>
+                </h:selectOneRadio>
+            </wi:field>
+            
+            <p:outputPanel layout="inline" styleClass="desejaRespostaContainer">
+            <h:panelGroup
+                rendered="#{cadastroTarefaExternaView.vo.desejaResposta}"
+            >
+            <wi:field
+                id="meioResposta"
+                label="#{infoxMessages['registroManifestacao.meioDeResposta']}"
+                required="#{cadastroTarefaExternaView.vo.desejaResposta}"
+            >
+                <h:selectOneMenu
+                    id="meioRespostaInput"
+                    value="#{cadastroTarefaExternaView.vo.meioResposta}"
+                    styleClass="select input"
+                    onchange="showLoading()"
+                    required="#{cadastroTarefaExternaView.vo.desejaResposta}"
+                >
+                    <p:ajax
+                        event="change"
+                        process="@this"
+                        partialSubmit="true"
+                        oncomplete="hideLoading()"
+                        update="@(.emailContainer) @(.contatosPessoaContainer)"
+                    />
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems
+                        value="#{cadastroTarefaExternaView.meiosResposta}"
+                        var="mr"
+                        itemLabel="#{mr.label}"
+                        itemValue="#{mr}"
+                    />
+                </h:selectOneMenu>
+            </wi:field>
+            <p:outputPanel
+                styleClass="emailContainer"
+                layout="inline"
+            >
+            <wi:field
+                id="email"
+                label="#{messages['registroManifestacao.email']}"
+                required="#{cadastroTarefaExternaView.vo.meioResposta eq 'EM'}"
+                rendered="#{cadastroTarefaExternaView.vo.tipoManifestacao eq 'A'}"
+            >
+                <h:inputText
+                    id="emailInput"
+                    value="#{cadastroTarefaExternaView.vo.email}"
+                    required="#{cadastroTarefaExternaView.vo.meioResposta eq 'EM'}"
+                >
+                    <f:validator validatorId="emailValidator" />
+                </h:inputText>
+            </wi:field>
+            </p:outputPanel>
+            </h:panelGroup>
+            </p:outputPanel>
+            
+            <wi:field
+                id="dataAbertura"
+                label="#{messages['registroManifestacao.dataAbertura']}"
+                required="true"
+            >
+                <p:calendar
+                    id="dataAberturaInput"
+                    value="#{cadastroTarefaExternaView.vo.dataAbertura}"
+                    required="true"
+                    maxdate="#{now}"
+                    pattern="dd/MM/yyyy"
+                    placeholder="__/__/____"
+                    mask="99/99/9999"
+                />
+            </wi:field>
+            
+            <wi:field
+                id="tipoManifesto"
+                label="#{infoxMessages['registroManifestacao.tipoManifestacao']}"
+                required="true"
+            >
+                <h:selectOneMenu
+                    id="tipoManifestoInput"
+                    value="#{cadastroTarefaExternaView.vo.tipoManifesto}"
+                    styleClass="select input"
+                    required="true"
+                >
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems
+                        value="#{cadastroTarefaExternaView.tiposManifesto}"
+                        var="mf"
+                        itemLabel="#{mf.label}"
+                        itemValue="#{mf}"
+                    />
+                </h:selectOneMenu>
+            </wi:field>
+            
+            <wi:field
+                id="tituloManifesto"
+                label="#{messages['registroManifestacao.tituloManifesto']}"
+                required="true"
+            >
+                <h:inputText
+                    id="tituloManifestoInput"
+                    value="#{cadastroTarefaExternaView.vo.tituloManifesto}"
+                    required="true"
+                />
+            </wi:field>
+            
+            <wi:field
+                id="descricaoManifesto"
+                label="#{messages['registroManifestacao.descricaoManifesto']}"
+                required="true"
+            >
+                <h:inputTextarea
+                    id="descricaoManifestoInput"
+                    value="#{cadastroTarefaExternaView.vo.descricaoManifesto}"
+                    required="true"
+                />
+            </wi:field>
+            
+            </p:outputPanel>
+            <p:commandButton
+                action="#{cadastroTarefaExternaView.cadastrar}"
+                onclick="showLoading()"
+                oncomplete="hideLoading()"
+                update="@form :pageBodyDialogMessage"
+                process="@form"
+                partialSubmit="true"
+                value="#{messages['processo.iniciarBtn']}"
+            />
+            </h:form>
+        </p:panel>
+        
+    </ui:define>
+</ui:composition>
