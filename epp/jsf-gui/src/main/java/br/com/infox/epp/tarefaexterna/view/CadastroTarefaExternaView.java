@@ -3,30 +3,44 @@ package br.com.infox.epp.tarefaexterna.view;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.seam.contexts.Contexts;
+import org.richfaces.event.FileUploadEvent;
+import org.richfaces.event.FileUploadListener;
+import org.richfaces.model.UploadedFile;
 
+import br.com.infox.cdi.dao.Dao;
+import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.municipio.EstadoSearch;
 import br.com.infox.epp.pessoa.type.TipoGeneroEnum;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
+import br.com.infox.epp.tarefaexterna.CadastroTarefaExternaDocumentoDTO;
+import br.com.infox.epp.tarefaexterna.DocumentoUploadTarefaExternaService;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
+import br.com.infox.seam.exception.BusinessRollbackException;
 import lombok.Getter;
 
 @Named
 @ViewScoped
-public class CadastroTarefaExternaView implements Serializable {
+public class CadastroTarefaExternaView implements FileUploadListener, Serializable {
     private static final long serialVersionUID = 1L;
 
     private static final String TAREFA_EXTERNA_TIPOS_MANIFESTO = "tarefaExternaTiposManifesto";
@@ -40,6 +54,12 @@ public class CadastroTarefaExternaView implements Serializable {
     private EstadoSearch estadoSearch;
     @Inject
     private DominioVariavelTarefaSearch dominioVariavelTarefaSearch;
+    @Inject
+    private ConfiguracaoTarefaExternaViewSearch configuracaoTarefaExternaViewSearch;
+
+    @Inject
+    @GenericDao
+    private Dao<ClassificacaoDocumento, Integer> classificacaoDocumentoDao;
 
     @Getter
     private List<SelectItem> estados;
@@ -53,26 +73,63 @@ public class CadastroTarefaExternaView implements Serializable {
     @Getter
     private List<SelectItem> tiposManifesto;
 
-    private String uuidView;
+    private UUID uuidTarefaExterna;
+
+
+    @Getter
+    private CadastroTarefaExternaDocumentoDTO docVO;
+    @Inject
+    @Getter
+    private CadastroTarefaDocumentoDataModel documentosDataModel;
+    @Getter
+    private List<ClassificacaoDocumentoVO> classificacoes;
+    @Getter
+    private List<PastaVO> pastas;
+    @Getter
+    private String acceptedTypes;
+    @Inject
+    private DocumentoUploadTarefaExternaService documentoUploadTarefaExternaService;
+    @Inject
+    private DocumentoUploaderService documentoUploaderService;
 
     @PostConstruct
     private void init() {
-        uuidView = UUID.randomUUID().toString();
+        uuidTarefaExterna = UUID.randomUUID();
+        documentosDataModel.setUuidTarefaExterna(uuidTarefaExterna);
         this.vo = new CadastroTarefaExternaVO();
+        this.docVO = new CadastroTarefaExternaDocumentoDTO();
+        getDocVO().setUuidTarefaExterna(uuidTarefaExterna);
         this.estados = estadoSearch.findAll()
             .stream()
             .map(o -> new SelectItem(o.getCodigo(), o.getNome()))
             .collect(Collectors.toList());
         this.tiposGenero = TipoGeneroEnum.values();
 
+        classificacoes = configuracaoTarefaExternaViewSearch.getClassificacoes();
+        pastas = configuracaoTarefaExternaViewSearch.getPastas();
+
         initListas();
         onChangeTipoManifestacao();
+    }
+
+    @PreDestroy
+    private void preDestroy() {
+        documentoUploadTarefaExternaService.remover(this.uuidTarefaExterna);
     }
 
     private void initListas() {
         this.grupoOuvidorias = getListaDados(TAREFA_EXTERNA_GRUPO_OUVIDORIAS);
         this.meiosRespostaBase = getListaDados(TAREFA_EXTERNA_MEIOS_RESPOSTA);
         this.tiposManifesto = getListaDados(TAREFA_EXTERNA_TIPOS_MANIFESTO);
+    }
+
+    public void onChangeClassificacaoDocumento() {
+        if(getDocVO().getIdClassificacaoDocumento() != null) {
+            ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoDao.findById(getDocVO().getIdClassificacaoDocumento());
+            acceptedTypes = classificacaoDocumento.getAcceptedTypes();
+        } else {
+            acceptedTypes = null;
+        }
     }
 
     public void onChangeDesejaResposta() {
@@ -111,9 +168,65 @@ public class CadastroTarefaExternaView implements Serializable {
         return resultado;
     }
 
+    @Override
+    @ExceptionHandled
+    public void processFileUpload(FileUploadEvent event) {
+        getDocVO().setUploadValido(false);
+        try {
+            UploadedFile file = event.getUploadedFile();
+            ClassificacaoDocumento classificacao = classificacaoDocumentoDao.findById(getDocVO().getIdClassificacaoDocumento());
+            documentoUploaderService.validaDocumento(file, classificacao, file.getData());
+            getDocVO().getBins().add(documentoUploaderService.createProcessoDocumentoBin(file));
+            getDocVO().setUploadValido(true);
+        } catch (Exception e) {
+            throw new BusinessRollbackException("Falha no upload", e);
+        }
+    }
+
+    @ExceptionHandled
+    public void limparArquivos() {
+        String arquivosParaLimpar = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("arquivosParaLimpar");
+        List<String> arquivos = arquivosParaLimpar == null ? Collections.emptyList() : Arrays.asList(arquivosParaLimpar.split(";"));
+        if(!arquivos.isEmpty()) {
+            List<DocumentoBin> arquivosparaRemover = new ArrayList<>();
+            for (DocumentoBin documentoBin : getDocVO().getBins()) {
+                if(arquivos.contains(documentoBin.getNomeArquivo())){
+                    arquivosparaRemover.add(documentoBin);
+                }
+            }
+            getDocVO().getBins().removeAll(arquivosparaRemover);
+            if(getDocVO().getBins().isEmpty()) {
+                getDocVO().setUploadValido(false);
+            }
+        }
+    }
+
+    @ExceptionHandled(successMessage = "Operação efetuada com sucesso")
+    public void removerDocumentos() {
+        List<DocumentoVO> selecionados = getDocumentosDataModel().getSelecionados();
+
+        if(selecionados == null || selecionados.isEmpty()) {
+            return;
+        }
+        documentoUploadTarefaExternaService.remover(
+                selecionados.stream().map(DocumentoVO::getId).collect(Collectors.toList())
+        );
+        getDocumentosDataModel().getSelecionados().clear();
+    }
+
+    @ExceptionHandled(value = MethodType.PERSIST)
+    public void inserirDocumento() {
+        getDocVO().setDataInclusao(Calendar.getInstance().getTime());
+
+        documentoUploadTarefaExternaService.inserir(getDocVO());
+
+        this.docVO = new CadastroTarefaExternaDocumentoDTO();
+        getDocVO().setUuidTarefaExterna(uuidTarefaExterna);
+        onChangeClassificacaoDocumento();
+    }
+
     @ExceptionHandled(value = MethodType.PERSIST)
     public void cadastrar() {
-        System.out.println(Contexts.getApplicationContext().get("f4666914-25ad-4860-8163-f5da1e93b1b1"));
     }
 
 

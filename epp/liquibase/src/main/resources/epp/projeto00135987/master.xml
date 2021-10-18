@@ -9,5 +9,6 @@
     <include file="epp/projeto00135987/003-tabela-documento-upload-tarefa-externa.xml" />
     <include file="epp/projeto00135987/004-tarefa-externa.xml" />
     <include file="epp/projeto00135987/005-dominios-de-dados.xml" />
+    <include file="epp/projeto00135987/006-tabela-documento-upload-tarefa-externa-ajustes.xml" />
 
 </databaseChangeLog>

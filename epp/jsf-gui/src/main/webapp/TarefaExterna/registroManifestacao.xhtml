@@ -21,9 +21,11 @@
             header="#{infoxMessages['registroManifestacao.titlePage']}"
         >
             <h:form
-                id="formDadosPessoais"
+                id="formTarefaExterna"
             >
-            
+            <p:outputPanel
+                styleClass="formTarefaExternaContainer"
+            >
             <wi:field
                 id="tipoManifestacao"
                 label="#{messages['registroManifestacao.tipoManifestacao']}"
@@ -410,14 +412,274 @@
                     required="true"
                 />
             </wi:field>
-            
             </p:outputPanel>
+            </p:outputPanel>
+            
+            <div class="ui-g">
+            <div class="ui-g-12 ui-lg-6">
+            <rich:collapsiblePanel
+                id="uploadDoc"
+                switchType="client"
+                opened="true"
+                header="#{infoxMessages['registroManifestacao.upload']}"
+                style="margin-bottom: 10px;"
+            >
+                <p:outputPanel
+                    id="uploadDocContainer"
+                    styleClass="uploadDocContainer"
+                >
+                <wi:field
+                    id="descricaoDoc"
+                    label="#{infoxMessages['registroManifestacao.descricaoDoc']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="descricaoDocInput"
+                        value="#{cadastroTarefaExternaView.docVO.descricao}"
+                        required="true"
+                    />
+                </wi:field>
+                <wi:field
+                    id="classificacaoDoc"
+                    label="#{infoxMessages['tarefaExterna.configuracao.classificacaoDocumento']}"
+                    required="true"
+                >
+                    <h:selectOneMenu
+                        id="classificacaoDocInput"
+                        value="#{cadastroTarefaExternaView.docVO.idClassificacaoDocumento}"
+                        styleClass="select input"
+                        required="true"
+                        onchange="showLoading()"
+                    >
+                        <p:ajax
+                            listener="#{cadastroTarefaExternaView.onChangeClassificacaoDocumento}"
+                            update="@(.binContainer)"
+                            event="change"
+                            oncomplete="hideLoading()"
+                            process="@this"
+                            partialSubmit="true"
+                        />
+                        <f:selectItem
+                            noSelectionOption="true"
+                            itemValue="#{null}"
+                            itemLabel="#{messages['crud.select.select']}"
+                        />
+                        <f:selectItems
+                            value="#{cadastroTarefaExternaView.classificacoes}"
+                            var="cd"
+                            itemLabel="#{cd.descricao}(#{cd.codigo})"
+                            itemValue="#{cd.id}"
+                        />
+                    </h:selectOneMenu>
+                </wi:field>
+                <wi:field
+                    id="pastaDoc"
+                    label="#{infoxMessages['tarefaExterna.configuracao.pasta']}"
+                >
+                    <h:selectOneMenu
+                        id="pastaDocInput"
+                        value="#{cadastroTarefaExternaView.docVO.idPasta}"
+                        styleClass="select input"
+                    >
+                        <f:selectItem
+                            noSelectionOption="true"
+                            itemValue="#{null}"
+                            itemLabel="#{messages['crud.select.select']}"
+                        />
+                        <f:selectItems
+                            value="#{cadastroTarefaExternaView.pastas}"
+                            var="cd"
+                            itemLabel="#{cd.nome}(#{cd.codigo})"
+                            itemValue="#{cd.id}"
+                        />
+                    </h:selectOneMenu>
+                </wi:field>
+                <p:outputPanel
+                    styleClass="binContainer"
+                >
+                <rich:fileUpload 
+                    id="documentos"
+                    execute="@this"
+                    status=":status"
+                    limitRender="true"
+                    fileUploadListener="#{cadastroTarefaExternaView.processFileUpload}"
+                    onclear="showLoading(); onDocUploadClear(event)"
+                    addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+                    clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+                    clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+                    doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
+                    uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+                    sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+                    maxFilesQuantity="10"
+                    listHeight="50px"
+                    immediateUpload="true"
+                    noDuplicate="true"
+                    render="btGravarDoc pageBodyDialogMessage"
+                    acceptedTypes="#{cadastroTarefaExternaView.acceptedTypes}"
+                    ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')"
+                    rendered="#{not empty cadastroTarefaExternaView.docVO.idClassificacaoDocumento}"
+                />
+                <script type="text/javascript">
+                function onDocUploadClear(a){
+                    let files = a.rf.data.map(function(obj){return obj.name;}).join(";");
+                    limparDocsUpload([{name : 'arquivosParaLimpar', value : files}]);
+                }
+                </script>
+                <p:remoteCommand
+                    name="limparDocsUpload"
+                    action="#{cadastroTarefaExternaView.limparArquivos}"
+                    process="@this"
+                    partialSubmit="true"
+                    update="@(.btGravarDoc)"
+                    oncomplete="hideLoading()"
+                />
+                
+                </p:outputPanel>
+                <h:panelGroup id="btGravarDoc" styleClass="btGravarDoc">
+                <p:commandButton
+                    action="#{cadastroTarefaExternaView.inserirDocumento}"
+                    onclick="showLoading()"
+                    oncomplete="hideLoading()"
+                    update="@(.uploadDocContainer) @(.docsInseridosContainer) :pageBodyDialogMessage"
+                    process="@(.uploadDocContainer)"
+                    partialSubmit="true"
+                    disabled="#{not cadastroTarefaExternaView.docVO.uploadValido}"
+                    value="#{messages['button.save']}"
+                />
+                </h:panelGroup>
+                </p:outputPanel>
+            </rich:collapsiblePanel>
+            </div>
+            <div class="ui-g-12 ui-lg-6">
+            <rich:collapsiblePanel
+                id="docsInseridos"
+                switchType="client"
+                opened="true"
+                header="#{infoxMessages['registroManifestacao.documentosAnexados']}"
+                style="margin-bottom: 10px;"
+            >
+                <p:outputPanel
+                    id="docsInseridosContainer"
+                    styleClass="docsInseridosContainer"
+                >
+                <p:dataTable
+                    id="dtDocAnexados"
+                    widgetVar="dtDocAnexadosWV"
+                    styleClass="dtable rf-dt-crud"
+                    rows="30"
+                    rowsPerPageTemplate="15,30,60"
+                    emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
+                    paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                    currentPageReportTemplate="Página {currentPage} de {totalPages} em {totalRecords} registros"
+                    lazy="true"
+                    paginator="true"
+                    value="#{cadastroTarefaExternaView.documentosDataModel}"
+                    binding="#{cadastroTarefaExternaView.documentosDataModel.dataTable}"
+                    selection="#{cadastroTarefaExternaView.documentosDataModel.selecionados}"
+                    var="rd"
+                >
+                    <p:ajax
+                        event="page"
+                        process="@this"
+                        partialSubmit="true"
+                        update="@(.btRemoverDocAnexados)"
+                        onstart="showLoading(); PF('dtDocAnexadosWV').unselectAllRows();"
+                        oncomplete="hideLoading()"
+                    />
+                    <p:ajax
+                        event="toggleSelect"
+                        process="@this"
+                        partialSubmit="true"
+                        update="@(.btRemoverDocAnexados)"
+                        onstart="showLoading()"
+                        oncomplete="hideLoading()"
+                    />
+                    <p:ajax
+                        event="rowSelectCheckbox"
+                        process="@this"
+                        partialSubmit="true"
+                        update="@(.btRemoverDocAnexados)"
+                        onstart="showLoading()"
+                        oncomplete="hideLoading()"
+                    />
+                    <p:ajax
+                        event="rowUnselectCheckbox"
+                        process="@this"
+                        partialSubmit="true"
+                        update="@(.btRemoverDocAnexados)"
+                        onstart="showLoading()"
+                        oncomplete="hideLoading()"
+                    />
+                    <p:column
+                        selectionMode="multiple"
+                        styleClass="dt-toolbar-col"
+                        width="15"
+                    />
+                    <p:column
+                        width="15"
+                    >
+                        <p:commandLink
+                            process="@this"
+                            update="@this"
+                            partialSubmit="true"
+                            action="#{jsfUtil.applyLastPhaseFlashAction()}"
+                            oncomplete="#{cadastroTarefaExternaView.documentosDataModel.jsOpenPopup}"
+                        >
+                            <f:setPropertyActionListener
+                                value="#{rd.idDocumentoBin}"
+                                target="#{flash.idDocumentoBin}"
+                            />
+                            <f:setPropertyActionListener
+                                value="#{false}"
+                                target="#{flash.binario}"
+                            />
+                            <h:graphicImage
+                                title="Visualizar"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
+                            />
+                        </p:commandLink>
+                    </p:column>
+                    <p:column headerText="#{infoxMessages['registroManifestacao.doc.pasta']}">
+                        <h:outputText value="#{rd.classificacao}" />
+                    </p:column>
+                    <p:column
+                        headerText="#{infoxMessages['registroManifestacao.doc.descricao']}">
+                        <h:outputText value="#{rd.descricao}" />
+                    </p:column>
+                    <p:column
+                        headerText="#{infoxMessages['registroManifestacao.doc.dataInclusao']}">
+                        <h:outputText value="#{rd.dataInclusao}" />
+                    </p:column>
+                    <p:column
+                        headerText="#{infoxMessages['registroManifestacao.doc.pasta']}">
+                        <h:outputText value="#{rd.pasta}" />
+                    </p:column>
+                </p:dataTable>
+                <p:outputPanel
+                    styleClass="btRemoverDocAnexados"
+                >
+                    <p:commandButton
+                        action="#{cadastroTarefaExternaView.removerDocumentos}"
+                        update="@(.docsInseridosContainer) :pageBodyDialogMessage"
+                        process="@this"
+                        disabled="#{empty cadastroTarefaExternaView.documentosDataModel.selecionados}"
+                        onclick="if(!confirm('#{infoxMessages['crud.confirmRemove']}')){return false;} showLoading();"
+                        oncomplete="hideLoading()"
+                        value="Remover"                    
+                    />
+                </p:outputPanel>
+                </p:outputPanel>
+                
+            </rich:collapsiblePanel>
+            </div>
+            </div>
+            
             <p:commandButton
                 action="#{cadastroTarefaExternaView.cadastrar}"
                 onclick="showLoading()"
                 oncomplete="hideLoading()"
-                update="@form :pageBodyDialogMessage"
-                process="@form"
+                update="@(.formTarefaExternaContainer) :pageBodyDialogMessage"
+                process="@(.formTarefaExternaContainer)"
                 partialSubmit="true"
                 value="#{messages['processo.iniciarBtn']}"
             />
