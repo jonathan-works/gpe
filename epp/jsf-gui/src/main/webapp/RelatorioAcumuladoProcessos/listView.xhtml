@@ -6,10 +6,45 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a="http://richfaces.org/a4j"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	xmlns:a="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 	<ui:define name="title">#{infoxMessages['relAcumuladoSint.titlePage']}</ui:define>
 	<ui:define name="body">
+		<wi:panel id="estatisticaPanel" styleClass="content-block">
+			<h:form>
+				<div>
+					<i:selectManyMenu id="assunto" required="true"
+						label="#{infoxMessages['relAcumuladoSint.assunto']}"
+						value="#{acumuladoSinteticoProcessosView.listaAssuntoSelecionado}"
+						items="#{acumuladoSinteticoProcessosView.listaAssunto}"
+						selectStyle="width: 350px" />
+
+					<i:selectManyMenu id="status"
+						label="#{infoxMessages['relAcumuladoSint.status']}"
+						value="#{acumuladoSinteticoProcessosView.listaStatusSelecionado}"
+						items="#{acumuladoSinteticoProcessosView.listaStatus}"
+						selectStyle="width: 350px" />
+				</div>
+				<div>
+					<i:selectManyMenu id="mesReferencia"
+						label="#{infoxMessages['relAcumuladoSint.mesReferencia']}"
+						value="#{acumuladoSinteticoProcessosView.listaMesSelecionado}"
+						items="#{acumuladoSinteticoProcessosView.listaMes}"
+						selectStyle="width: 350px" />
+
+					<wi:inputNumber id="ano"
+						label="#{infoxMessages['relAcumuladoSint.ano']}"
+						value="#{acumuladoSinteticoProcessosView.ano}" maxlength="4"
+						size="8" />
+				</div>
+
+				<div>
+					<p:commandButton
+						value="#{infoxMessages['relAcumuladoSint.gerarPDF']}" />
+				</div>
+			</h:form>
+		</wi:panel>
 	</ui:define>
 
 </ui:composition>
