@@ -12,6 +12,7 @@ import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.relatorio.search.AcumuladoSinteticoProcessosSearch;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,8 @@ public class AcumuladoSinteticoProcessosView implements Serializable {
 	
 	@Inject
 	private FluxoDAO fluxoDAO;
+	@Inject
+	AcumuladoSinteticoProcessosSearch acumuladoSinteticoProcessosSearch;
 	
 	@Getter @Setter
 	private List<Fluxo> listaAssunto;
@@ -46,6 +49,16 @@ public class AcumuladoSinteticoProcessosView implements Serializable {
 		listaAssunto = fluxoDAO.getFluxosPrimariosAtivos();
 		listaStatus = Arrays.asList("Em andamento", "Arquivados/Finalizados");
 		listaMes = DateUtil.getListaTodosMeses();
+	}
+	
+	public void gerarRelatorio() {
+		if(listaStatusSelecionado.isEmpty() || listaStatusSelecionado.contains("Em andamento")) {
+			acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, "Em andamento", listaMesSelecionado, ano);
+		}
+		
+		if(listaStatusSelecionado.isEmpty() || listaStatusSelecionado.contains("Arquivados/Finalizados")) {
+			acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, "Arquivados/Finalizados", listaMesSelecionado, ano);
+		}
 	}
 
 }

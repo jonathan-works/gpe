@@ -11,36 +11,44 @@
 	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 	<ui:define name="title">#{infoxMessages['relAcumuladoSint.titlePage']}</ui:define>
 	<ui:define name="body">
+	<style type="text/css">
+  		.ui-selectmanymenu {
+  			width: 350px;
+  		}
+  	</style>
+	
 		<wi:panel id="estatisticaPanel" styleClass="content-block">
 			<h:form>
 				<div>
 					<i:selectManyMenu id="assunto" required="true"
 						label="#{infoxMessages['relAcumuladoSint.assunto']}"
 						value="#{acumuladoSinteticoProcessosView.listaAssuntoSelecionado}"
-						items="#{acumuladoSinteticoProcessosView.listaAssunto}"
-						selectStyle="width: 350px" />
+						items="#{acumuladoSinteticoProcessosView.listaAssunto}" />
 
 					<i:selectManyMenu id="status"
 						label="#{infoxMessages['relAcumuladoSint.status']}"
 						value="#{acumuladoSinteticoProcessosView.listaStatusSelecionado}"
-						items="#{acumuladoSinteticoProcessosView.listaStatus}"
-						selectStyle="width: 350px" />
+						items="#{acumuladoSinteticoProcessosView.listaStatus}" />
 				</div>
 				<div>
 					<i:selectManyMenu id="mesReferencia"
+						required="true"
 						label="#{infoxMessages['relAcumuladoSint.mesReferencia']}"
 						value="#{acumuladoSinteticoProcessosView.listaMesSelecionado}"
-						items="#{acumuladoSinteticoProcessosView.listaMes}"
-						selectStyle="width: 350px" />
+						items="#{acumuladoSinteticoProcessosView.listaMes}" />
 
 					<wi:inputNumber id="ano"
 						label="#{infoxMessages['relAcumuladoSint.ano']}"
+						required="true"
 						value="#{acumuladoSinteticoProcessosView.ano}" maxlength="4"
 						size="8" />
 				</div>
 
 				<div>
 					<p:commandButton
+						process="@form"
+						update="@form"
+						actionListener="#{acumuladoSinteticoProcessosView.gerarRelatorio}"
 						value="#{infoxMessages['relAcumuladoSint.gerarPDF']}" />
 				</div>
 			</h:form>
