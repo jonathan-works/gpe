@@ -50,8 +50,16 @@
 						actionListener="#{acumuladoSinteticoProcessosView.prepararAbrirRelatorio}"
 						value="#{infoxMessages['relAcumuladoSint.gerarPDF']}" />
 
+					<p:commandButton process="@form" update="@form"
+						oncomplete="document.getElementById('relatorioForm:gerarExcel').click();"
+						value="#{infoxMessages['relAcumuladoSint.gerarExcel']}" />
+
 					<p:commandLink id="openPDF" target="_blank" action="report.xhtml"
 						ajax="false" style="display: none;" />
+
+					<h:commandLink id="gerarExcel"
+						action="#{acumuladoSinteticoProcessosView.gerarExcel}"
+						style="display: none;" />
 				</div>
 			</h:form>
 		</wi:panel>

@@ -25,7 +25,7 @@ public class AcumuladoSinteticoProcessosRelView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
-	AcumuladoSinteticoProcessosSearch acumuladoSinteticoProcessosSearch;
+	private AcumuladoSinteticoProcessosSearch acumuladoSinteticoProcessosSearch;
 	
 	@Getter @Setter
 	private List<AcumuladoSinteticoProcessosVO> listaRelatorioEmAndamento;

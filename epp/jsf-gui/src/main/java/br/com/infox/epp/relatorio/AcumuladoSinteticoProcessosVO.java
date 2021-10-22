@@ -2,6 +2,7 @@ package br.com.infox.epp.relatorio;
 
 import java.util.Date;
 
+import br.com.infox.core.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +20,20 @@ public class AcumuladoSinteticoProcessosVO {
 	private String localizacao;
 	private Date abertura;
 	private Date encerramento;
+	
+	public String getMes() {
+		return encerramento == null? DateUtil.formatarData(abertura, "MM") : DateUtil.formatarData(encerramento, "MM");
+	}
+	
+	public String getAberturaExtenso() {
+		return DateUtil.formatarData(abertura);
+	}
+	
+	public String getEncerramentoExtenso() {
+		return encerramento != null ? DateUtil.formatarData(encerramento) : "";
+	}
+	
+	public String getStatus() {
+		return encerramento == null? "Em andamento" : "Arquivados";
+	}
 }

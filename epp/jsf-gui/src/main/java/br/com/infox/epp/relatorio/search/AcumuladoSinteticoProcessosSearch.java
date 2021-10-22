@@ -28,6 +28,10 @@ public class AcumuladoSinteticoProcessosSearch extends PersistenceController {
 				+ " inner join tb_localizacao as l on l.id_localizacao = p.id_localizacao"
 				+ " where l.id_localizacao = :idLocalizacao and p.id_jbpm = pn.id_ and pd.name_ in :assunto");
 		
+		if(status.equals("Em andamento")) {
+			builderQuery.append(" and p.dt_fim IS NULL");
+		}
+		
 		String andOrBetween = " and (";
 		for(String mes : listaMes) {
 			builderQuery.append(andOrBetween);
@@ -39,7 +43,12 @@ public class AcumuladoSinteticoProcessosSearch extends PersistenceController {
 			builderQuery.append(getIntervaloEntreDatasBetween(mes, ano));
 			andOrBetween = " or ";
 		}
-		builderQuery.append(") order by pd.name_, p.dt_inicio, p.dt_fim");
+		
+		if(status.equals("Em andamento")) {
+			builderQuery.append(") order by p.dt_inicio");
+		} else if (status.equals("Arquivados/Finalizados")) {
+			builderQuery.append(") order by p.dt_fim");
+		}
 		
 		List<Object[]> resultSet = getEntityManager().createNativeQuery(builderQuery.toString()).setParameter("assunto", listaAssunto).setParameter("idLocalizacao", localizacao.getIdLocalizacao()).getResultList();
 		List<AcumuladoSinteticoProcessosVO> listaResultado = new ArrayList<AcumuladoSinteticoProcessosVO>();
