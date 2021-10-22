@@ -36,5 +36,9 @@ public class CadastroTarefaExternaDocumentoDTO implements Serializable {
     @NotBlank
     private boolean uploadValido;
 
+    public CadastroTarefaExternaDocumentoDTO(UUID uuidTarefaExterna) {
+        super();
+        this.uuidTarefaExterna = uuidTarefaExterna;
+    }
 
 }

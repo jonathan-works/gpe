@@ -23,6 +23,8 @@ public class CadastroTarefaExternaPessoaVO implements Serializable {
     private String nome;
     @Pattern(regexp = "M|F", flags = Pattern.Flag.CASE_INSENSITIVE)
     @NotBlank
+    private String codSexo;
+    @NotBlank
     private String sexo;
     @NotBlank
     private String cep;

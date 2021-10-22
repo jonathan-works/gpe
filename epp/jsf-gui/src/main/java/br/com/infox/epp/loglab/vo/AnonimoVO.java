@@ -20,6 +20,7 @@ public class AnonimoVO {
     private String nome;
     @Size(max = 15)
     private String telefone;
+    private String email;
     private TipoParticipanteEnum tipoParticipante;
 
     public String getNomeDefaultIfNull() {

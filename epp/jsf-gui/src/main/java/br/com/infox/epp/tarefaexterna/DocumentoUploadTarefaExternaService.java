@@ -1,5 +1,7 @@
 package br.com.infox.epp.tarefaexterna;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,10 +18,19 @@ import javax.persistence.criteria.Root;
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.loglab.contribuinte.type.TipoParticipanteEnum;
+import br.com.infox.epp.loglab.service.ParticipanteProcessoLoglabService;
+import br.com.infox.epp.loglab.vo.AnonimoVO;
+import br.com.infox.epp.loglab.vo.ParticipanteProcessoVO;
+import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.tarefaexterna.view.CadastroTarefaExternaVO;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -29,29 +40,40 @@ public class DocumentoUploadTarefaExternaService {
     @GenericDao
     private Dao<DocumentoUploadTarefaExterna, Integer> dao;
     @Inject
-    private DocumentoBinManager documentoBinManager;
+    private DocumentoManager documentoManager;
     @Inject
-    private DocumentoBinarioManager documentoBinarioManager;
-
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void remover(Long id) {
-        DocumentoUploadTarefaExterna pasta = dao.getEntityManager().getReference(DocumentoUploadTarefaExterna.class, id);
-        dao.remove(pasta);
-        documentoBinManager.remove(pasta.getDocumentoBin());
-        documentoBinarioManager.remove(pasta.getDocumentoBin().getId());
-    }
+    private ParticipanteProcessoLoglabService participanteProcessoLoglabService;
+    @Inject
+    private PastaManager pastaManager;
+    @Inject
+    private DocumentoBinManager documentoBinManager;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void remover(List<Long> listaId) {
-        removerByDocBin(getListDocBinByFiltros(listaId, null));
+        if(listaId == null || listaId.isEmpty()) {
+            return;
+        }
+        dao.getEntityManager()
+            .createQuery("delete from DocumentoUploadTarefaExterna o where o.id in (:lista)")
+            .setParameter("lista", listaId)
+            .executeUpdate();
+    }
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removerTodosCascade() {
+        removerByDocBinCascade(getListDocBinByFiltros(null, null));
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void remover(UUID uuid) {
-        removerByDocBin(getListDocBinByFiltros(null, uuid));
+    public void removerCascade(List<Long> listaId) {
+        removerByDocBinCascade(getListDocBinByFiltros(listaId, null));
     }
 
-    private void removerByDocBin(List<Integer> listaDocBin) {
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removerCascade(UUID uuid) {
+        removerByDocBinCascade(getListDocBinByFiltros(null, uuid));
+    }
+
+    private void removerByDocBinCascade(List<Integer> listaDocBin) {
         if(listaDocBin == null || listaDocBin.isEmpty()) {
             return;
         }
@@ -78,6 +100,15 @@ public class DocumentoUploadTarefaExternaService {
         return em.createQuery(query).getResultList();
     }
 
+    private List<DocumentoUploadTarefaExterna> getListDocumentoUploadTarefaExternaByFiltros(UUID uuid) {
+        EntityManager em = dao.getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<DocumentoUploadTarefaExterna> query = cb.createQuery(DocumentoUploadTarefaExterna.class);
+        Root<DocumentoUploadTarefaExterna> documentoUploadTarefaExterna = query.from(DocumentoUploadTarefaExterna.class);
+        query.where(cb.equal(documentoUploadTarefaExterna.get(DocumentoUploadTarefaExterna_.uuidTarefaExterna), uuid));
+        return em.createQuery(query).getResultList();
+    }
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void inserir(CadastroTarefaExternaDocumentoDTO dto) {
         ClassificacaoDocumento classificacaoDocumento = dao.getEntityManager().getReference(ClassificacaoDocumento.class, dto.getIdClassificacaoDocumento());
@@ -94,6 +125,39 @@ public class DocumentoUploadTarefaExternaService {
             doc.setUuidTarefaExterna(dto.getUuidTarefaExterna());
             dao.persist(doc);
         }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void persistirNoProcesso(String codigoTipoParticipante, UUID uuid, CadastroTarefaExternaVO ctVO, Processo processo) {
+        if("A".equals(ctVO.getCodTipoManifestacao())) {
+            AnonimoVO anonimoVO = new AnonimoVO();
+            anonimoVO.setEmail(ctVO.getEmail());
+            anonimoVO.setTipoParticipante(TipoParticipanteEnum.ANON);
+            ParticipanteProcessoVO participanteProcessoVO = new ParticipanteProcessoVO();
+            participanteProcessoVO.setTipoPessoa(TipoPessoaEnum.A);
+            participanteProcessoVO.setCdTipoParte(codigoTipoParticipante);
+            participanteProcessoVO.setDataInicio(Calendar.getInstance().getTime());
+            participanteProcessoVO.setIdProcesso(processo.getIdProcesso());
+            participanteProcessoVO.setAnonimoVO(anonimoVO);
+            participanteProcessoLoglabService.gravarParticipanteProcesso(participanteProcessoVO);
+        }
+
+        List<Long> idsParaRemover = new ArrayList<>();
+        for (DocumentoUploadTarefaExterna docUploadTarefaExterna : getListDocumentoUploadTarefaExternaByFiltros(uuid)) {
+            Pasta pasta = null;
+            if(docUploadTarefaExterna.getPasta() != null) {
+                pasta = pastaManager.getByCodigoAndProcesso(docUploadTarefaExterna.getPasta().getCodigo(), processo);
+            }
+            documentoManager.createDocumento(
+                processo,
+                docUploadTarefaExterna.getDescricao(),
+                docUploadTarefaExterna.getDocumentoBin(),
+                docUploadTarefaExterna.getClassificacaoDocumento(),
+                pasta
+            );
+            idsParaRemover.add(docUploadTarefaExterna.getId());
+        }
+        remover(idsParaRemover);
     }
 
 }

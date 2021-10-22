@@ -9,7 +9,8 @@
     xmlns:p="http://primefaces.org/ui"
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:rich="http://richfaces.org/rich"
-    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <ui:define name="title">#{infoxMessages['registroManifestacao.titlePage']}</ui:define>
 
@@ -24,6 +25,7 @@
                 id="formTarefaExterna"
             >
             <p:outputPanel
+                id="formTarefaExternaContainer"
                 styleClass="formTarefaExternaContainer"
             >
             <wi:field
@@ -33,7 +35,7 @@
             >
                 <h:selectOneRadio
                     id="tipoManifestacaoInput"
-                    value="#{cadastroTarefaExternaView.vo.tipoManifestacao}"
+                    value="#{cadastroTarefaExternaView.vo.codTipoManifestacao}"
                     onchange="showLoading()"
                     required="true"
                 >
@@ -57,13 +59,16 @@
             </wi:field>
             
             <p:outputPanel styleClass="dadosPessoaisContainer">
-            <h:panelGroup rendered="#{cadastroTarefaExternaView.vo.tipoManifestacao eq 'I'}">
+            <h:panelGroup rendered="#{cadastroTarefaExternaView.vo.codTipoManifestacao eq 'I'}">
             <fieldset style="margin-bottom: 10px;">
                 <legend>#{messages['registroManifestacao.dadosPessoais']}</legend>
                 
                 
-                <wi:field id="numeroCpf" required="true"
-                    label="#{infoxMessages['registroManifestacao.cpf']}">
+                <wi:field
+                    id="numeroCpf"
+                    required="true"
+                    label="#{infoxMessages['registroManifestacao.cpf']}"
+                >
                     <p:inputMask id="numeroCpfInput"
                         mask="999.999.999-99"
                         size="14"
@@ -93,7 +98,7 @@
                 >
                     <h:selectOneMenu
                         id="sexoInput"
-                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.sexo}"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.codSexo}"
                         required="true"
                     >
                         <f:selectItem
@@ -207,37 +212,36 @@
                 <wi:field
                     id="telefoneCelular"
                     label="#{messages['registroManifestacao.telefoneCelular']}"
-                    required="#{cadastroTarefaExternaView.vo.meioResposta eq 'TL'}"
+                    required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'TL'}"
                 >
                     <h:inputText
                         id="telefoneCelularInput"
                         value="#{cadastroTarefaExternaView.vo.dadosPessoais.telefoneCelular}"
-                        required="#{cadastroTarefaExternaView.vo.meioResposta eq 'TL'}"
+                        required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'TL'}"
                     />
                 </wi:field>
                 <wi:field
                     id="telefoneFixo"
                     label="#{messages['registroManifestacao.telefoneFixo']}"
-                    required="#{cadastroTarefaExternaView.vo.meioResposta eq 'TL'}"
+                    required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'TL'}"
                 >
                     <h:inputText
                         id="telefoneFixoInput"
                         value="#{cadastroTarefaExternaView.vo.dadosPessoais.telefoneFixo}"
-                        required="#{cadastroTarefaExternaView.vo.meioResposta eq 'TL'}"
+                        required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'TL'}"
                     />
                 </wi:field>
                 <wi:field
                     id="emailPessoal"
                     label="#{messages['registroManifestacao.email']}"
-                    required="#{cadastroTarefaExternaView.vo.meioResposta eq 'EM'}"
+                    required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'EM'}"
                 >
                     <h:inputText
                         id="emailPessoalInput"
                         value="#{cadastroTarefaExternaView.vo.dadosPessoais.email}"
-                        required="#{cadastroTarefaExternaView.vo.meioResposta eq 'EM'}"
-                    >
-                        <f:validator validatorId="emailValidator" />
-                    </h:inputText>
+                        required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'EM'}"
+                        validator="emailValidator"
+                    />
                 </wi:field>
                 </p:outputPanel>
             </fieldset>
@@ -250,7 +254,7 @@
             >
                 <h:selectOneMenu
                     id="grupoOuvidoriaInput"
-                    value="#{cadastroTarefaExternaView.vo.grupoOuvidoria}"
+                    value="#{cadastroTarefaExternaView.vo.codGrupoOuvidoria}"
                     required="true"
                 >
                     <f:selectItem
@@ -267,6 +271,7 @@
                 </h:selectOneMenu>
             </wi:field>
             
+            <p:outputPanel layout="inline" styleClass="desejaRespostaContainer">
             <wi:field
                 id="desejaResposta"
                 label="#{infoxMessages['registroManifestacao.desejaResposta']}"
@@ -275,22 +280,22 @@
                     id="desejaRespostaInput"
                     value="#{cadastroTarefaExternaView.vo.desejaResposta}"
                     onchange="showLoading()"
+                    converter="javax.faces.Boolean"
                     required="true"
                 >
                     <p:ajax
                         listener="#{cadastroTarefaExternaView.onChangeDesejaResposta}"
                         event="change"
-                        process="@this"
+                        process="@this @(.contatosPessoaContainer)"
+                        update="@(.desejaRespostaContainer) @(.contatosPessoaContainer)"
                         partialSubmit="true"
                         oncomplete="hideLoading()"
-                        update="@(.desejaRespostaContainer) @(.contatosPessoaContainer)"
                     />
                     <f:selectItem itemValue="true" itemLabel="#{infoxMessages['crud.yes']}"/>
                     <f:selectItem itemValue="false" itemLabel="#{infoxMessages['crud.no']}"/>
                 </h:selectOneRadio>
             </wi:field>
             
-            <p:outputPanel layout="inline" styleClass="desejaRespostaContainer">
             <h:panelGroup
                 rendered="#{cadastroTarefaExternaView.vo.desejaResposta}"
             >
@@ -301,7 +306,7 @@
             >
                 <h:selectOneMenu
                     id="meioRespostaInput"
-                    value="#{cadastroTarefaExternaView.vo.meioResposta}"
+                    value="#{cadastroTarefaExternaView.vo.codMeioResposta}"
                     styleClass="select input"
                     onchange="showLoading()"
                     required="#{cadastroTarefaExternaView.vo.desejaResposta}"
@@ -333,13 +338,13 @@
             <wi:field
                 id="email"
                 label="#{messages['registroManifestacao.email']}"
-                required="#{cadastroTarefaExternaView.vo.meioResposta eq 'EM'}"
-                rendered="#{cadastroTarefaExternaView.vo.tipoManifestacao eq 'A'}"
+                required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'EM'}"
+                rendered="#{cadastroTarefaExternaView.vo.codTipoManifestacao eq 'A'}"
             >
                 <h:inputText
                     id="emailInput"
                     value="#{cadastroTarefaExternaView.vo.email}"
-                    required="#{cadastroTarefaExternaView.vo.meioResposta eq 'EM'}"
+                    required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'EM'}"
                 >
                     <f:validator validatorId="emailValidator" />
                 </h:inputText>
@@ -371,7 +376,7 @@
             >
                 <h:selectOneMenu
                     id="tipoManifestoInput"
-                    value="#{cadastroTarefaExternaView.vo.tipoManifesto}"
+                    value="#{cadastroTarefaExternaView.vo.codTipoManifesto}"
                     styleClass="select input"
                     required="true"
                 >
@@ -415,7 +420,7 @@
             </p:outputPanel>
             </p:outputPanel>
             
-            <div class="ui-g">
+            <div id="uploadDocDiv" class="ui-g">
             <div class="ui-g-12 ui-lg-6">
             <rich:collapsiblePanel
                 id="uploadDoc"
@@ -675,11 +680,12 @@
             </div>
             
             <p:commandButton
+                id="cadastrarTarefaExterna"
                 action="#{cadastroTarefaExternaView.cadastrar}"
                 onclick="showLoading()"
-                oncomplete="hideLoading()"
+                oncomplete="if(!args || (!args.validationFailed &amp;&amp; !args.erro)){infox.openPopUp('_blank', 'dadosProcesso.seam'); document.location.reload(true);}else{infox.hideLoading();}"
                 update="@(.formTarefaExternaContainer) :pageBodyDialogMessage"
-                process="@(.formTarefaExternaContainer)"
+                process="@this @(.formTarefaExternaContainer)"
                 partialSubmit="true"
                 value="#{messages['processo.iniciarBtn']}"
             />

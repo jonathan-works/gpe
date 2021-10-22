@@ -16,6 +16,7 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.context.RequestContext;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
@@ -31,10 +32,15 @@ import br.com.infox.epp.municipio.EstadoSearch;
 import br.com.infox.epp.pessoa.type.TipoGeneroEnum;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.tarefaexterna.CadastroTarefaExternaDocumentoDTO;
 import br.com.infox.epp.tarefaexterna.DocumentoUploadTarefaExternaService;
+import br.com.infox.ibpm.sinal.SignalParam;
+import br.com.infox.ibpm.sinal.SignalParam.Type;
+import br.com.infox.ibpm.sinal.SignalService;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import lombok.Getter;
 
@@ -43,9 +49,12 @@ import lombok.Getter;
 public class CadastroTarefaExternaView implements FileUploadListener, Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final String TAREFA_EXTERNA_TIPOS_MANIFESTO = "tarefaExternaTiposManifesto";
-    private static final String TAREFA_EXTERNA_MEIOS_RESPOSTA = "tarefaExternaMeiosResposta";
-    private static final String TAREFA_EXTERNA_GRUPO_OUVIDORIAS = "tarefaExternaGrupoOuvidorias";
+    public static final String PARAM_TAREFA_EXTERNA = "tarefaExterna";
+    public static final String PARAM_UUID_TAREFA_EXTERNA = "uuidTarefaExterna";
+
+    public static final String DOMINIO_TAREFA_EXTERNA_TIPOS_MANIFESTO = "tarefaExternaTiposManifesto";
+    private static final String DOMINIO_TAREFA_EXTERNA_MEIOS_RESPOSTA = "tarefaExternaMeiosResposta";
+    private static final String DOMINIO_TAREFA_EXTERNA_GRUPO_OUVIDORIAS = "tarefaExternaGrupoOuvidorias";
 
     @Getter
     private CadastroTarefaExternaVO vo;
@@ -91,14 +100,11 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
     private DocumentoUploadTarefaExternaService documentoUploadTarefaExternaService;
     @Inject
     private DocumentoUploaderService documentoUploaderService;
+    @Inject
+    private SignalService signalService;
 
     @PostConstruct
     private void init() {
-        uuidTarefaExterna = UUID.randomUUID();
-        documentosDataModel.setUuidTarefaExterna(uuidTarefaExterna);
-        this.vo = new CadastroTarefaExternaVO();
-        this.docVO = new CadastroTarefaExternaDocumentoDTO();
-        getDocVO().setUuidTarefaExterna(uuidTarefaExterna);
         this.estados = estadoSearch.findAll()
             .stream()
             .map(o -> new SelectItem(o.getCodigo(), o.getNome()))
@@ -107,20 +113,27 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
 
         classificacoes = configuracaoTarefaExternaViewSearch.getClassificacoes();
         pastas = configuracaoTarefaExternaViewSearch.getPastas();
-
         initListas();
+        reset();
+    }
+
+    private void reset() {
+        uuidTarefaExterna = UUID.randomUUID();
+        documentosDataModel.setUuidTarefaExterna(uuidTarefaExterna);
+        this.vo = new CadastroTarefaExternaVO();
+        this.docVO = new CadastroTarefaExternaDocumentoDTO(uuidTarefaExterna);
         onChangeTipoManifestacao();
     }
 
     @PreDestroy
     private void preDestroy() {
-        documentoUploadTarefaExternaService.remover(this.uuidTarefaExterna);
+        documentoUploadTarefaExternaService.removerCascade(this.uuidTarefaExterna);
     }
 
     private void initListas() {
-        this.grupoOuvidorias = getListaDados(TAREFA_EXTERNA_GRUPO_OUVIDORIAS);
-        this.meiosRespostaBase = getListaDados(TAREFA_EXTERNA_MEIOS_RESPOSTA);
-        this.tiposManifesto = getListaDados(TAREFA_EXTERNA_TIPOS_MANIFESTO);
+        this.grupoOuvidorias = getListaDados(DOMINIO_TAREFA_EXTERNA_GRUPO_OUVIDORIAS);
+        this.meiosRespostaBase = getListaDados(DOMINIO_TAREFA_EXTERNA_MEIOS_RESPOSTA);
+        this.tiposManifesto = getListaDados(DOMINIO_TAREFA_EXTERNA_TIPOS_MANIFESTO);
     }
 
     public void onChangeClassificacaoDocumento() {
@@ -134,16 +147,17 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
 
     public void onChangeDesejaResposta() {
         if(!getVo().getDesejaResposta()) {
-            getVo().setMeioResposta(null);
+            getVo().setCodMeioResposta(null);
             getVo().setEmail(null);
         }
     }
 
     public void onChangeTipoManifestacao() {
-        if("A".equals(getVo().getTipoManifestacao())) {
+        if("A".equals(getVo().getCodTipoManifestacao())) {
             this.meiosResposta = this.meiosRespostaBase.stream()
                 .filter(o -> Arrays.asList("EM","PE").contains(o.getValue()))
                 .collect(Collectors.toList());
+            getVo().setCodMeioResposta(null);
         } else {
             this.meiosResposta = this.meiosRespostaBase;
         }
@@ -208,7 +222,7 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
         if(selecionados == null || selecionados.isEmpty()) {
             return;
         }
-        documentoUploadTarefaExternaService.remover(
+        documentoUploadTarefaExternaService.removerCascade(
                 selecionados.stream().map(DocumentoVO::getId).collect(Collectors.toList())
         );
         getDocumentosDataModel().getSelecionados().clear();
@@ -220,14 +234,59 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
 
         documentoUploadTarefaExternaService.inserir(getDocVO());
 
-        this.docVO = new CadastroTarefaExternaDocumentoDTO();
-        getDocVO().setUuidTarefaExterna(uuidTarefaExterna);
+        this.docVO = new CadastroTarefaExternaDocumentoDTO(uuidTarefaExterna);
         onChangeClassificacaoDocumento();
     }
 
     @ExceptionHandled(value = MethodType.PERSIST)
     public void cadastrar() {
-    }
+        String sinalTarefaExterna = Parametros.SINAL_TAREFA_EXTERNA.getValue();
+        List<SignalParam> params = new ArrayList<>();
 
+        boolean anonimo = "A".equals(getVo().getCodTipoManifestacao());
+        getVo().setTipoManifestacao(
+            anonimo ?  "Anônimo" : "Identificado"
+        );
+        if(!anonimo) {
+            getVo().getDadosPessoais().setSexo(
+                TipoGeneroEnum.M.equals(TipoGeneroEnum.valueOf(getVo().getDadosPessoais().getCodSexo())) ?  TipoGeneroEnum.M.getLabel() : TipoGeneroEnum.F.getLabel()
+            );
+        }
+        getVo().setTipoManifesto(getTiposManifesto().stream()
+            .filter(tm -> getVo().getCodTipoManifesto().equals(tm.getValue()))
+            .map(SelectItem::getLabel)
+            .findFirst()
+            .get()
+        );
+        if(getVo().getDesejaResposta()) {
+            getVo().setMeioResposta(getMeiosResposta().stream()
+                .filter(tm -> getVo().getCodMeioResposta().equals(tm.getValue()))
+                .map(SelectItem::getLabel)
+                .findFirst()
+                .get()
+            );
+        } else {
+            getVo().setMeioResposta(null);
+        }
+        getVo().setGrupoOuvidoria(getGrupoOuvidorias().stream()
+            .filter(tm -> getVo().getCodGrupoOuvidoria().equals(tm.getValue()))
+            .map(SelectItem::getLabel)
+            .findFirst()
+            .get()
+        );
+
+        params.add(new SignalParam(PARAM_TAREFA_EXTERNA, getVo(), Type.VARIABLE));
+        params.add(new SignalParam(PARAM_UUID_TAREFA_EXTERNA, this.uuidTarefaExterna.toString(), Type.VARIABLE));
+        try {
+            JsfUtil jsfUtil = JsfUtil.instance();
+            jsfUtil.addFlashParam(PARAM_UUID_TAREFA_EXTERNA, this.uuidTarefaExterna.toString());
+            jsfUtil.applyLastPhaseFlashAction();
+
+            signalService.startStartStateListening(sinalTarefaExterna, params);
+        } catch (Exception e) {
+            RequestContext.getCurrentInstance().addCallbackParam("erro", true);
+            throw new BusinessRollbackException("Erro inesperado", e);
+        }
+    }
 
 }

@@ -35,27 +35,27 @@ public class IniciarProcessoService {
     private PastaManager pastaManager;
     @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
-    
+
     public ProcessInstance iniciarProcesso(Processo processo) throws DAOException {
         return iniciarProcesso(processo, null, null, null, true);
     }
-    
+
     public ProcessInstance iniciarProcesso(Processo processo, String transitionName) throws DAOException {
         return iniciarProcesso(processo, null, null, transitionName, true);
     }
-    
+
     public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis) throws DAOException {
         return iniciarProcesso(processo, variaveis, null, null, true);
     }
     public ProcessInstance iniciarProcesso(Processo processo, List<MetadadoProcesso> metadados) throws DAOException {
         return iniciarProcesso(processo, null, metadados, null, true);
     }
-    
+
     public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, boolean createDefaultFolders) throws DAOException {
         return iniciarProcesso(processo, variaveis, null, null, createDefaultFolders);
     }
-    
-    public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
+
+    public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName,
             boolean createDefaultFolders) throws DAOException {
         processo.setDataInicio(DateTime.now().toDate());
         List<MetadadoProcesso> metadadosProcesso = ObjectUtils.defaultIfNull(metadados, new ArrayList<MetadadoProcesso>());
@@ -102,6 +102,7 @@ public class IniciarProcessoService {
         if (variaveis == null) variaveis = new HashMap<>();
         variaveis.put(VariaveisJbpmProcessosGerais.PROCESSO, processo.getIdProcesso());
         variaveis.put(VariaveisJbpmProcessosGerais.DATA_INICIO_PROCESSO, processo.getDataInicio());
+        variaveis.put(VariaveisJbpmProcessosGerais.PROCESSO_SENHA_ACESSO_EXTERNO, processo.getSenhaAcesso());
         if (processo.getProcessoPai() == null) {
             variaveis.put(VariaveisJbpmProcessosGerais.NATUREZA, processo.getNaturezaCategoriaFluxo().getNatureza().getNatureza());
             variaveis.put(VariaveisJbpmProcessosGerais.CATEGORIA, processo.getNaturezaCategoriaFluxo().getCategoria().getCategoria());
@@ -109,7 +110,7 @@ public class IniciarProcessoService {
         }
         return variaveis;
     }
-    
+
     protected void movimentarProcesso(ProcessInstance processInstance, String transitionName) {
         if (StringUtil.isEmpty(transitionName)) {
             processInstance.signal();
@@ -117,11 +118,11 @@ public class IniciarProcessoService {
             processInstance.signal(transitionName);
         }
     }
-    
+
     protected EntityManager getEntityManager() {
         return EntityManagerProducer.getEntityManager();
     }
-    
+
     protected JbpmContext getJbpmContext() {
         return JbpmContextProducer.getJbpmContext();
     }
