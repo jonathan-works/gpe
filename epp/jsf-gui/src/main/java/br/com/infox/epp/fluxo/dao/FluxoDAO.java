@@ -79,6 +79,7 @@ public class FluxoDAO extends DAO<Fluxo> {
 
         Root<Fluxo> fluxo2 = cq.from(Fluxo.class);
         cq.where(cb.in(fluxo2.get(Fluxo_.idFluxo)).value(sq));
+        cq.orderBy(cb.asc(fluxo2.get(Fluxo_.fluxo)));
 
         return getEntityManager().createQuery(cq).getResultList();
     }

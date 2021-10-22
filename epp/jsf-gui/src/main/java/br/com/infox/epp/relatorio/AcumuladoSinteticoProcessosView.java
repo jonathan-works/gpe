@@ -3,8 +3,10 @@ package br.com.infox.epp.relatorio;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -12,7 +14,6 @@ import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.relatorio.search.AcumuladoSinteticoProcessosSearch;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,8 +25,6 @@ public class AcumuladoSinteticoProcessosView implements Serializable {
 	
 	@Inject
 	private FluxoDAO fluxoDAO;
-	@Inject
-	AcumuladoSinteticoProcessosSearch acumuladoSinteticoProcessosSearch;
 	
 	@Getter @Setter
 	private List<Fluxo> listaAssunto;
@@ -51,14 +50,12 @@ public class AcumuladoSinteticoProcessosView implements Serializable {
 		listaMes = DateUtil.getListaTodosMeses();
 	}
 	
-	public void gerarRelatorio() {
-		if(listaStatusSelecionado.isEmpty() || listaStatusSelecionado.contains("Em andamento")) {
-			acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, "Em andamento", listaMesSelecionado, ano);
-		}
-		
-		if(listaStatusSelecionado.isEmpty() || listaStatusSelecionado.contains("Arquivados/Finalizados")) {
-			acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, "Arquivados/Finalizados", listaMesSelecionado, ano);
-		}
+	public void prepararAbrirRelatorio() {
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		sessionMap.put("listaAssuntoAcumuladoSinteticoProcessosView", listaAssuntoSelecionado);
+		sessionMap.put("listaStatusAcumuladoSinteticoProcessosView", listaStatusSelecionado);
+		sessionMap.put("listaMesAcumuladoSinteticoProcessosView", listaMesSelecionado);
+		sessionMap.put("anoAcumuladoSinteticoProcessosView", ano);
 	}
 
 }

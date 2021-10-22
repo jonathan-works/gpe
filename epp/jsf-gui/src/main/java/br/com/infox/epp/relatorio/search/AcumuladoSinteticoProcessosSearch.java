@@ -11,6 +11,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.relatorio.AcumuladoSinteticoProcessosVO;
 
@@ -19,15 +20,15 @@ import br.com.infox.epp.relatorio.AcumuladoSinteticoProcessosVO;
 public class AcumuladoSinteticoProcessosSearch extends PersistenceController {
 
 	@SuppressWarnings("unchecked")
-	public List<AcumuladoSinteticoProcessosVO> gerarRelatorio(List<Fluxo> listaAssunto, String status, List<String> listaMes, Integer ano) {
+	public List<AcumuladoSinteticoProcessosVO> gerarRelatorio(List<Fluxo> listaAssunto, String status, List<String> listaMes, Integer ano, Localizacao localizacao) {
 		StringBuilder builderQuery = new StringBuilder("Select p.nr_processo, pd.name_, u.nm_usuario, l.ds_localizacao, p.dt_inicio, p.dt_fim from tb_processo as p"
 				+ " inner join jbpm_processinstance as pn on p.id_jbpm = pn.id_"
 				+ " inner join jbpm_processdefinition as pd on pd.id_ = pn.processdefinition_"
 				+ " inner join tb_usuario_login as u on u.id_usuario_login = p.id_usuario_cadastro_processo"
 				+ " inner join tb_localizacao as l on l.id_localizacao = p.id_localizacao"
-				+ " where p.id_jbpm = pn.id_ and pd.name_ in :assunto");
+				+ " where l.id_localizacao = :idLocalizacao and p.id_jbpm = pn.id_ and pd.name_ in :assunto");
 		
-		String andOrBetween = " and ";
+		String andOrBetween = " and (";
 		for(String mes : listaMes) {
 			builderQuery.append(andOrBetween);
 			if(status.equals("Em andamento")) {
@@ -38,8 +39,9 @@ public class AcumuladoSinteticoProcessosSearch extends PersistenceController {
 			builderQuery.append(getIntervaloEntreDatasBetween(mes, ano));
 			andOrBetween = " or ";
 		}
+		builderQuery.append(") order by pd.name_, p.dt_inicio, p.dt_fim");
 		
-		List<Object[]> resultSet = getEntityManager().createNativeQuery(builderQuery.toString()).setParameter("assunto", listaAssunto).getResultList();
+		List<Object[]> resultSet = getEntityManager().createNativeQuery(builderQuery.toString()).setParameter("assunto", listaAssunto).setParameter("idLocalizacao", localizacao.getIdLocalizacao()).getResultList();
 		List<AcumuladoSinteticoProcessosVO> listaResultado = new ArrayList<AcumuladoSinteticoProcessosVO>();
 		for(Object[] result : resultSet) {
 			listaResultado.add(new AcumuladoSinteticoProcessosVO(getResultString(result[0]), getResultString(result[1]), getResultString(result[2]), getResultString(result[3]), getResultDate(result[4]), getResultDate(result[5])));

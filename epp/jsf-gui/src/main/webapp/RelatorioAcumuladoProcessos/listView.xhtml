@@ -8,17 +8,19 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:i="http://java.sun.com/jsf/composite/infox"
 	xmlns:a="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
-	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 	<ui:define name="title">#{infoxMessages['relAcumuladoSint.titlePage']}</ui:define>
+	<ui:define name="head">
+	</ui:define>
 	<ui:define name="body">
-	<style type="text/css">
-  		.ui-selectmanymenu {
-  			width: 350px;
-  		}
-  	</style>
-	
+		<style type="text/css">
+.ui-selectmanymenu {
+	width: 350px;
+}
+</style>
+
 		<wi:panel id="estatisticaPanel" styleClass="content-block">
-			<h:form>
+			<h:form id="relatorioForm">
 				<div>
 					<i:selectManyMenu id="assunto" required="true"
 						label="#{infoxMessages['relAcumuladoSint.assunto']}"
@@ -31,28 +33,30 @@
 						items="#{acumuladoSinteticoProcessosView.listaStatus}" />
 				</div>
 				<div>
-					<i:selectManyMenu id="mesReferencia"
-						required="true"
+					<i:selectManyMenu id="mesReferencia" required="true"
 						label="#{infoxMessages['relAcumuladoSint.mesReferencia']}"
 						value="#{acumuladoSinteticoProcessosView.listaMesSelecionado}"
 						items="#{acumuladoSinteticoProcessosView.listaMes}" />
 
 					<wi:inputNumber id="ano"
-						label="#{infoxMessages['relAcumuladoSint.ano']}"
-						required="true"
+						label="#{infoxMessages['relAcumuladoSint.ano']}" required="true"
 						value="#{acumuladoSinteticoProcessosView.ano}" maxlength="4"
 						size="8" />
 				</div>
 
 				<div>
-					<p:commandButton
-						process="@form"
-						update="@form"
-						actionListener="#{acumuladoSinteticoProcessosView.gerarRelatorio}"
+					<p:commandButton process="@form" update="@form"
+						oncomplete="document.getElementById('relatorioForm:openPDF').click();"
+						actionListener="#{acumuladoSinteticoProcessosView.prepararAbrirRelatorio}"
 						value="#{infoxMessages['relAcumuladoSint.gerarPDF']}" />
+
+					<p:commandLink id="openPDF" target="_blank" action="report.xhtml"
+						ajax="false" style="display: none;" />
 				</div>
 			</h:form>
 		</wi:panel>
+
+
 	</ui:define>
 
 </ui:composition>
