@@ -5,5 +5,7 @@
                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
 
 	<include file="epp/projeto00136002/001-add-recurso-page-relatorio-acumulado-processos.xml" />
+	<include file="epp/projeto00136002/002-add-recurso-page-relatorio-produtividade-usuarios.xml" />
+	<include file="epp/projeto00136002/003-add-parametro-limite-dias-geracao-relatorio.xml" />
 
 </databaseChangeLog>
