@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://jboss.org/schema/seam/pdf"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf">
+
+	<ui:param name="showLogoImg" value="true" />
+	<ui:param name="logoImg"
+		value="#{wi:get(logoImg, layoutController.getResourceUrlByPath('/imagens/logo_emblema_cuiaba_prefeitura.png'))}" />
+	<ui:param name="title"
+		value="#{infoxMessages['relAcumuladoSint.titleReport']}" />
+
+	<p:document title="#{infoxMessages['relAcumuladoSint.titleReport']}"
+		pageSize="A4"
+		margins="#{wi:get(marginLeft,'60')} #{wi:get(marginRight,'30')} #{wi:get(marginTop,'40')} #{wi:get(marginBotton,'30')}"
+		orientation="#{wi:get(orientation, 'portrait')}">
+
+		<f:facet name="header">
+			<p:header borderWidthTop="0" borderColorBottom="lightgray"
+				borderWidthBottom="1" alignment="right">
+				<p:paragraph alignment="right">
+					<p:font size="7">
+						<p:text value="Emitido por: " />
+						<p:text value="#{usuarioLogado}" />
+						<p:text value=". Emitido em: " />
+						<p:text value="#{currentTime}">
+							<s:convertDateTime pattern="dd/MM/yyyy / HH:mm" />
+						</p:text>
+					</p:font>
+				</p:paragraph>
+			</p:header>
+
+			<p:footer borderWidthTop="1" borderColorTop="lightgray"
+				borderWidthBottom="0" alignment="center">
+			</p:footer>
+		</f:facet>
+
+		<ui:include src="/WEB-INF/xhtml/tags/report/reportHeader.xhtml">
+			<ui:param name="spacingAfter" value="0" />
+		</ui:include>
+
+		<p:font size="10">
+			<p:table columns="1" widthPercentage="100" widths="1"
+				spacingBefore="1">
+				<p:cell borderWidth="0" horizontalAlignment="left"
+					verticalAlignment="bottom">
+					<p:font style="bold" size="12">
+						<p:paragraph alignment="left">
+							<p:text
+								value="#{acumuladoSinteticoProcessosRelView.localizacao.localizacao}" />
+						</p:paragraph>
+					</p:font>
+				</p:cell>
+			</p:table>
+
+			<p:table columns="2" widthPercentage="100" widths="1 1"
+				spacingBefore="1">
+				<p:cell borderWidth="0" horizontalAlignment="left"
+					verticalAlignment="bottom">
+					<p:paragraph alignment="left">
+						<p:font style="bold" size="12">
+							<p:text value="Mês: " />
+						</p:font>
+						<p:font size="10">
+							<p:text
+								value="#{acumuladoSinteticoProcessosRelView.mesesSelecionadosPorExtenso}" />
+						</p:font>
+					</p:paragraph>
+				</p:cell>
+
+				<p:cell borderWidth="0" horizontalAlignment="right"
+					verticalAlignment="bottom">
+					<p:paragraph alignment="right">
+						<p:font style="bold" size="12">
+							<p:text value="Ano: " />
+						</p:font>
+						<p:font size="10">
+							<p:text value="#{acumuladoSinteticoProcessosRelView.ano}" />
+						</p:font>
+					</p:paragraph>
+				</p:cell>
+			</p:table>
+
+			<h:panelGroup
+				rendered="#{not empty acumuladoSinteticoProcessosRelView.listaRelatorioEmAndamento}">
+				<p:table columns="1" widthPercentage="100" widths="1"
+					spacingBefore="1">
+					<p:cell borderWidth="0" horizontalAlignment="left"
+						verticalAlignment="bottom">
+						<p:paragraph alignment="left">
+							<p:font style="bold" size="12">
+								<p:text value="Status: " />
+							</p:font>
+							<p:font size="10">
+								<p:text value="Em andamento" />
+							</p:font>
+						</p:paragraph>
+					</p:cell>
+				</p:table>
+			</h:panelGroup>
+
+			<p:table columns="5" widthPercentage="100" headerRows="1"
+				widths="1 2 4 4 2" spacingBefore="5" spacingAfter="1">
+
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.mes']}" />
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.numeroProcesso']}" />
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.assunto']}" />
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.usuarioAbertura']}" />
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.dataAbertura']}" />
+
+				<ui:repeat var="row"
+					value="#{acumuladoSinteticoProcessosRelView.listaRelatorioEmAndamento}">
+					<wi:reportColumnDate value="#{row.abertura}" pattern="MM" />
+					<wi:reportColumn value="#{row.numeroProcesso}" columnAlign="center" />
+					<wi:reportColumn value="#{row.fluxo}" />
+					<wi:reportColumn value="#{row.usuarioAbertura}" />
+					<wi:reportColumnDate value="#{row.abertura}" pattern="dd/MM/yyyy" />
+				</ui:repeat>
+			</p:table>
+			<h:panelGroup
+				rendered="#{not empty acumuladoSinteticoProcessosRelView.listaRelatorioEmAndamento}">
+				<p:paragraph alignment="center" spacingAfter="30">
+					<p:font style="bold" size="10">
+						<p:text value="Total: " />
+						<p:text
+							value="#{acumuladoSinteticoProcessosRelView.listaRelatorioEmAndamento.size}" />
+					</p:font>
+				</p:paragraph>
+			</h:panelGroup>
+
+			<h:panelGroup
+				rendered="#{not empty acumuladoSinteticoProcessosRelView.listaRelatorioFinalizadoArquivado}">
+				<p:paragraph alignment="left">
+					<p:font style="bold" size="12">
+						<p:text value="Status: " />
+					</p:font>
+					<p:font size="10">
+						<p:text value="Arquivados" />
+					</p:font>
+				</p:paragraph>
+			</h:panelGroup>
+
+			<p:table columns="5" widthPercentage="100" headerRows="1"
+				widths="1 2 4 4 2" spacingBefore="5" spacingAfter="1">
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.mes']}" />
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.numeroProcesso']}" />
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.assunto']}" />
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.usuarioAbertura']}" />
+				<wi:reportColumnHeader
+					title="#{infoxMessages['relAcumuladoSint.dataEncerramento']}" />
+
+				<ui:repeat var="row"
+					value="#{acumuladoSinteticoProcessosRelView.listaRelatorioFinalizadoArquivado}">
+					<wi:reportColumnDate value="#{row.abertura}" pattern="MM" />
+					<wi:reportColumn value="#{row.numeroProcesso}" />
+					<wi:reportColumn value="#{row.fluxo}" />
+					<wi:reportColumn value="#{row.usuarioAbertura}" />
+					<wi:reportColumnDate value="#{row.encerramento}"
+						pattern="dd/MM/yyyy" />
+				</ui:repeat>
+			</p:table>
+			<h:panelGroup
+				rendered="#{not empty acumuladoSinteticoProcessosRelView.listaRelatorioFinalizadoArquivado}">
+				<p:paragraph alignment="center">
+					<p:font style="bold" size="10">
+						<p:text value="Total: " />
+						<p:text
+							value="#{acumuladoSinteticoProcessosRelView.listaRelatorioFinalizadoArquivado.size}" />
+					</p:font>
+				</p:paragraph>
+			</h:panelGroup>
+		</p:font>
+
+	</p:document>
+
+</ui:composition>
