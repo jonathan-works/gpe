@@ -68,12 +68,7 @@ public class AcumuladoSinteticoProcessosSearch extends PersistenceController {
 	
 	private String getIntervaloEntreDatasBetween(String mes, Integer ano) {
 		int indexMes = DateUtil.getListaTodosMeses().indexOf(mes);
-		StringBuilder sb = new StringBuilder();
-		sb.append("'01-").append(indexMes+1);
-		sb.append("-").append(ano).append("' and '");
-		sb.append(getUltimoDiaMes(ano, indexMes));
-		sb.append("-").append(indexMes+1).append("-").append(ano).append("'");
-		return sb.toString();
+		return String.format("'%3$d-%2$02d-01' and '%3$d-%2$02d-%1$02d'", getUltimoDiaMes(ano, indexMes), indexMes + 1, ano);
 	}
 	
 	private int getUltimoDiaMes(int ano, int mes) {
