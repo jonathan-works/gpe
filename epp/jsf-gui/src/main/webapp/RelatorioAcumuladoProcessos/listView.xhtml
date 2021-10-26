@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	xmlns:a="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+	<ui:define name="title">#{infoxMessages['relAcumuladoSint.titlePage']}</ui:define>
+	<ui:define name="head">
+	</ui:define>
+	<ui:define name="body">
+		<style type="text/css">
+.ui-selectmanymenu {
+	width: 350px;
+}
+</style>
+
+		<wi:panel id="estatisticaPanel" styleClass="content-block">
+			<h:form id="relatorioForm">
+				<div>
+					<i:selectManyMenu id="assunto" required="true"
+						label="#{infoxMessages['relAcumuladoSint.assunto']}"
+						value="#{acumuladoSinteticoProcessosView.listaAssuntoSelecionado}"
+						items="#{acumuladoSinteticoProcessosView.listaAssunto}" />
+
+					<i:selectManyMenu id="status"
+						label="#{infoxMessages['relAcumuladoSint.status']}"
+						value="#{acumuladoSinteticoProcessosView.listaStatusSelecionado}"
+						items="#{acumuladoSinteticoProcessosView.listaStatus}" />
+				</div>
+				<div>
+					<i:selectManyMenu id="mesReferencia" required="true"
+						label="#{infoxMessages['relAcumuladoSint.mesReferencia']}"
+						value="#{acumuladoSinteticoProcessosView.listaMesSelecionado}"
+						items="#{acumuladoSinteticoProcessosView.listaMes}" />
+
+					<wi:inputNumber id="ano"
+						label="#{infoxMessages['relAcumuladoSint.ano']}" required="true"
+						value="#{acumuladoSinteticoProcessosView.ano}" maxlength="4"
+						size="8" />
+				</div>
+
+				<div>
+					<p:commandButton process="@form" update="@form"
+						oncomplete="document.getElementById('relatorioForm:openPDF').click();"
+						actionListener="#{acumuladoSinteticoProcessosView.prepararAbrirRelatorio}"
+						value="#{infoxMessages['relAcumuladoSint.gerarPDF']}" />
+
+					<p:commandButton process="@form" update="@form"
+						oncomplete="document.getElementById('relatorioForm:gerarExcel').click();"
+						value="#{infoxMessages['relAcumuladoSint.gerarExcel']}" />
+
+					<p:commandLink id="openPDF" target="_blank" action="report.xhtml"
+						ajax="false" style="display: none;" />
+
+					<h:commandLink id="gerarExcel"
+						action="#{acumuladoSinteticoProcessosView.gerarExcel}"
+						style="display: none;" />
+				</div>
+			</h:form>
+		</wi:panel>
+
+
+	</ui:define>
+
+</ui:composition>

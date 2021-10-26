@@ -4,9 +4,11 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.enterprise.context.RequestScoped;
@@ -305,5 +307,9 @@ public class DateUtil {
 
         return msg;
     }
+    
+    public static List<String> getListaTodosMeses() {
+    	return Arrays.asList("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");    
+	}
 
 }

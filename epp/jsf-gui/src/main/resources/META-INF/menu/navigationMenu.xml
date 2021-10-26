@@ -63,6 +63,8 @@
         <item xsi:type="MenuItem" label="produtividade.menuText" url="/BAM/Produtividade/listView.xhtml"/>
         <item xsi:type="Submenu" label="relatorios.menuText">
             <item xsi:type="MenuItem" label="temposMedios.menuText" url="/Estatistica/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="relAcumuladoSint.menuText" url="/RelatorioAcumuladoProcessos/listView.xhtml"/>
+            <item xsi:type="MenuItem" label="relProdUsuarios.menuText" url="/RelatorioProdutividadeUsuarios/listView.xhtml"/>
         </item>
     </item>
     <item xsi:type="Submenu" label="menu.operacoes">
