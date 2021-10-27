@@ -1,4 +1,4 @@
-package br.com.infox.epp.relatorio;
+package br.com.infox.epp.relatorio.acumuladosinteticoprocessos.view;
 
 import java.util.Date;
 
