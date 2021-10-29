@@ -236,6 +236,7 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
 
         this.docVO = new CadastroTarefaExternaDocumentoDTO(uuidTarefaExterna);
         onChangeClassificacaoDocumento();
+        RequestContext.getCurrentInstance().addCallbackParam("sucesso", true);
     }
 
     @ExceptionHandled(value = MethodType.PERSIST)

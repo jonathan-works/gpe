@@ -433,6 +433,10 @@
                     id="uploadDocContainer"
                     styleClass="uploadDocContainer"
                 >
+                <p:outputPanel
+                    id="formUploadDocContainer"
+                    styleClass="formUploadDocContainer"
+                >
                 <wi:field
                     id="descricaoDoc"
                     label="#{infoxMessages['registroManifestacao.descricaoDoc']}"
@@ -499,6 +503,7 @@
                         />
                     </h:selectOneMenu>
                 </wi:field>
+                </p:outputPanel>
                 <p:outputPanel
                     styleClass="binContainer"
                 >
@@ -544,15 +549,23 @@
                 <p:commandButton
                     action="#{cadastroTarefaExternaView.inserirDocumento}"
                     onclick="showLoading()"
-                    oncomplete="hideLoading()"
-                    update="@(.uploadDocContainer) @(.docsInseridosContainer) :pageBodyDialogMessage"
-                    process="@(.uploadDocContainer)"
+                    oncomplete="if(args &amp;&amp; args.sucesso){reloadFormUpload()}else{hideLoading()}"
+                    update="@(.formUploadDocContainer) @(.docsInseridosContainer) :pageBodyDialogMessage"
+                    process="@this @(.formUploadDocContainer)"
                     partialSubmit="true"
                     disabled="#{not cadastroTarefaExternaView.docVO.uploadValido}"
                     value="#{messages['button.save']}"
                 />
                 </h:panelGroup>
                 </p:outputPanel>
+                
+                <p:remoteCommand
+                    name="reloadFormUpload"
+                    oncomplete="hideLoading()"
+                    partialSubmit="true"
+                    process="@this"
+                    update="@(.uploadDocContainer)"
+                />
             </rich:collapsiblePanel>
             </div>
             <div class="ui-g-12 ui-lg-6">
