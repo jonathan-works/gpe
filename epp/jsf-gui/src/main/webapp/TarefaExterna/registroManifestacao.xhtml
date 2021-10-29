@@ -217,7 +217,6 @@
                     <h:inputText
                         id="telefoneCelularInput"
                         value="#{cadastroTarefaExternaView.vo.dadosPessoais.telefoneCelular}"
-                        required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'TL'}"
                     />
                 </wi:field>
                 <wi:field
@@ -228,7 +227,6 @@
                     <h:inputText
                         id="telefoneFixoInput"
                         value="#{cadastroTarefaExternaView.vo.dadosPessoais.telefoneFixo}"
-                        required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'TL'}"
                     />
                 </wi:field>
                 <wi:field
@@ -239,7 +237,6 @@
                     <h:inputText
                         id="emailPessoalInput"
                         value="#{cadastroTarefaExternaView.vo.dadosPessoais.email}"
-                        required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'EM'}"
                         validator="emailValidator"
                     />
                 </wi:field>
@@ -344,7 +341,6 @@
                 <h:inputText
                     id="emailInput"
                     value="#{cadastroTarefaExternaView.vo.email}"
-                    required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'EM'}"
                 >
                     <f:validator validatorId="emailValidator" />
                 </h:inputText>
@@ -371,7 +367,7 @@
             
             <wi:field
                 id="tipoManifesto"
-                label="#{infoxMessages['registroManifestacao.tipoManifestacao']}"
+                label="#{infoxMessages['registroManifestacao.tipoManifesto']}"
                 required="true"
             >
                 <h:selectOneMenu

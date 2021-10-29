@@ -24,6 +24,7 @@ import org.richfaces.model.UploadedFile;
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.exception.EppConfigurationException;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
@@ -41,6 +42,7 @@ import br.com.infox.ibpm.sinal.SignalService;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.jsf.util.JsfUtil;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import lombok.Getter;
 
@@ -239,46 +241,79 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
         RequestContext.getCurrentInstance().addCallbackParam("sucesso", true);
     }
 
+    private void validarCadastro() {
+        if(getVo().getDesejaResposta() && !StringUtil.isEmpty(getVo().getCodMeioResposta())){
+            switch (getVo().getCodMeioResposta()) {
+            case "EM":
+                if(
+                    ("A".equals(getVo().getCodTipoManifestacao()) && StringUtil.isEmpty(getVo().getEmail())) ||
+                    ("I".equals(getVo().getCodTipoManifestacao()) && StringUtil.isEmpty(getVo().getDadosPessoais().getEmail()))
+                ){
+                    throw new BusinessRollbackException("Atenção: O e-mail deve ser informado, conforme escolha do meio de resposta.");
+                }
+                break;
+            case "TL":
+                if("I".equals(getVo().getCodTipoManifestacao()) && (
+                        StringUtil.isEmpty(getVo().getDadosPessoais().getTelefoneCelular()) ||
+                        StringUtil.isEmpty(getVo().getDadosPessoais().getTelefoneFixo())
+                    )
+                ){
+                    throw new BusinessRollbackException("Atenção: O telefone deve ser informado, conforme escolha do meio de resposta.");
+                }
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
     @ExceptionHandled(value = MethodType.PERSIST)
     public void cadastrar() {
-        String sinalTarefaExterna = Parametros.SINAL_TAREFA_EXTERNA.getValue();
-        List<SignalParam> params = new ArrayList<>();
+        try {
+            validarCadastro();
 
-        boolean anonimo = "A".equals(getVo().getCodTipoManifestacao());
-        getVo().setTipoManifestacao(
-            anonimo ?  "Anônimo" : "Identificado"
-        );
-        if(!anonimo) {
-            getVo().getDadosPessoais().setSexo(
-                TipoGeneroEnum.M.equals(TipoGeneroEnum.valueOf(getVo().getDadosPessoais().getCodSexo())) ?  TipoGeneroEnum.M.getLabel() : TipoGeneroEnum.F.getLabel()
+            String sinalTarefaExterna = Parametros.SINAL_TAREFA_EXTERNA.getValue();
+            if(StringUtil.isEmpty(sinalTarefaExterna)) {
+                throw new BusinessRollbackException(String.format("Parametro não encontrado: %s", Parametros.SINAL_TAREFA_EXTERNA.getLabel()));
+            }
+
+            List<SignalParam> params = new ArrayList<>();
+
+            boolean anonimo = "A".equals(getVo().getCodTipoManifestacao());
+            getVo().setTipoManifestacao(
+                anonimo ?  "Anônimo" : "Identificado"
             );
-        }
-        getVo().setTipoManifesto(getTiposManifesto().stream()
-            .filter(tm -> getVo().getCodTipoManifesto().equals(tm.getValue()))
-            .map(SelectItem::getLabel)
-            .findFirst()
-            .get()
-        );
-        if(getVo().getDesejaResposta()) {
-            getVo().setMeioResposta(getMeiosResposta().stream()
-                .filter(tm -> getVo().getCodMeioResposta().equals(tm.getValue()))
+            if(!anonimo) {
+                getVo().getDadosPessoais().setSexo(
+                    TipoGeneroEnum.M.equals(TipoGeneroEnum.valueOf(getVo().getDadosPessoais().getCodSexo())) ?  TipoGeneroEnum.M.getLabel() : TipoGeneroEnum.F.getLabel()
+                );
+            }
+            getVo().setTipoManifesto(getTiposManifesto().stream()
+                .filter(tm -> getVo().getCodTipoManifesto().equals(tm.getValue()))
                 .map(SelectItem::getLabel)
                 .findFirst()
                 .get()
             );
-        } else {
-            getVo().setMeioResposta(null);
-        }
-        getVo().setGrupoOuvidoria(getGrupoOuvidorias().stream()
-            .filter(tm -> getVo().getCodGrupoOuvidoria().equals(tm.getValue()))
-            .map(SelectItem::getLabel)
-            .findFirst()
-            .get()
-        );
+            if(getVo().getDesejaResposta()) {
+                getVo().setMeioResposta(getMeiosResposta().stream()
+                    .filter(tm -> getVo().getCodMeioResposta().equals(tm.getValue()))
+                    .map(SelectItem::getLabel)
+                    .findFirst()
+                    .get()
+                );
+            } else {
+                getVo().setMeioResposta(null);
+            }
+            getVo().setGrupoOuvidoria(getGrupoOuvidorias().stream()
+                .filter(tm -> getVo().getCodGrupoOuvidoria().equals(tm.getValue()))
+                .map(SelectItem::getLabel)
+                .findFirst()
+                .get()
+            );
 
-        params.add(new SignalParam(PARAM_TAREFA_EXTERNA, getVo(), Type.VARIABLE));
-        params.add(new SignalParam(PARAM_UUID_TAREFA_EXTERNA, this.uuidTarefaExterna.toString(), Type.VARIABLE));
-        try {
+            params.add(new SignalParam(PARAM_TAREFA_EXTERNA, getVo(), Type.VARIABLE));
+            params.add(new SignalParam(PARAM_UUID_TAREFA_EXTERNA, this.uuidTarefaExterna.toString(), Type.VARIABLE));
+
             JsfUtil jsfUtil = JsfUtil.instance();
             jsfUtil.addFlashParam(PARAM_UUID_TAREFA_EXTERNA, this.uuidTarefaExterna.toString());
             jsfUtil.applyLastPhaseFlashAction();
@@ -286,6 +321,9 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
             signalService.startStartStateListening(sinalTarefaExterna, params);
         } catch (Exception e) {
             RequestContext.getCurrentInstance().addCallbackParam("erro", true);
+            if(e instanceof BusinessException) {
+                throw e;
+            }
             throw new BusinessRollbackException("Erro inesperado", e);
         }
     }
