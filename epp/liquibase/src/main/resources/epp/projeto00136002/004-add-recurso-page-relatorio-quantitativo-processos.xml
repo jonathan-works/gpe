@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="nextValueForSqRecurso" value="nextval('sq_tb_recurso')" dbms="postgresql" />
+    <property name="nextValueForSqRecurso" value="sq_tb_recurso.nextval" dbms="oracle" />
+    <property name="nextValueForSqRecurso" value="next value for sq_tb_recurso" dbms="mssql" />
+
+    <changeSet author="marcone" id="1" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueComputed="${nextValueForSqRecurso}" />
+            <column name="ds_identificador" value="/pages/RelatorioQuantitativoProcessos/sintetico.seam" />
+            <column name="ds_nome" value="Relatório Quantitativo Sintético de Processos" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="marcone" id="2" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_recurso">
+            <column name="id_recurso" valueComputed="${nextValueForSqRecurso}" />
+            <column name="ds_identificador" value="/pages/RelatorioQuantitativoProcessos/analitico.seam" />
+            <column name="ds_nome" value="Relatório Quantitativo Analítico de Processos" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://jboss.org/schema/seam/pdf"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf">
+
+	<ui:param name="showLogoImg" value="true" />
+	<ui:param name="logoImg"
+		value="#{wi:get(logoImg, layoutController.getResourceUrlByPath('/imagens/logo_emblema_cuiaba_prefeitura.png'))}" />
+	<ui:param name="title"
+		value="#{infoxMessages['relQuantitativoProcessosSint.titlePage']}" />
+
+	<p:document title="#{infoxMessages['relQuantitativoProcessosSint.titlePage']}"
+		pageSize="A4"
+		margins="#{wi:get(marginLeft,'60')} #{wi:get(marginRight,'30')} #{wi:get(marginTop,'40')} #{wi:get(marginBotton,'30')}"
+		orientation="#{wi:get(orientation, 'portrait')}">
+
+		<f:facet name="header">
+			<p:header borderWidthTop="0" borderColorBottom="lightgray"
+				borderWidthBottom="1" alignment="right">
+				<p:paragraph alignment="right">
+					<p:font size="7">
+						<p:text value="Emitido por: " />
+						<p:text value="#{usuarioLogado}" />
+						<p:text value=". Emitido em: " />
+						<p:text value="#{currentTime}">
+							<s:convertDateTime pattern="dd/MM/yyyy / HH:mm" />
+						</p:text>
+					</p:font>
+				</p:paragraph>
+			</p:header>
+
+			<p:footer borderWidthTop="1" borderColorTop="lightgray"
+				borderWidthBottom="0" alignment="center">
+			</p:footer>
+		</f:facet>
+
+		<ui:include src="/WEB-INF/xhtml/tags/report/reportHeader.xhtml">
+			<ui:param name="spacingAfter" value="0" />
+		</ui:include>
+
+		<p:font size="10">
+			<p:table columns="1" widthPercentage="100" widths="1"
+				spacingBefore="1">
+				<p:cell borderWidth="0" horizontalAlignment="left"
+					verticalAlignment="bottom">
+					<p:font style="bold" size="12">
+						<p:paragraph alignment="left">
+							<p:text
+								value="#{relatorioProcessosSinteticoPDFView.localizacao}" />
+						</p:paragraph>
+					</p:font>
+				</p:cell>
+			</p:table>
+
+            <ui:repeat var="rs" value="#{relatorioProcessosSinteticoPDFView.relatorioSinteticoList}">
+                <p:font style="bold" size="12">
+                    <p:paragraph alignment="left">
+                        <p:text
+                            value="#{rs.localizacao}" />
+                    </p:paragraph>
+                </p:font>
+                <ui:repeat var="rsFluxo" value="#{rs.lista}">
+                <p:font style="bold" size="12">
+                    <p:paragraph alignment="left">
+                        <p:text
+                            value="#{rsFluxo.fluxo}" />
+                    </p:paragraph>
+                </p:font>
+    			<p:table
+                    columns="4"
+                    widthPercentage="100"
+                    headerRows="1"
+    				widths="2 2 4 2"
+                    spacingBefore="5"
+                    spacingAfter="1"
+                >
+    				<wi:reportColumnHeader
+    					title="#{infoxMessages['relAcumuladoSint.numeroProcesso']}" />
+    				<wi:reportColumnHeader
+    					title="#{infoxMessages['relAcumuladoSint.dataAbertura']}" />
+    				<wi:reportColumnHeader
+    					title="#{infoxMessages['relAcumuladoSint.usuarioAbertura']}" />
+    				<wi:reportColumnHeader
+    					title="#{infoxMessages['relQuantitativoProcessos.statusProcesso']}" />
+    
+    				<ui:repeat var="row"
+    					value="#{rsFluxo.lista}">
+    					<wi:reportColumn value="#{row.numeroProcesso}" columnAlign="center" />
+    					<wi:reportColumnDate value="#{row.dataAbertura}" pattern="dd/MM/yyyy" />
+    					<wi:reportColumn value="#{row.usuarioSolicitante}" />
+    					<wi:reportColumn value="#{row.status.label}" />
+    				</ui:repeat>
+    			</p:table>
+    			<h:panelGroup>
+    				<p:paragraph alignment="center" spacingAfter="30">
+    					<p:font style="bold" size="10">
+    						<p:text value="Total: " />
+    						<p:text
+    							value="#{rsFluxo.lista.size()}" />
+    					</p:font>
+    				</p:paragraph>
+    			</h:panelGroup>
+                </ui:repeat>
+            </ui:repeat>
+
+		</p:font>
+
+	</p:document>
+
+</ui:composition>

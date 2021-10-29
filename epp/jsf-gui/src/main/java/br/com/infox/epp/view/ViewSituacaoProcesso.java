@@ -19,6 +19,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
+import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,11 @@ public class ViewSituacaoProcesso implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_taskinstance", nullable = false, insertable = false, updatable = false)
     private TaskInstance taskInstance;
+
+    @Getter @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_taskinstance", nullable = false, insertable = false, updatable = false)
+    private UsuarioTaskInstance usuarioTaskInstance;
 
     @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -88,8 +94,8 @@ public class ViewSituacaoProcesso implements Serializable {
     @Column(name = "nr_processo", nullable = false, insertable = false, updatable = false)
     private String numeroProcesso;
 
-    @Column(name = "temdocumentoparaassinar", nullable = false, insertable = false, updatable = false)
-    private Boolean numeroProcessoRoot;
+    @Column(name = "nr_processo_root", nullable = false, insertable = false, updatable = false)
+    private String numeroProcessoRoot;
 
     @Column(name = "in_documento_assinar", nullable = false, insertable = false, updatable = false)
     private Boolean temDocumentoParaAssinar;

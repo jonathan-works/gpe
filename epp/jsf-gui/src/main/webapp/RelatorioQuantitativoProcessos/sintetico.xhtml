@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	xmlns:a="http://richfaces.org/a4j"
+    xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
+>
+<ui:define name="title">#{infoxMessages['relQuantitativoProcessosSint.titlePage']}</ui:define>
+<ui:define name="body">
+<style type="text/css">
+.ui-selectmanymenu {
+	width: 350px;
+}
+</style>
+
+<wi:panel id="estatisticaPanel" styleClass="content-block">
+	<h:form id="relatorioForm">
+		<div>
+            <wi:field
+                id="assunto"
+				label="#{infoxMessages['relQuantitativoProcessos.assunto']}"
+                required="true"
+            >
+                <p:selectManyMenu
+                    id="assuntoInput"
+                    filterMatchMode="contains"
+                    showCheckbox="true"
+                    required="true"
+                    filter="true"
+                    value="#{relatorioProcessosView.listaAssuntoSelecionado}"
+                >
+                    <f:selectItems
+                        value="#{relatorioProcessosView.listaAssunto}"
+                    />
+                </p:selectManyMenu>
+            </wi:field>
+            <wi:field
+                id="status"
+				label="#{infoxMessages['relQuantitativoProcessos.status']}"
+            >
+                <p:selectManyMenu
+                    id="statusInput"
+                    filterMatchMode="contains"
+                    showCheckbox="true"
+                    filter="true"
+                    value="#{relatorioProcessosView.listaStatusSelecionado}"
+                >
+                    <f:selectItems
+                        value="#{relatorioProcessosView.listaStatus}"
+                        var="ls"
+                        itemValue="#{ls.name()}"
+                        itemLabel="#{ls.label}"
+                    />
+                </p:selectManyMenu>
+            </wi:field>
+            <wi:inputDataPeriodo
+                id="periodo"
+                label="#{infoxMessages['relQuantitativoProcessos.periodo']}"
+                valueDateFrom="#{relatorioProcessosView.dataInicio}"
+                valueDateTo="#{relatorioProcessosView.dataFim}"
+            />
+		</div>
+
+		<div>
+			<p:commandButton
+                id="btAbrirPDF"
+                partialSubmit="true"
+                update="@form :pageBodyDialogMessage"
+                process="@form"
+                onclick="showLoading()"
+                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){infox.openPopUp('pdf', 'sinteticoReport.seam');}"
+				action="#{relatorioProcessosView.prepararAbrirRelatorio}"
+				value="#{infoxMessages['relQuantitativoProcessos.gerarPDF']}"
+            />
+            <p:commandButton
+                id="btAbrirExcel"
+                partialSubmit="true"
+                update="@form :pageBodyDialogMessage"
+                process="@form"
+                onclick="showLoading()"
+                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){document.getElementById('relatorioForm:gerarExcel').click();}"                
+				value="#{infoxMessages['relQuantitativoProcessos.gerarExcel']}"
+            />
+            <h:commandLink
+                id="gerarExcel"
+                action="#{relatorioProcessosView.gerarExcel}"
+                value="gerarExcel"
+                style="display: none;"
+            />
+
+			</div>
+		</h:form>
+	</wi:panel>
+
+
+</ui:define>
+
+</ui:composition>
