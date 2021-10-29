@@ -80,7 +80,7 @@ public class DadosTarefaExternaView implements Serializable {
         this.vo.setDataInico(ctVO.getDataAbertura());
         this.vo.setTituloManifestacao(ctVO.getTituloManifesto());
         this.vo.setNumeroManifestacao(pj.getProcesso().getNumeroProcesso());
-        this.vo.setTipoManifestacao(ctVO.getTipoManifestacao());
+        this.vo.setTipoManifestacao(ctVO.getTipoManifesto());
 
         String modDocChave = Parametros.MODELO_DOC_CHAVE_CONSULTA.getValue();
         if(StringUtil.isEmpty(modDocChave)) {
