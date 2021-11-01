@@ -1,4 +1,4 @@
-package br.com.infox.epp.relatorio;
+package br.com.infox.epp.relatorio.acumuladosinteticoprocessos.view;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.relatorio.search.AcumuladoSinteticoProcessosSearch;
+import br.com.infox.epp.relatorio.acumuladosinteticoprocessos.AcumuladoSinteticoProcessosSearch;
 import lombok.Getter;
 import lombok.Setter;
 

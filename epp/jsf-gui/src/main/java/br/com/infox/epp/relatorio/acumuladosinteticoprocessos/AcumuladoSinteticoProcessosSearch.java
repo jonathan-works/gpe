@@ -1,4 +1,4 @@
-package br.com.infox.epp.relatorio.search;
+package br.com.infox.epp.relatorio.acumuladosinteticoprocessos;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.relatorio.AcumuladoSinteticoProcessosVO;
+import br.com.infox.epp.relatorio.acumuladosinteticoprocessos.view.AcumuladoSinteticoProcessosVO;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
