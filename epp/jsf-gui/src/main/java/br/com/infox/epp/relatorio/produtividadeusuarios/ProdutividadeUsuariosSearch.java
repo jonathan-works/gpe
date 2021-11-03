@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -120,19 +121,26 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
 	
 	private long getQuantidadeProcessosFinalizadosPor(UsuarioLogin usuarioLogin, Localizacao localizacao, Fluxo fluxo, Date dataInicial, Date dataFinal) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        CriteriaQuery<Tuple> query = cb.createQuery(Tuple.class);
         Root<HistoricoMetadadoProcesso> historicoMetadadoProcesso = query.from(HistoricoMetadadoProcesso.class);
         Root<StatusProcesso> statusProcesso = query.from(StatusProcesso.class);
         Root<MovimentacaoTarefa> movimentacaoTarefa = query.from(MovimentacaoTarefa.class);
         Join<?, UsuarioTaskInstance> usuarioTaskInstance = movimentacaoTarefa.join(MovimentacaoTarefa_.usuarioTaskInstance);
         Join<?, Processo> processo = movimentacaoTarefa.join(MovimentacaoTarefa_.processos);
         Join<?, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo);
-        query.select(cb.countDistinct(processo));
+        query.multiselect(processo, usuarioTaskInstance.get(UsuarioTaskInstance_.localizacaoExterna));
         query.where(cb.equal(statusProcesso.get(StatusProcesso_.idStatusProcesso).as(String.class), historicoMetadadoProcesso.get(HistoricoMetadadoProcesso_.valor)),
         		cb.equal(processo.get(Processo_.idProcesso), historicoMetadadoProcesso.get(HistoricoMetadadoProcesso_.idProcesso)),
         		cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo),
         		cb.equal(statusProcesso.get(StatusProcesso_.descricao), "Arquivado"),
         		cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), usuarioLogin), cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.localizacaoExterna), localizacao.getIdLocalizacao()), cb.between(processo.get(Processo_.dataFim), dataInicial, dataFinal));
-        return getEntityManager().createQuery(query).getSingleResult();
+        
+        List<Processo> listaProcesso = new ArrayList<Processo>();
+        for(Tuple tuple : getEntityManager().createQuery(query).getResultList()) {
+        	if(!listaProcesso.contains(tuple.get(0, Processo.class)) && tuple.get(1, Localizacao.class).equals(localizacao)) {
+        		listaProcesso.add(tuple.get(0, Processo.class));
+        	}
+        }
+        return listaProcesso.size();
 	}
 }
