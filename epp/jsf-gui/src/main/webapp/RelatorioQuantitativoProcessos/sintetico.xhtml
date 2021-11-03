@@ -19,7 +19,10 @@
 }
 </style>
 
-<wi:panel id="estatisticaPanel" styleClass="content-block">
+<fieldset style="margin-top: 40px;">
+    <legend>
+        #{infoxMessages['relQuantitativoProcessos.filtros']}
+    </legend>
 	<h:form id="relatorioForm">
 		<div>
             <wi:field
@@ -94,11 +97,9 @@
                 style="display: none;"
             />
 
-			</div>
-		</h:form>
-	</wi:panel>
-
-
+		</div>
+	</h:form>
+</fieldset>
 </ui:define>
 
 </ui:composition>
