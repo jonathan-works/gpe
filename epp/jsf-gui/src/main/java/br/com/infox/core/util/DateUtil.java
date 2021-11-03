@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,6 +17,9 @@ import javax.inject.Named;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Interval;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 
 @Named
 @RequestScoped
@@ -288,28 +290,13 @@ public class DateUtil {
      * @return String no formato X anos(s), X mes(es) e X dia(s)
      */
     public static String formatarIntervaloDataPorExtenso(Date dataIni, Date dataFim) {
-        String msg = "0 ano(s), 0 mes(es) e 0 dia(s)";
-        GregorianCalendar gcIni = new GregorianCalendar();
-        gcIni.setTime(dataIni);
-
-        GregorianCalendar gcFim = new GregorianCalendar();
-        gcFim.setTime(dataFim);
-
-        long dif = gcFim.getTimeInMillis() - gcIni.getTimeInMillis();
-        if (dif > 0) {
-            GregorianCalendar gcDif = new GregorianCalendar();
-            gcDif.setTimeInMillis(dif);
-            long ano = gcFim.get(GregorianCalendar.YEAR) - gcIni.get(GregorianCalendar.YEAR);
-            long mes = gcDif.get(GregorianCalendar.MONTH);
-            long dia = gcDif.get(GregorianCalendar.DAY_OF_MONTH);
-            msg = ano + " ano(s), " + mes + " mes(es) e " + dia + " dia(s) ";
-        }
-
-        return msg;
+        Interval intervalo = new Interval(dataIni.getTime(), dataFim.getTime());
+        Period periodo = intervalo.toPeriod(PeriodType.yearMonthDayTime());
+        return periodo.getYears() + " ano(s), " + periodo.getMonths() + " mes(es) e " + periodo.getDays() + " dia(s)";
     }
-    
+
     public static List<String> getListaTodosMeses() {
-    	return Arrays.asList("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");    
-	}
+    	return Arrays.asList("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+    }
 
 }
