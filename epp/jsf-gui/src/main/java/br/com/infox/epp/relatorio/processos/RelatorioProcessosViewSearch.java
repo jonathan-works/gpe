@@ -106,7 +106,7 @@ public class RelatorioProcessosViewSearch {
                 , fluxo.get(Fluxo_.fluxo)
                 , processo.get(Processo_.numeroProcesso)
                 , usuarioCadastro.get(UsuarioLogin_.nomeUsuario)
-                , cb.isNull(processo.get(Processo_.dataFim))
+                , processo.get(Processo_.dataFim)
                 , processo.get(Processo_.dataInicio)
             )
         );

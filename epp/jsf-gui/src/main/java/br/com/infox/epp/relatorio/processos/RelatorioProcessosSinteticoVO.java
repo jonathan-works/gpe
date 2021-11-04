@@ -43,11 +43,11 @@ public class RelatorioProcessosSinteticoVO {
         private StatusProcessoEnum status;
         private Date dataAbertura;
         public RelatorioProcessosSinteticoRowVO(String numeroProcesso, String usuarioSolicitante,
-                Boolean emAndamento, Date dataAbertura) {
+                Date dataEncerramento, Date dataAbertura) {
             super();
             this.numeroProcesso = numeroProcesso;
             this.usuarioSolicitante = usuarioSolicitante;
-            this.status = emAndamento ? StatusProcessoEnum.A : StatusProcessoEnum.F;
+            this.status = dataEncerramento == null ? StatusProcessoEnum.A : StatusProcessoEnum.F;
             this.dataAbertura = dataAbertura;
         }
 
