@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://jboss.org/schema/seam/pdf"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:wi="http://www.itx.com.br/jsf">
+
+	<ui:param name="showLogoImg" value="true" />
+	<ui:param name="logoImg"
+		value="#{wi:get(logoImg, layoutController.getResourceUrlByPath('/imagens/logo_emblema_cuiaba_prefeitura.png'))}" />
+	<ui:param name="title"
+		value="#{infoxMessages['relQuantitativoProcessosAnalitico.titlePage']}" />
+
+	<p:document title="#{infoxMessages['relQuantitativoProcessosAnalitico.titlePage']}"
+		pageSize="A4"
+		margins="#{wi:get(marginLeft,'60')} #{wi:get(marginRight,'30')} #{wi:get(marginTop,'40')} #{wi:get(marginBotton,'30')}"
+		orientation="#{wi:get(orientation, 'portrait')}">
+
+		<f:facet name="header">
+			<p:header borderWidthTop="0" borderColorBottom="lightgray"
+				borderWidthBottom="1" alignment="right">
+				<p:paragraph alignment="right">
+					<p:font size="7">
+						<p:text value="Emitido por: " />
+						<p:text value="#{usuarioLogado}" />
+						<p:text value=". Emitido em: " />
+						<p:text value="#{currentTime}">
+							<s:convertDateTime pattern="dd/MM/yyyy / HH:mm" />
+						</p:text>
+					</p:font>
+				</p:paragraph>
+			</p:header>
+
+			<p:footer borderWidthTop="1" borderColorTop="lightgray"
+				borderWidthBottom="0" alignment="center">
+			</p:footer>
+		</f:facet>
+
+		<ui:include src="/WEB-INF/xhtml/tags/report/reportHeader.xhtml">
+			<ui:param name="spacingAfter" value="0" />
+		</ui:include>
+
+		<p:font size="10">
+			<p:table columns="1" widthPercentage="100" widths="1"
+				spacingBefore="1">
+				<p:cell borderWidth="0" horizontalAlignment="left"
+					verticalAlignment="bottom">
+					<p:font style="bold" size="12">
+						<p:paragraph alignment="left">
+							<p:text
+								value="#{relatorioProcessosAnaliticoPDFView.localizacao}" />
+						</p:paragraph>
+					</p:font>
+				</p:cell>
+			</p:table>
+
+            <ui:repeat var="rs" value="#{relatorioProcessosAnaliticoPDFView.relatorioAnaliticoList}">
+                <p:font style="bold" size="12">
+                    <p:paragraph alignment="left">
+                        <p:text
+                            value="#{rs.localizacao}" />
+                    </p:paragraph>
+                </p:font>
+                <ui:repeat var="rsFluxo" value="#{rs.lista}">
+                <p:font style="bold" size="12">
+                    <p:paragraph alignment="left">
+                        <p:text
+                            value="#{rsFluxo.fluxo}" />
+                    </p:paragraph>
+                </p:font>
+				<ui:repeat var="rowProcesso" value="#{rsFluxo.lista}">
+    			<p:table
+                    columns="4"
+                    widthPercentage="100"
+                    headerRows="1"
+    				widths="2 2 4 2"
+                    spacingBefore="10"
+                >
+    				<wi:reportColumnHeader
+    					title="#{infoxMessages['relAcumuladoSint.numeroProcesso']}" />
+    				<wi:reportColumnHeader
+    					title="#{infoxMessages['relAcumuladoSint.dataAbertura']}" />
+    				<wi:reportColumnHeader
+    					title="#{infoxMessages['relAcumuladoSint.usuarioAbertura']}" />
+    				<wi:reportColumnHeader
+    					title="#{infoxMessages['relQuantitativoProcessos.statusProcesso']}" />
+					<wi:reportColumn value="#{rowProcesso.numeroProcesso}" columnAlign="center" />
+					<wi:reportColumnDate value="#{rowProcesso.dataAbertura}" pattern="dd/MM/yyyy" />
+					<wi:reportColumn value="#{rowProcesso.usuarioSolicitante}" />
+					<wi:reportColumn value="#{rowProcesso.status.label}" />
+    			</p:table>
+                <p:table
+                    columns="3"
+                    widths="4 2 2"
+                    widthPercentage="100"
+                    headerRows="1"
+                >
+                    <wi:reportColumnHeader
+                        title="#{infoxMessages['relQuantitativoProcessosAnalitico.nomeParticipante']}"
+                    />
+                    <wi:reportColumnHeader
+                        title="#{infoxMessages['relQuantitativoProcessosAnalitico.cpfCnpj']}"
+                    />
+                    <wi:reportColumnHeader
+                        title="#{infoxMessages['relQuantitativoProcessosAnalitico.tipoParticipante']}"
+                    />
+                    <ui:repeat var="rowParte" value="#{rowProcesso.participantes}">
+                        <wi:reportColumn value="#{rowParte.nome}" />
+                        <wi:reportColumn value="#{rowParte.cpfCnpj}" />
+                        <wi:reportColumn value="#{rowParte.tipoParticipante}" />
+                    </ui:repeat>
+                </p:table>
+                <p:table
+                    columns="4"
+                    widths="2 2 2 2"
+                    widthPercentage="100"
+                    headerRows="1"
+                >
+                    <wi:reportColumnHeader
+                        title="#{infoxMessages['relQuantitativoProcessosAnalitico.tarefa']}"
+                    />
+                    <wi:reportColumnHeader
+                        title="#{infoxMessages['relQuantitativoProcessosAnalitico.setorUsuario']}"
+                    />
+                    <wi:reportColumnHeader
+                        title="#{infoxMessages['relQuantitativoProcessosAnalitico.dataInicio']}"
+                    />
+                    <wi:reportColumnHeader
+                        title="#{infoxMessages['relQuantitativoProcessosAnalitico.dataFechamento']}"
+                    />
+                    <ui:repeat var="rowTarefa" value="#{rowProcesso.tarefas}">
+                        <wi:reportColumn value="#{rowTarefa.nome}" />
+                        <wi:reportColumn value="#{rowTarefa.setor}" />
+                        <wi:reportColumnDate value="#{rowTarefa.dataInicio}" pattern="dd/MM/yyyy HH:mm" />
+                        <wi:reportColumnDate value="#{rowTarefa.dataFim}" pattern="dd/MM/yyyy HH:mm" />
+                    </ui:repeat>
+                </p:table>
+				</ui:repeat>
+                </ui:repeat>
+            </ui:repeat>
+
+		</p:font>
+
+	</p:document>
+
+</ui:composition>

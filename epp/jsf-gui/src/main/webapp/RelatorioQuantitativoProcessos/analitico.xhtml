@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:i="http://java.sun.com/jsf/composite/infox"
-	xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
+    xmlns:a="http://richfaces.org/a4j"
     xmlns:p="http://primefaces.org/ui"
-	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
 >
-<ui:define name="title">#{infoxMessages['relQuantitativoProcessosSint.titlePage']}</ui:define>
+<ui:define name="title">#{infoxMessages['relQuantitativoProcessosAnalitico.titlePage']}</ui:define>
 <ui:define name="body">
 <style type="text/css">
 .ui-selectmanymenu {
-	width: 350px;
+    width: 350px;
 }
 </style>
 
@@ -23,11 +23,11 @@
     <legend>
         #{infoxMessages['relQuantitativoProcessos.filtros']}
     </legend>
-	<h:form id="relatorioForm">
-		<div>
+    <h:form id="relatorioForm">
+        <div>
             <wi:field
                 id="assunto"
-				label="#{infoxMessages['relQuantitativoProcessos.assunto']}"
+                label="#{infoxMessages['relQuantitativoProcessos.assunto']}"
                 required="true"
             >
                 <p:selectManyMenu
@@ -45,7 +45,7 @@
             </wi:field>
             <wi:field
                 id="status"
-				label="#{infoxMessages['relQuantitativoProcessos.status']}"
+                label="#{infoxMessages['relQuantitativoProcessos.status']}"
             >
                 <p:selectManyMenu
                     id="statusInput"
@@ -64,42 +64,54 @@
             </wi:field>
             <wi:inputDataPeriodo
                 id="periodo"
-                label="#{infoxMessages['relQuantitativoProcessos.periodo']}"
+                label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura']}"
                 valueDateFrom="#{relatorioProcessosView.dataInicio}"
                 valueDateTo="#{relatorioProcessosView.dataFim}"
             />
-		</div>
+            <wi:inputDataPeriodo
+                id="periodoMovimentacao"
+                label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao']}"
+                valueDateFrom="#{relatorioProcessosView.dataMovimentacaoInicio}"
+                valueDateTo="#{relatorioProcessosView.dataMovimentacaoFim}"
+            />
+            <wi:inputDataPeriodo
+                id="periodoArquivamento"
+                label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento']}"
+                valueDateFrom="#{relatorioProcessosView.dataArquivamentoInicio}"
+                valueDateTo="#{relatorioProcessosView.dataArquivamentoFim}"
+            />
+        </div>
 
-		<div>
-			<p:commandButton
+        <div>
+            <p:commandButton
                 id="btAbrirPDF"
-                partialSubmit="true"
                 update="@form :pageBodyDialogMessage"
                 process="@form"
                 onclick="showLoading()"
-                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){infox.openPopUp('pdf', 'sinteticoReport.seam');}"
-				action="#{relatorioProcessosView.prepararAbrirRelatorioSintetico}"
-				value="#{infoxMessages['relQuantitativoProcessos.gerarPDF']}"
+                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){infox.openPopUp('pdf', 'analiticoReport.seam');}"
+                action="#{relatorioProcessosView.prepararAbrirRelatorioAnalitico}"
+                value="#{infoxMessages['relQuantitativoProcessos.gerarPDF']}"
             />
             <p:commandButton
                 id="btAbrirExcel"
                 partialSubmit="true"
                 update="@form :pageBodyDialogMessage"
                 process="@form"
+                action="#{relatorioProcessosView.prepararExcelAnalitico}"
                 onclick="showLoading()"
                 oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){document.getElementById('relatorioForm:gerarExcel').click();}"                
-				value="#{infoxMessages['relQuantitativoProcessos.gerarExcel']}"
+                value="#{infoxMessages['relQuantitativoProcessos.gerarExcel']}"
             />
             <h:commandLink
-                id="gerarExcel"
                 target="_blank"
-                action="#{relatorioProcessosView.gerarExcelSintetico}"
+                id="gerarExcel"
+                action="#{relatorioProcessosView.gerarExcelAnalitico}"
                 value="gerarExcel"
                 style="display: none;"
             />
 
-		</div>
-	</h:form>
+        </div>
+    </h:form>
 </fieldset>
 </ui:define>
 

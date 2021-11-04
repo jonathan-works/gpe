@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet
+        id="1"
+        author="marcone"
+		dbms="mssql, postgresql, oracle"
+    >
+        <createView viewName="vs_participante_processo">
+SELECT
+pp.id_participante_processo,
+pp.id_processo,
+pp.id_pessoa,
+pp.in_ativo,
+pp.nm_participante,
+pp.id_tipo_parte,
+pp.id_participante_pai,
+pp.ds_caminho_absoluto,
+pp.dt_inicio_participacao,
+pp.dt_fim_participacao,
+coalesce(pf.nr_cpf, pj.nr_cnpj) as nr_cpf_cnpj,
+p.nm_pessoa,
+p.tp_pessoa
+FROM tb_participante_processo pp
+left join tb_tipo_parte tp on (pp.id_tipo_parte = tp.id_tipo_parte)
+left join tb_pessoa p on (pp.id_pessoa = p.id_pessoa)
+left join tb_pessoa_juridica pj on (pp.id_pessoa = pj.id_pessoa_juridica)
+left join tb_pessoa_fisica pf on (pp.id_pessoa = pf.id_pessoa_fisica)
+        </createView>
+	</changeSet>
+
+</databaseChangeLog>

@@ -1,9 +1,10 @@
-package br.com.infox.epp.relatorio.processos;
+package br.com.infox.epp.relatorio.quantitativoprocessos.sitetico;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import br.com.infox.epp.relatorio.quantitativoprocessos.StatusProcessoEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package br.com.infox.epp.relatorio.processos;
+package br.com.infox.epp.relatorio.quantitativoprocessos;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.exception.ExcelExportException;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
@@ -55,6 +56,14 @@ public class RelatorioProcessosView implements Serializable {
 	private Date dataInicio;
 	@Getter @Setter
 	private Date dataFim;
+	@Getter @Setter
+	private Date dataMovimentacaoInicio;
+	@Getter @Setter
+	private Date dataMovimentacaoFim;
+	@Getter @Setter
+	private Date dataArquivamentoInicio;
+	@Getter @Setter
+	private Date dataArquivamentoFim;
 
 
 	@PostConstruct
@@ -66,27 +75,44 @@ public class RelatorioProcessosView implements Serializable {
 	}
 
 	@ExceptionHandled
-	public void prepararAbrirRelatorio() {
+	public void prepararAbrirRelatorioSintetico() {
 	    JsfUtil jsfUtil = JsfUtil.instance();
         jsfUtil.addFlashParam("assuntos", listaAssuntoSelecionado);
         jsfUtil.addFlashParam("status", listaStatusSelecionado.stream()
             .map(o -> StatusProcessoEnum.valueOf(o))
             .collect(Collectors.toList())
         );
-        jsfUtil.addFlashParam("dataInicio", dataInicio);
-        jsfUtil.addFlashParam("dataFim", dataFim);
+        jsfUtil.addFlashParam("dataAberturaInicio", dataInicio);
+        jsfUtil.addFlashParam("dataAberturaFim", DateUtil.getEndOfDay(dataFim));
         jsfUtil.applyLastPhaseFlashAction();
 	}
 
 	@ExceptionHandled
-	public void gerarExcel() {
+	public void prepararAbrirRelatorioAnalitico() {
+	    JsfUtil jsfUtil = JsfUtil.instance();
+	    jsfUtil.addFlashParam("assuntos", listaAssuntoSelecionado);
+	    jsfUtil.addFlashParam("status", listaStatusSelecionado.stream()
+	            .map(o -> StatusProcessoEnum.valueOf(o))
+	            .collect(Collectors.toList())
+	            );
+	    jsfUtil.addFlashParam("dataAberturaInicio", dataInicio);
+	    jsfUtil.addFlashParam("dataAberturaFim", DateUtil.getEndOfDay(dataFim));
+	    jsfUtil.addFlashParam("dataMovimentacaoInicio", dataMovimentacaoInicio);
+	    jsfUtil.addFlashParam("dataMovimentacaoFim", DateUtil.getEndOfDay(dataMovimentacaoFim));
+	    jsfUtil.addFlashParam("dataArquivamentoInicio", dataArquivamentoInicio);
+	    jsfUtil.addFlashParam("dataArquivamentoFim", DateUtil.getEndOfDay(dataArquivamentoFim));
+	    jsfUtil.applyLastPhaseFlashAction();
+	}
+
+	@ExceptionHandled
+	public void gerarExcelSintetico() {
 		try {
 			String urlTemplate = pathResolver.getContextRealPath() + "/RelatorioQuantitativoProcessos/sinteticoReport.xls";
 	        Map<String, Object> map = new HashMap<String, Object>();
 	        map.put("rowVO", relatorioProcessosViewSearch.getRelatorioSintetico(
                 listaAssuntoSelecionado,
                 dataInicio,
-                dataFim,
+                DateUtil.getEndOfDay(dataFim),
                 this.listaStatusSelecionado.stream()
 	                .map(o -> StatusProcessoEnum.valueOf(o))
 	                .collect(Collectors.toList())
@@ -95,6 +121,37 @@ public class RelatorioProcessosView implements Serializable {
 		} catch (ExcelExportException e) {
 			throw new BusinessRollbackException("Erro inesperado", e);
 		}
+	}
+
+	@ExceptionHandled
+	public void prepararExcelAnalitico() {
+	    JsfUtil jsfUtil = JsfUtil.instance();
+        jsfUtil.addFlashParam("rowVO", relatorioProcessosViewSearch.getRelatorioAnalitico(
+            listaAssuntoSelecionado
+            ,dataInicio
+            ,DateUtil.getEndOfDay(dataFim)
+            ,dataMovimentacaoInicio
+            ,DateUtil.getEndOfDay(dataMovimentacaoFim)
+            ,dataArquivamentoInicio
+            ,DateUtil.getEndOfDay(dataArquivamentoFim)
+            ,this.listaStatusSelecionado.stream()
+            .map(o -> StatusProcessoEnum.valueOf(o))
+            .collect(Collectors.toList())
+        ));
+        jsfUtil.applyLastPhaseFlashAction();
+	}
+
+	@ExceptionHandled
+	public void gerarExcelAnalitico() {
+	    try {
+	        Map<String, Object> map = new HashMap<String, Object>();
+	        JsfUtil jsfUtil = JsfUtil.instance();
+	        map.put("rowVO", jsfUtil.getFlashParam("rowVO", List.class));
+	        String urlTemplate = pathResolver.getContextRealPath() + "/RelatorioQuantitativoProcessos/analiticoReport.xls";
+	        ExcelExportUtil.downloadXLS(urlTemplate, map, "sinteticoReport.xls");
+	    } catch (ExcelExportException e) {
+	        throw new BusinessRollbackException("Erro inesperado", e);
+	    }
 	}
 
 }

@@ -1,4 +1,4 @@
-package br.com.infox.epp.relatorio.processos;
+package br.com.infox.epp.relatorio.quantitativoprocessos.sitetico;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
@@ -29,7 +30,8 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
-import br.com.infox.epp.relatorio.processos.RelatorioProcessosSinteticoVO.RelatorioProcessosSinteticoFluxoVO;
+import br.com.infox.epp.relatorio.quantitativoprocessos.StatusProcessoEnum;
+import br.com.infox.epp.relatorio.quantitativoprocessos.sitetico.RelatorioProcessosSinteticoVO.RelatorioProcessosSinteticoFluxoVO;
 import br.com.infox.epp.view.ViewSituacaoProcesso;
 import br.com.infox.epp.view.ViewSituacaoProcesso_;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
@@ -66,8 +68,8 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
 	    JsfUtil jsfUtil = JsfUtil.instance();
 	    assuntos = jsfUtil.getFlashParam("assuntos", List.class);
 	    status = jsfUtil.getFlashParam("status", List.class);
-	    dataInicio = jsfUtil.getFlashParam("dataInicio", Date.class);
-	    dataFim = jsfUtil.getFlashParam("dataFim", Date.class);
+	    dataInicio = jsfUtil.getFlashParam("dataAberturaInicio", Date.class);
+	    dataFim = jsfUtil.getFlashParam("dataAberturaFim", Date.class);
 
         EntityManager em = EntityManagerProducer.getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -105,6 +107,7 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
         Root<ViewSituacaoProcesso> viewSituacaoProcesso = query.from(ViewSituacaoProcesso.class);
+        Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
         Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance);
         Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao);
         Join<ViewSituacaoProcesso, Fluxo> fluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.fluxo);
@@ -112,6 +115,8 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
             fluxo.get(Fluxo_.idFluxo).in(assuntos),
             cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), Authenticator.getUsuarioLogado().getIdUsuarioLogin())
         );
+
+        aplicarFiltrosProcesso(query, cb, processo);
 
         query.select(cb.construct(query.getResultType(),
             localizacao.get(Localizacao_.localizacao).alias("localizacao"),
@@ -143,16 +148,30 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
         Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao);
         Join<ViewSituacaoProcesso, Fluxo> fluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.fluxo);
         sqSituacaoProcesso.where(
+            cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), Authenticator.getUsuarioLogado().getIdUsuarioLogin()),
             cb.equal(viewSituacaoProcesso.get(ViewSituacaoProcesso_.processo), processo),
             cb.equal(fluxo, idFluxo),
             cb.equal(localizacao, idLocalizacao)
         );
 
         query.where(
-            cb.equal(usuarioCadastro, Authenticator.getUsuarioLogado().getIdUsuarioLogin()),
             cb.exists(sqSituacaoProcesso)
         );
 
+        aplicarFiltrosProcesso(query, cb, processo);
+
+        query.select(
+            cb.construct(query.getResultType(),
+                processo.get(Processo_.numeroProcesso)
+                , usuarioCadastro.get(UsuarioLogin_.nomeUsuario)
+                , processo.get(Processo_.dataFim)
+                , processo.get(Processo_.dataInicio)
+            )
+        );
+        query.orderBy(cb.asc(processo.get(Processo_.numeroProcesso)));
+    }
+
+    private <T> void aplicarFiltrosProcesso(CriteriaQuery<T> query, CriteriaBuilder cb, Path<Processo> processo) {
         if(dataInicio != null) {
             query.where(
                 query.getRestriction(),
@@ -180,16 +199,6 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
                 );
             }
         }
-
-        query.select(
-            cb.construct(query.getResultType(),
-                processo.get(Processo_.numeroProcesso)
-                , usuarioCadastro.get(UsuarioLogin_.nomeUsuario)
-                , processo.get(Processo_.dataFim)
-                , processo.get(Processo_.dataInicio)
-            )
-        );
-        query.orderBy(cb.asc(processo.get(Processo_.numeroProcesso)));
     }
 
 }
