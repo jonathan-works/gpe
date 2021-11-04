@@ -1,7 +1,6 @@
 package br.com.infox.epp.relatorio.acumuladosinteticoprocessos.view;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.relatorio.acumuladosinteticoprocessos.AcumuladoSinteticoProcessosSearch;
@@ -28,9 +26,7 @@ public class AcumuladoSinteticoProcessosRelView implements Serializable {
 	private AcumuladoSinteticoProcessosSearch acumuladoSinteticoProcessosSearch;
 	
 	@Getter @Setter
-	private List<AcumuladoSinteticoProcessosVO> listaRelatorioEmAndamento;
-	@Getter @Setter
-	private List<AcumuladoSinteticoProcessosVO> listaRelatorioFinalizadoArquivado;
+	private List<AcumuladoSinteticoProcessosLocalizacaoVO> listaRelatorio;
 	
 	@Getter @Setter
 	private List<Fluxo> listaAssuntoSelecionado;
@@ -40,13 +36,10 @@ public class AcumuladoSinteticoProcessosRelView implements Serializable {
 	private List<String> listaMesSelecionado;
 	@Getter @Setter
 	private Integer ano;
-	@Getter @Setter
-	private Localizacao localizacao;
 	
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	private void init() {
-		localizacao = Authenticator.getLocalizacaoAtual();
 		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 		listaAssuntoSelecionado = (List<Fluxo>) sessionMap.get("listaAssuntoAcumuladoSinteticoProcessosView");
 		listaStatusSelecionado = (List<String>) sessionMap.get("listaStatusAcumuladoSinteticoProcessosView");
@@ -66,19 +59,6 @@ public class AcumuladoSinteticoProcessosRelView implements Serializable {
 	}
 	
 	private void gerarRelatorio() {
-		initRelatorios();
-		if(listaStatusSelecionado.isEmpty() || listaStatusSelecionado.contains("Em andamento")) {
-			listaRelatorioEmAndamento = acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, "Em andamento", listaMesSelecionado, ano, localizacao);
-		}
-		
-		if(listaStatusSelecionado.isEmpty() || listaStatusSelecionado.contains("Arquivados/Finalizados")) {
-			listaRelatorioFinalizadoArquivado = acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, "Arquivados/Finalizados", listaMesSelecionado, ano, localizacao);
-		}
+		listaRelatorio = acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, listaStatusSelecionado, listaMesSelecionado, ano, Authenticator.getLocalizacaoAtual());
 	}
-	
-	private void initRelatorios() {
-		listaRelatorioEmAndamento = new ArrayList<AcumuladoSinteticoProcessosVO>();
-		listaRelatorioFinalizadoArquivado = new ArrayList<AcumuladoSinteticoProcessosVO>();
-	}
-
 }
