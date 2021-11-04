@@ -19,57 +19,61 @@
 }
 </style>
 
-		<wi:panel id="relatorioPanel" styleClass="content-block">
-			<h:form id="relatorioForm">
-				<div>
-					<i:selectManyMenu id="usuario" required="true"
-						label="#{infoxMessages['relProdUsuarios.usuarioResponsavel']}"
-						value="#{produtividadeUsuariosView.listaUsuarioSelecionado}"
-						items="#{produtividadeUsuariosView.listaUsuario}"
-						converterId="br.com.infox.jsf.converter.SelectItemConverter" />
+<fieldset style="margin-top: 40px;">
+    <legend>
+        #{infoxMessages['relProdUsuarios.filtros']}
+    </legend>
+		<h:form id="relatorioForm">
+			<div>
+				<i:selectManyMenu id="usuario" required="true"
+					label="#{infoxMessages['relProdUsuarios.usuarioResponsavel']}"
+					value="#{produtividadeUsuariosView.listaUsuarioSelecionado}"
+					items="#{produtividadeUsuariosView.listaUsuario}"
+					converterId="br.com.infox.jsf.converter.SelectItemConverter" />
 
-					<i:selectManyMenu id="assunto" required="true"
-						label="#{infoxMessages['relProdUsuarios.assunto']}"
-						value="#{produtividadeUsuariosView.listaAssuntoSelecionado}"
-						items="#{produtividadeUsuariosView.listaAssunto}"
-						converterId="br.com.infox.jsf.converter.SelectItemConverter" />
-				</div>
+				<i:selectManyMenu id="assunto" required="true"
+					label="#{infoxMessages['relProdUsuarios.assunto']}"
+					value="#{produtividadeUsuariosView.listaAssuntoSelecionado}"
+					items="#{produtividadeUsuariosView.listaAssunto}"
+					converterId="br.com.infox.jsf.converter.SelectItemConverter" />
+			</div>
 
-				<div>
-					<h:outputLabel value="#{infoxMessages['relProdUsuarios.periodo']}" />
-				</div>
-				<div style="margin-left: 2px;">
-					<wi:inputDate id="dataInicio" required="true"
-						label="#{infoxMessages['relProdUsuarios.dataInicial']}"
-						value="#{produtividadeUsuariosView.dataInicial}">
-					</wi:inputDate>
-				</div>
-				<div style="margin-left: 2px;">
-					<wi:inputDate id="dataFim"
-						label="#{infoxMessages['relProdUsuarios.dataFinal']}"
-						value="#{produtividadeUsuariosView.dataFinal}">
-					</wi:inputDate>
-				</div>
+			<div>
+				<h:outputLabel value="#{infoxMessages['relProdUsuarios.periodo']}" />
+			</div>
+			<div style="margin-left: 2px;">
+				<wi:inputDate id="dataInicio" required="true"
+					label="#{infoxMessages['relProdUsuarios.dataInicial']}"
+					value="#{produtividadeUsuariosView.dataInicial}">
+				</wi:inputDate>
+			</div>
+			<div style="margin-left: 2px;">
+				<wi:inputDate id="dataFim"
+					label="#{infoxMessages['relProdUsuarios.dataFinal']}"
+					value="#{produtividadeUsuariosView.dataFinal}">
+				</wi:inputDate>
+			</div>
 
-				<div>
-					<p:commandButton process="@form" update="@form :pageBodyDialogMessage"
-						actionListener="#{produtividadeUsuariosView.prepararAbrirRelatorio}"
-						value="#{infoxMessages['relProdUsuarios.gerarPDF']}" />
+			<div>
+				<p:commandButton process="@form"
+					update="@form :pageBodyDialogMessage"
+					actionListener="#{produtividadeUsuariosView.prepararAbrirRelatorio}"
+					value="#{infoxMessages['relProdUsuarios.gerarPDF']}" />
 
-					<p:commandButton process="@form" update="@form :pageBodyDialogMessage"
-						actionListener="#{produtividadeUsuariosView.preparaAbrirExcel()}"
-						value="#{infoxMessages['relProdUsuarios.gerarExcel']}" />
+				<p:commandButton process="@form"
+					update="@form :pageBodyDialogMessage"
+					actionListener="#{produtividadeUsuariosView.preparaAbrirExcel()}"
+					value="#{infoxMessages['relProdUsuarios.gerarExcel']}" />
 
-					<p:commandLink id="openPDF" target="_blank" action="report.xhtml"
-						ajax="false" style="display: none;" />
+				<p:commandLink id="openPDF" target="_blank" action="report.xhtml"
+					ajax="false" style="display: none;" />
 
-					<h:commandLink id="gerarExcel"
-						action="#{produtividadeUsuariosView.gerarExcel}"
-						style="display: none;" />
-				</div>
-			</h:form>
-		</wi:panel>
-
+				<h:commandLink id="gerarExcel"
+					action="#{produtividadeUsuariosView.gerarExcel}"
+					style="display: none;" />
+			</div>
+		</h:form>
+</fieldset>
 	</ui:define>
 
 </ui:composition>
