@@ -3,22 +3,16 @@ package br.com.infox.epp.tarefaexterna.view;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-
-import org.jbpm.context.exe.variableinstance.StringInstance;
 
 import com.lowagie.text.DocumentException;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.exception.EppConfigurationException;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -29,7 +23,6 @@ import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.processo.entity.ProcessoJbpm;
-import br.com.infox.epp.processo.entity.ProcessoJbpm_;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
@@ -50,6 +43,8 @@ public class DadosTarefaExternaView implements Serializable {
     private boolean canOpen;
     @Inject
     private PdfManager pdfManager;
+    @Inject
+    private TarefaExternaSearch tarefaExternaSearch;
 
     @PostConstruct
     private void init() {
@@ -58,22 +53,12 @@ public class DadosTarefaExternaView implements Serializable {
             throw new BusinessRollbackException("Parâmetro não encontrado");
         }
 
-        EntityManager em = EntityManagerProducer.getEntityManager();
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<ProcessoJbpm> query = cb.createQuery(ProcessoJbpm.class);
-        Root<ProcessoJbpm> processoJbpm = query.from(ProcessoJbpm.class);
-
-        Subquery<Integer> sqStringInstance = query.subquery(Integer.class);
-        sqStringInstance.select(cb.literal(1));
-        Root<StringInstance> stringInstance = sqStringInstance.from(StringInstance.class);
-        sqStringInstance.where(
-            cb.equal(stringInstance.get("processInstance"), processoJbpm.get(ProcessoJbpm_.processInstance)),
-            cb.equal(stringInstance.get("name"), CadastroTarefaExternaView.PARAM_UUID_TAREFA_EXTERNA),
-            cb.equal(stringInstance.<String>get("value"), uuidTarefaExterna)
-        );
-
-        query.where(cb.exists(sqStringInstance));
-        ProcessoJbpm pj = em.createQuery(query).getSingleResult();
+        ProcessoJbpm pj = tarefaExternaSearch.getProcessoJbpmByUUID(UUID.fromString(uuidTarefaExterna));
+        if(pj == null){
+            throw new EppConfigurationException(
+                InfoxMessages.getInstance().get("configuracao.erroGenerico")
+            );
+        };
 
         CadastroTarefaExternaVO ctVO = (CadastroTarefaExternaVO) pj.getProcessInstance().getContextInstance().getVariable(CadastroTarefaExternaView.PARAM_TAREFA_EXTERNA);
         this.vo = new DadosTarefaExternaVO();

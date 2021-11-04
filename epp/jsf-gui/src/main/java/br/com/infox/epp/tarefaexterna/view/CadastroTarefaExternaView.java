@@ -24,6 +24,7 @@ import org.richfaces.model.UploadedFile;
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.exception.EppConfigurationException;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
@@ -61,6 +62,8 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
     @Getter
     private CadastroTarefaExternaVO vo;
 
+    @Inject
+    private TarefaExternaSearch tarefaExternaSearch;
     @Inject
     private EstadoSearch estadoSearch;
     @Inject
@@ -318,7 +321,17 @@ public class CadastroTarefaExternaView implements FileUploadListener, Serializab
             jsfUtil.addFlashParam(PARAM_UUID_TAREFA_EXTERNA, this.uuidTarefaExterna.toString());
             jsfUtil.applyLastPhaseFlashAction();
 
-            signalService.startStartStateListening(sinalTarefaExterna, params);
+            try {
+                signalService.startStartStateListening(sinalTarefaExterna, params);
+            }catch (Exception e) {
+                throw new BusinessRollbackException(InfoxMessages.getInstance().get("configuracao.erroGenerico"), e);
+            }
+
+            if(tarefaExternaSearch.getProcessoJbpmByUUID(this.uuidTarefaExterna) == null){
+                throw new BusinessRollbackException(
+                    InfoxMessages.getInstance().get("configuracao.erroGenerico")
+                );
+            };
         } catch (Exception e) {
             RequestContext.getCurrentInstance().addCallbackParam("erro", true);
             if(e instanceof BusinessException) {
