@@ -12,5 +12,81 @@
 	<ui:param name="showLogoImg" value="true" />
 	<ui:param name="logoImg"
 		value="#{wi:get(logoImg, layoutController.getResourceUrlByPath('/imagens/logo_emblema_cuiaba_prefeitura.png'))}" />
+	<ui:param name="title"
+		value="#{infoxMessages['relProdUsuarios.titleReport']}" />
+
+	<p:document title="#{infoxMessages['relProdUsuarios.titleReport']}"
+		pageSize="A4"
+		margins="#{wi:get(marginLeft,'60')} #{wi:get(marginRight,'30')} #{wi:get(marginTop,'40')} #{wi:get(marginBotton,'30')}"
+		orientation="#{wi:get(orientation, 'portrait')}">
+
+		<f:facet name="header">
+			<p:header borderWidthTop="0" borderColorBottom="lightgray"
+				borderWidthBottom="1" alignment="right">
+				<p:paragraph alignment="right">
+					<p:font size="7">
+						<p:text value="Emitido por: " />
+						<p:text value="#{usuarioLogado}" />
+						<p:text value=". Emitido em: " />
+						<p:text value="#{currentTime}">
+							<s:convertDateTime pattern="dd/MM/yyyy / HH:mm" />
+						</p:text>
+					</p:font>
+				</p:paragraph>
+			</p:header>
+
+			<p:footer borderWidthTop="1" borderColorTop="lightgray"
+				borderWidthBottom="0" alignment="center">
+			</p:footer>
+		</f:facet>
+
+		<ui:include src="/WEB-INF/xhtml/tags/report/reportHeader.xhtml">
+			<ui:param name="spacingAfter" value="0" />
+		</ui:include>
+
+		<ui:repeat var="row"
+			value="#{produtividadeUsuariosRelView.listaRelatorio}">
+			<p:paragraph spacingBefore="10" alignment="left">
+				<p:font style="bold" size="12">
+					<p:text value="Usuário Responsável: " />
+				</p:font>
+				<p:font size="10">
+					<p:text value="#{row.usuario}" />
+				</p:font>
+			</p:paragraph>
+			<ui:repeat var="rowLocalizacao" value="#{row.listaLocalizacaoVO}">
+				<p:paragraph alignment="left">
+					<p:font style="bold" size="12">
+						<p:text value="Setor: " />
+					</p:font>
+					<p:font size="10">
+						<p:text value="#{rowLocalizacao.localizacao}" />
+					</p:font>
+				</p:paragraph>
+				<p:table columns="4" widthPercentage="100" headerRows="1"
+					widths="5 2 2 2" spacingBefore="5" spacingAfter="10">
+
+					<wi:reportColumnHeader
+						title="#{infoxMessages['relProdUsuarios.assunto']}" />
+					<wi:reportColumnHeader
+						title="#{infoxMessages['relProdUsuarios.qtdIniciados']}" />
+					<wi:reportColumnHeader
+						title="#{infoxMessages['relProdUsuarios.qtdEmAndamento']}" />
+					<wi:reportColumnHeader
+						title="#{infoxMessages['relProdUsuarios.qtdArquivados']}" />
+
+					<ui:repeat var="rowAssunto"
+						value="#{rowLocalizacao.listaAssuntoQtdVO}">
+						<wi:reportColumn value="#{rowAssunto.assunto}"
+							columnAlign="center" />
+						<wi:reportColumn value="#{rowAssunto.qtdIniciada}" />
+						<wi:reportColumn value="#{rowAssunto.qtdEmAndamento}" />
+						<wi:reportColumn value="#{rowAssunto.qtdArquivadas}" />
+					</ui:repeat>
+				</p:table>
+			</ui:repeat>
+		</ui:repeat>
+
+	</p:document>
 
 </ui:composition>

@@ -10,8 +10,6 @@
 	xmlns:a="http://richfaces.org/a4j" xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 	<ui:define name="title">#{infoxMessages['relAcumuladoSint.titlePage']}</ui:define>
-	<ui:define name="head">
-	</ui:define>
 	<ui:define name="body">
 		<style type="text/css">
 .ui-selectmanymenu {
@@ -31,17 +29,28 @@
 						label="#{infoxMessages['relAcumuladoSint.status']}"
 						value="#{acumuladoSinteticoProcessosView.listaStatusSelecionado}"
 						items="#{acumuladoSinteticoProcessosView.listaStatus}" />
-				</div>
-				<div>
-					<i:selectManyMenu id="mesReferencia" required="true"
-						label="#{infoxMessages['relAcumuladoSint.mesReferencia']}"
-						value="#{acumuladoSinteticoProcessosView.listaMesSelecionado}"
-						items="#{acumuladoSinteticoProcessosView.listaMes}" />
-
-					<wi:inputNumber id="ano"
-						label="#{infoxMessages['relAcumuladoSint.ano']}" required="true"
-						value="#{acumuladoSinteticoProcessosView.ano}" maxlength="4"
-						size="8" />
+					<div>
+						<div>
+							<p:commandButton id="selecionarMeses"
+								value="#{infoxMessages['relAcumuladoSint.marcarTodos']}"
+								process="@this" update="@(.mesReferenciaStyleClass)"
+								actionListener="#{acumuladoSinteticoProcessosView.marcarTodos}" />
+							<p:commandButton id="deselecionarMeses"
+								value="#{infoxMessages['relAcumuladoSint.desmarcarTodos']}"
+								process="@this" update="@(.mesReferenciaStyleClass)"
+								actionListener="#{acumuladoSinteticoProcessosView.desmarcarTodos}" />
+						</div>
+						<p:outputPanel styleClass="mesReferenciaStyleClass" layout="inline" >
+							<i:selectManyMenu id="mesReferencia" required="true"
+								label="#{infoxMessages['relAcumuladoSint.mesReferencia']}"
+								value="#{acumuladoSinteticoProcessosView.listaMesSelecionado}"
+								items="#{acumuladoSinteticoProcessosView.listaMes}" />
+						</p:outputPanel>
+						<wi:inputNumber id="ano"
+							label="#{infoxMessages['relAcumuladoSint.ano']}" required="true"
+							value="#{acumuladoSinteticoProcessosView.ano}" maxlength="4"
+							size="8" />
+					</div>
 				</div>
 
 				<div>

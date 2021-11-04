@@ -62,6 +62,16 @@ public class AcumuladoSinteticoProcessosView implements Serializable {
 		listaAssunto = fluxoDAO.getFluxosPrimariosAtivos();
 		listaStatus = Arrays.asList("Em andamento", "Arquivados/Finalizados");
 		listaMes = DateUtil.getListaTodosMeses();
+		
+		listaMesSelecionado = new ArrayList<String>();
+	}
+	
+	public void marcarTodos() {
+		listaMesSelecionado.addAll(listaMes);
+	}
+	
+	public void desmarcarTodos() {
+		listaMesSelecionado.clear();
 	}
 	
 	public void prepararAbrirRelatorio() {
