@@ -16,7 +16,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -28,14 +27,12 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.relatorio.quantitativoprocessos.StatusProcessoEnum;
 import br.com.infox.epp.relatorio.quantitativoprocessos.sitetico.RelatorioProcessosSinteticoVO.RelatorioProcessosSinteticoFluxoVO;
-import br.com.infox.epp.view.ViewSituacaoProcesso;
-import br.com.infox.epp.view.ViewSituacaoProcesso_;
-import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
-import br.com.infox.ibpm.task.entity.UsuarioTaskInstance_;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import lombok.Getter;
@@ -106,14 +103,14 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
         EntityManager em = EntityManagerProducer.getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
-        Root<ViewSituacaoProcesso> viewSituacaoProcesso = query.from(ViewSituacaoProcesso.class);
-        Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
-        Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance);
-        Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao);
-        Join<ViewSituacaoProcesso, Fluxo> fluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.fluxo);
+        Root<Processo> processo = query.from(Processo.class);
+        Join<Processo, Localizacao> localizacao = processo.join(Processo_.localizacao);
+        Join<Processo, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = processo.join(Processo_.naturezaCategoriaFluxo);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
+
         query.where(
-            fluxo.get(Fluxo_.idFluxo).in(assuntos),
-            cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), Authenticator.getUsuarioLogado().getIdUsuarioLogin())
+            fluxo.get(Fluxo_.idFluxo).in(assuntos)
+            ,cb.equal(localizacao.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho())
         );
 
         aplicarFiltrosProcesso(query, cb, processo);
@@ -139,23 +136,13 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
 
         Root<Processo> processo = query.from(Processo.class);
         Join<Processo, UsuarioLogin> usuarioCadastro = processo.join(Processo_.usuarioCadastro);
-
-        Subquery<Integer> sqSituacaoProcesso = query.subquery(Integer.class);
-        sqSituacaoProcesso.select(cb.literal(1));
-
-        Root<ViewSituacaoProcesso> viewSituacaoProcesso = sqSituacaoProcesso.from(ViewSituacaoProcesso.class);
-        Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance);
-        Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao);
-        Join<ViewSituacaoProcesso, Fluxo> fluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.fluxo);
-        sqSituacaoProcesso.where(
-            cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), Authenticator.getUsuarioLogado().getIdUsuarioLogin()),
-            cb.equal(viewSituacaoProcesso.get(ViewSituacaoProcesso_.processo), processo),
-            cb.equal(fluxo, idFluxo),
-            cb.equal(localizacao, idLocalizacao)
-        );
+        Join<Processo, Localizacao> localizacao = processo.join(Processo_.localizacao);
+        Join<Processo, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = processo.join(Processo_.naturezaCategoriaFluxo);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
 
         query.where(
-            cb.exists(sqSituacaoProcesso)
+            cb.equal(localizacao, idLocalizacao),
+            cb.equal(fluxo, idFluxo)
         );
 
         aplicarFiltrosProcesso(query, cb, processo);

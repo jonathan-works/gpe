@@ -26,6 +26,8 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
@@ -61,17 +63,19 @@ public class RelatorioProcessosViewSearch {
         Root<ViewSituacaoProcesso> viewSituacaoProcesso = query.from(ViewSituacaoProcesso.class);
         Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
         Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
+        Join<Processo, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = processo.join(Processo_.naturezaCategoriaFluxo);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
         Join<Processo, UsuarioLogin> usuarioCadastro = processo.join(Processo_.usuarioCadastro);
-        Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance);
-        Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao);
-        Join<UsuarioTaskInstance, UsuarioLogin> usuario = usuarioTaskInstance.join(UsuarioTaskInstance_.usuario);
-        Join<ViewSituacaoProcesso, Fluxo> fluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.fluxo);
+        Join<Processo, Localizacao> localizacaoProcesso = processo.join(Processo_.localizacao);
+        Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance, JoinType.LEFT);
+        Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao, JoinType.LEFT);
+        Join<UsuarioTaskInstance, UsuarioLogin> usuario = usuarioTaskInstance.join(UsuarioTaskInstance_.usuario, JoinType.LEFT);
         Join<ViewSituacaoProcesso, ViewParticipanteProcesso> viewParticipanteProcesso = viewSituacaoProcesso.join(ViewSituacaoProcesso_.participantes, JoinType.LEFT);
         Join<ViewParticipanteProcesso, TipoParte> tipoParte = viewParticipanteProcesso.join(ViewParticipanteProcesso_.tipoParte, JoinType.LEFT);
 
         query.select(
             cb.construct(query.getResultType(),
-                localizacao.get(Localizacao_.localizacao)
+                localizacaoProcesso.get(Localizacao_.localizacao)
                 , fluxo.get(Fluxo_.fluxo)
                 , processo.get(Processo_.numeroProcesso)
                 , usuarioCadastro.get(UsuarioLogin_.nomeUsuario)
@@ -83,13 +87,13 @@ public class RelatorioProcessosViewSearch {
                 , tipoParte.get(TipoParte_.descricao)
                 , taskInstance.get("name")
                 , cb.concat(cb.concat(localizacao.get(Localizacao_.localizacao), cb.literal("/")), usuario.get(UsuarioLogin_.nomeUsuario))
-                , taskInstance.get("start")
+                , cb.coalesce(taskInstance.get("start"), taskInstance.get("create"))
                 , taskInstance.get("end")
             )
         );
 
         query.where(
-            cb.equal(usuario, Authenticator.getUsuarioLogado().getIdUsuarioLogin()),
+            cb.equal(localizacaoProcesso.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho()),
             fluxo.get(Fluxo_.idFluxo).in(assuntos)
         );
 
@@ -189,25 +193,14 @@ public class RelatorioProcessosViewSearch {
 
         CriteriaQuery<RelatorioProcessosSinteticoExcelVO> query = cb.createQuery(RelatorioProcessosSinteticoExcelVO.class);
         Root<Processo> processo = query.from(Processo.class);
+        Join<Processo, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = processo.join(Processo_.naturezaCategoriaFluxo);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
         Join<Processo, UsuarioLogin> usuarioCadastro = processo.join(Processo_.usuarioCadastro);
-        Root<Localizacao> localizacao = query.from(Localizacao.class);
-        Root<Fluxo> fluxo = query.from(Fluxo.class);
-
-        Subquery<Integer> sqSituacaoProcesso = query.subquery(Integer.class);
-        sqSituacaoProcesso.select(cb.literal(1));
-
-        Root<ViewSituacaoProcesso> viewSituacaoProcesso = sqSituacaoProcesso.from(ViewSituacaoProcesso.class);
-        Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance);
-        sqSituacaoProcesso.where(
-            cb.equal(viewSituacaoProcesso.get(ViewSituacaoProcesso_.processo), processo),
-            cb.equal(fluxo, viewSituacaoProcesso.join(ViewSituacaoProcesso_.fluxo)),
-            cb.equal(localizacao, usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao))
-        );
+        Join<Processo, Localizacao> localizacao = processo.join(Processo_.localizacao);
 
         query.where(
-            cb.equal(usuarioCadastro, Authenticator.getUsuarioLogado().getIdUsuarioLogin()),
-            fluxo.get(Fluxo_.idFluxo).in(assuntos),
-            cb.exists(sqSituacaoProcesso)
+            cb.equal(localizacao.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho())
+            , fluxo.get(Fluxo_.idFluxo).in(assuntos)
         );
 
         if(dataInicio != null) {
