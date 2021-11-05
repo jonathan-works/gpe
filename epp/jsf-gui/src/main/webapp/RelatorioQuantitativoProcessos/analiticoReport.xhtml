@@ -45,19 +45,6 @@
 		</ui:include>
 
 		<p:font size="10">
-			<p:table columns="1" widthPercentage="100" widths="1"
-				spacingBefore="1">
-				<p:cell borderWidth="0" horizontalAlignment="left"
-					verticalAlignment="bottom">
-					<p:font style="bold" size="12">
-						<p:paragraph alignment="left">
-							<p:text
-								value="#{relatorioProcessosAnaliticoPDFView.localizacao}" />
-						</p:paragraph>
-					</p:font>
-				</p:cell>
-			</p:table>
-
             <ui:repeat var="rs" value="#{relatorioProcessosAnaliticoPDFView.relatorioAnaliticoList}">
                 <p:font style="bold" size="12">
                     <p:paragraph alignment="left">
