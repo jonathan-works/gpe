@@ -1,4 +1,4 @@
-package br.com.infox.epp.relatorio.processos;
+package br.com.infox.epp.relatorio.quantitativoprocessos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

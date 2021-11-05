@@ -45,14 +45,15 @@
 		</ui:include>
 
 		<p:font size="10">
+		<ui:repeat var="rowLocalizacao" value="#{acumuladoSinteticoProcessosRelView.listaRelatorio}" >
 			<p:table columns="1" widthPercentage="100" widths="1"
-				spacingBefore="1">
+				spacingBefore="15">
 				<p:cell borderWidth="0" horizontalAlignment="left"
 					verticalAlignment="bottom">
 					<p:font style="bold" size="12">
 						<p:paragraph alignment="left">
 							<p:text
-								value="#{acumuladoSinteticoProcessosRelView.localizacao.localizacao}" />
+								value="#{rowLocalizacao.localizacao}" />
 						</p:paragraph>
 					</p:font>
 				</p:cell>
@@ -87,7 +88,7 @@
 			</p:table>
 
 			<h:panelGroup
-				rendered="#{not empty acumuladoSinteticoProcessosRelView.listaRelatorioEmAndamento}">
+				rendered="#{not empty rowLocalizacao.listaRelatorioEmAndamento}">
 				<p:table columns="1" widthPercentage="100" widths="1"
 					spacingBefore="1">
 					<p:cell borderWidth="0" horizontalAlignment="left"
@@ -119,7 +120,7 @@
 					title="#{infoxMessages['relAcumuladoSint.dataAbertura']}" />
 
 				<ui:repeat var="row"
-					value="#{acumuladoSinteticoProcessosRelView.listaRelatorioEmAndamento}">
+					value="#{rowLocalizacao.listaRelatorioEmAndamento}">
 					<wi:reportColumnDate value="#{row.abertura}" pattern="MM" />
 					<wi:reportColumn value="#{row.numeroProcesso}" columnAlign="center" />
 					<wi:reportColumn value="#{row.fluxo}" />
@@ -128,18 +129,18 @@
 				</ui:repeat>
 			</p:table>
 			<h:panelGroup
-				rendered="#{not empty acumuladoSinteticoProcessosRelView.listaRelatorioEmAndamento}">
+				rendered="#{not empty rowLocalizacao.listaRelatorioEmAndamento}">
 				<p:paragraph alignment="center" spacingAfter="30">
 					<p:font style="bold" size="10">
 						<p:text value="Total: " />
 						<p:text
-							value="#{acumuladoSinteticoProcessosRelView.listaRelatorioEmAndamento.size}" />
+							value="#{rowLocalizacao.listaRelatorioEmAndamento.size}" />
 					</p:font>
 				</p:paragraph>
 			</h:panelGroup>
 
 			<h:panelGroup
-				rendered="#{not empty acumuladoSinteticoProcessosRelView.listaRelatorioFinalizadoArquivado}">
+				rendered="#{not empty rowLocalizacao.listaRelatorioFinalizadoArquivado}">
 				<p:paragraph alignment="left">
 					<p:font style="bold" size="12">
 						<p:text value="Status: " />
@@ -164,7 +165,7 @@
 					title="#{infoxMessages['relAcumuladoSint.dataEncerramento']}" />
 
 				<ui:repeat var="row"
-					value="#{acumuladoSinteticoProcessosRelView.listaRelatorioFinalizadoArquivado}">
+					value="#{rowLocalizacao.listaRelatorioFinalizadoArquivado}">
 					<wi:reportColumnDate value="#{row.abertura}" pattern="MM" />
 					<wi:reportColumn value="#{row.numeroProcesso}" />
 					<wi:reportColumn value="#{row.fluxo}" />
@@ -174,15 +175,16 @@
 				</ui:repeat>
 			</p:table>
 			<h:panelGroup
-				rendered="#{not empty acumuladoSinteticoProcessosRelView.listaRelatorioFinalizadoArquivado}">
+				rendered="#{not empty rowLocalizacao.listaRelatorioFinalizadoArquivado}">
 				<p:paragraph alignment="center">
 					<p:font style="bold" size="10">
 						<p:text value="Total: " />
 						<p:text
-							value="#{acumuladoSinteticoProcessosRelView.listaRelatorioFinalizadoArquivado.size}" />
+							value="#{rowLocalizacao.listaRelatorioFinalizadoArquivado.size}" />
 					</p:font>
 				</p:paragraph>
 			</h:panelGroup>
+			</ui:repeat>
 		</p:font>
 
 	</p:document>

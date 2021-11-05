@@ -17,63 +17,64 @@
 }
 </style>
 
-		<wi:panel id="estatisticaPanel" styleClass="content-block">
-			<h:form id="relatorioForm">
-				<div>
-					<i:selectManyMenu id="assunto" required="true"
-						label="#{infoxMessages['relAcumuladoSint.assunto']}"
-						value="#{acumuladoSinteticoProcessosView.listaAssuntoSelecionado}"
-						items="#{acumuladoSinteticoProcessosView.listaAssunto}" />
+<fieldset style="margin-top: 40px;">
+    <legend>
+        #{infoxMessages['relAcumuladoSint.filtros']}
+    </legend>
+		<h:form id="relatorioForm">
+			<div>
+				<i:selectManyMenu id="assunto" required="true"
+					label="#{infoxMessages['relAcumuladoSint.assunto']}"
+					value="#{acumuladoSinteticoProcessosView.listaAssuntoSelecionado}"
+					items="#{acumuladoSinteticoProcessosView.listaAssunto}" />
 
-					<i:selectManyMenu id="status"
-						label="#{infoxMessages['relAcumuladoSint.status']}"
-						value="#{acumuladoSinteticoProcessosView.listaStatusSelecionado}"
-						items="#{acumuladoSinteticoProcessosView.listaStatus}" />
+				<i:selectManyMenu id="status"
+					label="#{infoxMessages['relAcumuladoSint.status']}"
+					value="#{acumuladoSinteticoProcessosView.listaStatusSelecionado}"
+					items="#{acumuladoSinteticoProcessosView.listaStatus}" />
+				<div>
 					<div>
-						<div>
-							<p:commandButton id="selecionarMeses"
-								value="#{infoxMessages['relAcumuladoSint.marcarTodos']}"
-								process="@this" update="@(.mesReferenciaStyleClass)"
-								actionListener="#{acumuladoSinteticoProcessosView.marcarTodos}" />
-							<p:commandButton id="deselecionarMeses"
-								value="#{infoxMessages['relAcumuladoSint.desmarcarTodos']}"
-								process="@this" update="@(.mesReferenciaStyleClass)"
-								actionListener="#{acumuladoSinteticoProcessosView.desmarcarTodos}" />
-						</div>
-						<p:outputPanel styleClass="mesReferenciaStyleClass" layout="inline" >
-							<i:selectManyMenu id="mesReferencia" required="true"
-								label="#{infoxMessages['relAcumuladoSint.mesReferencia']}"
-								value="#{acumuladoSinteticoProcessosView.listaMesSelecionado}"
-								items="#{acumuladoSinteticoProcessosView.listaMes}" />
-						</p:outputPanel>
-						<wi:inputNumber id="ano"
-							label="#{infoxMessages['relAcumuladoSint.ano']}" required="true"
-							value="#{acumuladoSinteticoProcessosView.ano}" maxlength="4"
-							size="8" />
+						<p:commandButton id="selecionarMeses"
+							value="#{infoxMessages['relAcumuladoSint.marcarTodos']}"
+							process="@this" update="@(.mesReferenciaStyleClass)"
+							actionListener="#{acumuladoSinteticoProcessosView.marcarTodos}" />
+						<p:commandButton id="deselecionarMeses"
+							value="#{infoxMessages['relAcumuladoSint.desmarcarTodos']}"
+							process="@this" update="@(.mesReferenciaStyleClass)"
+							actionListener="#{acumuladoSinteticoProcessosView.desmarcarTodos}" />
 					</div>
+					<p:outputPanel styleClass="mesReferenciaStyleClass" layout="inline">
+						<i:selectManyMenu id="mesReferencia" required="true"
+							label="#{infoxMessages['relAcumuladoSint.mesReferencia']}"
+							value="#{acumuladoSinteticoProcessosView.listaMesSelecionado}"
+							items="#{acumuladoSinteticoProcessosView.listaMes}" />
+					</p:outputPanel>
+					<wi:inputNumber id="ano"
+						label="#{infoxMessages['relAcumuladoSint.ano']}" required="true"
+						value="#{acumuladoSinteticoProcessosView.ano}" maxlength="4"
+						size="8" />
 				</div>
+			</div>
 
-				<div>
-					<p:commandButton process="@form" update="@form"
-						oncomplete="document.getElementById('relatorioForm:openPDF').click();"
-						actionListener="#{acumuladoSinteticoProcessosView.prepararAbrirRelatorio}"
-						value="#{infoxMessages['relAcumuladoSint.gerarPDF']}" />
+			<div>
+				<p:commandButton process="@form" update="@form"
+					oncomplete="document.getElementById('relatorioForm:openPDF').click();"
+					actionListener="#{acumuladoSinteticoProcessosView.prepararAbrirRelatorio}"
+					value="#{infoxMessages['relAcumuladoSint.gerarPDF']}" />
 
-					<p:commandButton process="@form" update="@form"
-						oncomplete="document.getElementById('relatorioForm:gerarExcel').click();"
-						value="#{infoxMessages['relAcumuladoSint.gerarExcel']}" />
+				<p:commandButton process="@form" update="@form"
+					oncomplete="document.getElementById('relatorioForm:gerarExcel').click();"
+					value="#{infoxMessages['relAcumuladoSint.gerarExcel']}" />
 
-					<p:commandLink id="openPDF" target="_blank" action="report.xhtml"
-						ajax="false" style="display: none;" />
+				<p:commandLink id="openPDF" target="_blank" action="report.xhtml"
+					ajax="false" style="display: none;" />
 
-					<h:commandLink id="gerarExcel"
-						action="#{acumuladoSinteticoProcessosView.gerarExcel}"
-						style="display: none;" />
-				</div>
-			</h:form>
-		</wi:panel>
-
-
+				<h:commandLink id="gerarExcel"
+					action="#{acumuladoSinteticoProcessosView.gerarExcel}"
+					style="display: none;" />
+			</div>
+		</h:form>
+</fieldset>
 	</ui:define>
 
 </ui:composition>

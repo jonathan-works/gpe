@@ -1,8 +1,9 @@
-package br.com.infox.epp.relatorio.processos;
+package br.com.infox.epp.relatorio.quantitativoprocessos.sitetico;
 
 import java.util.Date;
 
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.epp.relatorio.quantitativoprocessos.StatusProcessoEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,13 +22,13 @@ public class RelatorioProcessosSinteticoExcelVO {
     private String dataAbertura;
 
     public RelatorioProcessosSinteticoExcelVO(String secretaria, String assunto, String numeroProcesso,
-            String usuarioSolicitante, Boolean emAndamento, Date dataAbertura) {
+            String usuarioSolicitante, Date dataEncerramento, Date dataAbertura) {
         super();
         this.secretaria = secretaria;
         this.assunto = assunto;
         this.numeroProcesso = numeroProcesso;
         this.usuarioSolicitante = usuarioSolicitante;
-        this.status = emAndamento ? StatusProcessoEnum.A : StatusProcessoEnum.F;
+        this.status = dataEncerramento == null? StatusProcessoEnum.A : StatusProcessoEnum.F;
         this.dataAbertura = DateUtil.formatarData(dataAbertura);
     }
 

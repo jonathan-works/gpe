@@ -38,7 +38,7 @@ public class AcumuladoSinteticoProcessosView implements Serializable {
 	private AcumuladoSinteticoProcessosSearch acumuladoSinteticoProcessosSearch;
 	
 	@Getter @Setter
-	private List<AcumuladoSinteticoProcessosVO> listaRelatorioExcel;
+	private List<AcumuladoSinteticoProcessosExcelVO> listaRelatorioExcel;
 	
 	@Getter @Setter
 	private List<Fluxo> listaAssunto;
@@ -96,14 +96,27 @@ public class AcumuladoSinteticoProcessosView implements Serializable {
 	}
 	
 	private void gerarRelatorio() {
-		listaRelatorioExcel = new ArrayList<AcumuladoSinteticoProcessosVO>();
-		if(listaStatusSelecionado.isEmpty() || listaStatusSelecionado.contains("Em andamento")) {
-			listaRelatorioExcel.addAll(acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, "Em andamento", listaMesSelecionado, ano, Authenticator.getLocalizacaoAtual()));
+		listaRelatorioExcel = new ArrayList<AcumuladoSinteticoProcessosExcelVO>();
+		for(AcumuladoSinteticoProcessosLocalizacaoVO localizacaoVO : acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, listaStatusSelecionado, listaMesSelecionado, ano, Authenticator.getLocalizacaoAtual())) {
+			for(AcumuladoSinteticoProcessosVO processoVO : localizacaoVO.getListaRelatorioEmAndamento()) {
+				listaRelatorioExcel.add(createExcelVO(localizacaoVO, processoVO));
+			}
+			
+			for(AcumuladoSinteticoProcessosVO processoVO : localizacaoVO.getListaRelatorioFinalizadoArquivado()) {
+				listaRelatorioExcel.add(createExcelVO(localizacaoVO, processoVO));
+			}
 		}
-		
-		if(listaStatusSelecionado.isEmpty() || listaStatusSelecionado.contains("Arquivados/Finalizados")) {
-			listaRelatorioExcel.addAll(acumuladoSinteticoProcessosSearch.gerarRelatorio(listaAssuntoSelecionado, "Arquivados/Finalizados", listaMesSelecionado, ano, Authenticator.getLocalizacaoAtual()));
-		}
+	}
+	
+	private AcumuladoSinteticoProcessosExcelVO createExcelVO(AcumuladoSinteticoProcessosLocalizacaoVO localizacaoVO, AcumuladoSinteticoProcessosVO processoVO) {
+		AcumuladoSinteticoProcessosExcelVO excelVO = new AcumuladoSinteticoProcessosExcelVO();
+		excelVO.setLocalizacao(localizacaoVO.getLocalizacao());
+		excelVO.setNumeroProcesso(processoVO.getNumeroProcesso());
+		excelVO.setFluxo(processoVO.getFluxo());
+		excelVO.setUsuarioAbertura(processoVO.getUsuarioAbertura());
+		excelVO.setAbertura(processoVO.getAbertura());
+		excelVO.setEncerramento(processoVO.getEncerramento());
+		return excelVO;
 	}
 
 }
