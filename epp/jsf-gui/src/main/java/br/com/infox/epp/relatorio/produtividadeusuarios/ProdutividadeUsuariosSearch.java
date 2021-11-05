@@ -16,6 +16,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -51,6 +52,8 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
 	private LocalizacaoSearch localizacaoSearch;
 
 	public List<ProdutividadeUsuariosVO> gerarRelatorio(List<UsuarioLogin> listaUsuario, List<Fluxo> listaAssunto, Date dataInicial, Date dataFinal) {
+	    Date dataIni = DateUtil.getBeginningOfDay(dataInicial);
+	    Date dataFim = DateUtil.getEndOfDay(dataFinal);
 		List<ProdutividadeUsuariosVO> listaProdutividadeUsuariosVO = new ArrayList<ProdutividadeUsuariosVO>();
 		List<Localizacao> listaLocalizacoesPossiveis = localizacaoSearch.retrieveLocalizacaoByEstruturaFilho(Authenticator.getLocalizacaoAtual().getEstruturaFilho());
 		listaLocalizacoesPossiveis.add(0, Authenticator.getLocalizacaoAtual());
@@ -68,9 +71,9 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
 					for(Fluxo fluxo : listaAssunto) {
 						ProdutividadeUsuariosAssuntoQuantidadeVO produtividadeUsuariosAssuntoQuantidadeVO = new ProdutividadeUsuariosAssuntoQuantidadeVO();
 						produtividadeUsuariosAssuntoQuantidadeVO.setAssunto(fluxo.getFluxo());
-						produtividadeUsuariosAssuntoQuantidadeVO.setQtdIniciada(getQuantidadeProcessosIniciadosPor(usuarioLogin, localizacaoUsuario, fluxo, dataInicial, dataFinal));
-						produtividadeUsuariosAssuntoQuantidadeVO.setQtdEmAndamento(getQuantidadeProcessosEmAndamentoPor(usuarioLogin, localizacaoUsuario, fluxo, dataInicial, dataFinal));
-						produtividadeUsuariosAssuntoQuantidadeVO.setQtdArquivadas(getQuantidadeProcessosFinalizadosPor(usuarioLogin, localizacaoUsuario, fluxo, dataInicial, dataFinal));
+						produtividadeUsuariosAssuntoQuantidadeVO.setQtdIniciada(getQuantidadeProcessosIniciadosPor(usuarioLogin, localizacaoUsuario, fluxo, dataIni, dataFim));
+						produtividadeUsuariosAssuntoQuantidadeVO.setQtdEmAndamento(getQuantidadeProcessosEmAndamentoPor(usuarioLogin, localizacaoUsuario, fluxo, dataIni, dataFim));
+						produtividadeUsuariosAssuntoQuantidadeVO.setQtdArquivadas(getQuantidadeProcessosFinalizadosPor(usuarioLogin, localizacaoUsuario, fluxo, dataIni, dataFim));
 						produtividadeUsuariosLocalizacaoVO.getListaAssuntoQtdVO().add(produtividadeUsuariosAssuntoQuantidadeVO);
 					}
 					produtividadeUsuariosVO.getListaLocalizacaoVO().add(produtividadeUsuariosLocalizacaoVO);
