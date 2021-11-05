@@ -3,25 +3,52 @@ package br.com.infox.epp.relatorio.acumuladosinteticoprocessos;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.localizacao.LocalizacaoSearch;
+import br.com.infox.epp.relatorio.acumuladosinteticoprocessos.view.AcumuladoSinteticoProcessosLocalizacaoVO;
 import br.com.infox.epp.relatorio.acumuladosinteticoprocessos.view.AcumuladoSinteticoProcessosVO;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class AcumuladoSinteticoProcessosSearch extends PersistenceController {
+	
+	@Inject
+	private LocalizacaoSearch localizacaoSearch;
 
+	public List<AcumuladoSinteticoProcessosLocalizacaoVO> gerarRelatorio(List<Fluxo> listaAssunto, List<String> listaStatus, List<String> listaMes, Integer ano, Localizacao localizacao){
+		List<AcumuladoSinteticoProcessosLocalizacaoVO> resultRelatorio = new ArrayList<AcumuladoSinteticoProcessosLocalizacaoVO>();
+		List<Localizacao> listaLocalizacoesPossiveis = localizacaoSearch.retrieveLocalizacaoByEstruturaFilho(Authenticator.getLocalizacaoAtual().getEstruturaFilho());
+		for(Localizacao localizacaoPossivel : listaLocalizacoesPossiveis) {
+			AcumuladoSinteticoProcessosLocalizacaoVO acumuladoSinteticoProcessosLocalizacaoVO = new AcumuladoSinteticoProcessosLocalizacaoVO();
+			acumuladoSinteticoProcessosLocalizacaoVO.setLocalizacao(localizacaoPossivel.getLocalizacao());
+			if(listaStatus.isEmpty() || listaStatus.contains("Em andamento")) {
+				acumuladoSinteticoProcessosLocalizacaoVO.setListaRelatorioEmAndamento(buscarRelatorio(listaAssunto, "Em andamento", listaMes, ano, localizacaoPossivel));
+			}
+			if(listaStatus.isEmpty() || listaStatus.contains("Arquivados/Finalizados")) {
+				acumuladoSinteticoProcessosLocalizacaoVO.setListaRelatorioFinalizadoArquivado(buscarRelatorio(listaAssunto, "Arquivados/Finalizados", listaMes, ano, localizacaoPossivel));
+			}
+			resultRelatorio.add(acumuladoSinteticoProcessosLocalizacaoVO);
+		}
+		Collections.sort(resultRelatorio);
+		return resultRelatorio;
+	}
+	
 	@SuppressWarnings("unchecked")
-	public List<AcumuladoSinteticoProcessosVO> gerarRelatorio(List<Fluxo> listaAssunto, String status, List<String> listaMes, Integer ano, Localizacao localizacao) {
-		StringBuilder builderQuery = new StringBuilder("Select p.nr_processo, pd.name_, u.nm_usuario, l.ds_localizacao, p.dt_inicio, p.dt_fim from tb_processo as p"
+	private List<AcumuladoSinteticoProcessosVO> buscarRelatorio(List<Fluxo> listaAssunto, String status, List<String> listaMes, Integer ano, Localizacao localizacao) {
+		StringBuilder builderQuery = new StringBuilder("Select p.nr_processo, pd.name_, u.nm_usuario, p.dt_inicio, p.dt_fim from tb_processo as p"
 				+ " inner join jbpm_processinstance as pn on p.id_jbpm = pn.id_"
 				+ " inner join jbpm_processdefinition as pd on pd.id_ = pn.processdefinition_"
 				+ " inner join tb_usuario_login as u on u.id_usuario_login = p.id_usuario_cadastro_processo"
@@ -53,7 +80,7 @@ public class AcumuladoSinteticoProcessosSearch extends PersistenceController {
 		List<Object[]> resultSet = getEntityManager().createNativeQuery(builderQuery.toString()).setParameter("assunto", listaAssunto).setParameter("idLocalizacao", localizacao.getIdLocalizacao()).getResultList();
 		List<AcumuladoSinteticoProcessosVO> listaResultado = new ArrayList<AcumuladoSinteticoProcessosVO>();
 		for(Object[] result : resultSet) {
-			listaResultado.add(new AcumuladoSinteticoProcessosVO(getResultString(result[0]), getResultString(result[1]), getResultString(result[2]), getResultString(result[3]), getResultDate(result[4]), getResultDate(result[5])));
+			listaResultado.add(new AcumuladoSinteticoProcessosVO(getResultString(result[0]), getResultString(result[1]), getResultString(result[2]), getResultDate(result[3]), getResultDate(result[4])));
 		}
 		return listaResultado;
 	}

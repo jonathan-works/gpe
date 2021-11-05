@@ -8,5 +8,6 @@
 	<include file="epp/projeto00136002/002-add-recurso-page-relatorio-produtividade-usuarios.xml" />
 	<include file="epp/projeto00136002/003-add-parametro-limite-dias-geracao-relatorio.xml" />
 	<include file="epp/projeto00136002/004-add-recurso-page-relatorio-quantitativo-processos.xml" />
+	<include file="epp/projeto00136002/005-view-participante-processo.xml" />
 
 </databaseChangeLog>

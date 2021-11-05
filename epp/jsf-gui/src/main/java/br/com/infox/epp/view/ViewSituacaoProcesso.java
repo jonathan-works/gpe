@@ -1,6 +1,8 @@
 package br.com.infox.epp.view;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.jbpm.graph.exe.ProcessInstance;
@@ -85,6 +88,11 @@ public class ViewSituacaoProcesso implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_processo", nullable = false, insertable = false, updatable = false)
     private Processo processo;
+
+    @Getter @Setter
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_processo", referencedColumnName = "id_processo")
+    private List<ViewParticipanteProcesso> participantes = new ArrayList<>(0);
 
     @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY)
