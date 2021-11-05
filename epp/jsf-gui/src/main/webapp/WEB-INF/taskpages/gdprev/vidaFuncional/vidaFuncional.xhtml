@@ -14,6 +14,15 @@
     <h:form>
         <p:poll autoStart="false" interval="2" process="@this" update="@(.dialogProgressoDownloadContent) :pageBodyDialogMessage"
             listener="#{vidaFuncionalGDPrevTaskPageController.verificarTerminoDownload}" widgetVar="pollProgressoDownload" />
+            
+        <p:remoteCommand
+            process="@this"
+            partialSubmit="true"
+            onstart="showLoading()"
+            oncomplete="hideLoading()"
+            name="updateVidaFuncionalTable"
+            update="@(.vidaFuncionalTable)"
+        />
 
         <p:confirmDialog header="#{infoxMessages['vidaFuncionalGDPrev.aviso']}" message="#{infoxMessages['vidaFuncionalGDPrev.avisoArquivoOutroParticipante']}"
             widgetVar="confirmDialogArquivoOutroParticipante" closable="false">
@@ -37,6 +46,27 @@
         <fieldset>
             <legend>#{infoxMessages['vidaFuncionalGDPrev.buscar']}</legend>
             <h:form>
+                <wi:field id="gdprev" label="#{infoxMessages['vidaFuncionalGDPrev.gdprev']}">
+                    <h:selectOneMenu
+                        id="gdprevInput"
+                        value="#{vidaFuncionalGDPrevTaskPageController.opcaoDownload}"
+                        onchange="showLoading()"
+                    >
+                        <p:ajax
+                            listener="#{vidaFuncionalGDPrevTaskPageController.onChangeOpcaoDownload}"
+                            process="@this"
+                            update="@form @(.vidaFuncionalTable)"
+                            oncomplete="hideLoading()"
+                        />
+                        <f:selectItems
+                            value="#{vidaFuncionalGDPrevTaskPageController.opcoesDownload}"
+                            var="o"
+                            itemLabel="#{o.label}"
+                            itemValue="#{o}"
+                        />
+                    </h:selectOneMenu>
+                </wi:field>
+            
                 <wi:field id="nome" label="#{infoxMessages['vidaFuncionalGDPrev.nome']}">
                     <h:inputText id="nomeInput" value="#{vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.nome}" />
                 </wi:field>
@@ -48,24 +78,81 @@
                     onkeyup="onlyPositiveNumber(this)"
                     value="#{vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.matricula}"/>
 				
-				<wi:field id="nomeDocumento" label="#{infoxMessages['vidaFuncionalGDPrev.documentoNome']}">
+				<wi:field 
+                    id="nomeDocumento" 
+                    label="#{infoxMessages['vidaFuncionalGDPrev.documentoNome']}"
+                    rendered="#{not vidaFuncionalGDPrevTaskPageController.exibeRelatorioFuncionarios}"
+                >
                     <h:inputText id="nomeDocumentoInput" value="#{vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.nomeDocumento}" />
                 </wi:field>
-                
+				
                 <div>
-                    <p:commandButton value="#{infoxMessages['vidaFuncionalGDPrev.buscar']}" process="@form"
+                    <p:commandButton
+                        value="#{infoxMessages['vidaFuncionalGDPrev.buscar']}"
+                        partialSubmit="true"
+                        process="@form"
                         update="@form @(.vidaFuncionalTable) :pageBodyDialogMessage"
-                        action="#{vidaFuncionalGDPrevTaskPageController.buscarDocumentos}" styleClass="buttons"
-                        onstart="infox.showLoading()" oncomplete="infox.hideLoading()"/>
+                        action="#{vidaFuncionalGDPrevTaskPageController.buscar}"
+                        styleClass="buttons"
+                        onclick="infox.showLoading()"
+                        oncomplete="infox.hideLoading()"
+                    />
                 </div>
             </h:form>
         </fieldset>
 
         <p:outputPanel styleClass="vidaFuncionalTable" layout="block" style="margin-top: 10px">
-            <h:form>
+            <h:form id="relatoriosGDPREVForm" rendered="#{vidaFuncionalGDPrevTaskPageController.buscou}">
+                <p:dataTable
+                    id="listaFuncionarioVidaFuncionalDTO" 
+                    var="row" 
+                    lazy="false"
+                    value="#{vidaFuncionalGDPrevTaskPageController.listaFuncionarioVidaFuncionalDTO}"
+                    paginator="false"
+                    paginatorAlwaysVisible="false"
+                    paginatorPosition="both"
+                    emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
+                    rows="20"
+                    rendered="#{not vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.isEmpty() 
+                        and vidaFuncionalGDPrevTaskPageController.exibeRelatorioFuncionarios
+                        and vidaFuncionalGDPrevTaskPageController.podeVerRelatorioFuncionarioVidaFuncional
+                    }"
+                >
+
+                    <p:ajax event="page" onstart="infox.showLoading()" oncomplete="infox.hideLoading()" />
+
+                    <p:column style="width: 75px; text-align: center">
+                        <ui:fragment rendered="#{not row.baixado}">
+                            <p:commandButton 
+                                value="#{infoxMessages['vidaFuncionalGDPrev.baixar']}"
+                                process="@this"
+                                update=":pageBodyDialogMessage"
+                                styleClass="buttons"
+                                action="#{vidaFuncionalGDPrevTaskPageController.baixarRelatorio(row)}"
+                                onclick="infox.showLoading()"
+                                oncomplete="PF('dialogProgressoDownload').show(); PF('pollProgressoDownload').start(); infox.hideLoading();"/>
+                        </ui:fragment>
+
+                        <h:outputText value="#{infoxMessages['vidaFuncionalGDPrev.arquivoJaBaixado']}" rendered="#{row.baixado}" />
+                    </p:column>
+                    
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.cpf']}" style="text-align: center;">
+                        <h:outputText value="#{row.cpfServidor}" />
+                    </p:column>
+
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.matricula']}" style="text-align: center;">
+                        <h:outputText value="#{row.matriculaServidor}" />
+                    </p:column>
+
+                    <p:column headerText="#{infoxMessages['vidaFuncionalGDPrev.nome']}">
+                        <h:outputText value="#{row.nomeServidor}" />
+                    </p:column>
+                </p:dataTable>
+            
+            
                 <p:dataTable var="row" lazy="true" value="#{vidaFuncionalGDPrevDataModel}" binding="#{vidaFuncionalGDPrevDataModel.dataTable}"
                     paginator="true" paginatorAlwaysVisible="true" paginatorPosition="both" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
-                    rows="20" rendered="#{not vidaFuncionalGDPrevDataModel.filtroVidaFuncionalGDPrev.isEmpty()}">
+                    rows="20" rendered="#{not vidaFuncionalGDPrevTaskPageController.filtroVidaFuncionalGDPrev.isEmpty() and not vidaFuncionalGDPrevTaskPageController.exibeRelatorioFuncionarios}">
 
                     <p:ajax event="page" onstart="infox.showLoading()" oncomplete="infox.hideLoading()" />
 
@@ -127,6 +214,7 @@
 
     <p:dialog header="#{infoxMessages['vidaFuncionalGDPrev.progressoDownload']}" appendTo="@(body)"
         modal="true" resizable="false" fitViewport="true" closable="false"
+        onHide="updateVidaFuncionalTable();"
         height="250" width="400" responsive="true" widgetVar="dialogProgressoDownload" draggable="false">
 
         <p:outputPanel layout="block" styleClass="dialogProgressoDownloadContent">

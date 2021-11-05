@@ -30,7 +30,10 @@ import br.com.infox.ibpm.variable.components.AbstractTaskPageController;
 import br.com.infox.ibpm.variable.components.Taskpage;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.exception.BusinessRollbackException;
+import br.com.infox.seam.security.SecurityUtil;
 import lombok.Getter;
+import lombok.Setter;
 
 @Taskpage(
         id = VidaFuncionalGDPrevTaskPageController.TASKPAGE_ID,
@@ -56,6 +59,8 @@ public class VidaFuncionalGDPrevTaskPageController extends AbstractTaskPageContr
     private VidaFuncionalGDPrevSearch vidaFuncionalGDPrevSearch;
     @Inject
     private VidaFuncionalGDPrevService vidaFuncionalGDPrevService;
+    @Inject
+    private SecurityUtil securityUtil;
 
     @Getter
     private String label;
@@ -71,8 +76,29 @@ public class VidaFuncionalGDPrevTaskPageController extends AbstractTaskPageContr
     private DocumentoVidaFuncionalDTO documentoSelecionadoParaDownload;
     private boolean exibirAvisoInconsistenciaParticipante;
 
+
+    @Getter
+    private GDPrevOpcaoDownload[] opcoesDownload;
+    @Getter @Setter
+    private GDPrevOpcaoDownload opcaoDownload = GDPrevOpcaoDownload.CD;
+    private FuncionarioVidaFuncionalDTO funcionarioVidaFuncionalDTO = null;
+    @Getter
+    private List<FuncionarioVidaFuncionalDTO> listaFuncionarioVidaFuncionalDTO;
+    @Getter
+    private boolean exibeRelatorioFuncionarios;
+    @Getter
+    private boolean podeVerRelatorioFuncionarioVidaFuncional;
+    @Getter
+    private boolean buscou;
+
     @PostConstruct
     private void init() {
+        podeVerRelatorioFuncionarioVidaFuncional = securityUtil.checkPage("relatorioFuncionarioVidaFuncionalGDPrev");
+        if(podeVerRelatorioFuncionarioVidaFuncional) {
+            this.opcoesDownload = GDPrevOpcaoDownload.values();
+        } else {
+            this.opcoesDownload = new GDPrevOpcaoDownload[]{GDPrevOpcaoDownload.CD};
+        }
         this.label = TASKPAGE_NAME;
         this.filtroVidaFuncionalGDPrev = new FiltroVidaFuncionalGDPrev();
         this.vidaFuncionalGDPrevDataModel.setIdProcesso(getProcesso().getIdProcesso());
@@ -87,6 +113,11 @@ public class VidaFuncionalGDPrevTaskPageController extends AbstractTaskPageContr
         configurarLabelTaskPage();
         buscarTipoParteInteressadoServidor();
         buscarParticipanteInteressadoServidor();
+    }
+
+    public void onChangeOpcaoDownload() {
+        this.exibeRelatorioFuncionarios = !GDPrevOpcaoDownload.CD.equals(getOpcaoDownload());
+        this.buscou = false;
     }
 
     private void buscarParticipanteInteressadoServidor() {
@@ -120,10 +151,23 @@ public class VidaFuncionalGDPrevTaskPageController extends AbstractTaskPageContr
     }
 
     @ExceptionHandled
-    public void buscarDocumentos() {
+    public void buscar() {
+        this.buscou = false;
         if (getFiltroVidaFuncionalGDPrev().isEmpty()) {
             throw new BusinessException(InfoxMessages.getInstance().get("vidaFuncionalGDPrev.erroValidacaoFiltros"));
         }
+        if(GDPrevOpcaoDownload.CD.equals(getOpcaoDownload())) {
+            this.buscarDocumentos();
+        } else {
+            this.listaFuncionarioVidaFuncionalDTO = vidaFuncionalGDPrevSearch.getRelatorios(getFiltroVidaFuncionalGDPrev(), getProcesso().getIdProcesso(), getOpcaoDownload());
+            if (this.listaFuncionarioVidaFuncionalDTO == null || this.listaFuncionarioVidaFuncionalDTO.isEmpty()) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(InfoxMessages.getInstance().get("vidaFuncionalGDPrev.participanteSemVidaFuncional")));
+            }
+        }
+        this.buscou = true;
+    }
+
+    private void buscarDocumentos() {
         vidaFuncionalGDPrevDataModel.setFiltroVidaFuncionalGDPrev(getFiltroVidaFuncionalGDPrev());
         vidaFuncionalGDPrevDataModel.search();
         if (vidaFuncionalGDPrevDataModel.getResultList() != null && vidaFuncionalGDPrevDataModel.getResultList().isEmpty()) {
@@ -143,10 +187,26 @@ public class VidaFuncionalGDPrevTaskPageController extends AbstractTaskPageContr
     }
 
     @ExceptionHandled
+    public void baixarRelatorio(FuncionarioVidaFuncionalDTO funcionarioVidaFuncionalDTO) {
+        this.funcionarioVidaFuncionalDTO  = funcionarioVidaFuncionalDTO;
+        if(GDPrevOpcaoDownload.VF.equals(getOpcaoDownload())) {
+            this.pdfFuture = vidaFuncionalGDPrevSearch.downloadRelatorioVidaFuncional(funcionarioVidaFuncionalDTO.getId(),
+                (progresso) -> this.progressoDownload = Math.round(progresso * 100)
+            );
+        } else if(GDPrevOpcaoDownload.TS.equals(getOpcaoDownload())) {
+            this.pdfFuture = vidaFuncionalGDPrevSearch.downloadRelatorioTempoServico(funcionarioVidaFuncionalDTO.getId(),
+                (progresso) -> this.progressoDownload = Math.round(progresso * 100)
+            );
+        } else {
+            throw new BusinessRollbackException("Relatório inválido");
+        }
+    }
+
+    @ExceptionHandled
     public void baixarDocumento(DocumentoVidaFuncionalDTO documentoVidaFuncional) {
         this.documentoEmDownload = documentoVidaFuncional;
-        this.pdfFuture = vidaFuncionalGDPrevSearch.downloadDocumento(documentoVidaFuncional.getId(),
-                (progresso) -> this.progressoDownload = Math.round(progresso * 100));
+            this.pdfFuture = vidaFuncionalGDPrevSearch.downloadDocumento(documentoVidaFuncional.getId(),
+                    (progresso) -> this.progressoDownload = Math.round(progresso * 100));
     }
 
     @ExceptionHandled
@@ -157,10 +217,23 @@ public class VidaFuncionalGDPrevTaskPageController extends AbstractTaskPageContr
             JsfUtil.instance().execute("PF('dialogProgressoDownload').hide()");
 
             try {
-                vidaFuncionalGDPrevService.gravarDocumento(documentoEmDownload, this.pdfFuture.get(), getProcesso());
+                if((GDPrevOpcaoDownload.TS.equals(this.opcaoDownload) || GDPrevOpcaoDownload.VF.equals(this.opcaoDownload))
+                        && funcionarioVidaFuncionalDTO != null)
+                {
+                    vidaFuncionalGDPrevService.gravarRelatorio(funcionarioVidaFuncionalDTO, this.pdfFuture.get(), getProcesso(), this.opcaoDownload);
+                    for (FuncionarioVidaFuncionalDTO fvfDTO : this.listaFuncionarioVidaFuncionalDTO) {
+                        if(funcionarioVidaFuncionalDTO.equals(fvfDTO)) {
+                            funcionarioVidaFuncionalDTO.setBaixado(true);
+                        }
+                    }
+                } else if(GDPrevOpcaoDownload.CD.equals(this.opcaoDownload) && documentoEmDownload != null) {
+                    vidaFuncionalGDPrevService.gravarDocumento(documentoEmDownload, this.pdfFuture.get(), getProcesso());
+                    vidaFuncionalGDPrevDataModel.marcarComoBaixado(documentoEmDownload.getId());
+                    JsfUtil.instance().render(vidaFuncionalGDPrevDataModel.getDataTable().getClientId());
+                } else {
+                    throw new BusinessRollbackException("Falha no download");
+                }
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(InfoxMessages.getInstance().get("vidaFuncionalGDPrev.documentoAnexado")));
-                vidaFuncionalGDPrevDataModel.marcarComoBaixado(documentoEmDownload.getId());
-                JsfUtil.instance().render(vidaFuncionalGDPrevDataModel.getDataTable().getClientId());
             } catch (ExecutionException | InterruptedException e) {
                 throw new BusinessException(InfoxMessages.getInstance().get("vidaFuncionalGDPrev.erroAnexarDocumento"), e);
             } finally {
