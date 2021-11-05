@@ -44,12 +44,12 @@ import br.com.infox.ibpm.task.entity.UsuarioTaskInstance_;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ProdutividadeUsuariosSearch extends PersistenceController {
-	
+
 	@Inject
 	private UsuarioLoginDAO usuarioLoginDAO;
 	@Inject
 	private LocalizacaoSearch localizacaoSearch;
-	
+
 	public List<ProdutividadeUsuariosVO> gerarRelatorio(List<UsuarioLogin> listaUsuario, List<Fluxo> listaAssunto, Date dataInicial, Date dataFinal) {
 		List<ProdutividadeUsuariosVO> listaProdutividadeUsuariosVO = new ArrayList<ProdutividadeUsuariosVO>();
 		List<Localizacao> listaLocalizacoesPossiveis = localizacaoSearch.retrieveLocalizacaoByEstruturaFilho(Authenticator.getLocalizacaoAtual().getEstruturaFilho());
@@ -79,13 +79,13 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
 			Collections.sort(produtividadeUsuariosVO.getListaLocalizacaoVO());
 			listaProdutividadeUsuariosVO.add(produtividadeUsuariosVO);
 		}
-		
+
 		return listaProdutividadeUsuariosVO;
 	}
 
 	public List<UsuarioLogin> getUsuariosLocalizacaoAbaixoHierarquia() {
 		List<Localizacao> listaLocalizacaoAbaixoAtual = localizacaoSearch.retrieveLocalizacaoByEstruturaFilho(Authenticator.getLocalizacaoAtual().getEstruturaFilho());
-		
+
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<UsuarioLogin> query = cb.createQuery(UsuarioLogin.class);
         Root<UsuarioLogin> usuarioLogin = query.from(UsuarioLogin.class);
@@ -96,7 +96,7 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         query.orderBy(cb.asc(usuarioLogin.get(UsuarioLogin_.nomeUsuario)));
         return getEntityManager().createQuery(query).getResultList();
 	}
-	
+
 	private long getQuantidadeProcessosIniciadosPor(UsuarioLogin usuarioLogin, Localizacao localizacao, Fluxo fluxo, Date dataInicial, Date dataFinal) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
@@ -106,7 +106,7 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo), cb.equal(processo.get(Processo_.localizacao), localizacao), cb.equal(processo.get(Processo_.usuarioCadastro), usuarioLogin), cb.between(processo.get(Processo_.dataInicio), dataInicial, dataFinal));
         return getEntityManager().createQuery(query).getSingleResult();
 	}
-	
+
 	private long getQuantidadeProcessosEmAndamentoPor(UsuarioLogin usuarioLogin, Localizacao localizacao, Fluxo fluxo, Date dataInicial, Date dataFinal) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
@@ -118,7 +118,7 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo), cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), usuarioLogin), cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.localizacaoExterna), localizacao), cb.between(movimentacaoTarefa.get(MovimentacaoTarefa_.create), dataInicial, dataFinal), cb.isNull(movimentacaoTarefa.get(MovimentacaoTarefa_.end)));
         return getEntityManager().createQuery(query).getSingleResult();
 	}
-	
+
 	private long getQuantidadeProcessosFinalizadosPor(UsuarioLogin usuarioLogin, Localizacao localizacao, Fluxo fluxo, Date dataInicial, Date dataFinal) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Tuple> query = cb.createQuery(Tuple.class);
@@ -134,7 +134,7 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         		cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo),
         		cb.equal(statusProcesso.get(StatusProcesso_.descricao), "Arquivado"),
         		cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), usuarioLogin), cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.localizacaoExterna), localizacao.getIdLocalizacao()), cb.between(processo.get(Processo_.dataFim), dataInicial, dataFinal));
-        
+
         List<Processo> listaProcesso = new ArrayList<Processo>();
         for(Tuple tuple : getEntityManager().createQuery(query).getResultList()) {
         	if(!listaProcesso.contains(tuple.get(0, Processo.class)) && tuple.get(1, Localizacao.class).equals(localizacao)) {
