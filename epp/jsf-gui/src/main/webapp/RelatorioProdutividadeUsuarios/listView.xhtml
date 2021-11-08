@@ -39,7 +39,11 @@
 			</div>
 
 			<div>
-				<h:outputLabel value="#{infoxMessages['relProdUsuarios.periodo']}" />
+				<h:outputLabel id="periodoLabel" for="periodoInput">
+					<h:outputText value="#{infoxMessages['relProdUsuarios.periodo']}" />
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+						title="#{infoxMessages['relProdUsuarios.titleHelp']}" style="vertical-align: middle;" />
+				</h:outputLabel>
 			</div>
 			<div style="margin-left: 2px;">
 				<wi:inputDate id="dataInicio" required="true"
