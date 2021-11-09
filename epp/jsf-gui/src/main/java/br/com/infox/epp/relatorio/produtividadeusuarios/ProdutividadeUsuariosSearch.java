@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
+import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
@@ -88,6 +89,9 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
 
 	public List<UsuarioLogin> getUsuariosLocalizacaoAbaixoHierarquia() {
 		List<Localizacao> listaLocalizacaoAbaixoAtual = localizacaoSearch.retrieveLocalizacaoByEstruturaFilho(Authenticator.getLocalizacaoAtual().getEstruturaFilho());
+		if (listaLocalizacaoAbaixoAtual == null || listaLocalizacaoAbaixoAtual.isEmpty()) {
+		    throw new EppConfigurationException("Não é possível visualizar o relatório. Localização do usuário sem estrutura filho");
+		}
 
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<UsuarioLogin> query = cb.createQuery(UsuarioLogin.class);
