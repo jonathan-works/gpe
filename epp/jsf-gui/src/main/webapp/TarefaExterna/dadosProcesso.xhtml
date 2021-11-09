@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['dadosManifestacao.titlePage']}</ui:define>
+
+    <ui:define name="body">
+        <p:panel
+            id="panelPrincipal"
+            style="border-width: 1px; border-style: solid; margin-top: 35px"
+            styleClass="content-block"
+            header="#{infoxMessages['dadosManifestacao.manifestacao']}"
+        >
+            <wi:field
+                id="nrProcesso"
+                label="#{infoxMessages['dadosManifestacao.nrProcesso']}">
+                <h:outputText value="#{dadosTarefaExternaView.vo.numeroManifestacao}" />
+            </wi:field>
+            <wi:field
+                id="tipoManifestacao"
+                label="#{infoxMessages['dadosManifestacao.tipoManifestacao']}">
+                <h:outputText value="#{dadosTarefaExternaView.vo.tipoManifestacao}" />
+            </wi:field>
+            <wi:field
+                id="tituloManifesto"
+                label="#{infoxMessages['dadosManifestacao.tituloManifesto']}">
+                <h:outputText value="#{dadosTarefaExternaView.vo.tituloManifestacao}" />
+            </wi:field>
+            <wi:field
+                id="dataInicio"
+                label="#{infoxMessages['dadosManifestacao.dataInicio']}">
+                <h:outputText value="#{dadosTarefaExternaView.vo.dataInico}" />
+            </wi:field>
+            <div>
+            <wi:editor
+                id="conteudo"
+                readonly="true"
+                value="#{dadosTarefaExternaView.vo.conteudo}"
+                label="#{infoxMessages['dadosManifestacao.conteudo']}"
+                required="false"
+            />     
+            </div>
+            <h:form
+                id="dadosProcessoForm"
+            >
+            <p:commandButton
+                action="#{dadosTarefaExternaView.imprimir}"
+                onclick="showLoading();"
+                oncomplete="hideLoading(); infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam');"
+                value="Imprimir"
+            />
+            </h:form>
+        </p:panel>
+        
+    </ui:define>
+</ui:composition>

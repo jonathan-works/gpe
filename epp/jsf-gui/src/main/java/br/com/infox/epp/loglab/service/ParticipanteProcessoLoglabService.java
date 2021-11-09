@@ -90,6 +90,7 @@ public class ParticipanteProcessoLoglabService extends PersistenceController {
             participanteProcesso.setPessoa(pessoaFisica);
         } else if (TipoPessoaEnum.A.equals(participanteProcessoVO.getTipoPessoa())) {
             participanteProcesso.setPessoa(pessoaAnonimaService.insert(participanteProcessoVO.getAnonimoVO()));
+            includeMeioContato(participanteProcesso.getPessoa(), participanteProcessoVO.getAnonimoVO().getEmail());
         } else if (TipoPessoaEnum.J.equals(participanteProcessoVO.getTipoPessoa())) {
             PessoaJuridica pessoaJuridica = empresaService.convertPessoaJuridicaFromServidorContribuinteVO(participanteProcessoVO.getEmpresaVO());
             if(pessoaJuridica.getIdPessoa() == null) {

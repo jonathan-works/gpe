@@ -18,6 +18,9 @@ import br.com.infox.epp.system.parametro.ParametroDefinition;
 
 public enum Parametros {
 
+    SINAL_TAREFA_EXTERNA("sinalTarefaExterna"),
+    MODELO_DOC_CHAVE_CONSULTA("modeloDocumentoChaveConsulta"),
+    MODELO_DOC_DOWNLOAD_PDF("modeloDocumentoDownloadPDF"),
     IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO("usuarioExternoPodeVerDocExcluido"),
     SOMENTE_USUARIO_INTERNO_PODE_VER_HISTORICO("somenteUsuarioInternoVerMotivoExclusaoDoc"),
     ID_USUARIO_PROCESSO_SISTEMA("idUsuarioProcessoSistema"),

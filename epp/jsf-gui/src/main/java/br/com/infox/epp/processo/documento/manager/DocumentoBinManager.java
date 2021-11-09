@@ -62,8 +62,8 @@ import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.documento.type.ExpressionResolver;
-import br.com.infox.epp.documento.type.PosicaoTextoAssinaturaDocumentoEnum;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
+import br.com.infox.epp.documento.type.PosicaoTextoAssinaturaDocumentoEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
@@ -111,6 +111,18 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	private ModeloDocumentoManager modeloDocumentoManager;
 	@Inject
 	private ModeloDocumentoSearch modeloDocumentoSearch;
+
+	public void remove(List<Integer> listaDocBin) {
+	    if(listaDocBin == null || listaDocBin.isEmpty()) {
+	        return;
+	    }
+	    getDao()
+	        .getEntityManager()
+	        .createQuery("delete from DocumentoBin where id in (:lista)")
+	        .setParameter("lista", listaDocBin)
+	        .executeUpdate();
+	    documentoBinarioManager.remove(listaDocBin);
+	}
 
 	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
 		return createProcessoDocumentoBin(documento.getDocumentoBin());
@@ -194,7 +206,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		}
 
 	}
-	
+
 	public byte[] writeCancelamentoDocumento(byte[] pdf) {
 		try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
 			writeCancelamentoDocumento(pdf, outStream);
@@ -336,7 +348,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     public String getMensagemDocumentoNulo() {
         return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
-    
+
     public void writeCancelamentoDocumento(byte[] pdf, OutputStream outStream) {
     	if(InfoxPdfReader.isCriptografado(pdf)) {
             throw new MargemPdfException("Documento somente leitura, não é possível gravar");
@@ -344,7 +356,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         try {
         	final PdfReader pdfReader = new PdfReader(pdf);
         	final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
-        	
+
         	//Variáveis para a parte de cancelamento
 			Font f = new Font(Font.TIMES_ROMAN, 80);
 			f.setColor(Color.RED);
@@ -354,7 +366,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	        PdfContentByte over;
 	        Rectangle pagesize;
 	        float x, y;
-	        
+
 	        for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
     	        pagesize = pdfReader.getPageSizeWithRotation(page);
                 x = (pagesize.getLeft() + pagesize.getRight()) / 2;
@@ -365,7 +377,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                 ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, x, y, 45);
                 over.restoreState();
 	        }
-	        
+
 	        stamper.close();
         	outStream.flush();
         } catch (BadPasswordException e) {
@@ -393,7 +405,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 			}
 
 			Phrase codPhrase;
-			
+
         	for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
         		int rotation = pdfReader.getPageRotation(page);
         		final PdfContentByte content = stamper.getOverContent(page);
@@ -462,7 +474,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         	sb.append(TEXTO_DOCUMENTO_CANCELADO);
         	sb.append(" ");
         }
-        
+
         sb.append(TEXTO_AUTENTICIDADE_DOCUMENTO);
 		sb.append(getTextoCodigoSomente(uuid));
         return sb.toString();

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -84,6 +85,9 @@ import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.custom.variables.CustomVariableSearch;
+import br.com.infox.epp.tarefaexterna.DocumentoUploadTarefaExternaService;
+import br.com.infox.epp.tarefaexterna.view.CadastroTarefaExternaVO;
+import br.com.infox.epp.tarefaexterna.view.CadastroTarefaExternaView;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 import br.com.infox.seam.exception.BusinessException;
@@ -160,6 +164,8 @@ public class BpmExpressionService {
     protected ModeloDocumentoFolhaTramitacoesSearch modeloDocumentoFolhaTramitacoesSearch;
     @Inject
     protected TaskInstancePermitidaAssinarDocumentoService taskInstancePermitidaAssinarDocumentoService;
+    @Inject
+    protected DocumentoUploadTarefaExternaService documentoUploadTarefaExternaService;
 
     public String getConteudoFolhaDeRostoProcessoParaEditor() {
     	return modeloDocumentoFolhaRostoSearch.gerarTextoModeloDocumento(getProcessoAtual());
@@ -831,6 +837,33 @@ public class BpmExpressionService {
             throw new BusinessException("A data inicial não pode ser maior que a data final.");
 
         return DateUtil.formatarIntervaloDataPorExtenso(dataIni, dataFim);
+    }
+
+
+    @External(expressionType = ExpressionType.GERAL,
+        tooltip = "process.geral.expression.finalizaCadastroTarefaExterna.tooltip",
+        value = {
+            @Parameter(
+                selectable = false,
+                label = "codigoTipoParticipante",
+                tooltip = "process.geral.expression.finalizaCadastroTarefaExterna.codigoTipoParticipante.tooltip"
+            )
+        }
+    )
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void finalizaCadastroTarefaExterna(String codigoTipoParticipante) {
+        UUID uuid = UUID.fromString((String) getExecutionContext().getVariable(CadastroTarefaExternaView.PARAM_UUID_TAREFA_EXTERNA));
+        CadastroTarefaExternaVO ctVO = (CadastroTarefaExternaVO) getExecutionContext().getVariable(CadastroTarefaExternaView.PARAM_TAREFA_EXTERNA);
+        if(uuid == null || ctVO == null) {
+            throw new BusinessRollbackException("Tarefa externa não configurada");
+        }
+
+        documentoUploadTarefaExternaService.persistirNoProcesso(
+            codigoTipoParticipante,
+            uuid,
+            ctVO,
+            getProcessoAtual()
+        );
     }
 
 }

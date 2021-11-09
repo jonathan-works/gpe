@@ -56,6 +56,7 @@
         <item xsi:type="MenuItem" label="layout.menuText" url="/layout.xhtml"/>
         <item xsi:type="MenuItem" label="meioExpedicao.menuText" url="/MeioExpedicao/listView.xhtml"/>
         <item xsi:type="MenuItem" label="certificadoEletronico.titlePage" url="/CertificadoEletronico/listView.xhtml"/>
+        <item xsi:type="MenuItem" label="tarefaExterna.configuracao.titlePage" url="/TarefaExterna/listView.xhtml"/>
     </item>
     <item xsi:type="Submenu" label="menu.controle">
         <item xsi:type="MenuItem" label="bam.menuText" url="/BAM/listView.xhtml"/>

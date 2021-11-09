@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -19,7 +21,7 @@ public class DocumentoBinarioManager extends Manager<DocumentoBinarioDAO, Docume
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoBinarioManager";
-    
+
     public byte[] getData(int idDocumentoBinario) {
         return getDocumentoWrapper(idDocumentoBinario).carregarDocumentoBinario().getDocumentoBinario();
     }
@@ -31,15 +33,23 @@ public class DocumentoBinarioManager extends Manager<DocumentoBinarioDAO, Docume
     public void remove(Integer idDocumentoExistente) throws DAOException {
         remove(getDao().getReference(idDocumentoExistente));
     }
-    
+
+    public void remove(List<Integer> listaDocBin) throws DAOException {
+        getDao()
+            .getEntityManager()
+            .createQuery("delete from DocumentoBinario where id in (:lista)")
+            .setParameter("lista", listaDocBin)
+            .executeUpdate();
+    }
+
     public boolean existeBinario(int idDocumentoBinario) {
         return getDocumentoWrapper(idDocumentoBinario).existeBinario();
     }
-    
+
     public DocumentoBinWrapper getDocumentoWrapper(Integer idDocumentoBin) {
         return DocumentoBinWrapperFactory.getInstance().createWrapperInstance(idDocumentoBin);
     }
-    
+
     public void detach(int idDocumentoBinario) {
     	DocumentoBinario bin = getReference(idDocumentoBinario);
     	detach(bin);

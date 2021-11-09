@@ -1,0 +1,705 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:define name="title">#{infoxMessages['registroManifestacao.titlePage']}</ui:define>
+
+    <ui:define name="body">
+        <p:panel
+            id="panelPrincipal"
+            style="border-width: 1px; border-style: solid; margin-top: 35px"
+            styleClass="content-block"
+            header="#{infoxMessages['registroManifestacao.titlePage']}"
+        >
+            <h:form
+                id="formTarefaExterna"
+            >
+            <p:outputPanel
+                id="formTarefaExternaContainer"
+                styleClass="formTarefaExternaContainer"
+            >
+            <wi:field
+                id="tipoManifestacao"
+                label="#{messages['registroManifestacao.tipoManifestacao']}"
+                required="true"
+            >
+                <h:selectOneRadio
+                    id="tipoManifestacaoInput"
+                    value="#{cadastroTarefaExternaView.vo.codTipoManifestacao}"
+                    onchange="showLoading()"
+                    required="true"
+                >
+                    <p:ajax
+                        listener="#{cadastroTarefaExternaView.onChangeTipoManifestacao}"
+                        event="change"
+                        process="@this"
+                        partialSubmit="true"
+                        oncomplete="hideLoading()"
+                        update="@(.dadosPessoaisContainer)"
+                    />
+                    <f:selectItem
+                        itemLabel="Anônimo"
+                        itemValue="A"
+                    />
+                    <f:selectItem
+                        itemLabel="Identificado"
+                        itemValue="I"
+                    />
+                </h:selectOneRadio>
+            </wi:field>
+            
+            <p:outputPanel styleClass="dadosPessoaisContainer">
+            <h:panelGroup rendered="#{cadastroTarefaExternaView.vo.codTipoManifestacao eq 'I'}">
+            <fieldset style="margin-bottom: 10px;">
+                <legend>#{messages['registroManifestacao.dadosPessoais']}</legend>
+                
+                
+                <wi:field
+                    id="numeroCpf"
+                    required="true"
+                    label="#{infoxMessages['registroManifestacao.cpf']}"
+                >
+                    <p:inputMask id="numeroCpfInput"
+                        mask="999.999.999-99"
+                        size="14"
+                        required="true"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.cpf}">
+                        <f:validator validatorId="cpfValidator" />
+                        <f:converter converterId="cpfConverter" />
+                    </p:inputMask>
+                </wi:field>
+                
+                <wi:field
+                    id="nome"
+                    label="#{messages['registroManifestacao.nome']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="nomeInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.nome}"
+                        required="true"
+                    />
+                </wi:field>
+                
+                <wi:field
+                    id="sexo"
+                    label="#{infoxMessages['registroManifestacao.sexo']}"
+                    required="true"
+                >
+                    <h:selectOneMenu
+                        id="sexoInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.codSexo}"
+                        required="true"
+                    >
+                        <f:selectItem
+                            noSelectionOption="true"
+                            itemValue="#{null}"
+                            itemLabel="#{messages['crud.select.select']}"
+                        />
+                        <f:selectItems
+                            value="#{cadastroTarefaExternaView.tiposGenero}"
+                            var="tg"
+                            itemLabel="#{tg.label}"
+                            itemValue="#{tg}"
+                        />
+                    </h:selectOneMenu>
+                </wi:field>
+                    
+                <wi:field
+                    id="cep"
+                    label="#{infoxMessages['registroManifestacao.cep']}"
+                    required="true"
+                >
+                    <p:inputMask
+                        id="cepInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.cep}"
+                        required="true"
+                        size="12"
+                        maxlength="9"
+                        mask="99999-999"
+                    />
+                </wi:field>
+                
+                <wi:field
+                    id="endereco"
+                    label="#{messages['registroManifestacao.endereco']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="enderecoInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.endereco}"
+                        required="true"
+                    />
+                </wi:field>
+                <wi:field
+                    id="numero"
+                    label="#{messages['registroManifestacao.numero']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="numeroInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.numero}"
+                        required="true"
+                    />
+                </wi:field>
+                <wi:field
+                    id="bairro"
+                    label="#{messages['registroManifestacao.bairro']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="bairroInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.bairro}"
+                        required="true"
+                    />
+                </wi:field>
+                <wi:field
+                    id="complemento"
+                    label="#{messages['registroManifestacao.complemento']}"
+                >
+                    <h:inputText
+                        id="complementoInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.complemento}"
+                    />
+                </wi:field>
+                <wi:field
+                    id="uf"
+                    label="#{infoxMessages['registroManifestacao.codEstado']}"
+                    required="true"
+                >
+                    <h:selectOneMenu
+                        id="ufInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.uf}"
+                        required="true"
+                    >
+                        <f:selectItem
+                            noSelectionOption="true"
+                            itemValue="#{null}"
+                            itemLabel="#{messages['crud.select.select']}"
+                        />
+                        <f:selectItems
+                            value="#{cadastroTarefaExternaView.estados}"
+                            var="uf"
+                            itemLabel="#{uf.label}"
+                            itemValue="#{uf}"
+                        />
+                    </h:selectOneMenu>
+                </wi:field>
+                <wi:field
+                    id="municipio"
+                    label="#{messages['registroManifestacao.municipio']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="municipioInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.municipio}"
+                        required="true"
+                    />
+                </wi:field>
+                <p:outputPanel
+                    styleClass="contatosPessoaContainer"
+                >
+                <wi:field
+                    id="telefoneCelular"
+                    label="#{messages['registroManifestacao.telefoneCelular']}"
+                    required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'TL'}"
+                >
+                    <h:inputText
+                        id="telefoneCelularInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.telefoneCelular}"
+                    />
+                </wi:field>
+                <wi:field
+                    id="telefoneFixo"
+                    label="#{messages['registroManifestacao.telefoneFixo']}"
+                    required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'TL'}"
+                >
+                    <h:inputText
+                        id="telefoneFixoInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.telefoneFixo}"
+                    />
+                </wi:field>
+                <wi:field
+                    id="emailPessoal"
+                    label="#{messages['registroManifestacao.email']}"
+                    required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'EM'}"
+                >
+                    <h:inputText
+                        id="emailPessoalInput"
+                        value="#{cadastroTarefaExternaView.vo.dadosPessoais.email}"
+                        validator="emailValidator"
+                    />
+                </wi:field>
+                </p:outputPanel>
+            </fieldset>
+            </h:panelGroup>
+            
+            <wi:field
+                id="grupoOuvidoria"
+                label="#{infoxMessages['registroManifestacao.grupoOuvidoria']}"
+                required="true"
+            >
+                <h:selectOneMenu
+                    id="grupoOuvidoriaInput"
+                    value="#{cadastroTarefaExternaView.vo.codGrupoOuvidoria}"
+                    required="true"
+                >
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems
+                        value="#{cadastroTarefaExternaView.grupoOuvidorias}"
+                        var="go"
+                        itemLabel="#{go.label}"
+                        itemValue="#{go}"
+                    />
+                </h:selectOneMenu>
+            </wi:field>
+            
+            <p:outputPanel layout="inline" styleClass="desejaRespostaContainer">
+            <wi:field
+                id="desejaResposta"
+                label="#{infoxMessages['registroManifestacao.desejaResposta']}"
+            >
+                <h:selectOneRadio
+                    id="desejaRespostaInput"
+                    value="#{cadastroTarefaExternaView.vo.desejaResposta}"
+                    onchange="showLoading()"
+                    converter="javax.faces.Boolean"
+                    required="true"
+                >
+                    <p:ajax
+                        listener="#{cadastroTarefaExternaView.onChangeDesejaResposta}"
+                        event="change"
+                        process="@this @(.contatosPessoaContainer)"
+                        update="@(.desejaRespostaContainer) @(.contatosPessoaContainer)"
+                        partialSubmit="true"
+                        oncomplete="hideLoading()"
+                    />
+                    <f:selectItem itemValue="true" itemLabel="#{infoxMessages['crud.yes']}"/>
+                    <f:selectItem itemValue="false" itemLabel="#{infoxMessages['crud.no']}"/>
+                </h:selectOneRadio>
+            </wi:field>
+            
+            <h:panelGroup
+                rendered="#{cadastroTarefaExternaView.vo.desejaResposta}"
+            >
+            <wi:field
+                id="meioResposta"
+                label="#{infoxMessages['registroManifestacao.meioDeResposta']}"
+                required="#{cadastroTarefaExternaView.vo.desejaResposta}"
+            >
+                <h:selectOneMenu
+                    id="meioRespostaInput"
+                    value="#{cadastroTarefaExternaView.vo.codMeioResposta}"
+                    styleClass="select input"
+                    onchange="showLoading()"
+                    required="#{cadastroTarefaExternaView.vo.desejaResposta}"
+                >
+                    <p:ajax
+                        event="change"
+                        process="@this"
+                        partialSubmit="true"
+                        oncomplete="hideLoading()"
+                        update="@(.emailContainer) @(.contatosPessoaContainer)"
+                    />
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems
+                        value="#{cadastroTarefaExternaView.meiosResposta}"
+                        var="mr"
+                        itemLabel="#{mr.label}"
+                        itemValue="#{mr}"
+                    />
+                </h:selectOneMenu>
+            </wi:field>
+            <p:outputPanel
+                styleClass="emailContainer"
+                layout="inline"
+            >
+            <wi:field
+                id="email"
+                label="#{messages['registroManifestacao.email']}"
+                required="#{cadastroTarefaExternaView.vo.codMeioResposta eq 'EM'}"
+                rendered="#{cadastroTarefaExternaView.vo.codTipoManifestacao eq 'A'}"
+            >
+                <h:inputText
+                    id="emailInput"
+                    value="#{cadastroTarefaExternaView.vo.email}"
+                >
+                    <f:validator validatorId="emailValidator" />
+                </h:inputText>
+            </wi:field>
+            </p:outputPanel>
+            </h:panelGroup>
+            </p:outputPanel>
+            
+            <wi:field
+                id="dataAbertura"
+                label="#{messages['registroManifestacao.dataAbertura']}"
+                required="true"
+            >
+                <p:calendar
+                    id="dataAberturaInput"
+                    value="#{cadastroTarefaExternaView.vo.dataAbertura}"
+                    required="true"
+                    maxdate="#{now}"
+                    pattern="dd/MM/yyyy"
+                    placeholder="__/__/____"
+                    mask="99/99/9999"
+                />
+            </wi:field>
+            
+            <wi:field
+                id="tipoManifesto"
+                label="#{infoxMessages['registroManifestacao.tipoManifesto']}"
+                required="true"
+            >
+                <h:selectOneMenu
+                    id="tipoManifestoInput"
+                    value="#{cadastroTarefaExternaView.vo.codTipoManifesto}"
+                    styleClass="select input"
+                    required="true"
+                >
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems
+                        value="#{cadastroTarefaExternaView.tiposManifesto}"
+                        var="mf"
+                        itemLabel="#{mf.label}"
+                        itemValue="#{mf}"
+                    />
+                </h:selectOneMenu>
+            </wi:field>
+            
+            <wi:field
+                id="tituloManifesto"
+                label="#{messages['registroManifestacao.tituloManifesto']}"
+                required="true"
+            >
+                <h:inputText
+                    id="tituloManifestoInput"
+                    value="#{cadastroTarefaExternaView.vo.tituloManifesto}"
+                    required="true"
+                />
+            </wi:field>
+            
+            <wi:field
+                id="descricaoManifesto"
+                label="#{messages['registroManifestacao.descricaoManifesto']}"
+                required="true"
+            >
+                <h:inputTextarea
+                    id="descricaoManifestoInput"
+                    value="#{cadastroTarefaExternaView.vo.descricaoManifesto}"
+                    required="true"
+                />
+            </wi:field>
+            </p:outputPanel>
+            </p:outputPanel>
+            
+            <div id="uploadDocDiv" class="ui-g">
+            <div class="ui-g-12 ui-lg-6">
+            <rich:collapsiblePanel
+                id="uploadDoc"
+                switchType="client"
+                opened="true"
+                header="#{infoxMessages['registroManifestacao.upload']}"
+                style="margin-bottom: 10px;"
+            >
+                <p:outputPanel
+                    id="uploadDocContainer"
+                    styleClass="uploadDocContainer"
+                >
+                <p:outputPanel
+                    id="formUploadDocContainer"
+                    styleClass="formUploadDocContainer"
+                >
+                <wi:field
+                    id="descricaoDoc"
+                    label="#{infoxMessages['registroManifestacao.descricaoDoc']}"
+                    required="true"
+                >
+                    <h:inputText
+                        id="descricaoDocInput"
+                        value="#{cadastroTarefaExternaView.docVO.descricao}"
+                        required="true"
+                    />
+                </wi:field>
+                <wi:field
+                    id="classificacaoDoc"
+                    label="#{infoxMessages['tarefaExterna.configuracao.classificacaoDocumento']}"
+                    required="true"
+                >
+                    <h:selectOneMenu
+                        id="classificacaoDocInput"
+                        value="#{cadastroTarefaExternaView.docVO.idClassificacaoDocumento}"
+                        styleClass="select input"
+                        required="true"
+                        onchange="showLoading()"
+                    >
+                        <p:ajax
+                            listener="#{cadastroTarefaExternaView.onChangeClassificacaoDocumento}"
+                            update="@(.binContainer)"
+                            event="change"
+                            oncomplete="hideLoading()"
+                            process="@this"
+                            partialSubmit="true"
+                        />
+                        <f:selectItem
+                            noSelectionOption="true"
+                            itemValue="#{null}"
+                            itemLabel="#{messages['crud.select.select']}"
+                        />
+                        <f:selectItems
+                            value="#{cadastroTarefaExternaView.classificacoes}"
+                            var="cd"
+                            itemLabel="#{cd.descricao}(#{cd.codigo})"
+                            itemValue="#{cd.id}"
+                        />
+                    </h:selectOneMenu>
+                </wi:field>
+                <wi:field
+                    id="pastaDoc"
+                    label="#{infoxMessages['tarefaExterna.configuracao.pasta']}"
+                >
+                    <h:selectOneMenu
+                        id="pastaDocInput"
+                        value="#{cadastroTarefaExternaView.docVO.idPasta}"
+                        styleClass="select input"
+                    >
+                        <f:selectItem
+                            noSelectionOption="true"
+                            itemValue="#{null}"
+                            itemLabel="#{messages['crud.select.select']}"
+                        />
+                        <f:selectItems
+                            value="#{cadastroTarefaExternaView.pastas}"
+                            var="cd"
+                            itemLabel="#{cd.nome}(#{cd.codigo})"
+                            itemValue="#{cd.id}"
+                        />
+                    </h:selectOneMenu>
+                </wi:field>
+                </p:outputPanel>
+                <p:outputPanel
+                    styleClass="binContainer"
+                >
+                <rich:fileUpload 
+                    id="documentos"
+                    execute="@this"
+                    status=":status"
+                    limitRender="true"
+                    fileUploadListener="#{cadastroTarefaExternaView.processFileUpload}"
+                    onclear="showLoading(); onDocUploadClear(event)"
+                    addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+                    clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+                    clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+                    doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
+                    uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+                    sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+                    maxFilesQuantity="10"
+                    listHeight="50px"
+                    immediateUpload="true"
+                    noDuplicate="true"
+                    render="btGravarDoc pageBodyDialogMessage"
+                    acceptedTypes="#{cadastroTarefaExternaView.acceptedTypes}"
+                    ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')"
+                    rendered="#{not empty cadastroTarefaExternaView.docVO.idClassificacaoDocumento}"
+                />
+                <script type="text/javascript">
+                function onDocUploadClear(a){
+                    let files = a.rf.data.map(function(obj){return obj.name;}).join(";");
+                    limparDocsUpload([{name : 'arquivosParaLimpar', value : files}]);
+                }
+                </script>
+                <p:remoteCommand
+                    name="limparDocsUpload"
+                    action="#{cadastroTarefaExternaView.limparArquivos}"
+                    process="@this"
+                    partialSubmit="true"
+                    update="@(.btGravarDoc)"
+                    oncomplete="hideLoading()"
+                />
+                
+                </p:outputPanel>
+                <h:panelGroup id="btGravarDoc" styleClass="btGravarDoc">
+                <p:commandButton
+                    action="#{cadastroTarefaExternaView.inserirDocumento}"
+                    onclick="showLoading()"
+                    oncomplete="if(args &amp;&amp; args.sucesso){reloadFormUpload()}else{hideLoading()}"
+                    update="@(.formUploadDocContainer) @(.docsInseridosContainer) :pageBodyDialogMessage"
+                    process="@this @(.formUploadDocContainer)"
+                    partialSubmit="true"
+                    disabled="#{not cadastroTarefaExternaView.docVO.uploadValido}"
+                    value="#{messages['button.save']}"
+                />
+                </h:panelGroup>
+                </p:outputPanel>
+                
+                <p:remoteCommand
+                    name="reloadFormUpload"
+                    oncomplete="hideLoading()"
+                    partialSubmit="true"
+                    process="@this"
+                    update="@(.uploadDocContainer)"
+                />
+            </rich:collapsiblePanel>
+            </div>
+            <div class="ui-g-12 ui-lg-6">
+            <rich:collapsiblePanel
+                id="docsInseridos"
+                switchType="client"
+                opened="true"
+                header="#{infoxMessages['registroManifestacao.documentosAnexados']}"
+                style="margin-bottom: 10px;"
+            >
+                <p:outputPanel
+                    id="docsInseridosContainer"
+                    styleClass="docsInseridosContainer"
+                >
+                <p:dataTable
+                    id="dtDocAnexados"
+                    widgetVar="dtDocAnexadosWV"
+                    styleClass="dtable rf-dt-crud"
+                    rows="30"
+                    rowsPerPageTemplate="15,30,60"
+                    emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
+                    paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                    currentPageReportTemplate="Página {currentPage} de {totalPages} em {totalRecords} registros"
+                    lazy="true"
+                    paginator="true"
+                    value="#{cadastroTarefaExternaView.documentosDataModel}"
+                    binding="#{cadastroTarefaExternaView.documentosDataModel.dataTable}"
+                    selection="#{cadastroTarefaExternaView.documentosDataModel.selecionados}"
+                    var="rd"
+                >
+                    <p:ajax
+                        event="page"
+                        process="@this"
+                        partialSubmit="true"
+                        update="@(.btRemoverDocAnexados)"
+                        onstart="showLoading(); PF('dtDocAnexadosWV').unselectAllRows();"
+                        oncomplete="hideLoading()"
+                    />
+                    <p:ajax
+                        event="toggleSelect"
+                        process="@this"
+                        partialSubmit="true"
+                        update="@(.btRemoverDocAnexados)"
+                        onstart="showLoading()"
+                        oncomplete="hideLoading()"
+                    />
+                    <p:ajax
+                        event="rowSelectCheckbox"
+                        process="@this"
+                        partialSubmit="true"
+                        update="@(.btRemoverDocAnexados)"
+                        onstart="showLoading()"
+                        oncomplete="hideLoading()"
+                    />
+                    <p:ajax
+                        event="rowUnselectCheckbox"
+                        process="@this"
+                        partialSubmit="true"
+                        update="@(.btRemoverDocAnexados)"
+                        onstart="showLoading()"
+                        oncomplete="hideLoading()"
+                    />
+                    <p:column
+                        selectionMode="multiple"
+                        styleClass="dt-toolbar-col"
+                        width="15"
+                    />
+                    <p:column
+                        width="15"
+                    >
+                        <p:commandLink
+                            process="@this"
+                            update="@this"
+                            partialSubmit="true"
+                            action="#{jsfUtil.applyLastPhaseFlashAction()}"
+                            oncomplete="#{cadastroTarefaExternaView.documentosDataModel.jsOpenPopup}"
+                        >
+                            <f:setPropertyActionListener
+                                value="#{rd.idDocumentoBin}"
+                                target="#{flash.idDocumentoBin}"
+                            />
+                            <f:setPropertyActionListener
+                                value="#{false}"
+                                target="#{flash.binario}"
+                            />
+                            <h:graphicImage
+                                title="Visualizar"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
+                            />
+                        </p:commandLink>
+                    </p:column>
+                    <p:column headerText="#{infoxMessages['registroManifestacao.doc.pasta']}">
+                        <h:outputText value="#{rd.classificacao}" />
+                    </p:column>
+                    <p:column
+                        headerText="#{infoxMessages['registroManifestacao.doc.descricao']}">
+                        <h:outputText value="#{rd.descricao}" />
+                    </p:column>
+                    <p:column
+                        headerText="#{infoxMessages['registroManifestacao.doc.dataInclusao']}">
+                        <h:outputText value="#{rd.dataInclusao}" />
+                    </p:column>
+                    <p:column
+                        headerText="#{infoxMessages['registroManifestacao.doc.pasta']}">
+                        <h:outputText value="#{rd.pasta}" />
+                    </p:column>
+                </p:dataTable>
+                <p:outputPanel
+                    styleClass="btRemoverDocAnexados"
+                >
+                    <p:commandButton
+                        action="#{cadastroTarefaExternaView.removerDocumentos}"
+                        update="@(.docsInseridosContainer) :pageBodyDialogMessage"
+                        process="@this"
+                        disabled="#{empty cadastroTarefaExternaView.documentosDataModel.selecionados}"
+                        onclick="if(!confirm('#{infoxMessages['crud.confirmRemove']}')){return false;} showLoading();"
+                        oncomplete="hideLoading()"
+                        value="Remover"                    
+                    />
+                </p:outputPanel>
+                </p:outputPanel>
+                
+            </rich:collapsiblePanel>
+            </div>
+            </div>
+            
+            <p:commandButton
+                id="cadastrarTarefaExterna"
+                action="#{cadastroTarefaExternaView.cadastrar}"
+                onclick="showLoading()"
+                oncomplete="if(!args || (!args.validationFailed &amp;&amp; !args.erro)){infox.openPopUp('_blank', 'dadosProcesso.seam'); document.location.reload(true);}else{infox.hideLoading();}"
+                update="@(.formTarefaExternaContainer) :pageBodyDialogMessage"
+                process="@this @(.formTarefaExternaContainer)"
+                partialSubmit="true"
+                value="#{messages['processo.iniciarBtn']}"
+            />
+            </h:form>
+        </p:panel>
+        
+    </ui:define>
+</ui:composition>

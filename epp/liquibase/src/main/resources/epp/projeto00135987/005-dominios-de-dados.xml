@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="nextValueForSqDominioVarTarefa" value="nextval('sq_tb_dominio_variavel_tarefa')" dbms="postgresql" />
+    <property name="nextValueForSqDominioVarTarefa" value="sq_tb_dominio_variavel_tarefa" dbms="oracle" />
+    <property name="nextValueForSqDominioVarTarefa" value="next value for sq_tb_dominio_variavel_tarefa" dbms="mssql" />
+
+    <changeSet author="marcone" id="1" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_dominio_variavel_tarefa">
+            <column name="id_dominio_variavel_tarefa" valueComputed="${nextValueForSqRecurso}" />
+            <column name="ds_dominio_variavel_tarefa" value="D=Denúncia;E=Elogio;R=Reclamação;S=Sugestões;" />
+            <column name="nm_dominio_variavel_tarefa" value="Tipos de manifesto para tarefa externa" />
+            <column name="cd_dominio_variavel_tarefa" value="tarefaExternaTiposManifesto" />
+        </insert>
+    </changeSet>
+    <changeSet author="marcone" id="2" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_dominio_variavel_tarefa">
+            <column name="id_dominio_variavel_tarefa" valueComputed="${nextValueForSqRecurso}" />
+            <column name="ds_dominio_variavel_tarefa" value="CA=Carta;EM=E-Mail;PE=Pessoalmente;TL=Telefone" />
+            <column name="nm_dominio_variavel_tarefa" value="Meios de resposta para tarefa externa" />
+            <column name="cd_dominio_variavel_tarefa" value="tarefaExternaMeiosResposta" />
+        </insert>
+    </changeSet>
+    <changeSet author="marcone" id="3" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_dominio_variavel_tarefa">
+            <column name="id_dominio_variavel_tarefa" valueComputed="${nextValueForSqRecurso}" />
+            <column name="ds_dominio_variavel_tarefa" value="ATD=AGRICULTURA, TRABALHO E DESENVOLVIMENTO;ECN=ECONÔMICO;" />
+            <column name="nm_dominio_variavel_tarefa" value="Grupo de ouvidorias para tarefa externa" />
+            <column name="cd_dominio_variavel_tarefa" value="tarefaExternaGrupoOuvidorias" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

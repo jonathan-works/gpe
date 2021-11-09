@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['tarefaExterna.configuracao.titlePage']}</ui:define>
+
+    <ui:define name="body">
+        <p:panel
+            id="panelParametros"
+            style="border-width: 1px; border-style: solid; margin-top: 35px"
+            styleClass="content-block"
+            header="#{infoxMessages['tarefaExterna.configuracao.paramtros']}"
+        >
+            <div>
+            <h:form
+                id="formParametros"
+            >
+            <wi:field
+                id="sinalTarefaExterna"
+                label="#{messages['tarefaExterna.configuracao.sinalTarefaExterna']}"
+                required="true"
+            >
+                <h:selectOneMenu
+                    id="sinalTarefaExternaInput"
+                    value="#{configuracaoTarefaExternaView.vo.signalTarefaExterna}"
+                    required="true"
+                >
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems value="#{configuracaoTarefaExternaView.vo.signais}" />
+                </h:selectOneMenu>
+            </wi:field>
+            <wi:field
+                id="modeloDocumentoDownloadPDF"
+                label="#{messages['tarefaExterna.configuracao.modeloDocumentoDownloadPDF']}"
+                required="true"
+            >
+                <h:selectOneMenu
+                    id="modeloDocumentoDownloadPDFInput"
+                    value="#{configuracaoTarefaExternaView.vo.modeloDocumentoDownloadPDF}"
+                    required="true"
+                >
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems value="#{configuracaoTarefaExternaView.vo.modelos}" />
+                </h:selectOneMenu>
+            </wi:field>
+            <wi:field
+                id="modeloDocumentoChaveConsulta"
+                label="#{messages['tarefaExterna.configuracao.modeloDocumentoChaveConsulta']}"
+                required="true"
+            >
+                <h:selectOneMenu
+                    id="modeloDocumentoChaveConsultaInput"
+                    value="#{configuracaoTarefaExternaView.vo.modeloDocumentoChaveConsulta}"
+                    required="true"
+                >
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems value="#{configuracaoTarefaExternaView.vo.modelos}" />
+                </h:selectOneMenu>
+            </wi:field>
+            <p:commandButton
+                action="#{configuracaoTarefaExternaView.gravarParametros}"
+                update="@form :pageBodyDialogMessage"
+                process="@form"
+                partialSubmit="true"
+                onclick="showLoading()"
+                oncomplete="hideLoading()"
+                styleClass="buttons"
+                value="Gravar"
+            />
+            </h:form>
+            </div>
+            </p:panel>
+            <p:panel
+                id="panel_classificacaoDocumento"
+                style="border-width: 1px; border-style: solid; margin-top: 5px;"
+                header="#{infoxMessages['tarefaExterna.configuracao.classificacoesDocumento']}"
+            >
+            <p:outputPanel
+                styleClass="classificacaoDocumentoContainer"
+            >
+            <div>
+            <h:form
+                id="formClassDoc"
+            >
+            <wi:field
+                id="classificacaoDocumento"
+                label="#{messages['tarefaExterna.configuracao.classificacaoDocumento']}"
+                required="true"
+            >
+                <h:selectOneMenu
+                    id="classificacaoDocumentoInput"
+                    value="#{configuracaoTarefaExternaView.vo.classificacaoParaInserir}"
+                    required="true"
+                >
+                    <f:selectItem
+                        noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{messages['crud.select.select']}"
+                    />
+                    <f:selectItems
+                        value="#{configuracaoTarefaExternaView.vo.classificacoesDisponiveis}"
+                        var="cdd"
+                        itemValue="#{cdd.id}"
+                        itemLabel="#{cdd.descricao}(#{cdd.codigo})"
+                    />
+                </h:selectOneMenu>
+            </wi:field>
+            <p:commandButton
+                action="#{configuracaoTarefaExternaView.inserirClassificacaoDocumento}"
+                update="@(.classificacaoDocumentoContainer) :pageBodyDialogMessage"
+                partialSubmit="true"
+                process="@form"
+                onclick="showLoading()"
+                oncomplete="hideLoading()"
+                styleClass="buttons"
+                value="Inserir"
+            />
+            </h:form>
+            </div>
+            
+            <p:dataTable
+                var="cdRow"
+                value="#{configuracaoTarefaExternaView.vo.classificacoes}"
+            >
+                <p:column
+                    width="20"
+                >
+                    <h:form>
+                    <p:commandLink
+                        id="removerClassificacaoDocUpExterno"
+                        action="#{configuracaoTarefaExternaView.removerClassificacaoDocumento(cdRow.id)}"
+                        update="@(.classificacaoDocumentoContainer) :pageBodyDialogMessage"
+                        process="@this"
+                        partialSubmit="true"
+                        onclick="if(!confirm('#{infoxMessages['crud.confirmRemove']}')){return false;} showLoading();"
+                        oncomplete="hideLoading()"
+                    >
+                    <h:graphicImage
+                        url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                        title="#{infoxMessages['crud.remove']}"
+                    />
+                    </p:commandLink>
+                    </h:form>
+                </p:column>
+                <p:column
+                    headerText="#{messages['classificacaoDocumento.codigoDocumento']}"
+                ><h:outputText value="#{cdRow.codigo}" /></p:column>
+                <p:column
+                    headerText="#{messages['classificacaoDocumento.descricao']}"
+                ><h:outputText value="#{cdRow.descricao}" /></p:column>
+            </p:dataTable>
+            </p:outputPanel>
+            
+            </p:panel>
+            
+            <p:panel
+                id="panel_pasta"
+                style="border-width: 1px; border-style: solid; margin-top: 5px;"
+                header="#{infoxMessages['tarefaExterna.configuracao.pastas']}"
+            >
+            <p:outputPanel
+                styleClass="pastaContainer"
+            >
+            <div>
+            <h:form
+                id="formPasta"
+            >
+            <wi:field
+                id="codPasta"
+                label="#{messages['pasta.codigoPasta']}"
+                required="true"
+            >
+                <h:inputText
+                    id="codPastaInput"
+                    value="#{configuracaoTarefaExternaView.vo.codPastaParaInserir}"
+                    required="true"
+                />
+            </wi:field>
+            <wi:field
+                id="nomePasta"
+                label="#{messages['pasta.nome']}"
+                required="true"
+            >
+                <h:inputText
+                    id="nomePastaInput"
+                    value="#{configuracaoTarefaExternaView.vo.nomePastaParaInserir}"
+                    required="true"
+                />
+            </wi:field>
+            <p:commandButton
+                action="#{configuracaoTarefaExternaView.inserirPasta}"
+                update="@(.pastaContainer) :pageBodyDialogMessage"
+                partialSubmit="true"
+                process="@form"
+                onclick="showLoading()"
+                oncomplete="hideLoading()"
+                styleClass="buttons"
+                value="Inserir"
+            />
+            <p:commandButton
+                action="#{configuracaoTarefaExternaView.clearFormPasta}"
+                update="@form"
+                partialSubmit="true"
+                process="@this"
+                onclick="showLoading()"
+                oncomplete="hideLoading()"
+                styleClass="buttons"
+                value="Limpar"
+            />
+            </h:form>
+            </div>
+            
+            <p:dataTable
+                var="pastaRow"
+                value="#{configuracaoTarefaExternaView.vo.pastas}"
+            >
+                <p:column
+                    width="20"
+                >
+                    <h:form>
+                    <p:commandLink
+                        id="removerClassificacaoDocUpExterno"
+                        action="#{configuracaoTarefaExternaView.removerPasta(pastaRow.id)}"
+                        update="@(.pastaContainer) :pageBodyDialogMessage"
+                        process="@this"
+                        partialSubmit="true"
+                        onclick="if(!confirm('#{infoxMessages['crud.confirmRemove']}')){return false;} showLoading();"
+                        oncomplete="hideLoading()"
+                    >
+                    <h:graphicImage
+                        url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                        title="#{infoxMessages['crud.remove']}"
+                    />
+                    </p:commandLink>
+                    </h:form>
+                </p:column>
+                <p:column
+                    headerText="#{messages['pasta.codigoPasta']}"
+                ><h:outputText value="#{pastaRow.codigo}" /></p:column>
+                <p:column
+                    headerText="#{messages['pasta.nome']}"
+                ><h:outputText value="#{pastaRow.nome}" /></p:column>
+            </p:dataTable>
+            </p:outputPanel>
+        </p:panel>
+        
+    </ui:define>
+</ui:composition>

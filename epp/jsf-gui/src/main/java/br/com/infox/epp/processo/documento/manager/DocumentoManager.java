@@ -70,11 +70,11 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public List<Documento> getDocumentosFromDocumentoBin(DocumentoBin documentoBin){
     	return getDao().getDocumentosFromDocumentoBin(documentoBin);
     }
-    
+
     public String valorDocumento(Integer idDocumento) {
         return find(idDocumento).getDocumentoBin().getModeloDocumento();
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void exclusaoRestauracaoLogicaDocumentos(Collection<Documento> documentos, String motivo,
             TipoAlteracaoDocumento tipoAlteracaoDocumento) {
@@ -82,7 +82,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
             exclusaoRestauracaoLogicaDocumento(documento, motivo, tipoAlteracaoDocumento);
         }
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void exclusaoRestauracaoLogicaDocumento(Documento documento, String motivo, TipoAlteracaoDocumento tipoAlteracaoDocumento)
             throws DAOException {
@@ -111,11 +111,11 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         documento.setNumeroDocumento(getNextNumeracao(documento));
         return gravarDocumento(documento);
     }
-    
+
     public Documento gravarDocumentoNoProcesso(Documento documento) throws DAOException {
     	return gravarDocumentoNoProcesso(null, documento);
     }
-    
+
     public Documento gravarDocumento(Documento documento) {
     	documento.setDocumentoBin(this.documentoBinManager.createProcessoDocumentoBin(documento));
         if (documento.getUsuarioInclusao() == null) {
@@ -131,8 +131,13 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         persist(documento);
         return documento;
     }
-    
+
     public Documento createDocumento(Processo processo, String label, DocumentoBin bin, ClassificacaoDocumento classificacaoDocumento)
+            throws DAOException {
+        return this.createDocumento(processo, label, bin, classificacaoDocumento, null);
+    }
+
+    public Documento createDocumento(Processo processo, String label, DocumentoBin bin, ClassificacaoDocumento classificacaoDocumento, Pasta pasta)
             throws DAOException {
         final Documento doc = new Documento();
         doc.setDocumentoBin(bin);
@@ -140,11 +145,15 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         doc.setDescricao(label);
         doc.setExcluido(Boolean.FALSE);
-        Pasta defaultFolder = pastaManager.getDefaultFolder(processo);
-		if (defaultFolder == null) {
-			throw new BusinessRollbackException(InfoxMessages.getInstance().get("documento.erro.processSemPasta"));
-		}
-        doc.setPasta(defaultFolder);
+        if(pasta == null) {
+            Pasta defaultFolder = pastaManager.getDefaultFolder(processo);
+            if (defaultFolder == null) {
+                throw new BusinessRollbackException(InfoxMessages.getInstance().get("documento.erro.processSemPasta"));
+            }
+            doc.setPasta(defaultFolder);
+        } else {
+            doc.setPasta(pasta);
+        }
         doc.setClassificacaoDocumento(classificacaoDocumentoManager.getReference(classificacaoDocumento.getId()));
         doc.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(processo));
         return persist(doc);
@@ -165,47 +174,47 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public List<Documento> getListDocumentoByProcesso(Processo processo) {
         return getDao().getListDocumentoByProcesso(processo);
     }
-    
+
     public List<Documento> getListAllDocumentoByProcesso(Processo processo) {
         return getDao().getListAllDocumentoByProcesso(processo);
     }
-    
+
     public List<Documento> getListAllDocumentoByProcessoOrderData(Processo processo) {
         return getDao().getListAllDocumentoByProcessoOrderData(processo);
     }
-    
+
     public List<Documento> getListDocumentoMinutaByProcesso(Processo processo) {
     	return getDao().getListDocumentoByProcesso(processo);
     }
-    
+
     public int getTotalDocumentosProcesso(Processo processo) {
     	return getDao().getTotalDocumentosProcesso(processo);
     }
-    
+
     public List<Documento> getDocumentosSessaoAnexar(Processo processo, List<Integer> idsDocumentos) {
     	return getDao().getDocumentosSessaoAnexar(processo, idsDocumentos);
     }
-    
+
     @Override
     public Documento persist(Documento o) throws DAOException {
     	o = super.persist(o);
     	atualizarSuficienciaAssinatura(o);
     	return o;
     }
-    
+
     @Override
     public Documento update(Documento o) throws DAOException {
         o = super.update(o);
         atualizarSuficienciaAssinatura(o);
     	return o;
     }
-    
+
     private void atualizarSuficienciaAssinatura(Documento o ) throws DAOException{
         if (!o.getDocumentoBin().getSuficientementeAssinado() && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(o)) {
             documentoBinManager.setDocumentoSuficientementeAssinado(o.getDocumentoBin());
         }
     }
-    
+
     public boolean isDocumentoInclusoPorHierarquia(Documento documento, String identificadorPapelBase) {
     	return papelManager.isPapelHerdeiro(documento.getPerfilTemplate().getPapel().getIdentificador(), identificadorPapelBase);
     }
@@ -213,17 +222,17 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public boolean isDocumentoInclusoPorPapeis(Documento documento, List<String> identificadoresPapeis) {
         return identificadoresPapeis.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
     }
-    
+
     /**
-     * Define se um papel deve assinar um documento (checando se sua asinatura é obrigatória e se não existem outras restrições 
-     * para que o papel possa ser assinado, como processo finalizado e assinatura já feita pelo papel) 
+     * Define se um papel deve assinar um documento (checando se sua asinatura é obrigatória e se não existem outras restrições
+     * para que o papel possa ser assinado, como processo finalizado e assinatura já feita pelo papel)
      */
     public boolean deveAssinar(Documento documento, Papel papel) {
         	return documento.isDocumentoAssinavel(papel) && documento.isAssinaturaObrigatoria(papel) && !documento.isDocumentoAssinado(papel);
     }
-    
+
     /**
-     * Diz se um usuário pode assinar um documento 
+     * Diz se um usuário pode assinar um documento
      * (verificando se o documento já foi assinado por esse papel ou se o papel permite assinatura múltipla)
      */
     public boolean podeAssinar(Documento documento, UsuarioPerfil usuarioPerfil) {
@@ -232,7 +241,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
 
 		return documento.isDocumentoAssinavel(usuarioPerfil.getUsuarioLogin().getPessoaFisica(), usuarioPerfil.getPerfilTemplate().getPapel());
     }
-    
+
 	public Documento copiarDocumento(Documento original, Pasta novaPasta) throws CloneNotSupportedException {
 		Documento cDoc = original.makeCopy();
         cDoc.setPasta(novaPasta);
@@ -245,7 +254,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public boolean documentoInclusoPorHierarquia(Integer idDocumento, String identificadorPapelBase) {
         return isDocumentoInclusoPorHierarquia(find(idDocumento), identificadorPapelBase);
     }
-    
+
     public Processo getProcessoByDocumento(Documento documento) {
     	Pasta pasta = documento.getPasta();
     	if(pasta == null) {
