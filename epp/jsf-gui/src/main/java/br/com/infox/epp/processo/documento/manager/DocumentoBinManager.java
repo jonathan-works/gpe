@@ -373,8 +373,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         	UUID uuidDocumento = documento.getUuid();
         	String urlValidacaoDocumento = getUrlValidacaoDocumento(documento);
             CarimboQrCode carimboQrCode = new CarimboQrCode(urlValidacaoDocumento, uuidDocumento, textoAssinatura, documentoCancelado, posicao);
+            carimbos.addAll(assinaturaEletronicaSearch.criarCarimbosAssinaturaEletronica(documento));
             carimbos.add(carimboQrCode);
-        	carimbos.addAll(assinaturaEletronicaSearch.criarCarimbosAssinaturaEletronica(documento));
         }
         if(documentoCancelado) {
         	CarimboCancelamento carimboCancelamento = new CarimboCancelamento("CANCELADO");
