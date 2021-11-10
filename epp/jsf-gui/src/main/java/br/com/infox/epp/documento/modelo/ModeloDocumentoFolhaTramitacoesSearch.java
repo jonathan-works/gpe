@@ -63,7 +63,7 @@ public class ModeloDocumentoFolhaTramitacoesSearch extends PersistenceController
 		sb.append("<tr><th style=\"border-style: solid; border-width: thin; width: 40%;\">Usuário</th><th style=\"border-style: solid; border-width: thin; width: 40%;\">Tarefa</th><th style=\"text-align:right;border-style: solid; border-width: thin; width: 20%;\">Data</th><tr>");
 		for(MovimentacoesBean movimentacoesBean : listaMovimentacoes) {
 			sb.append("<tr><td style=\"font-size:13px;\">");
-			sb.append(movimentacoesBean.getUsuario().getNomeUsuario());
+			sb.append(movimentacoesBean.getUsuario() != null? movimentacoesBean.getUsuario().getNomeUsuario() : "");
 			sb.append("</td><td style=\"font-size:13px;\">");
 			sb.append(movimentacoesBean.getTarefa().getTarefa());
 			sb.append("</td><td style=\"text-align:right;font-size:12px;\">");
