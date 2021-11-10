@@ -4,6 +4,7 @@ import static br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais.PRO
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,9 +22,10 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.assertj.core.util.Strings;
 import org.jbpm.context.exe.VariableInstance;
 import org.jbpm.graph.exe.ExecutionContext;
+
+import com.google.common.base.Strings;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.componentes.reflection.Reflection;
@@ -864,6 +866,40 @@ public class BpmExpressionService {
             ctVO,
             getProcessoAtual()
         );
+    }
+
+    @External(expressionType = ExpressionType.GERAL,
+        tooltip = "process.geral.expression.formatarNumero.tooltip",
+        value = {
+            @Parameter(
+                selectable = true,
+                label = "numero",
+                defaultValue = "numero",
+                tooltip = "process.geral.expression.formatarNumero.numero.tooltip"
+            ),
+            @Parameter(
+                selectable = true,
+                label = "qtdCasasDecimais",
+                defaultValue = "qtdCasasDecimais",
+                tooltip = "process.geral.expression.formatarNumero.qtdCasasDecimais.tooltip"
+            )
+        }
+    )
+    public String formatarNumero(Object numero, Integer qtdCasasDecimais) {
+        if(numero != null){
+            DecimalFormat df = null;
+            if(qtdCasasDecimais != null && qtdCasasDecimais > 0) {
+                df = new DecimalFormat("#,###.".concat(Strings.repeat("0", qtdCasasDecimais)));
+            } else {
+                df = new DecimalFormat("#,###");
+            }
+            try {
+                return df.format(numero);
+            }catch (IllegalArgumentException e) {
+                throw new BusinessRollbackException("Parâmetro inválido", e);
+            }
+        }
+        return null;
     }
 
 }
