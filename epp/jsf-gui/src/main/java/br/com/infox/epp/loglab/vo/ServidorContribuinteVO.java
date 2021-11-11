@@ -28,6 +28,7 @@ public class ServidorContribuinteVO {
     @Cpf
     private String cpf;
     private String matricula;
+    @Size(min = 6, max = 256)
     private String nomeCompleto;
     private TipoGeneroEnum sexo;
     private Date dataNascimento;
