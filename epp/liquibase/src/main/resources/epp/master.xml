@@ -237,6 +237,7 @@
     <include file="epp/projeto00136016/master.xml" />
     <include file="epp/projeto00135987/master.xml" />
 	<include file="epp/projeto00136002/master.xml" />
+    <include file="epp/projeto00135986/master.xml" />
 
 
     <!-- Precisa Rodar após todos os scripts -->
