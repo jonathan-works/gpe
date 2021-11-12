@@ -148,7 +148,7 @@ public class RelatorioProcessosView implements Serializable {
 	        JsfUtil jsfUtil = JsfUtil.instance();
 	        map.put("rowVO", jsfUtil.getFlashParam("rowVO", List.class));
 	        String urlTemplate = pathResolver.getContextRealPath() + "/RelatorioQuantitativoProcessos/analiticoReport.xls";
-	        ExcelExportUtil.downloadXLS(urlTemplate, map, "sinteticoReport.xls");
+	        ExcelExportUtil.downloadXLS(urlTemplate, map, "analiticoReport.xls");
 	    } catch (ExcelExportException e) {
 	        throw new BusinessRollbackException("Erro inesperado", e);
 	    }
