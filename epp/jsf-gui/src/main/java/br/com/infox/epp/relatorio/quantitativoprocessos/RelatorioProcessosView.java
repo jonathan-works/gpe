@@ -64,6 +64,8 @@ public class RelatorioProcessosView implements Serializable {
 	private Date dataArquivamentoInicio;
 	@Getter @Setter
 	private Date dataArquivamentoFim;
+	@Getter
+    private boolean arquivadoSelecionado;
 
 
 	@PostConstruct
@@ -85,6 +87,11 @@ public class RelatorioProcessosView implements Serializable {
         jsfUtil.addFlashParam("dataAberturaInicio", dataInicio);
         jsfUtil.addFlashParam("dataAberturaFim", DateUtil.getEndOfDay(dataFim));
         jsfUtil.applyLastPhaseFlashAction();
+	}
+
+	@ExceptionHandled
+	public void onChangeListaStatus() {
+	    this.arquivadoSelecionado = getListaStatusSelecionado() != null && getListaStatusSelecionado().contains(StatusProcessoEnum.F.name());
 	}
 
 	@ExceptionHandled

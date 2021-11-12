@@ -25,6 +25,12 @@
         <ui:param
             name="idToForm"
             value="#{id}ToForm" />
+        <ui:param
+            name="requiredFrom"
+            value="#{empty requiredFrom ? required : requiredFrom}" />
+        <ui:param
+            name="requiredTo"
+            value="#{empty requiredTo ? required : requiredTo}" />
         <wi:mask
             selector=".#{id}maskDate"
             mask="#{empty maskDate ? '99/99/9999' : maskDate}" />
@@ -43,7 +49,7 @@
                 popup="#{empty popup ? 'true' : popup}"
                 showApplyButton="#{empty showApplyButton ? 'false' : showApplyButton}"
                 showWeeksBar="#{wi:get(showWeeksBar, false)}"
-                required="#{required}"
+                required="#{requiredFrom}"
                 inputClass="#{id}maskDate input date"
                 styleClass="date"
                 datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"
@@ -63,7 +69,7 @@
             popup="#{empty popup ? 'true' : popup}"
             showApplyButton="#{empty showApplyButton ? 'false' : showApplyButton}"
             showWeeksBar="#{wi:get(showWeeksBar, false)}"
-            required="#{required}"
+            required="#{requiredTo}"
             inputClass="#{id}maskDate input date"
             styleClass="date"
             datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"

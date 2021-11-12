@@ -53,7 +53,16 @@
                     showCheckbox="true"
                     filter="true"
                     value="#{relatorioProcessosView.listaStatusSelecionado}"
+                    onchange="showLoading()"
                 >
+                    <p:ajax
+                        event="change"
+                        listener="#{relatorioProcessosView.onChangeListaStatus}"
+                        process="@this"
+                        partialSubmit="@this"
+                        update="@(.periodoArquivamentoContainer)"
+                        oncomplete="hideLoading()"
+                    />
                     <f:selectItems
                         value="#{relatorioProcessosView.listaStatus}"
                         var="ls"
@@ -74,12 +83,19 @@
                 valueDateFrom="#{relatorioProcessosView.dataMovimentacaoInicio}"
                 valueDateTo="#{relatorioProcessosView.dataMovimentacaoFim}"
             />
+            <p:outputPanel
+                styleClass="periodoArquivamentoContainer"
+            >
             <wi:inputDataPeriodo
                 id="periodoArquivamento"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento']}"
+                disabled="#{not relatorioProcessosView.arquivadoSelecionado}"
+                required="#{relatorioProcessosView.arquivadoSelecionado}"
+                requiredTo="false"
                 valueDateFrom="#{relatorioProcessosView.dataArquivamentoInicio}"
                 valueDateTo="#{relatorioProcessosView.dataArquivamentoFim}"
             />
+            </p:outputPanel>
         </div>
 
         <div>
