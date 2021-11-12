@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -54,6 +55,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.assinaturaeletronica.AssinaturaEletronicaSearch;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
@@ -68,6 +70,10 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
+import br.com.infox.epp.processo.documento.download.Carimbador;
+import br.com.infox.epp.processo.documento.download.Carimbo;
+import br.com.infox.epp.processo.documento.download.CarimboCancelamento;
+import br.com.infox.epp.processo.documento.download.CarimboQrCode;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Documento_;
@@ -111,6 +117,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	private ModeloDocumentoManager modeloDocumentoManager;
 	@Inject
 	private ModeloDocumentoSearch modeloDocumentoSearch;
+	@Inject
+	private AssinaturaEletronicaSearch assinaturaEletronicaSearch;
 
 	public void remove(List<Integer> listaDocBin) {
 	    if(listaDocBin == null || listaDocBin.isEmpty()) {
@@ -227,7 +235,6 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
     public DocumentoBin createDocumentoBinResumoDocumentosProcesso(Processo processo) {
     	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-    		byte[] pdfData;
 	    	Document document = new Document();
 	    	PdfCopy copy = new PdfCopy(document, stream);
 	    	document.open();
@@ -235,18 +242,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	    	documentoToPdfCopy(copy, getModeloDocumentoToByteArray(modeloDocumentoSearch.getModeloDocumentoByCodigo(Parametros.CD_MODELO_DOCUMENTO_FOLHA_TRAMITACAO_RESUMO_PROCESSO.getValue()), processo));
     		for(Documento documento : getListAllDocumentoByProcessoOrderData(processo)) {
     			try {
-	    			if(podeExibirMargem(documento.getDocumentoBin())) {
-	    				pdfData = writeMargemDocumento(getOriginalData(documento.getDocumentoBin()), getTextoAssinatura(documento.getDocumentoBin()), documento.getDocumentoBin().getUuid(), getQrCodeSignatureImage(documento.getDocumentoBin()), documentoDAO.getPosicaoTextoAssinaturaDocumento(documento.getDocumentoBin()), documento.getExcluido());
-	    	    		if(documento.getExcluido()) {
-	    	    			pdfData = writeCancelamentoDocumento(pdfData);
-	    	    		}
-	    	    		documentoToPdfCopy(copy, pdfData);
-	    			} else if("pdf".equalsIgnoreCase(documento.getDocumentoBin().getExtensao()) && documento.getExcluido()) {
-    	    			pdfData = writeCancelamentoDocumento(getOriginalData(documento.getDocumentoBin()));
-    	    			documentoToPdfCopy(copy, pdfData);
-	    			} else {
-	    				documentoImageToPdfCopy(copy, (getOriginalData(documento.getDocumentoBin())));
-	    			}
+	    			appendDocumento(copy, documento);
     			} catch (Exception e) {
 				}
 	    	}
@@ -262,6 +258,23 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		}
 		return null;
     }
+
+	private void appendDocumento(PdfCopy copy, Documento documento) throws IOException, BadPdfFormatException {
+		boolean podeExibirMargem = podeExibirMargem(documento.getDocumentoBin());
+		boolean documentoExcluido = documento.getExcluido();
+		boolean isPDF = "pdf".equalsIgnoreCase(documento.getDocumentoBin().getExtensao());
+		boolean documentoSemCarimbos = !(podeExibirMargem || isPDF && documentoExcluido);
+		if (documentoSemCarimbos) {
+			documentoImageToPdfCopy(copy, (getOriginalData(documento.getDocumentoBin())));
+		} else {
+			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+				List<Carimbo> carimbos = gerarCarimbos(documento.getDocumentoBin(), podeExibirMargem, documentoExcluido);
+				writeCarimbos(getOriginalData(documento.getDocumentoBin()), baos, carimbos);
+				baos.flush();
+				documentoToPdfCopy(copy, baos.toByteArray());
+			}
+		}
+	}
 
     private boolean podeExibirMargem(DocumentoBin documento) {
         return "pdf".equalsIgnoreCase(documento.getExtensao())
@@ -348,6 +361,45 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     public String getMensagemDocumentoNulo() {
         return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
+
+	public List<Carimbo> gerarCarimbos(DocumentoBin documento, boolean gerarMargens, boolean documentoCancelado) {
+		List<Carimbo> carimbos = new ArrayList<>();
+        if (gerarMargens && podeExibirMargem(documento)) {
+        	String textoAssinatura = getTextoAssinatura(documento);
+        	int posicao = Carimbo.RODAPE;
+        	if (PosicaoTextoAssinaturaDocumentoEnum.LATERAL_VERTICAL.equals(documentoDAO.getPosicaoTextoAssinaturaDocumento(documento))) {
+    			posicao = Carimbo.LATERAL;
+        	}
+        	UUID uuidDocumento = documento.getUuid();
+        	String urlValidacaoDocumento = getUrlValidacaoDocumento(documento);
+            CarimboQrCode carimboQrCode = new CarimboQrCode(urlValidacaoDocumento, uuidDocumento, textoAssinatura, documentoCancelado, posicao);
+            carimbos.addAll(assinaturaEletronicaSearch.criarCarimbosAssinaturaEletronica(documento));
+            carimbos.add(carimboQrCode);
+        }
+        if(documentoCancelado) {
+        	CarimboCancelamento carimboCancelamento = new CarimboCancelamento("CANCELADO");
+        	carimbos.add(carimboCancelamento);
+        }
+		return carimbos;
+	}
+
+	public void writeCarimbos(byte[] pdf, OutputStream outStream, List<Carimbo> carimbos) {
+		if(InfoxPdfReader.isCriptografado(pdf)) {
+            throw new MargemPdfException("Documento somente leitura, não é possível gravar");
+    	}
+        try {
+        	final PdfReader pdfReader = new PdfReader(pdf);
+        	final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
+	        Carimbador carimbador = new Carimbador(carimbos);
+	        carimbador.aplicar(pdfReader, stamper);
+	        stamper.close();
+        	outStream.flush();
+        } catch (BadPasswordException e) {
+            throw new MargemPdfException("Documento somente leitura, não é possível gravar", e);
+        } catch (IOException | DocumentException e) {
+            throw new MargemPdfException("Erro ao gravar o cancelamento do PDF", e);
+        }
+	}
 
     public void writeCancelamentoDocumento(byte[] pdf, OutputStream outStream) {
     	if(InfoxPdfReader.isCriptografado(pdf)) {

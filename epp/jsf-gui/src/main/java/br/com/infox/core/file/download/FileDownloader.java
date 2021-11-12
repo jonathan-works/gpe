@@ -33,9 +33,9 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.util.CollectionUtil;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.assinaturaeletronica.AssinaturaEletronicaService;
 import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
+import br.com.infox.epp.processo.documento.download.Carimbo;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
@@ -73,8 +73,6 @@ public class FileDownloader implements Serializable {
     private PathResolver pathResolver;
     @Inject
     private DocumentoDAO documentoDAO;
-    @Inject
-    private AssinaturaEletronicaService assinaturaEletronicaService;
 
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)
@@ -309,36 +307,11 @@ public class FileDownloader implements Serializable {
     }
 
     public void export(DocumentoBin documento, OutputStream outputStream, boolean gerarMargens) {
-        byte[] originalData = getOriginalData(documento);
         List<Documento> listaDocumento = documentoDAO.getDocumentosFromDocumentoBin(documento);
         boolean documentoCancelado = CollectionUtil.isEmpty(listaDocumento)? false : listaDocumento.get(0).getExcluido();
-
-        if (gerarMargens && podeExibirMargem(documento)) {
-            assinaturaEletronicaService.writeImagemAssinaturaEletronica(originalData, outputStream, documento);
-            originalData = ((ByteArrayOutputStream) outputStream).toByteArray();
-            documentoBinManager.writeMargemDocumento(originalData, documentoBinManager.getTextoAssinatura(documento), documento.getUuid(), documentoBinManager.getQrCodeSignatureImage(documento), outputStream, documentoDAO.getPosicaoTextoAssinaturaDocumento(documento), documentoCancelado);
-            originalData = ((ByteArrayOutputStream) outputStream).toByteArray();
-            if(documentoCancelado) {
-                documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
-            }
-        }
-        else {
-            try {
-                if(documentoCancelado) {
-                    documentoBinManager.writeCancelamentoDocumento(originalData, outputStream);
-                } else {
-                    outputStream.write(originalData);
-                }
-            } catch(IOException e) {
-                throw new RuntimeException("Erro ao gravar no stream", e);
-            }
-        }
-    }
-
-    private boolean podeExibirMargem(DocumentoBin documento) {
-        return "pdf".equalsIgnoreCase(documento.getExtensao())
-                && (Boolean.TRUE.equals(documento.getSuficientementeAssinado())
-                        || documento.getAssinaturas() != null && !documento.getAssinaturas().isEmpty());
+        List<Carimbo> carimbos = documentoBinManager.gerarCarimbos(documento, gerarMargens, documentoCancelado);
+        byte[] originalData = getOriginalData(documento);
+        documentoBinManager.writeCarimbos(originalData, outputStream, carimbos);
     }
 
     public HttpServletResponse getResponse() {
