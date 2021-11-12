@@ -74,12 +74,14 @@
             <wi:inputDataPeriodo
                 id="periodo"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura']}"
+                tipMessage="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura.help']}"
                 valueDateFrom="#{relatorioProcessosView.dataInicio}"
                 valueDateTo="#{relatorioProcessosView.dataFim}"
             />
             <wi:inputDataPeriodo
                 id="periodoMovimentacao"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao']}"
+                tipMessage="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao.help']}"
                 valueDateFrom="#{relatorioProcessosView.dataMovimentacaoInicio}"
                 valueDateTo="#{relatorioProcessosView.dataMovimentacaoFim}"
             />
@@ -89,6 +91,7 @@
             <wi:inputDataPeriodo
                 id="periodoArquivamento"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento']}"
+                tipMessage="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento.help']}"
                 disabled="#{not relatorioProcessosView.arquivadoSelecionado}"
                 required="#{relatorioProcessosView.arquivadoSelecionado}"
                 requiredTo="false"
