@@ -140,7 +140,10 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         		cb.equal(processo.get(Processo_.idProcesso), historicoMetadadoProcesso.get(HistoricoMetadadoProcesso_.idProcesso)),
         		cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo),
         		cb.equal(statusProcesso.get(StatusProcesso_.descricao), "Arquivado"),
-        		cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), usuarioLogin), cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.localizacaoExterna), localizacao.getIdLocalizacao()), cb.between(processo.get(Processo_.dataFim), dataInicial, dataFinal));
+        		cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), usuarioLogin),
+        		cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.localizacaoExterna), localizacao.getIdLocalizacao()),
+        		cb.between(processo.get(Processo_.dataFim), dataInicial, dataFinal),
+        		cb.between(movimentacaoTarefa.get(MovimentacaoTarefa_.end), historicoMetadadoProcesso.get(HistoricoMetadadoProcesso_.dataRegistro), cb.currentDate()));
 
         List<Processo> listaProcesso = new ArrayList<Processo>();
         for(Tuple tuple : getEntityManager().createQuery(query).getResultList()) {
