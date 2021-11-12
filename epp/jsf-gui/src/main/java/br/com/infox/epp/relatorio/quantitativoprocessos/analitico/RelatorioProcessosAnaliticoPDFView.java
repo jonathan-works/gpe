@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
@@ -46,7 +48,6 @@ import br.com.infox.epp.view.ViewSituacaoProcesso;
 import br.com.infox.epp.view.ViewSituacaoProcesso_;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance_;
-import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import lombok.Getter;
 
@@ -78,24 +79,30 @@ public class RelatorioProcessosAnaliticoPDFView implements Serializable {
 	@SuppressWarnings("unchecked")
 	private void init() {
 	    localizacao = Authenticator.getLocalizacaoAtual().getLocalizacao();
+        Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        assuntos = (List<Integer>) sessionMap.get("assuntos");
+        status = (List<StatusProcessoEnum>) sessionMap.get("status");
+        dataAberturaInicio = (Date) sessionMap.get("dataAberturaInicio");
+        dataAberturaFim = (Date) sessionMap.get("dataAberturaFim");
+        dataMovimentacaoInicio = (Date) sessionMap.get("dataMovimentacaoInicio");
+        dataMovimentacaoFim = (Date) sessionMap.get("dataMovimentacaoFim");
+        dataArquivamentoInicio = (Date) sessionMap.get("dataArquivamentoInicio");
+        dataArquivamentoFim = (Date) sessionMap.get("dataArquivamentoFim");
 
-	    JsfUtil jsfUtil = JsfUtil.instance();
-	    assuntos = jsfUtil.getFlashParam("assuntos", List.class);
-	    status = jsfUtil.getFlashParam("status", List.class);
-	    dataAberturaInicio = jsfUtil.getFlashParam("dataAberturaInicio", Date.class);
-	    dataAberturaFim = jsfUtil.getFlashParam("dataAberturaFim", Date.class);
-	    dataMovimentacaoInicio = jsfUtil.getFlashParam("dataMovimentacaoInicio", Date.class);
-	    dataMovimentacaoFim = jsfUtil.getFlashParam("dataMovimentacaoFim", Date.class);
-	    dataArquivamentoInicio = jsfUtil.getFlashParam("dataArquivamentoInicio", Date.class);
-	    dataArquivamentoFim = jsfUtil.getFlashParam("dataArquivamentoFim", Date.class);
+        sessionMap.remove("assuntos");
+        sessionMap.remove("status");
+        sessionMap.remove("dataAberturaInicio");
+        sessionMap.remove("dataAberturaFim");
+        sessionMap.remove("dataMovimentacaoInicio");
+        sessionMap.remove("dataMovimentacaoFim");
+        sessionMap.remove("dataArquivamentoInicio");
+        sessionMap.remove("dataArquivamentoFim");
 
         EntityManager em = EntityManagerProducer.getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
-
         if(CollectionUtils.isEmpty(assuntos)){
             throw new BusinessRollbackException("Nenhum assunto foi informado");
         }
-
         CriteriaQuery<Tuple> querySwinlane = cb.createQuery(Tuple.class);
         baseQueryRelatorioAnalitico(querySwinlane);
         List<Tuple> resultado = em.createQuery(querySwinlane).getResultList();

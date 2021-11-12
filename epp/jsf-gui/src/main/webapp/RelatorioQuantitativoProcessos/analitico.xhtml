@@ -104,31 +104,27 @@
         <div>
             <p:commandButton
                 id="btAbrirPDF"
-                update="@form :pageBodyDialogMessage"
                 process="@form"
-                onclick="showLoading()"
-                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){infox.openPopUp('pdf', 'analiticoReport.seam');}"
-                action="#{relatorioProcessosView.prepararAbrirRelatorioAnalitico}"
+                update="@form :pageBodyDialogMessage"
+                actionListener="#{relatorioProcessosView.prepararAbrirRelatorioAnalitico}"
                 value="#{infoxMessages['relQuantitativoProcessos.gerarPDF']}"
             />
+
             <p:commandButton
                 id="btAbrirExcel"
-                partialSubmit="true"
-                update="@form :pageBodyDialogMessage"
                 process="@form"
-                action="#{relatorioProcessosView.prepararExcelAnalitico}"
-                onclick="showLoading()"
-                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){document.getElementById('relatorioForm:gerarExcel').click();}"                
+                update="@form :pageBodyDialogMessage"
+                actionListener="#{relatorioProcessosView.preparaAbrirExcel()}"
                 value="#{infoxMessages['relQuantitativoProcessos.gerarExcel']}"
             />
-            <h:commandLink
-                target="_blank"
-                id="gerarExcel"
+
+            <p:commandLink id="openPDF" target="_blank" action="analiticoReport.xhtml"
+            	ajax="false" style="display: none;" />
+
+            <h:commandLink id="gerarExcel"
                 action="#{relatorioProcessosView.gerarExcelAnalitico}"
-                value="gerarExcel"
                 style="display: none;"
             />
-
         </div>
     </h:form>
 </fieldset>

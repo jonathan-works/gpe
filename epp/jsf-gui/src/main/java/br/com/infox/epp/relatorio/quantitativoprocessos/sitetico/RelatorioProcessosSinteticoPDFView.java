@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
@@ -33,7 +35,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.relatorio.quantitativoprocessos.StatusProcessoEnum;
 import br.com.infox.epp.relatorio.quantitativoprocessos.sitetico.RelatorioProcessosSinteticoVO.RelatorioProcessosSinteticoFluxoVO;
-import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import lombok.Getter;
 
@@ -61,20 +62,22 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
 	@SuppressWarnings("unchecked")
 	private void init() {
 	    localizacao = Authenticator.getLocalizacaoAtual().getLocalizacao();
+        Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        assuntos = (List<Integer>) sessionMap.get("assuntos");
+        status = (List<StatusProcessoEnum>) sessionMap.get("status");
+        dataInicio = (Date) sessionMap.get("dataAberturaInicio");
+        dataFim = (Date) sessionMap.get("dataAberturaFim");
 
-	    JsfUtil jsfUtil = JsfUtil.instance();
-	    assuntos = jsfUtil.getFlashParam("assuntos", List.class);
-	    status = jsfUtil.getFlashParam("status", List.class);
-	    dataInicio = jsfUtil.getFlashParam("dataAberturaInicio", Date.class);
-	    dataFim = jsfUtil.getFlashParam("dataAberturaFim", Date.class);
+        sessionMap.remove("assuntos");
+        sessionMap.remove("status");
+        sessionMap.remove("dataAberturaInicio");
+        sessionMap.remove("dataAberturaFim");
 
         EntityManager em = EntityManagerProducer.getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
-
         if(CollectionUtils.isEmpty(assuntos)){
             throw new BusinessRollbackException("Nenhum assunto foi informado");
         }
-
         CriteriaQuery<Tuple> querySwinlane = cb.createQuery(Tuple.class);
         baseQueryRelatorioSintetico(querySwinlane);
         List<Tuple> resultado = em.createQuery(querySwinlane).getResultList();
