@@ -56,7 +56,7 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
 	    Date dataIni = DateUtil.getBeginningOfDay(dataInicial);
 	    Date dataFim = DateUtil.getEndOfDay(dataFinal);
 		List<ProdutividadeUsuariosVO> listaProdutividadeUsuariosVO = new ArrayList<ProdutividadeUsuariosVO>();
-		List<Localizacao> listaLocalizacoesPossiveis = localizacaoSearch.retrieveLocalizacaoByEstruturaFilho(Authenticator.getLocalizacaoAtual().getEstruturaFilho());
+		List<Localizacao> listaLocalizacoesPossiveis = localizacaoSearch.getLocalizacaoSuggestTree(Authenticator.getLocalizacaoAtual());
 		listaLocalizacoesPossiveis.add(0, Authenticator.getLocalizacaoAtual());
 		for(UsuarioLogin usuarioLogin : listaUsuario) {
 			usuarioLogin = usuarioLoginDAO.find(usuarioLogin.getIdUsuarioLogin());
@@ -88,7 +88,7 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
 	}
 
 	public List<UsuarioLogin> getUsuariosLocalizacaoAbaixoHierarquia() {
-		List<Localizacao> listaLocalizacaoAbaixoAtual = localizacaoSearch.retrieveLocalizacaoByEstruturaFilho(Authenticator.getLocalizacaoAtual().getEstruturaFilho());
+		List<Localizacao> listaLocalizacaoAbaixoAtual = localizacaoSearch.getLocalizacaoSuggestTree(Authenticator.getLocalizacaoAtual());
 		if (listaLocalizacaoAbaixoAtual == null || listaLocalizacaoAbaixoAtual.isEmpty()) {
 		    throw new EppConfigurationException("Não é possível visualizar o relatório. Localização do usuário sem estrutura filho");
 		}
@@ -153,4 +153,5 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         }
         return listaProcesso.size();
 	}
+
 }
