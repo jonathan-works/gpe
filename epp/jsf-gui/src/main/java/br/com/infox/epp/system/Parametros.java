@@ -74,6 +74,8 @@ public enum Parametros {
     TOKEN_WS_VIDA_FUNCIONAL_GDPREV("gdprev", "tokenWSVidaFuncionalGDPrev", FieldType.STRING),
     CLASSIFICACAO_DOC_PDF_GDPREV(new ParametroDefinition<>("gdprev", "codigoClassificacaoDocPdfGDPrev", FieldType.SELECT_ONE,
             ClassificacaoDocumento_.descricao, ClassificacaoDocumento_.codigoDocumento).addFilter(isTrue(ClassificacaoDocumento_.ativo))),
+    CLASSIFICACAO_DOC_FUNCIONARIOS_VF_GDPREV(new ParametroDefinition<>("gdprev", "codigoClassificacaoFuncionariosVFGDPrev", FieldType.SELECT_ONE,
+            ClassificacaoDocumento_.descricao, ClassificacaoDocumento_.codigoDocumento).addFilter(isTrue(ClassificacaoDocumento_.ativo))),
     TIPO_PARTE_SERVIDOR(new ParametroDefinition<>("gdprev", "codigoTipoParteServidor", FieldType.SELECT_ONE,
             TipoParte_.descricao, TipoParte_.identificador)),
     USUARIO_INCLUSAO_DOC_GDPREV(new ParametroDefinition<>("gdprev", "loginUsuarioInclusaoDocGDPrev", FieldType.SELECT_ONE,

@@ -5,16 +5,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
-import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -30,6 +32,8 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
@@ -44,7 +48,6 @@ import br.com.infox.epp.view.ViewSituacaoProcesso;
 import br.com.infox.epp.view.ViewSituacaoProcesso_;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance_;
-import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import lombok.Getter;
 
@@ -76,24 +79,30 @@ public class RelatorioProcessosAnaliticoPDFView implements Serializable {
 	@SuppressWarnings("unchecked")
 	private void init() {
 	    localizacao = Authenticator.getLocalizacaoAtual().getLocalizacao();
+        Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        assuntos = (List<Integer>) sessionMap.get("assuntos");
+        status = (List<StatusProcessoEnum>) sessionMap.get("status");
+        dataAberturaInicio = (Date) sessionMap.get("dataAberturaInicio");
+        dataAberturaFim = (Date) sessionMap.get("dataAberturaFim");
+        dataMovimentacaoInicio = (Date) sessionMap.get("dataMovimentacaoInicio");
+        dataMovimentacaoFim = (Date) sessionMap.get("dataMovimentacaoFim");
+        dataArquivamentoInicio = (Date) sessionMap.get("dataArquivamentoInicio");
+        dataArquivamentoFim = (Date) sessionMap.get("dataArquivamentoFim");
 
-	    JsfUtil jsfUtil = JsfUtil.instance();
-	    assuntos = jsfUtil.getFlashParam("assuntos", List.class);
-	    status = jsfUtil.getFlashParam("status", List.class);
-	    dataAberturaInicio = jsfUtil.getFlashParam("dataAberturaInicio", Date.class);
-	    dataAberturaFim = jsfUtil.getFlashParam("dataAberturaFim", Date.class);
-	    dataMovimentacaoInicio = jsfUtil.getFlashParam("dataMovimentacaoInicio", Date.class);
-	    dataMovimentacaoFim = jsfUtil.getFlashParam("dataMovimentacaoFim", Date.class);
-	    dataArquivamentoInicio = jsfUtil.getFlashParam("dataArquivamentoInicio", Date.class);
-	    dataArquivamentoFim = jsfUtil.getFlashParam("dataArquivamentoFim", Date.class);
+        sessionMap.remove("assuntos");
+        sessionMap.remove("status");
+        sessionMap.remove("dataAberturaInicio");
+        sessionMap.remove("dataAberturaFim");
+        sessionMap.remove("dataMovimentacaoInicio");
+        sessionMap.remove("dataMovimentacaoFim");
+        sessionMap.remove("dataArquivamentoInicio");
+        sessionMap.remove("dataArquivamentoFim");
 
         EntityManager em = EntityManagerProducer.getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
-
         if(CollectionUtils.isEmpty(assuntos)){
             throw new BusinessRollbackException("Nenhum assunto foi informado");
         }
-
         CriteriaQuery<Tuple> querySwinlane = cb.createQuery(Tuple.class);
         baseQueryRelatorioAnalitico(querySwinlane);
         List<Tuple> resultado = em.createQuery(querySwinlane).getResultList();
@@ -168,9 +177,9 @@ public class RelatorioProcessosAnaliticoPDFView implements Serializable {
 	    Root<ViewSituacaoProcesso> viewSituacaoProcesso = query.from(ViewSituacaoProcesso.class);
         Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
         Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
-        Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance);
-        Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao);
-        Join<UsuarioTaskInstance, UsuarioLogin> usuario = usuarioTaskInstance.join(UsuarioTaskInstance_.usuario);
+        Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance, JoinType.LEFT);
+        Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao, JoinType.LEFT);
+        Join<UsuarioTaskInstance, UsuarioLogin> usuario = usuarioTaskInstance.join(UsuarioTaskInstance_.usuario, JoinType.LEFT);
         Join<ViewSituacaoProcesso, Fluxo> fluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.fluxo);
 	    query.where(
             cb.equal(processo, idProcesso),
@@ -180,7 +189,7 @@ public class RelatorioProcessosAnaliticoPDFView implements Serializable {
 	    query.select(cb.construct(RelatorioProcessosAnaliticoTarefaVO.class,
             taskInstance.get("name"),
             cb.concat(cb.concat(localizacao.get(Localizacao_.localizacao), cb.literal("/")), usuario.get(UsuarioLogin_.nomeUsuario)),
-            taskInstance.get("start"),
+            cb.coalesce(taskInstance.get("start"), taskInstance.get("create")),
             taskInstance.get("end")
         ));
 
@@ -193,20 +202,16 @@ public class RelatorioProcessosAnaliticoPDFView implements Serializable {
         EntityManager em = EntityManagerProducer.getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
-        Root<ViewSituacaoProcesso> viewSituacaoProcesso = query.from(ViewSituacaoProcesso.class);
-        Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
-        Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
-        Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance);
-        Join<UsuarioTaskInstance, UsuarioLogin> usuario = usuarioTaskInstance.join(UsuarioTaskInstance_.usuario);
-        Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao);
-        Join<ViewSituacaoProcesso, Fluxo> fluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.fluxo);
-        query.where(
-            fluxo.get(Fluxo_.idFluxo).in(assuntos),
-            cb.equal(usuario, Authenticator.getUsuarioLogado().getIdUsuarioLogin())
-        );
+        Root<Processo> processo = query.from(Processo.class);
+        Join<Processo, Localizacao> localizacao = processo.join(Processo_.localizacao);
+        Join<Processo, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = processo.join(Processo_.naturezaCategoriaFluxo);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
 
+        query.where(
+            fluxo.get(Fluxo_.idFluxo).in(assuntos)
+            , cb.equal(localizacao.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho())
+        );
         aplicarFiltrosProcesso(query, cb, processo);
-        aplicarFiltrosTaskInstance(query, cb, taskInstance);
 
         query.select(cb.construct(query.getResultType(),
             localizacao.get(Localizacao_.localizacao).alias("localizacao"),
@@ -228,25 +233,14 @@ public class RelatorioProcessosAnaliticoPDFView implements Serializable {
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
         Root<Processo> processo = query.from(Processo.class);
+        Join<Processo, Localizacao> localizacao = processo.join(Processo_.localizacao);
         Join<Processo, UsuarioLogin> usuarioCadastro = processo.join(Processo_.usuarioCadastro);
-
-        Subquery<Integer> sqSituacaoProcesso = query.subquery(Integer.class);
-        sqSituacaoProcesso.select(cb.literal(1));
-
-        Root<ViewSituacaoProcesso> viewSituacaoProcesso = sqSituacaoProcesso.from(ViewSituacaoProcesso.class);
-        Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
-        Join<ViewSituacaoProcesso, UsuarioTaskInstance> usuarioTaskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioTaskInstance);
-        Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao);
-        Join<ViewSituacaoProcesso, Fluxo> fluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.fluxo);
-        sqSituacaoProcesso.where(
-            cb.equal(viewSituacaoProcesso.get(ViewSituacaoProcesso_.processo), processo),
-            cb.equal(fluxo, idFluxo),
-            cb.equal(localizacao, idLocalizacao)
-        );
-        aplicarFiltrosTaskInstance(sqSituacaoProcesso, cb, taskInstance);
+        Join<Processo, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = processo.join(Processo_.naturezaCategoriaFluxo);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
 
         query.where(
-            cb.exists(sqSituacaoProcesso)
+            cb.equal(localizacao, idLocalizacao)
+            , cb.equal(fluxo, idFluxo)
         );
         aplicarFiltrosProcesso(query, cb, processo);
 
@@ -262,30 +256,9 @@ public class RelatorioProcessosAnaliticoPDFView implements Serializable {
         query.orderBy(cb.asc(processo.get(Processo_.numeroProcesso)));
     }
 
-    private <T> void aplicarFiltrosTaskInstance(AbstractQuery<T> query, CriteriaBuilder cb,
-        Path<TaskInstance> taskInstance
-    ) {
-        if(dataMovimentacaoInicio != null || dataMovimentacaoFim != null) {
-            if(dataMovimentacaoInicio != null) {
-                query.where(
-                    query.getRestriction(),
-                    cb.greaterThanOrEqualTo(cb.coalesce(taskInstance.get("start"), taskInstance.get("create")),
-                        dataMovimentacaoInicio
-                    )
-                );
-            }
-
-            if(dataMovimentacaoFim != null) {
-                query.where(
-                    query.getRestriction(),
-                    cb.lessThanOrEqualTo(cb.coalesce(taskInstance.get("end"), cb.coalesce(taskInstance.get("start"), taskInstance.get("create"))),
-                        dataMovimentacaoFim
-                    )
-                );
-            }
-        }
-    }
-    private <T> void aplicarFiltrosProcesso(CriteriaQuery<T> query, CriteriaBuilder cb,
+    private <T> void aplicarFiltrosProcesso(
+        CriteriaQuery<T> query,
+        CriteriaBuilder cb,
         Path<Processo> processo
     ){
         if(dataAberturaInicio != null) {
@@ -326,6 +299,37 @@ public class RelatorioProcessosAnaliticoPDFView implements Serializable {
                     cb.isNotNull(processo.get(Processo_.dataFim))
                 );
             }
+        }
+
+        if(dataMovimentacaoInicio != null || dataMovimentacaoFim != null) {
+            Subquery<Integer> subquery = query.subquery(Integer.class);
+            subquery.select(cb.literal(1));
+            Root<ViewSituacaoProcesso> viewSituacaoProcesso = subquery.from(ViewSituacaoProcesso.class);
+            Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
+            subquery.where(
+                cb.equal(viewSituacaoProcesso.get(ViewSituacaoProcesso_.processo), processo)
+            );
+            if(dataMovimentacaoInicio != null) {
+                subquery.where(
+                    subquery.getRestriction(),
+                    cb.greaterThanOrEqualTo(cb.coalesce(taskInstance.get("start"), taskInstance.get("create")),
+                        dataMovimentacaoInicio
+                    )
+                );
+            }
+
+            if(dataMovimentacaoFim != null) {
+                subquery.where(
+                    subquery.getRestriction(),
+                    cb.lessThanOrEqualTo(cb.coalesce(taskInstance.get("end"), cb.coalesce(taskInstance.get("start"), taskInstance.get("create"))),
+                        dataMovimentacaoFim
+                    )
+                );
+            }
+            query.where(
+                query.getRestriction(),
+                cb.exists(subquery)
+            );
         }
     }
 

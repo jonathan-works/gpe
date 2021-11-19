@@ -97,10 +97,142 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
     private static final String FILTRO_NOME = "nome";
     private static final String FILTRO_TEMPORALIDADE = "temporalidade";
 
+    private static final String CONSULTA_FVF_PATH = "cuiaba/vida_funcional/consulta";
+    private static final String DOWNLOAD_PDF_FVF_VIDA_FUNCIONAL_PATH = "vida_funcional/funcionario_vida_funcional/relatorio_vida_funcional/";
+    private static final String DOWNLOAD_PDF_FVF_TEMPO_SERVICO_PATH = "vida_funcional/funcionario_vida_funcional/relatorio_vida_funcional_espelho/";
+
     @Inject
     private ParametroManager parametroManager;
     @Inject
     private LogWebserviceClientManager logWebserviceClientManager;
+
+    public List<FuncionarioVidaFuncionalDTO> getRelatorios(FiltroVidaFuncionalGDPrev filtros, Integer idProcesso, GDPrevOpcaoDownload opcaoDownload) {
+        if (filtros.isEmpty()) {
+            throw new BusinessRollbackException(InfoxMessages.getInstance().get("vidaFuncionalGDPrev.erroValidacaoFiltros"));
+        }
+
+        try (CloseableHttpClient client = createHttpClient()) {
+            URIBuilder uriBuilder = new URIBuilder(getGDPrevBaseUri().resolve(CONSULTA_FVF_PATH));
+
+            if (!StringUtil.isEmpty(filtros.getCpf())) {
+                uriBuilder.addParameter(FILTRO_CPF, filtros.getCpf());
+            }
+            if (!StringUtil.isEmpty(filtros.getNome())) {
+                uriBuilder.addParameter(FILTRO_NOME, filtros.getNome());
+            }
+            if (filtros.getMatricula() != null) {
+                uriBuilder.addParameter(FILTRO_MATRICULA, filtros.getMatricula().toString());
+            }
+
+            HttpUriRequest request = new HttpGet(uriBuilder.build());
+            request.addHeader(createAuthenticationHeader());
+
+            LogWebserviceClient logWebserviceClient = beginLog(CodigosServicos.WS_VIDA_FUNCIONAL_GDPREV, request);
+            try (CloseableHttpResponse response = client.execute(request)) {
+                validarStatusResposta(logWebserviceClient, response);
+                Charset charset = getResponseCharset(response.getEntity());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                try (InputStreamReader reader = new InputStreamReader(response.getEntity().getContent(), charset)) {
+                    String corpoResposta = IOUtils.toString(reader);
+                    endLog(logWebserviceClient, corpoResposta);
+                    List<FuncionarioVidaFuncionalDTO> resultado = new ArrayList<>();
+                    JsonArray array = createGson().fromJson(corpoResposta, JsonArray.class);
+                    for (JsonElement jsonElement : array) {
+                        JsonObject servidor = jsonElement.getAsJsonObject().get("Servidor").getAsJsonObject();
+                        JsonObject vinculo = jsonElement.getAsJsonObject().get("Vinculo").getAsJsonObject();
+                        JsonObject vidaFuncional = jsonElement.getAsJsonObject().get("FuncionarioVidaFuncional").getAsJsonObject();
+                        try {
+                            resultado.add(
+                                FuncionarioVidaFuncionalDTO.builder()
+                                .id(vidaFuncional.get("id").getAsLong())
+                                .nomeServidor(servidor.get("nome").getAsString())
+                                .cpfServidor(servidor.get("cpf_formatado").getAsString())
+                                .matriculaServidor(vinculo.get("matricula").getAsString())
+                                .dataExercicio(sdf.parse(vinculo.get("data_exercicio").getAsString()))
+                                .baixado(isDocumentoExistenteNoProcesso(vidaFuncional.get("id").getAsLong(), idProcesso, opcaoDownload))
+                                .build()
+                            );
+                        } catch (java.text.ParseException e) {
+                            throw new BusinessRollbackException(String.format("Data do relatório inválida: %s", vinculo.get("data_exercicio").getAsString()));
+                        }
+                    }
+                    return resultado;
+                } catch (UnsupportedOperationException | IOException e) {
+                    throw new BusinessRollbackException("Erro no processamento da resposta", e);
+                } catch (JsonSyntaxException e) {
+                    throw new BusinessRollbackException("O serviço retornou uma resposta inesperada. Por favor tente novamente ou contate o administrador do sistema.", e);
+                }
+
+            }
+        } catch (IOException | URISyntaxException e) {
+            throw new BusinessRollbackException("Erro na execução da requisição, por favor tente novamente", e);
+        }
+    }
+
+    @Asynchronous
+    public Future<byte[]> downloadRelatorioVidaFuncional(Long id, Consumer<Float> callback) {
+        try (CloseableHttpClient client = createHttpClient()) {
+            URI requestUri = new URIBuilder(getGDPrevBaseUri().resolve(DOWNLOAD_PDF_FVF_VIDA_FUNCIONAL_PATH).resolve(id.toString())).build();
+            HttpUriRequest request = new HttpGet(requestUri);
+            request.addHeader(createAuthenticationHeader());
+
+            LogWebserviceClient logWebserviceClient = beginLog(CodigosServicos.WS_VIDA_FUNCIONAL_GDPREV, request);
+            try (CloseableHttpResponse response = client.execute(request)) {
+                validarStatusResposta(logWebserviceClient, response);
+                endLog(logWebserviceClient, "<corpo da resposta omitido por tamanho (PDF)>");
+
+                int tamanhoPdf = Integer.valueOf(response.getFirstHeader(HttpHeaders.CONTENT_LENGTH).getValue());
+                ByteArrayOutputStream pdf = new ByteArrayOutputStream(tamanhoPdf);
+                byte[] buffer = new byte[8192];
+                int lido;
+                int totalLido = 0;
+                try (InputStream stream = response.getEntity().getContent()) {
+                    while ((lido = stream.read(buffer)) != -1) {
+                        pdf.write(buffer, 0, lido);
+                        totalLido += lido;
+                        callback.accept((float) totalLido / tamanhoPdf);
+                    }
+                }
+
+                return new AsyncResult<>(pdf.toByteArray());
+            }
+        } catch (IOException | URISyntaxException e) {
+            throw new BusinessRollbackException("Erro na execução da requisição, por favor tente novamente", e);
+        }
+    }
+
+    @Asynchronous
+    public Future<byte[]> downloadRelatorioTempoServico(Long id, Consumer<Float> callback) {
+        try (CloseableHttpClient client = createHttpClient()) {
+            URI requestUri = new URIBuilder(getGDPrevBaseUri().resolve(DOWNLOAD_PDF_FVF_TEMPO_SERVICO_PATH).resolve(id.toString())).build();
+            HttpUriRequest request = new HttpGet(requestUri);
+            request.addHeader(createAuthenticationHeader());
+
+            LogWebserviceClient logWebserviceClient = beginLog(CodigosServicos.WS_VIDA_FUNCIONAL_GDPREV, request);
+            try (CloseableHttpResponse response = client.execute(request)) {
+                validarStatusResposta(logWebserviceClient, response);
+                endLog(logWebserviceClient, "<corpo da resposta omitido por tamanho (PDF)>");
+
+                int tamanhoPdf = Integer.valueOf(response.getFirstHeader(HttpHeaders.CONTENT_LENGTH).getValue());
+                ByteArrayOutputStream pdf = new ByteArrayOutputStream(tamanhoPdf);
+                byte[] buffer = new byte[8192];
+                int lido;
+                int totalLido = 0;
+                try (InputStream stream = response.getEntity().getContent()) {
+                    while ((lido = stream.read(buffer)) != -1) {
+                        pdf.write(buffer, 0, lido);
+                        totalLido += lido;
+                        callback.accept((float) totalLido / tamanhoPdf);
+                    }
+                }
+
+                return new AsyncResult<>(pdf.toByteArray());
+            }
+        } catch (IOException | URISyntaxException e) {
+            throw new BusinessRollbackException("Erro na execução da requisição, por favor tente novamente", e);
+        }
+    }
 
     public VidaFuncionalGDPrevResponseDTO getDocumentos(FiltroVidaFuncionalGDPrev filtros, Integer pagina, Integer resultadosPorPagina, Integer idProcesso) {
         if (filtros.isEmpty()) {
@@ -247,7 +379,7 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
                         .matriculaServidor(jsonObject.get(FIELD_MATRICULA_SERVIDOR).getAsString())
                         .descricao(jsonObject.get(FIELD_TEMPORALIDADE).getAsString())
                         .nomeServidor(jsonObject.get(FIELD_NOME_SERVIDOR).getAsString())
-                        .baixado(isDocumentoExistenteNoProcesso(jsonObject.get(FIELD_ID_DOCUMENTO).getAsLong(), idProcesso))
+                        .baixado(isDocumentoExistenteNoProcesso(jsonObject.get(FIELD_ID_DOCUMENTO).getAsLong(), idProcesso, GDPrevOpcaoDownload.CD))
                         .build();
                 documentos.add(documento);
             } catch (java.text.ParseException e) {
@@ -293,7 +425,7 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
         return new SimpleDateFormat("dd/MM/yyyy");
     }
 
-    private boolean isDocumentoExistenteNoProcesso(Long identificadorGDPrev, Integer idProcesso) {
+    private boolean isDocumentoExistenteNoProcesso(Long identificadorGDPrev, Integer idProcesso, GDPrevOpcaoDownload opcaoDownload) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Documento> documento = query.from(Documento.class);
@@ -301,13 +433,10 @@ public class VidaFuncionalGDPrevSearch extends PersistenceController {
         Join<Documento, DocumentoBin> documentoBin = documento.join(Documento_.documentoBin, JoinType.INNER);
         query.select(cb.count(documentoBin));
         query.where(
-                cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
-                cb.equal(documentoBin.get(DocumentoBin_.idDocumentoExterno), gerarIdentificacaoVidaFuncionalGDPrev(identificadorGDPrev))
-                );
+            cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
+            cb.equal(documentoBin.get(DocumentoBin_.idDocumentoExterno), VidaFuncionalGDPrevService.getIdentificadorDocExterno(identificadorGDPrev, opcaoDownload))
+        );
         return getEntityManager().createQuery(query).getSingleResult() > 0;
     }
 
-    public String gerarIdentificacaoVidaFuncionalGDPrev(Long identificadorGDPrev) {
-        return String.format("VidaFuncionalGDPrev:%s", identificadorGDPrev);
-    }
 }

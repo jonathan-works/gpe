@@ -15,7 +15,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
+import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -44,15 +46,17 @@ import br.com.infox.ibpm.task.entity.UsuarioTaskInstance_;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ProdutividadeUsuariosSearch extends PersistenceController {
-	
+
 	@Inject
 	private UsuarioLoginDAO usuarioLoginDAO;
 	@Inject
 	private LocalizacaoSearch localizacaoSearch;
-	
+
 	public List<ProdutividadeUsuariosVO> gerarRelatorio(List<UsuarioLogin> listaUsuario, List<Fluxo> listaAssunto, Date dataInicial, Date dataFinal) {
+	    Date dataIni = DateUtil.getBeginningOfDay(dataInicial);
+	    Date dataFim = DateUtil.getEndOfDay(dataFinal);
 		List<ProdutividadeUsuariosVO> listaProdutividadeUsuariosVO = new ArrayList<ProdutividadeUsuariosVO>();
-		List<Localizacao> listaLocalizacoesPossiveis = localizacaoSearch.retrieveLocalizacaoByEstruturaFilho(Authenticator.getLocalizacaoAtual().getEstruturaFilho());
+		List<Localizacao> listaLocalizacoesPossiveis = localizacaoSearch.getLocalizacaoSuggestTree(Authenticator.getLocalizacaoAtual());
 		listaLocalizacoesPossiveis.add(0, Authenticator.getLocalizacaoAtual());
 		for(UsuarioLogin usuarioLogin : listaUsuario) {
 			usuarioLogin = usuarioLoginDAO.find(usuarioLogin.getIdUsuarioLogin());
@@ -68,9 +72,9 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
 					for(Fluxo fluxo : listaAssunto) {
 						ProdutividadeUsuariosAssuntoQuantidadeVO produtividadeUsuariosAssuntoQuantidadeVO = new ProdutividadeUsuariosAssuntoQuantidadeVO();
 						produtividadeUsuariosAssuntoQuantidadeVO.setAssunto(fluxo.getFluxo());
-						produtividadeUsuariosAssuntoQuantidadeVO.setQtdIniciada(getQuantidadeProcessosIniciadosPor(usuarioLogin, localizacaoUsuario, fluxo, dataInicial, dataFinal));
-						produtividadeUsuariosAssuntoQuantidadeVO.setQtdEmAndamento(getQuantidadeProcessosEmAndamentoPor(usuarioLogin, localizacaoUsuario, fluxo, dataInicial, dataFinal));
-						produtividadeUsuariosAssuntoQuantidadeVO.setQtdArquivadas(getQuantidadeProcessosFinalizadosPor(usuarioLogin, localizacaoUsuario, fluxo, dataInicial, dataFinal));
+						produtividadeUsuariosAssuntoQuantidadeVO.setQtdIniciada(getQuantidadeProcessosIniciadosPor(usuarioLogin, localizacaoUsuario, fluxo, dataIni, dataFim));
+						produtividadeUsuariosAssuntoQuantidadeVO.setQtdEmAndamento(getQuantidadeProcessosEmAndamentoPor(usuarioLogin, localizacaoUsuario, fluxo, dataIni, dataFim));
+						produtividadeUsuariosAssuntoQuantidadeVO.setQtdArquivadas(getQuantidadeProcessosFinalizadosPor(usuarioLogin, localizacaoUsuario, fluxo, dataIni, dataFim));
 						produtividadeUsuariosLocalizacaoVO.getListaAssuntoQtdVO().add(produtividadeUsuariosAssuntoQuantidadeVO);
 					}
 					produtividadeUsuariosVO.getListaLocalizacaoVO().add(produtividadeUsuariosLocalizacaoVO);
@@ -79,13 +83,16 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
 			Collections.sort(produtividadeUsuariosVO.getListaLocalizacaoVO());
 			listaProdutividadeUsuariosVO.add(produtividadeUsuariosVO);
 		}
-		
+
 		return listaProdutividadeUsuariosVO;
 	}
 
 	public List<UsuarioLogin> getUsuariosLocalizacaoAbaixoHierarquia() {
-		List<Localizacao> listaLocalizacaoAbaixoAtual = localizacaoSearch.retrieveLocalizacaoByEstruturaFilho(Authenticator.getLocalizacaoAtual().getEstruturaFilho());
-		
+		List<Localizacao> listaLocalizacaoAbaixoAtual = localizacaoSearch.getLocalizacaoSuggestTree(Authenticator.getLocalizacaoAtual());
+		if (listaLocalizacaoAbaixoAtual == null || listaLocalizacaoAbaixoAtual.isEmpty()) {
+		    throw new EppConfigurationException("Não é possível visualizar o relatório. Localização do usuário sem estrutura filho");
+		}
+
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<UsuarioLogin> query = cb.createQuery(UsuarioLogin.class);
         Root<UsuarioLogin> usuarioLogin = query.from(UsuarioLogin.class);
@@ -96,7 +103,7 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         query.orderBy(cb.asc(usuarioLogin.get(UsuarioLogin_.nomeUsuario)));
         return getEntityManager().createQuery(query).getResultList();
 	}
-	
+
 	private long getQuantidadeProcessosIniciadosPor(UsuarioLogin usuarioLogin, Localizacao localizacao, Fluxo fluxo, Date dataInicial, Date dataFinal) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
@@ -106,7 +113,7 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo), cb.equal(processo.get(Processo_.localizacao), localizacao), cb.equal(processo.get(Processo_.usuarioCadastro), usuarioLogin), cb.between(processo.get(Processo_.dataInicio), dataInicial, dataFinal));
         return getEntityManager().createQuery(query).getSingleResult();
 	}
-	
+
 	private long getQuantidadeProcessosEmAndamentoPor(UsuarioLogin usuarioLogin, Localizacao localizacao, Fluxo fluxo, Date dataInicial, Date dataFinal) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
@@ -118,7 +125,7 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo), cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), usuarioLogin), cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.localizacaoExterna), localizacao), cb.between(movimentacaoTarefa.get(MovimentacaoTarefa_.create), dataInicial, dataFinal), cb.isNull(movimentacaoTarefa.get(MovimentacaoTarefa_.end)));
         return getEntityManager().createQuery(query).getSingleResult();
 	}
-	
+
 	private long getQuantidadeProcessosFinalizadosPor(UsuarioLogin usuarioLogin, Localizacao localizacao, Fluxo fluxo, Date dataInicial, Date dataFinal) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Tuple> query = cb.createQuery(Tuple.class);
@@ -133,8 +140,11 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         		cb.equal(processo.get(Processo_.idProcesso), historicoMetadadoProcesso.get(HistoricoMetadadoProcesso_.idProcesso)),
         		cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo),
         		cb.equal(statusProcesso.get(StatusProcesso_.descricao), "Arquivado"),
-        		cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), usuarioLogin), cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.localizacaoExterna), localizacao.getIdLocalizacao()), cb.between(processo.get(Processo_.dataFim), dataInicial, dataFinal));
-        
+        		cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.usuario), usuarioLogin),
+        		cb.equal(usuarioTaskInstance.get(UsuarioTaskInstance_.localizacaoExterna), localizacao.getIdLocalizacao()),
+        		cb.between(processo.get(Processo_.dataFim), dataInicial, dataFinal),
+        		cb.between(movimentacaoTarefa.get(MovimentacaoTarefa_.end), historicoMetadadoProcesso.get(HistoricoMetadadoProcesso_.dataRegistro), cb.currentDate()));
+
         List<Processo> listaProcesso = new ArrayList<Processo>();
         for(Tuple tuple : getEntityManager().createQuery(query).getResultList()) {
         	if(!listaProcesso.contains(tuple.get(0, Processo.class)) && tuple.get(1, Localizacao.class).equals(localizacao)) {
@@ -143,4 +153,5 @@ public class ProdutividadeUsuariosSearch extends PersistenceController {
         }
         return listaProcesso.size();
 	}
+
 }

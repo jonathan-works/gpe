@@ -35,14 +35,14 @@ import lombok.Setter;
 public class ProdutividadeUsuariosView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Inject
     private PathResolver pathResolver;
 	@Inject
 	private FluxoDAO fluxoDAO;
 	@Inject
 	private ProdutividadeUsuariosSearch produtividadeUsuariosSearch;
-	
+
 	@Getter @Setter
 	private List<UsuarioLogin> listaUsuario;
 	@Getter @Setter
@@ -51,20 +51,20 @@ public class ProdutividadeUsuariosView implements Serializable {
 	private Date dataInicial;
 	@Getter @Setter
 	private Date dataFinal;
-	
+
 	@Getter @Setter
 	private List<UsuarioLogin> listaUsuarioSelecionado;
 	@Getter @Setter
 	private List<Fluxo> listaAssuntoSelecionado;
-	
+
 	private List<ProdutividadeUsuariosExcelVO> listaRelatorioExcel;
-	
+
 	@PostConstruct
 	private void init() {
-		listaAssunto = fluxoDAO.getFluxosPrimariosAtivos();
+		listaAssunto = fluxoDAO.getFluxosAtivosList();
 		listaUsuario = produtividadeUsuariosSearch.getUsuariosLocalizacaoAbaixoHierarquia();
 	}
-	
+
 	public void prepararAbrirRelatorio() {
 		validarDatas();
 		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
@@ -74,12 +74,12 @@ public class ProdutividadeUsuariosView implements Serializable {
 		sessionMap.put("dataFinalProdutividadeUsuariosView", dataFinal);
 		RequestContext.getCurrentInstance().execute("document.getElementById('relatorioForm:openPDF').click();");
 	}
-	
+
 	public void preparaAbrirExcel() {
 		validarDatas();
 		RequestContext.getCurrentInstance().execute("document.getElementById('relatorioForm:gerarExcel').click();");
 	}
-	
+
 	public void gerarExcel() {
 		try {
 			gerarRelatorio();
@@ -92,7 +92,7 @@ public class ProdutividadeUsuariosView implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void gerarRelatorio() {
 		listaRelatorioExcel = new ArrayList<ProdutividadeUsuariosExcelVO>();
 		for(ProdutividadeUsuariosVO usuarioVO : produtividadeUsuariosSearch.gerarRelatorio(listaUsuarioSelecionado, listaAssuntoSelecionado, dataInicial, dataFinal)) {
@@ -110,13 +110,13 @@ public class ProdutividadeUsuariosView implements Serializable {
 			}
 		}
 	}
-	
+
 	private void validarDatas() {
 		String erro = "";
 		if(dataFinal == null) {
 			dataFinal = new Date();
 		}
-		
+
 		if(dataInicial.after(dataFinal)) {
 			erro = "A data inicial não pode ser maior que a data final";
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(erro));

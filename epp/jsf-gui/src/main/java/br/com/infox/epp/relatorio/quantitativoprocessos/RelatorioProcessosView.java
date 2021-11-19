@@ -9,11 +9,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.primefaces.context.RequestContext;
 
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.util.DateUtil;
@@ -21,7 +24,6 @@ import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
-import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.seam.path.PathResolver;
 import lombok.Getter;
@@ -64,7 +66,8 @@ public class RelatorioProcessosView implements Serializable {
 	private Date dataArquivamentoInicio;
 	@Getter @Setter
 	private Date dataArquivamentoFim;
-
+	@Getter
+    private boolean arquivadoSelecionado;
 
 	@PostConstruct
 	private void init() {
@@ -76,82 +79,77 @@ public class RelatorioProcessosView implements Serializable {
 
 	@ExceptionHandled
 	public void prepararAbrirRelatorioSintetico() {
-	    JsfUtil jsfUtil = JsfUtil.instance();
-        jsfUtil.addFlashParam("assuntos", listaAssuntoSelecionado);
-        jsfUtil.addFlashParam("status", listaStatusSelecionado.stream()
-            .map(o -> StatusProcessoEnum.valueOf(o))
-            .collect(Collectors.toList())
-        );
-        jsfUtil.addFlashParam("dataAberturaInicio", dataInicio);
-        jsfUtil.addFlashParam("dataAberturaFim", DateUtil.getEndOfDay(dataFim));
-        jsfUtil.applyLastPhaseFlashAction();
+        Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        sessionMap.put("assuntos", listaAssuntoSelecionado);
+        sessionMap.put("status",
+                listaStatusSelecionado.stream().map(o -> StatusProcessoEnum.valueOf(o)).collect(Collectors.toList()));
+        sessionMap.put("dataAberturaInicio", dataInicio);
+        sessionMap.put("dataAberturaFim", DateUtil.getEndOfDay(dataFim));
+        RequestContext.getCurrentInstance().execute("document.getElementById('relatorioForm:openPDF').click();");
+	}
+
+	@ExceptionHandled
+	public void onChangeListaStatus() {
+	    this.arquivadoSelecionado = getListaStatusSelecionado() != null && getListaStatusSelecionado().contains(StatusProcessoEnum.F.name());
 	}
 
 	@ExceptionHandled
 	public void prepararAbrirRelatorioAnalitico() {
-	    JsfUtil jsfUtil = JsfUtil.instance();
-	    jsfUtil.addFlashParam("assuntos", listaAssuntoSelecionado);
-	    jsfUtil.addFlashParam("status", listaStatusSelecionado.stream()
-	            .map(o -> StatusProcessoEnum.valueOf(o))
-	            .collect(Collectors.toList())
-	            );
-	    jsfUtil.addFlashParam("dataAberturaInicio", dataInicio);
-	    jsfUtil.addFlashParam("dataAberturaFim", DateUtil.getEndOfDay(dataFim));
-	    jsfUtil.addFlashParam("dataMovimentacaoInicio", dataMovimentacaoInicio);
-	    jsfUtil.addFlashParam("dataMovimentacaoFim", DateUtil.getEndOfDay(dataMovimentacaoFim));
-	    jsfUtil.addFlashParam("dataArquivamentoInicio", dataArquivamentoInicio);
-	    jsfUtil.addFlashParam("dataArquivamentoFim", DateUtil.getEndOfDay(dataArquivamentoFim));
-	    jsfUtil.applyLastPhaseFlashAction();
+        Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        sessionMap.put("assuntos", listaAssuntoSelecionado);
+        sessionMap.put("status",
+                listaStatusSelecionado.stream().map(o -> StatusProcessoEnum.valueOf(o)).collect(Collectors.toList()));
+        sessionMap.put("dataAberturaInicio", dataInicio);
+        sessionMap.put("dataAberturaFim", DateUtil.getEndOfDay(dataFim));
+        sessionMap.put("dataMovimentacaoInicio", dataMovimentacaoInicio);
+        sessionMap.put("dataMovimentacaoFim", DateUtil.getEndOfDay(dataMovimentacaoFim));
+        sessionMap.put("dataArquivamentoInicio", dataArquivamentoInicio);
+        sessionMap.put("dataArquivamentoFim", DateUtil.getEndOfDay(dataArquivamentoFim));
+        RequestContext.getCurrentInstance().execute("document.getElementById('relatorioForm:openPDF').click();");
 	}
+
+    public void preparaAbrirExcel() {
+        RequestContext.getCurrentInstance().execute("document.getElementById('relatorioForm:gerarExcel').click();");
+    }
 
 	@ExceptionHandled
 	public void gerarExcelSintetico() {
-		try {
-			String urlTemplate = pathResolver.getContextRealPath() + "/RelatorioQuantitativoProcessos/sinteticoReport.xls";
-	        Map<String, Object> map = new HashMap<String, Object>();
-	        map.put("rowVO", relatorioProcessosViewSearch.getRelatorioSintetico(
-                listaAssuntoSelecionado,
-                dataInicio,
-                DateUtil.getEndOfDay(dataFim),
-                this.listaStatusSelecionado.stream()
-	                .map(o -> StatusProcessoEnum.valueOf(o))
-	                .collect(Collectors.toList())
-            ));
-	        ExcelExportUtil.downloadXLS(urlTemplate, map, "sinteticoReport.xls");
-		} catch (ExcelExportException e) {
-			throw new BusinessRollbackException("Erro inesperado", e);
-		}
-	}
-
-	@ExceptionHandled
-	public void prepararExcelAnalitico() {
-	    JsfUtil jsfUtil = JsfUtil.instance();
-        jsfUtil.addFlashParam("rowVO", relatorioProcessosViewSearch.getRelatorioAnalitico(
-            listaAssuntoSelecionado
-            ,dataInicio
-            ,DateUtil.getEndOfDay(dataFim)
-            ,dataMovimentacaoInicio
-            ,DateUtil.getEndOfDay(dataMovimentacaoFim)
-            ,dataArquivamentoInicio
-            ,DateUtil.getEndOfDay(dataArquivamentoFim)
-            ,this.listaStatusSelecionado.stream()
-            .map(o -> StatusProcessoEnum.valueOf(o))
-            .collect(Collectors.toList())
-        ));
-        jsfUtil.applyLastPhaseFlashAction();
+        try {
+            String urlTemplate = pathResolver.getContextRealPath()
+                    + "/RelatorioQuantitativoProcessos/sinteticoReport.xls";
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("rowVO", relatorioProcessosViewSearch.getRelatorioSintetico(
+                    listaAssuntoSelecionado,
+                    dataInicio,
+                    DateUtil.getEndOfDay(dataFim),
+                    this.listaStatusSelecionado.stream()
+                    .map(o -> StatusProcessoEnum.valueOf(o)).collect(Collectors.toList())));
+            ExcelExportUtil.downloadXLS(urlTemplate, map, "sinteticoReport.xls");
+        } catch (ExcelExportException e) {
+            throw new BusinessRollbackException("Erro inesperado", e);
+        }
 	}
 
 	@ExceptionHandled
 	public void gerarExcelAnalitico() {
-	    try {
-	        Map<String, Object> map = new HashMap<String, Object>();
-	        JsfUtil jsfUtil = JsfUtil.instance();
-	        map.put("rowVO", jsfUtil.getFlashParam("rowVO", List.class));
-	        String urlTemplate = pathResolver.getContextRealPath() + "/RelatorioQuantitativoProcessos/analiticoReport.xls";
-	        ExcelExportUtil.downloadXLS(urlTemplate, map, "sinteticoReport.xls");
-	    } catch (ExcelExportException e) {
-	        throw new BusinessRollbackException("Erro inesperado", e);
-	    }
+        try {
+            String urlTemplate = pathResolver.getContextRealPath()
+                    + "/RelatorioQuantitativoProcessos/analiticoReport.xls";
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("rowVO", relatorioProcessosViewSearch.getRelatorioAnalitico(
+                    listaAssuntoSelecionado,
+                    dataInicio,
+                    DateUtil.getEndOfDay(dataFim),
+                    dataMovimentacaoInicio,
+                    DateUtil.getEndOfDay(dataMovimentacaoFim),
+                    dataArquivamentoInicio,
+                    DateUtil.getEndOfDay(dataArquivamentoFim),
+                    this.listaStatusSelecionado.stream()
+                    .map(o -> StatusProcessoEnum.valueOf(o)).collect(Collectors.toList())));
+            ExcelExportUtil.downloadXLS(urlTemplate, map, "analiticoReport.xls");
+        } catch (ExcelExportException e) {
+            throw new BusinessRollbackException("Erro inesperado", e);
+        }
 	}
 
 }
