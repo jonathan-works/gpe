@@ -199,8 +199,8 @@ public class RelatorioProcessosViewSearch {
         Join<Processo, Localizacao> localizacao = processo.join(Processo_.localizacao);
 
         query.where(
-            cb.equal(localizacao.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho())
-            , fluxo.get(Fluxo_.idFluxo).in(assuntos)
+            cb.like(localizacao.get(Localizacao_.caminhoCompleto), cb.literal(Authenticator.getLocalizacaoAtual().getCaminhoCompleto() + "%")),
+            fluxo.get(Fluxo_.idFluxo).in(assuntos)
         );
 
         if(dataInicio != null) {

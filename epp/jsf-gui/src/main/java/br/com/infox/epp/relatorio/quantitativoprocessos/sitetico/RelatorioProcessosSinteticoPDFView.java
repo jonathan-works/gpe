@@ -112,8 +112,8 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
         Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
 
         query.where(
+            cb.like(localizacao.get(Localizacao_.caminhoCompleto), cb.literal(Authenticator.getLocalizacaoAtual().getCaminhoCompleto() + "%")),
             fluxo.get(Fluxo_.idFluxo).in(assuntos)
-            ,cb.equal(localizacao.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho())
         );
 
         aplicarFiltrosProcesso(query, cb, processo);
