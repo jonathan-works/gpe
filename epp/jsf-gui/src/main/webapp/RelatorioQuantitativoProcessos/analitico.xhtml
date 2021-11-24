@@ -71,32 +71,32 @@
                     />
                 </p:selectManyMenu>
             </wi:field>
-            <wi:inputDataPeriodo
+            <wi:inputPeriodo
                 id="periodo"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura']}"
-                tipMessage="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura.help']}"
-                valueDateFrom="#{relatorioProcessosView.dataInicio}"
-                valueDateTo="#{relatorioProcessosView.dataFim}"
+                help="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura.help']}"
+                valueFrom="#{relatorioProcessosView.dataInicio}"
+                valueTo="#{relatorioProcessosView.dataFim}"
             />
-            <wi:inputDataPeriodo
+            <wi:inputPeriodo
                 id="periodoMovimentacao"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao']}"
-                tipMessage="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao.help']}"
-                valueDateFrom="#{relatorioProcessosView.dataMovimentacaoInicio}"
-                valueDateTo="#{relatorioProcessosView.dataMovimentacaoFim}"
+                help="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao.help']}"
+                valueFrom="#{relatorioProcessosView.dataMovimentacaoInicio}"
+                valueTo="#{relatorioProcessosView.dataMovimentacaoFim}"
             />
             <p:outputPanel
                 styleClass="periodoArquivamentoContainer"
             >
-            <wi:inputDataPeriodo
+            <wi:inputPeriodo
                 id="periodoArquivamento"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento']}"
-                tipMessage="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento.help']}"
+                help="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento.help']}"
                 disabled="#{not relatorioProcessosView.arquivadoSelecionado}"
-                required="#{relatorioProcessosView.arquivadoSelecionado}"
+                requiredFrom="true"
                 requiredTo="false"
-                valueDateFrom="#{relatorioProcessosView.dataArquivamentoInicio}"
-                valueDateTo="#{relatorioProcessosView.dataArquivamentoFim}"
+                valueFrom="#{relatorioProcessosView.dataArquivamentoInicio}"
+                valueTo="#{relatorioProcessosView.dataArquivamentoFim}"
             />
             </p:outputPanel>
         </div>
