@@ -93,7 +93,7 @@ public class RelatorioProcessosViewSearch {
         );
 
         query.where(
-            cb.equal(localizacaoProcesso.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho()),
+            cb.like(localizacaoProcesso.get(Localizacao_.caminhoCompleto), cb.literal(Authenticator.getLocalizacaoAtual().getCaminhoCompleto() + "%")),
             fluxo.get(Fluxo_.idFluxo).in(assuntos)
         );
 
@@ -178,6 +178,7 @@ public class RelatorioProcessosViewSearch {
 
         return em.createQuery(query).getResultList();
     }
+
     public List<RelatorioProcessosSinteticoExcelVO> getRelatorioSintetico(
         List<Integer> assuntos,
         Date dataInicio,
