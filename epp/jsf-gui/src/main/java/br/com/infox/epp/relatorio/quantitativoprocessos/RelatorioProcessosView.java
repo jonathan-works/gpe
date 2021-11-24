@@ -105,12 +105,7 @@ public class RelatorioProcessosView implements Serializable {
         sessionMap.put("dataMovimentacaoFim", DateUtil.getEndOfDay(dataMovimentacaoFim));
         sessionMap.put("dataArquivamentoInicio", dataArquivamentoInicio);
         sessionMap.put("dataArquivamentoFim", DateUtil.getEndOfDay(dataArquivamentoFim));
-        RequestContext.getCurrentInstance().execute("document.getElementById('relatorioForm:openPDF').click();");
 	}
-
-    public void preparaAbrirExcel() {
-        RequestContext.getCurrentInstance().execute("document.getElementById('relatorioForm:gerarExcel').click();");
-    }
 
 	@ExceptionHandled
 	public void gerarExcelSintetico() {

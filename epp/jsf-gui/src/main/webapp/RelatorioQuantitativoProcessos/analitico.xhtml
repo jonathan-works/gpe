@@ -106,7 +106,9 @@
                 id="btAbrirPDF"
                 process="@form"
                 update="@form :pageBodyDialogMessage"
-                actionListener="#{relatorioProcessosView.prepararAbrirRelatorioAnalitico}"
+                onclick="showLoading()"
+                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){window.open('analiticoReport.seam', '_blank')}"
+                action="#{relatorioProcessosView.prepararAbrirRelatorioAnalitico}"
                 value="#{infoxMessages['relQuantitativoProcessos.gerarPDF']}"
             />
 
@@ -114,12 +116,10 @@
                 id="btAbrirExcel"
                 process="@form"
                 update="@form :pageBodyDialogMessage"
-                actionListener="#{relatorioProcessosView.preparaAbrirExcel()}"
+                onclick="showLoading()"
+                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){document.getElementById('relatorioForm:gerarExcel').click();}"
                 value="#{infoxMessages['relQuantitativoProcessos.gerarExcel']}"
             />
-
-            <p:commandLink id="openPDF" target="_blank" action="analiticoReport.xhtml"
-            	ajax="false" style="display: none;" />
 
             <h:commandLink id="gerarExcel"
                 action="#{relatorioProcessosView.gerarExcelAnalitico}"
