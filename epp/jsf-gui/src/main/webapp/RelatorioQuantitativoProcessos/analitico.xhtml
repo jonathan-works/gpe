@@ -43,6 +43,7 @@
                     />
                 </p:selectManyMenu>
             </wi:field>
+
             <wi:field
                 id="status"
                 label="#{infoxMessages['relQuantitativoProcessos.status']}"
@@ -71,6 +72,7 @@
                     />
                 </p:selectManyMenu>
             </wi:field>
+
             <wi:inputPeriodo
                 id="periodo"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura']}"
@@ -78,6 +80,7 @@
                 valueFrom="#{relatorioProcessosView.dataInicio}"
                 valueTo="#{relatorioProcessosView.dataFim}"
             />
+
             <wi:inputPeriodo
                 id="periodoMovimentacao"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao']}"
@@ -85,6 +88,7 @@
                 valueFrom="#{relatorioProcessosView.dataMovimentacaoInicio}"
                 valueTo="#{relatorioProcessosView.dataMovimentacaoFim}"
             />
+
             <p:outputPanel
                 styleClass="periodoArquivamentoContainer"
             >
@@ -93,7 +97,7 @@
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento']}"
                 help="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento.help']}"
                 disabled="#{not relatorioProcessosView.arquivadoSelecionado}"
-                requiredFrom="true"
+                requiredFrom="#{relatorioProcessosView.arquivadoSelecionado}"
                 requiredTo="false"
                 valueFrom="#{relatorioProcessosView.dataArquivamentoInicio}"
                 valueTo="#{relatorioProcessosView.dataArquivamentoFim}"

@@ -80,11 +80,12 @@
 			/>
 
             <p:commandButton
-                id="btAbrirExcel"
-                process="@form"
-                update="@form :pageBodyDialogMessage"
-               	actionListener="#{relatorioProcessosView.preparaAbrirExcel()}"
-				value="#{infoxMessages['relQuantitativoProcessos.gerarExcel']}"
+            	id="btAbrirExcel"
+            	process="@form"
+            	update="@form :pageBodyDialogMessage"
+            	onclick="showLoading()"
+            	oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){document.getElementById('relatorioForm:gerarExcel').click();}"
+            	value="#{infoxMessages['relQuantitativoProcessos.gerarExcel']}"
             />
 
             <p:commandLink id="openPDF" target="_blank" action="sinteticoReport.xhtml"
