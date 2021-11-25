@@ -16,6 +16,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
@@ -72,6 +73,7 @@ public class RelatorioProcessosViewSearch {
         Join<UsuarioTaskInstance, UsuarioLogin> usuario = usuarioTaskInstance.join(UsuarioTaskInstance_.usuario, JoinType.LEFT);
         Join<ViewSituacaoProcesso, ViewParticipanteProcesso> viewParticipanteProcesso = viewSituacaoProcesso.join(ViewSituacaoProcesso_.participantes, JoinType.LEFT);
         Join<ViewParticipanteProcesso, TipoParte> tipoParte = viewParticipanteProcesso.join(ViewParticipanteProcesso_.tipoParte, JoinType.LEFT);
+        Join<TaskInstance, SwimlaneInstance> swimlaneInstance = taskInstance.join("swimlaneInstance", JoinType.LEFT);
 
         query.select(
             cb.construct(query.getResultType(),
@@ -86,7 +88,7 @@ public class RelatorioProcessosViewSearch {
                 , viewParticipanteProcesso.get(ViewParticipanteProcesso_.cpfCnpj)
                 , tipoParte.get(TipoParte_.descricao)
                 , taskInstance.get("name")
-                , cb.concat(cb.concat(localizacao.get(Localizacao_.localizacao), cb.literal("/")), usuario.get(UsuarioLogin_.nomeUsuario))
+                , cb.concat(cb.concat(cb.coalesce(localizacao.get(Localizacao_.localizacao), swimlaneInstance.get("name")), cb.literal("/")), usuario.get(UsuarioLogin_.nomeUsuario))
                 , cb.coalesce(taskInstance.get("start"), taskInstance.get("create"))
                 , taskInstance.get("end")
             )
