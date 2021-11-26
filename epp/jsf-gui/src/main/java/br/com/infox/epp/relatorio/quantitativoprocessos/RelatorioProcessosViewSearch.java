@@ -7,6 +7,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -20,6 +21,7 @@ import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.util.ObjectUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Localizacao_;
@@ -35,6 +37,8 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
 import br.com.infox.epp.relatorio.quantitativoprocessos.analitico.RelatorioProcessosAnaliticoExcelVO;
 import br.com.infox.epp.relatorio.quantitativoprocessos.sitetico.RelatorioProcessosSinteticoExcelVO;
+import br.com.infox.epp.tarefa.dao.ProcessoTarefaDAO;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.view.ViewParticipanteProcesso;
 import br.com.infox.epp.view.ViewParticipanteProcesso_;
 import br.com.infox.epp.view.ViewSituacaoProcesso;
@@ -46,6 +50,9 @@ import br.com.infox.seam.exception.BusinessRollbackException;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class RelatorioProcessosViewSearch {
+
+    @Inject
+    private ProcessoTarefaDAO processoTarefaDAO;
 
     public List<RelatorioProcessosAnaliticoExcelVO> getRelatorioAnalitico(
         List<Integer> assuntos,
@@ -238,6 +245,7 @@ public class RelatorioProcessosViewSearch {
             cb.construct(query.getResultType(),
                 localizacao.get(Localizacao_.localizacao)
                 , fluxo.get(Fluxo_.fluxo)
+                , processo.get(Processo_.idProcesso)
                 , processo.get(Processo_.numeroProcesso)
                 , usuarioCadastro.get(UsuarioLogin_.nomeUsuario)
                 , processo.get(Processo_.dataFim)
@@ -250,8 +258,17 @@ public class RelatorioProcessosViewSearch {
             cb.asc(fluxo.get(Fluxo_.fluxo)),
             cb.asc(processo.get(Processo_.numeroProcesso))
         );
-
-        return em.createQuery(query).getResultList();
+        List<RelatorioProcessosSinteticoExcelVO> ltRelatorioProcessosSinteticoExcelVO = em.createQuery(query).getResultList();
+        for (RelatorioProcessosSinteticoExcelVO rowVO : ltRelatorioProcessosSinteticoExcelVO) {
+            Processo proc = em.getReference(Processo.class, rowVO.getIdProcesso());
+            if (!ObjectUtil.isEmpty(proc)) {
+                ProcessoTarefa processoTarefa = processoTarefaDAO.getUltimoProcessoTarefa(proc);
+                if (!ObjectUtil.isEmpty(processoTarefa)) {
+                    rowVO.setDescricaoTarefa(processoTarefa.getTarefa().getTarefa());
+                }
+            }
+        }
+        return ltRelatorioProcessosSinteticoExcelVO;
     }
 
 

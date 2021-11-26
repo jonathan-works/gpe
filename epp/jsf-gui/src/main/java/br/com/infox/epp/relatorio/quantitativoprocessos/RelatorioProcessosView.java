@@ -114,6 +114,7 @@ public class RelatorioProcessosView implements Serializable {
             String urlTemplate = pathResolver.getContextRealPath()
                     + "/RelatorioQuantitativoProcessos/sinteticoReport.xls";
             Map<String, Object> map = new HashMap<String, Object>();
+            map.put("cabecalhoEmissao", RelatorioUtil.getDadosEmissao());
             map.put("rowVO", relatorioProcessosViewSearch.getRelatorioSintetico(
                     listaAssuntoSelecionado,
                     dataInicio,
