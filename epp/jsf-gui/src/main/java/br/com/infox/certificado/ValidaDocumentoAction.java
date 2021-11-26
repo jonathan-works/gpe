@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.UUID;
 
 import javax.faces.event.AbortProcessingException;
 import javax.inject.Inject;
@@ -18,6 +17,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.core.action.ActionMessagesService;
@@ -29,7 +29,12 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.DadosAssinatura;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
+import br.com.infox.epp.assinador.view.AssinaturaCallback;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
+import br.com.infox.epp.documento.type.TipoMeioAssinaturaEnum;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -51,7 +56,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(ValidaDocumentoAction.NAME)
 @Transactional
 @ContextDependency
-public class ValidaDocumentoAction implements Serializable {
+public class ValidaDocumentoAction implements Serializable, AssinaturaCallback {
 
 	private static final String RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE = "anexarDocumentoSemAnalise";
 	private static final long serialVersionUID = 1L;
@@ -81,13 +86,15 @@ public class ValidaDocumentoAction implements Serializable {
 	private ProcessoDAO processoDAO;
 	@Inject
 	private ActionMessagesService actionMessagesService;
+	@Inject
+	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 
 	private Boolean podeIniciarFluxoAnaliseDocumentos;
 
 	/**
 	 * Valida a assinatura de um ProcessoDocumento. Quando o documento é do tipo
 	 * modelo as quebras de linha são retiradas.
-	 * 
+	 *
 	 * @param bin
 	 * @param certChain
 	 * @param signature
@@ -131,27 +138,41 @@ public class ValidaDocumentoAction implements Serializable {
 		return result;
 	}
 
-	public void assinaDocumento(UsuarioPerfil usuarioPerfil) {
-		if (this.documentoBin != null && usuarioPerfil.getAtivo() && !isAssinadoPor(usuarioPerfil)) {
-			try {
-				List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(token);
-				for (DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
-					UUID uuidDocumentoBin = dadosAssinatura.getUuidDocumentoBin();
-					if (uuidDocumentoBin != null && uuidDocumentoBin.equals(documentoBin.getUuid())) {
-						assinadorService.assinar(dadosAssinatura, usuarioPerfil);
-						setPodeIniciarFluxoAnaliseDocumentos(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento()));
-						break;
-					}
-				}
-				listAssinaturaDocumento = null;
-				setPodeIniciarFluxoAnaliseDocumentos(validaPodeIniciarFluxoAnalise());
-			} catch (AssinaturaException | DAOException e) {
-				LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
-				FacesMessages.instance().add(Severity.ERROR, e.getMessage());
-				throw new AbortProcessingException();
-			}
-		}
-	}
+	public AssinavelProvider getAssinavelProvider() {
+        TipoMeioAssinaturaEnum tma = classificacaoDocumentoPapelManager.getTipoMeioAssinaturaUsuarioLogadoByClassificacaoDocumento(
+            getDocumento().getClassificacaoDocumento()
+        );
+        return new AssinavelDocumentoBinProvider(new AssinavelDocumentoBinProvider.DocumentoComRegraAssinatura(
+            tma,
+            getDocumentoBin()
+        ));
+    }
+
+    @Override
+    public void onSuccess(List<DadosAssinatura> dadosAssinatura) {
+        UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+        if (this.documentoBin != null && usuarioPerfil.getAtivo() && !isAssinadoPor(usuarioPerfil)) {
+            try {
+                for (DadosAssinatura da : dadosAssinatura) {
+                    if (da.getUuidDocumentoBin() != null && da.getUuidDocumentoBin().equals(documentoBin.getUuid())) {
+                        assinadorService.assinar(da, usuarioPerfil);
+                        setPodeIniciarFluxoAnaliseDocumentos(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento()));
+                        break;
+                    }
+                }
+                setPodeIniciarFluxoAnaliseDocumentos(validaPodeIniciarFluxoAnalise());
+            } catch (AssinaturaException | DAOException e) {
+                LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
+                FacesMessages.instance().add(Severity.ERROR, e.getMessage());
+                throw new AbortProcessingException();
+            }
+        }
+    }
+
+    @Override
+    public void onFail(StatusToken statusToken, List<DadosAssinatura> dadosAssinatura) {
+
+    }
 
 	public void validaDocumentoId(Integer idDocumento) {
 		try {
@@ -273,7 +294,7 @@ public class ValidaDocumentoAction implements Serializable {
 			podeIniciarAnaliseDoc = !papelInclusaoPossuiRecursoAnexar(documento) && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
 			if (podeIniciarAnaliseDoc){
 				podeIniciarAnaliseDoc = !existeProcessoAnaliseByDocumento(documento);
-			}			
+			}
 		}
 		setPodeIniciarFluxoAnaliseDocumentos(podeIniciarAnaliseDoc);
 		return podeIniciarAnaliseDoc;
@@ -299,7 +320,7 @@ public class ValidaDocumentoAction implements Serializable {
         Papel papelInclusao = perfilTemplate.getPapel();
 		if(papelInclusao.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE))
 			return true;
-		
+
 		Queue<Papel> papeisPais = new LinkedList<Papel>(papelInclusao.getGrupos());
 		while(papeisPais.peek() != null){
 			Papel papelPai = papeisPais.element();
@@ -316,4 +337,5 @@ public class ValidaDocumentoAction implements Serializable {
 	public void setPodeIniciarFluxoAnaliseDocumentos(Boolean isDocumentoTotalmenteAssinado) {
 		this.podeIniciarFluxoAnaliseDocumentos = isDocumentoTotalmenteAssinado;
 	}
+
 }
