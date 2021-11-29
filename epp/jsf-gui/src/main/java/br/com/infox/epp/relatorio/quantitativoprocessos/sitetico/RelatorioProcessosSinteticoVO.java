@@ -39,19 +39,21 @@ public class RelatorioProcessosSinteticoVO {
     @NoArgsConstructor
     @EqualsAndHashCode(of = "numeroProcesso")
     public static class RelatorioProcessosSinteticoRowVO{
+        private Integer idProcesso;
         private String numeroProcesso;
         private String usuarioSolicitante;
         private StatusProcessoEnum status;
         private Date dataAbertura;
-        public RelatorioProcessosSinteticoRowVO(String numeroProcesso, String usuarioSolicitante,
+        private String descricaoTarefa;
+        public RelatorioProcessosSinteticoRowVO(Integer idProcesso, String numeroProcesso, String usuarioSolicitante,
                 Date dataEncerramento, Date dataAbertura) {
             super();
+            this.idProcesso = idProcesso;
             this.numeroProcesso = numeroProcesso;
             this.usuarioSolicitante = usuarioSolicitante;
             this.status = dataEncerramento == null ? StatusProcessoEnum.A : StatusProcessoEnum.F;
             this.dataAbertura = dataAbertura;
         }
-
 
     }
 }

@@ -60,10 +60,10 @@
                     </p:paragraph>
                 </p:font>
     			<p:table
-                    columns="4"
+                    columns="5"
                     widthPercentage="100"
                     headerRows="1"
-    				widths="2 2 4 2"
+    				widths="2 2 3 3 2"
                     spacingBefore="5"
                     spacingAfter="1"
                 >
@@ -74,13 +74,16 @@
     				<wi:reportColumnHeader
     					title="#{infoxMessages['relAcumuladoSint.usuarioAbertura']}" />
     				<wi:reportColumnHeader
+    					title="#{infoxMessages['relQuantitativoProcessosAnalitico.tarefa']}" />
+    				<wi:reportColumnHeader
     					title="#{infoxMessages['relQuantitativoProcessos.statusProcesso']}" />
-    
+
     				<ui:repeat var="row"
     					value="#{rsFluxo.lista}">
     					<wi:reportColumn value="#{row.numeroProcesso}" columnAlign="center" />
     					<wi:reportColumnDate value="#{row.dataAbertura}" pattern="dd/MM/yyyy" />
     					<wi:reportColumn value="#{row.usuarioSolicitante}" />
+    					<wi:reportColumn value="#{row.descricaoTarefa}" />
     					<wi:reportColumn value="#{row.status.label}" />
     				</ui:repeat>
     			</p:table>

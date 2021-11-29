@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
@@ -22,6 +23,7 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.collections.CollectionUtils;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.util.ObjectUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Localizacao_;
@@ -35,6 +37,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.relatorio.quantitativoprocessos.StatusProcessoEnum;
 import br.com.infox.epp.relatorio.quantitativoprocessos.sitetico.RelatorioProcessosSinteticoVO.RelatorioProcessosSinteticoFluxoVO;
+import br.com.infox.epp.relatorio.quantitativoprocessos.sitetico.RelatorioProcessosSinteticoVO.RelatorioProcessosSinteticoRowVO;
+import br.com.infox.epp.tarefa.dao.ProcessoTarefaDAO;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import lombok.Getter;
 
@@ -43,6 +48,9 @@ import lombok.Getter;
 public class RelatorioProcessosSinteticoPDFView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	@Inject
+	private ProcessoTarefaDAO processoTarefaDAO;
 
 	@Getter
 	private List<RelatorioProcessosSinteticoVO> relatorioSinteticoList = new ArrayList<RelatorioProcessosSinteticoVO>();
@@ -99,6 +107,15 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
                 query = cb.createQuery(RelatorioProcessosSinteticoVO.RelatorioProcessosSinteticoRowVO.class);
             baseQueryRelatorioSintetico(query, rpsVO.get("idLocalizacao", Integer.class), rpsVO.get("idFluxo", Integer.class));
             relatorioProcessosSinteticoFluxoVO.setLista(em.createQuery(query).getResultList());
+            for (RelatorioProcessosSinteticoRowVO rowVO : relatorioProcessosSinteticoFluxoVO.getLista()) {
+                Processo proc = em.getReference(Processo.class, rowVO.getIdProcesso());
+                if (!ObjectUtil.isEmpty(proc)) {
+                    ProcessoTarefa processoTarefa = processoTarefaDAO.getUltimoProcessoTarefa(proc);
+                    if (!ObjectUtil.isEmpty(processoTarefa)) {
+                        rowVO.setDescricaoTarefa(processoTarefa.getTarefa().getTarefa());
+                    }
+                }
+            }
         }
     }
 
@@ -112,8 +129,8 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
         Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
 
         query.where(
+            cb.like(localizacao.get(Localizacao_.caminhoCompleto), cb.literal(Authenticator.getLocalizacaoAtual().getCaminhoCompleto() + "%")),
             fluxo.get(Fluxo_.idFluxo).in(assuntos)
-            ,cb.equal(localizacao.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho())
         );
 
         aplicarFiltrosProcesso(query, cb, processo);
@@ -152,7 +169,8 @@ public class RelatorioProcessosSinteticoPDFView implements Serializable {
 
         query.select(
             cb.construct(query.getResultType(),
-                processo.get(Processo_.numeroProcesso)
+                processo.get(Processo_.idProcesso)
+                , processo.get(Processo_.numeroProcesso)
                 , usuarioCadastro.get(UsuarioLogin_.nomeUsuario)
                 , processo.get(Processo_.dataFim)
                 , processo.get(Processo_.dataInicio)

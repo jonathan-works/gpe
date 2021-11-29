@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param
+        name="requiredFrom"
+        value="#{wi:get(requiredFrom, required)}"
+    />
+    <ui:param
+        name="requiredTo"
+        value="#{wi:get(requiredTo, required)}"
+    />
+    
+    <wi:field
+        id="#{id}"
+        required="#{wi:get(requiredFrom, requiredTo)}"
+    >
+        <p:outputPanel
+            id="#{id}Container"
+        >
+        <h:outputText value="De: " />
+        <p:calendar
+            id="#{id}Input"
+            value="#{valueFrom}"
+            disabled="#{disabled}"
+            maxdate="#{valueTo}"
+            pattern="dd/MM/yyyy"
+            placeholder="__/__/____"
+            mask="99/99/9999"
+            required="${requiredFrom}"
+        >
+            <p:ajax
+                event="change"
+                update="@parent"
+                process="@this"
+                partialSubmit="true"
+                onstart="showLoading()"
+                oncomplete="hideLoading()"
+            />
+            <p:ajax
+                event="dateSelect"
+                update="@parent"
+                process="@this"
+                partialSubmit="true"
+                onstart="showLoading()"
+                oncomplete="hideLoading()"
+            />
+        </p:calendar>
+        <h:outputText value="Até: " />
+        <p:calendar
+            id="#{id}To"
+            value="#{valueTo}"
+            disabled="#{disabled}"
+            mindate="#{valueFrom}"
+            pattern="dd/MM/yyyy"
+            placeholder="__/__/____"
+            mask="99/99/9999"
+            required="${requiredTo}"
+        >
+            <p:ajax
+                event="change"
+                update="@parent"
+                process="@this"
+                partialSubmit="true"
+                onstart="showLoading()"
+                oncomplete="hideLoading()"
+            />
+            <p:ajax
+                event="dateSelect"
+                update="@parent"
+                process="@this"
+                partialSubmit="true"
+                onstart="showLoading()"
+                oncomplete="hideLoading()"
+            />
+        </p:calendar>
+        </p:outputPanel>
+    </wi:field>
+</ui:composition>

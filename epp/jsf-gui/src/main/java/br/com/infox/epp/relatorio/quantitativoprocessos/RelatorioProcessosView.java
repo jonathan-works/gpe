@@ -21,6 +21,7 @@ import org.primefaces.context.RequestContext;
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.core.util.ExcelExportUtil;
+import br.com.infox.core.util.RelatorioUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
@@ -105,12 +106,7 @@ public class RelatorioProcessosView implements Serializable {
         sessionMap.put("dataMovimentacaoFim", DateUtil.getEndOfDay(dataMovimentacaoFim));
         sessionMap.put("dataArquivamentoInicio", dataArquivamentoInicio);
         sessionMap.put("dataArquivamentoFim", DateUtil.getEndOfDay(dataArquivamentoFim));
-        RequestContext.getCurrentInstance().execute("document.getElementById('relatorioForm:openPDF').click();");
 	}
-
-    public void preparaAbrirExcel() {
-        RequestContext.getCurrentInstance().execute("document.getElementById('relatorioForm:gerarExcel').click();");
-    }
 
 	@ExceptionHandled
 	public void gerarExcelSintetico() {
@@ -118,6 +114,7 @@ public class RelatorioProcessosView implements Serializable {
             String urlTemplate = pathResolver.getContextRealPath()
                     + "/RelatorioQuantitativoProcessos/sinteticoReport.xls";
             Map<String, Object> map = new HashMap<String, Object>();
+            map.put("cabecalhoEmissao", RelatorioUtil.getDadosEmissao());
             map.put("rowVO", relatorioProcessosViewSearch.getRelatorioSintetico(
                     listaAssuntoSelecionado,
                     dataInicio,
@@ -136,6 +133,7 @@ public class RelatorioProcessosView implements Serializable {
             String urlTemplate = pathResolver.getContextRealPath()
                     + "/RelatorioQuantitativoProcessos/analiticoReport.xls";
             Map<String, Object> map = new HashMap<String, Object>();
+            map.put("cabecalhoEmissao", RelatorioUtil.getDadosEmissao());
             map.put("rowVO", relatorioProcessosViewSearch.getRelatorioAnalitico(
                     listaAssuntoSelecionado,
                     dataInicio,

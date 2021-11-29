@@ -43,6 +43,7 @@
                     />
                 </p:selectManyMenu>
             </wi:field>
+
             <wi:field
                 id="status"
                 label="#{infoxMessages['relQuantitativoProcessos.status']}"
@@ -71,32 +72,35 @@
                     />
                 </p:selectManyMenu>
             </wi:field>
-            <wi:inputDataPeriodo
+
+            <wi:inputPeriodo
                 id="periodo"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura']}"
-                tipMessage="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura.help']}"
-                valueDateFrom="#{relatorioProcessosView.dataInicio}"
-                valueDateTo="#{relatorioProcessosView.dataFim}"
+                help="#{infoxMessages['relQuantitativoProcessosAnalitico.dataAbertura.help']}"
+                valueFrom="#{relatorioProcessosView.dataInicio}"
+                valueTo="#{relatorioProcessosView.dataFim}"
             />
-            <wi:inputDataPeriodo
+
+            <wi:inputPeriodo
                 id="periodoMovimentacao"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao']}"
-                tipMessage="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao.help']}"
-                valueDateFrom="#{relatorioProcessosView.dataMovimentacaoInicio}"
-                valueDateTo="#{relatorioProcessosView.dataMovimentacaoFim}"
+                help="#{infoxMessages['relQuantitativoProcessosAnalitico.dataMovimentacao.help']}"
+                valueFrom="#{relatorioProcessosView.dataMovimentacaoInicio}"
+                valueTo="#{relatorioProcessosView.dataMovimentacaoFim}"
             />
+
             <p:outputPanel
                 styleClass="periodoArquivamentoContainer"
             >
-            <wi:inputDataPeriodo
+            <wi:inputPeriodo
                 id="periodoArquivamento"
                 label="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento']}"
-                tipMessage="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento.help']}"
+                help="#{infoxMessages['relQuantitativoProcessosAnalitico.dataArquivamento.help']}"
                 disabled="#{not relatorioProcessosView.arquivadoSelecionado}"
-                required="#{relatorioProcessosView.arquivadoSelecionado}"
+                requiredFrom="#{relatorioProcessosView.arquivadoSelecionado}"
                 requiredTo="false"
-                valueDateFrom="#{relatorioProcessosView.dataArquivamentoInicio}"
-                valueDateTo="#{relatorioProcessosView.dataArquivamentoFim}"
+                valueFrom="#{relatorioProcessosView.dataArquivamentoInicio}"
+                valueTo="#{relatorioProcessosView.dataArquivamentoFim}"
             />
             </p:outputPanel>
         </div>
@@ -106,7 +110,9 @@
                 id="btAbrirPDF"
                 process="@form"
                 update="@form :pageBodyDialogMessage"
-                actionListener="#{relatorioProcessosView.prepararAbrirRelatorioAnalitico}"
+                onclick="showLoading()"
+                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){window.open('analiticoReport.seam', '_blank')}"
+                action="#{relatorioProcessosView.prepararAbrirRelatorioAnalitico}"
                 value="#{infoxMessages['relQuantitativoProcessos.gerarPDF']}"
             />
 
@@ -114,12 +120,10 @@
                 id="btAbrirExcel"
                 process="@form"
                 update="@form :pageBodyDialogMessage"
-                actionListener="#{relatorioProcessosView.preparaAbrirExcel()}"
+                onclick="showLoading()"
+                oncomplete="hideLoading(); if(args &amp;&amp; !args.validationFailed){document.getElementById('relatorioForm:gerarExcel').click();}"
                 value="#{infoxMessages['relQuantitativoProcessos.gerarExcel']}"
             />
-
-            <p:commandLink id="openPDF" target="_blank" action="analiticoReport.xhtml"
-            	ajax="false" style="display: none;" />
 
             <h:commandLink id="gerarExcel"
                 action="#{relatorioProcessosView.gerarExcelAnalitico}"

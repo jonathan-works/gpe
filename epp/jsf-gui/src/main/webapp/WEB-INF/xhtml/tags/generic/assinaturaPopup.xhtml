@@ -69,23 +69,25 @@
 			<s:div id="conteudoAssinatura">
 				<h:form id="assinaturaDocumento">
 					<s:div id="assinatura_pers">
+                    <a:jsFunction name="actionPosSign"
+                        action="#{elFunctions.invokeMethod(actionPosSign)}"
+                        execute="@this"
+                        render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, #{afterRender}"
+                        onbegin="infox.showLoading();"
+                        oncomplete="infox.hideLoading();"
+                    />
 	
-						<a:jsFunction name="assinar"
-							actionListener="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
-							action="#{elFunctions.invokeMethod(actionPosSign)}"
-							execute="@this"
-							render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, #{afterRender}"
-							oncomplete="infox.hideLoading();" />
-	
-						<wi:certificadoDigital
-	            			id="appletAssinatura"
-							signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-							tokenField="#{validaDocumentoAction.token}"
-							documentoBinList="#{validaDocumentoAction.documentoBin}"
-							functionPreSign="infox.showLoading();"
-							functionPosSign="assinar();"
-							rendered="#{validaDocumentoAction.podeAssinar()}" >
-	          			</wi:certificadoDigital>
+                    <wi:assinador
+                        id="appletAssinatura"
+                        tokenField="#{validaDocumentoAction.token}"
+                        callbackHandler="#{validaDocumentoAction}" 
+                        assinavelProvider="#{validaDocumentoAction.assinavelProvider}"
+                        rendered="#{validaDocumentoAction.podeAssinar()}"
+                        execute="@this"
+                        render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, #{afterRender}"
+                        onbegin="infox.showLoading();"
+                        oncomplete="infox.hideLoading();#{not empty actionPosSign ? 'actionPosSign();' : ''}"
+                    />
 	
 					</s:div>
 				</h:form>

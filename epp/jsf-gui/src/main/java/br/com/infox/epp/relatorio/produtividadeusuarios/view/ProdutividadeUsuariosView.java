@@ -19,6 +19,7 @@ import org.primefaces.context.RequestContext;
 
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.util.ExcelExportUtil;
+import br.com.infox.core.util.RelatorioUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
@@ -85,8 +86,8 @@ public class ProdutividadeUsuariosView implements Serializable {
 			gerarRelatorio();
 			String urlTemplate = pathResolver.getContextRealPath() + "/RelatorioProdutividadeUsuarios/reportProdutividadeUsuarios.xls";
 	        Map<String, Object> map = new HashMap<String, Object>();
-	        StringBuilder className = new StringBuilder("acumuladoSinteticoProcessosVO");
-	        map.put(className.toString(), listaRelatorioExcel);
+	        map.put("cabecalhoEmissao", RelatorioUtil.getDadosEmissao());
+	        map.put("acumuladoSinteticoProcessosVO", listaRelatorioExcel);
 	        ExcelExportUtil.downloadXLS(urlTemplate, map, "reportProdutividadeUsuarios.xls");
 		} catch (ExcelExportException e) {
 			e.printStackTrace();

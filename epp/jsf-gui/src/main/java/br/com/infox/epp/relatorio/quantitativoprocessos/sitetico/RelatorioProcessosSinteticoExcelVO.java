@@ -16,16 +16,19 @@ public class RelatorioProcessosSinteticoExcelVO {
 
     private String secretaria;
     private String assunto;
+    private Integer idProcesso;
     private String numeroProcesso;
     private String usuarioSolicitante;
     private StatusProcessoEnum status;
     private String dataAbertura;
+    private String descricaoTarefa;
 
-    public RelatorioProcessosSinteticoExcelVO(String secretaria, String assunto, String numeroProcesso,
+    public RelatorioProcessosSinteticoExcelVO(String secretaria, String assunto, Integer idProcesso, String numeroProcesso,
             String usuarioSolicitante, Date dataEncerramento, Date dataAbertura) {
         super();
         this.secretaria = secretaria;
         this.assunto = assunto;
+        this.idProcesso = idProcesso;
         this.numeroProcesso = numeroProcesso;
         this.usuarioSolicitante = usuarioSolicitante;
         this.status = dataEncerramento == null? StatusProcessoEnum.A : StatusProcessoEnum.F;

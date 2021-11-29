@@ -138,6 +138,10 @@ version="2.0">
         <source>tags/form/fields/inputDate.xhtml</source>
     </tag>
     <tag>
+        <tag-name>inputPeriodo</tag-name>
+        <source>tags/form/fields/inputPeriodo.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>fileUpload</tag-name>
         <source>tags/form/fields/fileUpload.xhtml</source>
     </tag>

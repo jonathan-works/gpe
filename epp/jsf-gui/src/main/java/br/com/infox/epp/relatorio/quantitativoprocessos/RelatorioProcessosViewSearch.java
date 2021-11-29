@@ -7,6 +7,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -16,9 +17,11 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.util.ObjectUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Localizacao_;
@@ -34,6 +37,8 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
 import br.com.infox.epp.relatorio.quantitativoprocessos.analitico.RelatorioProcessosAnaliticoExcelVO;
 import br.com.infox.epp.relatorio.quantitativoprocessos.sitetico.RelatorioProcessosSinteticoExcelVO;
+import br.com.infox.epp.tarefa.dao.ProcessoTarefaDAO;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.view.ViewParticipanteProcesso;
 import br.com.infox.epp.view.ViewParticipanteProcesso_;
 import br.com.infox.epp.view.ViewSituacaoProcesso;
@@ -45,6 +50,9 @@ import br.com.infox.seam.exception.BusinessRollbackException;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class RelatorioProcessosViewSearch {
+
+    @Inject
+    private ProcessoTarefaDAO processoTarefaDAO;
 
     public List<RelatorioProcessosAnaliticoExcelVO> getRelatorioAnalitico(
         List<Integer> assuntos,
@@ -72,6 +80,7 @@ public class RelatorioProcessosViewSearch {
         Join<UsuarioTaskInstance, UsuarioLogin> usuario = usuarioTaskInstance.join(UsuarioTaskInstance_.usuario, JoinType.LEFT);
         Join<ViewSituacaoProcesso, ViewParticipanteProcesso> viewParticipanteProcesso = viewSituacaoProcesso.join(ViewSituacaoProcesso_.participantes, JoinType.LEFT);
         Join<ViewParticipanteProcesso, TipoParte> tipoParte = viewParticipanteProcesso.join(ViewParticipanteProcesso_.tipoParte, JoinType.LEFT);
+        Join<TaskInstance, SwimlaneInstance> swimlaneInstance = taskInstance.join("swimlaneInstance", JoinType.LEFT);
 
         query.select(
             cb.construct(query.getResultType(),
@@ -86,14 +95,14 @@ public class RelatorioProcessosViewSearch {
                 , viewParticipanteProcesso.get(ViewParticipanteProcesso_.cpfCnpj)
                 , tipoParte.get(TipoParte_.descricao)
                 , taskInstance.get("name")
-                , cb.concat(cb.concat(localizacao.get(Localizacao_.localizacao), cb.literal("/")), usuario.get(UsuarioLogin_.nomeUsuario))
+                , cb.concat(cb.concat(cb.coalesce(localizacao.get(Localizacao_.localizacao), swimlaneInstance.get("name")), cb.literal("/")), usuario.get(UsuarioLogin_.nomeUsuario))
                 , cb.coalesce(taskInstance.get("start"), taskInstance.get("create"))
                 , taskInstance.get("end")
             )
         );
 
         query.where(
-            cb.equal(localizacaoProcesso.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho()),
+            cb.like(localizacaoProcesso.get(Localizacao_.caminhoCompleto), cb.literal(Authenticator.getLocalizacaoAtual().getCaminhoCompleto() + "%")),
             fluxo.get(Fluxo_.idFluxo).in(assuntos)
         );
 
@@ -178,6 +187,7 @@ public class RelatorioProcessosViewSearch {
 
         return em.createQuery(query).getResultList();
     }
+
     public List<RelatorioProcessosSinteticoExcelVO> getRelatorioSintetico(
         List<Integer> assuntos,
         Date dataInicio,
@@ -199,8 +209,8 @@ public class RelatorioProcessosViewSearch {
         Join<Processo, Localizacao> localizacao = processo.join(Processo_.localizacao);
 
         query.where(
-            cb.equal(localizacao.get(Localizacao_.estruturaFilho), Authenticator.getLocalizacaoAtual().getEstruturaFilho())
-            , fluxo.get(Fluxo_.idFluxo).in(assuntos)
+            cb.like(localizacao.get(Localizacao_.caminhoCompleto), cb.literal(Authenticator.getLocalizacaoAtual().getCaminhoCompleto() + "%")),
+            fluxo.get(Fluxo_.idFluxo).in(assuntos)
         );
 
         if(dataInicio != null) {
@@ -235,6 +245,7 @@ public class RelatorioProcessosViewSearch {
             cb.construct(query.getResultType(),
                 localizacao.get(Localizacao_.localizacao)
                 , fluxo.get(Fluxo_.fluxo)
+                , processo.get(Processo_.idProcesso)
                 , processo.get(Processo_.numeroProcesso)
                 , usuarioCadastro.get(UsuarioLogin_.nomeUsuario)
                 , processo.get(Processo_.dataFim)
@@ -247,8 +258,17 @@ public class RelatorioProcessosViewSearch {
             cb.asc(fluxo.get(Fluxo_.fluxo)),
             cb.asc(processo.get(Processo_.numeroProcesso))
         );
-
-        return em.createQuery(query).getResultList();
+        List<RelatorioProcessosSinteticoExcelVO> ltRelatorioProcessosSinteticoExcelVO = em.createQuery(query).getResultList();
+        for (RelatorioProcessosSinteticoExcelVO rowVO : ltRelatorioProcessosSinteticoExcelVO) {
+            Processo proc = em.getReference(Processo.class, rowVO.getIdProcesso());
+            if (!ObjectUtil.isEmpty(proc)) {
+                ProcessoTarefa processoTarefa = processoTarefaDAO.getUltimoProcessoTarefa(proc);
+                if (!ObjectUtil.isEmpty(processoTarefa)) {
+                    rowVO.setDescricaoTarefa(processoTarefa.getTarefa().getTarefa());
+                }
+            }
+        }
+        return ltRelatorioProcessosSinteticoExcelVO;
     }
 
 
