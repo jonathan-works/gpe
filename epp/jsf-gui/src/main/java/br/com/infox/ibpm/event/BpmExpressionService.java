@@ -889,7 +889,7 @@ public class BpmExpressionService {
         if(numero != null){
             DecimalFormat df = null;
             if(qtdCasasDecimais != null && qtdCasasDecimais > 0) {
-                df = new DecimalFormat("#,###.".concat(Strings.repeat("0", qtdCasasDecimais)));
+                df = new DecimalFormat("#,##0.".concat(Strings.repeat("0", qtdCasasDecimais)));
             } else {
                 df = new DecimalFormat("#,###");
             }
