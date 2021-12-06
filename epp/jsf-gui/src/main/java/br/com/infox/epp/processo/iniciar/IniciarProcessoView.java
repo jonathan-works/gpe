@@ -301,8 +301,8 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         } catch (Exception e) {
             RequestContext.getCurrentInstance().addCallbackParam("erro", true);
             createProcesso(localizacaoAtual, usuarioLogado);
-            if(e instanceof BusinessException || e instanceof BusinessRollbackException) {
-                throw new BusinessRollbackException(e.getMessage(), e);
+            if(e instanceof BusinessException) {
+                throw e;
             }
             throw new BusinessRollbackException("Erro inesperado, favor entre em contato com o administrador do sistema.", e);
         }

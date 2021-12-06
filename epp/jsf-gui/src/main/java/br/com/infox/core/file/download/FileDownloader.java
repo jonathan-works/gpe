@@ -310,8 +310,17 @@ public class FileDownloader implements Serializable {
         List<Documento> listaDocumento = documentoDAO.getDocumentosFromDocumentoBin(documento);
         boolean documentoCancelado = CollectionUtil.isEmpty(listaDocumento)? false : listaDocumento.get(0).getExcluido();
         List<Carimbo> carimbos = documentoBinManager.gerarCarimbos(documento, gerarMargens, documentoCancelado);
+        boolean documentoSemCarimbos =  (CollectionUtil.isEmpty(carimbos));
         byte[] originalData = getOriginalData(documento);
-        documentoBinManager.writeCarimbos(originalData, outputStream, carimbos);
+        if (documentoSemCarimbos) {
+            try {
+                outputStream.write(originalData);
+            } catch(IOException e) {
+                throw new RuntimeException("Erro ao gravar no stream", e);
+            }
+        } else {
+            documentoBinManager.writeCarimbos(originalData, outputStream, carimbos);
+        }
     }
 
     public HttpServletResponse getResponse() {

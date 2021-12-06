@@ -36,9 +36,6 @@ public class FiltrosBeanList implements Serializable {
 	@Setter
 	@Getter
 	private PesquisaRequerenteVO requerente;
-	@Setter
-	@Getter
-	private String nomeRequerente;
 
 	public Fluxo getFluxo() {
 		return Fluxo;
@@ -116,7 +113,6 @@ public class FiltrosBeanList implements Serializable {
         setNumeroProcesso(null);
         setCpf(null);
         setRequerente(null);
-        setNomeRequerente(null);
 	}
 
 }

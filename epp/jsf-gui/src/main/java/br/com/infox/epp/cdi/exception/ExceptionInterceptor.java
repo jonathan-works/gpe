@@ -23,10 +23,10 @@ import br.com.infox.seam.exception.BusinessException;
 @ExceptionHandled
 @Interceptor
 public class ExceptionInterceptor implements Serializable {
-    
+
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(ExceptionInterceptor.class);
-	
+
 	@AroundInvoke
 	public Object handleException(InvocationContext context) throws Exception {
 		ExceptionHandled annotation = context.getMethod().getAnnotation(ExceptionHandled.class);
@@ -56,6 +56,9 @@ public class ExceptionInterceptor implements Serializable {
 			}
 			return result;
 		} catch (BusinessException e) {
+		    if(e.getCause() != null) {
+		        LOG.error("BusinessException", e);
+		    }
 		    FacesMessages.instance().add(e.getMessage());
 		} catch (Exception e) {
             if (e.getCause() != null && (e instanceof EJBException)){
@@ -80,13 +83,13 @@ public class ExceptionInterceptor implements Serializable {
 		}
 		return null;
 	}
-	
+
     private void createLogErro(Exception e) {
         LogErro logErro = getLogErroService().log(e);
         LOG.error(logErro.getCodigo(), e);
         FacesMessages.instance().add("Código de Erro: " + logErro.getCodigo() + " Mensagem: " + e.getMessage());
     }
-	
+
 	private LogErrorService getLogErroService() {
 	    return Beans.getReference(LogErrorService.class);
 	}

@@ -1,6 +1,7 @@
 package br.com.infox.epp.system.custom.variables;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -24,23 +25,23 @@ public class CustomVariable implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final String SEQUENCE_GENERATOR = "CustomVariableGenerator";
 	public static final String DATE_PATTERN = "dd/MM/yyyy";
-	
+
 	@Id
 	@SequenceGenerator(name = SEQUENCE_GENERATOR, sequenceName = "sq_variavel_custom_sistema", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(generator = SEQUENCE_GENERATOR, strategy = GenerationType.SEQUENCE)
 	@Column(name = "id_variavel_custom_sistema", nullable = false, unique = true)
 	private Long id;
-	
+
 	@NotNull
 	@Size(min = 1, max = 250)
 	@Column(name = "nm_codigo", nullable = false, length = 250, unique = true)
 	private String codigo;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tp_variavel", nullable = false)
 	private TipoCustomVariableEnum tipo;
-	
+
 	@NotNull
 	@Size(min = 1, max = 250)
 	@Column(name = "ds_valor", nullable = false, length = 250)
@@ -77,7 +78,7 @@ public class CustomVariable implements Serializable {
 	public void setValor(String valor) {
 		this.valor = valor;
 	}
-	
+
 	public Object getTypedValue() {
 		try {
 			switch (getTipo()) {
@@ -87,7 +88,7 @@ public class CustomVariable implements Serializable {
 				return new SimpleDateFormat(DATE_PATTERN).parse(getValor());
 			case DOUBLE:
 				NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-				return format.parse(getValor()).doubleValue();
+				return BigDecimal.valueOf(format.parse(getValor()).doubleValue());
 			case LONG:
 				return new Long(getValor());
 			case STRING:
