@@ -43,7 +43,7 @@ public class CarimboQrCode implements Carimbo {
 	private boolean aplicarComoImagem;
 
 	public CarimboQrCode(String urlValidacaoDocumento, UUID uuidDocumento, String textoAssinatura, boolean cancelado, int posicao) {
-		this(urlValidacaoDocumento, uuidDocumento, textoAssinatura, cancelado, 0, 0, 250, 62, posicao, false);
+		this(urlValidacaoDocumento, uuidDocumento, textoAssinatura, cancelado, 0, 0, (posicao == RODAPE ? 455 : 555), 62, posicao, false);
 	}
 
 	private byte[] qrCode(int sideSize) {
@@ -90,11 +90,11 @@ public class CarimboQrCode implements Carimbo {
 		final Font font = new Font(Font.TIMES_ROMAN, 8);
 
 		if (StringUtils.isNotBlank(textoAssinatura)) {
-			float lowerHeight = height * 0.75f;
+			float lowerHeight = height * 0.65f;
 			ColumnText ct = new ColumnText(content);
 			ct.setSimpleColumn(lowerLeftX, lowerLeftY + lowerHeight, upperRightX, upperRightY);
 			upperRightY = lowerLeftY + lowerHeight;
-			ct.setLeading(11);
+			ct.setLeading(10);
 			Phrase phrase = new Phrase(textoAssinatura, font);
 
 			ct.addText(phrase);
@@ -103,7 +103,7 @@ public class CarimboQrCode implements Carimbo {
 		}
 		ColumnText ct = new ColumnText(content);
 		ct.setSimpleColumn(lowerLeftX, lowerLeftY, upperRightX, upperRightY);
-		ct.setLeading(11);
+		ct.setLeading(10);
 		Phrase textoAutenticidade = new Phrase(resolveTextoAutenticidade(), font);
 		String urlQRCode = getUrlValidacaoDocumento();
 		Anchor codPhrase = new Anchor(urlQRCode, font);
