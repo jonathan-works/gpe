@@ -26,6 +26,7 @@ import br.com.infox.epp.processo.documento.download.Carimbo;
 import br.com.infox.epp.processo.documento.download.CarimboAssinatura;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -53,6 +54,12 @@ public class AssinaturaEletronicaSearch extends PersistenceController {
 			.flatMap(docBin->docBin.getDocumentoList().stream())
 			.map(Documento::getClassificacaoDocumento)
 			.findFirst();
+		if (!optClassificacao.isPresent()) {
+		    optClassificacao = Stream.of(documentoBin)
+		            .flatMap(docBin->docBin.getDocumentoTemporarioList().stream())
+		            .map(DocumentoTemporario::getClassificacaoDocumento)
+		            .findFirst();
+		}
 		LocalizacaoAssinaturaEletronicaDocumentoEnum localizacaoAssinatura = optClassificacao
 				.map(ClassificacaoDocumento::getLocalizacaoAssinaturaEletronicaDocumentoEnum)
 				.orElse(LocalizacaoAssinaturaEletronicaDocumentoEnum.ULTIMA_PAGINA);

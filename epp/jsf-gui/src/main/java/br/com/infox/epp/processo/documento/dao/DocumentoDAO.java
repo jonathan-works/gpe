@@ -55,6 +55,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
+import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
@@ -98,7 +99,7 @@ public class DocumentoDAO extends DAO<Documento> {
     	Root<Documento> doc = query.from(Documento.class);
     	Join<Documento, ClassificacaoDocumento> classificacao = doc.join(Documento_.classificacaoDocumento, JoinType.INNER);
     	Join<Documento, DocumentoBin> bin = doc.join(Documento_.documentoBin, JoinType.INNER);
-    	
+
     	Subquery<Integer> subquerySigilosos = query.subquery(Integer.class);
     	Root<SigiloDocumento> sigiloDocumento = subquerySigilosos.from(SigiloDocumento.class);
     	subquerySigilosos.select(cb.literal(1));
@@ -106,7 +107,7 @@ public class DocumentoDAO extends DAO<Documento> {
     			cb.equal(sigiloDocumento.get(SigiloDocumento_.ativo), true),
     			cb.equal(sigiloDocumento.get(SigiloDocumento_.documento), doc)
     	);
-    	
+
     	Subquery<Integer> subqueryRestricoesPasta = query.subquery(Integer.class);
     	Root<PastaRestricao> pastaRestricao = subqueryRestricoesPasta.from(PastaRestricao.class);
     	subqueryRestricoesPasta.select(cb.literal(1));
@@ -114,20 +115,20 @@ public class DocumentoDAO extends DAO<Documento> {
     			cb.equal(pastaRestricao.get(PastaRestricao_.pasta), doc.get(Documento_.pasta)),
     			cb.equal(pastaRestricao.get(PastaRestricao_.tipoPastaRestricao), PastaRestricaoEnum.D),
     			cb.equal(pastaRestricao.get(PastaRestricao_.read), true)
-    			
+
 		);
-    	
+
     	query.where(
     			cb.equal(bin.get(DocumentoBin_.minuta), false),
     			cb.equal(doc.get(Documento_.idJbpmTask), idJbpmTask),
     			classificacao.get(ClassificacaoDocumento_.visibilidade).in(VisibilidadeEnum.A, VisibilidadeEnum.E),
     			cb.equal(doc.get(Documento_.excluido), false),
     			cb.not(cb.exists(subquerySigilosos)),
-    			cb.exists(subqueryRestricoesPasta)    			
+    			cb.exists(subqueryRestricoesPasta)
     	);
     	return getEntityManager().createQuery(query).getResultList();
     }
-    
+
 
     protected FullTextEntityManager getFullTextEntityManager() {
         return Search.getFullTextEntityManager(super.getEntityManager());
@@ -138,7 +139,7 @@ public class DocumentoDAO extends DAO<Documento> {
         params.put(PARAM_PROCESSO, processo);
         return getNamedResultList(LIST_DOCUMENTO_BY_PROCESSO, params);
     }
-    
+
     public List<Documento> getListAllDocumentoByProcesso(Processo processo) {
     	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     	CriteriaQuery<Documento> query = cb.createQuery(Documento.class);
@@ -147,7 +148,7 @@ public class DocumentoDAO extends DAO<Documento> {
     	query.where(cb.equal(pasta.get(Pasta_.processo), processo));
     	return getEntityManager().createQuery(query).getResultList();
     }
-    
+
     public List<Documento> getListAllDocumentoByProcessoOrderData(Processo processo) {
     	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     	CriteriaQuery<Documento> query = cb.createQuery(Documento.class);
@@ -157,7 +158,7 @@ public class DocumentoDAO extends DAO<Documento> {
     	query.orderBy(cb.asc(doc.get(Documento_.dataInclusao)));
     	return getEntityManager().createQuery(query).getResultList();
     }
-    
+
     public List<Documento> getListDocumentoMinutaByProcesso(Processo processo) {
     	Map<String, Object> params = new HashMap<>(1);
     	params.put(PARAM_PROCESSO, processo);
@@ -233,6 +234,15 @@ public class DocumentoDAO extends DAO<Documento> {
         return entityManager.createQuery(cq).getResultList();
     }
 
+    public List<DocumentoTemporario> getDocumentosTemporariosFromDocumentoBin(DocumentoBin documentoBin) {
+        EntityManager entityManager = getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<DocumentoTemporario> cq = cb.createQuery(DocumentoTemporario.class);
+        Root<DocumentoTemporario> from = cq.from(DocumentoTemporario.class);
+        cq.select(from).where(cb.equal(from.get("documentoBin"), documentoBin));
+        return entityManager.createQuery(cq).getResultList();
+    }
+
     public List<Documento> getDocumentosByIdDocumentoBin(Integer idDocumentoBin) {
         EntityManager entityManager = getEntityManager();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -242,23 +252,29 @@ public class DocumentoDAO extends DAO<Documento> {
         cq.where(cb.equal(bin.get(DocumentoBin_.id), idDocumentoBin));
         return entityManager.createQuery(cq).getResultList();
     }
-    
+
     public List<Documento> getDocumentosDoProcessoPorClassificacao(Fluxo fluxo, Processo processo) {
         EntityManager entityManager = getEntityManager();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Documento> cq = cb.createQuery(Documento.class);
         Root<Documento> from = cq.from(Documento.class);
-        
+
         Join<Documento, Pasta> pasta = from.join(Documento_.pasta, JoinType.INNER);
-        
+
         return null;
     }
-    
+
     public PosicaoTextoAssinaturaDocumentoEnum getPosicaoTextoAssinaturaDocumento(DocumentoBin documentoBin) {
-    	List<Documento> documentoList = getDocumentosFromDocumentoBin(documentoBin);
-		if (!documentoList.isEmpty()) {
-			return documentoList.get(0).getClassificacaoDocumento().getPosicaoTextoAssinaturaDocumentoEnum();
-		}
-		return null;
+        List<Documento> documentoList = getDocumentosFromDocumentoBin(documentoBin);
+        if (!documentoList.isEmpty()) {
+            return documentoList.get(0).getClassificacaoDocumento().getPosicaoTextoAssinaturaDocumentoEnum();
+        }
+
+        List<DocumentoTemporario> documentoTemporarioList = getDocumentosTemporariosFromDocumentoBin(documentoBin);
+        if (!documentoTemporarioList.isEmpty()) {
+            return documentoTemporarioList.get(0).getClassificacaoDocumento().getPosicaoTextoAssinaturaDocumentoEnum();
+        }
+
+        return null;
     }
 }
