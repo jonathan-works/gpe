@@ -20,6 +20,7 @@ IndexTaskContent
 .metadata
 .project
 .settings
+.idea
 target
 .target/
 .apt_generated/
