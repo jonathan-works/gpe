@@ -382,6 +382,20 @@ public class AssinaturaDocumentoService {
         return result;
     }
 
+    public boolean isDocumentoAssinado(Integer idDocumentoBin, Papel papel, UsuarioLogin usuario) {
+        DocumentoBin documentoBin = this.documentoBinManager.find(idDocumentoBin);
+        boolean result = false;
+
+        for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
+            if (assinaturaDocumento.getPapel().equals(papel) &&
+                    assinaturaDocumento.getPessoaFisica().equals(usuario.getPessoaFisica())) {
+                result = isSignatureValid(assinaturaDocumento);
+                break;
+            }
+        }
+        return result;
+    }
+
     public boolean podeRenderizarApplet(Papel papel, ClassificacaoDocumento classificacao, Integer idDocumento, UsuarioLogin usuario) {
     	Documento documento = documentoManager.find(idDocumento);
     	if (documento == null) {
@@ -435,6 +449,11 @@ public class AssinaturaDocumentoService {
 
     public boolean isAssinavelPorUsuarioAtual(Papel papel, ClassificacaoDocumento classificacao, DocumentoBin documentoBin, UsuarioLogin usuario) {
         return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) &&
+                !isDocumentoAssinado(documentoBin, papel, usuario);
+    }
+
+    public boolean isAssinavelPorUsuarioAtual(Papel papel, Integer classificacao, Integer documentoBin, UsuarioLogin usuario) {
+        return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel.getIdPapel(), classificacao) &&
                 !isDocumentoAssinado(documentoBin, papel, usuario);
     }
 }

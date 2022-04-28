@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.ValidationException;
 
+import br.com.infox.epp.documento.DocumentoAssinavelDTO;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.graph.exe.ExecutionContext;
@@ -276,13 +277,18 @@ public class ConsultaProcessoList extends DataList<TaskBean> implements Serializ
     }
     
     public void buildExibirSelecaoAssinarDocumentosLote(List<TaskBean> listaTaskBean) {
-    	showMarcarTodosAssinaveis = false;
-		for(TaskBean taskBean : listaTaskBean) {
-			taskBean.setExibirSelecaoAssinaturaLote(!taskInstancePermitidaAssinarDocumentoSearch.getListaDocumentosParaSeremAssinados(taskBean.getIdTaskInstance()).isEmpty());
-			if(!showMarcarTodosAssinaveis && taskBean.isExibirSelecaoAssinaturaLote()) {
-				showMarcarTodosAssinaveis = true;
-			}
-		}
+        showMarcarTodosAssinaveis = false;
+
+        Set<String> collect = listaTaskBean.stream().map(tb -> tb.getIdTaskInstance()).collect(Collectors.toSet());
+
+        List<DocumentoAssinavelDTO> result = taskInstancePermitidaAssinarDocumentoSearch.getDTODocumentosAssinar(collect);
+
+        for(TaskBean taskBean : listaTaskBean) {
+            taskBean.setExibirSelecaoAssinaturaLote(result.stream().anyMatch(doc -> taskBean.getIdTaskInstance().equals(doc.getIdTaskIntance())));
+            if(!showMarcarTodosAssinaveis && taskBean.isExibirSelecaoAssinaturaLote()) {
+                showMarcarTodosAssinaveis = true;
+            }
+        }
 	}
     
     public void marcarAssinaveisNaoAssinaveis() {

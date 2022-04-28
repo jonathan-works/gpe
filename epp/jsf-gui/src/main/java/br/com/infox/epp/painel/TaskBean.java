@@ -1,5 +1,8 @@
 package br.com.infox.epp.painel;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import br.com.infox.epp.access.api.Authenticator;
@@ -66,6 +69,40 @@ public class TaskBean {
         this.pesoPrioridadeProcesso = pesoPrioridadeProcesso == null ? -1 : pesoPrioridadeProcesso;
         this.dataInicio = dataInicio;
         this.hasDocumentoParaAssinar = temDocumentoParaAssinar;
+    }
+
+    public TaskBean(Object[] record) {
+        this.idTaskInstance =  (String) record[0];
+        this.taskName = (String)  record[1];
+        this.assignee = (String) record[2];
+        this.idProcessInstance =  (String) record[3];
+        this.taskNodeKey =   (String) record[4];
+        this.idProcesso =   validateIntValue(record[5]);
+        this.nomeCaixa = (String) record[6];
+        this.idCaixa = validateIntValue(record[7]);
+        this.nomeNatureza =  (String)  record[8];
+        this.nomeCategoria =   (String)  record[9];
+        this.numeroProcesso =  (String)  record[10];
+        this.idProcessoRoot = validateIntValue(record[11]);
+        this.numeroProcessoRoot =  (String)  record[12];
+        this.nomeUsuarioSolicitante =  (String)  record[13];
+        this.idPrioridadeProcesso = validateIntValue(record[14]);
+        this.prioridadeProcesso = (String) record[15];
+        this.pesoPrioridadeProcesso = validateIntValue(record[16]) == null ? -1 : validateIntValue(record[16]);
+        this.dataInicio = convertDate(record[17]);
+        this.nomeNaturezaProcessoRoot = (String) record[18];
+        this.nomeCategoriaProcessoRoot =  (String) record[19];;
+        this.hasDocumentoParaAssinar = Boolean.valueOf(record[20].toString());
+        this.nomeFluxo =  (String) record[21];
+        this.idFluxo = validateIntValue(record[22]);
+    }
+
+    private Date convertDate(Object value){
+        return Date.from(LocalDateTime.parse(value.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private Integer validateIntValue(Object value){
+        return value == null ? null : Integer.valueOf(value.toString());
     }
 
     public String getIdTaskInstance() {
