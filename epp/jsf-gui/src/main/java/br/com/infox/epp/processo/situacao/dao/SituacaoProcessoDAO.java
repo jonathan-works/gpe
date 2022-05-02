@@ -117,7 +117,8 @@ public class SituacaoProcessoDAO extends PersistenceController {
 
         Map<String, Object> params = new HashMap<>();
 
-        StringBuilder query = ViewSituacaoProcessoQuery.TASK_INSTANCES_QUERY;
+        StringBuilder query = new StringBuilder("");
+        query.append(ViewSituacaoProcessoQuery.TASK_INSTANCES_QUERY);
         query.append(ViewSituacaoProcessoQuery.subQuerySigilo);
 
         if(fluxoBean.getTipoProcesso() == null){
@@ -161,13 +162,16 @@ public class SituacaoProcessoDAO extends PersistenceController {
         }
 
         query.append(")");
+        query.append("OPTION (FORCE ORDER)");
 
         params.put(PARAM_PROCESS_DEFINITION, fluxoBean.getProcessDefinitionId());
         params.put(PARAM_ID_USUARIO_LOGIN, Authenticator.getUsuarioLogado().getIdUsuarioLogin());
 
         Query nativeQuery = getEntityManager().createNativeQuery(query.toString());
 
-        params.entrySet().forEach( p -> nativeQuery.setParameter(p.getKey(), p.getValue()));
+        params.entrySet().forEach( p -> {
+            nativeQuery.setParameter(p.getKey(), p.getValue());
+        });
 
         List<Object[]> resultList = nativeQuery.getResultList();
         List<TaskBean> result = new LinkedList<>();

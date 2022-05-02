@@ -1,5 +1,7 @@
 package br.com.infox.epp.view.query;
 
+import java.util.Arrays;
+
 public interface ViewSituacaoProcessoQuery {
 
     String PARAM_PROCESS_DEFINITION = "processDefinitionId";
@@ -18,31 +20,32 @@ public interface ViewSituacaoProcessoQuery {
     String PARAM_TIPO_LOCAL = "local";
     String PARAM_CODIGO_LOCALIZACAO = "codigoLocalizacao";
     String PARAM_NUMERO_PROCESSO_ROOT = "nmrProcessoRoot";
+    String PARAM_ACTOR_ID = "idActor";
 
     String TASK_INSTANCES = "ViewSituacaoProcesso.getTaskIntances";
-    StringBuilder TASK_INSTANCES_QUERY = new StringBuilder("select Cast(taskins.ID_ as varchar) as idTaskInstance,")
+    StringBuilder TASK_INSTANCES_QUERY = new StringBuilder("select Cast(taskins.ID_ as varchar) idti,")
             .append("task.NAME_ , ")
             .append("taskins.ASSIGNEE_, ")
-            .append("Cast(processins.ID_ as varchar), ")
+            .append("Cast(processins.ID_ as varchar) as proid, ")
             .append("tasknode.KEY_, ")
             .append("proce.id_processo as idProcesso,")
-            .append("caixa.nm_caixa as nomeCaixa,")
-            .append("caixa.id_caixa as idCaixa,")
+            .append("caixa.nm_caixa ,")
+            .append("caixa.id_caixa ,")
             .append("nat.ds_natureza as nomeNatureza,")
             .append("cat.ds_categoria as nomeCategoria,")
             .append("proce.nr_processo as numeroProcesso,")
-            .append("procroot.id_processo as idProcessoRoot,")
-            .append("procroot.nr_processo as numeroProcessoRoot,")
+            .append("procroot.id_processo ,")
+            .append("procroot.nr_processo ,")
             .append("usulog.nm_usuario,")
             .append("prioproc.id_prioridade_processo, ")
             .append("prioproc.ds_prioridade_processo, ")
             .append("prioproc.nr_peso, ")
-            .append("convert(varchar,  proce.dt_inicio, 20) as dataInicio,")
-            .append("natroot.ds_natureza as nomeNaturezaProcessoRoot,")
-            .append("catroot.ds_categoria as nomeCategoriaProcessoRoot,")
-            .append("vssp.in_documento_assinar as temDocumentoParaAssinar,")
-            .append("fluxo.ds_fluxo as nomeFluxo,")
-            .append("fluxo.id_fluxo as idFluxo ")
+            .append("convert(varchar, proce.dt_inicio, 120), ")
+            .append("natroot.ds_natureza ,")
+            .append("catroot.ds_categoria ,")
+            .append("vssp.in_documento_assinar ,")
+            .append("flux.ds_fluxo ,")
+            .append("flux.id_fluxo ")
             .append("from  vs_situacao_processo vssp ")
             .append("inner join JBPM_TASKINSTANCE taskins on vssp.id_taskinstance = taskins.ID_  ")
             .append("inner join JBPM_PROCESSINSTANCE processins on vssp.id_processinstace = processins.ID_  ")
@@ -55,13 +58,11 @@ public interface ViewSituacaoProcessoQuery {
             .append("inner join tb_natureza nat on natcat.id_natureza = nat.id_natureza ")
             .append("inner join tb_categoria cat on natcat.id_categoria  = cat.id_categoria ")
             .append("inner join tb_fluxo flux on natcat.id_fluxo = flux.id_fluxo ")
-            .append("inner join tb_natureza_categoria_fluxo natcatroot on vssp.id_natureza_categoria_fluxo = natcatroot.id_natureza_categoria_fluxo ")
+            .append("inner join tb_natureza_categoria_fluxo natcatroot on vssp.id_natureza_categoria_fluxo_root = natcatroot.id_natureza_categoria_fluxo ")
             .append("inner join tb_natureza natroot on natcatroot.id_natureza = natroot.id_natureza ")
             .append("inner join tb_categoria catroot on natcatroot.id_categoria  = catroot.id_categoria ")
             .append("inner join JBPM_TASK task on taskins.TASK_ = task.ID_  ")
             .append("inner join JBPM_NODE tasknode on task.TASKNODE_ = tasknode.ID_ ")
-            .append("inner join JBPM_PROCESSDEFINITION processdefin on  processins.PROCESSDEFINITION_ = processdefin.ID_ ")
-            .append("inner join tb_fluxo fluxo on processdefin.NAME_ = fluxo.ds_fluxo ")
             .append("where processins.END_ is null ")
             .append("and taskins.ISOPEN_ = 1 ")
             .append("and taskins.ISSUSPENDED_ = 0 ")
