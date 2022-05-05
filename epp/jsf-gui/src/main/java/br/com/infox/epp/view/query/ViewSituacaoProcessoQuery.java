@@ -44,8 +44,8 @@ public interface ViewSituacaoProcessoQuery {
             .append("natroot.ds_natureza ,")
             .append("catroot.ds_categoria ,")
             .append("vssp.in_documento_assinar ,")
-            .append("flux.ds_fluxo ,")
-            .append("flux.id_fluxo ")
+            .append("fluxo.ds_fluxo ,")
+            .append("fluxo.id_fluxo ")
             .append("from  vs_situacao_processo vssp ")
             .append("inner join JBPM_TASKINSTANCE taskins on vssp.id_taskinstance = taskins.ID_  ")
             .append("inner join JBPM_PROCESSINSTANCE processins on vssp.id_processinstace = processins.ID_  ")
@@ -63,6 +63,8 @@ public interface ViewSituacaoProcessoQuery {
             .append("inner join tb_categoria catroot on natcatroot.id_categoria  = catroot.id_categoria ")
             .append("inner join JBPM_TASK task on taskins.TASK_ = task.ID_  ")
             .append("inner join JBPM_NODE tasknode on task.TASKNODE_ = tasknode.ID_ ")
+            .append("inner join dbo.JBPM_PROCESSDEFINITION processdefin on  processins.PROCESSDEFINITION_ = processdefin.ID_ " )
+            .append("inner join dbo.tb_fluxo fluxo on processdefin.NAME_ = fluxo.ds_fluxo ")
             .append("where processins.END_ is null ")
             .append("and taskins.ISOPEN_ = 1 ")
             .append("and taskins.ISSUSPENDED_ = 0 ")
@@ -137,8 +139,8 @@ public interface ViewSituacaoProcessoQuery {
             .append(PARAM_TIPO_LOCAL)
             .append("  )) ");
 
-    StringBuilder queryProcRoot = new StringBuilder(" and procroot.nr_processo like '%")
+    StringBuilder queryProcRoot = new StringBuilder(" and procroot.nr_processo like concat('%',:")
             .append(PARAM_NUMERO_PROCESSO_ROOT)
-            .append("%'");
+            .append(",'%')");
 
 }
