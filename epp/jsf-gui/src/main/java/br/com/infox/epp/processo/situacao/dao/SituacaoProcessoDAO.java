@@ -1,11 +1,14 @@
 package br.com.infox.epp.processo.situacao.dao;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,6 +22,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 import javax.persistence.criteria.Subquery;
 
+import br.com.infox.epp.view.query.ViewSituacaoProcessoQuery;
 import org.jbpm.context.exe.variableinstance.LongInstance;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
@@ -62,6 +66,9 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.view.ViewSituacaoProcesso;
 import br.com.infox.epp.view.ViewSituacaoProcesso_;
 import br.com.infox.ibpm.type.PooledActorType;
+import br.com.infox.epp.view.query.ViewSituacaoProcessoQuery.*;
+
+import static br.com.infox.epp.view.query.ViewSituacaoProcessoQuery.*;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -107,77 +114,71 @@ public class SituacaoProcessoDAO extends PersistenceController {
 	}
 
 	public List<TaskBean> getTaskIntances(FluxoBean fluxoBean) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<TaskBean> cq = cb.createQuery(TaskBean.class);
 
-        Root<ViewSituacaoProcesso> viewSituacaoProcesso = cq.from(ViewSituacaoProcesso.class);
+        Map<String, Object> params = new HashMap<>();
 
-        Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
-        Join<ViewSituacaoProcesso, ProcessInstance> processInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processInstance);
-        Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
-        Join<ViewSituacaoProcesso, Processo> processoRoot = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processoRoot);
-        Join<ViewSituacaoProcesso, UsuarioLogin> usuarioSolicitante = viewSituacaoProcesso.join(ViewSituacaoProcesso_.usuarioCadastro);
-        Join<ViewSituacaoProcesso, Caixa> caixa = viewSituacaoProcesso.join(ViewSituacaoProcesso_.caixa, JoinType.LEFT);
-        Join<ViewSituacaoProcesso, PrioridadeProcesso> prioridadeProcesso = viewSituacaoProcesso.join(ViewSituacaoProcesso_.prioridadeProcesso, JoinType.LEFT);
+        StringBuilder query = new StringBuilder("");
+        query.append(ViewSituacaoProcessoQuery.TASK_INSTANCES_QUERY);
+        query.append(ViewSituacaoProcessoQuery.subQuerySigilo);
 
-        Join<ViewSituacaoProcesso, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.naturezaCategoriaFluxo);
-        Join<NaturezaCategoriaFluxo, Natureza> natureza = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.natureza);
-        Join<NaturezaCategoriaFluxo, Categoria> categoria = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.categoria);
-        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
+        if(fluxoBean.getTipoProcesso() == null){
+            query.append(ViewSituacaoProcessoQuery.subQueryTipoProcessoNull);
+            params.put(PARAM_TIPO_PROCESSO_METADADO, EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType());
+        }else{
+            query.append(ViewSituacaoProcessoQuery.subQueryTipoProcesso);
+            params.put(PARAM_TIPO_PROCESSO_METADADO, EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType());
+            params.put(PARAM_TIPO_PROCESSO_VALOR, fluxoBean.getTipoProcesso());
+        }
 
-        Join<ViewSituacaoProcesso, NaturezaCategoriaFluxo> naturezaCategoriaFluxoRoot = viewSituacaoProcesso.join(ViewSituacaoProcesso_.naturezaCategoriaFluxoRoot);
-        Join<NaturezaCategoriaFluxo, Natureza> naturezaRoot = naturezaCategoriaFluxoRoot.join(NaturezaCategoriaFluxo_.natureza);
-        Join<NaturezaCategoriaFluxo, Categoria> categoriaRoot = naturezaCategoriaFluxoRoot.join(NaturezaCategoriaFluxo_.categoria);
+        if (TipoProcesso.COMUNICACAO.equals(fluxoBean.getTipoProcesso())) {
+            if (fluxoBean.getExpedida() != null && fluxoBean.getExpedida()) {
+               query.append(ViewSituacaoProcessoQuery.queryLocExpedidor);
+               params.put(PARAM_ID_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getIdLocalizacao());
+            } else {
+                PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+                Integer idPessoaFisica = pessoaFisica == null ? -1 : pessoaFisica.getIdPessoa();
+                query.append(ViewSituacaoProcessoQuery.queryDestDestinatario);
+                params.put(PARAM_LOCALIZACAO_DESTINO, EppMetadadoProvider.LOCALIZACAO_DESTINO.getMetadadoType());
+                params.put(PARAM_ID_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getIdLocalizacao());
+                params.put(PARAM_PERFIL_DESTINO, EppMetadadoProvider.PERFIL_DESTINO.getMetadadoType());
+                params.put(PARAM_ID_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId());
+                params.put(PARAM_PERFIL_DESTINO, EppMetadadoProvider.PERFIL_DESTINO.getMetadadoType());
+                params.put(PARAM_ID_PESSOA_FISICA, idPessoaFisica);
+            }
+        } else {
+            query.append(ViewSituacaoProcessoQuery.subQueryTipoProcessoFilter);
+            params.put(PARAM_ID_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId().toString());
+            params.put(PARAM_CODIGO_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getCodigo());
+            params.put(PARAM_NOME_USUARIO_LOGIN, Authenticator.getUsuarioLogado().getLogin());
+            params.put(PARAM_TIPO_USER, PooledActorType.USER.getValue());
+            params.put(PARAM_CODIGO_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getCodigo());
+            params.put(PARAM_TIPO_GROUP, PooledActorType.GROUP.getValue());
+            params.put(PARAM_TIPO_LOCAL, PooledActorType.LOCAL.getValue());
+        }
 
-        Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
-        Join<Task, TaskNode> taskNode = task.join("taskNode", JoinType.INNER);
-
-        Selection<String> idTaskInstance = taskInstance.<Long>get("id").as(String.class);
-        Selection<String> taskName = task.<String>get("name");
-        Selection<String> assignee = taskInstance.<String>get("assignee");
-        Selection<String> idProcessInstance = processInstance.<Long>get("id").as(String.class);
-        Selection<String> taskNodeKey = taskNode.<String>get("key");
-        Selection<String> nomeCaixa =  caixa.get(Caixa_.nomeCaixa);
-        Selection<Integer> idCaixa =  caixa.get(Caixa_.idCaixa);
-        Selection<String> nomeNatureza = natureza.get(Natureza_.natureza);
-        Selection<String> nomeCategoria = categoria.get(Categoria_.categoria);
-        Selection<String> numeroProcessoRoot = processoRoot.get(Processo_.numeroProcesso);
-        Selection<String> nomeNaturezaProcessoRoot = naturezaRoot.get(Natureza_.natureza);
-        Selection<String> nomeCategoriaProcessoRoot = categoriaRoot.get(Categoria_.categoria);
-        Selection<String> nomeUsuarioSolicitante = usuarioSolicitante.get(UsuarioLogin_.nomeUsuario);
-        Selection<Integer> idPrioridadeProcesso = prioridadeProcesso.get(PrioridadeProcesso_.idPrioridade);
-        Selection<String> nomePrioridade = prioridadeProcesso.get(PrioridadeProcesso_.descricaoPrioridade);
-        Selection<Integer> pesoPrioridade = prioridadeProcesso.get(PrioridadeProcesso_.peso);
-        Selection<Date> dataInicio = processo.get(Processo_.dataInicio);
-        Selection<Integer> idProcesso = processo.get(Processo_.idProcesso);
-        Selection<Integer> idProcessoRoot = processoRoot.get(Processo_.idProcesso);
-        Selection<String> numeroProcesso = processo.get(Processo_.numeroProcesso);
-
-        cq.select(cb.construct(TaskBean.class, idTaskInstance, taskName, assignee, idProcessInstance, taskNodeKey,
-                idProcesso, nomeCaixa, idCaixa, nomeNatureza, nomeCategoria, numeroProcesso, idProcessoRoot,
-                numeroProcessoRoot, nomeUsuarioSolicitante, idPrioridadeProcesso, nomePrioridade, pesoPrioridade, dataInicio,
-                nomeNaturezaProcessoRoot, nomeCategoriaProcessoRoot, viewSituacaoProcesso.get(ViewSituacaoProcesso_.temDocumentoParaAssinar)));
-
-        cq.where(
-                cb.isNull(processInstance.<Date>get("end")),
-                cb.isTrue(taskInstance.<Boolean>get("isOpen")),
-                cb.equal(fluxo.get(Fluxo_.idFluxo).as(String.class), cb.literal(fluxoBean.getProcessDefinitionId())),
-                cb.isFalse(taskInstance.<Boolean>get("isSuspended"))
-        );
-
-        appendSigiloProcessoFilter(cq, processo);
-        appendTipoProcessoFilter(cq, fluxoBean.getTipoProcesso(), processo);
-        appendTipoProcessoFilters(cq, fluxoBean.getTipoProcesso(), fluxoBean.getExpedida(), taskInstance, processo);
         if (!StringUtil.isEmpty(fluxoBean.getNumeroProcessoRootFilter())) {
-            appendNumeroProcessoRootFilter(cq, fluxoBean.getNumeroProcessoRootFilter(), processoRoot);
+            query.append(ViewSituacaoProcessoQuery.queryProcRoot);
+            params.put(PARAM_NUMERO_PROCESSO_ROOT, fluxoBean.getNumeroProcessoRootFilter());
         }
-        List<TaskBean> resultList = getEntityManager().createQuery(cq).getResultList();
-        for(TaskBean taskBean : resultList) {
-            Fluxo fluxoTarefaAtual = getFluxoByIdProcessoAndIdTaskInstance(taskBean.getIdProcesso(), taskBean.getIdTaskInstance());
-            taskBean.setNomeFluxo(fluxoTarefaAtual.getFluxo());
-            taskBean.setIdFluxo(fluxoTarefaAtual.getIdFluxo());
+
+        query.append(")");
+        query.append("OPTION (FORCE ORDER)");
+
+        params.put(PARAM_PROCESS_DEFINITION, fluxoBean.getProcessDefinitionId());
+        params.put(PARAM_ID_USUARIO_LOGIN, Authenticator.getUsuarioLogado().getIdUsuarioLogin());
+
+        Query nativeQuery = getEntityManager().createNativeQuery(query.toString());
+
+        params.entrySet().forEach( p -> {
+            nativeQuery.setParameter(p.getKey(), p.getValue());
+        });
+
+        List<Object[]> resultList = nativeQuery.getResultList();
+        List<TaskBean> result = new LinkedList<>();
+        for(Object[] record : resultList){
+            result.add(new TaskBean(record));
         }
-        return resultList;
+        return result;
     }
 
     protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcesso, Path<Processo> processoRoot) {

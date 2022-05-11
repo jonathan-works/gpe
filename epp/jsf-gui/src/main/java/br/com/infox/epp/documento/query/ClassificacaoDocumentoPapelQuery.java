@@ -19,4 +19,8 @@ public interface ClassificacaoDocumentoPapelQuery {
     String GET_BY_PAPEL_AND_CLASSIFICACAO_QUERY = "select o from ClassificacaoDocumentoPapel o "
             + "where o.classificacaoDocumento = :" + PARAM_CLASSIFICACAO_DOCUMENTO + " "
 				+ "and o.papel = :" + PARAM_PAPEL;
+
+	String NATIVE_PAPEL_PODE_ASSINAR_CLASSIFICACAO_QUERY = "select 1 from tb_classificacao_doc_papel o "
+			+ "where o.tp_assinatura <> 'P' and o.id_classificacao_documento = :" + PARAM_CLASSIFICACAO_DOCUMENTO
+			+ " and o.id_papel = :" + PARAM_PAPEL;
 }

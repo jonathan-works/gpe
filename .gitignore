@@ -20,9 +20,11 @@ IndexTaskContent
 .metadata
 .project
 .settings
+.idea
 target
 .target/
 .apt_generated/
 sonar-project.properties
 **/.DS_Store
 .DS_Store
+epp/jsf-gui/epp.iml

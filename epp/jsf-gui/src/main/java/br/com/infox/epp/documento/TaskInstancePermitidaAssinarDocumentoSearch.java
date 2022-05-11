@@ -1,7 +1,9 @@
 package br.com.infox.epp.documento;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -22,8 +24,10 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.entity.TaskInstancePermitidaAssinarDocumento;
 import br.com.infox.epp.documento.entity.TaskInstancePermitidaAssinarDocumento_;
+import br.com.infox.epp.documento.query.DocumentosParaSeremAssinadosQuery;
 import br.com.infox.epp.documento.service.DocumentoVO;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
@@ -100,4 +104,28 @@ public class TaskInstancePermitidaAssinarDocumentoSearch extends PersistenceCont
         return listaDocumento;
 	}
 
+	public List<DocumentoAssinavelDTO> getDTODocumentosAssinar(Set<String> idTaskInstance) {
+
+		List<Object[]> resultList = getEntityManager().createNativeQuery(DocumentosParaSeremAssinadosQuery.DOCUMENTOS_PARA_SEREM_ASSINADOS_QUERY
+				.toString()).setParameter(DocumentosParaSeremAssinadosQuery.PARAM_TASK_INSTANCE, idTaskInstance).getResultList();
+
+		List<DocumentoAssinavelDTO> listaDocumentoDTO = new ArrayList<>();
+		for(Object[] record : resultList){
+			listaDocumentoDTO.add(new DocumentoAssinavelDTO(Integer.valueOf(record[0].toString()),
+					Integer.valueOf(record[1].toString()),
+					Integer.valueOf(record[2].toString()), (String) record[3]));
+		}
+
+		for(Iterator<DocumentoAssinavelDTO> itDocumento = listaDocumentoDTO.iterator(); itDocumento.hasNext();) {
+			DocumentoAssinavelDTO doc = itDocumento.next();
+		boolean usuarioPodeAssinar = assinaturaDocumentoService
+					.isAssinavelPorUsuarioAtual(Authenticator.getPapelAtual(), doc.getIdClassificacao(),
+							doc.getIdDocumentoBin(), Authenticator.getUsuarioLogado());
+		if(!usuarioPodeAssinar) {
+				itDocumento.remove();
+			}
+		}
+
+		return listaDocumentoDTO;
+	}
 }

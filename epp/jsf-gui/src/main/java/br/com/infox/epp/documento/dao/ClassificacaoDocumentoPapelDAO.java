@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -33,6 +34,16 @@ public class ClassificacaoDocumentoPapelDAO extends DAO<ClassificacaoDocumentoPa
     	params.put(ClassificacaoDocumentoPapelQuery.PARAM_PAPEL, papel);
     	return getNamedSingleResult(ClassificacaoDocumentoPapelQuery.PAPEL_PODE_ASSINAR_CLASSIFICACAO, params) != null;
     }
+
+	public boolean papelPodeAssinarClassificacao(Integer papel, Integer classificacao) {
+
+		Query nativeQuery = getEntityManager()
+				.createNativeQuery(ClassificacaoDocumentoPapelQuery.NATIVE_PAPEL_PODE_ASSINAR_CLASSIFICACAO_QUERY)
+				.setParameter(ClassificacaoDocumentoPapelQuery.PARAM_CLASSIFICACAO_DOCUMENTO, classificacao)
+				.setParameter(ClassificacaoDocumentoPapelQuery.PARAM_PAPEL, papel);
+
+		return nativeQuery.getResultList() != null;
+	}
 
 	public boolean classificacaoExigeAssinatura(ClassificacaoDocumento classificacaoDocumento) {
 		Map<String, Object> params = new HashMap<>();
