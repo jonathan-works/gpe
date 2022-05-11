@@ -43,7 +43,7 @@ public class DocumentoCompartilhamentoList extends DataList<Documento> {
     private Processo processo;
     private List<Pasta> pastas;
     private ClassificacaoDocumento classificacaoDocumento;
-    private Integer numeroDocumento;
+    private Integer numeroSequencialDocumento;
     private Boolean excluido;
     private List<String> codigoMarcadores;
 
@@ -78,7 +78,7 @@ public class DocumentoCompartilhamentoList extends DataList<Documento> {
     @Override
     protected void addRestrictionFields() {
         addRestrictionField("classificacaoDocumento", RestrictionType.igual);
-        addRestrictionField("numeroDocumento", RestrictionType.igual);
+        addRestrictionField("numeroSequencialDocumento", RestrictionType.igual);
         addRestrictionField("excluido", RestrictionType.igual);
     }
 
@@ -86,7 +86,7 @@ public class DocumentoCompartilhamentoList extends DataList<Documento> {
     protected Map<String, String> getCustomColumnsOrder() {
         Map<String, String> map = new HashMap<>();
         map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
-        map.put("numeroDocumento", "o.numeroDocumento");
+        map.put("numeroSequencialDocumento", "o.numeroSequencialDocumento");
         map.put("usuarioInclusao", "o.usuarioInclusao.nomeUsuario");
         map.put("dataInclusao", "o.dataInclusao");
         map.put("descricao", "o.descricao");
@@ -118,12 +118,12 @@ public class DocumentoCompartilhamentoList extends DataList<Documento> {
         this.classificacaoDocumento = classificacaoDocumento;
     }
 
-    public Integer getNumeroDocumento() {
-        return numeroDocumento;
+    public Integer getNumeroSequencialDocumento() {
+        return numeroSequencialDocumento;
     }
 
-    public void setNumeroDocumento(Integer numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
+    public void setNumeroSequencialDocumento(Integer numeroSequencialDocumento) {
+        this.numeroSequencialDocumento = numeroSequencialDocumento;
     }
 
     public Boolean getExcluido() {

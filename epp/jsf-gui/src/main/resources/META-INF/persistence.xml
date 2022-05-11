@@ -9,7 +9,7 @@
     <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
     <properties>
       <property name="hibernate.show_sql" value="${desenvolvimento}" />
-      <property name="hibernate.format_sql" value="false" />
+      <property name="hibernate.format_sql" value="${desenvolvimento}" />
 
       <property name="hibernate.ejb.cfgfile" value="hibernate.cfg.xml"/>
 
@@ -54,7 +54,7 @@
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.show_sql" value="${desenvolvimento}" />
-      <property name="hibernate.format_sql" value="false" />
+      <property name="hibernate.format_sql" value="${desenvolvimento}" />
       <property name="hibernate.id.new_generator_mappings" value="false" />
 
       <property name="hibernate.default_batch_fetch_size" value="16" />

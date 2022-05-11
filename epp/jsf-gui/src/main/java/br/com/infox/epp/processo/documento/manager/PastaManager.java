@@ -263,12 +263,12 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Documento> query = cb.createQuery(Documento.class);
 		Root<Documento> root = query.from(Documento.class);
-		query.where(cb.equal(root.get(Documento_.pasta), pasta), cb.isNull(root.get(Documento_.numeroDocumento)));
+		query.where(cb.equal(root.get(Documento_.pasta), pasta), cb.isNull(root.get(Documento_.numeroSequencialDocumento)));
 		query.orderBy(cb.asc(root.get(Documento_.dataInclusao)));
 		List<Documento> documentos = entityManager.createQuery(query).getResultList();
 		
 		for (Documento documento : documentos) {
-			documento.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(pasta.getProcesso()));
+			documento.setNumeroSequencialDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(pasta.getProcesso()));
 			documentoManager.update(documento);
 		}
 	}
@@ -277,7 +277,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
 		try {
 			for (Documento documento : original.getDocumentosList()) {
 				Documento copia = documento.makeCopy();
-				copia.setNumeroDocumento(null);
+				copia.setNumeroSequencialDocumento(null);
 				copia.setPasta(novaPasta);
 				documentoManager.persist(copia);
 			}

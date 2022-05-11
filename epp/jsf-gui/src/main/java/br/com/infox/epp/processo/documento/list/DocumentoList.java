@@ -53,7 +53,7 @@ public class DocumentoList extends DataList<Documento> {
     protected Processo processo;
     protected Pasta pasta;
     protected ClassificacaoDocumento classificacaoDocumento;
-    protected Integer numeroDocumento;
+    protected Integer numeroSequencialDocumento;
     protected Boolean excluido;
     protected List<String> codigoMarcadores;
     
@@ -69,7 +69,7 @@ public class DocumentoList extends DataList<Documento> {
     protected void addRestrictionFields() {
         addRestrictionField("pasta", RestrictionType.igual);
         addRestrictionField("classificacaoDocumento", RestrictionType.igual);
-        addRestrictionField("numeroDocumento", RestrictionType.igual);
+        addRestrictionField("numeroSequencialDocumento", RestrictionType.igual);
         addRestrictionField("excluido", RestrictionType.igual);
     }
     
@@ -105,7 +105,7 @@ public class DocumentoList extends DataList<Documento> {
     protected Map<String, String> getCustomColumnsOrder() {
         Map<String, String> map = new HashMap<>();
         map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
-        map.put("numeroDocumento", "o.numeroDocumento");
+        map.put("numeroSequencialDocumento", "o.numeroSequencialDocumento");
         map.put("usuarioInclusao", "o.usuarioInclusao.nomeUsuario");
         map.put("dataInclusao", "o.dataInclusao");
         map.put("descricao", "o.descricao");
@@ -139,12 +139,12 @@ public class DocumentoList extends DataList<Documento> {
         this.pasta = pasta;
     }
 
-    public Integer getNumeroDocumento() {
-        return numeroDocumento;
+    public Integer getNumeroSequencialDocumento() {
+        return numeroSequencialDocumento;
     }
 
-    public void setNumeroDocumento(Integer numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
+    public void setNumeroSequencialDocumento(Integer numeroSequencialDocumento) {
+        this.numeroSequencialDocumento = numeroSequencialDocumento;
     }
 
     public Boolean getExcluido() {

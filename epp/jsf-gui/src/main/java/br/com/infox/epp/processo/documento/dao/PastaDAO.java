@@ -3,7 +3,7 @@ package br.com.infox.epp.processo.documento.dao;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_EXCLUIDO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_MARCADOR_DOCUMENTO;
-import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_NUMERO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_NUMERO_SEQ_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SIGILO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_NOME;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_AND_DESCRICAO;
@@ -11,7 +11,7 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CLASSIF
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CODIGO_MARCADOR;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_DESCRICAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NOME;
-import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NUMERO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NUMERO_SEQ_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PASTA;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_USUARIO_PERMISSAO;
@@ -83,9 +83,9 @@ public class PastaDAO extends DAO<Pasta> {
 			baseQuery = baseQuery + FILTER_CLASSIFICACAO_DOCUMENTO;
 			parameters.put(PARAM_CLASSIFICACAO_DOCUMENTO, documentoFilter.getIdClassificacaoDocumento());
 		}
-		if (documentoFilter.getNumeroDocumento() != null) {
-			baseQuery = baseQuery + FILTER_NUMERO_DOCUMENTO;
-			parameters.put(PARAM_NUMERO_DOCUMENTO, documentoFilter.getNumeroDocumento());
+		if (documentoFilter.getNumeroSequencialDocumento() != null) {
+			baseQuery = baseQuery + FILTER_NUMERO_SEQ_DOCUMENTO;
+			parameters.put(PARAM_NUMERO_SEQ_DOCUMENTO, documentoFilter.getNumeroSequencialDocumento());
 		}
 		if (documentoFilter.getMarcadores() != null) {
 		    for (String codigoMarcador : documentoFilter.getMarcadores()) {

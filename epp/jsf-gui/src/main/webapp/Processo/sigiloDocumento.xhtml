@@ -22,7 +22,7 @@
            <f:facet name="header">
                <h:outputText value="#{infoxMessages['sigiloDocumento.documento.identificador']}" />
            </f:facet>
-           <center><h:outputText value="#{row.numeroDocumento}" /></center>
+           <center><h:outputText value="#{row.numeroSequencialDocumento}" /></center>
        </rich:column>
        
        <rich:column>
@@ -135,7 +135,7 @@
                <f:facet name="header">
                    <h:outputText value="#{infoxMessages['sigiloDocumento.documento.identificador']}" />
                </f:facet>
-               <center><h:outputText value="#{row.documento.numeroDocumento}" /></center>
+               <center><h:outputText value="#{row.documento.numeroSequencialDocumento}" /></center>
            </rich:column>
            
            <rich:column width="18%">

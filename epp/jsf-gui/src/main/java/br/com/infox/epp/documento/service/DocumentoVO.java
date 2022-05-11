@@ -12,20 +12,20 @@ public class DocumentoVO {
 
     private Integer idDocumento;
     private Integer idDocumentoBin;
-    private Integer numeroDocumento;
+    private Integer numeroSequencialDocumento;
     private String classificacaoDocumento;
     private String descricao;
     private String usuario;
     private Date dataInclusao;
 
-    public DocumentoVO(Integer idDocumento, Integer idDocumentoBin, Integer numeroDocumento
+    public DocumentoVO(Integer idDocumento, Integer idDocumentoBin, Integer numeroSequencialDocumento
         , String classificacaoDocumento, String descricao
         , String usuario, Date dataInclusao
     ){
         super();
         this.idDocumento = idDocumento;
         this.idDocumentoBin = idDocumentoBin;
-        this.numeroDocumento = numeroDocumento;
+        this.numeroSequencialDocumento = numeroSequencialDocumento;
         this.classificacaoDocumento = classificacaoDocumento;
         this.descricao = descricao;
         this.usuario = usuario;

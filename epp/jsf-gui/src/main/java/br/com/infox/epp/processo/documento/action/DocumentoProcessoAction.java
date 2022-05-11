@@ -174,12 +174,12 @@ public class DocumentoProcessoAction implements Serializable {
 			documentoCompartilhamentoList.setClassificacaoDocumento(null);
 		}
 		
-		if (documentoFilter.getNumeroDocumento() != null) {
-			documentoList.setNumeroDocumento(documentoFilter.getNumeroDocumento());
-			documentoCompartilhamentoList.setNumeroDocumento(documentoFilter.getNumeroDocumento());
+		if (documentoFilter.getNumeroSequencialDocumento() != null) {
+			documentoList.setNumeroSequencialDocumento(documentoFilter.getNumeroSequencialDocumento());
+			documentoCompartilhamentoList.setNumeroSequencialDocumento(documentoFilter.getNumeroSequencialDocumento());
 		} else {
-			documentoList.setNumeroDocumento(null);
-			documentoCompartilhamentoList.setNumeroDocumento(null);
+			documentoList.setNumeroSequencialDocumento(null);
+			documentoCompartilhamentoList.setNumeroSequencialDocumento(null);
 		}
 		
 		if (documentoFilter.getMarcadores() != null) {

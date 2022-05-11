@@ -104,10 +104,10 @@ public class ZipDownloader {
 		}
 	}
 	
-	protected String getNomeArquivo(Integer numeroDocumento, String nomeArquivoOriginal) {
+	protected String getNomeArquivo(Integer numeroSequencialDocumento, String nomeArquivoOriginal) {
 		String nomeArquivo = nomeArquivoOriginal;
-		if(numeroDocumento != null) {
-			nomeArquivo = String.format("%04d-%s", numeroDocumento, nomeArquivo);
+		if(numeroSequencialDocumento != null) {
+			nomeArquivo = String.format("%04d-%s", numeroSequencialDocumento, nomeArquivo);
 		}		
 		return nomeArquivo;
 	}
@@ -117,7 +117,7 @@ public class ZipDownloader {
 		
 		Documento documento = documentoManager.find(idDocumento);
 		DocumentoBin documentoBin = documento.getDocumentoBin();
-		Integer numero = documento.getNumeroDocumento();
+		Integer numero = documento.getNumeroSequencialDocumento();
 		String nomeArquivoOriginal = documentoBin.getNomeArquivo();
 		if(!documentoBin.isBinario()) {
 			nomeArquivoOriginal = documento.getClassificacaoDocumento().getDescricao() + ".pdf";
@@ -184,7 +184,7 @@ public class ZipDownloader {
 				return result;
 			}
 			
-			result = nullFirstSafeCompare(o1.getNumeroDocumento(), o2.getNumeroDocumento());
+			result = nullFirstSafeCompare(o1.getNumeroSequencialDocumento(), o2.getNumeroSequencialDocumento());
 			if(result != 0) {
 				return result;
 			}

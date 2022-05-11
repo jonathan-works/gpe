@@ -3,6 +3,7 @@
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:a="http://richfaces.org/a4j"
     xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
@@ -34,6 +35,9 @@
                     <wi:selectSituacaoOneMenu id="ativo"
                         label="#{infoxMessages['field.situacao']}"
                         value="#{tipoModeloDocumentoList.entity.ativo}" />
+                    <wi:selectBooleanMenu id="numeracaoAutomatica"
+                    	label="#{infoxMessages['tipoModeloDocumento.numeracaoAutomatica']}"
+                    	value="#{tipoModeloDocumentoList.entity.numeracaoAutomatica}" />
                 </wi:searchForm>
             </ui:define>
             <wi:columnOutputText columnId="grupoModeloDocumento"
@@ -48,6 +52,15 @@
             <wi:columnSituacao columnId="ativo"
                 columnHeader="#{infoxMessages['field.situacao']}"
                 value="#{row.ativo}" />
+            <wi:columnBoolean columnId="numeracaoAutomatica"
+                columnHeader="#{infoxMessages['tipoModeloDocumento.numeracaoAutomatica']}"
+                value="#{row.numeracaoAutomatica}" />
+            <wi:columnOutputText columnId="numeroDocumentoInicial"
+                columnHeader="#{infoxMessages['tipoModeloDocumento.numeroDocumentoInicial']}"
+                value="#{row.numeroDocumentoInicial}" />
+            <wi:columnBoolean columnId="reiniciaNumeracaoAnual"
+                columnHeader="#{infoxMessages['tipoModeloDocumento.reiniciaNumeracaoAnual']}"
+                value="#{row.reiniciaNumeracaoAnual}" />
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
@@ -69,6 +82,24 @@
             <wi:selectSituacaoRadio id="ativo"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.ativo}" />
+            <wi:selectBooleanRadio id="numeracaoAutomatica"
+                label="#{infoxMessages['tipoModeloDocumento.numeracaoAutomatica']}"
+                value="#{tipoModeloDocumentoCrudAction.instance.numeracaoAutomatica}" >
+                <f:ajax event="change" execute="@this" render=":defaultTabPanel:tipoModeloDocumentoForm" 
+                	listener="#{tipoModeloDocumentoCrudAction.onChangeNumeracaoAutomatica()}"/>
+            </wi:selectBooleanRadio>
+            <wi:inputNumber id="numeroDocumentoInicial" converterId="longConverter"
+                    value="#{tipoModeloDocumentoCrudAction.instance.numeroDocumentoInicial}"
+                    required="#{tipoModeloDocumentoCrudAction.instance.numeracaoAutomatica}"
+                    rendered="#{tipoModeloDocumentoCrudAction.instance.numeracaoAutomatica}"
+                    label="#{infoxMessages['tipoModeloDocumento.numeroDocumentoInicial']}"
+                    onkeyup="onlyPositiveNumber(this)" 
+                    maxlength="18" />
+            <wi:selectBooleanRadio id="reiniciaNumeracaoAnual"
+                label="#{infoxMessages['tipoModeloDocumento.reiniciaNumeracaoAnual']}"
+                value="#{tipoModeloDocumentoCrudAction.instance.reiniciaNumeracaoAnual}" 
+                required="#{tipoModeloDocumentoCrudAction.instance.numeracaoAutomatica}"
+                rendered="#{tipoModeloDocumentoCrudAction.instance.numeracaoAutomatica}" />
         </wi:dataForm>
     </ui:define>
     <ui:define name="tabs">

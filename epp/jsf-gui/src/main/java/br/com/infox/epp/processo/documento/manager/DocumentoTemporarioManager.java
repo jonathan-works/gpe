@@ -130,7 +130,8 @@ public class DocumentoTemporarioManager extends PersistenceController {
         documento.setDocumentoBin(docBin);
         documento.setDescricao(dt.getDescricao());
         documento.setPasta(dt.getPasta());
-        documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
+        documento.setNumeroSequencialDocumento(documentoManager.getNextNumeracao(documento));
+        documento.setNumeroDocumento(dt.getNumeroDocumento());
         documento.setAnexo(dt.getAnexo());
         documento.setIdJbpmTask(dt.getIdJbpmTask());
         documento.setPerfilTemplate(dt.getPerfilTemplate());

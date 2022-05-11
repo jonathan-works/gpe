@@ -5,7 +5,7 @@ import java.util.List;
 public class DocumentoFilter {
 
     private Integer idClassificacaoDocumento;
-    private Integer numeroDocumento;
+    private Integer numeroSequencialDocumento;
     private List<String> marcadores;
 
     public Integer getIdClassificacaoDocumento() {
@@ -16,12 +16,12 @@ public class DocumentoFilter {
         this.idClassificacaoDocumento = idClassificacaoDocumento;
     }
 
-    public Integer getNumeroDocumento() {
-        return numeroDocumento;
+    public Integer getNumeroSequencialDocumento() {
+        return numeroSequencialDocumento;
     }
 
-    public void setNumeroDocumento(Integer numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
+    public void setNumeroSequencialDocumento(Integer numeroSequencialDocumento) {
+        this.numeroSequencialDocumento = numeroSequencialDocumento;
     }
 
     public List<String> getMarcadores() {

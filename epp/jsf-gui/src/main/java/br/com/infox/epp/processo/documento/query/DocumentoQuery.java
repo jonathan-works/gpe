@@ -7,7 +7,7 @@ public interface DocumentoQuery {
     String PARAM_IDS_DOCUMENTO = "idsDocumento";
 
     String NEXT_SEQUENCIAL = "getNextSequencial";
-    String NEXT_SEQUENCIAL_QUERY = "select max(pd.numeroDocumento) from Documento pd "
+    String NEXT_SEQUENCIAL_QUERY = "select max(pd.numeroSequencialDocumento) from Documento pd "
             + "inner join pd.classificacaoDocumento tpd inner join pd.pasta p where p.processo = :"
             + PARAM_PROCESSO
             + " and tpd.tipoNumeracao=:"

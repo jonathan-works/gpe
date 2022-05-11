@@ -356,7 +356,7 @@ public class PastaAction implements Serializable {
         String descricao = descricaoDocumento != null && !descricaoDocumento.isEmpty() && !descricaoDocumento.equals("-")
                 ? descricaoDocumento : compartilhamentoDocumentoToRemove.getClassificacaoDocumento().getDescricao();
         return String.format(msgRemoverCompartilhamentoDocumento,
-                        compartilhamentoDocumentoToRemove.getNumeroDocumento().toString(),
+                        compartilhamentoDocumentoToRemove.getNumeroSequencialDocumento().toString(),
                         descricao,
                         compartilhamentoDocumentoToRemove.getPasta().getProcesso().getNumeroProcessoRoot());
     }

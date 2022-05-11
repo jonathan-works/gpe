@@ -31,6 +31,7 @@ public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
         addSearchField("tipoModeloDocumento", SearchCriteria.CONTENDO);
         addSearchField("abreviacao", SearchCriteria.CONTENDO);
         addSearchField("ativo", SearchCriteria.IGUAL);
+        addSearchField("numeracaoAutomatica", SearchCriteria.IGUAL);
     }
 
     public Integer getIdGrupoModeloDocumento() {

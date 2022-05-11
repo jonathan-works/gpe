@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="nextValueForSqVariavel" value="nextval('sq_tb_variavel')" dbms="postgresql" />
+    <property name="nextValueForSqVariavel" value="sq_tb_variavel.nextval" dbms="oracle" />
+    <property name="nextValueForSqVariavel" value="next value for sq_tb_variavel" dbms="mssql" />
+
+
+    <changeSet author="hectorsol" id="1" dbms="mssql, postgresql, oracle">
+        <insert tableName="tb_variavel">
+            <column name="id_variavel" valueComputed="${nextValueForSqVariavel}" />
+            <column name="ds_variavel" value="Numero_Documento" />
+            <column name="vl_variavel" value="#{documento.numero}" />
+            <column name="in_ativo" valueBoolean="true" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

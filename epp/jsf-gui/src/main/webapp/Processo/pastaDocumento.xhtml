@@ -32,8 +32,8 @@
 				converterId="javax.faces.Integer"
 				itemLabel="#{item.descricao}" itemValue="#{item.id}"/>
 			
-			<i:inputNumber id="numeroDocumentoFilter" label="#{infoxMessages['documentoProcesso.numeroDocumento']}"
-				value="#{documentoProcessoAction.documentoFilter.numeroDocumento}"/>
+			<i:inputNumber id="numeroDocumentoFilter" label="#{infoxMessages['documentoProcesso.numeroSeqDocumento']}"
+				value="#{documentoProcessoAction.documentoFilter.numeroSequencialDocumento}"/>
 			
 	        <div class="property-field-edit" style="display: inline-block;">
 				<div class="property-field-edit-name">
@@ -206,12 +206,12 @@
 					url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
 					rendered="#{not row.excluido and pastaAction.canLogicDeleteFromInstance()}"
 					title="#{infoxMessages['button.delete']}"
-					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
+					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroSequencialDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
 				<h:graphicImage styleClass="opacityHover"
 					url="#{layoutController.getResourceUrlByPath('/imagens/stock_undelete.png')}"
 					rendered="#{row.excluido and pastaAction.canLogicDeleteFromInstance() and pastaAction.isDocumentoNaoPossuiAssinatura(row)}"
 					title="#{infoxMessages['button.restaurar']}"
-					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
+					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroSequencialDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
                 
                 
                 
@@ -230,9 +230,9 @@
 
 			<wi:columnOutputText
 				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-				columnId="numeroDocumento"
-				columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}"
-				value="#{row.numeroDocumento}" />
+				columnId="numeroSequencialDocumento"
+				columnHeader="#{infoxMessages['documentoProcesso.numeroSeqDocumento']}"
+				value="#{row.numeroSequencialDocumento}" />
 			<wi:columnOutputText
 				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
 				columnId="usuarioInclusao"
@@ -248,6 +248,11 @@
 				columnId="classificacaoDocumento"
 				columnHeader="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
 				value="#{row.classificacaoDocumento}" />
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="numeroDocumento"
+				columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}"
+				value="#{row.numeroAnoDocumento}" />
 
 			<wi:column columnId="descricao"
 				columnHeader="#{infoxMessages['documentoProcesso.descricao']}">
@@ -277,9 +282,9 @@
 	          $('.property-error').removeClass('property-error');
 		  }
 		  
-		  function setValuesToExcludeRestore(isExclusao, idDocumento, numeroDocumento, dsDocumento, classificacao) {
+		  function setValuesToExcludeRestore(isExclusao, idDocumento, numeroSequencialDocumento, dsDocumento, classificacao) {
 		      #{rich:jQuery('hiddenIdDocumento')}.val(idDocumento);
-		      #{rich:jQuery('numeroDocumento')}.text(numeroDocumento);
+		      #{rich:jQuery('numeroSequencialDocumento')}.text(numeroSequencialDocumento);
 		      #{rich:jQuery('processoDocumento')}.text(dsDocumento);
 		      #{rich:jQuery('tipoProcessoDocumentoOutPanel')}.text(classificacao);
 		      if (isExclusao) {
@@ -320,8 +325,8 @@
 				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
 				onmouseup="#{rich:component('requestMotivoPanel')}.hide();" />
 		</f:facet>
-		<wi:outputText id="numeroDocumento"
-			label="#{infoxMessages['processoDocumento.numeroDocumento']}" />
+		<wi:outputText id="numeroSequencialDocumento"
+			label="#{infoxMessages['processoDocumento.numeroSeqDocumento']}" />
 
 		<wi:outputText id="tipoProcessoDocumentoOutPanel"
 			label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />

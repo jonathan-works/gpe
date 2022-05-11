@@ -9,6 +9,9 @@ public interface TipoModeloDocumentoQuery {
     String TIPO_MODELO_DOCUMENTO = "ds_tipo_modelo_documento";
     String ABREVIACAO = "ds_abreviacao";
     String TIPO_MODELO_DOCUMENTO_ATTRIBUTE = "tipoModeloDocumento";
+    String NUMERACAO_AUTOMATICA = "in_numero_automatico";
+    String NUMERO_DOCUMENTO_INICIAL = "nr_documento_inicial";
+    String REINICIA_NUMERACAO_ANUAL = "in_reinicia_num_anual";
 
     String LIST_TIPOS_MODELO_DOCUMENTO_ATIVOS = "TipoModeloDocumento.listTiposModeloDocumentoAtivos";
     String LIST_TIPOS_MODELO_DOCUMENTO_ATIVOS_QUERY = "select o from TipoModeloDocumento o where o.ativo = true order by o.tipoModeloDocumento";

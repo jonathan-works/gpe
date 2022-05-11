@@ -108,7 +108,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         		throw new BusinessRollbackException("O processo informado e o processo da pasta do documento são diferentes");
         	}
         }
-        documento.setNumeroDocumento(getNextNumeracao(documento));
+        documento.setNumeroSequencialDocumento(getNextNumeracao(documento));
         return gravarDocumento(documento);
     }
 
@@ -155,7 +155,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
             doc.setPasta(pasta);
         }
         doc.setClassificacaoDocumento(classificacaoDocumentoManager.getReference(classificacaoDocumento.getId()));
-        doc.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(processo));
+        doc.setNumeroSequencialDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(processo));
         return persist(doc);
     }
 
@@ -245,7 +245,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
 	public Documento copiarDocumento(Documento original, Pasta novaPasta) throws CloneNotSupportedException {
 		Documento cDoc = original.makeCopy();
         cDoc.setPasta(novaPasta);
-        cDoc.setNumeroDocumento(null);
+        cDoc.setNumeroSequencialDocumento(null);
         cDoc.setDataInclusao(DateTime.now().toDate());
         cDoc.setUsuarioInclusao(null);
         return persist(cDoc);

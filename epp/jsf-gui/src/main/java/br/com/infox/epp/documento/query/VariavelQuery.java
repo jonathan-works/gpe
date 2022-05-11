@@ -7,4 +7,11 @@ public interface VariavelQuery {
     String DESCRICAO_VARIAVEL = "ds_variavel";
     String VALOR_VARIAVEL = "vl_variavel";
     String VARIAVEL_ATTRIBUTE = "variavel";
+    
+    String DESC_VARIAVEL_PARAM = "desc_variavel";
+    String ATIVO_PARAM = "ativo";
+    String VARIAVEL_BY_DESC_AND_ATIVO = "findVariavelByNomeAndAtivo";
+    String VARIAVEL_BY_DESC_AND_ATIVO_QUERY = "select t from Variavel t where t.variavel = :"
+            + DESC_VARIAVEL_PARAM + " and t.ativo = :" + ATIVO_PARAM;
+
 }
