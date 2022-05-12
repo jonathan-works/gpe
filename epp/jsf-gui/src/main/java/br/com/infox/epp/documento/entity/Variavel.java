@@ -8,6 +8,8 @@ import static br.com.infox.epp.documento.query.VariavelQuery.SEQUENCE_VARIAVEL;
 import static br.com.infox.epp.documento.query.VariavelQuery.TABLE_VARIAVEL;
 import static br.com.infox.epp.documento.query.VariavelQuery.VALOR_VARIAVEL;
 import static br.com.infox.epp.documento.query.VariavelQuery.VARIAVEL_ATTRIBUTE;
+import static br.com.infox.epp.documento.query.VariavelQuery.VARIAVEL_BY_DESC_AND_ATIVO;
+import static br.com.infox.epp.documento.query.VariavelQuery.VARIAVEL_BY_DESC_AND_ATIVO_QUERY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -30,6 +34,8 @@ import br.com.infox.constants.LengthConstants;
 
 @Entity
 @Table(name = TABLE_VARIAVEL, uniqueConstraints = @UniqueConstraint(columnNames = DESCRICAO_VARIAVEL) )
+@NamedQueries({
+    @NamedQuery(name = VARIAVEL_BY_DESC_AND_ATIVO, query = VARIAVEL_BY_DESC_AND_ATIVO_QUERY)})
 public class Variavel implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

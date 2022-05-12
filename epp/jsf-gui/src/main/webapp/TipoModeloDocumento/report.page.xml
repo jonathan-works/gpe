@@ -13,5 +13,5 @@
 	<param name="tipoModeloDocumento" value="#{tipoModeloDocumentoList.entity.tipoModeloDocumento}"/>		
 	<param name="abreviacao" value="#{tipoModeloDocumentoList.entity.abreviacao}"/>		
 	<param name="ativo" value="#{tipoModeloDocumentoList.entity.ativo}"/>
-
+	<param name="numeracaoAutomatica" value="#{tipoModeloDocumentoList.entity.numeracaoAutomatica}"/>
 </page>

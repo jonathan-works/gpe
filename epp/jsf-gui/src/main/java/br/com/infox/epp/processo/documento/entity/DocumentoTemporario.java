@@ -4,6 +4,7 @@ import static br.com.infox.epp.processo.documento.query.DocumentoTemporarioQuery
 import static br.com.infox.epp.processo.documento.query.DocumentoTemporarioQuery.LOAD_BY_ID_QUERY;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -68,6 +69,9 @@ public class DocumentoTemporario implements Serializable {
     @Size(max = Documento.TAMANHO_MAX_DESCRICAO_DOCUMENTO)
     @Column(name = "ds_documento", nullable = false, length=Documento.TAMANHO_MAX_DESCRICAO_DOCUMENTO)
     private String descricao;
+
+    @Column(name = "nr_documento")
+    private Long numeroDocumento;
 
     @NotNull
     @Column(name = "in_anexo", nullable = false)
@@ -159,7 +163,22 @@ public class DocumentoTemporario implements Serializable {
         this.descricao = descricao;
     }
 
-    public Boolean getAnexo() {
+    public Long getNumeroDocumento() {
+		return numeroDocumento;
+	}
+
+	public void setNumeroDocumento(Long numeroDocumento) {
+		this.numeroDocumento = numeroDocumento;
+	}
+
+	public String getNumeroAnoDocumento() {
+		if (this.numeroDocumento != null && this.dataInclusao != null) {
+			return "" + this.getNumeroDocumento() + "/" + new SimpleDateFormat("YYYY").format(this.getDataInclusao()); 
+		}
+		return null;
+	}
+	
+	public Boolean getAnexo() {
         return anexo;
     }
 

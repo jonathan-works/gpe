@@ -16,6 +16,7 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.TOTAL_DOC
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.lIST_DOCUMENTO_BY_TASKINSTANCE_QUERY;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -119,8 +120,12 @@ public class Documento implements Serializable, Cloneable, EntityListener<Docume
     
     @Column(name = "nr_documento", nullable = true)
     @Getter @Setter
-    private Integer numeroDocumento;
-    
+    private Integer numeroSequencialDocumento;
+
+    @Column(name = "cd_numero_doc", nullable = true)
+    @Getter @Setter
+    private Long numeroDocumento;
+
     @NotNull
     @Column(name = "in_documento_sigiloso", nullable = false)
     @Getter @Setter
@@ -334,5 +339,12 @@ public class Documento implements Serializable, Cloneable, EntityListener<Docume
     public boolean isSuficientementeAssinado() {
         return Boolean.TRUE.equals(getDocumentoBin().getSuficientementeAssinado());
     }
+
+	public String getNumeroAnoDocumento() {
+		if (this.numeroDocumento != null && this.dataInclusao != null) {
+			return "" + this.getNumeroDocumento() + "/" + new SimpleDateFormat("YYYY").format(this.getDataInclusao()); 
+		}
+		return null;
+	}
 
 }

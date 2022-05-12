@@ -168,6 +168,9 @@
 			<h:form id="editorForm">
 				<ui:param name="minuta"
 					value="#{empty anexarDocumentosView.documentoEditor.id or anexarDocumentosView.documentoEditor.documentoBin.minuta}" />
+				<ui:param name="numeracaoAutomatica"
+					value="#{not empty anexarDocumentosView.documentoEditor.classificacaoDocumento.tipoModeloDocumento and anexarDocumentosView.documentoEditor.classificacaoDocumento.tipoModeloDocumento.numeracaoAutomatica}" />
+				
 				<wi:inputText id="editorDescricao" required="true"
 					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
 					value="#{anexarDocumentosView.documentoEditor.descricao}"
@@ -191,7 +194,7 @@
 					value="#{anexarDocumentosView.documentoEditor.pasta}"
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}"
 					disabled="#{not minuta}" />
-				
+
 				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
 					<div class="property-field-edit">
 						<div class="property-field-edit-name">
@@ -211,6 +214,13 @@
 				</c:if>
 
 				<s:div id="selectModeloDocumentoDiv">
+					<wi:inputNumber id="numeroDocumento" converterId="longConverter"
+	                    value="#{anexarDocumentosView.documentoEditor.numeroDocumento}"
+	                    disabled="#{numeracaoAutomatica or not minuta}" readonly="#{numeracaoAutomatica or not minuta}"
+	                    label="#{infoxMessages['anexarDocumentos.numeroDocumento']}"
+	                    onkeyup="onlyPositiveNumber(this)" 
+	                    maxlength="18" />
+					
 					<wi:selectOneMenuEntity id="editorModeloDocumento" required="false"
 						label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
 						value="#{anexarDocumentosView.modeloDocumento}"
@@ -218,7 +228,7 @@
 						disabled="#{not minuta}" readonly="#{not minuta}"
 						rendered="#{anexarDocumentosView.showModeloDocumentoCombo}">
 						<a:ajax event="change"
-							execute="@this" render="editorDiv"
+							execute="selectModeloDocumentoDiv" render="editorDiv"
 							listener="#{anexarDocumentosView.onSelectModeloDocumento}" />
 					</wi:selectOneMenuEntity>
 				</s:div>
@@ -347,6 +357,10 @@
 								</ui:repeat>
 							</div>
 						</wi:column>
+
+						<wi:columnOutputText columnId="numeroAnoDocumento"
+							columnHeader="#{infoxMessages['anexarDocumentos.numeroDocumento']}" 
+							value="#{row.numeroAnoDocumento}"/>
 
 						<wi:columnOutputText columnId="dataInclusao"
 							columnHeader="#{infoxMessages['anexarDocumentos.data']}"

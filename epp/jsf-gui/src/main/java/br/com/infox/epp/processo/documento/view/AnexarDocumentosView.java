@@ -2,10 +2,13 @@ package br.com.infox.epp.processo.documento.view;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.ejb.EJBException;
@@ -43,8 +46,10 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.manager.VariavelManager;
 import br.com.infox.epp.documento.type.ExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
@@ -58,6 +63,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoTemporarioManager;
+import br.com.infox.epp.processo.documento.numeration.UltimoNumeroDocumentoManager;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.marcador.Marcador;
@@ -93,6 +99,10 @@ public class AnexarDocumentosView implements Serializable {
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@Inject
 	private ModeloDocumentoManager modeloDocumentoManager;
+	@Inject
+	private UltimoNumeroDocumentoManager ultimoNumeroDocumentoManager;
+	@Inject
+	private VariavelManager variavelManager;
 	@Inject
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 	@Inject
@@ -239,6 +249,7 @@ public class AnexarDocumentosView implements Serializable {
 	}
 
 	public void onChangeEditorClassificacaoDocumento() {
+		getDocumentoEditor().setNumeroDocumento(null);
 		checkVinculoClassificacaoDocumento();
 		getDocumentoEditor().getDocumentoBin().setModeloDocumento("");
 	}
@@ -250,6 +261,13 @@ public class AnexarDocumentosView implements Serializable {
 			setShowModeloDocumentoCombo(true);
 			setModeloDocumentoList(modeloDocumentoManager.getModeloDocumentoByTipo(tipoModeloDocumento));
 			setModeloDocumento(null);
+			if (getDocumentoEditor().getNumeroDocumento() == null) {
+				if (tipoModeloDocumento.getNumeracaoAutomatica().equals(Boolean.TRUE)) {
+					getDocumentoEditor().setNumeroDocumento(ultimoNumeroDocumentoManager.getNextNumeroDocumento(tipoModeloDocumento, LocalDate.now().getYear()));
+				} else {
+					getDocumentoEditor().setNumeroDocumento(null);
+				}
+			}
 		} else {
 			setShowModeloDocumentoCombo(false);
 		}
@@ -257,8 +275,18 @@ public class AnexarDocumentosView implements Serializable {
 
 	public void onSelectModeloDocumento() {
 		if (getModeloDocumento() != null) {
+			Map<String, String> variaveis = null;
+			if (getDocumentoEditor().getNumeroDocumento() != null) {
+				Variavel variavelNumDoc = variavelManager.getVariavelNumDocumento();
+				if (variavelNumDoc != null) {
+					variaveis = new HashMap<String, String>();
+					variaveis.put(variavelNumDoc.getValorVariavel(), String.valueOf(getDocumentoEditor().getNumeroDocumento()));
+				}
+			}
+			
 			String documentoConvertido = modeloDocumentoManager.evaluateModeloDocumento(getModeloDocumento(),
-					expressionResolver);
+																						expressionResolver, 
+																						variaveis);
 			getDocumentoEditor().getDocumentoBin().setModeloDocumento(documentoConvertido);
 		} else {
 			getDocumentoEditor().getDocumentoBin().setModeloDocumento("");
@@ -575,6 +603,7 @@ public class AnexarDocumentosView implements Serializable {
 				documentoTemporario.setDocumentoBin(documentoPersistido.getDocumentoBin());
 				documentoTemporario.setClassificacaoDocumento(documentoPersistido.getClassificacaoDocumento());
 				documentoTemporario.setDescricao(documentoPersistido.getDescricao());
+				documentoTemporario.setNumeroDocumento(documentoPersistido.getNumeroDocumento());
 			} catch (Exception e) {
 			}
 			setDocumentoEditor(documentoTemporario);
@@ -793,6 +822,7 @@ public class AnexarDocumentosView implements Serializable {
 			setDocumentoBin(documentoTemporario.getDocumentoBin());
 			setProcesso(documentoTemporario.getProcesso());
 			setDescricao(documentoTemporario.getDescricao());
+			setNumeroDocumento(documentoTemporario.getNumeroDocumento());
 			setAnexo(documentoTemporario.getAnexo());
 			setIdJbpmTask(documentoTemporario.getIdJbpmTask());
 			setPerfilTemplate(documentoTemporario.getPerfilTemplate());
@@ -811,6 +841,7 @@ public class AnexarDocumentosView implements Serializable {
 			dt.setDocumentoBin(this.getDocumentoBin());
 			dt.setProcesso(this.getProcesso());
 			dt.setDescricao(this.getDescricao());
+			dt.setNumeroDocumento(this.getNumeroDocumento());
 			dt.setAnexo(this.getAnexo());
 			dt.setIdJbpmTask(this.getIdJbpmTask());
 			dt.setPerfilTemplate(this.getPerfilTemplate());

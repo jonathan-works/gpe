@@ -55,7 +55,7 @@ public class TaskInstancePermitidaAssinarDocumentoSearch extends PersistenceCont
 
         query.select(cb.construct(DocumentoVO.class, documento.get(Documento_.id)
             , documentoBin.get(DocumentoBin_.id)
-            , documento.get(Documento_.numeroDocumento)
+            , documento.get(Documento_.numeroSequencialDocumento)
             , classificacaoDocumento.get(ClassificacaoDocumento_.descricao)
             , documento.get(Documento_.descricao)
             , usuarioInclusao.get(UsuarioLogin_.nomeUsuario)

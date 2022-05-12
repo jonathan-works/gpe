@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet id="1" author="hectorsol" dbms="mssql, postgresql, oracle">
+        <createSequence
+            sequenceName="sq_ult_num_documento"
+            incrementBy="1"
+            minValue="1"
+            startValue="1"
+        />
+    </changeSet>
+    <changeSet id="2" author="hectorsol" dbms="mssql, postgresql, oracle">
+        <createTable tableName="tb_ultimo_num_documento">
+            <column name="id_ultimo_num_documento" type="bigint">
+                <constraints
+                    nullable="false"
+                    primaryKey="true"
+                    primaryKeyName="pk_ultimo_num_documento"/>
+            </column>
+            <column name="id_tipo_modelo_documento" type="bigint">
+                <constraints
+                    foreignKeyName="ult_num_doc_id_tipo_mod_doc_fk"
+                    referencedTableName="tb_tipo_modelo_documento"
+                    referencedColumnNames="id_tipo_modelo_documento"
+                    nullable="false"
+                />
+            </column>
+            <column name="nr_ano" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="nr_documento" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

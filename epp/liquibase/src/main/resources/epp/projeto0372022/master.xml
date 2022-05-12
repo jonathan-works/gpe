@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <include file="epp/projeto0372022/001-tabela-ult-num-documento.xml" />
+    <include file="epp/projeto0372022/002-add-conf-num-tipo-modelo-documento.xml" />
+    <include file="epp/projeto0372022/003-add-conf-zera-num-anual-tipo-modelo-documento.xml" />
+    <include file="epp/projeto0372022/004-add-version-ult-num-documento.xml" />
+    <include file="epp/projeto0372022/005-add-num-ano-documento.xml" />
+    <include file="epp/projeto0372022/006-insert-variavel-num-documento.xml" />
+
+</databaseChangeLog>

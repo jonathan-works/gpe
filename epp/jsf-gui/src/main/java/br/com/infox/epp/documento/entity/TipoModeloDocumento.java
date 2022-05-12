@@ -14,6 +14,9 @@ import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.SEQUENCE
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.TABLE_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.TIPO_MODELO_DOCUMENTO_ATTRIBUTE;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.NUMERACAO_AUTOMATICA;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.NUMERO_DOCUMENTO_INICIAL;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.REINICIA_NUMERACAO_ANUAL;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,6 +56,9 @@ public class TipoModeloDocumento implements Serializable {
     private String tipoModeloDocumento;
     private String abreviacao;
     private Boolean ativo;
+    private Boolean numeracaoAutomatica;
+    private Long numeroDocumentoInicial;
+    private Boolean reiniciaNumeracaoAnual;
 
     private List<ModeloDocumento> modeloDocumentoList = new ArrayList<ModeloDocumento>(0);
 
@@ -63,11 +69,15 @@ public class TipoModeloDocumento implements Serializable {
 
     public TipoModeloDocumento(final GrupoModeloDocumento grupoModeloDocumento,
             final String tipoModeloDocumento, final String abreviacao,
-            final Boolean ativo) {
+            final Boolean ativo, final Boolean numeracaoAutomatica,
+            final Long numeroDocumentoInicial, final Boolean reiniciaNumeracaoAnual) {
         this.grupoModeloDocumento = grupoModeloDocumento;
         this.tipoModeloDocumento = tipoModeloDocumento;
         this.abreviacao = abreviacao;
         this.ativo = ativo;
+        this.numeracaoAutomatica = numeracaoAutomatica;
+        this.numeroDocumentoInicial = numeroDocumentoInicial;
+        this.reiniciaNumeracaoAnual = reiniciaNumeracaoAnual;
     }
 
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO)
@@ -145,6 +155,34 @@ public class TipoModeloDocumento implements Serializable {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    @Column(name = NUMERACAO_AUTOMATICA, nullable = false)
+    @NotNull
+    public Boolean getNumeracaoAutomatica() {
+        return numeracaoAutomatica;
+    }
+
+    public void setNumeracaoAutomatica(Boolean numeracaoAutomatica) {
+        this.numeracaoAutomatica = numeracaoAutomatica;
+    }
+
+    @Column(name = NUMERO_DOCUMENTO_INICIAL, nullable = true)
+    public Long getNumeroDocumentoInicial() {
+        return this.numeroDocumentoInicial;
+    }
+
+    public void setNumeroDocumentoInicial(Long numeroDocumentoInicial) {
+        this.numeroDocumentoInicial = numeroDocumentoInicial;
+    }
+
+    @Column(name = REINICIA_NUMERACAO_ANUAL, nullable = true)
+    public Boolean getReiniciaNumeracaoAnual() {
+        return reiniciaNumeracaoAnual;
+    }
+
+    public void setReiniciaNumeracaoAnual(Boolean reiniciaNumeracaoAnual) {
+        this.reiniciaNumeracaoAnual = reiniciaNumeracaoAnual;
     }
 
     @Override

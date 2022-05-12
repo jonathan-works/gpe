@@ -119,24 +119,26 @@ public class TipoModeloDocumentoCrudActionIT extends
 //                        .append(suffix).toString(), servletContext, session);
         for (final GrupoModeloDocumento grupoModeloDocumento : gruposModeloDocumento) {
             for (final Boolean ativo : TipoModeloDocumentoCrudActionIT.BOOLEANS) {
-                final String tipoModeloDocumento = MessageFormat.format(
-                        "tipoModeloDoc{0}{1}",
-                        ++TipoModeloDocumentoCrudActionIT.i, suffix);
-                final int tipoBeginIndex = tipoModeloDocumento.length()
-                        - LengthConstants.DESCRICAO_PADRAO_METADE;
+            	for (final Boolean numeracaoAutomatica : TipoModeloDocumentoCrudActionIT.BOOLEANS) {
+                    final String tipoModeloDocumento = MessageFormat.format(
+                            "tipoModeloDoc{0}{1}",
+                            ++TipoModeloDocumentoCrudActionIT.i, suffix);
+                    final int tipoBeginIndex = tipoModeloDocumento.length()
+                            - LengthConstants.DESCRICAO_PADRAO_METADE;
 
-                final String abreviacao = TipoModeloDocumentoCrudActionIT
-                        .getHashedString(tipoModeloDocumento);
-                final int abrevBeginIndex = abreviacao.length()
-                        - LengthConstants.DESCRICAO_ABREVIADA;
+                    final String abreviacao = TipoModeloDocumentoCrudActionIT
+                            .getHashedString(tipoModeloDocumento);
+                    final int abrevBeginIndex = abreviacao.length()
+                            - LengthConstants.DESCRICAO_ABREVIADA;
 
-                final TipoModeloDocumento entity = new TipoModeloDocumento(
-                        grupoModeloDocumento,
-                        tipoModeloDocumento.substring(tipoBeginIndex < 0 ? 0
-                                : tipoBeginIndex),
-                        abreviacao.substring(abrevBeginIndex < 0 ? 0
-                                : abrevBeginIndex), ativo);
-
+                    final TipoModeloDocumento entity = new TipoModeloDocumento(
+                            grupoModeloDocumento,
+                            tipoModeloDocumento.substring(tipoBeginIndex < 0 ? 0
+                                    : tipoBeginIndex),
+                            abreviacao.substring(abrevBeginIndex < 0 ? 0
+                                    : abrevBeginIndex), ativo, numeracaoAutomatica, null, null);
+                    list.add(entity);
+            	}
             }
         }
 
@@ -214,7 +216,7 @@ public class TipoModeloDocumentoCrudActionIT extends
                 new TipoModeloDocumento(null, createValidDesc(
                         ++TipoModeloDocumentoCrudActionIT.i, suffix),
                         createValidAbrev(TipoModeloDocumentoCrudActionIT.i,
-                                suffix), Boolean.TRUE), this.servletContext,
+                                suffix), Boolean.TRUE, null, null, null), this.servletContext,
                 this.session);
         final String[] tipoModeloDocFail = new String[] {
                 null,
@@ -240,7 +242,7 @@ public class TipoModeloDocumentoCrudActionIT extends
                         createValidDesc(++TipoModeloDocumentoCrudActionIT.i,
                                 suffix), createValidAbrev(
                                 TipoModeloDocumentoCrudActionIT.i, suffix),
-                        null), this.servletContext, this.session);
+                        null, null, null, null), this.servletContext, this.session);
     }
 
     //@Test
@@ -260,10 +262,12 @@ public class TipoModeloDocumentoCrudActionIT extends
         for (final GrupoModeloDocumento grupoModeloDocumento : gruposModeloDocumento) {
             for (final String abreviacao : abreviacaoFail) {
                 for (final Boolean ativo : TipoModeloDocumentoCrudActionIT.BOOLEANS) {
-                    this.persistFail.runTest(new TipoModeloDocumento(
-                            grupoModeloDocumento, createValidDesc(++i, suffix),
-                            abreviacao, ativo), this.servletContext,
-                            this.session);
+                	for (final Boolean numeracaoAutomatica : TipoModeloDocumentoCrudActionIT.BOOLEANS) {
+                        this.persistFail.runTest(new TipoModeloDocumento(
+                                grupoModeloDocumento, createValidDesc(++i, suffix),
+                                abreviacao, ativo, numeracaoAutomatica, null, null), this.servletContext,
+                                this.session);
+                	}
                 }
             }
         }
@@ -275,10 +279,13 @@ public class TipoModeloDocumentoCrudActionIT extends
         for (final GrupoModeloDocumento grupoModeloDocumento : gruposModeloDocumento) {
             for (final String tipoModeloDocumento : tipoModeloDocFail) {
                 for (final Boolean ativo : TipoModeloDocumentoCrudActionIT.BOOLEANS) {
-                    this.persistFail.runTest(new TipoModeloDocumento(
-                            grupoModeloDocumento, tipoModeloDocumento,
-                            abreviacaoSuc, ativo), this.servletContext,
-                            this.session);
+                	for (final Boolean numeracaoAutomatica : TipoModeloDocumentoCrudActionIT.BOOLEANS) {
+                        this.persistFail.runTest(new TipoModeloDocumento(
+                                grupoModeloDocumento, tipoModeloDocumento,
+                                abreviacaoSuc, ativo, numeracaoAutomatica, null, null), this.servletContext,
+                                this.session);
+                		
+                	}
                 }
             }
         }

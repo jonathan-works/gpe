@@ -83,10 +83,10 @@ public class VariableHandler implements Serializable {
         return (VariableHandler) Component.getInstance(NAME);
     }
 
-    public String getNumeroDocumentoTarefa(long taskId) {
+    public String getNumeroSeqDocumentoTarefa(long taskId) {
         for (Variavel variavel : getTaskVariables(taskId)) {
             if (JbpmUtil.isTypeEditor(variavel.getType())) {
-                return " - Doc. Nr: " + documentoManager.find(variavel.getValue()).getNumeroDocumento();
+                return " - Seq. Nr: " + documentoManager.find(variavel.getValue()).getNumeroSequencialDocumento();
             }
         }
         return null;

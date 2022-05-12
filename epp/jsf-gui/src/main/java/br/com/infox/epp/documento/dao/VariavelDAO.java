@@ -1,6 +1,12 @@
 package br.com.infox.epp.documento.dao;
 
+import static br.com.infox.epp.documento.query.VariavelQuery.DESC_VARIAVEL_PARAM;
+import static br.com.infox.epp.documento.query.VariavelQuery.ATIVO_PARAM;
+import static br.com.infox.epp.documento.query.VariavelQuery.VARIAVEL_BY_DESC_AND_ATIVO;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -8,6 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -48,4 +55,16 @@ public class VariavelDAO extends DAO<Variavel> {
         query.orderBy(cb.asc(variavel.get(Variavel_.variavel)));
         return query;
     }
+    
+	public Variavel getVariavelAtivaByNome(String nomeVariavel) {
+        if (StringUtils.isBlank(nomeVariavel)) {
+            return null;
+        }
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(DESC_VARIAVEL_PARAM, nomeVariavel);
+        parameters.put(ATIVO_PARAM, Boolean.TRUE);
+        return getNamedSingleResult(VARIAVEL_BY_DESC_AND_ATIVO, parameters);
+
+	}
+
 }

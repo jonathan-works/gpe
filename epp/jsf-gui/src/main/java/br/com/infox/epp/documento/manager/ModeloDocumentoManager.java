@@ -134,7 +134,18 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         return evaluateModeloDocumento(modeloDocumento, modeloDocumento.getModeloDocumento(), resolver);
     }
 
+    public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, ExpressionResolver resolver, Map<String, String> variaveis) {
+        if (modeloDocumento == null) {
+            return null;
+        }
+        return evaluateModeloDocumento(modeloDocumento, modeloDocumento.getModeloDocumento(), resolver, variaveis);
+    }
+
     public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, String texto, ExpressionResolver resolver) {
+    	return evaluateModeloDocumento(modeloDocumento, texto, resolver, null);
+    }
+    
+    public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, String texto, ExpressionResolver resolver, Map<String, String> variaveis) {
         if (modeloDocumento == null) {
             return null;
         }
@@ -162,32 +173,38 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 }
                 expression = unscapeHtmlFromExpression(expression);
                 String value = "";
-                if (!expression.startsWith("#{modelo:")) {
-                    Expression expr = new Expression(expression);
-                    if (resolver != null) {
-                        try {
-                            expr = resolver.resolve(expr);
-                        } catch (RuntimeException e) {
-                            modeloProcessado.append("Erro na linha: '" + linhas[i]);
-                            modeloProcessado.append("': " + e.getMessage());
-                            LOG.error(".appendTail()", e);
-                        }
-                    }
-                    // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
-                    // Matcher#appendReplacement (ver o Javadoc correspondente).
-                    // Importante manter a ordem dos replaces abaixo
-                    value = expr.isResolved() ? expr.getValue() : "";
-                    value = value == null ? "" : value;
+                if (variaveis != null && !variaveis.isEmpty() && variaveis.containsKey(expression)) {
+                	value = variaveis.get(expression);
+                	value = value == null ? "" : value;
                     value = value.replace("\\", "\\\\").replace("$", "\\$");
                 } else {
-                    String titulo = expression.substring("#{modelo:".length(), expression.length()-1);
-                    ModeloDocumento modeloDocumentoInside = getModeloDocumentoByTitulo(titulo);
-                    if (modeloDocumentoInside != null) {
-                        value = evaluateModeloDocumento(modeloDocumentoInside, resolver);
-                    } else {
-                        value = value == null ? "" : value;
-                        value = value.replace("\\", "\\\\").replace("$", "\\$");
-                    }
+	                if (!expression.startsWith("#{modelo:")) {
+	                    Expression expr = new Expression(expression);
+	                    if (resolver != null) {
+	                        try {
+	                            expr = resolver.resolve(expr);
+	                        } catch (RuntimeException e) {
+	                            modeloProcessado.append("Erro na linha: '" + linhas[i]);
+	                            modeloProcessado.append("': " + e.getMessage());
+	                            LOG.error(".appendTail()", e);
+	                        }
+	                    }
+	                    // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
+	                    // Matcher#appendReplacement (ver o Javadoc correspondente).
+	                    // Importante manter a ordem dos replaces abaixo
+	                    value = expr.isResolved() ? expr.getValue() : "";
+	                    value = value == null ? "" : value;
+	                    value = value.replace("\\", "\\\\").replace("$", "\\$");
+	                } else {
+	                    String titulo = expression.substring("#{modelo:".length(), expression.length()-1);
+	                    ModeloDocumento modeloDocumentoInside = getModeloDocumentoByTitulo(titulo);
+	                    if (modeloDocumentoInside != null) {
+	                        value = evaluateModeloDocumento(modeloDocumentoInside, resolver);
+	                    } else {
+	                        value = value == null ? "" : value;
+	                        value = value.replace("\\", "\\\\").replace("$", "\\$");
+	                    }
+	                }
                 }
                 matcher.appendReplacement(sb, value);
             }

@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -60,8 +61,10 @@ import br.com.infox.epp.cdi.util.Beans;
 import br.com.infox.epp.documento.domain.RegraAssinaturaService;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.manager.VariavelManager;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
@@ -80,6 +83,7 @@ import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.documento.numeration.UltimoNumeroDocumentoManager;
 import br.com.infox.epp.processo.handler.ProcessoHandler;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -142,7 +146,11 @@ public class TaskInstanceHome implements Serializable {
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
     @Inject
     private DocumentoManager documentoManager;
-    @Inject
+	@Inject
+	private UltimoNumeroDocumentoManager ultimoNumeroDocumentoManager;
+	@Inject
+	private VariavelManager variavelManager;
+	@Inject
     private PastaManager pastaManager;
     @Inject
     private DocumentoBinManager documentoBinManager;
@@ -234,12 +242,15 @@ public class TaskInstanceHome implements Serializable {
                 if (variableRetriever.isEditor()) {
                     DocumentoBin documentoBin = new DocumentoBin();
                     documento.setDocumentoBin(documentoBin);
-
+                    if (documento.getClassificacaoDocumento().getTipoModeloDocumento() != null && 
+                    		documento.getClassificacaoDocumento().getTipoModeloDocumento().getNumeracaoAutomatica().equals(Boolean.TRUE)) {
+                    	documento.setNumeroDocumento(ultimoNumeroDocumentoManager.getNextNumeroDocumento(documento.getClassificacaoDocumento().getTipoModeloDocumento(), LocalDate.now().getYear()));	
+                    }
                     if(variableAccess.getConfiguration() != null) {
                         List<String> codigosModelos = VariableEditorModeloHandler.fromJson(variableAccess.getConfiguration()).getCodigosModeloDocumento();
                         if (codigosModelos != null && codigosModelos.size() == 1) {
                             ModeloDocumento modelo = modeloDocumentoSearch.getModeloDocumentoByCodigo(codigosModelos.get(0));
-                            documentoBin.setModeloDocumento(evaluateModeloDocumento(modelo));
+                            documentoBin.setModeloDocumento(evaluateModeloDocumento(modelo, documento));
                             documento.setDescricao(modelo.getTituloModeloDocumento());
                         }
                     }
@@ -466,7 +477,7 @@ public class TaskInstanceHome implements Serializable {
         }
         if (documento.getPasta() == null)
             documento.setPasta(defaultFolder);
-        documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
+        documento.setNumeroSequencialDocumento(documentoManager.getNextNumeracao(documento));
         documento.setIdJbpmTask(getCurrentTaskInstance().getId());
         if (StringUtils.isEmpty(documento.getDescricao())) {
             String descricao = variableAccess.getLabel();
@@ -956,9 +967,21 @@ public class TaskInstanceHome implements Serializable {
         return modeloDocumentoSearch.getModeloDocumentoListByListCodigos(getCodigosModelos(editorId));
     }
 
-    private String evaluateModeloDocumento(ModeloDocumento modelo) {
+    private String evaluateModeloDocumento(ModeloDocumento modelo, Documento documento) {
+		Map<String, String> variaveis = null;
+    	if (documento != null && documento.getNumeroDocumento() != null) {
+    		Variavel variavelNumDoc = variavelManager.getVariavelNumDocumento();
+			if (variavelNumDoc != null) {
+				variaveis = new HashMap<String, String>();
+				variaveis.put(variavelNumDoc.getValorVariavel(), String.valueOf(documento.getNumeroDocumento()));
+			}
+    	}
         ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processoEpaHome.getInstance().getIdProcesso(), getCurrentTaskInstance());
-        return modeloDocumentoManager.evaluateModeloDocumento(modelo, chain);
+        return modeloDocumentoManager.evaluateModeloDocumento(modelo, chain, variaveis);
+    }
+
+    private String evaluateModeloDocumento(ModeloDocumento modelo) {
+        return evaluateModeloDocumento(modelo, null);
     }
 
     public void assignModeloDocumento(String id, ModeloDocumento modeloDocumento) {

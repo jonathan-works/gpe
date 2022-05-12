@@ -3,10 +3,11 @@
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns:wi="http://www.itx.com.br/jsf">
 
-	<wi:dataReport
+	<wi:dataReport 
          title="#{infoxMessages['tipoModeloDocumento.reportTitle']}"
-         columns="4"
-         widths="1 1 1 1"
+         columns="7"
+         widths="2 2 1 1 1 1 1"
+         orientation="landscape" 
          headerText="#{tipoModeloDocumentoList.criteria}">
 				   
 		<wi:reportColumnHeader
@@ -17,6 +18,12 @@
              title="#{infoxMessages['tipoModeloDocumento.abreviacao']}" />
 		<wi:reportColumnHeader
              title="#{infoxMessages['field.situacao']}" />
+		<wi:reportColumnHeader
+             title="#{infoxMessages['tipoModeloDocumento.numeracaoAutomatica']}" />
+		<wi:reportColumnHeader
+             title="#{infoxMessages['tipoModeloDocumento.numeroDocumentoInicial']}" />
+		<wi:reportColumnHeader
+             title="#{infoxMessages['tipoModeloDocumento.reiniciaNumeracaoAnual']}" />
 				
 		<ui:repeat
              var="row"
@@ -29,6 +36,15 @@
                  value="#{row.abreviacao}" />
 			<wi:reportColumnSituacao
                  value="#{row.ativo}"
+                 columnAlign="center" />
+			<wi:reportColumnBoolean
+                 value="#{row.numeracaoAutomatica}"
+                 columnAlign="center" />
+			<wi:reportColumn
+                 value="#{row.numeroDocumentoInicial}" 
+                 columnAlign="right" />
+			<wi:reportColumnBoolean
+                 value="#{row.reiniciaNumeracaoAnual}"
                  columnAlign="center" />
 		</ui:repeat>
 
