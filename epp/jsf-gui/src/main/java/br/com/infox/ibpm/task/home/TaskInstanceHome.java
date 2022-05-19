@@ -196,6 +196,7 @@ public class TaskInstanceHome implements Serializable {
 
     private boolean canClosePanelVal;
     private boolean taskCompleted;
+    private boolean movimentarProcesso = false;
 
     public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
@@ -242,10 +243,6 @@ public class TaskInstanceHome implements Serializable {
                 if (variableRetriever.isEditor()) {
                     DocumentoBin documentoBin = new DocumentoBin();
                     documento.setDocumentoBin(documentoBin);
-                    if (documento.getClassificacaoDocumento().getTipoModeloDocumento() != null && 
-                    		documento.getClassificacaoDocumento().getTipoModeloDocumento().getNumeracaoAutomatica().equals(Boolean.TRUE)) {
-                    	documento.setNumeroDocumento(ultimoNumeroDocumentoManager.getNextNumeroDocumento(documento.getClassificacaoDocumento().getTipoModeloDocumento(), LocalDate.now().getYear()));	
-                    }
                     if(variableAccess.getConfiguration() != null) {
                         List<String> codigosModelos = VariableEditorModeloHandler.fromJson(variableAccess.getConfiguration()).getCodigosModeloDocumento();
                         if (codigosModelos != null && codigosModelos.size() == 1) {
@@ -969,13 +966,21 @@ public class TaskInstanceHome implements Serializable {
 
     private String evaluateModeloDocumento(ModeloDocumento modelo, Documento documento) {
 		Map<String, String> variaveis = null;
-    	if (documento != null && documento.getNumeroDocumento() != null) {
-    		Variavel variavelNumDoc = variavelManager.getVariavelNumDocumento();
-			if (variavelNumDoc != null) {
-				variaveis = new HashMap<String, String>();
-				variaveis.put(variavelNumDoc.getValorVariavel(), String.valueOf(documento.getNumeroDocumento()));
-			}
-    	}
+        if (documento != null) {
+        	if (documento.getClassificacaoDocumento().getTipoModeloDocumento() != null && 
+        			documento.getClassificacaoDocumento().getTipoModeloDocumento().getNumeracaoAutomatica().equals(Boolean.TRUE) &&
+        			documento.getNumeroDocumento() == null && 
+        			this.movimentarProcesso) {
+        		documento.setNumeroDocumento(ultimoNumeroDocumentoManager.getNextNumeroDocumento(documento.getClassificacaoDocumento().getTipoModeloDocumento(), LocalDate.now().getYear()));	
+        	}
+			if (documento.getNumeroDocumento() != null) {
+	    		Variavel variavelNumDoc = variavelManager.getVariavelNumDocumento();
+				if (variavelNumDoc != null) {
+					variaveis = new HashMap<String, String>();
+					variaveis.put(variavelNumDoc.getValorVariavel(), String.valueOf(documento.getNumeroDocumento()));
+				}
+    		}
+		}
         ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processoEpaHome.getInstance().getIdProcesso(), getCurrentTaskInstance());
         return modeloDocumentoManager.evaluateModeloDocumento(modelo, chain, variaveis);
     }
@@ -986,7 +991,7 @@ public class TaskInstanceHome implements Serializable {
 
     public void assignModeloDocumento(String id, ModeloDocumento modeloDocumento) {
         if (modeloDocumento != null) {
-            String modelo = evaluateModeloDocumento(modeloDocumento);
+            String modelo = evaluateModeloDocumento(modeloDocumento, variaveisDocumento.get(id));
             variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);
             String descricao = modeloDocumento.getTituloModeloDocumento();
             variaveisDocumento.get(id).setDescricao(descricao);
@@ -1170,5 +1175,9 @@ public class TaskInstanceHome implements Serializable {
         return getTransition(transition).getConfiguration().isValidateForm();
     }
 
-
+    public boolean estaMovimentandoProcesso(boolean param) {
+    	movimentarProcesso = param;
+    	retrieveVariables();
+    	return movimentarProcesso;
+    }
 }

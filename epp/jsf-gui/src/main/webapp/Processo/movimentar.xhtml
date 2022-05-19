@@ -36,6 +36,9 @@
 	    <h:inputHidden
 	        id="canClosePanel"
 	        value="#{taskInstanceHome.canClosePanelVal}"></h:inputHidden>
+	    <h:inputHidden
+        	id="movimentarProcesso"
+        	value="#{taskInstanceHome.estaMovimentandoProcesso(true)}"></h:inputHidden>
 	    <h:outputScript>
 	      function verifyFields() {
 	        try {
