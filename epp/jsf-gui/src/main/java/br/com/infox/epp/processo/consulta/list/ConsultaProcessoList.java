@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -292,13 +293,9 @@ public class ConsultaProcessoList extends DataList<TaskBean> implements Serializ
 	}
     
     public void marcarAssinaveisNaoAssinaveis() {
-    	List<String> listaIdTaskInstance = new ArrayList<String>();
-    	for(TaskBean taskBean : filteredTasks) {
-    		if(taskBean.isSelecaoAssinaturaLote()) {
-    			listaIdTaskInstance.add(taskBean.getIdTaskInstance());
-    		}
-    	}
+        Set<String> listaIdTaskInstance = filteredTasks.stream().filter(TaskBean::isSelecaoAssinaturaLote).map(TaskBean::getIdTaskInstance).collect(Collectors.toSet());
     	listagemDocumentoAssinatura = taskInstancePermitidaAssinarDocumentoSearch.getListaDocumentoDTOParaSeremAssinados(listaIdTaskInstance);
+        System.out.println(listagemDocumentoAssinatura);
     }
     
 	public void marcarTodosAssinaveis(AjaxBehaviorEvent event) {
@@ -402,8 +399,9 @@ public class ConsultaProcessoList extends DataList<TaskBean> implements Serializ
 	public void onSuccess(List<DadosAssinatura> dadosAssinatura) {
 		try {
 			if (dadosAssinatura != null) {
-				for (DadosAssinatura dadoAssinatura : dadosAssinatura) {
-					assinadorService.assinar(dadoAssinatura, Authenticator.getUsuarioPerfilAtual());
+                UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
+                for (DadosAssinatura dadoAssinatura : dadosAssinatura) {
+					assinadorService.assinar(dadoAssinatura, usuarioPerfilAtual);
 				}
 				dispararSinalAssinaturaEmLote();
 				FacesMessages.instance().add(Severity.INFO,	InfoxMessages.getInstance().get("Documentos assinados com sucesso"));
@@ -421,9 +419,10 @@ public class ConsultaProcessoList extends DataList<TaskBean> implements Serializ
 	}
     
     private void dispararSinalAssinaturaEmLote() {
-    	for (TaskBean taskBean : filteredTasks) {
-            signalService.dispatch(taskBean.getIdProcesso(), SINAL_ASSINATURA_LOTE_PAINEL_USUARIO);
-        }
+
+      filteredTasks.stream().filter(task -> task.isSelecaoAssinaturaLote())
+              .collect(Collectors.toList())
+              .forEach(able -> signalService.dispatch(able.getIdProcesso(), SINAL_ASSINATURA_LOTE_PAINEL_USUARIO));
     }
     
     private DocumentoBin getDocumentoTemporarioByUuid(UUID uuid) {

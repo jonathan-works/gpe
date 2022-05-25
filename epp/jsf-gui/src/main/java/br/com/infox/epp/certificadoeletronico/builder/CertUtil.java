@@ -17,6 +17,7 @@ import org.bouncycastle.openssl.PEMDecryptorProvider;
 import org.bouncycastle.openssl.PEMEncryptedKeyPair;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.bc.BcPEMDecryptorProvider;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 
@@ -28,6 +29,7 @@ public class CertUtil {
 
     static {
         Security.addProvider(new BouncyCastleProvider());
+       // Security.setProperty("crypto.policy", "unlimited");
     }
 
     public static X509Certificate getCertificate(byte[] filename)  {
@@ -65,21 +67,37 @@ public class CertUtil {
     }
 
     public static KeyPair getKeyPair(InputStreamReader isr, String pass)  {
+        try {
 
-        try (PEMParser pemParser = new PEMParser(isr)){
+            PEMParser pemParser = new PEMParser(isr);
+
          // reads your key file
             Object object = pemParser.readObject();
             JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
 
+
+          /*  PEMDecryptorProvider decryptionProvider = new JcePEMDecryptorProviderBuilder().setProvider("BC").build("key".toCharArray());
+            PEMKeyPair decryptedKeyPair = ((PEMEncryptedKeyPair) object).decryptKeyPair(decryptionProvider);*/
             KeyPair kp;
 
 //            JceOpenSSLPKCS8DecryptorProviderBuilder jceOpenSSLPKCS8DecryptorProviderBuilder = new JceOpenSSLPKCS8DecryptorProviderBuilder();
             if (object instanceof PEMEncryptedKeyPair) {
-                PEMDecryptorProvider decProv = new JcePEMDecryptorProviderBuilder().build(pass.toCharArray());
+               // PEMDecryptorProvider decProv = new JcePEMDecryptorProviderBuilder().build(pass.toCharArray());
                 // Encrypted key - we will use provided password
-                PEMEncryptedKeyPair ckp = (PEMEncryptedKeyPair) object;
+              //  PEMEncryptedKeyPair ckp = (PEMEncryptedKeyPair) object;
                 // uses the password to decrypt the key
-                kp = converter.getKeyPair(ckp.decryptKeyPair(decProv));
+               // kp = converter.getKeyPair(ckp.decryptKeyPair(decProv));
+
+              //  PEMDecryptorProvider decryptionProvider = new JcePEMDecryptorProviderBuilder().setProvider("BC").build(pass.toCharArray());
+                //PEMKeyPair decryptedKeyPair = ((PEMEncryptedKeyPair) object).decryptKeyPair(decryptionProvider);
+
+                PEMEncryptedKeyPair keyPair = (PEMEncryptedKeyPair) object;
+                PEMDecryptorProvider keyDecryptorProvider = new BcPEMDecryptorProvider(pass.toCharArray());
+                PEMKeyPair decryptKeyPair = keyPair.decryptKeyPair(keyDecryptorProvider);
+                kp = new JcaPEMKeyConverter().setProvider(BouncyCastleProvider.PROVIDER_NAME)
+                        .getKeyPair(decryptKeyPair);
+
+              //  kp = converter.getKeyPair(ckp.decryptKeyPair(decryptionProvider));
             } else {
                 // Unencrypted key - no password needed
                 PEMKeyPair ukp = (PEMKeyPair) object;
@@ -93,6 +111,7 @@ public class CertUtil {
 //            System.out.println(privateKey.getClass());
             return kp;
         } catch (IOException e) {
+            e.printStackTrace();
             // TODO Auto-generated catch block
             throw new BusinessRollbackException("Falha ao retornar keypair", e);
         }

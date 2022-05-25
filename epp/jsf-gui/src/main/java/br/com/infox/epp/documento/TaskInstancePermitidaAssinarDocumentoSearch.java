@@ -32,6 +32,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
 import br.com.infox.epp.processo.documento.entity.Documento_;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -65,8 +66,22 @@ public class TaskInstancePermitidaAssinarDocumentoSearch extends PersistenceCont
         return em.createQuery(query).getResultList();
     }
 
-	public TaskInstanceListagemDocumentoDTO getListaDocumentoDTOParaSeremAssinados(List<String> listaIdTaskInstance) {
+	public TaskInstanceListagemDocumentoDTO getListaDocumentoDTOParaSeremAssinados(Set<String> listaIdTaskInstance) {
 		TaskInstanceListagemDocumentoDTO listagemDocumentoDTO = new TaskInstanceListagemDocumentoDTO();
+
+	/*	List<DocumentoAssinavelDTO> dtoDocumentosAssinar = getDTODocumentosAssinar(listaIdTaskInstance);
+
+		dtoDocumentosAssinar.forEach(dto -> {
+			if(dto.isDocumentoBinMinuta()){
+				listagemDocumentoDTO.getListaDocumentoMinutaDTO().add(dto);
+			}else if(assinaturaDocumentoService.podeRenderizarApplet(Authenticator.getPapelAtual(),
+					dto, Authenticator.getUsuarioLogado())){
+				listagemDocumentoDTO.getListaDocumentoAssinavelDTO().add(dto);
+			}else {
+				listagemDocumentoDTO.getListaDocumentoNaoAssinavelDTO().add(dto);
+			}
+		});*/
+
 		for(String idTaskInstance : listaIdTaskInstance) {
 			for(Documento documento : getListaDocumentosParaSeremAssinados(idTaskInstance)) {
 				if (documento.getDocumentoBin().getMinuta()) {
@@ -113,7 +128,9 @@ public class TaskInstancePermitidaAssinarDocumentoSearch extends PersistenceCont
 		for(Object[] record : resultList){
 			listaDocumentoDTO.add(new DocumentoAssinavelDTO(Integer.valueOf(record[0].toString()),
 					Integer.valueOf(record[1].toString()),
-					Integer.valueOf(record[2].toString()), (String) record[3]));
+					Integer.valueOf(record[2].toString()),
+					Boolean.valueOf(record[3].toString()),
+					(String) record[4]));
 		}
 
 		for(Iterator<DocumentoAssinavelDTO> itDocumento = listaDocumentoDTO.iterator(); itDocumento.hasNext();) {

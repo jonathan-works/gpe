@@ -6,11 +6,8 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 
 import javax.validation.ValidationException;
 
@@ -94,6 +91,15 @@ public class CMSAdapter {
 			hashes.put(tipoSignedData.getOid(), signedData);
 			
 			CMSSignedData cmsSignedData = new CMSSignedData(hashes, signature);
+			Collection<X509CertificateHolder> certs = cmsSignedData.getCertificates().getMatches(null);
+
+			certs.removeIf(new Predicate<X509CertificateHolder>() {
+				@Override
+				public boolean test(X509CertificateHolder cert) {
+					return ! cert.getIssuer().equals(cert.getSubject());
+				}
+			});
+
 			Store<X509CertificateHolder> certStore = cmsSignedData.getCertificates();
 			Iterator<SignerInformation> signers = cmsSignedData.getSignerInfos().getSigners().iterator();
 
@@ -102,7 +108,7 @@ public class CMSAdapter {
 			}
 			
 			SignerInformation signerInformation = signers.next();
-			Iterator<X509CertificateHolder> signerCertificates = certStore.getMatches(signerInformation.getSID()).iterator();				
+			Iterator<X509CertificateHolder> signerCertificates = certStore.getMatches(signerInformation.getSID()).iterator();
 				
 			Certificate cert = new JcaX509CertificateConverter().getCertificate(signerCertificates.next());
 			boolean valido = signerInformation.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert.getPublicKey()));

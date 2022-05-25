@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import br.com.infox.epp.documento.DocumentoAssinavelDTO;
 import org.apache.commons.codec.binary.Base64;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -410,6 +411,14 @@ public class AssinaturaDocumentoService {
     	}
     	return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) &&
     			!isDocumentoAssinado(documentoBin, papel, usuario);
+    }
+
+    public boolean podeRenderizarApplet(Papel papel, DocumentoAssinavelDTO dto, UsuarioLogin usuario) {
+        if (dto.getIdDocumentoBin() == null || (dto.getIdDocumentoBin() != null && dto.isDocumentoBinMinuta())) {
+            return false;
+        }
+        return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel.getIdPapel(), dto.getIdClassificacao()) &&
+                !isDocumentoAssinado(dto.getIdDocumentoBin(), papel, usuario);
     }
 
     public boolean precisaAssinatura(ClassificacaoDocumento classificacaoDocumento){

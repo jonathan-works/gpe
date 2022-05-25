@@ -19,5 +19,6 @@ public class DocumentoAssinavelDTO implements Serializable {
 	private Integer iddocumento;
 	private Integer idClassificacao;
 	private Integer idDocumentoBin;
+	private boolean isDocumentoBinMinuta;
 	private String idTaskIntance;
 }
