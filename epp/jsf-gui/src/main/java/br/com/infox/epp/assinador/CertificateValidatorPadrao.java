@@ -51,14 +51,13 @@ public class CertificateValidatorPadrao implements CertificateValidator {
 
     private CertPathValidator createCertPathValidator() throws NoSuchAlgorithmException {
         CertPathValidator certPathValidator = CertPathValidator.getInstance(CERT_PATH_VALIDATOR_ALGORITHM_NAME);
-
         return certPathValidator;
     }
 
     private PKIXParameters createPKIXParameters() throws KeyStoreException, InvalidAlgorithmParameterException {
         KeyStore keyStore = trustStoreService.getTrustStore();
         PKIXParameters params = new PKIXParameters(keyStore);
-        params.setRevocationEnabled(true);
+        params.setRevocationEnabled(false);
         return params;
     }
     private CertificateFactory createCertificateFactory() throws CertificateException {

@@ -5,11 +5,13 @@ import java.security.cert.CertPathValidatorException.BasicReason;
 import java.security.cert.CertPathValidatorException.Reason;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+import org.bouncycastle.cert.X509CertificateHolder;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
@@ -120,9 +122,20 @@ public class ValidadorAssinaturaPadrao implements ValidadorAssinatura, Validador
 	@Override
 	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature, PessoaFisica pessoaFisica) throws AssinaturaException {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
-		String certChainBase64 = dadosAssinaturaLegada.getCertChainBase64();
-		verificaCertificadoUsuarioLogado(certChainBase64, pessoaFisica);
-		validarAssinatura(signedData, tipoSignedData, signature);
+		verificaCertificadoUsuarioLogado(dadosAssinaturaLegada.getCertChainBase64(), pessoaFisica);
+		validarAssinatura(signedData, tipoSignedData, signature, dadosAssinaturaLegada);
+	}
+
+	@Override
+	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature, DadosAssinaturaLegada dadosAssinaturaLegada) throws AssinaturaException {
+		try {
+			if (ParametroUtil.isValidaAssinatura()) {
+				validarCertificado(dadosAssinaturaLegada.getCertChain());
+				cmsAdapter.validarAssinatura(signedData, tipoSignedData, signature);
+			}
+		} catch (CertificadoException e) {
+			throw new AssinaturaException(e);
+		}
 	}
 
 }

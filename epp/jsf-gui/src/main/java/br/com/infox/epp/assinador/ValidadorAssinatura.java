@@ -9,4 +9,6 @@ public interface ValidadorAssinatura {
 	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature) throws AssinaturaException;
 
 	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature, PessoaFisica pessoaFisica) throws AssinaturaException;
+
+	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature, DadosAssinaturaLegada dadosAssinaturaLegada) throws AssinaturaException;
 }
