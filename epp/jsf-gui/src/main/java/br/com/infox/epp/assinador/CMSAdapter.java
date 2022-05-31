@@ -91,15 +91,6 @@ public class CMSAdapter {
 			hashes.put(tipoSignedData.getOid(), signedData);
 			
 			CMSSignedData cmsSignedData = new CMSSignedData(hashes, signature);
-			Collection<X509CertificateHolder> certs = cmsSignedData.getCertificates().getMatches(null);
-
-			certs.removeIf(new Predicate<X509CertificateHolder>() {
-				@Override
-				public boolean test(X509CertificateHolder cert) {
-					return ! cert.getIssuer().equals(cert.getSubject());
-				}
-			});
-
 			Store<X509CertificateHolder> certStore = cmsSignedData.getCertificates();
 			Iterator<SignerInformation> signers = cmsSignedData.getSignerInfos().getSigners().iterator();
 
@@ -115,7 +106,7 @@ public class CMSAdapter {
 			
 			return valido;
 		} catch (CMSException | CertificateException | OperatorCreationException e) {
-			throw new AssinaturaException("Erro na assinatura", e);
+			return false;
 		}
     }
     

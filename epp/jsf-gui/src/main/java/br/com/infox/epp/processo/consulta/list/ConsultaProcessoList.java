@@ -295,7 +295,6 @@ public class ConsultaProcessoList extends DataList<TaskBean> implements Serializ
     public void marcarAssinaveisNaoAssinaveis() {
         Set<String> listaIdTaskInstance = filteredTasks.stream().filter(TaskBean::isSelecaoAssinaturaLote).map(TaskBean::getIdTaskInstance).collect(Collectors.toSet());
     	listagemDocumentoAssinatura = taskInstancePermitidaAssinarDocumentoSearch.getListaDocumentoDTOParaSeremAssinados(listaIdTaskInstance);
-        System.out.println(listagemDocumentoAssinatura);
     }
     
 	public void marcarTodosAssinaveis(AjaxBehaviorEvent event) {
