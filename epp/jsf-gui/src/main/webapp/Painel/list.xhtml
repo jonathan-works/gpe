@@ -130,7 +130,7 @@
                             onstart="infox.showLoading();"
                             oncomplete="infox.hideLoading(); #{fileDownloader.getWindowOpenByIdDocumentoBin(lda.idDocumentoBin)}"
                         >
-                            <h:outputText value="#{lda.numeroDocumento}" />
+                            <h:outputText value="#{lda.numeroSequencialDocumento}" />
                             <f:setPropertyActionListener value="#{lda.idDocumentoBin}" target="#{flash.idDocumentoBin}" />
                             <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
                         </p:commandLink>
