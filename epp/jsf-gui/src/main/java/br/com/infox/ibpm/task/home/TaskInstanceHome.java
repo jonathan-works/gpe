@@ -1177,7 +1177,11 @@ public class TaskInstanceHome implements Serializable {
 
     public boolean estaMovimentandoProcesso(boolean param) {
     	movimentarProcesso = param;
-    	retrieveVariables();
+        if(mapaDeVariaveis == null){
+            createInstance();
+        }else{
+            retrieveVariables();
+        }
     	return movimentarProcesso;
     }
 }
