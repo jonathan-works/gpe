@@ -41,6 +41,8 @@ public class TaskBean {
     private boolean selecaoAssinaturaLote;
     @Getter @Setter
     private Boolean hasDocumentoParaAssinar;
+    @Getter @Setter
+    private boolean podeVisualizarProcesso;
 
 
     public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
@@ -95,6 +97,7 @@ public class TaskBean {
         this.hasDocumentoParaAssinar = validateBooleanValue(record[20].toString());
         this.nomeFluxo =  (String) record[21];
         this.idFluxo = validateIntValue(record[22]);
+        this.podeVisualizarProcesso = validateBooleanValue(record[23]);
     }
 
     private Date convertDate(Object value){
@@ -102,7 +105,7 @@ public class TaskBean {
     }
 
     private boolean validateBooleanValue(Object value){
-        return validateIntValue(value) == 1 ? true : false;
+        return value == null ? false : validateIntValue(value) == 1 ? true : false;
     }
 
     private Integer validateIntValue(Object value){

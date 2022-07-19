@@ -90,6 +90,17 @@
         title="#{infoxMessages['painel.list.liberarTarefaServidor']} #{row.nomeUsuarioTarefa}" />
     </a:commandLink>
 
+      <a:commandLink
+              action="#{taskInstanceHome.recuperarProcesso(row)}"
+              execute="@this" render="baseBody, pageBodyDialogMessage"
+              limitRender="true"
+              rendered="#{taskInstanceHome.podeRecuperaProcesso(row)}"
+              onclick="showLoading()"
+              title="#{infoxMessages['painel.recuperarProcesso.tooltip']}">
+          <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/return.png')}"
+                          title="#{infoxMessages['painel.list.recuperarProcesso']} #{row.nomeUsuarioTarefa}" />
+      </a:commandLink>
+
 		<rich:column id="checkboxColumn">
 			<h:selectBooleanCheckbox value="#{row.selecaoAssinaturaLote}"
 				rendered="#{exibirSelecaoAssinaturaLote}" 
