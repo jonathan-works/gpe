@@ -46,4 +46,7 @@ public class TaskInstanceManager extends Manager<TaskInstanceDAO, UsuarioTaskIns
         return getDao().getTaskInstanceOpen(processo.getIdProcesso());
     }
 
+    public TaskInstance getTaskInstanceOpen(Integer idProcesso) {
+        return getDao().getTaskInstanceOpen(idProcesso);
+    }
 }

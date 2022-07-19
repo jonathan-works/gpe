@@ -22,6 +22,9 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import org.jbpm.context.exe.VariableInstance;
 import org.jbpm.graph.exe.ExecutionContext;
 
@@ -168,6 +171,8 @@ public class BpmExpressionService {
     protected TaskInstancePermitidaAssinarDocumentoService taskInstancePermitidaAssinarDocumentoService;
     @Inject
     protected DocumentoUploadTarefaExternaService documentoUploadTarefaExternaService;
+    @Inject
+    protected ProcessoTarefaManager processoTarefaManager;
 
     public String getConteudoFolhaDeRostoProcessoParaEditor() {
     	return modeloDocumentoFolhaRostoSearch.gerarTextoModeloDocumento(getProcessoAtual());
@@ -900,6 +905,19 @@ public class BpmExpressionService {
             }
         }
         return null;
+    }
+
+   @External(expressionType = ExpressionType.GERAL,
+            tooltip = "process.events.expression.adicionarvariavelprocesso.tooltip"
+    )
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void adicionarVariavelAoProcesso(String nome, String valor) {
+       ExecutionContext executionContext = getExecutionContext();
+
+       VariableInstance variableInstance = VariableInstance.create(executionContext.getTaskInstance().getToken(), nome, valor);
+       executionContext.getTaskInstance().getVariableInstances().put(nome, variableInstance);
+       ExecutionContext.pushCurrentContext(executionContext);
+
     }
 
 }

@@ -8,10 +8,15 @@ import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.seam.exception.BusinessRollbackException;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
+import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -291,5 +296,9 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
 
     public ProcessoTarefa getUltimoProcessoTarefa(Processo processo) {
         return getDao().getUltimoProcessoTarefa(processo);
+    }
+
+    public List<ProcessoTarefa> getDoisUltimosProcessosTarefa(Processo processo) {
+        return getDao().getDoisUltimosProcessosTarefa(processo);
     }
 }

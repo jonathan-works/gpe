@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -105,5 +106,13 @@ public class ProcessoTarefaDAO extends DAO<ProcessoTarefa> {
     	Map<String, Object> params = new HashMap<>();
         params.put(QUERY_PARAM_PROCESSO, processo);
         return getNamedSingleResult(ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA, params);
+    }
+
+    public List<ProcessoTarefa> getDoisUltimosProcessosTarefa(Processo processo) {
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(QUERY_PARAM_PROCESSO, processo);
+
+        return getResultList(ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA_QUERY, parameters, 1, 2);
     }
 }

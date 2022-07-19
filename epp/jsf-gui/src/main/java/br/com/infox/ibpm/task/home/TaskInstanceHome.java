@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -19,6 +21,8 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
+import br.com.infox.epp.painel.TaskBean;
+import br.com.infox.epp.processo.entity.Processo;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -129,6 +133,7 @@ public class TaskInstanceHome implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceHome";
     private static final String TASK_INSTANCE_FORM_ID = "movimentarTabPanel:taskInstanceForm";
+    private static final String VARIABLE_INSTANCE_RECUPERAR_PROCESSO = "recuperarProcesso";
 
     @Inject
     private ProcessoManager processoManager;
@@ -1183,5 +1188,42 @@ public class TaskInstanceHome implements Serializable {
             retrieveVariables();
         }
     	return movimentarProcesso;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void recuperarProcesso(TaskBean taskBean) {
+        try {
+            Processo processo = processoManager.find(taskBean.getIdProcesso());
+
+            List<ProcessoTarefa> doisUltimosProcessosTarefa = processoTarefaManager.getDoisUltimosProcessosTarefa(processo);
+
+            if (doisUltimosProcessosTarefa == null || doisUltimosProcessosTarefa.isEmpty() || doisUltimosProcessosTarefa.size() == 1)
+                throw new RuntimeException("Processo Tarefa não encontrado nos parametros corretos para retornar tarefa");
+
+            ProcessoTarefa processoTarefa = doisUltimosProcessosTarefa.get(1);
+
+            TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen(processo);
+            setTaskId(taskInstanceOpen.getTask().getId());
+            processoTarefaManager.finalizarInstanciaTarefa(taskInstanceOpen, processoTarefa.getTarefa().getTarefa());
+        } catch (Exception e) {
+            throw new ApplicationException("Erro ao recuperar tarefa.");
+        }
+    }
+
+    public boolean podeRecuperaProcesso(final TaskBean taskBean){
+        try{
+            if(taskBean.isPodeVisualizarProcesso()) {
+                TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen(taskBean.getIdProcesso());
+                Map<String, VariableInstance> variableMap = taskInstanceOpen.getVariableInstances();
+                if (variableMap != null) {
+                    VariableInstance variableInstance = variableMap.get(VARIABLE_INSTANCE_RECUPERAR_PROCESSO);
+                    return variableInstance != null && Boolean.valueOf(variableInstance.getValue().toString()).booleanValue() == true;
+                }
+                return false;
+            }
+        }catch (Exception e){
+            throw new ApplicationException("Erro ao recuperar variáveis de instância.");
+        }
+        return false;
     }
 }

@@ -18,6 +18,8 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
+import javax.inject.Inject;
+
 @Name(DocumentoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
@@ -27,7 +29,7 @@ public class DocumentoService implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoService";
 
-    @In
+    @Inject
     private DocumentoManager documentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
