@@ -1,8 +1,9 @@
 package br.com.infox.epp.painel;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.*;
 
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.processo.type.TipoProcesso;
 
 public class FluxoBean implements Comparable<FluxoBean> {
@@ -13,6 +14,8 @@ public class FluxoBean implements Comparable<FluxoBean> {
 	private TipoProcesso tipoProcesso;
 	private Boolean expedida = false;
 	private boolean bpmn20;
+	private boolean podeVisualizarComExcessao;
+	private List<Long> taskInstancesExcessao;
 
 	private String numeroProcessoRootFilter;
 	private Map<String, TaskBean> tasks;
@@ -65,7 +68,37 @@ public class FluxoBean implements Comparable<FluxoBean> {
         }
     }
 
-    public void addTaskDefinition(TaskBean taskBean) {
+	public FluxoBean(Object[] record, String tipoProcesso, String expedida, String numeroProcessoRootFilter) {
+		podeVisualizarComExcessao = true;
+		this.processDefinitionId =  BigInteger.valueOf(Long.valueOf(record[1].toString())).toString();
+		this.quantidadeProcessos = validateIntValue(record[2]);
+		if (tipoProcesso != null) {
+			this.tipoProcesso = TipoProcesso.getByName(tipoProcesso);
+		}
+		this.expedida = Boolean.valueOf(expedida);
+		this.bpmn20 = false;
+		this.numeroProcessoRootFilter = numeroProcessoRootFilter;
+
+		if(TipoProcesso.COMUNICACAO.value().equals(tipoProcesso)) {
+			this.name = (String) record[0] + (this.expedida ? "-Expedidas" : "-Recebidas");
+		}
+		else
+		{
+			this.name = (String) record[0];
+		}
+		taskInstancesExcessao = new ArrayList<>();
+		String[] split = record[3].toString().split(",");
+		Arrays.asList(split).forEach(v -> {
+			if (!StringUtil.isEmpty(v))
+				taskInstancesExcessao.add(Long.valueOf(v));
+		});
+	}
+
+	private Long validateIntValue(Object value){
+		return value == null ? null : Long.valueOf(value.toString());
+	}
+
+	public void addTaskDefinition(TaskBean taskBean) {
         if (tasks == null) tasks = new HashMap<>();
 		String taskNodeKey = taskBean.getTaskNodeKey();
 		String taskName = taskBean.getTaskName();
@@ -192,4 +225,11 @@ public class FluxoBean implements Comparable<FluxoBean> {
 		return this.getName().compareTo(o.getName());
 	}
 
+	public boolean isPodeVisualizarComExcessao() {
+		return podeVisualizarComExcessao;
+	}
+
+	public List<Long> getTaskInstancesExcessao() {
+		return taskInstancesExcessao;
+	}
 }

@@ -1,33 +1,19 @@
 package br.com.infox.epp.processo.situacao.dao;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.AbstractQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
-import javax.persistence.criteria.Subquery;
+import javax.persistence.criteria.*;
 
 import br.com.infox.epp.view.query.ViewSituacaoProcessoQuery;
 import org.jbpm.context.exe.variableinstance.LongInstance;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
-import org.jbpm.graph.node.TaskNode;
-import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -36,19 +22,15 @@ import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.entity.PerfilTemplate;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
-import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Categoria_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
-import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza_;
 import br.com.infox.epp.painel.FluxoBean;
 import br.com.infox.epp.painel.TaskBean;
-import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.Caixa_;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.entity.Processo;
@@ -56,7 +38,6 @@ import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
-import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso_;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
@@ -66,9 +47,9 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.view.ViewSituacaoProcesso;
 import br.com.infox.epp.view.ViewSituacaoProcesso_;
 import br.com.infox.ibpm.type.PooledActorType;
-import br.com.infox.epp.view.query.ViewSituacaoProcessoQuery.*;
 
 import static br.com.infox.epp.view.query.ViewSituacaoProcessoQuery.*;
+import static java.util.stream.Collectors.groupingBy;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -80,7 +61,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
 
 	    Root<ViewSituacaoProcesso> viewSituacaoProcesso = cq.from(ViewSituacaoProcesso.class);
 	    Join<ViewSituacaoProcesso, TaskInstance> taskInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.taskInstance);
-        Join<ViewSituacaoProcesso, ProcessInstance> processInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processInstance);
+	    Join<ViewSituacaoProcesso, ProcessInstance> processInstance = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processInstance);
         Join<ViewSituacaoProcesso, Processo> processo = viewSituacaoProcesso.join(ViewSituacaoProcesso_.processo);
         Join<Processo, NaturezaCategoriaFluxo> naturezaCategoriaFluxo = processo.join(Processo_.naturezaCategoriaFluxo);
         Join<NaturezaCategoriaFluxo, Fluxo> fluxo = naturezaCategoriaFluxo.join(NaturezaCategoriaFluxo_.fluxo);
@@ -101,6 +82,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
                 cb.isNull(processInstance.<Date>get("end")),
                 cb.isTrue(taskInstance.<Boolean>get("isOpen")),
                 cb.isFalse(taskInstance.<Boolean>get("isSuspended"))
+
         );
 
         appendSigiloProcessoFilter(cq, processo);
@@ -110,8 +92,94 @@ public class SituacaoProcessoDAO extends PersistenceController {
             Join<Processo, Processo> processoRoot = processo.join(Processo_.processoRoot, JoinType.INNER);
             appendNumeroProcessoRootFilter(cq, numeroProcessoRootFilter, processoRoot);
         }
-        return getEntityManager().createQuery(cq).getResultList();
+
+        List<FluxoBean> resultList = getEntityManager().createQuery(cq).getResultList();
+
+        List<FluxoBean> byVariable = findByVariable(tipoProcesso, comunicacoesExpedidas, numeroProcessoRootFilter);
+
+        if(byVariable != null && !byVariable.isEmpty()) {
+            resultList.addAll(byVariable);
+
+            Map<String, Map<String, List<FluxoBean>>> collect = resultList.stream().collect(groupingBy(FluxoBean::getName, groupingBy(FluxoBean::getProcessDefinitionId)));
+
+            List<FluxoBean> ordered = collect.values().stream().flatMap(a -> a.values().stream()).flatMap(Collection::stream).collect(Collectors.toList());
+
+            return  ordered;
+        }
+
+        return resultList;
 	}
+
+    private List<FluxoBean> findByVariable(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRootFilter){
+
+        StringBuilder query = new StringBuilder("");
+        query.append("select flux.ds_fluxo, flux.id_fluxo, count(DISTINCT taskins.ID_) as qtd, STUFF(concat(taskins.ID_,','), 1, 0, null) as ids from JBPM_VARIABLEINSTANCE vi ")
+                .append("inner join JBPM_PROCESSINSTANCE process on vi.PROCESSINSTANCE_ = process.ID_ ")
+                .append("inner join JBPM_TASKINSTANCE taskins on vi.TASKINSTANCE_ = taskins.ID_ ")
+                .append("inner join vs_situacao_processo vs on  taskins.ID_ = vs.id_taskinstance ")
+                .append("inner join tb_processo proce on  vs.id_processo = proce.id_processo ")
+                .append("inner join tb_natureza_categoria_fluxo natcat on proce.id_natureza_categoria_fluxo = natcat.id_natureza_categoria_fluxo ")
+                .append("inner join tb_fluxo flux on natcat.id_fluxo = flux.id_fluxo ");
+
+        if (!StringUtil.isEmpty(numeroProcessoRootFilter)) {
+            query.append("inner join tb_processo procroot on vs.id_processo_root = procroot.id_processo_root ");
+        }
+
+                query.append("where vi.NAME_ = 'perfilVisualizarRecuperar' and vi.STRINGVALUE_ = concat(:")
+                .append(PARAM_CODIGO_LOCALIZACAO).append(",'/',:").append(PARAM_CODIGO_PERFIL_TEMPLATE)
+                .append(") and process.END_ is null ")
+                .append("and taskins.ISOPEN_ = 1 ")
+                .append("and taskins.ISSUSPENDED_ = 0 ");
+
+        Map<String, Object> params = new HashMap<>();
+
+        if(tipoProcesso == null){
+            query.append(ViewSituacaoProcessoQuery.subQueryTipoProcessoNull);
+            params.put(PARAM_TIPO_PROCESSO_METADADO, EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType());
+        }else{
+            query.append(ViewSituacaoProcessoQuery.subQueryTipoProcesso);
+            params.put(PARAM_TIPO_PROCESSO_METADADO, EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType());
+            params.put(PARAM_TIPO_PROCESSO_VALOR, tipoProcesso.value());
+        }
+
+        if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
+            if (comunicacoesExpedidas) {
+                query.append(ViewSituacaoProcessoQuery.queryLocExpedidor);
+                params.put(PARAM_ID_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getIdLocalizacao());
+            } else {
+                PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+                Integer idPessoaFisica = pessoaFisica == null ? -1 : pessoaFisica.getIdPessoa();
+                query.append(ViewSituacaoProcessoQuery.queryDestDestinatario);
+                params.put(PARAM_LOCALIZACAO_DESTINO, EppMetadadoProvider.LOCALIZACAO_DESTINO.getMetadadoType());
+                params.put(PARAM_ID_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getIdLocalizacao());
+                params.put(PARAM_PERFIL_DESTINO, EppMetadadoProvider.PERFIL_DESTINO.getMetadadoType());
+                params.put(PARAM_ID_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId());
+                params.put(PARAM_PERFIL_DESTINO, EppMetadadoProvider.PERFIL_DESTINO.getMetadadoType());
+                params.put(PARAM_ID_PESSOA_FISICA, idPessoaFisica);
+            }
+        }
+
+        if (!StringUtil.isEmpty(numeroProcessoRootFilter)) {
+            query.append(ViewSituacaoProcessoQuery.queryProcRoot);
+            params.put(PARAM_NUMERO_PROCESSO_ROOT, numeroProcessoRootFilter);
+        }
+
+        query.append(" group by flux.ds_fluxo, flux.id_fluxo, STUFF(concat(taskins.ID_,','), 1, 0, null) ");
+        Query nativeQuery = getEntityManager().createNativeQuery(query.toString());
+
+        params.put(PARAM_CODIGO_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getCodigo());
+        params.put(PARAM_CODIGO_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getCodigo());
+        params.entrySet().forEach( p -> {
+            nativeQuery.setParameter(p.getKey(), p.getValue());
+        });
+
+        List<Object[]> resultList = nativeQuery.getResultList();
+        List<FluxoBean> result = new LinkedList<>();
+        for(Object[] record : resultList){
+            result.add(new FluxoBean(record, tipoProcesso == null ? null : tipoProcesso.value(), String.valueOf(comunicacoesExpedidas), numeroProcessoRootFilter));
+        }
+        return result;
+    }
 
 	public List<TaskBean> getTaskIntances(FluxoBean fluxoBean) {
 
@@ -127,7 +195,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         }else{
             query.append(ViewSituacaoProcessoQuery.subQueryTipoProcesso);
             params.put(PARAM_TIPO_PROCESSO_METADADO, EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType());
-            params.put(PARAM_TIPO_PROCESSO_VALOR, fluxoBean.getTipoProcesso());
+            params.put(PARAM_TIPO_PROCESSO_VALOR, fluxoBean.getTipoProcesso().value());
         }
 
         if (TipoProcesso.COMUNICACAO.equals(fluxoBean.getTipoProcesso())) {
@@ -148,21 +216,21 @@ public class SituacaoProcessoDAO extends PersistenceController {
         } else {
             query.append(ViewSituacaoProcessoQuery.subQueryTipoProcessoFilter);
             params.put(PARAM_ID_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId().toString());
-            params.put(PARAM_CODIGO_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getCodigo());
             params.put(PARAM_NOME_USUARIO_LOGIN, Authenticator.getUsuarioLogado().getLogin());
             params.put(PARAM_TIPO_USER, PooledActorType.USER.getValue());
-            params.put(PARAM_CODIGO_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getCodigo());
             params.put(PARAM_TIPO_GROUP, PooledActorType.GROUP.getValue());
             params.put(PARAM_TIPO_LOCAL, PooledActorType.LOCAL.getValue());
         }
+
+        params.put(PARAM_CODIGO_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getCodigo());
+        params.put(PARAM_CODIGO_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getCodigo());
 
         if (!StringUtil.isEmpty(fluxoBean.getNumeroProcessoRootFilter())) {
             query.append(ViewSituacaoProcessoQuery.queryProcRoot);
             params.put(PARAM_NUMERO_PROCESSO_ROOT, fluxoBean.getNumeroProcessoRootFilter());
         }
-
         query.append(")");
-        query.append("OPTION (FORCE ORDER)");
+        query.append(" OPTION (FORCE ORDER)");
 
         params.put(PARAM_PROCESS_DEFINITION, fluxoBean.getProcessDefinitionId());
         params.put(PARAM_ID_USUARIO_LOGIN, Authenticator.getUsuarioLogado().getIdUsuarioLogin());
@@ -176,8 +244,71 @@ public class SituacaoProcessoDAO extends PersistenceController {
         List<Object[]> resultList = nativeQuery.getResultList();
         List<TaskBean> result = new LinkedList<>();
         for(Object[] record : resultList){
-            result.add(new TaskBean(record));
+            result.add(new TaskBean(record, fluxoBean.isPodeVisualizarComExcessao()));
         }
+
+        if(fluxoBean.isPodeVisualizarComExcessao()){
+            params = new HashMap<>();
+            StringBuilder queryVariables = new StringBuilder("");
+            queryVariables.append(TASK_INSTANCES_QUERY_WITH_VARIABLE_INSTANCE);
+            if(fluxoBean.getTipoProcesso() == null){
+                queryVariables.append(ViewSituacaoProcessoQuery.subQueryTipoProcessoNull);
+                params.put(PARAM_TIPO_PROCESSO_METADADO, EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType());
+            }else{
+                queryVariables.append(ViewSituacaoProcessoQuery.subQueryTipoProcesso);
+                params.put(PARAM_TIPO_PROCESSO_METADADO, EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType());
+                params.put(PARAM_TIPO_PROCESSO_VALOR, fluxoBean.getTipoProcesso().value());
+            }
+
+            if (TipoProcesso.COMUNICACAO.equals(fluxoBean.getTipoProcesso())) {
+                if (fluxoBean.getExpedida() != null && fluxoBean.getExpedida()) {
+                    queryVariables.append(ViewSituacaoProcessoQuery.queryLocExpedidor);
+                    params.put(PARAM_ID_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getIdLocalizacao());
+                } else {
+                    PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+                    Integer idPessoaFisica = pessoaFisica == null ? -1 : pessoaFisica.getIdPessoa();
+                    queryVariables.append(ViewSituacaoProcessoQuery.queryDestDestinatario);
+                    params.put(PARAM_LOCALIZACAO_DESTINO, EppMetadadoProvider.LOCALIZACAO_DESTINO.getMetadadoType());
+                    params.put(PARAM_ID_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getIdLocalizacao());
+                    params.put(PARAM_PERFIL_DESTINO, EppMetadadoProvider.PERFIL_DESTINO.getMetadadoType());
+                    params.put(PARAM_ID_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId());
+                    params.put(PARAM_PERFIL_DESTINO, EppMetadadoProvider.PERFIL_DESTINO.getMetadadoType());
+                    params.put(PARAM_ID_PESSOA_FISICA, idPessoaFisica);
+                }
+            }
+
+            if (!StringUtil.isEmpty(fluxoBean.getNumeroProcessoRootFilter())) {
+                queryVariables.append(ViewSituacaoProcessoQuery.queryProcRoot);
+                params.put(PARAM_NUMERO_PROCESSO_ROOT, fluxoBean.getNumeroProcessoRootFilter());
+            }
+
+
+            queryVariables.append(" OPTION (FORCE ORDER)");
+
+            params.put(PARAM_IDS_TASK_INSTANCE, fluxoBean.getTaskInstancesExcessao());
+            params.put(PARAM_PROCESS_DEFINITION, fluxoBean.getProcessDefinitionId());
+
+            Query nativeQueryVariables = getEntityManager().createNativeQuery(queryVariables.toString());
+
+            params.entrySet().forEach( p -> {
+                nativeQueryVariables.setParameter(p.getKey(), p.getValue());
+            });
+
+            List<Object[]> resultListVariables = nativeQueryVariables.getResultList();
+            List<TaskBean> resultVariables = new LinkedList<>();
+            for(Object[] record : resultListVariables){
+                resultVariables.add(new TaskBean(record, fluxoBean.isPodeVisualizarComExcessao()));
+            }
+
+            if(resultVariables != null && !resultVariables.isEmpty()) {
+                result.addAll(resultVariables);
+
+                List<TaskBean> collect = result.stream().collect(groupingBy(TaskBean::getTaskName)).values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+
+                return  collect;
+            }
+        }
+
         return result;
     }
 
