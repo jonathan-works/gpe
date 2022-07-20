@@ -73,7 +73,7 @@ public class TaskBean {
         this.hasDocumentoParaAssinar = temDocumentoParaAssinar;
     }
 
-    public TaskBean(Object[] record) {
+    public TaskBean(Object[] record, boolean podeVisualizarProcesso) {
         this.idTaskInstance =  (String) record[0];
         this.taskName = (String)  record[1];
         this.assignee = (String) record[2];
@@ -97,7 +97,7 @@ public class TaskBean {
         this.hasDocumentoParaAssinar = validateBooleanValue(record[20].toString());
         this.nomeFluxo =  (String) record[21];
         this.idFluxo = validateIntValue(record[22]);
-        this.podeVisualizarProcesso = validateBooleanValue(record[23]);
+        this.podeVisualizarProcesso = podeVisualizarProcesso;
     }
 
     private Date convertDate(Object value){
