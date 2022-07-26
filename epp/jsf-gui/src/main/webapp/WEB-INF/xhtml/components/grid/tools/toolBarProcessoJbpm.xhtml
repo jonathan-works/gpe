@@ -35,7 +35,7 @@
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
     </a:commandLink>
 
-    <a:commandLink execute="@this" rendered="#{empty owner and showMovimentarToolBar and authenticator.perfilTemplateAtualPossuiLocalizacao()}"
+    <a:commandLink execute="@this" rendered="#{empty owner and showMovimentarToolBar and authenticator.perfilTemplateAtualPossuiLocalizacao() and !taskInstanceHome.podeRecuperaProcesso(row)}"
       target="#{idProcesso}popUpFluxo"
       render="@form"
       onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
@@ -47,9 +47,9 @@
     </a:commandLink>
 
 		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" title="#{infoxMessages['painel.movimentar.tooltipProblemaLocalizacao']}" 
-		rendered="#{empty owner and showMovimentarToolBar and not authenticator.perfilTemplateAtualPossuiLocalizacao()}" style="opacity: 0.4;"/>
+		rendered="#{empty owner and showMovimentarToolBar and not authenticator.perfilTemplateAtualPossuiLocalizacao()  and !taskInstanceHome.podeRecuperaProcesso(row)}" style="opacity: 0.4;"/>
     <a:commandLink execute="@this"
-      rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar and authenticator.perfilTemplateAtualPossuiLocalizacao()}"
+      rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar and authenticator.perfilTemplateAtualPossuiLocalizacao() and !taskInstanceHome.podeRecuperaProcesso(row)}"
       target="#{idProcesso}popUpFluxo"
       onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
       title="#{infoxMessages['painel.movimentarUnassigned.tooltip']}"
@@ -60,11 +60,11 @@
     </a:commandLink>
 
 	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/processAssigned.png')}" title="#{infoxMessages['painel.movimentar.tooltipProblemaLocalizacao']}" 
-	rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar and not authenticator.perfilTemplateAtualPossuiLocalizacao()}" style="opacity: 0.4;"/>
+	rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar and not authenticator.perfilTemplateAtualPossuiLocalizacao() and !taskInstanceHome.podeRecuperaProcesso(row)}" style="opacity: 0.4;"/>
 	
     <p:commandLink
         action="#{painelUsuarioController.carregarDocumentosParaAssinar(row)}"
-        rendered="#{row.hasDocumentoParaAssinar}"
+        rendered="#{row.hasDocumentoParaAssinar and !taskInstanceHome.podeRecuperaProcesso(row)}"
         process="@this"
         partialSubmit="true"
         update="@(.listaDocsParaAssinarPanelContainer)"
@@ -85,7 +85,7 @@
       onclick="return confirm(\'#{infoxMessages['movimentar.confirmLiberarTarefa']}\');"
       limitRender="true"
       title="#{infoxMessages['painel.liberarTarefa.tooltip']}"
-      rendered="#{(owner ne authenticator.getUsuarioLogado().login and not empty owner and authenticator.isUsuarioAtualResponsavel())}">
+      rendered="#{(owner ne authenticator.getUsuarioLogado().login and not empty owner and authenticator.isUsuarioAtualResponsavel()) and !taskInstanceHome.podeRecuperaProcesso(row)}">
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/role.gif')}"
         title="#{infoxMessages['painel.list.liberarTarefaServidor']} #{row.nomeUsuarioTarefa}" />
     </a:commandLink>
@@ -95,7 +95,8 @@
               execute="@this" render="baseBody, pageBodyDialogMessage"
               limitRender="true"
               rendered="#{taskInstanceHome.podeRecuperaProcesso(row)}"
-              onclick="showLoading()"
+              update="@form"
+              onclick="showLoading()"  oncomplete="hideLoading();"
               title="#{infoxMessages['painel.recuperarProcesso.tooltip']}">
           <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/return.png')}"
                           title="#{infoxMessages['painel.list.recuperarProcesso']} #{row.nomeUsuarioTarefa}" />
@@ -103,7 +104,7 @@
 
 		<rich:column id="checkboxColumn">
 			<h:selectBooleanCheckbox value="#{row.selecaoAssinaturaLote}"
-				rendered="#{exibirSelecaoAssinaturaLote}" 
+				rendered="#{exibirSelecaoAssinaturaLote and !taskInstanceHome.podeRecuperaProcesso(row)}"
 				onclick="updateMarcarTodos($(this)); enableDisableAssinarButton();"
 				styleClass="checkButtonDocumento">
 				<p:ajax execute="@this" />

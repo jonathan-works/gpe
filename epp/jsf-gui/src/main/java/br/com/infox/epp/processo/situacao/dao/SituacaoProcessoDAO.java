@@ -98,13 +98,20 @@ public class SituacaoProcessoDAO extends PersistenceController {
         List<FluxoBean> byVariable = findByVariable(tipoProcesso, comunicacoesExpedidas, numeroProcessoRootFilter);
 
         if(byVariable != null && !byVariable.isEmpty()) {
-            resultList.addAll(byVariable);
+            byVariable.forEach(tk -> {
 
-            Map<String, Map<String, List<FluxoBean>>> collect = resultList.stream().collect(groupingBy(FluxoBean::getName, groupingBy(FluxoBean::getProcessDefinitionId)));
+                for (FluxoBean fb: new ArrayList<>(resultList)) {
+                        if (tk.getName().equals(fb.getName()) && tk.getProcessDefinitionId().equals(fb.getProcessDefinitionId())) {
+                            fb.setPodeVisualizarComExcessao(true);
+                            fb.setTaskInstancesExcessao(tk.getTaskInstancesExcessao());
+                            long qtd = fb.getQuantidadeProcessos() + tk.getQuantidadeProcessos();
+                            fb.setQuantidadeProcessos(qtd);
+                            return;
 
-            List<FluxoBean> ordered = collect.values().stream().flatMap(a -> a.values().stream()).flatMap(Collection::stream).collect(Collectors.toList());
+                    }
+                }
+            });
 
-            return  ordered;
         }
 
         return resultList;

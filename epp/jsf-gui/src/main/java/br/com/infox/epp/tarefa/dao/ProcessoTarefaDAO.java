@@ -113,6 +113,6 @@ public class ProcessoTarefaDAO extends DAO<ProcessoTarefa> {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_PROCESSO, processo);
 
-        return getResultList(ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA_QUERY, parameters, 1, 2);
+        return getResultList(ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA_QUERY, parameters, 0, 2);
     }
 }
