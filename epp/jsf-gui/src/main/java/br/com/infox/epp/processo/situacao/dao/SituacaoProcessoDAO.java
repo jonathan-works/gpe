@@ -98,19 +98,19 @@ public class SituacaoProcessoDAO extends PersistenceController {
         List<FluxoBean> byVariable = findByVariable(tipoProcesso, comunicacoesExpedidas, numeroProcessoRootFilter);
 
         if(byVariable != null && !byVariable.isEmpty()) {
-            byVariable.forEach(tk -> {
+            String nome = byVariable.get(0).getName();
+            String id = byVariable.get(0).getProcessDefinitionId();
+            List<Long> tasks = byVariable.stream().flatMap(vari -> vari.getTaskInstancesExcessao().stream()).collect(Collectors.toList());
 
-                for (FluxoBean fb: new ArrayList<>(resultList)) {
-                        if (tk.getName().equals(fb.getName()) && tk.getProcessDefinitionId().equals(fb.getProcessDefinitionId())) {
+            for (FluxoBean fb: new ArrayList<>(resultList)) {
+                        if (nome.equals(fb.getName()) && id.equals(fb.getProcessDefinitionId())) {
                             fb.setPodeVisualizarComExcessao(true);
-                            fb.setTaskInstancesExcessao(tk.getTaskInstancesExcessao());
-                            long qtd = fb.getQuantidadeProcessos() + tk.getQuantidadeProcessos();
+                            fb.setTaskInstancesExcessao(tasks);
+                            long qtd = fb.getQuantidadeProcessos() + tasks.size();
                             fb.setQuantidadeProcessos(qtd);
-                            return;
-
+                            break;
                     }
                 }
-            });
 
         }
 
@@ -120,7 +120,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
     private List<FluxoBean> findByVariable(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRootFilter){
 
         StringBuilder query = new StringBuilder("");
-        query.append("select flux.ds_fluxo, flux.id_fluxo, count(DISTINCT taskins.ID_) as qtd, STUFF(concat(taskins.ID_,','), 1, 0, null) as ids from JBPM_VARIABLEINSTANCE vi ")
+        query.append("select flux.ds_fluxo, flux.id_fluxo, count(DISTINCT taskins.ID_) as qtd, taskins.ID_ from JBPM_VARIABLEINSTANCE vi ")
                 .append("inner join JBPM_PROCESSINSTANCE process on vi.PROCESSINSTANCE_ = process.ID_ ")
                 .append("inner join JBPM_TASKINSTANCE taskins on vi.TASKINSTANCE_ = taskins.ID_ ")
                 .append("inner join vs_situacao_processo vs on  taskins.ID_ = vs.id_taskinstance ")
@@ -171,7 +171,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
             params.put(PARAM_NUMERO_PROCESSO_ROOT, numeroProcessoRootFilter);
         }
 
-        query.append(" group by flux.ds_fluxo, flux.id_fluxo, STUFF(concat(taskins.ID_,','), 1, 0, null) ");
+        query.append(" group by flux.ds_fluxo, flux.id_fluxo, taskins.ID_ ");
         Query nativeQuery = getEntityManager().createNativeQuery(query.toString());
 
         params.put(PARAM_CODIGO_PERFIL_TEMPLATE, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getCodigo());
