@@ -41,6 +41,8 @@ public class TaskBean {
     private boolean selecaoAssinaturaLote;
     @Getter @Setter
     private Boolean hasDocumentoParaAssinar;
+    @Getter @Setter
+    private boolean podeVisualizarProcesso;
 
 
     public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
@@ -71,7 +73,7 @@ public class TaskBean {
         this.hasDocumentoParaAssinar = temDocumentoParaAssinar;
     }
 
-    public TaskBean(Object[] record) {
+    public TaskBean(Object[] record, boolean podeVisualizarProcesso) {
         this.idTaskInstance =  (String) record[0];
         this.taskName = (String)  record[1];
         this.assignee = (String) record[2];
@@ -92,13 +94,18 @@ public class TaskBean {
         this.dataInicio = convertDate(record[17]);
         this.nomeNaturezaProcessoRoot = (String) record[18];
         this.nomeCategoriaProcessoRoot =  (String) record[19];;
-        this.hasDocumentoParaAssinar = Boolean.valueOf(record[20].toString());
+        this.hasDocumentoParaAssinar = validateBooleanValue(record[20].toString());
         this.nomeFluxo =  (String) record[21];
         this.idFluxo = validateIntValue(record[22]);
+        this.podeVisualizarProcesso = podeVisualizarProcesso;
     }
 
     private Date convertDate(Object value){
         return Date.from(LocalDateTime.parse(value.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private boolean validateBooleanValue(Object value){
+        return value == null ? false : validateIntValue(value) == 1 ? true : false;
     }
 
     private Integer validateIntValue(Object value){

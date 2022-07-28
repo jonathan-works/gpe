@@ -1,8 +1,9 @@
 package br.com.infox.epp.painel;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.*;
 
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.processo.type.TipoProcesso;
 
 public class FluxoBean implements Comparable<FluxoBean> {
@@ -13,6 +14,8 @@ public class FluxoBean implements Comparable<FluxoBean> {
 	private TipoProcesso tipoProcesso;
 	private Boolean expedida = false;
 	private boolean bpmn20;
+	private boolean podeVisualizarComExcessao;
+	private List<Long> taskInstancesExcessao;
 
 	private String numeroProcessoRootFilter;
 	private Map<String, TaskBean> tasks;
@@ -38,7 +41,7 @@ public class FluxoBean implements Comparable<FluxoBean> {
 
 	public FluxoBean(String name, Long quantidadeProcessos) {
 		this.name = name;
-		this.quantidadeProcessos = quantidadeProcessos;
+		this.setQuantidadeProcessos(quantidadeProcessos);
 	}
 
 	public FluxoBean(String processDefinitionId, String name, Long quantidadeProcessos) {
@@ -48,7 +51,7 @@ public class FluxoBean implements Comparable<FluxoBean> {
 
 	public FluxoBean(String processDefinitionId, String name, Long quantidadeProcessos, String tipoProcesso, String expedida, String numeroProcessoRootFilter) {
         this.processDefinitionId = processDefinitionId;
-        this.quantidadeProcessos = quantidadeProcessos;
+        this.setQuantidadeProcessos(quantidadeProcessos);
         if (tipoProcesso != null) {
             this.tipoProcesso = TipoProcesso.getByName(tipoProcesso);
         }
@@ -65,7 +68,37 @@ public class FluxoBean implements Comparable<FluxoBean> {
         }
     }
 
-    public void addTaskDefinition(TaskBean taskBean) {
+	public FluxoBean(Object[] record, String tipoProcesso, String expedida, String numeroProcessoRootFilter) {
+		podeVisualizarComExcessao = true;
+		this.processDefinitionId =  BigInteger.valueOf(Long.valueOf(record[1].toString())).toString();
+		this.setQuantidadeProcessos(validateIntValue(record[2]));
+		if (tipoProcesso != null) {
+			this.tipoProcesso = TipoProcesso.getByName(tipoProcesso);
+		}
+		this.expedida = Boolean.valueOf(expedida);
+		this.bpmn20 = false;
+		this.numeroProcessoRootFilter = numeroProcessoRootFilter;
+
+		if(TipoProcesso.COMUNICACAO.value().equals(tipoProcesso)) {
+			this.name = (String) record[0] + (this.expedida ? "-Expedidas" : "-Recebidas");
+		}
+		else
+		{
+			this.name = (String) record[0];
+		}
+		setTaskInstancesExcessao(new ArrayList<>());
+		String[] split = record[3].toString().split(",");
+		Arrays.asList(split).forEach(v -> {
+			if (!StringUtil.isEmpty(v))
+				getTaskInstancesExcessao().add(Long.valueOf(v));
+		});
+	}
+
+	private Long validateIntValue(Object value){
+		return value == null ? null : Long.valueOf(value.toString());
+	}
+
+	public void addTaskDefinition(TaskBean taskBean) {
         if (tasks == null) tasks = new HashMap<>();
 		String taskNodeKey = taskBean.getTaskNodeKey();
 		String taskName = taskBean.getTaskName();
@@ -154,7 +187,7 @@ public class FluxoBean implements Comparable<FluxoBean> {
 		result = prime * result + (bpmn20 ? 1231 : 1237);
 		result = prime * result + ((expedida == null) ? 0 : expedida.hashCode());
 		result = prime * result + ((processDefinitionId == null) ? 0 : processDefinitionId.hashCode());
-		result = prime * result + ((quantidadeProcessos == null) ? 0 : quantidadeProcessos.hashCode());
+		result = prime * result + ((getQuantidadeProcessos() == null) ? 0 : getQuantidadeProcessos().hashCode());
 		return result;
 	}
 
@@ -179,10 +212,10 @@ public class FluxoBean implements Comparable<FluxoBean> {
 				return false;
 		} else if (!processDefinitionId.equals(other.processDefinitionId))
 			return false;
-		if (quantidadeProcessos == null) {
-			if (other.quantidadeProcessos != null)
+		if (getQuantidadeProcessos() == null) {
+			if (other.getQuantidadeProcessos() != null)
 				return false;
-		} else if (!quantidadeProcessos.equals(other.quantidadeProcessos))
+		} else if (!getQuantidadeProcessos().equals(other.getQuantidadeProcessos()))
 			return false;
 		return true;
 	}
@@ -192,4 +225,24 @@ public class FluxoBean implements Comparable<FluxoBean> {
 		return this.getName().compareTo(o.getName());
 	}
 
+
+	public boolean isPodeVisualizarComExcessao() {
+		return podeVisualizarComExcessao;
+	}
+
+	public void setPodeVisualizarComExcessao(boolean podeVisualizarComExcessao) {
+		this.podeVisualizarComExcessao = podeVisualizarComExcessao;
+	}
+
+	public List<Long> getTaskInstancesExcessao() {
+		return taskInstancesExcessao;
+	}
+
+	public void setTaskInstancesExcessao(List<Long> taskInstancesExcessao) {
+		this.taskInstancesExcessao = taskInstancesExcessao;
+	}
+
+	public void setQuantidadeProcessos(Long quantidadeProcessos) {
+		this.quantidadeProcessos = quantidadeProcessos;
+	}
 }
