@@ -5,12 +5,7 @@ import static java.text.MessageFormat.format;
 import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -134,6 +129,7 @@ public class TaskInstanceHome implements Serializable {
     public static final String NAME = "taskInstanceHome";
     private static final String TASK_INSTANCE_FORM_ID = "movimentarTabPanel:taskInstanceForm";
     private static final String VARIABLE_INSTANCE_RECUPERAR_PROCESSO = "recuperarProcesso";
+    private static final String VARIABLE_INSTANCE_PERFIL_VISUALIZAR_RECUPERAR = "perfilVisualizarRecuperar";
 
     @Inject
     private ProcessoManager processoManager;
@@ -1191,10 +1187,8 @@ public class TaskInstanceHome implements Serializable {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void recuperarProcesso(TaskBean taskBean) {
+    public void recuperarProcesso(Processo processo) {
         try {
-            Processo processo = processoManager.find(taskBean.getIdProcesso());
-
             List<ProcessoTarefa> doisUltimosProcessosTarefa = processoTarefaManager.getDoisUltimosProcessosTarefa(processo);
 
             if (doisUltimosProcessosTarefa == null || doisUltimosProcessosTarefa.isEmpty() || doisUltimosProcessosTarefa.size() == 1)
@@ -1210,20 +1204,30 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    public boolean podeRecuperaProcesso(final TaskBean taskBean){
+    public boolean podeRecuperaProcesso(final Processo processo){
         try{
-            if(taskBean.isPodeVisualizarProcesso()) {
-                TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen(taskBean.getIdProcesso());
+                TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen(processo);
                 Map<String, VariableInstance> variableMap = taskInstanceOpen.getVariableInstances();
                 if (variableMap != null) {
-                    VariableInstance variableInstance = variableMap.get(VARIABLE_INSTANCE_RECUPERAR_PROCESSO);
-                    return variableInstance != null && Boolean.valueOf(variableInstance.getValue().toString()).booleanValue() == true;
+                    VariableInstance recuperarProcesso = variableMap.get(VARIABLE_INSTANCE_RECUPERAR_PROCESSO);
+                    VariableInstance perfilRecuperarProcesso = variableMap.get(VARIABLE_INSTANCE_PERFIL_VISUALIZAR_RECUPERAR);
+                    
+                    if((recuperarProcesso == null || perfilRecuperarProcesso == null)){
+                        return false;
+                    }
+
+                    List<String> perfis = Arrays.asList(perfilRecuperarProcesso.getValue().toString().split(","));
+
+                    String codigoLocalizacao = Authenticator.getLocalizacaoAtual().getCodigo();
+                    String codigoPerfil = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getCodigo();
+                    String concat = codigoLocalizacao.concat("/").concat(codigoPerfil);
+
+                    return  Boolean.valueOf(recuperarProcesso.getValue().toString()).booleanValue() == true
+                            && perfis.stream().anyMatch(p -> p.trim().equals(concat.trim()));
                 }
                 return false;
-            }
         }catch (Exception e){
-            throw new ApplicationException("Erro ao recuperar variáveis de instância.");
+            return false;
         }
-        return false;
     }
 }
