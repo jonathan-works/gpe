@@ -69,19 +69,6 @@ public class TaskInstancePermitidaAssinarDocumentoSearch extends PersistenceCont
 	public TaskInstanceListagemDocumentoDTO getListaDocumentoDTOParaSeremAssinados(Set<String> listaIdTaskInstance) {
 		TaskInstanceListagemDocumentoDTO listagemDocumentoDTO = new TaskInstanceListagemDocumentoDTO();
 
-	/*	List<DocumentoAssinavelDTO> dtoDocumentosAssinar = getDTODocumentosAssinar(listaIdTaskInstance);
-
-		dtoDocumentosAssinar.forEach(dto -> {
-			if(dto.isDocumentoBinMinuta()){
-				listagemDocumentoDTO.getListaDocumentoMinutaDTO().add(dto);
-			}else if(assinaturaDocumentoService.podeRenderizarApplet(Authenticator.getPapelAtual(),
-					dto, Authenticator.getUsuarioLogado())){
-				listagemDocumentoDTO.getListaDocumentoAssinavelDTO().add(dto);
-			}else {
-				listagemDocumentoDTO.getListaDocumentoNaoAssinavelDTO().add(dto);
-			}
-		});*/
-
 		for(String idTaskInstance : listaIdTaskInstance) {
 			for(Documento documento : getListaDocumentosParaSeremAssinados(idTaskInstance)) {
 				if (documento.getDocumentoBin().getMinuta()) {

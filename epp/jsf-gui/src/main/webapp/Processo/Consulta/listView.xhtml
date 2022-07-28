@@ -237,6 +237,16 @@
                                 title="#{infoxMessages['prioridadeProcesso.select']}"
                                 url="#{layoutController.getResourceUrlByPath('/imagens/priority.gif')}" />
                         </a:commandLink>
+                        <p:commandLink
+                                action="#{taskInstanceHome.recuperarProcesso(row)}"
+                                process="@this"
+                                rendered="#{taskInstanceHome.podeRecuperaProcesso(row)}"
+                                update="@form"
+                                onclick="showLoading()"  oncomplete="hideLoading();"
+                                title="#{infoxMessages['painel.recuperarProcesso.tooltip']}">
+                            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/return.png')}"
+                                            title="#{infoxMessages['painel.list.recuperarProcesso']}" />
+                        </p:commandLink>
                     </ui:define>
 					<infox:dynamicColumns columns="#{consultaProcessoDynamicColumnsController.dynamicColumns}" />
 

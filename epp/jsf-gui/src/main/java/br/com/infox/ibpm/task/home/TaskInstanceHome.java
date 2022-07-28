@@ -5,13 +5,10 @@ import static java.text.MessageFormat.format;
 import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -19,6 +16,8 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
+import br.com.infox.epp.painel.TaskBean;
+import br.com.infox.epp.processo.entity.Processo;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -129,6 +128,8 @@ public class TaskInstanceHome implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceHome";
     private static final String TASK_INSTANCE_FORM_ID = "movimentarTabPanel:taskInstanceForm";
+    private static final String VARIABLE_INSTANCE_RECUPERAR_PROCESSO = "recuperarProcesso";
+    private static final String VARIABLE_INSTANCE_PERFIL_VISUALIZAR_RECUPERAR = "perfilVisualizarRecuperar";
 
     @Inject
     private ProcessoManager processoManager;
@@ -1177,7 +1178,56 @@ public class TaskInstanceHome implements Serializable {
 
     public boolean estaMovimentandoProcesso(boolean param) {
     	movimentarProcesso = param;
-    	retrieveVariables();
+        if(mapaDeVariaveis == null){
+            createInstance();
+        }else{
+            retrieveVariables();
+        }
     	return movimentarProcesso;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void recuperarProcesso(Processo processo) {
+        try {
+            List<ProcessoTarefa> doisUltimosProcessosTarefa = processoTarefaManager.getDoisUltimosProcessosTarefa(processo);
+
+            if (doisUltimosProcessosTarefa == null || doisUltimosProcessosTarefa.isEmpty() || doisUltimosProcessosTarefa.size() == 1)
+                throw new RuntimeException("Processo Tarefa não encontrado nos parametros corretos para retornar tarefa");
+
+            ProcessoTarefa processoTarefa = doisUltimosProcessosTarefa.get(1);
+
+            TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen(processo);
+            setTaskId(taskInstanceOpen.getTask().getId());
+            processoTarefaManager.finalizarInstanciaTarefa(taskInstanceOpen, processoTarefa.getTarefa().getTarefa());
+        } catch (Exception e) {
+            throw new ApplicationException("Erro ao recuperar tarefa.");
+        }
+    }
+
+    public boolean podeRecuperaProcesso(final Processo processo){
+        try{
+                TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen(processo);
+                Map<String, VariableInstance> variableMap = taskInstanceOpen.getVariableInstances();
+                if (variableMap != null) {
+                    VariableInstance recuperarProcesso = variableMap.get(VARIABLE_INSTANCE_RECUPERAR_PROCESSO);
+                    VariableInstance perfilRecuperarProcesso = variableMap.get(VARIABLE_INSTANCE_PERFIL_VISUALIZAR_RECUPERAR);
+                    
+                    if((recuperarProcesso == null || perfilRecuperarProcesso == null)){
+                        return false;
+                    }
+
+                    List<String> perfis = Arrays.asList(perfilRecuperarProcesso.getValue().toString().split(","));
+
+                    String codigoLocalizacao = Authenticator.getLocalizacaoAtual().getCodigo();
+                    String codigoPerfil = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getCodigo();
+                    String concat = codigoLocalizacao.concat("/").concat(codigoPerfil);
+
+                    return  Boolean.valueOf(recuperarProcesso.getValue().toString()).booleanValue() == true
+                            && perfis.stream().anyMatch(p -> p.trim().equals(concat.trim()));
+                }
+                return false;
+        }catch (Exception e){
+            return false;
+        }
     }
 }
