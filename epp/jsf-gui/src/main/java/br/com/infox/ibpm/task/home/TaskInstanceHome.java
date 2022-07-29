@@ -1187,26 +1187,31 @@ public class TaskInstanceHome implements Serializable {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void recuperarProcesso(Processo processo) {
+    public void recuperarProcesso(Object processo) {
         try {
-            List<ProcessoTarefa> doisUltimosProcessosTarefa = processoTarefaManager.getDoisUltimosProcessosTarefa(processo);
+            if(processo instanceof Processo){
+
+            List<ProcessoTarefa> doisUltimosProcessosTarefa = processoTarefaManager.getDoisUltimosProcessosTarefa((Processo) processo);
 
             if (doisUltimosProcessosTarefa == null || doisUltimosProcessosTarefa.isEmpty() || doisUltimosProcessosTarefa.size() == 1)
                 throw new RuntimeException("Processo Tarefa não encontrado nos parametros corretos para retornar tarefa");
 
             ProcessoTarefa processoTarefa = doisUltimosProcessosTarefa.get(1);
 
-            TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen(processo);
+            TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen((Processo) processo);
             setTaskId(taskInstanceOpen.getTask().getId());
             processoTarefaManager.finalizarInstanciaTarefa(taskInstanceOpen, processoTarefa.getTarefa().getTarefa());
+            }
+
         } catch (Exception e) {
             throw new ApplicationException("Erro ao recuperar tarefa.");
         }
     }
 
-    public boolean podeRecuperaProcesso(final Processo processo){
+    public boolean podeRecuperaProcesso(Object processo){
         try{
-                TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen(processo);
+            if(processo instanceof Processo){
+                TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen((Processo) processo);
                 Map<String, VariableInstance> variableMap = taskInstanceOpen.getVariableInstances();
                 if (variableMap != null) {
                     VariableInstance recuperarProcesso = variableMap.get(VARIABLE_INSTANCE_RECUPERAR_PROCESSO);
@@ -1225,6 +1230,7 @@ public class TaskInstanceHome implements Serializable {
                     return  Boolean.valueOf(recuperarProcesso.getValue().toString()).booleanValue() == true
                             && perfis.stream().anyMatch(p -> p.trim().equals(concat.trim()));
                 }
+            }
                 return false;
         }catch (Exception e){
             return false;
