@@ -44,13 +44,13 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pastaManager";
     
-    @In
+    @Inject
     private DocumentoService documentoService;
-    @In
+    @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
-    @In
+    @Inject
     private PastaRestricaoManager pastaRestricaoManager;
-    @In
+    @Inject
     private ModeloPastaManager modeloPastaManager;
     @In
     private ProcessoManager processoManager;

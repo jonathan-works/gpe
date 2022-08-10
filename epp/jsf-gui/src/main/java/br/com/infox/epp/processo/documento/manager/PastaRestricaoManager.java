@@ -48,7 +48,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
     private PapelManager papelManager;
     @In
     private LocalizacaoManager localizacaoManager;
-    @In
+    @Inject
     private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
 
     public Map<Integer, PastaRestricaoBean> loadRestricoes(Processo processo, UsuarioLogin usuario, Localizacao localizacao, Papel papel) throws DAOException {
