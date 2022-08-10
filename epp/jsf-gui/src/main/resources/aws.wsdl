@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="WSControleAcesso" targetNamespace="br.com.abaco.sisbase" xmlns:wsdlns="br.com.abaco.sisbase" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="br.com.abaco.sisbase" xmlns:tns1="Genexus">
+	<types>
+		<schema targetNamespace="br.com.abaco.sisbase" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" elementFormDefault="qualified">
+			<import namespace="Genexus"/>
+			<complexType name="SDTRegistro">
+				<all>
+					<element name="Colunas" type="tns:ArrayOfSDTColuna">
+					</element>
+				</all>
+			</complexType>
+			<complexType name="ArrayOfSDTColuna">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="SDTColuna" type="tns:SDTColuna">
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="SDTColuna">
+				<all>
+					<element name="Nome" type="xsd:string">
+					</element>
+					<element name="Valor" type="xsd:string">
+					</element>
+				</all>
+			</complexType>
+			<complexType name="ArrayOfSDTPerfilUsuario">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="SDTPerfilUsuario" type="tns:SDTPerfilUsuario">
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="SDTPerfilUsuario">
+				<all>
+					<element name="PerfId" type="xsd:int">
+					</element>
+					<element name="UsuId" type="xsd:int">
+					</element>
+					<element name="UsuNome" type="xsd:string">
+					</element>
+					<element name="UsuCpfCnpj" type="xsd:string">
+					</element>
+					<element name="ObjetosPerfil" type="tns:ArrayOfSDTObjetosPerfil">
+					</element>
+				</all>
+			</complexType>
+			<complexType name="ArrayOfSDTObjetosPerfil">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="SDTObjetosPerfil" type="tns:SDTObjetosPerfil">
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="SDTObjetosPerfil">
+				<all>
+					<element name="ObjId" type="xsd:long">
+					</element>
+					<element name="ObjDsc" type="xsd:string">
+					</element>
+					<element name="ObjNome" type="xsd:string">
+					</element>
+					<element name="ObjMenu" type="xsd:byte">
+					</element>
+					<element name="ObjOrd" type="xsd:byte">
+					</element>
+					<element name="ObjPai" type="xsd:long">
+					</element>
+					<element name="ObjPainome" type="xsd:string">
+					</element>
+					<element name="ObjNivel" type="xsd:byte">
+					</element>
+					<element name="ObjTarget" type="xsd:string">
+					</element>
+					<element name="ObjTipo" type="xsd:string">
+					</element>
+					<element name="Acoes" type="tns:ArrayOfsvchar">
+					</element>
+				</all>
+			</complexType>
+			<complexType name="ArrayOfsvchar">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="item" type="xsd:string">
+					</element>
+				</sequence>
+			</complexType>
+			<element name="WSControleAcesso.SETLOGIN">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.SETLOGINResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Sdtusuario" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETLISTAACAOOBJETOUSUARIO">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETLISTAACAOOBJETOUSUARIOResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Listaacao" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETMENUGXUI">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Jsonin" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETMENUGXUIResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Jsonout" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETMENUSISTEMAS">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Usuid" type="xsd:long"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETMENUSISTEMASResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Html" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETUSUARIOAUTENTICADO">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETUSUARIOAUTENTICADOResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Usuario" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETLISTAOBJETOUSUARIOAUTENTICADO">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETLISTAOBJETOUSUARIOAUTENTICADOResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Xml" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETORGANOGRAMAUSUARIOAUT">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.GETORGANOGRAMAUSUARIOAUTResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Organograma" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.VALIDARLOGINACESSO">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Sisid" type="xsd:int"/>
+						<element minOccurs="1" maxOccurs="1" name="Usulogin" type="xsd:string"/>
+						<element minOccurs="1" maxOccurs="1" name="Ususenha" type="xsd:string"/>
+						<element minOccurs="1" maxOccurs="1" name="Chave" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.VALIDARLOGINACESSOResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Messages" type="tns1:Messages"/>
+						<element minOccurs="1" maxOccurs="1" name="Sdtperfisusuario" type="tns:ArrayOfSDTPerfilUsuario"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.SETORGANOGRAMAUSUARIOAUT">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcesso.SETORGANOGRAMAUSUARIOAUTResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroerro" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+		<schema targetNamespace="Genexus" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" elementFormDefault="qualified">
+			<import namespace="br.com.abaco.sisbase"/>
+			<complexType name="Messages">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="Messages.Message" type="tns1:Messages.Message">
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="Messages.Message">
+				<all>
+					<element name="Id" type="xsd:string">
+					</element>
+					<element name="Type" type="xsd:byte">
+					</element>
+					<element name="Description" type="xsd:string">
+					</element>
+				</all>
+			</complexType>
+		</schema>
+	</types>
+	<message name="WSControleAcesso.SETLOGINSoapIn">
+		<part name="parameters" element="tns:WSControleAcesso.SETLOGIN"/>
+	</message>
+	<message name="WSControleAcesso.SETLOGINSoapOut">
+		<part name="parameters" element="tns:WSControleAcesso.SETLOGINResponse"/>
+	</message>
+	<message name="WSControleAcesso.GETLISTAACAOOBJETOUSUARIOSoapIn">
+		<part name="parameters" element="tns:WSControleAcesso.GETLISTAACAOOBJETOUSUARIO"/>
+	</message>
+	<message name="WSControleAcesso.GETLISTAACAOOBJETOUSUARIOSoapOut">
+		<part name="parameters" element="tns:WSControleAcesso.GETLISTAACAOOBJETOUSUARIOResponse"/>
+	</message>
+	<message name="WSControleAcesso.GETMENUGXUISoapIn">
+		<part name="parameters" element="tns:WSControleAcesso.GETMENUGXUI"/>
+	</message>
+	<message name="WSControleAcesso.GETMENUGXUISoapOut">
+		<part name="parameters" element="tns:WSControleAcesso.GETMENUGXUIResponse"/>
+	</message>
+	<message name="WSControleAcesso.GETMENUSISTEMASSoapIn">
+		<part name="parameters" element="tns:WSControleAcesso.GETMENUSISTEMAS"/>
+	</message>
+	<message name="WSControleAcesso.GETMENUSISTEMASSoapOut">
+		<part name="parameters" element="tns:WSControleAcesso.GETMENUSISTEMASResponse"/>
+	</message>
+	<message name="WSControleAcesso.GETUSUARIOAUTENTICADOSoapIn">
+		<part name="parameters" element="tns:WSControleAcesso.GETUSUARIOAUTENTICADO"/>
+	</message>
+	<message name="WSControleAcesso.GETUSUARIOAUTENTICADOSoapOut">
+		<part name="parameters" element="tns:WSControleAcesso.GETUSUARIOAUTENTICADOResponse"/>
+	</message>
+	<message name="WSControleAcesso.GETLISTAOBJETOUSUARIOAUTENTICADOSoapIn">
+		<part name="parameters" element="tns:WSControleAcesso.GETLISTAOBJETOUSUARIOAUTENTICADO"/>
+	</message>
+	<message name="WSControleAcesso.GETLISTAOBJETOUSUARIOAUTENTICADOSoapOut">
+		<part name="parameters" element="tns:WSControleAcesso.GETLISTAOBJETOUSUARIOAUTENTICADOResponse"/>
+	</message>
+	<message name="WSControleAcesso.GETORGANOGRAMAUSUARIOAUTSoapIn">
+		<part name="parameters" element="tns:WSControleAcesso.GETORGANOGRAMAUSUARIOAUT"/>
+	</message>
+	<message name="WSControleAcesso.GETORGANOGRAMAUSUARIOAUTSoapOut">
+		<part name="parameters" element="tns:WSControleAcesso.GETORGANOGRAMAUSUARIOAUTResponse"/>
+	</message>
+	<message name="WSControleAcesso.VALIDARLOGINACESSOSoapIn">
+		<part name="parameters" element="tns:WSControleAcesso.VALIDARLOGINACESSO"/>
+	</message>
+	<message name="WSControleAcesso.VALIDARLOGINACESSOSoapOut">
+		<part name="parameters" element="tns:WSControleAcesso.VALIDARLOGINACESSOResponse"/>
+	</message>
+	<message name="WSControleAcesso.SETORGANOGRAMAUSUARIOAUTSoapIn">
+		<part name="parameters" element="tns:WSControleAcesso.SETORGANOGRAMAUSUARIOAUT"/>
+	</message>
+	<message name="WSControleAcesso.SETORGANOGRAMAUSUARIOAUTSoapOut">
+		<part name="parameters" element="tns:WSControleAcesso.SETORGANOGRAMAUSUARIOAUTResponse"/>
+	</message>
+	<portType name="WSControleAcessoSoapPort">
+		<operation name="SETLOGIN">
+			<input message="wsdlns:WSControleAcesso.SETLOGINSoapIn"/>
+			<output message="wsdlns:WSControleAcesso.SETLOGINSoapOut"/>
+		</operation>
+		<operation name="GETLISTAACAOOBJETOUSUARIO">
+			<input message="wsdlns:WSControleAcesso.GETLISTAACAOOBJETOUSUARIOSoapIn"/>
+			<output message="wsdlns:WSControleAcesso.GETLISTAACAOOBJETOUSUARIOSoapOut"/>
+		</operation>
+		<operation name="GETMENUGXUI">
+			<input message="wsdlns:WSControleAcesso.GETMENUGXUISoapIn"/>
+			<output message="wsdlns:WSControleAcesso.GETMENUGXUISoapOut"/>
+		</operation>
+		<operation name="GETMENUSISTEMAS">
+			<input message="wsdlns:WSControleAcesso.GETMENUSISTEMASSoapIn"/>
+			<output message="wsdlns:WSControleAcesso.GETMENUSISTEMASSoapOut"/>
+		</operation>
+		<operation name="GETUSUARIOAUTENTICADO">
+			<input message="wsdlns:WSControleAcesso.GETUSUARIOAUTENTICADOSoapIn"/>
+			<output message="wsdlns:WSControleAcesso.GETUSUARIOAUTENTICADOSoapOut"/>
+		</operation>
+		<operation name="GETLISTAOBJETOUSUARIOAUTENTICADO">
+			<input message="wsdlns:WSControleAcesso.GETLISTAOBJETOUSUARIOAUTENTICADOSoapIn"/>
+			<output message="wsdlns:WSControleAcesso.GETLISTAOBJETOUSUARIOAUTENTICADOSoapOut"/>
+		</operation>
+		<operation name="GETORGANOGRAMAUSUARIOAUT">
+			<input message="wsdlns:WSControleAcesso.GETORGANOGRAMAUSUARIOAUTSoapIn"/>
+			<output message="wsdlns:WSControleAcesso.GETORGANOGRAMAUSUARIOAUTSoapOut"/>
+		</operation>
+		<operation name="VALIDARLOGINACESSO">
+			<input message="wsdlns:WSControleAcesso.VALIDARLOGINACESSOSoapIn"/>
+			<output message="wsdlns:WSControleAcesso.VALIDARLOGINACESSOSoapOut"/>
+		</operation>
+		<operation name="SETORGANOGRAMAUSUARIOAUT">
+			<input message="wsdlns:WSControleAcesso.SETORGANOGRAMAUSUARIOAUTSoapIn"/>
+			<output message="wsdlns:WSControleAcesso.SETORGANOGRAMAUSUARIOAUTSoapOut"/>
+		</operation>
+	</portType>
+	<binding name="WSControleAcessoSoapBinding" type="wsdlns:WSControleAcessoSoapPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="SETLOGIN">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSO.SETLOGIN"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETLISTAACAOOBJETOUSUARIO">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSO.GETLISTAACAOOBJETOUSUARIO"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETMENUGXUI">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSO.GETMENUGXUI"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETMENUSISTEMAS">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSO.GETMENUSISTEMAS"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETUSUARIOAUTENTICADO">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSO.GETUSUARIOAUTENTICADO"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETLISTAOBJETOUSUARIOAUTENTICADO">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSO.GETLISTAOBJETOUSUARIOAUTENTICADO"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETORGANOGRAMAUSUARIOAUT">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSO.GETORGANOGRAMAUSUARIOAUT"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="VALIDARLOGINACESSO">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSO.VALIDARLOGINACESSO"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="SETORGANOGRAMAUSUARIOAUT">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSO.SETORGANOGRAMAUSUARIOAUT"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="WSControleAcesso">
+		<port name="WSControleAcessoSoapPort" binding="wsdlns:WSControleAcessoSoapBinding">
+			<soap:address location="http://10.1.5.49:28080/quartzo/servlet/awscontroleacesso"/>
+		</port>
+	</service>
+</definitions>

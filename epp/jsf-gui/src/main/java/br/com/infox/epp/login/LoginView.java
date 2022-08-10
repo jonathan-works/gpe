@@ -7,6 +7,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.infox.epp.access.api.QuartzoAuthenticator;
 import org.jboss.seam.Component;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -32,6 +33,9 @@ public class LoginView implements Serializable {
     @Inject
     private ExtensaoLogin extensaoLogin;
 
+	@Inject
+	private QuartzoAuthenticator quartzoAuthenticator;
+
 	private static final long serialVersionUID = 1L;
 
 	private boolean forcarMostrarCaptcha = false;
@@ -47,6 +51,7 @@ public class LoginView implements Serializable {
 	
 	@ExceptionHandled
 	public void login() {
+		//quartzoAuthenticator.login();
 	    
 		Credentials credentials = (Credentials) Component.getInstance(Credentials.class);
 		String username = credentials.getUsername();

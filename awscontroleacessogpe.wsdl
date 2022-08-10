@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="WSControleAcessoGPE" targetNamespace="br.com.abaco.sisbase" xmlns:wsdlns="br.com.abaco.sisbase" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="br.com.abaco.sisbase" xmlns:tns1="Genexus">
+	<types>
+		<schema targetNamespace="br.com.abaco.sisbase" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" elementFormDefault="qualified">
+			<import namespace="Genexus"/>
+			<complexType name="SDTRegistro">
+				<all>
+					<element name="Colunas" type="tns:ArrayOfSDTColuna">
+					</element>
+				</all>
+			</complexType>
+			<complexType name="ArrayOfSDTColuna">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="SDTColuna" type="tns:SDTColuna">
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="SDTColuna">
+				<all>
+					<element name="Nome" type="xsd:string">
+					</element>
+					<element name="Valor" type="xsd:string">
+					</element>
+				</all>
+			</complexType>
+			<complexType name="SDTUsuarioGPE">
+				<all>
+					<element name="Nome" type="xsd:string">
+					</element>
+					<element name="Email" type="xsd:string">
+					</element>
+					<element name="CPF" type="xsd:string">
+					</element>
+					<element name="DataNasc" type="xsd:date">
+					</element>
+				</all>
+			</complexType>
+			<complexType name="ArrayOfSDTPerfilUsuarioGPE">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="SDTPerfilUsuarioGPE" type="tns:SDTPerfilUsuarioGPE">
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="SDTPerfilUsuarioGPE">
+				<all>
+					<element name="PerfId" type="xsd:string">
+					</element>
+					<element name="PerfNome" type="xsd:string">
+					</element>
+					<element name="OrgaoGPE" type="tns:ArrayOfSDTOrgaoGPE">
+					</element>
+				</all>
+			</complexType>
+			<complexType name="ArrayOfSDTOrgaoGPE">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="SDTOrgaoGPE" type="tns:SDTOrgaoGPE">
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="SDTOrgaoGPE">
+				<all>
+					<element name="OrgnId" type="xsd:string">
+					</element>
+					<element name="OrgnNome" type="xsd:string">
+					</element>
+				</all>
+			</complexType>
+			<element name="WSControleAcessoGPE.SETLOGIN">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.SETLOGINResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Sdtusuario" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETLISTAACAOOBJETOUSUARIO">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETLISTAACAOOBJETOUSUARIOResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Listaacao" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETMENUGXUI">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Jsonin" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETMENUGXUIResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Jsonout" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETMENUSISTEMAS">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Usuid" type="xsd:long"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETMENUSISTEMASResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Html" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETUSUARIOAUTENTICADO">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETUSUARIOAUTENTICADOResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Usuario" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETLISTAOBJETOUSUARIOAUTENTICADO">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETLISTAOBJETOUSUARIOAUTENTICADOResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Xml" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETORGANOGRAMAUSUARIOAUT">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.GETORGANOGRAMAUSUARIOAUTResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Organograma" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.VALIDARLOGINACESSO">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Sisid" type="xsd:int"/>
+						<element minOccurs="1" maxOccurs="1" name="Usulogin" type="xsd:string"/>
+						<element minOccurs="1" maxOccurs="1" name="Ususenha" type="xsd:string"/>
+						<element minOccurs="1" maxOccurs="1" name="Chave" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.VALIDARLOGINACESSOResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Messages" type="tns1:Messages"/>
+						<element minOccurs="1" maxOccurs="1" name="Sdtusuariogpe" type="tns:SDTUsuarioGPE"/>
+						<element minOccurs="1" maxOccurs="1" name="Sdtperfilusuariogpe" type="tns:ArrayOfSDTPerfilUsuarioGPE"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.SETORGANOGRAMAUSUARIOAUT">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroin" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="WSControleAcessoGPE.SETORGANOGRAMAUSUARIOAUTResponse">
+				<complexType>
+					<sequence>
+						<element minOccurs="1" maxOccurs="1" name="Registroerro" type="tns:SDTRegistro"/>
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+		<schema targetNamespace="Genexus" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" elementFormDefault="qualified">
+			<import namespace="br.com.abaco.sisbase"/>
+			<complexType name="Messages">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="Messages.Message" type="tns1:Messages.Message">
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="Messages.Message">
+				<all>
+					<element name="Id" type="xsd:string">
+					</element>
+					<element name="Type" type="xsd:byte">
+					</element>
+					<element name="Description" type="xsd:string">
+					</element>
+				</all>
+			</complexType>
+		</schema>
+	</types>
+	<message name="WSControleAcessoGPE.SETLOGINSoapIn">
+		<part name="parameters" element="tns:WSControleAcessoGPE.SETLOGIN"/>
+	</message>
+	<message name="WSControleAcessoGPE.SETLOGINSoapOut">
+		<part name="parameters" element="tns:WSControleAcessoGPE.SETLOGINResponse"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETLISTAACAOOBJETOUSUARIOSoapIn">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETLISTAACAOOBJETOUSUARIO"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETLISTAACAOOBJETOUSUARIOSoapOut">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETLISTAACAOOBJETOUSUARIOResponse"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETMENUGXUISoapIn">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETMENUGXUI"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETMENUGXUISoapOut">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETMENUGXUIResponse"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETMENUSISTEMASSoapIn">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETMENUSISTEMAS"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETMENUSISTEMASSoapOut">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETMENUSISTEMASResponse"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETUSUARIOAUTENTICADOSoapIn">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETUSUARIOAUTENTICADO"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETUSUARIOAUTENTICADOSoapOut">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETUSUARIOAUTENTICADOResponse"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETLISTAOBJETOUSUARIOAUTENTICADOSoapIn">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETLISTAOBJETOUSUARIOAUTENTICADO"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETLISTAOBJETOUSUARIOAUTENTICADOSoapOut">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETLISTAOBJETOUSUARIOAUTENTICADOResponse"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETORGANOGRAMAUSUARIOAUTSoapIn">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETORGANOGRAMAUSUARIOAUT"/>
+	</message>
+	<message name="WSControleAcessoGPE.GETORGANOGRAMAUSUARIOAUTSoapOut">
+		<part name="parameters" element="tns:WSControleAcessoGPE.GETORGANOGRAMAUSUARIOAUTResponse"/>
+	</message>
+	<message name="WSControleAcessoGPE.VALIDARLOGINACESSOSoapIn">
+		<part name="parameters" element="tns:WSControleAcessoGPE.VALIDARLOGINACESSO"/>
+	</message>
+	<message name="WSControleAcessoGPE.VALIDARLOGINACESSOSoapOut">
+		<part name="parameters" element="tns:WSControleAcessoGPE.VALIDARLOGINACESSOResponse"/>
+	</message>
+	<message name="WSControleAcessoGPE.SETORGANOGRAMAUSUARIOAUTSoapIn">
+		<part name="parameters" element="tns:WSControleAcessoGPE.SETORGANOGRAMAUSUARIOAUT"/>
+	</message>
+	<message name="WSControleAcessoGPE.SETORGANOGRAMAUSUARIOAUTSoapOut">
+		<part name="parameters" element="tns:WSControleAcessoGPE.SETORGANOGRAMAUSUARIOAUTResponse"/>
+	</message>
+	<portType name="WSControleAcessoGPESoapPort">
+		<operation name="SETLOGIN">
+			<input message="wsdlns:WSControleAcessoGPE.SETLOGINSoapIn"/>
+			<output message="wsdlns:WSControleAcessoGPE.SETLOGINSoapOut"/>
+		</operation>
+		<operation name="GETLISTAACAOOBJETOUSUARIO">
+			<input message="wsdlns:WSControleAcessoGPE.GETLISTAACAOOBJETOUSUARIOSoapIn"/>
+			<output message="wsdlns:WSControleAcessoGPE.GETLISTAACAOOBJETOUSUARIOSoapOut"/>
+		</operation>
+		<operation name="GETMENUGXUI">
+			<input message="wsdlns:WSControleAcessoGPE.GETMENUGXUISoapIn"/>
+			<output message="wsdlns:WSControleAcessoGPE.GETMENUGXUISoapOut"/>
+		</operation>
+		<operation name="GETMENUSISTEMAS">
+			<input message="wsdlns:WSControleAcessoGPE.GETMENUSISTEMASSoapIn"/>
+			<output message="wsdlns:WSControleAcessoGPE.GETMENUSISTEMASSoapOut"/>
+		</operation>
+		<operation name="GETUSUARIOAUTENTICADO">
+			<input message="wsdlns:WSControleAcessoGPE.GETUSUARIOAUTENTICADOSoapIn"/>
+			<output message="wsdlns:WSControleAcessoGPE.GETUSUARIOAUTENTICADOSoapOut"/>
+		</operation>
+		<operation name="GETLISTAOBJETOUSUARIOAUTENTICADO">
+			<input message="wsdlns:WSControleAcessoGPE.GETLISTAOBJETOUSUARIOAUTENTICADOSoapIn"/>
+			<output message="wsdlns:WSControleAcessoGPE.GETLISTAOBJETOUSUARIOAUTENTICADOSoapOut"/>
+		</operation>
+		<operation name="GETORGANOGRAMAUSUARIOAUT">
+			<input message="wsdlns:WSControleAcessoGPE.GETORGANOGRAMAUSUARIOAUTSoapIn"/>
+			<output message="wsdlns:WSControleAcessoGPE.GETORGANOGRAMAUSUARIOAUTSoapOut"/>
+		</operation>
+		<operation name="VALIDARLOGINACESSO">
+			<input message="wsdlns:WSControleAcessoGPE.VALIDARLOGINACESSOSoapIn"/>
+			<output message="wsdlns:WSControleAcessoGPE.VALIDARLOGINACESSOSoapOut"/>
+		</operation>
+		<operation name="SETORGANOGRAMAUSUARIOAUT">
+			<input message="wsdlns:WSControleAcessoGPE.SETORGANOGRAMAUSUARIOAUTSoapIn"/>
+			<output message="wsdlns:WSControleAcessoGPE.SETORGANOGRAMAUSUARIOAUTSoapOut"/>
+		</operation>
+	</portType>
+	<binding name="WSControleAcessoGPESoapBinding" type="wsdlns:WSControleAcessoGPESoapPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="SETLOGIN">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSOGPE.SETLOGIN"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETLISTAACAOOBJETOUSUARIO">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSOGPE.GETLISTAACAOOBJETOUSUARIO"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETMENUGXUI">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSOGPE.GETMENUGXUI"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETMENUSISTEMAS">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSOGPE.GETMENUSISTEMAS"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETUSUARIOAUTENTICADO">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSOGPE.GETUSUARIOAUTENTICADO"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETLISTAOBJETOUSUARIOAUTENTICADO">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSOGPE.GETLISTAOBJETOUSUARIOAUTENTICADO"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GETORGANOGRAMAUSUARIOAUT">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSOGPE.GETORGANOGRAMAUSUARIOAUT"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="VALIDARLOGINACESSO">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSOGPE.VALIDARLOGINACESSO"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="SETORGANOGRAMAUSUARIOAUT">
+			<soap:operation soapAction="br.com.abaco.sisbaseaction/AWSCONTROLEACESSOGPE.SETORGANOGRAMAUSUARIOAUT"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="WSControleAcessoGPE">
+		<port name="WSControleAcessoGPESoapPort" binding="wsdlns:WSControleAcessoGPESoapBinding">
+			<soap:address location="http://10.1.5.49:28080/quartzo/servlet/awscontroleacessogpe"/>
+		</port>
+	</service>
+</definitions>
