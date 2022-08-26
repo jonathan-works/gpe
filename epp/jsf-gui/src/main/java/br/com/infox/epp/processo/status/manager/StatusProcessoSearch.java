@@ -78,4 +78,14 @@ public class StatusProcessoSearch extends PersistenceController {
 		return getEntityManager().createQuery(cq).getSingleResult() > 0;
 	}
 
+	public StatusProcesso getStatusByNameAtivo(String name) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<StatusProcesso> cq = cb.createQuery(StatusProcesso.class);
+		Root<StatusProcesso> statusProcesso = cq.from(StatusProcesso.class);
+		cq.select(statusProcesso);
+		cb.isTrue(statusProcesso.get(StatusProcesso_.ativo));
+		cq.where(cb.equal(statusProcesso.get(StatusProcesso_.nome), cb.literal(name)));
+		List<StatusProcesso> result = getEntityManager().createQuery(cq).setMaxResults(1).getResultList();
+		return result.isEmpty() ? null : result.get(0);
+	}
 }

@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.situacao.dao;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -10,6 +9,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.view.query.ViewSituacaoProcessoQuery;
 import org.jbpm.context.exe.variableinstance.LongInstance;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -23,22 +23,18 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
-import br.com.infox.epp.fluxo.entity.Categoria_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
-import br.com.infox.epp.fluxo.entity.Natureza_;
 import br.com.infox.epp.painel.FluxoBean;
 import br.com.infox.epp.painel.TaskBean;
-import br.com.infox.epp.painel.caixa.Caixa_;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
-import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso_;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao_;
@@ -55,7 +51,7 @@ import static java.util.stream.Collectors.groupingBy;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class SituacaoProcessoDAO extends PersistenceController {
 
-	public List<FluxoBean> getFluxoList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRootFilter) {
+	public List<FluxoBean> getFluxoList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRootFilter, StatusProcesso statusArquivado) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<FluxoBean> cq = cb.createQuery(FluxoBean.class);
 
@@ -86,6 +82,9 @@ public class SituacaoProcessoDAO extends PersistenceController {
         );
 
         appendSigiloProcessoFilter(cq, processo);
+        if(!Objects.isNull(statusArquivado)){
+         appendStatusProcessoMetadadoFilter(cq, processo, statusArquivado);
+        }
         appendTipoProcessoFilter(cq, tipoProcesso, processo);
         appendTipoProcessoFilters(cq, tipoProcesso, comunicacoesExpedidas, taskInstance, processo);
         if (!StringUtil.isEmpty(numeroProcessoRootFilter)) {
@@ -438,4 +437,23 @@ public class SituacaoProcessoDAO extends PersistenceController {
 	protected Authenticator getAuthenticator() {
 	    return Authenticator.instance();
 	}
+
+    private void appendStatusProcessoMetadadoFilter(AbstractQuery<?> abstractQuery, Join<ViewSituacaoProcesso, Processo> processo, StatusProcesso statusArquivado){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        String metadadoTipoProcesso = EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType();
+        Predicate predicateSubquery = cb.equal(metadado.get(MetadadoProcesso_.metadadoType), metadadoTipoProcesso);
+
+        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.valor), statusArquivado.getIdStatusProcesso().toString()), predicateSubquery);
+        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.processo).get(Processo_.idProcesso), processo.get(Processo_.idProcesso)), predicateSubquery);
+
+        subquery.where(predicateSubquery);
+        Predicate predicate = abstractQuery.getRestriction();
+
+        predicate = cb.and(cb.not(cb.exists(subquery)), predicate);
+
+        abstractQuery.where(predicate);
+    }
 }
