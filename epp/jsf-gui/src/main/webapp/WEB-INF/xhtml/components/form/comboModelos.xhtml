@@ -14,6 +14,8 @@
             label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
             rendered="#{not readonly and home.getCodigosModelos(props.editorId).size() > 1}"
             items="#{home.getModeloItems(props.editorId)}"
+			disabled="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1
+    			or home.variaveisDocumento[id].hasAssinatura()}"
             showLabelSelecione="true">
             <a:ajax
                 event="change"
