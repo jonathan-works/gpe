@@ -91,7 +91,7 @@
 			</p:outputPanel>
 			<s:div id="#{id}Div">
 				<ui:fragment
-					rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}">
+					rendered="#{taskInstanceHome.podeVisualizarUpload(id) or (not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly)}">
 					<s:decorate id="#{id}Decoration" template="#{template}">
 						<ui:define name="label">
 							<h:outputText value="#{infoxMessages['fileUpload.header']}" />
