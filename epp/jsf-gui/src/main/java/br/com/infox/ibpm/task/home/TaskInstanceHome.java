@@ -1245,7 +1245,16 @@ public class TaskInstanceHome implements Serializable {
 
     public boolean podeVisualizarUpload(String idDocumento){
         try{
-            return  variaveisDocumento.get(idDocumento) == null || (Authenticator.getUsuarioLogado().getIdUsuarioLogin()
+
+            if(variaveisDocumento.get(idDocumento) == null){
+                return true;
+            }
+
+            if( !variaveisDocumento.get(idDocumento).getDocumentoBin().getAssinaturas().isEmpty()){
+                return false;
+            }
+
+            return  (Authenticator.getUsuarioLogado().getIdUsuarioLogin()
                     .equals(variaveisDocumento.get(idDocumento).getUsuarioInclusao().getIdUsuarioLogin())
                     && getCurrentTaskInstance().getId() ==  variaveisDocumento.get(idDocumento).getIdJbpmTask().intValue());
 
