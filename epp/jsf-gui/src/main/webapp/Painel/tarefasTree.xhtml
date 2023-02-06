@@ -9,6 +9,22 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
+
+	<script>
+        $(document).ready(function(){
+
+            if(#{not empty painelUsuarioController.nomeTarefaAberta()}){
+                var ss = '#selectTarefaTree';
+
+                $(ss).select();
+            $('span:contains(#{painelUsuarioController.nomeTarefaAberta()})').parent().addClass('rf-trn-sel');
+
+                }
+
+
+        });
+    </script>
+
     <rich:panel header="${infoxMessages['painel.tarefas']} (${painelTreeHandler.fluxoBean.name})" id="TarefasTree" styleClass="tree-tarefas" style="width: 100%; padding-bottom: 110px;">
         <h:outputText rendered="#{empty painelTreeHandler.tarefasRoots and empty painelTreeHandler.caixasSub}" value="#{infoxMessages['process.noAvailableProcesses']}"/>
         <h:outputText rendered="#{empty painelTreeHandler.tarefasRoots and not empty painelTreeHandler.caixasSub}" value="#{infoxMessages['process.noAvailableProcessesFluxMain']}"/>
@@ -24,7 +40,7 @@
             render="divPainelProcessosInterna, :pesquisaListForm"
             var="node"
             style="padding-right: calc(26% - 28px);">
-            <rich:treeModelAdaptor id="tarefaTreeModelAdaptor" nodes="#{painelTreeHandler.tarefasRoots}">
+            <rich:treeModelAdaptor id="tarefaTreeModelAdaptor" nodes="#{painelTreeHandler.tarefasRoots}" >
                 <rich:treeNode
                     id="taskNode"
                     iconCollapsed="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"

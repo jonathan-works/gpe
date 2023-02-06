@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
+import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.painel.TaskBean;
 import br.com.infox.epp.processo.entity.Processo;
 import org.apache.commons.lang3.StringUtils;
@@ -198,6 +199,9 @@ public class TaskInstanceHome implements Serializable {
     private boolean canClosePanelVal;
     private boolean taskCompleted;
     private boolean movimentarProcesso = false;
+
+    @Inject
+    private PainelUsuarioController painelUsuarioController;
 
     public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
@@ -800,6 +804,8 @@ public class TaskInstanceHome implements Serializable {
         if (canClosePanel() && isUsuarioExterno()) {
             redirectToAcessoExterno();
         }
+
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("endTransisiton", true);
     }
 
     private boolean isUsuarioExterno() {
