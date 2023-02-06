@@ -1236,4 +1236,24 @@ public class TaskInstanceHome implements Serializable {
             return false;
         }
     }
+
+    public boolean podeVisualizarUpload(String idDocumento){
+        try{
+
+            if(variaveisDocumento.get(idDocumento) == null){
+                return true;
+            }
+
+            if( !variaveisDocumento.get(idDocumento).getDocumentoBin().getAssinaturas().isEmpty()){
+                return false;
+            }
+
+            return  (Authenticator.getUsuarioLogado().getIdUsuarioLogin()
+                    .equals(variaveisDocumento.get(idDocumento).getUsuarioInclusao().getIdUsuarioLogin())
+                    && getCurrentTaskInstance().getId() ==  variaveisDocumento.get(idDocumento).getIdJbpmTask().intValue());
+
+        }catch (Exception e){
+            return false;
+        }
+    }
 }

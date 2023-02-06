@@ -32,7 +32,7 @@ public class MassiveReindexer {
 	
 	@PostConstruct
 	public void init() {
-		if (false) {
+		if (canExecute()) {
 			TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
 			try {
 				transactionManager.setTransactionTimeout(10800);
