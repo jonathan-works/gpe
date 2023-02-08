@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -13,6 +14,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 
+import br.com.infox.core.tree.EntityNode;
+import br.com.infox.jsf.util.JsfUtil;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
@@ -53,7 +56,7 @@ public class PainelUsuarioController implements Serializable {
 	@Inject
 	protected PainelTreeHandler painelTreeHandler;
 	@Inject
-	protected ConsultaProcessoList consultaProcessoList;
+	private ConsultaProcessoList consultaProcessoList;
 	@Inject
 	protected CaixaManager caixaManager;
 	@Inject
@@ -71,6 +74,9 @@ public class PainelUsuarioController implements Serializable {
 	private String numeroProcesso;
 	private String idProcessDefinition;
 	private Integer pollInterval;
+
+	@Inject
+	private JsfUtil jsfUtil;
 
 	@Getter
     private List<DocumentoVO> listaDocumentosParaAssinar = new ArrayList<>();
@@ -96,6 +102,8 @@ public class PainelUsuarioController implements Serializable {
 	public void atualizarPainelProcessos() throws IOException {
 	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso());
 	    verificaHouveAlteracao(fluxosDisponiveisTemp);
+
+
 	}
 
 	protected void verificaHouveAlteracao(List<? extends FluxoBean> fluxosDisponiveisTemp) throws IOException {
@@ -143,6 +151,10 @@ public class PainelUsuarioController implements Serializable {
 		painelTreeHandler.setFluxoBean(getSelectedFluxo());
 		consultaProcessoList.onSelectFluxo(getSelectedFluxo());
 		situacaoProcessoManager.loadTasks(getSelectedFluxo());
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("fluxoSelecionado", getSelectedFluxo().getProcessDefinitionId());
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("fluxoSelecionadoExpedida", getSelectedFluxo().getExpedida());
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("endTransisiton", false);
+
 	}
 
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
@@ -284,7 +296,42 @@ public class PainelUsuarioController implements Serializable {
 		}
 		setSelectedFluxo(fluxoBean);
 		onSelectFluxo();
+
+		if(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("taskSelecionado") != null){
+			String taskSelecionado = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("taskSelecionado").toString();
+
+			Optional<PainelEntityNode> first = painelTreeHandler.getTarefasRoots().stream().filter(task -> task.getEntity().getName().equals(taskSelecionado)).findFirst();
+
+			if(first.isPresent()){
+
+				painelTreeHandler.setSelected((TaskDefinitionBean) first.get().getEntity());
+				onSelectNode();
+				painelTreeHandler.lancarEvento();
+			}
+
+		}
 	}
+
+	public String nomeTarefaAberta(){
+		if(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("taskSelecionado") != null) {
+			return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("taskSelecionado").toString();
+		}
+
+		return null;
+	}
+	public boolean validarAtualizarList(){
+
+		try {
+			idProcessDefinition = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("fluxoSelecionado").toString();
+			expedida = Boolean.valueOf(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("fluxoSelecionadoExpedida").toString());
+			boolean transitou = Boolean.valueOf(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("endTransisiton").toString());
+
+			return transitou && idProcessDefinition != null && expedida != null;
+		}catch (Exception e){
+			return false;
+		}
+	}
+
 
 	public boolean canShowProcessoList() {
 	    return getSelected() != null && getSelected() instanceof TaskDefinitionBean;
@@ -366,4 +413,7 @@ public class PainelUsuarioController implements Serializable {
 		return pollInterval;
 	}
 
+	public ConsultaProcessoList getConsultaProcessoList(){
+		return this.consultaProcessoList;
+	}
 }

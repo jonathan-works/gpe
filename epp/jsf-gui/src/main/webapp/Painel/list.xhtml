@@ -17,6 +17,7 @@
   <ui:define name="title">#{pageTitle}</ui:define>
 
   <ui:define name="body">
+
     <h:form>
     	<a:poll action="#{painelUsuarioController.atualizarPainelProcessos}" interval="#{painelUsuarioController.pollInterval * 1000}" execute="@this" render="@none" immediate="true" bypassUpdates="true"/>
     </h:form>
@@ -31,6 +32,15 @@
 	      	$(component).addClass('fluxo-sel');
 	      }
 	    </h:outputScript>
+
+		<script>
+			$(document).ready(function(){
+				if (#{painelUsuarioController.validarAtualizarList()}) {
+					var s = '#' + #{painelUsuarioController.idProcessDefinition} + 'fluxo';
+					$(s).mouseup();
+				}
+			});
+		</script>
 
 	    <div class="ui-tabs-panel ui-corner-bottom" style="padding: 0.8em; margin-top: 1em;">
 

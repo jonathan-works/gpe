@@ -8,10 +8,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jboss.seam.core.Events;
+import org.primefaces.event.NodeSelectEvent;
+import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
@@ -22,6 +26,7 @@ import br.com.infox.epp.painel.FluxoBean;
 import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.painel.TaskBean;
 import br.com.infox.epp.painel.TaskDefinitionBean;
+import org.richfaces.model.SequenceRowKey;
 
 @Named
 @ViewScoped
@@ -58,7 +63,18 @@ public class PainelTreeHandler extends AbstractTreeHandler<TaskDefinitionBean> {
 
     public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
     	super.processTreeSelectionChange(ev);
+        if(!ev.getNewSelection().isEmpty() && this.getSelected() != null && this.getSelected().getTasks().size() > 1){
+
+         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("taskSelecionado", this.getSelected().getName());
+        }else{
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("taskSelecionado");
+        }
+
 		painelUsuarioController.onSelectNode();
+    }
+
+    public void lancarEvento(){
+        Events.instance().raiseEvent(getEventSelected(), getSelected());
     }
 
     public List<PainelEntityNode> getTarefasRoots() {
