@@ -250,7 +250,7 @@ public class Processo implements Serializable, Recursive<Processo> {
             setIdProcesso(generatedId);
             setNumeroProcesso(getIdProcesso().toString());
         }
-        setSenhaAcesso(RandomStringUtils.random(15, true, true));
+        setSenhaAcesso(RandomStringUtils.random(7, true, true).toLowerCase());
         preencherProcessoRoot();
         RecursiveManager.refactor(this);
     }
