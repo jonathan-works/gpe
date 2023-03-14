@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:a="http://richfaces.org/a4j"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:rich="http://richfaces.org/rich"
-  xmlns:i="http://java.sun.com/jsf/composite/infox"
-  xmlns:s="http://jboss.org/schema/seam/taglib"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:a="http://richfaces.org/a4j"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:i="http://java.sun.com/jsf/composite/infox"
                 xmlns:p="http://primefaces.org/ui">
 
   <h:form>
@@ -14,6 +13,7 @@
     <ui:param name="idTaskInstance" value="#{row.idTaskInstance}" />
     <ui:param name="owner" value="#{row.assignee}" />
     <ui:param name="exibirSelecaoAssinaturaLote" value="#{row.exibirSelecaoAssinaturaLote}" />
+    <ui:param name="exibirmovimentarEmLote" value="#{row.exibirmovimentarEmLote}" />
     <ui:param name="inTabExpedidas" value="#{painelUsuarioController.selectedFluxo.expedida}" />
     <ui:param name="showMovimentarToolBar" value="#{wi:get(showMovimentarToolBar, true)}" />
 
@@ -110,6 +110,15 @@
 				<p:ajax execute="@this" />
 			</h:selectBooleanCheckbox>
 		</rich:column>
+
+      <rich:column id="checkboxColumnMovimentarLote">
+          <h:selectBooleanCheckbox value="#{row.selecaoMovimentarEmLote}"
+                                   rendered="#{exibirmovimentarEmLote and !taskInstanceHome.podeRecuperaProcesso(row) and (empty owner and showMovimentarToolBar and authenticator.perfilTemplateAtualPossuiLocalizacao())}"
+                                   onclick="updateMarcarTodosMovimentarLote($(this)); enableDisableMovimentarLote();"
+                                   styleClass="checkButtonMovimentarLote">
+              <p:ajax execute="@this" listener="#{consultaProcessoList.podeVisualizarTransitions}" />
+          </h:selectBooleanCheckbox>
+      </rich:column>
 
 	</h:form>
 

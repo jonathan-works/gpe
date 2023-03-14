@@ -1262,4 +1262,8 @@ public class TaskInstanceHome implements Serializable {
             return false;
         }
     }
+
+    public void setProcessoEpaHome(ProcessoEpaHome processoEpaHome) {
+        this.processoEpaHome = processoEpaHome;
+    }
 }

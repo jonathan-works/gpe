@@ -44,6 +44,12 @@ public class TaskBean {
     @Getter @Setter
     private boolean podeVisualizarProcesso;
 
+    @Getter @Setter
+    private boolean exibirmovimentarEmLote;
+
+    @Getter @Setter
+    private boolean selecaoMovimentarEmLote;
+
 
     public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
             Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeNatureza,
