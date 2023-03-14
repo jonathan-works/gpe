@@ -24,6 +24,13 @@
 			<p:ajax execute="@this" listener="#{consultaProcessoList.marcarTodosAssinaveis}" />
 		</h:selectBooleanCheckbox>
 
-	</h:form>
+      <h:selectBooleanCheckbox onclick="checkAllChildrenBoxesMovimentarLote(); enableDisableMovimentarLote();"
+                               rendered="#{consultaProcessoList.showMarcarTodosMovimentarEmLote}"
+                               styleClass="checkButtonMarcarTodosMovimentarLote">
+          <p:ajax execute="@this" listener="#{consultaProcessoList.marcarTodosMovimentar}"/>
+      </h:selectBooleanCheckbox>
+
+
+  </h:form>
 
 </ui:composition>

@@ -171,7 +171,9 @@
 				
 			</wi:dataTable>
 
-			<h:form>
+			<h:form id="formButtons">
+
+
 				<p:commandButton styleClass="buttons"
 					id="callAssinarDocumentosEmLotePainel" value="Assinar"
 					widgetVar="callAssinarDocumentosEmLotePainelWV"
@@ -179,7 +181,22 @@
 					execute="@form painelProcessos" onclick="infox.showLoading();"
 					oncomplete="#{rich:component('assinarDocumentosPopUpPanel')}.show();infox.hideLoading();"
 					update="@this assinarDocumentosPopUpPanelOutput" />
+
+				<h:selectOneMenu id="transitions" value="#{consultaProcessoList.nome}" disabled="#{empty consultaProcessoList.transitionsSelectItens and !consultaProcessoList.podeVisualizarTransitions()}" >
+					<f:selectItems
+							value="#{consultaProcessoList.transitionsSelectItens}" />
+				</h:selectOneMenu>
+
+
+					<p:commandButton styleClass="buttons"
+									 id="callMovimentarProcessosEmLotePainel" value="Movimentar"
+									 widgetVar="callMovimentarProcessosEmLotePainel"
+									 actionListener="#{consultaProcessoList.movimentarEmLote()}"
+									 execute="@form painelProcessos" onclick="infox.showLoading();"  oncomplete="infox.hideLoading();"
+									 update="@this" />
+
 			</h:form>
+
 		</s:div>
 	</s:div>
 
@@ -306,14 +323,49 @@
     function desmarcarMarcarTodos(){
         $('.checkButtonMarcarTodos').prop('checked',false);
     }
-    
-    function updateMarcarTodos(checkBox){
+
+	function checkAllChildrenBoxesMovimentarLote(){
+		$('.checkButtonMovimentarLote').prop('checked', $('.checkButtonMarcarTodosMovimentarLote').prop('checked'));
+	}
+
+	function desmarcarMarcarTodosMovimentarLote() {
+		$('.checkButtonMarcarTodosMovimentarLote').prop('checked', false);
+	}
+
+
+	function updateMarcarTodos(checkBox){
         if(!checkBox.prop('checked')){
             $('.checkButtonMarcarTodos').prop('checked',false);
         }else{
             $('.checkButtonMarcarTodos').prop('checked',isTodosCheckBoxesMarcados());
         }
     }
+
+	function updateMarcarTodosMovimentarLote(checkBox){
+
+		if(!checkBox.prop('checked')){
+			$('.checkButtonMarcarTodosMovimentarLote').prop('checked',false);
+		}else{
+			$('.checkButtonMarcarTodosMovimentarLote').prop('checked', isTodosCheckBoxesMarcadosMovimentarLote());
+		}
+	}
+
+	function isTodosCheckBoxesMarcadosMovimentarLote(){
+		checkButtonsArray = $('.checkButtonMovimentarLote');
+
+		if(!checkButtonsArray) {
+			return false;
+		}
+
+		for (var i = 0; i &lt; checkButtonsArray.size(); i++) {
+			if(!$(checkButtonsArray[i]).prop('checked'))
+				return false;
+		}
+
+		return true;
+	}
+
+
     function isTodosCheckBoxesMarcados(){
         checkButtonsArray = $('.checkButtonDocumento');
         if(!checkButtonsArray)
@@ -325,20 +377,39 @@
         }
             return true;
     }
+
     function enableDisableAssinarButton(){
         checkButtonsArray = $('.checkButtonDocumento');
         if(!checkButtonsArray){
         	PF('callAssinarDocumentosEmLotePainelWV').disable();
-            return;
+			return;
         }
 
         for (var i = 0; i &lt; checkButtonsArray.size(); i++) {
             if($(checkButtonsArray[i]).prop('checked')) {
             	PF('callAssinarDocumentosEmLotePainelWV').enable();
-            	return;
+				return;
             }
         }
-        PF('callAssinarDocumentosEmLotePainelWV').disable();
+		PF('callAssinarDocumentosEmLotePainelWV').disable();
     }
+
+	function enableDisableMovimentarLote(){
+		checkButtonsArray = $('.checkButtonMovimentarLote');
+
+		if(!checkButtonsArray){
+			PF('callMovimentarProcessosEmLotePainel').disable();
+			return;
+		}
+
+		for (var i = 0; i &lt; checkButtonsArray.size(); i++) {
+			if($(checkButtonsArray[i]).prop('checked')) {
+				PF('callMovimentarProcessosEmLotePainel').enable();
+				return;
+			}
+		}
+		PF('callMovimentarProcessosEmLotePainel').disable();
+
+	}
 </script>
 </ui:composition>

@@ -1,27 +1,30 @@
 package br.com.infox.epp.processo.consulta.list;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 import javax.validation.ValidationException;
 
 import br.com.infox.epp.documento.DocumentoAssinavelDTO;
+import br.com.infox.epp.movimentarlote.TaskInstancePermitidaMovimentarLoteSearch;
+
+import br.com.infox.epp.painel.PainelUsuarioController;
+import br.com.infox.epp.processo.home.ProcessoEpaHome;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.ibpm.task.manager.TaskInstanceManager;
+import br.com.infox.jsf.util.JsfUtil;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
@@ -145,9 +148,27 @@ public class ConsultaProcessoList extends DataList<TaskBean> implements Serializ
     private String tokenAssinatura;
     @Getter @Setter
     private boolean showMarcarTodosAssinaveis;
+
+    @Getter @Setter
+    private boolean showMarcarTodosMovimentarEmLote = false;
+
+    @Inject
+    private TaskInstancePermitidaMovimentarLoteSearch taskInstancePermitidaMovimentarLoteSearch;
     
     @Inject
     private FiltroVariavelProcessoSearch filtroVariavelProcessoSearch;
+
+    @Getter @Setter
+    private List<SelectItem> transitionsSelectItens;
+
+    @Getter @Setter
+    private String nome;
+
+    @Inject
+    private TaskInstanceManager taskInstanceManager;
+
+    @Inject
+    private PainelUsuarioController painelUsuarioController;
 
     public void onChangeTipoFiltroVariavelProcesso() {
         this.filtroVariavelSelecionado = null;
@@ -274,7 +295,9 @@ public class ConsultaProcessoList extends DataList<TaskBean> implements Serializ
         setPage(1);
         search();
         buildExibirSelecaoAssinarDocumentosLote(filteredTasks);
+        buildExibirSelecaoMovimentarEmLote(filteredTasks);
         RequestContext.getCurrentInstance().execute("enableDisableAssinarButton();");
+        RequestContext.getCurrentInstance().execute("enableDisableMovimentarLote();");
     }
     
     public void buildExibirSelecaoAssinarDocumentosLote(List<TaskBean> listaTaskBean) {
@@ -291,10 +314,54 @@ public class ConsultaProcessoList extends DataList<TaskBean> implements Serializ
             }
         }
 	}
+
+    public void buildExibirSelecaoMovimentarEmLote(List<TaskBean> listaTaskBean) {
+        showMarcarTodosMovimentarEmLote = false;
+
+        Set<String> collect = listaTaskBean.stream().map(tb -> tb.getIdTaskInstance()).collect(Collectors.toSet());
+
+        List<String> result = taskInstancePermitidaMovimentarLoteSearch.getTaskIntancesAptasAMovimentarEmLote(collect);
+
+        for(TaskBean taskBean : listaTaskBean) {
+            taskBean.setExibirmovimentarEmLote(result.stream().anyMatch(s -> taskBean.getIdTaskInstance().equals(s)));
+            if(!showMarcarTodosMovimentarEmLote && taskBean.isExibirmovimentarEmLote()) {
+                showMarcarTodosMovimentarEmLote = true;
+            }
+        }
+    }
     
     public void marcarAssinaveisNaoAssinaveis() {
         Set<String> listaIdTaskInstance = filteredTasks.stream().filter(TaskBean::isSelecaoAssinaturaLote).map(TaskBean::getIdTaskInstance).collect(Collectors.toSet());
     	listagemDocumentoAssinatura = taskInstancePermitidaAssinarDocumentoSearch.getListaDocumentoDTOParaSeremAssinados(listaIdTaskInstance);
+    }
+
+    public void movimentarEmLote() throws IOException {
+        Set<TaskBean> listaIdTaskInstance = filteredTasks.stream().filter(TaskBean::isSelecaoMovimentarEmLote).collect(Collectors.toSet());
+
+        if(!listaIdTaskInstance.isEmpty()){
+            listaIdTaskInstance.forEach(tk ->{
+
+                try {
+                    TaskInstanceHome tih = TaskInstanceHome.instance();
+                    ProcessoEpaHome processoEpaHome = ProcessoEpaHome.instance();
+                    processoEpaHome.setProcessoIdProcesso(tk.getIdProcesso());
+                    tih.setProcessoEpaHome(processoEpaHome);
+                    TaskInstance taskInstanceOpen = taskInstanceManager.getTaskInstanceOpen(tk.getIdProcesso());
+                    tih.setCurrentTaskInstance(taskInstanceOpen);
+                    tih.setTaskId(Long.valueOf(tk.getIdTaskInstance()));
+
+                    tih.end(this.nome);
+                    tih.clear();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    FacesMessages.instance().add("Erro ao movimentar processo");
+                }
+            });
+            ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(servletContext.getContextPath() + "/Painel/list.seam");
+        }
+
     }
     
 	public void marcarTodosAssinaveis(AjaxBehaviorEvent event) {
@@ -305,6 +372,38 @@ public class ConsultaProcessoList extends DataList<TaskBean> implements Serializ
 			}
 		}
 	}
+
+    public void marcarTodosMovimentar(AjaxBehaviorEvent event) {
+        boolean selecionarTodos = ((HtmlSelectBooleanCheckbox)event.getSource()).isSelected();
+        for (TaskBean taskBean : filteredTasks) {
+            if (taskBean.isExibirmovimentarEmLote()) {
+                taskBean.setSelecaoMovimentarEmLote(selecionarTodos);
+            }
+        }
+
+        podeVisualizarTransitions();
+    }
+
+    public boolean podeVisualizarTransitions(){
+
+        if(filteredTasks == null){
+            return false;
+        }
+
+        Optional<TaskBean> tk = filteredTasks.stream().filter(t -> t.isSelecaoMovimentarEmLote() == true).findFirst();
+        transitionsSelectItens = new ArrayList<>();
+        if(tk.isPresent()){
+
+            TaskInstanceHome tih = TaskInstanceHome.instance();
+            tih.setTaskId(Long.valueOf(tk.get().getIdTaskInstance()));
+            tih.getTransitions().forEach(t ->  transitionsSelectItens.add(new SelectItem(t.getName(), t.getName())));
+
+        }
+
+        JsfUtil.instance().render("formButtons");
+
+        return tk.isPresent() ;
+    }
 
     protected void clearExtraFilters() {}
 
