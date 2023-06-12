@@ -46,7 +46,7 @@
                         label="#{infoxMessages['fluxo.publicado']}"
                         value="#{fluxoList.entity.publicado}" />
                     <wi:selectSituacaoOneMenu
-                        id="ativo"
+                        id="ativoSearch"
                         label="#{infoxMessages['field.situacao']}"
                         value="#{fluxoList.entity.ativo}" />
                 </wi:searchForm>
@@ -184,9 +184,23 @@
                 
             <ui:include src="atributos.xhtml" />
             <wi:selectSituacaoRadio
-                id="ativo"
+                id="ativos"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{fluxoCrudAction.instance.ativo}" />
+
+            <wi:selectBooleanRadio
+                    id="duplicidade"
+                    label="#{infoxMessages['field.duplicidade']}"
+                    value="#{fluxoCrudAction.instance.permiteDuplicidade}" />
+
+            <i:selectOneMenu
+                    id="qtdDuplicidade"
+                    value="#{fluxoCrudAction.instance.qtdDuplicidade}"
+                    label="#{infoxMessages['field.qtd.duplicidade']}">
+			<c:forEach var="i" begin="1" end="10">
+				<f:selectItem itemLabel="#{i}" itemValue="#{i}" />
+			</c:forEach>
+			</i:selectOneMenu>
 
             <ui:define name="buttons">
                 <a:commandButton value="#{infoxMessages['crud.persist']}" action="#{fluxoCrudAction.persist}" execute="@form"

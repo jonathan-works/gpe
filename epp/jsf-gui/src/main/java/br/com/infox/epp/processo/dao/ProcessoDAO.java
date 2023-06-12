@@ -1,35 +1,5 @@
 package br.com.infox.epp.processo.dao;
 
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY1;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY2;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY3;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY4;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_PARAM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_ROOT_PARAM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_FLUXO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_JBPM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TASK;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TASKMGMINSTANCE;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TOKEN;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_USUARIO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_SITUACAO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_TIPO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_JBPM_LOG;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TIPO_PROCESSO_PARAM;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +17,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.TransactionPropagationType;
@@ -76,6 +47,8 @@ import br.com.infox.epp.tarefa.entity.Tarefa_;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
+
+import static br.com.infox.epp.processo.query.ProcessoQuery.*;
 
 @Stateless
 @AutoCreate
@@ -283,6 +256,41 @@ public class ProcessoDAO extends DAO<Processo> {
         params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, meioExpedicaoSearch.getMeioExpedicaoSistema().getId().toString());
         params.put(ProcessoQuery.QUERY_PARAM_FLUXO_COMUNICACAO, fluxoComunicacao.getFluxo());
         return getNamedResultList(ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, params);
+    }
+
+    public List<String> buscarProcessosDuplicados(NaturezaCategoriaFluxo naturezaCategoriaFluxo, List<ParticipanteProcesso> participanteProcessos ){
+
+        if(naturezaCategoriaFluxo.getFluxo().getPermiteDuplicidade()) {
+
+            Map<String, Object> parameters = new HashMap<>();
+
+            if (participanteProcessos.isEmpty()) {
+                return null;
+            }
+
+            for (ParticipanteProcesso p : participanteProcessos) {
+
+                String numeroCpf = "XXXXXX";
+                String numeroCnpj = "XXXXXX";
+
+                if(p.getPessoa() instanceof PessoaFisica){
+                    numeroCpf =  ((PessoaFisica) p.getPessoa()).getCpf();
+                }else{
+                    numeroCnpj = ((PessoaJuridica) p.getPessoa()).getCnpj();
+                }
+
+                parameters.put(PARAM_ID_NATUREZA_FLUXO, naturezaCategoriaFluxo.getIdNaturezaCategoriaFluxo());
+                parameters.put(PARAM_CPF_PARTICIPANTE, numeroCpf);
+                parameters.put(PARAM_CNPJ_PARTICIPANTE, numeroCnpj);
+                List<String> result = getNamedResultList(PARTICIPANTE_DUPLICADO_NATUREZA, parameters);
+
+                if(result != null && result.size() >= naturezaCategoriaFluxo.getFluxo().getQtdDuplicidade()){
+                    return result;
+                }
+            }
+
+        }
+        return null;
     }
 
 }

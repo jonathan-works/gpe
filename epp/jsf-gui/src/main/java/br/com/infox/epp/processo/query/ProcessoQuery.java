@@ -312,4 +312,17 @@ public interface ProcessoQuery {
 			+ " and not exists (select 1 from MetadadoProcesso mp "
 					+ " where p = mp.processo and mp.metadadoType = 'dataCumprimento' ) "
 			+ " and exists (select 1 from org.jbpm.graph.exe.ProcessInstance pi where pi.id = p.idJbpm and pi.processDefinition.name = :comunicar) ";
+
+
+	String PARAM_ID_NATUREZA_FLUXO = "idNaturezaFluxo";
+	String PARAM_CPF_PARTICIPANTE = "cpfParticipante";
+	String PARAM_CNPJ_PARTICIPANTE = "cnpjParticipante";
+	String PARTICIPANTE_DUPLICADO_NATUREZA = "Participante.duplicado";
+	String PARTICIPANTE_DUPLICADO_NATUREZA_QUERY =
+			"select tp.nr_processo  from tb_processo tp " +
+					"                 where tp.id_natureza_categoria_fluxo = :" + PARAM_ID_NATUREZA_FLUXO +
+					"                 and ( EXISTS (select 1 from tb_contribuinte tpd where tpd.nr_cpf = :" + PARAM_CPF_PARTICIPANTE +") " +
+					"                 OR EXISTS (select 1 from tb_servidor ts  where ts.nr_cpf = :" + PARAM_CPF_PARTICIPANTE +") " +
+					"                 OR EXISTS (select 1 from tb_pessoa_juridica tpj where tpj.nr_cnpj = :" + PARAM_CNPJ_PARTICIPANTE +")) " +
+					"                 and DATEDIFF(day, tp.dt_inicio, GETDATE()) < 31 ";
 }

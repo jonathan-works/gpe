@@ -72,6 +72,9 @@ import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.util.time.DateRange;
 
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID_TASK_INSTANCE;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_ID_TASK_INSTANCE;
+
 @AutoCreate
 @Stateless
 @Name(ProcessoManager.NAME)
@@ -433,5 +436,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
 	}
-	
+
+
+    public List<String> buscarProcessosDuplicados(NaturezaCategoriaFluxo naturezaCategoriaFluxo, List<ParticipanteProcesso> participanteProcessos ){
+        return getDao().buscarProcessosDuplicados(naturezaCategoriaFluxo, participanteProcessos);
+    }
 }
