@@ -2,58 +2,8 @@ package br.com.infox.epp.processo.entity;
 
 import static br.com.infox.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.constants.LengthConstants.DESCRICAO_MINIMA;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS1;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS2;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS3;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS4;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY1;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY2;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY3;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY4;
-import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_CAIXA;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_JBPM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_USUARIO_CADASTRO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_BY_ID_CAIXA;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_BY_ID_CAIXA_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_TIPO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_TIPO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_JBPM_LOG;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_JBPM_LOG_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_GASTO_PROCESSO_EPP;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.*;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PARTICIPANTE_DUPLICADO_NATUREZA_QUERY;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -123,7 +73,8 @@ import lombok.Setter;
         @NamedNativeQuery(name = REMOVER_JBPM_LOG, query = REMOVER_JBPM_LOG_QUERY),
         @NamedNativeQuery(name = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, query = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY),
         @NamedNativeQuery(name = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO, query = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY,
-        resultClass = Processo.class)
+        resultClass = Processo.class),
+        @NamedNativeQuery(name = PARTICIPANTE_DUPLICADO_NATUREZA, query = PARTICIPANTE_DUPLICADO_NATUREZA_QUERY)
 })
 @NamedQueries(value = {
         @NamedQuery(name = PROCESSO_BY_NUMERO, query = PROCESSO_BY_NUMERO_QUERY),

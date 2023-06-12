@@ -22,6 +22,9 @@ public interface FluxoQuery {
     String FLUXO_ATTRIBUTE = "fluxo";
     String PERMITE_PARTE_ANONIMA = "in_permite_parte_anonima";
 
+    String DUPLICIDADE = "in_permite_duplicidade";
+    String QTD_DUPLICIDADE = "qtd_duplicidade";
+
     String PARAM_FLUXO = "fluxo";
     String PARAM_DESCRICAO = "descricao";
     String PARAM_NOME = "nomeFluxo";

@@ -1,49 +1,21 @@
 package br.com.infox.epp.processo.partes.entity;
 
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO_QUERY;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO_QUERY;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO_QUERY;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ_QUERY;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_BY_PESSOA_FETCH;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_BY_PESSOA_FETCH_QUERY;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PESSOA_BY_PARTICIPANTE_PROCESSO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PESSOA_BY_PARTICIPANTE_PROCESSO_QUERY;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.core.persistence.generator.CustomIdGenerator;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.processo.entity.Processo;
+
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.*;
+import static br.com.infox.epp.processo.query.ProcessoQuery.*;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY;
 
 @Entity
 @Table(name = ParticipanteProcesso.TABLE_NAME)

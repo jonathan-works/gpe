@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -90,6 +91,10 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     private TipoParteSearch tipoParteSearch;
     @Inject
     private ProcessoManager processoManager;
+
+    @Inject
+    private ParticipanteProcessoManager participanteProcessoManager;
+
     @Inject
     private ProcessoSearch processoSearch;
     @Inject
@@ -285,6 +290,13 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
                     participantes.addAll(participanteVO.getListParticipantes(processo));
                 }
             }
+
+            List<String> numerosProcessos = processoManager.buscarProcessosDuplicados(naturezaCategoriaFluxoItem.getNaturezaCategoriaFluxo(), participantes);
+
+            if(numerosProcessos != null){
+                throw new BusinessRollbackException("Identificados Processos Duplicados. " +  numerosProcessos.toString());
+            }
+
             List<MetadadoProcesso> metadados = new ArrayList<>();
             MetadadoProcessoProvider processoProvider = new MetadadoProcessoProvider();
             if (naturezaCategoriaFluxoItem.hasItem()) {

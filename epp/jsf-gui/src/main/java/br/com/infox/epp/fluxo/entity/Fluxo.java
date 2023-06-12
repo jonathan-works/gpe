@@ -5,34 +5,7 @@ import static br.com.infox.constants.LengthConstants.DESCRICAO_PEQUENA;
 import static br.com.infox.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.CODIGO_FLUXO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO_QUERY;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_DESCRICAO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_DESCRICAO_QUERY;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS_QUERY;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_BY_FLUXO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_BY_FLUXO_QUERY;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.DATA_FIM_PUBLICACAO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.DATA_INICIO_PUBLICACAO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.DESCRICAO_FLUXO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_ATTRIBUTE;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_CODIGO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_CODIGO_QUERY;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICACAO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICAO_QUERY;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_NOME;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_NOME_QUERY;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.ID_FLUXO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.ID_USUARIO_PUBLICACAO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS_QUERY;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.PERMITE_PARTE_ANONIMA;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.PRAZO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.PUBLICADO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.SEQUENCE_FLUXO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.TABLE_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.*;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -130,6 +103,12 @@ public class Fluxo implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DATA_FIM_PUBLICACAO)
     private Date dataFimPublicacao;
+
+    @Column(name = DUPLICIDADE)
+    private Boolean permiteDuplicidade;
+
+    @Column(name = QTD_DUPLICIDADE)
+    private Integer qtdDuplicidade;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0);
@@ -334,5 +313,21 @@ public class Fluxo implements Serializable {
     	fluxo.setPublicado(false);
     	fluxo.setQtPrazo(getQtPrazo());
     	return fluxo;
+    }
+
+    public Boolean getPermiteDuplicidade() {
+        return permiteDuplicidade;
+    }
+
+    public void setPermiteDuplicidade(Boolean permiteDuplicidade) {
+        this.permiteDuplicidade = permiteDuplicidade;
+    }
+
+    public Integer getQtdDuplicidade() {
+        return qtdDuplicidade;
+    }
+
+    public void setQtdDuplicidade(Integer qtdDuplicidade) {
+        this.qtdDuplicidade = qtdDuplicidade;
     }
 }
