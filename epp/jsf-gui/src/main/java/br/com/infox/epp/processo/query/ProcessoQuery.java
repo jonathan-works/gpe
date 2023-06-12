@@ -324,5 +324,5 @@ public interface ProcessoQuery {
 					"                 and ( EXISTS (select 1 from tb_contribuinte tpd where tpd.nr_cpf = :" + PARAM_CPF_PARTICIPANTE +") " +
 					"                 OR EXISTS (select 1 from tb_servidor ts  where ts.nr_cpf = :" + PARAM_CPF_PARTICIPANTE +") " +
 					"                 OR EXISTS (select 1 from tb_pessoa_juridica tpj where tpj.nr_cnpj = :" + PARAM_CNPJ_PARTICIPANTE +")) " +
-					"                 and DATEDIFF(day, tp.dt_inicio, GETDATE()) < 31 ";
+					"                 and DATEDIFF(day, tp.dt_inicio, GETDATE()) < 31 and not exists (select 1 from tb_metadado_processo mp where tp.id_processo = mp.id_processo and  mp.nm_metadado_processo  = 'statusProcesso' and mp.vl_metadado_processo = '14')";
 }
