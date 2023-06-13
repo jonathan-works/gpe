@@ -319,10 +319,9 @@ public interface ProcessoQuery {
 	String PARAM_CNPJ_PARTICIPANTE = "cnpjParticipante";
 	String PARTICIPANTE_DUPLICADO_NATUREZA = "Participante.duplicado";
 	String PARTICIPANTE_DUPLICADO_NATUREZA_QUERY =
-			"select tp.nr_processo  from tb_processo tp " +
+			"select tp.nr_processo  from tb_processo tp inner join tb_participante_processo par on par.id_processo = tp.id_processo  " +
 					"                 where tp.id_natureza_categoria_fluxo = :" + PARAM_ID_NATUREZA_FLUXO +
-					"                 and ( EXISTS (select 1 from tb_contribuinte tpd where tpd.nr_cpf = :" + PARAM_CPF_PARTICIPANTE +") " +
-					"                 OR EXISTS (select 1 from tb_servidor ts  where ts.nr_cpf = :" + PARAM_CPF_PARTICIPANTE +") " +
-					"                 OR EXISTS (select 1 from tb_pessoa_juridica tpj where tpj.nr_cnpj = :" + PARAM_CNPJ_PARTICIPANTE +")) " +
+					"                 and  (EXISTS (select 1 from tb_pessoa_fisica tpd where par.id_pessoa = tpd.id_pessoa_fisica and  tpd.nr_cpf  :" + PARAM_CPF_PARTICIPANTE +") " +
+					"                 OR EXISTS (select 1 from tb_pessoa_juridica tpj where par.id_pessoa = tpj.id_pessoa_juridica and  tpj.nr_cnpj = :" + PARAM_CNPJ_PARTICIPANTE +")) " +
 					"                 and DATEDIFF(day, tp.dt_inicio, GETDATE()) < 31 and not exists (select 1 from tb_metadado_processo mp where tp.id_processo = mp.id_processo and  mp.nm_metadado_processo  = 'statusProcesso' and mp.vl_metadado_processo = '14')";
 }
