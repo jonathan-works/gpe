@@ -12,6 +12,10 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response.Status;
 
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
 
@@ -24,10 +28,10 @@ import br.com.infox.epp.access.api.RolesMap;
 import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.service.AuthenticatorService;
-import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.login.LoginService;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 
 @Stateless
 public class ProcessoEndpointService {
@@ -47,44 +51,30 @@ public class ProcessoEndpointService {
     @Inject
     private UsuarioPerfilDAO usuarioPerfilDAO;
     @Inject
+    private DocumentoBinManager documentoBinManager;
+
+    @Inject
     private ModeloDocumentoManager modeloDocumentoManager;
+
+    @Inject
+    private ProcessoManager processoManager;
     
 
-    public byte[] gerarPDFProcesso(ProcessoDTO processoDTO, List<MovimentacaoGroup> groups) {
-        return gerarPDFProcesso(pdfManager, fileDownloader, processoDTO, groups);
+    public byte[] gerarPDFProcesso(ProcessoDTO processoDTO) {
+        return gerarPDFProcesso(pdfManager, fileDownloader, processoDTO);
     }
 
-    private byte[] gerarPDFProcesso(PdfManager pdfManager, FileDownloader fileDownloader, ProcessoDTO processoDTO,
-            List<MovimentacaoGroup> groups) {
+    private byte[] gerarPDFProcesso(PdfManager pdfManager, FileDownloader fileDownloader, ProcessoDTO processoDTO) {
         ByteArrayOutputStream pdf = new ByteArrayOutputStream();
         try {
             com.lowagie.text.Document pdfDocument = new com.lowagie.text.Document();
             PdfCopy copy = new PdfCopy(pdfDocument, pdf);
             pdfDocument.open();
 
-            String htmlFolhaRosto = resolverModeloComContexto(processoDTO.getId(), Parametros.FOLHA_ROSTO_PROCESSO.getValue());
-            try(ByteArrayOutputStream pagRosto = new ByteArrayOutputStream()){
-                pdfManager.convertHtmlToPdf(htmlFolhaRosto, pagRosto);
-                copy = pdfManager.copyPdf(copy, pagRosto.toByteArray());
-            }
+            Processo processo = processoManager.find(processoDTO.getId());
+            DocumentoBin documentoBinResumoDocumentosProcesso = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
 
-            for (MovimentacaoGroup group : groups) {
-                List<DocumentoBin> documentos = processoEndpointSearch
-                        .getListaDocumentoBinByIdProcessoAndLocalizacaoAndDtInclusao(processoDTO.getId(),
-                                group.getIdLocalizacao(), group.getStart(), group.getEnd());
-                if (documentos.isEmpty()) {
-					continue;
-				}
-                String htmlFolhaRostoGroup = resolverModeloComContexto(processoDTO.getId(), Parametros.FOLHA_ROSTO_MOVIMENTACOES.getValue(), group);
-                try(ByteArrayOutputStream pagRosto = new ByteArrayOutputStream()){
-                    pdfManager.convertHtmlToPdf(htmlFolhaRostoGroup, pagRosto);
-                    copy = pdfManager.copyPdf(copy, pagRosto.toByteArray());
-                }
-
-                for (DocumentoBin documentoBin : documentos) {
-                    copy = pdfManager.copyPdf(copy, fileDownloader.getData(documentoBin, false));
-                }
-            }
+            pdfManager.copyPdf(copy, fileDownloader.getData(documentoBinResumoDocumentosProcesso, false));
 
             pdfDocument.addTitle("numeroDoProcesso");
             pdfDocument.close();

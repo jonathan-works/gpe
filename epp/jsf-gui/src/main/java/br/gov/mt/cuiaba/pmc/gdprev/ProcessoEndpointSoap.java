@@ -28,6 +28,7 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
     @Inject
     private ProcessoEndpointService processoEndpointService;
 
+
     @Override
     @MTOM(enabled = true, threshold = 10240)
     public Documento recuperarProcessoEmDocumento(String username, String password, String numeroDoProcesso) {
@@ -39,10 +40,8 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
                 throw new WebServiceException(Status.NOT_FOUND.getStatusCode(), "HTTP" + Status.NOT_FOUND.getStatusCode(),
                         "Processo não encontrado");
             }
-            List<MovimentacaoGroup> groups = processoEndpointSearch
-                    .getListaMovimentacaoGroupByIdProcesso(processoDTO.getId());
+            byte[] data = processoEndpointService.gerarPDFProcesso(processoDTO);
 
-            byte[] data = processoEndpointService.gerarPDFProcesso(processoDTO, groups);
             DataSource ds = new ByteArrayDataSource(data, "application/pdf");
             DataHandler dataHandler = new DataHandler(ds);
             return new Documento(dataHandler);
