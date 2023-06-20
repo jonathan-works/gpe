@@ -1,5 +1,7 @@
 package br.gov.mt.cuiaba.pmc.gdprev;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 import javax.activation.DataHandler;
@@ -12,6 +14,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.soap.MTOM;
 
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import org.jboss.seam.contexts.Lifecycle;
 
 import br.com.infox.core.util.DateUtil;
@@ -28,6 +31,9 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
     @Inject
     private ProcessoEndpointService processoEndpointService;
 
+	@Inject
+	private DocumentoBinManager documentoBinManager;
+
     @Override
     @MTOM(enabled = true, threshold = 10240)
     public Documento recuperarProcessoEmDocumento(String username, String password, String numeroDoProcesso) {
@@ -39,10 +45,8 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
                 throw new WebServiceException(Status.NOT_FOUND.getStatusCode(), "HTTP" + Status.NOT_FOUND.getStatusCode(),
                         "Processo não encontrado");
             }
-            List<MovimentacaoGroup> groups = processoEndpointSearch
-                    .getListaMovimentacaoGroupByIdProcesso(processoDTO.getId());
+            byte[] data = processoEndpointService.gerarPDFProcesso(processoDTO);
 
-            byte[] data = processoEndpointService.gerarPDFProcesso(processoDTO, groups);
             DataSource ds = new ByteArrayDataSource(data, "application/pdf");
             DataHandler dataHandler = new DataHandler(ds);
             return new Documento(dataHandler);

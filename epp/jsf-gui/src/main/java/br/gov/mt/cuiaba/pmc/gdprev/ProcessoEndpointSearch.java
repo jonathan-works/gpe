@@ -320,7 +320,8 @@ public class ProcessoEndpointSearch extends PersistenceController {
       subqueryDocumentos.groupBy(subDocBin.get(DocumentoBin_.id));
       subqueryDocumentos.where(
               cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), idProcesso),
-              cb.isFalse(doc.get(Documento_.excluido)), cb.between(doc.get(Documento_.dataInclusao), dtStart, dtEnd),
+              cb.isFalse(doc.get(Documento_.excluido)),
+              cb.between(doc.get(Documento_.dataInclusao), dtStart, dtEnd),
               cb.equal(doc.get(Documento_.localizacao).get(Localizacao_.idLocalizacao), idLocalizacao),
               cb.isTrue(subDocBin.get(DocumentoBin_.suficientementeAssinado))
               );
