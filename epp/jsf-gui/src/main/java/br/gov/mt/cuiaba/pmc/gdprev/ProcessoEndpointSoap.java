@@ -1,7 +1,5 @@
 package br.gov.mt.cuiaba.pmc.gdprev;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 
 import javax.activation.DataHandler;
@@ -14,7 +12,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.soap.MTOM;
 
-import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import org.jboss.seam.contexts.Lifecycle;
 
 import br.com.infox.core.util.DateUtil;
@@ -31,8 +28,6 @@ public class ProcessoEndpointSoap implements ProcessoEndpoint {
     @Inject
     private ProcessoEndpointService processoEndpointService;
 
-	@Inject
-	private DocumentoBinManager documentoBinManager;
 
     @Override
     @MTOM(enabled = true, threshold = 10240)
