@@ -2,7 +2,7 @@ package br.com.infox.core.server;
 
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Logger;
 
 import javax.ejb.Singleton;
 import javax.ejb.TransactionAttribute;
@@ -25,6 +25,7 @@ import br.com.infox.epp.system.Configuration;
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class ApplicationServerService implements Serializable {
 
+	private static final Logger LOGGER = Logger.getLogger(ApplicationServerService.class.getName());
 	private static final long serialVersionUID = 1L;
 
 	private static final String JBOSS_HTTP_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=http";
@@ -49,32 +50,19 @@ public class ApplicationServerService implements Serializable {
 
 	private Integer getServerListeningPort() {
     	MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+
         try {
-        	ObjectName socketBindingMBean = new ObjectName(JBOSS_HTTPS_SOCKET_BINDING);
+			ObjectName socketBindingMBean = new ObjectName(JBOSS_HTTPS_SOCKET_BINDING);
             String  boundAddress = (String) mBeanServer.getAttribute(socketBindingMBean, "boundAddress");
             isSecure = boundAddress != null;
             if (boundAddress == null) {
-            	socketBindingMBean = new ObjectName(JBOSS_HTTP_SOCKET_BINDING);
-            	
+            	return (Integer) ManagementFactory.getPlatformMBeanServer().getAttribute(new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http"), "port");
             }
-            return (Integer) mBeanServer.getAttribute(socketBindingMBean, "boundPort");
+
         } catch (AttributeNotFoundException | InstanceNotFoundException | MBeanException | ReflectionException | MalformedObjectNameException e) {
-    		try {
-				ObjectName socketBindingMBean = new ObjectName(TOMCAT_SERVICE_CONNECTOR);
-				Object service = mBeanServer.getAttribute(socketBindingMBean, "managedResource");
-				Object[] connectors = (Object[]) service.getClass().getMethod("findConnectors").invoke(service);
-				for (Object connector : connectors) {
-					boolean isHttp = connector.getClass().getMethod("getProtocol").invoke(connector).equals("HTTP/1.1");
-					if (isHttp) {
-						isSecure = (boolean) connector.getClass().getMethod("getSecure").invoke(connector);
-						return (Integer) connector.getClass().getMethod("getPort").invoke(connector);
-					}
-				}
-    		} catch (MalformedObjectNameException | InstanceNotFoundException | ReflectionException | AttributeNotFoundException | MBeanException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
-    			throw new IllegalStateException(e1);
-			}
-    		throw new IllegalStateException(e);
+			LOGGER.info("Porta naop encontrada");
         }
+		return 8080;
 	}
 	
 	public TransactionManager getTransactionManager() {
