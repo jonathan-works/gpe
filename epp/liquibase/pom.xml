@@ -139,6 +139,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <tarLongFileMode>posix</tarLongFileMode>
                     <descriptor>src/main/assembly/mvn-assembly-conf.xml</descriptor>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
