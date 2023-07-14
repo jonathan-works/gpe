@@ -59,11 +59,11 @@ public class MassiveReindexer {
 	private void execute() throws InterruptedException {
 		Session session = HibernateUtil.getSession();
 		FullTextSession fullTextSession = Search.getFullTextSession(session);
-		fullTextSession.getTransaction().setTimeout(90000);
+		fullTextSession.getTransaction().setTimeout(900000);
 		MassIndexer massIndexer = fullTextSession.createIndexer()
-				.batchSizeToLoadObjects(50)
+				.batchSizeToLoadObjects(80)
 				.cacheMode(CacheMode.IGNORE)
-				.threadsToLoadObjects(5)
+				.threadsToLoadObjects(15)
 				.idFetchSize(150)
 				.purgeAllOnStart(true)
 				.typesToIndexInParallel(2);
