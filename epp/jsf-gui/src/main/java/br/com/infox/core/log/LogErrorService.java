@@ -157,9 +157,9 @@ public class LogErrorService extends PersistenceController {
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void atualizarLogErro(LogErro logErro) {
-    	EntityManager entityManager = getEntityManager();
+    	/*EntityManager entityManager = getEntityManager();
     	entityManager.merge(logErro);
-    	entityManager.flush();
+    	entityManager.flush();*/
     }
     
     public EntityManager getEntityManager() {
@@ -168,13 +168,13 @@ public class LogErrorService extends PersistenceController {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void sendAllPendentesEnvio() {
-        List<LogErro> logErroPendenteEnvio = logErroSearch.listAllPendentesEnvio();
+      /*  List<LogErro> logErroPendenteEnvio = logErroSearch.listAllPendentesEnvio();
         for (LogErro logErro : logErroPendenteEnvio) {
            try {
                send(logErro);
            } catch (Exception e) {
            }
-        }
+        }*/
     }
     
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
