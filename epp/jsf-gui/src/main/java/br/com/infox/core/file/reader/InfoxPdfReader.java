@@ -65,6 +65,7 @@ public class InfoxPdfReader {
                 try {
                     String textFromPage = null;
                     try {
+                        System.out.println("####### " + i);
                         sb.append(extractor.getTextFromPage(i));
                     } catch (NullPointerException e){}
                     //FIXME: PREVISTO DEVE ADICIONAR TEXTO VAZIO.
