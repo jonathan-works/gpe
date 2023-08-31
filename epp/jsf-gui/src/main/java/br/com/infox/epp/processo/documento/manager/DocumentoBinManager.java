@@ -612,7 +612,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	}
 
 	private String getUrlValidacaoDocumento() {
-		return "http://localhost:8081/epp-3.3.0-SNAPSHOT/validaDoc.seam";
+		return this.pathResolver.getUrlProject() + "/validaDoc.seam";
 	}
 
 	public String getUrlValidacaoDocumento(final DocumentoBin documento) {
