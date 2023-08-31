@@ -244,6 +244,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     			try {
 	    			appendDocumento(copy, documento);
     			} catch (Exception e) {
+					e.printStackTrace();
 				}
 	    	}
 	    	document.close();
@@ -611,7 +612,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	}
 
 	private String getUrlValidacaoDocumento() {
-		return this.pathResolver.getUrlProject() + "/validaDoc.seam";
+		return "http://localhost:8081/epp-3.3.0-SNAPSHOT/validaDoc.seam";
 	}
 
 	public String getUrlValidacaoDocumento(final DocumentoBin documento) {

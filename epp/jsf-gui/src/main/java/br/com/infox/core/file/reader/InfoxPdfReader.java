@@ -65,13 +65,14 @@ public class InfoxPdfReader {
                 try {
                     String textFromPage = null;
                     try {
-                        extractor.getTextFromPage(i);
-                    } catch (NullPointerException e){} 
-                    //FIXME: PREVISTO DEVE ADICIONAR TEXTO VAZIO. 
+                        sb.append(extractor.getTextFromPage(i));
+                    } catch (NullPointerException e){}
+                    //FIXME: PREVISTO DEVE ADICIONAR TEXTO VAZIO.
                     //Ticket aberto solicitando correção https://github.com/LibrePDF/OpenPDF/issues/34
                     sb.append(textFromPage == null ? null : textFromPage.replace("\u0000", ""));
                 } catch (ExceptionConverter | Error e) {
                     LOG.error("Erro ao extrair texto da página " + i, e);
+                    continue;
                 }
             }
         } catch (IOException e) {
