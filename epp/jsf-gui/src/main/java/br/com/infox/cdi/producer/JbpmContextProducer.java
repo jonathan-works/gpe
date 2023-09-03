@@ -78,9 +78,13 @@ public final class JbpmContextProducer {
 
         @Override
         public void beforeCompletion() {
-            jbpmContext.close();
+            try {
+                jbpmContext.close();
+            }catch (Exception e){
+
+            }
         }
-        
+
         @Override
         public void afterCompletion(int status) {
             if (Status.STATUS_COMMITTED == status) clearLogs();

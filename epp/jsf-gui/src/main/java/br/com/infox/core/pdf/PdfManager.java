@@ -5,6 +5,7 @@ import java.io.OutputStream;
 
 import javax.ejb.Stateless;
 
+import com.lowagie.text.pdf.PdfSmartCopy;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -56,6 +57,16 @@ public class PdfManager {
     }
 
     public PdfCopy copyPdf(PdfCopy copy, byte[] pdf) throws IOException, BadPdfFormatException {
+		PdfReader reader = new PdfReader(pdf);
+		for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+			copy.addPage(copy.getImportedPage(reader, i));
+		}
+		copy.freeReader(reader);
+		reader.close();
+		return copy;
+	}
+
+	public PdfSmartCopy copySmartPdf(PdfSmartCopy copy, byte[] pdf) throws IOException, BadPdfFormatException {
 		PdfReader reader = new PdfReader(pdf);
 		for (int i = 1; i <= reader.getNumberOfPages(); i++) {
 			copy.addPage(copy.getImportedPage(reader, i));

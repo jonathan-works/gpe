@@ -21,6 +21,9 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.epp.processo.manager.ProcessoManager;
+import com.lowagie.text.pdf.*;
 import org.apache.commons.io.IOUtils;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -37,14 +40,6 @@ import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.exceptions.BadPasswordException;
-import com.lowagie.text.pdf.BadPdfFormatException;
-import com.lowagie.text.pdf.ColumnText;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfCopy;
-import com.lowagie.text.pdf.PdfGState;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfStamper;
-import com.lowagie.text.pdf.PdfWriter;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.file.encode.MD5Encoder;
@@ -236,7 +231,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     public DocumentoBin createDocumentoBinResumoDocumentosProcesso(Processo processo) {
     	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
 	    	Document document = new Document();
-	    	PdfCopy copy = new PdfCopy(document, stream);
+	    	PdfSmartCopy copy = new PdfSmartCopy(document, stream);
 	    	document.open();
 	    	documentoToPdfCopy(copy, getModeloDocumentoToByteArray(modeloDocumentoSearch.getModeloDocumentoByCodigo(Parametros.CD_MODELO_DOCUMENTO_FOLHA_ROSTO_RESUMO_PROCESSO.getValue()), processo));
 	    	documentoToPdfCopy(copy, getModeloDocumentoToByteArray(modeloDocumentoSearch.getModeloDocumentoByCodigo(Parametros.CD_MODELO_DOCUMENTO_FOLHA_TRAMITACAO_RESUMO_PROCESSO.getValue()), processo));
@@ -260,7 +255,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		return null;
     }
 
-	private void appendDocumento(PdfCopy copy, Documento documento) throws IOException, BadPdfFormatException {
+	private void appendDocumento(PdfSmartCopy copy, Documento documento) throws IOException, BadPdfFormatException {
 		boolean podeExibirMargem = podeExibirMargem(documento.getDocumentoBin());
 		boolean documentoExcluido = documento.getExcluido();
 		boolean isPDF = "pdf".equalsIgnoreCase(documento.getDocumentoBin().getExtensao());
@@ -302,7 +297,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         return outputStream.toByteArray();
     }
 
-    private void documentoToPdfCopy(PdfCopy copy, byte[] documento) throws IOException, BadPdfFormatException {
+    private void documentoToPdfCopy(PdfSmartCopy copy, byte[] documento) throws IOException, BadPdfFormatException {
     	PdfReader reader = new PdfReader(documento);
 		for(int i = 1; i < reader.getNumberOfPages() + 1; i++) {
 			copy.addPage(copy.getImportedPage(reader, i));
@@ -311,7 +306,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	    reader.close();
     }
 
-    private void documentoImageToPdfCopy(PdfCopy copy, byte[] documento) throws IOException, BadPdfFormatException {
+    private void documentoImageToPdfCopy(PdfSmartCopy copy, byte[] documento) throws IOException, BadPdfFormatException {
     	Document imageDocument = new Document();
     	try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
     		PdfWriter imageDocumentWriter = PdfWriter.getInstance(imageDocument, stream);
@@ -624,13 +619,17 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	}
 
 	public void atualizarDocumentoBinResumoProcesso(Processo processo, DocumentoBin documentoBinResumoProcesso) {
+
 		if(processo.getDocumentoBinResumoProcesso() != null) {
+			processoDao.refresh(processo);
 			DocumentoBin documentoResumoAntigo = processo.getDocumentoBinResumoProcesso();
 			processo.setDocumentoBinResumoProcesso(null);
 			remove(documentoResumoAntigo);
 		}
 		processo.setDocumentoBinResumoProcesso(documentoBinResumoProcesso);
+
 		processoDao.update(processo);
+
 	}
 
 	private ExpressionResolver createExpressionResolver(Processo processo) {

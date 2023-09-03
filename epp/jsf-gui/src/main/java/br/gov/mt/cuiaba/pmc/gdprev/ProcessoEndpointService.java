@@ -16,6 +16,7 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import com.lowagie.text.pdf.PdfSmartCopy;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
 
@@ -68,13 +69,14 @@ public class ProcessoEndpointService {
         ByteArrayOutputStream pdf = new ByteArrayOutputStream();
         try {
             com.lowagie.text.Document pdfDocument = new com.lowagie.text.Document();
-            PdfCopy copy = new PdfCopy(pdfDocument, pdf);
+           // PdfCopy copy = new PdfCopy(pdfDocument, pdf);
+            PdfSmartCopy smaretCopy = new PdfSmartCopy(pdfDocument, pdf);
             pdfDocument.open();
 
             Processo processo = processoManager.find(processoDTO.getId());
             DocumentoBin documentoBinResumoDocumentosProcesso = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
 
-            pdfManager.copyPdf(copy, fileDownloader.getData(documentoBinResumoDocumentosProcesso, false));
+            pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(documentoBinResumoDocumentosProcesso, false));
 
             pdfDocument.addTitle("numeroDoProcesso");
             pdfDocument.close();

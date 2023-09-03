@@ -29,8 +29,10 @@ import br.com.infox.jpa.EntityManagerImpl;
 import br.com.infox.jpa.EntityManagerSerializable;
 
 public class EntityManagerProducer {
-    
-    private static final Annotation VIEW_ENTITY_MANAGER = new AnnotationLiteral<ViewEntityManager>() {private static final long serialVersionUID = 1L;};
+
+	private static final Annotation VIEW_ENTITY_MANAGER = new AnnotationLiteral<ViewEntityManager>() {
+		private static final long serialVersionUID = 1L;
+	};
     private static final Annotation LOG_ENTITY_MANAGER = new AnnotationLiteral<LogEntityManager>() {private static final long serialVersionUID = 1L;};
     private static final Annotation BINARY_DATABASE = new AnnotationLiteral<BinaryDatabase>() {private static final long serialVersionUID = 1L;};
     private static final ThreadLocal<EntityManagerSerializable> ENTITY_MANAGER_LOCAL = new ThreadLocal<>();
