@@ -9,6 +9,10 @@ import java.util.Locale;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
+import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -109,10 +113,27 @@ public class DocumentoDownloader implements Serializable {
     	DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
     	downloadDocumento(documentoBin);
     }
-    
+
+    @Inject
+    private StatusProcessoSearch statusProcessoSearch;
+
+    private static final String statusProcessoArquivado = "Processo Arquivado";
+
     public void downloadDocumentoResumoProcesso(Integer idProcesso) {
     	Processo processo = processoManager.find(idProcesso);
-    	DocumentoBin documentoBin = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
+        DocumentoBin documentoBin = null;
+        if(processo != null) {
+            MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType());
+            if (metadado != null && processo.getDocumentoBinResumoProcesso() != null) {
+                StatusProcesso statusArquivado = statusProcessoSearch.getStatusByNameAtivo(statusProcessoArquivado);
+                if (statusArquivado != null && statusArquivado.getIdStatusProcesso().toString().equals(metadado.getValor())) {
+                    documentoBin = processo.getDocumentoBinResumoProcesso();
+                }
+            } else {
+
+                documentoBin = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
+            }
+        }
     	downloadDocumento(documentoBin);
     }
     
