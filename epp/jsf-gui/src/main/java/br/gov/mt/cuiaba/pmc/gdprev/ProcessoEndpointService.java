@@ -87,7 +87,7 @@ public class ProcessoEndpointService {
                 MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType());
                 if(metadado != null &&  processo.getDocumentoBinResumoProcesso() != null){
                     StatusProcesso statusArquivado = statusProcessoSearch.getStatusByNameAtivo(statusProcessoArquivado);
-                    if(statusArquivado != null && statusArquivado.getIdStatusProcesso().equals(metadado.getValor())){
+                    if(statusArquivado != null && statusArquivado.getIdStatusProcesso().toString().equals(metadado.getValor())){
                         pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(processo.getDocumentoBinResumoProcesso(), false));
                     }
                 }else {
