@@ -16,6 +16,10 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
+import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import com.lowagie.text.pdf.PdfSmartCopy;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
@@ -65,6 +69,10 @@ public class ProcessoEndpointService {
         return gerarPDFProcesso(pdfManager, fileDownloader, processoDTO);
     }
 
+    @Inject
+    private StatusProcessoSearch statusProcessoSearch;
+
+    private static final String statusProcessoArquivado = "Processo Arquivado";
     private byte[] gerarPDFProcesso(PdfManager pdfManager, FileDownloader fileDownloader, ProcessoDTO processoDTO) {
         ByteArrayOutputStream pdf = new ByteArrayOutputStream();
         try {
@@ -74,9 +82,20 @@ public class ProcessoEndpointService {
             pdfDocument.open();
 
             Processo processo = processoManager.find(processoDTO.getId());
-            DocumentoBin documentoBinResumoDocumentosProcesso = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
 
-            pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(documentoBinResumoDocumentosProcesso, false));
+            if(processo != null){
+                MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType());
+                if(metadado != null &&  processo.getDocumentoBinResumoProcesso() != null){
+                    StatusProcesso statusArquivado = statusProcessoSearch.getStatusByNameAtivo(statusProcessoArquivado);
+                    if(statusArquivado != null && statusArquivado.getIdStatusProcesso().equals(metadado.getValor())){
+                        pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(processo.getDocumentoBinResumoProcesso(), false));
+                    }
+                }else {
+                    DocumentoBin documentoBinResumoDocumentosProcesso = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
+
+                    pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(documentoBinResumoDocumentosProcesso, false));
+                }
+            }
 
             pdfDocument.addTitle("numeroDoProcesso");
             pdfDocument.close();
