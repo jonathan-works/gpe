@@ -121,19 +121,7 @@ public class DocumentoDownloader implements Serializable {
 
     public void downloadDocumentoResumoProcesso(Integer idProcesso) {
     	Processo processo = processoManager.find(idProcesso);
-        DocumentoBin documentoBin = null;
-        if(processo != null) {
-            MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType());
-            if (metadado != null && processo.getDocumentoBinResumoProcesso() != null) {
-                StatusProcesso statusArquivado = statusProcessoSearch.getStatusByNameAtivo(statusProcessoArquivado);
-                if (statusArquivado != null && statusArquivado.getIdStatusProcesso().toString().equals(metadado.getValor())) {
-                    documentoBin = processo.getDocumentoBinResumoProcesso();
-                }
-            } else {
-
-                documentoBin = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
-            }
-        }
+        DocumentoBin documentoBin = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
     	downloadDocumento(documentoBin);
     }
     
