@@ -63,43 +63,37 @@ public class ProcessoEndpointService {
 
     @Inject
     private ProcessoManager processoManager;
-    
+
 
     public byte[] gerarPDFProcesso(ProcessoDTO processoDTO) {
         return gerarPDFProcesso(pdfManager, fileDownloader, processoDTO);
     }
 
-    @Inject
-    private StatusProcessoSearch statusProcessoSearch;
-
-    private static final String statusProcessoArquivado = "Processo Arquivado";
     private byte[] gerarPDFProcesso(PdfManager pdfManager, FileDownloader fileDownloader, ProcessoDTO processoDTO) {
         ByteArrayOutputStream pdf = new ByteArrayOutputStream();
         try {
             com.lowagie.text.Document pdfDocument = new com.lowagie.text.Document();
-           // PdfCopy copy = new PdfCopy(pdfDocument, pdf);
+            // PdfCopy copy = new PdfCopy(pdfDocument, pdf);
             PdfSmartCopy smaretCopy = new PdfSmartCopy(pdfDocument, pdf);
             pdfDocument.open();
 
             Processo processo = processoManager.find(processoDTO.getId());
 
-            if(processo != null){
-                MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType());
-                if(metadado != null &&  processo.getDocumentoBinResumoProcesso() != null){
-                    StatusProcesso statusArquivado = statusProcessoSearch.getStatusByNameAtivo(statusProcessoArquivado);
-                    if(statusArquivado != null && statusArquivado.getIdStatusProcesso().toString().equals(metadado.getValor())){
-                        pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(processo.getDocumentoBinResumoProcesso(), false));
-                    }
-                }else {
-                    DocumentoBin documentoBinResumoDocumentosProcesso = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
+            if (processo != null) {
 
-                    pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(documentoBinResumoDocumentosProcesso, false));
-                }
+                pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(processo.getDocumentoBinResumoProcesso(), false));
+
+            } else {
+                DocumentoBin documentoBinResumoDocumentosProcesso = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
+
+                pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(documentoBinResumoDocumentosProcesso, false));
             }
+
 
             pdfDocument.addTitle("numeroDoProcesso");
             pdfDocument.close();
-        } catch (DocumentException | IOException e) {
+        } catch (DocumentException |
+                 IOException e) {
             Logger.getGlobal().log(Level.SEVERE, "Erro", e);
         }
         return pdf.toByteArray();
@@ -107,25 +101,28 @@ public class ProcessoEndpointService {
 
     public void autenticar(String username, String password) {
         if (loginService.autenticar(username, password)) {
-        	if (!podeAcessarWSSoap(username)) {
-        		throw new WebServiceException(Status.FORBIDDEN.getStatusCode(), "HTTP"+Status.FORBIDDEN.getStatusCode(), "Recurso não disponível");
-        	}
+            if (!podeAcessarWSSoap(username)) {
+                throw new WebServiceException(Status.FORBIDDEN.getStatusCode(), "HTTP" + Status.FORBIDDEN.getStatusCode(), "Recurso não disponível");
+            }
         } else {
-        	throw new WebServiceException(Status.UNAUTHORIZED.getStatusCode(), "HTTP"+Status.UNAUTHORIZED.getStatusCode(), "Não autorizado");
+            throw new WebServiceException(Status.UNAUTHORIZED.getStatusCode(), "HTTP" + Status.UNAUTHORIZED.getStatusCode(), "Não autorizado");
         }
     }
-    private static final String RECURSO="acessaWSProcessoSoap";
-	private boolean podeAcessarWSSoap(String username) {
-		authenticatorService.autenticaManualmenteNoSeamSecurity(username, IdentityManager.instance());
-		Set<String> roleSet = new HashSet<>();
-		for (UsuarioPerfil usuarioPerfil : usuarioPerfilDAO.listByLogin(username)) {
-			roleSet.addAll(RolesMap.instance().getChildrenRoles(usuarioPerfil.getPerfilTemplate().getPapel().getIdentificador()));
-		}
-		for (String role : roleSet) {
-			Identity.instance().addRole(role);
-		}
-		return Identity.instance().hasPermission(RECURSO, "access");
-	}
+
+    private static final String RECURSO = "acessaWSProcessoSoap";
+
+    private boolean podeAcessarWSSoap(String username) {
+        authenticatorService.autenticaManualmenteNoSeamSecurity(username, IdentityManager.instance());
+        Set<String> roleSet = new HashSet<>();
+        for (UsuarioPerfil usuarioPerfil : usuarioPerfilDAO.listByLogin(username)) {
+            roleSet.addAll(RolesMap.instance().getChildrenRoles(usuarioPerfil.getPerfilTemplate().getPapel().getIdentificador()));
+        }
+        for (String role : roleSet) {
+            Identity.instance().addRole(role);
+        }
+        return Identity.instance().hasPermission(RECURSO, "access");
+    }
+
     private String resolverModeloComContexto(Integer idProcesso, String codigoModelo) {
         return resolverModeloComContexto(idProcesso, codigoModelo, null);
     }

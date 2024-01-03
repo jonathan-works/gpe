@@ -114,11 +114,6 @@ public class DocumentoDownloader implements Serializable {
     	downloadDocumento(documentoBin);
     }
 
-    @Inject
-    private StatusProcessoSearch statusProcessoSearch;
-
-    private static final String statusProcessoArquivado = "Processo Arquivado";
-
     public void downloadDocumentoResumoProcesso(Integer idProcesso) {
     	Processo processo = processoManager.find(idProcesso);
         DocumentoBin documentoBin = documentoBinManager.createDocumentoBinResumoDocumentosProcesso(processo);
