@@ -36,7 +36,7 @@
 			<string value='JbpmJobExecutor' />
 		</field>
 		<field name='nbrOfThreads'>
-			<int value='1' />
+			<int value='10' />
 		</field>
 		<field name='idleInterval'>
 			<int value='600000' /> <!-- 10 minutes --><!-- 60000 é 1 minuto -->
