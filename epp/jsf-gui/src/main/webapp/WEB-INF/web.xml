@@ -41,7 +41,7 @@
  </context-param>
  <context-param>
    <param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>
-   <param-value>524288</param-value> <!-- 512 KB -->
+   <param-value>1048576</param-value> <!-- 512 KB -->
  </context-param>
  <!-- Seam -->
  <context-param>

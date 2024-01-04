@@ -84,13 +84,14 @@ public class DocumentoDownloader implements Serializable {
     }
 
     public void downloadDocumento(Documento documento, boolean gerarMargens) {
-    	if (validarSigilo(documento)) {
+    	//if (validarSigilo(documento)) {
     	    try {
+                System.out.println("####### " +  documento.getDocumentoBin().getId());
     	        getFileDownloader().downloadDocumento(documento);
             } catch (IOException e) {
                 getActionMessagesService().handleException(null, e);
             }
-    	}
+    	//}
     }
     
     public void downloadDocumento(Documento documento) {

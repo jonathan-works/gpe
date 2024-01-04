@@ -88,8 +88,8 @@ public class FileDownloader implements Serializable {
         }
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         if(externalContext.isSecure()) {
-            externalContext.setResponseHeader("Cache-Control", "public");
-            externalContext.setResponseHeader("Pragma", "public");
+            externalContext.setResponseHeader("Cache-Control", "no-cache");
+            externalContext.setResponseHeader("Pragma", "no-cache");
         }
         try {
             IOUtils.copy(downloadResource.getInputStream(), response.getOutputStream());
