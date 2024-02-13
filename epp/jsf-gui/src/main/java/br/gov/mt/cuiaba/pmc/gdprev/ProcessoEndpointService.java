@@ -79,7 +79,7 @@ public class ProcessoEndpointService {
 
             Processo processo = processoManager.find(processoDTO.getId());
 
-            if (processo != null) {
+            if (processo != null && processo.getDocumentoBinResumoProcesso() != null) {
 
                 pdfManager.copySmartPdf(smaretCopy, fileDownloader.getData(processo.getDocumentoBinResumoProcesso(), false));
 

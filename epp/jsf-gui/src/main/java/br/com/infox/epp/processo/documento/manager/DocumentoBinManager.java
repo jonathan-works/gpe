@@ -256,7 +256,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     }
 
 	private void appendDocumento(PdfSmartCopy copy, Documento documento) throws IOException, BadPdfFormatException {
-		boolean podeExibirMargem = podeExibirMargem(documento.getDocumentoBin());
+		boolean podeExibirMargem = documento != null && documento.getDocumentoBin() != null && podeExibirMargem(documento.getDocumentoBin());
 		boolean documentoExcluido = documento.getExcluido();
 		boolean isPDF = "pdf".equalsIgnoreCase(documento.getDocumentoBin().getExtensao());
 		boolean documentoSemCarimbos = !(podeExibirMargem || isPDF && documentoExcluido);
@@ -360,7 +360,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 	public List<Carimbo> gerarCarimbos(DocumentoBin documento, boolean gerarMargens, boolean documentoCancelado) {
 		List<Carimbo> carimbos = new ArrayList<>();
-        if (gerarMargens && podeExibirMargem(documento)) {
+        if (documento != null && gerarMargens && podeExibirMargem(documento)) {
         	String textoAssinatura = getTextoAssinatura(documento);
         	int posicao = Carimbo.RODAPE;
         	if (PosicaoTextoAssinaturaDocumentoEnum.LATERAL_VERTICAL.equals(documentoDAO.getPosicaoTextoAssinaturaDocumento(documento))) {
