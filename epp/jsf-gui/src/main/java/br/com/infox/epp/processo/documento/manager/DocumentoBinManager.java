@@ -144,6 +144,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 			}
 		}
 		bin.setDataInclusao(new Date());
+		bin.setExtensao("docx");
 		bin = persist(bin);
 		if (bin.isBinario() && dados != null) {
 			documentoBinarioManager.salvarBinario(bin.getId(), dados);
